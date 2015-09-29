@@ -1,4 +1,11 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+    <style typ="text/css" rel="stylesheet">
+        #week-selector {list-style: outside none none;}
+        #week-selector li {display: inline-block;}
+        #cal_container {margin: 0 20px;}
+        #cal_container #datepicker {width: 2px;opacity: 0;position: absolute;display:none;}
+        #cal_container #numberWeek {width: 20px;display: inline-block;}
+    </style>
     <!--div id="content">
         <ul class="pathway">
                 <li><a href="{season/buildings_link}"><xsl:value-of select="php:function('lang', 'Buildings')" /></a></li>
@@ -9,28 +16,64 @@
 
     <xsl:call-template name="msgbox"/>
     <!--xsl:call-template name="yui_booking_i18n"/-->
+    
+    <div class="pure-form">
+        <input type="hidden" name="tab" value="" />
+        <div id="tab-content">
+            <xsl:value-of disable-output-escaping="yes" select="season/tabs" />
+            <div id="season_wtemplate">
+                <fieldset>
+                    <div class="pure-g">
+                        <div class="pure-u-1">
+                            <div class="heading"></div>
+                            <div clas="pure-control-group">
+                                <!--ul id="week-selector">
+                                    <li><span class="pure-button pure-button-primary" onclick="schedule.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></span></li>
+                                    <li id="cal_container">
+                                        <div>
+                                            <span><xsl:value-of select="php:function('lang', 'Week')" />: </span>
+                                            <label id="numberWeek"></label>
+                                            <input type="text" id="datepicker" />
+                                            <img id="pickerImg" src="/portico/phpgwapi/templates/base/images/cal.png" />
+                                        </div>
+                                    </li>
+                                    <li><span class="pure-button pure-button-primary" onclick="schedule.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></span></li>
+                                </ul-->
+                                <div id="schedule_container"></div>
+                            </div>                            
 
-        <dl class="form">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Week Template')" /></dt>
-		</dl>
+                            <form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form"></form>
+                            
+                                
+                            
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <xsl:if test="season/permission/write">
+            <div class="pure-control-group">	
+                <div class="form-buttons">
+                    <button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
+                    <button>
+                        <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
+                        <xsl:value-of select="php:function('lang', 'Generate allocations')" />
+                    </button>
+                    <a class="cancel">
+                        <xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
+                        <xsl:value-of select="php:function('lang', 'Back to season')"/>
+                    </a>
+                </div>
+            </div>
+        </xsl:if>
+        
+    </div>
 
-		<div id="schedule_container"/>
+
 		
-		<xsl:if test="season/permission/write">	
-			<div class="form-buttons">
-				<button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
-				<button>
-					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Generate allocations')" />
-				</button>
-				<a class="cancel">
-					<xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Back to season')"/>
-				</a>
-			</div>
-		</xsl:if>
 		
-		<form id="panel1" method="POST">
+		
+		<!--form id="panel1" method="POST">
 			<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>
 			<div class="hd"><xsl:value-of select="php:function('lang', 'Allocations')" /></div>
 			<div class="bd">
@@ -83,11 +126,34 @@
 				</dl>
 				<div class="clr"/>
 			</div>
-		</form>
+		</form-->
 
 	<!--/div-->
 
-<script type="text/javascript">
+    <script type="text/javascript">
+        var season_id = <xsl:value-of select="season/id"/>;
+        var resource_ids = <xsl:value-of select="season/resources_json"/>;
+        var r = [{n: 'ResultSet'},{n: 'Result'}];
+        <![CDATA[
+            var weekUrl = 'index.php?menuaction=booking.uiseason.wtemplate_json&id=' + season_id + '&phpgw_return_as=json&';
+        ]]>
+        $(window).load(function() {
+            var colDefs = [
+                {key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'}, 
+                {key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},
+                {key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'scheduleDateColumn'},
+                {key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: 'scheduleDateColumn'},
+                {key: '3', label: '<xsl:value-of select="php:function('lang', 'Wednesday')" />', formatter: 'scheduleDateColumn'},
+                {key: '4', label: '<xsl:value-of select="php:function('lang', 'Thursday')" />', formatter: 'scheduleDateColumn'},
+                {key: '5', label: '<xsl:value-of select="php:function('lang', 'Friday')" />', formatter: 'scheduleDateColumn'},
+                {key: '6', label: '<xsl:value-of select="php:function('lang', 'Saturday')" />', formatter: 'scheduleDateColumn'},
+                {key: '7', label: '<xsl:value-of select="php:function('lang', 'Sunday')" />', formatter: 'scheduleDateColumn'}
+            ];
+            createTableSchedule('schedule_container', weekUrl, colDefs, r, 'pure-table' );
+        });
+    </script>
+
+<!--script type="text/javascript">
 var season_id = <xsl:value-of select="season/id"/>;
 var resource_ids = <xsl:value-of select="season/resources_json"/>;
 <![CDATA[
@@ -251,7 +317,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.dialog = new YAHOO.booking.AllocationDialog('panel1');
 	YAHOO.booking.updateSchedule();
 });
-</script>
+</script-->
 
 <xsl:if test="not(season/permission/write)">
 	<script type="text/javascript">

@@ -27,7 +27,7 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
         d.setDate(d.getDate() + i);
         var x = (i<6) ? i+1 : 0;
         schedule.dates[keys[x]] = d;
-        colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: 'scheduleDateColumn', date: d});
+        colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d});
     }
     var r = [{n: 'ResultSet'},{n: 'Result'}];
 //    createta d u c r cl
@@ -44,7 +44,6 @@ $(function() {
         changeYear: true,
         firstDay: 1,
         onSelect: function(a,e){
-            console.log(a);
             var date = new Date(a);
             schedule.updateSchedule(date);
         }
@@ -91,9 +90,7 @@ schedule.nextWeek2 = function () {
     date.setDate(date.getDate()+7);
     var url = self.location.href;
     url = url.substr(0, (url.indexOf("#date")));
-    console.log(url);
     url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-    console.log(url);
     location.replace(url);
     location.reload();
 };

@@ -58,7 +58,7 @@
             schedule.includeResource = true;
             var handleHistoryNavigation = function (state) {
                 schedule.date = parseISO8601(state);
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.backendScheduleColorFormatter, true);
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, 'backendScheduleDateColumn', true);
             };
 
             var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
