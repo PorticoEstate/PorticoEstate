@@ -8,22 +8,64 @@ function onAdjust_price()
 	
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 
-		document.getElementById("message").innerHTML = '';
+		JqueryPortico.show_message(0, result);
+		
+		var combo = $("#price_item_id");
 
-		if (typeof(result.message) !== 'undefined')
+		if (typeof(result.types_options) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
-				document.getElementById("message").innerHTML = v.msg;
+			combo.empty();
+			$.each(result.types_options, function (k, v) 
+			{
+				combo.append($("<option></option>").attr("value", v.id).text(v.name));
 			});
+			
+			$("#ctrl_adjust_price_item_price").val('');
 		}
-
-		if (typeof(result.error) !== 'undefined')
-		{
-			$.each(result.error, function (k, v) {
-				document.getElementById("message").innerHTML = v.msg;
-			});
-		}
+		
 		oTable0.fnDraw();
 
 	}, '', "POST", "JSON");
+}
+
+getRequestData = function(dataSelected, parameters){
+	
+	var data = {};
+	
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < dataSelected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = dataSelected[n][val.source];
+		});		
+	}
+	
+	return data;
+};
+
+function removePrice (oArgs, parameters)
+{
+	var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+	var selected = oTT.fnGetSelectedData();
+	var nTable = 0;
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = getRequestData(selected, parameters);
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message(nTable, result);
+		
+		oTable0.fnDraw();
+
+	}, data, 'POST', 'JSON');
 }
