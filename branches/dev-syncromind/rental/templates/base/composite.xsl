@@ -40,7 +40,11 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'name')"/>
 							</label>
-							<input type="text" name="name" id="name" value="{value_name}"/>
+							<input type="text" name="name" id="name" value="{value_name}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
