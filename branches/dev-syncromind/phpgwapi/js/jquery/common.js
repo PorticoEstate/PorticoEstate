@@ -266,18 +266,19 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 			 },
 			fnInitComplete: function (oSettings, json)
 			{
-				if(JqueryPortico.inlineTablesRendered == JqueryPortico.inlineTablesDefined)
+				/*if(JqueryPortico.inlineTablesRendered == JqueryPortico.inlineTablesDefined)
 				{
 					if(typeof(JqueryPortico.render_tabs) == 'function')
 					{
-						var delay=350;//allow extra 350 milliseconds to really finish
+						var delay=15;//allow extra 350 milliseconds to really finish
 						setTimeout(function()
 						{
 							JqueryPortico.render_tabs();
+							alert(JqueryPortico.inlineTablesRendered);
 
 						},delay);
 					}
-				}
+				}*/
 			},
 		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 		//	language:		JqueryPortico.i18n.datatable(),
