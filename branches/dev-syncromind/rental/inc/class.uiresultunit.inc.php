@@ -118,7 +118,7 @@
 						array(
 							'key'		=> 'ORG_UNIT_NAME', 
 							'label'		=> lang('unit_name'), 
-							'className'	=> 'center', 
+							'className'	=> '', 
 							'sortable'	=> true, 
 							'hidden'	=> false
 						),
@@ -132,7 +132,7 @@
 						array(
 							'key'		=> 'UNIT_NO_OF_DELEGATES', 
 							'label'		=> lang('unit_no_of_delegates'), 
-							'className'	=> '', 
+							'className'	=> 'center', 
 							'sortable'	=> false, 
 							'hidden'	=> false
 						)
