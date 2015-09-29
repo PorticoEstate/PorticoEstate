@@ -9,29 +9,35 @@ function searchUser()
 	var oArgs = {menuaction:'rental.uiresultunit.search_user'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	
+	$('.loading').css( {"visibility" : "visible"} );
+	
 	var data = {"username": document.getElementById('username').value};
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 		
-			document.getElementById('message').innerHTML = '';
+			document.getElementById('custom_message').innerHTML = '';
 
 			if (typeof(result.message) !== 'undefined')
 			{
-				document.getElementById('message').innerHTML = result.message.msg;
+				document.getElementById('custom_message').innerHTML = result.message.msg;
 			}
 
 			if (typeof(result.error) !== 'undefined')
 			{
-				document.getElementById('message').innerHTML = result.error.msg;
+				document.getElementById('custom_message').innerHTML = result.error.msg;
 			}
-	
-			document.getElementById('username').value = result.data.username;
-			document.getElementById('firstname').value = result.data.firstname;
-			document.getElementById('lastname').value = result.data.lastname;
-			if (typeof(result.data.email) !== 'undefined')
+
+			if (typeof(result.data) !== 'undefined')
 			{
-				document.getElementById('email').value = result.data.email;
+				document.getElementById('username').value = result.data.username;
+				document.getElementById('firstname').value = result.data.firstname;
+				document.getElementById('lastname').value = result.data.lastname;
+				if (typeof(result.data.email) !== 'undefined')
+				{
+					document.getElementById('email').value = result.data.email;
+				}
+				document.getElementById('account_id').value = result.data.account_id;
 			}
-			document.getElementById('account_id').value = result.data.account_id;
+			$('.loading').css( {"visibility" : "hidden"} );
 			
 	}, data, "POST", "JSON");		
 }
@@ -50,6 +56,8 @@ function addDelegate()
 	data['id'] = document.getElementById('unit_id').value;
 	data['level'] = document.getElementById('unit_level').value;
 	data['account_id'] = document.getElementById('account_id').value;
+	
+	$('.loading').css( {"visibility" : "visible"} );
 	
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 		
@@ -71,6 +79,8 @@ function addDelegate()
 			document.getElementById('email').value = '';
 			document.getElementById('account_id').value = '';
 			document.getElementById('message').innerHTML = '';
+			
+			$('.loading').css( {"visibility" : "hidden"} );
 			
 			oTable0.fnDraw();
 			
