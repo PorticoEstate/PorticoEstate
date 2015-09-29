@@ -62,7 +62,9 @@ input[type="radio"] {margin-right: 2px;}
 .pure-table thead th{text-align: center;}
 .pure-table tbody th{border-top: 1px solid #cbcbcb;text-align: right;font-weight: bold;color: #000;}
 
+#schedule_container {color: #000;}
 #schedule_container .pure-table thead th {line-height: 1.4;}
+p.conflicts {margin: 0;color: #000;}
 
 .date-container {position: relative;}
         
