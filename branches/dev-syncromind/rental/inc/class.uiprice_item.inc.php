@@ -504,7 +504,7 @@ JS;
 	 * @param $key ?
 	 * @param $params [price_item.id, type of query, editable]
 	 */
-	public function add_actions(&$value, $key, $params)
+	/*public function add_actions(&$value, $key, $params)
 	{
 		$value['actions'] = array();
 		$value['labels'] = array();
@@ -547,7 +547,7 @@ JS;
 				}
 				break;
 		}
-	}
+	}*/
 	
 	public function manual_adjustment()
 	{
@@ -609,11 +609,16 @@ JS;
 			(
 				'my_name'		=> 'delete',
 				'text'			=> lang('delete'),
-				'action'		=> self::link(array(
-						'menuaction'	=> 'rental.uiadjustment.delete'
-				)),
 				'confirm_msg'	=> lang('do you really want to delete this entry'),
-				'parameters'	=> json_encode($parameters)
+				'type'			=> 'custom',
+				'custom_code'	=> "
+					var oArgs = ".json_encode(array(
+							'menuaction'		=> 'rental.uiadjustment.delete', 
+							'phpgw_return_as'	=> 'json'
+						)).";
+					var parameters = ".json_encode($parameters).";
+					removePrice(oArgs, parameters);
+				"	
 			);
 			
 		$datatable_def[] = array
@@ -746,33 +751,21 @@ JS;
 				else{
 					$message = "Ingen kontrakter er oppdatert";
 				}
-				/*$data = array
-				(
-					'price_item_id' => $id,
-					'message' => $message
-				);*/
 				$receipt['message'][] = array('msg'=>$message);
-				//self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
-				//$this->render('admin_price_item_manual_adjustment.php', $data);
+							
+				$types_options[] = array('id'=>'', 'name'=>'Velg priselement');
+				$types = rental_soprice_item::get_instance()->get_manual_adjustable();
+				foreach($types as $id => $label)
+				{
+					$types_options[] = array('id'=>$id, 'name'=>lang($label));
+				}
+				$receipt['types_options'] = $types_options;
+				
 			} else {
-				/*$data = array
-				(
-					'price_item_id' => $id,
-					'error' => $error
-				);
-				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	*/
-				//$this->render('admin_price_item_manual_adjustment.php', $data);
 				$receipt['error'][] = array('msg'=>'error');
 			}
 		}
 		else{
-			/*$data = array
-			(
-				'price_item_id' => $id,
-				'error' => lang('price_not_numeric')
-			);
-			self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	*/
-			//$this->render('admin_price_item_manual_adjustment.php', $data);
 			$receipt['error'][] = array('msg'=>lang('price_not_numeric'));
 		}
 		
