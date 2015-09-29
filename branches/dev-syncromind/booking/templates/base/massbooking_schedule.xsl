@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+    <div id="content_overlay"></div>
     <style typ="text/css" rel="stylesheet">
         #week-selector {list-style: outside none none;}
         #week-selector li {display: inline-block;}
@@ -64,12 +65,14 @@
 
     <script type="text/javascript">
         $(window).load(function() {
+            $('body').prepend($('#content_overlay'));
             schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
             schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
             schedule.includeResource = true;
+            schedule.colFormatter = 'frontendScheduleDateColumn';
             var handleHistoryNavigation = function (state) {
                 schedule.date = parseISO8601(state);
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, 'frontendScheduleDateColumn', schedule.includeResource);
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             };
             
             var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
