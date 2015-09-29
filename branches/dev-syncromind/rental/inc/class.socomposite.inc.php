@@ -200,8 +200,19 @@ class rental_socomposite extends rental_socommon
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+		$this->sort_field = $sort_field;
 
-//	    _debug_array("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		switch($sort_field)
+		{
+			case 'status':
+				$this->skip_limit_query = true;
+				break;
+
+			default:
+				break;
+		}
+
+//		_debug_array("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 	    
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -482,4 +493,3 @@ class rental_socomposite extends rental_socommon
 		return $uicols;
     }
 }
-?>

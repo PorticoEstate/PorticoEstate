@@ -6,14 +6,17 @@ abstract class rental_socommon
 	protected $join;
 	protected $left_join;
 	protected $sort_field;
-	
+	protected $skip_limit_query;
+
+
 	public function __construct()
 	{
-		$this->db           = clone $GLOBALS['phpgw']->db;
-		$this->like			= & $this->db->like;
-		$this->join			= & $this->db->join;
-		$this->left_join	= & $this->db->left_join;
-		$this->sort_field	= null;
+		$this->db				= clone $GLOBALS['phpgw']->db;
+		$this->like				= & $this->db->like;
+		$this->join				= & $this->db->join;
+		$this->left_join		= & $this->db->left_join;
+		$this->sort_field		= null;
+		$this->skip_limit_query = null;
 	}
 	
 		/**
@@ -220,7 +223,7 @@ abstract class rental_socommon
 		 * Sigurd: try to limit the candidates to a minimum
 		 */
 		$bypass_offset_check = false;
-		if($num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
+		if(!$this->skip_limit_query && $num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
 		{
 			$bypass_offset_check = true;
 			$sql_parts_filter = explode('FROM',$sql, 2);
