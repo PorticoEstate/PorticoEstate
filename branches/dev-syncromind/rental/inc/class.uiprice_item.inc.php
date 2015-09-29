@@ -316,7 +316,8 @@ JS;
 				'responsibility_id'				=> $responsibility_id,
 				'mode'							=> $mode,
 
-				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
 		self::render_template_xsl(array('price_item'), array($mode => $data));
