@@ -11,3 +11,18 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 	display: inline-block;
 	vertical-align: top;
 }
+
+.loading {
+	background: url("../images/loader.gif") center center no-repeat;;
+	width: 16px;
+	height: 16px;
+	display:inline-block;
+	margin-left: 10px;
+	vertical-align:middle;
+	visibility:hidden;
+}
+
+.custom-message {
+	display:inline-block;
+	vertical-align:middle;
+}
