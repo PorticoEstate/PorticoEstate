@@ -132,8 +132,35 @@
 											</div>
 										</div>
 									</xsl:for-each>
+									
+									<div class="pure-g" >
+										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" ><xsl:value-of select="php:function('lang', 'start time')" /></div>
+
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
+											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00"></input>
+										</div>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
+											:
+										</div>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
+											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00"></input>
+										</div>
+
+										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1"><xsl:value-of select="php:function('lang', 'end time')" /></div>
+
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
+											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00"></input>
+										</div>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
+											:
+										</div>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
+											<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00"></input>
+										</div>
+									</div>
+									
 									<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
-										<label for="start_time">
+										<!--label for="start_time">
 											<xsl:value-of select="php:function('lang', 'start time')" />
 										</label>
 										<span>
@@ -142,7 +169,7 @@
 											<xsl:text>:</xsl:text>
 											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00">
 											</input>
-										</span>
+										</span
 										<label for="end_time">
 											<xsl:value-of select="php:function('lang', 'end time')" />
 										</label>
@@ -150,7 +177,7 @@
 										</input>
 										<xsl:text>:</xsl:text>
 										<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00">
-										</input>
+										</input>-->
 									</div>
 
 								</div>
