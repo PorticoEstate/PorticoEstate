@@ -371,7 +371,15 @@
 			$season['generate_url'] = self::link(array('menuaction' => 'booking.uiseason.generate', 'id' => $season['id']));
 			$season['delete_wtemplate_alloc_url'] = self::link(array('menuaction' => 'booking.uiseason.delete_wtemplate_alloc', 'phpgw_return_as'=>'json'));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
+                        
+                        $tabs = array();
+			$tabs['generic'] = array('label' => lang('Week template'), 'link' => '#season_wtemplate');
+			$active_tab = 'generic';
+            
+                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			self::add_javascript('booking', 'booking', 'schedule.js');
+                        phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('season_wtemplate', array('season' => $season));
 		}
 

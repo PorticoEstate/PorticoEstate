@@ -134,7 +134,15 @@
 			{
 				$building['date'] = phpgw::get_var('date', 'GET');
 			}
+                        
+                        $tabs = array();
+			$tabs['generic'] = array('label' => lang('Massbooking Schedule'), 'link' => '#massbooking_schedule');
+			$active_tab = 'generic';
+            
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			self::add_javascript('booking', 'booking', 'schedule.js');
+                        phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('massbooking_schedule', array('building' => $building, 'backend' => $backend));
 		}
 
