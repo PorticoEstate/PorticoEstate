@@ -53,7 +53,7 @@
                             <span><xsl:value-of select="php:function('lang', 'Week')" />: </span>
                             <label id="numberWeek"></label>
                             <input type="text" id="datepicker" />
-                            <img id="pickerImg" src="/portico/phpgwapi/templates/base/images/cal.png" />
+                            <img id="pickerImg" src="{building/picker_img}" />
                         </div>
                     </li>
                     <li><span class="pure-button pure-button-primary" onclick="schedule.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></span></li>
