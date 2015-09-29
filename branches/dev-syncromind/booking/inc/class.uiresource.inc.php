@@ -258,6 +258,8 @@
 				'phpgw_return_as' => 'json',
 			));
                         
+                        $resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+                        
                         $tabs = array();
 			$tabs['generic'] = array('label' => lang('Resource Schedule'), 'link' => '#resource_schedule');
 			$active_tab = 'generic';

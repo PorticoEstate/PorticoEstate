@@ -277,7 +277,9 @@
 			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
                         phpgwapi_jquery::load_widget("datepicker");
-            
+                        
+                        $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+                        
                         $tabs = array();
 			$tabs['generic']	= array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
 			$active_tab = 'generic';

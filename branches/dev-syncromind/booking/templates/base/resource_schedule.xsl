@@ -45,7 +45,8 @@
                             <span><xsl:value-of select="php:function('lang', 'Week')" />: </span>
                             <label id="numberWeek"></label>
                             <input type="text" id="datepicker" />
-                            <img id="pickerImg" src="/portico/phpgwapi/templates/base/images/cal.png" />
+                            <!--img id="pickerImg" src="/portico/phpgwapi/templates/base/images/cal.png" /-->
+                            <img id="pickerImg" src="{resource/picker_img}" />
                         </div>
                     </li>
                     <li><span class="pure-button pure-button-primary" onclick="schedule.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></span></li>
@@ -62,9 +63,10 @@
             schedule.setupWeekPicker('cal_container');
             schedule.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
             schedule.includeResource = false;
+            schedule.colFormatter = 'backendScheduleDateColumn';
             var handleHistoryNavigation = function (state) {
                 schedule.date = parseISO8601(state);
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, 'backendScheduleDateColumn', schedule.includeResource);
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             };
 
             var initialRequest = getUrlData("date") || '<xsl:value-of select="resource/date"/>';

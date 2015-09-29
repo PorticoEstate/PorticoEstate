@@ -135,6 +135,8 @@
 				$building['date'] = phpgw::get_var('date', 'GET');
 			}
                         
+                        $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+                        
                         $tabs = array();
 			$tabs['generic'] = array('label' => lang('Massbooking Schedule'), 'link' => '#massbooking_schedule');
 			$active_tab = 'generic';
