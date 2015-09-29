@@ -71,21 +71,21 @@
                         <div id="permissions_container"></div>
                     </div>
                 </div>
-                <div class="form-buttons">
-                    <xsl:if test="resource/permission/write">
-                        <button>
-                            <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="resource/edit_link"/>'</xsl:attribute>
-                            <xsl:value-of select="php:function('lang', 'Edit')" />
-                        </button>
-                    </xsl:if>
-                    <button>
-                        <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/schedule_link"/>"</xsl:attribute>
-                        <xsl:value-of select="php:function('lang', 'Resource schedule')" />
-                    </button>
-                </div>
             </div>
         </div>
     </form>
+    <div class="form-buttons">
+        <xsl:if test="resource/permission/write">
+            <button>
+                <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="resource/edit_link"/>'</xsl:attribute>
+                <xsl:value-of select="php:function('lang', 'Edit')" />
+            </button>
+        </xsl:if>
+        <button>
+            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/schedule_link"/>"</xsl:attribute>
+            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
+        </button>
+    </div>
 
 
     <!--/div-->
