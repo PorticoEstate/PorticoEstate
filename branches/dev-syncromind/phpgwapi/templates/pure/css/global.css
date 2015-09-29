@@ -65,6 +65,10 @@ input[type="radio"] {margin-right: 2px;}
 #schedule_container {color: #000;}
 #schedule_container .pure-table thead th {line-height: 1.4;}
 p.conflicts {margin: 0;color: #000;}
+#schedule_container .cellInfo:hover {background-image: url("../images/info.png");background-position: 100% 0;background-repeat: no-repeat;cursor: pointer;}
+#schedule_overlay {background-color: #fff;border: 1px solid #000;height: auto;left: 0;margin: auto;padding: 20px;position: absolute;right: 0;width: 400px;z-index: 9;}
+#schedule_overlay img {bottom: 0;display: block;left: 0;margin: auto;position: absolute;right: 0;top: 0;}
+#content_overlay {display: block;height: 100%;left: 0;position: fixed;top: 0;width: 100%;}
 
 .date-container {position: relative;}
         
