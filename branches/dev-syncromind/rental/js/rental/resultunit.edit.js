@@ -72,13 +72,12 @@ function addDelegate()
 			{
 				document.getElementById('message0').innerHTML = result.error.msg;
 			}
-			
 			document.getElementById('username').value = '';
 			document.getElementById('firstname').value = '';
 			document.getElementById('lastname').value = '';
 			document.getElementById('email').value = '';
 			document.getElementById('account_id').value = '';
-			document.getElementById('message').innerHTML = '';
+			document.getElementById('custom_message').innerHTML = '';
 			
 			$('.loading').css( {"visibility" : "hidden"} );
 			
