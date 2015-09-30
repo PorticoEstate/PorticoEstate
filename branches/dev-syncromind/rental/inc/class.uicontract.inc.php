@@ -1232,7 +1232,7 @@ JS;
 				
 				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
 				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_contract'));
 				}
 				
 				// Gets responsibility area from db (ex: eksternleie, internleie)
@@ -1391,7 +1391,7 @@ JS;
 										
 				if(!($contract && $contract->has_permission(PHPGW_ACL_READ)))
 				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_contract'));
 				}
 				$created = date($this->dateFormat, $contract->get_last_updated());  
 				$created_by = $contract->get_last_edited_by();				
@@ -1648,7 +1648,7 @@ JS;
 					
 				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
 				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_contract'));
 				}
 				$created = date($this->dateFormat, $contract->get_last_updated());  
 				$created_by = $contract->get_last_edited_by();					
@@ -1669,8 +1669,7 @@ JS;
 				}
 				else
 				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
-					return;	
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_new_contract'));
 				}
 			}
 			
@@ -2155,7 +2154,7 @@ JS;
 			}
 		
 			// If no executive officer 
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_new_contract'));
 		}
 		
 		/**
@@ -2207,7 +2206,7 @@ JS;
 			}
 		
 			// If no executive officer 
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_new_contract'));
 		}
 
 		/**
@@ -2496,12 +2495,18 @@ JS;
 			return $this->jquery_results($result_data);
 		}
 		
-		public function get_max_area(){
+		/**
+		 * Note: Used?
+		 * @return array
+		 */
+		public function get_max_area()
+		{
+			$draw			= phpgw::get_var('draw', 'int');
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$total_price =  rental_socontract_price_item::get_instance()->get_max_area($contract_id);
 			$result_array = array('max_area' => $max_area);
-			$result_data = array('results' => $result_array, 'total_records' => 1);
-			return $this->yui_results($result_data, 'total_records', 'results');
+			$result_data = array('results' => $result_array, 'total_records' => 1, 'draw' => $draw);
+			return $this->jquery_results($result_data, 'total_records', 'results');
 		}
 		
 

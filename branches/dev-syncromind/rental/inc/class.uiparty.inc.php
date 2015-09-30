@@ -561,7 +561,7 @@ JS;
 		}
 		else
 		{
-			$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('invalid_request'));
 		}
 
 		if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
@@ -570,7 +570,7 @@ JS;
 		}
 		else
 		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_view_party')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_party'));
 		}
 	}
 
@@ -589,7 +589,7 @@ JS;
 			// Retrieve the party object or create a new one if correct permissions
 			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 			}
 		}
 			
@@ -866,7 +866,7 @@ JS;
 	{
 		if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 		}
 
 		$party_id = (int)phpgw::get_var('id');
@@ -1378,8 +1378,7 @@ JS;
 		}
 		else
 		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 		}
 	}	
 }
-?>

@@ -304,7 +304,7 @@ JS;
 			if(!$adjustment->has_permission(PHPGW_ACL_EDIT))
 			{
 				unset($adjustment);
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_adjustment')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_adjustment'));
 			}
 		}
 		else
@@ -388,7 +388,7 @@ JS;
 		
 			if(!($adjustment && $adjustment->has_permission(PHPGW_ACL_EDIT)))
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_adjustment')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_adjustment'));
 			}
 		}
 		else
@@ -401,7 +401,7 @@ JS;
 			}
 			else
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_new_adjustment')));	
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_new_adjustment'));
 			}
 		}
 
@@ -468,7 +468,7 @@ JS;
 	 */
 	public function view() 
 	{
-		$this->render('permission_denied.php',array('error' => lang('permission_denied_view_adjustment')));
+		phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_adjustment'));
 	}
 	
 	public function delete()

@@ -38,8 +38,7 @@ class rental_uiprice_item extends rental_uicommon
 	{
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 				
 		if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -224,8 +223,7 @@ JS;
 
 		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		
 		$this->edit(array(), 'view');
@@ -239,8 +237,7 @@ JS;
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		
 		$responsibility_id = phpgw::get_var('responsibility_id');
@@ -331,8 +328,7 @@ JS;
 	{
 		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 	
 		$this->edit();
@@ -554,11 +550,9 @@ JS;
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('manual_adjustment');
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');		
-		//$this->render('admin_price_item_manual_adjustment.php');
 		
 		$types_options = array();
 		$types_options[] = array('id'=>'', 'name'=>'Velg priselement');
@@ -717,8 +711,7 @@ JS;
 	{
 		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		
 		$id = (int)phpgw::get_var('price_item_id');

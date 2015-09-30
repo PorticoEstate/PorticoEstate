@@ -50,8 +50,9 @@
 			return $this->jquery_results($result_data);
 		}
 		
-		public function index(){
-			$this->render('delegate_list.php');
+		public function index()
+		{
+			/*nothing...*/
 		}
 		
 		public function add_actions(&$value, $key, $params)

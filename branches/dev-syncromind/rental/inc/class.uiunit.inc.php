@@ -62,9 +62,7 @@
 			$result_data['draw']    = $draw;
 
 			return $this->jquery_results($result_data);
-		
-			/*$result_data = array('results' => $rows, 'total_records' => count($rows));	
-			return $this->yui_results($result_data, 'total_records', 'results');*/
+	
 		}
 		
 		/**

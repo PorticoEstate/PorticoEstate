@@ -92,14 +92,6 @@
 				}
 			}
 			
-			//$editable = phpgw::get_var('editable') == '1' ? true : false;
-			
-			//Add context menu columns (actions and labels)
-			//array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));				
-			
-			//Build a YUI result from the data
-			/*$result_data = array('results' => $rows, 'total_records' => $result_count);	
-			return $this->yui_results($result_data, 'total_records', 'results');*/
 			
 			$result_data    =   array('results' =>  $rows);
 			$result_data['total_records']	= $result_count;
@@ -284,8 +276,7 @@
 
 			if(!$this->check_permissions($document,$document_properties))
 			{
-				$this->render('permission_denied.php');
-				return;
+				phpgw::no_access();
 			}
 			
 			$result = rental_sodocument::get_instance()->delete_document_from_vfs

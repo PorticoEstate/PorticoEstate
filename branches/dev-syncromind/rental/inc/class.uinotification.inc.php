@@ -87,12 +87,6 @@ class rental_uinotification extends rental_uicommon
 
 		return $this->jquery_results($result_data);
 		
-		/*$editable = phpgw::get_var('editable') == 'true' ? true : false;
-		
-		array_walk($rows, array($this, 'add_actions'), array($query_type, $editable));
-
-		$result_data = array('results' => $rows, 'total_records' => $result_count);
-		return $this->yui_results($result_data, 'total_records', 'results');*/
 	}
 	
 	/**

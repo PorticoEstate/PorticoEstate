@@ -20,7 +20,6 @@
 			'add'		=> true,
 			'add_unit' => true,
 			'remove_unit' => true,
-			'orphan_units' => true,
 			'query'		=> true,
 			'download'	=> true
 		);
@@ -278,7 +277,6 @@
 
 			return $this->jquery_results($result_data);
 		
-			//return $this->yui_results($result_data, 'total_records', 'results');
 		}
 		
 		/**
@@ -581,7 +579,7 @@
 			}
 			else
 			{
-				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('invalid_request'));
 			}
 
 			if(isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
@@ -590,7 +588,7 @@
 			}
 			else
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_view_composite')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_composite'));
 			}
 		}
 
@@ -608,7 +606,7 @@
 			{	
 				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 				}
 			}
 		
@@ -930,7 +928,7 @@ JS;
 		{
 			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 			}
 			
 			$composite_id = (int)phpgw::get_var('id');
@@ -982,8 +980,7 @@ JS;
 		{
 			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
-				return;
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied'));
 			}
 			
 			$composite_id = (int)phpgw::get_var('composite_id');
@@ -1017,8 +1014,7 @@ JS;
 		{
 			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
-				return;
+				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied'));
 			}
 			$unit_ids = phpgw::get_var('ids');
 			
@@ -1040,30 +1036,6 @@ JS;
 		}
 
 		/**
-		 * Get a list of rental units or areas that are not tied to any rental composite
-		 *
-		 */
-		public function orphan_units()
-		{
-			if(!$this->isExecutiveOfficer())
-			{
-				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
-				return;
-			}
-
-			self::set_active_menu('rental::composites::orphan_units');
-
-			$data = array
-			(
-				'message' => phpgw::get_var('message'),
-				'error' =>  phpgw::get_var('error'),
-				'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.orphan_units'))
-			);
-
-			$this->render('orphan_unit_list.php', $data);
-		}
-
-		/**
 		 * Stores which columns that should be displayed in index(). The data
 		 * is stored per user.
 		 *
@@ -1080,4 +1052,3 @@ JS;
 			}
 		}
 	}
-?>

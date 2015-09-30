@@ -126,8 +126,7 @@ class rental_uibilling extends rental_uicommon
 			{
 				if(!$this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
 				{
-					$this->render('permission_denied.php');
-					return;
+					phpgw::no_access();
 				}
 			}
 			
@@ -767,8 +766,7 @@ JS;
 	{
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_run');
@@ -993,8 +991,7 @@ JS;
 	{
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_job->set_deleted(true);
@@ -1041,8 +1038,7 @@ JS;
 	{
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}			
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_job->set_timestamp_commit(time());
@@ -1065,8 +1061,7 @@ JS;
 	{
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
 		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 		{
@@ -1190,8 +1185,7 @@ JS;
     {
 		if(!$this->isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
-			return;
+			phpgw::no_access();
 		}
     	//$browser = CreateObject('phpgwapi.browser');
 		//$browser->content_header('export.txt','text/plain');
