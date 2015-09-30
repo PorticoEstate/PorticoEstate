@@ -692,32 +692,6 @@ function createObject (object) {
     return obj;
 }
 
-function createTableObject (object) {
-    var obj = "";
-    if (typeof(object) == 'object') {
-//        console.log(object);
-        $.each(object, function(io, vo){
-            var type = vo['type'];
-            var attrs = "";
-//            console.log(vo);
-//            console.log(typeof(vo));
-//            console.log(io);
-            $.each(vo.attrs, function(iv, vv){
-//                console.log(iv + " -> " + vv);
-//                console.log("aaa");
-//                console.log(typeof(vv));
-//                console.log(vv);
-                attrs += vv['attrs']['name'] + "='" + vv['attrs']['value'] + "' ";
-            });
-//            console.log(attrs);
-            var element = "";            
-            element += "<"+type+" "+attrs+">";
-            obj += (io > 0) ? '&nbsp;' : '';
-            obj += element;
-        });    
-    }
-    return obj;
-}
 
 function populateSelect (url, selection, container) {
     container.html("");
@@ -741,23 +715,40 @@ function populateSelect (url, selection, container) {
 }
 
 
-
 function createTableSchedule (d,u,c,r,cl) {
+    var container = document.getElementById(d);
+    var xtable = document.createElement('table');
+    var tableHead = document.createElement('thead');
+    var tableHeadTr = document.createElement('tr');
+
     restartColors ();
     r = (r) ? r : 'data';
     var tableClass = (cl) ? cl : "pure-table pure-table-striped";
 
-    var tableHead = "<thead><tr>";
+    xtable.setAttribute('class', tableClass);
+
     $.each(c, function(i, v) {
         var label = (v.label) ? v.label : "";
-        tableHead += "<th>"+label+"</th>";
+        var tableHeadTrTh = document.createElement('th');
+        tableHeadTrTh.innerHTML = label;
+        tableHeadTr.appendChild(tableHeadTrTh);
     });
-    tableHead += "</tr></thead>";
+    tableHead.appendChild(tableHeadTr);
+    xtable.appendChild(tableHead);
 
-    var tableBody = "<tbody><tr><td colspan="+c.length+">Loading...</td></tr></tbody>";
-    $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
+    var tableBody = document.createElement('tbody');
+    var tableBodyTr = document.createElement('tr');
+    var tableBodyTrTd = document.createElement('td');
+    tableBodyTrTd.setAttribute('colspan', c.length);
+    tableBodyTrTd.innerHTML = "Loading...";
+    tableBodyTr.appendChild(tableBodyTrTd);
+    tableBody.appendChild(tableBodyTr);
+    xtable.appendChild(tableBody);
+    
+    container.innerHTML = "";
+    container.appendChild(xtable);
+
     $.get(u, function(data) {
-        tableBody = "<tbody>";
         var selected = new Array();
         if (typeof(r) == 'object') {
             selected = data;
@@ -772,39 +763,80 @@ function createTableSchedule (d,u,c,r,cl) {
         }
         if (selected.length == 0) {
             tableClass = "pure-table pure-table-bordered";
-            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
+            tableBody.innerHTML = "";
+            tableBodyTr.innerHTML = "";
+            tableBodyTrTd.setAttribute('colspan', c.length);
+            tableBodyTrTd.innerHTML = "No records found";
+            tableBodyTr.appendChild(tableBodyTrTd);
+            tableBody.appendChild(tableBodyTr);
         }else {
-            var colorCell = "transparent";
-            var borderTop = "0"
+            tableBody.innerHTML = "";
             $.each(selected, function(id, vd) {
-                tableBody += "<tr>";
-                $.each(c, function(ic, vc) {                    
+                var tableBodyTr = document.createElement('tr');
+                var borderTop = "0";
+                    var borderTop2 = "0";
+                $.each(c, function(ic, vc) {
                     var k = vc.key;
-                    var tableBodyTd = "";
-                    var tableBodyType = "td";
+                    var colorCell = "";
+                    var tableBodyTrTdType = (k == "time") ? "th" : "td";
+
+                    var tableBodyTrTd = document.createElement(tableBodyTrTdType);
+
+                    var classes = "";
+                    var tableBodyTrTdText = "";
+                    
                     if (vc['formatter']) {
-                        if (vc['formatter'] == "scheduleDateColumn"){
-//                            if (vd[k]){
-//                                if (vd[k]['conflicts']){
-//                                    if (vd[k]['conflicts'].length > 0){
-//                                        console.log(vd[k]);
-//                                    }
-//                                }
-//                            }
-                            tableBodyTd = (vd[k]) ? formatScheduleDateColumn(vd[k]['id'],formatScheduleShorten(vd[k]['name'],9),vd[k]['type']) : "...";
-                            colorCell = (vd[k]) ? formatScheduleCellDateColumn(vd[k]['name'],vd[k]['type']) : "";
-                        }
                         if (vc['formatter'] == "scheduleResourceColumn"){
-                            tableBodyTd = (vd[k]) ? formatGenericLink(vd['resource'],vd['resource_link']) : "";
-                            colorCell = "";
+                            if (vd[k]) {
+                                tableBodyTr.setAttribute('resource', vd['resource_id']);
+                            }
+                            tableBodyTrTdText = (vd[k]) ? formatGenericLink(vd['resource'],vd['resource_link']) : "";
+                        }else{
+                            if (vd[k]) {
+                                var id = vd[k]['id'];
+                                var name = (vd[k]['shortname']) ? formatScheduleShorten(vd[k]['shortname'],9) : formatScheduleShorten(vd[k]['name'],9);
+                                var type = vd[k]['type'];
+                                if (vc['formatter'] == "scheduleDateColumn"){
+                                    tableBodyTrTdText = formatGenericLink(name, null);
+                                }
+                                if (vc['formatter'] == "backendScheduleDateColumn") {
+                                    var conflicts = new Array();
+                                    if (vd[k]['conflicts']){
+                                        if (vd[k]['conflicts'].length > 0){
+                                            conflicts = vd[k]['conflicts'];
+                                        }
+                                    }
+                                    tableBodyTrTdText = formatBackendScheduleDateColumn(id,name,type,conflicts);
+                                    classes += " " + type;
+                                }
+                                if (vc['formatter'] == "frontendScheduleDateColumn") {
+                                    if (vd[k]['is_public'] == 0) {
+                                        name = formatScheduleShorten('Privat arr.',9);
+                                    }
+                                    if (type != "event") {
+                                        console.log("xxx");
+                                    }else {
+                                        console.log("event");
+                                    }
+                                    tableBodyTrTdText = name;
+                                    classes += " cellInfo";
+                                    classes += " " + type;
+                                    tableBodyTrTd.addEventListener('click', function(){schedule.showInfo(vd[k]['info_url'],tableBodyTr.getAttribute('resource'))}, false);
+                                }
+                                colorCell = formatScheduleCellDateColumn(name,type);
+                                classes += " " + colorCell;
+                                tableBodyTrTd.setAttribute('class', classes);
+                            }else{
+                                tableBodyTrTdText = "...";
+                                if (vc['formatter'] == "frontendScheduleDateColumn") {
+                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'],tableBodyTr.getAttribute('resource'))});
+                                }
+                            }
                         }
                     }else {
-                        tableBodyTd = (vd[k]) ? vd[k] : "";
-                        colorCell = "";
+                        tableBodyTrTdText = (vd[k]) ? vd[k] : "";
                     }
-                    
                     if (k == "time") {
-                        tableBodyType = "th";
                         borderTop = (vd[k]) ? "2" : "1";
                     }
                     if (ic == 0){
@@ -813,16 +845,14 @@ function createTableSchedule (d,u,c,r,cl) {
                     }else {
                         borderTop = borderTop2;
                     }
-                    tableBody +=  "<"+tableBodyType+" style='border-top:"+borderTop+"px solid #cbcbcb;' class='"+colorCell+"'>";
-                    tableBody += tableBodyTd;
-                    tableBody += "</"+tableBodyType+">";
+                    tableBodyTrTd.setAttribute('style', 'border-top:'+borderTop+'px solid #cbcbcb;');
+                    tableBodyTrTd.innerHTML = tableBodyTrTdText;
+                    tableBodyTr.appendChild(tableBodyTrTd);
                 });
-                tableBody += "</tr>";
+                tableBody.appendChild(tableBodyTr);
             });
         }
-        tableBody += "</tbody>";
-        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
-    });    
+    });
 }
 
 function restartColors () {
@@ -844,9 +874,10 @@ function formatScheduleCellDateColumn(name, type){
     var color = colorMap[name];
     return color;
 }
-function formatScheduleDateColumn(id, name, type){
+function formatBackendScheduleDateColumn(id, name, type, conflicts){
     var link = "";
     var text = "";
+    conflicts = (conflicts) ? conflicts : {};
     if (type == "booking") {
         link = 'index.php?menuaction=booking.uibooking.edit&id=' + id;
     }
@@ -854,12 +885,18 @@ function formatScheduleDateColumn(id, name, type){
         link = 'index.php?menuaction=booking.uiallocation.edit&id=' + id;
     }
     else if (type == "event") {
-        link = 'index.php?menuaction=booking.uievent.edit&id=' + id;
+        link = 'index.php?menuaction=booking.uievent.edit&id=' + id;    
     }
     text = formatGenericLink(name, link);
-//    if (type == "event" && ){}
+    if (type == "event" && conflicts.length > 0){
+        $.each(conflicts, function(i, v){
+            var conflict = formatBackendScheduleDateColumn(v['id'], formatScheduleShorten(v['name'],9), v['type']);
+            text += "<p class='conflicts'>conflicts with: " + conflict + "</p>";
+        });
+    }
     return text;
 }
+function formatFrontendScheduleDateColumn(){}
 
 function formatScheduleShorten(text, max) {
     if (max && text.length > max) {
