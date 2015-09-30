@@ -720,7 +720,6 @@ function createTableSchedule (d,u,c,r,cl) {
     var xtable = document.createElement('table');
     var tableHead = document.createElement('thead');
     var tableHeadTr = document.createElement('tr');
-
     restartColors ();
     r = (r) ? r : 'data';
     var tableClass = (cl) ? cl : "pure-table pure-table-striped";
@@ -812,11 +811,6 @@ function createTableSchedule (d,u,c,r,cl) {
                                 if (vc['formatter'] == "frontendScheduleDateColumn") {
                                     if (vd[k]['is_public'] == 0) {
                                         name = formatScheduleShorten('Privat arr.',9);
-                                    }
-                                    if (type != "event") {
-                                        console.log("xxx");
-                                    }else {
-                                        console.log("event");
                                     }
                                     tableBodyTrTdText = name;
                                     classes += " cellInfo";
