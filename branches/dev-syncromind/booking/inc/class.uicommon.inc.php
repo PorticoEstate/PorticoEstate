@@ -715,6 +715,11 @@
 
 		public function adddatetimepicker($type = 'datetime')
 		{
+			phpgwapi_jquery::load_widget('datepicker');
+
+			$theme = 'ui-lightness';
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+
 			switch($type)
 			{
 				case 'datetime':
