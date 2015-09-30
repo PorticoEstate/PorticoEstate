@@ -377,7 +377,10 @@
 				else
 */
 				{
-					$statement_object = $this->db->query($sql);
+					if($statement_object = $this->db->query($sql))
+					{
+						$this->affected_rows = $statement_object->rowCount();
+					}
 					if($fetch)
 					{
 /*
