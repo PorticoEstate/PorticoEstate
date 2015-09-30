@@ -193,7 +193,21 @@
                                     </p>
                                 </xsl:if>
                                 <label><h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4></label>
-                                <div id="audience_container">&nbsp;</div>
+                                <ul style="list-style:none;padding-left:10px;">
+                                    <xsl:for-each select="audience">
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" name="audience[]">
+                                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                                    <xsl:if test="../application/audience=id">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                                <xsl:value-of select="name"/>
+                                            </label>
+                                        </li>
+                                    </xsl:for-each>
+                                </ul>
                             </fieldset>
                         </div>
                     </div>
