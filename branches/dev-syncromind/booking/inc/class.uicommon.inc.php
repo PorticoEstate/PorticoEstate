@@ -148,6 +148,8 @@
 		{
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+                        
+                        self::add_javascript('booking', 'booking', 'common');
 
 			$this->ui_session_key = $this->current_app().'_uicommon';
 			//$this->restore_flash_msgs();
@@ -756,12 +758,12 @@
 						'<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
 						'<div class="pure-control-group">'+
 							'<label for="start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
-							'<input class="time pure-input-2-3" id="start_date_'+this.counter+'" name="start_date_'+this.counter+'" type="text">'+
+							'<input class="time pure-input-2-3" id="start_date_'+this.counter+'" name="from_[]" type="text">'+
 							'</input>'+
 						'</div>'+
 						'<div class="pure-control-group">'+
 							'<label for="end_date_'+this.counter+'"><h4>{$lang_to}</h4></label>'+
-							'<input class="time pure-input-2-3" id="end_date_'+this.counter+'" name="end_date_'+this.counter+'" type="text">'+
+							'<input class="time pure-input-2-3" id="end_date_'+this.counter+'" name="to_[]" type="text">'+
 							'</input>'+
 						'</div>'
 				 '</div>';
