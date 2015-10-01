@@ -49,7 +49,7 @@ function populateTableChkRegulations (building_id, selection, resources) {
         url += '&owner[]=resource::'+resources[r];
     }
     var container = 'regulation_documents';
-    var colDefsRegulations = [{label: lang['Accepted'], object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection},{key: 'name',label: lang['Document'],formatter: genericLink}];
+    var colDefsRegulations = [{label: lang['Accepted'], object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'accepted_documents[]'}]}], value: 'id', checked: selection},{key: 'name',label: lang['Document'],formatter: genericLink}];
     if (regulations_select_all){
         colDefsRegulations[0]['object'][0]['attrs'].push({name:'checked',value: 'checked'});
     }

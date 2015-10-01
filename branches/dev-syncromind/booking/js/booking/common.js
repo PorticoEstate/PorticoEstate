@@ -1,3 +1,4 @@
+/*
 YAHOO.namespace('booking');
 
 YAHOO.booking.js_alias_method_chain = function(constructor_func, func_name, new_feature_name, feature_impl_func) {
@@ -13,8 +14,9 @@ YAHOO.booking.lang = function(section, config) {
 	}
 	return config;
 };
-
+*/
 /** Hook widgets to translations **/
+/*
 YAHOO.booking.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
 	YAHOO.booking.lang('Calendar', config);
 	return this.init_without_i18n(id, container, config);
@@ -771,3 +773,24 @@ YAHOO.booking.postToUrl = function(path, params, method) {
 	});
 
 })();
+
+*/
+
+
+JqueryPortico.booking = {};
+
+JqueryPortico.booking.postToUrl = function(path, params, method) {
+    method = method || "post";
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+    for(var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", params[key][0]);
+        hiddenField.setAttribute("value", params[key][1]);
+        form.appendChild(hiddenField);
+    }
+    document.body.appendChild(form);
+    form.submit();
+};
