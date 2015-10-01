@@ -248,9 +248,10 @@
                                 </xsl:choose>
                             </xsl:attribute>
                         </input>
-                        <a class="cancel" href="{building/cancel_link}">
-                            <xsl:value-of select="php:function('lang', 'Cancel')" />
-                        </a>
+						<input type="button" class="pure-button pure-button-primary" name="cancel">
+							<xsl:attribute name="onclick">window.location="<xsl:value-of select="building/cancel_link"/>"</xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+						</input>
                     </div>
 		</form>
 	<!--/div-->
