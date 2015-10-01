@@ -249,6 +249,7 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
+			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['message_link'] = self::link(array('menuaction' => 'booking.uisystem_message.edit', 'building_id' => $building['id']));
 			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
@@ -270,6 +271,7 @@
 		public function schedule()
 		{
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uibuilding");
+			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'booking.uibooking.building_schedule', 
 				'building_id' => $building['id'], 
