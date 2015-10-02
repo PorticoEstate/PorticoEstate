@@ -43,12 +43,14 @@ $(window).load(function() {
 function populateSelectSeason (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = $('#season_container');
-    populateSelect(url, selection, container);    
+    var attr = [{name: 'name',value: 'season_id'}];
+    populateSelect(url, selection, container, attr);
 }
 function populateSelectGroup (organization_id, selection) {
     var url = 'index.php?menuaction=booking.uigroup.index&filter_organization_id=' + organization_id + '&phpgw_return_as=json';
     var container = $('#group_container');
-    populateSelect(url, selection, container);
+    var attr = [{name: 'name',value: 'group_id'}];
+    populateSelect(url, selection, container, attr);
 };
 function populateTableChkResources (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
