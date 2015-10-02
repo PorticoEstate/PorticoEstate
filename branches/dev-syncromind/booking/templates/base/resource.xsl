@@ -24,33 +24,33 @@
         <input type="hidden" name="tab" value="" />
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
-            <div id="resource">
+            <div id="resource" class="booking-container">
                 <div class="pure-control-group">
-					<label class="custom-label">
+					<label>
                         <xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
                     <div class="custom-container"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
                 </div>
 				<div class="pure-control-group">
-					<label class="custom-label">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Building')" />
 					</label>
 					<span><xsl:value-of select="resource/building_name"/></span>
 				</div>
 				<div class="pure-control-group">
-					<label class="custom-label">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Activity')" />
 					</label>
 					<span><xsl:value-of select="resource/activity_name"/></span>
 				</div>
 				<div class="pure-control-group">
-					<label class="custom-label">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Resource Type')" />
 					</label>
 					<span><xsl:value-of select="php:function('lang', string(resource/type))"/></span>
 				</div>
                 <div class="pure-control-group">
-					<label class="custom-label">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Documents')" />
 					</label>
 					<div class="pure-custom">
@@ -66,7 +66,7 @@
 					</div>
                 </div>
                 <div class="pure-control-group">
-					<label class="custom-label">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Permissions')" />
 					</label>
 					<div id="permissions_container" class="custom-container"></div>
