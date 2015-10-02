@@ -54,6 +54,12 @@
                 <div id="schedule_container"></div>
             </div>
         </div>
+		<div class="form-buttons">
+			<input type="button" class="pure-button pure-button-primary" name="cancel">
+				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+			</input>
+		</div>		
     </form>
                 
     <!--/div-->
