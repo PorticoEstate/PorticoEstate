@@ -137,48 +137,116 @@
                                     </p>
                                 </xsl:if>
                                 <div id="dates-container">
+                                    <!--xsl:variable name="indexid"></xsl:variable-->
+                                    <input type="hidden" id="date_format" />
                                     <xsl:for-each select="application/dates">
-                                        <div class="date-container">
-                                            <a href="javascript:void(0);" class="close-btn btnclose">-</a>
-                                            <div class="pure-control-group">
-                                                <label for="start_date">
-                                                    <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
-                                                </label>
-                                                <input class="datetime pure-input-2-3" id="start_date" name="from_[]" type="text">
-                                                    <xsl:if test="activity/start_date != ''">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
-                                                        </xsl:attribute>
-                                                    </xsl:if>
-                                                    <xsl:attribute name="data-validation">
-                                                        <xsl:text>required</xsl:text>
-                                                    </xsl:attribute>
-                                                </input>
-                                            </div>
-                                            <div class="pure-control-group">
-                                                <label for="end_date">
-                                                    <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
-                                                </label>
-                                                <xsl:if test="activity/error_msg_array/end_date != ''">
-                                                    <xsl:variable name="error_msg">
-                                                        <xsl:value-of select="activity/error_msg_array/end_date" />
-                                                    </xsl:variable>
-                                                    <div class='input_error_msg'>
-                                                        <xsl:value-of select="php:function('lang', $error_msg)" />
+                                        
+                                        <xsl:variable name="index" select="position()-2"/>
+                                        <xsl:choose>
+                                            <xsl:when test="position() > 1">
+                                                <div class="date-container">
+                                                    <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                                    <div class="pure-control-group">
+                                                        <label for="start_date_{$index}">
+                                                            <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+                                                        </label>
+                                                        <input id="alt_start_date_{$index}" name="from_[]" type="hidden"></input>
+                                                        <input class="newaddedpicker datetime pure-input-2-3" id="start_date_{$index}" type="text">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="from_"/>
+                                                            </xsl:attribute>
+                                                            <!--xsl:if test="activity/start_date != ''">
+                                                                <xsl:attribute name="value">
+                                                                    <xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
+                                                                </xsl:attribute>
+                                                            </xsl:if>
+                                                            <xsl:attribute name="data-validation">
+                                                                <xsl:text>required</xsl:text>
+                                                            </xsl:attribute-->
+                                                        </input>
                                                     </div>
-                                                </xsl:if>
-                                                <input class="datetime pure-input-2-3" id="end_date" name="to_[]" type="text">
-                                                    <xsl:if test="activity/end_date != ''">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>
-                                                        </xsl:attribute>
-                                                    </xsl:if>
-                                                </input>
-                                            </div>
-                                            <!--div class="help_text">
-                                                <xsl:value-of select="php:function('lang','Give end date to activity')" />
-                                            </div-->
-                                        </div>
+                                                    <div class="pure-control-group">
+                                                        <label for="end_date_{$index}">
+                                                            <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+                                                        </label>
+                                                        <xsl:if test="activity/error_msg_array/end_date != ''">
+                                                            <xsl:variable name="error_msg">
+                                                                <xsl:value-of select="activity/error_msg_array/end_date" />
+                                                            </xsl:variable>
+                                                            <div class='input_error_msg'>
+                                                                <xsl:value-of select="php:function('lang', $error_msg)" />
+                                                            </div>
+                                                        </xsl:if>
+                                                        <input id="alt_end_date_{$index}" name="to_[]" type="hidden"></input>
+                                                        <input class="newaddedpicker datetime pure-input-2-3" id="end_date_{$index}" type="text">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="to_"/>
+                                                            </xsl:attribute>
+                                                            <!--xsl:if test="activity/end_date != ''">
+                                                                <xsl:attribute name="value">
+                                                                    <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>
+                                                                </xsl:attribute>
+                                                            </xsl:if-->
+                                                        </input>
+                                                    </div>
+                                                    <!--div class="help_text">
+                                                        <xsl:value-of select="php:function('lang','Give end date to activity')" />
+                                                    </div-->
+                                                </div>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <div class="date-container">
+                                                    <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                                    <div class="pure-control-group">
+                                                        <label for="start_date">
+                                                            <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+                                                        </label>
+                                                        <input id="alt_start_date" name="from_[]" type="hidden"></input>
+                                                        <input class="datetime pure-input-2-3" id="start_date" type="text">
+                                                            <!--xsl:if test="activity/start_date != ''">
+                                                                <xsl:attribute name="value">
+                                                                    <xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
+                                                                </xsl:attribute>
+                                                            </xsl:if>
+                                                            <xsl:attribute name="data-validation">
+                                                                <xsl:text>required</xsl:text>
+                                                            </xsl:attribute-->
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="from_"/>
+                                                            </xsl:attribute>
+                                                        </input>
+                                                    </div>
+                                                    <div class="pure-control-group">
+                                                        <label for="end_date">
+                                                            <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+                                                        </label>
+                                                        <xsl:if test="activity/error_msg_array/end_date != ''">
+                                                            <xsl:variable name="error_msg">
+                                                                <xsl:value-of select="activity/error_msg_array/end_date" />
+                                                            </xsl:variable>
+                                                            <div class='input_error_msg'>
+                                                                <xsl:value-of select="php:function('lang', $error_msg)" />
+                                                            </div>
+                                                        </xsl:if>
+                                                        <input id="alt_end_date" name="to_[]" type="hidden"></input>
+                                                        <input class="datetime pure-input-2-3" id="end_date" type="text">
+                                                            <!--xsl:if test="activity/end_date != ''">
+                                                                <xsl:attribute name="value">
+                                                                    <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>
+                                                                </xsl:attribute>
+                                                            </xsl:if-->
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="to_"/>
+                                                            </xsl:attribute>
+                                                        </input>
+                                                    </div>
+                                                    <!--div class="help_text">
+                                                        <xsl:value-of select="php:function('lang','Give end date to activity')" />
+                                                    </div-->
+                                                </div>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                                
                                     </xsl:for-each>
                                 </div>
                                 <div class="pure-control-group"><a href="javascript:void(0);" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></div>
