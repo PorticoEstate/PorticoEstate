@@ -71,22 +71,45 @@
 		*/
 		function _input_modern($id, $type)
 		{
-			$js = <<<JS
+                    $js = <<<JS
 			$(function() {
-				$( "#{$id}" ).{$type}picker({ 
-					dateFormat: '{$this->dateformat}',
-					showWeek: true,
-					changeMonth: true,
-					changeYear: true,
-					showOn: "button",
-					showButtonPanel:true,
-					buttonImage: "{$this->img_cal}",
-					buttonText: "{$this->lang_select_date}",
-					buttonImageOnly: true
-				});
+                            $( "#{$id}" ).{$type}picker({ 
+                                dateFormat: '{$this->dateformat}',
+                                showWeek: true,
+                                changeMonth: true,
+                                changeYear: true,
+                                showOn: "button",
+                                showButtonPanel:true,
+                                buttonImage: "{$this->img_cal}",
+                                buttonText: "{$this->lang_select_date}",
+                                buttonImageOnly: true,
+                                altField: "#alt_{$id}",
+                                altFormat: "yy-mm-dd",
+                                altFieldTimeOnly: false
+                            });
 			    $('#ui-datepicker-div').draggable();
+                                $('#date_format').val('{$this->dateformat}');
+                            $.each($('.newaddedpicker'), function(i, v){
+                                var id = v.id;
+                                v.classList.remove('newaddedpicker');
+                                $( "#"+id ).{$type}picker({
+                                    dateFormat: '{$this->dateformat}',
+                                    showWeek: true,
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    showOn: "button",
+                                    showButtonPanel:true,
+                                    buttonImage: "{$this->img_cal}",
+                                    buttonText: "{$this->lang_select_date}",
+                                    buttonImageOnly: true,
+                                    altField: "#alt_"+id,
+                                    altFormat: "yy-mm-dd",
+                                    altFieldTimeOnly: false
+                                });
+                            });
 			});
 JS;
+
 			$GLOBALS['phpgw']->js->add_code('', $js);
 		}
 	}
