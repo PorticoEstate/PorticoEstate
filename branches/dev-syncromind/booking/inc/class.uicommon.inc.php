@@ -765,7 +765,7 @@
 						'</div>'+
 						'<div class="pure-control-group">'+
 							'<label for="end_date_'+this.counter+'"><h4>{$lang_to}</h4></label>'+
-                                                        '<input id="alt_end_date_'+this.counter+'" name="from_[]" type="hidden">'+
+                                                        '<input id="alt_end_date_'+this.counter+'" name="to_[]" type="hidden">'+
 							'</input>'+
 							'<input class="new_datepicker time pure-input-2-3" id="end_date_'+this.counter+'" type="text">'+
 							'</input>'+
@@ -775,9 +775,6 @@
 					
 
 					add.parent().parent().children('#dates-container').append(html);
-                                                        
-//                                                        console.log($('#start_date_'+this.counter));
-//                                                        console.log($( ".time" ));
                                                         
                                         $('#start_date_'+this.counter).{$_type}picker({
                                             dateFormat: '{$dateformat}',
