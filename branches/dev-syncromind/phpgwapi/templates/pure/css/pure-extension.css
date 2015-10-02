@@ -26,3 +26,15 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 	display:inline-block;
 	vertical-align:middle;
 }
+
+.custom-container {
+	display:inline-block;
+	vertical-align: top;
+}
+
+.custom-label {
+	font-weight: bold;
+}
+.booking-container label {
+	font-weight: bold;
+}
