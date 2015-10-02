@@ -61,6 +61,9 @@
                                             <xsl:attribute name="disabled" value="disabled"/>
                                         </xsl:if>
                                         <xsl:attribute name='title'><xsl:value-of select="document/name"/></xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>												
                                     </input>
                                 </div>
                                 <div class="pure-control-group">
@@ -73,7 +76,7 @@
                                     <label for="field_category">
                                         <h4><xsl:value-of select="php:function('lang', 'Category')" /></h4>
                                     </label>
-                                    <select name='category' id='field_category'>
+                                    <select name='category' id='field_category' data-validation="required">
                                         <option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
                                         <xsl:for-each select="document/document_types/*">
                                             <option>
@@ -91,7 +94,7 @@
                                     <h4><xsl:value-of select="php:function('lang', string(document/owner_type_label))" /></h4>
                                 </label>
                                 <!--div class="autocomplete"-->
-                                <input id="field_owner_name" name="owner_name" type="text">
+                                <input id="field_owner_name" name="owner_name" type="text" data-validation="required" >
                                         <xsl:attribute name="value"><xsl:value-of select="document/owner_name"/></xsl:attribute>
                                         <xsl:if test="document/inline = '1'">
                                                 <xsl:attribute name="disabled">disabled</xsl:attribute>
@@ -121,10 +124,10 @@
                         </xsl:choose>
                     </xsl:attribute>
                 </input>
-                <a class="cancel">
-                    <xsl:attribute name="href"><xsl:value-of select="document/cancel_link"/></xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Cancel')" />
-                </a>
+				<input type="button" class="pure-button pure-button-primary" name="cancel">
+					<xsl:attribute name="onclick">window.location="<xsl:value-of select="document/cancel_link"/>"</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+				</input>
             </div>
     	</form>
     <!--/div-->
