@@ -20,72 +20,76 @@
     <xsl:call-template name="msgbox"/>
     <!--xsl:call-template name="yui_booking_i18n"/-->
     
-    <form class="pure-form pure-form-aligned">
+    <form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
         <input type="hidden" name="tab" value="" />
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
             <div id="resource">
-                <div class="pure-g">
-                    <div class="pure-u-1">
-                        <h3><xsl:value-of select="php:function('lang', 'Description')" /></h3>
-                        <div class="description"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
-                    </div>
+                <div class="pure-control-group">
+					<label class="custom-label">
+                        <xsl:value-of select="php:function('lang', 'Description')" />
+					</label>
+                    <div class="custom-container"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
                 </div>
-                <div class="pure-g">
-                    <div class="pure-u-1">
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
-                            </label>
-                            <span><xsl:value-of select="resource/building_name"/></span>
-                        </div>
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
-                            </label>
-                            <span><xsl:value-of select="resource/activity_name"/></span>
-                        </div>
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Resource Type')" /></h4>
-                            </label>
-                            <span><xsl:value-of select="php:function('lang', string(resource/type))"/></span>
-                        </div>
-                    </div>
+				<div class="pure-control-group">
+					<label class="custom-label">
+						<xsl:value-of select="php:function('lang', 'Building')" />
+					</label>
+					<span><xsl:value-of select="resource/building_name"/></span>
+				</div>
+				<div class="pure-control-group">
+					<label class="custom-label">
+						<xsl:value-of select="php:function('lang', 'Activity')" />
+					</label>
+					<span><xsl:value-of select="resource/activity_name"/></span>
+				</div>
+				<div class="pure-control-group">
+					<label class="custom-label">
+						<xsl:value-of select="php:function('lang', 'Resource Type')" />
+					</label>
+					<span><xsl:value-of select="php:function('lang', string(resource/type))"/></span>
+				</div>
+                <div class="pure-control-group">
+					<label class="custom-label">
+						<xsl:value-of select="php:function('lang', 'Documents')" />
+					</label>
+					<div class="pure-custom">
+						<div id="documents_container" class="custom-container"></div>
+						<div>
+							<a class='button'>
+								<xsl:attribute name="href"><xsl:value-of select="resource/add_document_link"/></xsl:attribute>
+								<xsl:if test="resource/permission/write">
+									<xsl:value-of select="php:function('lang', 'Add Document')" />
+								</xsl:if>
+							</a>
+						</div>
+					</div>
                 </div>
-                <div class="pure-g">
-                    <div class="pure-u-1">
-                        <h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
-                        <div id="documents_container"></div>
-                        <a class='button'>
-                            <xsl:attribute name="href"><xsl:value-of select="resource/add_document_link"/></xsl:attribute>
-                            <xsl:if test="resource/permission/write">
-                                <xsl:value-of select="php:function('lang', 'Add Document')" />
-                            </xsl:if>
-                        </a>
-                    </div>
-                </div>
-                <div class="pure-g">
-                    <div class="pure-u-1">
-                        <h3><xsl:value-of select="php:function('lang', 'Permissions')" /></h3>
-                        <div id="permissions_container"></div>
-                    </div>
+                <div class="pure-control-group">
+					<label class="custom-label">
+						<xsl:value-of select="php:function('lang', 'Permissions')" />
+					</label>
+					<div id="permissions_container" class="custom-container"></div>
                 </div>
             </div>
         </div>
+		<div class="form-buttons">
+			<xsl:if test="resource/permission/write">
+				<input type="button" class="pure-button pure-button-primary" name="edit">
+					<xsl:attribute name="onclick">window.location.href='<xsl:value-of select="resource/edit_link"/>'</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Edit')" /></xsl:attribute>
+				</input>
+			</xsl:if>
+			<input type="button" class="pure-button pure-button-primary" name="resource_schedule">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/schedule_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Resource schedule')" /></xsl:attribute>
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="cancel">
+				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+			</input>			
+		</div>
     </form>
-    <div class="form-buttons">
-        <xsl:if test="resource/permission/write">
-            <button>
-                <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="resource/edit_link"/>'</xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Edit')" />
-            </button>
-        </xsl:if>
-        <button>
-            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/schedule_link"/>"</xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
-        </button>
-    </div>
 
 
     <!--/div-->
