@@ -21,52 +21,51 @@
     <input type="hidden" name="tab" value=""/>
     <div id="tab-content">
         <xsl:value-of disable-output-escaping="yes" select="building/tabs"/>
-        <div id="building_show"> 
+        <div id="building_show" class="booking-container"> 
                 <div class="pure-control-group">          
-                    <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Description')" />
                     </label>
                     <!--div class="description"--><!--/div-->
-                    <div style="display:inline-block;">
+                    <div class="custom-container">
                         <xsl:value-of select="building/description" disable-output-escaping="yes"/>
                     </div>
-                </div>
-                        
+                </div>                   
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Street')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Street')" />
                     </label>
                     <xsl:value-of select="building/street"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Zip code')" /></h4>
+                       <xsl:value-of select="php:function('lang', 'Zip code')" />
                     </label>
                     <xsl:value-of select="building/zip_code"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Postal City')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Postal City')" />
                     </label>
                     <xsl:value-of select="building/city"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'District')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'District')" />
                     </label>
                     <xsl:value-of select="building/district"/>
                 </div>
                 <div class="pure-control-group">
                     <xsl:if test="building/location_code !=''">
                         <label>
-                            <h4><xsl:value-of select="php:function('lang', 'Location Code')" /></h4>
+                            <xsl:value-of select="php:function('lang', 'Location Code')" />
                         </label>
                         <a href="{building/location_link}"><xsl:value-of select="building/location_code"/></a>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Homepage')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Homepage')" />
                     </label>
                     <a>
                         <xsl:attribute name="href"><xsl:value-of select="building/homepage"/></xsl:attribute>
@@ -75,7 +74,7 @@
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Email')" />
                     </label>
                     <a>
                         <xsl:attribute name="href">mailto:<xsl:value-of select="building/email"/></xsl:attribute>
@@ -84,84 +83,82 @@
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Telephone')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Telephone')" />
                     </label>
                     <xsl:value-of select="building/phone"/>
                 </div>
-                <div class="pure-control-group">
-                    <xsl:if test="building/tilsyn_name != ''">
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></h4>
-                            </label>
-                            <xsl:value-of select="building/tilsyn_name"/>
-                        </div>
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></h4>
-                            </label>
-                            <a>
-                                <xsl:attribute name="href">mailto:<xsl:value-of select="building/tilsyn_email"/></xsl:attribute>
-                                <xsl:value-of select="building/tilsyn_email"/>
-                            </a>
-                        </div>
-                        <div class="pure-control-group">    
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></h4>
-                            </label>
-                            <xsl:value-of select="building/tilsyn_phone"/>
-                        </div>
-                    </xsl:if>
-                </div>
-                <div class="pure-control-group">
-                    <xsl:if test="building/tilsyn_name2 != ''">
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></h4>
-                            </label>
-                            <xsl:value-of select="building/tilsyn_name2"/>
-                        </div>
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></h4>
-                            </label>
-                            <a>
-                            <xsl:attribute name="href">mailto:<xsl:value-of select="building/tilsyn_email2"/></xsl:attribute>
-                            <xsl:value-of select="building/tilsyn_email2"/></a>
-                        </div>
-                        <div class="pure-control-group">
-                            <label>
-                                <h4><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></h4>
-                            </label>
-                            <xsl:value-of select="building/tilsyn_phone2"/>
-                        </div>
-                    </xsl:if>
-                </div>
+				<xsl:if test="building/tilsyn_name != ''">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" />
+						</label>
+						<xsl:value-of select="building/tilsyn_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" />
+						</label>
+						<a>
+							<xsl:attribute name="href">mailto:<xsl:value-of select="building/tilsyn_email"/></xsl:attribute>
+							<xsl:value-of select="building/tilsyn_email"/>
+						</a>
+					</div>
+					<div class="pure-control-group">    
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" />
+						</label>
+						<xsl:value-of select="building/tilsyn_phone"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="building/tilsyn_name2 != ''">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" />
+						</label>
+						<xsl:value-of select="building/tilsyn_name2"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" />
+						</label>
+						<a>
+						<xsl:attribute name="href">mailto:<xsl:value-of select="building/tilsyn_email2"/></xsl:attribute>
+						<xsl:value-of select="building/tilsyn_email2"/></a>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" />
+						</label>
+						<xsl:value-of select="building/tilsyn_phone2"/>
+					</div>
+				</xsl:if>
                 <div class="pure-control-group">
                     <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Bookable resources')" />
                     </label>
-                    <div id="resources_container" style="display:inline-block;"></div>
+                    <div id="resources_container" class="custom-container"></div>
                 </div>
                 <div class="pure-control-group">
-                    <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Documents')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Documents')" />
                     </label>
-                    <div style="display:inline-block;">
-                        <div id="documents_container"></div>
-                        <a class='button'>
-                            <xsl:attribute name="href"><xsl:value-of select="building/add_document_link"/></xsl:attribute>
-                            <xsl:if test="building/permission/write">
-                                <xsl:value-of select="php:function('lang', 'Add Document')" />
-                            </xsl:if>
-                        </a>
+                    <div class="pure-custom">
+                        <div id="documents_container" class="custom-container"></div>
+						<div>
+							<a class='button'>
+								<xsl:attribute name="href"><xsl:value-of select="building/add_document_link"/></xsl:attribute>
+								<xsl:if test="building/permission/write">
+									<xsl:value-of select="php:function('lang', 'Add Document')" />
+								</xsl:if>
+							</a>
+						</div>
                     </div>                        
                 </div>
                 <div class="pure-control-group">
-                    <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Permissions')" />
                     </label>
-                    <div id="permissions_container" style="display:inline-block;"></div>
+                    <div id="permissions_container" class="custom-container"></div>
                 </div>
 					</div>
 				</div>
