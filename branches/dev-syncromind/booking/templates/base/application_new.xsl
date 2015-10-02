@@ -144,7 +144,7 @@
                                                 <label for="start_date">
                                                     <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
                                                 </label>
-                                                <input class="datetime pure-input-2-3" id="start_date" name="start_date" type="text">
+                                                <input class="datetime pure-input-2-3" id="start_date" name="from_[]" type="text">
                                                     <xsl:if test="activity/start_date != ''">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
@@ -167,7 +167,7 @@
                                                         <xsl:value-of select="php:function('lang', $error_msg)" />
                                                     </div>
                                                 </xsl:if>
-                                                <input class="datetime pure-input-2-3" id="end_date" name="end_date" type="text">
+                                                <input class="datetime pure-input-2-3" id="end_date" name="to_[]" type="text">
                                                     <xsl:if test="activity/end_date != ''">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>

@@ -92,7 +92,7 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'From')"/></h4>
                                 </label>
-                                <input class="datetime pure-input-2-3" id="start_date" name="start_date" type="text" style="display:inline-block;">
+                                <input class="datetime pure-input-2-3" id="start_date" name="from_" type="text" style="display:inline-block;">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
@@ -107,7 +107,7 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'To')"/></h4>
                                 </label>
-                                <input class="datetime pure-input-2-3" id="end_date" name="end_date" type="text" style="display:inline-block;"></input>
+                                <input class="datetime pure-input-2-3" id="end_date" name="to_" type="text" style="display:inline-block;"></input>
                                 <!--div class="datetime-picker"-->
                                 <!--input id="field_to" name="to_" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
@@ -149,7 +149,7 @@
                                 <!--input id="field_repeat_until" name="repeat_until" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="repeat_until"/></xsl:attribute>
                                 </input-->
-                                <input class="datetime pure-input-2-3" id="start" name="start" type="text" style="display:inline-block;">
+                                <input class="datetime pure-input-2-3" id="field_repeat_until" name="repeat_until" type="text" style="display:inline-block;">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>

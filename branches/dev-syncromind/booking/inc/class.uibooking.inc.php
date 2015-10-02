@@ -537,7 +537,7 @@
                         $tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
                         $active_tab = 'generic';
 
-                        $GLOBALS['phpgw']->jqcal->add_listener('start', 'date');
+                        $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
                         $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
                         $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 
