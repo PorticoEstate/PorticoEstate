@@ -21,16 +21,20 @@
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
-            <div id="resource"> 
+            <div id="resource" class="booking-container"> 
                 <div class="pure-control-group">
-                    <label for="field_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Name')" />
                     </label>
-                    <input name="name" id="field_name" type="text" value="{resource/name}"/>
+                    <input name="name" id="field_name" type="text" value="{resource/name}">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>								
+					</input>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_activity_id">
-                        <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Activity')" />
                     </label>
                     <select id="field_activity_id" name="activity_id">
                         <xsl:for-each select="activitydata/results">
@@ -44,14 +48,14 @@
                     </select>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_sort">
-                        <h4><xsl:value-of select="php:function('lang', 'Sort order')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Sort order')" />
                     </label>
                     <input name="sort" id="field_sort" type="text" value="{resource/sort}"/>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_building_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Building')" />
                     </label>
                     <!--div class="autocomplete"-->
                     <xsl:if test="new_form or resource/permission/write/building_id">
@@ -61,13 +65,16 @@
                         <xsl:if test="not(new_form) and not(resource/permission/write/building_id)">
                             <xsl:attribute name="disabled">disabled</xsl:attribute>
                         </xsl:if>
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>					
                     </input>
-                    <div id="building_container"></div>
+                    <div id="building_container" class="custom-container"></div>
                     <!--/div-->
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_type">
-                        <h4><xsl:value-of select="php:function('lang', 'Resource Type')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Resource Type')" />
                     </label>
                     <select name='type' id='field_type'>
                         <option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
@@ -81,43 +88,43 @@
                         </xsl:for-each>
                     </select>
                 </div>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Active')"/>
+						</label>
+						<select id="field_active" name="active">
+							<option value="1">
+								<xsl:if test="resource/active=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Active')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/active=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Inactive')"/>
+							</option>
+						</select>
+					</div>
+				</xsl:if>             
                 <div class="pure-control-group">
-                    <xsl:if test="not(new_form)">
-                        <label for="field_active">
-                            <h4><xsl:value-of select="php:function('lang', 'Active')"/></h4>
-                        </label>
-                        <select id="field_active" name="active">
-                            <option value="1">
-                                <xsl:if test="resource/active=1">
-                                    <xsl:attribute name="selected">checked</xsl:attribute>
-                                </xsl:if>
-                                <xsl:value-of select="php:function('lang', 'Active')"/>
-                            </option>
-                            <option value="0">
-                                <xsl:if test="resource/active=0">
-                                    <xsl:attribute name="selected">checked</xsl:attribute>
-                                </xsl:if>
-                                <xsl:value-of select="php:function('lang', 'Inactive')"/>
-                            </option>
-                        </select>
-                    </xsl:if>
-                </div>
-                <div class="pure-control-group">
-                    <label for="field_description" style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Description')" />
                     </label>
-                    <div style="display:inline-block;max-width:80%;">
+                    <div class="custom-container">
                         <textarea id="field_description" name="description" type="text"><xsl:value-of select="resource/description"/></textarea>
                     </div>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'organzations_ids')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'organzations_ids')" />
                     </label>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_organizations_ids">
-                        <h4><xsl:value-of select="php:function('lang', 'organzations_ids_description')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'organzations_ids_description')" />
                     </label>
                     <input name="organizations_ids" id="field_organizations_ids" type="text" value="{resource/organizations_ids}"/>
                 </div>
@@ -136,9 +143,10 @@
                     </xsl:choose>
                 </xsl:attribute>
             </input>
-            <a class="cancel" href="{resource/cancel_link}">
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>			
+			<input type="button" class="pure-button pure-button-primary" name="cancel">
+				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+			</input>
         </div>
     </form>
     <!--/div-->	
