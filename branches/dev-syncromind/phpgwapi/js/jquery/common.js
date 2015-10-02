@@ -693,12 +693,17 @@ function createObject (object) {
 }
 
 
-function populateSelect (url, selection, container) {
+function populateSelect (url, selection, container, attr) {
     container.html("");
     var select = document.createElement('select');
     var option = document.createElement('option');
+    if (attr){
+        $.each(attr, function(i, v){
+            select.setAttribute(v['name'],v['value']);
+        })
+    }
     container.append(select);
-    option.setAttribute('value', '');
+    option.setAttribute('value', '');    
     option.text = '-----';
     select.appendChild(option);
     $.get(url, function(r){
