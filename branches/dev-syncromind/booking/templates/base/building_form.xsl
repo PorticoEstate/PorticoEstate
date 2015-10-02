@@ -25,7 +25,11 @@
                                 <label for="field_building_name">
                                     <h4><xsl:value-of select="php:function('lang', 'Building Name')" /></h4>
                                 </label>
-                                <input id="field_building_name" name="name" type="text" value="{building/name}"/>
+                                <input id="field_building_name" name="name" type="text" value="{building/name}">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>								
+								</input>									
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_phone">
