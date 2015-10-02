@@ -27,42 +27,43 @@
              <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                <div id="permission"> 
+                <div id="permission" class="booking-container"> 
                     <fieldset>                                            
-                        <div class="pure-control-group">
-                            <xsl:if test="id">
-                                    <!-- An update, add id column -->
-                                    <input name='field_id' type='hidden'>
-                                            <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                    </input>
-                            </xsl:if>
-                        </div>
+
+						<xsl:if test="id">
+								<!-- An update, add id column -->
+								<input name='field_id' type='hidden'>
+										<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+								</input>
+						</xsl:if>
 			<!-- Role -->
                         <div class="pure-control-group">
                             <label for="field_role" style="vertical-align:top;">
-                                <h4><xsl:value-of select="php:function('lang', 'Role')" /></h4>
+                                <xsl:value-of select="php:function('lang', 'Role')" />
                             </label>
-                            <div style="display:inline-block;">  
+                            <div class="pure-custom">  
                                 <span><xsl:value-of select="node()"/></span>
-                                <select name='role' id='field_role' style="display:block;" data-validation="required">
-                                    <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
-                                    <xsl:for-each select="available_roles/*">
-                                        <option>
-                                            <xsl:if test="../../role = local-name()">
-                                                <xsl:attribute name="selected">selected</xsl:attribute>
-                                            </xsl:if>
-                                            <xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
-                                            <xsl:value-of select="php:function('lang', string(node()))"/>
-                                        </option>
-                                    </xsl:for-each>
-                                </select>
+								<div>
+									<select name='role' id='field_role' style="display:block;" data-validation="required">
+										<option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
+										<xsl:for-each select="available_roles/*">
+											<option>
+												<xsl:if test="../../role = local-name()">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+												<xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
+												<xsl:value-of select="php:function('lang', string(node()))"/>
+											</option>
+										</xsl:for-each>
+									</select>
+								</div>
                             </div>
                         </div>
 
 			<!-- Subject -->
                         <div class="pure-control-group">
                             <label for="field_subject_name">
-                                <h4><xsl:value-of select="php:function('lang', 'Account')" /></h4>
+                                <xsl:value-of select="php:function('lang', 'Account')" />
                             </label>
                             <!--div class="autocomplete"-->
                             <input id="field_subject_name" name="subject_name" type="text">
@@ -80,7 +81,7 @@
 
                         <div class="pure-control-group">
                             <label for="field_object_name">
-                                <h4><xsl:value-of select="php:function('lang', string(object_type_label))" /></h4>
+                                <xsl:value-of select="php:function('lang', string(object_type_label))" />
                             </label>
                             <!--div class="autocomplete"-->
                             <input id="field_object_name" name="object_name" type="text">
