@@ -309,6 +309,7 @@
                         $active_tab = 'generic';
 
                         $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}
@@ -347,6 +348,7 @@
                         $active_tab = 'generic';
 
                         $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}
