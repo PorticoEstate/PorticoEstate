@@ -173,6 +173,7 @@
                         $active_tab = 'generic';
 
                         $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
 		}
@@ -191,7 +192,7 @@
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 			$resource['types'] = $this->resource_types();
 			
 			$errors = array();
@@ -221,6 +222,7 @@
                         $active_tab = 'generic';
 
                         $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
@@ -232,6 +234,7 @@
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id']));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
 
@@ -265,6 +268,7 @@
 			$active_tab = 'generic';
             
                         $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
                         
 			self::add_javascript('booking', 'booking', 'schedule.js');
                         
