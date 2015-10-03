@@ -19,72 +19,74 @@
 
         <xsl:call-template name="msgbox"/>
 		<!--xsl:call-template name="yui_booking_i18n"/-->  
-    <input type="hidden" name="tab" value=""/>
-    <div id="tab-content">
-        <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
-        <div id="season_show"> 
-            <form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
+    
+	<form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
+		<div id="tab-content">
+			<input type="hidden" name="tab" value=""/>
+			<xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
+			<div id="season_show" class="booking-container"> 
+            
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Case officer')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Case officer')" />
                     </label>
                     <xsl:value-of select="season/officer_name"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'From')" />
                     </label>
                     <xsl:value-of select="php:function('pretty_timestamp', season/from_)"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'To')" />
                     </label>
                     <xsl:value-of select="php:function('pretty_timestamp', season/to_)"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Building')" />
                     </label>
                     <xsl:value-of select="season/building_name"/>
                 </div>
                 <div class="pure-control-group">
                     <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Status')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Status')" />
                     </label>
                     <xsl:value-of select="season/status"/>
                 </div>
                 <div class="pure-control-group">
-                    <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Resources')" />
                     </label>
-                    <div id="resources_container" style="display:inline-block;"></div>
+                    <div id="resources_container" class="custom-container"></div>
                 </div>
                 <div class="pure-control-group">
-                    <label style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Permissions')" />
                     </label>
-                    <div id="permissions_container" style="display:inline-block;"></div>   
-                </div>
-            </form>
-            <div class="form-buttons">
-                <xsl:if test="season/permission/write">
-                    <button>
-                        <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link">"</xsl:value-of>"</xsl:attribute>
-                        <xsl:value-of select="php:function('lang', 'Edit')" />
-                    </button>
-                </xsl:if>
-                <button>
-                    <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/boundaries_link">"</xsl:value-of>"</xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Boundaries')" />
-                </button>
-                <button>
-                    <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/wtemplate_link">"</xsl:value-of>"</xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Week template')" />
-                </button>
-            </div>                
-        </div>
-    </div>
+                    <div id="permissions_container" class="custom-container"></div>   
+                </div>                
+			</div>
+		</div>
+		<div class="form-buttons">
+			<xsl:if test="season/permission/write">
+				<input type="button" class="pure-button pure-button-primary" name="edit">
+					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link"/>"</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Edit')" /></xsl:attribute>	
+				</input>
+			</xsl:if>
+			<input type="button" class="pure-button pure-button-primary" name="boundaries">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/boundaries_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Boundaries')" /></xsl:attribute>	
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="week_template">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/wtemplate_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Week template')" /></xsl:attribute>	
+			</input>
+		</div>		
+	</form>
 
     <!--/div-->
 
