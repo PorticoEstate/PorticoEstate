@@ -54,15 +54,25 @@
         <xsl:if test="season/permission/write">
             <div class="pure-control-group">	
                 <div class="form-buttons">
+					<!--
                     <button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
                     <button>
                         <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
                         <xsl:value-of select="php:function('lang', 'Generate allocations')" />
                     </button>
-                    <a class="cancel">
-                        <xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-                        <xsl:value-of select="php:function('lang', 'Back to season')"/>
-                    </a>
+					-->
+					<input type="button" class="pure-button pure-button-primary" name="new">
+						<xsl:attribute name="onclick">window.location.href="#"</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'New allocation')" /></xsl:attribute>	
+					</input>
+					<input type="button" class="pure-button pure-button-primary" name="generate_allocations">
+						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Generate allocations')" /></xsl:attribute>	
+					</input>						
+					<input type="button" class="pure-button pure-button-primary" name="cencel">
+						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+					</input>
                 </div>
             </div>
         </xsl:if>
