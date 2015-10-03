@@ -10,10 +10,10 @@
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
-            <div id="season_new"> 
+            <div id="season_new" class="booking-container"> 
                 <div class="pure-control-group">
                     <label for="field_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Name')" />
                     </label>
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/name"/></xsl:attribute>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="pure-control-group">
                     <label for="field_building_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Building')" />
                     </label>
                     <!--div class="autocomplete"-->
                     <input id="field_building_id" name="building_id" type="hidden">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="pure-control-group">
                     <label for="field_officer_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Case officer')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Case officer')" />
                     </label>
                     <!--div class="autocomplete"-->
                     <input id="field_officer_id" name="officer_id" type="hidden">
@@ -48,14 +48,14 @@
                     </div-->
                 </div>
                 <div class="pure-control-group">
-                    <label for="" style="vertical-align:top;">
-                        <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Resources')" />
                     </label>
-                    <div id="resources-container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                    <div id="resources-container" class="custom-container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                 </div>
                 <div class="pure-control-group">
                     <label for="status_field">
-                        <h4><xsl:value-of select="php:function('lang', 'Status')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'Status')" />
                     </label>                    
                     <select name="status" id=" ">
                         <option value="PLANNING">
@@ -79,7 +79,7 @@
                     </input>
                     </div-->
                     <label for="start_date">
-                        <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'From')" />
                     </label>
                     <input class="datetime" id="start_date" name="start_date" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
@@ -92,7 +92,7 @@
                     </input>
                     </div-->
                     <label for="end_date">
-                        <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+                        <xsl:value-of select="php:function('lang', 'To')" />
                     </label>
                     <input class="datetime" id="end_date" name="end_date" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
@@ -104,10 +104,10 @@
             <input type="submit" class="pure-button pure-button-primary">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
             </input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>
+			<input type="button" class="pure-button pure-button-primary" name="cencel">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+			</input>
         </div>
     </form>
     <!--/div-->
