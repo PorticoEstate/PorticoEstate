@@ -106,18 +106,12 @@
                                         <xsl:attribute name="value"><xsl:value-of select="boundary/to_"/></xsl:attribute>
                                     </input>
                                 </div>
+								<input type="submit" class="pure-button pure-button-primary">
+									<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
+								</input>								
                             </div>
                         </div>
-                    </div>
-                    <div class="form-buttons">
-                        <input type="submit" class="pure-button pure-button-primary">
-                            <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
-                        </input>
-                        <a class="cancel">
-                            <xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-                            <xsl:value-of select="php:function('lang', 'Back to season')"/>
-                        </a>
-                    </div>                        
+                    </div>                       
                 </xsl:if>
                 <!-- <form action="" method="POST">
                 <dl class="form">
@@ -143,14 +137,12 @@
                 </form> -->
             </div>
         </div>
+        <div class="form-buttons">
+			<input type="button" class="pure-button pure-button-primary" name="cencel">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+			</input>
+        </div>		
     </form>
-    <script type="text/javascript">
-        <![CDATA[
-    YAHOO.util.Event.addListener(window, "load", function() {
-        var url = 'index.php?menuaction=booking.uiseason.index&sort=name&phpgw_return_as=json&';
-    ]]>
-            YAHOO.booking.radioTableHelper('foo_container', url, 'foo');
-    });
-    </script>
     <!--/div-->
 </xsl:template>
