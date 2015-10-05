@@ -371,6 +371,13 @@
 			$this->flash_form_errors($errors);
 
 //			$this->use_yui_editor();
+                        phpgwapi_jquery::init_ckeditor('field-message');
+                        
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
+                        $active_tab = 'generic';
+
+                        $system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
                         phpgwapi_jquery::init_ckeditor('field_description');
                         
@@ -404,11 +411,11 @@
 			);
 			$loggedin = (int) true; // FIXME: Some sort of authentication!
 
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
-            $active_tab = 'generic';
-            
-            $system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
+                        $active_tab = 'generic';
+
+                        $system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('system_message', array('system_message' => $system_message, 'loggedin' => $loggedin));
 		}
