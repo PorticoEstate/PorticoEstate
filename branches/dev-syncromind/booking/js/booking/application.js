@@ -33,7 +33,26 @@ $(window).load(function(){
         var selection = [];
         populateTableChkRegulations(building_id_selection, selection, resources);
     });
+    
+    $('#application_form').submit(function(e){
+        if(!validate_documents()){
+            e.preventDefault();
+            alert(lang['You must accept to follow all terms and conditions of lease first.']);
+        }
+    });
+    
 });
+
+function validate_documents() {
+    var n = 0;
+    $('#regulation_documents input[name="accepted_documents[]"]').each(function(){
+         if(!$(this).is(':checked')) {
+             n++;
+         }
+    });
+    var v = (n == 0) ? true : false;
+    return v;
+}
 
 
 function populateTableChkResources (building_id, selection) {
