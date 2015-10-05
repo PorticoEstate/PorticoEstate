@@ -728,7 +728,7 @@
 				$replace = array ('Å','å','Ø','ø','Æ','æ');
 				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 			}
-			
+                        
 			if(phpgw::get_var('from_', 'GET'))
 			{
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
