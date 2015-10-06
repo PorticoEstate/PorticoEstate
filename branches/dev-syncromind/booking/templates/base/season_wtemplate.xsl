@@ -61,15 +61,14 @@
                         <xsl:value-of select="php:function('lang', 'Generate allocations')" />
                     </button>
 					-->
-					<input type="button" class="pure-button pure-button-primary" name="new">
-						<xsl:attribute name="onclick">window.location.href="#"</xsl:attribute>
+					<input type="button" class="pure-button pure-button-primary" name="new" onclick="showAllocationForm();">
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'New allocation')" /></xsl:attribute>	
 					</input>
 					<input type="button" class="pure-button pure-button-primary" name="generate_allocations">
 						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Generate allocations')" /></xsl:attribute>	
 					</input>						
-					<input type="button" class="pure-button pure-button-primary" name="cencel">
+					<input type="button" class="pure-button pure-button-primary" name="cancel">
 						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
 					</input>
