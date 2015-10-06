@@ -323,6 +323,4 @@ a.pure-button {text-decoration: none;}
 .pure-button {margin-right: 5px;margin-top: 5px;text-shadow: none;box-shadow: none;display: inline-block;vertical-align: top;}
 
 //ALLOCATION
-div.allocation-list2 {border: 1px solid #555;height: 10em;max-width: 30em;overflow: auto;padding: 0.4em;width: 100%;}
-
 div.allocation-list {border: 1px solid #555;height: 10em;max-width: 30em;overflow: auto;padding: 0.4em;width: 100%;}
