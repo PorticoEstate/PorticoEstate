@@ -20,9 +20,9 @@
 			'delete_wtemplate_alloc'	=>	true,
 			'wtemplate'		=>	true,
 			'wtemplate_json'		=>	true,
-			'wtemplate_alloc_json'		=>	true,
+			'wtemplate_alloc'		=>	true,
 			'generate'		=>	true,
-			'toggle_show_inactive'	=>	true,
+			'toggle_show_inactive'	=>	true
 		);
 
 		public function __construct()
@@ -366,23 +366,23 @@
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
-			$season['get_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
-			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
+			$season['get_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
+			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['generate_url'] = self::link(array('menuaction' => 'booking.uiseason.generate', 'id' => $season['id']));
 			$season['delete_wtemplate_alloc_url'] = self::link(array('menuaction' => 'booking.uiseason.delete_wtemplate_alloc', 'phpgw_return_as'=>'json'));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
-                        
                         $tabs = array();
 			$tabs['generic'] = array('label' => lang('Week template'), 'link' => '#season_wtemplate');
 			$active_tab = 'generic';
             
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
-			self::add_javascript('booking', 'booking', 'schedule.js');
+			//self::add_javascript('booking', 'booking', 'schedule.js');
+						self::add_javascript('booking', 'booking', 'season.wtemplate.js');
                         phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('season_wtemplate', array('season' => $season));
 		}
-
+		
 		public function wtemplate_json()
 		{
 			$season_id = intval(phpgw::get_var('id', 'GET'));
@@ -398,9 +398,11 @@
 		}
 		
 		/* Return a single wtemplate allocations as JSON */
-		public function wtemplate_alloc_json()
+		public function wtemplate_alloc()
 		{
 			$season_id = intval(phpgw::get_var('season_id', 'GET'));
+			$phpgw_return_as = phpgw::get_var('phpgw_return_as');
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$alloc = extract_values($_POST, $this->wtemplate_alloc_fields);
@@ -413,8 +415,20 @@
 				return $errors;
 			}
 			$id = intval(phpgw::get_var('id', 'GET'));
-			$alloc = $this->bo->wtemplate_alloc_read_single($id);
-			return $alloc;
+		
+			if($phpgw_return_as == 'json')
+			{
+				$alloc = $this->bo->wtemplate_alloc_read_single($id);
+				return $alloc;
+			}
+			
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			
+			$tabs['generic'] = array('label' => lang('Week template'), 'link' => '#season_wtemplate');
+			$active_tab = 'generic';       
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
+			self::render_template('season_wtemplate_allocation', array('season' => $season));			
 		}
 
 		public function generate()
