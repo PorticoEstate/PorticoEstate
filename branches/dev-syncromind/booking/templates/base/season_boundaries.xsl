@@ -2,38 +2,12 @@
     <style type="text/css">
         .time-picker {display: inline;}
     </style>
-    <!--div id="content">
-        <ul class="pathway">
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="season/buildings_link"/></xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Buildings')" />
-                </a>
-            </li>
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="season/building_link"/></xsl:attribute>
-                    <xsl:value-of select="season/building_name"/>
-                </a>
-            </li>
-            <li><xsl:value-of select="php:function('lang', 'Seasons')" /></li>
-            <li>
-				<a>
-                    <xsl:attribute name="href"><xsl:value-of select="season/season_link"/></xsl:attribute>
-					<xsl:value-of select="season/name"/>
-				</a>
-			</li>
-            <li><xsl:value-of select="php:function('lang', 'Boundaries')" /></li>
-        </ul-->
-
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
-
     <form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
-            <div id="season_boundaries">
+            <div id="season_boundaries" class="booking-container">
                 <table id="boundary-table" class="pure-table pure-table-bordered">
                     <thead>
                         <tr>
@@ -75,7 +49,7 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_status">
-                                    <h4><xsl:value-of select="php:function('lang', 'Week day')" /></h4>
+                                    <xsl:value-of select="php:function('lang', 'Week day')" />
                                 </label>
                                 <select name="wday">
                                     <option value="1"><xsl:value-of select="php:function('lang', 'Monday')" /></option>
@@ -89,7 +63,7 @@
                             </div>
                             <div class="pure-control-group">
                                 <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+                                    <xsl:value-of select="php:function('lang', 'From')" />
                                 </label>
                                 <div class="time-picker">
                                     <input id="field_from" name="from_" type="text">
@@ -99,16 +73,19 @@
                             </div>
                             <div class="pure-control-group">
                                 <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+                                    <xsl:value-of select="php:function('lang', 'To')" />
                                 </label>
                                 <div class="time-picker">
                                     <input id="field_to" name="to_" type="text">
                                         <xsl:attribute name="value"><xsl:value-of select="boundary/to_"/></xsl:attribute>
                                     </input>
                                 </div>
-								<input type="submit" class="pure-button pure-button-primary">
-									<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
-								</input>								
+                            </div>
+                            <div class="pure-control-group">
+                                <label>&nbsp;</label>
+                                <input type="submit" class="pure-button pure-button-primary">
+                                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
+                                </input>
                             </div>
                         </div>
                     </div>                       
@@ -138,11 +115,10 @@
             </div>
         </div>
         <div class="form-buttons">
-			<input type="button" class="pure-button pure-button-primary" name="cencel">
-				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
-			</input>
+            <input type="button" class="pure-button pure-button-primary" name="cencel">
+                <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+            </input>
         </div>		
     </form>
-    <!--/div-->
 </xsl:template>

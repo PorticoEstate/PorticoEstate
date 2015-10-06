@@ -4,29 +4,18 @@
         input.datetime,
         input.time {display: inline-block !important;}
     </style>
-    <!--div id="content"-->
-        <!--ul class="pathway">
-            <li><xsl:value-of select="php:function('lang', 'Events')" /></li>
-            <li>#<xsl:value-of select="event/id"/></li>
-        </ul-->
     <xsl:call-template name="msgbox"/>
-	<!--xsl:call-template name="yui_booking_i18n"/-->
-
     <form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="event/tabs"/>
-            <div id="event_edit">
+            <div id="event_edit" class="booking-container">
                 <fieldset>
                     <div class="pure-g pure-form pure-form-aligned">
                         <div class="pure-u-1">
-                            <h1>
-                                #<xsl:value-of select="event/id"/>
-                            </h1>
+                            <h1>#<xsl:value-of select="event/id"/></h1>
                             <div class="pure-control-group">
-                                <label for="field_active">
-                                    <h4><xsl:value-of select="php:function('lang', 'Active')"/></h4>
-                                </label>
+                                <label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label>
                                 <select id="field_active" name="active">
                                     <option value="1">
                                         <xsl:if test="event/active=1">
@@ -43,16 +32,13 @@
                                 </select>
                             </div>
                             <div class="pure-control-group">
-                                <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'Application')"/></h4>
-                                </label>
+                                <label><xsl:value-of select="php:function('lang', 'Application')"/></label>
                                 <xsl:if test="event/application_id != ''">
                                     <a href="{event/application_link}">#<xsl:value-of select="event/application_id"/></a>
                                 </xsl:if>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="pure-g">
                         <div class="pure-u-1">
                             <div class="heading">
@@ -60,24 +46,19 @@
                             </div>
                             <xsl:for-each select="comments[author]">
                                 <div class="pure-control-group">
-                                    <label>
-                                        <h4><xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/></h4>
-                                    </label>
+                                    <label><xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/></label>
                                     <span><xsl:value-of select="comment" disable-output-escaping="yes"/></span>
                                 </div>
                             </xsl:for-each>
                         </div>
                     </div>
-                    
                     <div class="pure-g">
                         <div class="pure-u-1">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Why')" /></h3></legend>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_activity">
-                                    <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
-                                </label>
+                                <label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                                 <select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
@@ -92,15 +73,11 @@
                                 </select>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_description">
-                                    <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
-                                </label>
+                                <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
                                 <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description"><xsl:value-of select="event/description"/></textarea>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_public">
-                                    <h4><xsl:value-of select="php:function('lang', 'Event type')"/></h4>
-                                </label>
+                                <label for="field_public"><xsl:value-of select="php:function('lang', 'Event type')"/></label>
                                 <select id="field_public" name="is_public" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
                                     <option value="1">
                                         <xsl:if test="event/is_public=1">
@@ -118,46 +95,34 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="pure-g">
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Where')" /></h3></legend>
-                            </div>                
+                            </div>
                             <div class="pure-control-group">
-                                <label for="field_building_name">
-                                    <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
-                                </label>
-                                <!--div class="autocomplete"-->
+                                <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                                 <input id="field_building_id" name="building_id" type="hidden">
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_id"/></xsl:attribute>
                                 </input>
                                 <input id="field_building_name" name="building_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_name"/></xsl:attribute>
                                 </input>
-                                <div id="building_container"></div>
-                                <!--/div-->
                             </div>
                             <div class="pure-control-group">
-                                <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
-                                </label>
+                                <label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
                                 <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                             </div>
                         </div>
-                        
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'When')" /></h3></legend>
                             </div>
                             <div class="pure-control-group">
-                                <label for="from_">
-                                    <h4><xsl:value-of select="php:function('lang','Start date')" /></h4>
-                                </label>
+                                <label for="from_"><xsl:value-of select="php:function('lang','Start date')" /></label>
                                 <input class="datetime pure-input-2-3" id="from_" name="from_" type="text">
                                     <xsl:if test="event/from_ != ''">
                                         <xsl:attribute name="value">
-                                            <!--xsl:value-of select="php:function('date', $datetime_format, number(event/from_))"/-->
                                             <xsl:value-of select="event/from_"/>
                                         </xsl:attribute>
                                     </xsl:if>
@@ -167,13 +132,10 @@
                                 </input>
                             </div>
                             <div class="pure-control-group">
-                                <label for="to_">
-                                    <h4><xsl:value-of select="php:function('lang', 'End date')" /></h4>
-                                </label>
+                                <label for="to_"><xsl:value-of select="php:function('lang', 'End date')" /></label>
                                 <input class="datetime pure-input-2-3" id="to_" name="to_" type="text">
                                     <xsl:if test="event/to_ != ''">
                                         <xsl:attribute name="value">
-                                            <!--xsl:value-of select="php:function('date', $datetime_format, number(event/from_))"/-->
                                             <xsl:value-of select="event/to_"/>
                                         </xsl:attribute>
                                     </xsl:if>
@@ -183,16 +145,13 @@
                                 </input>
                             </div>
                         </div>
-                        
                         <div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Who')" /></h3></legend>
                             </div>
                             <div class="pure-g">
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">			
-                                    <label>
-                                        <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
-                                    </label>
+                                    <label><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
                                     <ul style="list-style:none;padding: 0 0 0 10px;">
                                         <xsl:for-each select="audience">
                                             <li>
@@ -210,9 +169,7 @@
                                     </ul>
                                 </div>
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
-                                    <label for="field_from">
-                                        <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
-                                    </label>
+                                    <label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label>
                                     <table id="agegroup" class="pure-table pure-table-bordered">
                                         <thead>
                                             <tr>
@@ -251,45 +208,35 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3></legend>
                             </div>
-                            <div class="pure-control-group">        
-                                <label for="field_contact_name">
-                                    <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
-                                </label>
+                            <div class="pure-control-group">
+                                <label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input id="field_contact_name" name="contact_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="event/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_contact_mail">
-                                    <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
-                                </label>
+                                <label for="field_contact_mail"><xsl:value-of select="php:function('lang', 'Email')" /></label>
                                 <input id="field_contact_mail" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="event/contact_email"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_contact_phone">
-                                    <h4><xsl:value-of select="php:function('lang', 'Phone')" /></h4>
-                                </label>
+                                <label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
                                 <input id="field_contact_phone" name="contact_phone" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="event/contact_phone"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_cost">
-                                    <h4><xsl:value-of select="php:function('lang', 'Cost')" /></h4>
-                                </label>
+                                <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
                                 <input id="field_cost" name="cost" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
                                 </input>
-                            </div>            
+                            </div>
                         </div>
-                        
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Invoice information')" /></h3></legend>
@@ -298,13 +245,10 @@
                                 <xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
                             </div>
                             <div class="pure-control-group">
-                                <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'Internal Customer')"/></h4>
-                                </label>
+                                <label><xsl:value-of select="php:function('lang', 'Internal Customer')"/></label>
                                 <xsl:copy-of select="phpgw:option_checkbox(event/customer_internal, 'customer_internal')"/>
                             </div>
                         </div>
-                        
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></h3></legend>
@@ -337,47 +281,18 @@
                                             <option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
                                             <option value="3" selected="selected"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
                                         </xsl:when>
-                                    </xsl:choose>                        
-                                    <!--
-                                    <xsl:if test="event/reminder = 0">
-                                            <option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-                                            <option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-                                            <option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
-                                            <option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
-                                    </xsl:if>
-                                    <xsl:if test="event/reminder = 1">
-                                            <option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-                                            <option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-                                            <option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
-                                            <option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
-                                    </xsl:if>
-                                    <xsl:if test="event/reminder = 2">
-                                            <option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-                                            <option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-                                            <option value="2" selected="selected"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
-                                            <option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
-                                    </xsl:if>
-                                    <xsl:if test="event/reminder = 3">
-                                            <option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-                                            <option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-                                            <option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
-                                            <option value="3" selected="selected"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
-                                    </xsl:if>
-                                    -->
+                                    </xsl:choose>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="pure-g">
                         <div class="pure-u-1">
                             <div class="heading">
                                 <legend><label for="field_mail"><h3><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></h3></label></legend>
                             </div>
                             <div class="pure-control-group">
-                                <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></h4>
-                                </label>
+                                <label><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></label>
                                 <textarea rows="4" id="field_mail" name="mail" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3"></textarea>
                             </div>
                             <div class="pure-control-group">
@@ -399,28 +314,23 @@
                                 </label>
                             </div>
                             <div class="pure-control-group">
-                                <label for="sendtorbuilding_email1">
-                                    <h4><xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></h4>
-                                </label>
+                                <label for="sendtorbuilding_email1"><xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></label>
                                 <input type="text" id="sendtorbuilding_email1" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="sendtorbuilding_email1" />
                             </div>
                             <div class="pure-control-group">
-                                <label for="sendtorbuilding_email2">
-                                    <h4><xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></h4>
-                                </label>
+                                <label for="sendtorbuilding_email2"><xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></label>
                                 <input type="text" id="sendtorbuilding_email2" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="sendtorbuilding_email2" />
                             </div>
-                            
                         </div>
                     </div>
-            </fieldset>
+                </fieldset>
             </div>
         </div>
         <div class="form-buttons">
             <input type="submit" class="pure-button pure-button-primary">
-                                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send')"/></xsl:attribute>
-                        </input>
-            <a class="cancel">
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send')"/></xsl:attribute>
+            </input>
+            <a class="cancel pure-button pure-button-primary">
                 <xsl:attribute name="href"><xsl:value-of select="event/cancel_link"/></xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Cancel')" />
             </a>
@@ -431,9 +341,4 @@
         var initialSelection = <xsl:value-of select="event/resources_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     </script>
-    <!--/div-->
-    <!--script type="text/javascript">
-        YAHOO.booking.initialSelection = <xsl:value-of select="event/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
-    </script-->
 </xsl:template>
