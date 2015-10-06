@@ -137,10 +137,8 @@
                                     </p>
                                 </xsl:if>
                                 <div id="dates-container">
-                                    <!--xsl:variable name="indexid"></xsl:variable-->
                                     <input type="hidden" id="date_format" />
                                     <xsl:for-each select="application/dates">
-                                        
                                         <xsl:variable name="index" select="position()-2"/>
                                         <xsl:choose>
                                             <xsl:when test="position() > 1">
@@ -150,10 +148,14 @@
                                                         <label for="start_date_{$index}">
                                                             <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
                                                         </label>
-                                                        <input id="alt_start_date_{$index}" name="from_[]" type="hidden"></input>
+                                                        <input id="alt_start_date_{$index}" name="from_[]" type="hidden">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="from_" />
+                                                            </xsl:attribute>
+                                                        </input>
                                                         <input class="newaddedpicker datetime pure-input-2-3" id="start_date_{$index}" type="text">
                                                             <xsl:attribute name="value">
-                                                                <xsl:value-of select="from_"/>
+                                                                <xsl:value-of select="from_" />
                                                             </xsl:attribute>
                                                             <!--xsl:if test="activity/start_date != ''">
                                                                 <xsl:attribute name="value">
@@ -177,7 +179,11 @@
                                                                 <xsl:value-of select="php:function('lang', $error_msg)" />
                                                             </div>
                                                         </xsl:if>
-                                                        <input id="alt_end_date_{$index}" name="to_[]" type="hidden"></input>
+                                                        <input id="alt_end_date_{$index}" name="to_[]" type="hidden">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="to_"/>
+                                                            </xsl:attribute>
+                                                        </input>
                                                         <input class="newaddedpicker datetime pure-input-2-3" id="end_date_{$index}" type="text">
                                                             <xsl:attribute name="value">
                                                                 <xsl:value-of select="to_"/>
@@ -201,8 +207,15 @@
                                                         <label for="start_date">
                                                             <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
                                                         </label>
-                                                        <input id="alt_start_date" name="from_[]" type="hidden"></input>
+                                                        <input id="alt_start_date" name="from_[]" type="hidden">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="from_"/>
+                                                            </xsl:attribute>
+                                                        </input>
                                                         <input class="datetime pure-input-2-3" id="start_date" type="text">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="from_"/>
+                                                            </xsl:attribute>
                                                             <!--xsl:if test="activity/start_date != ''">
                                                                 <xsl:attribute name="value">
                                                                     <xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
@@ -211,9 +224,6 @@
                                                             <xsl:attribute name="data-validation">
                                                                 <xsl:text>required</xsl:text>
                                                             </xsl:attribute-->
-                                                            <xsl:attribute name="value">
-                                                                <xsl:value-of select="from_"/>
-                                                            </xsl:attribute>
                                                         </input>
                                                     </div>
                                                     <div class="pure-control-group">
@@ -228,16 +238,20 @@
                                                                 <xsl:value-of select="php:function('lang', $error_msg)" />
                                                             </div>
                                                         </xsl:if>
-                                                        <input id="alt_end_date" name="to_[]" type="hidden"></input>
+                                                        <input id="alt_end_date" name="to_[]" type="hidden">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="to_"/>
+                                                            </xsl:attribute>
+                                                        </input>
                                                         <input class="datetime pure-input-2-3" id="end_date" type="text">
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="to_"/>
+                                                            </xsl:attribute>
                                                             <!--xsl:if test="activity/end_date != ''">
                                                                 <xsl:attribute name="value">
                                                                     <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>
                                                                 </xsl:attribute>
                                                             </xsl:if-->
-                                                            <xsl:attribute name="value">
-                                                                <xsl:value-of select="to_"/>
-                                                            </xsl:attribute>
                                                         </input>
                                                     </div>
                                                     <!--div class="help_text">
@@ -246,7 +260,6 @@
                                                 </div>
                                             </xsl:otherwise>
                                         </xsl:choose>
-                                                
                                     </xsl:for-each>
                                 </div>
                                 <div class="pure-control-group"><a href="javascript:void(0);" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></div>
@@ -379,7 +392,7 @@
                 <input type="submit" class="pure-button pure-button-primary">
                     <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send')"/></xsl:attribute>
                 </input>
-                <a class="cancel">
+                <a class="cancel pure-button pure-button-primary">
                     <xsl:attribute name="href"><xsl:value-of select="application/cancel_link"/></xsl:attribute>
                     <xsl:value-of select="php:function('lang', 'Cancel')" />
                 </a>
@@ -394,5 +407,17 @@
         var initialSelection = <xsl:value-of select="application/resources_json"/>;
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+    /*    
+        $(window).load(function(){
+            var date_format = $('#date_format').val();
+            var time_format = 'HH:mm:ss';
+            $("#start_date").datepicker( "refresh" );
+            var datex = $('#start_date').datepicker('getDate');
+            console.log(datex);
+            var date = $.datepicker.formatDate(date_format, datex);
+            var time = $.datepicker.formatTime(time_format, datex);
+            //$('#start_date').val(date+" "+time);
+        });
+    */
     </script>
 </xsl:template>
