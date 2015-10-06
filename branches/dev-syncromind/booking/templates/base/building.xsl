@@ -133,7 +133,7 @@
 					</div>
 				</xsl:if>
                 <div class="pure-control-group">
-                    <label style="vertical-align:top;">
+                    <label>
                         <xsl:value-of select="php:function('lang', 'Bookable resources')" />
                     </label>
                     <div id="resources_container" class="custom-container"></div>
