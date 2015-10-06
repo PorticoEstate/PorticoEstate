@@ -46,7 +46,7 @@
                 <input type="hidden" name="tab" value=""/>
                     <div id="tab-content">
                         <xsl:value-of disable-output-escaping="yes" select="application/tabs"/>
-                        <div id="application">
+                        <div id="application" class="booking-container">
                         <fieldset>
                             <div class="pure-g">
                                 <div class="pure-u-1">
@@ -281,17 +281,17 @@
                                     </div>
                                     <div class="pure-control-group">
                                         <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
+                                            <xsl:value-of select="php:function('lang', 'Target audience')" />
                                         </label>    
-                                        <label>
-                                            <ul>
+                                        <div class="custom-container">
+                                            <ul class="list-left">
                                                 <xsl:for-each select="audience">
                                                     <xsl:if test="../application/audience=id">
                                                         <li><xsl:value-of select="name"/></li>
                                                     </xsl:if>
                                                 </xsl:for-each>
                                             </ul>
-                                        </label>
+                                        </div>
                                     </div>
                                     <div class="pure-control-group">
                                         <label style="vertical-align: top;width: auto;">
@@ -467,7 +467,7 @@
                     </div>
                     <dl class="proplist-col">
                         <xsl:if test="application/edit_link">
-                            <button>
+                            <button class="pure-button pure-button-primary">
                                     <xsl:if test="application/case_officer/is_current_user">
                                         <xsl:attribute name="onclick">window.location.href='<xsl:value-of 				select="application/edit_link"/>'</xsl:attribute>
                                     </xsl:if>
@@ -478,7 +478,7 @@
                             </button>
                         </xsl:if>
 
-                        <a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a>
+                        <a class="pure-button pure-button-primary" href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a>
                     </dl>
             </form>
     <!--/div-->

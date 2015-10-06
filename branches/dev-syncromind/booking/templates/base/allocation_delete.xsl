@@ -1,16 +1,14 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <xsl:call-template name="msgbox"/>
-	<!--xsl:call-template name="yui_booking_i18n"/-->
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <fieldset>
             <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="allocation/tabs"/>
-                <div id="allocation_delete">
+                <div id="allocation_delete" class="booking-container">
                     <div class="heading">
                         <legend><h3><xsl:value-of select="php:function('lang', 'Delete allocation')"/></h3></legend>
-                    </div>
-                    
+                    </div>                    
                     <div class="pure-control-group">
                         <h4><xsl:value-of select="php:function('lang', 'Delete Information')"/></h4>
                         <h4><xsl:value-of select="php:function('lang', 'Delete Information2')"/></h4>
@@ -23,41 +21,31 @@
                         <input id="field_to" name="to_" type="hidden" value="{allocation/to_}" />
                     </div>
                     <div class="pure-control-group">
-                        <label for="field_building" style="vertical-align:top;">
-                            <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
-                        </label>
+                        <label for="field_building" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                         <div class="autocomplete" style="display:inline-block;">
                             <xsl:value-of select="allocation/building_name"/>
                         </div>
                     </div>
                     <div class="pure-control-group">
-                        <label for="field_org" style="vertical-align:top;">
-                            <h4><xsl:value-of select="php:function('lang', 'Organization')" /></h4>
-                        </label>
+                        <label for="field_org" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Organization')" /></label>
                         <div class="autocomplete" style="display:inline-block;">
                             <xsl:value-of select="allocation/organization_name"/>
                         </div>
                     </div>
                     <div class="pure-control-group">
-                        <label for="field_from" style="vertical-align:top;">
-                            <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
-                        </label>
+                        <label for="field_from" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'From')" /></label>
                         <div style="display:inline-block;">
                             <xsl:value-of select="allocation/from_"/>
                         </div>
                     </div>
                     <div class="pure-control-group">
-                        <label for="field_to" style="vertical-align:top;">
-                            <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
-                        </label>
+                        <label for="field_to" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'To')" /></label>
                         <div style="display:inline-block;">
                             <xsl:value-of select="allocation/to_"/>
                         </div>
                     </div>
                     <div class="pure-control-group">                            
-                        <label for="field_repeat_until" style="vertical-align:top;">
-                            <h4><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></h4>
-                        </label>
+                        <label for="field_repeat_until" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label>
                         <div style="display:inline-block;">
                             <div>
                                 <label style="display: block !important;text-align: left !important;">
@@ -85,9 +73,7 @@
                         </div>
                     </div>
                     <div class="pure-control-group">
-                        <label>
-                            <h4><xsl:value-of select="php:function('lang', 'Interval')" /></h4>
-                        </label>
+                        <label><xsl:value-of select="php:function('lang', 'Interval')" /></label>
                         <xsl:value-of select="../field_interval" />
                         <select id="field_interval" name="field_interval">
                             <option value="1">
@@ -116,7 +102,6 @@
                             </option>
                         </select>
                     </div>
-
                 </div>
             </div>
         </fieldset>
@@ -124,7 +109,7 @@
             <input type="submit" class="pure-button pure-button-primary">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')"/></xsl:attribute>
             </input>
-            <a class="cancel">
+            <a class="cancel pure-button pure-button-primary">
                 <xsl:attribute name="href"><xsl:value-of select="allocation/cancel_link"/></xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Cancel')" />
             </a>
