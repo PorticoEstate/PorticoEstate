@@ -51,11 +51,26 @@
 				<dd><input id="field_cost" name="cost" type="text"/></dd>
 				<dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
 				<dd>
-					<div id="resources-container"/>
+					<div id="resources_container" class="custom-container"></div>
 				</dd>
 			</dl>
 			<div class="clr"/>
 		</div>
 	</form>
 
+<script type="text/javascript">
+    var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Account', 'Role', 'Actions', 'Edit', 'Delete', 'Resource Type')"/>;
+                
+    <![CDATA[
+        var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+    ]]>
+    var colDefsRespurces = [
+        {key: 'name', label: lang['Name'], formatter: genericLink},
+        {key: 'type', label: lang['Resource Type']}
+    ];
+
+    createTable('resources_container', resourcesURL, colDefsRespurces);
+	
+</script>
 </xsl:template>
