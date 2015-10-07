@@ -377,7 +377,7 @@
             
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
-			//self::add_javascript('booking', 'booking', 'schedule.js');
+			self::add_javascript('booking', 'booking', 'schedule.js');
 						self::add_javascript('booking', 'booking', 'season.wtemplate.js');
                         phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('season_wtemplate', array('season' => $season));
@@ -401,7 +401,7 @@
 		public function wtemplate_alloc()
 		{
 			$season_id = intval(phpgw::get_var('season_id', 'GET'));
-			$phpgw_return_as = phpgw::get_var('phpgw_return_as');
+			//$phpgw_return_as = phpgw::get_var('phpgw_return_as');
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -416,11 +416,22 @@
 			}
 			$id = intval(phpgw::get_var('id', 'GET'));
 		
-			if($phpgw_return_as == 'json')
-			{
+			/*if($phpgw_return_as == 'json')
+			{*/
 				$alloc = $this->bo->wtemplate_alloc_read_single($id);
-				return $alloc;
+				//return $alloc;
+			//}
+			$resource_ids = phpgw::get_var('filter_id', 'GET');
+
+			if (count($resource_ids) == 0) {
+				$resource_ids = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
+			} else {
+				foreach($resource_ids as $res)
+				{
+					$resource_ids = $resource_ids . '&filter_id[]=' . $res;
+				}
 			}
+			$season['resource_ids'] = $resource_ids;
 			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			
