@@ -150,13 +150,13 @@
             var colDefs = [
                 {key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'}, 
                 {key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},
-                {key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'scheduleDateColumn'},
-                {key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: 'scheduleDateColumn'},
-                {key: '3', label: '<xsl:value-of select="php:function('lang', 'Wednesday')" />', formatter: 'scheduleDateColumn'},
-                {key: '4', label: '<xsl:value-of select="php:function('lang', 'Thursday')" />', formatter: 'scheduleDateColumn'},
-                {key: '5', label: '<xsl:value-of select="php:function('lang', 'Friday')" />', formatter: 'scheduleDateColumn'},
-                {key: '6', label: '<xsl:value-of select="php:function('lang', 'Saturday')" />', formatter: 'scheduleDateColumn'},
-                {key: '7', label: '<xsl:value-of select="php:function('lang', 'Sunday')" />', formatter: 'scheduleDateColumn'}
+                {key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'seasonDateColumn'},
+                {key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: 'seasonDateColumn'},
+                {key: '3', label: '<xsl:value-of select="php:function('lang', 'Wednesday')" />', formatter: 'seasonDateColumn'},
+                {key: '4', label: '<xsl:value-of select="php:function('lang', 'Thursday')" />', formatter: 'seasonDateColumn'},
+                {key: '5', label: '<xsl:value-of select="php:function('lang', 'Friday')" />', formatter: 'seasonDateColumn'},
+                {key: '6', label: '<xsl:value-of select="php:function('lang', 'Saturday')" />', formatter: 'seasonDateColumn'},
+                {key: '7', label: '<xsl:value-of select="php:function('lang', 'Sunday')" />', formatter: 'seasonDateColumn'}
             ];
             createTableSchedule('schedule_container', weekUrl, colDefs, r, 'pure-table' );
         });
