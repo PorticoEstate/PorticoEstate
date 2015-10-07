@@ -788,7 +788,7 @@ function createTableSchedule (d,u,c,r,cl) {
 
                     var classes = "";
                     var tableBodyTrTdText = "";
-                    
+					
                     if (vc['formatter']) {
                         if (vc['formatter'] == "scheduleResourceColumn"){
                             if (vd[k]) {
@@ -799,7 +799,11 @@ function createTableSchedule (d,u,c,r,cl) {
                             if (vd[k]) {
                                 var id = vd[k]['id'];
                                 var name = (vd[k]['shortname']) ? formatScheduleShorten(vd[k]['shortname'],9) : formatScheduleShorten(vd[k]['name'],9);
-                                var type = vd[k]['type'];
+                                var type = vd[k]['type']; 
+                                if (vc['formatter'] == "seasonDateColumn"){
+                                    tableBodyTrTdText = name;
+									tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm(vd[k]['id'])});
+                                }							
                                 if (vc['formatter'] == "scheduleDateColumn"){
                                     tableBodyTrTdText = formatGenericLink(name, null);
                                 }
