@@ -3,60 +3,90 @@
     <xsl:call-template name="msgbox"/>
     <!--xsl:call-template name="yui_booking_i18n"/-->
  
-	<form id="panel1" method="POST">
-		<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>
-		<div class="hd"><xsl:value-of select="php:function('lang', 'Allocations')" /></div>
-		<div class="bd">
-			<dl class="form-col">
-				<dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
-				<dd>
-					<input type="hidden" id="field_id" name="id"/>
-					<div class="autocomplete">
-						<input id="field_org_id" name="organization_id" type="hidden"/>
-						<input id="field_org_name" name="organization_name" type="text"/>
-						<div id="org_container"/>
-					</div>
-				</dd>
-				<dt><label for="field_wday"><xsl:value-of select="php:function('lang', 'Day of the week')" /></label></dt>
-				<dd>
-					<select id="field_wday" name="wday">
-						<option value="1"><xsl:value-of select="php:function('lang', 'Monday')" /></option>
-						<option value="2"><xsl:value-of select="php:function('lang', 'Tuesday')" /></option>
-						<option value="3"><xsl:value-of select="php:function('lang', 'Wednesday')" /></option>
-						<option value="4"><xsl:value-of select="php:function('lang', 'Thursday')" /></option>
-						<option value="5"><xsl:value-of select="php:function('lang', 'Friday')" /></option>
-						<option value="6"><xsl:value-of select="php:function('lang', 'Saturday')" /></option>
-						<option value="7"><xsl:value-of select="php:function('lang', 'Sunday')" /></option>
-					</select>
-				</dd>
-				<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-				<dd>
-					<div class="time-picker">
-					<input id="field_from" name="from_" type="text">
+    <form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
+        <div id="tab-content">
+            <input type="hidden" name="tab" value=""/>
+            <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
+            <div id="allocations">
+				<input type="hidden" id="id" name="id">
+					<xsl:attribute name="value"><xsl:value-of select="season/id"/></xsl:attribute>
+				</input>
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'Organization')" /></label>					
+					<input id="organization_id" name="organization_id" type="hidden">
+						<xsl:attribute name="value"><xsl:value-of select="season/organization_id"/></xsl:attribute>
+					</input>
+					<input id="organization_name" name="organization_name" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/organization_name"/></xsl:attribute>
+					</input>					
+				</div>
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'Day of the week')" /></label>
+					<select id="wday" name="wday">
+						<option value="1">
+							<xsl:if test="season/wday = '1'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Monday')" />
+						</option>
+						<option value="2">
+							<xsl:if test="season/wday = '2'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Tuesday')" />
+						</option>
+						<option value="3">
+							<xsl:if test="season/wday = '3'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Wednesday')" />
+						</option>
+						<option value="4">
+							<xsl:if test="season/wday = '4'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Thursday')" />
+						</option>
+						<option value="5">
+							<xsl:if test="season/wday = '5'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Friday')" />
+						</option>
+						<option value="6">
+							<xsl:if test="season/wday = '6'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Saturday')" />
+						</option>
+						<option value="7">
+							<xsl:if test="season/wday = '7'"><xsl:attribute name="selected" value="selected"/></xsl:if>
+							<xsl:value-of select="php:function('lang', 'Sunday')" />
+						</option>
+					</select>					
+				</div>
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'From')" /></label>
+					<input id="from_" name="from_" type="text">
 						<xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
-					</input>
-					</div>
-				</dd>
-				<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-				<dd>
-					<div class="time-picker">
-					<input id="field_to" name="to_" type="text">
+					</input>					
+				</div>
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'To')" /></label>
+					<input id="to_" name="to_" type="text">
 						<xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
-					</input>
-					</div>
-				</dd>
-			</dl>
-			<dl class="form-col">
-				<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
-				<dd><input id="field_cost" name="cost" type="text"/></dd>
-				<dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
-				<dd>
+					</input>					
+				</div>
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'Cost')" /></label>
+					<input id="cost" name="cost" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/cost"/></xsl:attribute>
+					</input>					
+				</div>			
+				<div clas="pure-control-group">
+					<label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
 					<div id="resources_container" class="custom-container"></div>
-				</dd>
-			</dl>
-			<div class="clr"/>
-		</div>
-	</form>
+				</div>
+
+            </div>
+        </div>
+        <div class="form-buttons">
+            <input type="button" class="pure-button pure-button-primary">
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
+            </input>
+            <input type="button" class="pure-button pure-button-primary">
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')" /></xsl:attribute>
+            </input>
+        </div>
+    </form>		
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
@@ -65,9 +95,10 @@
     <![CDATA[
         var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
     ]]>
+	var selection = <xsl:value-of select="season/resource_selected"/>;
     var colDefsRespurces = [
-        {key: 'name', label: lang['Name'], formatter: genericLink},
-        {key: 'type', label: lang['Resource Type']}
+		{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'resources_checks'}]}], value: 'id', checked: selection},
+        {key: 'name', label: lang['Name']}
     ];
 
     createTable('resources_container', resourcesURL, colDefsRespurces);
