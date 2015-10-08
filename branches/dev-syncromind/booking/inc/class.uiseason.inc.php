@@ -207,9 +207,9 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'season.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
+			//phpgwapi_yui::load_widget('datatable');
+			//phpgwapi_yui::load_widget('calendar');
+			//phpgwapi_yui::load_widget('autocomplete');
 			array_set_default($season, 'resources', array());
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
@@ -222,7 +222,7 @@
                         $active_tab = 'generic';
 
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
+		
 			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
 
@@ -377,8 +377,7 @@
             
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
-			self::add_javascript('booking', 'booking', 'schedule.js');
-						self::add_javascript('booking', 'booking', 'season.wtemplate.js');
+			self::add_javascript('booking', 'booking', 'schedule.js');						
                         phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('season_wtemplate', array('season' => $season));
 		}
@@ -416,29 +415,46 @@
 			}
 			$id = intval(phpgw::get_var('id', 'GET'));
 		
-			/*if($phpgw_return_as == 'json')
-			{*/
-				$alloc = $this->bo->wtemplate_alloc_read_single($id);
-				//return $alloc;
-			//}
-			$resource_ids = phpgw::get_var('filter_id', 'GET');
+			$alloc = $this->bo->wtemplate_alloc_read_single($id);
 
+			$resource_ids = phpgw::get_var('filter_id', 'GET');
+			
+			$season = $alloc;
+			$season['resource_selected'] = json_encode($alloc['resources']);
+			
+			$filters = null;
 			if (count($resource_ids) == 0) {
-				$resource_ids = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
+				$filters = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
 			} else {
 				foreach($resource_ids as $res)
 				{
-					$resource_ids = $resource_ids . '&filter_id[]=' . $res;
+					$filters = $filters . '&filter_id[]=' . $res;
 				}
 			}
-			$season['resource_ids'] = $resource_ids;
+			$season['resource_ids'] = $filters;
 			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			
-			$tabs['generic'] = array('label' => lang('Week template'), 'link' => '#season_wtemplate');
-			$active_tab = 'generic';       
+			$tabs['allocations'] = array('label' => lang('Allocations'), 'link' => '#allocations');
+			$active_tab = 'allocations';       
             $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			
+			phpgwapi_jquery::load_widget('autocomplete');
                         
+			$jscode = <<<JS
+
+				$(document).ready(function() {
+					
+					var oArgs = {menuaction:'booking.uiorganization.index'};
+					var sUrl = phpGWLink('index.php', oArgs, true);	
+	
+					JqueryPortico.autocompleteHelper(sUrl, 'organization_name', 'organization_id', 'org_container');					
+				});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $jscode);
+			
+			self::add_javascript('booking', 'booking', 'season.wtemplate.js');
+		
 			self::render_template('season_wtemplate_allocation', array('season' => $season));			
 		}
 
