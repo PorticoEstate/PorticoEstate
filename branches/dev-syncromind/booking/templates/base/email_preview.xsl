@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="form-buttons">
-            <input type="submit" name="sendmail">
+            <input type="submit" name="sendmail" class="pure-button pure-button-primary">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send e-mails')"/></xsl:attribute>
             </input>
         </div>
