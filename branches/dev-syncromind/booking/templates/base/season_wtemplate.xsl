@@ -61,7 +61,7 @@
                         <xsl:value-of select="php:function('lang', 'Generate allocations')" />
                     </button>
 					-->
-					<input type="button" class="pure-button pure-button-primary" name="new" onclick="showAllocationForm();">
+					<input type="button" class="pure-button pure-button-primary" name="new" onclick="schedule.newAllocationForm('')">
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'New allocation')" /></xsl:attribute>	
 					</input>
 					<input type="button" class="pure-button pure-button-primary" name="generate_allocations">
