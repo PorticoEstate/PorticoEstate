@@ -331,7 +331,10 @@
                         phpgwapi_jquery::init_ckeditor('field_description');
             
                         $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Group Edit'), 'link' => '#group_edit');
+                        $tab_text = ($id) ? 'Group Edit' : 'Group New' ;
+                        if (id) {
+                            $tabs['generic'] = array('label' => lang($tab_text), 'link' => '#group_edit');
+                        }
                         $active_tab = 'generic';
                         $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
