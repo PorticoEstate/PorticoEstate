@@ -5,7 +5,7 @@
     	<dt class="heading"><xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
-	<xsl:call-template name="yui_booking_i18n"/>
+	<!--xsl:call-template name="yui_booking_i18n"/-->
 
     <form action="" method="POST">
 		<input type="hidden" name="season_id" value="{booking/season_id}"/>

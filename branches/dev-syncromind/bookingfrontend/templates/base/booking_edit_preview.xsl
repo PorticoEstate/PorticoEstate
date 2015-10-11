@@ -5,7 +5,7 @@
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Mass update')"/></dt>
 		</dl>
 		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+	<!--xsl:call-template name="yui_booking_i18n"/-->
 		<xsl:choose>
 			<xsl:when test="step = 2">
 				<p>

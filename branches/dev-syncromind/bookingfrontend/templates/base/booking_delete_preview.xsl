@@ -5,7 +5,7 @@
     	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete Booking')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
-	<xsl:call-template name="yui_booking_i18n"/>
+	<!--xsl:call-template name="yui_booking_i18n"/-->
 
 	<!-- <xsl:call-template name="xmlsource"/> -->
 

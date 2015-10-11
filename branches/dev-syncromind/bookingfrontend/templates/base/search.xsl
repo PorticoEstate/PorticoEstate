@@ -14,7 +14,7 @@
 </xsl:template>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:call-template name="yui_booking_i18n"/>
+	<!--xsl:call-template name="yui_booking_i18n"/-->
   <div id="content">
     <form action="" method="GET" id="search">
       <input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />

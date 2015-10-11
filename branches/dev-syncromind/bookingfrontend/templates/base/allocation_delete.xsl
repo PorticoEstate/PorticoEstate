@@ -5,7 +5,7 @@
     	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
-	<xsl:call-template name="yui_booking_i18n"/>
+	<!--xsl:call-template name="yui_booking_i18n"/-->
 	<dl class="form">
     	<dd><xsl:value-of select="php:function('lang', 'Delete Information')"/></dd>
     	<dd><xsl:value-of select="php:function('lang', 'Delete Information2')"/></dd>

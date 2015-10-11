@@ -11,8 +11,8 @@
 		function __construct()
 		{
 			
-			$this->bo = CreateObject('bookingfrontend.bosearch');
 			parent::__construct();
+			$this->bo = CreateObject('bookingfrontend.bosearch');
 			$old_top = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
@@ -42,8 +42,14 @@
 			
 			$params = is_null($search) ? array('baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}", 'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg", 'frontpagetext' => $frontpagetext) : array('search' => $search);
 
-			self::render_template('search', $params);
+//			self::render_template('search', $params);
+            self::render_template_xsl('search', $params);
+
 		}
-		
+
+		function query()
+		{
+			
+		}	
 		
 	}
