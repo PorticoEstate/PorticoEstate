@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'index_json'	=>	true,
+			'query'			=>	true,
 			'show'			=>	true,
 			'schedule'		=>	true
 		);
@@ -23,6 +24,11 @@
 		public function index_json()
 		{
 			return $this->bo->populate_grid_data("bookingfrontend.uiresource.show");
+		}
+
+		public function query()
+		{
+			return $this->index_json();
 		}
 
 		public function show()
