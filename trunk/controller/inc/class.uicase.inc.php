@@ -304,9 +304,13 @@
                         $config->read();
                         $mandatory_location = $config->config_data['control_mandatory_location'];
                         if($mandatory_location && $mandatory_location == 1)
+						{
                             $mandatory_location = true;
+						}
                         else
+						{
                             $mandatory_location = false;
+						}
 			$case_data = $this->_get_case_data();
 			$check_list = $case_data['check_list'];
 
