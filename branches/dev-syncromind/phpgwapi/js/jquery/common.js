@@ -802,7 +802,7 @@ function createTableSchedule (d,u,c,r,cl) {
                                 var type = vd[k]['type']; 
                                 if (vc['formatter'] == "seasonDateColumn"){
                                     tableBodyTrTdText = name;
-									tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm(vd[k]['id'])});
+									tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm({'id':vd[k]['id']})});
                                 }							
                                 if (vc['formatter'] == "scheduleDateColumn"){
                                     tableBodyTrTdText = formatGenericLink(name, null);
@@ -834,6 +834,9 @@ function createTableSchedule (d,u,c,r,cl) {
                                 if (vc['formatter'] == "frontendScheduleDateColumn") {
                                     tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'],tableBodyTr.getAttribute('resource'))});
                                 }
+                                if (vc['formatter'] == "seasonDateColumn") {
+                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newAllocationForm({'_from':vd['_from'], '_to':vd['_to'], 'wday':vc['key']})});
+                                }								
                             }
                         }
                     }else {
