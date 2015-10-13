@@ -146,8 +146,9 @@
         <![CDATA[
             var weekUrl = 'index.php?menuaction=booking.uiseason.wtemplate_json&id=' + season_id + '&phpgw_return_as=json&';
         ]]>
+		var colDefs = [];
         $(window).load(function() {
-            var colDefs = [
+            colDefs = [
                 {key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'}, 
                 {key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},
                 {key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'seasonDateColumn'},
