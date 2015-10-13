@@ -1,8 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
-    <!--h3><xsl:value-of select="php:function('lang', 'Edit target audience')" /></h3-->
     <xsl:call-template name="msgbox"/>
-	<!--xsl:call-template name="yui_booking_i18n"/-->
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -55,13 +52,12 @@
         </div>
         <div class="form-buttons">
             <input type="submit" class="button pure-button pure-button-primary">
-               <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
+               <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
             </input>
-            <a class="cancel">
+            <a class="cancel pure-button pure-button-primary">
                 <xsl:attribute name="href"><xsl:value-of select="audience/cancel_link"></xsl:value-of></xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Cancel')" />
             </a>			
         </div>
     </form>
-    <!--/div-->
 </xsl:template>

@@ -1,20 +1,10 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
-
     <xsl:call-template name="msgbox"/>
-	<!--xsl:call-template name="yui_booking_i18n"/-->
-
-	<!--dl class="form">
-		<dt class="heading"><xsl:value-of select="php:function('lang', 'Account Codes')"/> - <xsl:value-of select="php:function('lang', 'Labels')"/></dt>
-	</dl-->
-
-	<!--p><xsl:value-of select="php:function('lang', 'account_code_dimension_helptext')"/></p-->
-
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="data/tabs"/>
-            <div id="account_code">
+            <div id="account_code" class="booking-container">
                 <div class="pure-control-group">
                     <label>Article (pos 283 - 297)</label>
                                         <input id="field_article" name="article" type="text">
@@ -69,9 +59,8 @@
                                                 <xsl:attribute name="value"><xsl:value-of select="config_data/dim_value_5"/></xsl:attribute>
                                         </input>
                 </div>
-                <div class="clr"/>
                 <div class="pure-control-group">
-                        <dt class="heading"><xsl:value-of select="php:function('lang', 'External account')"/></dt>
+                        <div class="heading"><legend><h3><xsl:value-of select="php:function('lang', 'External account')"/></h3></legend></div>
                 </div>
                 <div class="pure-control-group">
                     <p><xsl:value-of select="php:function('lang', 'External_account_helptext')"/></p>
@@ -116,10 +105,8 @@
                             </option>
                         </select>
                 </div>
-
-                <div class="clr"/>
                 <div class="pure-control-group">
-                        <dt class="heading"><xsl:value-of select="php:function('lang', 'Internal account')"/></dt>
+                        <div class="heading"><legend><h3><xsl:value-of select="php:function('lang', 'Internal account')"/></h3></legend></div>
                 </div>
                 <div class="pure-control-group">
                     <p><xsl:value-of select="php:function('lang', 'Internal_account_helptext')"/></p>
@@ -171,10 +158,8 @@
                         </select>
                 </div>
 
-                <div class="clr"/>
-
                 <div class="pure-control-group">
-                        <dt class="heading"><xsl:value-of select="php:function('lang', 'Export agresso')"/></dt>
+                        <div class="heading"><legend><h3><xsl:value-of select="php:function('lang', 'Export agresso')"/></h3></legend></div>
                 </div>
 
                 <div class="pure-control-group">

@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content_overlay"></div>
+    <!--div id="content_overlay"></div-->
     <style typ="text/css" rel="stylesheet">
         #week-selector {list-style: outside none none;}
         #week-selector li {display: inline-block;}
@@ -62,8 +62,11 @@
             </div>
         </div>
     </form>
-
+    <div id="dialog_schedule"></div>
     <script type="text/javascript">
+        
+        schedule.createDialogSchedule(300);
+        
         $(window).load(function() {
             $('body').prepend($('#content_overlay'));
             schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';

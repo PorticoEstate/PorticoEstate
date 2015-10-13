@@ -1,12 +1,12 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--script type="text/javascript">
-		YAHOO.booking.documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
-		YAHOO.booking.documentOwnerAutocomplete = <xsl:value-of select="document/inline"/> == 0;
-	</script-->
-	
-    <!--div id="content"-->
-    	<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
+    <script type="text/javascript">
+            var documentOwnerType = "";
+            var documentOwnerAutocomplete = "";
+            documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
+            documentOwnerAutocomplete = (documentOwnerAutocomplete) ? documentOwnerAutocomplete : 0;
+    </script>
+
+    <xsl:call-template name="msgbox"/>
 
     	<form action="" method="POST" enctype='multipart/form-data' id='form' class="pure-form pure-form-aligned" name="form">
             <input type="hidden" name="tab" value=""/>
@@ -89,7 +89,7 @@
                         </xsl:choose>
                     </xsl:attribute>
                 </input>
-                <a class="cancel">
+                <a class="cancel pure-button pure-button-primary">
                     <xsl:attribute name="href"><xsl:value-of select="document/cancel_link"/></xsl:attribute>
                     <xsl:value-of select="php:function('lang', 'Cancel')" />
                 </a>

@@ -16,13 +16,7 @@
 </func:function>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
-    <!--dl class="form">
-            <dt class="heading"><xsl:value-of select="php:function('lang', phpgw:conditional(new_form, 'Add', 'Edit'))"/><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'Account Codes')"/></dt>
-    </dl-->
-
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
 
     <form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
         <input type="hidden" name="tab" value=""/>
@@ -83,12 +77,12 @@
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
-                                <xsl:if test="config_data/external_format!= 'KOMMFAKT'">
+                                <!--xsl:if test="config_data/external_format = 'KOMMFAKT'"-->
                                     <label for="field_unit_prefix">
                                         <h4><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></h4>
                                     </label>
                                     <input name="unit_prefix" type="text" id="field_unit_prefix" value="{account_code_set/unit_prefix}" maxlength='1' class="pure-u-1" />
-                                </xsl:if>
+                                <!--/xsl:if-->
                             </div>
                         </div>
                         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
@@ -169,7 +163,7 @@
         </div>
         <div class="form-buttons">
             <input type="submit" value="{php:function('lang', phpgw:conditional(new_form, 'Create', 'Save'))}" class="button pure-button pure-button-primary"/>
-            <a class="cancel" href="{account_code_set/cancel_link}">
+            <a class="cancel pure-button pure-button-primary" href="{account_code_set/cancel_link}">
                 <xsl:value-of select="php:function('lang', 'Cancel')" />
             </a>
         </div>

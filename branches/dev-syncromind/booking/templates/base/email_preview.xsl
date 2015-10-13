@@ -6,7 +6,7 @@
         <input type="hidden" name="tab" value=""/>
         <input type="hidden" name="step" value="{step}"/>
         <input type="hidden" name="seasons" value="{season}"/>
-        <input type="hidden" name="building_id" value="{building}"/>
+        <input type="hidden" name="building_id" value="{building_id}"/>
         <input type="hidden" name="mailbody" value="{mailbody}"/>
         <input type="hidden" name="mailsubject" value="{mailsubject}"/>
         <div id="tab-content">

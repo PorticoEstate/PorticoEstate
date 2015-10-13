@@ -30,7 +30,7 @@
                                 <label for="start_date">
                                     <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
                                 </label>
-                                <input class="datetime" id="start_date" name="start_date" type="text">
+                                <input class="datetime" id="start_date" name="from" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="from"/></xsl:attribute>
                                 </input>
                             </div>
@@ -44,7 +44,7 @@
                                 <label for="end_date">
                                     <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
                                 </label>
-                                <input class="datetime" id="end_date" name="end_date" type="text">
+                                <input class="datetime" id="end_date" name="to" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="to"/></xsl:attribute>
                                 </input>
                             </div>

@@ -1,8 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	
-<!--xsl:call-template name="yui_booking_i18n"/-->
-
-
 <style id='toggle-box-css' type='text/css' scoped='scoped'>
     .toggle-box {
       display: none;
@@ -45,118 +41,103 @@
     .toggle-box:checked + label:before {
       content: "\2212";
     }
-</style>
 
-
-<style>
     #expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
     #treeDiv { background: #fff; padding:1em; margin-top:1em; }
 </style>
+<xsl:call-template name="msgbox"/>
+<div>
+    <input type="hidden" name="tab" value=""/>
+    <div id="tab-content">
+        <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+        <div id="activities">
+            <input type="hidden" name="application_id" value="{booking/application_id}"/>
+            <form id="queryForm" method="GET" action="">
+                <input class="toggle-box" id="header1" type="checkbox" />
+                <label for="header1">
+                    <xsl:value-of select="php:function('lang', 'toolbar')"/>
+                </label>
+                <div id="toolbar">
+                    <!--xsl:if test="item/text and normalize-space(item/text)"-->
+                        <table id="toolbar_table" class="pure-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <xsl:value-of select="php:function('lang', 'name')"/>
+                                    </th>
+                                    <th>
+                                        <xsl:value-of select="php:function('lang', 'item')"/>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <xsl:if test="links/add">
+                                            <input type="button" class="pure-button pure-button-primary">
+                                                <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/add"/>', "_self");</xsl:attribute>
+                                                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add Activity')" /></xsl:attribute>
+                                                <xsl:attribute name="id">new-button</xsl:attribute>
+                                            </input>
+                                        </xsl:if>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <xsl:if test="not(show_all='1')">
+                                            <input type="button" class="pure-button pure-button-primary">
+                                                <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/show_inactive"/>', "_self");</xsl:attribute>
+                                                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'show all')" /></xsl:attribute>
+                                                <xsl:attribute name="id">new-button</xsl:attribute>
+                                            </input>
+                                        </xsl:if>
+                                        <xsl:if test="show_all='1'">
+                                            <input type="button" class="pure-button pure-button-primary">
+                                                <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/hide_inactive"/>', "_self");</xsl:attribute>
+                                                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Show only active')" /></xsl:attribute>
+                                                <xsl:attribute name="id">new-button</xsl:attribute>
+                                            </input>
+                                        </xsl:if>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                </div>
+
+            </form>
+
+            <div id="tree_container">
+                <legend>
+                    <h3><xsl:value-of select="php:function('lang', 'Current Activities')" /></h3>
+                </legend>
 
 
-<form id="queryForm" method="GET" action="">
-    <input class="toggle-box" id="header1" type="checkbox" />
-    <label for="header1">
-        <xsl:value-of select="php:function('lang', 'toolbar')"/>
-    </label>
-    <div id="toolbar">
-        <!--xsl:if test="item/text and normalize-space(item/text)"-->
+                <script type="text/javascript">
+                    var activities = null;
+                <xsl:if test="treedata != ''">
+                    activities = <xsl:value-of select="treedata"/>;
+                </xsl:if>
+                </script>
 
-            <table id="toolbar_table" class="pure-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <xsl:value-of select="php:function('lang', 'name')"/>
-                        </th>
-                        <th>
-                            <xsl:value-of select="php:function('lang', 'item')"/>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                        </td>                                
-                        <td>
-                            <xsl:if test="links/add">
-                                <input type="button" class="pure-button pure-button-primary">
-                                    <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/add"/>', "_self");</xsl:attribute>
-                                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add Activity')" /></xsl:attribute>
-                                    <xsl:attribute name="id">new-button</xsl:attribute>
-                                </input>
-                            </xsl:if>
-                        </td>
+                <!-- markup for expand/contract links -->
+                <div id="treecontrol">
+                        <a id="collapse" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+                        <xsl:text> | </xsl:text>
+                        <a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
+                </div>
 
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <xsl:if test="not(show_all='1')">
-                                <input type="button" class="pure-button pure-button-primary">
-                                    <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/show_inactive"/>', "_self");</xsl:attribute>
-                                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'show all')" /></xsl:attribute>
-                                    <xsl:attribute name="id">new-button</xsl:attribute>
-                                </input>
-                            </xsl:if>
-                            <xsl:if test="show_all='1'">
-                                <input type="button" class="pure-button pure-button-primary">
-                                    <xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/hide_inactive"/>', "_self");</xsl:attribute>
-                                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Show only active')" /></xsl:attribute>
-                                    <xsl:attribute name="id">new-button</xsl:attribute>
-                                </input>
-                            </xsl:if>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+                <div id="treeDiv"></div>
+            </div>
+        </div>
     </div>
-
-</form>
-
-<div id="tree_container">
-    <legend>
-        <h3><xsl:value-of select="php:function('lang', 'Current Activities')" /></h3>
-    </legend>
-
-
-<!--div id="toolbar">
-        <table class="yui-skin-sam" border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
-                <tr>
-                        <xsl:if test="links/add">
-                                <td valign="top"><input id="new-button" type="link" value="{php:function('lang', 'Add Activity')}" href="{links/add}"/></td>
-                        </xsl:if>
-                        <xsl:if test="not(show_all='1')">
-                                <td valign="top"><input id="show-hide" type="link" value="{php:function('lang', 'Show all')}" href="{links/show_inactive}"/></td>
-                        </xsl:if>
-                        <xsl:if test="show_all='1'">
-                                <td valign="top"><input id="show-hide" type="link" value="{php:function('lang', 'Show only active')}" href="{links/hide_inactive}"/></td>
-                        </xsl:if>
-                </tr>
-        </table>
-</div-->
-
-
-
+ </div>   
 
     <script type="text/javascript">
-        var activities = null;            
-    <xsl:if test="treedata != ''">
-        activities = <xsl:value-of select="treedata"/>;
-    </xsl:if>
-    </script>
-
-
-<!-- markup for expand/contract links -->
-
-    <div id="treecontrol">
-            <a id="collapse" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
-            <xsl:text> | </xsl:text>
-            <a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
-    </div>
-    <div id="treeDiv"></div>
-    <script type="text/javascript">
-
         $("#treeDiv").jstree({
             "core" : {
                 "multiple" : false,
@@ -185,37 +166,4 @@
             $('#treeDiv').jstree('open_all');
         });
     </script>
-</div>
-
-
-
-<!--div style="padding: 0 2em"-->
-
-
-
-<!--script type="text/javascript">
-YAHOO.util.Event.addListener(window, "load", function() {
-	var newButton = YAHOO.util.Dom.get('new-button');
-	if(newButton)
-		new YAHOO.widget.Button(newButton, 
-		                        {type: 'link', 
-		                         href: newButton.getAttribute('href')});
-	var showHideButton = YAHOO.util.Dom.get('show-hide');
-	new YAHOO.widget.Button(showHideButton, 
-	                        {type: 'link', 
-	                         href: showHideButton.getAttribute('href')});
-
-
-
-	var tree = new YAHOO.widget.TreeView("tree_container", <xsl:value-of select="treedata"/>); 
-<xsl:if test="navi/add">
-	tree.subscribe("labelClick", function(node) {
-		window.location.href = node.href;
-	});
-</xsl:if>
-	tree.render(); 
-});
-</script-->
-	
-<!--/div-->
 </xsl:template>

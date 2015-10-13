@@ -1,17 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--xsl:call-template name="yui_booking_i18n"/-->
-    <!--div id="content"-->
-    <!--ul class="pathway">
-            <li>
-                    <a>
-                            <xsl:attribute name="href"><xsl:value-of select="account_code_set/account_codes_link"/></xsl:attribute>
-                            <xsl:value-of select="php:function('lang', 'Account Codes')" />
-                    </a>
-            </li>
-            <li>
-                    <xsl:value-of select="account_code_set/name"/>
-            </li>
-    </ul-->
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -64,12 +51,12 @@
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">	
-                    <xsl:if test="config_data/external_format != 'KOMMFAKT'">
+                    <!--xsl:if test="config_data/external_format != 'KOMMFAKT'"-->
                         <label>
                             <h4><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></h4>
                         </label>
                         <xsl:value-of select="account_code_set/unit_prefix"/>
-                    </xsl:if>
+                    <!--/xsl:if-->
                 </div>		
 		<div class="pure-control-group">
                     <xsl:if test="config_data/dim_1">
@@ -120,11 +107,10 @@
     <div class="form-buttons">
         <xsl:if test="account_code_set/permission/write">
             <div class="form-buttons">
-                <button onclick="window.location.href='{account_code_set/edit_link}'">
+                <button onclick="window.location.href='{account_code_set/edit_link}'" class="pure-button pure-button-primary">
                     <xsl:value-of select="php:function('lang', 'Edit')" />
                 </button>
             </div>
         </xsl:if>
     </div>
-	<!--/div-->
 </xsl:template>

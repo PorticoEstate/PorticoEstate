@@ -9,10 +9,10 @@
                 <div class="pure-control-group">
                     <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                     <input id="field_building_id" name="building_id" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="building_id"/></xsl:attribute>
+                        <xsl:attribute name="value"><xsl:value-of select="building/id"/></xsl:attribute>
                     </input>
                     <input id="field_building_name" name="building_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="building_name"/></xsl:attribute>
+                        <xsl:attribute name="value"><xsl:value-of select="building/name"/></xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
