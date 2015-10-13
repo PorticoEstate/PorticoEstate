@@ -30,7 +30,8 @@
 			{
 				$step = phpgw::get_var('step', 'POST');
 				$step++;
-				$building =  phpgw::get_var('building_id', 'POST');
+				$building_id =  phpgw::get_var('building_id', 'POST');
+                                $building_name =  phpgw::get_var('building_name', 'POST');
 				if (is_array(phpgw::get_var('seasons', 'POST')))
 				{
 					$season =  implode(',', phpgw::get_var('seasons', 'POST'));
@@ -45,30 +46,32 @@
 
 				if ($step == 1)
 				{
-					if ($building == '' || $season == '' || $mailsubject == '' || $mailbody == '')
+					if ($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
 					{
 						$errors['incomplete form'] = lang('All fields are required');
 					}
 					else
 					{
-						$contacts = $this->get_email_addresses($building, $season);
+						$contacts = $this->get_email_addresses($building_id, $season);
 						$step++;
 					}
 				}
 				elseif ($step == 2)
 				{
-					$contacts = $this->get_email_addresses($building, $season);
+					$contacts = $this->get_email_addresses($building_id, $season);
 					$step++;
 				}
 				elseif ($step == 3)
 				{
-					$contacts = $this->get_email_addresses($building, $season);
+					$contacts = $this->get_email_addresses($building_id, $season);
 					$result = $this->send_emails($contacts, $mailsubject, $mailbody);
 					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt', 
 						'ok' => count($result['ok']),
 						'failed' => count($result['failed'])
 					));
 				}
+                            $building['id'] = $building_id;
+                            $building['name'] = $building_name;
 			}
 
 			$this->flash_form_errors($errors);
@@ -92,6 +95,7 @@
 			if ($step == 2)
 				self::render_template_xsl('email_preview', 
 					array('building' => $building,
+                                        'building_id' => $building_id,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
 					'mailbody' => $mailbody,
