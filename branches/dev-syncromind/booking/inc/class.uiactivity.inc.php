@@ -80,11 +80,17 @@
 				'show_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => 'true')),
 				'hide_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => ''))
 			);
+                        
+                        $tabs = array();
+			$tabs['generic'] = array('label' => lang('Booking'), 'link' => '#activities');
+			$active_tab = 'generic';
+                        $tabs = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			if ($this->bo->allow_create())
 			{
 				$links['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
 			}
-			self::render_template_xsl('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all));
+			self::render_template_xsl('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all, 'tabs' => $tabs));
 		}
 
 		public function add()

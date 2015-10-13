@@ -42,8 +42,13 @@
 			$reports[]	 = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array(
 					'menuaction' => 'booking.uireports.participants')));
 			$reports[]	 = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
-
-			self::render_template_xsl('report_index', array('reports' => $reports));
+                        
+                        $tabs = array();
+			$tabs['generic'] = array('label' => lang('Reports'), 'link' => '#reports');
+			$active_tab = 'generic';
+                        $tabs = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			
+                        self::render_template_xsl('report_index', array('reports' => $reports, 'tabs' => $tabs));
 		}
 
 		public function add()
