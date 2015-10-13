@@ -55,15 +55,23 @@
 				</div>
 				<div clas="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'From')" /></label>
-					<input id="from_" name="from_" type="text">
-						<xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
+					<input id="from_h" name="from_h" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/from_h"/></xsl:attribute>
+					</input>
+					:
+					<input id="from_m" name="from_m" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/from_m"/></xsl:attribute>
 					</input>					
 				</div>
 				<div clas="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'To')" /></label>
-					<input id="to_" name="to_" type="text">
-						<xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
-					</input>					
+					<input id="to_h" name="to_h" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/to_h"/></xsl:attribute>
+					</input>
+					:
+					<input id="to_m" name="to_m" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="season/to_m"/></xsl:attribute>
+					</input>									
 				</div>
 				<div clas="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'Cost')" /></label>
@@ -79,12 +87,14 @@
             </div>
         </div>
         <div class="form-buttons">
-            <input type="button" class="pure-button pure-button-primary">
+            <input type="button" class="pure-button pure-button-primary" onclick="saveTemplateAlloc()">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
             </input>
-            <input type="button" class="pure-button pure-button-primary">
-                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')" /></xsl:attribute>
-            </input>
+			<xsl:if test="season/id != ''">
+				<input type="button" class="pure-button pure-button-primary" onclick="deleteTemplateAlloc()">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')" /></xsl:attribute>
+				</input>
+			</xsl:if>
         </div>
     </form>		
 
