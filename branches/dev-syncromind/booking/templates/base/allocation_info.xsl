@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div class="close" style="float: right"><a onclick="schedule.closeOverlay(); return false" style="cursor:pointer;"><xsl:value-of select="php:function('lang', 'Close')"/></a></div>
+    <!--div class="close" style="float: right"><a onclick="schedule.closeOverlay(); return false" style="cursor:pointer;"><xsl:value-of select="php:function('lang', 'Close')"/></a></div-->
     <h3><xsl:value-of select="php:function('lang', 'Allocation')"/> #<xsl:value-of select="allocation/id"/></h3>
     <div class="pure-form pure-form-aligned">
         <div class="pure-control-group">
@@ -20,7 +20,7 @@
         <div class="actions">
             <button onclick="location.href='{allocation/add_link}'" class="pure-button pure-button-primary"><xsl:value-of select="php:function('lang', 'Create new booking')"/></button>
             <xsl:if test="allocation/delete_link">
-                <button onclick="location.href='{allocation/delete_link}'" class="pure-button-primary"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></button>
+                <button onclick="location.href='{allocation/delete_link}'" class="pure-button pure-button-primary"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></button>
             </xsl:if>
         </div>
     </xsl:if>

@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div class="close" style="float: right"><a onclick="schedule.closeOverlay(); return false" style="cursor:pointer;"><xsl:value-of select="php:function('lang', 'Close')"/></a></div>
+    <!--div class="close" style="float: right"><a onclick="schedule.closeOverlay(); return false" style="cursor:pointer;"><xsl:value-of select="php:function('lang', 'Close')"/></a></div-->
     <h3><xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/></h3>
     <div class="pure-form pure-form-aligned">
         <div class="pure-control-group">
@@ -23,8 +23,8 @@
     </div>
     <xsl:if test="booking/edit_link">
         <div class="actions">
-            <button onclick="location.href='{booking/edit_link}'"><xsl:value-of select="php:function('lang', 'Edit booking')"/></button>
-            <button onclick="location.href='{booking/delete_link}'"><xsl:value-of select="php:function('lang', 'Delete booking')"/></button>
+            <button onclick="location.href='{booking/edit_link}'" class="pure-button pure-button-primary"><xsl:value-of select="php:function('lang', 'Edit booking')"/></button>
+            <button onclick="location.href='{booking/delete_link}'" class="pure-button pure-button-primary"><xsl:value-of select="php:function('lang', 'Delete booking')"/></button>
         </div>
     </xsl:if>
 </xsl:template>
