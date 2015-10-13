@@ -174,7 +174,7 @@
 		}
 		
 		public function add()
-		{	
+		{
 			$errors = array();
 			$document = array();
 			
@@ -186,7 +186,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($document);
-					$this->redirect('booking.uidocumentation.index');
+					$this->redirect(array('menuaction'=>'booking.uidocumentation.index'));
 				}
 			}
 			
@@ -218,7 +218,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($document);	
-					$this->redirect('booking.uidocumentation.index');
+					$this->redirect(array('menuaction'=>'booking.uidocumentation.index'));
 				}
 			}
 			
@@ -226,11 +226,11 @@
 			$this->flash_form_errors($errors);
 			$this->add_default_display_data($document);
 			
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
-            $active_tab = 'generic';
-            
-            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
+                        $active_tab = 'generic';
+
+                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('documentation_form', array('document' => $document));
 		}
@@ -249,7 +249,7 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$this->bo->delete($id);
 			
-			$this->redirect('booking.uidocumentation.index');
+			$this->redirect(array('menuaction'=>'booking.uidocumentation.index'));
 		}
 		
 		
