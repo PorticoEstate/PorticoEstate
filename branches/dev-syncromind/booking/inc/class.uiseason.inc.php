@@ -377,7 +377,8 @@
             
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
-			self::add_javascript('booking', 'booking', 'schedule.js');						
+			self::add_javascript('booking', 'booking', 'schedule.js');		
+			//self::add_javascript('booking', 'booking', 'season.wtemplate.js');
                         phpgwapi_jquery::load_widget("datepicker");
 			self::render_template('season_wtemplate', array('season' => $season));
 		}
@@ -399,28 +400,51 @@
 		/* Return a single wtemplate allocations as JSON */
 		public function wtemplate_alloc()
 		{
-			$season_id = intval(phpgw::get_var('season_id', 'GET'));
+			//$season_id = intval(phpgw::get_var('season_id', 'GET'));
 			//$phpgw_return_as = phpgw::get_var('phpgw_return_as');
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$alloc = extract_values($_POST, $this->wtemplate_alloc_fields);
-				$alloc['season_id'] = $season_id;
+				//$alloc['season_id'] = $season_id;
+				$alloc['season_id'] = phpgw::get_var('season_id');
+			
 				$errors = $this->bo->validate_wtemplate_alloc($alloc);
 				if(!$errors && $alloc['id'])
 					$receipt = $this->bo->update_wtemplate_alloc($alloc);
 				else if(!$errors && !$alloc['id'])
 					$receipt = $this->bo->add_wtemplate_alloc($alloc);
-				return $errors;
+				
+				return $errors;			
 			}
-			$id = intval(phpgw::get_var('id', 'GET'));
-		
-			$alloc = $this->bo->wtemplate_alloc_read_single($id);
-
-			$resource_ids = phpgw::get_var('filter_id', 'GET');
 			
-			$season = $alloc;
-			$season['resource_selected'] = json_encode($alloc['resources']);
+			$id = intval(phpgw::get_var('id', 'GET'));
+			
+			$_from = phpgw::get_var('_from', 'GET');
+			$_to = phpgw::get_var('_to', 'GET');
+			$wday = phpgw::get_var('wday', 'GET');
+		
+			if (!empty($id))
+			{
+				$alloc = $this->bo->wtemplate_alloc_read_single($id);				
+				$season = $alloc;
+				$_from = $alloc['from_'];
+				$_to = $alloc['to_'];
+				$season['resource_selected'] = json_encode($alloc['resources']);				
+			} else {
+				$season['resource_selected'] = json_encode(array());
+				$season['wday'] = $wday;				
+			}
+			
+			$array_from = explode(':', ($_from ? $_from : '00:00'));
+			$array_to = explode(':', ($_to ? $_to : '00:00'));
+			
+			$season['from_h'] = $array_from[0];
+			$season['from_m'] = $array_from[1];
+			$season['to_h'] = $array_to[0];
+			$season['to_m'] = $array_to[1];			
+				
+			$resource_ids = phpgw::get_var('filter_id', 'GET');
 			
 			$filters = null;
 			if (count($resource_ids) == 0) {
@@ -452,7 +476,7 @@
 				});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
-			
+		
 			self::add_javascript('booking', 'booking', 'season.wtemplate.js');
 		
 			self::render_template('season_wtemplate_allocation', array('season' => $season));			
