@@ -31,8 +31,13 @@ saveTemplateAlloc = function(){
 	var data = values;
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 
-		parent.createTableSchedule('schedule_container', parent.weekUrl, parent.colDefs, parent.r, 'pure-table' );
-		parent.TINY.box.hide();
+		if (typeof(result.error) !== 'undefined')
+		{
+			JqueryPortico.show_message('',result);
+		} else {
+			parent.createTableSchedule('schedule_container', parent.weekUrl, parent.colDefs, parent.r, 'pure-table' );
+			parent.TINY.box.hide();
+		}
 
 	}, data, "POST", "JSON");
 };
