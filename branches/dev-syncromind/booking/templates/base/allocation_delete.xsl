@@ -8,7 +8,7 @@
                 <div id="allocation_delete" class="booking-container">
                     <div class="heading">
                         <legend><h3><xsl:value-of select="php:function('lang', 'Delete allocation')"/></h3></legend>
-                    </div>                    
+                    </div>
                     <div class="pure-control-group">
                         <h4><xsl:value-of select="php:function('lang', 'Delete Information')"/></h4>
                         <h4><xsl:value-of select="php:function('lang', 'Delete Information2')"/></h4>
@@ -44,7 +44,7 @@
                             <xsl:value-of select="allocation/to_"/>
                         </div>
                     </div>
-                    <div class="pure-control-group">                            
+                    <div class="pure-control-group">
                         <label for="field_repeat_until" style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label>
                         <div style="display:inline-block;">
                             <div>

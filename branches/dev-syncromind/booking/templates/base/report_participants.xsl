@@ -1,15 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--div id="content">
-
-		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
-
-		<dl class="form">
-			<dt class="heading">
-				<xsl:value-of select="php:function('lang', 'Participants Per Age Group Per Month')" />
-			</dt>
-		</dl-->
-
     <form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -82,5 +71,4 @@
             </input>
         </div>
     </form>
-	<!--/div-->
 </xsl:template>

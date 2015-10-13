@@ -1,20 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
-
-	<!--dl class="form">
-    	<dt class="heading">
-			<xsl:if test="not(system_message/id)">
-				<xsl:value-of select="php:function('lang', 'New System Message')" />
-			</xsl:if>
-			<xsl:if test="system_message/id">
-				<xsl:value-of select="php:function('lang', 'Edit System Message')" />
-			</xsl:if>
-		</dt>
-	</dl-->
-
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
-
     <form action="" method="POST" class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -58,31 +43,4 @@
             </a>
         </div>
     </form>
-<!--/div-->
-
-<!--script type="text/javascript">
-<![CDATA[
-var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
-    height: '300px',
-    width: '522px',
-    dompath: true,
-    animate: true,
-	handleSubmit: true,
-        toolbar: {
-            titlebar: '',
-            buttons: [
-               { group: 'textstyle', label: ' ',
-                    buttons: [
-                        { type: 'push', label: 'Bold', value: 'bold' },
-                        { type: 'separator' },
-                        { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink'}
-                    ]
-                }
-            ]
-        }
-});
-descEdit.render();
-]]>
-</script-->
 </xsl:template>
-

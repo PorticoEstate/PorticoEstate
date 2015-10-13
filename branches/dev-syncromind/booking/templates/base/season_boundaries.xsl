@@ -41,7 +41,7 @@
                         </xsl:choose>
                     </tbody>
                 </table>
-                <xsl:if test="season/permission/write">                        
+                <xsl:if test="season/permission/write">
                     <div class="pure-g">
                         <div class="pure-u-1">
                             <div class="heading">
@@ -88,7 +88,7 @@
                                 </input>
                             </div>
                         </div>
-                    </div>                       
+                    </div>
                 </xsl:if>
                 <!-- <form action="" method="POST">
                 <dl class="form">
@@ -117,8 +117,8 @@
         <div class="form-buttons">
             <input type="button" class="pure-button pure-button-primary" name="cencel">
                 <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
-                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
             </input>
-        </div>		
+        </div>
     </form>
 </xsl:template>

@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <style type="text/css">
-        #agegroup td {padding: 0 0.3em;}        
+        #agegroup td {padding: 0 0.3em;}
     </style>
     <xsl:call-template name="msgbox"/>
     <form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
@@ -10,7 +10,7 @@
             <div id="event_new" class="booking-container">
                 <fieldset>
                     <input type="hidden" name="application_id" value="{event/application_id}"/>
-                    <div class="pure-g">                            
+                    <div class="pure-g">
                         <div class="pure-u-1">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Why')" /></h3></legend>
@@ -92,7 +92,7 @@
                                         <div class="pure-control-group">
                                             <label for="end_date">
                                                 <xsl:value-of select="php:function('lang', 'To')" />
-                                            </label>                                                                
+                                            </label>
                                             <input class="datetime pure-input-2-3" id="end_date" name="to_[]" type="text">
                                                 <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
                                             </input>
@@ -254,7 +254,7 @@
                                 <xsl:copy-of select="phpgw:option_checkbox(event/customer_internal, 'customer_internal')"/>
                             </div>
                         </div>
-                    </div>                                
+                    </div>
                 </fieldset>
             </div>
         </div>

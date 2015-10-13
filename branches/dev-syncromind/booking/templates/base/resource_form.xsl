@@ -1,22 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content">
-
-    <dl class="form">
-            <dt class="heading">
-                    <xsl:choose>
-                            <xsl:when test="new_form">
-                                    <xsl:value-of select="php:function('lang', 'Add Resource')" />
-                            </xsl:when>
-                            <xsl:otherwise>
-                                    <xsl:value-of select="php:function('lang', 'Edit Resource')" />
-                            </xsl:otherwise>
-                    </xsl:choose>
-            </dt>
-    </dl-->
-
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
-
     <form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -27,10 +10,10 @@
                         <xsl:value-of select="php:function('lang', 'Name')" />
                     </label>
                     <input name="name" id="field_name" type="text" value="{resource/name}">
-						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
-						</xsl:attribute>								
-					</input>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                    </input>
                 </div>
                 <div class="pure-control-group">
                     <label>
@@ -57,7 +40,6 @@
                     <label>
                         <xsl:value-of select="php:function('lang', 'Building')" />
                     </label>
-                    <!--div class="autocomplete"-->
                     <xsl:if test="new_form or resource/permission/write/building_id">
                         <input id="field_building_id" name="building_id" type="hidden" value="{resource/building_id}"/>
                     </xsl:if>
@@ -65,12 +47,11 @@
                         <xsl:if test="not(new_form) and not(resource/permission/write/building_id)">
                             <xsl:attribute name="disabled">disabled</xsl:attribute>
                         </xsl:if>
-						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
-						</xsl:attribute>					
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                     <div id="building_container" class="custom-container"></div>
-                    <!--/div-->
                 </div>
                 <div class="pure-control-group">
                     <label>
@@ -81,34 +62,34 @@
                         <xsl:for-each select="resource/types/*">
                             <option value="{local-name()}">
                                 <xsl:if test="../../type = local-name()">
-                                        <xsl:attribute name="selected">selected</xsl:attribute>
+                                    <xsl:attribute name="selected">selected</xsl:attribute>
                                 </xsl:if>
                                 <xsl:value-of select="php:function('lang', string(node()))"/>
                             </option>
                         </xsl:for-each>
                     </select>
                 </div>
-				<xsl:if test="not(new_form)">
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Active')"/>
-						</label>
-						<select id="field_active" name="active">
-							<option value="1">
-								<xsl:if test="resource/active=1">
-									<xsl:attribute name="selected">checked</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', 'Active')"/>
-							</option>
-							<option value="0">
-								<xsl:if test="resource/active=0">
-									<xsl:attribute name="selected">checked</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', 'Inactive')"/>
-							</option>
-						</select>
-					</div>
-				</xsl:if>             
+                <xsl:if test="not(new_form)">
+                    <div class="pure-control-group">
+                        <label>
+                            <xsl:value-of select="php:function('lang', 'Active')"/>
+                        </label>
+                        <select id="field_active" name="active">
+                            <option value="1">
+                                <xsl:if test="resource/active=1">
+                                    <xsl:attribute name="selected">checked</xsl:attribute>
+                                </xsl:if>
+                                <xsl:value-of select="php:function('lang', 'Active')"/>
+                            </option>
+                            <option value="0">
+                                <xsl:if test="resource/active=0">
+                                    <xsl:attribute name="selected">checked</xsl:attribute>
+                                </xsl:if>
+                                <xsl:value-of select="php:function('lang', 'Inactive')"/>
+                            </option>
+                        </select>
+                    </div>
+                </xsl:if>
                 <div class="pure-control-group">
                     <label>
                         <xsl:value-of select="php:function('lang', 'Description')" />
@@ -143,20 +124,10 @@
                     </xsl:choose>
                 </xsl:attribute>
             </input>
-			<input type="button" class="pure-button pure-button-primary" name="cancel">
-				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
-			</input>
+            <input type="button" class="pure-button pure-button-primary" name="cancel">
+                <xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+            </input>
         </div>
     </form>
-    <!--/div-->	
-    <script type="text/javascript">
-        /*
-            <![CDATA[
-            YAHOO.util.Event.addListener(window, "load", function() {
-            YAHOO.booking.rtfEditorHelper('field_description');
-            });
-            ]]>
-        */
-    </script>
 </xsl:template>

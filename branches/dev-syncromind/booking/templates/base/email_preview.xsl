@@ -1,7 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->    
     <form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
         <input type="hidden" name="tab" value=""/>
         <input type="hidden" name="step" value="{step}"/>
@@ -34,5 +32,4 @@
             </input>
         </div>
     </form>
-    <!--/div-->
 </xsl:template>

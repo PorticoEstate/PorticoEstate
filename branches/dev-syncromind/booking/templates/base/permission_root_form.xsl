@@ -4,7 +4,6 @@
         <xsl:apply-templates select="permission"/>
     </div>
 </xsl:template>
-
 <xsl:template match="data/permission" xmlns:php="http://php.net/xsl">
     <form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
         <input type="hidden" name="tab" value=""/>
@@ -42,10 +41,10 @@
                         <h4><xsl:value-of select="php:function('lang', 'Account')" /></h4>
                     </label>
                     <input id="field_subject_name" name="subject_name" type="text">
-                            <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
+                        <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
                     </input>
                     <input id="field_subject_id" name="subject_id" type="hidden">
-                            <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
+                        <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
                     </input>
                 </div>
             </div>

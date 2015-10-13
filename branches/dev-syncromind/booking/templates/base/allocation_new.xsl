@@ -2,15 +2,13 @@
     <style type="text/css">
         .pure-control-group h4 {margin: 0px;}
     </style>
-
     <xsl:call-template name="msgbox"/>
-
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
         <xsl:value-of disable-output-escaping="yes" select="allocation/tabs"/>
             <div id="allocation_new" class="booking-container">    
-                <input type="hidden" name="application_id" value="{allocation/application_id}"/>                
+                <input type="hidden" name="application_id" value="{allocation/application_id}"/>
                 <div class="pure-control-group">
                     <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                     <input id="field_building_id" name="building_id" type="hidden">
@@ -36,7 +34,7 @@
                             <xsl:if test="../allocation/weekday = 'monday'">
                                 <xsl:attribute name="selected">selected</xsl:attribute>
                             </xsl:if>
-                            <xsl:value-of select="php:function('lang', 'Monday')" />    
+                            <xsl:value-of select="php:function('lang', 'Monday')" />
                         </option>
                         <option value="tuesday">
                             <xsl:if test="weekday = 'tuesday'">
@@ -89,13 +87,13 @@
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <label for="outseason"><xsl:value-of select="php:function('lang', 'Recurring allocation')" /></label>
+                    <label><xsl:value-of select="php:function('lang', 'Recurring allocation')" /></label>
                     <input type="checkbox" name="outseason" id="outseason">
                         <xsl:if test="outseason='on'">
                             <xsl:attribute name="checked">checked</xsl:attribute>
                         </xsl:if>
                     </input>
-                    <label style="text-align:left;margin-left:5px;" for="outseason"><xsl:value-of select="php:function('lang', 'Out season')" /></label>
+                    <label style="text-align:left;margin-left:5px;font-weight: normal;" for="outseason"><xsl:value-of select="php:function('lang', 'Out season')" /></label>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_interval"><xsl:value-of select="php:function('lang', 'Interval')" /></label>
@@ -153,7 +151,6 @@
             </a>
         </div>
     </form>
-    
     <script type="text/javascript">
         var season_id = '<xsl:value-of select="allocation/season_id"/>';
         var initialSelection = <xsl:value-of select="allocation/resources_json"/>;

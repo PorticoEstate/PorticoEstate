@@ -5,8 +5,8 @@
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="allocation/tabs"/>
             <div id="allocations_edit" class="booking-container">
-                <fieldset>                        
-                    <h1>#<xsl:value-of select="allocation/id"/></h1>                        
+                <fieldset>
+                    <h1>#<xsl:value-of select="allocation/id"/></h1>
                     <div class="pure-control-group">
                         <label><xsl:value-of select="php:function('lang', 'Application')"/></label>
                         <xsl:if test="allocation/application_id!=''">
@@ -14,7 +14,7 @@
                         </xsl:if>
                     </div>
                     <div class="pure-control-group">
-                        <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>                                
+                        <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                         <input id="field_building_id" name="building_id" type="hidden">
                             <xsl:attribute name="value"><xsl:value-of select="allocation/building_id"/></xsl:attribute>
                         </input>
@@ -44,7 +44,7 @@
                         <label style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Season')" /></label>
                         <div id="season_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                     </div>
-                    <div class="pure-control-group">    
+                    <div class="pure-control-group">
                         <label style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Resources')" /></label>
                         <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                     </div>

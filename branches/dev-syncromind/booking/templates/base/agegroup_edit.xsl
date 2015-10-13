@@ -4,19 +4,15 @@
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
-            <div id="agegroup_edit">
+            <div id="agegroup_edit" class="booking-container">
                 <div class="pure-control-group">
-                    <label for="field_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
-                    </label>
+                    <label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="resource/name"/></xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_active">
-                        <h4><xsl:value-of select="php:function('lang', 'Active')" /></h4>
-                    </label>
+                    <label for="field_active"><xsl:value-of select="php:function('lang', 'Active')" /></label>
                     <select id="field_active" name="active">
                         <option value="1">
                             <xsl:if test="resource/active=1">
@@ -33,15 +29,11 @@
                     </select>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_sort">
-                        <h4><xsl:value-of select="php:function('lang', 'Sort order')" /></h4>
-                    </label>
+                    <label for="field_sort"><xsl:value-of select="php:function('lang', 'Sort order')" /></label>
                     <input id="field_sort" name="sort" type="text" value="{resource/sort}"/>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_description">
-                        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
-                    </label>
+                    <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
                     <textarea rows="5" id="field_description" name="description">
                         <xsl:value-of select="resource/description"/>
                     </textarea>
@@ -55,10 +47,10 @@
             <a class="cancel pure-button pure-button-primary">
                 <xsl:attribute name="href"><xsl:value-of select="resource/cancel_link"></xsl:value-of></xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>			
-        </div>        
+            </a>
+        </div>
     </form>
-    <!--script type="text/javascript">
+    <script type="text/javascript">
        var initialSelection = <xsl:value-of select="booking/resources_json"/>;
-    </script-->
+    </script>
 </xsl:template>

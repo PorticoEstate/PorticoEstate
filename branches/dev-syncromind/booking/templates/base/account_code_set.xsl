@@ -3,102 +3,78 @@
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="account_code_set/tabs"/>
-            <div id="account">                
-		<div class="pure-control-group">
-                    <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
-                    </label>
+            <div id="account" class="booking-container">
+                <div class="pure-control-group">
+                    <label><xsl:value-of select="php:function('lang', 'Name')" /></label>
                     <xsl:value-of select="account_code_set/name"/>
                 </div>
-		<div class="pure-control-group">
+                <div class="pure-control-group">
                     <xsl:if test="config_data/dim_3">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_3" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_3" /></label>
                         <xsl:value-of select="account_code_set/object_number"/>
                     </xsl:if>
                 </div>
-                <div class="pure-control-group">	
+                <div class="pure-control-group">
                     <xsl:if test="config_data/article">
-                        <label>
-                            <h4><xsl:value-of select="php:function('lang', 'Article')" /></h4>
-                        </label>
+                        <label><xsl:value-of select="php:function('lang', 'Article')" /></label>
                         <xsl:value-of select="account_code_set/article"/>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
                     <xsl:if test="config_data/dim_value_1">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_value_1" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_value_1" /></label>
                         <xsl:value-of select="account_code_set/unit_number"/>
                     </xsl:if>
                 </div>
-                <div class="pure-control-group">	
+                <div class="pure-control-group">
                     <xsl:if test="config_data/dim_value_4">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_value_4" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_value_4" /></label>
                         <xsl:value-of select="account_code_set/dim_value_4"/>
                     </xsl:if>
                 </div>
-                <div class="pure-control-group">	
+                <div class="pure-control-group">
                     <xsl:if test="config_data/dim_value_5">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_value_5" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_value_5" /></label>
                         <xsl:value-of select="account_code_set/dim_value_5"/>
                     </xsl:if>
                 </div>
-                <div class="pure-control-group">	
+                <div class="pure-control-group">
                     <!--xsl:if test="config_data/external_format != 'KOMMFAKT'"-->
-                        <label>
-                            <h4><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></h4>
-                        </label>
+                        <label><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></label>
                         <xsl:value-of select="account_code_set/unit_prefix"/>
                     <!--/xsl:if-->
-                </div>		
-		<div class="pure-control-group">
+                </div>
+                <div class="pure-control-group">
                     <xsl:if test="config_data/dim_1">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_1" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_1" /></label>
                         <xsl:value-of select="account_code_set/responsible_code"/>
                     </xsl:if>
                 </div>
-                <div class="pure-control-group">	
+                <div class="pure-control-group">
                     <xsl:if test="config_data/dim_2">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_2" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_2" /></label>
                         <xsl:value-of select="account_code_set/service"/>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
                     <xsl:if test="config_data/dim_4">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_4" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_4" /></label>
                         <xsl:value-of select="account_code_set/dim_4"/>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
                     <xsl:if test="config_data/dim_5">
-                        <label>
-                            <h4><xsl:value-of select="config_data/dim_5" /></h4>
-                        </label>
+                        <label><xsl:value-of select="config_data/dim_5" /></label>
                         <xsl:value-of select="account_code_set/project_number"/>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
                     <xsl:if test="config_data/external_format != 'KOMMFAKT'">
-                        <xsl:value-of select="php:function('lang', 'Reference')" />
+                        <label><xsl:value-of select="php:function('lang', 'Reference')" /></label>
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
-                    <label>
-                        <h4><xsl:value-of select="php:function('lang', 'Invoice instruction')" />      </h4>
-                    </label>              
+                    <label><xsl:value-of select="php:function('lang', 'Invoice instruction')" /></label>
                     <div class="description" style="display:inline-block;max-width:80%;"><xsl:value-of select="account_code_set/invoice_instruction"/></div>
                 </div>
             </div>

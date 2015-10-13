@@ -2,7 +2,6 @@
     <xsl:param name="test"/>
     <xsl:param name="true"/>
     <xsl:param name="false"/>
-
     <func:result>
         <xsl:choose>
             <xsl:when test="$test">
@@ -14,22 +13,18 @@
         </xsl:choose>
     </func:result>
 </func:function>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <xsl:call-template name="msgbox"/>
-
     <form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="account_code_set/tabs"/>
-            <div id="account">
+            <div id="account" class="booking-container">
                 <fieldset>
                     <div class="pure-g">
                         <div class="pure-u-1 pure-u-sm-1 pure-u-md-2-3 pure-u-lg-1-2">
                             <div class="pure-control-group">
-                                <label for="field_name">
-                                    <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
-                                </label>
+                                <label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input name="name" type="text" id="field_name" value="{account_code_set/name}" class="pure-u-1" />
                             </div>
                         </div>
@@ -38,58 +33,44 @@
                         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_3">
-                                    <label for="field_object_number">
-                                        <h4><xsl:value-of select="config_data/dim_3" /></h4>
-                                    </label>
+                                    <label for="field_object_number"><xsl:value-of select="config_data/dim_3" /></label>
                                     <input name="object_number" type="text" id="field_object_number" value="{account_code_set/object_number}" maxlength='8' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/article">
-                                    <label for="field_article">
-                                        <h4><xsl:value-of select="config_data/article" /></h4>
-                                    </label>
+                                    <label for="field_article"><xsl:value-of select="config_data/article" /></label>
                                     <input name="article" type="text" id="field_article" value="{account_code_set/article}" maxlength='15' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_value_1">
-                                    <label for="field_unit_number">
-                                        <h4><xsl:value-of select="config_data/dim_value_1" /></h4>
-                                    </label>
+                                    <label for="field_unit_number"><xsl:value-of select="config_data/dim_value_1" /></label>
                                     <input name="unit_number" type="text" id="field_unit_number" value="{account_code_set/unit_number}" maxlength='12' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_value_4">
-                                    <label for="field_dim_value_4">
-                                        <h4><xsl:value-of select="config_data/dim_value_4" /></h4>
-                                    </label>
+                                    <label for="field_dim_value_4"><xsl:value-of select="config_data/dim_value_4" /></label>
                                     <input name="dim_value_4" type="text" id="field_dim_value_4" value="{account_code_set/dim_value_4}" maxlength='12' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_value_5">
-                                    <label for="field_dim_value_5">
-                                        <h4><xsl:value-of select="config_data/dim_value_5" /></h4>
-                                    </label>
+                                    <label for="field_dim_value_5"><xsl:value-of select="config_data/dim_value_5" /></label>
                                     <input name="dim_value_5" type="text" id="field_dim_value_5" value="{account_code_set/dim_value_5}" maxlength='12' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <!--xsl:if test="config_data/external_format = 'KOMMFAKT'"-->
-                                    <label for="field_unit_prefix">
-                                        <h4><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></h4>
-                                    </label>
+                                    <label for="field_unit_prefix"><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></label>
                                     <input name="unit_prefix" type="text" id="field_unit_prefix" value="{account_code_set/unit_prefix}" maxlength='1' class="pure-u-1" />
                                 <!--/xsl:if-->
                             </div>
                         </div>
                         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
                             <div class="pure-control-group">
-                                <label for="field_active">
-                                    <h4><xsl:value-of select="php:function('lang', 'Active')"/></h4>
-                                </label>
+                                <label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label>
                                 <select id="field_active" name="active" class="pure-u-1">
                                     <xsl:if test="new_form">
                                         <xsl:attribute name="disabled">disabled</xsl:attribute>
@@ -110,33 +91,25 @@
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_1">
-                                    <label for="field_responsible_code">
-                                        <h4><xsl:value-of select="config_data/dim_1" /></h4>
-                                    </label>
+                                    <label for="field_responsible_code"><xsl:value-of select="config_data/dim_1" /></label>
                                     <input name="responsible_code" type="text" id="field_responsible_code" value="{account_code_set/responsible_code}" maxlength='6' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_2">
-                                    <label for="field_service">
-                                        <h4><xsl:value-of select="config_data/dim_2" /></h4>
-                                    </label>
+                                    <label for="field_service"><xsl:value-of select="config_data/dim_2" /></label>
                                     <input name="service" type="text" id="field_service" value="{account_code_set/service}" maxlength='8' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_4">
-                                    <label for="field_dim_4">
-                                        <h4><xsl:value-of select="config_data/dim_4" /></h4>
-                                    </label>
+                                    <label for="field_dim_4"><xsl:value-of select="config_data/dim_4" /></label>
                                     <input name="dim_4" type="text" id="field_dim_4" value="{account_code_set/dim_4}" maxlength='8' class="pure-u-1" />
                                 </xsl:if>
                             </div>
                             <div class="pure-control-group">
                                 <xsl:if test="config_data/dim_5">
-                                    <label for="field_project_number">
-                                        <h4><xsl:value-of select="config_data/dim_5" /></h4>
-                                    </label>
+                                    <label for="field_project_number"><xsl:value-of select="config_data/dim_5" /></label>
                                     <input name="project_number" type="text" id="field_project_number" value="{account_code_set/project_number}" maxlength='12' class="pure-u-1" />
                                 </xsl:if>
                             </div>
@@ -145,9 +118,7 @@
                     <div class="pure-g">
                         <div class="pure-u-1 pure-u-sm-1 pure-u-md-2-3 pure-u-lg-1-2">
                             <div class="pure-control-group">
-                                <label for="field_invoice_instruction">
-                                    <h4><xsl:value-of select="php:function('lang', 'Invoice instruction')" /></h4>
-                                </label>
+                                <label for="field_invoice_instruction"><xsl:value-of select="php:function('lang', 'Invoice instruction')" /></label>
                                 <input id="field_invoice_instruction" name="invoice_instruction" value="{account_code_set/invoice_instruction}" class="pure-u-1" />
                             </div>
                             <!--div class="pure-control-group">
@@ -168,7 +139,4 @@
             </a>
         </div>
     </form>
-    <!--/div-->
 </xsl:template>
-
-

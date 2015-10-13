@@ -50,5 +50,5 @@
                 <xsl:value-of select="php:function('lang', 'Edit')" />
             </a>
         </div>
-    </form>    
+    </form>
 </xsl:template>

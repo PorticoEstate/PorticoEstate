@@ -86,9 +86,9 @@
     </script>
 </xsl:template>
 <xsl:template name="xmlsource">
-  NODE <xsl:value-of select="name()"/>
-  ATTR { <xsl:for-each select="attribute::*"><xsl:value-of select="name()"/>=<xsl:value-of select="."/> </xsl:for-each> }
-  CHILDREN: { <xsl:for-each select="*"><xsl:call-template name="xmlsource"/></xsl:for-each> }
-  TEXT <xsl:value-of select="text()"/>
-  <br/>
+    NODE <xsl:value-of select="name()"/>
+    ATTR { <xsl:for-each select="attribute::*"><xsl:value-of select="name()"/>=<xsl:value-of select="."/> </xsl:for-each> }
+    CHILDREN: { <xsl:for-each select="*"><xsl:call-template name="xmlsource"/></xsl:for-each> }
+    TEXT <xsl:value-of select="text()"/>
+    <br/>
 </xsl:template>

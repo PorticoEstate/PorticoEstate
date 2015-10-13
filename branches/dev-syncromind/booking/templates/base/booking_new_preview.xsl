@@ -33,10 +33,10 @@
                 <input type="hidden" name="activity_id" value="{booking/activity_id}" />
                 <input type="hidden" name="group_id" value="{booking/group_id}" />
                 <xsl:for-each select="booking/audience">
-                        <input type="hidden" name="audience[]" value="{.}" />
+                    <input type="hidden" name="audience[]" value="{.}" />
                 </xsl:for-each>
                 <xsl:for-each select="booking/resources">
-                        <input type="hidden" name="resources[]" value="{.}" />
+                    <input type="hidden" name="resources[]" value="{.}" />
                 </xsl:for-each>
                 <xsl:for-each select="booking/agegroups">
                     <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>

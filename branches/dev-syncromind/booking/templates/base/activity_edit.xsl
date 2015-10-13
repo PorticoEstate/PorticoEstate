@@ -4,46 +4,38 @@
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="activity/tabs"/>
-            <div id="activity_edit">
+            <div id="activity_edit" class="booking-container">
                 <div class="pure-control-group">
-                    <label for="field_name">
-                        <h4><xsl:value-of select="php:function('lang', 'Activity')"/></h4>
-                    </label>
+                    <label for="field_name"><xsl:value-of select="php:function('lang', 'Activity')"/></label>
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="activity/name"/></xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_active">
-                        <xsl:value-of select="php:function('lang', 'Active')" />
-                    </label>
+                    <label for="field_active"><xsl:value-of select="php:function('lang', 'Active')" /></label>
                     <select id="field_active" name="active">
                         <option value="1">
                             <xsl:if test="activity/active=1">
-                                    <xsl:attribute name="selected">checked</xsl:attribute>
+                                <xsl:attribute name="selected">checked</xsl:attribute>
                             </xsl:if>
                             <xsl:value-of select="php:function('lang', 'Active')" />
                         </option>
                         <option value="0">
                             <xsl:if test="activity/active=0">
-                                    <xsl:attribute name="selected">checked</xsl:attribute>
+                                <xsl:attribute name="selected">checked</xsl:attribute>
                             </xsl:if>
                             <xsl:value-of select="php:function('lang', 'Inactive')" />
                         </option>
                     </select>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_description">
-                        <xsl:value-of select="php:function('lang', 'Description')"/>
-                    </label>
+                    <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')"/></label>
                     <textarea rows="5" id="field_description" name="description">
                        <xsl:value-of select="activity/description"/>
                     </textarea>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_parent_id">
-                        <h4><xsl:value-of select="php:function('lang', 'Parent activity')"/></h4>
-                    </label>
+                    <label for="field_parent_id"><xsl:value-of select="php:function('lang', 'Parent activity')"/></label>
                     <select name="parent_id" id="field_parent_id">
                         <option value="0"><xsl:value-of select="php:function('lang', 'No parent')"/></option>
                         <xsl:for-each select="activities">

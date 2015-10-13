@@ -1,18 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <script type="text/javascript">
-            var documentOwnerType = "";
-            var documentOwnerAutocomplete = "";
-            documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
-            documentOwnerAutocomplete = (documentOwnerAutocomplete) ? documentOwnerAutocomplete : 0;
+        var documentOwnerType = "";
+        var documentOwnerAutocomplete = "";
+        documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
+        documentOwnerAutocomplete = (documentOwnerAutocomplete) ? documentOwnerAutocomplete : 0;
     </script>
-
     <xsl:call-template name="msgbox"/>
-
     	<form action="" method="POST" enctype='multipart/form-data' id='form' class="pure-form pure-form-aligned" name="form">
             <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="document/tabs"/>
-                <div id="documentation">
+                <div id="documentation" class="booking-container">
                     <fieldset>
                         <div class="heading">
                             <legend><h3>
@@ -21,7 +19,7 @@
                                 </xsl:if>
                                 <xsl:if test="not(document/id)">
                                     <xsl:value-of select="php:function('lang', 'Upload manual')" />
-                                </xsl:if>                                           
+                                </xsl:if>
                             </h3></legend>
                         </div>
                         <xsl:if test="document/id">
@@ -29,13 +27,9 @@
                             <input name='field_id' type='hidden'>
                                 <xsl:attribute name="value"><xsl:value-of select="document/id"/></xsl:attribute>
                             </input>
-                        </xsl:if> 
-
-
+                        </xsl:if>
                         <div class="pure-control-group">
-                            <label for="field_name">
-                                <h4><xsl:value-of select="php:function('lang', 'Document')" /></h4>
-                            </label>
+                            <label for="field_name"><xsl:value-of select="php:function('lang', 'Document')" /></label>
                             <input name="name" id='field_name'>
                                 <xsl:attribute name="value"><xsl:value-of select="document/name"/></xsl:attribute>
                                 <xsl:attribute name="type">
@@ -51,15 +45,11 @@
                             </input>
                         </div>
                         <div class="pure-control-group">
-                            <label for="field_description">
-                                <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
-                            </label>
+                            <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
                             <textarea name="description" id='field_description'><xsl:value-of select="document/description"/></textarea>
                         </div>
                         <div class="pure-control-group">
-                            <label for="field_category">
-                                <h4><xsl:value-of select="php:function('lang', 'Category')" /></h4>
-                            </label>
+                            <label for="field_category"><xsl:value-of select="php:function('lang', 'Category')" /></label>
                             <select name='category' id='field_category'>
                                 <option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
                                 <xsl:for-each select="document/document_types/*">
@@ -95,5 +85,4 @@
                 </a>
             </div>
     	</form>
-    <!--/div-->
 </xsl:template>

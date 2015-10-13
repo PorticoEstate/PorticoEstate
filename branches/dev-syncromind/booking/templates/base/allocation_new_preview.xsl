@@ -1,13 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <!--div id="content"-->
-
-	<!--dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'New Allocation')"/></dt>
-	</dl-->
     <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
     <!-- <xsl:call-template name="xmlsource"/> -->
-
     <form action="" method="POST">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
@@ -29,16 +22,14 @@
                 <input type="hidden" name="field_interval" value="{interval}" />
                 <input type="hidden" name="outseason" value="{outseason}" />
                 <xsl:for-each select="allocation/resources">
-                        <input type="hidden" name="resources[]" value="{.}" />
+                    <input type="hidden" name="resources[]" value="{.}" />
                 </xsl:for-each>
-
-                <h4><xsl:value-of select="php:function('lang', 'Allocations that can be created')" /></h4>        
+                <h4><xsl:value-of select="php:function('lang', 'Allocations that can be created')" /></h4>
                 <div class="allocation-list">
                     <xsl:for-each select="valid_dates">
                         <li><xsl:value-of select="from_"/> - <xsl:value-of select="to_"/></li>
                     </xsl:for-each>
                 </div>
-
                 <h4><xsl:value-of select="php:function('lang', 'Allocations  with existing allocations or bookings (%1)', count(result/invalid[from_]))" /></h4>
                 <div class="allocation-list">
                     <xsl:for-each select="invalid_dates">
@@ -57,8 +48,6 @@
             </div>
         </div>
     </form>
-
-    <!--/div-->
     <script type="text/javascript">
         var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
     </script>

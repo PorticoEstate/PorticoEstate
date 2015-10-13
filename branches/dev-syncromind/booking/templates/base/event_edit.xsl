@@ -150,7 +150,7 @@
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Who')" /></h3></legend>
                             </div>
                             <div class="pure-g">
-                                <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">			
+                                <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
                                     <label><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
                                     <ul style="list-style:none;padding: 0 0 0 10px;">
                                         <xsl:for-each select="audience">
