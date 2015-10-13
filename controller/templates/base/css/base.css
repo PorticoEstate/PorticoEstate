@@ -1924,6 +1924,11 @@ li.check_item_case ul li .col_3 {
   padding: 7px 10px;
 }
 
+#choose-building-on-property .add-case .required{
+    border: 1px solid #ff0000;
+    
+}
+
 
 /* ================================ CASE MESSAGE ============================= */
 
