@@ -35,6 +35,15 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 .custom-label {
 	font-weight: bold;
 }
+
+div.allocation-list {
+    border: 1px solid #555;
+    height: 10em;
+    overflow: auto;
+    padding: 0.4em;
+    width: 30em;
+}
+
 .booking-container > label {
 	font-weight: bold;
 }
