@@ -149,11 +149,26 @@ schedule.closeOverlay = function(){
     $('#schedule_overlay').hide().remove();
 }
 
-schedule.newAllocationForm = function(id) {
+schedule.newAllocationForm = function(args) {
 	
 	var oArgs = {menuaction:'booking.uiseason.wtemplate_alloc'};
-	oArgs['id'] = id;
-	oArgs['season_id'] = season_id;
+	if (typeof(args['id']) !== 'undefined')
+	{
+		oArgs['id'] = args['id'];
+	} else {
+		if (typeof(args['_from']) !== 'undefined')
+		{
+			oArgs['_from'] = args['_from'];
+		}
+		if (typeof(args['_to']) !== 'undefined')
+		{
+			oArgs['_to'] = args['_to'];
+		}
+		if (typeof(args['wday']) !== 'undefined')
+		{
+			oArgs['wday'] = args['wday'];
+		}
+	}
 	
 	var sUrl = phpGWLink('index.php', oArgs);
 	
@@ -165,13 +180,7 @@ schedule.newAllocationForm = function(id) {
 	close: true,
 	closejs:false
 	});
-		
-	/*JqueryPortico.execute_ajax(requestUrl, function(result){
-		console.log(result);
-	}, {}, 'GET', 'JSON');*/
-	
 };
-
 
 /*
 colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10',
