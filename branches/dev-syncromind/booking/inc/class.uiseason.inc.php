@@ -411,11 +411,22 @@
 			
 				$errors = $this->bo->validate_wtemplate_alloc($alloc);
 				if(!$errors && $alloc['id'])
+				{
 					$receipt = $this->bo->update_wtemplate_alloc($alloc);
+				}
 				else if(!$errors && !$alloc['id'])
+				{
 					$receipt = $this->bo->add_wtemplate_alloc($alloc);
+				}
 				
-				return $errors;			
+				$message = array();
+				if (count($errors))
+				{
+					foreach ($errors as $error) {
+						$message['error'][] = array('msg'=>$error[0]);
+					}
+				}
+				return $message;			
 			}
 			
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -498,6 +509,10 @@ JS;
 			$from_ = $season['from_'];
 			$to_ = $season['to_'];
 			$interval = 1;
+			
+			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
@@ -529,6 +544,12 @@ JS;
 				}
                                 $this->bo->so->update_id_string();
 			}
+			
+            $tabs = array();
+			$tabs['generate_allocations'] = array('label' => lang('Generate Allocations'), 'link' => '#generate_allocations');
+			$active_tab = 'generate_allocations';         
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						
 			$this->flash_form_errors($errors);
                         
                         $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'date');
