@@ -1,7 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-    <xsl:call-template name="msgbox"/>
-    <!--xsl:call-template name="yui_booking_i18n"/-->
+    <div id='message' class='message'/>
  
     <form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
         <div id="tab-content">
@@ -11,7 +10,7 @@
 				<input type="hidden" id="id" name="id">
 					<xsl:attribute name="value"><xsl:value-of select="season/id"/></xsl:attribute>
 				</input>
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'Organization')" /></label>					
 					<input id="organization_id" name="organization_id" type="hidden">
 						<xsl:attribute name="value"><xsl:value-of select="season/organization_id"/></xsl:attribute>
@@ -20,7 +19,7 @@
 						<xsl:attribute name="value"><xsl:value-of select="season/organization_name"/></xsl:attribute>
 					</input>					
 				</div>
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'Day of the week')" /></label>
 					<select id="wday" name="wday">
 						<option value="1">
@@ -53,37 +52,36 @@
 						</option>
 					</select>					
 				</div>
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'From')" /></label>
-					<input id="from_h" name="from_h" type="text">
+					<input id="from_h" name="from_h" type="text" size="5">
 						<xsl:attribute name="value"><xsl:value-of select="season/from_h"/></xsl:attribute>
 					</input>
 					:
-					<input id="from_m" name="from_m" type="text">
+					<input id="from_m" name="from_m" type="text" size="5">
 						<xsl:attribute name="value"><xsl:value-of select="season/from_m"/></xsl:attribute>
 					</input>					
 				</div>
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'To')" /></label>
-					<input id="to_h" name="to_h" type="text">
+					<input id="to_h" name="to_h" type="text" size="5">
 						<xsl:attribute name="value"><xsl:value-of select="season/to_h"/></xsl:attribute>
 					</input>
 					:
-					<input id="to_m" name="to_m" type="text">
+					<input id="to_m" name="to_m" type="text" size="5">
 						<xsl:attribute name="value"><xsl:value-of select="season/to_m"/></xsl:attribute>
 					</input>									
 				</div>
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'Cost')" /></label>
 					<input id="cost" name="cost" type="text">
 						<xsl:attribute name="value"><xsl:value-of select="season/cost"/></xsl:attribute>
 					</input>					
 				</div>			
-				<div clas="pure-control-group">
+				<div class="pure-control-group">
 					<label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
 					<div id="resources_container" class="custom-container"></div>
 				</div>
-
             </div>
         </div>
         <div class="form-buttons">
@@ -96,7 +94,7 @@
 				</input>
 			</xsl:if>
         </div>
-    </form>		
+    </form>	
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
