@@ -3,8 +3,8 @@
     <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
-            <xsl:value-of disable-output-escaping="yes" select="group/tabs"/>
-            <div id="group_edit" class="booking-container"> 
+            <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
+            <div id="generic" class="booking-container"> 
                 <fieldset>
                     <div class="heading">
                         <legend><h3>
