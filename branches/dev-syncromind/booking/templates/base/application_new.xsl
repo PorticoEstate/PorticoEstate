@@ -273,13 +273,13 @@
                                 <xsl:if test="config/application_contact_information">
                                     <p><xsl:value-of select="config/application_contact_information"/></p>
                                 </xsl:if>
-                                <label for="field_contact_name"<xsl:value-of select="php:function('lang', 'Name')" /></label>
+                                <label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input id="field_contact_name" class="pure-input-1" name="contact_name" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
-                                <label for="field_contact_email"><<xsl:value-of select="php:function('lang', 'E-mail address')" /></label>
+                                <label for="field_contact_email"><xsl:value-of select="php:function('lang', 'E-mail address')" /></label>
                                 <input id="field_contact_email" class="pure-input-1" name="contact_email" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
                                 </input>
