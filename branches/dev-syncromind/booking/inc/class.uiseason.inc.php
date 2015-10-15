@@ -261,7 +261,7 @@
                         $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
                         $tabs = array();
-			$tabs['generic']	= array('label' => lang('Season Edit'), 'link' => '#season_edit');
+			$tabs['generic']	= array('label' => lang('Season Edit'), 'link' => '#generic');
 			$active_tab = 'generic';
             
                         $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -552,14 +552,14 @@ JS;
 						
 			$this->flash_form_errors($errors);
                         
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'date');
+                        /*$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'date');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'date');
                         
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Season'), 'link' => '#season_generate');
                         $active_tab = 'generic';
 
-                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);*/
                         
 			self::render_template('season_generate', array('season' => $season, 
 								  'result' => $result, 'step' => $step,
