@@ -36,15 +36,7 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 	font-weight: bold;
 }
 
-div.allocation-list {
-    border: 1px solid #555;
-    height: 10em;
-    overflow: auto;
-    padding: 0.4em;
-    width: 30em;
-}
-
-.booking-container > label {
+.booking-container .pure-control-group > label {
 	font-weight: bold;
 }
 
@@ -322,14 +314,17 @@ ul.pathway li:first-child {
 #schedule_container .color60 {
     background-color: #aaa;
 }
-/*********************/
+
 .list-left {padding-left: 20px;text-align: left;margin-top: 0px;}
 
 
-//BUTTONS
+
 button.pure-button {margin-right: 5px;}
 a.pure-button {text-decoration: none;}
 .pure-button {margin-right: 5px;margin-top: 5px;text-shadow: none;box-shadow: none;display: inline-block;vertical-align: top;}
 
-//ALLOCATION
+
 div.allocation-list {border: 1px solid #555;height: 10em;max-width: 30em;overflow: auto;padding: 0.4em;width: 100%;}
+
+
+button.ui-button {box-shadow: none;text-shadow: none;}
