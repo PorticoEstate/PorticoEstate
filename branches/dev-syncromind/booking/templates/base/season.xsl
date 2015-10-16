@@ -55,7 +55,7 @@
                     <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link"/>"</xsl:attribute>
                     <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Edit')" /></xsl:attribute>
                 </input>
-            </xsl:if>
+            </xsl:if>			
             <input type="button" class="pure-button pure-button-primary" name="boundaries">
                 <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/boundaries_link"/>"</xsl:attribute>
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Boundaries')" /></xsl:attribute>
@@ -63,6 +63,10 @@
             <input type="button" class="pure-button pure-button-primary" name="week_template">
                 <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/wtemplate_link"/>"</xsl:attribute>
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Week template')" /></xsl:attribute>
+            </input>
+            <input type="button" class="pure-button pure-button-primary" name="cencel">
+                <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
             </input>
         </div>
     </form>
