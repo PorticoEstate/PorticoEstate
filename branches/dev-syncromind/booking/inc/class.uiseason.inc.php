@@ -184,10 +184,10 @@
 				$season = extract_values($_POST, $this->fields);
 				$season['active'] = '1';
 				array_set_default($_POST, 'resources', array());
-				$from =  strtotime($season['from_']);
-				$to =  strtotime($season['to_']);
-				$season['from_'] = date("Y-m-d",$from);
-				$season['to_'] = date("Y-m-d",$to);
+				
+				$season['from_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_']));
+				$season['to_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_']));
+
 				$errors = $this->bo->validate($season);
 				
 				if(!$errors)
@@ -207,21 +207,19 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'season.js');
-			//phpgwapi_yui::load_widget('datatable');
-			//phpgwapi_yui::load_widget('calendar');
-			//phpgwapi_yui::load_widget('autocomplete');
+
 			array_set_default($season, 'resources', array());
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
             
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
+            $GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
             
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Season New'), 'link' => '#season_new');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Season New'), 'link' => '#season_new');
+			$active_tab = 'generic';
 
-                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		
 			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
@@ -232,15 +230,15 @@
 			$season = $this->bo->read_single($id);
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
-			$from =  strtotime($season['from_']);
-			$to =  strtotime($season['to_']);
-			$season['from_'] = date("Y-m-d",$from);
-			$season['to_'] = date("Y-m-d",$to);
+
 			$errors = array();
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
 				$season = array_merge($season, extract_values($_POST, $this->fields));
+				$season['from_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_']));
+				$season['to_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_']));
 				$errors = $this->bo->validate($season);
 				if(!$errors)
 				{
@@ -254,24 +252,28 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'season.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('autocomplete');
+			
+			$season['from_'] = pretty_timestamp($season['from_']);
+			$season['to_'] = pretty_timestamp($season['to_']);
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
-                        $tabs = array();
-			$tabs['generic']	= array('label' => lang('Season Edit'), 'link' => '#generic');
+			
+            $GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
+			
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Season Edit'), 'link' => '#season_new');
 			$active_tab = 'generic';
             
-                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
-			self::render_template_xsl('season_edit', array('season' => $season, 'lang' => $lang));
+			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
 		
 		public function show()
 		{
 			$season = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
 			$season['edit_link'] = self::link(array('menuaction' => 'booking.uiseason.edit', 'id' => $season['id']));
@@ -291,11 +293,11 @@
 			$season['resource_ids'] = $resource_ids;
 			$season['status'] = $season['status'] ? lang($season['status']) : $season['status'];
             
-                        $tabs = array();
+            $tabs = array();
 			$tabs['generic']	= array('label' => lang('Season Show'), 'link' => '#season_show');
 			$active_tab = 'generic';
             
-                        $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('season', array('season' => $season, 'lang' => $lang));
 		}
