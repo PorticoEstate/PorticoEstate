@@ -61,18 +61,18 @@
                     </select>
                 </div>
                 <div class="pure-control-group">
-                    <label for="start_date">
+                    <label>
                         <xsl:value-of select="php:function('lang', 'From')" />
                     </label>
-                    <input class="datetime" id="start_date" name="start_date" type="text">
+                    <input class="datetime" id="from_" name="from_" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <label for="end_date">
+                    <label>
                         <xsl:value-of select="php:function('lang', 'To')" />
                     </label>
-                    <input class="datetime" id="end_date" name="end_date" type="text">
+                    <input class="datetime" id="to_" name="to_" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
                     </input>
                 </div>
@@ -80,7 +80,7 @@
         </div>
         <div class="form-buttons">
             <input type="submit" class="pure-button pure-button-primary">
-                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
             </input>
             <input type="button" class="pure-button pure-button-primary" name="cencel">
                 <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
