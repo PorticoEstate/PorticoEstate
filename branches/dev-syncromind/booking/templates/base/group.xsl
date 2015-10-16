@@ -49,6 +49,10 @@
                 <xsl:attribute name="href"><xsl:value-of select="group/edit_link"/></xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Edit')" />
             </a>
+            <input type="button" class="pure-button pure-button-primary" name="cencel">
+                <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="group/cancel_link"/>"</xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+            </input>			
         </div>
     </form>
 </xsl:template>
