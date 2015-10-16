@@ -83,5 +83,9 @@
         <button class="pure-button pure-button-primary" onclick="window.location.href='{organization/edit_link}'">
             <xsl:value-of select="php:function('lang', 'Edit')" />
         </button>
+		<input type="button" class="pure-button pure-button-primary" name="cencel">
+			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="organization/cancel_link"/>"</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+		</input>		
     </div>
 </xsl:template>
