@@ -115,7 +115,7 @@ schedule.newApplicationForm = function(date, _from, _to, resource) {
     window.location.href = url;
 }
 
-schedule.showInfo = function(url, resource) {
+schedule.showInfo2 = function(url, resource) {
     var content_overlay = document.getElementById('content_overlay');
     var overlay = document.createElement('div');
     var img = document.createElement('img');
@@ -143,6 +143,50 @@ schedule.showInfo = function(url, resource) {
         $('#schedule_overlay').hide().remove();
         alert( "Failed to load booking details page" );
     });
+}
+
+schedule.showInfo = function(url, resource) {
+    var dialog = document.getElementById('dialog_schedule');
+    var img = document.createElement('img');
+    img.setAttribute('src','/portico/phpgwapi/templates/pure/images/loading_overlay.gif');
+    img.style.display = "block";
+    img.style.margin = "37px auto 0";
+    dialog.appendChild(img);
+    
+    schedule.dialogSchedule.dialog("close");
+    schedule.dialogSchedule.dialog("destroy");
+    schedule.createDialogSchedule(300);
+    schedule.dialogSchedule.dialog("open");
+    
+    resource = (resource) ? resource : null;
+    url = url.replace(/&amp;/gi, '&') + '&resource=' + resource;
+    
+    $.get(url, function(data){
+       schedule.dialogSchedule.dialog("close");
+       schedule.dialogSchedule.dialog("destroy");
+       dialog.innerHTML = data;
+       schedule.createDialogSchedule(650);
+       schedule.dialogSchedule.dialog("open");
+    })
+    .fail(function() {
+        schedule.dialogSchedule.dialog("close");
+        alert( "Failed to load booking details page" );
+    });
+}
+
+schedule.createDialogSchedule = function(w){
+    schedule.dialogSchedule = $('#dialog_schedule').dialog({
+        autoOpen: false,
+        modal: false,
+        width: w,
+        close: function(){
+            schedule.cleanDialog();
+        }
+    });
+}
+
+schedule.cleanDialog = function(){
+    $('#dialog_schedule').html("");
 }
 
 schedule.closeOverlay = function(){
@@ -181,6 +225,10 @@ schedule.newAllocationForm = function(args) {
 	closejs:false
 	});
 };
+
+
+
+
 
 /*
 colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10',
