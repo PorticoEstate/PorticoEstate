@@ -316,6 +316,7 @@
 			}
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
+			$organization['cancel_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$this->install_customer_identifier_ui($organization);
 			self::render_template_xsl('organization', array('organization' => $organization));
