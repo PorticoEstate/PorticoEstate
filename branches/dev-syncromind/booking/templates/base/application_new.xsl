@@ -127,12 +127,7 @@
                                                 <a href="javascript:void(0);" class="close-btn btnclose">-</a>
                                                 <div class="pure-control-group">
                                                     <label for="start_date_{$index}"><xsl:value-of select="php:function('lang', 'From')" /></label>
-                                                    <input id="alt_start_date_{$index}" name="from_[]" type="hidden">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="from_" />
-                                                        </xsl:attribute>
-                                                    </input>
-                                                    <input class="newaddedpicker datetime pure-input-2-3" id="start_date_{$index}" type="text">
+                                                    <input class="newaddedpicker datetime pure-input-2-3" id="start_date_{$index}" type="text" name="from_[]">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="from_" />
                                                         </xsl:attribute>
@@ -156,12 +151,7 @@
                                                             <xsl:value-of select="php:function('lang', $error_msg)" />
                                                         </div>
                                                     </xsl:if>
-                                                    <input id="alt_end_date_{$index}" name="to_[]" type="hidden">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="to_"/>
-                                                        </xsl:attribute>
-                                                    </input>
-                                                    <input class="newaddedpicker datetime pure-input-2-3" id="end_date_{$index}" type="text">
+                                                    <input class="newaddedpicker datetime pure-input-2-3" id="end_date_{$index}" type="text" name="to_[]">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="to_"/>
                                                         </xsl:attribute>
@@ -182,12 +172,7 @@
                                                 <a href="javascript:void(0);" class="close-btn btnclose">-</a>
                                                 <div class="pure-control-group">
                                                     <label for="start_date"><xsl:value-of select="php:function('lang', 'From')" /></label>
-                                                    <input id="alt_start_date" name="from_[]" type="hidden">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="from_"/>
-                                                        </xsl:attribute>
-                                                    </input>
-                                                    <input class="datetime pure-input-2-3" id="start_date" type="text">
+                                                    <input class="datetime pure-input-2-3" id="start_date" type="text" name="from_[]">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="from_"/>
                                                         </xsl:attribute>
@@ -213,12 +198,7 @@
                                                             <xsl:value-of select="php:function('lang', $error_msg)" />
                                                         </div>
                                                     </xsl:if>
-                                                    <input id="alt_end_date" name="to_[]" type="hidden">
-                                                        <xsl:attribute name="value">
-                                                            <xsl:value-of select="to_"/>
-                                                        </xsl:attribute>
-                                                    </input>
-                                                    <input class="datetime pure-input-2-3" id="end_date" type="text">
+                                                    <input class="datetime pure-input-2-3" id="end_date" type="text" name="to_[]">
                                                         <xsl:attribute name="value">
                                                             <xsl:value-of select="to_"/>
                                                         </xsl:attribute>
@@ -363,18 +343,6 @@
         var initialAcceptAllTerms = false;
         var initialSelection = <xsl:value-of select="application/resources_json"/>;
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
-        var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
-    /*
-        $(window).load(function(){
-            var date_format = $('#date_format').val();
-            var time_format = 'HH:mm:ss';
-            $("#start_date").datepicker( "refresh" );
-            var datex = $('#start_date').datepicker('getDate');
-            console.log(datex);
-            var date = $.datepicker.formatDate(date_format, datex);
-            var time = $.datepicker.formatTime(time_format, datex);
-            //$('#start_date').val(date+" "+time);
-        });
-    */
+        var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>
     </script>
 </xsl:template>
