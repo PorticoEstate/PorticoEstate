@@ -369,11 +369,23 @@
 			}
 			else 
 			{
+				$dateTimeFrom = phpgw::get_var('from_', 'GET');
+				$dateTimeTo = phpgw::get_var('to_', 'GET');                                
+				$dateTimeFromE = explode(" ", $dateTimeFrom[0]);
+				$dateTimeToE = explode(" ", $dateTimeTo[0]);
+				if (phpgw::get_var('from_', 'GET') < 14) {
+					$timeFrom[] = phpgw::get_var('from_', 'GET');
+					$timeTo[] = phpgw::get_var('to_', 'GET');
+				}else {
+					$timeFrom[] = $dateTimeFromE[1];
+					$timeTo[] = $dateTimeToE[1];
+				}
+
 				array_set_default($allocation, 'resources', array(get_var('resource', int, 'GET')));
 				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'GET'));
 				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'GET'));
-				array_set_default($allocation, 'from_', phpgw::get_var('from_', 'GET'));
-				array_set_default($allocation, 'to_', phpgw::get_var('to_', 'GET'));
+				array_set_default($allocation, 'from_', $timeFrom);
+				array_set_default($allocation, 'to_', $timeTo);
 				$weekday =  phpgw::get_var('weekday', 'GET');
 			}
 
@@ -453,7 +465,7 @@
 
 		public function edit()
 		{
-            
+                    
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$allocation = $this->bo->read_single($id);
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
@@ -465,11 +477,16 @@
             
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$_POST['from_'] = date("Y-m-d H:i:s", strtotime(str_replace("/", "-", $_POST['from_'])));
+				$_POST['to_'] = date("Y-m-d H:i:s", strtotime(str_replace("/", "-", $_POST['to_'])));
 				array_set_default($_POST, 'resources', array());
 				$allocation = array_merge($allocation, extract_values($_POST, $this->fields));
 				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+                                
+                                
+                                
 				$errors = $this->bo->validate($allocation);
-				if(!$errors)
+				if($errors)
 				{
 					try {
 						$receipt = $this->bo->update($allocation);
@@ -481,13 +498,16 @@
 					}
 				}
 			}
+
+                        $allocation['from_'] = date($this->dateFormat." H:i", strtotime($allocation['from_']));
+                        $allocation['to_'] = date($this->dateFormat." H:i", strtotime($allocation['to_']));
+                        
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
                         $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
                         $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
             

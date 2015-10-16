@@ -657,11 +657,11 @@
 				$application = $this->extract_form_data();
 
 				foreach ($_POST['from_'] as &$from) {
-					$timestamp =  strtotime($from);
+					$timestamp =  strtotime(str_replace("/","-",$from));
 					$from =  date("Y-m-d H:i:s",$timestamp);
 				}
 				foreach ($_POST['to_'] as &$to) {
-					$timestamp =  strtotime($to);
+					$timestamp =  strtotime(str_replace("/","-",$to));
 					$to =  date("Y-m-d H:i:s",$timestamp);
 				}
 
@@ -731,7 +731,11 @@
                         
 			if(phpgw::get_var('from_', 'GET'))
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
+                            foreach (phpgw::get_var('from_', 'GET') as $k => $v) {
+                                $_GET['from_'][$k] = date($this->dateFormat." H:i", strtotime($_GET['from_'][$k]));
+                                $_GET['to_'][$k] = date($this->dateFormat." H:i", strtotime($_GET['to_'][$k]));
+                            }
+				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', '', 'GET'), phpgw::get_var('to_', '', 'GET'));
 			}
 			else
 			{
@@ -826,12 +830,11 @@
 				$errors = $this->validate($application);
 
 				foreach ($_POST['from_'] as &$from) {
-					$timestamp =  strtotime($from);
+					$timestamp =  strtotime(str_replace("/","-",$from));
 					$from =  date("Y-m-d H:i:s",$timestamp);
 				}
-
 				foreach ($_POST['to_'] as &$to) {
-					$timestamp =  strtotime($to);
+					$timestamp =  strtotime(str_replace("/","-",$to));
 					$to =  date("Y-m-d H:i:s",$timestamp);
 				}
 
@@ -845,6 +848,18 @@
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
 			}
+                        
+                        foreach ($application['dates'] as &$date) {
+                            $date['from_'] = date($this->dateFormat." H:i", strtotime($date['from_']));
+                            $date['to_'] = date($this->dateFormat." H:i", strtotime($date['to_']));
+                        }
+//                        foreach ($application['dates']['to_'] as &$to) {
+//                            $to = date($this->dateFormat." H:i", strtotime($to));
+//                        }
+                        
+//                        $application['from_'] = date($this->dateFormat." H:i", strtotime($application['from_']));
+//                        $application['to_'] = date($this->dateFormat." H:i", strtotime($application['to_']));
+                        
 			$this->flash_form_errors($errors);
                         $this->set_case_officer($application);
 			self::add_javascript('booking', 'booking', 'application.js');

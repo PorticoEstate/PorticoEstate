@@ -747,6 +747,25 @@
 			$js =<<<JS
 
 			$(function() {
+                                
+                                $.each($('.newaddedpicker'), function(i, v){
+                                var id = v.id;
+                                v.classList.remove('newaddedpicker');
+                                $( "#"+id ).{$type}picker({
+                                    dateFormat: '{$dateformat}',
+                                    showWeek: true,
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    showOn: "button",
+                                    showButtonPanel:true,
+                                    buttonImage: "{$img_cal}",
+                                    buttonText: "{$lang_select_date}",
+                                    buttonImageOnly: true,
+                                    altField: "#alt_"+id,
+                                    altFormat: "yy-mm-dd",
+                                    altFieldTimeOnly: false
+                                });
+                            });
 
 				$('#add-date-link').click(function(){
 					var add = $(this);
@@ -758,69 +777,31 @@
 						'<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
 						'<div class="pure-control-group">'+
 							'<label for="start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
-                                                        '<input id="alt_start_date_'+this.counter+'" name="from_[]" type="hidden">'+
-							'</input>'+
-							'<input class="new_datepicker time pure-input-2-3" id="start_date_'+this.counter+'" type="text">'+
+							'<input class="new_datepicker time pure-input-2-3" name="from_[]" id="start_date_'+this.counter+'" type="text">'+
 							'</input>'+
 						'</div>'+
 						'<div class="pure-control-group">'+
-							'<label for="end_date_'+this.counter+'"><h4>{$lang_to}</h4></label>'+
-                                                        '<input id="alt_end_date_'+this.counter+'" name="to_[]" type="hidden">'+
-							'</input>'+
-							'<input class="new_datepicker time pure-input-2-3" id="end_date_'+this.counter+'" type="text">'+
+							'<label for="end_date_'+this.counter+'" ><h4>{$lang_to}</h4></label>'+
+							'<input class="new_datepicker time pure-input-2-3" name="to_[]" id="end_date_'+this.counter+'" type="text">'+
 							'</input>'+
 						'</div>'
-				 '</div>';
-
-					
+				 	'</div>';
 
 					add.parent().parent().children('#dates-container').append(html);
-                                                        
-                                        $('#start_date_'+this.counter).{$_type}picker({
-                                            dateFormat: '{$dateformat}',
-                                            showWeek: true,
-                                            changeMonth: true,
-                                            changeYear: true,
-                                            showOn: "button",
-                                            showButtonPanel:true,
-                                            buttonImage: "{$img_cal}",
-                                            buttonText: "{$lang_select_date}",
-                                            buttonImageOnly: true,
-                                            altField: "#alt_start_date_"+this.counter,
-                                            altFormat: "yy-mm-dd",
-                                            altFieldTimeOnly: false
-                                        });
-                                        
-                                        $('#end_date_'+this.counter).{$_type}picker({
-                                            dateFormat: '{$dateformat}',
-                                            showWeek: true,
-                                            changeMonth: true,
-                                            changeYear: true,
-                                            showOn: "button",
-                                            showButtonPanel:true,
-                                            buttonImage: "{$img_cal}",
-                                            buttonText: "{$lang_select_date}",
-                                            buttonImageOnly: true,
-                                            altField: "#alt_end_date_"+this.counter,
-                                            altFormat: "yy-mm-dd",
-                                            altFieldTimeOnly: false
-                                        });
-                                        
 
-//					$( ".time" ).{$_type}picker({
-//						dateFormat: '{$dateformat}',
-//							showWeek: true,
-//							changeMonth: true,
-//							changeYear: true,
-//							showOn: "button",
-//							showButtonPanel:true,
-//							buttonImage: "{$img_cal}",
-//							buttonText: "{$lang_select_date}",
-//							buttonImageOnly: true
-//					});
-                                    this.counter++;
+					$( ".new_datepicker" ).{$_type}picker({
+						dateFormat: '{$dateformat}',
+						showWeek: true,
+						changeMonth: true,
+						changeYear: true,
+						showOn: "button",
+						showButtonPanel:true,
+						buttonImage: "{$img_cal}",
+						buttonText: "{$lang_select_date}",
+						buttonImageOnly: true
+					});
+					this.counter++;
 				});
-
 			});
 
 			$(document).on("click",".btnclose",function(){
