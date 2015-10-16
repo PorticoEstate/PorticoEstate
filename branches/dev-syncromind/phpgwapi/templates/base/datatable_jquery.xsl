@@ -137,22 +137,61 @@
                                             <div id="filter_{name}_container"/>
                                         </div>
                                         <script type="text/javascript">
-                                            <![CDATA[
-                                                //var oAC = JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
-
-                                                //var autocompleteURL = 'index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&filter_'+name+'_name';
-                                                //var elem = $('input#filter_'+name+'_name');
-                                                //var ele2 = $('#toolbar_table');
-                                            ]]>
-                                            
                                             $(document).ready(function() {
-                                            var app = "<xsl:value-of select="app"/>";
-                                            var name = "<xsl:value-of select="name"/>";
-                                            var ui = "<xsl:value-of select="ui"/>";
-                                            <![CDATA[
-                                                JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
-                                                                                    'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
-                                            ]]>
+                                                var app = "<xsl:value-of select="app"/>";
+                                                var name = "<xsl:value-of select="name"/>";
+                                                var ui = "<xsl:value-of select="ui"/>";
+                                                var depends = false;
+                                                var filter_depends = "";
+                                                var filter_selected = "";
+                                            <xsl:if test="depends">
+                                                depends = "<xsl:value-of select="depends"/>";
+                                                //filter_depends = $('#filer_'+depends+'_id').val();                                                
+                                                $("#filter_"+depends+"_name").on("autocompleteselect", function(event, i){
+                                                    var filter_select = i.item.value;
+                                                    filter_depends = i.item.value;                                                                                                        
+                                                    if (filter_select != filter_selected){
+                                                        if (filter_depends) {
+                                                            <![CDATA[
+                                                                JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&filter_'+depends+'_id='+filter_depends+'&', 
+                                                                                                    'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+                                                            ]]>                                                        
+                                                        }
+                                                        oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
+                                                        $('#filter_'+name+'_name').val('');
+                                                        $('#filter_'+name+'_id').val('');
+                                                        filter_selected = filter_select;
+                                                    }
+                                                });
+                                                $("#filter_"+depends+"_name").on("keyup", function(){
+                                                    if ($(this).val() == ''){
+                                                        filter_depends = false;
+                                                        if (!filter_depends) {
+                                                            <![CDATA[
+                                                                JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
+                                                                                                    'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+                                                            ]]>                                                        
+                                                        }
+                                                        filter_selected = "";
+                                                        oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
+                                                        $('#filter_'+name+'_name').val('');
+                                                        $('#filter_'+name+'_id').val('');
+                                                    }
+                                                });                                                
+                                            </xsl:if>
+                                                if (filter_depends) {
+                                                    <![CDATA[
+                                                        JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&filter_'+depends+'_id='+filter_depends+'&', 
+                                                                                            'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+                                                    ]]>
+                                                }else{
+                                                    <![CDATA[
+                                                        JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
+                                                                                            'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+                                                    ]]>
+                                                }
+
+                                                
                                             });
 
                                             YAHOO.util.Event.onDOMReady(function() {
@@ -850,6 +889,7 @@
                         });
                         $('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
                             if ($(this).val() == ''){
+                                $('#filter_<xsl:value-of select="name"/>_id').val('');
                                 filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
                             }
                         });
