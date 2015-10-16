@@ -347,6 +347,7 @@
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
 			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit', 'id' => $group['id']));
+			$group['cancel_link'] = self::link(array('menuaction' => $this->module . '.uigroup.index'));
 			
 			$data = array(
 				'group'	=>	$group
