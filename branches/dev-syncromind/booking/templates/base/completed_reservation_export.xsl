@@ -32,7 +32,12 @@
             </div>
         </div>
     </form>
-
+    <div class="form-buttons">
+		<input type="button" class="pure-button pure-button-primary" name="cancel">
+			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="export/cancel_link"/>"</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+		</input>
+    </div>
     <script type="text/javascript">
         var lang = <xsl:value-of select="php:function('js_lang', 'ID', 'Building', 'Season', 'From', 'To')"/>;
     </script>
