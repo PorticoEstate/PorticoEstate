@@ -111,5 +111,9 @@
         <button onclick='window.location.href="{reservation/application_link}"' disabled="1" class="pure-button pure-button-primary">
             <xsl:value-of select="php:function('lang', 'Application')" />
         </button>
+		<input type="button" class="pure-button pure-button-primary" name="cancel">
+			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="reservation/cancel_link"/>"</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+		</input>
     </div>
 </xsl:template>
