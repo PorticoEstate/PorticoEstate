@@ -79,7 +79,7 @@
                         phpgwapi_jquery::load_widget('autocomplete');
             
                         $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Building Send'), 'link' => '#building');
+                        $tabs['generic'] = array('label' => lang('Send e-mail'), 'link' => '#building');
                         $active_tab = 'generic';
 
                         $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
