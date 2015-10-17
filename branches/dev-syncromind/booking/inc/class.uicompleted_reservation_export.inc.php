@@ -60,14 +60,16 @@ phpgw::import_class('booking.uicommon');
 				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')
 				|| $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))			
             {
-    			$this->flash_form_errors(array('access_denied' => lang("Access denied")));
+    			//$this->flash_form_errors(array('access_denied' => lang("Access denied")));
+				phpgwapi_cache::message_set(lang('Access denied'), 'error'); 
     			$this->redirect_to('index', $filter_params);
             }
 			//This will read all of the list data using the values of the standard search filters in the ui index view
 			$exports = $this->bo->read_all();
 			
 			if (!is_array($exports) || count($exports['results']) <= 0) {
-				$this->flash_form_errors(array('empty_list' => lang("Cannot generate files from empty list")));
+				//$this->flash_form_errors(array('empty_list' => lang("Cannot generate files from empty list")));
+				phpgwapi_cache::message_set(lang('Cannot generate files from empty list'), 'error');
 				$this->redirect_to('index', $filter_params);
 			}
 			
@@ -75,7 +77,8 @@ phpgw::import_class('booking.uicommon');
 				$this->redirect_to('index', array('ui' => 'completed_reservation_export_file'));
 			}
 			
-			$this->flash_form_errors(array('already_generated' => lang("The invoice data in this list already has generated files")));
+			//$this->flash_form_errors(array('already_generated' => lang("The invoice data in this list already has generated files")));
+			phpgwapi_cache::message_set(lang('The invoice data in this list already has generated files'), 'error'); 
 			$this->redirect_to('index', $filter_params);
 		}
 		
@@ -362,12 +365,13 @@ phpgw::import_class('booking.uicommon');
 			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$this->add_default_display_data($export);
 			$this->add_template_file('helpers');
+			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));
             
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Export'), 'link' => '#export');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Export'), 'link' => '#export');
+			$active_tab = 'generic';
 
-                        $export['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$export['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('completed_reservation_export', array('export' => $export));
 		}
