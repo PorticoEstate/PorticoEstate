@@ -657,12 +657,10 @@
 				$application = $this->extract_form_data();
 
 				foreach ($_POST['from_'] as &$from) {
-					$timestamp =  strtotime(str_replace("/","-",$from));
-					$from =  date("Y-m-d H:i:s",$timestamp);
+                                        $from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
 				foreach ($_POST['to_'] as &$to) {
-					$timestamp =  strtotime(str_replace("/","-",$to));
-					$to =  date("Y-m-d H:i:s",$timestamp);
+                                        $to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
@@ -703,9 +701,13 @@
 					$application['id'] = $receipt['id'];
 					$this->bo->send_notification($application, true);
                                         $this->bo->so->update_id_string();
-					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
-								 lang("A Case officer will review your application as soon as possible.")."<br />".
-								 lang("Please check your Spam Filter if you are missing mail."));
+                                        phpgwapi_cache::message_set(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
+                                                lang("A Case officer will review your application as soon as possible.")."<br />".
+                                                lang("Please check your Spam Filter if you are missing mail."
+                                                ));
+//					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
+//								 lang("A Case officer will review your application as soon as possible.")."<br />".
+//								 lang("Please check your Spam Filter if you are missing mail."));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
@@ -732,7 +734,7 @@
 			if(phpgw::get_var('from_', 'GET'))
 			{
                             foreach (phpgw::get_var('from_', 'GET') as $k => $v) {
-                                $_GET['from_'][$k] = date($this->dateFormat." H:i", strtotime($_GET['from_'][$k]));
+                                $_GET['from_'][$k] = pretty_timestamp($_GET['from_'][$k]);
                                 $_GET['to_'][$k] = date($this->dateFormat." H:i", strtotime($_GET['to_'][$k]));
                             }
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', '', 'GET'), phpgw::get_var('to_', '', 'GET'));
@@ -830,12 +832,10 @@
 				$errors = $this->validate($application);
 
 				foreach ($_POST['from_'] as &$from) {
-					$timestamp =  strtotime(str_replace("/","-",$from));
-					$from =  date("Y-m-d H:i:s",$timestamp);
+                                        $from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
 				foreach ($_POST['to_'] as &$to) {
-					$timestamp =  strtotime(str_replace("/","-",$to));
-					$to =  date("Y-m-d H:i:s",$timestamp);
+                                        $to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
@@ -849,10 +849,21 @@
 				}
 			}
                         
+//                        foreach ($application['dates'] as &$date) {
+//                            $date['from_'] = date($this->dateFormat." H:i", strtotime($date['from_']));
+//                            $date['to_'] = date($this->dateFormat." H:i", strtotime($date['to_']));
+//                        }
+                        
+//                        foreach ($application['dates'] as &$date) {
+//                            $date['from_'] = date("d/m/Y H:i", phpgwapi_datetime::date_to_timestamp($date['from_']));
+//                            $date['to_'] = date($this->dateFormat. " H:i", phpgwapi_datetime::date_to_timestamp($date['to_']));
+//                        }
+                        
                         foreach ($application['dates'] as &$date) {
-                            $date['from_'] = date($this->dateFormat." H:i", strtotime($date['from_']));
-                            $date['to_'] = date($this->dateFormat." H:i", strtotime($date['to_']));
+                            $date['from_'] = pretty_timestamp($date['from_']);
+                            $date['to_'] = pretty_timestamp($date['to_']);
                         }
+                        
 //                        foreach ($application['dates']['to_'] as &$to) {
 //                            $to = date($this->dateFormat." H:i", strtotime($to));
 //                        }

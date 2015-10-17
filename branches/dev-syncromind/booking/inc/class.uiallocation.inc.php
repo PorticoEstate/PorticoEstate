@@ -477,8 +477,8 @@
             
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$_POST['from_'] = date("Y-m-d H:i:s", strtotime(str_replace("/", "-", $_POST['from_'])));
-				$_POST['to_'] = date("Y-m-d H:i:s", strtotime(str_replace("/", "-", $_POST['to_'])));
+				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
 				array_set_default($_POST, 'resources', array());
 				$allocation = array_merge($allocation, extract_values($_POST, $this->fields));
 				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
@@ -486,11 +486,11 @@
                                 
                                 
 				$errors = $this->bo->validate($allocation);
-				if($errors)
+				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->update($allocation);
-                        $this->bo->so->update_id_string();
+						$this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
 					} catch (booking_unauthorized_exception $e) {
@@ -499,8 +499,8 @@
 				}
 			}
 
-                        $allocation['from_'] = date($this->dateFormat." H:i", strtotime($allocation['from_']));
-                        $allocation['to_'] = date($this->dateFormat." H:i", strtotime($allocation['to_']));
+                        $allocation['from_'] = pretty_timestamp($allocation['from_']);
+                        $allocation['to_'] = pretty_timestamp($allocation['to_']);
                         
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
@@ -532,6 +532,11 @@
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                            
+                            $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+                            $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                            $_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+                            
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
 
@@ -586,13 +591,13 @@
 
                                                 if ($err) 
                                                 {
-                                                        $invalid_dates[$i]['from_'] = $fromdate;
-                                                        $invalid_dates[$i]['to_'] = $todate;
+                                                        $invalid_dates[$i]['from_'] = pretty_timestamp($fromdate);
+                                                        $invalid_dates[$i]['to_'] = pretty_timestamp($todate);
                                                 } 
                                                 else 
                                                 {
-                                                        $valid_dates[$i]['from_'] = $fromdate;
-                                                        $valid_dates[$i]['to_'] = $todate;
+                                                        $valid_dates[$i]['from_'] = pretty_timestamp($fromdate);
+                                                        $valid_dates[$i]['to_'] = pretty_timestamp($todate);
                                                         if ($step == 3)
                                                         {
                                                             $stat = $this->bo->so->delete_allocation($id);
@@ -606,8 +611,13 @@
                                         }
                                 }
 			}
+                        
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
+                        
+                        $allocation['from_'] = pretty_timestamp($allocation['from_']);
+                        $allocation['to_'] = pretty_timestamp($allocation['to_']);
+                        
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
@@ -636,8 +646,8 @@
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
-					'from_date' => $from_date,
-					'to_date' => $to_date,
+					'from_date' => pretty_timestamp($from_date),
+					'to_date' => pretty_timestamp($to_date),
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates
 				));

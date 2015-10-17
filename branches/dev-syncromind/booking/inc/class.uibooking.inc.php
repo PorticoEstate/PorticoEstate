@@ -322,9 +322,14 @@
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
                         #The string replace is a workaround for a problem at Bergen Kommune 
-
+                        
                         $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
                         $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
+                        foreach ($booking['from_'] as $k => $v) {
+				$booking['from_'][$k] = pretty_timestamp($booking['from_'][$k]);
+				$booking['to_'][$k] = pretty_timestamp($booking['to_'][$k]);
+                        }
+                        
 			$time_from = explode(" ",phpgw::get_var('from_', 'str', 'GET'));
 			$time_to = explode(" ",phpgw::get_var('to_', 'str', 'GET'));
 
@@ -353,6 +358,10 @@
                         }
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+				$_POST['repeat_until'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+                            
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
 
@@ -360,6 +369,9 @@
 				$booking['from_'] =  date("Y-m-d H:i:s",$timestamp);
 				$timestamp =  strtotime($booking['to_']);
 				$booking['to_'] =  date("Y-m-d H:i:s",$timestamp);
+                                
+                                $booking['from_'] = pretty_timestamp($booking['from_']);
+				$booking['to_'] = pretty_timestamp($booking['to_']);
 
 				if(strlen($_POST['from_']) < 6) 
 				{
@@ -458,13 +470,13 @@
 
 						if ($err) 
 						{
-							$invalid_dates[$i]['from_'] = $fromdate;
-							$invalid_dates[$i]['to_'] = $todate;
+							$invalid_dates[$i]['from_'] = pretty_timestamp($fromdate);
+							$invalid_dates[$i]['to_'] = pretty_timestamp($todate);
 						} 
 						else 
 						{
-							$valid_dates[$i]['from_'] = $fromdate;
-							$valid_dates[$i]['to_'] = $todate;
+							$valid_dates[$i]['from_'] = pretty_timestamp($fromdate);
+							$valid_dates[$i]['to_'] = pretty_timestamp($todate);
 							if ($step == 3)
 							{
                                                                 if( $noallocation ) {
@@ -572,9 +584,9 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => $_POST['repeat_until'],
-					'from_date' => $_POST['from_'],
-					'to_date' => $_POST['to_'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+					'from_date' => pretty_timestamp($_POST['from_']),
+					'to_date' => pretty_timestamp($_POST['to_']),
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups,
@@ -629,6 +641,10 @@
             
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                            
+                            $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+                            $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                            
 				array_set_default($_POST, 'resources', array());
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
 				$booking['allocation_id'] = $booking['allocation_id'] ? $booking['allocation_id'] : null;
@@ -646,6 +662,10 @@
 					}
 				}
 			}
+                        
+			$booking['from_'] = pretty_timestamp($booking['from_']);
+			$booking['to_'] = pretty_timestamp($booking['to_']);
+                        
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'booking.js');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
