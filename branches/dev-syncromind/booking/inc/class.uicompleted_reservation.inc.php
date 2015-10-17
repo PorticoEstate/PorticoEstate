@@ -683,12 +683,16 @@ phpgw::import_class('booking.sopermission');
 			{
 				$show_edit_button = true;
 			}
-                        
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Group'), 'link' => '#completed_reservation');
-                        $active_tab = 'generic';
+			
+			$reservation['from_'] = pretty_timestamp($reservation['from_']);
+			$reservation['to_'] = pretty_timestamp($reservation['to_']);
+			$reservation['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation.index'));
+			
+			$tabs = array();
+			$tabs['completed_reservation'] = array('label' => lang('Reservation show'), 'link' => '#completed_reservation');
+			$active_tab = 'completed_reservation';
 
-                        $reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			self::render_template('completed_reservation', array('reservation' => $reservation, 'show_edit_button' => $show_edit_button));
 		}
 		
@@ -726,7 +730,7 @@ phpgw::import_class('booking.sopermission');
 		}
 		
 		public function edit()
-                {
+        {
 			//TODO: Display hint to user about primary type of customer identifier
 			
 			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
@@ -758,10 +762,10 @@ phpgw::import_class('booking.sopermission');
 				}
 			}
 			
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Group'), 'link' => '#completed_reservation_edit');
-                        $active_tab = 'generic';
-                        $reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$tabs = array();
+			$tabs['completed_reservation_edit'] = array('label' => lang('Reservation edit'), 'link' => '#completed_reservation_edit');
+			$active_tab = 'completed_reservation_edit';
+			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);
