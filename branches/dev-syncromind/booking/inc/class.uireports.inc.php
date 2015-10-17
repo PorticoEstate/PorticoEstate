@@ -298,15 +298,15 @@ HTML;
 			self::set_active_menu('booking::reportcenter::participants');
 			$errors		 = array();
 			$buildings	 = $this->building_bo->read();
-			$to			 = '2009-01-01';
-			$from		 = '2009-01-01';
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-
 				$to		 = phpgw::get_var('to', 'POST');
 				$from	 = phpgw::get_var('from', 'POST');
 
+				$to_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
+				$from_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
+				
 				$output_type	 = phpgw::get_var('otype', 'POST');
 				$building_list	 = phpgw::get_var('building', 'POST');
 
@@ -317,7 +317,7 @@ HTML;
 
 				if(!count($errors))
 				{
-					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"", $from, $to, implode(",", $building_list));
+					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"", $from_, $to_, implode(",", $building_list));
 					// DEBUG
 					//print_r($jasper_parameters);
 					//exit(0);
@@ -336,14 +336,15 @@ HTML;
 			}
 			else
 			{
-				$to		 = date("Y-m-d", time());
-				$from	 = date("Y-m-d", time());
+				$to		 = date($this->dateFormat, time());
+				$from	 = date($this->dateFormat, time());
 			}
+			
+			phpgwapi_cache::message_set($errors, 'error'); 
+			//$this->flash_form_errors($errors);
 
-			$this->flash_form_errors($errors);
-
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('from', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('to', 'date');
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Report Participants'), 'link' => '#report_part');
@@ -365,9 +366,15 @@ HTML;
 			$show = '';
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$to		 = phpgw::get_var('to', 'POST');
+				$from	 = phpgw::get_var('from', 'POST');
+
+				$to_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
+				$from_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
+				
 				$show		 = 'report';
 				$allocations = $this->get_free_allocations(
-				phpgw::get_var('building', 'POST'), phpgw::get_var('from', 'POST'), phpgw::get_var('to', 'POST'), phpgw::get_var('weekdays', 'POST')
+				phpgw::get_var('building', 'POST'), $from_, $to_, phpgw::get_var('weekdays', 'POST')
 				);
 
 				$counter = 0;
@@ -389,21 +396,20 @@ HTML;
 				{
 					$show		 = 'gui';
 					$errors[]	 = lang('no records found.');
-					$to			 = phpgw::get_var('to', 'POST');
-					$from		 = phpgw::get_var('from', 'POST');
 				}
 			}
 			else
 			{
-				$to		 = date("Y-m-d", time());
-				$from	 = date("Y-m-d", time());
+				$to		 = date($this->dateFormat, time());
+				$from	 = date($this->dateFormat, time());
 				$show	 = 'gui';
 			}
+			
+			phpgwapi_cache::message_set($errors, 'error'); 
+			//$this->flash_form_errors($errors);
 
-			$this->flash_form_errors($errors);
-
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('from', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('to', 'date');
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Report FreeTime'), 'link' => '#report_freetime');
