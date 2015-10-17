@@ -82,7 +82,7 @@
             <input type="submit" class="pure-button pure-button-primary">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
             </input>
-            <input type="button" class="pure-button pure-button-primary" name="cencel">
+            <input type="button" class="pure-button pure-button-primary" name="cancel">
                 <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
             </input>
