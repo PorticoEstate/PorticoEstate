@@ -597,11 +597,11 @@ class rental_uibilling extends rental_uicommon
 		}	
 
 		$code =	<<<JS
-			var thousandsSeparator = '$this->thousandsSeparator';
-			var decimalSeparator = '$this->decimalSeparator';
-			var decimalPlaces = '$this->decimalPlaces';
-			var currency_suffix = '$this->currency_suffix';
-			var area_suffix = '$this->area_suffix';
+			var thousandsSeparator = '{$this->thousandsSeparator}';
+			var decimalSeparator = '{$this->decimalSeparator}';
+			var decimalPlaces = '{$this->decimalPlaces}';
+			var currency_suffix = '{$this->currency_suffix}';
+			var area_suffix = '{$this->area_suffix}';
 JS;
 		$GLOBALS['phpgw']->js->add_code('', $code);
 			
@@ -746,11 +746,11 @@ JS;
 			);
 
 		$code =	<<<JS
-			var thousandsSeparator = '$this->thousandsSeparator';
-			var decimalSeparator = '$this->decimalSeparator';
-			var decimalPlaces = '$this->decimalPlaces';
-			var currency_suffix = '$this->currency_suffix';
-			var area_suffix = '$this->area_suffix';
+			var thousandsSeparator = '{$this->thousandsSeparator}';
+			var decimalSeparator = '{$this->decimalSeparator}';
+			var decimalPlaces = '{$this->decimalPlaces}';
+			var currency_suffix = '{$this->currency_suffix}';
+			var area_suffix = '{$this->area_suffix}';
 JS;
 		$GLOBALS['phpgw']->js->add_code('', $code);
 		
@@ -851,14 +851,15 @@ JS;
 		
 		$sum =  number_format($billing_job->get_total_sum(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator).' '.$this->currency_suffix;
 		$last_updated = $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_stop(),$this->dateFormat . ' H:i:s');
+		$timestamp_commit = $billing_job->get_timestamp_commit();
 				
-		if(empty($billing_job->get_timestamp_commit()))
+		if(empty($timestamp_commit))
 		{
 			$timestamp_commit = lang('No');
 		}
 		else
 		{
-			$timestamp_commit = $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_commit(), $this->dateFormat . ' H:i:s');
+			$timestamp_commit = $GLOBALS['phpgw']->common->show_date($timestamp_commit, $this->dateFormat . ' H:i:s');
 		}
 			
 		$tabletools[] = array
@@ -966,11 +967,11 @@ JS;
 		);
 		
 		$code =	<<<JS
-			var thousandsSeparator = '$this->thousandsSeparator';
-			var decimalSeparator = '$this->decimalSeparator';
-			var decimalPlaces = '$this->decimalPlaces';
-			var currency_suffix = '$this->currency_suffix';
-			var area_suffix = '$this->area_suffix';
+			var thousandsSeparator = '{$this->thousandsSeparator}';
+			var decimalSeparator = '{$this->decimalSeparator}';
+			var decimalPlaces = '{$this->decimalPlaces}';
+			var currency_suffix = '{$this->currency_suffix}';
+			var area_suffix = '{$this->area_suffix}';
 				
 			function formatterPrice (key, oData) 
 			{
