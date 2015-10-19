@@ -1757,7 +1757,8 @@ JS;
 			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 			
-			if(empty($contract->get_id()))
+			$_contract_id = $contract->get_id();
+			if(empty($_contract_id))
 			{
 				$account_in = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
 				$account_out = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
