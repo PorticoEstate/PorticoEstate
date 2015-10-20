@@ -6,9 +6,33 @@
             <xsl:value-of disable-output-escaping="yes" select="audience/tabs"/>
             <div id="audience_edit" class="booking-container">
                 <fieldset>
+				<div class="pure-control-group">
+					<label for="field_activity">
+						<xsl:value-of select="php:function('lang', 'Activity')" />
+					</label>
+					<select name="activity_id" id="field_activity">
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
+
+						<xsl:for-each select="activities">
+							<option>
+								<xsl:if test="selected = 1">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="value">
+									<xsl:value-of select="id"/>
+								</xsl:attribute>
+								<xsl:value-of select="name"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</div>
+
                     <div class="pure-control-group">
                         <label for="field_name"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
                         <input id="field_name" name="name" type="text">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
                             <xsl:attribute name="value"><xsl:value-of select="audience/name"/></xsl:attribute>
                         </input>
                     </div>

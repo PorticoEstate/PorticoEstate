@@ -61,4 +61,17 @@
 			return $this->so->get_path($id);
 		}
 
+		public function get_top_level($selected = 0)
+		{
+			$values =  $this->so->get_top_level();
+			if($selected)
+			{
+				foreach ($values as $entry)
+				{
+					$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+				}
+			}
+			return $values;
+		}
+
 	}

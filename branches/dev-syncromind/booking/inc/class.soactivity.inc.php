@@ -56,4 +56,21 @@
 			return $path;
 		}
 
+		public function get_top_level()
+		{
+
+			$sql = "SELECT name, id FROM bb_activity WHERE parent_id = 0 OR parent_id IS NULL" ;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'	=>  $this->db->f('id'),
+					'name'	=>  $this->db->f('name', true),
+				);
+			}
+			return $values;
+		}
 	}

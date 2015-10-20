@@ -64,7 +64,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id = "agegroup_tbody">
                                     <xsl:for-each select="agegroups">
                                         <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
                                         <tr>
@@ -195,11 +195,11 @@
                                 <p><xsl:value-of select="config/application_who"/></p>
                             </xsl:if>
                             <label><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
-                            <ul style="list-style:none;padding-left:10px;">
+                            <ul id= "audience"  style="list-style:none;padding-left:10px;">
                                 <xsl:for-each select="audience">
                                     <li>
                                         <label>
-                                            <input type="checkbox" name="audience[]">
+                                            <input type="radio" name="audience[]">
                                                 <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
                                                 <xsl:if test="../application/audience=id">
                                                     <xsl:attribute name="checked">checked</xsl:attribute>
@@ -207,7 +207,7 @@
                                             </input>
                                             <xsl:value-of select="name"/>
                                         </label>
-                                    </li>
+									</li>
                                 </xsl:for-each>
                             </ul>
                         </fieldset>

@@ -756,11 +756,14 @@
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
 			}
+			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			$activity_path	 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$application['audience_json'] = json_encode(array_map('intval',$application['audience']));
 
 			$audience = $audience['results'];
@@ -807,6 +810,8 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
+			$activity_path	 = $this->activity_bo->get_path($application['activity_id']);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 			
 			$this->check_application_assigned_to_current_user($application);
 			
@@ -869,9 +874,9 @@
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
@@ -953,6 +958,8 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
+			$activity_path	 = $this->activity_bo->get_path($application['activity_id']);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
                          $tabs = array();
 			$tabs['generic']	= array('label' => lang('Application'), 'link' => '#application');
 			$active_tab = 'generic';
@@ -1057,7 +1064,9 @@
 			$this->set_case_officer($application);
 
 		//	$comments = array_reverse($application['comments']); //fixed in db
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+//			_debug_array($application);
+//			_debug_array($agegroups);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
@@ -1102,5 +1111,18 @@
 //        var_dump($application);
 //        var_dump($application);
 //        exit();
+		}
+
+		function get_activity_data()
+		{
+			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			$activity_path	 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
+			return array(
+				'agegroups' => $agegroups['results'],
+				'audience' => $audience['results'],
+			);
 		}
 	}

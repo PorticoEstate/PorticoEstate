@@ -25,6 +25,7 @@
 //			Analizar esta linea de permisos self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boaudience');
+			$this->activity_bo = CreateObject('booking.boactivity');
 			
 			self::set_active_menu('booking::settings::audience');
 		}
@@ -110,6 +111,10 @@
 							'label' => lang('Description')
 						),
 						array(
+							'key' => 'activity_name',
+							'label' => lang('activity')
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -130,7 +135,7 @@
 			}
 			
 //			self::render_template('datatable', $data);
-            self::render_template_xsl('datatable_jquery',$data);
+				self::render_template_xsl('datatable_jquery',$data);
 		}
 
         public function query()
@@ -163,9 +168,11 @@
 		{
 			$errors = array();
 			$audience = array();
+			$activity_id = phpgw::get_var('activity_id', int, 'POST');
+			$activities	 = $this->activity_bo->get_top_level($activity_id);
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$audience = extract_values($_POST, array('name', 'sort', 'description'));
+				$audience = extract_values($_POST, array('activity_id','name', 'sort', 'description'));
 				$audience['active'] = 1;
 				$errors = $this->bo->validate($audience);
 				if(!$errors)
@@ -184,14 +191,16 @@
 
 //                      $data = array();
                         $audience['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
-			self::render_template_xsl('audience_new', array('audience' => $audience));
+  			phpgwapi_jquery::formvalidator_generate(array());
+			self::render_template_xsl('audience_new', array('audience' => $audience, 'activities' => $activities));
 		}
 
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$audience = $this->bo->read_single($id);
+			$activities		 = $this->activity_bo->get_top_level($audience['activity_id']);
+
 			$audience['id'] = $id;
 			$audience['resource_link'] = self::link(array('menuaction' => 'booking.uiaudience.show', 'id' => $audience['id']));
 			$audience['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -217,7 +226,9 @@
                         $audience['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
-			self::render_template_xsl('audience_edit', array('audience' => $audience));
+  			phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('audience_edit', array('audience' => $audience, 'activities' => $activities));
 		}
 		
 		public function show()

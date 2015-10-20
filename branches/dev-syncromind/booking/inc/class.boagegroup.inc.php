@@ -9,9 +9,15 @@
 			$this->so = CreateObject('booking.soagegroup');
 		}
 		
-		function fetch_age_groups()
+		function fetch_age_groups($top_level_activity = 0)
 		{
-			return $this->so->read(array('filters'=>array('active'=>'1'), 'sort'=>'sort'));
+			$filters = array('active'=>'1');
+			if($top_level_activity)
+			{
+				$filters['activity_id'] = $top_level_activity;
+			}
+
+			return $this->so->read(array('filters'=>$filters, 'sort'=>'sort'));
 		}
 
 		// Extract agegroup info from _POST into $data

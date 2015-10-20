@@ -8,7 +8,13 @@
 			'add'			=>	true,
 			'edit'			=>	true,
 			'show'			=>	true,
+			'get_activity_data'	=> true
 		);
+
+		function get_activity_data()
+		{
+			return parent::get_activity_data();
+		}
 
 		function show()
 		{

@@ -49,9 +49,10 @@
 		'bb_targetaudience' => array(
 			'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => False),
+					'activity_id' => array('type' => 'int','precision' => '4','nullable' => false),
 					'name' => array('type' => 'text', 'nullable' => False),
 					'sort' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default'=> 0),
-					'description' => array('type' => 'text', 'nullable' => False),
+					'description' => array('type' => 'text', 'nullable' => true),
 					'active' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default' => 1),
 				),
 			'pk' => array('id'),
@@ -384,9 +385,10 @@
 		'bb_agegroup' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => false),
 				'name' => array('type' => 'text', 'nullable' => False),
 				'sort' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default'=> 0),
-				'description' => array('type' => 'text', 'nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => true),
 				'active' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default' => 1),
 			),
 			'pk' => array('id'),
@@ -426,6 +428,8 @@
 				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
+				'female_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('booking_id', 'agegroup_id'),
 			'fk' => array(
@@ -590,6 +594,8 @@
 				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
+				'female_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('event_id', 'agegroup_id'),
 			'fk' => array(

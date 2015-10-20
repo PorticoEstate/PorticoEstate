@@ -8,6 +8,16 @@
 			parent::__construct(	'bb_agegroup', 
 									array(
 									'id'			=> 	array(	'type'		=> 'int'),
+									'activity_id'	=> 	array(	'type'		=> 'int',
+																'required' 	=> true),
+									'activity_name'	 => array('type'	 => 'string',
+														'query'	 => true,
+														'join'	 => array(
+															'table'	 => 'bb_activity',
+															'fkey'	 => 'activity_id',
+															'key'	 => 'id',
+															'column' => 'name'
+														)),
 									'name' 			=> 	array(	'type'		=> 'string',
 																'query' 	=> true,
 																'required' 	=> true ),

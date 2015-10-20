@@ -13,7 +13,6 @@
 			'index'			=>	true,
             'query'         =>  true,
 			'add'			=>	true,
-			'show'			=>	true,
 			'active'		=>	true,
 			'edit'			=>	true
 		);
@@ -25,6 +24,7 @@
 //			Analizar esta linea de permisos self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boagegroup');
+			$this->activity_bo = CreateObject('booking.boactivity');
 			
 			self::set_active_menu('booking::settings::agegroup');
 		}
@@ -90,6 +90,10 @@
 							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
+							'key' => 'activity_name',
+							'label' => lang('activity')
+						),
+						array(
 							'key' => 'active',
 							'label' => lang('Active')
 						),
@@ -143,9 +147,13 @@
 		{
 			$errors = array();
 			$agegroup = array();
+			
+			$activity_id = phpgw::get_var('activity_id', int, 'POST');
+			$activities	 = $this->activity_bo->get_top_level($activity_id);
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$agegroup = extract_values($_POST, array('name', 'sort', 'description'));
+				$agegroup = extract_values($_POST, array('activity_id', 'name', 'sort', 'description'));
 				$agegroup['active'] = true;
 				$errors = $this->bo->validate($agegroup);
 				if(!$errors)
@@ -163,14 +171,17 @@
                         $active_tab = 'generic';
 
                         $agegroup['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
-			self::render_template_xsl('agegroup_new', array('agegroup' => $agegroup));
+  			phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('agegroup_new', array('agegroup' => $agegroup, 'activities' => $activities));
 		}
 
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$resource = $this->bo->read_single($id);
+			$activities				 = $this->activity_bo->get_top_level($resource['activity_id']);
+
 			$resource['id'] = $id;
 			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiagegroup.show', 'id' => $resource['id']));
 			$resource['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -196,6 +207,7 @@
                         $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
-			self::render_template_xsl('agegroup_edit', array('resource' => $resource, 'lang' => $lang));
+  			phpgwapi_jquery::formvalidator_generate(array());
+			self::render_template_xsl('agegroup_edit', array('resource' => $resource, 'activities' => $activities));
 		}
 	}

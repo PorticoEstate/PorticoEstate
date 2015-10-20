@@ -178,13 +178,11 @@
 			$report['resources_json'] = json_encode(array_map('intval', $report['resources']));
 			$report['cancel_link']	 = self::link(array('menuaction' => 'booking.uireports.index'));
 			array_set_default($report, 'cost', '0');
-			$activities				 = $this->activity_bo->fetch_activities();
-			$activities				 = $activities['results'];
+			$activities				 = $this->activity_bo->get_top_level();
 //			$agegroups				 = $this->agegroup_bo->fetch_age_groups();
 //			$agegroups				 = $agegroups['results'];
 //			$audience				 = $this->audience_bo->fetch_target_audience();
 //			$audience				 = $audience['results'];
-
 			$report['days'] = array(
 				array('id' => 1, 'name' => lang('Monday')),
 				array('id' => 2, 'name' => lang('Tuesday')),
