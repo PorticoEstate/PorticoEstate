@@ -397,6 +397,7 @@ HTML;
 					$show		 = 'gui';
 					$errors[]	 = lang('no records found.');
 				}
+				$allocations['cancel_link'] = self::link(array('menuaction' => 'booking.uireports.freetime'));
 			}
 			else
 			{
