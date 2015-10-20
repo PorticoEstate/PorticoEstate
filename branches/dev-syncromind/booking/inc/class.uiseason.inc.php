@@ -205,6 +205,10 @@
 				$season['officer_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 				$season['officer_name'] = $GLOBALS['phpgw_info']['user']['account_lid'];
 			}
+			
+			$season['from_'] = pretty_timestamp($season['from_']);
+			$season['to_'] = pretty_timestamp($season['to_']); 
+			
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'season.js');
 
@@ -220,6 +224,7 @@
 			$active_tab = 'generic';
 
 			$season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$season['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 		
 			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
@@ -266,6 +271,7 @@
 			$active_tab = 'generic';
             
             $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$season['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
@@ -508,8 +514,9 @@ JS;
 			$result = array();
 			$step = 1;
 			$errors = array();
-			$from_ = $season['from_'];
-			$to_ = $season['to_'];
+
+			$from = pretty_timestamp($season['from_']);
+			$to = pretty_timestamp($season['to_']);
 			$interval = 1;
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
@@ -518,10 +525,10 @@ JS;
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
-				$from =  strtotime(phpgw::get_var('from_', 'POST'));
-				$to =  strtotime(phpgw::get_var('to_', 'POST'));
-				$from_ = date("Y-m-d",$from);
-				$to_ = date("Y-m-d",$to);
+				$from =  phpgw::get_var('from_', 'POST');
+				$to =  phpgw::get_var('to_', 'POST');
+				$from_ = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
+				$to_ = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
 
 				$interval = phpgw::get_var('field_interval', 'POST');
 				if($from_ < $season['from_'])
@@ -566,7 +573,7 @@ JS;
 			self::render_template('season_generate', array('season' => $season, 
 								  'result' => $result, 'step' => $step,
 								  'interval' => $interval,
-								  'from_' => $from_, 'to_' => $to_));
+								  'from_' => $from, 'to_' => $to));
 		}
 
 	}
