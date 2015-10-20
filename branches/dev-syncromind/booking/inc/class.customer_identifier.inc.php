@@ -166,9 +166,9 @@
 
 					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
 					if (all_cust_fields[field_type].name == 'customer_ssn') {
-						all_cust_fields[field_type].value = '6 siffer (DDMMÅÅ) eller 11 siffer';
+						all_cust_fields[field_type].placeholder = '6 siffer (DDMMÅÅ) eller 11 siffer';
 					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
-						all_cust_fields[field_type].value = '9 siffer';
+						all_cust_fields[field_type].placeholder = '9 siffer';
 					}
 					all_cust_fields[field_type].focus();
 					all_cust_fields[field_type].select();
