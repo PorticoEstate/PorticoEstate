@@ -337,6 +337,7 @@
                         }
                         $active_tab = 'generic';
                         $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						$group['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module, 'activities' => $activities));
 		}
