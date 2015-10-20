@@ -274,12 +274,6 @@
 					<xsl:value-of select="php:function('lang', 'Create report')"/>
 				</xsl:attribute>
 			</input>
-			<a class="cancel">
-				<xsl:attribute name="href">
-					<xsl:value-of select="report/cancel_link"/>
-				</xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Cancel')" />
-			</a>
 		</div>
 	</form>
 	<script type="text/javascript">
