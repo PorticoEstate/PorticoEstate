@@ -219,7 +219,11 @@
                                 <label for="field_admin_email_1">
                                     <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                                 </label>
-                                <input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' class="pure-u-1"/>
+								<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' class="pure-u-1" data-validation="email">
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>										
+								</input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_admin_phone_1">
@@ -243,7 +247,11 @@
                                 <label for="field_admin_email_2">
                                     <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                                 </label>
-                                <input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' class="pure-u-1"/>
+								<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' class="pure-u-1" data-validation="email">
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>									
+								</input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_admin_phone_2">
