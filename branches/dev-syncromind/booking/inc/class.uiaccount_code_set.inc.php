@@ -138,13 +138,15 @@ phpgw::import_class('booking.uicommon');
 			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-			$this->add_default_display_data($account_code_set);
+			//$this->add_default_display_data($account_code_set);
+			$account_code_set['edit_link'] = self::link(array('menuaction' => 'booking.uiaccount_code_set.edit', 'id' => $account_code_set['id']));
+			$account_code_set['cancel_link'] = self::link(array('menuaction' => 'booking.uiaccount_code_set.index'));
             
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Account set code'), 'link' => '#account');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Account set code'), 'link' => '#account');
+			$active_tab = 'generic';
 
-                        $account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('account_code_set', array('account_code_set' => $account_code_set, 'config_data' => $config->config_data));
 		}
