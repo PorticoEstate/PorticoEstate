@@ -79,14 +79,17 @@
                 </div>
             </div>
         </div>
+		<div class="form-buttons">
+			<xsl:if test="account_code_set/permission/write">
+				<input type="button" class="pure-button pure-button-primary" name="cancel">
+					<xsl:attribute name="onclick">window.location="<xsl:value-of select="account_code_set/edit_link"/>"</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Edit')" /></xsl:attribute>
+				</input>
+			</xsl:if>
+			<input type="button" class="pure-button pure-button-primary" name="cancel">
+				<xsl:attribute name="onclick">window.location="<xsl:value-of select="account_code_set/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>
+			</input>		
+		</div>
     </form>
-    <div class="form-buttons">
-        <xsl:if test="account_code_set/permission/write">
-            <div class="form-buttons">
-                <button onclick="window.location.href='{account_code_set/edit_link}'" class="pure-button pure-button-primary">
-                    <xsl:value-of select="php:function('lang', 'Edit')" />
-                </button>
-            </div>
-        </xsl:if>
-    </div>
 </xsl:template>
