@@ -238,11 +238,12 @@
 			
 			$this->add_template_helpers();
             
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Organization New'), 'link' => '#organization_edit');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Organization New'), 'link' => '#organization_edit');
+			$active_tab = 'generic';
 
-                        $organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$organization['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
