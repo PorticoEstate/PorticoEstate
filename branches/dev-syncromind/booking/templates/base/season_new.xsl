@@ -11,6 +11,9 @@
                     </label>
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/name"/></xsl:attribute>
+						<xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -22,6 +25,9 @@
                     </input>
                     <input id="field_building_name" name="building_name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/building_name"/></xsl:attribute>
+						<xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>						
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -66,6 +72,9 @@
                     </label>
                     <input class="datetime" id="from_" name="from_" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
+						<xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>						
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -74,6 +83,9 @@
                     </label>
                     <input class="datetime" id="to_" name="to_" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
+						<xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>						
                     </input>
                 </div>
             </div>
