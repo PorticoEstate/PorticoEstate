@@ -18,7 +18,11 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="name"><xsl:value-of select="php:function('lang', 'Group')" /></label>
-                        <input id="name" name="name" type="text" value="{group/name}" />
+						<input id="name" name="name" type="text" value="{group/name}" >
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>				
+						</input>
                     </div>
                     <div class="pure-control-group">
                         <label for="shortname"><xsl:value-of select="php:function('lang', 'Group shortname')" /></label>
@@ -31,6 +35,9 @@
                             <xsl:if test="group/organization_id">
                                 <xsl:attribute name='disabled'>disabled</xsl:attribute>
                             </xsl:if>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>	
                         </input>
                         <div id="organization_container"></div>
                     </div>
@@ -102,7 +109,11 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_email_1"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-                        <input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{group/contacts[1]/email}'/>
+						<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{group/contacts[1]/email}' data-validation="email">
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>							
+						</input>
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_phone_1"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
@@ -117,7 +128,11 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_email_2"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-                        <input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{group/contacts[2]/email}'/>
+						<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{group/contacts[2]/email}' data-validation="email">
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>								
+						</input>
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_phone_2"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
