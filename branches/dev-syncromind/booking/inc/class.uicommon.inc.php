@@ -117,7 +117,7 @@
 		{
 			$date = $date[0]->nodeValue;
 		}
-		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
+		preg_match('/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
 
 		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		if($match[4]) 
@@ -760,29 +760,28 @@
                                     showButtonPanel:true,
                                     buttonImage: "{$img_cal}",
                                     buttonText: "{$lang_select_date}",
-                                    buttonImageOnly: true,
-                                    altField: "#alt_"+id,
-                                    altFormat: "yy-mm-dd",
-                                    altFieldTimeOnly: false
+                                    buttonImageOnly: true
                                 });
                             });
 
 				$('#add-date-link').click(function(){
 					var add = $(this);
 					var html = '';
+                                    
+                                        this.counter = $('.date-container').length - 1;
 
 					if (!this.counter) { this.counter = 0; }
 
 					html = '<div class="date-container">'+
 						'<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
 						'<div class="pure-control-group">'+
-							'<label for="start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
-							'<input class="new_datepicker time pure-input-2-3" name="from_[]" id="start_date_'+this.counter+'" type="text">'+
+							'<label for="new_start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
+							'<input class="new_datepicker time pure-input-2-3" name="from_[]" id="new_start_date_'+this.counter+'" type="text">'+
 							'</input>'+
 						'</div>'+
 						'<div class="pure-control-group">'+
-							'<label for="end_date_'+this.counter+'" ><h4>{$lang_to}</h4></label>'+
-							'<input class="new_datepicker time pure-input-2-3" name="to_[]" id="end_date_'+this.counter+'" type="text">'+
+							'<label for="new_end_date_'+this.counter+'" ><h4>{$lang_to}</h4></label>'+
+							'<input class="new_datepicker time pure-input-2-3" name="to_[]" id="new_end_date_'+this.counter+'" type="text">'+
 							'</input>'+
 						'</div>'
 				 	'</div>';
