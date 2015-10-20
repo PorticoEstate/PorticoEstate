@@ -75,10 +75,10 @@
 		* @param boolean $debug Debug flag
 		* @return integer 1 when str2 is newest (bigger version number) than str1
 		*/
-		public function cmp_version_long($str1,$str2,$debug=False)
+		public function cmp_version_long($str1, $str2, $debug = false)
 		{
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str1, $regs);
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str2, $regs2);
+			$regs = explode('.', $str1);
+			$regs2 = explode('.', $str2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<6;++$i)
