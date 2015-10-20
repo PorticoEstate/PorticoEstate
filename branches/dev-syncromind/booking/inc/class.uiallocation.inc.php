@@ -298,7 +298,7 @@
 						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
 					}
 				} 
-				$_POST['from_'] = $allocation['from_'];
+                                $_POST['from_'] = $allocation['from_'];
 				$_POST['to_'] = $allocation['to_'];
 
 				$errors = $this->bo->validate($allocation);
@@ -577,7 +577,9 @@
                                                 $fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
                                                 $todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
                                                 $allocation['from_'] = $fromdate;
-                                                $allocation['to_'] = $todate;
+                                                $allocation['to_'] = $todate;                                                
+                                                $fromdate = pretty_timestamp($fromdate);
+                                                $todate = pretty_timestamp($todate);
 
                                                 $id = $this->bo->so->get_allocation_id($allocation);
                                                 if ($id)
@@ -591,13 +593,13 @@
 
                                                 if ($err) 
                                                 {
-                                                        $invalid_dates[$i]['from_'] = pretty_timestamp($fromdate);
-                                                        $invalid_dates[$i]['to_'] = pretty_timestamp($todate);
+                                                        $invalid_dates[$i]['from_'] = $fromdate;
+                                                        $invalid_dates[$i]['to_'] = $todate;
                                                 } 
                                                 else 
                                                 {
-                                                        $valid_dates[$i]['from_'] = pretty_timestamp($fromdate);
-                                                        $valid_dates[$i]['to_'] = pretty_timestamp($todate);
+                                                        $valid_dates[$i]['from_'] = $fromdate;
+                                                        $valid_dates[$i]['to_'] = $todate;
                                                         if ($step == 3)
                                                         {
                                                             $stat = $this->bo->so->delete_allocation($id);
@@ -645,7 +647,7 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => $_POST['repeat_until'],
+					'repeat_until' => pretty_timestamp($active_tab),
 					'from_date' => pretty_timestamp($from_date),
 					'to_date' => pretty_timestamp($to_date),
 					'valid_dates' => $valid_dates,

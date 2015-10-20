@@ -363,6 +363,14 @@ class booking_uievent extends booking_uicommon
 
 			array_set_default($_POST, 'from_', array());
 			array_set_default($_POST, 'to_', array());
+                        
+                        foreach ($_POST['from_'] as &$from) {
+                            $from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
+                        }
+                        foreach ($_POST['to_'] as &$to) {
+                            $to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+                        }
+                        
 			$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
 			array_set_default($_POST, 'resources', array());
@@ -521,6 +529,11 @@ class booking_uievent extends booking_uicommon
 		$audience = $audience['results'];
 
 		$this->install_customer_identifier_ui($event);
+                
+                foreach ($event['dates'] as &$date) {
+                    $date['from_'] = pretty_timestamp($date['from_']);
+                    $date['to_'] = pretty_timestamp($date['to_']);
+                }
         
                 $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
                 $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
@@ -599,7 +612,12 @@ class booking_uievent extends booking_uicommon
 			$customer['customer_organization_number'] = $organization['organization_number'];
 			$customer['customer_internal'] = $organization['customer_internal'];
 		}
-
+                
+                if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+                    $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                }
+                
 		list($event, $errors) = $this->extract_and_validate($event);
 
 		if ($event['customer_organization_number']) {
@@ -615,6 +633,11 @@ class booking_uievent extends booking_uicommon
 				$event['customer_organization_id'] = Null;
 			}
 			array_set_default($_POST, 'resources', array());
+                        
+                        
+                        
+//                        $event['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['from_']));
+//                        $event['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['to_']));
 
 			if ($_POST['organization_name']) {
 				$event['customer_organization_name'] = $_POST['organization_name'];
@@ -855,6 +878,9 @@ class booking_uievent extends booking_uicommon
 			$event['customer_organization_number'] = $customer['customer_organization_number'];
 			$event['customer_internal'] = $customer['customer_internal'];
 		}
+                
+                $event['from_'] = pretty_timestamp($event['from_']);
+                $event['to_'] = pretty_timestamp($event['to_']);
 
                 $GLOBALS['phpgw']->jqcal->add_listener('from_', 'datetime');
                         $GLOBALS['phpgw']->jqcal->add_listener('to_', 'datetime');

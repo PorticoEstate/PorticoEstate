@@ -783,6 +783,11 @@
                                 $application['contact_phone'] = $organization['contacts'][1]['phone'];
                             }
                         }
+                        
+                        foreach ($application['dates'] as &$date) {
+                            $date['from_'] = pretty_timestamp($date['from_']);
+                            $date['to_'] = pretty_timestamp($date['to_']);
+                        }
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
@@ -849,27 +854,10 @@
 				}
 			}
                         
-//                        foreach ($application['dates'] as &$date) {
-//                            $date['from_'] = date($this->dateFormat." H:i", strtotime($date['from_']));
-//                            $date['to_'] = date($this->dateFormat." H:i", strtotime($date['to_']));
-//                        }
-                        
-//                        foreach ($application['dates'] as &$date) {
-//                            $date['from_'] = date("d/m/Y H:i", phpgwapi_datetime::date_to_timestamp($date['from_']));
-//                            $date['to_'] = date($this->dateFormat. " H:i", phpgwapi_datetime::date_to_timestamp($date['to_']));
-//                        }
-                        
                         foreach ($application['dates'] as &$date) {
                             $date['from_'] = pretty_timestamp($date['from_']);
                             $date['to_'] = pretty_timestamp($date['to_']);
                         }
-                        
-//                        foreach ($application['dates']['to_'] as &$to) {
-//                            $to = date($this->dateFormat." H:i", strtotime($to));
-//                        }
-                        
-//                        $application['from_'] = date($this->dateFormat." H:i", strtotime($application['from_']));
-//                        $application['to_'] = date($this->dateFormat." H:i", strtotime($application['to_']));
                         
 			$this->flash_form_errors($errors);
                         $this->set_case_officer($application);

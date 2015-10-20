@@ -20,7 +20,7 @@
     </style>
 
     <xsl:call-template name="msgbox"/>
-    <form class= "pure-form pure-form-aligned" action="" method="post" id="form" name="form">
+    <div class= "pure-form pure-form-aligned" id="form" name="form">
         <input type="hidden" name="tab" value=""/>
         <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="application/tabs"/>
@@ -402,7 +402,7 @@
             </xsl:if>
             <a class="pure-button pure-button-primary" href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a>
         </div>
-    </form>
+    </div>
     <script type="text/javascript">
         var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
         var currentuser = '<xsl:value-of select="application/currentuser"/>';

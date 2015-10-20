@@ -360,7 +360,7 @@
 			{
 				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-				$_POST['repeat_until'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
                             
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
@@ -465,18 +465,20 @@
 						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
 						$booking['from_'] = $fromdate;
 						$booking['to_'] = $todate;
+                                                $fromdate = pretty_timestamp($fromdate);
+                                                $todate = pretty_timestamp($todate);
 
 						$err = $this->bo->validate($booking);
 
 						if ($err) 
 						{
-							$invalid_dates[$i]['from_'] = pretty_timestamp($fromdate);
-							$invalid_dates[$i]['to_'] = pretty_timestamp($todate);
+							$invalid_dates[$i]['from_'] = $fromdate;
+							$invalid_dates[$i]['to_'] = $todate;
 						} 
 						else 
 						{
-							$valid_dates[$i]['from_'] = pretty_timestamp($fromdate);
-							$valid_dates[$i]['to_'] = pretty_timestamp($todate);
+							$valid_dates[$i]['from_'] = $fromdate;
+							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
                                                                 if( $noallocation ) {
@@ -707,6 +709,10 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                            $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+                            $_POST['to_'] = date("Y-m-d H:i:s" ,  phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                            $_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
 
@@ -756,6 +762,8 @@
                                                 $todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
                                                 $booking['from_'] = $fromdate;
                                                 $booking['to_'] = $todate;
+                                                $fromdate = pretty_timestamp($fromdate);
+                                                $todate = pretty_timestamp($todate);
 
                                                 $id = $this->bo->so->get_booking_id($booking);                
                                                 if($id) {
@@ -801,6 +809,10 @@
 			$this->flash_form_errors($errors);
                         phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('booking', 'booking', 'booking.js');
+                        
+                        $booking['from_'] = pretty_timestamp($booking['from_']);
+                        $booking['to_'] = pretty_timestamp($booking['to_']);
+                        
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 			$booking['booking_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
@@ -829,9 +841,9 @@
                                         'recurring' => $_POST['recurring'],
                                         'outseason' => $_POST['outseason'],
                                         'interval' => $_POST['field_interval'],
-                                        'repeat_until' => $_POST['repeat_until'],
-                                        'from_date' => $from_date,
-                                        'to_date' => $to_date,
+                                        'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+                                        'from_date' => pretty_timestamp($from_date),
+                                        'to_date' => pretty_timestamp($to_date),
                                         'delete_allocation' => $_POST['delete_allocation'],
                                         'allocation_keep' => $allocation_keep,
                                         'allocation_delete' => $allocation_delete,
