@@ -40,6 +40,9 @@
                                  <xsl:if test="currentapp = 'booking'">
                                     <input id="inputs" name="name" type="text" class="pure-u-1">
                                         <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>										
                                     </input>
                                 </xsl:if>
                                 <xsl:if test="currentapp != 'booking'">
@@ -93,8 +96,8 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_email"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-                                <input id="field_email" name="email" type="text" class="pure-u-1">
-                                    <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>
+                                <input id="field_email" name="email" type="text" class="pure-u-1" data-validation="email">
+                                    <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>									
                                 </input>
                             </div>
                         </div>
