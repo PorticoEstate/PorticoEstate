@@ -123,6 +123,7 @@
                         $active_tab = 'generic';
 
                         $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $activity['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('activity_new', array('activity' => $activity, 'activities' => $activities));
 		}
@@ -162,6 +163,7 @@
                         $active_tab = 'generic';
 
                         $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $activity['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			self::render_template_xsl('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'activities' => $activities));
 		}

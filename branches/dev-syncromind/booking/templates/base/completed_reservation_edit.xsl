@@ -13,11 +13,18 @@
                         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
                             <div class="pure-control-group">
                                 <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
-                                <input id="field_cost" name="cost" type="text" value="{reservation/cost}" class="pure-u-1"/>
+                                <input id="field_cost" name="cost" type="text" value="{reservation/cost}" class="pure-u-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                </input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_customer_type"><xsl:value-of select="php:function('lang', 'Customer Type')" /></label>
                                 <select name='customer_type' id='field_customer_type' class="pure-u-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <option value=''><xsl:value-of select="php:function('lang', 'Select...')" /></option>
                                     <xsl:for-each select="reservation/customer_types/*">
                                         <option>
@@ -43,7 +50,11 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
-                                <input type='text' id='field_description' name="description" value='{reservation/description}' maxlength='60' class="pure-u-1"/>
+                                <input type='text' id='field_description' name="description" value='{reservation/description}' maxlength='60' class="pure-u-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                </input>
                             </div>
                         </div>
                     </div>

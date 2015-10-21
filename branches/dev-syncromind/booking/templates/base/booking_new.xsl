@@ -16,6 +16,9 @@
                             <div class="pure-control-group">
                                 <label style="width:auto;" for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                                 <select name="activity_id" id="field_activity">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -39,6 +42,9 @@
                                     <xsl:attribute name="value"><xsl:value-of select="booking/building_id"/></xsl:attribute>
                                 </input>
                                 <input id="field_building_name" name="building_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="booking/building_name"/></xsl:attribute>
                                 </input>
                             </div>
@@ -70,24 +76,20 @@
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'From')"/></label>
                                 <input class="datetime pure-input-2-3" id="start_date" name="from_" type="text" style="display:inline-block;">
+                                    <xsl:attribute name="data-validate">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="booking/from_"/></xsl:attribute>
                                 </input>
-                                <!--div class="datetime-picker"-->
-                                <!--input id="field_from" name="from_" type="text">
-                                    <xsl:attribute name="value"><xsl:value-of select="booking/from_"/></xsl:attribute>
-                                </input-->
-                                <!--/div-->
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'To')"/></label>
                                 <input class="datetime pure-input-2-3" id="end_date" name="to_" type="text" style="display:inline-block;">
+                                    <xsl:attribute name="data-validate">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
                                 </input>
-                                <!--div class="datetime-picker"-->
-                                <!--input id="field_to" name="to_" type="text">
-                                    <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
-                                </input-->
-                                <!--/div-->
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Cost')" /></label>

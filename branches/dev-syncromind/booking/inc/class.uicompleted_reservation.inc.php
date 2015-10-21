@@ -730,7 +730,7 @@ phpgw::import_class('booking.sopermission');
 		}
 		
 		public function edit()
-        {
+		{
 			//TODO: Display hint to user about primary type of customer identifier
 			
 			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
@@ -766,6 +766,7 @@ phpgw::import_class('booking.sopermission');
 			$tabs['completed_reservation_edit'] = array('label' => lang('Reservation edit'), 'link' => '#completed_reservation_edit');
 			$active_tab = 'completed_reservation_edit';
 			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $reservation['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
                         
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);

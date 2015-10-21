@@ -787,22 +787,24 @@
                             }
                         }
                         
-                        foreach ($application['dates'] as &$date) {
-                            $date['from_'] = pretty_timestamp($date['from_']);
-                            $date['to_'] = pretty_timestamp($date['to_']);
-                        }
-			
+			foreach ($application['dates'] as &$date) {
+				$date['from_'] = pretty_timestamp($date['from_']);
+				$date['to_'] = pretty_timestamp($date['to_']);
+			}
+
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-			
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
-                        $active_tab = 'generic';
 
-                        $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-                        self::add_javascript('booking', 'booking', 'application.js');
-						self::adddatetimepicker();
-			
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
+			$active_tab = 'generic';
+
+			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+                        
+			self::add_javascript('booking', 'booking', 'application.js');
+			self::adddatetimepicker();
+
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
 
@@ -881,13 +883,14 @@
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
                         //test
-            
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-                                    $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-            //			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
-                        $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-                        self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+            //			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+
+			self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		private function check_date_availability(&$allocation)

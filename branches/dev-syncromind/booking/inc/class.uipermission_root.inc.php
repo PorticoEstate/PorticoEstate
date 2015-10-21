@@ -210,6 +210,7 @@
 
             //            $data = array();
                         $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 			self::render_template_xsl('permission_root_form', array('permission' => $permission));
 		}

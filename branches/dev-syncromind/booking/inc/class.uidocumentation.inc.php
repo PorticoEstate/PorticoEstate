@@ -196,11 +196,12 @@
 			
 			$this->flash_form_errors($errors);
 
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
+			$active_tab = 'generic';
 
-                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			phpgwapi_jquery::formvalidator_generate(array());
             
 			self::render_template_xsl('documentation_form', array('document' => $document));
 		}
@@ -226,12 +227,13 @@
 			$this->flash_form_errors($errors);
 			$this->add_default_display_data($document);
 			
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
-                        $active_tab = 'generic';
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
+			$active_tab = 'generic';
 
-                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			phpgwapi_jquery::formvalidator_generate(array());
+
 			self::render_template_xsl('documentation_form', array('document' => $document));
 		}
 		

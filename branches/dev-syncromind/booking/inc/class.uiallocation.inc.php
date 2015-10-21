@@ -395,14 +395,15 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
-            
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
-                        $active_tab = 'generic';
 
-                        $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
+			$active_tab = 'generic';
+
+			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$allocation['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			if ($step < 2) 
 			{
@@ -471,7 +472,7 @@
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
-                        $tabs = array();
+			$tabs = array();
 			$tabs['generic']	= array('label' => lang('Allocations Edit'), 'link' => '#allocations_edit');
 			$active_tab = 'generic';
             
@@ -499,18 +500,19 @@
 				}
 			}
 
-                        $allocation['from_'] = pretty_timestamp($allocation['from_']);
-                        $allocation['to_'] = pretty_timestamp($allocation['to_']);
-                        
+			$allocation['from_'] = pretty_timestamp($allocation['from_']);
+			$allocation['to_'] = pretty_timestamp($allocation['to_']);
+
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
-                        $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$allocation['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
-            
+
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation));
 		}
 

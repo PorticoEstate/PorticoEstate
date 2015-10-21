@@ -31,6 +31,9 @@
                         <div class="pure-control-group">
                             <label for="field_name"><xsl:value-of select="php:function('lang', 'Document')" /></label>
                             <input name="name" id='field_name'>
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <xsl:attribute name="value"><xsl:value-of select="document/name"/></xsl:attribute>
                                 <xsl:attribute name="type">
                                     <xsl:choose>
@@ -51,6 +54,9 @@
                         <div class="pure-control-group">
                             <label for="field_category"><xsl:value-of select="php:function('lang', 'Category')" /></label>
                             <select name='category' id='field_category'>
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
                                 <xsl:for-each select="document/document_types/*">
                                     <option>

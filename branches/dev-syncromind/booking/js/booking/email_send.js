@@ -25,7 +25,7 @@ $(window).load(function(){
 function populateTableChkSeasons (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = 'season_container';
-    var colDefsSeasons = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'seasons[]'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}];
+    var colDefsSeasons = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'seasons[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 season'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}];
     populateTableChk(url, container, colDefsSeasons);
 }
 

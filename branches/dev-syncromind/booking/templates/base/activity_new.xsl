@@ -9,6 +9,9 @@
                     <label for="field_name"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="activity/name"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">

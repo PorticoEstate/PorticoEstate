@@ -22,6 +22,9 @@
                     <div style="display:inline-block;max-width:80%;">
                         <span><xsl:value-of select="node()"/></span><br />
                         <select name='role' id='field_role'>
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
                             <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
                             <xsl:for-each select="available_roles/*">
                                 <option>
@@ -42,6 +45,9 @@
                     </label>
                     <input id="field_subject_name" name="subject_name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                     <input id="field_subject_id" name="subject_id" type="hidden">
                         <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>

@@ -350,6 +350,7 @@ HTML;
 
 			$data			 = array();
 			$data['tabs']	 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $data['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 			self::render_template_xsl('report_participants', array('data' => $data, 'from' => $from,
 				'to' => $to, 'buildings' => $buildings['results']));

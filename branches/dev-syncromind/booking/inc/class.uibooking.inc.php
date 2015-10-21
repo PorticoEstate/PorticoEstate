@@ -546,17 +546,18 @@
 			$groups = $groups['results'];
 
 			$resouces_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
-            
-                        $tabs = array();
-                        $tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
-                        $active_tab = 'generic';
 
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-                        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
+			$active_tab = 'generic';
 
-                        $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
+			$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+
+			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+
 			if ($step < 2) 
 			{
 				self::render_template_xsl('booking_new', array('booking' => $booking, 
@@ -679,12 +680,13 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-            
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+
+			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
-                    
-                        $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
+
+			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+
 			self::render_template_xsl('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 

@@ -83,6 +83,7 @@
                         $active_tab = 'generic';
 
                         $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			if ($step == 1)
 				self::render_template_xsl('email_index', 

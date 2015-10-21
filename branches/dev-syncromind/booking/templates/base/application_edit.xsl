@@ -40,6 +40,9 @@
                             <div class="pure-control-group">
                                 <label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                                 <select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -54,7 +57,12 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
-                                <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description"><xsl:value-of select="application/description"/></textarea>
+                                <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="application/description"/>
+                                </textarea>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_equipment"><xsl:value-of select="php:function('lang', 'Equipment')" /></label>
@@ -73,6 +81,9 @@
                                     <xsl:attribute name="value"><xsl:value-of select="application/building_id"/></xsl:attribute>
                                 </input>
                                 <input id="field_building_name" name="building_name" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/building_name"/></xsl:attribute>
                                 </input>
                                 <div id="building_container"></div>
@@ -201,12 +212,18 @@
                             <div class="pure-control-group">
                                 <label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input id="field_contact_name" name="contact_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label>
                                 <input id="field_contact_email" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
                                 </input>
                             </div>

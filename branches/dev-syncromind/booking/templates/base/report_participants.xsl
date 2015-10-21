@@ -5,35 +5,25 @@
             <xsl:value-of disable-output-escaping="yes" select="data/tabs"/>
             <div id="report_part">
                 <div class="pure-control-group">
-                    <!--dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-                    <dd>
-                    <div class="date-picker">
-                        <input id="field_from" name="from" type="text">
-                            <xsl:attribute name="value"><xsl:value-of select="from"/></xsl:attribute>
-                        </input>
-                    </div>
-                    </dd-->
                     <label for="start_date">
                         <h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
                     </label>
                     <input class="datetime" id="from" name="from" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="from"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <!--dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-                    <dd>
-                    <div class="date-picker">
-                        <input id="field_to" name="to" type="text">
-                            <xsl:attribute name="value"><xsl:value-of select="to"/></xsl:attribute>
-                        </input>
-                    </div>
-                    </dd-->
                     <label for="end_date">
                         <h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
                     </label>
                     <input class="datetime" id="to" name="to" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="to"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -41,6 +31,9 @@
                         <h4><xsl:value-of select="php:function('lang', 'buildings')"/></h4>
                     </label>
                     <select id="field_building" name="building[]" size="10" multiple="multiple" class="full-width">
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                         <xsl:for-each select="buildings">
                             <xsl:sort select="name"/>
                             <option>

@@ -13,6 +13,9 @@
                     </input>
                     <input id="field_building_name" name="building_name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="building/name"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -23,11 +26,19 @@
                     <label for="field_mailsubject"><xsl:value-of select="php:function('lang', 'Mail subject')" /></label>
                     <input type="text" id="field_mailsubject" name="mailsubject" class="full-width">
                         <xsl:attribute name="value"><xsl:value-of select="mailsubject"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_mailbody"><xsl:value-of select="php:function('lang', 'Mail body')" /></label>
-                    <textarea id="field_mailbody" name="mailbody" class="full-width"><xsl:value-of select="mailbody"/></textarea>
+                    <textarea id="field_mailbody" name="mailbody" class="full-width">                        
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:value-of select="mailbody"/>
+                    </textarea>
                 </div>
             </div>
         </div>

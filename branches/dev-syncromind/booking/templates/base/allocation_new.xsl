@@ -15,6 +15,9 @@
                         <xsl:attribute name="value"><xsl:value-of select="allocation/building_id"/></xsl:attribute>
                     </input>
                     <input id="field_building_name" name="building_name" type="text">
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/building_name"/></xsl:attribute>
                     </input>
                 </div>
@@ -24,6 +27,9 @@
                         <xsl:attribute name="value"><xsl:value-of select="allocation/organization_id"/></xsl:attribute>
                     </input>
                     <input id="field_org_name" name="organization_name" type="text">
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/organization_name"/></xsl:attribute>
                     </input>
                 </div>
@@ -132,6 +138,9 @@
                 <div class="pure-control-group">
                     <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
                     <input id="field_cost" name="cost" type="text">
+                        <xsl:attributes name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attributes>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/cost"/></xsl:attribute>
                     </input>
                 </div>

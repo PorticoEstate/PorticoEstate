@@ -24,6 +24,9 @@
                                     <p><xsl:value-of select="config/application_activities"/></p>
                                 </xsl:if>
                                 <select name="activity_id" id="field_activity" class="pure-input-1">
+                                    <xsl:attributes name="date-validtion">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attributes>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -41,7 +44,12 @@
                                 <xsl:if test="config/application_description">
                                     <p><xsl:value-of select="config/application_description"/></p>
                                 </xsl:if>
-                                <textarea rows="6" id="field_description" class="full-width pure-input-1" name="description"><xsl:value-of select="application/description"/></textarea>
+                                <textarea rows="6" id="field_description" class="full-width pure-input-1" name="description">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="application/description"/>
+                                </textarea>
                             </div>
                         </fieldset>
                     </div>
@@ -102,6 +110,9 @@
                                 </input>
                                 <input id="field_building_name" class="pure-input-1" name="building_name" type="text">
                                     <xsl:attribute name="value"><xsl:value-of select="application/building_name"/></xsl:attribute>
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                 </input>
                                 <div id="building_container"></div>
                             </div>
@@ -223,12 +234,18 @@
                                 </xsl:if>
                                 <label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input id="field_contact_name" class="pure-input-1" name="contact_name" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_contact_email"><xsl:value-of select="php:function('lang', 'E-mail address')" /></label>
                                 <input id="field_contact_email" class="pure-input-1" name="contact_email" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
                                 </input>
                             </div>
