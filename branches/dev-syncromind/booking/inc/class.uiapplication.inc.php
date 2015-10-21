@@ -733,10 +733,6 @@
                         
 			if(phpgw::get_var('from_', 'GET'))
 			{
-                            foreach (phpgw::get_var('from_', 'GET') as $k => $v) {
-                                $_GET['from_'][$k] = pretty_timestamp($_GET['from_'][$k]);
-                                $_GET['to_'][$k] = date($this->dateFormat." H:i", strtotime($_GET['to_'][$k]));
-                            }
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', '', 'GET'), phpgw::get_var('to_', '', 'GET'));
 			}
 			else
