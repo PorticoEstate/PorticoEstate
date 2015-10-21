@@ -35,11 +35,20 @@ $(document).ready(function() {
 					$("#agegroup_tbody").html( html_agegroups );
 
 					var audience = data.audience;
+					var checked = '';
 					for ( var i = 0; i < audience.length; ++i )
 					{
+						checked = '';
+						for ( var j = 0; j < initialAudience.length; ++j )
+						{
+							if(audience[i]['id'] == initialAudience[j])
+							{
+								checked = " checked='checked'";
+							}
+						}
 						html_audience += "<li>";
 						html_audience += "<label>";
-						html_audience += "<input type=\"radio\" name=\"audience[]\" value='" +audience[i]['id'] + "'></input>";
+						html_audience += "<input type=\"radio\" name=\"audience[]\" value='" +audience[i]['id'] + "'" + checked+ "></input>";
 						html_audience += audience[i]['name'];
 						html_audience += "</label>";
 						html_audience += "</li>";
