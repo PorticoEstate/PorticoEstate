@@ -242,7 +242,17 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'shortname', 'organization_id', 'organization_name', 'description', 'contacts', 'active', 'activity_id', 'show_in_portal')));
+				$group = array_merge($group, extract_values($_POST, array(
+					'name'				=> 'string',
+					'shortname'			=> 'string',
+					'organization_id'	=> 'string',
+					'organization_name'	=> 'string',
+					'description'		=> 'html',
+					'contacts'			=> 'string',
+					'active'			=> 'int',
+					'activity_id'		=> 'int',
+					'show_in_portal'	=> 'int',
+					)));
 				if (!isset($group["active"]))
 				{
 					$group['active'] = '1';

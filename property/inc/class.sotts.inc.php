@@ -143,6 +143,8 @@
 			$building_part	= isset($data['building_part']) && $data['building_part'] ? $data['building_part']:'';
 			$branch_id		= isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id']:0;
 			$order_dim1		= isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1']:0;
+			$custom_filtermethod= isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod']:array();
+
 
 			$result_order_field = '';
 			if ($order)
@@ -423,6 +425,12 @@
 			if ($location_code)
 			{
 				$filtermethod .= " $where fm_tts_tickets.location_code {$this->like} '{$location_code}%'";
+				$where= 'AND';
+			}
+
+			foreach($custom_filtermethod as $custom_filter_key => $custom_filter_value)
+			{
+				$filtermethod .= " $where fm_tts_tickets.{$custom_filter_key} = '{$custom_filter_value}'";
 				$where= 'AND';
 			}
 

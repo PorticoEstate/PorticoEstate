@@ -247,7 +247,9 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$system_message = array_merge($system_message, extract_values($_POST, array('time', 'title', 'message')));
+				$system_message = array_merge($system_message, extract_values($_POST, array(
+					'name' => 'string', 'time' => 'string', 'title' => 'string', 'message' => 'html', 'phone' => 'string', 'email' => 'email')
+				));
 				if (!isset($system_message["Status"]))
 				{
 					$system_message['status'] = 'NEW';
