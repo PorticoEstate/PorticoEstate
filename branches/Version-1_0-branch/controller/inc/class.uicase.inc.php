@@ -300,6 +300,17 @@
 
 		function add_case()
 		{
+                        $config	= CreateObject('phpgwapi.config','controller');
+                        $config->read();
+                        $mandatory_location = $config->config_data['control_mandatory_location'];
+                        if($mandatory_location && $mandatory_location == 1)
+						{
+                            $mandatory_location = true;
+						}
+                        else
+						{
+                            $mandatory_location = false;
+						}
 			$case_data = $this->_get_case_data();
 			$check_list = $case_data['check_list'];
 
@@ -321,6 +332,8 @@
 				'location_level' 					=> $level,
 				'current_year' 						=> $year,
 				'current_month_nr' 					=> $month,
+                                'mandatory_location'                                    => $mandatory_location,
+                                'location_required'                                     => $mandatory_location,
 				'cases_view'						=> 'add_case',
 			);
 			

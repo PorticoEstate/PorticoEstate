@@ -29,13 +29,26 @@
 			
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'shortname', 'homepage', 'phone', 'email', 
-								  'street', 'zip_code', 'city', 'district', 
-								  'description', 'contacts', 'active', 
-								  'organization_number', 'activity_id',
-								  'customer_number', 'customer_internal', 'show_in_portal');
-								
-			
+			$this->fields = array(
+				'name'					=> 'string',
+				'shortname'				=> 'string',
+				'homepage'				=> 'url',
+				'phone'					=> 'string',
+				'email'					=> 'email',
+				'street'				=> 'string',
+				'zip_code'				=> 'string',
+				'city'					=> 'string',
+				'district'				=> 'string',
+				'description'			=> 'html',
+				'contacts'				=> 'string',
+				'active'				=> 'int',
+				'organization_number'	=> 'string',
+				'activity_id'			=> 'int',
+				'customer_number'		=> 'string',
+				'customer_internal'		=> 'int',
+				'show_in_portal'		=> 'int',
+				);
+
 		}
 		
 		public function building_users() {

@@ -6,7 +6,7 @@
   
     <xsl:call-template name="check_list_top_section">
     </xsl:call-template>
-		
+
 	<xsl:choose>
 		<xsl:when test="buildings_on_property/child::node()">
   			<div id="choose-building-wrp">

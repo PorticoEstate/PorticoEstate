@@ -374,8 +374,8 @@ function validate_form(formObj)
 			status = false;
 		}
 	});
-
-	return status;
+        
+       	return status;
 }
 
 //Updates order number for hidden field and number in front of row

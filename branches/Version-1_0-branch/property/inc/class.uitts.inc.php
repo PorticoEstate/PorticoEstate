@@ -743,6 +743,46 @@
 							)
 						)
 					);
+					$custom	= createObject('phpgwapi.custom_fields');
+					$attrib_data = $custom->find('property',".ticket", 0, '','','',true, true);
+					$i = 12;
+					if($attrib_data)
+					{
+						foreach ( $attrib_data as $attrib )
+						{
+							if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+							{
+								$values_combo_box[$i][]  = array
+								(
+									'id' 	=> '',
+									'name'	=> lang('select') . " '{$attrib['input_text']}'"
+								);
+
+								foreach($attrib['choice'] as $choice)
+								{
+									$values_combo_box[$i][]  = array
+									(
+										'id' 	=> $choice['id'],
+										'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+									);
+								}
+
+								$datatable['actions']['form'][0]['fields']['field'][] = array
+								(
+									'id' => "sel_{$attrib['column_name']}",
+									'name' => $attrib['column_name'],
+									'value'	=> $attrib['input_text'],
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[$i],
+									'onchange'=> "onChangeSelect(\"{$attrib['column_name']}\");",
+									'tab_index' => $i
+								);
+								$i++;
+							}
+						}
+					}
+
 
 					if($order_read)
 					{
@@ -755,7 +795,7 @@
 									'style' => 'filter',
 									'values' => $this->bo->get_vendors($this->vendor_id),
 									'onchange'=> 'onChangeSelect("vendor_id");',
-									'tab_index' => 12
+									'tab_index' => $i++
 						);
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
@@ -766,7 +806,7 @@
 									'style' => 'filter',
 									'values' => $this->bo->get_ecodimb($this->ecodimb),
 									'onchange'=> 'onChangeSelect("ecodimb");',
-									'tab_index' => 13
+									'tab_index' => $i++
 						);
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
@@ -777,7 +817,7 @@
 									'style' => 'filter',
 									'values' => $this->bo->get_b_account($this->b_account),
 									'onchange'=> 'onChangeSelect("b_account");',
-									'tab_index' => 14
+									'tab_index' => $i++
 						);
 
 
@@ -799,7 +839,7 @@
 									//'values' => $this->bo->get_building_part($this->building_part),
 									'values'	=> $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart)),
 									'onchange'=> 'onChangeSelect("building_part");',
-									'tab_index' => 15
+									'tab_index' => $i++
 						);
 
 						if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1)
@@ -813,7 +853,7 @@
 									'style' => 'filter',
 									'values' => $this->bo->get_branch($this->branch_id),
 									'onchange'=> 'onChangeSelect("branch_id");',
-									'tab_index' => 16
+									'tab_index' => $i++
 							);
 						}
 
@@ -826,7 +866,7 @@
 									'style' => 'filter',
 									'values' => $this->bo->get_order_dim1($this->order_dim1),
 									'onchange'=> 'onChangeSelect("order_dim1");',
-									'tab_index' => 17
+									'tab_index' => $i++
 						);
 					}
 				}
@@ -897,6 +937,7 @@
 				}
 				$dry_run = true;
 			}
+			$columns = $this->bo->get_columns();
 
 			$ticket_list = $this->bo->read($start_date, $end_date,'',$dry_run);
 
@@ -961,7 +1002,7 @@
 			$uicols['descr'][]	= lang('entry date');
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
-			$columns = $this->bo->get_columns();
+//			$columns = $this->bo->get_columns();
 
 //_debug_array($custom_cols);die();
 			foreach ($custom_cols as $col)
