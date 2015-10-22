@@ -369,9 +369,6 @@
 				$booking['from_'] =  date("Y-m-d H:i:s",$timestamp);
 				$timestamp =  strtotime($booking['to_']);
 				$booking['to_'] =  date("Y-m-d H:i:s",$timestamp);
-                                
-                                $booking['from_'] = pretty_timestamp($booking['from_']);
-				$booking['to_'] = pretty_timestamp($booking['to_']);
 
 				if(strlen($_POST['from_']) < 6) 
 				{
@@ -526,6 +523,8 @@
 						}
 					}
 				}
+                                $booking['from_'] = pretty_timestamp($booking['from_']);
+				$booking['to_'] = pretty_timestamp($booking['to_']);
 			}
 			if($allocation['cost'] > 0) {
 				$errors['cost'] = lang('There is a cost of %1 assosiated with the allocation you are useing',$allocation['cost']);
@@ -533,15 +532,40 @@
 			$this->flash_form_errors($errors);
 			unset($errors['cost']);
 			self::add_javascript('booking', 'booking', 'booking.js');
-			array_set_default($booking, 'resources', array());
+                        
+			if(phpgw::get_var('resource', 'GET') == 'null')
+			{			
+				array_set_default($application, 'resources', array());
+			}
+			else 
+			{
+				$resources = explode(",",phpgw::get_var('resource', 'GET'));
+				array_set_default($booking, 'resources', $resources);
+			}
+			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'GET'));
+			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'GET'));
+			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'GET'));
+			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'GET'));
+			if (strstr($application['building_name'],"%")){
+				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+				$replace = array ('Å','å','Ø','ø','Æ','æ');
+				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+			}
+
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uimassbooking.index'));
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
-			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
-			$audience = $audience['results'];
+
+			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			$activity_path = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
+			$audience = $audience['results'];
+                        $booking['audience_json'] = json_encode(array_map('intval',$booking['audience']));
+
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
 
@@ -573,10 +597,9 @@
 					'date_from' => $time_from[0],
 					'date_to' => $time_to[0],
 					'application_id' => $application_id,
-                                        'noallocation' => $noallocation)
-					
+					'noallocation' => $noallocation)
 				);
-			} 
+			}
 			else if ($step == 2) 
 			{
 				self::render_template_xsl('booking_new_preview', array('booking' => $booking, 
@@ -594,7 +617,7 @@
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups,
 					'application_id' => $application_id,
-                                        'noallocation' => $noallocation)
+					'noallocation' => $noallocation)
 				);
 			}
 		}
@@ -631,6 +654,10 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
+                        
+                        $activity_path = $this->activity_bo->get_path($booking['activity_id']);
+                        $top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+                        
 			$booking['group'] = $this->group_bo->so->read_single($booking['group_id']);
 			$booking['organization_id'] = $booking['group']['organization_id'];
 			$booking['organization_name'] = $booking['group']['organization_name'];
@@ -674,12 +701,13 @@
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $booking['application_id']));
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+                        $booking['audience_json'] = json_encode(array_map('intval',$booking['audience']));
 
 			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
@@ -858,6 +886,10 @@
 		public function show()
 		{
 			$booking = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+                        
+                        $activity_path = $this->activity_bo->get_path($booking['activity_id']);
+                        $top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+                        
 			$booking['bookings_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
 			$booking['delete_link'] = self::link(array('menuaction' => 'booking.uibooking.delete', 'id' => $booking['id']));

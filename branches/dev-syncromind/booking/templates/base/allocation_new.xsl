@@ -138,9 +138,9 @@
                 <div class="pure-control-group">
                     <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
                     <input id="field_cost" name="cost" type="text">
-                        <xsl:attributes name="data-validation">
+                        <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
-                        </xsl:attributes>
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/cost"/></xsl:attribute>
                     </input>
                 </div>

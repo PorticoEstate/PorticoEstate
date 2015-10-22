@@ -515,36 +515,41 @@ class booking_uievent extends booking_uicommon
 		{
 			$this->flash_form_errors($errors);
 		}
-
+                
 		self::add_javascript('booking', 'booking', 'event.js');
 		array_set_default($event, 'resources', array());
 		$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 		$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
 		array_set_default($event, 'cost', '0');
+                
+                $activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+                $activity_path = $this->activity_bo->get_path($activity_id);
+                $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 		$activities = $this->activity_bo->fetch_activities();
 		$activities = $activities['results'];
-		$agegroups = $this->agegroup_bo->fetch_age_groups();
+		$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 		$agegroups = $agegroups['results'];
-		$audience = $this->audience_bo->fetch_target_audience();
+		$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 		$audience = $audience['results'];
 
 		$this->install_customer_identifier_ui($event);
-                
-                foreach ($event['dates'] as &$date) {
-                    $date['from_'] = pretty_timestamp($date['from_']);
-                    $date['to_'] = pretty_timestamp($date['to_']);
-                }
-        
-                $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-                $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 
-                $tabs = array();
-                $tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');
-                $active_tab = 'generic';
+		foreach ($event['dates'] as &$date) {
+			$date['from_'] = pretty_timestamp($date['from_']);
+			$date['to_'] = pretty_timestamp($date['to_']);
+		}
 
-                $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-				self::adddatetimepicker();
-        
+		$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+		$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+
+		$tabs = array();
+		$tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');
+		$active_tab = 'generic';
+
+		$event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+		$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+		self::adddatetimepicker();
+
 		$this->add_template_helpers();
 		self::render_template_xsl('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 	}
@@ -579,6 +584,10 @@ class booking_uievent extends booking_uicommon
 	{
 		$id = intval(phpgw::get_var('id', 'GET'));
 		$event = $this->bo->read_single($id);
+                
+                $activity_path = $this->activity_bo->get_path($event['activity_id']);
+                $top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+                
 		$building_info = $this->bo->so->get_building_info($id);
 		$event['building_id'] = $building_info['id'];
 		$event['building_name'] = $building_info['name'];
@@ -896,14 +905,16 @@ class booking_uievent extends booking_uicommon
 		$activities = $activities['results'];
 #			$comments = array_reverse($event['comments']);
 		$comments = $this->bo->so->get_ordered_comments($id);
-		$agegroups = $this->agegroup_bo->fetch_age_groups();
+		$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 		$agegroups = $agegroups['results'];
-		$audience = $this->audience_bo->fetch_target_audience();
+		$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 		$audience = $audience['results'];
+                $event['audience_json'] = json_encode(array_map('intval',$event['audience']));
+                
 		$this->install_customer_identifier_ui($event);
 		$this->add_template_helpers();
         
-//              phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'),'activity_form');
+              phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
         
                 $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //              echo '<pre>'; print_r($event);echo '</pre>';

@@ -60,6 +60,9 @@
                             <div class="pure-control-group">
                                 <label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                                 <select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -74,7 +77,12 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
-                                <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description"><xsl:value-of select="event/description"/></textarea>
+                                <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="event/description"/>
+                                </textarea>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_public"><xsl:value-of select="php:function('lang', 'Event type')"/></label>
@@ -103,9 +111,15 @@
                             <div class="pure-control-group">
                                 <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                                 <input id="field_building_id" name="building_id" type="hidden">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_id"/></xsl:attribute>
                                 </input>
                                 <input id="field_building_name" name="building_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_name"/></xsl:attribute>
                                 </input>
                             </div>
@@ -152,11 +166,12 @@
                             <div class="pure-g">
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
                                     <label><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
-                                    <ul style="list-style:none;padding: 0 0 0 10px;">
+                                    <input type="hidden" data-validation="target_audience"></input>
+                                    <ul id="audience" style="list-style:none;padding: 0 0 0 10px;">
                                         <xsl:for-each select="audience">
                                             <li>
                                                 <label style="display:inline-block">
-                                                    <input type="checkbox" name="audience[]">
+                                                    <input type="radio" name="audience[]">
                                                         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
                                                         <xsl:if test="../event/audience=id">
                                                             <xsl:attribute name="checked">checked</xsl:attribute>
@@ -170,6 +185,7 @@
                                 </div>
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
                                     <label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label>
+                                    <input type="hidden" data-validation="number_participants"></input>
                                     <table id="agegroup" class="pure-table pure-table-bordered">
                                         <thead>
                                             <tr>
@@ -178,7 +194,7 @@
                                                 <th><xsl:value-of select="php:function('lang', 'Female')" /></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="agegroup_tbody">
                                             <xsl:for-each select="agegroups">
                                                 <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
                                                 <tr>
@@ -215,6 +231,9 @@
                             <div class="pure-control-group">
                                 <label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label>
                                 <input id="field_contact_name" name="contact_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
@@ -233,6 +252,9 @@
                             <div class="pure-control-group">
                                 <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
                                 <input id="field_cost" name="cost" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
                                 </input>
                             </div>
@@ -339,6 +361,7 @@
     <script type="text/javascript">
         $('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
         var initialSelection = <xsl:value-of select="event/resources_json"/>;
+        var initialAudience = <xsl:value-of select="event/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     </script>
 </xsl:template>

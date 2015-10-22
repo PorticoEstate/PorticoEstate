@@ -657,10 +657,10 @@
 				$application = $this->extract_form_data();
 
 				foreach ($_POST['from_'] as &$from) {
-                                        $from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
+                                        $from = ($from) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from)) : "";
 				}
 				foreach ($_POST['to_'] as &$to) {
-                                        $to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+                                        $to = ($to) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to)) : "";
 				}
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
@@ -755,6 +755,7 @@
 			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			$activity_path	 = $this->activity_bo->get_path($activity_id);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+                        array_set_default($application, 'activity_id', $activity_id);
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
@@ -796,7 +797,7 @@
 			$active_tab = 'generic';
 
 			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
                         
 			self::add_javascript('booking', 'booking', 'application.js');
 			self::adddatetimepicker();
@@ -878,13 +879,14 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
+                        $application['audience_json'] = json_encode(array_map('intval',$application['audience']));
                         //test
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
             //			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+			$application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
 
 			self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
@@ -959,7 +961,7 @@
 
 			$activity_path	 = $this->activity_bo->get_path($application['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
-                         $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Application'), 'link' => '#application');
 			$active_tab = 'generic';
             

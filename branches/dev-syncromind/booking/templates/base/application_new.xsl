@@ -24,9 +24,9 @@
                                     <p><xsl:value-of select="config/application_activities"/></p>
                                 </xsl:if>
                                 <select name="activity_id" id="field_activity" class="pure-input-1">
-                                    <xsl:attributes name="date-validtion">
+                                    <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
-                                    </xsl:attributes>
+                                    </xsl:attribute>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -60,6 +60,7 @@
                                 <p><xsl:value-of select="config/application_howmany"/></p>
                             </xsl:if>
                             <label><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
+                            <input type="hidden" data-validation="number_participants"></input>
                             <table id="agegroup" class="pure-table pure-table-bordered">
                                 <thead>
                                     <tr>
@@ -206,6 +207,7 @@
                                 <p><xsl:value-of select="config/application_who"/></p>
                             </xsl:if>
                             <label><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
+                            <input type="hidden" data-validation="target_audience"></input>
                             <ul id= "audience"  style="list-style:none;padding-left:10px;">
                                 <xsl:for-each select="audience">
                                     <li>
@@ -218,7 +220,7 @@
                                             </input>
                                             <xsl:value-of select="name"/>
                                         </label>
-									</li>
+                                    </li>
                                 </xsl:for-each>
                             </ul>
                         </fieldset>
@@ -252,6 +254,15 @@
                             <div class="pure-control-group">
                                 <label for="field_contact_email2"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')" /></label>
                                 <input id="field_contact_email2" class="pure-input-1" name="contact_email2" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>confirmation</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:atrribute name="data-validation-confirm">
+                                        <xsl:text>contact_email</xsl:text>
+                                    </xsl:atrribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:text>the e-mail addresses you entered do not match</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email2"/></xsl:attribute>
                                 </input>
                             </div>
@@ -286,6 +297,7 @@
                             <div class="heading"><legend><h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3></legend></div>
                             <p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
                             <div class="pure-control-group">
+                                <input type="hidden" data-validation="regulations_documents"></input>
                                 <xsl:if test="config/application_terms">
                                     <p><xsl:value-of select="config/application_terms"/></p>
                                 </xsl:if>
