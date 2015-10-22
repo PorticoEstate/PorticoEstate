@@ -89,4 +89,18 @@
 				$errors['type'] = lang('Invalid Resource Type');
 			}
 		}
+
+		function _get_conditions($query, $filters)
+		{
+
+			if(isset($filters['activity_id']) && $filters['activity_id'])
+			{
+				$soactivity = createObject('booking.soactivity');
+				$children = $soactivity->get_children($filters['activity_id']);
+				$activity_ids = array_merge(array($filters['activity_id']),$children);
+				$filters['activity_id'] = $activity_ids;
+			}
+			$conditions = parent::_get_conditions($query, $filters);
+			return $conditions;
+		}
 	}

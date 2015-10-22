@@ -16,7 +16,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="report/tabs"/>
 			<div id="report_new">
 				<fieldset>
-					<input type="hidden" name="application_id" value="{report/application_id}"/>
+					<input type="hidden" name="report_id" value="{report/report_id}"/>
                         
 					<div class="pure-g">
 						<div class="pure-u-1">
@@ -30,11 +30,26 @@
 							<div class="pure-control-group">
 								<label for="field_activity">
 									<h4>
+										<xsl:value-of select="php:function('lang', 'type')" />
+									</h4>
+								</label>
+								<select name="report_type" id="report_type" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<option value="1">
+										<xsl:value-of select="php:function('lang', 'counting')" />
+									</option>
+									<option value="2">
+										<xsl:value-of select="php:function('lang', 'time')" />
+									</option>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_activity">
+									<h4>
 										<xsl:value-of select="php:function('lang', 'Activity')" />
 									</h4>
 								</label>
 								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
-									<option value="">
+									<option value="-1">
 										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 									</option>
 									<xsl:for-each select="activities">
@@ -78,19 +93,27 @@
 										<xsl:value-of select="php:function('lang', 'Building')" />
 									</h4>
 								</label>
-								<!--div class="autocomplete"-->
-								<input id="field_building_id" name="building_id" type="hidden">
-									<xsl:attribute name="value">
-										<xsl:value-of select="report/building_id"/>
-									</xsl:attribute>
-								</input>
-								<input id="field_building_name" name="building_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
-									<xsl:attribute name="value">
-										<xsl:value-of select="report/building_name"/>
-									</xsl:attribute>
-								</input>
-								<!--div id="building_container"/>
-								</div-->
+								<ul id= "variable_vertical" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
+									<li>
+										<label>
+											<input id="check_all_buildings" type="checkbox" value="1" name="all_buildings" >
+											</input>
+											<xsl:value-of select="php:function('lang', 'All')" />
+										</label>
+									</li>
+								</ul>
+								<div id="building_container">
+									<input id="field_building_id" name="building_id" type="hidden">
+										<xsl:attribute name="value">
+											<xsl:value-of select="report/building_id"/>
+										</xsl:attribute>
+									</input>
+									<input id="field_building_name" name="building_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+										<xsl:attribute name="value">
+											<xsl:value-of select="report/building_name"/>
+										</xsl:attribute>
+									</input>
+								</div>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -158,27 +181,6 @@
 											<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00"></input>
 										</div>
 									</div>
-									
-									<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
-										<!--label for="start_time">
-											<xsl:value-of select="php:function('lang', 'start time')" />
-										</label>
-										<span>
-											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00">
-											</input>
-											<xsl:text>:</xsl:text>
-											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00">
-											</input>
-										</span
-										<label for="end_time">
-											<xsl:value-of select="php:function('lang', 'end time')" />
-										</label>
-										<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00">
-										</input>
-										<xsl:text>:</xsl:text>
-										<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00">
-										</input>-->
-									</div>
 
 								</div>
 							</div>
@@ -193,9 +195,9 @@
 										<li>
 											<label>
 												<input type="checkbox" value="{id}" name="weekdays[]" >
-													<xsl:if test="selected = 1">
+													<!--xsl:if test="selected = 1"-->
 														<xsl:attribute name="checked">checked</xsl:attribute>
-													</xsl:if>
+													<!--/xsl:if-->
 												</input>
 												<xsl:value-of select="name" />
 											</label>
@@ -278,6 +280,6 @@
 	</form>
 	<script type="text/javascript">
 		var initialSelection = <xsl:value-of select="report/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type', 'Select a building first')"/>;
 	</script>
 </xsl:template>

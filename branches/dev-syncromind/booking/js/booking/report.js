@@ -21,10 +21,10 @@ $(window).load(function () {
 });
 
 function populateTableChkResources(building_id, selection) {
-	oArgs = {menuaction: 'booking.uiresource.index', sort:'name', filter_building_id:building_id};
+	oArgs = {menuaction: 'booking.uiresource.index', sort:'name', filter_building_id:building_id, filter_activity_id: $("#field_activity").val()};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var container = 'resources_container';
-	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'checked', value: 'checked'}]}], value: 'id'/*, checked: selection*/}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
 	populateTableChk(requestUrl, container, colDefsResources);
 }
 
@@ -33,11 +33,38 @@ function populateTableChk(url, container, colDefs) {
 }
 
 $(document).ready(function(){
-
+/*
+	$( "#check_all_buildings" ).on( "click", function() {
+		if($(this).prop("checked"))
+		{
+			$("#field_building_name").val('');
+			$("#building_container").hide();
+			$("#resources_container").html('');
+		}
+		else
+		{
+			$("#building_container").show();
+			$("#resources_container").html(lang['Select a building first']);
+		}
+	});
+*/
 	$("#field_activity").change(function () {
 		oArgs = {menuaction: 'booking.uireports.get_custom'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var activity_id =$("#field_activity").val();
+		//reset resources on activity change
+//		$("#field_building_name").val('');
+		var building_id = $('#field_building_id').val();
+		if(building_id)
+		{
+			populateTableChkResources(building_id, []);
+		}
+
+		
+		if(!$("#check_all_buildings").prop("checked"))
+		{
+//			$("#resources_container").html(lang['Select a building first']);
+		}
 
 		$.ajax({
 				type: 'POST',

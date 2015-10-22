@@ -54,7 +54,7 @@
 		public function add()
 		{
 			self::set_active_menu('booking::reportcenter::add_generic');
-
+			_debug_array($_POST);
 			$errors	 = array();
 			$report	 = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -157,8 +157,8 @@
 						$receipt = $this->bo->add($report);
 						$this->bo->so->update_id_string();
 					}
-					$this->redirect(array('menuaction' => 'booking.uireports.edit', 'id' => $receipt['id'],
-						'secret' => $report['secret'], 'warnings' => $errors));
+	//				$this->redirect(array('menuaction' => 'booking.uireports.edit', 'id' => $receipt['id'],
+	//					'secret' => $report['secret'], 'warnings' => $errors));
 				}
 			}
 			if($errors['report'])

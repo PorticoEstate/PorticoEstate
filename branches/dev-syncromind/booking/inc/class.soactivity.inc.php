@@ -3,6 +3,8 @@
 	
 	class booking_soactivity extends booking_socommon
 	{
+		private $activity_tree = array();
+
 		function __construct()
 		{
 			parent::__construct('bb_activity', 
@@ -72,5 +74,21 @@
 				);
 			}
 			return $values;
+		}
+
+		public function get_children($parent, $level = 0)
+		{
+			$parent = (int)$parent;
+			$db		 = clone($this->db);
+			$sql	 = "SELECT * FROM bb_activity WHERE  parent_id = {$parent} ORDER BY name ASC";
+			$db->query($sql, __LINE__, __FILE__);
+
+			while($db->next_record())
+			{
+				$id						 = $db->f('id');
+				$this->activity_tree[]	 = $id;
+				$this->get_children($id, $level + 1);
+			}
+			return $this->activity_tree;
 		}
 	}
