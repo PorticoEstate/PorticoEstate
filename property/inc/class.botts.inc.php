@@ -56,6 +56,7 @@
 		public $sum_difference	= 0;
 		public $show_finnish_date = false;
 		public $simple = false;
+		protected $custom_filters = array();
 
 		var $public_functions = array
 		(
@@ -334,8 +335,12 @@
 					'name'=> $custom_col['input_text'],
 					'datatype' => $custom_col['datatype'],
 				);
-			}
+				if(($custom_col['datatype'] == 'LB' || $custom_col['datatype'] == 'CH' || $custom_col['datatype'] == 'R') && $custom_col['choice'])
+				{
+					$this->custom_filters[] = $custom_col['column_name'];
+				}
 
+			}
 			return $columns;
 		}
 
@@ -507,13 +512,23 @@
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
 
+
+			$custom_filtermethod = array();
+			foreach($this->custom_filters as $custom_filter)
+			{
+				if($_REQUEST[$custom_filter]) //just testing..
+				{
+					$custom_filtermethod[$custom_filter] = phpgw::get_var($custom_filter, 'int');
+				}
+			}
+
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
 				'allrows'=>$this->allrows,'user_id' => $this->user_id,'reported_by' => $this->reported_by, 'external'=>$external, 'dry_run' => $dry_run,
 				'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id,
 				'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
-				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1));
+				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1, 'custom_filtermethod' => $custom_filtermethod));
 
 			$this->total_records		= $this->so->total_records;
 			$this->sum_budget			= $this->so->sum_budget;
