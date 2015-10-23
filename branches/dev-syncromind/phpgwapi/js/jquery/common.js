@@ -720,11 +720,13 @@ function populateSelect (url, selection, container, attr) {
 }
 
 
-function createTableSchedule (d,u,c,r,cl) {
+function createTableSchedule (d,u,c,r,cl,dt) {
     var container = document.getElementById(d);
     var xtable = document.createElement('table');
     var tableHead = document.createElement('thead');
     var tableHeadTr = document.createElement('tr');
+    var date = (dt) ? dt : "";
+
     restartColors ();
     r = (r) ? r : 'data';
     var tableClass = (cl) ? cl : "pure-table pure-table-striped";
@@ -794,7 +796,8 @@ function createTableSchedule (d,u,c,r,cl) {
                             if (vd[k]) {
                                 tableBodyTr.setAttribute('resource', vd['resource_id']);
                             }
-                            tableBodyTrTdText = (vd[k]) ? formatGenericLink(vd['resource'],vd['resource_link']) : "";
+                            var resourceLink = (date) ? vd['resource_link'] + "#date=" + date : vd['resource_link'];
+                            tableBodyTrTdText = (vd[k]) ? formatGenericLink(vd['resource'], resourceLink) : "";
                         }else{
                             if (vd[k]) {
                                 var id = vd[k]['id'];
@@ -802,7 +805,7 @@ function createTableSchedule (d,u,c,r,cl) {
                                 var type = vd[k]['type']; 
                                 if (vc['formatter'] == "seasonDateColumn"){
                                     tableBodyTrTdText = name;
-									tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm({'id':vd[k]['id']})});
+                                    tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm({'id':vd[k]['id']})});
                                 }							
                                 if (vc['formatter'] == "scheduleDateColumn"){
                                     tableBodyTrTdText = formatGenericLink(name, null);
@@ -833,6 +836,9 @@ function createTableSchedule (d,u,c,r,cl) {
                                 tableBodyTrTdText = "...";
                                 if (vc['formatter'] == "frontendScheduleDateColumn") {
                                     tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'],tableBodyTr.getAttribute('resource'))});
+                                }
+                                if (vc['formatter'] == "backendScheduleDateColumn") {
+                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'])});
                                 }
                                 if (vc['formatter'] == "seasonDateColumn") {
                                     tableBodyTrTd.addEventListener('dblclick', function(){schedule.newAllocationForm({'_from':vd['_from'], '_to':vd['_to'], 'wday':vc['key']})});
