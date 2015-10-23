@@ -65,13 +65,6 @@ $(window).load(function() {
             building_id_selection = building_id;
         }
     });
-    
-//    $('#form').submit(function(e){
-//        if(!validate_documents()){
-//            e.preventDefault();
-//            alert(lang['You must accept to follow all terms and conditions of lease first.']);
-//        }
-//    });
 });
 
 $.formUtils.addValidator({
