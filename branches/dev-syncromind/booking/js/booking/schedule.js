@@ -31,7 +31,7 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
     }
     var r = [{n: 'ResultSet'},{n: 'Result'}];
 //    createta d u c r cl
-    createTableSchedule(container, url, colDefs, r, "pure-table");
+    createTableSchedule(container, url, colDefs, r, "pure-table", schedule.state);
 
 };
 
@@ -101,6 +101,9 @@ schedule.newApplicationForm = function(date, _from, _to, resource) {
     _from = _from ? '%20' + _from: '';
     _to = _to ? '%20' + _to: '';
     var url = schedule.newApplicationUrl;
+    if (!url){
+        return;
+    }
     var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
     var day = date.getDay();
     var weekday=new Array(7);
@@ -111,7 +114,10 @@ schedule.newApplicationForm = function(date, _from, _to, resource) {
     weekday[4]="thursday";
     weekday[5]="friday";
     weekday[6]="saturday";
-    url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
+    url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&weekday=' + weekday[day];
+    if (resource){
+        url += '&resource=' + resource;
+    }
     window.location.href = url;
 }
 
