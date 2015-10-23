@@ -255,6 +255,13 @@
 		public function schedule()
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'booking.uibuilding', 'booking.uiresource');
+                        $resource['application_link'] = self::link(array(
+				'menuaction' => 'booking.uiapplication.add', 
+				'building_id' => $resource['building_id'], 
+				'building_name' => $resource['building_name'],
+				'activity_id' => $resource['activity_id'],
+				'resource' => $resource['id']
+			));
 			$resource['datasource_url'] = self::link(array(
 				'menuaction' => 'booking.uibooking.resource_schedule', 
 				'resource_id' => $resource['id'], 

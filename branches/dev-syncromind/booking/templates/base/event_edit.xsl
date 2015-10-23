@@ -363,5 +363,6 @@
         var initialSelection = <xsl:value-of select="event/resources_json"/>;
         var initialAudience = <xsl:value-of select="event/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+        $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
     </script>
 </xsl:template>

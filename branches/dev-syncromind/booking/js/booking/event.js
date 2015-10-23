@@ -65,6 +65,13 @@ $(window).load(function() {
             building_id_selection = building_id;
         }
     });
+    
+//    $('#form').submit(function(e){
+//        if(!validate_documents()){
+//            e.preventDefault();
+//            alert(lang['You must accept to follow all terms and conditions of lease first.']);
+//        }
+//    });
 });
 
 $.formUtils.addValidator({
@@ -96,6 +103,52 @@ $.formUtils.addValidator({
         return v;
     },
     errorMessage: 'Number of participants is required',
+    errorMessageKey: ''
+});
+
+$.formUtils.addValidator({
+    name: 'customer_identifier',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var v = true;
+        var customer_ssn = $('#field_customer_ssn').val();
+        var customer_organization_number = $('#field_customer_organization_number').val();
+        var cost = $('#field_cost').val();
+        if ( (customer_ssn == "" && customer_organization_number == "") && (cost > 0) ) {
+           v = false;
+        }
+        return v;
+    },
+    errorMessage: 'There is set a cost, but no invoice data is filled inn',
+    errorMessageKey: ''
+});
+
+$.formUtils.addValidator({
+    name: 'application_dates',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var n = 0;
+        if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
+            return false;
+        }
+        $('input[name="from_[]"]').each(function(){
+            if ($(this).val() == "") {
+                $($(this).addClass("error").css("border-color","red"));
+                n++;
+            } else {
+                $($(this).removeClass("error").css("border-color",""));
+            }
+        });
+        $('input[name="to_[]"]').each(function(){
+            if ($(this).val() == "") {
+                $($(this).addClass("error").css("border-color","red"));
+                n++;
+            } else {
+                $($(this).removeClass("error").css("border-color",""));
+            }
+        });
+        var v = (n == 0) ? true : false;
+        return v;
+    },
+    errorMessage: 'Invalida date',
     errorMessageKey: ''
 });
 

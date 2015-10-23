@@ -83,12 +83,18 @@
                 <div class="pure-control-group">
                     <label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label>
                     <input id="field_from" name="from_" type="text">
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/from_"/></xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label>
                     <input id="field_to" name="to_" type="text">
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/to_"/></xsl:attribute>
                     </input>
                 </div>

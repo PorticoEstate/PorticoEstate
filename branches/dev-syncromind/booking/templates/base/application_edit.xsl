@@ -98,6 +98,7 @@
                                 <legend><h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3></legend>
                             </div>
                             <div id="dates-container">
+                                <input type="hidden" data-validation="application_dates" />
                                 <input type="hidden" id="date_format" />
                                 <xsl:for-each select="application/dates">
                                     <xsl:variable name="index" select="position()-2"/>
@@ -277,5 +278,6 @@
         var initialAcceptAllTerms = true;
         var initialSelection = <xsl:value-of select="application/resources_json"/>;
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
+        $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
     </script>
 </xsl:template>

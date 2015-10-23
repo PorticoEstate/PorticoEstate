@@ -92,6 +92,7 @@
                                 <legend><h3><xsl:value-of select="php:function('lang', 'When?')" /></h3></legend>
                             </div>
                             <div id="dates-container"  class="pure-control-group">
+                                <input type="hidden" data-validation="application_dates" />
                                 <xsl:for-each select="event/dates">
                                     <xsl:variable name="index" select="position()-2"/>
                                     <xsl:choose>
@@ -320,5 +321,6 @@
         $('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
         var initialSelection = <xsl:value-of select="event/resources_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type')"/>;
+        $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
     </script>
 </xsl:template>

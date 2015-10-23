@@ -40,6 +40,7 @@
         $(window).load(function() {
             schedule.setupWeekPicker('cal_container');
             schedule.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
+            schedule.newApplicationUrl = '<xsl:value-of select="resource/application_link"/>';
             schedule.includeResource = false;
             schedule.colFormatter = 'backendScheduleDateColumn';
             var handleHistoryNavigation = function (state) {

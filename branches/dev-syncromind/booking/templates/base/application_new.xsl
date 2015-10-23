@@ -130,6 +130,7 @@
                                 <p><xsl:value-of select="config/application_when"/></p>
                             </xsl:if>
                             <div id="dates-container">
+                                <input type="hidden" data-validation="application_dates" />
                                 <input type="hidden" id="date_format" />
                                 <xsl:for-each select="application/dates">
                                     <xsl:variable name="index" select="position()-2"/>
@@ -257,9 +258,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>confirmation</xsl:text>
                                     </xsl:attribute>
-                                    <xsl:atrribute name="data-validation-confirm">
+                                    <xsl:attribute name="data-validation-confirm">
                                         <xsl:text>contact_email</xsl:text>
-                                    </xsl:atrribute>
+                                    </xsl:attribute>
                                     <xsl:attribute name="data-validation-error-msg">
                                         <xsl:text>the e-mail addresses you entered do not match</xsl:text>
                                     </xsl:attribute>
@@ -341,5 +342,6 @@
         var initialSelection = <xsl:value-of select="application/resources_json"/>;
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>
+        $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
     </script>
 </xsl:template>

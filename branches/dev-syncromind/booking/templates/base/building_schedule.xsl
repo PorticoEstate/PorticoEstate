@@ -44,12 +44,13 @@
             schedule.colFormatter = 'backendScheduleDateColumn';
             var handleHistoryNavigation = function (state) {
                 schedule.date = parseISO8601(state);
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, true);
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             };
 
             var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
 
             var state = getUrlData("date") || initialRequest;
+            schedule.state = state;
             if (state){
                 handleHistoryNavigation(state);
                 schedule.week = $.datepicker.iso8601Week(schedule.date);

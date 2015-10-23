@@ -159,6 +159,50 @@ $.formUtils.addValidator({
     errorMessageKey: ''
 });
 
+$.formUtils.addValidator({
+    name: 'customer_identifier',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var v = false;
+        var customer_ssn = $('#field_customer_ssn').val();
+        var customer_organization_number = $('#field_customer_organization_number').val();
+        if (customer_ssn != "" || customer_organization_number != "") {
+            v = true;
+        }
+        return v;
+   },
+   errorMessage: 'Customer identifier type is required',
+   errorMessageKey: ''
+});
+
+$.formUtils.addValidator({
+    name: 'application_dates',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var n = 0;
+        if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
+            return false;
+        }
+        $('input[name="from_[]"]').each(function(){
+            if ($(this).val() == "") {
+                $($(this).addClass("error").css("border-color","red"));
+                n++;
+            } else {
+                $($(this).removeClass("error").css("border-color",""));
+            }
+        });
+        $('input[name="to_[]"]').each(function(){
+            if ($(this).val() == "") {
+                $($(this).addClass("error").css("border-color","red"));
+                n++;
+            } else {
+                $($(this).removeClass("error").css("border-color",""));
+            }
+        });
+        var v = (n == 0) ? true : false;
+        return v;
+    },
+    errorMessage: 'Invalida date',
+    errorMessageKey: ''
+});
 
 function populateTableChkResources (building_id, selection) {
     var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
