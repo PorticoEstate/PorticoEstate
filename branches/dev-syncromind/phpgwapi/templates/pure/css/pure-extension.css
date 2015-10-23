@@ -329,5 +329,5 @@ div.allocation-list {border: 1px solid #555;height: 10em;max-width: 30em;overflo
 
 button.ui-button {box-shadow: none;text-shadow: none;}
 
-// AUTOCOMPLETE
+/* AUTOCOMPLETE */
 .ui-widget.ui-autocomplete {max-height: 224px;overflow-x: hidden;overflow-y: auto;}
