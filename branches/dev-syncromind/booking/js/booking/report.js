@@ -33,21 +33,20 @@ function populateTableChk(url, container, colDefs) {
 }
 
 $(document).ready(function(){
-/*
+
 	$( "#check_all_buildings" ).on( "click", function() {
 		if($(this).prop("checked"))
 		{
-			$("#field_building_name").val('');
 			$("#building_container").hide();
-			$("#resources_container").html('');
+			$("#resources_container").hide();
 		}
 		else
 		{
 			$("#building_container").show();
-			$("#resources_container").html(lang['Select a building first']);
+			$("#resources_container").show();
 		}
 	});
-*/
+
 	$("#field_activity").change(function () {
 		oArgs = {menuaction: 'booking.uireports.get_custom'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -88,7 +87,7 @@ $(document).ready(function(){
 						htmlString += message;
 						htmlString += '</div>';
 						//$("#receipt").html(htmlString);
-						$("#custom_elements_horizontal").html( variable_horizontal );
+				//		$("#custom_elements_horizontal").html( variable_horizontal );
 						$("#custom_elements_vertical").html( variable_vertical );
 					}
 				}

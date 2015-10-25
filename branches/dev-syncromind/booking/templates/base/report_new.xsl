@@ -10,7 +10,7 @@
 	<xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-	<form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
+    <form action="" method="POST" id='report_form' class="pure-form pure-form-stacked" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="report/tabs"/>
@@ -34,11 +34,11 @@
 									</h4>
 								</label>
 								<select name="report_type" id="report_type" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
-									<option value="1">
-										<xsl:value-of select="php:function('lang', 'counting')" />
+									<option value="participants_per_resource">
+										<xsl:value-of select="php:function('lang', 'participants_per_resource')" />
 									</option>
-									<option value="2">
-										<xsl:value-of select="php:function('lang', 'time')" />
+									<option value="freetime">
+										<xsl:value-of select="php:function('lang', 'freetime')" />
 									</option>
 								</select>
 							</div>
@@ -49,6 +49,15 @@
 									</h4>
 								</label>
 								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>number</xsl:text>
+                                    </xsl:attribute>
+                                   <xsl:attribute name="data-validation-allowing">
+                                        <xsl:text>positive</xsl:text>
+                                    </xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
+                                    </xsl:attribute>
 									<option value="-1">
 										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 									</option>
@@ -137,24 +146,28 @@
 							</div>
 							<div class="pure-g">
 								<div id="dates-container" class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
-									<xsl:for-each select="report/dates">
-										<div class="date-container">
-											<div class="pure-control-group">
-												<label for="start_date">
-													<xsl:value-of select="php:function('lang', 'From')" />
-												</label>
-												<input class="datetime pure-input-1-2" id="start_date" name="start_date" type="text">
-												</input>
-											</div>
-											<div class="pure-control-group">
-												<label for="end_date">
-													<xsl:value-of select="php:function('lang', 'To')" />
-												</label>
-												<input class="datetime pure-input-1-2" id="end_date" name="end_date" type="text">
-												</input>
-											</div>
+									<div class="date-container">
+										<div class="pure-control-group">
+											<label for="start_date">
+												<xsl:value-of select="php:function('lang', 'From')" />
+											</label>
+											<input class="datetime pure-input-1-2" id="start_date" name="start_date" type="text" value="{report/start_date}">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+											</input>
 										</div>
-									</xsl:for-each>
+										<div class="pure-control-group">
+											<label for="end_date">
+												<xsl:value-of select="php:function('lang', 'To')" />
+											</label>
+											<input class="datetime pure-input-1-2" id="end_date" name="end_date" type="text" value="{report/end_date}">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+											</input>
+										</div>
+									</div>
 									
 									<div class="pure-g" >
 										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" ><xsl:value-of select="php:function('lang', 'start time')" /></div>
@@ -195,6 +208,8 @@
 										<li>
 											<label>
 												<input type="checkbox" value="{id}" name="weekdays[]" >
+													<xsl:attribute name="data-validation">checkbox_group</xsl:attribute>
+													<xsl:attribute name="data-validation-qty">min1</xsl:attribute>
 													<!--xsl:if test="selected = 1"-->
 														<xsl:attribute name="checked">checked</xsl:attribute>
 													<!--/xsl:if-->
@@ -223,7 +238,7 @@
 										</h4>
 									</label>
 									<ul id= "variable_horizontal" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
-										<xsl:for-each select="report/variables">
+										<xsl:for-each select="report/variables_horizontal">
 											<li>
 												<label>
 													<input type="radio" value="{id}" name="variable_horizontal" >
@@ -245,7 +260,7 @@
 										</h4>
 									</label>
 									<ul id= "variable_vertical" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
-										<xsl:for-each select="report/variables">
+										<xsl:for-each select="report/variables_vertical">
 											<li>
 												<label>
 													<input type="radio" value="{id}" name="variable_vertical" >
