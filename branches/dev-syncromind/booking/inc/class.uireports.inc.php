@@ -90,6 +90,9 @@
 					case 'participants_per_resource':
 						$this->get_participants_per_resource($report);
 						break;
+					case 'cover_ratio':
+						$this->get_cover_ratio($report);
+						break;
 					case 'freetime':
 						$this->get_freetime($report);
 						break;
@@ -155,10 +158,155 @@
 				'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
+		/**
+		 *
+		 * @param type $data
+		 */
+		public function get_cover_ratio($data)
+		{
+			$db = & $GLOBALS['phpgw']->db;
+
+			$resources = array();
+			if($data['all_buildings'])
+			{
+				$sql = "SELECT DISTINCT bb_resource.id FROM bb_building"
+				. " JOIN bb_resource ON bb_resource.building_id = bb_building.id"
+				. " WHERE bb_building.active = 1"
+				. " AND activity_id IN (" .implode(',', $data['activity_ids']) . ')';
+				$db->query($sql);
+				while ($db->next_record())
+				{
+					$resources[] = $db->f('id');
+				}
+
+			}
+			else
+			{
+				$resources = $data['resources'];
+			}
+
+			$db_dateformat = $db->date_format();
+			$errors		 = array();
+			$from_		 = date($db_dateformat, phpgwapi_datetime::date_to_timestamp($data['start_date']));
+			$to_		 = date($db_dateformat ,phpgwapi_datetime::date_to_timestamp($data['end_date']));
+			
+			/*
+			 * Get availlable time
+			 */
+			$begin = new DateTime( date('Y-m-d', phpgwapi_datetime::date_to_timestamp($data['start_date']) ) );
+			$end = new DateTime( date('Y-m-d', phpgwapi_datetime::date_to_timestamp($data['end_date']) ) );
+			$end = $end->modify( '+1 day' );
+
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+
+			$resources_string = $resources ? implode(",", $resources) : -1;
+			$weekdays_string = $data['weekdays'] ? implode(",", $data['weekdays']) : -1;
+
+			$candidates = array();
+			foreach ( $period as $dt )
+			{
+				$check_date =  $dt->format( $db_dateformat );
+				$weekday =  $dt->format( 'N' );
+				$sql = "SELECT sb.wday AS wday, sb.from_ as boundary_from, sb.to_ as boundary_to,bu.id as building_id,"
+					. " bu.name as building_name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (sb.to_ - sb.from_)) as timespan"
+					. " FROM bb_building bu, bb_season se, bb_season_boundary sb, bb_resource re, bb_season_resource sr"
+					. " WHERE bu.id = se.building_id"
+					. " AND bu.id = re.building_id"
+					. " AND sr.season_id = se.id"
+					. " AND sr.resource_id = re.id"
+					. " AND sb.season_id = se.id"
+					. " AND bu.active = 1"
+					. " AND sb.wday = {$weekday}"
+					. " AND date_trunc('day' ,se.to_) >= to_date('{$check_date}' ,'YYYY-MM-DD')"
+					. " AND date_trunc('day' ,se.from_) <= to_date('{$check_date}', 'YYYY-MM-DD')"
+					. " AND re.id = ANY (string_to_array('{$resources_string}', ',')::int4[])"
+					. " AND sb.wday = ANY (string_to_array('{$weekdays_string}', ',')::int4[])";
+
+				$db->query($sql);
+				while($db->next_record())
+				{
+					$candidates[$check_date][] = array(
+						'date'				=> $check_date,
+						'wday'				=> $db->f('wday'),
+						'timespan'			=> $db->f('timespan'),
+						'boundary_from'		=> $db->f('boundary_from'),
+						'boundary_to'		=> $db->f('boundary_to'),
+						'building_id'		=> $db->f('building_id'),
+						'building_name'		=> $db->f('building_name'),
+						'resource_id'		=> $db->f('resource_id'),
+						'resource_name'		=> $db->f('resource_name')
+					);
+				}
+
+//_debug_array($sql);
+
+			}
+
+			unset($check_date);
+			$ret = array();
+			foreach($candidates as $check_date => &$data_set)
+			{
+				foreach($data_set as &$entry)
+				{
+
+					$sql = "SELECT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (bo.to_ - bo.from_)) as timespan
+					FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu, bb_booking_resource br, bb_resource re
+					WHERE ba.agegroup_id = ag.id
+					AND ba.booking_id = bo.id
+					AND br.booking_id = bo.id
+					AND br.resource_id = re.id
+					AND bo.allocation_id = al.id
+					AND al.season_id = se.id
+					AND se.building_id = bu.id
+					AND ag.active = 1
+					AND date_trunc('day' ,bo.from_) >= to_date('{$check_date}' ,'YYYY-MM-DD')
+					AND date_trunc('day' ,bo.from_) <= to_date('$check_date', 'YYYY-MM-DD')
+					AND re.id = {$entry['resource_id']}
+					AND EXTRACT(DOW FROM bo.from_) = {$entry['wday']}
+					AND (ba.male > 0 OR ba.female > 0)
+					UNION
+					SELECT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (ev.to_ - ev.from_)) as timespan
+					FROM bb_event ev
+					INNER JOIN bb_event_agegroup ea ON ea.event_id = ev.id
+					INNER JOIN bb_agegroup ag ON ag.id = ea.agegroup_id and ag.active = 1
+					INNER JOIN bb_event_resource er ON er.event_id = ev.id
+					INNER JOIN bb_resource re ON re.id = er.resource_id
+					INNER JOIN bb_building bu ON bu.id = re.building_id
+					WHERE date_trunc('day' ,ev.from_) >= to_date('{$check_date}' ,'YYYY-MM-DD')
+					AND date_trunc('day' ,ev.from_) <= to_date('{$check_date}', 'YYYY-MM-DD')
+					AND EXTRACT(DOW FROM ev.from_) = {$entry['wday']}
+					AND er.resource_id = {$entry['resource_id']}
+					AND (ea.male > 0 OR ea.female > 0)
+					ORDER BY resource_name ASC, timespan";
+//_debug_array($sql);
+					$timespan = 0;
+					$db->query($sql);
+
+					while($db->next_record())
+					{
+						$timespan += $db->f('timespan');
+					}
+//					_debug_array($timespan);
+					$entry['cover_ratio'] = round((($timespan/$entry['timespan']) * 100), 2, PHP_ROUND_HALF_UP);
+					$ret[] = $entry;
+
+				}
+			}
+
+//			_debug_array($ret);
+			if($ret)
+			{
+				$bocommon = CreateObject('property.bocommon');
+				$bocommon->download($ret, array_keys($ret[0]), array_keys($ret[0]));
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			
+		}
 		public function get_participants_per_resource($data)
 		{
 
-			$output_type = 'PDF';//'XLS';
+			$output_type = 'XLS';//'XLS';
 			$db = & $GLOBALS['phpgw']->db;
 
 			$resources = array();

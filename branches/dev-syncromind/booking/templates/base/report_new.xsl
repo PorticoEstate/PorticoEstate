@@ -37,8 +37,8 @@
 									<option value="participants_per_resource">
 										<xsl:value-of select="php:function('lang', 'participants_per_resource')" />
 									</option>
-									<option value="freetime">
-										<xsl:value-of select="php:function('lang', 'freetime')" />
+									<option value="cover_ratio">
+										<xsl:value-of select="php:function('lang', 'cover ratio')" />
 									</option>
 								</select>
 							</div>
