@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 $(window).load(function () {
 	var building_id = $('#field_building_id').val();
-	if (building_id) {
+	if (building_id > 0) {
 		populateTableChkResources(building_id, initialSelection);
 		building_id_selection = building_id;
 	}

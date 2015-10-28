@@ -34,12 +34,17 @@
 									</h4>
 								</label>
 								<select name="report_type" id="report_type" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
-									<option value="participants_per_resource">
-										<xsl:value-of select="php:function('lang', 'participants_per_resource')" />
-									</option>
-									<option value="cover_ratio">
-										<xsl:value-of select="php:function('lang', 'cover ratio')" />
-									</option>
+									<xsl:for-each select="report_types">
+										<option>
+											<xsl:if test="selected = 1">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:attribute name="value">
+												<xsl:value-of select="id"/>
+											</xsl:attribute>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
 								</select>
 							</div>
 							<div class="pure-control-group">
@@ -173,25 +178,25 @@
 										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" ><xsl:value-of select="php:function('lang', 'start time')" /></div>
 
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
-											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00"></input>
+											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00" value="{report/start_hour}"></input>
 										</div>
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
 											:
 										</div>
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00"></input>
+											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00" value="{report/start_minute}"></input>
 										</div>
 
 										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1"><xsl:value-of select="php:function('lang', 'end time')" /></div>
 
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00"></input>
+											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00" value="{report/end_hour}"></input>
 										</div>
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
 											:
 										</div>
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00"></input>
+											<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00" value="{report/end_minute}"></input>
 										</div>
 									</div>
 
