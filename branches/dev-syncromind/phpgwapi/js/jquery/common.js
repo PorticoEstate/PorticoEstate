@@ -543,17 +543,55 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 //r  => respuesta
 //cl => clase
 function createTable (d,u,c,r,cl) {
+    var container = document.getElementById(d);
+    var xTable = document.createElement('table');
+    var tableHead = document.createElement('thead');
+    var tableHeadTr = document.createElement('tr');
+    
     r = (r) ? r : 'data';
     var tableClass = (cl) ? cl : "pure-table pure-table-striped";
-
-    var tableHead = "<thead><tr>";
+    
+    xTable.setAttribute('class', tableClass);
+    
     $.each(c, function(i, v) {
         var label = (v.label) ? v.label : "";
-        tableHead += "<th>"+label+"</th>";
+        var tableHeadTrTh = document.createElement('th');
+        tableHeadTrTh.innerHTML = label;
+        if (v.attrs) {
+            $.each(v.attrs, function(i, v) {
+                tableHeadTrTh.setAttribute(v.name, v.value);
+            });
+        }
+        tableHeadTr.appendChild(tableHeadTrTh);
     });
-    tableHead += "</tr></thead>";
+    tableHead.appendChild(tableHeadTr);
+    xTable.appendChild(tableHead);
+    
+    var tableBody = document.createElement('tbody');
+    var tableBodyTr = document.createElement('tr');
+    var tableBodyTrTd = document.createElement('td');
+    var tableBodyTrTdText = "";
+    tableBodyTrTd.setAttribute('colspan', c.length);
+    tableBodyTrTd.innerHTML = "Loading...";
+    tableBodyTr.appendChild(tableBodyTrTd);
+    tableBody.appendChild(tableBodyTr);
+    xTable.appendChild(tableBody);
+    
+    container.innerHTML = "";
+    container.appendChild(xTable);
 
-    var tableBody = "<tbody>";
+//    var tableHead = "<thead><tr>";
+//    $.each(c, function(i, v) {
+//        var thHidden = "";
+//        var label = (v.label) ? v.label : "";
+//        if (v.hidden){
+//            thHidden = " style=\"display:none;\"";
+//        }
+//        tableHead += "<th"+thHidden+">"+label+"</th>";
+//    });
+//    tableHead += "</tr></thead>";
+//
+//    var tableBody = "<tbody>";
 
     $.get(u, function(data) {
         var selected = new Array();
@@ -569,17 +607,27 @@ function createTable (d,u,c,r,cl) {
         if (!selected){
             return;
         }
+        tableBody.innerHTML = "";
         if (selected.length == 0) {
-            tableClass = "pure-table pure-table-bordered";
-            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
+//            tableClass = "pure-table pure-table-bordered";
+//            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
+            tableBodyTr.innerHTML = "";
+            tableBodyTrTd.setAttribute('colspan', c.length);
+            tableBodyTrTd.innerHTML = "No records found";
+            tableBodyTr.appendChild(tableBodyTrTd);
+            tableBody.appendChild(tableBodyTr);
         }else {
             $.each(selected, function(id, vd) {
-                tableBody += "<tr>";
+//                tableBodyTr.innerHTML = "";
+                var tableBodyTr = document.createElement('tr');
+//                tableBody += "<tr>";
                 $.each(c, function(ic, vc) {
-                    tableBody += "<td>";
-                    var tableBodyTd = "";
+//                    var tableBodyTd = "";
+//                    var tdHidden = "";
+                    var tableBodyTrTd = document.createElement('td');
+                    tableBodyTrTdText = "";
                     if (vc['object']){
-                        objects = [];
+                        var objects = [];
                         $.each(vc['object'], function(io, vo){
                             var array_attr = new Array();
                             $.each(vo['attrs'], function(ia, va){
@@ -615,7 +663,10 @@ function createTable (d,u,c,r,cl) {
                             objects.push({type: vo['type'],attrs: array_attr});
                         });
                         var object = createObject(objects);
-                        tableBodyTd = object;
+                        $.each(object, function(i, o) {
+                            tableBodyTrTd.appendChild(o);
+                        });
+//                        tableBodyTd = object;
                     }else if (vc['formatter']) {
                         vcfa = [];
                         vcft = 'genericLink';                        
@@ -659,25 +710,40 @@ function createTable (d,u,c,r,cl) {
                                 link = (vd['link']) ? formatGenericLink(vd[k],vd['link']) : link;
                             }
                         }
-                        tableBodyTd = link;
+                        tableBodyTrTdText = link;
+                        tableBodyTrTd.innerHTML = tableBodyTrTdText;
                     }else {
                         var k = vc.key;
-                        tableBodyTd = vd[k];
+                        tableBodyTrTdText = vd[k];
+                        tableBodyTrTd.innerHTML = tableBodyTrTdText;
+//                        if (vc.hidden){
+//                            tdHidden = " style=\"display:none;\"";
+//                        }
                     }
-                    tableBody += tableBodyTd;
-                    tableBody += "</td>";
+                    if (vc.attrs) {
+                        $.each(vc.attrs, function(i, v) {
+                            tableBodyTrTd.setAttribute(v.name, v.value);
+                        });
+                    }
+//                    tableBody += "<td" + tdHidden +">";
+//                    tableBody += tableBodyTd;
+//                    tableBody += "</td>";
+                    tableBodyTr.appendChild(tableBodyTrTd);
                 });
-                tableBody += "</tr>";
+//                tableBody += "</tr>";
+                tableBody.appendChild(tableBodyTr);
             });
+            
         }
-        tableBody += "</tbody>";
-        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
+//        tableBody += "</tbody>";
+//        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
     });
 }
 
 
 function createObject (object) {
     var obj = "";
+    var objs = new Array();
     if (typeof(object)) {
         $.each(object, function(i,v){
             type = v['type']            
@@ -685,11 +751,15 @@ function createObject (object) {
             $.each(v['attrs'], function(i,v){
                 element.setAttribute(v['name'], v['value']);
             });
-            obj += (i > 0) ? '&nbsp;' : '';
-            obj += element.outerHTML;
+            if (i > 0) {
+                objs.push('&nbsp;');
+            }
+            objs.push(element);
+//            obj += (i > 0) ? '&nbsp;' : '';
+//            obj += element.outerHTML;
         });
     };
-    return obj;
+    return objs;
 }
 
 
@@ -729,7 +799,7 @@ function createTableSchedule (d,u,c,r,cl,dt) {
 
     restartColors ();
     r = (r) ? r : 'data';
-    var tableClass = (cl) ? cl : "pure-table pure-table-striped";
+    var tableClass = (cl) ? cl : "pure-table";
 
     xtable.setAttribute('class', tableClass);
 
@@ -768,7 +838,6 @@ function createTableSchedule (d,u,c,r,cl,dt) {
             return;
         }
         if (selected.length == 0) {
-            tableClass = "pure-table pure-table-bordered";
             tableBody.innerHTML = "";
             tableBodyTr.innerHTML = "";
             tableBodyTrTd.setAttribute('colspan', c.length);
