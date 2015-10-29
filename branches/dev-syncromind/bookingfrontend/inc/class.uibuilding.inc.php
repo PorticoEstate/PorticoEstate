@@ -273,8 +273,14 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         if ($backend == 'true') {
             $building['date'] = phpgw::get_var('date', 'GET');
         }
+        
+        self::add_stylesheet("bookingfrontend/css/bookingfrontend.css");
 
         self::add_javascript('booking', 'booking', 'schedule.js');
+        phpgwapi_jquery::load_widget("datepicker");
+
+        $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+                        
         self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
     }
 
@@ -310,7 +316,11 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         if (trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage']))) {
             $building['homepage'] = 'http://' . $building['homepage'];
         }
-        self::render_template('building', array("building" => $building));
+        
+        self::add_stylesheet("bookingfrontend/css/bookingfrontend.css");
+        phpgwapi_jquery::load_widget("autocomplete");
+        phpgwapi_jquery::load_widget("datepicker");
+        self::render_template_xsl('building', array("building" => $building));
     }
 
 }

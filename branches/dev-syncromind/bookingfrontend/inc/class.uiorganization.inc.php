@@ -61,6 +61,10 @@
 			$organization['login_link'] = 'login.php'.$auth_forward;
 			$organization['logoff_link'] = 'logoff.php'.$auth_forward;
 			if ($bouser->is_organization_admin($organization['id'])) $organization['logged_on'] = true;
+                        
+			self::add_stylesheet("bookingfrontend/css/bookingfrontend.css");
+			phpgwapi_jquery::load_widget("core");
+                        
 			self::render_template('organization', array('organization' => $organization));
 		}
 	}
