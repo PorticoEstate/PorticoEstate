@@ -1,6 +1,7 @@
 var schedule = new Array();
 
-schedule.renderSchedule = function(container, url, date, colFormatter, includeResource) {
+schedule.renderSchedule = function(container, url, date, colFormatter, includeResource, classTable) {
+    classTable = (classTable) ? classTable : "pure-table";
     while(date.getDay() != 1) {
         date.setDate(date.getDate()-1);
     }
@@ -31,12 +32,11 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
     }
     var r = [{n: 'ResultSet'},{n: 'Result'}];
 //    createta d u c r cl
-    createTableSchedule(container, url, colDefs, r, "pure-table", schedule.state);
+    createTableSchedule(container, url, colDefs, r, classTable, schedule.state);
 
 };
 
 schedule.setupWeekPicker = function(){}
-
 $(function() {
     $( "#cal_container #datepicker" ).datepicker({
         showWeek: true,
@@ -44,8 +44,11 @@ $(function() {
         changeYear: true,
         firstDay: 1,
         onSelect: function(a,e){
-            var date = new Date(a);
-            schedule.updateSchedule(date);
+            if (a != schedule.dateSelected){
+                var date = new Date(a);
+                schedule.dateSelected = a;
+                schedule.updateSchedule(date);
+            }
         }
     });
     $("#cal_container #pickerImg").on('click', function(){
@@ -57,12 +60,13 @@ schedule.updateSchedule = function (date) {
     schedule.week = $.datepicker.iso8601Week(date);
     $('#cal_container #numberWeek').text(schedule.week);
     $("#cal_container #datepicker").datepicker("setDate", date);
-    
+    classTable = (schedule.classTable) ? schedule.classTable : 'pure-table';
+
     var url = self.location.href;
     url = url.substr(0, (url.indexOf("#date")));
     url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
     location.replace(url);
-    schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.colFormatter, schedule.includeResource);
+    schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.colFormatter, schedule.includeResource, classTable);
     schedule.date = date;
 }
 
@@ -82,28 +86,21 @@ schedule.nextWeek = function () {
 }
 
 
-schedule.nextWeek2 = function () {
-    var date = schedule.date;
-    while(date.getDay() != 1) {
-        date.setDate(date.getDate()-1);
-    }
-    date.setDate(date.getDate()+7);
-    var url = self.location.href;
-    url = url.substr(0, (url.indexOf("#date")));
-    url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-    location.replace(url);
-    location.reload();
-};
-
 schedule.newApplicationForm = function(date, _from, _to, resource) {
-    resource = (resource) ? resource : null;
-    date = (date) ? date : schedule.date;
-    _from = _from ? '%20' + _from: '';
-    _to = _to ? '%20' + _to: '';
+//    console.log(arguments);
+//    console.log(arguments.length);
     var url = schedule.newApplicationUrl;
     if (!url){
         return;
     }
+    if (arguments.length == 0) {
+        window.location.href = url;
+        return;
+    }
+    resource = (resource) ? resource : null;
+    date = (date) ? date : schedule.date;
+    _from = _from ? '%20' + _from: '';
+    _to = _to ? '%20' + _to: '';
     var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
     var day = date.getDay();
     var weekday=new Array(7);
@@ -181,9 +178,11 @@ schedule.showInfo = function(url, resource) {
 }
 
 schedule.createDialogSchedule = function(w){
+    var ww = $(window).width();
+    w = (w > (ww+40)) ? (ww-40) : w;
     schedule.dialogSchedule = $('#dialog_schedule').dialog({
         autoOpen: false,
-        modal: false,
+        modal: true,
         width: w,
         close: function(){
             schedule.cleanDialog();
