@@ -69,7 +69,27 @@
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2')"/>;
-	
+                
+                <![CDATA[
+                var groupURL = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
+                var buildingURL = 'index.php?menuaction=bookingfrontend.uibuilding.find_buildings_used_by&sort=name&organization_id=' + organization_id + '&phpgw_return_as=json&';
+                ]]>
+                
+                var rBuilding = [{n: 'ResultSet'},{n: 'Result'}];
+                
+                var colDefsGroup = [
+                                    {key: 'name', label: lang['Name'], formatter: genericLink},
+                                    {key: 'link', attrs: [{name: 'hidden'}]},
+                                    {key: 'activity_name', label: lang['Activity']},
+                                    {key: 'primary_contact_name', label: lang['Contact 1']},
+                                    {key: 'secondary_contact_name', label: lang['Contact 2']}
+                ];
+                var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+                
+                createTable('groups_container', groupURL, colDefsGroup, '', 'bookingfrontend-table bookingfrontend-table-striped');
+                createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding, 'bookingfrontend-table bookingfrontend-table-striped');
+
+/*	
 		<![CDATA[
 		YAHOO.util.Event.addListener(window, "load", function() {
 			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
@@ -87,6 +107,7 @@
 			YAHOO.booking.inlineTableHelper('buildings_used_by_container', url, colDefs);
 		});
 		]]>
+*/
 	</script>
 
 </xsl:template>

@@ -46,6 +46,16 @@
 	<script type="text/javascript">
 		var resource_id = <xsl:value-of select="resource/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
+                
+                var documentResourceURL = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&no_images=1&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+                var documentResourceImagesURL = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+                
+                var colDefsDocumentResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+                
+                createTable = ('documents_container', documentsResourceURL, colDefsDocumentResource);
+                createnInlineImages('images_container', 'documentResourceImagesURL');
+
+/*
 <![CDATA[
 	YAHOO.util.Event.addListener(window, "load", function() {
 
@@ -57,6 +67,7 @@
 	YAHOO.booking.inlineImages('images_container', url);
 });
 ]]>
+*/
 	</script>
 
 </xsl:template>

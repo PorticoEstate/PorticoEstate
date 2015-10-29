@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<!--xsl:call-template name="yui_booking_i18n"/-->
-	
+
 	<div id="content">
 		<ul class="pathway">
 			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
@@ -82,7 +82,26 @@
 			
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity', 'Resource Type')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
+                                <![CDATA[
+                                var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+                                var documentURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&no_images=1&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+                                var building_usersURL = 'index.php?menuaction=bookingfrontend.uiorganization.building_users&sort=name&building_id=' + building_id + '&phpgw_return_as=json&';
+                                var document_buildingURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+                                ]]>
+                                
+                                var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
+                                
+                                var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
+                                var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
+                                var colDefsBuilding_users = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'activity_name', label: lang['Activity']}];
+                                
+                                createTable('resources_container', resourcesURL, colDefsResources, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
+                                createTable('documents_container', documentURL, colDefsDocument, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
+                                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'bookingfrontend-table bookingfrontend-table-striped');
+                                //createnInlineImages('images_container', 'document_buildingURL');
+
+/*                                
 				<![CDATA[
 				
 				YAHOO.util.Event.addListener(window, "load", function() {
@@ -102,6 +121,7 @@
 				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'activity_name', label: lang['Activity']}];
 				YAHOO.booking.inlineTableHelper('building_users_container', url, colDefs);
 				]]>
+*/
 			</script>
 		</xsl:for-each>
 	</div>

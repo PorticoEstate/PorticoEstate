@@ -34,6 +34,30 @@
 	</div>
 
 <script type="text/javascript">
+    $(window).load(function(){
+        schedule.setupWeekPicker('cal_container');
+        schedule.datasourceUrl = '<xsl:value-of select="resource/datasource_url" />';
+        schedule.newApplicationUrl = '<xsl:value-of select="resource/application_link" />';
+        schedule.includeResource = false;
+        schedule.colFormatter = 'frontendScheduleColorFormatter';
+        var handleHistoryNavigation = function (state) {
+            schedule.date = parseISO8601(state);
+            schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+        }
+        
+        var initialRequest = getUrlData("date") || '<xsl:value-of select="resource/date" />';
+        
+        var state = getUrlData("date") || initialRequest;
+        if (state) {
+            handleHistoryNavigation(state);
+            schedule.week = $.datepicker.iso8601Week(schedule.date);
+            $('#cal_container #numberWeek').text(schedule.week);
+            $('#cal_container #datepicker').datepicker("setDate", parseISO8601(state));
+        }
+    });
+
+
+/*
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
@@ -52,6 +76,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     });
    	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
 });
+*/
 </script>
 
 </xsl:template>

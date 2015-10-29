@@ -1,3 +1,37 @@
+//var building_id_selection;
+//
+//$(document).ready(function(){
+//    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 'field_building_name', 'field_building_id', 'building_container');
+//    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uigroup.index&phpgw_return_as=json&', 'field_group_name', 'field_group_id', 'group_container');
+//});
+//
+//$(window).load(function(){
+//   var building_id =  $('#field_building_id').val();
+//   if (building_id) {
+//        populateTableChkResources(building_id, initialSelection);
+//        building_id_selection = building_id
+//   }
+//   $('#field_building_name').on("autocompleteselect", function(event, ui) {
+//      var building_id = ui.item.value;
+//      if (building_id != building_id_selection) {
+//            populateTableChkResources(building_id, []);
+//            building_id_selection = building_id;
+//      }
+//   });
+//});
+//
+//function populateTableChk (url, container, colDefs) {
+//    createTable(container, url, colDefs);
+//}
+//
+//function populateTableChkResources (building_id, selection) {
+//    var url = "index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=" +  building_id + "&phpgw_return_as=json&";
+//    var container = "resources_container";
+//    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resource[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']},{key: 'type', label: lang['Resources Type']}];
+//    populateTableChk(url, container, colDefsResources);
+//}
+//
+
 populateResourceTable = function(building_id, selection) {
     YAHOO.booking.checkboxTableHelper('resources_container', 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
     'resources[]', selection);

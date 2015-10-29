@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div style="float: right"><a onclick="YAHOO.booking.closeOverlay(); return false" href=""><xsl:value-of select="php:function('lang', 'Close')"/></a></div>
+	<!--div style="float: right"><a onclick="YAHOO.booking.closeOverlay(); return false" href=""><xsl:value-of select="php:function('lang', 'Close')"/></a></div-->
 	<h3><xsl:value-of select="php:function('lang', 'Event')"/> #<xsl:value-of select="event/id"/></h3>
 	<xsl:if test="event/is_public=1">
 		<div>
