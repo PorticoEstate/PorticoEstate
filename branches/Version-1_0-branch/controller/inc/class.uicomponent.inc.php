@@ -1200,10 +1200,10 @@
 				<th>
 				</th>
 				<th>
-				
+				Status
 				</th>
 				<th>
-					Status
+					
 				</th>
 HTML;
 
@@ -1235,10 +1235,10 @@ HTML;
 							{$values['img']}
 						</td>
 						<td>
-							Antall:</br>Tidsbruk:
+							{$values['name']}
 						</td>
 						<td>
-							{$values['name']}
+							Antall:</br>Tidsbruk:
 						</td>
 HTML;
 				for ( $_month=1; $_month < 13; $_month++ )
