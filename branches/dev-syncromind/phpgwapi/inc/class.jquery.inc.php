@@ -302,7 +302,8 @@ HTML;
 
 			$i++;
 		}
-		$selected = in_array($selection, $tab_map) ? (int)$tab_map[$selection] : 0;
+
+		$selected = array_key_exists($selection, $tab_map) ? (int)$tab_map[$selection] : 0;
 
 		$disabled_js = '[' . implode(',', $disabled) . ']';
 
