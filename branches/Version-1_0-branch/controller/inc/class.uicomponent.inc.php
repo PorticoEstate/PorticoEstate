@@ -1141,37 +1141,37 @@
 
 
 			$summary = array(
-				 "CONTROL_NOT_DONE" => array(
-					'name' => 'Ikke utført',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Ikke utført\"/>"
-					),
 				"CONTROL_REGISTERED" => array(
-					'name' => 'Registrert',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow_ring.png\" title=\"Registrert\"/>"
+					'name' => 'Satt opp',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow_ring.png\" title=\"Kontroll satt opp\"/>"
 					),
 				"CONTROL_PLANNED" => array(
-					'name' => 'Planlagt',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow.png\" title=\"Planlagt\"/>"
-					),
-				"CONTROL_NOT_DONE_WITH_PLANNED_DATE" => array(
-					'name' => 'Forsinket, Ikke utført',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Forsinket, Ikke utført\"/>"
-					),
-				"CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS" => array(
-					'name' => 'Senere enn planagt',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_light_green.png\" title=\"Senere enn planagt\"/>"
+					'name' => 'Har planlagt dato',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow.png\" title=\"Kontroll har planlagt dato\"/>"
 					),
 				"CONTROL_DONE_IN_TIME_WITHOUT_ERRORS" => array(
-					'name' => 'Utført uten avvik',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_dark_green.png\" title=\"Utført uten avvik\"/>"
+					'name' => 'Gjennomført uten åpne saker før fris',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_dark_green.png\" title=\"Kontroll gjennomført uten åpne saker før fris\"/>"
+					),
+				"CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS" => array(
+					'name' => 'Gjennomført uten åpne saker etter frist',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_light_green.png\" title=\"Kontroll gjennomført uten åpne saker etter frist\"/>"
 					),
 				"CONTROL_DONE_WITH_ERRORS" => array(
-					'name' => 'Utført med åpne avvik',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"Utført med åpne avvik\"/>"
+					'name' => 'Gjennomført med åpne saker',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"Kontroll gjennomført med åpne saker\"/>"
+					),
+				 "CONTROL_NOT_DONE" => array(
+					'name' => 'Ikke gjennomført (ikke planlagt)',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Kontroll ikke gjennomført\"/>"
+					),
+				"CONTROL_NOT_DONE_WITH_PLANNED_DATE" => array(
+					'name' => 'ikke gjennomført (planlagt)',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Kontroll ikke gjennomført\"/>"
 					),
 				"CONTROL_CANCELED" => array(
-					'name' => 'kansellert',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_black_cross.png\" title=\"kansellert\"/>"
+					'name' => 'Kansellert',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_black_cross.png\" title=\"Kontroll kansellert\"/>"
 					)
 				);
 
