@@ -23,7 +23,8 @@
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
-
+	//phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('frontend.bofrontend');
 	phpgw::import_class('frontend.bofellesdata');
 	phpgw::import_class('frontend.borental');
@@ -33,8 +34,8 @@
 	 *
 	 * @package Frontend
 	 */
-
-	class frontend_uifrontend
+	//class frontend_uifrontend
+	abstract class frontend_uifrontend extends phpgwapi_uicommon_jquery
 	{
 		/**
 		 * Used to save state of header (select box, ++) between requests
@@ -50,6 +51,7 @@
 
 		public function __construct()
 		{
+			parent::__construct();
 			// This module uses XSLT templates
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
@@ -66,8 +68,8 @@
 			$tabs			= $this->get_tabs();
 			$location_id	= phpgw::get_var('location_id', 'int', 'REQUEST');
 			$tab			= isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
-			$selected		= isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
-			$this->tabs		= $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
+			$selected		= isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));		
+			$this->tabs		= phpgwapi_jquery::tabview_generate($tabs, $selected);
 			$this->menu		= $this->create_menu($tabs, $selected);
 
 			phpgwapi_cache::session_set('frontend','tab',$selected);
@@ -286,7 +288,7 @@
 		{
 			// Get tabs from location hierarchy
 			// tabs [location identidier] = {label => ..., link => ...}
-			$locations = frontend_bofrontend::get_sections();
+			$locations = frontend_bofrontend::get_sections();			
 			$tabs = array();
 			foreach ($locations as $key => $entry)
 			{
@@ -303,7 +305,6 @@
 				}
 				unset($location);
 			}
-
 
 			// this one is for generic entitysupport from the app 'property'
 			$entity_frontend = isset($this->config->config_data['entity_frontend']) && $this->config->config_data['entity_frontend'] ? $this->config->config_data['entity_frontend'] : array();
