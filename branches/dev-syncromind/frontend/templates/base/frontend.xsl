@@ -179,8 +179,8 @@
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>
 
+<!--
 <xsl:template match="tabs">
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>
-
-
+-->
