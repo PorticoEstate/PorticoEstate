@@ -656,22 +656,7 @@
 
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
 			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
-//_debug_array($custom_config->config_data);die();
-			// required settings:
-/*
-			integration_tab
-			integration_height
-			integration_url
-			integration_parametres
-			integration_action
-			integration_action_view
-			integration_action_edit
-			integration_auth_key_name
-			integration_auth_url
-			integration_auth_hash_name
-			integration_auth_hash_value
-			integration_location_data
- */
+
 			$tabs = array();
 			$tabs['info']	= array('label' => 'Info', 'link' => '#info');
 			$active_tab = $active_tab ? $active_tab : 'info';
@@ -791,73 +776,11 @@
 				}
 			}
 
-//_debug_array($integration);die();
-// ---- END INTEGRATION -------------------------
-
-
-
-			$link_file_data = array
-				(
-					'menuaction'	=> 'property.uientity.view_file',
-					'loc1'			=> $values['location_data']['loc1'],
-					'id'			=> $id,
-					'cat_id'		=> $this->cat_id,
-					'entity_id'		=> $this->entity_id,
-					'type'			=> $this->type
-				);
-
-			$img_types = array
-			(
-				'image/jpeg',
-				'image/png',
-				'image/gif'
-			);
-
-			$content_files = array();
-
-			for($z=0; $z<count($values['files']); $z++)
-			{
-				$content_files[$z]['url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
-				$content_files[$z]['file_name'] = $values['files'][$z]['name'];
-
-				if(in_array($values['files'][$z]['mime_type'], $img_types))
-				{
-					$content_files[$z]['file_name']	= urlencode($values['files'][$z]['name']);
-					$content_files[$z]['directory']	= urlencode($values['files'][$z]['directory']);
-					$content_files[$z]['img_id']	= $values['files'][$z]['file_id'];
-				}
-			}
-
-
-
-			$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'url','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'file_name','hidden'=>true),
-														array('key' => 'img_id','hidden'=>true),
-														array('key' => 'directory','hidden'=>true),
-														array('key' => 'picture','label'=>'picture','sortable'=>false,'resizeable'=>false,'visible'=>true,'formatter'=>'show_picture')))
-				);
-
-
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
 
 			$data = array(
 				'header' 		=> $this->header_state,
-				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
-				'tabs'			=> $this->tabs,
 				'entityinfo'	=> array
 					(
 						'entitylist'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -887,38 +810,25 @@
 							'p_num'			=> $id
 						)),
 						'location_id'		=> $this->location_id,
-						'id'			=> $id,
-						'entity'        => $entity,
-						'entityhistory'	=> $entityhistory2,
+						'id'				=> $id,
+						'entity'			=> $entity,
 						'custom_attributes'	=> array('attributes' => $values['attributes']),
 						'location_data'		=> $location_data,
-						'files'				=> isset($values['files'])?$values['files']:'',
-						'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-						'base_java_url'		=>	"{menuaction:'property.uientity.get_files',".
-												"id:'{$id}',".
-												"entity_id:'{$this->entity_id}',".
-												"cat_id:'{$this->cat_id}',".
-												"type:'{$this->type}'}",
-						'datatable'			=> $datavalues,
-						'myColumnDefs'		=> $myColumnDefs,
-						'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-						'active_tab'		=> $active_tab,
 						'integration'		=> $integration,
+						'msgbox_data'		=> isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
+						'tabs'				=> $this->tabs									
 					)
 			);
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('animation');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
+
+			/*$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
 			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');*/
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
+			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), array('data' => $data));
+			
+			/*$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));*/
 		}
 	}
