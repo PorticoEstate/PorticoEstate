@@ -179,7 +179,7 @@ schedule.showInfo = function(url, resource) {
 
 schedule.createDialogSchedule = function(w){
     var ww = $(window).width();
-    w = (w > (ww+40)) ? (ww-40) : w;
+    w = (w > (ww-40)) ? (ww-40) : w;
     schedule.dialogSchedule = $('#dialog_schedule').dialog({
         autoOpen: false,
         modal: true,
