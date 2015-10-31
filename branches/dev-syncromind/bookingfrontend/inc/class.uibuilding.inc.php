@@ -273,8 +273,6 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         if ($backend == 'true') {
             $building['date'] = phpgw::get_var('date', 'GET');
         }
-        
-        self::add_stylesheet("bookingfrontend/css/bookingfrontend.css");
 
         self::add_javascript('booking', 'booking', 'schedule.js');
         phpgwapi_jquery::load_widget("datepicker");
