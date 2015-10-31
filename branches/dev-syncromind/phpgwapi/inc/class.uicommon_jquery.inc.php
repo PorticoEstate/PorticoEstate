@@ -68,6 +68,7 @@
 
 
 			$this->tmpl_search_path = array();
+            array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
@@ -194,7 +195,10 @@
 
 		public function link($data)
 		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
+            if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			else
+				return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
 		public function redirect($link_data)
