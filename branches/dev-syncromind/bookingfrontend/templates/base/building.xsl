@@ -83,23 +83,28 @@
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
 				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
-                                <![CDATA[
-                                var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-                                var documentURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&no_images=1&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-                                var building_usersURL = 'index.php?menuaction=bookingfrontend.uiorganization.building_users&sort=name&building_id=' + building_id + '&phpgw_return_as=json&';
-                                var document_buildingURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-                                ]]>
-                                
-                                var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
-                                
-                                var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
-                                var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
-                                var colDefsBuilding_users = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'activity_name', label: lang['Activity']}];
-                                
-                                createTable('resources_container', resourcesURL, colDefsResources, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
-                                createTable('documents_container', documentURL, colDefsDocument, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
-                                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'bookingfrontend-table bookingfrontend-table-striped');
-                                //createnInlineImages('images_container', 'document_buildingURL');
+                <![CDATA[
+                var resourcesURL = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+                var documentURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&no_images=1&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+                var building_usersURL = 'index.php?menuaction=bookingfrontend.uiorganization.building_users&sort=name&building_id=' + building_id + '&phpgw_return_as=json&';
+                var document_buildingURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+                ]]>
+                
+                var rResources = 'results';
+                var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
+
+                var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
+                var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
+                var colDefsBuilding_users = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'activity_name', label: lang['Activity']}];
+
+                var paginatorTableBuilding_users = new Array();
+                paginatorTableBuilding_users.limit = 10;
+                createPaginatorTable('building_users_container', paginatorTableBuilding_users);
+
+                createTable('resources_container', resourcesURL, colDefsResources, rResources, 'bookingfrontend-table bookingfrontend-table-striped');
+                createTable('documents_container', documentURL, colDefsDocument, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
+                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'bookingfrontend-table bookingfrontend-table-striped', paginatorTableBuilding_users);
+                //createnInlineImages('images_container', 'document_buildingURL');
 
 /*                                
 				<![CDATA[
