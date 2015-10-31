@@ -69,6 +69,7 @@ JS;
 	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/bkbooking/css/frontend.css";
+    $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
