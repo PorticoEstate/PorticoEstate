@@ -1,26 +1,6 @@
 <xsl:template match="entityinfo" xmlns:php="http://php.net/xsl">
 	
 	<script type="text/javascript">
-		var property_js = <xsl:value-of select="property_js" />;
-		var base_java_url = <xsl:value-of select="base_java_url" />;
-		var datatable = new Array();
-		var myColumnDefs = new Array();
-
-		<xsl:for-each select="datatable">
-			datatable[<xsl:value-of select="name"/>] = [
-			{
-			values			:	<xsl:value-of select="values"/>,
-			total_records	: 	<xsl:value-of select="total_records"/>,
-			edit_action		:  	<xsl:value-of select="edit_action"/>,
-			is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-			footer			:	<xsl:value-of select="footer"/>
-			}
-			]
-		</xsl:for-each>
-
-		<xsl:for-each select="myColumnDefs">
-			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-		</xsl:for-each>
 
 	showlightbox_edit_entity = function(location_id, id)
 	{
@@ -47,7 +27,6 @@
 		parent.location.reload();
 	}
 
-
 	</script>
 
     <table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -62,27 +41,31 @@
         </xsl:choose>
     </table>
 
-    <div class="yui-navset" id="entity_tabview">
-        <div class="yui-content">
-        	<div id="entityinfo">
-        		<ul style="margin: 2em;">
-	<!--				<xsl:value-of disable-output-escaping="yes" select="tabs"/>-->
-					<div id="info">
-
-        			<li style="margin-bottom: 1em;">
-        				<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
-        			</li>
-        			<li style="margin-bottom: 1em;">
-						<a href="#" onclick="showlightbox_edit_entity({location_id},{id});">
-							<xsl:value-of select="php:function('lang', 'edit')"/>
-						</a>
-        			</li>
-        			<li style="margin-bottom: 1em;">
-						<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');">
-							<xsl:value-of select="php:function('lang', 'add ticket')"/>
-						</a>
-        			</li>
-        			<li>
+    <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	
+	<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div id="{$location_id}">
+				
+						<div class="pure-control-group">
+							<label>
+								<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
+							</label>
+						</div>						
+						<div class="pure-control-group">
+							<label>
+								<a href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
+							</label>
+						</div>						
+						<div class="pure-control-group">
+							<label>
+								<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
+							</label>
+						</div>
+    
+        	
 						<xsl:choose>
 							<xsl:when test="location_data!=''">
 								<li>
@@ -95,11 +78,10 @@
 								</div>
 							</xsl:when>
 						</xsl:choose>
-					</li>
-					<li>
+				
+
 						<xsl:apply-templates select="custom_attributes/attributes"/>
-						<hr/>
-        			</li>
+        			
 <!--
 					<xsl:choose>
 						<xsl:when test="files!=''">
@@ -109,7 +91,7 @@
 						</xsl:when>
 					</xsl:choose>
 -->
-					</div>
+
 
 					<xsl:for-each select="integration">
 						<div id="{section}">
@@ -119,13 +101,10 @@
 						</div>
 					</xsl:for-each>
 
-
-        		</ul>
-
-
-        	</div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</form>
+	
 </xsl:template>
 
 
