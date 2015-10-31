@@ -534,7 +534,101 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 
 
 
+function updateTablePaginator (p, m) {
+    var paginator = p;
+    
+    if (paginator.limit == 0) {
+        return;
+    }
+    
+    paginator.start += m;
+    var e = 0;
+    
+    if (paginator.start < 0) {
+        paginator.start = 0;
+        e++;
+    }
+    if ((paginator.start) > paginator.max){
+        paginator.start -= m;
+        e++;
+    }
+    
+    if ((paginator.start - Math.abs(m)) < 0) {
+        paginator.tablePaginatorPrevButton.classList.add('disabled');
+        paginator.tablePaginatorPrevButton.classList.remove('enabled');
+    }else{
+        paginator.tablePaginatorPrevButton.classList.remove('disabled');
+        paginator.tablePaginatorPrevButton.classList.add('enabled');
+    }
+    
+    if ((paginator.start + Math.abs(m)) > paginator.max) {
+        paginator.tablePaginatorNextButton.classList.add('disabled');
+        paginator.tablePaginatorNextButton.classList.remove('enabled');
+    }else{
+        paginator.tablePaginatorNextButton.classList.remove('disabled');
+        paginator.tablePaginatorNextButton.classList.add('enabled');
+    }
 
+    if (e > 0) {
+        return;
+    }
+    createTable(paginator.container,paginator.url,paginator.col,paginator.r,paginator.class,paginator);
+}
+
+function createPaginatorTable (c, p) {
+    var paginator = p;
+    if (!paginator.limit) {
+        paginator.limit = 0;
+    }
+
+    var tablePaginator = document.createElement('ul');
+    var container = document.getElementById(c);    
+
+    var tablePaginatorPrev = document.createElement('li');
+    var tablePaginatorText = document.createElement('li');
+    var tablePaginatorNext = document.createElement('li');
+    var tablePaginatorPrevButton = document.createElement('a');
+    var tablePaginatorNextButton = document.createElement('a');    
+
+    tablePaginator.style.display = 'none';
+    tablePaginator.classList.add('tablePaginator');
+    
+    tablePaginatorPrev.classList.add('tablePaginatorPrev');
+    tablePaginatorText.classList.add('tablePaginatorText');
+    tablePaginatorNext.classList.add('tablePaginatorNext');
+
+    tablePaginatorPrevButton.classList.add('disabled');
+    tablePaginatorNextButton.classList.add('enabled');
+
+    tablePaginatorPrevButton.innerHTML = "Prev";
+    tablePaginatorNextButton.innerHTML = "Next";
+
+    tablePaginatorPrev.appendChild(tablePaginatorPrevButton);
+    tablePaginatorNext.appendChild(tablePaginatorNextButton);
+
+    tablePaginator.appendChild(tablePaginatorPrev);
+    tablePaginator.appendChild(tablePaginatorText);
+    tablePaginator.appendChild(tablePaginatorNext);
+
+    paginator.tablePaginator = tablePaginator;
+    paginator.tablePaginatorText = tablePaginatorText;
+    paginator.tablePaginatorPrevButton = tablePaginatorPrevButton;
+    paginator.tablePaginatorNextButton = tablePaginatorNextButton;
+
+    if (!paginator.start) {
+        paginator.start = 0;
+    }
+
+    tablePaginatorPrevButton.addEventListener('click', function(){
+        updateTablePaginator(paginator, (parseInt(paginator.limit) * -1 ) );
+    }, false);
+
+    tablePaginatorNextButton.addEventListener('click', function(){
+        updateTablePaginator(paginator, parseInt(paginator.limit));
+    }, false);
+
+    container.appendChild(tablePaginator);
+}
 
 
 //d  => div contenedor
@@ -542,7 +636,8 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 //c  => columnas
 //r  => respuesta
 //cl => clase
-function createTable (d,u,c,r,cl) {
+//l  => limit
+function createTable (d,u,c,r,cl,l) {
     var container = document.getElementById(d);
     var xTable = document.createElement('table');
     var tableHead = document.createElement('thead');
@@ -577,31 +672,27 @@ function createTable (d,u,c,r,cl) {
     tableBody.appendChild(tableBodyTr);
     xTable.appendChild(tableBody);
     
-    container.innerHTML = "";
-    container.appendChild(xTable);
+    $("#"+d+" table").remove();
+    
+    if (l) {
+        l.container = d;l.url = u;l.col = c;l.r = r;l.class = cl;
+        u += "&results="+l.limit+"&startIndex="+l.start;
+    }
 
-//    var tableHead = "<thead><tr>";
-//    $.each(c, function(i, v) {
-//        var thHidden = "";
-//        var label = (v.label) ? v.label : "";
-//        if (v.hidden){
-//            thHidden = " style=\"display:none;\"";
-//        }
-//        tableHead += "<th"+thHidden+">"+label+"</th>";
-//    });
-//    tableHead += "</tr></thead>";
-//
-//    var tableBody = "<tbody>";
+    container.appendChild(xTable);
 
     $.get(u, function(data) {
         var selected = new Array();
+        var totalResults = "";
         if (typeof(r) == 'object') {
             selected = data;
             $.each(r, function(i, e){
                 selected = selected[e['n']];
             });
-        }else {
+            totalResults = data.ResultSet.totalRecords;
+        }else {            
             selected = data[r];
+            totalResults = data['recordsTotal'];
         }
 
         if (!selected){
@@ -609,21 +700,25 @@ function createTable (d,u,c,r,cl) {
         }
         tableBody.innerHTML = "";
         if (selected.length == 0) {
-//            tableClass = "pure-table pure-table-bordered";
-//            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
             tableBodyTr.innerHTML = "";
             tableBodyTrTd.setAttribute('colspan', c.length);
             tableBodyTrTd.innerHTML = "No records found";
             tableBodyTr.appendChild(tableBodyTrTd);
             tableBody.appendChild(tableBodyTr);
         }else {
+            if (l) {
+                l.tablePaginator.style.display = 'block';
+                l.max = totalResults;
+                l.tablePaginatorText.innerHTML = (l.start+1) + " - " + ( ( (l.start+l.limit)>l.max || l.limit==0 ) ? l.max : l.start+l.limit ) + " / " + l.max;
+                if (l.limit > l.max || l.limit == 0) {
+                    l.tablePaginatorNextButton.classList.add('disabled');
+                    l.tablePaginatorNextButton.classList.remove('enabled');
+                }
+            }
+            
             $.each(selected, function(id, vd) {
-//                tableBodyTr.innerHTML = "";
                 var tableBodyTr = document.createElement('tr');
-//                tableBody += "<tr>";
                 $.each(c, function(ic, vc) {
-//                    var tableBodyTd = "";
-//                    var tdHidden = "";
                     var tableBodyTrTd = document.createElement('td');
                     tableBodyTrTdText = "";
                     if (vc['object']){
@@ -666,7 +761,6 @@ function createTable (d,u,c,r,cl) {
                         $.each(object, function(i, o) {
                             tableBodyTrTd.appendChild(o);
                         });
-//                        tableBodyTd = object;
                     }else if (vc['formatter']) {
                         vcfa = [];
                         vcft = 'genericLink';                        
@@ -716,27 +810,17 @@ function createTable (d,u,c,r,cl) {
                         var k = vc.key;
                         tableBodyTrTdText = vd[k];
                         tableBodyTrTd.innerHTML = tableBodyTrTdText;
-//                        if (vc.hidden){
-//                            tdHidden = " style=\"display:none;\"";
-//                        }
                     }
                     if (vc.attrs) {
                         $.each(vc.attrs, function(i, v) {
                             tableBodyTrTd.setAttribute(v.name, v.value);
                         });
                     }
-//                    tableBody += "<td" + tdHidden +">";
-//                    tableBody += tableBodyTd;
-//                    tableBody += "</td>";
                     tableBodyTr.appendChild(tableBodyTrTd);
                 });
-//                tableBody += "</tr>";
                 tableBody.appendChild(tableBodyTr);
             });
-            
         }
-//        tableBody += "</tbody>";
-//        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
     });
 }
 
@@ -755,8 +839,6 @@ function createObject (object) {
                 objs.push('&nbsp;');
             }
             objs.push(element);
-//            obj += (i > 0) ? '&nbsp;' : '';
-//            obj += element.outerHTML;
         });
     };
     return objs;
