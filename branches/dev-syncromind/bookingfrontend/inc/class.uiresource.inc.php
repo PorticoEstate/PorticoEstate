@@ -17,7 +17,7 @@
 			$this->bo = CreateObject('booking.boresource');
             $this->building_bo = CreateObject('booking.bobuilding');
             $old_top = array_pop($this->tmpl_search_path);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
 		}
 		
@@ -65,7 +65,10 @@
 				'phpgw_return_as' => 'json',
 			));
             self::add_javascript('booking', 'booking', 'schedule.js');
-            self::render_template('resource_schedule', array('resource' => $resource,));
+            phpgwapi_jquery::load_widget("datepicker");
+            $resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+            
+            self::render_template_xsl('resource_schedule', array('resource' => $resource,));
 		}
 	}
 
