@@ -791,16 +791,20 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-
-			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
-			$active_tab = 'generic';
-
-			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
                         
 			self::add_javascript('booking', 'booking', 'application.js');
 			self::adddatetimepicker();
+            
+            if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend') {
+                self::add_stylesheet('phpgwapi/templates/portico/base.css');                
+            } else {
+                $tabs = array();
+                $tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
+                $active_tab = 'generic';
+
+                $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
+            }
 
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}

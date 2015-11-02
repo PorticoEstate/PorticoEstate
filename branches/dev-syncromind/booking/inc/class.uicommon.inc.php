@@ -718,8 +718,12 @@
 		public function adddatetimepicker($type = 'datetime')
 		{
 			phpgwapi_jquery::load_widget('datepicker');
-
-			$theme = 'ui-lightness';
+            if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend') {
+                $theme = 'humanity';
+            } else {
+                $theme = 'ui-lightness';
+            }
+//			$theme = 'ui-lightness';
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 
 			switch($type)
@@ -743,6 +747,36 @@
 			$lang_select_date = lang('select date');
 			$lang_from = lang('from');
 			$lang_to = lang('to');
+            
+            if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend') {
+                $html = 'var html = "<div class=\'date-container\'>"+
+                            "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
+                            "<dt><label for=\'new_start_date_"+this.counter+"\'>'.$lang_from.'</label></dt>"+
+                            "<dd><input class=\'new_datepicker time\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+                            "</input></dd>"+
+                            "<dt><label for=\'new_end_date_"+this.counter+"\' >'.$lang_to.'</label></dt>"+
+                            "<dd><input class=\'new_datepicker time\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+                            "</input></dd>"+
+                        "</div>"';
+            } else {
+                $html = 'var html = "<div class=\'date-container\'>"+
+						"<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
+						"<div class=\'pure-control-group\'>"+
+							"<label for=\'new_start_date_"+this.counter+"\'><h4>'.$lang_from.'</h4></label>"+
+							"<input class=\'new_datepicker time pure-input-2-3\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+							"</input>"+
+						"</div>"+
+						"<div class=\'pure-control-group\'>"+
+							"<label for=\'new_end_date_"+this.counter+"\' ><h4>'.$lang_to.'</h4></label>"+
+							"<input class=\'new_datepicker time pure-input-2-3\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+							"</input>"+
+						"</div>"+
+				 	"</div>"';
+            }
+
+//            echo $html;
+//            exit();
+                
 
 			$js =<<<JS
 
@@ -771,20 +805,8 @@
                                         this.counter = $('.date-container').length - 1;
 
 					if (!this.counter) { this.counter = 0; }
-
-					html = '<div class="date-container">'+
-						'<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
-						'<div class="pure-control-group">'+
-							'<label for="new_start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
-							'<input class="new_datepicker time pure-input-2-3" name="from_[]" id="new_start_date_'+this.counter+'" type="text">'+
-							'</input>'+
-						'</div>'+
-						'<div class="pure-control-group">'+
-							'<label for="new_end_date_'+this.counter+'" ><h4>{$lang_to}</h4></label>'+
-							'<input class="new_datepicker time pure-input-2-3" name="to_[]" id="new_end_date_'+this.counter+'" type="text">'+
-							'</input>'+
-						'</div>'
-				 	'</div>';
+                                    
+                    {$html}
 
 					add.parent().parent().children('#dates-container').append(html);
 
