@@ -16,11 +16,11 @@
 			<div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
 			<dt>
 				<label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
-				<xsl:if test="config/application_activities">
+				<!--xsl:if test="config/application_activities">
 				<p>
 					<xsl:value-of select="config/application_activities"/>
 				</p>		
-				</xsl:if>
+				</xsl:if-->
 			</dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -38,16 +38,16 @@
 			</dd>
 			<dt>
 				<label for="field_description"><xsl:value-of select="php:function('lang', 'Information about the event')" /></label>
-				<xsl:if test="config/application_description">
+				<!--xsl:if test="config/application_description">
 				<p>
 					<xsl:value-of select="config/application_description"/>
 				</p>		
-				</xsl:if>
+				</xsl:if-->
 			</dt>
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
-            <dt>
+            <!--dt>
                 <xsl:if test="config/application_equipment">
                     <p>
                         <xsl:value-of select="config/application_equipment"/>
@@ -56,49 +56,53 @@
             </dt>
             <dd>
                 <textarea id="field_equipment" class="full-width" name="equipment"><xsl:value-of select="application/equipment"/></textarea>
-            </dd>
+            </dd-->
 		</dl>
 		<dl class="form-col">
 			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
-			<xsl:if test="config/application_howmany">
+			<!--xsl:if test="config/application_howmany">
 			<p>
 				<xsl:value-of select="config/application_howmany"/>
 			</p>		
-			</xsl:if>
+			</xsl:if-->
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label></dt>
 			<dd>
-				<table id="agegroup">
-					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+				<table id="agegroup" class="bookingfrontend-table">
+                    <thead>
+                        <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
 					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
-					<xsl:for-each select="agegroups">
-						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-						<tr>
-							<th><xsl:value-of select="name"/></th>
-							<td>
-								<input type="text">
-									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
-								</input>
-							</td>
-							<td>
-								<input type="text">
-									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</xsl:for-each>
+                    </thead>
+                    <tbody id="agegroup_tbody">
+                        <xsl:for-each select="agegroups">
+                            <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+                            <tr>
+                                <th><xsl:value-of select="name"/></th>
+                                <td>
+                                    <input type="text">
+                                        <xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+                                        <xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
+                                    </input>
+                                </td>
+                                <td>
+                                    <input type="text">
+                                        <xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+                                        <xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
+                                    </input>
+                                </td>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
 				</table>
 			</dd>
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
-			<xsl:if test="config/application_where">
+			<!--xsl:if test="config/application_where">
 				<p>
 					<xsl:value-of select="config/application_where"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
@@ -118,14 +122,60 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-			<xsl:if test="config/application_when">
+			<!--xsl:if test="config/application_when">
 				<p>
 					<xsl:value-of select="config/application_when"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<div id="dates-container">
 				<xsl:for-each select="application/dates">
-					<div class="date-container">
+                    <xsl:variable name="index" select="position()-2" />
+                    <xsl:choose>
+                        <xsl:when test="position() > 1">
+                            <div class="date-container">
+                                <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                <dt><label for="start_date_{$index}"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+                                <dd>
+                                    <input class="newaddedpicker datetime" id="start_date_{$index}" type="text" name="from_[]">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="from_" />
+                                        </xsl:attribute>
+                                    </input>
+                                </dd>
+                                <dt><label for="end_date_{$index}"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+                                <dd>
+                                    <input class="newaddedpicker datetime" id="end_date_{$index}" type="text" name="to_[]">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="to_"/>
+                                        </xsl:attribute>
+                                    </input>
+                                </dd>
+                            </div>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <div class="date-container">
+                                <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                <dt><label for="start_date"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+                                <dd>
+                                    <input class="datetime" id="start_date" type="text" name="from_[]">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="from_" />
+                                        </xsl:attribute>
+                                    </input>
+                                </dd>
+                                <dt><label for="end_date"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+                                <dd>
+                                    <input class="datetime" id="end_date" type="text" name="to_[]">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="to_"/>
+                                        </xsl:attribute>
+                                    </input>
+                                </dd>
+                            </div>
+                        </xsl:otherwise>
+                    </xsl:choose>
+
+					<!--div class="date-container">
 						<a href="#" class="close-btn">-</a>
 						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
 						<dd class="datetime-picker">
@@ -139,33 +189,48 @@
 								<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
 							</input>
 						</dd>
-					</div>
+					</div-->
 				</xsl:for-each>
 			</div>
 
 
-			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+			<dt><a href="javascript:void(0);" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
 			<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
-			<xsl:if test="config/application_who">
+			<!--xsl:if test="config/application_who">
 				<p>
 					<xsl:value-of select="config/application_who"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 			<dd>
-				<div id="audience_container">&nbsp;</div>
+				<!--div id="audience_container">&nbsp;</div-->
+                <ul id= "audience"  style="list-style:none;padding-left:10px;">
+                    <xsl:for-each select="audience">
+                        <li>
+                            <label>
+                                <input type="radio" name="audience[]">
+                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                    <xsl:if test="../application/audience=id">
+                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                    </xsl:if>
+                                </input>
+                                <xsl:value-of select="name"/>
+                            </label>
+                        </li>
+                    </xsl:for-each>
+                </ul>
 			</dd>
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading"><br />6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
-			<xsl:if test="config/application_contact_information">
+			<!--xsl:if test="config/application_contact_information">
 				<p>
 					<xsl:value-of select="config/application_contact_information"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd>
 				<input id="field_contact_name" name="contact_name" type="text">
@@ -193,34 +258,34 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
-			<xsl:if test="config/application_responsible_applicant">
+			<!--xsl:if test="config/application_responsible_applicant">
 				<p>
 					<xsl:value-of select="config/application_responsible_applicant"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 			<br />
-			<xsl:if test="config/application_invoice_information">
+			<!--xsl:if test="config/application_invoice_information">
 				<p>
 					<xsl:value-of select="config/application_invoice_information"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<xsl:if test="config/application_terms">
+			<!--xsl:if test="config/application_terms">
 				<p>
 					<xsl:value-of select="config/application_terms"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 			<br />
 			<div id='regulation_documents'>&nbsp;</div>
 			<br />
-			<xsl:if test="config/application_terms2">
+			<!--xsl:if test="config/application_terms2">
 				<p>
 					<xsl:value-of select="config/application_terms2"/>
 				</p>		
-			</xsl:if>
+			</xsl:if-->
 		</dl>
 		<div class="form-buttons">
 			<input type="submit">
@@ -241,5 +306,6 @@
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+		var tableClass = 'bookingfrontend-table bookingfrontend-table-striped';
 	</script>
 </xsl:template>
