@@ -229,7 +229,7 @@ function populateTableChkRegulations (building_id, selection, resources) {
 }
 
 function populateTableResources (url, container, colDefs) {
-    if (tableClass) {
+    if (typeof tableClass !== 'undefined') {
         createTable(container,url,colDefs,'results', tableClass);
     } else {
         createTable(container,url,colDefs,'results');
@@ -237,14 +237,13 @@ function populateTableResources (url, container, colDefs) {
 }
 
 function populateTableRegulations (url, container, colDefs) {
-    if (tableClass) {
+    if (typeof tableClass !== 'undefined') {
         createTable(container,url,colDefs,'', tableClass);
     } else {
         createTable(container,url,colDefs);
     }
     
 }
-
 
 
 /*

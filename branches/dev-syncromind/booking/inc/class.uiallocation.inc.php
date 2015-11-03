@@ -649,7 +649,7 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => pretty_timestamp($active_tab),
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'from_date' => pretty_timestamp($from_date),
 					'to_date' => pretty_timestamp($to_date),
 					'valid_dates' => $valid_dates,
