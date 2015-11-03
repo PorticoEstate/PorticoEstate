@@ -96,8 +96,8 @@
 				{
 					switch($report_type)
 					{
-						case 'participants_per_resource':
-							$this->get_participants_per_resource($report);
+						case 'participants_per_agegroupe':
+							$this->get_participants_per_agegroupe($report);
 							break;
 						case 'cover_ratio':
 							$this->get_cover_ratio($report);
@@ -151,9 +151,9 @@
 			);
 			$report_types	 = array(
 				array(
-					'id' => 'participants_per_resource',
+					'id' => 'participants_per_agegroupe',
 					'name' => lang('participants_per_agegroupe'),
-					'selected' => $report_type == 'participants_per_resource' ? 1 : 0
+					'selected' => $report_type == 'participants_per_agegroupe' ? 1 : 0
 				),
 				array(
 					'id' => 'cover_ratio',
@@ -356,7 +356,7 @@
 			}
 		}
 
-		public function get_participants_per_resource($data)
+		public function get_participants_per_agegroupe($data)
 		{
 
 			$output_type = 'XLS';//'XLS';
