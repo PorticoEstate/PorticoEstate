@@ -316,7 +316,7 @@
 			
 			$sql .= "AND ((c.start_date <= $to_date AND c.end_date IS NULL) ";
 			$sql .= "OR (c.start_date <= $to_date AND c.end_date > $from_date ))";
-			
+
 
 			$this->db->query($sql);
 

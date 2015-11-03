@@ -173,6 +173,31 @@
     color: #000000;
     background-color: #EAF2D3;
 }
+#summary {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#summary td, #summary th {
+    font-size: 1em;
+    border: 1px solid #98bf21;
+    padding: 3px 7px 2px 7px;
+}
+
+#summary th {
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: green;
+    color: #ffffff;
+}
+
+#summary tr.alt td {
+    color: #000000;
+    background-color: #EAF2D3;
+}
 </style>
 
 	<xsl:call-template name="datasource-definition" />
@@ -273,26 +298,8 @@
 				success: function(data) {
 					if( data != null)
 					{
-						$("#tbody").html(data.tbody);
-						var time_sum = data.time_sum;
-						var time_sum_actual = data.time_sum_actual;
-
-						$("#checkall").html(data.checkall);
-						$("#total_records").html(data.total_records);
-						$("#sum_text").html('Sum');
-						$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
-						$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);
-						$("#month2").html(time_sum[2] + '/' + time_sum_actual[2]);
-						$("#month3").html(time_sum[3] + '/' + time_sum_actual[3]);
-						$("#month4").html(time_sum[4] + '/' + time_sum_actual[4]);
-						$("#month5").html(time_sum[5] + '/' + time_sum_actual[5]);
-						$("#month6").html(time_sum[6] + '/' + time_sum_actual[6]);
-						$("#month7").html(time_sum[7] + '/' + time_sum_actual[7]);
-						$("#month8").html(time_sum[8] + '/' + time_sum_actual[8]);
-						$("#month9").html(time_sum[9] + '/' + time_sum_actual[9]);
-						$("#month10").html(time_sum[10] + '/' + time_sum_actual[10]);
-						$("#month11").html(time_sum[11] + '/' + time_sum_actual[11]);
-						$("#month12").html(time_sum[12] + '/' + time_sum_actual[12]);
+						var components_data = data.components;
+						var summary_data = data.summary;
 						if(data.location_filter)
 						{
 							var obj = data.location_filter;
@@ -323,6 +330,43 @@
 							});
 
 							$("#location_id").html( htmlString );
+
+						}
+
+						if(components_data !==null)
+						{
+							$("#tbody").html(components_data.tbody);
+							var time_sum = components_data.time_sum;
+							var time_sum_actual = components_data.time_sum_actual;
+
+							$("#checkall").html(components_data.checkall);
+							$("#total_records").html(components_data.total_records);
+							$("#sum_text").html('Sum');
+							$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
+							$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);
+							$("#month2").html(time_sum[2] + '/' + time_sum_actual[2]);
+							$("#month3").html(time_sum[3] + '/' + time_sum_actual[3]);
+							$("#month4").html(time_sum[4] + '/' + time_sum_actual[4]);
+							$("#month5").html(time_sum[5] + '/' + time_sum_actual[5]);
+							$("#month6").html(time_sum[6] + '/' + time_sum_actual[6]);
+							$("#month7").html(time_sum[7] + '/' + time_sum_actual[7]);
+							$("#month8").html(time_sum[8] + '/' + time_sum_actual[8]);
+							$("#month9").html(time_sum[9] + '/' + time_sum_actual[9]);
+							$("#month10").html(time_sum[10] + '/' + time_sum_actual[10]);
+							$("#month11").html(time_sum[11] + '/' + time_sum_actual[11]);
+							$("#month12").html(time_sum[12] + '/' + time_sum_actual[12]);
+						}
+
+						if(summary_data !== null)
+						{
+							$( "#status_summary" ).show();
+							$( "#components" ).hide();
+							$( "#status_summary").html(summary_data);
+						}
+						else
+						{
+							$( "#status_summary" ).hide();
+							$( "#components" ).show();
 
 						}
 					}
@@ -450,5 +494,8 @@
 		</thead>
 		<tbody id="tbody"></tbody>
 	</table>
+	<div id="status_summary">
+		
+	</div>
 	 
 </xsl:template>

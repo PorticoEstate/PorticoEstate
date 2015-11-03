@@ -754,6 +754,43 @@
 				);
 			}
 
+			$attrib_data = $this->bo->get_custom_cols();
+			if($attrib_data)
+			{
+				foreach ( $attrib_data as $attrib )
+				{
+					$_filter_data = array();
+					if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					{
+
+						$_filter_data[]  = array
+						(
+							'id' 	=> '',
+							'name'	=> lang('select') . " {$attrib['input_text']}"
+						);
+
+						$_selected = phpgw::get_var($attrib['column_name']);
+						foreach($attrib['choice'] as $choice)
+						{
+							$_filter_data[]  = array
+							(
+								'id' 	=> $choice['id'],
+								'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+								'selected' => $choice['id'] == $_selected ? 1 : 0
+							);
+						}
+
+						$combos[] = array('type'	 => 'filter',
+							'name'	 => $attrib['column_name'],
+							'extra'	 => '',
+							'text'	 => $attrib['input_text'],
+							'list'	 => $_filter_data
+						);
+
+					}
+				}
+			}
+
 			return $combos;
 		}
 

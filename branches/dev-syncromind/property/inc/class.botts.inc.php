@@ -56,6 +56,7 @@
 		public $sum_difference		 = 0;
 		public $show_finnish_date	 = false;
 		public $simple				 = false;
+		protected $custom_filters = array();
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -322,18 +323,55 @@
 			}
 
 
-			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
-			foreach($custom_cols as $custom_col)
+			$custom_cols = $this->get_custom_cols();
+
+			foreach ($custom_cols as $custom_col)
 			{
 				$columns[$custom_col['column_name']] = array
-					(
-					'id'		 => $custom_col['column_name'],
-					'name'		 => $custom_col['input_text'],
-					'datatype'	 => $custom_col['datatype'],
+				(
+					'id' => $custom_col['column_name'],
+					'name'=> $custom_col['input_text'],
+					'datatype' => $custom_col['datatype'],
 				);
+				if(($custom_col['datatype'] == 'LB' || $custom_col['datatype'] == 'CH' || $custom_col['datatype'] == 'R') && $custom_col['choice'])
+				{
+					$this->custom_filters[] = $custom_col['column_name'];
+				}
+
+			}
+			return $columns;
+		}
+
+		function get_custom_cols()
+		{
+			static $custom_cols = array();
+
+			if($custom_cols)
+			{
+				return $custom_cols;
+			}
+			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			return $custom_cols;
+		}
+
+		function get_custom_filters()
+		{
+			static $custom_filters = array();
+
+			if($custom_filters)
+			{
+				return $custom_filters;
 			}
 
-			return $columns;
+			$custom_cols = $this->get_custom_cols();
+			foreach ($custom_cols as $custom_col)
+			{
+				if(($custom_col['datatype'] == 'LB' || $custom_col['datatype'] == 'CH' || $custom_col['datatype'] == 'R') && $custom_col['choice'])
+				{
+					$custom_filters[] = $custom_col['column_name'];
+				}
+			}
+			return $custom_filters;
 		}
 
 		function get_group_list($selected = 0)
@@ -513,6 +551,17 @@
 			$start_date	 = $this->bocommon->date_to_timestamp($start_date);
 			$end_date	 = $this->bocommon->date_to_timestamp($end_date);
 
+			$custom_filtermethod = array();
+			foreach($this->get_custom_filters() as $custom_filter)
+			{
+				if($_REQUEST[$custom_filter]) //just testing..
+				{
+					$custom_filtermethod[$custom_filter] = phpgw::get_var($custom_filter, 'int');
+				}
+			}
+
+			$data['custom_filtermethod'] = $custom_filtermethod;
+
 			$tickets = $this->so->read($data);
 
 			$this->total_records	 = $this->so->total_records;
@@ -686,7 +735,7 @@
 		{
 			$this->so->update_view($id);
 
-			$values['attributes']	 = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes']	 = $this->get_custom_cols();
 			$ticket					 = $this->so->read_single($id, $values);
 			$ticket					 = $this->custom->prepare($ticket, 'property', '.ticket', $view);
 
@@ -1658,7 +1707,7 @@
 
 		public function get_attributes($values)
 		{
-			$values['attributes']	 = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values['attributes']	 = $this->get_custom_cols();
 			$values					 = $this->custom->prepare($values, 'property', '.ticket', false);
 			return $values;
 		}

@@ -268,6 +268,12 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type'	 => 'filter',
+								'name'	 => 'report_type',
+								'text'	 => lang('report type'),
+								'list'	 => array(array('id' => 'components', 'name' => lang('components')), array('id' => 'summary', 'name' => lang('summary'))),
+								'onchange'	=> 'update_table();'
+							),
+							array('type'	 => 'filter',
 								'name'	 => 'entity_group_id',
 								'text'	 => lang('entity group'),
 								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => phpgw::get_var('entity_group_id'), 'add_empty' => true)),
@@ -463,6 +469,7 @@
 			$all_items = phpgw::get_var('all_items', 'bool');
 			$user_only = phpgw::get_var('user_only', 'bool');
 			$filter_status = phpgw::get_var('status', 'string');
+			$report_type = phpgw::get_var('report_type', 'string');
 			if($filter_component_str = phpgw::get_var('filter_component', 'string'))
 			{
 				$filter_component_arr = explode('_', $filter_component_str);
@@ -825,6 +832,15 @@
 			unset($component_id);
 			unset($component);
 
+			if($report_type == 'summary')
+			{
+				return array(
+					'components' => null,
+					'summary' => $this->get_summary($values),
+					'location_filter' => $location_filter
+				);
+			}
+
 			$choose_master = false;
 			if($all_components && count($all_components))
 			{
@@ -988,7 +1004,11 @@
 				$result['checkall'] = '';
 			}
 
-			return $result;
+			return array(
+				'components'		=> $result,
+				'summary'			=> null,
+				'location_filter'	=> $location_filter
+				);
 		}
 
 		private function translate_calendar_info($param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to)
@@ -1112,6 +1132,167 @@
 			}
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
+		}
+
+		private function get_summary($data)
+		{
+
+
+			$summary = array(
+				"CONTROL_REGISTERED" => array(
+					'name' => 'Satt opp',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow_ring.png\" title=\"Kontroll satt opp\"/>"
+					),
+				"CONTROL_PLANNED" => array(
+					'name' => 'Har planlagt dato',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_yellow.png\" title=\"Kontroll har planlagt dato\"/>"
+					),
+				"CONTROL_DONE_IN_TIME_WITHOUT_ERRORS" => array(
+					'name' => 'Gjennomført uten åpne saker før fris',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_dark_green.png\" title=\"Kontroll gjennomført uten åpne saker før fris\"/>"
+					),
+				"CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS" => array(
+					'name' => 'Gjennomført uten åpne saker etter frist',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_light_green.png\" title=\"Kontroll gjennomført uten åpne saker etter frist\"/>"
+					),
+				"CONTROL_DONE_WITH_ERRORS" => array(
+					'name' => 'Gjennomført med åpne saker',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"Kontroll gjennomført med åpne saker\"/>"
+					),
+				 "CONTROL_NOT_DONE" => array(
+					'name' => 'Ikke gjennomført (ikke planlagt)',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Kontroll ikke gjennomført\"/>"
+					),
+				"CONTROL_NOT_DONE_WITH_PLANNED_DATE" => array(
+					'name' => 'ikke gjennomført (planlagt)',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_cross.png\" title=\"Kontroll ikke gjennomført\"/>"
+					),
+				"CONTROL_CANCELED" => array(
+					'name' => 'Kansellert',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_black_cross.png\" title=\"Kontroll kansellert\"/>"
+					)
+				);
+
+
+			foreach($data as $entry)
+			{
+
+				for ( $_month=1; $_month < 13; $_month++ )
+				{
+					if(isset($entry[$_month]['status']))
+					{
+						$summary[$entry[$_month]['status']][$_month]['count'] +=1;
+						$summary[$entry[$_month]['status']][$_month]['billable_hours'] += $entry[$_month]['info']['billable_hours'];
+					}
+
+				}
+			}
+
+			$sum = array();
+			$fields = $this->get_fields();
+			$html = <<<HTML
+
+			<table id="summary">
+				<thead>
+				<tr>
+				<th>
+				</th>
+				<th>
+				Status
+				</th>
+				<th>
+					
+				</th>
+HTML;
+
+			foreach($fields as $field)
+			{
+				if((int) $field['key'])
+				{
+					$html .= <<<HTML
+
+					<th>
+						{$field['label']}
+					</th>
+HTML;
+				}
+			}
+					$html .= <<<HTML
+
+					</tr>
+				</thead>
+				<tbody>
+HTML;
+			unset($_month);
+			foreach($summary as $status => $values)
+			{
+				$html .= <<<HTML
+
+					<tr>
+						<td>
+							{$values['img']}
+						</td>
+						<td>
+							{$values['name']}
+						</td>
+						<td>
+							Antall:</br>Tidsbruk:
+						</td>
+HTML;
+				for ( $_month=1; $_month < 13; $_month++ )
+				{
+					$value = '';
+					if(isset($values[$_month]))
+					{
+						$value = "{$values[$_month]['count']}</br>{$values[$_month]['billable_hours']}";
+						$sum[$_month]['count'] += $values[$_month]['count'];
+						$sum[$_month]['billable_hours'] += $values[$_month]['billable_hours'];
+					}
+					$html .= <<<HTML
+
+					<td>
+						{$value}
+					</td>
+HTML;
+				}
+			
+			}
+					$html .= <<<HTML
+
+				</tr>
+			</tbody>
+HTML;
+			$html .= <<<HTML
+  <tfoot>
+    <tr>
+		<td>
+		</td>
+		<td>
+			Totalt
+		</td>
+		<td>
+		</td>
+HTML;
+ 			foreach($fields as $field)
+			{
+				if((int) $field['key'])
+				{
+					$html .= <<<HTML
+
+					<td>
+						{$sum[$field['key']]['count']}</br>{$sum[$field['key']]['billable_hours']}
+					</td>
+HTML;
+				}
+			}
+			$html .= <<<HTML
+    </tr>
+  </tfoot>
+
+		</table>
+HTML;
+
+			return $html;
 		}
 
 		function get_start_month_for_control($control)
