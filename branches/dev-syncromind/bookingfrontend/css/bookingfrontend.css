@@ -1,4 +1,4 @@
-ul.pathway {font-size: 110%;font-weight: bolder;margin: 1em 0;}
+ul.pathway {font-size: 110%;font-weight: bolder;margin: 1em 0;padding: 0;}
 ul.pathway li a {color: #000;text-decoration: none;}
 ul.pathway li a:hover {color: #008;}
 ul.pathway li {background: rgba(0, 0, 0, 0) url("../../phpgwapi/templates/pure/images/pathwaysep.png") no-repeat scroll 0 50%;display: inline;padding-left: 16px;}
@@ -48,7 +48,7 @@ ul.pathway li:first-child {background: rgba(0, 0, 0, 0) none repeat scroll 0 0;p
 #dialog_schedule dt {font-weight: bold;margin-top: 10px;}
 #dialog_schedule dd {padding-left: 25px;}
 /*SCHEDULE COLORS*/
-#schedule_container .color1 {
+/*#schedule_container .color1 {
     background-color: #ccccff;
 }
 #schedule_container .color2 {
@@ -227,7 +227,7 @@ ul.pathway li:first-child {background: rgba(0, 0, 0, 0) none repeat scroll 0 0;p
 }
 #schedule_container .color60 {
     background-color: #aaa;
-}
+}*/
 
 
 /* BOOKINGFRONTEND */
@@ -284,6 +284,7 @@ ul.pathway li:first-child {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
     padding-left: 0;
 }*/
+
 dl.form, dl.form-col, dl.form-2col {
     margin: 1em 1em 1em 0;
     padding-right: 1em;
@@ -316,9 +317,9 @@ dl.form dd textarea.threecol-width, dl.form-col dd textarea.threecol-width {
     height: 5em;
     width: 58em;
 }
-dl.form dd input[type="text"], dl.form dd .autocomplete, dl.form-col dd input[type="text"], dl.form-col dd .autocomplete {
+/*dl.form dd input[type="text"], dl.form dd .autocomplete, dl.form-col dd input[type="text"], dl.form-col dd .autocomplete {
     width: 15em;
-}
+}*/
 /*dl.form dd .autocomplete, dl.form-col dd .autocomplete, dl.form-2col dd .autocomplete {
     padding-bottom: 2em;
 }
@@ -352,14 +353,14 @@ dl.proplist dt, dl.proplist-col dt {
     font-weight: bolder;
     margin: 0.8em 0 0.1em;
 }
-dl.proplist-col, dl.form-col {
+/*dl.proplist-col, dl.form-col {
     float: left;
     width: 18em;
 }
 dl.form-2col {
     float: left;
     width: 38em;
-}
+}*/
 .form-buttons {
     clear: both;
     padding-top: 2em;
@@ -612,16 +613,6 @@ dl.proplist dd.address, dl.proplist-col dd.address {
 #agegroup {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #7f7f7f;
-    white-space: nowrap;
-}
-#agegroup, #agegroup td, #agegroup th {
-    width: 1%;
-}
-#agegroup td, #agegroup th {
-    padding: 0.1em 0.3em;
-}
-#agegroup td input {
-    width: 3em;
 }
 table#report {
     background: #eee none repeat scroll 0 0;
@@ -707,3 +698,16 @@ div.info:hover {
 .ui-menu .ui-menu-item {
     text-align: left;
 }
+
+/* GENERAL */
+#wrapper {max-width: 1000px;width: 90%;}
+dd {margin-left: 0;}
+#dates-container {width: 18em;}
+
+.pure-g {letter-spacing: unset;}
+.pure-g [class*="pure-u"] {padding: 0;}
+.pure-g [class*="pure-u"] button,
+.pure-g [class*="pure-u"] input,
+.pure-g [class*="pure-u"] select,
+.pure-g [class*="pure-u"] textarea {max-width: 90%;}
+.pure-table {font-size: 12px;font-family: Arial,Helvetica,Verdana,sans-serif;}
