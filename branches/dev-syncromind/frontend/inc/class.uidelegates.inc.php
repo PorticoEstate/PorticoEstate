@@ -6,7 +6,8 @@
 		public $public_functions = array
 		(
 			'index'				=> true,
-			'remove_delegate'	=> true
+			'remove_delegate'	=> true,
+			'query'				=> true
 		);
 
 		public function __construct()
@@ -15,8 +16,6 @@
 			parent::__construct();	
 		}
 		
-		
-
 		public function index()
 		{	
 			$config	= CreateObject('phpgwapi.config','rental');
@@ -203,6 +202,8 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
 		}
+		
+		public function query() {}
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
