@@ -55,7 +55,7 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 
-			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
+			if ($config->config_data['user_can_delete'] != 'yes') {
 
 	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
@@ -105,7 +105,7 @@
 	            $this->flash_form_errors($errors);
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id']));
 
-				$this->use_yui_editor();
+//				$this->use_yui_editor();
 				self::render_template('allocation_cancel', array('allocation'=>$allocation));
 
 			} else {
@@ -144,6 +144,11 @@
 
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
+                    
+                    $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+                    $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                    $_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+                    
 					$from_date = $_POST['from_'];
 					$to_date = $_POST['to_'];
 	
@@ -206,6 +211,8 @@
 							$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
 							$allocation['from_'] = $fromdate;
 							$allocation['to_'] = $todate;
+                            $fromdate = pretty_timestamp($fromdate);
+                            $todate = pretty_timestamp($todate);
 	
 	                        $id = $this->bo->so->get_allocation_id($allocation);                
 							if ($id) 
@@ -272,11 +279,17 @@
 	                }
 				}
 				$this->flash_form_errors($errors);
-				self::add_javascript('booking', 'booking', 'allocation.js');
+//				self::add_javascript('booking', 'booking', 'allocation.js');
+                
+                $allocation['from_'] = pretty_timestamp($allocation['from_']);
+                $allocation['to_'] = pretty_timestamp($allocation['to_']);
+                
 				$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 #				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show', 'id' => $allocation['id']));
                 $allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id'], 'date' => $allocation['from_']));
 				$allocation['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.show', 'id' => $allocation['application_id']));
+                
+                $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
 	
 				if ($step < 2) 
 	            {
@@ -294,9 +307,9 @@
 						'recurring' => $_POST['recurring'],
 						'outseason' => $_POST['outseason'],
 						'interval' => $_POST['field_interval'],
-						'repeat_until' => $_POST['repeat_until'],
-						'from_date' => $from_date,
-						'to_date' => $to_date,
+						'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+						'from_date' => pretty_timestamp($from_date),
+						'to_date' => pretty_timestamp($to_date),
 						'message' => $_POST['message'],
 						'valid_dates' => $valid_dates,
 						'invalid_dates' => $invalid_dates

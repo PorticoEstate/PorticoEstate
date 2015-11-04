@@ -53,7 +53,7 @@
 
         var colDefsDocumentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 
-        createTable('documents_container', documentsResourceURL, colDefsDocumentsResource, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
+        createTable('documents_container', documentsResourceURL, colDefsDocumentsResource);
         //createnInlineImages('images_container', 'documentResourceImagesURL');
 
 /*

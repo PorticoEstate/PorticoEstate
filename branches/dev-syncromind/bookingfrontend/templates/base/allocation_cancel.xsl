@@ -130,7 +130,8 @@
     </form>
     </div>
     <script type="text/javascript">
-        YAHOO.booking.season_id = '<xsl:value-of select="allocation/season_id"/>';
+        var season_id = '<xsl:value-of select="allocation/season_id"/>';
+        /*
         <![CDATA[
         var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
             height: '300px',
@@ -153,5 +154,6 @@
         });
         descEdit.render();
         ]]>
+        */
 </script>
 </xsl:template>

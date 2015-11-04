@@ -54,10 +54,9 @@
         schedule.newApplicationUrl = '<xsl:value-of select="resource/application_link" />';
         schedule.includeResource = false;
         schedule.colFormatter = 'frontendScheduleDateColumn';
-        schedule.classTable = 'bookingfrontend-table';
         var handleHistoryNavigation = function (state) {
             schedule.date = parseISO8601(state);
-            schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource, schedule.classTable);
+            schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
         }
         
         var initialRequest = getUrlData("date") || '<xsl:value-of select="resource/date" />';

@@ -86,8 +86,8 @@
                 ];
                 var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
                 
-                createTable('groups_container', groupURL, colDefsGroup, '', 'bookingfrontend-table bookingfrontend-table-striped');
-                createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding, 'bookingfrontend-table bookingfrontend-table-striped');
+                createTable('groups_container', groupURL, colDefsGroup);
+                createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding);
 
 /*	
 		<![CDATA[

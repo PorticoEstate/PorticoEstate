@@ -101,9 +101,9 @@
                 paginatorTableBuilding_users.limit = 10;
                 createPaginatorTable('building_users_container', paginatorTableBuilding_users);
 
-                createTable('resources_container', resourcesURL, colDefsResources, rResources, 'bookingfrontend-table bookingfrontend-table-striped');
-                createTable('documents_container', documentURL, colDefsDocument, 'data', 'bookingfrontend-table bookingfrontend-table-striped');
-                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'bookingfrontend-table bookingfrontend-table-striped', paginatorTableBuilding_users);
+                createTable('resources_container', resourcesURL, colDefsResources, rResources);
+                createTable('documents_container', documentURL, colDefsDocument);
+                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
                 //createnInlineImages('images_container', 'document_buildingURL');
 
 /*                                

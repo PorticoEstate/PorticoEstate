@@ -23,25 +23,18 @@
 				- Søk ledig tid
 			</xsl:if>
 		</xsl:if>
-
-		<!--ul id="week-selector">
-			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
-			<li id="cal_container"/>
-			<li><a href="#" onclick="YAHOO.booking.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
-		</ul-->
-                <ul id="week-selector">
-                    <li><a id="btnPrevWeek" class="moveWeek" onclick="schedule.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
-                    <li id="cal_container">
-                        <div>
-                            <span><xsl:value-of select="php:function('lang', 'Week')" />: </span>
-                            <label id="numberWeek"></label>
-                            <input type="text" id="datepicker" />
-                            <img id="pickerImg" src="{building/picker_img}" />
-                        </div>
-                    </li>
-                    <li><a id="btnPrevWeek" class="moveWeek" onclick="schedule.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
-                </ul>
-
+        <ul id="week-selector">
+            <li><a id="btnPrevWeek" class="moveWeek" onclick="schedule.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
+            <li id="cal_container">
+                <div>
+                    <span><xsl:value-of select="php:function('lang', 'Week')" />: </span>
+                    <label id="numberWeek"></label>
+                    <input type="text" id="datepicker" />
+                    <img id="pickerImg" src="{building/picker_img}" />
+                </div>
+            </li>
+            <li><a id="btnPrevWeek" class="moveWeek" onclick="schedule.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
+        </ul>
         <div id="schedule_container"/>
     </div>
     <div id="dialog_schedule"></div>
@@ -54,10 +47,9 @@
             schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
             schedule.includeResource = true;
             schedule.colFormatter = 'frontendScheduleDateColumn';
-            schedule.classTable = 'bookingfrontend-table';
             var handleHistoryNavigation = function (state) {
                 schedule.date = parseISO8601(state);
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource, schedule.classTable);
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             };
 
             var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
