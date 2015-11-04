@@ -220,25 +220,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 			
-			$start_date	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);			
-			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
-
-//			$this->save_sessiondata();
-
-			//Preferencias sets
-			/*
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'] == 'yes')
-			{
-				$group_filters = 'select';
-				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field_grouped'));
-			}
-			else
-			{
-				$group_filters = 'filter';
-				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
-			}*/
 			
 			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
 
@@ -259,23 +241,20 @@
 			
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
-			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
 			$params = array(
-				'start'		 => 0,
-				'results'	 => 10,
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query'		 => $search['value'],
-				'order'		 => 'num',
-				'sort'		 => 'asc',
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date,
 				'dry_run'	 => true
 			);
 
-			$values = $this->bo->read($params);
-
+			$this->bo->read($params);
+			
 			$uicols = $this->bo->uicols;
 
 			$uicols['name'][]		 = 'img_id';
@@ -327,9 +306,15 @@
 					$params['formatter'] = $uicols['formatter'][$k];
 				}
 
-				if($uicols['name'][$k] == 'entry_date' || $uicols['name'][$k] == 'num')
+				switch ($uicols['name'][$k])
 				{
-					$params['hidden'] = true;
+					case 'entry_date':
+					case 'num':
+					case 'loc1':
+					case 'loc2':
+					case 'loc1_name':
+						$params['hidden'] = true;
+						break;
 				}
 
 				$denied = array('merknad');
@@ -511,12 +496,19 @@
 			$order	 = phpgw::get_var('order');
 			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$ordering = $columns[$order[0]['column']]['data'];
+			
+			if (!$order[0]['column'])
+			{
+				$ordering = 'id';
+			}
 
 			$params = array(
 				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query'		 => $search['value'],
-				'order'		 => $columns[$order[0]['column']]['data'],
+				'order'		 => $ordering,
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1,
 				'start_date' => $start_date,
