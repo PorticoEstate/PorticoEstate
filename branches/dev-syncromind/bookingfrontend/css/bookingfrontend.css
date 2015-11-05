@@ -704,7 +704,6 @@ div.info:hover {
 dd {margin-left: 0;}
 #dates-container {width: 18em;}
 
-.pure-g {letter-spacing: unset;}
 .pure-g [class*="pure-u"] {padding: 0;}
 .pure-g [class*="pure-u"] button,
 .pure-g [class*="pure-u"] input,

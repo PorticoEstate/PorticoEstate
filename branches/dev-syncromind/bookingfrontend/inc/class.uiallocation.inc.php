@@ -55,7 +55,7 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 
-			if ($config->config_data['user_can_delete'] != 'yes') {
+			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
 
 	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
