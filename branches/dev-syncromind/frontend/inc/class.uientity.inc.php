@@ -342,7 +342,7 @@
 						),
 					)
 				);
-
+			
 			$parameters2 = array
 				(
 					'parameter' => array
@@ -408,15 +408,17 @@
 					(
 						'my_name'		=> 'add_tinybox',
 						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uientity.edit',
-							'location_id'	=> $this->location_id,
-							'lean'			=> true,
-							'noframework'	=> true,
-							'target'		=> '_tinybox',
-						)),
-						'parameters'	=> array('parameter' => array(array('name'=> 'dummy', 'source' => 'id')))
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'	=> 'property.uientity.edit',
+									'location_id'	=> $this->location_id,
+									'lean'			=> true,
+									'noframework'	=> true
+								)).";
+							var parameters = ".json_encode(array('parameter' => array(array('name'=> 'dummy', 'source' => 'id')))).";
+							addEntity(oArgs, parameters);
+						"						
 					);
 			}
 
@@ -476,7 +478,8 @@
 				'entity'			=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'		=> lang('add ticket')
 			);
-
+			
+			self::add_javascript('frontend', 'jquery', 'entity.list.js');
 			self::render_template_xsl(array( 'entity', 'datatable_inline', 'frontend'), array('data' => $data));			
 		}
 
@@ -817,7 +820,8 @@
 
 			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');*/
-
+			
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');
 			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), array('data' => $data));
 			
 			/*$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
