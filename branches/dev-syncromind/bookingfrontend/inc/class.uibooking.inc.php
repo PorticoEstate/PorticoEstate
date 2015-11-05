@@ -709,7 +709,7 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 
-			if ($config->config_data['user_can_delete'] != 'yes') {
+			if ($config->config_data['user_can_delete_bookings'] != 'yes') {
 
 	        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 	   			$errors = array();
