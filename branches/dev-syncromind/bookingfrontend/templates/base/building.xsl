@@ -105,6 +105,10 @@
                 createTable('documents_container', documentURL, colDefsDocument);
                 createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
                 //createnInlineImages('images_container', 'document_buildingURL');
+                
+                $.get(document_buildingURL, function(data){
+                    console.log(data);
+                });
 
 /*                                
 				<![CDATA[

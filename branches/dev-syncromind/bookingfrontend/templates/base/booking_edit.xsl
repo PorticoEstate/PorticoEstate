@@ -71,6 +71,7 @@
                 <dl class="form-col">
                     <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
                     <dd>
+                        <input id="field_organization_id" name="organization_id" type="hidden" value="{booking/organization_id}"/>
                         <xsl:value-of select="booking/organization_name"/>
                     </dd>
                 </dl>

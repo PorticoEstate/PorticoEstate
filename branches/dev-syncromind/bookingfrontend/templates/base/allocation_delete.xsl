@@ -34,7 +34,7 @@
                     <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
                     <dd>
                         <div class="autocomplete">
-                                <xsl:value-of select="allocation/organization_name"/>
+                            <xsl:value-of select="allocation/organization_name"/>
                         </div>
                     </dd>
                 </dl>
@@ -149,7 +149,7 @@
         </div>
         
         <div class="pure-g">
-            <div class="pure-control-group">
+            <div class="pure-u-1">
                 <div class="form-buttons">
                     <input type="submit">
                         <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')"/></xsl:attribute>

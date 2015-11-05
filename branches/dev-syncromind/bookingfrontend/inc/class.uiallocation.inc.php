@@ -105,6 +105,10 @@
 	            $this->flash_form_errors($errors);
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id']));
 
+                $allocation['from_'] = pretty_timestamp($allocation['from_']);
+                $allocation['to_'] = pretty_timestamp($allocation['to_']);
+                $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+
 //				$this->use_yui_editor();
 				self::render_template('allocation_cancel', array('allocation'=>$allocation));
 

@@ -74,11 +74,14 @@
 			//Filter application comments only after update has been attempted unless 
 			//you wish to delete the comments not matching the specified types
 			$this->filter_application_comments($application, array('comment'));
+            
+            $activity_path = $this->activity_bo->get_path($application['activity_id']);
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 			
 			$application['resource_ids'] = $resource_ids;
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
 		}
