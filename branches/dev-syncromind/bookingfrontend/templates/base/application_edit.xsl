@@ -80,25 +80,74 @@
                     </dd>
                 </dl>
             </div>
+            
+            <!--div class="date-container">
+                <a href="#" class="close-btn">-</a>
+                <dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+                <dd class="datetime-picker">
+                    <input id="field_{position()}_from" name="from_[]" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
+                    </input>
+                </dd>
+                <dt><label for="field_{position()}_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+                <dd class="datetime-picker">
+                    <input id="field_{position()}_to" name="to_[]" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
+                    </input>
+                </dd>
+            </div-->
+            
             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                 <dl class="form-col">
                     <div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
                     <div id="dates-container">
-                        <xsl:for-each select="application/dates"><div class="date-container">
-                            <a href="#" class="close-btn">-</a>
-                            <dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-                            <dd class="datetime-picker">
-                                <input id="field_{position()}_from" name="from_[]" type="text">
-                                    <xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
-                                </input>
-                            </dd>
-                            <dt><label for="field_{position()}_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-                            <dd class="datetime-picker">
-                                <input id="field_{position()}_to" name="to_[]" type="text">
-                                    <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
-                                </input>
-                            </dd>
-                        </div></xsl:for-each>
+                        <xsl:for-each select="application/dates">
+                            <xsl:variable name="index" select="position()-2"/>
+                            <xsl:choose>
+                                <xsl:when test="position() > 1">
+                                    <div class="date-container">
+                                        <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                        <dt><label for="start_date_{$index}"><xsl:value-of select="php:function('lang', 'From)" /></label></dt>
+                                        <dd>
+                                            <input class="newaddedpicker datetime" id="start_date_{$index}" type="text" name="from[]">
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="from_" />
+                                                </xsl:attribute>
+                                            </input>
+                                        </dd>
+                                        <dt><label for="end_date_{$index}"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+                                        <dd>
+                                            <input class="datepicker datetime" id="end_date_{$index}" type="text" name="to_[]">
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="to_" />
+                                                </xsl:attribute>
+                                            </input>
+                                        </dd>
+                                    </div>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <div class="date-container">
+                                        <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                        <dt><label for="start_date"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+                                        <dd>
+                                            <input class="datetime" id="start_date" type="text" name="from_[]">
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="from_" />
+                                                </xsl:attribute>
+                                            </input>
+                                        </dd>
+                                        <dt><label for="end_date"><xsl:value-of select="php:function('lang', To)" /></label></dt>
+                                        <dd>
+                                            <input class="datetime" id="end_date" type="text" name="to_[]">
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="to_" />
+                                                </xsl:attribute>
+                                            </input>
+                                        </dd>
+                                    </div>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
                     </div>
                     <dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
                 </dl>
@@ -184,7 +233,7 @@
             </div>
             <div class="pure-u-1 pure-u-md-1-2 pure-u-1-3">
                 <dl class="form-col">
-                    <div class="heading"><br /><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+                    <div class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
                     <br/>
                     <div id='regulation_documents'/>
                 </dl>

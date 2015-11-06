@@ -64,7 +64,7 @@
 				'resource_id' => $resource['id'], 
 				'phpgw_return_as' => 'json',
 			));
-            self::add_javascript('booking', 'booking', 'schedule.js');
+            self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
             phpgwapi_jquery::load_widget("datepicker");
             $resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
             
