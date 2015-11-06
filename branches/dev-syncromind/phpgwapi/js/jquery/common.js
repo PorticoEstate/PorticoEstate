@@ -643,6 +643,10 @@ function createTable (d,u,c,r,cl,l) {
     var tableHead = document.createElement('thead');
     var tableHeadTr = document.createElement('tr');
     
+    if (!container) {
+        return;
+    }
+    
     r = (r) ? r : 'data';
     var tableClass = (cl) ? cl : "pure-table pure-table-striped";
     
