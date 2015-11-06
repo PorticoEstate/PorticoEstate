@@ -890,7 +890,7 @@
 					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
 
-					$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
+					$log[] = $reservation['id'].';'.$reservation['reservation_type'].';'. $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
 				} else {
 
 					//item level
@@ -974,7 +974,7 @@
 					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
 
-					$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
+					$log[] = $reservation['id'].';'.$reservation['reservation_type'].';'. $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
 
 				}
 			}
@@ -1148,7 +1148,7 @@
 				$log_cost = $reservation['cost'];
 				$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
 
-				$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
+				$log[] = $reservation['id'].';'.$reservation['reservation_type'].';'. $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
 
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $fakturalinje));
