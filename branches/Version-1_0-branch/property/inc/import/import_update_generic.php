@@ -316,7 +316,7 @@
 				{
 					if(!$_value = $data[array_search($key, $fields)])
 					{
-						throw new Exception("Fant ikke verdi for feltet 'primary key'");
+						throw new Exception("Fant ikke verdi for feltet 'primary key' {$key}");
 					}
 
 					$primary_key[] = "$key='{$_value}'";
