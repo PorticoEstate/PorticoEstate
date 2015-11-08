@@ -14,8 +14,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     protected $so_contact;
     protected $so_activity;
     protected $so_arena;
+	private $validator;
+	private $config_booking;
+	private $debug;
 
-    public $public_functions = array
+	public $public_functions = array
     (
         'index'                     => true,
         'index_json'                => true,
@@ -43,6 +46,13 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         self::set_active_menu('activitycalendar::activities');
         $config	= CreateObject('phpgwapi.config','activitycalendar');
         $config->read();
+        $this->config_booking	= CreateObject('phpgwapi.config','booking');
+        $this->config_booking->read();
+
+		$this->validator = CreateObject('phpgwapi.EmailAddressValidator');
+
+		$this->debug = true;
+
     }
 
     /**
@@ -379,7 +389,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         {
             $user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
         }
-        else {
+        else
+		{
             $user_rows_per_page = 10;
         }
         // YUI variables for paging and sorting
@@ -407,6 +418,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $email = false;
         if(isset($email_param)){
             $email=true;
+            $num_of_objects = null;
         }
 
         $uid = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -513,12 +525,13 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $c = createobject('phpgwapi.config','activitycalendarfrontend');
         $c->read();
         $config = $c->config_data;
+		$_subject = lang('mail_subject_update');
 
         $mailBaseURL = $c->config_data['mailBaseURL'];
     	foreach($activities as $activity)
     	{
-            //$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
-            $subject = lang('mail_subject_update');
+			$subject = "{$_subject}::" .$activity->get_title();
+			//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
             //$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
             //$link_text = "<a href='{$mailBaseURL}?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
             $link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
@@ -530,11 +543,17 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
              */
             $office_id = $activity->get_office();
             if($office_id == 1)
+			{
                 $office_id_new = 2;
+			}
             else if($office_id == 2)
+			{
                 $office_id_new = 1;
+			}
             else
+			{
                 $office_id_new = (int)$office_id;
+			}
             $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($office_id_new);
             if($activity->get_state() == 2)
             {
@@ -553,19 +572,27 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             {
                 $activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
 /*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+				{
                         activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
+				}
                 else*/
                 if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+				{
                     activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
+				}
             }
             else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
             {
                 $activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
 /*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
-                        activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
+                {
+					activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
+				}
                 else*/
                 if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+				{
                     activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
+				}
             }
         }
 
@@ -621,7 +648,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                     activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
             else */
             if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+			{
                 activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
+			}
     	}
     	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
     	{
@@ -631,7 +660,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                             activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
             else */
             if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+			{
                 activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
+			}
     	}
 
     	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
@@ -647,8 +678,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             $GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
         }
 
-        $config	= CreateObject('phpgwapi.config','booking');
-        $config->read();
+		$config = $this->config_booking;
         $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
         //$from = "erik.holm-larsen@bouvet.no";
 
@@ -664,10 +694,24 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         //var_dump($mailtoAddress.';'.$from.';'.$subject);
         if (strlen($mailtoAddress) > 0)
         {
-            try
+			if (!$this->validator->check_email_address($mailtoAddress))
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'uiactivities::send_mailnotification_to_group() : not a valid address.: %1',
+					'p1'	=> $mailtoAddress,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+	            return false;
+			}
+			if($this->debug)
+			{
+				_debug_array($mailtoAddress);
+	            return false;
+			}
+
+			try
             {
-                //var_dump('inne i try');
-//				var_dump('inne i try - org;');
                 $GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
             }
             catch (phpmailerException $e)
@@ -693,8 +737,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             $GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
         }
 
-        $config	= CreateObject('phpgwapi.config','booking');
-        $config->read();
+		$config = $this->config_booking;
         $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
         //$from = "tester@bouvet.no";
 
@@ -708,10 +751,26 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         //var_dump($mailtoAddress.';'.$from.';'.$subject);
         if (strlen($mailtoAddress) > 0)
         {
-            try
+			if (!$this->validator->check_email_address($mailtoAddress))
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'uiactivities::send_mailnotification_to_group() : not a valid address.: %1',
+					'p1'	=> $mailtoAddress,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+	            return false;
+			}
+
+			if($this->debug)
+			{
+				_debug_array($mailtoAddress);
+				_debug_array($subject);
+	            return false;
+			}
+
+			try
             {
-//		var_dump('inne i try - group;');
-//		$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
                 $GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
             }
             catch (phpmailerException $e)

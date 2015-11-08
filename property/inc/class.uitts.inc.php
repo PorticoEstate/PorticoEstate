@@ -755,7 +755,7 @@
 								$values_combo_box[$i][]  = array
 								(
 									'id' 	=> '',
-									'name'	=> lang('select') . " '{$attrib['input_text']}'"
+									'name'	=> lang('select') . " {$attrib['input_text']}"
 								);
 
 								foreach($attrib['choice'] as $choice)
@@ -2261,6 +2261,7 @@
 					}
 				}
 			}
+
 
 			$location_data=$bolocation->initiate_ui_location(array(
 				'values'	=> (isset($values['location_data'])?$values['location_data']:''),
