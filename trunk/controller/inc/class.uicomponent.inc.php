@@ -838,7 +838,7 @@
 			{
 				return array(
 					'components' => null,
-					'summary' => $this->get_summary($values, $keep_only_assigned_to),
+					'summary' => $this->get_summary($values, $user_id),
 					'location_filter' => $location_filter
 				);
 			}
@@ -1136,7 +1136,7 @@
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
 		}
 
-		private function get_summary($data, $keep_only_assigned_to)
+		private function get_summary($data, $user_id)
 		{
 
 
@@ -1185,7 +1185,7 @@
 
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
-					if($keep_only_assigned_to && $keep_only_assigned_to != $entry[$_month]['info']['assigned_to'])
+					if($user_id && $user_id != $entry[$_month]['info']['assigned_to'])
 					{
 						continue;
 					}
