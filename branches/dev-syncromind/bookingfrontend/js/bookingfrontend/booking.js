@@ -15,7 +15,6 @@ $(document).ready(function(){
             success: function(data) {
                 var html_agegroups = '';
                 var html_audience = '';
-                console.log(data);
                 if( data != null)
                 {
                     var agegroups = data.agegroups;
