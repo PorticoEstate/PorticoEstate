@@ -51,7 +51,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 
 		$this->validator = CreateObject('phpgwapi.EmailAddressValidator');
 
-		$this->debug = true;
+		$this->debug = false;
 
     }
 
@@ -596,7 +596,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             }
         }
 
-    	//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
+		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
 
     }
 
@@ -687,7 +687,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             return false;
         }
 
-        $mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person->get_id());
+        $mailtoAddress = trim(activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person->get_id()));
         //$mailtoAddress = "erik.holm-larsen@bouvet.no";
 
         //var_dump($mailtoAddress);
@@ -702,11 +702,16 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 					'line'	=> __LINE__,
 					'file'	=> __FILE__
 				));
+				$msg = "Overskrift: \"{$subject}\"; Adressen feiler på validering:\"{$mailtoAddress}\"";
+				_debug_array($msg);
 	            return false;
 			}
+
+			_debug_array($mailtoAddress);
+			_debug_array($subject);
+
 			if($this->debug)
 			{
-				_debug_array($mailtoAddress);
 	            return false;
 			}
 
@@ -746,7 +751,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             return false;
         }
 
-        $mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person->get_id());
+        $mailtoAddress = trim(activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person->get_id()));
         //$mailtoaddress = "erik.holm-larsen@bouvet.no";
         //var_dump($mailtoAddress.';'.$from.';'.$subject);
         if (strlen($mailtoAddress) > 0)
@@ -759,13 +764,17 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 					'line'	=> __LINE__,
 					'file'	=> __FILE__
 				));
-	            return false;
+				$msg = "Overskrift: \"{$subject}\"; Adressen feiler på validering:\"{$mailtoAddress}\"";
+				_debug_array($msg);
+
+				return false;
 			}
+
+			_debug_array($mailtoAddress);
+			_debug_array($subject);
 
 			if($this->debug)
 			{
-				_debug_array($mailtoAddress);
-				_debug_array($subject);
 	            return false;
 			}
 
