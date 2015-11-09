@@ -2,7 +2,6 @@
     <div id="content">
 
         <xsl:call-template name="msgbox"/>
-        <xsl:call-template name="yui_booking_i18n"/>
 
         <dl class="form">
             <dt class="heading">

@@ -65,4 +65,12 @@
 
 			self::render_template('settings', array('config_data' =>$config->config_data, 'billing' => $billing ) );
 		}
+
+		/**
+		 * Dummy function to meet the requirements of the parent class
+		 */
+		public function query()
+		{
+
+		}
 	}
