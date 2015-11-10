@@ -46,7 +46,7 @@
 			} 
 			elseif ($GLOBALS['phpgw_info']['server']['db_type'] == "mysql") 
 			{
-				$this->connection_string = "jdbc:postgresql://".$db_host.":3306/".$db_name;
+				$this->connection_string = "jdbc:mysql://".$db_host.":3306/".$db_name;
 			}
 		}
 
@@ -274,6 +274,10 @@
 				$browser = CreateObject('phpgwapi.browser');
 				$browser->content_header($filename,$mime,strlen($output));
 				echo $output;
+				if($output)
+				{
+					$GLOBALS['phpgw']->common->phpgw_exit();
+				}
 				return false;
 			}
 		}

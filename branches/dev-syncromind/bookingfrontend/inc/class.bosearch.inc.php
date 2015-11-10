@@ -12,9 +12,13 @@
 			$this->soevent = CreateObject('booking.soevent');
 		}
 		
-		function search($searchterm)
+		function search($searchterm, $activity_top_level, $building_id)
 		{
-			if($type = phpgw::get_var('type', 'GET'))
+			if($activity_top_level)
+			{
+				$types = array('resource');
+			}
+			else if($type = phpgw::get_var('type', 'string','GET'))
 			{
 				$types = array($type);
 			}
@@ -58,7 +62,18 @@
 
 			if(in_array('resource', $types))
 			{
-                $res_result = $this->soresource->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1")));
+				$_filter_resource = array("active" => "1");
+
+				if($activity_top_level)
+				{
+					$_filter_resource['activity_id'] = $activity_top_level;
+				}
+				if($building_id)
+				{
+					$_filter_resource['building_id'] = $building_id;
+				}
+		
+				$res_result = $this->soresource->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => $_filter_resource ));
                 foreach($res_result['results'] as &$res)
                 {
                     $res['name'] = $res['building_name']. ' / ' . $res['name'];

@@ -23,6 +23,12 @@
 		
 		public function index_json()
 		{
+			if ($sub_activity_id = phpgw::get_var('sub_activity_id'))
+			{
+				$activity_path = ExecMethod('booking.boactivity.get_path',$sub_activity_id);
+				$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+				$_REQUEST['filter_activity_id'] = $top_level_activity;
+			}
 			return $this->bo->populate_grid_data("bookingfrontend.uiresource.show");
 		}
 

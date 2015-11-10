@@ -15,9 +15,10 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<!--xsl:call-template name="yui_booking_i18n"/-->
-  <div id="content">
+<div id="content">
     <form action="" method="GET" id="search">
-      <input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
+      <input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
+      <input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" />
       <xsl:choose>
         <xsl:when test="search and string-length(search/searchterm) &gt; 0">
           <input id="search" type="text" name="searchterm" value="{search/searchterm}"/>
@@ -26,11 +27,41 @@
           <input id="search" type="text" name="searchterm" value="Søk hall, klubb eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
+		<div id="building_container">
+			<input id="field_building_id" name="building_id" type="hidden">
+				<xsl:attribute name="value">
+					<xsl:value-of select="building_id"/>
+				</xsl:attribute>
+			</input>
+			<input id="field_building_name" name="building_name" type="text">
+				<xsl:attribute name="value">
+					<xsl:value-of select="building_name"/>
+				</xsl:attribute>
+			</input>
+		</div>
+      <!--xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/-->
       <div class="hint">
         F.eks. "<i>Haukelandshallen</i>", "<i>Nordnes bydelshus</i>", "<i>idrett</i>" eller "<i>kor</i>".
       </div>
     </form>
+	<ul>
+		<xsl:for-each select="activities">
+			<li>
+				<a href="{search_url}">
+					<xsl:choose>
+						<xsl:when test="../activity_top_level = id">
+							<xsl:text>[</xsl:text>
+							<xsl:value-of select="name"/>
+							<xsl:text>]</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="name"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</li>
+		</xsl:for-each>
+	</ul>
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
@@ -89,11 +120,11 @@
 	                        </xsl:otherwise>
 	                      </xsl:choose>
 						<div id="{img_container}"/>
-						<script type="text/javascript">
+						<!--script type="text/javascript">
 						YAHOO.util.Event.addListener(window, "load", function() {
 							YAHOO.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
 						});
-						</script>
+						</script-->
 
 	                    </dd>
 	                    <xsl:if test="string-length(homepage) &gt; 1">

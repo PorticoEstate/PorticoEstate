@@ -718,7 +718,14 @@
 			else 
 			{
                                 $resources = explode(",",phpgw::get_var('resource', 'GET'));
-                                array_set_default($application, 'resources', $resources);
+								if($resources)
+								{
+									$resources_id = $resources[0];
+									$resource = $this->resource_bo->read_single($resources_id);
+									$activity_id = $resource['activity_id'];
+								}
+
+								array_set_default($application, 'resources', $resources);
 
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
@@ -752,7 +759,10 @@
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
 			}
-			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			if(!$activity_id)
+			{
+				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			}
 			$activity_path	 = $this->activity_bo->get_path($activity_id);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
                         array_set_default($application, 'activity_id', $activity_id);

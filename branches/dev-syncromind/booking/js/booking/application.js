@@ -6,7 +6,13 @@ $(document).ready(function() {
                                                   'field_building_name', 'field_building_id', 'building_container');
 
     $("#field_activity").change(function(){
-        var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
+		var building_id = $('#field_building_id').val();
+		if(building_id)
+		{
+			populateTableChkResources(building_id, initialSelection);
+		}
+
+		var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
         var requestUrl = phpGWLink('index.php', oArgs, true);
 
         $.ajax({
@@ -208,7 +214,8 @@ if ($.formUtils) {
 }
 
 function populateTableChkResources (building_id, selection) {
-    var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
+	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort:'name', filter_building_id:building_id, sub_activity_id: $("#field_activity").val()};
+	var url = phpGWLink('index.php', oArgs, true);
     var container = 'resources_container';
     var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableResources(url, container, colDefsResources);

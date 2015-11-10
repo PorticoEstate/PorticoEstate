@@ -359,7 +359,7 @@
 		public function get_participants_per_agegroupe($data)
 		{
 
-			$output_type = 'XLS';//'XLS';
+			$output_type = 'XHTML';//'XLS';
 			$db			 = & $GLOBALS['phpgw']->db;
 
 			$resources = array();

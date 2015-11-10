@@ -25,7 +25,7 @@
                         </xsl:if-->
                     </dt>
                     <dd>
-                        <select name="activity_id" id="field_activity">
+ 						<select name="activity_id" id="field_activity">
                             <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                             <xsl:for-each select="activities">
                                 <option>
