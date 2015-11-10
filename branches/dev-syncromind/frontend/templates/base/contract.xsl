@@ -1,12 +1,13 @@
 <xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
 	<!-- <xsl:copy-of select="."/> -->
-    <div class="yui-navset" id="ticket_tabview">
-        <xsl:value-of disable-output-escaping="yes" select="tabs" />
-        <div class="yui-content">
-        	<div class="toolbar" style="display: block; padding-bottom: 1em;">
+	<div id="tab-content">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+		<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+		<div id="{$location_id}">
+        	<div>
             	<div id="contract_selector">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
-			           <form action="{form_url}" method="post" style="float:left;">
+			           <form action="{form_url}" method="post">
 		           			<select name="contract_filter" onchange="this.form.submit()">
 		           				<xsl:choose>
 		           					<xsl:when test="//contract_filter = 'active'">
@@ -39,7 +40,7 @@
 			           			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_contracts')"/></em>
 			           		</xsl:when>
 			           		<xsl:otherwise>
-					             <form action="{form_url}" method="post" style="float: left;">
+					             <form action="{form_url}" method="post">
 						           	<xsl:for-each select="select">
 						           		<xsl:choose>
 							           		<xsl:when test="id = //selected_contract">
@@ -159,7 +160,7 @@
 											</li>
 											<li>
 												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
-												<form action="{form_url}" method="post" style="float:left;">
+												<form action="{form_url}" method="post">
 							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 							           				<br/>
 							           				<textarea name="contract_message" cols="80" rows="5">
