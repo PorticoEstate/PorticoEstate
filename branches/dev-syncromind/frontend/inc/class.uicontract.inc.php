@@ -22,6 +22,8 @@ class frontend_uicontract extends frontend_uifrontend
 	public function __construct()
 	{
 		parent::__construct();
+		
+		$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 //		$this->get_contracts_per_location();
 	}
 	
@@ -178,26 +180,28 @@ class frontend_uicontract extends frontend_uifrontend
 			$this->contract_state['contract'] = null;
 		}
 		
-		$data = array (
-			'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+		$data = array (			
 			'header' 		=>	$this->header_state,
-			'tabs' 			=> 	$this->tabs,
 			'contract_data' => 	array (
-				'select' => $contracts_for_selection, 
-				'selected_contract' =>  $this->contract_state['selected'], 
-				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
-				'party'	=> $party_array,
-				'composite' => $composite_array,
-				'contract_filter' => $this->contract_filter,
-				'form_url' => $this->form_url
+				'select'			=> $contracts_for_selection, 
+				'selected_contract' => $this->contract_state['selected'], 
+				'contract'			=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+				'party'				=> $party_array,
+				'composite'			=> $composite_array,
+				'location_id'		=> $this->location_id,
+				'contract_filter'	=> $this->contract_filter,
+				'form_url'			=> $this->form_url,
+				'tabs'				=> $this->tabs
 			)
 		);
-					
-		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
+
+		self::render_template_xsl(array( 'contract', 'frontend'), array('data' => $data));
 	}
 
-
+	
+	public function query() {}
+	
 	private function get_contracts_per_location()
 	{
 		$org_unit = $this->header_state['selected_org_unit'];
