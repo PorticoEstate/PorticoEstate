@@ -1,11 +1,12 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
-   	<div class="yui-navset" id="ticket_tabview">
-        <xsl:value-of disable-output-escaping="yes" select="tabs" />
-		<div class="yui-content">
+	<div id="tab-content">
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+		<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+		<div id="{$location_id}">
 		<xsl:variable name="unit_leader" select="//header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER"></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'">
-				<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
+				<div class="pure-u-1-3">
 					<xsl:choose>
 						<xsl:when test="number_of_delegates &lt; delegate_limit">
 							<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
@@ -48,7 +49,7 @@
 		
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
-			   			<div class="delegates" style=" float: left; padding-left: 2em; padding-top: 2em; width=70%; text-align: left;">
+			   			<div class="pure-u-1-3">
 							<h3><xsl:value-of select="php:function('lang', 'delegates_for_res_unit')"/> (<xsl:value-of select="number_of_delegates"/>)</h3>
 							<xsl:choose>
 						   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
@@ -83,7 +84,7 @@
 						</div>
 			   		</xsl:when>
 			   		<xsl:otherwise>
-			   			<div class="delegates" style="float: left; padding-left: 2em; padding-top: 2em; width=70%;">
+			   			<div class="pure-u-1-3">
 			   				<h3 style="color: red;"><xsl:value-of select="php:function('lang', 'deletage_to_all_res_units')"/></h3>
 			   			</div>
 			   		</xsl:otherwise>
@@ -91,14 +92,14 @@
 								
 			<xsl:choose>
 				<xsl:when test="normalize-space(//user_delegate) != ''">	       
-					<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
+					<div class="pure-u-1-3">
 						<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
 						<xsl:choose>
 					   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
 					   			 <em style="margin-left: 1em;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 					   		</xsl:when>
 							<xsl:otherwise>
-							 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
+							<xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
 								<ul>
 									<xsl:for-each select="user_delegate">
 										<li>
