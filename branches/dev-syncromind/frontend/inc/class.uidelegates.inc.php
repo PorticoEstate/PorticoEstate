@@ -13,6 +13,7 @@
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.delegates'), $GLOBALS['phpgw_info']['user']['account_id']);
+			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			parent::__construct();	
 		}
 		
@@ -168,7 +169,7 @@
 				}
 			}
 
-			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index', 'location_id' => $this->location_id));
 			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header_state['selected_org_unit']);
 			$delegates_per_user = frontend_bofrontend::get_delegates(null, true);
 			
@@ -177,30 +178,32 @@
 			
 			$config	= CreateObject('phpgwapi.config','frontend');
 			$config->read();
+			
 			$delegateLimit = $config->config_data['delegate_limit'];
 			if(!is_numeric($delegateLimit)) $delegateLimit = 3;
 			$error_message = lang('max_x_delegates',$delegateLimit);
 						
+			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$data = array (
 				'header' 		=>	$this->header_state,
-				'tabs' 			=> 	$this->tabs,
 				'delegate_data' => 	array (
-					'form_action' => $form_action,
-					'delegate' 	=> $delegates_per_org_unit,
-					'user_delegate' => $delegates_per_user,
-					'number_of_delegates' => isset($number_of_delegates) ? $number_of_delegates : 0 ,
-					'number_of_user_delegates' => isset($number_of_user_delegates) ? $number_of_user_delegates : 0 ,
-					'search'	=> isset($search) ? $search : array(),
-					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-					'delegate_limit' => $delegateLimit,
-					'error_message' => $error_message,
-				),
-				
+					'form_action'				=> $form_action,
+					'location_id'				=> $this->location_id,
+					'delegate'					=> $delegates_per_org_unit,
+					'user_delegate'				=> $delegates_per_user,
+					'number_of_delegates'		=> isset($number_of_delegates) ? $number_of_delegates : 0 ,
+					'number_of_user_delegates'  => isset($number_of_user_delegates) ? $number_of_user_delegates : 0 ,
+					'search'					=> isset($search) ? $search : array(),
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+					'delegate_limit'			=> $delegateLimit,
+					'error_message'				=> $error_message,
+					'tabs'						=> $this->tabs
+				)
 			);
 			
-			
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
+			self::render_template_xsl(array( 'delegate', 'frontend'), array('data' => $data));
 		}
 		
 		public function query() {}
