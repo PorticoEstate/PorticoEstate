@@ -433,9 +433,7 @@
 				}
 			}
 			
-			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-//                        echo $base_sql;exit();
-                        
+			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";                        
 			if ($results) 
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -443,6 +441,7 @@
 				$offset = ($start > 0) ?  'OFFSET ' . $start . ' ' : ' ';
 				$this->db->query($base_sql.$offset, __LINE__, __FILE__);
 			}
+            
 			$results = array();
 			while ($this->db->next_record())
 			{
@@ -510,7 +509,6 @@
     				}
     			}
 		    }
-
                     return array(
                             'total_records' => $total_records,
                             'results'		=> $results,
