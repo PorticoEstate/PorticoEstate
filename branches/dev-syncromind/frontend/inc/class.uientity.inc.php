@@ -380,25 +380,27 @@
 						'parameters'	=> json_encode($parameters)
 					);
 			}
-
+									
 			if ($category['start_ticket'])
 			{
 				$tabletools[] = array
 					(
 						'my_name'		=> 'edit',
 						'text'	 		=> lang('start ticket'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
-							'noframework'	=> 1,
-							'target'		=> '_tinybox',
-							'p_entity_id'	=> $this->entity_id,
-							'p_cat_id'		=> $this->cat_id,
-							'type'			=> $this->type,
-							'bypass'		=> true,
-							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
-						)),
-						'parameters'	=> json_encode($parameters2)
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+									'noframework'	=> 1,
+									'p_entity_id'	=> $this->entity_id,
+									'p_cat_id'		=> $this->cat_id,
+									'type'			=> $this->type,
+									'bypass'		=> true,
+									'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}"
+								)).";
+							var parameters = ".json_encode($parameters2).";
+							startTicket(oArgs, parameters);
+						"
 					);
 			}
 
