@@ -608,8 +608,7 @@
 			$activities = $activities['results'];
             
             self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking_massupdate.js');
-			echo "Step: " . $step . "<br />";
-            var_dump($booking);exit();
+
 			self::render_template('booking_massupdate',
 					array('booking' => $booking,
 						  'agegroups' => $agegroups,
