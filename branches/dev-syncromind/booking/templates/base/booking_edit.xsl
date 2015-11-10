@@ -73,11 +73,11 @@
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Season')"/></label>
-                                <div id="season_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
+                                <div id="season_container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Resources')"/></label>
-                                <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
+                                <div id="resources_container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                             </div>
                         </div>
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -96,7 +96,7 @@
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Group')"/></label>
-                                <div id="group_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
+                                <div id="group_container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_from"><xsl:value-of select="php:function('lang', 'From')"/></label>

@@ -1,8 +1,9 @@
 var building_id_selection;
-
+var organization_id_selection = "";
 $(document).ready(function(){
-//    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 'field_building_name', 'field_building_id', 'building_container');
-//    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uigroup.index&phpgw_return_as=json&', 'field_group_name', 'field_group_id', 'group_container');
+    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 'field_building_name', 'field_building_id', 'building_container');
+    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uigroup.index&phpgw_return_as=json&', 'field_group_name', 'field_group_id', 'group_container');
+    JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 'field_org_name', 'field_org_id', 'org_container');
 
     $("#field_activity").change(function(){
         var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
@@ -62,17 +63,31 @@ $(document).ready(function(){
 
 $(window).load(function(){
    var building_id =  $('#field_building_id').val();
+   var organization_id = $('#field_org_id').val();
    if (building_id) {
+       populateSelectSeason(building_id, season_id);
         populateTableChkResources(building_id, initialSelection);
         building_id_selection = building_id
    }
+   if (organization_id) {
+        populateSelectGroup(organization_id, group_id);
+        organization_id_selection = organization_id;
+    }
    $('#field_building_name').on("autocompleteselect", function(event, ui) {
       var building_id = ui.item.value;
       if (building_id != building_id_selection) {
+          populateSelectSeason(building_id, '');
             populateTableChkResources(building_id, []);
             building_id_selection = building_id;
       }
    });
+   $('#field_org_name').on('autocompleteselect', function(event, ui){
+       var organization_id = ui.item.value;
+       if (organization_id != organization_id_selection) {
+           populateSelectGroup(organization_id, '');
+           organization_id_selection = organization_id;
+       }
+    });
 });
 
 function populateTableChk (url, container, colDefs) {
@@ -86,7 +101,19 @@ function populateTableChkResources (building_id, selection) {
     populateTableChk(url, container, colDefsResources);
 }
 
+function populateSelectGroup (organization_id, selection) {
+    var url = 'index.php?menuaction=booking.uigroup.index&filter_organization_id=' + organization_id + '&phpgw_return_as=json';
+    var container = $('#group_container');
+    var attr = [{name: 'name',value: 'group_id'},{name: 'data-validation', value: 'required'}];
+    populateSelect(url, selection, container, attr);
+};
 
+function populateSelectSeason (building_id, selection) {
+    var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
+    var container = $('#season_container');
+    var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'}];
+    populateSelect(url, selection, container, attr);
+}
 //populateResourceTable = function(building_id, selection) {
 //    YAHOO.booking.checkboxTableHelper('resources_container', 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
 //    'resources[]', selection);

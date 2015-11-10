@@ -39,7 +39,7 @@
                     <label>
                         <xsl:value-of select="php:function('lang', 'Resources')" />
                     </label>
-                    <div id="resources-container" class="custom-container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                    <div id="resources-container" class="custom-container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                 </div>
                 <div class="pure-control-group">
                     <label for="status_field">

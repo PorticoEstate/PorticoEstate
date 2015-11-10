@@ -21,8 +21,8 @@
 			<dd><input name="title" type="text" value="{system_message/title}" /></dd>
 
 			<dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
-			<dd class="yui-skin-sam">
-			<textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
+			<dd class="yui-skin-sam" style="width:100%;max-width:500px;">
+                <textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
 			</dd>
 			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd><input name="name" type="text" value="{system_message/name}" /></dd>
@@ -49,7 +49,7 @@
 	</form>
 </div>
 
-<script type="text/javascript">
+<!--script type="text/javascript">
 <![CDATA[
 var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
     height: '300px',
@@ -72,6 +72,6 @@ var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
 });
 descEdit.render();
 ]]>
-</script>
+</script-->
 </xsl:template>
 

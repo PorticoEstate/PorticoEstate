@@ -139,7 +139,7 @@
                 </div>
                 <div class="pure-control-group">
                     <label style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Season')" /></label>
-                    <div id="season_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                    <div id="season_container" style="display:inline-block;"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
@@ -152,7 +152,7 @@
                 </div>
                 <div class="pure-control-group">
                     <label style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Resources')" /></label>
-                    <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                    <div id="resources_container" style="display:inline-block;"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                 </div>
             </div>
         </div>

@@ -125,7 +125,7 @@
                     </dd>
                     <dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
                     <dd>
-                        <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                        <div id="resources_container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                     </dd>
                 </dl>
             </div>

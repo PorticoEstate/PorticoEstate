@@ -26,7 +26,7 @@
 					</select>
 					<xsl:if test="count(booking/results) &gt; 0">
 						<div class="form-buttons">
-							<input type="submit" style="float: right;">
+							<input type="submit">
 							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Update')"/></xsl:attribute>
 							</input>
 						</div>
@@ -129,7 +129,7 @@
 						</dd>
 					</dl>
 					<div class="form-buttons">
-						<input type="submit" style="float: right;">
+						<input type="submit">
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Next')"/></xsl:attribute>
 						</input>
 					</div>

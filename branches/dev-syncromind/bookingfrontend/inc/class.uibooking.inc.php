@@ -123,6 +123,10 @@
             }
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                $_POST['from_'] = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : "";
+                $_POST['to_'] = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : "";
+                $_POST['repeat_until'] = ($_POST['repeat_until']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : "";
+                
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
 				if(strlen($_POST['from_']) < 6) 
@@ -225,12 +229,32 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			array_set_default($booking, 'resources', array());
+
+            $booking['from_'] = pretty_timestamp($booking['from_']);
+            $booking['to_'] = pretty_timestamp($booking['to_']);
+            $booking['repeat_until'] = pretty_timestamp($booking['repeat_until']);
+            
+            foreach($bookings['results'] as &$b)
+			{
+				$b['from_'] = pretty_timestamp($b['from_']);
+				$b['to_'] = pretty_timestamp($b['to_']);
+                $b['repeat_until'] = pretty_timestamp($b['repeat_until']);
+			}
+
+            if(!$activity_id)
+			{
+				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			}
+            $activity_path = $this->activity_bo->get_path($activity_id);
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+            
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=> $booking['building_id']));
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
+            $booking['audience_json'] = json_encode(array_map('intval',$booking['audience']));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
@@ -242,6 +266,11 @@
 			{
 				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
 			}
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+            $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+            $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+            
 			if ($step < 2) 
 			{
 				self::render_template('booking_new', array('booking' => $booking, 
@@ -606,6 +635,12 @@
 
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+            
+            foreach($booking['results'] as &$b)
+			{
+				$b['from_'] = pretty_timestamp($b['from_']);
+				$b['to_'] = pretty_timestamp($b['to_']);
+			}
             
             self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking_massupdate.js');
 

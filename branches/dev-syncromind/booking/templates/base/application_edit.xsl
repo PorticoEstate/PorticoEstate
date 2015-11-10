@@ -90,7 +90,7 @@
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
-                                <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+                                <div id="resources_container" style="display:inline-block;"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                             </div>
                         </div>
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">

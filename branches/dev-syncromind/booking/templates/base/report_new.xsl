@@ -136,7 +136,7 @@
 									</h4>
 								</label>
 								<div id="resources_container">
-									<xsl:value-of select="php:function('lang', 'Select a building first')" />
+									<span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span>
 								</div>
 							</div>
 						</div>
