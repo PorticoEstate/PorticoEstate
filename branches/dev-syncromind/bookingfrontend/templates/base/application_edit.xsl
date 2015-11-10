@@ -107,9 +107,9 @@
                                 <xsl:when test="position() > 1">
                                     <div class="date-container">
                                         <a href="javascript:void(0);" class="close-btn btnclose">-</a>
-                                        <dt><label for="start_date_{$index}"><xsl:value-of select="php:function('lang', 'From)" /></label></dt>
+                                        <dt><label for="start_date_{$index}"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
                                         <dd>
-                                            <input class="newaddedpicker datetime" id="start_date_{$index}" type="text" name="from[]">
+                                            <input class="newaddedpicker datetime" id="start_date_{$index}" type="text" name="from_[]">
                                                 <xsl:attribute name="value">
                                                     <xsl:value-of select="from_" />
                                                 </xsl:attribute>
@@ -117,7 +117,7 @@
                                         </dd>
                                         <dt><label for="end_date_{$index}"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
                                         <dd>
-                                            <input class="datepicker datetime" id="end_date_{$index}" type="text" name="to_[]">
+                                            <input class="newaddedpicker datetime" id="end_date_{$index}" type="text" name="to_[]">
                                                 <xsl:attribute name="value">
                                                     <xsl:value-of select="to_" />
                                                 </xsl:attribute>
@@ -136,7 +136,7 @@
                                                 </xsl:attribute>
                                             </input>
                                         </dd>
-                                        <dt><label for="end_date"><xsl:value-of select="php:function('lang', To)" /></label></dt>
+                                        <dt><label for="end_date"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
                                         <dd>
                                             <input class="datetime" id="end_date" type="text" name="to_[]">
                                                 <xsl:attribute name="value">
@@ -149,7 +149,7 @@
                             </xsl:choose>
                         </xsl:for-each>
                     </div>
-                    <dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+                    <dt><a href="javascript:void(0)" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
                 </dl>
             </div>
             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
