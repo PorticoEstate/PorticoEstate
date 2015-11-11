@@ -676,6 +676,7 @@ function createTable (d,u,c,r,cl,l) {
     tableBody.appendChild(tableBodyTr);
     xTable.appendChild(tableBody);
     
+    $("#"+d+" span.select_first_text").remove();
     $("#"+d+" table").remove();
     
     if (l) {
