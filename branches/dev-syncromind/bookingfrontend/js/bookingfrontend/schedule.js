@@ -5,8 +5,6 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
     while(date.getDay() != 1) {
         date.setDate(date.getDate()-1);
     }
-//    var container = document.getElementById(container);
-//    container.innerHTML = '';
     url += '&date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
 
     var lang = {
@@ -87,8 +85,6 @@ schedule.nextWeek = function () {
 
 
 schedule.newApplicationForm = function(date, _from, _to, resource) {
-//    console.log(arguments);
-//    console.log(arguments.length);
     var url = schedule.newApplicationUrl;
     if (!url){
         return;
