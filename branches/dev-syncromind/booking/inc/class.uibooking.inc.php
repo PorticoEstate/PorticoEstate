@@ -894,17 +894,20 @@
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
 			$booking['delete_link'] = self::link(array('menuaction' => 'booking.uibooking.delete', 'id' => $booking['id']));
 			$resource_ids = '';
-            
-                        $tabs = array();
-			$tabs['generic']	= array('label' => lang('Booking'), 'link' => '#booking');
-			$active_tab = 'generic';
-            
+
 			foreach($booking['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$booking['resource_ids'] = $resource_ids;
-                        $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+            if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend') {
+                $tabs = array();
+                $tabs['generic']	= array('label' => lang('Booking'), 'link' => '#booking');
+                $active_tab = 'generic';
+                $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            }
+
 			self::render_template_xsl('booking', array('booking' => $booking));
 		}
 
