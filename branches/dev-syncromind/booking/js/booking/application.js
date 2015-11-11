@@ -2,7 +2,7 @@ var building_id_selection = "";
 var regulations_select_all = "";
 
 $(document).ready(function() {
-    JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 
+    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
                                                   'field_building_name', 'field_building_id', 'building_container');
 
     $("#field_activity").change(function(){
@@ -13,7 +13,7 @@ $(document).ready(function() {
 		}
 
 		var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
-        var requestUrl = phpGWLink('index.php', oArgs, true);
+        var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
         $.ajax({
             type: 'POST',
@@ -215,7 +215,7 @@ if ($.formUtils) {
 
 function populateTableChkResources (building_id, selection) {
 	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort:'name', filter_building_id:building_id, sub_activity_id: $("#field_activity").val()};
-	var url = phpGWLink('index.php', oArgs, true);
+	var url = phpGWLink('bookingfrontend/', oArgs, true);
     var container = 'resources_container';
     var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableResources(url, container, colDefsResources);

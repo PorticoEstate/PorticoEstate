@@ -1,14 +1,14 @@
 var building_id_selection = "";
 $(document).ready(function() {
-    JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&', 
+    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
                                                   'field_building_name', 'field_building_id', 'building_container');
 
-    JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 
+    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uiorganization.index&phpgw_return_as=json&',
                                          'field_org_name', 'field_org_id', 'org_container');
 
     $("#field_activity").change(function(){
         var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
-        var requestUrl = phpGWLink('index.php', oArgs, true);
+        var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
         $.ajax({
             type: 'POST',

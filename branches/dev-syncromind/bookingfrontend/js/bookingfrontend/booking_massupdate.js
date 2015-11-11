@@ -3,7 +3,7 @@ $(window).load(function(){
     
     $("#field_activity").change(function(){
         var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
-        var requestUrl = phpGWLink('index.php', oArgs, true);
+        var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
         $.ajax({
             type: 'POST',
