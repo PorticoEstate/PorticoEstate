@@ -1,15 +1,47 @@
 <!-- $Id$ -->
 <xsl:template match="helpdesk" xmlns:php="http://php.net/xsl">
+	
     <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-    <div class="yui-navset" id="ticket_tabview">
-        <xsl:value-of disable-output-escaping="yes" select="tabs" />
-        <div class="yui-content">
+	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	
+	<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div id="{$location_id}">
         	<xsl:choose>
 				<xsl:when test="normalize-space(//header/selected_location) != ''">
 					<div class="toolbar-container">
-		                <div class="toolbar">
-		                    <xsl:apply-templates select="datatable/actions" />  
-		                </div>
+							<div>
+								<xsl:for-each select="filters">
+									<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+									<select id="{$name}" name="{$name}">
+										<xsl:for-each select="list">
+											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+											<xsl:choose>
+												<xsl:when test="id = 'NEW'">
+													<option value="{$id}" selected="selected">
+														<xsl:value-of select="name"/>
+													</option>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:choose>
+														<xsl:when test="selected = 'selected'">
+															<option value="{$id}" selected="selected">
+																<xsl:value-of select="name"/>
+															</option>
+														</xsl:when>
+														<xsl:otherwise>
+															<option value="{$id}">
+																<xsl:value-of select="name"/>
+															</option>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:for-each>
+									</select>									
+								</xsl:for-each>
+							</div>
 		            </div>
 		            <div class="tickets">
 		            	<table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -23,7 +55,18 @@
 					            </xsl:when>
 					        </xsl:choose>
 					    </table>
-		            	<xsl:apply-templates select="datatable" />
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
 		            </div>
 				</xsl:when>
 				<xsl:otherwise>
@@ -35,7 +78,28 @@
             
         </div>
     </div>
+	</form>
+	<script type="text/javascript" class="init">
 
+		<xsl:for-each select="filters">
+			<xsl:if test="type = 'filter'">
+				$('select#<xsl:value-of select="name"/>').change( function() 
+				{
+					<xsl:value-of select="extra"/>
+					filterData('<xsl:value-of select="name"/>', $(this).val());
+				});
+			</xsl:if>
+		</xsl:for-each>
+
+		<![CDATA[
+			function filterData(param, value)
+			{
+				oTable0.dataTableSettings[0]['ajax']['data'][param] = value;
+				oTable0.fnDraw();
+			}
+		]]>
+		
+	</script>
 </xsl:template>
 
 <xsl:template match="lightbox_name" xmlns:php="http://php.net/xsl">
