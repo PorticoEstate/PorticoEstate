@@ -794,3 +794,23 @@ JqueryPortico.booking.postToUrl = function(path, params, method) {
     document.body.appendChild(form);
     form.submit();
 };
+
+
+JqueryPortico.booking.inlineImages = function (container, url) {
+    container = document.getElementById(container);
+    $.get(url, function(data){
+        var dlImage = document.createElement('dl');
+        dlImage.setAttribute('class', 'proplist images');
+        var results = data.ResultSet.Result;
+        if (typeof results == 'object') {
+            $.each(results, function(i,v){
+                var imgEl = dlImage.appendChild(document.createElement('dd')).appendChild(document.createElement('img'));
+                var captionEl = dlImage.appendChild(document.createElement('dt'));
+                imgEl.setAttribute('src', v.src.replace(/&amp;/gi, '&'));
+                captionEl.appendChild(document.createTextNode(v.description));
+                container.appendChild(dlImage);
+
+            });
+        }
+    });
+}
