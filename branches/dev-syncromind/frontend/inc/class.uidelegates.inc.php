@@ -172,7 +172,7 @@
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index', 'location_id' => $this->location_id));
 			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header_state['selected_org_unit']);
 			$delegates_per_user = frontend_bofrontend::get_delegates(null, true);
-			
+	
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
 			
