@@ -5,7 +5,8 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
     while(date.getDay() != 1) {
         date.setDate(date.getDate()-1);
     }
-    url += '&date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	var datestr = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	url += '&date=' + datestr;
 
     var lang = {
             WEEKDAYS_FULL: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -30,7 +31,7 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
     }
     var r = [{n: 'ResultSet'},{n: 'Result'}];
 //    createta d u c r cl
-    createTableSchedule(container, url, colDefs, r, classTable, schedule.state);
+	createTableSchedule(container, url, colDefs, r, classTable, datestr);
 
 };
 
@@ -64,7 +65,7 @@ schedule.updateSchedule = function (date) {
     var url = self.location.href;
     url = url.substr(0, (url.indexOf("#date")));
     url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-    location.replace(url);
+	location.replace(url);
     schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.colFormatter, schedule.includeResource, classTable);
     schedule.date = date;
 }
