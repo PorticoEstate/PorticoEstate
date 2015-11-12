@@ -39,7 +39,8 @@
 
 		public function show()
 		{
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+			$resource['building'] = ExecMethod('booking.bobuilding.read_single', $resource['building_id']);
 			$resource['building_link']  = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => 'building'));
 			$resource['resources_link'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => 'resource'));
@@ -53,7 +54,7 @@
 
 		public function schedule()
 		{
-            $resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
+            $resource = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
             $building = $this->building_bo->read_single($resource['building_id']);
             $resource['deactivate_application'] = $building['deactivate_application'];
             if ($building['deactivate_application'] == 0) {

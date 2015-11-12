@@ -79,16 +79,27 @@
                     <dl class="proplist-col images">
                         <div id="images_container"></div>
                     </dl>
-                </div>
+ 					<dl class="proplist-col images">
+						<div id="images_container"></div>
+						<xsl:if test="street and normalize-space(street)">
+							<iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe><br />
+							<small><a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a></small>
+						</xsl:if>
+					</dl>
+               </div>
             </div>
+
             <script type="text/javascript">
                 var building_id = <xsl:value-of select="id"/>;
                 var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
+				var address = '<xsl:value-of select="street"/>, <xsl:value-of select="zip_code"/>, <xsl:value-of select="city"/>';
                 <![CDATA[
                 var resourcesURL = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
                 var documentURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&no_images=1&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
                 var building_usersURL = 'index.php?menuaction=bookingfrontend.uiorganization.building_users&sort=name&building_id=' + building_id + '&phpgw_return_as=json&';
                 var document_buildingURL = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+				var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
+				var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
                 ]]>
                 
                 var rResources = 'results';
@@ -105,6 +116,17 @@
                 createTable('resources_container', resourcesURL, colDefsResources, rResources);
                 createTable('documents_container', documentURL, colDefsDocument);
                 createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
+
+				$(window).load(function(){
+					// Load image
+					JqueryPortico.booking.inlineImages('images_container', document_buildingURL);
+
+					// Load Google map
+					if( iurl.length > 0 ) {
+						$("#googlemapiframe").attr("src", iurl);
+						$("#googlemaplink").attr("href", linkurl);
+					}
+				});
 /*
                 <![CDATA[
 

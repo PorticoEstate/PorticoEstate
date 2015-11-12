@@ -115,11 +115,11 @@
                                                     </xsl:otherwise>
                                                 </xsl:choose>
                                                 <div id="{img_container}"/>
-                                                <!--script type="text/javascript">
-                                                YAHOO.util.Event.addListener(window, "load", function() {
+                                                <script type="text/javascript">
+                                                $(window).load(function() {
                                                     JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
                                                 });
-                                                </script-->
+                                                </script>
                                             </dd>
                                             <xsl:if test="string-length(homepage) &gt; 1">
                                                 <dt><h4><xsl:value-of select="php:function('lang', 'Homepage')" /></h4></dt>
