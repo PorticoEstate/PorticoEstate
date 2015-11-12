@@ -1,10 +1,7 @@
 var building_id_selection = "";
 $(document).ready(function() {
-    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
-                                                  'field_building_name', 'field_building_id', 'building_container');
-
-    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uiorganization.index&phpgw_return_as=json&',
-                                         'field_org_name', 'field_org_id', 'org_container');
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true), 'field_building_name', 'field_building_id', 'building_container' );
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.index'}, true), 'field_org_name', 'field_org_id', 'org_container');
 
     $("#field_activity").change(function(){
         var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
@@ -146,7 +143,7 @@ $.formUtils.addValidator({
 });
 
 function populateTableChkResources (building_id, selection) {
-    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id}, true);
     var container = 'resources_container';
     var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableChk(url, container, colDefsResources);

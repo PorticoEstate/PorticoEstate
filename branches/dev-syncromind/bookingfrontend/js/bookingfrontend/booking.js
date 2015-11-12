@@ -1,9 +1,9 @@
 var building_id_selection;
 var organization_id_selection = "";
 $(document).ready(function(){
-    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 'field_building_name', 'field_building_id', 'building_container');
-    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uigroup.index&phpgw_return_as=json&', 'field_group_name', 'field_group_id', 'group_container');
-    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 'field_org_name', 'field_org_id', 'org_container');
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true), 'field_building_name', 'field_building_id', 'building_container');
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uigroup.index'}, true), 'field_group_name', 'field_group_id', 'group_container');
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'booking.uiorganization.index'}, true), 'field_org_name', 'field_org_id', 'org_container');
 
     $("#field_activity").change(function(){
         var oArgs = {menuaction:'bookingfrontend.uiapplication.get_activity_data', activity_id:$(this).val()};
@@ -95,21 +95,21 @@ function populateTableChk (url, container, colDefs) {
 }
 
 function populateTableChkResources (building_id, selection) {
-    var url = "index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=" +  building_id + "&phpgw_return_as=json&";
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: building_id}, true);
     var container = "resources_container";
     var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']},{key: 'type', label: lang['Resource Type']}];
     populateTableChk(url, container, colDefsResources);
 }
 
 function populateSelectGroup (organization_id, selection) {
-    var url = 'index.php?menuaction=booking.uigroup.index&filter_organization_id=' + organization_id + '&phpgw_return_as=json';
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uigroup.index', filter_organization_id: organization_id}, true);
     var container = $('#group_container');
     var attr = [{name: 'name',value: 'group_id'},{name: 'data-validation', value: 'required'}];
     populateSelect(url, selection, container, attr);
 };
 
 function populateSelectSeason (building_id, selection) {
-    var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uiseason.index', sort: 'name', filter_building_id: building_id}, true);
     var container = $('#season_container');
     var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'}];
     populateSelect(url, selection, container, attr);
