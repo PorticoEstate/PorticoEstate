@@ -314,10 +314,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         if (trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage']))) {
             $building['homepage'] = 'http://' . $building['homepage'];
         }
-        
-        self::add_stylesheet("bookingfrontend/css/bookingfrontend.css");
-        phpgwapi_jquery::load_widget("autocomplete");
-        phpgwapi_jquery::load_widget("datepicker");
+
         self::render_template_xsl('building', array("building" => $building));
     }
 

@@ -71,7 +71,7 @@
                     </xsl:if-->
                     <dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label></dt>
                     <dd>
-                        <table id="agegroup" class="pure-table">
+                        <table id="agegroup" class="pure-table pure-table-bordered">
                             <thead>
                                 <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
                                 <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>

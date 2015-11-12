@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div class="close"><a onclick="YAHOO.booking.closeOverlay(); return false" href=""><xsl:value-of select="php:function('lang', 'Close')"/></a></div>
+	<!--div class="close"><a onclick="YAHOO.booking.closeOverlay(); return false" href=""><xsl:value-of select="php:function('lang', 'Close')"/></a></div-->
 	<h3><xsl:value-of select="php:function('lang', 'Allocation')"/> #<xsl:value-of select="allocation/id"/></h3>
 	<dl>
 		<dt><xsl:value-of select="php:function('lang', 'Where')"/></dt>

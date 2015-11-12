@@ -175,7 +175,7 @@
                 <dl class="form-col">
                     <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
                     <dd>
-                        <table id="agegroup" class="pure-table">
+                        <table id="agegroup" class="pure-table pure-table-bordered">
                             <thead>
                                 <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
                                 <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>

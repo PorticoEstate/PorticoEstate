@@ -134,15 +134,15 @@
 				var eventParams = {};
 			</script>
 			<xsl:for-each select="application/dates">
-				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
-				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+				<dd><span style="font-weight:bold;"><xsl:value-of select="php:function('lang', 'From')" />: &nbsp;</span><span><xsl:value-of select="php:function('pretty_timestamp', from_)"/></span></dd>
+				<dd><span style="font-weight:bold;"><xsl:value-of select="php:function('lang', 'To')" />: &nbsp;</span><span><xsl:value-of select="php:function('pretty_timestamp', to_)"/></span></dd>
 				<xsl:if test="../edit_link">
 				<script type="text/javascript">
 					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
 				</script>
-				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+				<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 					<xsl:if test="not(../case_officer/is_current_user)">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>		
 					</xsl:if>
@@ -169,17 +169,21 @@
 			</dd>
             <dt><xsl:value-of select="php:function('lang', 'Number of participants')" /></dt>
 			<dd>
-				<table id="agegroup">
-					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
-					<xsl:for-each select="agegroups">
-						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-						<tr>
-							<th><xsl:value-of select="name"/></th>
-							<td><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></td>
-							<td><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></td>
-						</tr>
-					</xsl:for-each>
+				<table id="agegroup" class="pure-table pure-table-bordered">
+                    <thead>
+                        <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+                        <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
+                    </thead>
+                    <tbody>
+                        <xsl:for-each select="agegroups">
+                            <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+                            <tr>
+                                <th><xsl:value-of select="name"/></th>
+                                <td><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></td>
+                                <td><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></td>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
 				</table>
 			</dd>
         </dl>

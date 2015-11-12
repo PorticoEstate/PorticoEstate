@@ -704,9 +704,19 @@ div.info:hover {
 dd {margin-left: 0;}
 #dates-container {width: 18em;}
 
+.ui-widget-overlay {background-image: none;}
+
+#field_customer_ssn {display: block;}
+#field_customer_organization_number {display: block;}
+
 .pure-g [class*="pure-u"] {padding: 0;}
 .pure-g [class*="pure-u"] button,
 .pure-g [class*="pure-u"] input,
 .pure-g [class*="pure-u"] select,
 .pure-g [class*="pure-u"] textarea {max-width: 90%;}
 .pure-table {font-size: 12px;font-family: Arial,Helvetica,Verdana,sans-serif;}
+
+#frontend .pure-g dl.proplist-col main {width: 100%;}
+#frontend .pure-g dl.proplist-col.main {width: 100%;}
+#frontend .pure-g dl.proplist-col.images {margin: 0 auto;max-width: 300px;width: 90%;clear: none;float: none;}
+#frontend .pure-g dl.proplist.images dd img {width: 100%;}

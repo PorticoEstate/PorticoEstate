@@ -118,8 +118,12 @@
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
 				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
+                $booking['organization_id'] = $allocation['organization_id'];
+				$booking['organization_name'] = $allocation['organization_name'];
 			} else {
 				$season = $this->season_bo->read_single($_POST['season_id']);
+                $booking['organization_id'] = $_POST['organization_id'];
+				$booking['organization_name'] = $_POST['organization_name'];
             }
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -138,8 +142,8 @@
 					$booking['to_'] = join(" ",$date_to); 
 					$_POST['to_'] = join(" ",$date_to);
 				}				
-				$booking['building_name'] = $building['name'];
-				$booking['building_id'] = $building['id'];
+//				$booking['building_name'] = $building['name'];
+//				$booking['building_id'] = $building['id'];
 				$booking['active'] = '1';
 				$booking['cost'] = 0;
 				$booking['completed'] = '0';
@@ -259,7 +263,7 @@
 			$activities = $activities['results'];
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
-			$booking['organization_name'] = $allocation['organization_name'];
+//            $booking['organization_name'] = $allocation['organization_name'];
 			$resources_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
 			$res_names = array();
 			foreach($resources_full['results'] as $res)
@@ -298,9 +302,9 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => $_POST['repeat_until'],
-					'from_date' => $_POST['from_'],
-					'to_date' => $_POST['to_'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+					'from_date' => pretty_timestamp($_POST['from_']),
+					'to_date' => pretty_timestamp($_POST['to_']),
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups)
@@ -313,7 +317,11 @@
 			$step = 1;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+            
+            $activity_path = $this->activity_bo->get_path($booking['activity_id']);
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+            
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$building = $this->building_bo->read_single($booking['building_id']);
 

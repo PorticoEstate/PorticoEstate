@@ -71,7 +71,7 @@
 
     </div>
     <script type="text/javascript">
-        YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
+        var initialSelection = <xsl:value-of select="booking/resources_json"/>;
     </script>
 </xsl:template>
 <xsl:template name="xmlsource">

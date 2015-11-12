@@ -244,6 +244,8 @@
     </form>
     </div>
     <script type="text/javascript">
+        var season_id = '<xsl:value-of select="booking/season_id"/>';
+        var group_id = '<xsl:value-of select="booking/group_id"/>';
         var initialSelection = <xsl:value-of select="booking/resources_json" />;
         var initialAudience = <xsl:value-of select="booking/audience_json" />;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
