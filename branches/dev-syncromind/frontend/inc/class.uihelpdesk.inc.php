@@ -146,6 +146,20 @@
 					'parameters'	=> json_encode($parameters)
 				);
 			
+			$tabletools[] = array
+				(
+					'my_name'		=> 'new_ticket',
+					'text' 			=> lang('new_ticket'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+								'noframework'	=> 1
+							)).";
+						newTicket(oArgs);
+					"
+				);
+			
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
@@ -159,10 +173,10 @@
 				'tabletools' => $tabletools
 			);
 
-			$link =	$GLOBALS['phpgw']->link(
+			/*$link =	$GLOBALS['phpgw']->link(
 					'/index.php',
 					array('menuaction'	=> 'frontend.uihelpdesk.view'));
-			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";
+			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";*/
 			
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
@@ -172,28 +186,31 @@
 				'helpdesk' 		=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'	=> lang('add ticket')
 			);
-
+			
+			self::add_javascript('frontend', 'jquery', 'helpdesk.list.js');
 			self::render_template_xsl(array('helpdesk', 'datatable_inline', 'frontend'), array('data' => $data));
 		}
 		
 		public function query()
 		{
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$bo	= CreateObject('property.botts');
 			
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
 			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-
-			$bo->status_id = phpgw::get_var('status_id', 'string', 'REQUEST', 'all');
+			$status_id = phpgw::get_var('status_id', 'string', 'REQUEST', 'all');
 
 			$params = array(
 				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query'		 => $search['value'],
-				'order'		 => $columns[$order[0]['column']]['data'],
+				'order'		 => ($columns[$order[0]['column']]['data'] == 'subject') ? 'entry_date' : $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
-				'allrows'	 => phpgw::get_var('length', 'int') == -1
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
+				'status_id'	 => $status_id
 			);
 
 			if(isset($this->location_code) && $this->location_code != '')
@@ -574,6 +591,8 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
+			
+			//self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
 		}
 		
 
