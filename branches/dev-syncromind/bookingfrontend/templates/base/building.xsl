@@ -79,14 +79,21 @@
                     <dl class="proplist-col images">
                         <div id="images_container"></div>
                     </dl>
- 					<dl class="proplist-col images">
-						<div id="images_container"></div>
-						<xsl:if test="street and normalize-space(street)">
-							<iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe><br />
-							<small><a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a></small>
-						</xsl:if>
-					</dl>
                </div>
+            </div>
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-lg-1-2"></div>
+                <div class="pure-u-1 pure-u-lg-1-2">
+                    <dl class="proplist-col images map">
+                        <!--div id="images_container"></div-->
+                        <xsl:if test="street and normalize-space(street)">
+                            <div class="gmap-container">
+                                <iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe>
+                            </div>
+                            <small><a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a></small>
+                        </xsl:if>
+                    </dl>
+                </div>
             </div>
 
             <script type="text/javascript">

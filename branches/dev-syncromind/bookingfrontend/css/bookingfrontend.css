@@ -719,4 +719,7 @@ dd {margin-left: 0;}
 #frontend .pure-g dl.proplist-col main {width: 100%;}
 #frontend .pure-g dl.proplist-col.main {width: 100%;}
 #frontend .pure-g dl.proplist-col.images {margin: 0 auto;max-width: 300px;width: 90%;clear: none;float: none;}
+#frontend .pure-g dl.proplist-col.images.map {max-width: 500px;width: 100%;max-height: 300px;}
+    .gmap-container {position: relative;padding-bottom: 60%;height: 0;overflow: hidden;}
+    .gmap-container iframe {position: absolute;top: 0;left: 0;width: 100% !important;height: 100% !important;}
 #frontend .pure-g dl.proplist.images dd img {width: 100%;}
