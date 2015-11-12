@@ -39,13 +39,7 @@
                     <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')"/></label></dt>
                     <dd>
                         <input id="field_building_id" name="building_id" type="hidden" value="{booking/building_id}"/>
-                        <input id="field_building_name" name="building_name" type="text" value="{booking/building_name}" />
-                    </dd>
-                </dl>
-                <dl class="form-col">
-                    <dt><label for="field_season"><xsl:value-of select="php:function('lang', 'Season')"/></label></dt>
-                    <dd>
-                        <div id="season_container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
+                        <xsl:value-of select="booking/building_name" />
                     </dd>
                 </dl>
                 <dl class="form-col">
@@ -59,8 +53,7 @@
                 <dl class="form-col">
                     <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
                     <dd>
-                        <input id="field_org_id" name="organization_id" type="hidden" value="{booking/organization_id}" />
-                        <input id="field_org_name" name="organization_name" type="text" value="{booking/organization_name}" />
+                        <xsl:value-of select="booking/organization_name" />
                     </dd>
                 </dl>
                 <dl class="form-col">
@@ -244,8 +237,6 @@
     </form>
     </div>
     <script type="text/javascript">
-        var season_id = '<xsl:value-of select="booking/season_id"/>';
-        var group_id = '<xsl:value-of select="booking/group_id"/>';
         var initialSelection = <xsl:value-of select="booking/resources_json" />;
         var initialAudience = <xsl:value-of select="booking/audience_json" />;
         var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;

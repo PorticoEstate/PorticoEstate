@@ -182,32 +182,11 @@
                 <xsl:value-of select="php:function('lang', 'Cancel')"/>
             </a>
         </div>
-        
-
-        <!--dl class="form-col">
-                    
-                    
-                    
-                    
-                    
-        </dl>
-        <dl class="form-col">
-            
-                    
-        </dl>
-		<div style='clear:left; padding:0; margin:0'/>
-
-        <dl class="form-col">
-                    
-        </dl-->
-
-        
     </form>
     </div>
     <script type="text/javascript">
         var season_id = '<xsl:value-of select="booking/season_id" />';
         var group_id = '<xsl:value-of select="booking/group_id" />';
-        var initialSelection = '<xsl:value-of select="booking/resource_json" />';
     </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
