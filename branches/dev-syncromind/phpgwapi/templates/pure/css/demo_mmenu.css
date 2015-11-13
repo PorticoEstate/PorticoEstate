@@ -91,10 +91,8 @@ nav:not(.mm-menu)
 .header a
 {
 	background: center center no-repeat transparent;
-/*
 	background-image: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P//PwOtARMDHQBdLGFBYtMq3BiHT3DRPU4YR4NrNAmPJuHRJDyahEeT8Ii3BCDAAF0WBj5Er5idAAAAAElFTkSuQmCC );
-*/
-display: block;
+	display: block;
 	width: 40px;
 	height: 40px;
 	position: absolute;
@@ -109,12 +107,13 @@ display: block;
 /*
 	LAYOUT
 */
+/*
 #hamburger
 {
 	display: block;
 	width: 40px;
 	height: 36px;
-/*	margin: 20px;*/
+	margin: 20px;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -153,7 +152,7 @@ display: block;
 	}
 }
 
-/* Hamburger animation */
+ Hamburger animation 
 #hamburger:before,
 #hamburger:after,
 #hamburger span
@@ -176,4 +175,4 @@ html.mm-opening #hamburger:after
 {
 	transform: rotate( -45deg );
 	bottom: 15px;
-}
+}*/
