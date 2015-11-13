@@ -1,8 +1,10 @@
 <xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
 	<!-- <xsl:copy-of select="."/> -->
-    <div class="yui-navset" id="documents_tabview">
-    <xsl:value-of disable-output-escaping="yes" select="tabs" />
-        <div class="yui-content">
+	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	<div class="pure-form pure-form-aligned">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div id="{$location_id}">
         	<div class="toolbar-container">
 	        	<div class="toolbar" style="display: block; padding-bottom: 1em;">
 	            	<div id="contract_selector">
@@ -71,35 +73,20 @@
 			            </xsl:when>
 			        </xsl:choose>
 			    </table>
-			    <div id="paging_0"> </div>
-				<div id="datatable-container_0"></div>
-   	 			<xsl:apply-templates select="datatable" />
+				<xsl:for-each select="datatable_def">
+					<xsl:if test="container = 'datatable-container_0'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl' />
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+							<xsl:with-param name="tabletools" select ='tabletools' />
+							<xsl:with-param name="data" select ='data' />
+							<xsl:with-param name="config" select ='config' />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>	
 			</div>
         </div>
     </div>
-</xsl:template>
-
-<xsl:template name="datatable" match="datatable">
-	<!--  DATATABLE DEFINITIONS-->
-	<script type="text/javascript">
-		var property_js = <xsl:value-of select="property_js" />;
-		var datatable = new Array();
-		var myColumnDefs = new Array();
-
-		<xsl:for-each select="datatable">
-			datatable[<xsl:value-of select="name"/>] = [
-			{
-				values			:	<xsl:value-of select="values"/>,
-				total_records	: 	<xsl:value-of select="total_records"/>,
-				edit_action		:  	<xsl:value-of select="edit_action"/>,
-				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-				footer			:	<xsl:value-of select="footer"/>
-			}
-			]
-		</xsl:for-each>
-
-		<xsl:for-each select="myColumnDefs">
-			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-		</xsl:for-each>
-	</script>
+	</div>
 </xsl:template>
