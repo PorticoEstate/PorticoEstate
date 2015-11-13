@@ -75,15 +75,10 @@
                         <div id="documents_container"/>
                     </dl>
                 </div>
-                <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-u-1 pure-u-lg-1-2">
                     <dl class="proplist-col images">
                         <div id="images_container"></div>
                     </dl>
-               </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-lg-1-2"></div>
-                <div class="pure-u-1 pure-u-lg-1-2">
                     <dl class="proplist-col images map">
                         <!--div id="images_container"></div-->
                         <xsl:if test="street and normalize-space(street)">
@@ -93,9 +88,8 @@
                             <small><a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a></small>
                         </xsl:if>
                     </dl>
-                </div>
+               </div>
             </div>
-
             <script type="text/javascript">
                 var building_id = <xsl:value-of select="id"/>;
                 var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;

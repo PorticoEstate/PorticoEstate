@@ -1,21 +1,21 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--xsl:call-template name="yui_booking_i18n"/-->
-	<div id="content">
-		<ul class="pathway">
-			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
-			<li>
-				<a href="{resource/building_link}">
-					<xsl:value-of select="resource/building_name"/>
-				</a>
-			</li>
-			<li>
+    <!--xsl:call-template name="yui_booking_i18n"/-->
+    <div id="content">
+        <ul class="pathway">
+            <li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
+            <li>
+                <a href="{resource/building_link}">
+                    <xsl:value-of select="resource/building_name"/>
+                </a>
+            </li>
+            <li>
                 <xsl:value-of select="resource/name"/>
-			</li>
-		</ul>
-		<div>
-        	<button onclick="window.location.href='{resource/schedule_link}'"><xsl:value-of select="php:function('lang', 'Resource schedule')" /></button>
+            </li>
+        </ul>
+        <div>
+            <button onclick="window.location.href='{resource/schedule_link}'"><xsl:value-of select="php:function('lang', 'Resource schedule')" /></button>
             - Søk ledig tid/informasjon om hva som skjer
-		</div>
+        </div>
         <div class="pure-g">
             <div class="pure-u-1 pure-u-md-1-2">
                 <dl class="proplist-col main">
@@ -37,16 +37,11 @@
                     <div id="documents_container"/>
                 </dl>
             </div>
-            <div class="pure-u-1 pure-u-md-1-2">
+            <div class="pure-u-1 pure-u-lg-1-2">
                 <dl class="proplist-col images">
                     <div id="images_container">
                     </div>
                 </dl>
-           </div>
-        </div>        
-        <div class="pure-g">
-            <div class="pure-u-1 pure-u-lg-1-2"></div>
-            <div class="pure-u-1 pure-u-lg-1-2">
                 <dl class="proplist-col images map">
                     <!--div id="images_container"></div-->
                     <xsl:if test="resource/building/street and normalize-space(resource/building/street)">
@@ -56,32 +51,32 @@
                         <small><a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a></small>
                     </xsl:if>
                 </dl>
-            </div>
-        </div>        
-	</div>
-	<script type="text/javascript">        
-		var resource_id = <xsl:value-of select="resource/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
-		var address = '<xsl:value-of select="resource/building/street"/>, <xsl:value-of select="resource/building/zip_code"/>, <xsl:value-of select="resource/building/city"/>';
+           </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var resource_id = <xsl:value-of select="resource/id"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
+        var address = '<xsl:value-of select="resource/building/street"/>, <xsl:value-of select="resource/building/zip_code"/>, <xsl:value-of select="resource/building/city"/>';
 
         <![CDATA[
         var documentsResourceURL = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&no_images=1&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
         var documentsResourceImagesURL = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-		var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
-		var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
+        var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
+        var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
          ]]>
 
         var colDefsDocumentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 
         createTable('documents_container', documentsResourceURL, colDefsDocumentsResource);
         $(window).load(function(){
-			JqueryPortico.booking.inlineImages('images_container', documentsResourceImagesURL);
+            JqueryPortico.booking.inlineImages('images_container', documentsResourceImagesURL);
 
-			// Load Google map
-			if( iurl.length > 0 ) {
-				$("#googlemapiframe").attr("src", iurl);
-				$("#googlemaplink").attr("href", linkurl);
-			}
+            // Load Google map
+            if( iurl.length > 0 ) {
+                $("#googlemapiframe").attr("src", iurl);
+                $("#googlemaplink").attr("href", linkurl);
+            }
 
         });
 
@@ -98,5 +93,5 @@
     });
     ]]>
     */
-	</script>
+    </script>
 </xsl:template>
