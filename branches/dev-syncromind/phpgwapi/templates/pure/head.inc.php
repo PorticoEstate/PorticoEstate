@@ -18,15 +18,19 @@
 		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
 		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
 		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
-		$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
+		$javascripts[] = "/phpgwapi/js/jquery/mmenu/core/js/jquery.mmenu.min.all.js";
 		$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
 
-		$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css";
+		$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
 
+		$menu_stylesheet_widescreen = '';
+
+/*
 		$menu_stylesheet_widescreen = <<<HTML
 
-		<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+		<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/jquery/mmenu/extensions/css/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
 HTML;
+*/
 	}
 	else
 	{
@@ -51,6 +55,7 @@ HTML;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
