@@ -163,7 +163,7 @@
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
 
-				$log = "Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp\n";
+				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp\n";
 				$log .= $export_log;
 				$export_log = $log;			
 				
