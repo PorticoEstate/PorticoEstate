@@ -751,6 +751,13 @@
 			$this->flash_form_errors($errors);
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
+			if(!$activity_id)
+			{
+				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
+			}
+			$activity_path	 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
+			$filter_activity_top = 0;
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
@@ -758,15 +765,10 @@
 			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
+				$filter_activity_top = $top_level_activity > 0 ? $top_level_activity : 0;
 			}
-			if(!$activity_id)
-			{
-				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
-			}
-			$activity_path	 = $this->activity_bo->get_path($activity_id);
-			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
-                        array_set_default($application, 'activity_id', $activity_id);
-			$activities = $this->activity_bo->fetch_activities();
+			array_set_default($application, 'activity_id', $activity_id);
+			$activities = $this->activity_bo->fetch_activities($filter_activity_top);
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];

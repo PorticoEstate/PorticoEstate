@@ -26,7 +26,7 @@
 			}
 		}
 
-		function fetch_activities()
+		function fetch_activities($parent_id = 0)
 		{
 			$activities = $this->so->read(array());
 			$activities = $activities['results'];
@@ -45,6 +45,10 @@
 			$result = array();
 			foreach($children[null] as $child)
 			{
+				if($parent_id && $child['id'] != $parent_id)
+				{
+					continue;
+				}
 				$this->tree_walker($result, $children, '', $child);
 			}
 			usort($result, 'node_sort');
