@@ -88,6 +88,10 @@
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 $test = $this->bo->read_single($event['id']);
+                
+                $_POST['org_from'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_from']));
+                $_POST['org_to'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_to']));
+                
                 $event['from_'] = substr($_POST['org_from'],0,11).$_POST['from_'].":00";
                 $event['to_'] = substr($_POST['org_to'],0,11).$_POST['to_'].":00";
                 array_set_default($_POST, 'resources', array());
@@ -128,15 +132,28 @@
             self::add_javascript('bookingfrontend', 'bookingfrontend', 'event.js');
             $event['resources_json'] = json_encode(array_map('intval', $event['resources']));
             $event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=> $event['building_id'], 'date' => $date));
+            
+            $activity_path = $this->activity_bo->get_path($event['activity_id']);
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : .1;
+            
             $activities = $this->activity_bo->fetch_activities();
             $activities = $activities['results'];
             $comments = $this->bo->so->get_ordered_comments($id);
-            $agegroups = $this->agegroup_bo->fetch_age_groups();
+            $agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
             $agegroups = $agegroups['results'];
-            $audience = $this->audience_bo->fetch_target_audience();
+            $audience = $this->audience_bo->fetch_target_audience($top_level_activity);
             $audience = $audience['results'];
             $this->install_customer_identifier_ui($event);
             $this->add_template_helpers();
+            
+            $event['from_'] = pretty_timestamp($event['from_']);
+            $event['to_'] = pretty_timestamp($event['to_']);
+            $event['from_2'] = date("H:i", phpgwapi_datetime::date_to_timestamp($event['from_']));
+            $event['to_2'] = date("H:i", phpgwapi_datetime::date_to_timestamp($event['to_']));
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('from_', 'time');
+            $GLOBALS['phpgw']->jqcal->add_listener('to_', 'time');
+            phpgwapi_jquery::load_widget('datepicker');
 
             self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
         }
@@ -333,7 +350,11 @@
 			$step = 1;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$event = $this->bo->read_single($id);
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
+
+            $activity_path = $this->activity_bo->get_path($event['activity_id']);
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : .1;
+            
+            $agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 
 			$building_info = $this->bo->so->get_building_info($id);

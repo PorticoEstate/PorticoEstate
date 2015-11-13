@@ -709,7 +709,7 @@ dd {margin-left: 0;}
 #field_customer_ssn {display: block;}
 #field_customer_organization_number {display: block;}
 
-.pure-g [class*="pure-u"] {padding: 0;}
+.pure-g [class*="pure-u"] {padding: 0;font-family: verdana,​sans-serif;}
 .pure-g [class*="pure-u"] button,
 .pure-g [class*="pure-u"] input,
 .pure-g [class*="pure-u"] select,
