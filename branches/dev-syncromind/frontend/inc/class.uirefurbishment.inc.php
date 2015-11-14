@@ -51,7 +51,7 @@
 			$data = array
 			(
 				'header'	=> $this->header_state,
-				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id)
+				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'location_id' => $this->location_id)
 			);
 			
 			self::render_template_xsl(array('refurbishment', 'frontend'), array('data' => $data));
