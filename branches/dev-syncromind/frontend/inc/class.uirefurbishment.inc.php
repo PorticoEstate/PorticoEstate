@@ -43,18 +43,19 @@
 		public function __construct()
 		{
 			parent::__construct();
+			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 		}
 
 		public function index()
 		{
 			$data = array
 			(
-				'header' =>$this->header_state,
-				'tabs' => $this->tabs,
-				'refurbishment'      => lang('not_implemented')
+				'header'	=> $this->header_state,
+				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id)
 			);
 			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','refurbishment'));
+			self::render_template_xsl(array('refurbishment', 'frontend'), array('data' => $data));
 		}
+		
+		public function query() {}
     }
