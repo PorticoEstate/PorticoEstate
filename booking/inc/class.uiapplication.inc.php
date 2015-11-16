@@ -695,7 +695,7 @@
 			);
 			foreach($copy as $f)
 			{
-				$event[] = array($f, $application[$f]);
+				$event[] = array($f, htmlentities($application[$f]));
 			}
 			foreach($application['agegroups'] as $ag)
 			{
