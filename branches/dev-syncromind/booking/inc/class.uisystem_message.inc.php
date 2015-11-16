@@ -395,6 +395,7 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                $_POST['create'] = date("Y-m-d H.i:s", phpgwapi_datetime::date_to_timestamp($_POST['created']));
 				if($_POST['status'] == 'CLOSED') {
 					$system_message['status'] = 'CLOSED';
 					$receipt = $this->bo->update($system_message);
