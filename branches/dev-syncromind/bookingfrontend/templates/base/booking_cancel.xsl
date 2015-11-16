@@ -164,10 +164,10 @@
             </div>
         </div>
         <div class="pure-g">
-            <div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
+            <div class="pure-u-1 pure-u-lg-4-5">
                 <dl class="form-col">
                     <dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
-                    <dd class="yui-skin-sam">
+                    <dd>
                     <textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
                     </dd>
                 </dl>

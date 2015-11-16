@@ -120,7 +120,7 @@
                             <ul id="audience">
                                 <xsl:for-each select="audience">
                                     <li>
-                                        <input type="checkbox" name="audience[]">
+                                        <input type="radio" name="audience[]">
                                             <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
                                             <xsl:if test="../event/audience=id">
                                                 <xsl:attribute name="checked">checked</xsl:attribute>

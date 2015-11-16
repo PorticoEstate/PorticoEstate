@@ -69,7 +69,7 @@
 
             $currres = $event['resources'];
 
-//            list($event, $errors) = $this->extract_and_validate($event);
+            list($event, $errors) = $this->extract_and_validate($event);
 
             if ($event['customer_organization_number']) {
                 $orginfo = $this->bo->so->get_org($event['customer_organization_number']);
@@ -213,7 +213,7 @@
 
                     } else {
                         $errors['not_admin'] = lang("You can't cancel events");
-                    }
+            }
                 } else {
                     $errors['started'] = lang("You can't cancel event that has started, for help contacts site admin");
                 }
@@ -227,6 +227,11 @@
             $activities = $activities['results'];
             $this->install_customer_identifier_ui($event);
             $this->add_template_helpers();
+            
+            $event['from_'] = pretty_timestamp($event['from_']);
+            $event['to_'] = pretty_timestamp($event['to_']);
+            
+            phpgwapi_jquery::init_ckeditor('field-message');
 
             self::render_template('event_delete', array('event' => $event, 'activities' => $activities, 'can_delete_events' => $can_delete_events));
         }

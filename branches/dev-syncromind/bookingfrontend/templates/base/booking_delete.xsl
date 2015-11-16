@@ -153,10 +153,10 @@
             </div>
         </div>
         <div class="pure-g">
-            <div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
+            <div class="pure-u-1 pure-u-lg-4-5">
                 <dl class="form-col">
                     <dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
-                    <dd class="yui-skin-sam">
+                    <dd>
                         <textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
                     </dd>
                 </dl>
@@ -177,6 +177,7 @@
         var season_id = '<xsl:value-of select="booking/season_id" />';
         var group_id = '<xsl:value-of select="booking/group_id" />';
         var initialSelection = '<xsl:value-of select="booking/resource_json" />';
+        var lang = <xsl:value-of select="php:function(('js_lang', 'Resource Type')" />;
     </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';

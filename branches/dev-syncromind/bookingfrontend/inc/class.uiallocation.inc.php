@@ -110,6 +110,8 @@
                 $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
 
 //				$this->use_yui_editor();
+                
+                phpgwapi_jquery::init_ckeditor('field-message');
 				self::render_template('allocation_cancel', array('allocation'=>$allocation));
 
 			} else {
@@ -148,7 +150,6 @@
 
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
-                    
                     $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
                     $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
                     $_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
@@ -297,6 +298,7 @@
 	
 				if ($step < 2) 
 	            {
+                    phpgwapi_jquery::init_ckeditor('field-message');
 	    			self::render_template('allocation_delete', array('allocation' => $allocation,
 						'recurring' => $recurring,
 						'outseason' => $outseason,

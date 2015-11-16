@@ -16,6 +16,11 @@
 			parent::__construct();
             $this->module = "bookingfrontend";
 		}
+        
+        public function show() {
+            phpgwapi_jquery::init_ckeditor('field-message');
+            parent::show();
+        }
 		
 		public function edit()
 		{

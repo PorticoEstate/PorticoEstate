@@ -797,6 +797,8 @@
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id']));
 	
 //				$this->use_yui_editor();
+                
+                phpgwapi_jquery::init_ckeditor('field-message');
 				self::render_template('booking_cancel', array('booking'=>$booking));
 
 			} else {
@@ -1030,6 +1032,7 @@
                 
 				if ($step < 2) 
 	            {
+                    phpgwapi_jquery::init_ckeditor('field-message');
 	    			self::render_template('booking_delete', array('booking' => $booking,
 						'recurring' => $recurring,
 						'outseason' => $outseason,
