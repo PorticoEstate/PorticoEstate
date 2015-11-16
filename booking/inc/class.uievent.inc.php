@@ -368,7 +368,7 @@ class booking_uievent extends booking_uicommon
 					$_POST['contact_phone'] = $organization['contacts'][1]['phone'];
 				}
 			}
-			if (!$_POST['application_id'])
+			if (is_array($event['dates']))//(!$_POST['application_id'])
 			{
 				$temp_errors = array();
 				foreach( $event['dates'] as $checkdate)
