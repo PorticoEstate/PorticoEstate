@@ -15,7 +15,7 @@
 				alert('{browser_not_supported}');
 			}
 		</script>
-
+		{css}
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
@@ -38,8 +38,6 @@
 				background-color: #dadada !important;
 			}
 		</style>
-
-		{css}
 
 		<script type="text/javascript">
 		<!--

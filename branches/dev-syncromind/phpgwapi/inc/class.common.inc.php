@@ -596,7 +596,7 @@ HTML;
 		{
 			$tpl_dir = self::get_tpl_dir('phpgwapi');
 
-			$css_dir = "$tpl_dir/css";
+			$css_dir = "$tpl_dir/themes";
 
 			$list = array();
 			if ( !is_dir($css_dir) )
