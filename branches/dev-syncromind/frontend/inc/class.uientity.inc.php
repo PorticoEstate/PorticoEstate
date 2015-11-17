@@ -25,7 +25,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	phpgw::import_class('frontend.uifrontend');
+	phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Helpdesk
@@ -33,7 +33,7 @@
 	 * @package Frontend
 	 */
 
-	class frontend_uientity extends frontend_uifrontend
+	class frontend_uientity extends frontend_uicommon
 	{
 
 		public $public_functions = array
@@ -47,8 +47,9 @@
 
 		public function __construct()
 		{
+			parent::__construct();
+			
 			$GLOBALS['phpgw']->translation->add_app('property');
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			$location_info				= $GLOBALS['phpgw']->locations->get_name($this->location_id);
 			$this->acl_location			= $location_info['location'];
 			$location_arr				= explode('.', $this->acl_location);
@@ -101,7 +102,7 @@
 
 
 			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
-			parent::__construct();
+			
 			$this->location_code = $this->header_state['selected_location'];
 			$this->bo->location_code = $this->location_code;
 
@@ -477,7 +478,7 @@
 
 			$data = array(				
 				'header'			=> $this->header_state,
-				'entity'			=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
+				'entity'			=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'tabs_content' => $this->tabs_content, 'filters' => $filters, 'tab_selected' => $this->tab_selected, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'		=> lang('add ticket')
 			);
 			
@@ -501,7 +502,6 @@
 			$order	 = phpgw::get_var('order');
 			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$ordering = $columns[$order[0]['column']]['data'];
 			
 			if (!$order[0]['column'])
@@ -626,8 +626,6 @@
 			$bo	= & $this->bo;
 			$id = phpgw::get_var('id');
 			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'view' => true));
-
-//_debug_array($values);
 
 			$entity = $this->soadmin_entity->read_single($this->entity_id);
 			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
@@ -806,27 +804,19 @@
 							'origin_id'		=> $id,
 							'p_num'			=> $id
 						)),
-						'location_id'		=> $this->location_id,
+						'tab_selected'		=> $this->tab_selected,
 						'id'				=> $id,
 						'entity'			=> $entity,
 						'custom_attributes'	=> array('attributes' => $values['attributes']),
 						'location_data'		=> $location_data,
 						'integration'		=> $integration,
 						'msgbox_data'		=> isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
-						'tabs'				=> $this->tabs									
+						'tabs'				=> $this->tabs,
+						'tabs_content'		=> $this->tabs_content
 					)
 			);
 
-			/*$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-
-			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');*/
-			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');
-			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), array('data' => $data));
-			
-			/*$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));*/
+			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), array('data' => $data));			
 		}
 	}
