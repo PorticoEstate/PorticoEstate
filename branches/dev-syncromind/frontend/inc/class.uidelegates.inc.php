@@ -62,9 +62,8 @@
 			{
 				$account_id = phpgw::get_var('account_id');
 				$success = false;
-				if($use_fellesdata){
+				if($use_fellesdata && !empty($account_id)){
 					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-					
 					//Parameter to delegate access to only a single organisational unit
 					$org_unit_id = $this->header_state['selected_org_unit'];
 					$success = true;
@@ -182,7 +181,7 @@
 			if(!is_numeric($delegateLimit)) $delegateLimit = 3;
 			$error_message = lang('max_x_delegates',$delegateLimit);
 						
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			//$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
 			
 			$data = array (
