@@ -1,7 +1,7 @@
 <?php
-phpgw::import_class('frontend.uifrontend');
+phpgw::import_class('frontend.uicommon');
 
-class frontend_uidocumentupload extends frontend_uifrontend
+class frontend_uidocumentupload extends frontend_uicommon
 {
 	public static $ROOT_FOR_DOCUMENTS = '/frontend';
 	public static $HELP_DOCUMENTS = '/help';
@@ -54,6 +54,8 @@ class frontend_uidocumentupload extends frontend_uifrontend
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
 		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','documentupload'));
 	}
+	
+	public function query() {}
 	
 	public function store_doc_to_vfs($file)
 	{
