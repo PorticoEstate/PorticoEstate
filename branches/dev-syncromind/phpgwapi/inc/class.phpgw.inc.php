@@ -449,7 +449,11 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+                                if ($filtered) {
+                                    return $filtered;
+                                } else {
+                                    return $value;
+                                }
 						}
 						return (string) $default;
 
@@ -493,7 +497,11 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_URL);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+                                if ($filtered) {
+                                    return $filtered;
+                                } else {
+                                    return $value;
+                                }
 						}
 						return (string) $default;
 
