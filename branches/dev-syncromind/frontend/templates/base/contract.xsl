@@ -14,8 +14,8 @@
 	<div class="pure-form pure-form-aligned">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
-			<div id="{$location_id}">
+			<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+			<div id="{$tab_selected}">
 				<div class="pure-g">
 					<div class="pure-u-1">
 					    <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
@@ -185,6 +185,7 @@
 					</xsl:choose>
 				</div>
 			</div>
+			<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 		</div>
 	</div>
 </xsl:template>
