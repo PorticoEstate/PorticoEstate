@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Drawings
@@ -32,7 +32,7 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uidrawings extends frontend_uifrontend
+    class frontend_uidrawings extends frontend_uicommon
     {
 
         public $public_functions = array
@@ -45,7 +45,6 @@
 		{
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.drawings'));
 			parent::__construct();
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			$this->location_code = $this->header_state['selected_location'];
 		}
 
@@ -119,7 +118,7 @@
 			$data = array
 			(
 				'header'			=> $this->header_state,
-				'drawings' 			=> array('datatable_def'=>$datatable_def, 'tabs'=>$this->tabs, 'location_id'=>$this->location_id, 'msgbox_data'=>$GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)))
+				'drawings' 			=> array('datatable_def'=>$datatable_def, 'tabs'=>$this->tabs, 'tabs_content'=>$this->tabs_content, 'tab_selected'=>$this->tab_selected, 'msgbox_data'=>$GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)))
 			);
 			
 			self::render_template_xsl(array('drawings', 'datatable_inline', 'frontend'), array('data' => $data));
