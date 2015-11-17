@@ -417,7 +417,7 @@
 									'menuaction'	=> 'property.uientity.edit',
 									'location_id'	=> $this->location_id,
 									'lean'			=> true,
-									'noframework'	=> true
+									'noframework'	=> true								
 								)).";
 							var parameters = ".json_encode(array('parameter' => array(array('name'=> 'dummy', 'source' => 'id')))).";
 							addEntity(oArgs, parameters);
@@ -806,6 +806,7 @@
 						)),
 						'tab_selected'		=> $this->tab_selected,
 						'id'				=> $id,
+						'location_id'		=> $this->location_id,
 						'entity'			=> $entity,
 						'custom_attributes'	=> array('attributes' => $values['attributes']),
 						'location_data'		=> $location_data,
