@@ -1,12 +1,12 @@
 <?php
 
-phpgw::import_class('frontend.uifrontend');
+phpgw::import_class('frontend.uicommon');
 phpgw::import_class('rental.uicontract');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socomposite');
 phpgw::import_class('rental.soparty');
 
-class frontend_uicontract extends frontend_uifrontend
+class frontend_uicontract extends frontend_uicommon
 {
 
 	protected $contract_state_identifier;
@@ -22,12 +22,8 @@ class frontend_uicontract extends frontend_uifrontend
 	public function __construct()
 	{
 		parent::__construct();
-		
-		$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
-//		$this->get_contracts_per_location();
 	}
 	
-
 	/**
 	 * Show single contract details
 	 */
@@ -189,10 +185,11 @@ class frontend_uicontract extends frontend_uifrontend
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'party'				=> $party_array,
 				'composite'			=> $composite_array,
-				'location_id'		=> $this->location_id,
+				'tab_selected'		=> $this->tab_selected,
 				'contract_filter'	=> $this->contract_filter,
 				'form_url'			=> $this->form_url,
-				'tabs'				=> $this->tabs
+				'tabs'				=> $this->tabs,
+				'tabs_content'		=> $this->tabs_content
 			)
 		);
 
