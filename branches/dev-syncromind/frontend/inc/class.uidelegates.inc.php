@@ -1,7 +1,7 @@
 <?php
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
-	class frontend_uidelegates extends frontend_uifrontend
+	class frontend_uidelegates extends frontend_uicommon
 	{	
 		public $public_functions = array
 		(
@@ -13,7 +13,6 @@
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.delegates'), $GLOBALS['phpgw_info']['user']['account_id']);
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			parent::__construct();	
 		}
 		
@@ -190,7 +189,7 @@
 				'header' 		=>	$this->header_state,
 				'delegate_data' => 	array (
 					'form_action'				=> $form_action,
-					'location_id'				=> $this->location_id,
+					'tab_selected'				=> $this->tab_selected,
 					'delegate'					=> $delegates_per_org_unit,
 					'user_delegate'				=> $delegates_per_user,
 					'number_of_delegates'		=> isset($number_of_delegates) ? $number_of_delegates : 0 ,
@@ -199,7 +198,8 @@
 					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 					'delegate_limit'			=> $delegateLimit,
 					'error_message'				=> $error_message,
-					'tabs'						=> $this->tabs
+					'tabs'						=> $this->tabs,
+					'tabs_content'				=> $this->tabs_content
 				)
 			);
 			
