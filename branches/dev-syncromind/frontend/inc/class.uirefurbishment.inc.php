@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Refurbishment
@@ -32,7 +32,7 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uirefurbishment extends frontend_uifrontend
+    class frontend_uirefurbishment extends frontend_uicommon
     {
 
         public $public_functions = array
@@ -43,7 +43,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 		}
 
 		public function index()
@@ -51,7 +50,7 @@
 			$data = array
 			(
 				'header'	=> $this->header_state,
-				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'location_id' => $this->location_id)
+				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'tabs_content'=>$this->tabs_content, 'tab_selected'=>$this->tab_selected)
 			);
 			
 			self::render_template_xsl(array('refurbishment', 'frontend'), array('data' => $data));
