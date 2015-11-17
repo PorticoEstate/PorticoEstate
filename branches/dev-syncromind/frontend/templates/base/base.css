@@ -364,7 +364,7 @@ table#key_data td {
 .user_menu {
 	list-style:none;
 	height: 100%;
-	padding: 2px;
+	//padding: 2px;
 	border-style: none none none solid;
 	border-width: 1px;
 	border-color: grey;
@@ -420,12 +420,13 @@ a.header_link {
 	}
 	
 #logo_holder {
+	float: left;
 	border: 0 none;
-	font-family:Arial,sans-serif;
-font-size:65%;
-line-height:1.166;
-position: absolute;
-padding:2em;
+	//font-family:Arial,sans-serif;
+	font-size:65%;
+	line-height:1.166;
+	padding:2em;
+	position: absolute;
 }
 
 em#bold {
