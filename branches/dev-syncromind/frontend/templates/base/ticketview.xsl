@@ -13,12 +13,12 @@
     </table>
 
     <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	
 	<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div id="{$location_id}">
+			<div id="{$tab_selected}">
         		<ul style="margin: 2em;">
         			<li style="margin-bottom: 1em;">
         				<a href="{helpdesklist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show_all_tickets')"/></a>
@@ -81,6 +81,7 @@
         			</li>
         		</ul>
         	</div>
+			<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
         </div>
     </form>
 </xsl:template>
