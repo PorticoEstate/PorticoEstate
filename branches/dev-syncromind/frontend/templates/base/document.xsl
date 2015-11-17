@@ -1,10 +1,10 @@
 <xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
 	<!-- <xsl:copy-of select="."/> -->
-	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	<div class="pure-form pure-form-aligned">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div id="{$location_id}">
+			<div id="{$tab_selected}">
         	<div class="toolbar-container">
 	        	<div class="toolbar" style="display: block; padding-bottom: 1em;">
 	            	<div id="contract_selector">
@@ -87,6 +87,7 @@
 				</xsl:for-each>	
 			</div>
         </div>
+		<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
     </div>
 	</div>
 </xsl:template>
