@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
     phpgw::import_class('rental.uicontract');
     phpgw::import_class('rental.socontract');
     include_class('rental', 'document', 'inc/model/');
@@ -35,7 +35,7 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uicontract_documents extends frontend_uifrontend
+    class frontend_uicontract_documents extends frontend_uicommon
     {
 
         public $public_functions = array
@@ -45,12 +45,12 @@
 
 		public function __construct()
 		{
+			parent::__construct();
+			
 		    $this->contract_state_identifier_doc = "contract_state_in";
 		    $this->contracts_per_location_identifier_doc = "contracts_in_per_location";
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 		    $this->form_url_doc = $GLOBALS['phpgw']->link('/',array('menuaction' => 'frontend.uicontract_documents.index', 'location_id' => $this->location_id));
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.document.contracts'));
-			parent::__construct();
 			
 			$this->location_code = $this->header_state['selected_location'];
 //			$this->location_code = '1102-01';
@@ -190,7 +190,8 @@
     			'contract_data' => 	array (
 					'datatable_def'			=> $datatable_def, 
 					'tabs'					=> $this->tabs, 
-					'location_id'			=> $this->location_id,
+					'tabs_content'			=> $this->tabs_content,
+					'tab_selected'			=> $this->tab_selected,
 	    			'select'				=> $contracts_for_selection, 
 		    		'selected_contract'		=> $this->contract_state_doc['selected'],
 			    	'contract'				=> isset($this->contract_state_doc['contract']) ? $this->contract_state_doc['contract']->serialize() : array(),
