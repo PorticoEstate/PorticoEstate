@@ -266,6 +266,8 @@
             $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
             $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
             
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
+            
 			if ($step < 2) 
 			{
 				self::render_template('booking_new', array('booking' => $booking, 
@@ -353,7 +355,6 @@
 
 		public function edit()
 		{
-
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
@@ -477,6 +478,7 @@
 			if ($step < 2) {
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 				$booking['organization_name'] = $group['organization_name'];
+                $booking['organization_id'] = $group['organization_id'];
 			}
 
             $booking['from_'] = pretty_timestamp($booking['from_']);
@@ -507,6 +509,9 @@
             $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
             
             $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
+            
 			if ($step < 2) 
 			{
 				self::render_template('booking_edit', array('booking' => $booking, 
@@ -634,6 +639,8 @@
 			$activities = $activities['results'];
 
             self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking_massupdate.js');
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
 
 			self::render_template('booking_massupdate',
 					array('booking' => $booking,
@@ -792,6 +799,7 @@
                 $booking['to_'] = pretty_timestamp($booking['to_']);
                 
                 $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+                $booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
                 
 	            $this->flash_form_errors($errors);
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id']));

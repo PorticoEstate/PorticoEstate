@@ -7,7 +7,7 @@
     <xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-    <form action="" method="POST">
+    <form action="" method="POST" id="booking_form">
 		<input type="hidden" name="season_id" value="{booking/season_id}"/>
 		<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
 		<input type="hidden" name="step" value="1"/>
@@ -36,6 +36,9 @@
                     <dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
                     <dd>
                         <select name="activity_id" id="field_activity">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
                             <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                             <xsl:for-each select="activities">
                                 <option>
@@ -56,7 +59,11 @@
                 <dl class="form-col">
                     <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')"/></label></dt>
                     <dd>
-                        <input id="field_building_id" name="building_id" type="hidden" value="{booking/building_id}"/>
+                        <input id="field_building_id" name="building_id" type="hidden" value="{booking/building_id}">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                        </input>
                         <xsl:value-of select="booking/building_name"/>
                     </dd>
                 </dl>
@@ -71,7 +78,11 @@
                 <dl class="form-col">
                     <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
                     <dd>
-                        <input id="field_organization_id" name="organization_id" type="hidden" value="{booking/organization_id}"/>
+                        <input id="field_organization_id" name="organization_id" type="hidden" value="{booking/organization_id}">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                        </input>
                         <xsl:value-of select="booking/organization_name"/>
                     </dd>
                 </dl>
@@ -79,7 +90,10 @@
                     <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
                     <dd>
                         <select name="group_id">
-                                <option value=""><xsl:value-of select="php:function('lang', 'Select a group')"/></option>
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <option value=""><xsl:value-of select="php:function('lang', 'Select a group')"/></option>
                             <xsl:for-each select="groups">
                                 <option value="{id}">
                                     <xsl:if test="../booking/group_id = id">
@@ -95,6 +109,9 @@
                     <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')"/></label></dt>
                     <dd>
                         <input class="datetime" id="field_from" type="text" name="from_">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
                             <xsl:attribute name="value">
                                 <xsl:value-of select="booking/from_" />
                             </xsl:attribute>
@@ -110,6 +127,9 @@
                     <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')"/></label></dt>
                     <dd>
                         <input class="datetime" id="field_to" type="text" name="to_">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
                             <xsl:attribute name="value">
                                 <xsl:value-of select="booking/to_"/>
                             </xsl:attribute>
@@ -157,6 +177,7 @@
                 <dl class="form-col">
                     <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
                     <dd>
+                        <input type="hidden" data-validation="target_audience" />
                         <ul id="audience" style="list-style:none;padding-left:10px;">
                             <xsl:for-each select="audience">
                                 <li>
@@ -175,6 +196,7 @@
                 <dl class="form-col">
                     <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
                     <dd>
+                        <input type="hidden" data-validation="number_participants" />
                         <table id="agegroup" class="pure-table pure-table-bordered">
                             <thead>
                                 <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>

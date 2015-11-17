@@ -7,7 +7,7 @@
         <xsl:call-template name="msgbox"/>
         <!--xsl:call-template name="yui_booking_i18n"/-->
 
-        <form action="" method="POST">
+        <form action="" method="POST" id="event_form" name="event_form">
             <div class="pure-g">
                 <div class="pure-u-1">
                     <dl class="form-col">
@@ -15,6 +15,9 @@
                         <dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
                         <dd>
                             <select name="activity_id" id="field_activity">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                 <xsl:for-each select="activities">
                                     <option>
@@ -50,7 +53,12 @@
 
                         <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
                         <dd>
-                            <textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
+                            <textarea id="field_description" class="full-width" name="description">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
+                                <xsl:value-of select="event/description"/>
+                            </textarea>
                         </dd>
                     </dl>
                 </div>
@@ -63,9 +71,15 @@
                         <dd>
                             <div class="autocomplete">
                                 <input id="field_building_id" name="building_id" type="hidden">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_id"/></xsl:attribute>
                                 </input>
                                 <input id="field_building_name" name="building_name" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="event/building_name"/></xsl:attribute>
                                 </input>
                                 <div id="building_container"/>
@@ -90,6 +104,9 @@
                                 </input>
                             </div-->
                             <input class="datetime pure-input-2-3" id="from_" name="from_" type="text">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <xsl:if test="event/from_ != ''">
                                     <xsl:attribute name="value"><xsl:value-of select="event/from_2" /></xsl:attribute>
                                 </xsl:if>
@@ -105,6 +122,9 @@
                                 </input>
                             </div-->
                             <input class="datetime pure-input-2-3" id="to_" name="to_" type="text">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <xsl:if test="event/to_ != ''">
                                     <xsl:attribute name="value"><xsl:value-of select="event/to_2" /></xsl:attribute>
                                 </xsl:if>
@@ -117,6 +137,7 @@
                         <dt class="heading"><xsl:value-of select="php:function('lang', 'Who')" /></dt>
                         <dt><label><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
                         <dd>
+                            <input type="hidden" data-validation="target_audience" />
                             <ul id="audience">
                                 <xsl:for-each select="audience">
                                     <li>
@@ -133,6 +154,7 @@
                         </dd>
                         <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
                         <dd>
+                            <input type="hidden" data-validation="number_participants" />
                             <table id="agegroup" class="pure-table pure-table-bordered">
                                 <thead>
                                     <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
@@ -170,6 +192,9 @@
                         <dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
                         <dd>
                             <input id="field_contact_name" name="contact_name" type="text">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <xsl:attribute name="value"><xsl:value-of select="event/contact_name"/></xsl:attribute>
                             </input>
                         </dd>
@@ -188,6 +213,9 @@
                         <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
                         <dd>
                             <input id="field_cost" name="cost" type="text" readonly="readonly">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
                             </input>
                         </dd>

@@ -58,6 +58,37 @@ $(window).load(function(){
     });
 });
 
+$.formUtils.addValidator({
+    name: 'target_audience',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var n = 0;
+        $('#audience input[name="audience[]"]').each(function(){
+           if ($(this).is(':checked')) {
+               n++;
+           }
+        });
+        var v = (n > 0) ? true : false;
+        return v;
+    },
+    errorMessage: 'Please choose at least 1 target audience',
+    errorMessageKey: ''
+})
+
+$.formUtils.addValidator({
+    name: 'number_participants',
+    validatorFunction: function(value, $el, config, languaje, $form) {
+        var n = 0;
+        $('#agegroup_tbody input').each(function() {
+            if ($(this).val() != "" && $(this).val() > 0) {
+                n++;
+            } 
+        });
+        var v = (n > 0) ? true : false;
+        return v;
+    },
+    errorMessage: 'Number of participants is required',
+    errorMessageKey: ''
+});
 
 
 

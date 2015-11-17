@@ -28,14 +28,27 @@
                 <div class="pure-u-1 pure-u-md-1-3">
                     <dl class="form-col">
                         <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Group')" /></label></dt>
-                        <dd><input name="name" type="text" value="{group/name}" /></dd>
+                        <dd>
+                            <input name="name" type="text" value="{group/name}">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
+                            </input>
+                        </dd>
                         <dt><label for="field_shortname"><xsl:value-of select="php:function('lang', 'Group shortname')" /></label></dt>
                         <dd><input name="shortname" type="text" value="{group/shortname}" /></dd>
                         <dt><label for="field_organization"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
                         <dd>
                             <div class="autocomplete">
-                                <input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}"/>
+                                <input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                </input>
                                 <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:if test="group/organization_id">
                                         <xsl:attribute name='disabled'>disabled</xsl:attribute>
                                     </xsl:if>
@@ -81,6 +94,7 @@
                                 </select>
                             </dd>
                         </xsl:if>
+			<!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
                         <dt><label for="field_show_in_portal"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label></dt>
                         <dd>
                            <select id="field_show_in_portal" name="show_in_portal">
@@ -98,6 +112,7 @@
                                </option>
                            </select>
                         </dd>
+			<!--</xsl:if>-->
                     </dl>
                 </div>
             </div>
@@ -143,7 +158,6 @@
                     </dl>
                 </div>
             </div>
-
             <!--dl class="form-col">
             </dl-->
             <!--dl class="form-col"-->
@@ -152,11 +166,6 @@
             <!--/dl-->
 
             <!--div style='clear:left; padding:0; margin:0'/-->
-
-                    
-
-                    
-
             <div class="form-buttons">
                 <xsl:if test="not(group/id)"><input type="submit" value="{php:function('lang', 'Add')}"/></xsl:if>
                 <xsl:if test="group/id"><input type="submit" value="{php:function('lang', 'Save')}"/></xsl:if>

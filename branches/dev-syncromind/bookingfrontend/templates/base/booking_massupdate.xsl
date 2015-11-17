@@ -44,7 +44,7 @@
 					<xsl:value-of select="php:function('lang', 'Please update the data and click the Next-button.')" />&nbsp;
 					<xsl:value-of select="php:function('lang', 'When clicking the Next-button you will be presented to a list of bookings that will be updated.')" />
 				</p>
-				<form action="" method="POST">
+				<form action="" method="POST" name="booking_form" id="booking_form">
 					<input type="hidden" name="season_id" value="{booking/season_id}"/>
 					<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
 					<input type="hidden" name="step" value="1"/>
@@ -52,6 +52,9 @@
 						<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 						<dd>
 							<select name="activity_id" id="field_activity">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
 								<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
 								<xsl:for-each select="activities">
 									<option>
@@ -67,7 +70,10 @@
 						<dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
 						<dd>
 							<select name="group_id">
-									<option value=""><xsl:value-of select="php:function('lang', 'Select a group')"/></option>
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
+                                <option value=""><xsl:value-of select="php:function('lang', 'Select a group')"/></option>
 								<xsl:for-each select="groups">
 									<option value="{id}">
 										<xsl:if test="../booking/group_id = id">
@@ -82,6 +88,7 @@
 					<dl class="form-col">
 						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 						<dd>
+                            <input type="hidden" data-validation="target_audience" />
 							<ul id="audience" style="list-style:none;padding-left:10px;">
 								<xsl:for-each select="audience">
 									<li>
@@ -100,6 +107,7 @@
 					<dl class="form-col">
 						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
 						<dd>
+                            <input type="hidden" data-validation="number_participants" />
 							<table id="agegroup" class="pure-table pure-table-bordered">
                                 <thead>
                                     <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>

@@ -20,7 +20,13 @@
             <div class="pure-u-1">
                 <dl class="form-col">
                     <dt><label for="field_title"><xsl:value-of select="php:function('lang', 'Title')" /></label></dt>
-                    <dd><input name="title" type="text" value="{system_message/title}" /></dd>
+                    <dd>
+                        <input name="title" type="text" value="{system_message/title}">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                        </input>
+                    </dd>
                 </dl>
             </div>
         </div>
@@ -30,7 +36,12 @@
                 <dl class="form-col">
                     <dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
                     <dd>
-                        <textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
+                        <textarea id="field-message" name="message" type="text">
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:value-of select="system_message/message"/>
+                        </textarea>
                     </dd>
                 </dl>
             </div>
@@ -40,7 +51,13 @@
             <div class="pure-u-1">
                 <dl class="form-col">
                     <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
-                    <dd><input name="name" type="text" value="{system_message/name}" /></dd>
+                    <dd>
+                        <input name="name" type="text" value="{system_message/name}" >
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                        </input>
+                    </dd>
                     <dt><label for="field_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
                     <dd><input name="phone" type="text" value="{system_message/phone}" /></dd>
                     <dt><label for="field_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>

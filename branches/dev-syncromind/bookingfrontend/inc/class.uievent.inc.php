@@ -154,6 +154,8 @@
             $GLOBALS['phpgw']->jqcal->add_listener('from_', 'time');
             $GLOBALS['phpgw']->jqcal->add_listener('to_', 'time');
             phpgwapi_jquery::load_widget('datepicker');
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'event_form');
 
             self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
         }
@@ -357,7 +359,7 @@
 			$event = $this->bo->read_single($id);
 
             $activity_path = $this->activity_bo->get_path($event['activity_id']);
-            $top_level_activity = $activity_path ? $activity_path[0]['id'] : .1;
+            $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
             
             $agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];

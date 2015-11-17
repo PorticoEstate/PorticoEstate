@@ -43,11 +43,17 @@
                         <dd>
                             <xsl:if test="currentapp = 'booking'">
                                 <input id="inputs" name="name" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
                                 </input>
                             </xsl:if>
                             <xsl:if test="currentapp != 'booking'">
                                 <input id="inputs" name="name" readonly="true" type="text">
+                                    <xsl:attribute name="data-validation">
+                                        <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
                                 </input>
                             </xsl:if>
@@ -184,6 +190,9 @@
                         <dt style="margin-top: 40px;"><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
                         <dd>
                             <select name="activity_id" id="field_activity">
+                                <xsl:attribute name="data-validation">
+                                    <xsl:text>required</xsl:text>
+                                </xsl:attribute>
                                 <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                 <xsl:for-each select="activities">
                                     <option>

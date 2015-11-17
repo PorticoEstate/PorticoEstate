@@ -37,10 +37,10 @@
 			{
 				$system_message = array_merge($system_message, extract_values($_POST, array('time', 'title', 'message', 'name', 'phone', 'email')));
 
-				if ($system_message['message'] == '') {
+				if ($system_message['title'] == '') {
 					$errors['system_message'] = lang('Missing title');
 				} 
-				elseif ($system_message['title'] == '') {
+				elseif ($system_message['message'] == '') {
 					$errors['system_message'] = lang('Missing message');
 				} 
 				elseif ($system_message['name'] == '') {
