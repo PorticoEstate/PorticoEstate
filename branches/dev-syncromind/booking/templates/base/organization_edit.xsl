@@ -96,7 +96,7 @@
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_email"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-                                <input id="field_email" name="email" type="text" class="pure-u-1" data-validation="email">
+                                <input id="field_email" name="email" type="text" class="pure-u-1">
                                     <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>									
                                 </input>
                             </div>
@@ -181,6 +181,9 @@
                                 <div class="pure-control-group pure-u-sm-1-1 pure-u-md-2-3 pure-u-lg-1-2">
                                     <label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
                                     <select name="activity_id" id="field_activity" class="pure-u-2-3">
+                                        <xsl:attribute name="data-validation">
+                                            <xsl:text>required</xsl:text>
+                                        </xsl:attribute>
                                         <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                         <xsl:for-each select="activities">
                                             <option>

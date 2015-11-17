@@ -811,11 +811,11 @@
                 $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                 
                 self::add_javascript('booking', 'booking', 'application.js');
-                
-                phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
             } else {
                 self::add_javascript('bookingfrontend', 'bookingfrontend', 'application.js');
             }
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
 
 			self::adddatetimepicker();
 
@@ -878,7 +878,6 @@
                         
 			$this->flash_form_errors($errors);
                         $this->set_case_officer($application);
-			self::add_javascript('booking', 'booking', 'application.js');
 			self::adddatetimepicker();
 			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
@@ -903,9 +902,13 @@
                 $tabs = array();
                 $tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
                 $active_tab = 'generic';
+                self::add_javascript('booking', 'booking', 'application.js');
                 $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-                $application['validator'] = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
+            } else {
+                self::add_javascript('bookingfrontend', 'bookingfrontend', 'application.js');
             }
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'application_form');
 
 			self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
