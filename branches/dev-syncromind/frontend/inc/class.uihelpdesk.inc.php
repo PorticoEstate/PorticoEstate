@@ -25,7 +25,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	phpgw::import_class('frontend.uifrontend');
+	phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Helpdesk
@@ -33,7 +33,7 @@
 	 * @package Frontend
 	 */
 
-	class frontend_uihelpdesk extends frontend_uifrontend
+	class frontend_uihelpdesk extends frontend_uicommon
 	{
 
 		public $public_functions = array
@@ -47,8 +47,9 @@
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'));
-			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
+
 			parent::__construct();
+			
 			$this->location_code = $this->header_state['selected_location'];
 			$GLOBALS['phpgw']->translation->add_app('property');
 		}
@@ -183,7 +184,7 @@
 			
 			$data = array(
 				'header' 		=> $this->header_state,
-				'helpdesk' 		=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'filters' => $filters, 'location_id' => $this->location_id, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
+				'helpdesk' 		=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'tabs_content' => $this->tabs_content, 'filters' => $filters, 'tab_selected' => $this->tab_selected, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'	=> lang('add ticket')
 			);
 			
@@ -352,32 +353,6 @@
 				}
 			}
 
-			/*
-			foreach($history as $story)
-			{
-				
-				 // String search for filtering out ticket history. If the status contains e.g. "Budget changed"
-				 // the history bullet will not be incuded in the ticket history shown to frontend users.
-				 
-				if(
-					(	
-						strpos($story['value_action'],'Budget changed') === false && 
-						strpos($story['value_action'],'Priority changed') === false &&
-						strpos($story['value_action'],'actual cost changed') === false &&
-						strpos($story['value_action'],'Billable hours changed') === false
-					)
-				)
-				{
-					$tickethistory[] = array(
-						'date' => $story['value_date'],
-						'user' => $story['value_user'],
-						'action'=> $story['value_action'],
-						'new_value' => $story['value_new_value'],
-						'old_value' => $story['value_old_value']
-					);
-				}
-			}*/
-
 			usort($tickethistory, array($this, "cmp"));
 
 
@@ -404,7 +379,8 @@
 					'ticket'        => $ticket,
 					'tickethistory'	=> $tickethistory2,
 					'tabs'			=> $this->tabs,
-					'location_id'	=> $this->location_id
+					'tabs_content'	=> $this->tabs_content,
+					'tab_selected'	=> $this->tab_selected
 				)
 			);
 			
