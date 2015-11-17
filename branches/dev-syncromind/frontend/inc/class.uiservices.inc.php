@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Services
@@ -32,7 +32,7 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uiservices extends frontend_uifrontend
+    class frontend_uiservices extends frontend_uicommon
     {
 
         public $public_functions = array
@@ -57,4 +57,6 @@
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
         	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','services'));
 		}
+		
+		public function query() {}
     }
