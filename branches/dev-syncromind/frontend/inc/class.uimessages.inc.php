@@ -1,7 +1,7 @@
 <?php
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
-	class frontend_uimessages extends frontend_uifrontend
+	class frontend_uimessages extends frontend_uicommon
 	{	
 		public $public_functions = array
 		(
@@ -61,4 +61,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','messages'));
 			
 		}
+		
+		public function query() {}
 	}
