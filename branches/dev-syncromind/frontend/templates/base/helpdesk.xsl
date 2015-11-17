@@ -2,12 +2,12 @@
 <xsl:template match="helpdesk" xmlns:php="http://php.net/xsl">
 	
     <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-	<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
+	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	
 	<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div id="{$location_id}">
+			<div id="{$tab_selected}">
         	<xsl:choose>
 				<xsl:when test="normalize-space(//header/selected_location) != ''">
 					<div class="toolbar-container">
@@ -75,8 +75,8 @@
 		            </div>
 				</xsl:otherwise>
 			</xsl:choose>
-            
         </div>
+		<xsl:value-of disable-output-escaping="yes" select="tabs_content" />	
     </div>
 	</form>
 	<script type="text/javascript" class="init">
