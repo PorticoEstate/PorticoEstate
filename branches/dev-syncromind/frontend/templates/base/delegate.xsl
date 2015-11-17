@@ -2,8 +2,8 @@
 	<div class="pure-form pure-form-stacked">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:variable name="location_id"><xsl:value-of select="location_id"/></xsl:variable>
-			<div id="{$location_id}">
+			<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+			<div id="{$tab_selected}">
 				<xsl:variable name="unit_leader" select="//header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER"></xsl:variable>
 				<xsl:choose>
 					<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'">
@@ -113,6 +113,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</div>
+			<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 		</div>	
 	</div>
 </xsl:template>
