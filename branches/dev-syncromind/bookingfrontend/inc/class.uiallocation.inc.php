@@ -126,8 +126,7 @@
 				$allocation = $this->bo->read_single($id);
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	    		$season = $this->season_bo->read_single($allocation['season_id']);
-				$step = phpgw::get_var('step', 'string', 'POST');
-	        	if (! isset($step)) $step = 1;
+				$step = phpgw::get_var('step', 'string', 'REQUEST', 1);
 	            $errors = array();
 				$invalid_dates = array();
 				$valid_dates = array();

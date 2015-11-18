@@ -104,8 +104,7 @@
 			$time_from = explode(" ",phpgw::get_var('from_', 'string'));
 			$time_to = explode(" ",phpgw::get_var('to_', 'string'));
 
-			$step = phpgw::get_var('step', 'string', 'POST');
-			if (! isset($step)) $step = 1;
+			$step = phpgw::get_var('step', 'string', 'REQUEST', 1);
 			$invalid_dates = array();
 			$valid_dates = array();
 
@@ -363,7 +362,7 @@
 			$errors = array();
 			$update_count = 0;
 			$today = getdate();
-			$step = intval(phpgw::get_var('step', 'int'));
+			$step = phpgw::get_var('step', 'int');
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
