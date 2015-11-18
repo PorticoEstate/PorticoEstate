@@ -57,7 +57,7 @@
 
 			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
 
-	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
+	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'int')));
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -116,17 +116,17 @@
 
 			} else {
 
-				$id = intval(phpgw::get_var('allocation_id', 'GET'));
-                $from_date = phpgw::get_var('from_', 'GET');
-                $to_date = phpgw::get_var('to_', 'GET');
-				$outseason = phpgw::get_var('outseason', 'GET');
-				$recurring = phpgw::get_var('recurring', 'GET');
-				$repeat_until = phpgw::get_var('repeat_until', 'GET');
-				$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
+				$id = phpgw::get_var('allocation_id', 'int');
+                $from_date = phpgw::get_var('from_', 'string');
+                $to_date = phpgw::get_var('to_', 'string');
+				$outseason = phpgw::get_var('outseason', 'string');
+				$recurring = phpgw::get_var('recurring', 'string');
+				$repeat_until = phpgw::get_var('repeat_until', 'string');
+				$field_interval = phpgw::get_var('field_interval', 'int');
 				$allocation = $this->bo->read_single($id);
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	    		$season = $this->season_bo->read_single($allocation['season_id']);
-				$step = phpgw::get_var('step', 'str', 'POST');
+				$step = phpgw::get_var('step', 'string', 'POST');
 	        	if (! isset($step)) $step = 1;
 	            $errors = array();
 				$invalid_dates = array();
@@ -249,9 +249,9 @@
 						if ($step == 3) 
 						{
                             $maildata = array();
-                            $maildata['outseason'] = phpgw::get_var('outseason','GET');
-                            $maildata['recurring'] = phpgw::get_var('recurring', 'GET');		
-                            $maildata['repeat_until'] = phpgw::get_var('repeat_until', 'GET');	
+                            $maildata['outseason'] = phpgw::get_var('outseason','string');
+                            $maildata['recurring'] = phpgw::get_var('recurring', 'string');
+                            $maildata['repeat_until'] = phpgw::get_var('repeat_until', 'string');
 							$maildata['delete'] = $valid_dates;
 
 							$res_names = '';
@@ -342,7 +342,7 @@
                 $user_can_delete_allocations = 2;
             }
 
-			$allocation = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$allocation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$allocation['resources']), 'sort'=>'name'));
 			$allocation['resources'] = $resources['results'];
 			$res_names = array();
@@ -350,7 +350,7 @@
 			{
 				$res_names[] = $res['name'];
 			}
-			$allocation['resource'] = phpgw::get_var('resource', 'GET');
+			$allocation['resource'] = phpgw::get_var('resource');
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $allocation['organization_id']));

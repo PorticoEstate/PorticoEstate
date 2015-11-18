@@ -25,7 +25,7 @@
         }
         public function index_json()
         {   
-			if ($id = intval(phpgw::get_var('id', 'GET'))) {
+			if ($id = phpgw::get_var('id', 'int')) {
 				$person = $this->bo->read_single($id);
 				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
 			}

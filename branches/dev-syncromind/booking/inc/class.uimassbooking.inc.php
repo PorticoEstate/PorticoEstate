@@ -118,8 +118,8 @@
 
 		public function schedule()
 		{
-			$backend = phpgw::get_var('backend', 'GET');
-			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uimassbooking");
+			$backend = phpgw::get_var('backend', 'bool', 'GET');
+			$building = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), "booking.uimassbooking");
 			$building['application_link'] = self::link(array(
 				'menuaction' => 'booking.uiallocation.add', 
 				'building_id' => $building['id'], 
@@ -130,9 +130,9 @@
 				'building_id' => $building['id'], 
 				'phpgw_return_as' => 'json',
 			));
-			if ($backend == 'true')
+			if ($backend)
 			{
-				$building['date'] = phpgw::get_var('date', 'GET');
+				$building['date'] = phpgw::get_var('date', 'string', 'GET');
 			}
                         
                         $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');

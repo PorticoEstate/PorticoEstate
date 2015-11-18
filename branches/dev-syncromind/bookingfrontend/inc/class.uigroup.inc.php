@@ -19,7 +19,7 @@
 		
 		public function show()
 		{
-			$group = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$group = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
 			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit', 'id' => $group['id']));

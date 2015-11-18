@@ -304,8 +304,8 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
     public function schedule()
     {
-        $backend = phpgw::get_var('backend', 'GET');
-        $building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
+        $backend = phpgw::get_var('backend', 'bool','GET');
+        $building = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), 'bookingfrontend.uibuilding');
         if ($building['deactivate_application'] == 0) {
             $building['application_link'] = self::link(array(
                 'menuaction' => 'bookingfrontend.uiapplication.add',
@@ -328,8 +328,8 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
         // the schedule can also be used from backend
         // if so we want to change default date shown in the calendar
-        if ($backend == 'true') {
-            $building['date'] = phpgw::get_var('date', 'GET');
+        if ($backend) {
+            $building['date'] = phpgw::get_var('date', 'string',  'GET');
         }
 
         self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
@@ -342,8 +342,8 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
     public function extraschedule()
     {
-        $backend = phpgw::get_var('backend', 'GET');
-        $building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
+        $backend = phpgw::get_var('backend', 'bool', 'GET');
+        $building = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), 'bookingfrontend.uibuilding');
         $building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule', 'id' => $building['id']));
         $building['datasource_url'] = self::link(array(
             'menuaction' => 'bookingfrontend.uibooking.building_extraschedule',
@@ -353,8 +353,8 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
         // the schedule can also be used from backend
         // if so we want to change default date shown in the calendar
-        if ($backend == 'true') {
-            $building['date'] = phpgw::get_var('date', 'GET');
+        if ($backend) {
+            $building['date'] = phpgw::get_var('date', 'string', 'GET');
         }
         $building['deactivate_application'] = 1;
         self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
@@ -366,7 +366,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
     public function show()
     {
         $this->check_active('booking.uibuilding.show');
-        $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+        $building = $this->bo->read_single(phpgw::get_var('id', 'int','GET'));
         $building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
         $building['extra_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule', 'id' => $building['id']));
         $building['message_link'] = self::link(array('menuaction' => 'bookingfrontend.uisystem_message.edit', 'building_id' => $building['id'], 'building_name' => $building['name']));

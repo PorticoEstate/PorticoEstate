@@ -23,7 +23,7 @@
 		
         public function edit()
         {
-            $id = intval(phpgw::get_var('id', 'GET'));
+            $id = phpgw::get_var('id', 'int');
             $event = $this->bo->read_single($id);
             $building_info = $this->bo->so->get_building_info($id);
             $event['building_id'] = $building_info['id'];
@@ -165,7 +165,7 @@
             $config	= CreateObject('phpgwapi.config','booking');
             $config->read();
 
-            $event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+            $event = $this->bo->read_single(phpgw::get_var('id', 'int'));
             $bouser = CreateObject('bookingfrontend.bouser');
             $errors = array();
 
@@ -317,7 +317,7 @@
             } else {
                 $user_can_delete_bookings = 1;
             }
-            $event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+            $event = $this->bo->read_single(phpgw::get_var('id', 'int'));
             unset($event['comments']);
             $resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$event['resources']), 'sort'=>'name'));
             if ($event['customer_organization_number'] != '')
@@ -355,7 +355,7 @@
         public function report_numbers()
 		{
 			$step = 1;
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$event = $this->bo->read_single($id);
 
             $activity_path = $this->activity_bo->get_path($event['activity_id']);
@@ -367,7 +367,7 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$building = $this->building_bo->read_single($building_info['id']);
 
-			if ($event['secret'] != phpgw::get_var('secret', 'GET'))
+			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
 				self::render_template('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
@@ -382,7 +382,7 @@
 				foreach($sexes as $sex)
 				{
 					$i = 0;
-					foreach(phpgw::get_var($sex, 'POST') as $agegroup_id => $value)
+					foreach(phpgw::get_var($sex) as $agegroup_id => $value)
 					{
 						$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
 						$temp_agegroup[$i][$sex] = $value;

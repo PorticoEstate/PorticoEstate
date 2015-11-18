@@ -25,8 +25,8 @@
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'search.js');
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-			$searchterm = trim(phpgw::get_var('searchterm', 'string', null));
-			$type = phpgw::get_var('type','string', 'GET', null);
+			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
+			$type = phpgw::get_var('type','string', 'REQUEST', null);
 			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
 

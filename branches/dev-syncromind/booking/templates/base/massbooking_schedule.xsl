@@ -110,7 +110,7 @@
                 YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
         });
         */
-        <xsl:if test="backend = 'true'">
+        <xsl:if test="backend = '1'">
             $('#header').hide();
                 /*YAHOO.util.Dom.setStyle(('header'), 'display', 'none');*/
         </xsl:if>

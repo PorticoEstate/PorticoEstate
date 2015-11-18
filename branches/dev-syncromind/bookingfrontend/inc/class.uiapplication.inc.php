@@ -18,10 +18,10 @@
 
 		function show()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 
-			if($application['secret'] != phpgw::get_var('secret', 'GET'))
+			if($application['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}

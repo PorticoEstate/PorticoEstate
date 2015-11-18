@@ -29,7 +29,7 @@
         }
 		public function edit()
 		{
-			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
 			if (isset($organization['permission']['write']))
 			{
@@ -43,7 +43,7 @@
 		
 		public function show()
 		{
-			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "organization"));
