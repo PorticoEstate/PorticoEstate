@@ -836,7 +836,7 @@
 			{
 				return array(
 					'components' => null,
-					'summary' => $this->get_summary($values),
+					'summary' => $this->get_summary($values, $user_id),
 					'location_filter' => $location_filter
 				);
 			}
@@ -1134,7 +1134,7 @@
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
 		}
 
-		private function get_summary($data)
+		private function get_summary($data, $user_id)
 		{
 
 
@@ -1174,15 +1174,25 @@
 				);
 
 
+
+			$grand_total_count = 0;
+			$grand_total_billable_hours = 0;
+
 			foreach($data as $entry)
 			{
 
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
+					if($user_id && $user_id != $entry[$_month]['info']['assigned_to'])
+					{
+						continue;
+					}
 					if(isset($entry[$_month]['status']))
 					{
 						$summary[$entry[$_month]['status']][$_month]['count'] +=1;
 						$summary[$entry[$_month]['status']][$_month]['billable_hours'] += $entry[$_month]['info']['billable_hours'];
+						$grand_total_count +=1;
+						$grand_total_billable_hours += $entry[$_month]['info']['billable_hours'];
 					}
 
 				}
@@ -1271,6 +1281,7 @@ HTML;
 			Totalt
 		</td>
 		<td>
+			{$grand_total_count}</br>{$grand_total_billable_hours}
 		</td>
 HTML;
  			foreach($fields as $field)

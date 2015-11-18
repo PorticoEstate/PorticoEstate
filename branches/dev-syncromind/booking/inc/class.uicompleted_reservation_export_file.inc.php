@@ -162,7 +162,8 @@ phpgw::import_class('booking.uicommon');
 					'label' => lang('Download'), 
 					'href' => $this->link_to('download', array('id' => $export_file['id']))
 				);
-                if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'] and !empty($export_file['log_filename'])) {
+                if ($export_file['total_items'] > 0 and !empty($export_file['log_filename'])) //and $export_file['id'] > $config->config_data['invoice_last_id'] )
+				{
     				$export_file['log'] = array(
 	    				'label' => lang('log'), 
 	    				'href' => $this->link_to('log', array('id' => $export_file['id']))

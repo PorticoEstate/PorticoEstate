@@ -826,14 +826,18 @@
 			}
 
 			$case_id = phpgw::get_var('case_id');
-			$check_list_id = phpgw::get_var('check_list_id');
-				
-			$status = $this->so->delete($case_id);
+
+			$case = $this->so->get_single($case_id);
+			$case->set_status(controller_check_item_case::STATUS_CLOSED);
+
+			$status = false;
+			if($this->so->store($case))
+			{
+				$status = $this->so->delete($case_id);
+			}
 		
 			if($status)
 			{
-
-
 				return json_encode( array( "status" => "deleted" ) );
 			}
 			else
@@ -850,7 +854,6 @@
 			}
 
 			$case_id = phpgw::get_var('case_id');
-			$check_list_id = phpgw::get_var('check_list_id');
 				
 			$case = $this->so->get_single($case_id);
 			$case->set_status(controller_check_item_case::STATUS_CLOSED);

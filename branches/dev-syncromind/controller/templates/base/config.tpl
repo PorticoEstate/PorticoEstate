@@ -52,15 +52,23 @@
 				</select>
 			</td>
 		</tr>
-
 		<tr class="row_off">
+			<td>{lang_control_mandatory_location}</td>
+			<td>
+				<select name="newsettings[control_mandatory_location]">
+					<option value="" {selected_control_mandatory_location_}>{lang_no}</option>
+					<option value="1" {selected_control_mandatory_location_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_on">
 			<td>{lang_document_category}:</td>
 			<td>
-	    	<!--to be able to blank the setting - need an empty value-->
-	    	<input type = 'hidden' name="newsettings[document_cat][]" value="">
-		     <table>
-{hook_document_cat}
-			 </table>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[document_cat][]" value="">
+				<table>
+					{hook_document_cat}
+				</table>
 			</td>
 		</tr>
 

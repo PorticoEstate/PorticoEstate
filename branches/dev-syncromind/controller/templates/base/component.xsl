@@ -252,6 +252,7 @@
 		{
 			$("#receipt").html('');
 
+			var report_type = $("#report_type").val();
 			var user_id = $("#user_id").val();
 			var custom_frontend = $("[name='custom_frontend']").val();
 
@@ -284,6 +285,17 @@
 				$("[for='all_items']").show();
 				$( "#org_unit_id" ).show();
 				$("[for='org_unit_id']").show();
+				$("[name='user_only']").show();
+				$("[for='user_only']").show();
+			}
+
+			if(report_type == 'summary')
+			{
+				$("[name='user_only']").hide();
+				$("[for='user_only']").hide();
+			}
+			else
+			{
 				$("[name='user_only']").show();
 				$("[for='user_only']").show();
 			}
