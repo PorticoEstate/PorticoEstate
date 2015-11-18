@@ -187,7 +187,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['id']));
@@ -229,7 +229,7 @@
 		
 		public function show()
 		{
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$resource = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit', 'id' => $resource['id']));
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -254,7 +254,7 @@
 
 		public function schedule()
 		{
-			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'booking.uibuilding', 'booking.uiresource');
+			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'int'), 'booking.uibuilding', 'booking.uiresource');
                         $resource['application_link'] = self::link(array(
 				'menuaction' => 'booking.uiapplication.add', 
 				'building_id' => $resource['building_id'], 

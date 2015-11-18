@@ -130,7 +130,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$activity = $this->bo->read_single($id);
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
 			$activities = $this->bo->fetch_activities();

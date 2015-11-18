@@ -577,14 +577,14 @@ HTML;
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$to		 = phpgw::get_var('to', 'POST');
-				$from	 = phpgw::get_var('from', 'POST');
+				$to		 = phpgw::get_var('to', 'string');
+				$from	 = phpgw::get_var('from', 'string');
 
 				$to_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
 				$from_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
 
-				$output_type	 = phpgw::get_var('otype', 'POST');
-				$building_list	 = phpgw::get_var('building', 'POST');
+				$output_type	 = phpgw::get_var('otype', 'string');
+				$building_list	 = phpgw::get_var('building');
 
 				if(!count($building_list))
 				{
@@ -643,15 +643,15 @@ HTML;
 			$show = '';
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$to		 = phpgw::get_var('to', 'POST');
-				$from	 = phpgw::get_var('from', 'POST');
+				$to		 = phpgw::get_var('to', 'string');
+				$from	 = phpgw::get_var('from', 'string');
 
 				$to_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
 				$from_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
 
 				$show		 = 'report';
 				$allocations = $this->get_free_allocations(
-				phpgw::get_var('building', 'POST'), $from_, $to_, phpgw::get_var('weekdays', 'POST')
+				phpgw::get_var('building'), $from_, $to_, phpgw::get_var('weekdays')
 				);
 
 				$counter = 0;

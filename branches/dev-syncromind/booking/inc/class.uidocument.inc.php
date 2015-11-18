@@ -117,12 +117,12 @@
 		
 		public function get_inline_params()
 		{
-			return array('filter_owner_id' => intval(phpgw::get_var('filter_owner_id', 'any', false)));
+			return array('filter_owner_id' => phpgw::get_var('filter_owner_id', 'int'));
 		}
 		
 		public function is_inline()
 		{
-			return false != phpgw::get_var('filter_owner_id', 'any', false);
+			return false != phpgw::get_var('filter_owner_id', 'int', 'REQUEST', false);
 		}
 		
 		public static function generate_inline_link($documentOwnerType, $documentOwnerId, $action)
@@ -306,7 +306,7 @@
 		
 		public function show()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
 			self::render_template('document', array('document' => $document));
@@ -361,7 +361,7 @@
 		
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$document = $this->bo->read_single($id);        
             
 			$errors = array();
@@ -400,7 +400,7 @@
 		
 		public function download()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			
 			$document = $this->bo->read_single($id);
 			
@@ -409,7 +409,7 @@
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			
 			$this->redirect_to_parent_if_inline();

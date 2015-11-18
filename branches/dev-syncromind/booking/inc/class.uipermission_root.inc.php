@@ -175,7 +175,7 @@
 		
 		// public function show()
 		// {
-		// 	$id = intval(phpgw::get_var('id', 'GET'));
+		// 	$id = (phpgw::get_var('id', 'int');
 		// 	$permission = $this->bo->read_single($id);
 		// 	$this->add_default_display_data($permission);
 		// 	self::render_template('permission_root', array('permission' => $permission));
@@ -217,7 +217,7 @@
 		
 		// public function edit()
 		// {
-		// 	$id = intval(phpgw::get_var('id', 'GET'));
+		// 	$id = phpgw::get_var('id', 'int');
 		// 	$permission = $this->bo->read_single($id);
 		// 	
 		// 	$errors = array();
@@ -243,7 +243,7 @@
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			$this->redirect($this->generate_link_params('index'));
 		}

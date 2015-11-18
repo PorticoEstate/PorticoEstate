@@ -171,15 +171,15 @@
             } else {
 	            unset($filters['building_name']);                
             }
-            $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
+            $testdata2 =  phpgw::get_var('type', 'string', 'REQUEST');
             if ($testdata2 != '') {
-	            $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
+	            $filters['type'] = phpgw::get_var('type', 'string', 'REQUEST');
             } else {
 	            unset($filters['type']);
             }
-            $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
+            $testdata2 =  phpgw::get_var('status', 'string', 'REQUEST');
             if ($testdata2 != '') {
-	            $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
+	            $filters['status'] = phpgw::get_var('status', 'string', 'REQUEST');
             } else {
 	            unset($filters['status']);
             }
@@ -261,15 +261,15 @@
             } else {
 	            unset($filters['building_name']);                
             }
-            $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
+            $testdata2 =  phpgw::get_var('type', 'string', 'REQUEST');
             if ($testdata2 != '') {
-	            $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
+	            $filters['type'] = phpgw::get_var('type', 'string', 'REQUEST');
             } else {
 	            unset($filters['type']);
             }
-            $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
+            $testdata2 =  phpgw::get_var('status', 'string', 'REQUEST');
             if ($testdata2 != '') {
-	            $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
+	            $filters['status'] = phpgw::get_var('status', 'string', 'REQUEST');
             } else {
 	            unset($filters['status']);
             }
@@ -322,7 +322,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 
 			if ($id)
 			{
@@ -335,7 +335,7 @@
 				date_default_timezone_set("Europe/Oslo");
 				$date = new DateTime(phpgw::get_var('date'));
 				$system_message = array();
-				$system_message['building_id'] = intval(phpgw::get_var('building_id', 'GET'));
+				$system_message['building_id'] = phpgw::get_var('building_id', 'int');
 				$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 				$system_message['created'] =  $date->format('Y-m-d  H:m');
 				$system_message['cancel_link'] = self::link(array('menuaction' => 'booking.uisystem_message.index'));
@@ -386,9 +386,9 @@
 		
 		public function show()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 
-			$system_message = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$system_message = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$system_message['system_messages_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));
 			$system_message['system_message_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.show', 'id' => $system_message['system_message_id']));
 			$system_message['back_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));

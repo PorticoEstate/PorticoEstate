@@ -135,7 +135,7 @@ phpgw::import_class('booking.uicommon');
 		
 		public function show()
 		{
-			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 			//$this->add_default_display_data($account_code_set);
@@ -152,7 +152,7 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		public function edit() {
-			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 			

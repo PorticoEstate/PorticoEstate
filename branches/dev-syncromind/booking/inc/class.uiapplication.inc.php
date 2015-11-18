@@ -647,7 +647,7 @@
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-                                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
+                                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'int'))));
 
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
@@ -711,13 +711,13 @@
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
-			if(phpgw::get_var('resource', 'GET') == 'null')
+			if(phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))
 			{			
                                 array_set_default($application, 'resources', array());
 			}
 			else 
 			{
-                                $resources = explode(",",phpgw::get_var('resource', 'GET'));
+                                $resources = explode(",",phpgw::get_var('resource'));
 								if($resources)
 								{
 									$resources_id = $resources[0];
@@ -728,9 +728,9 @@
 								array_set_default($application, 'resources', $resources);
 
 			}
-			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
+			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'int'));
 
-			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
+			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'string'));
 			
 			if (strstr($application['building_name'],"%")){
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
@@ -738,9 +738,9 @@
 				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 			}
                         
-			if(phpgw::get_var('from_', 'GET'))
+			if(phpgw::get_var('from_', 'string'))
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', '', 'GET'), phpgw::get_var('to_', '', 'GET'));
+				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
 			else
 			{
@@ -764,7 +764,7 @@
 			}
 			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
-				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
+				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'int')));
 				$filter_activity_top = $top_level_activity > 0 ? $top_level_activity : 0;
 			}
 			array_set_default($application, 'activity_id', $activity_id);
@@ -824,7 +824,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 			$activity_path	 = $this->activity_bo->get_path($application['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
@@ -978,7 +978,7 @@
                         $config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 			$application_text = $config->config_data;
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 
 			$activity_path	 = $this->activity_bo->get_path($application['activity_id']);

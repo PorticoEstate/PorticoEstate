@@ -168,7 +168,7 @@
 		{
 			$errors = array();
 			$audience = array();
-			$activity_id = phpgw::get_var('activity_id', int, 'POST');
+			$activity_id = phpgw::get_var('activity_id', 'int', 'POST');
 			$activities	 = $this->activity_bo->get_top_level($activity_id);
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -197,7 +197,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$audience = $this->bo->read_single($id);
 			$activities		 = $this->activity_bo->get_top_level($audience['activity_id']);
 
@@ -233,7 +233,7 @@
 		
 		public function show()
 		{
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$resource = $this->bo->read_single(phpgw::get_var('id', 'int'));
 					$lang['title'] = lang('New audience');
 					$lang['name'] = lang('Name');
 					$lang['description'] = lang('Description');

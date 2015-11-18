@@ -362,7 +362,7 @@ phpgw::import_class('booking.uicommon');
 		
 		public function show()
 		{
-			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$export = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$this->add_default_display_data($export);
 			$this->add_template_file('helpers');
 			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));

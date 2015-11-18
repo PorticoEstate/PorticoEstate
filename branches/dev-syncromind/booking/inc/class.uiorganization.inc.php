@@ -250,7 +250,7 @@
 
 		public function edit()
 		{	
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$organization = $this->bo->read_single($id);
 			$organization['id'] = $id;
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
@@ -306,7 +306,7 @@
 		
 		public function show()
 		{
-			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('Organization'), 'link' => '#organization');

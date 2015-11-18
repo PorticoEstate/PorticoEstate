@@ -88,7 +88,7 @@
 		public function apply_inline_params(&$params)
 		{
 			if($this->is_inline()) {
-				$params['filter_object_id'] = intval(phpgw::get_var('filter_object_id'));
+				$params['filter_object_id'] = phpgw::get_var('filter_object_id', 'int');
 			}
 			return $params;
 		}
@@ -106,12 +106,12 @@
 		
 		public function get_inline_params()
 		{
-			return array('filter_object_id' => intval(phpgw::get_var('filter_object_id', 'any', false)));
+			return array('filter_object_id' => phpgw::get_var('filter_object_id', 'int', 'REQUEST'));
 		}
 		
 		public function is_inline()
 		{
-			return false != phpgw::get_var('filter_object_id', 'any', false);
+			return false != phpgw::get_var('filter_object_id', 'int', 'REQUEST');
 		}
 		
 		public static function generate_inline_link($object_type, $permissionObjectId, $action)
@@ -264,7 +264,7 @@
 		public function show()
 		{
 			#$this->check_active('booking.uipermission_building.show');
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$permission = $this->bo->read_single($id);
 			$this->add_default_display_data($permission);
 			self::render_template('permission', array('permission' => $permission));
@@ -316,7 +316,7 @@
 		
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$permission = $this->bo->read_single($id);
                         
 			$errors = array();
@@ -355,7 +355,7 @@
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			
 			$this->redirect_to_parent_if_inline();

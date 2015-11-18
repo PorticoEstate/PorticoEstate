@@ -673,7 +673,7 @@ phpgw::import_class('booking.sopermission');
 		
 		public function show()
 		{
-			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
 			$show_edit_button = false;
@@ -734,11 +734,11 @@ phpgw::import_class('booking.sopermission');
 			//TODO: Display hint to user about primary type of customer identifier
 			
 			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
-			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
 			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !in_array($reservation['building_id'],$building_role))
 			{
-    			$this->redirect_to('show', array('id' => phpgw::get_var('id', 'GET')));
+    			$this->redirect_to('show', array('id' => phpgw::get_var('id', 'int')));
 			}
 			
 			if (((int)$reservation['exported']) !== 0) {

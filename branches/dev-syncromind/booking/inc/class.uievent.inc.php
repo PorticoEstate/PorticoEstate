@@ -582,7 +582,7 @@ class booking_uievent extends booking_uicommon
 
 	public function edit()
 	{
-		$id = intval(phpgw::get_var('id', 'GET'));
+		$id = phpgw::get_var('id', 'int');
 		$event = $this->bo->read_single($id);
                 
                 $activity_path = $this->activity_bo->get_path($event['activity_id']);
@@ -651,7 +651,7 @@ class booking_uievent extends booking_uicommon
 			if ($_POST['organization_name']) {
 				$event['customer_organization_name'] = $_POST['organization_name'];
 				$event['customer_organization_id'] = $_POST['organization_id'];
-				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int')));
 
 				if ($organization['customer_internal'] == 0) {
 					$event['customer_identifier_type'] = $organization['customer_identifier_type'];
@@ -922,8 +922,8 @@ class booking_uievent extends booking_uicommon
 	}
 	public function delete()
 	{
-		$event_id = phpgw::get_var('event_id', 'GET');
-		$application_id = phpgw::get_var('application_id', 'GET');
+		$event_id = phpgw::get_var('event_id', 'int');
+		$application_id = phpgw::get_var('application_id', 'int');
 
 		if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')) {
 			$this->bo->so->delete_event($event_id);
@@ -937,7 +937,7 @@ class booking_uievent extends booking_uicommon
 	}
 	public function info()
 	{
-		$event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+		$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
 		$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$event['resources']), 'sort'=>'name'));
 		$event['resources'] = $resources['results'];
 		$res_names = array();
@@ -945,7 +945,7 @@ class booking_uievent extends booking_uicommon
 		{
 			$res_names[] = $res['name'];
 		}
-		$event['resource'] = phpgw::get_var('resource', 'GET');
+		$event['resource'] = phpgw::get_var('resource');
 		$event['resource_info'] = join(', ', $res_names);
 		$event['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $event['resources'][0]['building_id']));
 		$event['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $event['organization_id']));

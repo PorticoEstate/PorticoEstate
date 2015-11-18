@@ -249,7 +249,7 @@ phpgw::import_class('booking.uicommon');
 		
 		public function show()
 		{
-			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$export_file['type'] = lang($export_file['type']);
 			$this->add_default_display_data($export_file);
                         $tabs = array();
@@ -260,7 +260,7 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		public function download() {
-			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			
 			if (!is_array($export_file)) {
 				$this->redirect_to('index');
@@ -271,7 +271,7 @@ phpgw::import_class('booking.uicommon');
 			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
 		}
 		public function log() {
-			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			
 			if (!is_array($export_file)) {
 				$this->redirect_to('index');
@@ -282,8 +282,8 @@ phpgw::import_class('booking.uicommon');
 			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
 		}
 		public function upload() {
-			$id = phpgw::get_var('id', 'GET');
-			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			
 			if (!is_array($export_file)) {
 				$this->redirect_to('index');

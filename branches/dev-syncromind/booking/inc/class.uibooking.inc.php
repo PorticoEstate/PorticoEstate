@@ -315,26 +315,26 @@
 			$errors = array();
 			$booking = array();
 			$booking['cost'] = 0;
-			$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
+			$allocation_id = phpgw::get_var('allocation_id', 'int');
 			if (isset($_POST['application_id'])) {
 				$application_id = phpgw::get_var('application_id', 'int', 'POST');
 			}	
-			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
-			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
+			$booking['building_id'] = phpgw::get_var('building_id', 'int');
+			$booking['resources'] = phpgw::get_var('resources', 'int');
                         #The string replace is a workaround for a problem at Bergen Kommune 
                         
-                        $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
-                        $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
+                        $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'string'));
+                        $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'string'));
                         foreach ($booking['from_'] as $k => $v) {
 				$booking['from_'][$k] = pretty_timestamp($booking['from_'][$k]);
 				$booking['to_'][$k] = pretty_timestamp($booking['to_'][$k]);
                         }
                         
-			$time_from = explode(" ",phpgw::get_var('from_', 'str', 'GET'));
-			$time_to = explode(" ",phpgw::get_var('to_', 'str', 'GET'));
+			$time_from = explode(" ",phpgw::get_var('from_', 'string'));
+			$time_to = explode(" ",phpgw::get_var('to_', 'string'));
 
-			$step = phpgw::get_var('step', 'str', 'POST');
-			if (! isset($step)) $step = 1;
+			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
+
 			if (! isset($allocation_id)) $noallocation = 1;
 			$invalid_dates = array();
 			$valid_dates = array();
@@ -346,7 +346,7 @@
 				$booking['season_id'] = $season['id'];
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
-				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
+				array_set_default($booking, 'resources', array(get_var('resource', 'int')));
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
                                 $noallocation = False;
@@ -533,19 +533,19 @@
 			unset($errors['cost']);
 			self::add_javascript('booking', 'booking', 'booking.js');
                         
-			if(phpgw::get_var('resource', 'GET') == 'null')
+			if(phpgw::get_var('resource') == 'null')
 			{			
 				array_set_default($application, 'resources', array());
 			}
 			else 
 			{
-				$resources = explode(",",phpgw::get_var('resource', 'GET'));
+				$resources = explode(",",phpgw::get_var('resource', 'string'));
 				array_set_default($booking, 'resources', $resources);
 			}
-			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'GET'));
-			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'GET'));
-			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'GET'));
-			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'GET'));
+			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'int'));
+			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'int'));
+			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'int'));
+			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'string'));
 			if (strstr($application['building_name'],"%")){
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
 				$replace = array ('Å','å','Ø','ø','Æ','æ');
@@ -652,7 +652,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$booking = $this->bo->read_single($id);
                         
                         $activity_path = $this->activity_bo->get_path($booking['activity_id']);
@@ -679,13 +679,13 @@
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
 				$booking['allocation_id'] = $booking['allocation_id'] ? $booking['allocation_id'] : null;
 				$this->agegroup_bo->extract_form_data($booking);
-				$group = $this->group_bo->read_single(intval(phpgw::get_var('group_id', 'GET')));
+				$group = $this->group_bo->read_single(intval(phpgw::get_var('group_id', 'int')));
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->update($booking);
-						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'POST'));
+						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'string','POST'));
 						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$booking['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
@@ -720,17 +720,16 @@
 
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
-			$outseason = phpgw::get_var('outseason', 'GET');
-			$recurring = phpgw::get_var('recurring', 'GET');
-			$repeat_untild = phpgw::get_var('repeat_until', 'GET');
-			$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
-			$delete_allocation = phpgw::get_var('delete_allocation', 'GET');
+			$id = phpgw::get_var('id', 'int');
+			$outseason = phpgw::get_var('outseason', 'string');
+			$recurring = phpgw::get_var('recurring', 'string');
+			$repeat_untild = phpgw::get_var('repeat_until', 'string');
+			$field_interval = intval(phpgw::get_var('field_interval'));
+			$delete_allocation = phpgw::get_var('delete_allocation');
 			$booking = $this->bo->read_single($id);
                         $allocation = $this->allocation_bo->read_single($booking['allocation_id']);
                         $season = $this->season_bo->read_single($booking['season_id']);
-			$step = phpgw::get_var('step', 'str', 'POST');
-                        if (! isset($step)) $step = 1;
+			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
                         $errors = array();
 			$invalid_dates = array();
 			$valid_dates = array();
@@ -885,7 +884,7 @@
 		
 		public function show()
 		{
-			$booking = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
                         
                         $activity_path = $this->activity_bo->get_path($booking['activity_id']);
                         $top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
@@ -913,7 +912,7 @@
 
 		public function info()
 		{
-			$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
 			$booking['resources'] = $resources['results'];

@@ -148,7 +148,7 @@
 			$errors = array();
 			$agegroup = array();
 			
-			$activity_id = phpgw::get_var('activity_id', int, 'POST');
+			$activity_id = phpgw::get_var('activity_id', 'int', 'POST');
 			$activities	 = $this->activity_bo->get_top_level($activity_id);
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -178,7 +178,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
 			$activities				 = $this->activity_bo->get_top_level($resource['activity_id']);
 

@@ -248,8 +248,7 @@
 		public function add()
 		{
 			$errors = array();
-			$step = phpgw::get_var('step', 'str', 'POST');
-			if (! isset($step)) $step = 1;
+			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
 			$invalid_dates = array();
 			$valid_dates = array();
 
@@ -261,11 +260,11 @@
 				$allocation['active'] = '1';
 				$allocation['completed'] = '0';
 
-				if (phpgw::get_var('weekday', 'str', 'GET') != '')
+				if (phpgw::get_var('weekday', 'string') != '')
 				{
-					$from_date = phpgw::get_var('from_', 'str', 'GET');
-					$to_date = phpgw::get_var('to_', 'str', 'GET');
-					$weekday = phpgw::get_var('weekday', 'str', 'GET');
+					$from_date = phpgw::get_var('from_', 'string');
+					$to_date = phpgw::get_var('to_', 'string');
+					$weekday = phpgw::get_var('weekday', 'string');
 					$datef = explode(' ',$from_date[0]);
 					$timef = $_POST['from_'];
 					$datet = explode(' ',$to_date[0]);
@@ -293,7 +292,7 @@
 
 
 				if (($_POST['weekday'] != 'sunday' &&  date('w')  > date('w',strtotime($_POST['weekday']))) || (date('w') == 'sunday' &&  date('w') < date('w',strtotime($_POST['weekday'])))) {
-					if(phpgw::get_var('weekday', 'str', 'GET') == ''){
+					if(phpgw::get_var('weekday', 'string') == ''){
 						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_'])-60*60*24*7);
 						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
 					}
@@ -362,31 +361,31 @@
 					}
 				}
 			}
-			if(phpgw::get_var('building_name', 'GET') == '')
+			if(phpgw::get_var('building_name', 'string') == '')
 			{			
 				array_set_default($allocation, 'resources', array());
 				$weekday =  'monday';
 			}
 			else 
 			{
-				$dateTimeFrom = phpgw::get_var('from_', 'GET');
-				$dateTimeTo = phpgw::get_var('to_', 'GET');                                
+				$dateTimeFrom = phpgw::get_var('from_', 'string');
+				$dateTimeTo = phpgw::get_var('to_', 'string');
 				$dateTimeFromE = explode(" ", $dateTimeFrom[0]);
 				$dateTimeToE = explode(" ", $dateTimeTo[0]);
-				if (phpgw::get_var('from_', 'GET') < 14) {
-					$timeFrom[] = phpgw::get_var('from_', 'GET');
-					$timeTo[] = phpgw::get_var('to_', 'GET');
+				if (phpgw::get_var('from_', 'string') < 14) {
+					$timeFrom[] = phpgw::get_var('from_', 'string');
+					$timeTo[] = phpgw::get_var('to_', 'string');
 				}else {
 					$timeFrom[] = $dateTimeFromE[1];
 					$timeTo[] = $dateTimeToE[1];
 				}
 
-				array_set_default($allocation, 'resources', array(get_var('resource', int, 'GET')));
-				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'GET'));
-				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'GET'));
+				array_set_default($allocation, 'resources', array(get_var('resource', 'int')));
+				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'int'));
+				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'string'));
 				array_set_default($allocation, 'from_', $timeFrom);
 				array_set_default($allocation, 'to_', $timeTo);
-				$weekday =  phpgw::get_var('weekday', 'GET');
+				$weekday =  phpgw::get_var('weekday', 'string');
 			}
 
 			$this->flash_form_errors($errors);
@@ -467,7 +466,7 @@
 		public function edit()
 		{
                     
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$allocation = $this->bo->read_single($id);
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
@@ -482,7 +481,7 @@
 				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
 				array_set_default($_POST, 'resources', array());
 				$allocation = array_merge($allocation, extract_values($_POST, $this->fields));
-				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int','POST')));
                                 
                                 
                                 
@@ -492,7 +491,7 @@
 					try {
 						$receipt = $this->bo->update($allocation);
 						$this->bo->so->update_id_string();
-						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'POST'));
+						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'string','POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
@@ -518,15 +517,14 @@
 
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('allocation_id', 'GET'));
-			$outseason = phpgw::get_var('outseason', 'GET');
-			$recurring = phpgw::get_var('recurring', 'GET');
-			$repeat_until = phpgw::get_var('repeat_until', 'GET');
-			$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
+			$id = phpgw::get_var('allocation_id', 'int');
+			$outseason = phpgw::get_var('outseason', 'string');
+			$recurring = phpgw::get_var('recurring', 'string');
+			$repeat_until = phpgw::get_var('repeat_until', 'string');
+			$field_interval = phpgw::get_var('field_interval', 'int');
 			$allocation = $this->bo->read_single($id);
                         $season = $this->season_bo->read_single($allocation['season_id']);
-			$step = phpgw::get_var('step', 'str', 'POST');
-                        if (! isset($step)) $step = 1;
+			$step = phpgw::get_var('step', 'string', 'REQUEST', 1);
                         $errors = array();
 			$invalid_dates = array();
 			$valid_dates = array();
@@ -660,7 +658,7 @@
 		
 		public function show()
 		{
-			$allocation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$allocation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
 			$allocation['edit_link'] = self::link(array('menuaction' => 'booking.uiallocation.edit', 'id' => $allocation['id']));
@@ -681,7 +679,7 @@
 		}
 		public function info()
 		{
-			$allocation = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$allocation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$allocation['resources']), 'sort'=>'name'));
 			$allocation['resources'] = $resources['results'];
 			$res_names = array();
@@ -689,7 +687,7 @@
 			{
 				$res_names[] = $res['name'];
 			}
-			$allocation['resource'] = phpgw::get_var('resource', 'GET');
+			$allocation['resource'] = phpgw::get_var('resource');
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $allocation['organization_id']));

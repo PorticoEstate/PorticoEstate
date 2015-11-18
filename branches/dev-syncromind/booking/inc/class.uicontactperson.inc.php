@@ -84,7 +84,7 @@
         }
         public function index_json()
         {   
-			if ($id = intval(phpgw::get_var('id', 'GET'))) {
+			if ($id = phpgw::get_var('id', 'int')) {
 				$person = $this->bo->read_single($id);
 				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
 			}
@@ -95,7 +95,7 @@
         }
 		public function show()
 		{
-			$person = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$person = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$person['contactpersons_link'] = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 			$person['edit_link'] = self::link(array('menuaction' => 'booking.uicontactperson.edit', 'id' => $person['id']));
 
@@ -106,7 +106,7 @@
 		}
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			if ($id) {
 				$person = $this->bo->read_single($id);
 				$person['id'] = $id;

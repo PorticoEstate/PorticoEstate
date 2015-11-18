@@ -59,7 +59,7 @@
 		
 		public function properties()
 		{
-			$q = phpgw::get_var('query', 'str', 'REQUEST', null);
+			$q = phpgw::get_var('query', 'string', 'REQUEST', null);
 			$type_id = count(explode('-', $q));
 			$so = CreateObject('property.solocation');
 			$ret = $so->read(array('type_id' => $type_id, 'location_code'=>$q));
@@ -202,7 +202,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$building = $this->bo->read_single($id);
 			$building['id'] = $id;
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -247,7 +247,7 @@
 		
 		public function show()
 		{
-			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$building = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
@@ -272,7 +272,7 @@
 
 		public function schedule()
 		{
-			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uibuilding");
+			$building = $this->bo->get_schedule(phpgw::get_var('id', 'int'), "booking.uibuilding");
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'booking.uibooking.building_schedule', 

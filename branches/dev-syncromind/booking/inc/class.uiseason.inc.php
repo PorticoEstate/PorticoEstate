@@ -231,7 +231,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$season = $this->bo->read_single($id);
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
@@ -278,7 +278,7 @@
 		
 		public function show()
 		{
-			$season = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$season = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
@@ -310,7 +310,7 @@
 
 		public function boundaries()
 		{
-			$season_id = intval(phpgw::get_var('id', 'GET'));
+			$season_id = phpgw::get_var('id', 'int');
 			$season = $this->bo->read_single($season_id);
 			
 			$boundaries = $this->bo->get_boundaries($season_id);
@@ -351,7 +351,7 @@
 
 		public function delete_boundary()
 		{
-			$boundary_id = intval(phpgw::get_var('id', 'GET'));
+			$boundary_id = phpgw::get_var('id', 'int');
 			$boundary = $this->bo->read_boundary($boundary_id);
 			$season_id = $boundary['season_id'];
 			$this->bo->delete_boundary($boundary);
@@ -360,7 +360,7 @@
 
 		public function delete_wtemplate_alloc()
 		{
-			$allocation_id = intval(phpgw::get_var('id', 'POST'));
+			$allocation_id = phpgw::get_var('id', 'int');
 			$alloc = $this->bo->so_wtemplate_alloc->read_single($allocation_id);
 			$this->bo->delete_wtemplate_alloc($alloc);
 			return 1;
@@ -368,7 +368,7 @@
 
 		public function wtemplate()
 		{
-			$season_id = intval(phpgw::get_var('id', 'GET'));
+			$season_id = phpgw::get_var('id', 'int');
 			$season = $this->bo->read_single($season_id);
 			$season['season_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season_id));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -393,7 +393,7 @@
 		
 		public function wtemplate_json()
 		{
-			$season_id = intval(phpgw::get_var('id', 'GET'));
+			$season_id = phpgw::get_var('id', 'int');
 			$allocations = $this->bo->wtemplate_schedule($season_id);
 			$data = array
 			(
@@ -408,14 +408,14 @@
 		/* Return a single wtemplate allocations as JSON */
 		public function wtemplate_alloc()
 		{
-			//$season_id = intval(phpgw::get_var('season_id', 'GET'));
+			//$season_id = phpgw::get_var('season_id', 'int');
 			//$phpgw_return_as = phpgw::get_var('phpgw_return_as');
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$alloc = extract_values($_POST, $this->wtemplate_alloc_fields);
 				//$alloc['season_id'] = $season_id;
-				$alloc['season_id'] = phpgw::get_var('season_id');
+				$alloc['season_id'] = phpgw::get_var('season_id', 'int');
 			
 				$errors = $this->bo->validate_wtemplate_alloc($alloc);
 				if(!$errors && $alloc['id'])
@@ -437,11 +437,11 @@
 				return $message;			
 			}
 			
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			
-			$_from = phpgw::get_var('_from', 'GET');
-			$_to = phpgw::get_var('_to', 'GET');
-			$wday = phpgw::get_var('wday', 'GET');
+			$_from = phpgw::get_var('_from', 'string');
+			$_to = phpgw::get_var('_to', 'string');
+			$wday = phpgw::get_var('wday', 'string');//int?
 		
 			if (!empty($id))
 			{
@@ -463,7 +463,7 @@
 			$season['to_h'] = $array_to[0];
 			$season['to_m'] = $array_to[1];			
 				
-			$resource_ids = phpgw::get_var('filter_id', 'GET');
+			$resource_ids = phpgw::get_var('filter_id', 'int');
 			
 			$filters = null;
 			if (count($resource_ids) == 0) {
@@ -503,7 +503,7 @@ JS;
 
 		public function generate()
 		{
-			$season_id = intval(phpgw::get_var('id', 'GET'));
+			$season_id = phpgw::get_var('id', 'int');
 			$season = $this->bo->read_single($season_id);
 			
 			$this->bo->authorize_write($season);
@@ -524,13 +524,13 @@ JS;
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
-				$from =  phpgw::get_var('from_', 'POST');
-				$to =  phpgw::get_var('to_', 'POST');
+				$step = phpgw::get_var('create') ? 3 : 2;
+				$from =  phpgw::get_var('from_', 'string');
+				$to =  phpgw::get_var('to_', 'string');
 				$from_ = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($from));
 				$to_ = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
 
-				$interval = phpgw::get_var('field_interval', 'POST');
+				$interval = phpgw::get_var('field_interval');
 				if($from_ < $season['from_'])
 				{
 					$errors['from_'] = lang('Start date must be after %1', pretty_timestamp($season['from_']));

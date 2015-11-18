@@ -28,20 +28,20 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$step = phpgw::get_var('step', 'POST');
+				$step = phpgw::get_var('step', 'int');
 				$step++;
-				$building_id =  phpgw::get_var('building_id', 'POST');
-                                $building_name =  phpgw::get_var('building_name', 'POST');
-				if (is_array(phpgw::get_var('seasons', 'POST')))
+				$building_id =  phpgw::get_var('building_id', 'int');
+                                $building_name =  phpgw::get_var('building_name', 'string');
+				if (is_array(phpgw::get_var('seasons')))
 				{
-					$season =  implode(',', phpgw::get_var('seasons', 'POST'));
+					$season =  implode(',', phpgw::get_var('seasons'));
 				}
 				else
 				{
-					$season =  phpgw::get_var('seasons', 'POST');
+					$season =  phpgw::get_var('seasons');
 				}
-				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
-				$mailbody =  phpgw::get_var('mailbody', 'POST');
+				$mailsubject =  phpgw::get_var('mailsubject', 'string');
+				$mailbody =  phpgw::get_var('mailbody', 'string');
 				$contacts = null;
 
 				if ($step == 1)
@@ -106,8 +106,8 @@
 
 		public function receipt()
 		{
-			$ok_count =  phpgw::get_var('ok', 'GET');
-			$fail_count =  phpgw::get_var('failed', 'GET');
+			$ok_count =  phpgw::get_var('ok');
+			$fail_count =  phpgw::get_var('failed');
 			self::render_template('email_receipt',
 				array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}

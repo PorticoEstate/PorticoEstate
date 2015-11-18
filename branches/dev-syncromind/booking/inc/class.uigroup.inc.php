@@ -96,12 +96,12 @@
 		
 		public function get_inline_params()
 		{
-			return array('filter_organization_id' => intval(phpgw::get_var('filter_organization_id', 'any', false)));
+			return array('filter_organization_id' => phpgw::get_var('filter_organization_id', 'int', 'REQUEST'));
 		}
 		
 		public function is_inline()
 		{
-			return false != phpgw::get_var('filter_organization_id', 'any', false);
+			return false != phpgw::get_var('filter_organization_id', 'int', 'REQUEST');
 		}
 		
 		public function index()
@@ -246,7 +246,7 @@
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
             
                                    
 			if ($id)
@@ -344,7 +344,7 @@
 		
 		public function show()
 		{
-			$group = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$group = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
 			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit', 'id' => $group['id']));
