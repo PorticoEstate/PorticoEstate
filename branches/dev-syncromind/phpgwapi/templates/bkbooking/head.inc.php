@@ -69,6 +69,7 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 
 
 //	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
