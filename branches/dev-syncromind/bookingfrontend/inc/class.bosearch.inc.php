@@ -14,7 +14,7 @@
 		
 		function search($searchterm, $activity_top_level, $building_id)
 		{
-			if($activity_top_level)
+			if($activity_top_level && !$building_id)
 			{
 				$types = array('resource');
 			}
@@ -31,7 +31,7 @@
 
 			if(in_array('building', $types))
 			{
-                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1")));
+                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1", 'id' => $building_id)));
                 foreach($bui_result['results'] as &$bui)
                 {
                     $bui['type'] = "building";

@@ -14,19 +14,10 @@
 </xsl:template>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--xsl:call-template name="yui_booking_i18n"/-->
     <div id="content">
         <form action="" method="GET" id="search">
             <input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
             <input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" />
-            <xsl:choose>
-                <xsl:when test="search and string-length(search/searchterm) &gt; 0">
-                    <input id="search" type="text" name="searchterm" value="{search/searchterm}"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <input id="search" type="text" name="searchterm" value="Søk hall, klubb eller aktivitet" onclick="value=''" />
-                </xsl:otherwise>
-            </xsl:choose>
             <div id="building_container">
                 <input id="field_building_id" name="building_id" type="hidden">
                     <xsl:attribute name="value">
@@ -37,6 +28,10 @@
                     <xsl:attribute name="value">
                         <xsl:value-of select="building_name"/>
                     </xsl:attribute>
+                    <xsl:attribute name="placeholder">
+						<xsl:text> Søk bygning</xsl:text>
+                    </xsl:attribute>
+
                 </input>
             </div>
             <!--xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/-->
@@ -64,7 +59,7 @@
         </ul>
         <xsl:if test="not(search)">	
             <div id="cloud">
-            <div class="frontpagetext"><xsl:value-of select="frontpagetext"/></div>
+            <div class="frontpagetext"><xsl:value-of disable-output-escaping="yes" select="frontpagetext"/></div>
             </div>
             <div style="text-align:center;">
                 <img alt="" >

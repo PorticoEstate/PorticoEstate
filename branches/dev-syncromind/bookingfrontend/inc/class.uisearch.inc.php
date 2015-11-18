@@ -40,7 +40,7 @@
 				$frontpagetext = 'Velkommen til AktivBy.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
 			}
 			
-			if (strlen($searchterm) || $type || $activity_top_level)
+			if ($building_id || $type || $activity_top_level)
 			{
 				$search = array(
 					'results'    => $this->bo->search($searchterm, $activity_top_level, $building_id),
