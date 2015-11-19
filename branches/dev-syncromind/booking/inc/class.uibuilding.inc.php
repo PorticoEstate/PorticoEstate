@@ -21,7 +21,8 @@
 			'find_buildings_used_by' => true,
 		);
 
-		public function __construct()
+        protected $module;
+        public function __construct()
 		{
 			parent::__construct();
 			
@@ -55,6 +56,7 @@
 				'extra_kalendar'			=> 'string',
 				'calendar_text'				=> 'string',
 			);
+            $this->module = "booking";
 		}
 		
 		public function properties()
@@ -109,7 +111,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uibuilding.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => $this->module.'.uibuilding.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -148,7 +150,7 @@
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type' => 'link',
 					'value' => lang('New building'),
-					'href' => self::link(array('menuaction' => 'booking.uibuilding.add'))
+					'href' => self::link(array('menuaction' => $this->module.'.uibuilding.add'))
 				));
 			}
 
@@ -162,7 +164,7 @@
 			$buildings = $this->bo->read();
 			foreach($buildings['results'] as &$building)
 			{
-				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
+				$building['link'] = $this->link(array('menuaction' => $this->module.'.uibuilding.show', 'id' => $building['id']));
 #				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
 			return $this->jquery_results($buildings);

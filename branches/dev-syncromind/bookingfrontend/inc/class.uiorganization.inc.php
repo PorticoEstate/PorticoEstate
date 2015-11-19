@@ -10,6 +10,7 @@
 			 'index'        =>  true,
 			 'building_users' => true,
              'get_orgid'    => true,
+            'toggle_show_inactive'	=>	true,
 			);
 		protected $module;
 

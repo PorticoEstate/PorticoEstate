@@ -98,7 +98,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uisystem_message.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => $this->module.'.uisystem_message.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -198,7 +198,7 @@
             );
 
             $system_messages = $this->bo->so->read($params);
-            array_walk($system_messages["results"], array($this, "_add_links"), "booking.uisystem_message.show");
+            array_walk($system_messages["results"], array($this, "_add_links"), $this->module.".uisystem_message.show");
 
 
             foreach($system_messages['results'] as &$system_message)
@@ -284,7 +284,7 @@
 			);
 
 			$system_messages = $this->bo->so->read($params);
-			array_walk($system_messages["results"], array($this, "_add_links"), "booking.uisystem_message.show");
+			array_walk($system_messages["results"], array($this, "_add_links"), $this->module.".uisystem_message.show");
 
 
 			foreach($system_messages['results'] as &$system_message)

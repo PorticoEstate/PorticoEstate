@@ -8,6 +8,7 @@
 			'index'			=>	true,
 			'edit'			=>	true,
             'show'          =>  true,
+            'toggle_show_inactive'	=>	true,
 		);
 
         protected $module;

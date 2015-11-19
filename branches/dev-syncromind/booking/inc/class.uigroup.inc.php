@@ -119,7 +119,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New group'),
-								'href' => self::link(array('menuaction' => 'booking.uigroup.edit'))
+								'href' => self::link(array('menuaction' => $this->module.'.uigroup.edit'))
 							),
 							array(
 								'type' => 'link',
@@ -130,7 +130,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uigroup.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => $this->module.'.uigroup.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'organization_name',

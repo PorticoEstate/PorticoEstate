@@ -79,7 +79,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New organization'),
-								'href' => self::link(array('menuaction' => 'booking.uiorganization.add'))
+								'href' => self::link(array('menuaction' => $this->module.'.uiorganization.add'))
 							),
 							array(
 								'type' => 'link',
@@ -90,7 +90,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uiorganization.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => $this->module.'.uiorganization.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -156,7 +156,7 @@
 //			$organizations = $this->bo->so->read($params);
                     
                         $organizations = $this->bo->read();
-			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+			array_walk($organizations["results"], array($this, "_add_links"), $this->module.".uiorganization.show");
 
 			foreach($organizations["results"] as &$organization) {
 

@@ -9,6 +9,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         'information_screen' => true,
         'extraschedule' => true,
         'show' => true,
+        'toggle_show_inactive'	=>	true,
         'find_buildings_used_by' => true,
     );
     protected $module;
@@ -18,6 +19,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         parent::__construct();
         $this->booking_bo = CreateObject('booking.bobooking');
         $this->resource_bo = CreateObject('booking.boresource');
+        $this->module = "bookingfrontend";
     }
 
     public function information_screen()

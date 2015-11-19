@@ -8,18 +8,20 @@
 			'index'			=>	true,
 			'edit'			=>	true,
             'show'          =>  true,
+            'toggle_show_inactive'	=>	true,
 		);
 
         protected $module;
 		public function __construct()
 		{
 			parent::__construct();
+            $this->url_prefix = 'bookingfrontend.uisystem_message';
             $this->module = "bookingfrontend";
 		}
         
         public function show() {
-            phpgwapi_jquery::init_ckeditor('field-message');
             parent::show();
+            phpgwapi_jquery::init_ckeditor('field-message');
         }
 		
 		public function edit()
