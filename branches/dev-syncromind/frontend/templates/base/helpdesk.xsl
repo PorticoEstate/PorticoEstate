@@ -50,17 +50,6 @@
 								</div>
 							</div>
 							<div class="tickets">
-								<table cellpadding="2" cellspacing="2" width="95%" align="center">
-									<xsl:choose>
-										<xsl:when test="msgbox_data != ''">
-											<tr>
-												<td align="left" colspan="3">
-													<xsl:call-template name="msgbox"/>
-												</td>
-											</tr>
-										</xsl:when>
-									</xsl:choose>
-								</table>
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
 										<xsl:call-template name="table_setup">
@@ -113,94 +102,73 @@
 </xsl:template>
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
-    <h2>Ny melding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-        <table cellpadding="0" cellspacing="0" width="100%">
-            <xsl:choose>
-                <xsl:when test="msgbox_data != ''">
-                    <tr>
-                        <td align="left" colspan="2">
-                            <xsl:call-template name="msgbox"/>
-                        </td>
-                    </tr>
-                </xsl:when>
-            </xsl:choose>
-
-
-            <xsl:if test="noform != 1">
-                <tr>
-                   <td class="th_text" valign="top">
-                        <xsl:value-of select="php:function('lang', 'category')" />
-                    </td>
-                    <td class="th_text" valign="top">
-						<select name="values[cat_id]" >
-							<xsl:attribute name="title">
+		
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<xsl:call-template name="msgbox"/>
+			</xsl:when>
+	    </xsl:choose>
+   
+        <div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div id="details">
+				<xsl:if test="noform != 1">
+					<div class="pure-form pure-form-aligned">
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'category')" />
-							</xsl:attribute>
-							<xsl:apply-templates select="category_list"/>
-						</select>			
-                    </td>
-                </tr>
-                <tr>
-                    <td class="th_text" valign="top">
-                        <xsl:value-of select="php:function('lang', 'subject')" />
-                    </td>
-                    <td class="th_text" valign="top">
-                        <input type="text" name="values[title]" value="{title}"/>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="th_text" valign="top">
-                        <xsl:value-of select="php:function('lang', 'locationdesc')" />
-                    </td>
-                    <td class="th_text" valign="top">
-                        <input type="text" name="values[locationdesc]" value="{locationdesc}"/>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td valign="top">
-                        <xsl:value-of select="php:function('lang', 'description')" />
-                    </td>
-                    <td>
-                        <textarea cols="60" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
-                            <xsl:value-of select="description"/>
-                        </textarea>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td valign="top">
-                        <xsl:value-of select="php:function('lang', 'file')" />
-                    </td>
-                    <td>
-                        <input type="file" name="file" size="50">
-                            <xsl:attribute name="title">
-                                <xsl:value-of select="php:function('lang', 'file')" />
-                            </xsl:attribute>
-                        </input>
-                    </td>
-                </tr>
-
-                <tr height="50">
-                    <td>
-                        <xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>
-                        <input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
-                    </td>
-                </tr>
-                 <tr>
-                  <td>
-                  </td>
-                  <td >
-
+							</label>
+							<select name="values[cat_id]" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'category')" />
+								</xsl:attribute>
+								<xsl:apply-templates select="category_list"/>
+							</select>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'subject')" />
+							</label>
+							<input type="text" name="values[title]" value="{title}"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'locationdesc')" />
+							</label>
+							<input type="text" name="values[locationdesc]" value="{locationdesc}"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'description')" />
+							</label>
+							<textarea cols="60" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
+								<xsl:value-of select="description"/>
+							</textarea>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'file')" />
+							</label>
+							<input type="file" name="file" size="50">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'file')" />
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>
+							<label>
+								<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
+							</label>
+						</div>
+					</div>
+					<div class="attributes">
 						<xsl:apply-templates select="custom_attributes/attributes"/>
-
-                    </td>
-                </tr>
-
-            </xsl:if>
-        </table>
+					</div>
+				</xsl:if>
+			</div>
+        </div>
     </form>
 </xsl:template>
 
