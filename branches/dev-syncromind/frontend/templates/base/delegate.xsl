@@ -24,7 +24,7 @@
 										<input type="hidden" name="account_id" value="{search/account_id}"/>
 										<dl>
 											<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
-											<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="{$btn_search}"/></dd>
+											<dd><input type="text" name="username" value="{search/username}"/><input type="submit" class="pure-button pure-button-active" name="search" value="{$btn_search}"/></dd>
 											<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
 											<dd><input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/></dd>
 											<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
@@ -32,7 +32,7 @@
 											<dt><xsl:value-of select="php:function('lang', 'email')"/></dt>
 											<dd><input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/></dd>
 											<dt></dt>
-											<dd><input type="submit" name="add" value="{$btn_add}"/></dd>
+											<dd><input type="submit" class="pure-button pure-button-active" name="add" value="{$btn_add}"/></dd>
 										</dl>
 									</form>
 								</xsl:when>
@@ -63,7 +63,7 @@
 															<input type="hidden" name="account_id" value="{account_id}"/>
 															 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 															(<xsl:value-of select="account_lid"/>)
-															<input type="submit" name="remove_specific" value="{$btn_remove}"/>
+															<input type="submit" class="pure-button pure-button-active" name="remove_specific" value="{$btn_remove}"/>
 														</form>
 													</xsl:when>
 													<xsl:otherwise>
@@ -102,7 +102,7 @@
 													<input type="hidden" name="account_id" value="{account_id}"/>
 													 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 													(<xsl:value-of select="account_lid"/>)
-													<input type="submit" name="remove" value="{$btn_remove}"/>
+													<input type="submit" class="pure-button pure-button-active" name="remove" value="{$btn_remove}"/>
 												</form>
 											</li>
 										</xsl:for-each>
