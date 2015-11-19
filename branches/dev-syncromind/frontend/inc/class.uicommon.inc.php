@@ -66,6 +66,7 @@
 
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
 			$tabs			= $this->get_tabs();
+			//print_r($tabs); die;
 			$location_id	= phpgw::get_var('location_id', 'int', 'REQUEST');			
 			$tab			= isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
 			$selected		= isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));	
@@ -340,11 +341,11 @@
 
 			if(isset($extra_tabs))
 			{
-				$tabs = array_merge($extra_tabs,$tabs);
+				$tabs = $extra_tabs + $tabs;
 			}
 
 			phpgwapi_cache::session_clear('frontend', 'extra_tabs');
-
+			
 			return $tabs;
 		}
 		
