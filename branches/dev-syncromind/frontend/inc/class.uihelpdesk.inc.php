@@ -553,6 +553,10 @@
 				'p_num'			=> $p_num,
 			);
 
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Ny melding'), 'link' => '#details');
+			$active_tab = 'details';
+			
 			$data = array(
 				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
 				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
@@ -562,6 +566,7 @@
 				'description'   	=> $values['description'],
 				'noform'        	=> $noform,
 				'category_list'		=> $category_list,
+				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
@@ -570,6 +575,4 @@
 			
 			//self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
 		}
-		
-
 	}
