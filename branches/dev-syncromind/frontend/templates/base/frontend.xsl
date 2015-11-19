@@ -1,7 +1,10 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<xsl:variable name="messages_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uimessages.index')" /></xsl:variable>
-	<div id="wrapper">
-    	<div id="header">
+	<div class="frontend_header">
+    	<div class="frontend_content">
+			<div id="logo_holder">
+				<img src="{logo_path}"/>
+			</div>
     		<div id="login-bar">
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/> | <a href="http://portico/pe/preferences/changepassword.php">Bytt passord</a></li>
@@ -22,7 +25,7 @@
 			</div>
 			<div id="area_and_price">
 				<ul>
-					<li ><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
+					<li><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
     				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="total_area"/></li>
     				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="total_price"/></li>
     			</ul>
@@ -72,107 +75,97 @@
 					</div>
 				</xsl:when>
 			</xsl:choose>
-			<div id="logo_holder">
-				<img src="{logo_path}"/>
-			</div>
 		</div>
-    </div>
-	<table id="header">
-		<xsl:choose>
-			<xsl:when test="number_of_locations = 0">
-				<tr valign="top">
-					<td>
+		
+		<div class="frontend_content">
+			<xsl:choose>
+				<xsl:when test="number_of_locations = 0">
+					<div>
 						<label>
 							<xsl:choose>
 								<xsl:when test="use_fellesdata != 1">
 									<a href="{form_action}&amp;refresh=true" class="list_image">
-								    						<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
-								    					</a>
+															<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
+														</a>
 								  </xsl:when>
 							</xsl:choose>
 							<img src="frontend/templates/base/images/32x32/house.png" class="list_image"/>
 							<em class="select_header"><xsl:value-of select="php:function('lang', 'no_buildings')"/></em>
 						</label>
-					</td>
-				</tr>
-			</xsl:when>
-			<xsl:otherwise>
-				<tr valign="top">
-					<td>
-						<div id="unit_selector">
-							<form action="{form_action}" method="post">
-								<label>
+					</div>
+				</xsl:when>
+
+				<xsl:otherwise>
+					<div id="unit_selector">
+						<form action="{form_action}" method="post">
+							<label>
+								<xsl:choose>
+									<xsl:when test="use_fellesdata != 1">
+										<a href="{form_action}&amp;refresh=true" class="list_image">
+																<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
+															</a>
+									  </xsl:when>
+								</xsl:choose>
+								<img src="frontend/templates/base/images/32x32/house.png" class="list_image"/>
+								<em class="select_header"><xsl:value-of select="php:function('lang', 'select_unit')"/></em>
+							</label>
+							<br/>
+							<xsl:variable name="lang_no_name_unit"><xsl:value-of select="php:function('lang', 'no_name_unit')"/></xsl:variable>								
+							<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
+								<xsl:for-each select="locations">
+									<xsl:sort select="loc1_name"/>
 									<xsl:choose>
-										<xsl:when test="use_fellesdata != 1">
-											<a href="{form_action}&amp;refresh=true" class="list_image">
-										    						<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
-										    					</a>
-										  </xsl:when>
-									</xsl:choose>
-									<img src="frontend/templates/base/images/32x32/house.png" class="list_image"/>
-									<em class="select_header"><xsl:value-of select="php:function('lang', 'select_unit')"/></em>
-								</label>
-								<br/>
-								<xsl:variable name="lang_no_name_unit"><xsl:value-of select="php:function('lang', 'no_name_unit')"/></xsl:variable>								
-								<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
-									<xsl:for-each select="locations">
-										<xsl:sort select="loc1_name"/>
-										<xsl:choose>
-											<xsl:when test="location_code = //header/selected_location">
-												<option value="{location_code}" selected="selected">
-													<xsl:choose>
-														<xsl:when test="name != ''">
-															<xsl:value-of select="name"/>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
-														</xsl:otherwise>
-													</xsl:choose>
-												</option>
-											</xsl:when>
-											<xsl:otherwise>
-												<option value="{location_code}">
+										<xsl:when test="location_code = //header/selected_location">
+											<option value="{location_code}" selected="selected">
 												<xsl:choose>
 													<xsl:when test="name != ''">
 														<xsl:value-of select="name"/>
 													</xsl:when>
 													<xsl:otherwise>
-															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
+														<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
 													</xsl:otherwise>
 												</xsl:choose>
-												</option>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:for-each>
-								</select>
-							</form>
-						</div>
-					</td>
-					<td>
-						<div id="area_and_price" style="margin-top: 2em;">
+											</option>
+										</xsl:when>
+										<xsl:otherwise>
+											<option value="{location_code}">
+											<xsl:choose>
+												<xsl:when test="name != ''">
+													<xsl:value-of select="name"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
+												</xsl:otherwise>
+											</xsl:choose>
+											</option>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:for-each>
+							</select>
+						</form>
+					</div>
+
+					<div id="area_and_price2">
 						<ul>
 							<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
-		    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="selected_total_area"/></li>
-		    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="selected_total_price"/></li>
-		    			</ul>
-						</div>
-					</td>
-					<td>
-						<br/>
-						<div id="unit_image">
-							<img alt="">
-								<xsl:attribute name="src">
-									<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uifrontend.objectimg')" />
-									<xsl:text>&amp;loc_code=</xsl:text>
-									<xsl:value-of select="//header/selected_location"/>
-								</xsl:attribute>
-							</img>
-						</div>
-					</td>
-				</tr>
-			</xsl:otherwise>
-		</xsl:choose>
-	</table>
+							<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="selected_total_area"/></li>
+							<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="selected_total_price"/></li>
+						</ul>
+					</div>
+
+					<div id="unit_image">
+						<img alt="">
+							<xsl:attribute name="src">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uifrontend.objectimg')" />
+								<xsl:text>&amp;loc_code=</xsl:text>
+								<xsl:value-of select="//header/selected_location"/>
+							</xsl:attribute>
+						</img>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+    </div>
 </xsl:template>
 
 <xsl:template match="menu">
