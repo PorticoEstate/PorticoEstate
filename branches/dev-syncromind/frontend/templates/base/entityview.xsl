@@ -29,82 +29,77 @@
 
 	</script>
 
-    <table cellpadding="2" cellspacing="2" width="95%" align="center">
-        <xsl:choose>
-            <xsl:when test="msgbox_data != ''">
-                <tr>
-                    <td align="left" colspan="3">
-                        <xsl:call-template name="msgbox"/>
-                    </td>
-                </tr>
-            </xsl:when>
-        </xsl:choose>
-    </table>
-
-    <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+	<xsl:choose>
+	    <xsl:when test="msgbox_data != ''">
+			<xsl:call-template name="msgbox"/>
+	    </xsl:when>
+   </xsl:choose>
+   
 	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	
-	<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-stacked">
-		<div id="tab-content">
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div id="{$tab_selected}">
-				<fieldset>
-						<div class="pure-control-group">
-							<label>
-								<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
-							</label>
-						</div>						
-						<div class="pure-control-group">
-							<label>
-								<a href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
-							</label>
-						</div>						
-						<div class="pure-control-group">
-							<label>
-								<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
-							</label>
-						</div>
-    
-        	
+	<div class="frontend_body">
+		<div class="pure-form pure-form-stacked">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<div id="{$tab_selected}">
+					<fieldset>
+							<div class="pure-control-group">
+								<label>
+									<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
+								</label>
+							</div>						
+							<div class="pure-control-group">
+								<label>
+									<a href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
+								</label>
+							</div>						
+							<div class="pure-control-group">
+								<label>
+									<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
+								</label>
+							</div>
+
+
+							<xsl:choose>
+								<xsl:when test="location_data!=''">
+									<li>
+										<b><xsl:value-of select="php:function('lang', 'location')"/></b>
+									</li>
+									<div id="location">
+										<table>
+											<xsl:call-template name="location_view"/>
+										</table>
+									</div>
+								</xsl:when>
+							</xsl:choose>
+
+
+							<xsl:apply-templates select="custom_attributes/attributes"/>
+
+	<!--
 						<xsl:choose>
-							<xsl:when test="location_data!=''">
+							<xsl:when test="files!=''">
 								<li>
-									<b><xsl:value-of select="php:function('lang', 'location')"/></b>
+									<div id="datatable-container_0"></div>
 								</li>
-								<div id="location">
-									<table>
-										<xsl:call-template name="location_view"/>
-									</table>
-								</div>
 							</xsl:when>
 						</xsl:choose>
-				
-
-						<xsl:apply-templates select="custom_attributes/attributes"/>
-        			
-<!--
-					<xsl:choose>
-						<xsl:when test="files!=''">
-							<li>
-								<div id="datatable-container_0"></div>
-							</li>
-						</xsl:when>
-					</xsl:choose>
--->
+	-->
 
 
-					<xsl:for-each select="integration">
-						<div id="{section}">
-							<iframe id="{section}_content" width="100%" height="{height}" src="{src}">
-								<p>Your browser does not support iframes.</p>
-							</iframe>
-						</div>
-					</xsl:for-each>
-				</fieldset>
+						<xsl:for-each select="integration">
+							<div id="{section}">
+								<iframe id="{section}_content" width="100%" height="{height}" src="{src}">
+									<p>Your browser does not support iframes.</p>
+								</iframe>
+							</div>
+						</xsl:for-each>
+					</fieldset>
+				</div>
+				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 			</div>
-			<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 		</div>
-	</form>
+	</div>
 </xsl:template>
 
 
