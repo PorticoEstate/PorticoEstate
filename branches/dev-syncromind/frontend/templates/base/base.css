@@ -7,7 +7,21 @@ body {
 }
 button { padding: .3em .6em; margin: .4em 0;}
 a:link, a:visited { color: black;}
+
 div#wrapper {}
+
+.frontend_header {
+	padding-left: 2em;
+	padding-right: 2em;
+	padding-top: 2em;
+}
+
+.frontend_body {
+	padding-left: 2em;
+	padding-right: 2em;
+	padding-top: 2em;
+}
+
 ul#metanav {
     float: right;
     list-style-type: none;
@@ -25,12 +39,15 @@ div#content {
 #header-search.hidden  { display: none; }
 #header-search .query { width: 15em;}
 
-div#header {
-    background: url(../images/header_bg.png) repeat-x;
-    height: 129px;
+.frontend_content {
+    //background: url(../images/header_bg.png) repeat-x;
+    //height: 129px;
+	display: inline-block;
+	width: 100%;
 }
-div#header a {
-	float: left;
+
+.frontend_content a {
+	//float: left;
 }
 div#logo {
     width: 125px;
@@ -63,7 +80,7 @@ ul.nav li:first-child:before { display: none; }
 #login-bar {
     clear: right;
     float: right;
-    padding: .5em 1em 0 0;
+    //padding: .5em 1em 0 0;
 }
 form#search {
     text-align: center;
@@ -86,7 +103,7 @@ ol#result {
 }
 ol#result dl { margin: 0; }
 
-ol#result .header {
+ol#result .content {
     font-size: 120%;
     background-color: #eee;
     border-top: 1px solid #ccc;
@@ -241,8 +258,6 @@ dl.contactinfo dd {
 	clear:right;
 }
 
-
-
 #frontend h2 { margin-bottom: 0.1em;}
 #frontend dl.proplist.images dd img { width: 300px; border:1px solid #777; padding: 1px;}
 #frontend dl.proplist.images dl { margin-bottom: 1.5em; }
@@ -297,13 +312,25 @@ dl.form-col {
 }
 
 
-table#header {
+table .frontend_content {
 	margin: 2em;
 	
 	}
 
 div#unit_selector {
-	
+	float: left;
+	//list-style:none;
+	//padding: 2px;
+	//padding-left: 5px;
+	//padding:0.5em 1em 0 0;	
+}
+
+div#area_and_price2 {
+	float: left;
+	//list-style:none;
+	//padding: 2px;
+	//padding-left: 5px;
+	//padding:0.5em 1em 0 0;
 }
 
 div#all_units_key_data {
@@ -311,8 +338,9 @@ div#all_units_key_data {
 	}
 
 div#unit_image {
-	margin-left: 2em;
-	}
+	margin-left: 4em;
+	float: left;	
+}
 
 div#unit_image img {
 	height:170px;
@@ -378,10 +406,10 @@ table#key_data td {
 #area_and_price {
 	list-style:none;
 	height: 100%;
-	padding: 2px;
-	padding-left: 5px;
+	//padding: 2px;
+	//padding-left: 5px;
 	float:right;
-	padding:0.5em 1em 0 0;
+	//padding:0.5em 1em 0 0;
 }
 
 #area_and_price li {
@@ -391,10 +419,10 @@ table#key_data td {
 #org_units {
 	list-style: none;
 	height: 100%;
-	padding: 2px;
-	padding-left: 5px;
+	//padding: 2px;
+	//padding-left: 5px;
 	float:right;
-	padding:0.5em 1em 0 0;
+	//padding:0.5em 1em 0 0;
 }
 
 #org_units li {
@@ -404,10 +432,10 @@ table#key_data td {
 #information {
 	list-style:none;
 	height: 100%;
-	padding: 2px;
-	padding-left: 5px;
+	//padding: 2px;
+	//padding-left: 5px;
 	float:right;
-	padding:0.5em 1em 0 0;
+	//padding:0.5em 1em 0 0;
 }
 
 #information li {
@@ -423,32 +451,20 @@ a.header_link {
 	float: left;
 	border: 0 none;
 	//font-family:Arial,sans-serif;
-	font-size:65%;
-	line-height:1.166;
-	padding:2em;
-	position: absolute;
+	//font-size:65%;
+	//line-height:1.166;
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+	//position: absolute;
 }
 
 em#bold {
 	font-weight: bold;
 	}
 
-div#header a {
+.frontend_content a {
 	float: none;
 }
-
-.yui-skin-sam .yui-navset .yui-nav, .yui-skin-sam .yui-navset .yui-navset-top .yui-nav {
-	border-color: #BF0005;
-	border-width:0 0 2px;
-	}
-	
-.yui-skin-sam .yui-navset .yui-content {
-	background: none repeat scroll 0 0 #F4F2ED;
-}
-
-.yui-skin-sam .yui-navset .yui-nav .selected a, .yui-skin-sam .yui-navset .yui-nav .selected a:focus, .yui-skin-sam .yui-navset .yui-nav .selected a:hover {
-	background:url("../../../../assets/skins/sam/sprite.png") repeat-x scroll left -1400px #2647A0;
-	}
 	
 div.tickets {
 	margin-top: 1em;
