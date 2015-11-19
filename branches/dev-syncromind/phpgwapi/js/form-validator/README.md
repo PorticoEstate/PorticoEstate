@@ -1,12 +1,8 @@
 # jQuery Form Validator
 
-With this feature rich jQuery plugin it becomes easy to validate user input while keeping your
- HTML markup clean from javascript code. Even though this plugin has **a wide range of validation functions**
-it's designed to require as little bandwidth as possible. This is achieved by grouping together validation functions
-in "modules", making it possible for the programmer to load **only those functions that's needed** to validate a
-particular form.
+jQuery Form Validator is a **feature rich and multilingual** jQuery plugin that makes it easy to validate user input while keeping your HTML markup clean from javascript code. Even though this plugin has a wide range of validation functions it's **designed to require as little network traffic as possible**. This is achieved by grouping together validation functions in "modules", making it possible to load only those functions that's needed to validate a particular form.
 
-**Form demos and full documentation is available at http://formvalidator.net/**
+**Form demos and full documentation available at http://formvalidator.net/**
 
 *Usage example*
 
@@ -40,7 +36,7 @@ particular form.
 
 ### Support for HTML5
 
-As of version 2.2 (unreleased) you can use this plugin as a fallback solution for the validation attributes in the HTML5 spec. Add the module `html5` to the module string and you can use the following native features:
+As of version 2.2 (unreleased) you can use this plugin as a fallback solution for the validation attributes in the HTML5 spec. Add the module `html5` to the module declaration and you can use the following native features:
 
 **Attributes**: require, pattern, maxlength, min, max, placeholder
 
@@ -78,6 +74,7 @@ Read the documentation for the default features at [http://formvalidator.net/#de
  * **CVV**
  * **strength** — *Validate the strength of a password*
  * **server** — *Validate value of input on server side*
+ * **letternumeric** — *Validate that the input value consists out of only letters and/or numbers*
 
 Read the documentation for the security module at [http://formvalidator.net/#security-validators](http://formvalidator.net/#security-validators)
 
@@ -99,7 +96,8 @@ Read the documentation for the location module at [http://formvalidator.net/#loc
 ### Module: file
  * **mime**
  * **extension**
- * **size**
+ * **size** (file size)
+ * **dimension** (size dimension and ratio)
 
 Read the documentation for the file module at [http://formvalidator.net/#file-validators](http://formvalidator.net/#file-validators)
 
@@ -117,6 +115,25 @@ Read the documentation for the Swedish module at [http://formvalidator.net/#swed
  * **ukvatnumber**
 
 Read the documentation for the UK module at [http://formvalidator.net/#uk-validators](http://formvalidator.net/#uk-validators)
+
+### Module: brazil
+ * **brphone** — Validate a brazilian telephone number
+ * **cep**
+ * **cpf** 
+
+### Module: sanitation
+ * **trim**
+ * **trimLeft**
+ * **trimRight**
+ * **upper**  — (convert all letters to upper case)
+ * **lower**  — (convert all letters to lower case)
+ * **capitalize**  — (convert the first letter in all words to upper case)
+ * **insertRight**  — (declare a text that should be inserted at the end of the value, attribute data-sanitize-insert-right)
+ * **insertLeft**  — (declare a text that should be inserted at the beginning of the value, attribute data-sanitize-insert-left)
+ * **escape**  — (convert < > & ' " to html entities)
+ * **numberFormat**  — (declare the attribute data-sanitize-number-format with any of the formats described on http://numeraljs.com/. Note that this rule requires that numeral.js is included in the page)
+
+Read the documentation for the sanitation module at [http://formvalidator.net/#data-sanitation](http://formvalidator.net/#data-sanitation)
 
 
 ## Writing a custom validator
@@ -215,74 +232,13 @@ It is possible to display help information for each input. The information will 
 
 Read about how to customize this plugin over at [http://formvalidator.net/#configuration](http://formvalidator.net/#configuration)
 
+### Validate On Event ###
+You can cause an element to be validated upon the firing of an event, by attaching an attribute to the form input element named `data-validation-event="click"`. When the configuration settings have `validateOnEvent : true`, the click event will trigger the onBlur validaton for that element. Possible use case: Checkboxes. Instead of waiting for the checkbox to lose focus (blur) and waiting for a validation to occurr, you can specify that elements validation should occur as soon as that checkbox element is clicked.
+
 ## Localization
-This plugin contains a set of error dialogs. In case you don't define an inline error message the plugin
-will fall back on one of the dialogs below. You can how ever add the attribute *data-validation-error-msg* to an
-element, and that message will be displayed instead. All error dialogs can be overwritten by passing an
-object into the validation function.
 
-```javascript
-var enErrorDialogs = {
-    errorTitle : 'Form submission failed!',
-    requiredFields : 'You have not answered all required fields',
-    badTime : 'You have not given a correct time',
-    badEmail : 'You have not given a correct e-mail address',
-    badTelephone : 'You have not given a correct phone number',
-    badSecurityAnswer : 'You have not given a correct answer to the security question',
-    badDate : 'You have not given a correct date',
-    lengthBadStart : 'You must give an answer between ',
-    lengthBadEnd : 'characters',
-    lengthTooLongStart : 'You have given an answer longer than ',
-    lengthTooShortStart : 'You have given an answer shorter than ',
-    notConfirmed : 'Values could not be confirmed',
-    badDomain : 'Incorrect domain value',
-    badUrl : 'The answer you gave was not a correct URL',
-    badCustomVal : 'You gave an incorrect answer',
-    badInt : 'The answer you gave was not a correct number',
-    badSecurityNumber : 'Your social security number was incorrect',
-    badUKVatAnswer : 'Incorrect UK VAT Number',
-    badStrength : 'The password isn\'t strong enough',
-    badNumberOfSelectedOptionsStart : 'You have to choose at least ',
-    badNumberOfSelectedOptionsEnd : ' answers',
-    badAlphaNumeric : 'The answer you gave must contain only alphanumeric characters ',
-    badAlphaNumericExtra: ' and ',
-    wrongFileSize : 'The file you are trying to upload is too large',
-    wrongFileType : 'The file you are trying to upload is of wrong type',
-    groupCheckedTooFewStart : 'Please choose at least ',
-    groupCheckedTooManyStart : 'Please choose a maximum of ', 
-    groupCheckedRangeStart : 'Please choose between ',
-    groupCheckedEnd : ' item(s)'
-};
-```
-
-```html
-<form action="script.php">
-    ...
-</form>
-<script src="js/jquery.min.js"></script>
-<script src="js/form-validator/jquery.form-validator.min.js"></script>
-<script src="js/form-validator/locale.en.js"></script>
-<script>
-  $.validate({
-    language : enErrorDialogs
-  });
-</script>
-...
-```
-
-It's also possible to add inline error messages. If you add attribute `data-validation-error-msg` to an element the value of
-that attribute will be displayed instead of the error dialog that the validation function refers to.
-
-## Input length restriction
-```html
-<p>
-  History (<span id="maxlength">50</span> characters left)
-  <textarea rows="3" id="area"></textarea>
-</p>
-<script type="text/javascript">
-  $('#area').restrictLength( $('#maxlength') );
-</script>
-```
+This plugin comes with translations for English, German, French Spanish and Swedish. You can also choose to override the error
+dialogs yourself. Here you can read more about [localization](http://formvalidator.net/#localization)
 
 ## Program Flow
 Form submit() event is bound to jQ func **validateForm()** when the form is submitted, it calls
@@ -295,7 +251,30 @@ it calls jQ func **$.formUtils.validateInput** to validate the single input when
 
 ## Changelog
 
-#### 2.2.0 (unreleased)
+#### 2.3.0 (unreleased)
+- New translations (Polish, Romanian, Czech, Russian, Italian)
+- Several improvements made to already existing translations
+
+#### 2.2.8
+- The plugin is now again possible to install via bower.
+- Portoguese language pack and validators
+- New module used for data-sanitiation
+- E-mail addresses now validated in accordance to rfc 6531
+- Now possible to use $.fn.validate to programmatically validate inputs
+- Hidden inputs won't get validated by default (can be overriden using option validateHiddenInputs)
+
+
+#### 2.2.43
+- Fixed min/max parse error in HTML5 module
+- Now also supports Twitter bootstraps horizontal forms
+- This plugin now also distributes a default CSS theme including success/fail icons (used on formvalidator.net)
+- Email validation now won't fail if email begins with a number
+- This plugin now comes with error dialogs translated to English, French, German, Spanish and English.
+- New validator `letternumeric`. Validates that input consists out of any type of letter (not only alphanumeric) and/or numbers
+- You can now validate image dimension and ratio
+- ... and a bunch of other smaller bug fixes and improvements.
+
+#### 2.2.0
 * Now possible to define an error message for each validation rule on a certain input (issue #113)
 * This plugin now serves as a html5 fallback. You can now use the native attributes to declare which type
 of validation that should be applied.
@@ -305,7 +284,14 @@ of validation that should be applied.
 * Use the attribute data-validation-confirm to declare which input that should be confirmed when using validation=confirmation (issue #112)
 * Validation "required" now supports inputs of type radio
 * $.validateForm is now deprecated, use $.isValid instead
-
+* Possible to check if form is valid programmatically without showing error messages
+* Select elements can now be validated server-side
+* Cleaned up dialog messages
+* Various IE8 fixes
+* Possible to send along parameters to the server when using server side validation
+* Now possible to set your own parameter name when using server side validation
+* Improved/simplified URL validation
+* ... and a whole lot more small improvements
 
 #### 2.1.47
 * Incorrect error-styling when using datepicker or suggestions is now fixed
@@ -332,22 +318,22 @@ of validation that should be applied.
  * Correction of the US states in validation "federatestate"
  * Fixed bug in server validation
 
-#### 2.1.9
+#### 2.1.09
  * File validation now support multiple files
  * Length validation can now be used to validate the number of uploaded files using a file input that supports multiple files
  * Validation classes is no longer applied on inputs that for some reason shouldn't become validated
 
-#### 2.1.8
+#### 2.1.08
  * Now possible to configure the decimal separator when validating float values. Use either the
  attribute *data-validation-decimal-separator* or the property *decimalSeparator* when
 calling $.validate()
  * $.validationSetup is renamed to $.validate. You will still be able to initiate the validation by calling
  the $.validationSetup but it's considered deprecated.
 
-#### 2.1.6
- * Modules can now be loaded from remote website
+#### 2.1.06
+ * Modules can now be loaded from remote websites
 
-#### 2.1.5
+#### 2.1.05
  * Fixed language bug (issue #43 on github)
  * Validation on server side is now triggered by the blur event
  * Now using class names that's compliant with twitter bootstrap 3.x
