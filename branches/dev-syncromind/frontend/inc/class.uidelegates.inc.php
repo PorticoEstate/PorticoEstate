@@ -24,7 +24,7 @@
 			if(isset($_POST['search']))
 			{
 				$username = phpgw::get_var('username');
-				if(!isset($username))
+				if(empty($username))
 				{
 					$msglog['error'][] = array('msg' => lang('lacking_username'));
 				}
