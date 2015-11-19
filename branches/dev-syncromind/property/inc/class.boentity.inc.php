@@ -40,8 +40,13 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $p_num;
 		var $allrows;
+		var $district_id;
+		var $status;
 		var $part_of_town_id;
+		var $start_date;
+		var $end_date;
 		var $location_code;
 		var $results;
 		var $acl_location;

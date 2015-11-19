@@ -501,7 +501,7 @@
 			$filtermethod	 = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where			 = 'AND';
 
-//			if( $category['org_unit'])
+			if( $category['org_unit'])
 			{
 				if($org_units)
 				{
@@ -1491,7 +1491,7 @@
 			}
 
 			unset($_config);
-//			if( $category['org_unit'])
+			if( $category['org_unit'])
 			{
 				if($org_units)
 				{

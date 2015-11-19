@@ -517,7 +517,8 @@
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1,
 				'start_date' => $start_date,
-				'end_date'	 => $end_date
+				'end_date'	 => $end_date,
+				'dry_run'	 => false
 			);
 
 			$values = $this->bo->read($params);
