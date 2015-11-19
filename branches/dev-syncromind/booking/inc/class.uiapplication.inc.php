@@ -880,9 +880,11 @@
                         $this->set_case_officer($application);
 			self::adddatetimepicker();
 			
+            $current_app = $GLOBALS['phpgw_info']['flags']['currentapp'] ? $GLOBALS['phpgw_info']['flags']['currentapp'] : 'booking';
+            
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
-			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			$application['cancel_link'] = self::link(array('menuaction' => $current_app.'.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);

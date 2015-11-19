@@ -99,10 +99,10 @@
 			$booking['building_id'] = phpgw::get_var('building_id', 'int');
 			$allocation_id = phpgw::get_var('allocation_id', 'int');
             #The string replace is a workaround for a problem at Bergen Kommune 
-            $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'string'));
-            $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'string'));
-			$time_from = explode(" ",phpgw::get_var('from_', 'string'));
-			$time_to = explode(" ",phpgw::get_var('to_', 'string'));
+            $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'string', 'GET'));
+            $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'string', 'GET'));
+			$time_from = explode(" ",phpgw::get_var('from_', 'string', 'GET'));
+			$time_to = explode(" ",phpgw::get_var('to_', 'string', 'GET'));
 
 			$step = phpgw::get_var('step', 'string', 'REQUEST', 1);
 			$invalid_dates = array();
@@ -116,14 +116,13 @@
 				$booking['season_id'] = $season['id'];
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
+                $booking['allocation_id'] = $allocation_id;
 				array_set_default($booking, 'resources', array( phpgw::get_var('resource')));
 			} else {
 				$season = $this->season_bo->read_single($_POST['season_id']);
             }
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-                $_POST['from_'] = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : "";
-                $_POST['to_'] = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : "";
                 $_POST['repeat_until'] = ($_POST['repeat_until']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : "";
                 
 				$today = getdate();
@@ -232,9 +231,6 @@
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			array_set_default($booking, 'resources', array());
 
-            $booking['from_'] = pretty_timestamp($booking['from_']);
-            $booking['to_'] = pretty_timestamp($booking['to_']);
-
             if(!$activity_id)
 			{
 				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
@@ -261,9 +257,12 @@
 				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
 			}
             
-            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
-            $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
+            $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
             $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+            
+            $booking['from_'] = pretty_timestamp($booking['from_']);
+            $booking['to_'] = pretty_timestamp($booking['to_']);
             
             phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
             
@@ -295,8 +294,8 @@
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
-					'from_date' => pretty_timestamp($_POST['from_']),
-					'to_date' => pretty_timestamp($_POST['to_']),
+					'from_date' => $_POST['from_'],
+					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups)
@@ -480,15 +479,6 @@
                 $booking['organization_id'] = $group['organization_id'];
 			}
 
-            $booking['from_'] = pretty_timestamp($booking['from_']);
-            $booking['to_'] = pretty_timestamp($booking['to_']);
-            
-            foreach($bookings['results'] as &$b)
-			{
-				$b['from_'] = pretty_timestamp($b['from_']);
-				$b['to_'] = pretty_timestamp($b['to_']);
-			}
-
             $activity_path = $this->activity_bo->get_path($booking['activity_id']);
             $top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
             
@@ -508,6 +498,15 @@
             $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
             
             $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+            
+            $booking['from_'] = pretty_timestamp($booking['from_']);
+            $booking['to_'] = pretty_timestamp($booking['to_']);
+            
+            foreach($bookings['results'] as &$b)
+			{
+				$b['from_'] = pretty_timestamp($b['from_']);
+				$b['to_'] = pretty_timestamp($b['to_']);
+			}
             
             phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
             
