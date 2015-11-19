@@ -18,7 +18,7 @@
 
 	<xsl:template match="attributes">
 
-			<div class="pure-control-group">
+			<div class="pure-group">
 				<label>
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
@@ -28,7 +28,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<b><xsl:value-of select="input_text"/></b>
+							<xsl:value-of select="input_text"/>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
@@ -47,7 +47,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</label>
-				<div class="pure-custom">
+				<div>
 					<xsl:choose>
 						<xsl:when test="name!=''">
 							<xsl:choose>
