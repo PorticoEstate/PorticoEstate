@@ -13,13 +13,15 @@ div#wrapper {}
 .frontend_header {
 	padding-left: 2em;
 	padding-right: 2em;
-	padding-top: 2em;
+	padding-top: 1em;
+	padding-bottom: 1em;
 }
 
 .frontend_body {
 	padding-left: 2em;
 	padding-right: 2em;
-	padding-top: 2em;
+	padding-top: 1em;
+	padding-bottom: 1em;
 }
 
 ul#metanav {
@@ -545,4 +547,31 @@ div#paging {
    width:auto;    
 }
 
+.pure-control-group {
+	margin-bottom: 0.5em;
+}
 
+.pure-group {
+	margin-bottom: 0.5em;
+}
+
+.pure-group label, .pure-control-group label {
+	font-weight: bold;
+	display: inline;
+	margin-right: 1em;
+}
+
+.pure-group div, .pure-control-group div {
+	display: inline;
+}
+
+.pure-group div input {
+	display: inline;
+}
+
+.attributes {
+	padding-left: 2em;
+	padding-right: 2em;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
