@@ -47,18 +47,18 @@
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
-				'tabs' 			=> 	$this->tabs,
 				'messages_data' => 	array (
-					'form_action' => $form_action,
-					'message' 	=> $messages,
-					'view'		=> $message
+					'form_action'	=> $form_action,
+					'message'		=> $messages,
+					'view'			=> $message,
+					'tabs'			=> $this->tabs, 
+					'tabs_content'	=> $this->tabs_content, 
+					'tab_selected'	=> $this->tab_selected
 				),
 				
 			);
 			
-			
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','messages'));
+			self::render_template_xsl(array('messages', 'frontend'), array('data' => $data));
 			
 		}
 		
