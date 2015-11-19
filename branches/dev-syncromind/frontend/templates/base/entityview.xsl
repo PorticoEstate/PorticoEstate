@@ -38,54 +38,26 @@
 	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	
 	<div class="frontend_body">
-		<div class="pure-form pure-form-stacked">
+		<div>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
 				<div id="{$tab_selected}">
-					<fieldset>
-							<div class="pure-control-group">
-								<label>
-									<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
-								</label>
-							</div>						
-							<div class="pure-control-group">
-								<label>
-									<a href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
-								</label>
-							</div>						
-							<div class="pure-control-group">
-								<label>
-									<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
-								</label>
-							</div>
+					<div>
+						<div class="pure-control-group">
+							
+								<a class="pure-button" href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
+								<a class="pure-button" href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
+								<a class="pure-button" href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
+							
+						</div>						
 
-
-							<xsl:choose>
-								<xsl:when test="location_data!=''">
-									<li>
-										<b><xsl:value-of select="php:function('lang', 'location')"/></b>
-									</li>
-									<div id="location">
-										<table>
-											<xsl:call-template name="location_view"/>
-										</table>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-
-
-							<xsl:apply-templates select="custom_attributes/attributes"/>
-
-	<!--
 						<xsl:choose>
-							<xsl:when test="files!=''">
-								<li>
-									<div id="datatable-container_0"></div>
-								</li>
+							<xsl:when test="location_data!=''">
+								<xsl:call-template name="location_view"/>
 							</xsl:when>
 						</xsl:choose>
-	-->
 
+						<xsl:apply-templates select="custom_attributes/attributes"/>
 
 						<xsl:for-each select="integration">
 							<div id="{section}">
@@ -94,7 +66,7 @@
 								</iframe>
 							</div>
 						</xsl:for-each>
-					</fieldset>
+					</div>
 				</div>
 				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 			</div>
