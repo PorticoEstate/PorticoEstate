@@ -1,4 +1,11 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
+	<xsl:choose>
+	    <xsl:when test="msgbox_data != ''">
+			<xsl:call-template name="msgbox"/>
+	    </xsl:when>
+   </xsl:choose>
+	
+	<div class="frontend_body">
 	<div class="pure-form pure-form-stacked">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -38,12 +45,6 @@
 				</xsl:choose>
 
 				<xsl:choose>
-				   <xsl:when test="msgbox_data != ''">
-					<xsl:call-template name="msgbox"/>
-				   </xsl:when>
-			   </xsl:choose>
-
-				<xsl:choose>
 					<xsl:when test="//selected_org_unit != 'all'">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<h3><xsl:value-of select="php:function('lang', 'delegates_for_res_unit')"/> (<xsl:value-of select="number_of_delegates"/>)</h3>
@@ -70,7 +71,6 @@
 															(<xsl:value-of select="account_lid"/>)
 													</xsl:otherwise>
 												</xsl:choose>
-
 											</li>
 										</xsl:for-each>
 									</ul>
@@ -115,6 +115,7 @@
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 		</div>	
+	</div>
 	</div>
 </xsl:template>
 
