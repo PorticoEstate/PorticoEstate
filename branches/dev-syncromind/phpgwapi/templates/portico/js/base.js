@@ -1,293 +1,199 @@
-YAHOO.namespace ("portico");
-
-YAHOO.portico.DEBUG = false;
-YAHOO.portico.LOG_ELEMENT = null;
-
-YAHOO.portico.Log = function( html )
-{
-	if( !YAHOO.portico.DEBUG )
-	{
-		return;
-	}
-
-	if( YAHOO.portico.LOG_ELEMENT == null )
-	{
-		YAHOO.portico.LOG_ELEMENT = document.getElementById('debug');
-	}
-
-	if( YAHOO.portico.LOG_ELEMENT )
-	{
-		YAHOO.portico.LOG_ELEMENT.innerHTML += html;
-	}
-};
-
-YAHOO.portico.Store = function(location, data)
-{
-	var	handleSuccess = function(o)
-	{
-			YAHOO.portico.Log( "<strong>Success:</strong><br>" );
-			YAHOO.portico.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-			YAHOO.portico.Log( "<br><br>" );
-	}
-
-	var	handleFailure = function(o)
-	{
-			YAHOO.portico.Log( "<strong>Failure:</strong><br>" );
-			YAHOO.portico.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-			YAHOO.portico.Log( "<br><br>" );
-	}
-
-	var callback =
-	{
-		success: handleSuccess,
-		failure: handleFailure
-	};
-
-	var sUrl = phpGWLink('index.php',
-	{
-    	menuaction: 'phpgwapi.template_portico.store',
-        phpgw_return_as: 'json',
-        location: location
-	});
-
-	var postData = 'data=' + JSON.stringify( data );
-	YAHOO.portico.Log( "<strong>Sending payload:</strong><pre>" + JSON.stringify( data ) + "</pre>" );
-    var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, postData);
-
-};
-
-YAHOO.portico.NavBar = function()
-{
-	this.state = navbar_config.length == 0 ? {} : navbar_config;
-
-	var self = this;
-
-	this.buildWidget = function()
-	{
-		YAHOO.util.Event.on( "navbar", "click", this.clickHandler, this );
-	};
-
-	this.clickHandler = function(e, obj)
-	{
-		//scope for 'this' is the DOM element whose click event was detected
-
-		var elTarget = YAHOO.util.Event.getTarget(e);
-
-		if(elTarget.nodeName.toUpperCase() == "IMG" &&
-			( elTarget.className == 'expanded' || elTarget.className == 'collapsed' ) )
-		{
-			YAHOO.util.Event.preventDefault(e);
-
-			// Should we expand or collapse ?
-      		var new_state = ( elTarget.className == 'expanded' ? 'collapsed' : 'expanded' );
-
-      		// Change CSS class (which sets image)
-      		elTarget.className = new_state;
-
-      		// Walk upwards the DOM-tree till we find an A element (which has an id )
-      		while(elTarget.nodeName.toUpperCase() != "A")
-      		{
-        		elTarget = elTarget.nextSibling;
-      		}
-      		var id = elTarget.id;
-
-      		// Walk upwards the DOM-tree till we find a LI element
-      		while (elTarget.nodeName.toUpperCase() != "LI")
-      		{
-        		elTarget = elTarget.parentNode;
-      		}
-
-      		// Do the actual collapse / expand by chaning the CSS class
-      		elTarget.className = new_state;
-
-			// Cleanup leaf nodes introduced by header.inc.php
-			if(self.first_run)
-			{
-				for (var i in self.state)
-				{
-					var elm = document.getElementById( i );
-					while( elm != null && elm.nodeName.toUpperCase() !=  "UL" )
-					{
-						elm = elm.nextSibling;
-					}
-
-					if( elm == null ) {
-						delete self.state[i];
-					}
-				}
-				self.first_run=false;
-			}
-
-			// Store navbar state, this is done by only storing expanded nodes
-			if(elTarget.className ==  'expanded')
-			{
-			  self.state[id] = true;
-			}
-			else if( self.state[id] )
-			{
-			  delete self.state[id];
-			}
-
-			YAHOO.portico.Store('navbar_config', self.state);
-		}
-	};
-
-	// Call "constructor"
-	self.buildWidget();
-};
-
-
-YAHOO.portico.BorderLayout = function()
-{
-	if(border_layout_config)
-	{
-		this.config = border_layout_config.length == 0 ? {} : border_layout_config;
-	}
-	else
-	{
-		this.config = {};
-	}
-
-	var self = this;
-
-	this.buildWidget = function()
-	{
-		var DOM = YAHOO.util.Dom;
-	// Uncomment for make use of east-layout - also see: footer.tpl
-	//	var layouts = Array( 'north', 'west', 'center', 'east', 'south' );
-		var layouts = Array( 'north', 'west', 'center', 'south' );
-		var layout = Array();
-
-		// Collect layout units for border layout
-		var layoutDom = document.getElementById('border-layout');
-		for( i=0; i<layouts.length; i++ )
-		{
-			layout[ layouts[i] ] = DOM.getElementsByClassName( 'layout-' + layouts[i], 'div', layoutDom )[0];
-		}
-
-		if( typeof this.config.unitLeftWidth == 'undefined' )
-		{
-			this.config.unitLeftWidth = 200;
-		}
-
-		if( typeof this.config.unitRightWidth == 'undefined' )
-		{
-			this.config.unitRightWidth = 6;
-		}	
-		
-		var header_height = 26;
-		if(noheader)
-		{
-			header_height = 0;
-		}
-
-		var footer_height = 26;
-		if(nofooter)
-		{
-			footer_height = 0;
-		}
-
-		this.layout = new YAHOO.widget.Layout({
-			minWidth: 600,
-			minHeight: 400,
-            units: [
-				{ position: 'top', body: layout['north'], height: header_height },
-				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false,  maxWidth: 300, minWidth: 6 },
-                { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
-	// Uncomment for make use of east-layout
-    //           { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
-                { position: 'bottom', body: layout['south'], height: footer_height }
-            ]
-        });
-
-        this.layout.render();
-
 /*
-		if (this.config.collapsed == true)
-		{
-			this.layout.getUnitByPosition('left').collapse();
-		}
-*/
-		this.layout.on('resize', this.handleResize );
-	};
+ * complex.html
+ *
+ * This is a demonstration page for the jQuery layout widget
+ *
+ *	NOTE: For best code readability, view this with a fixed-space font and tabs equal to 4-chars
+ */
 
-	this.handleResize = function() {
-		
-//		var collapsed = self.layout.getUnitByPosition('left')._collapsed;
-		var unitLeftWidth = self.layout.getUnitByPosition('left').getSizes().wrap.w + 10;
-		var unitRightWidth = 1;//Dummy//self.layout.getUnitByPosition('right').getSizes().wrap.w + 10;
+	var outerLayout, innerLayout;
 
-		if( unitLeftWidth != self.config.unitLeftWidth ||
-//			collapsed != self.config.collapsed ||
-			unitRightWidth != self.config.unitRightWidth )
-		{
-			self.config.unitLeftWidth = unitLeftWidth;
-			self.config.unitRightWidth = unitRightWidth;
-//			self.config.collapsed = collapsed;
+	/*
+	*#######################
+	*     ON PAGE LOAD
+	*#######################
+	*/
+	$(document).ready( function() {
+		// create the OUTER LAYOUT
+		outerLayout = $("body").layout( layoutSettings_Outer );
 
-			YAHOO.portico.Store( 'border_layout_config',
-				self.config
-			);
-		}
+		/*******************************
+		 ***  CUSTOM LAYOUT BUTTONS  ***
+		 *******************************
+		 *
+		 * Add SPANs to the east/west panes for customer "close" and "pin" buttons
+		 *
+		 * COULD have hard-coded span, div, button, image, or any element to use as a 'button'...
+		 * ... but instead am adding SPANs via script - THEN attaching the layout-events to them
+		 *
+		 * CSS will size and position the spans, as well as set the background-images
+		 */
 
-	}
+		// BIND events to hard-coded buttons in the NORTH toolbar
+		outerLayout.addToggleBtn( "#tbarToggleNorth", "north" );
+		outerLayout.addOpenBtn( "#tbarOpenSouth", "south" );
+		outerLayout.addCloseBtn( "#tbarCloseSouth", "south" );
+		outerLayout.addPinBtn( "#tbarPinWest", "west" );
+		outerLayout.addPinBtn( "#tbarPinEast", "east" );
 
-	// Helper function to find DIV.header inside a layout unit and return text of h2 element
-	this.getHeader = function( node )
-	{
-		var title="";
+		// save selector strings to vars so we don't have to repeat it
+		// must prefix paneClass with "body > " to target ONLY the outerLayout panes
+		var westSelector = "body > .ui-layout-west"; // outer-west pane
+		var eastSelector = "body > .ui-layout-east"; // outer-east pane
 
-		try
-		{
-			var div	= YAHOO.util.Dom.getElementsByClassName( 'header', 'div', node )[0];
-			var header = div.getElementsByTagName('h2')[0];
-			title = header.innerHTML;
-		}
-		catch (e)
-		{
-		}
-		return title;
-	};
+		 // CREATE SPANs for pin-buttons - using a generic class as identifiers
+		$("<span></span>").addClass("pin-button").prependTo( westSelector );
+		$("<span></span>").addClass("pin-button").prependTo( eastSelector );
+		// BIND events to pin-buttons to make them functional
+		outerLayout.addPinBtn( westSelector +" .pin-button", "west");
+		outerLayout.addPinBtn( eastSelector +" .pin-button", "east" );
 
-	// Call "constructor"
-	self.buildWidget();
-};
+		 // CREATE SPANs for close-buttons - using unique IDs as identifiers
+		$("<span></span>").attr("id", "west-closer" ).prependTo( westSelector );
+		$("<span></span>").attr("id", "east-closer").prependTo( eastSelector );
+		// BIND layout events to close-buttons to make them functional
+		outerLayout.addCloseBtn("#west-closer", "west");
+		outerLayout.addCloseBtn("#east-closer", "east");
 
-YAHOO.util.Event.onDOMReady( YAHOO.portico.NavBar );
-YAHOO.util.Event.onDOMReady( YAHOO.portico.BorderLayout );
-
-	this.lightboxlogin = function()
-	{
-		var oArgs = {lightbox:1};
-		var strURL = phpGWLink('login.php', oArgs);
-
-		var onDialogShow = function(e, args, o)
-		{
-			var frame = document.createElement('iframe');
-			frame.src = strURL;
-			frame.width = "100%";
-			frame.height = "400";
-			o.setBody(frame);
-		};
-		lightbox_login.showEvent.subscribe(onDialogShow, lightbox_login);
-		lightbox_login.show();
-	}
-
-
-YAHOO.util.Event.addListener(window, "load", function()
-{
-		lightbox_login = new YAHOO.widget.Dialog("lightbox-login",
-		{
-			width : "600px",
-			fixedcenter : true,
-			visible : false,
-			modal : false
-			//draggable: true,
-			//constraintoviewport : true
+		// DEMO HELPER: prevent hyperlinks from reloading page when a 'base.href' is set
+		$("a").each(function () {
+			var path = document.location.href;
+			if (path.substr(path.length-1)=="#") path = path.substr(0,path.length-1);
+			if (this.href.substr(this.href.length-1) == "#") this.href = path +"#";
 		});
 
-		lightbox_login.render();
+	});
 
-		YAHOO.util.Dom.setStyle('lightbox-login', 'display', 'block');
-});
+
+	/*
+	*#######################
+	* INNER LAYOUT SETTINGS
+	*#######################
+	*
+	* These settings are set in 'list format' - no nested data-structures
+	* Default settings are specified with just their name, like: fxName:"slide"
+	* Pane-specific settings are prefixed with the pane name + 2-underscores: north__fxName:"none"
+	*/
+	layoutSettings_Inner = {
+		applyDefaultStyles:				true // basic styling for testing & demo purposes
+	,	minSize:						20 // TESTING ONLY
+	,	spacing_closed:					14
+	,	north__spacing_closed:			8
+	,	south__spacing_closed:			8
+	,	north__togglerLength_closed:	-1 // = 100% - so cannot 'slide open'
+	,	south__togglerLength_closed:	-1
+	,	fxName:							"slide" // do not confuse with "slidable" option!
+	,	fxSpeed_open:					1000
+	,	fxSpeed_close:					2500
+	,	fxSettings_open:				{ easing: "easeInQuint" }
+	,	fxSettings_close:				{ easing: "easeOutQuint" }
+	,	north__fxName:					"none"
+	,	south__fxName:					"drop"
+	,	south__fxSpeed_open:			500
+	,	south__fxSpeed_close:			1000
+	//,	initClosed:						true
+	,	center__minWidth:				200
+	,	center__minHeight:				200
+	};
+
+
+	/*
+	*#######################
+	* OUTER LAYOUT SETTINGS
+	*#######################
+	*
+	* This configuration illustrates how extensively the layout can be customized
+	* ALL SETTINGS ARE OPTIONAL - and there are more available than shown below
+	*
+	* These settings are set in 'sub-key format' - ALL data must be in a nested data-structures
+	* All default settings (applied to all panes) go inside the defaults:{} key
+	* Pane-specific settings go inside their keys: north:{}, south:{}, center:{}, etc
+	*/
+	var layoutSettings_Outer = {
+		name: "outerLayout" // NO FUNCTIONAL USE, but could be used by custom code to 'identify' a layout
+		// options.defaults apply to ALL PANES - but overridden by pane-specific settings
+	,	defaults: {
+			size:					"auto"
+		,	minSize:				50
+		,	paneClass:				"pane" 		// default = 'ui-layout-pane'
+		,	resizerClass:			"resizer"	// default = 'ui-layout-resizer'
+		,	togglerClass:			"toggler"	// default = 'ui-layout-toggler'
+		,	buttonClass:			"button"	// default = 'ui-layout-button'
+		,	contentSelector:		".content"	// inner div to auto-size so only it scrolls, not the entire pane!
+		,	contentIgnoreSelector:	"span"		// 'paneSelector' for content to 'ignore' when measuring room for content
+		,	togglerLength_open:		35			// WIDTH of toggler on north/south edges - HEIGHT on east/west edges
+		,	togglerLength_closed:	35			// "100%" OR -1 = full height
+		,	hideTogglerOnSlide:		true		// hide the toggler when pane is 'slid open'
+		,	togglerTip_open:		"Close This Pane"
+		,	togglerTip_closed:		"Open This Pane"
+		,	resizerTip:				"Resize This Pane"
+		//	effect defaults - overridden on some panes
+		,	fxName:					"slide"		// none, slide, drop, scale
+		,	fxSpeed_open:			750
+		,	fxSpeed_close:			1500
+		,	fxSettings_open:		{ easing: "easeInQuint" }
+		,	fxSettings_close:		{ easing: "easeOutQuint" }
+	}
+	,	north: {
+			spacing_open:			1			// cosmetic spacing
+		,	togglerLength_open:		0			// HIDE the toggler button
+		,	togglerLength_closed:	-1			// "100%" OR -1 = full width of pane
+		,	resizable: 				false
+		,	slidable:				false
+		//	override default effect
+		,	fxName:					"none"
+		}
+	,	south: {
+			maxSize:				200
+		,	spacing_closed:			0			// HIDE resizer & toggler when 'closed'
+		,	slidable:				false		// REFERENCE - cannot slide if spacing_closed = 0
+		,	initClosed:				false
+		//	CALLBACK TESTING...
+		,	onhide_start:			function () { return confirm("START South pane hide \n\n onhide_start callback \n\n Allow pane to hide?"); }
+		,	onhide_end:				function () { alert("END South pane hide \n\n onhide_end callback"); }
+		,	onshow_start:			function () { return confirm("START South pane show \n\n onshow_start callback \n\n Allow pane to show?"); }
+		,	onshow_end:				function () { alert("END South pane show \n\n onshow_end callback"); }
+		,	onopen_start:			function () { return confirm("START South pane open \n\n onopen_start callback \n\n Allow pane to open?"); }
+		,	onopen_end:				function () { alert("END South pane open \n\n onopen_end callback"); }
+		,	onclose_start:			function () { return confirm("START South pane close \n\n onclose_start callback \n\n Allow pane to close?"); }
+		,	onclose_end:			function () { alert("END South pane close \n\n onclose_end callback"); }
+		//,	onresize_start:			function () { return confirm("START South pane resize \n\n onresize_start callback \n\n Allow pane to be resized?)"); }
+		,	onresize_end:			function () { alert("END South pane resize \n\n onresize_end callback \n\n NOTE: onresize_start event was skipped."); }
+		}
+	,	west: {
+			size:					250
+		,	spacing_closed:			21			// wider space when closed
+		,	togglerLength_closed:	21			// make toggler 'square' - 21x21
+		,	togglerAlign_closed:	"top"		// align to top of resizer
+		,	togglerLength_open:		0			// NONE - using custom togglers INSIDE west-pane
+		,	togglerTip_open:		"Close West Pane"
+		,	togglerTip_closed:		"Open West Pane"
+		,	resizerTip_open:		"Resize West Pane"
+		,	slideTrigger_open:		"click" 	// default
+		,	initClosed:				true
+		//	add 'bounce' option to default 'slide' effect
+		,	fxSettings_open:		{ easing: "easeOutBounce" }
+		}
+	,	east: {
+			size:					250
+		,	spacing_closed:			21			// wider space when closed
+		,	togglerLength_closed:	21			// make toggler 'square' - 21x21
+		,	togglerAlign_closed:	"top"		// align to top of resizer
+		,	togglerLength_open:		0 			// NONE - using custom togglers INSIDE east-pane
+		,	togglerTip_open:		"Close East Pane"
+		,	togglerTip_closed:		"Open East Pane"
+		,	resizerTip_open:		"Resize East Pane"
+		,	slideTrigger_open:		"mouseover"
+		,	initClosed:				true
+		//	override default effect, speed, and settings
+		,	fxName:					"drop"
+		,	fxSpeed:				"normal"
+		,	fxSettings:				{ easing: "" } // nullify default easing
+		}
+	,	center: {
+			paneSelector:			"#mainContent" 			// sample: use an ID to select pane instead of a class
+		,	minWidth:				200
+		,	minHeight:				200
+		}
+	};
 

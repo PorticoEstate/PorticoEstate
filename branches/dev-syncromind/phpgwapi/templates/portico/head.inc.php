@@ -20,11 +20,11 @@
 	$javascripts = array();
 
 	$stylesheets = array();
-	phpgwapi_yui::load_widget('dragdrop');
-	phpgwapi_yui::load_widget('element');
-	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('connection');
-	phpgwapi_yui::load_widget('resize');
+
+	phpgw::import_class('phpgwapi.jquery');
+	phpgwapi_jquery::load_widget('core');
+	phpgwapi_jquery::load_widget('layout');
+
 	$javascripts = array
 	(
 		"/phpgwapi/js/json/json.js"
@@ -41,33 +41,20 @@
 		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 		phpgwapi_yui::load_widget('treeview');
 		phpgwapi_yui::load_widget('datasource');
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
 			$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
 		}
-
 		else if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
 		{
-			phpgw::import_class('phpgwapi.jquery');
 			phpgwapi_jquery::load_widget('menu');
 		}
 
 	}
 
-	phpgwapi_yui::load_widget('button');
 
 	$stylesheets = array();
-
-	if( !isset($GLOBALS['phpgw_info']['flags']['no_reset_fonts']) )
-	{
-		$stylesheets[] = '/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css';
-	}
-
-	$stylesheets[] = "/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -80,10 +67,10 @@
 		$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 
-	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
-	{
-		$stylesheets[] = "/phpgwapi/templates/base/css/yui_table_nowrap.css";
-	}
+//	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
+//	{
+//		$stylesheets[] = "/phpgwapi/templates/base/css/yui_table_nowrap.css";
+//	}
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -160,11 +147,10 @@
 
 	flush();
 
-	echo '<body class="yui-skin-sam">';
+	echo '<body>';
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		echo '<div align = "left">';
 		register_shutdown_function('parse_footer_end_noframe');
 	}
 	
@@ -172,7 +158,6 @@
 	{
 		if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 		{
-			echo '</div>';
 		}
 
 		$footer = <<<HTML

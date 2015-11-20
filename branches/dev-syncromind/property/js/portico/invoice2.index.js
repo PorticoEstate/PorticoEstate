@@ -1,17 +1,20 @@
 $(document).ready(function(){
 
-	$("body").layout(
-		{
-			applyDemoStyles:			true,
-			east__size:					350,
-			east__fxSpeed:				100,
-			livePaneResizing:			true,
-			animatePaneSizing:			true, // changes in pane-sizes when resetting state will be animated
-			stateManagement__enabled:	true
- });
+//	$("body").layout(
+//		{
+//			applyDemoStyles:			true,
+//			east__size:					350,
+//			east__fxSpeed:				100,
+//			livePaneResizing:			true,
+//			animatePaneSizing:			true,
+//			stateManagement__enabled:	true
+// });
 
 
 
+$(document).ready(function () {
+	$('body').layout({ applyDemoStyles: true });
+});
 
 	var api = oTable0.api();
 	api.on( 'draw', sum_columns );
