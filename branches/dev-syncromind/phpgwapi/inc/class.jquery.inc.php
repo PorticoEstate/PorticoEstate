@@ -83,8 +83,9 @@ class phpgwapi_jquery {
 					(
 					"js/jquery-2.1.1{$_type}",
 					"validator/jquery.form-validator{$_type}"
+//					"validator/jquery.form-validator"
 				);
-				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/theme-default.css");
 				break;
 			
 			case 'menu':
@@ -203,8 +204,107 @@ class phpgwapi_jquery {
 			$errorMessagePosition = "'top'";
 		}
 
+		$translation = '';
+		if(!$times_loaded)//first time only
+		{
+			//TODO: use translations from the package
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] == 'no')
+			{
+				$translation = <<<JS
+
+				var validateLanguage = {
+					errorTitle: 'innsending av skjema mislyktes!',
+					requiredField: 'Dette er et obligatorisk felt',
+					requiredFields: 'Du har ikke svart på alle obligatoriske felter',
+					badTime: 'Du har ikke angitt en gyldig tid',
+					badEmail: 'Du har ikke angitt en gyldig e-postadresse',
+					badTelephone: 'Du har ikke angitt et gyldig telefonnummer',
+					badSecurityAnswer: 'Du har ikke gitt korrekt svar på sikkerhetsspørsmålet',
+					badDate: 'Du har ikke gitt en gyldig dato',
+					lengthBadStart: 'Inputverdien må være mellom ',
+					lengthBadEnd: ' karakterer',
+					lengthTooLongStart: 'Inputverdien er lengre enn ',
+					lengthTooShortStart: 'Inputverdien er kortere enn ',
+					notConfirmed: 'Inputverdiene kunne ikke bekreftes',
+					badDomain: 'Feilaktig domene verdi',
+					badUrl: 'Inputverdiene er ikke et riktig nettadresse',
+					badCustomVal: 'Inputverdien er feil',
+					andSpaces: ' og mellomrom ',
+					badInt: 'Du har ikke angitt et tall',
+					badSecurityNumber: 'Personnummeret validerer ikke',
+					badUKVatAnswer: 'Feil britisk moms-kode',
+					badStrength: 'Passordet er ikke sterk nok',
+					badNumberOfSelectedOptionsStart: 'Du må velge minst ',
+					badNumberOfSelectedOptionsEnd: ' svar',
+					badAlphaNumeric: 'Inputverdiene kan bare inneholde alfanumeriske tegn ',
+					badAlphaNumericExtra: ' og ',
+					wrongFileSize: 'Filen du prøver å laste opp er for stor (max %s)',
+					wrongFileType: 'Bare filer av type %s er mulig',
+					groupCheckedRangeStart: 'Vennligst velg mellom ',
+					groupCheckedTooFewStart: 'Vennligst velg minst ',
+					groupCheckedTooManyStart: 'Vennligst velg maksimum ',
+					groupCheckedEnd: ' alternativ',
+					badCreditCard: 'Kredittkortnummeret er ikke gyldig',
+					badCVV: 'CVV-nummer ikke var gyldig',
+					wrongFileDim : 'Feil bildedimensjoner,',
+					imageTooTall : 'bildet kan ikke være høyere enn',
+					imageTooWide : 'bildet kan ikke være bredere enn',
+					imageTooSmall : 'bildet var for liten',
+					min : 'minimum',
+					max : 'maximum',
+					imageRatioNotAccepted : 'Bildeforholdet kan ikke aksepteres',
+					badBrazilTelephoneAnswer: 'Telefonnummeret er ugyldig',
+					badBrazilCEPAnswer: 'CEP er ugyldig',
+					badBrazilCPFAnswer: 'CPF er ugyldig'
+				   };
+JS;
+
+			}
+			else
+			{
+
+				$translation = <<<JS
+
+				var validateLanguage = {
+					 errorTitle : 'Form submission failed!',
+					 requiredFields : 'You have not answered all required fields',
+					 badTime : 'You have not given a correct time',
+					 badEmail : 'You have not given a correct e-mail address',
+					 badTelephone : 'You have not given a correct phone number',
+					 badSecurityAnswer : 'You have not given a correct answer to the security question',
+					 badDate : 'You have not given a correct date',
+					 lengthBadStart : 'You must give an answer between ',
+					 lengthBadEnd : ' characters',
+					 lengthTooLongStart : 'You have given an answer longer than ',
+					 lengthTooShortStart : 'You have given an answer shorter than ',
+					 notConfirmed : 'Values could not be confirmed',
+					 badDomain : 'Incorrect domain value',
+					 badUrl : 'The answer you gave was not a correct URL',
+					 badCustomVal : 'You gave an incorrect answer',
+					 badInt : 'The answer you gave was not a correct number',
+					 badSecurityNumber : 'Your social security number was incorrect',
+					 badUKVatAnswer : 'Incorrect UK VAT Number',
+					 badStrength : 'The password isn\'t strong enough',
+					 badNumberOfSelectedOptionsStart : 'You have to choose at least ',
+					 badNumberOfSelectedOptionsEnd : ' answers',
+					 badAlphaNumeric : 'The answer you gave must contain only alphanumeric characters ',
+					 badAlphaNumericExtra: ' and ',
+					 wrongFileSize : 'The file you are trying to upload is too large',
+					 wrongFileType : 'The file you are trying to upload is of wrong type',
+					 groupCheckedRangeStart : 'Please choose between ',
+					 groupCheckedTooFewStart : 'Please choose at least ',
+					 groupCheckedTooManyStart : 'Please choose a maximum of ',
+					 groupCheckedEnd : ' item(s)'
+				   };
+JS;
+			}
+		}
+
 		$js = <<<JS
-			$(document).ready(function () 
+
+			{$translation}
+
+			$(document).ready(function ()
 			{
 				$.validate({
 					lang: '{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}', // (supported languages are fr, de, se, sv, en, pt, no)
