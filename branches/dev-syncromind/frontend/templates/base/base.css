@@ -555,7 +555,7 @@ div#paging {
 	margin-bottom: 0.5em;
 }
 
-.pure-group label, .pure-control-group label {
+.ticket_content .pure-group label, .ticket_content .pure-control-group label {
 	font-weight: bold;
 	display: inline;
 	margin-right: 1em;
