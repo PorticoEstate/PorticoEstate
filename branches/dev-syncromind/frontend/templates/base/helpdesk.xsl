@@ -102,14 +102,14 @@
 </xsl:template>
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
-    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+			<xsl:call-template name="msgbox"/>
+		</xsl:when>
+	</xsl:choose>
 		
-		<xsl:choose>
-			<xsl:when test="msgbox_data != ''">
-				<xsl:call-template name="msgbox"/>
-			</xsl:when>
-	    </xsl:choose>
-   
+    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
         <div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div id="details">
@@ -142,7 +142,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'description')" />
 							</label>
-							<textarea cols="60" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
+							<textarea cols="50" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
 								<xsl:value-of select="description"/>
 							</textarea>
 						</div>
@@ -163,7 +163,7 @@
 							</label>
 						</div>
 					</div>
-					<div class="attributes">
+					<div class="ticket_content attributes">
 						<xsl:apply-templates select="custom_attributes/attributes"/>
 					</div>
 				</xsl:if>
