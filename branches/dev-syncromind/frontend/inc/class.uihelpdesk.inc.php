@@ -570,9 +570,9 @@
 				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
+			/*$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));*/
 			
-			//self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
+			self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
 		}
 	}
