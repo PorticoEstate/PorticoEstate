@@ -27,6 +27,10 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please select an activity')"/>
+									</xsl:attribute>
+
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -48,6 +52,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please enter a description')"/>
+									</xsl:attribute>
                                     <xsl:value-of select="application/description"/>
                                 </textarea>
                             </div>
@@ -60,7 +67,11 @@
                                 <p><xsl:value-of select="config/application_howmany"/></p>
                             </xsl:if>
                             <label><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
-                            <input type="hidden" data-validation="number_participants"></input>
+                            <input type="hidden" data-validation="number_participants">
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Number of participants is required')"/>
+								</xsl:attribute>
+ 							</input>
                             <table id="agegroup" class="pure-table pure-table-bordered">
                                 <thead>
                                     <tr>
@@ -114,6 +125,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please enter a building name')"/>
+									</xsl:attribute>
                                 </input>
                                 <div id="building_container"></div>
                             </div>
@@ -240,7 +254,10 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
-                                    <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Enter a name')"/>
+									</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
@@ -249,7 +266,10 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
-                                    <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
+ 									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Enter an email')"/>
+									</xsl:attribute>
+                                   <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
@@ -262,7 +282,7 @@
                                         <xsl:text>contact_email</xsl:text>
                                     </xsl:attribute>
                                     <xsl:attribute name="data-validation-error-msg">
-                                        <xsl:text>the e-mail addresses you entered do not match</xsl:text>
+										<xsl:value-of select="php:function('lang', 'the e-mail addresses you entered does not match')"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email2"/></xsl:attribute>
                                 </input>
@@ -343,5 +363,6 @@
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>
         $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
+        $('#field_customer_identifier_type').attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'Customer identifier type is required')"/>");
     </script>
 </xsl:template>

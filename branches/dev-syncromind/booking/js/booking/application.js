@@ -110,7 +110,7 @@ $(window).load(function(){
 if ($.formUtils) {
     $.formUtils.addValidator({
         name: 'regulations_documents',
-        validatorFunction: function(value, $el, config, languaje, $form) {
+        validatorFunction: function(value, $el, config, language, $form) {
             var n = 0;
             $('#regulation_documents input[name="accepted_documents[]"]').each(function(){
                 if(!$(this).is(':checked')) {
@@ -121,12 +121,12 @@ if ($.formUtils) {
             return v;
         },
         errorMessage: 'You must accept to follow all terms and conditions of lease first.',
-        errorMessageKey: ''
+        errorMessageKey: 'regulations_documents'
     })
 
     $.formUtils.addValidator({
         name: 'target_audience',
-        validatorFunction: function(value, $el, config, languaje, $form) {
+        validatorFunction: function(value, $el, config, language, $form) {
             var n = 0;
             $('#audience input[name="audience[]"]').each(function(){
                if ($(this).is(':checked')) {
@@ -137,12 +137,12 @@ if ($.formUtils) {
             return v;
         },
         errorMessage: 'Please choose at least 1 target audience',
-        errorMessageKey: ''
+        errorMessageKey: 'target_audience'
     })
 
     $.formUtils.addValidator({
         name: 'number_participants',
-        validatorFunction: function(value, $el, config, languaje, $form) {
+        validatorFunction: function(value, $el, config, language, $form) {
             var n = 0;
             $('#agegroup_tbody input').each(function() {
                 if ($(this).val() != "" && $(this).val() > 0) {
@@ -153,12 +153,12 @@ if ($.formUtils) {
             return v;
         },
         errorMessage: 'Number of participants is required',
-        errorMessageKey: ''
+        errorMessageKey: 'number_participants'
     });
 
     $.formUtils.addValidator({
         name: 'customer_identifier',
-        validatorFunction: function(value, $el, config, languaje, $form) {
+        validatorFunction: function(value, $el, config, language, $form) {
             var v = false;
             var customer_ssn = $('#field_customer_ssn').val();
             var customer_organization_number = $('#field_customer_organization_number').val();
@@ -168,12 +168,12 @@ if ($.formUtils) {
             return v;
        },
        errorMessage: 'Customer identifier type is required',
-       errorMessageKey: ''
+       errorMessageKey: 'customer_identifier'
     });
 
     $.formUtils.addValidator({
         name: 'application_dates',
-        validatorFunction: function(value, $el, config, languaje, $form) {
+        validatorFunction: function(value, $el, config, language, $form) {
             var n = 0;
             if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
                 return false;
@@ -198,7 +198,7 @@ if ($.formUtils) {
             return v;
         },
         errorMessage: 'Invalida date',
-        errorMessageKey: ''
+        errorMessageKey: 'application_dates'
     });
 } else {
     function validate_documents() {
