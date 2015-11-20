@@ -42,7 +42,7 @@
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
 				<div id="{$tab_selected}">
-					<div>
+					<div class="ticket_content">
 						<div class="pure-control-group">
 							
 								<a class="pure-button" href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
