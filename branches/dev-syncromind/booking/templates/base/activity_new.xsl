@@ -19,7 +19,7 @@
                     <textarea rows="5" id="field_description" name="description"><xsl:value-of select="activity/description"/></textarea>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_parent_id">ww<xsl:value-of select="php:function('lang', 'Parent activity')" /></label>
+                    <label for="field_parent_id"><xsl:value-of select="php:function('lang', 'Parent activity')" /></label>
                     <select name="parent_id" id="field_parent_id">
                         <option value="0"><xsl:value-of select="php:function('lang', 'No Parent')" /></option>
                         <xsl:for-each select="activities">
