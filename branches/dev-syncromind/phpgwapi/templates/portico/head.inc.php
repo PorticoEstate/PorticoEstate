@@ -55,6 +55,12 @@
 
 
 	$stylesheets = array();
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
