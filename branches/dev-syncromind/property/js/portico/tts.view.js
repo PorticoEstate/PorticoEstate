@@ -53,7 +53,7 @@ var FormatterAmount2 = function(key, oData)
 					errorMessagePosition : 'top',
 					language : validateLanguage
 				};
-			var test =  $('form').validateForm(validateLanguage, conf);
+			var test =  $('form').isValid(validateLanguage, conf);
 			if(!test)
 			{
 				return;

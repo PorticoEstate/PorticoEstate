@@ -204,7 +204,7 @@ $(document).ready(function(){
 				errorMessagePosition : 'top',
 				language : validateLanguage
 			};
-		return $('form').validateForm(validateLanguage, conf);
+		return $('form').isValid(validateLanguage, conf);
 	}
 
 	$(document).ready(function(){
