@@ -293,15 +293,16 @@
 
 		public function get_all_org_units_autocomplete()
 		{
-			$query = mb_strtoupper(phpgw::get_var('query'), 'UTF-8');
-
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET,  V_ORG_ENHET.ORG_NIVAA";
-			$tables	 = "V_ORG_ENHET";
-			$sql	 = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 			if(!$db		 = $this->get_db())
 			{
 				return;
 			}
+
+			$query = mb_strtoupper(phpgw::get_var('query'), 'UTF-8');
+
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET,  V_ORG_ENHET.ORG_NIVAA";
+			$tables	 = "V_ORG_ENHET";
+			$sql	 = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) {$db->like} '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 
 			if($db->Type == "postgres")
 			{
@@ -317,7 +318,7 @@
 			$result_units = array();
 			while($db->next_record())
 			{
-				$result[] = array
+				$result_units[] = array
 					(
 					'id'		 => (int)$db->f($org_enhet_field),
 					'name'		 => $db->f($name_field, true) . ' (' . (int)$db->f($level_field) . ')',
@@ -325,7 +326,7 @@
 				);
 			}
 
-			return array('ResultSet' => array('Result' => $result));
+			return array('ResultSet' => array('Result' => $result_units));
 		}
 
 		public function get_org_unit_name($id = 0)
@@ -564,6 +565,11 @@
 		{
 			$this->log(__class__, __function__);
 
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
 			$tables	 = "V_ORG_ENHET";
 			$joins	 = "LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) " .
@@ -583,9 +589,9 @@
 						{
 							if($db->Type == "postgres")
 							{
-								$selector = $selector . " (upper(fornavn) LIKE '%$search_word%' OR " .
-								"upper(etternavn) LIKE '%$search_word%' OR " .
-								"upper(brukernavn) LIKE '%$search_word%')";
+								$selector = $selector . " (upper(fornavn) ILIKE '%$search_word%' OR " .
+								"upper(etternavn) ILIKE '%$search_word%' OR " .
+								"upper(brukernavn) ILIKE '%$search_word%')";
 							}
 							else
 							{
@@ -605,7 +611,7 @@
 					default:
 						if($db->Type == "postgres")
 						{
-							$selector = "upper(org_navn) LIKE '%" . $search_for . "%'";
+							$selector = "upper(org_navn) ILIKE '%" . $search_for . "%'";
 						}
 						else
 						{
@@ -663,11 +669,6 @@
 			}
 			$sql = "$sql $order_by";
 
-
-			if(!$db = $this->get_db())
-			{
-				return;
-			}
 
 			$db->limit_query($sql, $start_index, __LINE__, __FILE__, $num_of_objects);
 
@@ -743,9 +744,9 @@
 						{
 							if($db->Type == "postgres")
 							{
-								$selector = $selector . " (upper(fornavn) LIKE '%$search_word%' OR " .
-								"upper(etternavn) LIKE '%$search_word%' OR " .
-								"upper(brukernavn) LIKE '%$search_word%')";
+								$selector = $selector . " (upper(fornavn) ILIKE '%$search_word%' OR " .
+								"upper(etternavn) ILIKE '%$search_word%' OR " .
+								"upper(brukernavn) ILIKE '%$search_word%')";
 							}
 							else
 							{
@@ -765,7 +766,7 @@
 					default:
 						if($db->Type == "postgres")
 						{
-							$selector = "upper(org_navn) LIKE '%" . $search_for . "%'";
+							$selector = "upper(org_navn) ILIKE '%" . $search_for . "%'";
 						}
 						else
 						{
