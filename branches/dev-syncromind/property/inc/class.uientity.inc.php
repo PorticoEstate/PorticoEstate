@@ -2215,7 +2215,7 @@ JS;
 				(
 				'datatable_def'				 => $datatable_def,
 				'repeat_types'				 => array('options' => $repeat_types),
-				'controller'				 => $_enable_controller,
+				'controller'				 => $_enable_controller && $id,
 				'cases_time_span'			 => array('options' => $cases_time_span),
 				'cancel_url'				 => $GLOBALS['phpgw']->link('/index.php', $link_index),
 				'enable_bulk'				 => $category['enable_bulk'],
