@@ -1,4 +1,4 @@
-<xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
 	
 	<xsl:choose>
 	    <xsl:when test="msgbox_data != ''">

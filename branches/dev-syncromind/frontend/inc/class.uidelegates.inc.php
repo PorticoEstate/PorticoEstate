@@ -185,8 +185,8 @@
 			phpgwapi_cache::session_clear('frontend','msgbox');
 			
 			$data = array (
-				'header' 		=>	$this->header_state,
-				'delegate_data' => 	array (
+				'header'						=>	$this->header_state,
+				'section'						=> 	array(
 					'form_action'				=> $form_action,
 					'tab_selected'				=> $this->tab_selected,
 					'delegate'					=> $delegates_per_org_unit,
@@ -202,7 +202,7 @@
 				)
 			);
 			
-			self::render_template_xsl(array( 'delegate', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array( 'delegate', 'datatable_inline', 'frontend'),$data);
 		}
 		
 		public function query() {}

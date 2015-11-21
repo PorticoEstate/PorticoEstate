@@ -478,12 +478,18 @@
 
 			$data = array(				
 				'header'			=> $this->header_state,
-				'entity'			=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'tabs_content' => $this->tabs_content, 'filters' => $filters, 'tab_selected' => $this->tab_selected, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
+				'section'			=> array(
+					'datatable_def' => $datatable_def,
+					'tabs' => $this->tabs,
+					'tabs_content' => $this->tabs_content,
+					'filters' => $filters,
+					'tab_selected' => $this->tab_selected,
+					'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'		=> lang('add ticket')
 			);
 			
 			self::add_javascript('frontend', 'jquery', 'entity.list.js');
-			self::render_template_xsl(array( 'entity', 'datatable_inline', 'frontend'), array('data' => $data));			
+			self::render_template_xsl(array( 'entity', 'datatable_inline', 'frontend'), $data);			
 		}
 
 		
@@ -777,7 +783,7 @@
 
 			$data = array(
 				'header' 		=> $this->header_state,
-				'entityinfo'	=> array
+				'section'	=> array
 					(
 						'entitylist'	=> $GLOBALS['phpgw']->link('/index.php',
 									array
@@ -819,6 +825,6 @@
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');
-			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), array('data' => $data));			
+			self::render_template_xsl(array('frontend', 'entityview', 'attributes_view'), $data);			
 		}
 	}

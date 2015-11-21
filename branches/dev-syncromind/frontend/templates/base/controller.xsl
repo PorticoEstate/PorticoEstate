@@ -1,4 +1,4 @@
-<xsl:template match="controller" xmlns:php="http://php.net/xsl">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
         <div class="yui-content">
 
 		<xsl:variable name="controller_params">

@@ -50,10 +50,14 @@
 			$data = array
 			(
 				'header'	=> $this->header_state,
-				'contract'	=> array('refurbishment' => lang('not_implemented'), 'tabs' => $this->tabs, 'tabs_content'=>$this->tabs_content, 'tab_selected'=>$this->tab_selected)
+				'section'	=> array('refurbishment' => lang('not_implemented'),
+					'tabs' => $this->tabs,
+					'tabs_content'=>$this->tabs_content,
+					'tab_selected'=>$this->tab_selected
+				)
 			);
 			
-			self::render_template_xsl(array('refurbishment', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array('refurbishment', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query() {}

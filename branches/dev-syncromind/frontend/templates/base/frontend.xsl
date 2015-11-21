@@ -1,3 +1,11 @@
+
+<xsl:template match="data">
+	<xsl:apply-templates select="header"/>
+	<xsl:apply-templates select="section"/>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
+
+
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<xsl:variable name="messages_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uimessages.index')" /></xsl:variable>
 	<div class="frontend_header">

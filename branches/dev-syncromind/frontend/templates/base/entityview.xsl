@@ -1,4 +1,4 @@
-<xsl:template match="entityinfo" xmlns:php="http://php.net/xsl">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
 	
 	<script type="text/javascript">
 

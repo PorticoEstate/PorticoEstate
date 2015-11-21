@@ -178,7 +178,7 @@ class frontend_uicontract extends frontend_uicommon
 		
 		$data = array (			
 			'header' 		=>	$this->header_state,
-			'contract_data' => 	array (
+			'section' => 	array (
 				'select'			=> $contracts_for_selection, 
 				'selected_contract' => $this->contract_state['selected'], 
 				'contract'			=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
@@ -193,7 +193,7 @@ class frontend_uicontract extends frontend_uicommon
 			)
 		);
 
-		self::render_template_xsl(array( 'contract', 'frontend'), array('data' => $data));
+		self::render_template_xsl(array( 'contract', 'datatable_inline', 'frontend'),  $data);
 	}
 
 	

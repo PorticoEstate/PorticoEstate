@@ -118,10 +118,16 @@
 			$data = array
 			(
 				'header'			=> $this->header_state,
-				'drawings' 			=> array('datatable_def'=>$datatable_def, 'tabs'=>$this->tabs, 'tabs_content'=>$this->tabs_content, 'tab_selected'=>$this->tab_selected, 'msgbox_data'=>$GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)))
+				'section' 			=> array(
+					'datatable_def'=>$datatable_def,
+					'tabs'=>$this->tabs,
+					'tabs_content'=>$this->tabs_content,
+					'tab_selected'=>$this->tab_selected,
+					'msgbox_data'=>$GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))
+				)
 			);
 			
-			self::render_template_xsl(array('drawings', 'datatable_inline', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array('drawings', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query() {}

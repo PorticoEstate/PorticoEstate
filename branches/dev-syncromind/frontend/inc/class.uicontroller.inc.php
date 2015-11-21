@@ -112,13 +112,13 @@
 			$data = array
 			(
 				'header'		=>$this->header_state,
-				'tabs'			=> $this->tabs,
-				'menu'			=> $this->menu,
-				'controller'	=> array('location_code'=> $this->location_code)
+				'section'		=>array(
+					'tabs'			=> $this->tabs,
+					'menu'			=> $this->menu,
+					'controller'	=> array('location_code'=> $this->location_code)
+					)
 			);
-			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','controller'));
+			self::render_template_xsl(array( 'controller', 'datatable_inline', 'frontend'),  $data);
 		}
 		
 		public function query() {}

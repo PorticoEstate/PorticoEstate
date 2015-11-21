@@ -47,70 +47,17 @@
 
 		public function index()
 		{
-			/*$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1);
-			$content = array();
-			foreach ($allusers as $user)
-			{
-				$content[] = array
-				(
-					'id'	=> $user->id,
-					'name'	=> $user->__toString(), 
-				);
-			}
-
-
-       		$myColumnDefs[0] = array
-       		(
-       			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array('key' => 'id','label'=> lang('id') ,'sortable'=>true,'resizeable'=>true,'hidden'=>false),
-       												array('key' => 'name',	'label'=> lang('name'),	'sortable'=>true,'resizeable'=>true),
-		       				       					array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
-			);	
-
-			$datavalues[0] = array
-			(
-					'name'					=> "0",
-					'values' 				=> json_encode($content),
-					'total_records'			=> 0,
-					'permission'   			=> "''",
-					'is_paginator'			=> 1,
-					'footer'				=> 1
-			);
-
-
-			$data = array
-			(
-				'header' 			=>$this->header_state,
-				'td_count'			=> 2,
-				'base_java_url'		=> "{menuaction:'frontend.ui_demo_tabs.first'}",
-				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'			=> $datavalues,
-				'myColumnDefs'		=> $myColumnDefs,
-				'tabs'				=> $this->tabs,
-			);
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
-
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'demo_tabs.second', 'frontend' );
-
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'demo'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('demo_3' => $data));*/
 			$data = array
 			(
 				'header' =>$this->header_state,
-				'tabs' => $this->tabs,
-				'pictures'      => lang('not_implemented')
+				'section'	=> array('maintenance' => lang('not_implemented'),
+					'tabs' => $this->tabs,
+					'tabs_content'=>$this->tabs_content,
+					'tab_selected'=>$this->tab_selected
+				)
 			);
+			self::render_template_xsl(array('pictures', 'datatable_inline', 'frontend'), $data);
 			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','pictures'));
 
 		}
 		

@@ -184,12 +184,19 @@
 			
 			$data = array(
 				'header' 		=> $this->header_state,
-				'helpdesk' 		=> array('datatable_def' => $datatable_def, 'tabs' => $this->tabs, 'tabs_content' => $this->tabs_content, 'filters' => $filters, 'tab_selected' => $this->tab_selected, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
+				'section' 		=> array(
+					'datatable_def' => $datatable_def,
+					'tabs' => $this->tabs,
+					'tabs_content' => $this->tabs_content,
+					'filters' => $filters,
+					'tab_selected' => $this->tab_selected,
+					'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))
+				),
 				'lightbox_name'	=> lang('add ticket')
 			);
 			
 			self::add_javascript('frontend', 'jquery', 'helpdesk.list.js');
-			self::render_template_xsl(array('helpdesk', 'datatable_inline', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array('helpdesk', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query()
@@ -368,8 +375,7 @@
 			
 			$data = array(
 				'header' 		=> $this->header_state,
-				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
-				'ticketinfo'	=> array(
+				'section'	=> array(
 					'helpdesklist'	=> $GLOBALS['phpgw']->link('/index.php',
 								array
 								(
@@ -380,11 +386,12 @@
 					'tickethistory'	=> $tickethistory2,
 					'tabs'			=> $this->tabs,
 					'tabs_content'	=> $this->tabs_content,
-					'tab_selected'	=> $this->tab_selected
+					'tab_selected'	=> $this->tab_selected,
+					'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
 				)
 			);
 			
-			self::render_template_xsl(array('frontend', 'ticketview'), array('data' => $data));
+			self::render_template_xsl(array('frontend', 'datatable_inline', 'ticketview'), $data);
 		}
 
 
@@ -570,9 +577,13 @@
 				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
-			/*$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));*/
+			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
 			
-			self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
+			/*
+			 * Note: not working for when you want a spesific target other than 'data'
+			 * self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
+			 */
+
 		}
 	}

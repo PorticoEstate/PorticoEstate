@@ -1,4 +1,4 @@
-<xsl:template match="contract" xmlns:php="http://php.net/xsl">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
 	
 	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
 	

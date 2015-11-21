@@ -47,7 +47,7 @@
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
-				'messages_data' => 	array (
+				'section' => 	array (
 					'form_action'	=> $form_action,
 					'message'		=> $messages,
 					'view'			=> $message,
@@ -58,7 +58,7 @@
 				
 			);
 			
-			self::render_template_xsl(array('messages', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array('messages', 'datatable_inline', 'frontend'), $data);
 			
 		}
 		

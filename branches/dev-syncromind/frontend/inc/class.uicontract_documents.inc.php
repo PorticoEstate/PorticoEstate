@@ -187,7 +187,7 @@
 			$data = array
 			(
 				'header'				=> $this->header_state,
-    			'contract_data' => 	array (
+    			'section' => 	array (
 					'datatable_def'			=> $datatable_def, 
 					'tabs'					=> $this->tabs, 
 					'tabs_content'			=> $this->tabs_content,
@@ -200,7 +200,7 @@
 			    )
 			);
 
-			self::render_template_xsl(array('document', 'datatable_inline', 'frontend'), array('data' => $data));
+			self::render_template_xsl(array('document', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query() {}

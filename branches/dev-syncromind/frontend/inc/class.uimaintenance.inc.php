@@ -50,12 +50,13 @@
 			$data = array
 			(
 				'header' =>$this->header_state,
-				'tabs' => $this->tabs,
-				'maintenance'      => lang('not_implemented')
+				'section'	=> array('maintenance' => lang('not_implemented'),
+					'tabs' => $this->tabs,
+					'tabs_content'=>$this->tabs_content,
+					'tab_selected'=>$this->tab_selected
+				)
 			);
-			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','maintenance'));
+			self::render_template_xsl(array('maintenance', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query() {}

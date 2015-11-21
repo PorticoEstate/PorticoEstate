@@ -49,13 +49,16 @@
 		{
 			$data = array
 			(
-				'header' =>$this->header_state,
-				'tabs' => $this->tabs,
-				'services'      => lang('not_implemented')
+				'header'		=>$this->header_state,
+				'section'		=> array(
+					'services'		=> lang('not_implemented'),
+					'tabs'			=> $this->tabs,
+					'tabs_content'	=> $this->tabs_content,
+					'tab_selected'	=> $this->tab_selected
+				)
 			);
 			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','services'));
+			self::render_template_xsl(array('services', 'datatable_inline', 'frontend'), $data);
 		}
 		
 		public function query() {}
