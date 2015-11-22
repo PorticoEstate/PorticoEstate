@@ -97,7 +97,6 @@ HTML;
 		'javascript'				=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'					=> $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'				=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-		'browser_not_supported'		=> lang('browser not supported'),
 		'str_base_url'				=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'				=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'				=> $GLOBALS['phpgw']->common->get_on_events(),

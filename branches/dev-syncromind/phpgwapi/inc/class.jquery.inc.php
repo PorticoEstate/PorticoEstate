@@ -50,7 +50,18 @@
 		 */
 		public static function load_widget($widget)
 		{
-			$_type = '.min'; // save some download
+			if(preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			{
+				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
+			}
+			else
+			{
+				$_jquery_core = 'jquery-2.1.4';
+			}
+
+			$_jquery_ui	 = 'jquery-ui-1.11.4';
+			$_type		 = '.min'; // save some download
+
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$theme = 'humanity';
@@ -65,19 +76,16 @@
 				case 'core':
 					$load = array
 						(
-						//"js/jquery-1.11.3{$_type}",
-						"js/jquery-2.1.4{$_type}",
-//						"js/jquery-migrate-1.2.1"
+						"js/{$_jquery_core}{$_type}",
 					);
 					break;
 
 				case 'datepicker':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
-						"js/jquery-ui-1.11.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
 						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
-//						"js/jquery-migrate-1.2.1"
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
@@ -86,7 +94,7 @@
 				case 'validator':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
+						"js/{$_jquery_core}{$_type}",
 						"validator/jquery.form-validator{$_type}"
 //					"validator/jquery.form-validator"
 					);
@@ -97,9 +105,8 @@
 				case 'autocomplete':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
-						"js/jquery-ui-1.11.1{$_type}",
-//						"js/jquery-migrate-1.2.1"
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
@@ -109,7 +116,7 @@
 				case 'tabview':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
+						"js/{$_jquery_core}{$_type}",
 						//	"tabs/jquery.responsiveTabs{$_type}",
 						"tabs/jquery.responsiveTabs",
 						'common'
@@ -122,7 +129,7 @@
 				case 'mmenu':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
+						"js/{$_jquery_core}{$_type}",
 						"mmenu/src/js/jquery.mmenu.min.all"
 					);
 
@@ -133,7 +140,7 @@
 				case 'treeview':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
+						"js/{$_jquery_core}{$_type}",
 						"treeview/jstree{$_type}"
 					);
 
@@ -144,7 +151,7 @@
 				case 'numberformat':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
+						"js/{$_jquery_core}{$_type}",
 						"number-format/jquery.number{$_type}"
 					);
 
@@ -152,8 +159,8 @@
 				case 'layout':
 					$load = array
 						(
-						"js/jquery-2.1.4{$_type}",
-						"js/jquery-ui-1.11.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
 						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 					);
 					break;

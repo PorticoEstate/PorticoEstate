@@ -9,12 +9,6 @@
 		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
 		<title>{site_title}</title>
-		<script type="text/javascript">
-			if(typeof(Storage)=="undefined")
-			{
-				alert('{browser_not_supported}');
-			}
-		</script>
 		{css}
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
