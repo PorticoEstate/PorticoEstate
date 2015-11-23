@@ -195,10 +195,11 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			$start_date 	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);
+			//$start_date 	= urldecode($this->start_date);
+			//$end_date 	= urldecode($this->end_date);
 
-			$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date, 'type' => $this->type));
+			//$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date, 'type' => $this->type));
+			$list = $this->query();
 			$uicols	= $this->bo->uicols;
 
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
@@ -443,6 +444,25 @@
 					);
 			}
 
+			$tabletools[] = array
+				(
+					'my_name'		=> 'download_entity',
+					'text'			=> lang('download'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+									'menuaction'	=> 'frontend.uientity.download',
+									'entity_id'     => $this->entity_id,
+									'cat_id'        => $this->cat_id,
+									'type'			=> $this->type,							
+									'location_id'	=> $this->location_id,
+									'export'		=> true,
+									'allrows'		=> true
+							)).";
+						download(oArgs);
+					"					
+				);
+				
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
@@ -495,15 +515,6 @@
 		
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
-
-			if($start_date && empty($end_date))
-			{
-				$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$end_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
-			}
-
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
 			$draw	 = phpgw::get_var('draw', 'int');
@@ -518,13 +529,10 @@
 			$params = array(
 				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
+				'query'		 => (is_array($search)) ? $search['value'] : $search,
 				'order'		 => $ordering,
 				'sort'		 => $order[0]['dir'],
-				'allrows'	 => phpgw::get_var('length', 'int') == -1,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date,
-				'dry_run'	 => false
+				'allrows'	 => phpgw::get_var('length', 'int') == -1
 			);
 
 			$values = $this->bo->read($params);
