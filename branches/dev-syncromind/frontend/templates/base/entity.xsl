@@ -21,7 +21,7 @@
 									<div class="pure-u-1">
 										<xsl:for-each select="filters">
 											<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-											<select id="{$name}" name="{$name}">
+											<select id="{$name}" name="{$name}" class="filter_entity">
 												<xsl:for-each select="list">
 													<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 													<xsl:choose>
