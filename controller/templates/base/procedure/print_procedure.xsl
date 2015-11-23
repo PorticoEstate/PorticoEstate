@@ -91,7 +91,7 @@
 }
 	
 	ol{
- 		margin: 0;
+ 		margin: 15px;
     	padding: 0 20px;
 	}
 	
