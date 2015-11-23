@@ -190,6 +190,9 @@
 
 			if(isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
+                            //var_dump($_POST);
+                            //var_dump(strtotime(phpgw::get_var('start_date')));
+                            //die;
 				if(!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
@@ -212,9 +215,9 @@
 					$procedure->set_description($description_txt);
 					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
-					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
-					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
-					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
+					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
+					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
+					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					$revision = (int)$procedure->get_revision_no();
@@ -288,8 +291,8 @@
 					$procedure->set_description($description_txt);
 					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
-					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
-					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
+					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					if(isset($procedure_id) && $procedure_id > 0)
@@ -499,19 +502,35 @@
 				$procedure->set_responsibility(str_replace('&nbsp;', ' ', $procedure->get_responsibility()));
 				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
 
-				$procedure_array = $procedure->toArray();
+				
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
 				{
-					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
+					//$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
+                                        $procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date()));
 				}
+                                else
+                                {
+                                        $procedure->set_start_date("");
+                                }
 				if($procedure->get_end_date() && $procedure->get_end_date() != null)
 				{
-					$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
+					//$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
+                                        $procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date()));
 				}
+                                else
+                                {
+                                        $procedure->set_end_date("");
+                                }
 				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
 				{
-					$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
+					//$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
+                                        $procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date()));
 				}
+                                else
+                                {
+                                    $procedure->set_revision_date("");
+                                }
+                                $procedure_array = $procedure->toArray();
 
 				if(!$view_revision)
 				{
@@ -527,7 +546,7 @@
 						$table_values[] = array('row' => $rev);
 					}
 				}
-				
+                                
 				$tabs = array(
 				            array(
 								'label' => lang('Procedure')

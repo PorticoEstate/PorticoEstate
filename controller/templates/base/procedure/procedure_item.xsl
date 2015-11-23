@@ -56,7 +56,7 @@
 							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="start_date" />
+							<xsl:value-of select="procedure/start_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -70,7 +70,7 @@
 							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="revision_date" />
+							<xsl:value-of select="procedure/revision_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -84,7 +84,7 @@
 							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="end_date" />
+							<xsl:value-of select="procedure/end_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
