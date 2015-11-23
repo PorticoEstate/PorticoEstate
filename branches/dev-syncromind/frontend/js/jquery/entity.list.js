@@ -55,3 +55,30 @@ refresh_entity = function()
 {
 	oTable0.fnDraw();
 };
+
+var download = function(oArgs){
+
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var filters = $('.filter_entity');
+	
+	if (filters.length > 0) 
+	{
+		filters.each(function(i, obj) 
+		{
+			if (obj.value !== '') 
+			{
+				oArgs[obj.name] = obj.value;
+			}
+		});		
+	}
+	
+	oArgs['search'] = $('input[type=search]').val();
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	window.open(requestUrl,'_self');
+};
