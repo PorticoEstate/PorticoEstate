@@ -25,6 +25,15 @@
 					'deactivate_sendmessage' => array('type' => 'int'),
 					'extra_kalendar' => array('type' => 'int'),
 					'location_code' =>array('type' => 'string', 'required' => false),
+					'part_of_town_id'	=> array('type' => 'string',
+						  'required' => false,
+						  'join' 		=> array(
+							'table' 	=> 'fm_location1',
+							'fkey' 		=> 'location_code',
+							'key' 		=> 'location_code',
+							'column' 	=> 'location_code'
+					)),
+
 					'street' 		=> array('type' => 'string', 'query' => true),
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string', 'query' => true),

@@ -12,13 +12,11 @@
 			$this->soevent = CreateObject('booking.soevent');
 		}
 		
-		function search($searchterm, $activity_top_level, $building_id)
+		function search($searchterm, $activity_top_level, $building_id, $filter_part_of_town)
 		{
-			if($activity_top_level && !$building_id)
-			{
-				$types = array('resource');
-			}
-			else if($type = phpgw::get_var('type', 'string','GET'))
+			$building_filter = array();
+
+			if($type = phpgw::get_var('type', 'string'))
 			{
 				$types = array($type);
 			}
@@ -31,10 +29,21 @@
 
 			if(in_array('building', $types))
 			{
-                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1", 'id' => $building_id)));
-                foreach($bui_result['results'] as &$bui)
+				$_filter_building = array("active" => "1");
+				if(isset($filter_part_of_town[0]) && $filter_part_of_town[0])
+				{
+					$_filter_building['part_of_town_id'] = $filter_part_of_town;
+				}
+				if($building_id)
+				{
+					$_filter_building['id'] = $building_id;
+				}
+
+				$bui_result = $this->sobuilding->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => $_filter_building));
+				foreach($bui_result['results'] as &$bui)
                 {
-                    $bui['type'] = "building";
+					$building_filter[] = $bui['id'];
+					$bui['type'] = "building";
                     $bui['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $bui['id']));
                     $bui['img_container'] = "building-" . $bui['id'];
                     $bui['img_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_building.index_images', 'filter_owner_id' => $bui['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
@@ -68,9 +77,16 @@
 				{
 					$_filter_resource['activity_id'] = $activity_top_level;
 				}
+
+				$_filter_resource['building_id'] = $building_filter;
+
 				if($building_id)
 				{
-					$_filter_resource['building_id'] = $building_id;
+					$_filter_resource['building_id'][] = $building_id;
+				}
+				if(isset($filter_part_of_town[0]) && $filter_part_of_town[0])
+				{
+					$_filter_resource['part_of_town_id'] = $filter_part_of_town;
 				}
 		
 				$res_result = $this->soresource->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => $_filter_resource ));

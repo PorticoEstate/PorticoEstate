@@ -351,7 +351,9 @@
 			{
 				if($this->fields[$key])
 				{
-					$table = isset($this->fields[$key]['join']) && $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+//					$table = isset($this->fields[$key]['join']) && $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+					$table = $this->fields[$key]['join'] ? $this->build_join_table_alias($key, $this->fields[$key]) : $this->table_name;
+
 					if(is_array($val) && count($val) == 0)
 					{
 						$clauses[] = '1=0';
