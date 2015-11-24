@@ -725,3 +725,6 @@ dd {margin-left: 0;}
 #frontend .pure-g dl.proplist.images dd img {width: 100%;}
 
 ol#result .header {text-align: left;}
+
+select.error,
+select.valid {background-position: right 18px center !important;}
