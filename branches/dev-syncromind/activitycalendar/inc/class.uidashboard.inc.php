@@ -26,7 +26,82 @@
 
 		public function index()
 		{
-			$this->render('dashboard.php');
+			$columns_def_organization = array(
+				array('key'=>'organization_number', 'label'=>lang('organization_number'), 'sortable'=>false),
+				array('key'=>'name', 'label'=>lang('name'), 'sortable'=>false),
+				array('key'=>'district', 'label'=>lang('district'), 'sortable'=>false),
+				array('key'=>'office', 'label'=>lang('office'), 'sortable'=>false),				
+				array('key'=>'description', 'label'=>lang('description'), 'sortable'=>false),
+				array('key'=>'change_type', 'label'=>lang('change_type'), 'sortable'=>false)
+			);
+		
+			/*$tabletools_organization[] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.edit'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			
+			$tabletools_organization[] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);*/
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'activitycalendar.uiorganization.query', 'type'=>'new_organizations', 'phpgw_return_as'=>'json'))),
+				'data'			=> json_encode(array()),
+				'ColumnDefs'	=> $columns_def_organization,
+				//'tabletools'	=> $tabletools_organization,
+				'config'		=> array(
+					array('disableFilter'	=> true)
+				)
+			);
+			
+			$columns_def_activities = array(
+				array('key'=>'id', 'label'=>lang('id'), 'sortable'=>true),
+				array('key'=>'title', 'label'=>lang('title'), 'sortable'=>true),
+				array('key'=>'state', 'label'=>lang('status'), 'sortable'=>true),
+				array('key'=>'organization_id', 'label'=>lang('organization'), 'sortable'=>true),				
+				array('key'=>'group_id', 'label'=>lang('group'), 'sortable'=>true),
+				array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true),
+				array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true),
+				array('key'=>'category', 'label'=>lang('category'), 'sortable'=>true),
+				array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true),
+				array('key'=>'arena', 'label'=>lang('arena'), 'sortable'=>true),
+				array('key'=>'time', 'label'=>lang('time'), 'sortable'=>true),
+				array('key'=>'contact_person_1', 'label'=>lang('contact_person_1'), 'sortable'=>true),
+				array('key'=>'contact_person_2', 'label'=>lang('contact_person_2'), 'sortable'=>true),
+				array('key'=>'last_change_date', 'label'=>lang('last_change_date'), 'sortable'=>true)
+			);
+			
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'activitycalendar.uiactivities.query', 'type'=>'new_activities', 'phpgw_return_as'=>'json'))),
+				'data'			=> json_encode(array()),
+				'ColumnDefs'	=> $columns_def_activities,
+				//'tabletools'	=> $tabletools_organization,
+				'config'		=> array(
+					array('disableFilter'	=> true)
+				)
+			);
+			
+			$data = array
+				(
+					'datatable_def'					=> $datatable_def
+				);
+			
+			self::render_template_xsl(array('dashboard', 'datatable_inline'), array('edit' => $data));			
 		}
 
 		public function changed_organizations()
