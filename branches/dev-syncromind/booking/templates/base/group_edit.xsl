@@ -18,11 +18,14 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="name"><xsl:value-of select="php:function('lang', 'Group')" /></label>
-						<input id="name" name="name" type="text" value="{group/name}" >
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>				
-						</input>
+                        <input id="name" name="name" type="text" value="{group/name}" >
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                            </xsl:attribute>
+                        </input>
                     </div>
                     <div class="pure-control-group">
                         <label for="shortname"><xsl:value-of select="php:function('lang', 'Group shortname')" /></label>
@@ -35,9 +38,12 @@
                             <xsl:if test="group/organization_id">
                                 <xsl:attribute name='disabled'>disabled</xsl:attribute>
                             </xsl:if>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>	
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter an organization name')" />
+                            </xsl:attribute>
                         </input>
                         <div id="organization_container"></div>
                     </div>
@@ -109,11 +115,14 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_email_1"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-						<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{group/contacts[1]/email}' data-validation="email">
-							<xsl:attribute name="data-validation-optional">
-								<xsl:text>true</xsl:text>
-							</xsl:attribute>							
-						</input>
+                        <input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{group/contacts[1]/email}' data-validation="email">
+                            <xsl:attribute name="data-validation-optional">
+                                <xsl:text>true</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
+                            </xsl:attribute>
+                        </input>
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_phone_1"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
@@ -128,11 +137,14 @@
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_email_2"><xsl:value-of select="php:function('lang', 'Email')" /></label>
-						<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{group/contacts[2]/email}' data-validation="email">
-							<xsl:attribute name="data-validation-optional">
-								<xsl:text>true</xsl:text>
-							</xsl:attribute>								
-						</input>
+                        <input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{group/contacts[2]/email}' data-validation="email">
+                            <xsl:attribute name="data-validation-optional">
+                                <xsl:text>true</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
+                            </xsl:attribute>
+                        </input>
                     </div>
                     <div class="pure-control-group">
                         <label for="field_admin_phone_2"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
@@ -154,7 +166,7 @@
         <![CDATA[
             $(document).ready(function() {
                 JqueryPortico.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiorganization.index&phpgw_return_as=json&',
-                                                              'field_organization_name', 'field_organization_id', 'organization_container');
+                                                 'field_organization_name', 'field_organization_id', 'organization_container');
             });
         ]]>
     </script>

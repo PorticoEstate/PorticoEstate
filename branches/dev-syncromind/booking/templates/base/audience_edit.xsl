@@ -15,6 +15,9 @@
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
                             </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                            </xsl:attribute>
                             <xsl:for-each select="activities">
                                 <option>
                                     <xsl:if test="selected = 1">
@@ -33,6 +36,9 @@
                         <input id="field_name" name="name" type="text">
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a name')" />
                             </xsl:attribute>
                             <xsl:attribute name="value"><xsl:value-of select="audience/name"/></xsl:attribute>
                         </input>
@@ -60,6 +66,9 @@
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
                             </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a sort order')" />
+                            </xsl:attribute>
                         </input>
                     </div>
                     <div class="pure-control-group">
@@ -67,6 +76,9 @@
                         <textarea rows="5" id="field_description" name="description">
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a description')" />
                             </xsl:attribute>
                            <xsl:value-of select="audience/description"/>
                         </textarea>

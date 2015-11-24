@@ -40,9 +40,12 @@
                                  <xsl:if test="currentapp = 'booking'">
                                     <input id="inputs" name="name" type="text" class="pure-u-1">
                                         <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>										
+                                        <xsl:attribute name="data-validation">
+                                            <xsl:text>required</xsl:text>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                                        </xsl:attribute>
                                     </input>
                                 </xsl:if>
                                 <xsl:if test="currentapp != 'booking'">
@@ -97,7 +100,7 @@
                             <div class="pure-control-group">
                                 <label for="field_email"><xsl:value-of select="php:function('lang', 'Email')" /></label>
                                 <input id="field_email" name="email" type="text" class="pure-u-1">
-                                    <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>									
+                                    <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>
                                 </input>
                             </div>
                         </div>
@@ -184,6 +187,9 @@
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
                                         </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                                        </xsl:attribute>
                                         <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                         <xsl:for-each select="activities">
                                             <option>
@@ -222,11 +228,14 @@
                                 <label for="field_admin_email_1">
                                     <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                                 </label>
-								<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' class="pure-u-1" data-validation="email">
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>										
-								</input>
+                                <input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' class="pure-u-1" data-validation="email">
+                                    <xsl:attribute name="data-validation-optional">
+                                        <xsl:text>true</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
+                                    </xsl:attribute>
+                                </input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_admin_phone_1">
@@ -250,11 +259,14 @@
                                 <label for="field_admin_email_2">
                                     <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                                 </label>
-								<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' class="pure-u-1" data-validation="email">
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>									
-								</input>
+                                <input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' class="pure-u-1" data-validation="email">
+                                    <xsl:attribute name="data-validation-optional">
+                                        <xsl:text>true</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
+                                    </xsl:attribute>
+                                </input>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_admin_phone_2">

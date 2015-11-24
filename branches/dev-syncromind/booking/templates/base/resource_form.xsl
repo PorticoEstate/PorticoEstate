@@ -13,6 +13,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -50,6 +53,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+                        </xsl:attribute>
                     </input>
                     <div id="building_container" class="custom-container"></div>
                 </div>
@@ -58,6 +64,12 @@
                         <xsl:value-of select="php:function('lang', 'Resource Type')" />
                     </label>
                     <select name='type' id='field_type'>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please select a resource type')" />
+                        </xsl:attribute>
                         <option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
                         <xsl:for-each select="resource/types/*">
                             <option value="{local-name()}">

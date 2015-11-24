@@ -43,6 +43,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                                    </xsl:attribute>
                                     <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                     <xsl:for-each select="activities">
                                         <option>
@@ -60,6 +63,9 @@
                                 <textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a description')" />
                                     </xsl:attribute>
                                     <xsl:value-of select="application/description"/>
                                 </textarea>
@@ -84,12 +90,20 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/building_name"/></xsl:attribute>
                                 </input>
                                 <div id="building_container"></div>
                             </div>
                             <div class="pure-control-group">
                                 <label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
+                                <input type="hidden" data-validation="application_resources">
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please choose at least 1 resource')" />
+                                    </xsl:attribute>                                    
+                                </input>
                                 <div id="resources_container" style="display:inline-block;"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                             </div>
                         </div>
@@ -98,7 +112,11 @@
                                 <legend><h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3></legend>
                             </div>
                             <div id="dates-container">
-                                <input type="hidden" data-validation="application_dates" />
+                                <input type="hidden" data-validation="application_dates">
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Invalid date')" />
+                                    </xsl:attribute>
+                                </input>
                                 <input type="hidden" id="date_format" />
                                 <xsl:for-each select="application/dates">
                                     <xsl:variable name="index" select="position()-2"/>
@@ -154,7 +172,11 @@
                             <div class="pure-g">
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
                                     <label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
-                                    <input type="hidden" data-validation="target_audience"></input>
+                                    <input type="hidden" data-validation="target_audience">
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please choose at least 1 target audience')" />
+                                        </xsl:attribute>
+                                    </input>
                                     <ul id="audience" style="list-style:none;padding-left:10px;">
                                         <xsl:for-each select="audience">
                                             <li>
@@ -173,7 +195,11 @@
                                 </div>
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
                                     <label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label>
-                                    <input type="hidden" data-validation="number_participants"></input>
+                                    <input type="hidden" data-validation="number_participants">
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Number of participants is required')" />
+                                        </xsl:attribute>
+                                    </input>
                                     <table id="agegroup" class="pure-table pure-table-bordered">
                                         <thead>
                                             <tr>
@@ -218,6 +244,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a contact name')" />
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
                                 </input>
                             </div>
@@ -226,6 +255,9 @@
                                 <input id="field_contact_email" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a contact email')" />
                                     </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
                                 </input>
@@ -251,7 +283,11 @@
                                     <div class="heading">
                                         <legend><h3><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3></legend>
                                     </div>
-                                    <input type="hidden" data-validation="regulations_documents"></input>
+                                    <input type="hidden" data-validation="regulations_documents">
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" />
+                                        </xsl:attribute>
+                                    </input>
                                     <div id='regulation_documents'></div>
                                 </div>
                                 <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1"></div>
@@ -278,6 +314,6 @@
         var initialAcceptAllTerms = true;
         var initialSelection = <xsl:value-of select="application/resources_json"/>;
         var initialAudience = <xsl:value-of select="application/audience_json"/>;
-        $('#field_customer_identifier_type').attr("data-validation","customer_identifier");
+        $('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg", "<xsl:value-of select="php:function('lang', 'Customer identifier type is required')" />");
     </script>
 </xsl:template>

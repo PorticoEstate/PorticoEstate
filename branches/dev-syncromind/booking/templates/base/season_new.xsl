@@ -14,6 +14,9 @@
 						<xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -27,7 +30,10 @@
                         <xsl:attribute name="value"><xsl:value-of select="season/building_name"/></xsl:attribute>
 						<xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
-                        </xsl:attribute>						
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -36,15 +42,32 @@
                     </label>
                     <input id="field_officer_id" name="officer_id" type="hidden">
                         <xsl:attribute name="value"><xsl:value-of select="season/officer_id"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an officer name')" />
+                        </xsl:attribute>
                     </input>
                     <input id="field_officer_name" name="officer_name" type="text">
                         <xsl:attribute name="value"><xsl:value-of select="season/officer_name"/></xsl:attribute>
+                        <xsl:attribute name="data-validation">
+                            <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an officer name')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
                     <label>
                         <xsl:value-of select="php:function('lang', 'Resources')" />
                     </label>
+                    <input type="hidden" data-validation="application_resources">
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please choose at least 1 resource')" />
+                        </xsl:attribute>
+                    </input>
                     <div id="resources-container" class="custom-container"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                 </div>
                 <div class="pure-control-group">
@@ -74,7 +97,10 @@
                         <xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
 						<xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
-                        </xsl:attribute>						
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -85,7 +111,10 @@
                         <xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
 						<xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
-                        </xsl:attribute>						
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+                        </xsl:attribute>
                     </input>
                 </div>
             </div>

@@ -16,10 +16,18 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
                     <label style="vertical-align:top;"><xsl:value-of select="php:function('lang', 'Season')" /></label>
+                    <input type="hidden" data-validation="application_season">
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please choose at least 1 season')" />
+                        </xsl:attribute>
+                    </input>
                     <div id="season_container" style="display:inline-block;"><span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span></div>
                 </div>
                 <div class="pure-control-group">
@@ -29,6 +37,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a mail subject')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -36,6 +47,9 @@
                     <textarea id="field_mailbody" name="mailbody" class="full-width">                        
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a mail body')" />
                         </xsl:attribute>
                         <xsl:value-of select="mailbody"/>
                     </textarea>

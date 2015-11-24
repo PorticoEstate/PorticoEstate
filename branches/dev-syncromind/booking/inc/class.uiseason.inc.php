@@ -185,8 +185,8 @@
 				$season['active'] = '1';
 				array_set_default($_POST, 'resources', array());
 				
-				$season['from_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_']));
-				$season['to_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_']));
+				$season['from_'] = ($season['from_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_'])) : $season['from_'];
+				$season['to_'] = ($season['to_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_'])) : $season['to_'];
 
 				$errors = $this->bo->validate($season);
 				
@@ -242,8 +242,8 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$season = array_merge($season, extract_values($_POST, $this->fields));
-				$season['from_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_']));
-				$season['to_'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_']));
+				$season['from_'] = ($season['from_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_'])) : $season['from_'];
+				$season['to_'] = ($season['to_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_'])) : $season['to_'];
 				$errors = $this->bo->validate($season);
 				if(!$errors)
 				{

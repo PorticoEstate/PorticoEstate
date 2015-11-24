@@ -672,8 +672,8 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
                             
-                            $_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
-                            $_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+                $_POST['from_'] = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : $_POST['from_'];
+                $_POST['to_'] = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : $_POST['to_'];
                             
 				array_set_default($_POST, 'resources', array());
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));

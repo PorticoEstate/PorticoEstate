@@ -13,6 +13,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -24,6 +27,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+                        </xsl:attribute>
                     </input>
                 </div>
                 <div class="pure-control-group">
@@ -33,6 +39,9 @@
                     <select id="field_building" name="building[]" size="10" multiple="multiple" class="full-width">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please choose at least 1 building')" />
                         </xsl:attribute>
                         <xsl:for-each select="buildings">
                             <xsl:sort select="name"/>

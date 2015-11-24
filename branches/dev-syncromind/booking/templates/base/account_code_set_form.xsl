@@ -29,6 +29,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                                    </xsl:attribute>
                                 </input>
                             </div>
                         </div>
@@ -42,6 +45,9 @@
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
                                         </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter an object number')" />
+                                        </xsl:attribute>
                                     </input>
                                 </xsl:if>
                             </div>
@@ -52,6 +58,9 @@
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
                                         </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter an article')" />
+                                        </xsl:attribute>
                                     </input>
                                 </xsl:if>
                             </div>
@@ -61,6 +70,9 @@
                                     <input name="unit_number" type="text" id="field_unit_number" value="{account_code_set/unit_number}" maxlength='12' class="pure-u-1">
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter an unit number')" />
                                         </xsl:attribute>
                                     </input>
                                 </xsl:if>
@@ -84,6 +96,9 @@
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
                                         </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter an unit prefix')" />
+                                        </xsl:attribute>
                                     </input>
                                 <!--/xsl:if-->
                             </div>
@@ -94,6 +109,9 @@
                                 <select id="field_active" name="active" class="pure-u-1">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please select an status')" />
                                     </xsl:attribute>
                                     <xsl:if test="new_form">
                                         <xsl:attribute name="disabled">disabled</xsl:attribute>
@@ -119,6 +137,9 @@
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
                                         </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter a responsible code')" />
+                                        </xsl:attribute>
                                     </input>
                                 </xsl:if>
                             </div>
@@ -128,6 +149,9 @@
                                     <input name="service" type="text" id="field_service" value="{account_code_set/service}" maxlength='8' class="pure-u-1">
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter a service')" />
                                         </xsl:attribute>
                                     </input>
                                 </xsl:if>
@@ -144,6 +168,9 @@
                                     <input name="project_number" type="text" id="field_project_number" value="{account_code_set/project_number}" maxlength='12' class="pure-u-1">
                                         <xsl:attribute name="data-validation">
                                             <xsl:text>required</xsl:text>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="data-validation-error-msg">
+                                            <xsl:value-of select="php:function('lang', 'Please enter a project number')" />
                                         </xsl:attribute>
                                     </input>
                                 </xsl:if>

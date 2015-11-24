@@ -90,7 +90,7 @@ $(window).load(function(){
     });
     $('#resources_container').on('change', '.chkRegulations', function(){
         var resources = new Array();
-        $('#resources_container input.chkRegulations[name="resources[]"]:checked').each(function() {
+        $('#resources_container input[name="resources[]"]:checked').each(function() {
             resources.push($(this).val());
         });
         var selection = [];
@@ -122,7 +122,7 @@ if ($.formUtils) {
         },
         errorMessage: 'You must accept to follow all terms and conditions of lease first.',
         errorMessageKey: 'regulations_documents'
-    })
+    });
 
     $.formUtils.addValidator({
         name: 'target_audience',
@@ -138,7 +138,23 @@ if ($.formUtils) {
         },
         errorMessage: 'Please choose at least 1 target audience',
         errorMessageKey: 'target_audience'
-    })
+    });
+    
+    $.formUtils.addValidator({
+        name: 'application_resources',
+        validatorFunction: function(value, $el, config, language, $form) {
+            var n = 0;
+            $('#resources_container table input[name="resources[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 resource',
+        errorMessageKey: 'application_resources'
+    });
 
     $.formUtils.addValidator({
         name: 'number_participants',
@@ -197,7 +213,7 @@ if ($.formUtils) {
             var v = (n == 0) ? true : false;
             return v;
         },
-        errorMessage: 'Invalida date',
+        errorMessage: 'Invalid date',
         errorMessageKey: 'application_dates'
     });
 } else {
@@ -217,7 +233,7 @@ function populateTableChkResources (building_id, selection) {
 	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort:'name', filter_building_id:building_id, sub_activity_id: $("#field_activity").val()};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
     var container = 'resources_container';
-    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableResources(url, container, colDefsResources);
 }
 

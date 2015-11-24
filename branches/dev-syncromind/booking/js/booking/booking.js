@@ -62,8 +62,6 @@ $(document).ready(function() {
             }
         });
     });
-    
-    
 });
 
 
@@ -96,54 +94,72 @@ $(window).load(function() {
     });
 });
 
-$.formUtils.addValidator({
-    name: 'target_audience',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var n = 0;
-        $('#audience input[name="audience[]"]').each(function(){
-           if ($(this).is(':checked')) {
-               n++;
-           }
-        });
-        var v = (n > 0) ? true : false;
-        return v;
-    },
-    errorMessage: 'Please choose at least 1 target audience',
-    errorMessageKey: ''
-})
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'target_audience',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var n = 0;
+            $('#audience input[name="audience[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 target audience',
+        errorMessageKey: ''
+    });
 
-$.formUtils.addValidator({
-    name: 'number_participants',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var n = 0;
-        $('#agegroup_tbody input').each(function() {
-            if ($(this).val() != "" && $(this).val() > 0) {
-                n++;
-            } 
-        });
-        var v = (n > 0) ? true : false;
-        return v;
-    },
-    errorMessage: 'Number of participants is required',
-    errorMessageKey: ''
-});
+    $.formUtils.addValidator({
+        name: 'application_resources',
+        validatorFunction: function(value, $el, config, language, $form) {
+            var n = 0;
+            $('#resources_container table input[name="resources[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 resource',
+        errorMessageKey: 'application_resources'
+    });
+
+    $.formUtils.addValidator({
+        name: 'number_participants',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var n = 0;
+            $('#agegroup_tbody input').each(function() {
+                if ($(this).val() != "" && $(this).val() > 0) {
+                    n++;
+                } 
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Number of participants is required',
+        errorMessageKey: ''
+    });
+}
 
 function populateSelectSeason (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = $('#season_container');
-    var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'}];
+    var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'},{name: 'data-validation-error-msg', value: lang['Please select a season']}];
     populateSelect(url, selection, container, attr);
 }
 function populateSelectGroup (organization_id, selection) {
     var url = 'index.php?menuaction=booking.uigroup.index&filter_organization_id=' + organization_id + '&phpgw_return_as=json';
     var container = $('#group_container');
-    var attr = [{name: 'name',value: 'group_id'},{name: 'data-validation', value: 'required'}];
+    var attr = [{name: 'name',value: 'group_id'},{name: 'data-validation', value: 'required'},{name: 'data-validation-error-msg', value: lang['Please select a group']}];
     populateSelect(url, selection, container, attr);
 };
 function populateTableChkResources (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = 'resources_container';
-    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableChk(url, container, colDefsResources);
 }
 

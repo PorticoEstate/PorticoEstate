@@ -22,10 +22,28 @@ $(window).load(function(){
     });
 });
 
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'application_season',
+        validatorFunction: function(value, $el, config, language, $form) {
+            var n = 0;
+            $('#season_container table input[name="seasons[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 season',
+        errorMessageKey: 'application_season'
+    });
+}
+
 function populateTableChkSeasons (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = 'season_container';
-    var colDefsSeasons = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'seasons[]'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 season'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}];
+    var colDefsSeasons = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'seasons[]'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}];
     populateTableChk(url, container, colDefsSeasons);
 }
 

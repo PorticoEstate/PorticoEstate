@@ -28,6 +28,9 @@
                             <span><xsl:value-of select="node()"/></span>
                             <div>
                                 <select name='role' id='field_role' style="display:block;" data-validation="required">
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please select a role')" />
+                                    </xsl:attribute>
                                     <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
                                     <xsl:for-each select="available_roles/*">
                                         <option>
@@ -51,7 +54,10 @@
                         <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
-                        </xsl:attribute>	
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an account')" />
+                        </xsl:attribute>
                         </input>
                         <input id="field_subject_id" name="subject_id" type="hidden">
                             <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
@@ -66,6 +72,9 @@
                             <xsl:attribute name="value"><xsl:value-of select="object_name"/></xsl:attribute>
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
                             </xsl:attribute>
                             <xsl:if test="inline = '1'">
                                 <xsl:attribute name="disabled">disabled</xsl:attribute>

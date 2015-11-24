@@ -5,8 +5,6 @@ $(document).ready(function() {
 
     JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 
                                          'field_org_name', 'field_org_id', 'org_container');
-    
-    
 });
 
 
@@ -30,7 +28,7 @@ $(window).load(function() {
 function populateSelectSeason (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = $('#season_container');
-    var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'}];
+    var attr = [{name: 'name',value: 'season_id'},{name: 'data-validation', value: 'required'},{name: 'data-validation-error-msg', value: 'Please select a season'}];
     populateSelect(url, selection, container, attr);
 }
 function populateTableChkResources (building_id, selection) {

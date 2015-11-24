@@ -24,6 +24,24 @@ $(window).load(function(){
     });
 });
 
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'application_resources',
+        validatorFunction: function(value, $el, config, language, $form) {
+            var n = 0;
+            $('#resources-container table input[name="resources[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 resource',
+        errorMessageKey: 'application_resources'
+    });
+}
+
 function populateTableChkResources (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = 'resources-container';

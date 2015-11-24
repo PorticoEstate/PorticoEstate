@@ -34,6 +34,9 @@
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
                                 </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Missing file for document')" />
+                                </xsl:attribute>
                                 <xsl:attribute name="value"><xsl:value-of select="document/name"/></xsl:attribute>
                                 <xsl:attribute name="type">
                                     <xsl:choose>
@@ -56,6 +59,9 @@
                             <select name='category' id='field_category'>
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
+                                </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please select a category')" />
                                 </xsl:attribute>
                                 <option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
                                 <xsl:for-each select="document/document_types/*">

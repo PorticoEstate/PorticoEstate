@@ -44,6 +44,9 @@
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
                             </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a name')" />
+                            </xsl:attribute>
                         </input>
                     </div>
                     <div class="pure-control-group">
@@ -56,7 +59,13 @@
                         <label for="field_category">
                             <xsl:value-of select="php:function('lang', 'Category')" />
                         </label>
-                        <select name='category' id='field_category' data-validation="required">
+                        <select name='category' id='field_category'>
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please select a category')" />
+                            </xsl:attribute>
                             <option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
                             <xsl:for-each select="document/document_types/*">
                                 <option>
@@ -73,8 +82,14 @@
                         <label for="field_owner_name">
                             <xsl:value-of select="php:function('lang', string(document/owner_type_label))" />
                         </label>
-                        <input id="field_owner_name" name="owner_name" type="text" data-validation="required" >
+                        <input id="field_owner_name" name="owner_name" type="text">
                             <xsl:attribute name="value"><xsl:value-of select="document/owner_name"/></xsl:attribute>
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter an owner name')" />
+                            </xsl:attribute>
                             <xsl:if test="document/inline = '1'">
                                 <xsl:attribute name="disabled">disabled</xsl:attribute>
                             </xsl:if>

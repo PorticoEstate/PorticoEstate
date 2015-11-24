@@ -17,6 +17,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a cost')" />
+                                    </xsl:attribute>
                                 </input>
                             </div>
                             <div class="pure-control-group">
@@ -24,6 +27,9 @@
                                 <select name='customer_type' id='field_customer_type' class="pure-u-1">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please select a customer type')" />
                                     </xsl:attribute>
                                     <option value=''><xsl:value-of select="php:function('lang', 'Select...')" /></option>
                                     <xsl:for-each select="reservation/customer_types/*">
@@ -53,6 +59,9 @@
                                 <input type='text' id='field_description' name="description" value='{reservation/description}' maxlength='60' class="pure-u-1">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter a description')" />
                                     </xsl:attribute>
                                 </input>
                             </div>

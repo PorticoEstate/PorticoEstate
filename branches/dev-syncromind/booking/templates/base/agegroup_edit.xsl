@@ -13,6 +13,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                        </xsl:attribute>
                         <xsl:attribute name="disabled">disabled</xsl:attribute>
                         <xsl:for-each select="activities">
                             <option>
@@ -32,6 +35,9 @@
                     <input id="field_name" name="name" type="text">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a name')" />
                         </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="resource/name"/></xsl:attribute>
                     </input>
@@ -58,6 +64,9 @@
                     <input id="field_sort" name="sort" type="text" value="{resource/sort}">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a sort order')" />
                         </xsl:attribute>
                     </input>
                 </div>

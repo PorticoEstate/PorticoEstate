@@ -18,6 +18,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/building_name"/></xsl:attribute>
                     </input>
                 </div>
@@ -29,6 +32,9 @@
                     <input id="field_org_name" name="organization_name" type="text">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an organization name')" />
                         </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/organization_name"/></xsl:attribute>
                     </input>
@@ -86,6 +92,9 @@
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+                        </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/from_"/></xsl:attribute>
                     </input>
                 </div>
@@ -94,6 +103,9 @@
                     <input id="field_to" name="to_" type="text">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter an end date')" />
                         </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/to_"/></xsl:attribute>
                     </input>
@@ -146,6 +158,9 @@
                     <input id="field_cost" name="cost" type="text">
                         <xsl:attribute name="data-validation">
                             <xsl:text>required</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a cost')" />
                         </xsl:attribute>
                         <xsl:attribute name="value"><xsl:value-of select="allocation/cost"/></xsl:attribute>
                     </input>

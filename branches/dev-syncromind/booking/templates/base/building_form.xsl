@@ -14,7 +14,7 @@
                             <xsl:text>required</xsl:text>
                         </xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please - enter a Building Name!')"/>
+							<xsl:value-of select="php:function('lang', 'Please enter a name')"/>
 						</xsl:attribute>	
                     </input>
                 </div>
@@ -31,7 +31,10 @@
 					<input id="field_email" name="email" type="text" value="{building/email}" data-validation="email">
 						<xsl:attribute name="data-validation-optional">
 							<xsl:text>true</xsl:text>
-						</xsl:attribute>										
+						</xsl:attribute>
+                        <xsl:attribute name="data-validation-error-msg">
+                            <xsl:value-of select="php:function('lang', 'Please enter a valid email')" />
+                        </xsl:attribute>
 					</input>
                 </div>
                 <div class="pure-control-group">
