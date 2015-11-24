@@ -723,3 +723,5 @@ dd {margin-left: 0;}
     .gmap-container {position: relative;padding-bottom: 60%;height: 0;overflow: hidden;}
     .gmap-container iframe {position: absolute;top: 0;left: 0;width: 100% !important;height: 100% !important;}
 #frontend .pure-g dl.proplist.images dd img {width: 100%;}
+
+ol#result .header {text-align: left;}
