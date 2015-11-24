@@ -16,6 +16,8 @@ $(document).ready(function () {
 
 $("#part_of_town :checkbox").on('click', function() {
 		part_of_towns = [];
+		$('#field_building_id').val('');
+		$("#field_building_name").val('');
        $("#part_of_town :checkbox:checked").each(function() {
 		part_of_towns.push($(this).val());
        });
