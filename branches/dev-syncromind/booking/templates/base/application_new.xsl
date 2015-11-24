@@ -295,7 +295,7 @@
                                         <xsl:text>contact_email</xsl:text>
                                     </xsl:attribute>
                                     <xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'the e-mail addresses you entered does not match')"/>
+										<xsl:value-of select="php:function('lang', 'The e-mail addresses you entered do not match')"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="application/contact_email2"/></xsl:attribute>
                                 </input>
