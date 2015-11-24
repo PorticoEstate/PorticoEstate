@@ -21,6 +21,7 @@
 		function index()
 		{
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('treeview');
 
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'search.js');
 			$config	= CreateObject('phpgwapi.config','booking');
@@ -60,24 +61,40 @@
 
 			$activities	= ExecMethod('booking.boactivity.get_top_level');
 
+			$filter_tree = array();
 			foreach($activities as &$activity)
 			{
-				$activity['search_url'] = self::link(array(
-					'menuaction'			=> 'bookingfrontend.uisearch.index',
-					'activity_top_level'	=> $activity['id'],
-					'building_id'			=> $building_id,
-					'filter_part_of_town'	=> $imploded_filter_part_of_town
-				));
-			}
+				$_url	= self::link(array(
+							'menuaction'			=> 'bookingfrontend.uisearch.index',
+							'activity_top_level'	=> $activity['id'],
+							'building_id'			=> $building_id,
+							'filter_part_of_town'	=> $imploded_filter_part_of_town));
 
-			$params['activities']	= $activities;
+				$organized_fields = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}");
+				$filter_tree[] = array(
+					'text'		=> $activity['id'] == $activity_top_level ? "[{$activity['name']}]" : $activity['name'],
+					'state'		=> array (
+							'opened' => true,
+							'selected'	=> $activity['id'] == $activity_top_level ? 'true' : 'false'
+						),
+					'parent'	=> '#',
+					'a_attr'	=> array('href' => $_url),
+					'children'	=> $organized_fields,
+ 				);
+
+
+			}
+//_debug_array($filter_tree);
+//die();
 			$params['part_of_towns'] = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
-//			$params['selected_part_of_towns'] = $imploded_filter_part_of_town;
 			
 			foreach ($params['part_of_towns'] as &$part_of_town)
 			{
 				$part_of_town['checked'] = in_array($part_of_town['id'], $filter_part_of_town);
 			}
+
+			$params['filter_tree'] = json_encode($filter_tree);
+
 
             self::render_template_xsl('search', $params);
 

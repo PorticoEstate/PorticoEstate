@@ -1,3 +1,4 @@
+var filter_tree = null;
 var building_id_selection = "";
 var part_of_town_string = "";
 var part_of_towns = [];
@@ -35,6 +36,42 @@ $("#part_of_town :checkbox").on('click', function() {
 
 		window.location.href = requestUrl;
    });
+
+
+// Filter tree
+	$("#treeDiv1").jstree({
+		"core" : {
+            "multiple" : true,
+			"themes" : { "stripes" : true },
+			"data" : filter_tree
+		},
+        "plugins" : [ "themes","html_data","ui","state","checkbox" ]
+	});
+
+	$("#treeDiv1").bind("select_node.jstree", function (event, data) {
+		if(typeof(data.event) == 'undefined')
+		{
+			return false;
+		}
+		var href = data.node.a_attr.href;
+		if(href != "#")
+		{
+			window.location.href = href;
+		}
+	});
+
+	$('#collapse1').on('click',function(){
+		$(this).attr('href','javascript:;');
+		$('#treeDiv1').jstree('close_all');
+	})
+
+	$('#expand1').on('click',function(){
+		$(this).attr('href','javascript:;');
+		$('#treeDiv1').jstree('open_all');
+	});
+
+
+
 
 });
 

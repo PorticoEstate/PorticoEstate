@@ -67,24 +67,26 @@
 			</ul>
 		</div>
 
-		<ul>
-			<xsl:for-each select="activities">
-				<li>
-					<a href="{search_url}">
-						<xsl:choose>
-							<xsl:when test="../activity_top_level = id">
-								<xsl:text>[</xsl:text>
-								<xsl:value-of select="name"/>
-								<xsl:text>]</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="name"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</a>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<div id="document">
+			<fieldset>
+				<!-- Some style for the expand/contract section-->
+				<style>
+					#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+					#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+				</style>
+				<script type="text/javascript">
+					filter_tree = <xsl:value-of select="filter_tree"/>;
+				</script>
+				<!-- markup for expand/contract links -->
+				<div id="treecontrol">
+					<a id="collapse1" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+					<xsl:text> | </xsl:text>
+					<a id="expand1" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
+				</div>
+				<div id="treeDiv1"></div>
+			</fieldset>
+		</div>
+
 		<xsl:if test="not(search)">
 			<div id="cloud">
 				<div class="frontpagetext">
