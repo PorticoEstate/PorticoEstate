@@ -138,7 +138,7 @@ $.formUtils.addValidator({
         var v = (n == 0) ? true : false;
         return v;
     },
-    errorMessage: 'Invalida date',
+    errorMessage: 'Invalid date',
     errorMessageKey: ''
 });
 
