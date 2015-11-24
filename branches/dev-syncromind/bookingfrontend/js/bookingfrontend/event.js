@@ -64,83 +64,85 @@ $(window).load(function() {
     });
 });
 
-$.formUtils.addValidator({
-    name: 'target_audience',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var n = 0;
-        $('#audience input[name="audience[]"]').each(function(){
-           if ($(this).is(':checked')) {
-               n++;
-           }
-        });
-        var v = (n > 0) ? true : false;
-        return v;
-    },
-    errorMessage: 'Please choose at least 1 target audience',
-    errorMessageKey: ''
-})
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'target_audience',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var n = 0;
+            $('#audience input[name="audience[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 target audience',
+        errorMessageKey: ''
+    });
 
-$.formUtils.addValidator({
-    name: 'number_participants',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var n = 0;
-        $('#agegroup_tbody input').each(function() {
-            if ($(this).val() != "" && $(this).val() > 0) {
-                n++;
-            } 
-        });
-        var v = (n > 0) ? true : false;
-        return v;
-    },
-    errorMessage: 'Number of participants is required',
-    errorMessageKey: ''
-});
+    $.formUtils.addValidator({
+        name: 'number_participants',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var n = 0;
+            $('#agegroup_tbody input').each(function() {
+                if ($(this).val() != "" && $(this).val() > 0) {
+                    n++;
+                } 
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Number of participants is required',
+        errorMessageKey: ''
+    });
 
-$.formUtils.addValidator({
-    name: 'customer_identifier',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var v = true;
-        var customer_ssn = $('#field_customer_ssn').val();
-        var customer_organization_number = $('#field_customer_organization_number').val();
-        var cost = $('#field_cost').val();
-        if ( (customer_ssn == "" && customer_organization_number == "") && (cost > 0) ) {
-           v = false;
-        }
-        return v;
-    },
-    errorMessage: 'There is set a cost, but no invoice data is filled inn',
-    errorMessageKey: ''
-});
-
-$.formUtils.addValidator({
-    name: 'application_dates',
-    validatorFunction: function(value, $el, config, languaje, $form) {
-        var n = 0;
-        if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
-            return false;
-        }
-        $('input[name="from_[]"]').each(function(){
-            if ($(this).val() == "") {
-                $($(this).addClass("error").css("border-color","red"));
-                n++;
-            } else {
-                $($(this).removeClass("error").css("border-color",""));
+    $.formUtils.addValidator({
+        name: 'customer_identifier',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var v = true;
+            var customer_ssn = $('#field_customer_ssn').val();
+            var customer_organization_number = $('#field_customer_organization_number').val();
+            var cost = $('#field_cost').val();
+            if ( (customer_ssn == "" && customer_organization_number == "") && (cost > 0) ) {
+               v = false;
             }
-        });
-        $('input[name="to_[]"]').each(function(){
-            if ($(this).val() == "") {
-                $($(this).addClass("error").css("border-color","red"));
-                n++;
-            } else {
-                $($(this).removeClass("error").css("border-color",""));
+            return v;
+        },
+        errorMessage: 'There is set a cost, but no invoice data is filled inn',
+        errorMessageKey: ''
+    });
+
+    $.formUtils.addValidator({
+        name: 'application_dates',
+        validatorFunction: function(value, $el, config, languaje, $form) {
+            var n = 0;
+            if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
+                return false;
             }
-        });
-        var v = (n == 0) ? true : false;
-        return v;
-    },
-    errorMessage: 'Invalid date',
-    errorMessageKey: ''
-});
+            $('input[name="from_[]"]').each(function(){
+                if ($(this).val() == "") {
+                    $($(this).addClass("error").css("border-color","red"));
+                    n++;
+                } else {
+                    $($(this).removeClass("error").css("border-color",""));
+                }
+            });
+            $('input[name="to_[]"]').each(function(){
+                if ($(this).val() == "") {
+                    $($(this).addClass("error").css("border-color","red"));
+                    n++;
+                } else {
+                    $($(this).removeClass("error").css("border-color",""));
+                }
+            });
+            var v = (n == 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Invalid date',
+        errorMessageKey: ''
+    });
+}                    
 
 function populateTableChkResources (building_id, selection) {
     var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id}, true);

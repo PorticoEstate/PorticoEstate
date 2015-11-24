@@ -123,7 +123,7 @@ if ($.formUtils) {
         },
         errorMessage: 'You must accept to follow all terms and conditions of lease first.',
         errorMessageKey: ''
-    })
+    });
 
     $.formUtils.addValidator({
         name: 'target_audience',
@@ -139,7 +139,7 @@ if ($.formUtils) {
         },
         errorMessage: 'Please choose at least 1 target audience',
         errorMessageKey: ''
-    })
+    });
 
     $.formUtils.addValidator({
         name: 'number_participants',
