@@ -26,6 +26,8 @@
 
 		public function index()
 		{
+			$GLOBALS['phpgw']->jqcal->add_listener('date_change');
+			
 			$columns_def_organization = array(
 				array('key'=>'organization_number', 'label'=>lang('organization_number'), 'sortable'=>false),
 				array('key'=>'name', 'label'=>lang('name'), 'sortable'=>false),
@@ -73,6 +75,7 @@
 				array('key'=>'state', 'label'=>lang('status'), 'sortable'=>true),
 				array('key'=>'organization_id', 'label'=>lang('organization'), 'sortable'=>true),				
 				array('key'=>'group_id', 'label'=>lang('group'), 'sortable'=>true),
+				array('key'=>'change_type', 'label'=>lang('change_type'), 'sortable'=>false),
 				array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true),
 				array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true),
 				array('key'=>'category', 'label'=>lang('category'), 'sortable'=>true),
@@ -89,16 +92,47 @@
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'activitycalendar.uiactivities.query', 'type'=>'new_activities', 'phpgw_return_as'=>'json'))),
 				'data'			=> json_encode(array()),
-				'ColumnDefs'	=> $columns_def_activities,
+				'ColumnDefs'	=> $columns_def_activities
 				//'tabletools'	=> $tabletools_organization,
-				'config'		=> array(
-					array('disableFilter'	=> true)
-				)
 			);
 			
+			$activity_state_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
+			$activity_state_options[] = array('id'=>'1', 'name'=>lang('new'), 'selected'=>0);
+			$activity_state_options[] = array('id'=>'2', 'name'=>lang('change'), 'selected'=>0);
+
+			$uid		 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$user_office = activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
+			if($user_office && $user_office == 1)
+			{
+				$user_office = 2;
+			}
+			else if($user_office == 2)
+			{
+				$user_office = 1;
+			}
+		
+			$activity_district_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>0);
+			$districts = activitycalendar_soactivity::get_instance()->select_district_list();
+			foreach($districts as $district)
+			{
+				$selected = ($user_office == $district['id']) ? 1 : 0;
+				$activity_district_options[] = array('id'=>$district['id'], 'name'=>$district['name'], 'selected'=>$selected);	
+			}
+				
+			$activity_category_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>0);
+			$categories = activitycalendar_soactivity::get_instance()->get_categories();
+			foreach($categories as $category)
+			{
+				$activity_category_options[] = array('id'=>$category->get_id(), 'name'=>$category->get_name(), 'selected'=>0);				
+			}
+		
 			$data = array
 				(
-					'datatable_def'					=> $datatable_def
+					'datatable_def'						=> $datatable_def,
+					
+					'list_activity_state_options'		=> array('options' => $activity_state_options),
+					'list_activity_district_options'	=> array('options' => $activity_district_options),
+					'list_activity_category_options'	=> array('options' => $activity_category_options)
 				);
 			
 			self::render_template_xsl(array('dashboard', 'datatable_inline'), array('edit' => $data));			
