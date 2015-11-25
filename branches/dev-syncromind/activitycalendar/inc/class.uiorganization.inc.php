@@ -604,145 +604,149 @@
 		public function add_actions(&$value, $key, $params)
 		{
 			//Defining new columns
-			$value['ajax']		 = array();
+			/*$value['ajax']		 = array();
 			$value['actions']	 = array();
-			$value['labels']	 = array();
-
+			$value['labels']	 = array();*/
+			
+			$actions = array();
+			
 			$query_type = $params[0];
 
 			switch($query_type)
 			{
 				case 'all_organizations':
-					$value['ajax'][] = false;
+					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uigroup.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'booking.uigroup.show',
 							'id' => $value['id'])));
 					}
 					else
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show',
 							'id' => $value['id'])));
 					}
-					$value['labels'][] = lang('show');
+					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					break;
 
 				case 'changed_organizations':
-					$value['ajax'][] = false;
+					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'])));
 					}
-					$value['labels'][] = lang('show');
+					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						$value['ajax'][] = false;
+						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'])));
 						}
-						$value['labels'][] = lang('edit');
+						$actions[] = '<a href="'.$url.'">'.lang('edit').'</a>';
 					}
 					break;
 				case 'new_organizations':
-					$value['ajax'][] = false;
+					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'])));
 					}
-					$value['labels'][] = lang('show');
+					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						$value['ajax'][] = false;
+						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'])));
 						}
-						$value['labels'][] = lang('edit');
+						$actions[] = '<a href="'.$url.'">'.lang('edit').'</a>';
 					}
 					break;
 				case 'changed_groups':
-					$value['ajax'][] = false;
+					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'])));
 					}
-					$value['labels'][] = lang('show');
+					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						$value['ajax'][] = false;
+						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'])));
 						}
-						$value['labels'][] = lang('edit');
+						$actions[] = '<a href="'.$url.'">'.lang('edit').'</a>';
 					}
 					break;
 				case 'new_groups':
-					$value['ajax'][] = false;
+					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id' => $value['id'])));
 					}
-					$value['labels'][] = lang('show');
+					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						$value['ajax'][] = false;
+						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
 						{
-							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id' => $value['id'])));
 						}
-						$value['labels'][] = lang('edit');
+						$actions[] = '<a href="'.$url.'">'.lang('edit').'</a>';
 					}
 					break;
 			}
+			
+			return $value['operations'] = implode(' | ', $actions);
 		}
 	}
