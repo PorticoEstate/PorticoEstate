@@ -430,9 +430,9 @@
 				case 'new_activities':
 					$filters		 = array('new_activities' => 'yes', 'activity_state' => phpgw::get_var('activity_state'),
 						'activity_category' => phpgw::get_var('activity_category'), 'activity_district' => phpgw::get_var('activity_district'),
-						'user_id' => $uid, 'updated_date_hidden' => phpgw::get_var('date_change_hidden'));
+						'user_id' => $uid, 'updated_date_hidden' => phpgw::get_var('date_change'));
 					$result_objects	 = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$result_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
+					$result_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);				
 					break;
 				case 'all_activities':
 				default:
@@ -684,6 +684,12 @@
 				}
 			}
 
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$message['message'][] = array('msg'=>lang('E-post sendt'));
+				return $message;
+			}
+		
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index',
 				'message' => 'E-post sendt'));
 		}
