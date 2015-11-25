@@ -48,33 +48,13 @@
 		//public $dateFormat;
 		public $type_of_user;
 		public $flash_msgs;
+		public $user_rows_per_page;
 
 		public function __construct()
 		{
 			parent::__construct();
 			
 			self::set_active_menu('activitycalendar');
-			/*self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
-			//self::add_stylesheet('rental/templates/base/css/base.css');
-			self::add_javascript('activitycalendar', 'activitycalendar', 'common.js');
-			self::add_javascript('activitycalendar', 'activitycalendar', 'jquery.js');
-			$this->tmpl_search_path = array();
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('animation');
-
-			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];*/
 
 			$this->acl		 = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
@@ -85,6 +65,8 @@
 			  ADMINISTRATOR => $this->isAdministrator()
 			  ); */
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
+			
+			$this->user_rows_per_page = ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 10;
 		}
 
 		/**
