@@ -8,7 +8,7 @@
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
-<!-- add / edit  -->
+
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 	<h3><xsl:value-of select="php:function('lang', 'dashboard_title')"/></h3>
 	<div>
@@ -31,6 +31,24 @@
 					</div>
 				</div>
 				<div id="executive_officer">
+						<div class="pure-custom">
+							<div class="pure-control-group">
+								<label><xsl:value-of select="php:function('lang', 'activity_state')"/></label>
+								<select id="activity_state" name="activity_state">
+									<xsl:apply-templates select="list_activity_state_options/options"/>
+								</select>
+								<label><xsl:value-of select="php:function('lang', 'office')"/></label>
+								<select id="activity_district" name="activity_district">
+									<xsl:apply-templates select="list_activity_district_options/options"/>
+								</select>
+								<label><xsl:value-of select="php:function('lang', 'Category')"/></label>
+								<select id="activity_category" name="activity_category">
+									<xsl:apply-templates select="list_activity_category_options/options"/>
+								</select>													
+								<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+								<input type="text" id="date_change" name="date_change" value=""></input>
+							</div>								
+						</div>
 					<div>
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_1'">
