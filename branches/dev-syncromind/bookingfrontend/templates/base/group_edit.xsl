@@ -23,7 +23,7 @@
     <xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-        <form action="" method="POST">
+        <form action="" method="POST" id="form" name="form">
             <div class="pure-g">
                 <div class="pure-u-1 pure-u-md-1-3">
                     <dl class="form-col">
@@ -32,6 +32,9 @@
                             <input name="name" type="text" value="{group/name}">
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
+                                </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please enter a group')" />
                                 </xsl:attribute>
                             </input>
                         </dd>
@@ -44,10 +47,16 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter an organization')" />
+                                    </xsl:attribute>
                                 </input>
                                 <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter an organization')" />
                                     </xsl:attribute>
                                     <xsl:if test="group/organization_id">
                                         <xsl:attribute name='disabled'>disabled</xsl:attribute>
@@ -217,4 +226,3 @@
     ]]>
     </script-->
 </xsl:template>
-

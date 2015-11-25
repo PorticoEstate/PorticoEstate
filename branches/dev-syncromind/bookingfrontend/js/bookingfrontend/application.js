@@ -156,6 +156,22 @@ if ($.formUtils) {
         errorMessage: 'Number of participants is required',
         errorMessageKey: ''
     });
+    
+    $.formUtils.addValidator({
+        name: 'application_resources',
+        validatorFunction: function(value, $el, config, language, $form) {
+            var n = 0;
+            $('#resources_container table input[name="resources[]"]').each(function(){
+               if ($(this).is(':checked')) {
+                   n++;
+               }
+            });
+            var v = (n > 0) ? true : false;
+            return v;
+        },
+        errorMessage: 'Please choose at least 1 resource',
+        errorMessageKey: 'application_resources'
+    });
 
     $.formUtils.addValidator({
         name: 'customer_identifier',
@@ -218,7 +234,7 @@ function populateTableChkResources (building_id, selection) {
 	var oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort:'name', filter_building_id: building_id, sub_activity_id: $("#field_activity").val()};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
     var container = 'resources_container';
-    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'},{name: 'data-validation', value: 'checkbox_group'},{name: 'data-validation-qty', value: 'min1'},{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'},{name: 'class', value: 'chkRegulations'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
     populateTableResources(url, container, colDefsResources);
 }
 

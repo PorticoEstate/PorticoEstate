@@ -60,9 +60,10 @@
 			$this->flash_form_errors($errors);
             
             phpgwapi_jquery::init_ckeditor('field-message');
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 			
 //			$this->use_yui_editor();
 			self::render_template('system_message', array('system_message' => $system_message));
 		}
 	}
-

@@ -15,7 +15,7 @@
     <xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-	<form action="" method="POST">
+	<form action="" method="POST" id="form" name="form">
         <div class="pure-g">
             <div class="pure-u-1">
                 <dl class="form-col">
@@ -24,6 +24,9 @@
                         <input name="title" type="text" value="{system_message/title}">
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a title')" />
                             </xsl:attribute>
                         </input>
                     </dd>
@@ -40,6 +43,9 @@
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
                             </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a message')" />
+                            </xsl:attribute>
                             <xsl:value-of select="system_message/message"/>
                         </textarea>
                     </dd>
@@ -55,6 +61,9 @@
                         <input name="name" type="text" value="{system_message/name}" >
                             <xsl:attribute name="data-validation">
                                 <xsl:text>required</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please enter a name')" />
                             </xsl:attribute>
                         </input>
                     </dd>

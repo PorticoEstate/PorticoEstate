@@ -35,7 +35,7 @@
         <xsl:call-template name="msgbox"/>
         <!--xsl:call-template name="yui_booking_i18n"/-->
 
-        <form action="" method="POST">
+        <form action="" method="POST" id="form" name="form">
             <div class="pure-g">
                 <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                     <dl class="form-col">
@@ -46,6 +46,9 @@
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter an organization')" />
+                                    </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
                                 </input>
                             </xsl:if>
@@ -53,6 +56,9 @@
                                 <input id="inputs" name="name" readonly="true" type="text">
                                     <xsl:attribute name="data-validation">
                                         <xsl:text>required</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Please enter an organization')" />
                                     </xsl:attribute>
                                     <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
                                 </input>
@@ -193,6 +199,9 @@
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
                                 </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                                </xsl:attribute>
                                 <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
                                 <xsl:for-each select="activities">
                                     <option>
@@ -304,5 +313,3 @@
     </div>
 
 </xsl:template>
-
-

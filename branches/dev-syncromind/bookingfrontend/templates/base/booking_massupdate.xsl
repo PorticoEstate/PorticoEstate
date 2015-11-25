@@ -55,6 +55,9 @@
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
                                 </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please select an activity')" />
+                                </xsl:attribute>
 								<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
 								<xsl:for-each select="activities">
 									<option>
@@ -73,6 +76,9 @@
                                 <xsl:attribute name="data-validation">
                                     <xsl:text>required</xsl:text>
                                 </xsl:attribute>
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please select a group')" />
+                                </xsl:attribute>
                                 <option value=""><xsl:value-of select="php:function('lang', 'Select a group')"/></option>
 								<xsl:for-each select="groups">
 									<option value="{id}">
@@ -88,7 +94,11 @@
 					<dl class="form-col">
 						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 						<dd>
-                            <input type="hidden" data-validation="target_audience" />
+                            <input type="hidden" data-validation="target_audience">
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please choose at least 1 target audience')" />
+                                </xsl:attribute>
+                            </input>
 							<ul id="audience" style="list-style:none;padding-left:10px;">
 								<xsl:for-each select="audience">
 									<li>
@@ -107,7 +117,11 @@
 					<dl class="form-col">
 						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
 						<dd>
-                            <input type="hidden" data-validation="number_participants" />
+                            <input type="hidden" data-validation="number_participants">
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Number of participants is required')" />
+                                </xsl:attribute>
+                            </input>
 							<table id="agegroup" class="pure-table pure-table-bordered">
                                 <thead>
                                     <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
