@@ -389,35 +389,31 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
-			// YUI variables for paging and sorting
-			$start_index	 = phpgw::get_var('startIndex', 'int');
-			$num_of_objects	 = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		 = phpgw::get_var('sort');
-			$sort_ascending	 = phpgw::get_var('dir') == 'desc' ? false : true;
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $this->user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id'; 
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for		 = phpgw::get_var('query');
-			$search_type	 = phpgw::get_var('search_option');
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option');
+
 			// Create an empty result set
-			$result_objects	 = array();
-			$result_count	 = 0;
+			$result_objects = array();
+			$result_count = 0;
+
+			$export			= phpgw::get_var('export','bool');
+			if ($export)
+			{
+				$num_of_objects = null;
+			}
+			
 			//Retrieve the type of query and perform type specific logic
 			$query_type		 = phpgw::get_var('type');
-
-			$exp_param	 = phpgw::get_var('export');
-			$export		 = false;
-			if(isset($exp_param))
-			{
-				$export			 = true;
-				$num_of_objects	 = null;
-			}
 
 			$email_param = phpgw::get_var('email');
 			$email		 = false;
@@ -436,7 +432,7 @@
 						'activity_category' => phpgw::get_var('activity_category'), 'activity_district' => phpgw::get_var('activity_district'),
 						'user_id' => $uid, 'updated_date_hidden' => phpgw::get_var('date_change_hidden'));
 					$result_objects	 = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
+					$result_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'all_activities':
 				default:
@@ -444,7 +440,7 @@
 						'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid,
 						'updated_date_hidden' => phpgw::get_var('date_change_hidden'));
 					$result_objects	 = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
+					$result_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 			}
 
@@ -453,7 +449,6 @@
 			$mail_rows	 = array();
 			foreach($result_objects as $result)
 			{
-//          var_dump($result);
 				if(isset($result))
 				{
 					// ... add a serialized result
@@ -469,22 +464,22 @@
 				}
 			}
 
-			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => $object_count);
-
 			if(!$export && !$email)
 			{
 				//Add action column to each row in result table
-				array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
+				array_walk($rows, array($this, 'add_actions'), array($query_type));
 			}
 			if($email)
 			{
-				//var_dump($mail_rows);
 				$this->send_email_to_selection($mail_rows);
 			}
 			else
 			{
-				return $this->yui_results($result_data, 'total_records', 'results');
+				$result_data    =   array('results' =>  $rows);
+				$result_data['total_records']	= $result_count;
+				$result_data['draw']    = $draw;
+				
+				return $this->jquery_results($result_data);
 			}
 		}
 
