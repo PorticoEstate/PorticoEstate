@@ -41,13 +41,15 @@
 								<select id="activity_district" name="activity_district">
 									<xsl:apply-templates select="list_activity_district_options/options"/>
 								</select>
+							</div>
+							<div class="pure-control-group">
 								<label><xsl:value-of select="php:function('lang', 'Category')"/></label>
 								<select id="activity_category" name="activity_category">
 									<xsl:apply-templates select="list_activity_category_options/options"/>
 								</select>													
 								<label><xsl:value-of select="php:function('lang', 'date')"/></label>
 								<input type="text" id="date_change" name="date_change" value=""></input>
-							</div>								
+							</div>														
 						</div>
 					<div>
 						<xsl:for-each select="datatable_def">
