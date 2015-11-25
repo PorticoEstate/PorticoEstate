@@ -405,35 +405,27 @@
 		 */
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
-			// YUI variables for paging and sorting
-			$start_index	 = phpgw::get_var('startIndex', 'int');
-			$num_of_objects	 = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		 = phpgw::get_var('sort', 'string', 'GET', 'identifier');
-			$sort_ascending	 = phpgw::get_var('dir') == 'desc' ? false : true;
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $this->user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier'; 
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for		 = phpgw::get_var('query');
-			$search_type	 = phpgw::get_var('search_option');
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option');
+
 			// Create an empty result set
-			$result_objects	 = array();
-			$result_count	 = 0;
+			$result_objects = array();
+			$result_count = 0;
 
-			//Create an empty result set
-			$parties = array();
-
-			$exp_param	 = phpgw::get_var('export');
-			$export		 = false;
-			if(isset($exp_param))
+			$export			= phpgw::get_var('export','bool');
+			if ($export)
 			{
-				$export			 = true;
-				$num_of_objects	 = null;
+				$num_of_objects = null;
 			}
 
 			//Retrieve the type of query and perform type specific logic
@@ -500,22 +492,25 @@
 					}
 				}
 			}
-			// ... add result data
-			$organization_data = array('results' => $rows, 'total_records' => $result_count);
-
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-
+			
 			if(!$export)
 			{
-				array_walk(
-				$organization_data['results'], array($this, 'add_actions'), array(// Parameters (non-object pointers)
-					$type			// [2] The type of query
-				)
+				array_walk($rows, array($this, 'add_actions'), array(// Parameters (non-object pointers)
+						$type			// [2] The type of query
+					)
 				);
 			}
 
+			if($export)
+			{
+				return $rows;
+			}
 
-			return $this->yui_results($organization_data, 'total_records', 'results');
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= $result_count;
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		public function get_organization_groups()
