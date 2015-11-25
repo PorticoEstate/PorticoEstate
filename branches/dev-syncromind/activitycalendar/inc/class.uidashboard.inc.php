@@ -34,28 +34,9 @@
 				array('key'=>'district', 'label'=>lang('district'), 'sortable'=>false),
 				array('key'=>'office', 'label'=>lang('office'), 'sortable'=>false),				
 				array('key'=>'description', 'label'=>lang('description'), 'sortable'=>false),
-				array('key'=>'change_type', 'label'=>lang('change_type'), 'sortable'=>false)
+				array('key'=>'change_type', 'label'=>lang('change_type'), 'sortable'=>false),
+				array('key'=>'operations', 'label'=>lang('operations'), 'sortable'=>false, 'className'=>'center')
 			);
-		
-			/*$tabletools_organization[] = array
-				(
-					'my_name'		=> 'edit',
-					'text'			=> lang('edit'),
-					'action'		=> self::link(array(
-							'menuaction'	=> 'rental.uicontract.edit'
-					)),
-					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-				);
-			
-			$tabletools_organization[] = array
-				(
-					'my_name'		=> 'show',
-					'text'			=> lang('show'),
-					'action'		=> self::link(array(
-							'menuaction'	=> 'rental.uicontract.view'
-					)),
-					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-				);*/
 
 			$datatable_def[] = array
 			(
@@ -63,7 +44,6 @@
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'activitycalendar.uiorganization.query', 'type'=>'new_organizations', 'phpgw_return_as'=>'json'))),
 				'data'			=> json_encode(array()),
 				'ColumnDefs'	=> $columns_def_organization,
-				//'tabletools'	=> $tabletools_organization,
 				'config'		=> array(
 					array('disableFilter'	=> true)
 				)
@@ -86,14 +66,49 @@
 				array('key'=>'contact_person_2', 'label'=>lang('contact_person_2'), 'sortable'=>true),
 				array('key'=>'last_change_date', 'label'=>lang('last_change_date'), 'sortable'=>true)
 			);
+
+			$tabletools_activities[] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiactivities.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			
+			$tabletools_activities[] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),			
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiactivities.edit'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			
+			$tabletools_activities[] = array
+				(
+					'my_name'		=> 'send_mail',
+					'text'			=> lang('send_mail'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'activitycalendar.uiactivities.send_mail', 
+								'phpgw_return_as'	=> 'json'
+							)).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id'), array('name'=>'message_type', 'source'=>'update')))).";
+						sendMail(oArgs, parameters);
+					"
+				);
 			
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'activitycalendar.uiactivities.query', 'type'=>'new_activities', 'phpgw_return_as'=>'json'))),
 				'data'			=> json_encode(array()),
-				'ColumnDefs'	=> $columns_def_activities
-				//'tabletools'	=> $tabletools_organization,
+				'ColumnDefs'	=> $columns_def_activities,
+				'tabletools'	=> $tabletools_activities
 			);
 			
 			$activity_state_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
@@ -135,6 +150,7 @@
 					'list_activity_category_options'	=> array('options' => $activity_category_options)
 				);
 			
+			self::add_javascript('activitycalendar', 'activitycalendar', 'dashboard.index.js');
 			self::render_template_xsl(array('dashboard', 'datatable_inline'), array('edit' => $data));			
 		}
 
