@@ -1,23 +1,4 @@
 
-var getRequestData = function(dataSelected, parameters){
-	
-	var data = {};
-	
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < dataSelected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = dataSelected[n][val.source];
-		});		
-	}
-	
-	return data;
-};
-
 function sendMail(oArgs, parameters)
 {
 	var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
@@ -29,16 +10,26 @@ function sendMail(oArgs, parameters)
 		return false;
 	}
 
-	var data = getRequestData(selected, parameters);
-	var requestUrl = phpGWLink('index.php', oArgs);
-
-	JqueryPortico.execute_ajax(requestUrl, function(result){
-
-		JqueryPortico.show_message(nTable, result);
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		var data = {};
 		
-		oTable1.fnDraw();
+		$.each(parameters.parameter, function( i, val ) 
+		{
+			data[val.name] = selected[n][val.source];
+		});		
+		
+		var requestUrl = phpGWLink('index.php', oArgs);
 
-	}, data, 'POST', 'JSON');
+		JqueryPortico.execute_ajax(requestUrl, function(result){
+
+			JqueryPortico.show_message(nTable, result);
+
+		}, data, 'POST', 'JSON');		
+	}
+	
+	oTable1.fnDraw();
 }
 
 function filterDataActivities(param, value)
