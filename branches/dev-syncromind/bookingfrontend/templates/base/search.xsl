@@ -1,21 +1,6 @@
-<xsl:template name="strip-tags" xmlns:php="http://php.net/xsl">
-	<xsl:param name="text"/>
-	<xsl:choose>
-		<xsl:when test="contains($text, '&lt;')">
-			<xsl:value-of select="substring-before($text, '&lt;')"/>
-			<xsl:call-template name="strip-tags">
-				<xsl:with-param name="text" select="concat(' ', substring-after($text, '&gt;'))"/>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$text"/>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
-//		var selected_part_of_towns = "<xsl:value-of select="selected_part_of_towns"/>";
+		//		var selected_part_of_towns = "<xsl:value-of select="selected_part_of_towns"/>";
 	</script>
 	<div id="content">
 		<form action="" method="GET" id="search">
@@ -55,9 +40,9 @@
 									<xsl:value-of select="id"/>
 								</xsl:attribute>
 								<xsl:if test="checked = 1">
-								<xsl:attribute name="checked">
-									<xsl:text>checked</xsl:text>
-								</xsl:attribute>
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
 								</xsl:if>
 							</input>
 							<xsl:value-of select="name"/>
@@ -73,118 +58,41 @@
 				<style>
 					#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
 					#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+					.no_checkbox>i.jstree-checkbox{ display:none}
 				</style>
 				<script type="text/javascript">
 					filter_tree = <xsl:value-of select="filter_tree"/>;
 				</script>
 				<!-- markup for expand/contract links -->
 				<div id="treecontrol">
-					<a id="collapse1" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+					<a id="collapse1" title="Collapse the entire tree below" href="#">
+						<xsl:value-of select="php:function('lang', 'collapse all')"/>
+					</a>
 					<xsl:text> | </xsl:text>
-					<a id="expand1" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
+					<a id="expand1" title="Expand the entire tree below" href="#">
+						<xsl:value-of select="php:function('lang', 'expand all')"/>
+					</a>
 				</div>
 				<div id="treeDiv1"></div>
 			</fieldset>
 		</div>
 
-		<xsl:if test="not(search)">
-			<div id="cloud">
-				<div class="frontpagetext">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+		<div id="no_result">
+			<xsl:if test="not(search)">
+				<div id="cloud">
+					<div class="frontpagetext">
+						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+					</div>
 				</div>
-			</div>
-			<div style="text-align:center;">
-				<img alt="" >
-					<xsl:attribute name="src">
-						<xsl:value-of select="frontimage"/>
-					</xsl:attribute>
-				</img>
-			</div>
-		</xsl:if>
-		<xsl:if test="search">
-			<div id="result">
-				<h5>
-					<u>
-						<strong>
-							<xsl:value-of select="php:function('lang', 'Found %1 results', search/results/total_records_sum)" />
-						</strong>
-					</u>
-				</h5>
-				<br />
-				<br />
-				<xsl:if test="search/results/total_records_sum &gt; 0">
-					<ol id="result">
-						<xsl:for-each select="search/results/results">
-							<li>
-								<div class="header">
-									<a class="bui_single_view_link">
-										<xsl:attribute name="href">
-											<xsl:value-of select="link"/>
-										</xsl:attribute>
-										<xsl:value-of select="name"/>
-									</a>
-									(<xsl:value-of select="php:function('lang', string(type))"/>)
-								</div>
-								<div class="details">
-									<div>
-										<dl>
-											<dt>
-												<h4>
-													<xsl:value-of select="php:function('lang', 'Description')" />
-												</h4>
-											</dt>
-											<dd class="description">
-												<xsl:variable name="tag_stripped_description">
-													<xsl:call-template name="strip-tags">
-														<xsl:with-param name="text" select="description"/>
-													</xsl:call-template>
-												</xsl:variable>
-												<xsl:choose>
-													<xsl:when test="string-length($tag_stripped_description) &gt; 1">
-														<xsl:choose>
-															<xsl:when test="string-length($tag_stripped_description) &gt; 100">
-																<xsl:value-of select="substring($tag_stripped_description, 0, 97)"/>...
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:value-of select="$tag_stripped_description"/>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:value-of select="php:function('lang', 'No description yet')" />
-													</xsl:otherwise>
-												</xsl:choose>
-												<div id="{img_container}"/>
-												<script type="text/javascript">
-													$(window).load(function() {
-													JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
-													});
-												</script>
-											</dd>
-											<xsl:if test="string-length(homepage) &gt; 1">
-												<dt>
-													<h4>
-														<xsl:value-of select="php:function('lang', 'Homepage')" />
-													</h4>
-												</dt>
-												<dd class="description">
-													<a>
-														<xsl:attribute name="href">
-															<xsl:value-of select="homepage"/>
-														</xsl:attribute>
-														<xsl:value-of select="homepage"/>
-													</a>
-												</dd>
-											</xsl:if>
-										</dl>
-									</div>
-									<div class="clr"></div>
-								</div>
-							</li>
-						</xsl:for-each>
-					</ol>
-				</xsl:if>
-			</div>
-		</xsl:if>
+				<div style="text-align:center;">
+					<img alt="" >
+						<xsl:attribute name="src">
+							<xsl:value-of select="frontimage"/>
+						</xsl:attribute>
+					</img>
+				</div>
+			</xsl:if>
+		</div>
+		<div id="result"></div>
 	</div>
 </xsl:template>

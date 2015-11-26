@@ -1526,15 +1526,17 @@
 			{
 				$id = $this->_db2->f('id');
 				$tree[] = array(
+					'id'		=> "ajson{$this->node_id}",
 					'db_id'		=> $id,
 					'parent'	=> $this->_db2->f('parent_id'),
 					'text'		=> $this->_db2->f('name',true),
 				);
+				$this->node_id++;
 			}
 
 			foreach($tree as &$node)
 			{
-				$children = $this->get_group_children($location_id, $node['db_id'], 0);
+				$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id']);
 				$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id']);
 				if($children)
 				{
@@ -1621,11 +1623,14 @@
 
 			while($this->_db2->next_record())
 			{
+				$id = $this->_db2->f('id');
 				$children[] = array(
-					'id'	=> "ajson{$this->node_id}",
-					'db_id'		=> $this->_db2->f('id'),
-					'parent'	=> $parent,
-					'text'		=> $this->_db2->f('input_text',true),
+					'id'			=> "ajson{$this->node_id}",
+					'db_id'			=> $id,
+					'location_id'	=> $location_id,
+					'attribute_id'	=> $id,
+					'parent'		=> $parent,
+					'text'			=> $this->_db2->f('input_text',true),
 				);
 				$this->node_id++;
 			}
@@ -1637,9 +1642,12 @@
 				{
 					foreach ($_choices as &$_choice)
 					{
-						$_choice['parent'] = $child['id'];
-						$_choice['db_id']  = $_choice['id'];
-						$_choice['id']  = "ajson{$this->node_id}";
+						$_choice['parent']		= $child['id'];
+						$_choice['db_id']		= $_choice['id'];
+						$_choice['location_id']	= $location_id;
+						$_choice['attribute_id']= $child['db_id'];
+						$_choice['choice_id']	= $_choice['id'];
+						$_choice['id']			= "ajson{$this->node_id}";
 						$this->node_id++;
 					}
 					$child['children'] = $_choices;
