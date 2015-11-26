@@ -2,6 +2,8 @@ var filter_tree = null;
 var building_id_selection = "";
 var part_of_town_string = "";
 var part_of_towns = [];
+var selected_building_id = null;
+
 var selected_criteria = [];
 $(document).ready(function () {
 	update_autocompleteHelper = function () {
@@ -14,6 +16,7 @@ $(document).ready(function () {
 	}
 
 	$("#part_of_town :checkbox").on('click', function () {
+		selected_building_id = null;
 		update_search(selected_criteria);
 
 	});
@@ -28,7 +31,7 @@ $(document).ready(function () {
 			themes: {"stripes": true}
 		},
 		checkbox: {whole_node: true, three_state: false, cascade: "up+down+undetermined"},
-		plugins: ["themes", "state", "checkbox"]
+		plugins: ["themes", "checkbox"]
 	});
 
 
@@ -37,17 +40,8 @@ $(document).ready(function () {
 		{
 			return false;
 		}
-		var href = data.node.a_attr.href;
-		if (href == "#")
-		{
-			selected_criteria = $("#treeDiv1").jstree('get_selected', true);
-		}
-		else
-		{
-			var activity_top_level = 0;
-			$('#activity_top_level').val(activity_top_level);
+		update_activity_top_level(data, true);
 
-		}
 		update_search(selected_criteria);
 
 	});
@@ -58,19 +52,42 @@ $(document).ready(function () {
 		{
 			return false;
 		}
+		update_activity_top_level(data, false);
+
+		update_search(selected_criteria);
+	});
+
+	update_activity_top_level = function (data, deselect) {
+
+		var parents = data.node.parents;
+		var level = parents.length;
+		var activity_top_level = 0;
+		if (!deselect)
+		{
+			//Top node
+			if (level < 2)
+			{
+				activity_top_level = data.node.a_attr.activity_top_level;
+			}
+			else
+			{
+				//Find top node
+				var top_node_id = parents[(level - 2)];
+
+				var treeInst = $('#treeDiv1').jstree(true);
+				top_node = treeInst.get_node(top_node_id)
+				activity_top_level = top_node.a_attr.activity_top_level;
+			}
+		}
+		$('#activity_top_level').val(activity_top_level);
+
 		var href = data.node.a_attr.href;
 		if (href == "#")
 		{
 			selected_criteria = $("#treeDiv1").jstree('get_selected', true);
 		}
-		else
-		{
-			var activity_top_level = data.node.a_attr.activity_top_level;
-			$('#activity_top_level').val(activity_top_level);
-		}
-		update_search(selected_criteria);
-	});
 
+	}
 	update_search = function (selected_criteria) {
 
 		var criteria = [];
@@ -96,7 +113,7 @@ $(document).ready(function () {
 		var oArgs = {
 			menuaction: 'bookingfrontend.uisearch.query',
 			activity_top_level: activity_top_level,
-			building_id: $('#field_building_id').val(),
+			building_id: selected_building_id,
 			filter_part_of_town: part_of_town_string
 		};
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs);
@@ -127,14 +144,13 @@ $(document).ready(function () {
 		$('#treeDiv1').jstree('open_all');
 	});
 
-
 });
 
 $(window).load(function () {
-	var building_id = $('#field_building_id').val();
 	$("#field_building_name").on("autocompleteselect", function (event, ui) {
 		var building_id = ui.item.value;
 		if (building_id != building_id_selection) {
+			selected_building_id = building_id;
 			update_search(selected_criteria);
 		}
 	});

@@ -34,6 +34,12 @@
 				{
 					$_filter_building['part_of_town_id'] = $filter_part_of_town;
 				}
+
+				if($activity_top_level && !$building_id)
+				{
+					$buildings = $this->sobuilding->get_buildings_from_activity($activity_top_level);
+					$_filter_building['id'] = $buildings;
+				}
 				if($building_id)
 				{
 					$_filter_building['id'] = $building_id;

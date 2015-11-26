@@ -33,7 +33,6 @@
 							'key' 		=> 'location_code',
 							'column' 	=> 'location_code'
 					)),
-
 					'street' 		=> array('type' => 'string', 'query' => true),
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string', 'query' => true),
@@ -86,5 +85,29 @@
 			')';
 			
 			return $this->read($params);
+		}
+
+		/**
+		 * Returns buildins with resources within top level activity
+		 * @param type $activity_id
+		 * @return array building ids
+		 */
+		function get_buildings_from_activity($activity_id = 0)
+		{
+			$soactivity = createObject('booking.soactivity');
+			$children = $soactivity->get_children($activity_id);
+			$activity_ids = array_merge(array($activity_id),$children);
+			$buildings = array();
+			if(!$activity_ids)
+			{
+				return $buildings;
+			}
+			$sql = 'SELECT building_id FROM bb_resource WHERE activity_id IN (' . implode(',', $activity_ids) . ')';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$buildings[] = $this->db->f('building_id');
+			}
+			return $buildings;
 		}
 	}
