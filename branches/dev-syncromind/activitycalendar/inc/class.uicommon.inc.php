@@ -229,42 +229,38 @@
 		 */
 		public function download()
 		{
-			$list	 = $this->query();
-			$list	 = $list['ResultSet']['Result'];
+            $list = $this->query();
 
-			$keys = array();
+            $keys = array();
 
-			if(count($list[0]) > 0)
-			{
-				foreach($list[0] as $key => $value)
-				{
-					if(!is_array($value))
-					{
-						array_push($keys, $key);
-					}
-				}
-			}
+            if(count($list[0]) > 0) {
+                foreach($list[0] as $key => $value) {
+                    if(!is_array($value)) {
+                        array_push($keys, $key);
+                    }
+                }
+            }
+            
+            // Remove newlines from output
+            $count = count($list);
+            for($i = 0; $i < $count; $i++)
+            {
+ 				foreach ($list[$i] as $key => &$data)
+ 				{
+	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
+ 				}
+            }
 
-			// Remove newlines from output
-			$count = count($list);
-			for($i = 0; $i < $count; $i++)
-			{
-				foreach($list[$i] as $key => &$data)
-				{
-					$data = str_replace(array("\n", "\r\n", "<br>"), '', $data);
-				}
-			}
+             // Use keys as headings
+            $headings = array();
+            $count_keys = count($keys);
+            for($j=0;$j<$count_keys;$j++)
+            {
+            	array_push($headings, lang($keys[$j]));
+            }
 
-			// Use keys as headings
-			$headings	 = array();
-			$count_keys	 = count($keys);
-			for($j = 0; $j < $count_keys; $j++)
-			{
-				array_push($headings, lang($keys[$j]));
-			}
-
-			$property_common = CreateObject('property.bocommon');
-			$property_common->download($list, $keys, $headings);
+            $property_common = CreateObject('property.bocommon');
+            $property_common->download($list, $keys, $headings);
 		}
 
 		/**
