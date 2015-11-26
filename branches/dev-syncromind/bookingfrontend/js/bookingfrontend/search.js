@@ -44,7 +44,7 @@ $(document).ready(function () {
 		}
 		else
 		{
-			var activity_top_level = data.node.a_attr.activity_top_level;
+			var activity_top_level = 0;
 			$('#activity_top_level').val(activity_top_level);
 
 		}
