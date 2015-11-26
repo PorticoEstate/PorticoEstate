@@ -57,7 +57,54 @@
 		private function _get_filters()
 		{
 			$filters = array();
-
+			
+			$activity_state_options = array
+			(
+				array('id' => 'all', 'name' => lang('all')),
+				array('id' => '1', 'name' => lang('new')),
+				array('id' => '2', 'name' => lang('change')),
+				array('id' => '3', 'name' => lang('published')),
+				array('id' => '5', 'name' => lang('rejected'))
+			);
+			
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'activity_state',
+							'text'   => lang('activity_state'),
+							'list'   => $activity_state_options
+						);
+		
+			$activity_district_options[] = array('id'=>'all', 'name'=>lang('all'));
+			$districts = activitycalendar_soactivity::get_instance()->select_district_list();
+			foreach($districts as $district)
+			{
+				$activity_district_options[] = array('id'=>$district['id'], 'name'=>$district['name']);	
+			}
+				
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'activity_district',
+							'text'   => lang('office'),
+							'list'   => $activity_district_options
+						);
+			
+			$activity_category_options[] = array('id'=>'all', 'name'=>lang('all'));
+			$categories = activitycalendar_soactivity::get_instance()->get_categories();
+			foreach($categories as $category)
+			{
+				$activity_category_options[] = array('id'=>$category->get_id(), 'name'=>$category->get_name());				
+			}
+			
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'activity_category',
+							'text'   => lang('Category'),
+							'list'   => $activity_category_options
+						);
+			
 			return $filters;
 		}
 		/**
@@ -70,9 +117,6 @@
 
 		public function index()
 		{
-			//$message = phpgw::get_var('message');
-			//$this->render('activity_list.php');
-			
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
@@ -88,6 +132,14 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+							array
+								(
+								'type'	 => 'date-picker',
+								'id'	 => 'date_change',
+								'name'	 => 'date_change',
+								'value'	 => '',
+								'text'	 => lang('date')
+							),							
 							array(
 								'type'   => 'link',
 								'value'  => lang('new'),
@@ -132,7 +184,9 @@
 			);
 
 			$filters = $this->_get_Filters();
-			foreach($filters as $filter){
+			krsort($filters);
+			foreach($filters as $filter)
+			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
@@ -155,7 +209,7 @@
 					)),
 					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 				);
-
+			
 			$data['datatable']['actions'][] = array
 				(
 					'my_name'		=> 'send_mail',
@@ -164,13 +218,17 @@
 					'custom_code'	=> "
 						var oArgs = ".json_encode(array(
 								'menuaction'		=> 'activitycalendar.uiactivities.send_mail', 
+								'message_type'		=> 'update',
 								'phpgw_return_as'	=> 'json'
 							)).";
-						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id'), array('name'=>'message_type', 'source'=>'update')))).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id')))).";
 						sendMail(oArgs, parameters);
 					"
 				);
-
+			
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_date_change');
+			
+			self::add_javascript('activitycalendar', 'activitycalendar', 'activities.index.js');
 			self::render_template_xsl('datatable_jquery', $data);			
 		}
 
@@ -544,7 +602,7 @@
 				default:
 					$filters		 = array('activity_state' => phpgw::get_var('activity_state'), 'activity_category' => phpgw::get_var('activity_category'),
 						'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid,
-						'updated_date_hidden' => phpgw::get_var('date_change_hidden'));
+						'updated_date_hidden' => phpgw::get_var('date_change'));
 					$result_objects	 = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$result_count	 = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -570,6 +628,11 @@
 				}
 			}
 
+			if($export)
+			{
+				return $rows;
+			}
+			
 			if(!$export && !$email)
 			{
 				//Add action column to each row in result table
