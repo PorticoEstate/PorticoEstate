@@ -54,6 +54,12 @@
 			$this->debug = false;
 		}
 
+		private function _get_filters()
+		{
+			$filters = array();
+
+			return $filters;
+		}
 		/**
 		 * Public method. Forwards the user to edit mode.
 		 */
@@ -65,7 +71,107 @@
 		public function index()
 		{
 			//$message = phpgw::get_var('message');
-			$this->render('activity_list.php');
+			//$this->render('activity_list.php');
+			
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$appname = lang('activities');
+
+			$function_msg = lang('list %1', $appname);
+			$type = 'all_activities';
+
+			$data = array(
+				'datatable_name'	=> $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type'   => 'link',
+								'value'  => lang('new'),
+								'href'   => self::link(array(
+									'menuaction'	=> 'activitycalendar.uiactivities.add'
+								)),
+								'class'  => 'new_item'
+							)							
+						)
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'activitycalendar.uiactivities.index', 
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'activitycalendar.uiactivities.download',
+							'type'		=> $type,
+							'export'    => true,
+							'allrows'   => true
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+							array('key'=>'id', 'label'=>lang('id'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'title', 'label'=>lang('title'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'state', 'label'=>lang('status'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'organization_id', 'label'=>lang('organization'), 'sortable'=>true, 'hidden'=>false),				
+							array('key'=>'group_id', 'label'=>lang('group'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'category', 'label'=>lang('category'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'arena', 'label'=>lang('arena'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'time', 'label'=>lang('time'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'contact_person_1', 'label'=>lang('contact_person_1'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'contact_person_2', 'label'=>lang('contact_person_2'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'last_change_date', 'label'=>lang('last_change_date'), 'sortable'=>true, 'hidden'=>false)
+					)
+				)
+			);
+
+			$filters = $this->_get_Filters();
+			foreach($filters as $filter){
+				array_unshift($data['form']['toolbar']['item'], $filter);
+			}
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiactivities.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))		
+				);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),			
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiactivities.edit'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'send_mail',
+					'text'			=> lang('send_mail'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'activitycalendar.uiactivities.send_mail', 
+								'phpgw_return_as'	=> 'json'
+							)).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id'), array('name'=>'message_type', 'source'=>'update')))).";
+						sendMail(oArgs, parameters);
+					"
+				);
+
+			self::render_template_xsl('datatable_jquery', $data);			
 		}
 
 		/**
