@@ -95,9 +95,10 @@
 					'custom_code'	=> "
 						var oArgs = ".json_encode(array(
 								'menuaction'		=> 'activitycalendar.uiactivities.send_mail', 
+								'message_type'		=> 'update',
 								'phpgw_return_as'	=> 'json'
 							)).";
-						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id'), array('name'=>'message_type', 'source'=>'update')))).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'activity_id', 'source'=>'id')))).";
 						sendMail(oArgs, parameters);
 					"
 				);
