@@ -56,7 +56,7 @@
 
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
@@ -143,7 +143,9 @@
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'border_layout_config' => $_border_layout_config,
-		'navbar_config' => $_navbar_config
+		'navbar_config' => $_navbar_config,
+		'lang_collapse_all'	=> lang('collapse all'),
+		'lang_expand_all'	=> lang('expand all')
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

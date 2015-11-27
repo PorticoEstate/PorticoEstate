@@ -193,12 +193,24 @@ HTML;
 						plugins: ["state", "search"]
 					});
 					var to = false;
-					$('#plugins4_q').keyup(function () {
+					$('#navbar_search').keyup(function () {
 						if(to) { clearTimeout(to); }
 						to = setTimeout(function () {
-							var v = $('#plugins4_q').val();
+							var v = $('#navbar_search').val();
 							$('#navbar').jstree(true).search(v);
 						}, 250);
+					});
+					$('#navbar').bind('select_node.jstree', function(e,data) {
+						if (typeof (data.event) == 'undefined')
+						{
+							return false;
+						}
+				//		var treeInst = $('#treeDiv1').jstree(true);
+				//		treeInst.save_state();
+						setTimeout(function() {
+							window.location.href = data.node.a_attr.href;
+						}, 100);
+
 					});
 				});
 			</script>
@@ -298,19 +310,30 @@ JS;
 			$current_class = 'current';
 		}
 
-		$link_class =" class=\"{$current_class}{$parent_class}\"";
+		$link_class = " class=\"{$current_class}{$parent_class}\"";
+		$id=" id=\"{$id}\"";
+		/**
+		 * Sigurd: Block class for treeview
+		 */
+		$link_class = '';//" class=\"{$current_class}{$parent_class}\"";
+		$expand_class = '';
+		$icon_style = '';
+		$id			= '';
 
 		$out = <<<HTML
 				<li{$expand_class}>
 
 HTML;
-		if( $expand_class )
+/*
+ *		Sigurd: img treeview
+ * 		if( $expand_class )
 		{
 		$out .= <<<HTML
 							<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
 
 HTML;
 		}
+ */
 		$target = '';
 		if(isset($item['target']))
 		{
@@ -323,9 +346,7 @@ HTML;
 
 		return <<<HTML
 $out
-					<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}" {$target}>
-						<span>{$item['text']}</span>
-					</a>
+					<a href="{$item['url']}"{$link_class}{$icon_style}{$id}{$target}>{$item['text']}</a>
 {$children}
 				</li>
 
