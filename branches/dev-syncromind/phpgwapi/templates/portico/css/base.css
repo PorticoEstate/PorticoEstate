@@ -2,130 +2,6 @@
 	Border-layout for CSS only layout
 */
 
-body {
-	height: 100%;
-	background: #edf5ff;
-}
-
-div#border-layout {
-	text-align: left;
-}
-
-div#border-layout div.layout-north,
-div#border-layout div.layout-south
-{
-
-	position: absolute;
-	left: 0;
-	height: 26px;
-	width: 100%;
-}
-
-div#border-layout div.layout-north
-{
-	top: 0;
-}
-
-div#border-layout div.layout-south
-{
-	bottom: 0;
-}
-
-div#border-layout div.layout-west,
-div#border-layout div.layout-east
-{
-	position: absolute;
-	top: 31px;
-	bottom: 31px;
-	width: 194px;
-}
-
-div#border-layout div.layout-west
-{
-	left: 5px;
-}
-
-div#border-layout div.layout-east
-{
-	right: 5px;
-}
-
-div#border-layout div.layout-center {
-	position: absolute;
-	top: 31px;
-	bottom: 31px;
-	left: 204px;
-	right: 204px;
-}
-
-div#border-layout div.header
-{
-	height: 23px;
-	border: 1px solid #808080;
-	border-bottom: none;
-	background: #3f6ad1;
-}
-div#border-layout div.header h2
-{
-	font-size: 1em;
-	margin: 0px 3px;
-	color: #fff;
-	font-weight: bold;
-	line-height: 22px;
-}
-div#border-layout div.breadcrumbs
-{
-	font-size: 1em;
-	margin: 0px 3px;
-	color: #fff;
-	font-weight: bold;
-	line-height: 11px;
-}
-
-div#border-layout div.layout-west div.body,
-div#border-layout div.layout-east div.body,
-div#border-layout div.layout-center div.body
-{
-	background: #fff;
-	position: absolute;
-	overflow: auto;
-	top: 23px;
-	bottom: 0em;
-	border: 1px solid #808080;
-	left: 0px;
-	right: 0px;
-}
-
-div#border-layout div.layout-center div.body
-{
-	background: #fff;
-}
-
-
-/*
-	Border-layout for JS layout
-*/
-.yui-skin-sam .yui-layout .yui-layout-unit-top div.yui-layout-bd,
-.yui-skin-sam .yui-layout .yui-layout-unit-bottom div.yui-layout-bd
-{
-	border: none;
-}
-
-.yui-skin-sam .yui-layout div.header
-{
-	display: none;
-}
-
-.yui-skin-sam .yui-layout div.yui-layout-unit div.yui-layout-bd
-{
-	background-color: #fff;
-}
-
-.yui-skin-sam .yui-layout div.yui-layout-unit div.yui-layout-hd h2
-{
-	font-size: 1em;
-	margin: 0;
-}
 
 /*
 	Border-layout common for CSS and JS layout
@@ -170,75 +46,6 @@ div.layout-south div.body div.button-bar
 {
 	float: right;
 	margin: 0 5px;
-}
-
-
-/*
-	Navbar layout
-*/
-
-ul#navbar
-{
-	/*background: #fff;*/
-}
-
-ul#navbar li
-{
-	display: block;
-	white-space: nowrap;
-}
-
-ul#navbar li a
-{
-	color: #000;
-	text-decoration: none;
-	background-repeat: no-repeat;
-	background-position: left center;
-	display: inline-block;
-	padding-left: 20px;
-	margin-left: 20px;
-	padding: 2px 0px 2px 20px;
-}
-
-#navbar a.parent
-{
-	margin-left: 0px;
-}
-
-ul#navbar li a.current span
-{
-	background: #3f6ad1;
-	color: #fff;
-}
-ul#navbar li li
-{
-	padding-left: 20px;
-}
-
-#navbar li.collapsed ul
-{
-	display: none;
-}
-
-#navbar img.collapsed
-{
-	background: url(../images/collapsed.png) no-repeat center center;
-}
-
-#navbar img.collapsed:hover
-{
-	background-image: url(../images/collapsed-hover.png);
-}
-
-#navbar img.expanded
-{
-
-	background: url(../images/expanded.png) no-repeat center center;
-}
-
-#navbar img.expanded:hover
-{
-	background-image: url(../images/expanded-hover.png);
 }
 
 
@@ -350,45 +157,6 @@ thead, th, .th
 	Menu layout ("navbar" conflicts with the template "simple" - testing - try the admin section)
 */
 
-ul#menu
-{
-	/*background: #fff;*/
-}
-
-ul#menu li
-{
-	display: block;
-	white-space: nowrap;
-}
-
-ul#menu li a
-{
-	color: #000;
-	text-decoration: none;
-	background-repeat: no-repeat;
-	background-position: left center;
-	display: inline-block;
-	padding-left: 20px;
-	margin-left: 0px;
-	padding: 2px 0px 2px 0px;
-}
-
-#menu a.parent
-{
-	margin-left: 0px;
-}
-
-ul#menu li a.current span
-{
-	background: #3f6ad1;
-	color: #fff;
-}
-
-ul#menu li li
-{
-	padding-left: 20px;
-}
-
 .yui-skin-sam .yui-navset .yui-nav li.disabled
 {
 	opacity: .5;
@@ -455,32 +223,6 @@ code {
 		margin: 1em 0 1em 1em;
 	}
 
-ul {
-	padding: 0;
-	padding-bottom: 20px; /* give whitespace at bottom for FF */
-	margin: 0;
-	list-style-type: square;
-	}
-	li {
-		padding: 0;
-		margin: 0;
-		margin: 0.5ex 0 0.5ex 1.2em;
-	}
-
-table {
-	border-color: #666;
-	}
-	th {
-		background-color: #EEE;
-		padding: 4px 7px 5px;
-		border-color: #666;
-		text-align: left;
-	}
-	td {
-		padding: 2px 7px 3px;
-		border-color: #666 #CCC;
-		vertical-align: top;
-	}
 
 
 /*
@@ -544,28 +286,6 @@ table {
 }
 
 
-/*
-*	INNER-LAYOUT PANE FORMATTING
-*/
-
-#mainContent .ui-layout-pane {
-	padding: 10px;
-}
-#mainContent .ui-layout-north ,
-#mainContent .ui-layout-south {
-	text-align: center;
-}
-#mainContent .ui-layout-center {
-	padding: 0 !important; /* inner divs have padding */
-}
-#mainContent .ui-layout-content {
-	padding: 10px;
-}
-#mainContent .ui-layout-center h3 {
-	font-size: 1em;
-	padding: 5px;
-	margin: 0;
-}
 
 
 /*

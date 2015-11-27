@@ -186,8 +186,21 @@ HTML;
 			$var['treemenu'] .= <<<JS
 				<script type="text/javascript">
 				$(function() {
-				$("#navbar").menu();
-			});
+					$('#navbar').jstree({
+						core:{
+								multiple: false
+							 },
+						plugins: ["state", "search"]
+					});
+					var to = false;
+					$('#plugins4_q').keyup(function () {
+						if(to) { clearTimeout(to); }
+						to = setTimeout(function () {
+							var v = $('#plugins4_q').val();
+							$('#navbar').jstree(true).search(v);
+						}, 250);
+					});
+				});
 			</script>
 JS;
 

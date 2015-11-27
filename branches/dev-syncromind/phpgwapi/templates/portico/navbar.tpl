@@ -49,14 +49,13 @@
 			</div>
 
 			<div class="ui-layout-west">
-				<div class="content">
+				<div>
 					<h2>{user_fullname}</h2>
 				</div>
 
-				<div class="body">
-						<div class="treeview">
+				<input type="text" id="plugins4_q" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" />
+				<div id="navbar">
 {treemenu}
-						</div>
 				</div>
 			</div>
 
