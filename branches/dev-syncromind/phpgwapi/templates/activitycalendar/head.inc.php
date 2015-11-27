@@ -8,7 +8,7 @@
 	}
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-
+    $GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
