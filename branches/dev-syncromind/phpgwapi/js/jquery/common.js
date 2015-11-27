@@ -876,6 +876,25 @@ function populateSelect (url, selection, container, attr) {
     });
 }
 
+function populateSelect_activityCalendar (url, container, attr) {
+    var select = document.createElement('select');
+    var option = document.createElement('option');
+    if (attr){
+        $.each(attr, function(i, v){
+            select.setAttribute(v['name'],v['value']);
+        })
+    }
+    $.get(url, function(r){
+        select.innerHTML = r;
+        container.html("");
+        if (r) {
+            container.append(select);
+        }
+    }).fail(function(){
+        alert("AJAX doesn't work");
+    });
+}
+
 
 function createTableSchedule (d,u,c,r,cl,dt) {
     var container = document.getElementById(d);
