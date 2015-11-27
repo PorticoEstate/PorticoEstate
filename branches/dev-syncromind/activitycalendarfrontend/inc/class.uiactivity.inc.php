@@ -133,6 +133,29 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$activity->set_organization_id($o_id);
 				$activity->set_description($organization->get_description());
 				$activity->set_contact_persons($pers);
+                
+                self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_new.js');
+
+//                self::render_template_xsl(
+//                        'activity_new',
+//                        array(
+//                            'activity' => $activity,
+//                            'new_organization' => false,
+//                            'organization' => $organization,
+//                            'contact1' => $persons[0],
+//                            'arenas' => $arenas,
+//                            'buildings' => $buildings,
+//                            'categories' => $categories,
+//                            'targets' => $targets,
+//                            'districts' => $districts,
+//                            'offices' => $offices,
+//                            'editable' => true,
+//                            'message' => isset($message) ? $message : phpgw::get_var('message'),
+//                            'error' => isset($error) ? $error : phpgw::get_var('error'),
+//                            'helpImg' => $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif'),
+//                            'ajaxURL' => $ajaxUrl                            
+//                        )
+//                );
 
 				$this->render('activity_new.php', array
 						(
@@ -352,6 +375,17 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				);
 			}
 		} else {
+            self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_new_step_1.js');
+            
+//            self::render_template_xsl(
+//                    'activity_new_step_1',
+//                    array(
+//                        'ajaxURL' => $ajaxUrl,
+//                        'helpImg' => $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif'),
+//                        'organizations' => (array)$organizations
+//                    )
+//            );
+            
 			return $this->render('activity_new_step_1.php', array
 									(
 									'organizations' => $organizations,
