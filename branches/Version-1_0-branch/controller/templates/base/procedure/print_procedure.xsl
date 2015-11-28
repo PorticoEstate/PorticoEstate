@@ -23,8 +23,8 @@
                         </xsl:if>
 		</div>
 		<div>
-			<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
-			<xsl:if test="procedure/revision_date != 0">
+                        <xsl:if test="procedure/revision_date != 0">
+                            <label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
 				<xsl:variable name="revisiondate"><xsl:value-of select="procedure/revision_date" /></xsl:variable>
 				<xsl:value-of select="php:function('date', $date_format, $revisiondate)" />
 			</xsl:if>
@@ -32,7 +32,7 @@
 		<div>
 			<xsl:if test="procedure/end_date != 0">
 				<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
-			
+			<xsl:value-of select="procedure/end_date" />
 				<xsl:variable name="enddate"><xsl:value-of select="procedure/end_date" /></xsl:variable>
 				<xsl:value-of select="php:function('date', $date_format, $enddate)" />
 			</xsl:if>
@@ -91,7 +91,7 @@
 }
 	
 	ol{
- 		margin: 0;
+ 		margin: 15px;
     	padding: 0 20px;
 	}
 	

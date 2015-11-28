@@ -3303,11 +3303,32 @@
 														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)))
 				);
 
-			$payments = $this->bo->get_payments($id);
+			$budgets = $this->bo->get_budgets($id);
 
 			$datavalues[4] = array
 				(
 					'name'					=> "4",
+					'values' 				=> json_encode($budgets),
+					'total_records'			=> count($budgets),
+					'permission'   			=> "''",
+					'is_paginator'			=> 1,
+					'edit_action'			=> "''",
+					'footer'				=> 0
+				);
+
+			$myColumnDefs[5] = array
+				(
+					'name'		=> "5",
+					'values'	=>	json_encode(array(	array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
+														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+			$payments = $this->bo->get_payments($id);
+
+			$datavalues[5] = array
+				(
+					'name'					=> "5",
 					'values' 				=> json_encode($payments),
 					'total_records'			=> count($payments),
 					'permission'   			=> "''",
@@ -3388,7 +3409,7 @@
 			}
 
 			$year	= date('Y') -1;
-			$limit	= $year + 3;
+			$limit	= $year + 4;
 
 			while ($year < $limit)
 			{
