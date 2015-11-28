@@ -9,7 +9,7 @@
                         <legend><xsl:value-of select="php:function('lang', 'responsible')" /></legend>
                         <dt>
                             <label for="organization_id"><xsl:value-of select="php:function('lang', 'choose_org')" /></label>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0);">
                                 <xsl:attribute name="onclick">
                                     alert('<xsl:value-of select="php:function('lang', 'help_choose_activity_org')" />');return false;
                                 </xsl:attribute>
@@ -29,14 +29,14 @@
                                 </xsl:for-each-->
                             </select>
                         </dd>
-                        <a id="displayText3" href="javascript:void(0)">Ikke i listen? Registrer ny organisasjon</a><br />
+                        <a id="displayText3" href="javascript:void(0);">Ikke i listen? Registrer ny organisasjon</a><br />
                         <dt>
                             <div style="overflow:hidden;" id="toggleText3">
                                 <dl>
                                     <div style="overflow:hidden;">
                                         <p>
                                             Registrer ny organisasjon
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0);">
                                                 <xsl:attribute name="onclick">
                                                     alert('<xsl:value-of select="php:function('lang', 'help_new_activity_org')" />');return false;
                                                 </xsl:attribute>
@@ -46,7 +46,7 @@
                                         Felt merket med (*) er påkrevde felt <br /><br />
                                         <dt>
                                             <label for="orgname">Organisasjonsnavn (*)</label>
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0);">
                                                 <xsl:attribute name="onclick">
                                                     alert('<xsl:value-of select="php:function('lang', 'help_organization_name')" />');return false;
                                                 </xsl:attribute>

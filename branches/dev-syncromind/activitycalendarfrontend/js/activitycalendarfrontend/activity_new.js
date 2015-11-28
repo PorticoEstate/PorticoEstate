@@ -142,7 +142,7 @@ function get_address_search_arena()
 var current_address_search_cp2 = "";
 function get_address_search_cp2()
 {
-    var address = $('contact2_address');
+    var address = $('#contact2_address');
     var div_address = $('#address_container');
     
     var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
@@ -164,7 +164,8 @@ function setAddressValue(field)
         var address = document.getElementById('contact2_address');
         var div_address = document.getElementById('contact2_address_container');
 
-        address.value=field.value;
+//        address.value=field.value;
+        address.value = (field.value && field.value != 0) ? field.value : "";
         div_address.style.display="none";
     }
     else if(field.name == 'arena_address_select')
@@ -172,7 +173,8 @@ function setAddressValue(field)
         var address = document.getElementById('arena_address');
         var div_address = document.getElementById('arena_address_container');
 
-        address.value=field.value;
+//        address.value=field.value;
+        address.value = (field.value && field.value != 0) ? field.value : "";
         div_address.style.display="none";
     }
     else
@@ -180,7 +182,8 @@ function setAddressValue(field)
         var address = document.getElementById('address');
         var div_address = document.getElementById('address_container');
 
-        address.value=field.value;
+//        address.value=field.value;
+        address.value = (field.value && field.value != 0) ? field.value : "";
         div_address.style.display="none";
     }
 }
