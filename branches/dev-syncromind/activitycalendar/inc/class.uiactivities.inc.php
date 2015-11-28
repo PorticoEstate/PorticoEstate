@@ -528,9 +528,99 @@
 				$error		 = lang('org_not_transferred');
 				$editable	 = false;
 			}
-			//var_dump($local_group);
 
-			return $this->render('activity.php', array
+			if($activity->get_group_id())
+			{
+				if($activity->get_new_group())
+				{
+					$description = activitycalendar_sogroup::get_instance()->get_description_local($activity->get_group_id());
+				}
+				else
+				{
+					$description = activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
+				}
+			}
+			else if($activity->get_organization_id())
+			{
+				if($activity->get_new_org())
+				{
+					$description = activitycalendar_soorganization::get_instance()->get_description_local($activity->get_organization_id());
+				}
+				else
+				{
+					$description = activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
+				}
+			}
+			
+			$selected_state = $activity->get_state();
+			$state_options = array
+			(
+				array('id'=>'1', 'name'=>lang('new'), 'selected'=>(($selected_state == 1) ? 1 : 0)),
+				array('id'=>'2', 'name'=>lang('change'), 'selected'=>(($selected_state == 2) ? 1 : 0)),
+				array('id'=>'3', 'name'=>lang('published'), 'selected'=>(($selected_state == 3) ? 1 : 0)),
+				array('id'=>'5', 'name'=>lang('rejected'), 'selected'=>(($selected_state == 4) ? 1 : 0))
+			);
+			
+			$category_options[] = array('id'=>'0', 'name'=>lang('Ingen kategori valgt'), 'selected'=>0);
+			$current_category_id = $activity->get_category();
+			foreach($categories as $category)
+			{
+				$id = $category->get_id();
+				$selected = ($current_category_id == $id) ? 1 : 0;
+				$category_options[] = array('id'=>$id, 'name'=>$category->get_name(), 'selected'=>$selected);					
+			}
+						
+			$current_target_ids		 = $activity->get_target();
+			$current_target_id_array = explode(",", $current_target_ids);
+			$target_checks = array();
+			foreach($targets as $t)
+			{
+				$checked = (in_array($t->get_id(), $current_target_id_array)) ? 'checked' : '';
+				$target_checks[] = array('value'=>$t->get_id(), 'label'=>$t->get_name(), 'checked'=>$checked, 'name'=>'target[]');
+			}		
+			
+			$current_district_ids		 = $activity->get_district();
+			$current_district_id_array	 = explode(",", $current_district_ids);
+			$district_checks = array();
+			foreach($districts as $d)
+			{
+				$checked = (in_array($d['part_of_town_id'], $current_district_id_array)) ? 'checked' : '';
+				$district_checks[] = array('value'=>$d['part_of_town_id'], 'label'=>$d['name'], 'checked'=>$checked, 'name'=>'district[]');				
+			}
+			
+			$building_options[] = array('id'=>'0', 'name'=>lang('Ingen kommunale bygg valgt'), 'selected'=>0);
+			$current_internal_arena_id = $activity->get_internal_arena();
+			foreach($buildings as $building_id => $building_name)
+			{
+				$selected = ($current_internal_arena_id == $building_id) ? 1 : 0;
+				$building_options[] = array('id'=>$building_id, 'name'=>$building_name, 'selected'=>$selected);					
+			}
+			
+			$arena_external_options[] = array('id'=>'0', 'name'=>lang('Ingen arena valgt'), 'selected'=>0);
+			$current_arena_id = $activity->get_arena();
+			foreach($arenas as $arena)
+			{
+				$selected = ($current_arena_id == $arena->get_id()) ? 1 : 0;
+				$arena_external_options[] = array('id'=>$arena->get_id(), 'name'=>$arena->get_arena_name(), 'selected'=>$selected);					
+			}
+			
+			$office_options[] = array('id'=>'0', 'name'=>lang('Ingen kontor valgt'), 'selected'=>0);
+			$selected_office = $activity->get_office();
+			foreach($offices as $office)
+			{
+				$selected = ($selected_office == $office['id']) ? 1 : 0;
+				$office_options[] = array('id'=>$office['id'], 'name'=>$office['name'], 'selected'=>$selected);					
+			}
+			
+			$organization_options[] = array('id'=>'', 'name'=>lang('Ingen organisasjon valgt'), 'selected'=>0);
+			$current_organization_id = $activity->get_organization_id();
+			foreach($organizations as $organization)
+			{
+				$selected = ($current_organization_id == $organization->get_id()) ? 1 : 0;
+				$organization_options[] = array('id'=>$organization->get_id(), 'name'=>$organization->get_name(), 'selected'=>$selected);					
+			}
+			
+			/*return $this->render('activity.php', array
 				(
 				'activity'		 => $activity,
 				'organizations'	 => $organizations,
@@ -548,7 +638,55 @@
 				'message'		 => isset($message) ? $message : phpgw::get_var('message'),
 				'error'			 => isset($error) ? $error : phpgw::get_var('error')
 			)
+			);*/
+			
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+			$active_tab = 'details';
+
+			$data = array
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.save')),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.save')),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'activity_id'					=> $activity->get_id(),
+				'value_title'					=> $activity->get_title(),
+				'value_description'				=> $description,
+				'list_state_options'			=> array('options' => $state_options),
+				'list_category_options'			=> array('options' => $category_options),
+				'list_target_checks'			=> array('choice' => $target_checks),
+				'list_district_checks'			=> array('choice' => $district_checks),
+				'special_adaptation_checked'	=> ($activity->get_special_adaptation() ? 1 : 0),
+				'list_building_options'			=> array('options' => $building_options),
+				'list_arena_external_options'	=> array('options' => $arena_external_options),
+				'value_time'					=> $activity->get_time(),
+				'list_office_options'			=> array('options' => $office_options),
+				'list_organization_options'		=> array('options' => $organization_options),
+				'organization_selected'			=> ($current_organization_id ? 1 : 0),
+				'organization_url'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'booking.uiorganization.show', 'id'=>$current_organization_id)),
+				
+				/*'has_custom_address'			=> ($composite->has_custom_address()) ? 1 : 0,
+				'value_custom_address_1'		=> $composite->get_custom_address_1(),
+				'value_custom_house_number'		=> $composite->get_custom_house_number(),
+				'value_custom_address_2'		=> $composite->get_custom_address_2(),
+				'value_custom_postcode'			=> $composite->get_custom_postcode(),
+				'value_custom_place'			=> $composite->get_custom_place(),
+				'value_area_gros'				=> $composite->get_area_gros(). ' ' .$this->area_suffix,
+				'value_area_net'				=> $composite->get_area_net(). ' ' .$this->area_suffix,
+				'is_active'						=> ($composite->is_active()) ? 1 : 0,
+				'value_description'				=> $composite->get_description(),
+
+				'list_fields_of_responsibility_options'	=> array('options' => $fields_of_responsibility_options),
+				
+				'composite_id'					=> $composite_id,*/
+
+				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
+			
+			self::render_template_xsl(array('activity'), array('edit' => $data));
 		}
 
 		public function query()
