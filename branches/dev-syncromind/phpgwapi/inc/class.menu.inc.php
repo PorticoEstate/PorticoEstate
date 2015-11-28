@@ -460,12 +460,16 @@ HTML;
 			{
 				$vals['url'] = str_replace('&amp;','&', $vals['url']);
 				$menu[$i] = $vals;
+				$menu[$i]['app'] = $app;
 				$menu[$i]['key'] = $key;
 				$menu[$i]['is_leaf'] = true;
+				$menu[$i]['children'] = false;
 				if(isset($menu[$i]['children']))
 				{
 					$menu[$i]['is_leaf'] = false;
-					unset($menu[$i]['children']);
+					$menu[$i]['children'] = true;
+
+//					unset($menu[$i]['children']);
 				}
 				$i++;
 			}

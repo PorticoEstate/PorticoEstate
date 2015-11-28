@@ -151,7 +151,6 @@
 			$_menu_selection = str_replace('::', '|', $GLOBALS['phpgw_info']['flags']['menu_selection']);
 
 			$var['treemenu'] = <<<HTML
-				<div id="MenutreeDiv1"></div>
 				<script type="text/javascript">
 		 			var apps = {$applications};
 					var mapping = {$mapping};
@@ -174,7 +173,7 @@ HTML;
 				}
 			}
 			$var['treemenu'] = <<<HTML
-			<ul id="navbar">
+			<ul>
 {$treemenu}
 			</ul>
 

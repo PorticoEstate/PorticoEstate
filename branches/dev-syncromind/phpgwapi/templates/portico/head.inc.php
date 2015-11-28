@@ -38,17 +38,12 @@
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
-		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
-		phpgwapi_yui::load_widget('treeview');
-		phpgwapi_yui::load_widget('datasource');
-		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'jsmenu';
+		phpgwapi_jquery::load_widget('treeview');
+
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'jsmenu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
-			$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
-		}
-		else if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
-		{
-			phpgwapi_jquery::load_widget('treeview');
+			$javascripts[] = "/phpgwapi/templates/portico/js/ajax_jsmenu.js";
 		}
 
 	}
