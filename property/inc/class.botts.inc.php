@@ -1680,6 +1680,15 @@
 			return $values;
 		}
 
+		public function get_budgets($id)
+		{
+			$budgets = $this->so->get_budgets($id);
+			foreach($budgets as &$budget)
+			{
+				$budget['created_on_date'] = $GLOBALS['phpgw']->common->show_date($payment['created_on'],$this->dateformat);
+			}
+			return $budgets;
+		}
 		public function get_payments($id)
 		{
 			$payments = $this->so->get_payments($id);
