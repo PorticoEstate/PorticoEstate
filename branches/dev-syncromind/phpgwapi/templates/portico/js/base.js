@@ -42,4 +42,24 @@
 			$('#navbar').jstree('open_all');
 		});
 
+		update_content = function(requestUrl)
+		{
+
+			window.location.href = requestUrl;
+			return false;
+			requestUrl += '&phpgw_return_as=stripped_html';
+			$.ajax({
+				type: 'GET',
+				url: requestUrl,
+				success: function (data) {
+					if (data != null)
+					{
+						$("#center_content").html(data);
+					}
+				}
+			});
+
+		}
+
+
 	});

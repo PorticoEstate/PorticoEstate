@@ -208,7 +208,8 @@ HTML;
 				//		var treeInst = $('#treeDiv1').jstree(true);
 				//		treeInst.save_state();
 						setTimeout(function() {
-							window.location.href = data.node.a_attr.href;
+							update_content(data.node.a_attr.href);
+							//window.location.href = data.node.a_attr.href;
 						}, 100);
 
 					});

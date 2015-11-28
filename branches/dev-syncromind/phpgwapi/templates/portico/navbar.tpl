@@ -64,6 +64,6 @@
 				</div>
 			</div>
 
-			<div class="ui-layout-center content">
+			<div id="center_content" class="ui-layout-center content">
 				<h1 id="top">{current_app_title}</h1>
 					

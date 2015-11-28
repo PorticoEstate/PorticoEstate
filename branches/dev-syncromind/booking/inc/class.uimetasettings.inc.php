@@ -37,4 +37,9 @@
 			$this->use_yui_editor();
 			self::render_template('metasettings', array('config_data' =>$config->config_data));
 		}
+
+		function query()
+		{
+
+		}
 	}
