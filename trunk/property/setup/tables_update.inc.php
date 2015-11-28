@@ -8624,3 +8624,66 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.694 to 0.9.17.695
+	* differentiate budget.
+	*/
+	$test[] = '0.9.17.694';
+	function property_upgrade0_9_17_694()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_budget', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'ticket_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => false),
+					'period' => array('type' => 'int','precision' => '4','nullable' => false),
+					'remark' => array('type' => 'text','nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id, budget, entry_date FROM fm_tts_tickets WHERE budget != 0  ORDER BY entry_date");
+
+		$tickets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$tickets[] = array
+			(
+				'id'				=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'budget'		=> $GLOBALS['phpgw_setup']->oProc->f('budget'),
+				'entry_date'		=> $GLOBALS['phpgw_setup']->oProc->f('entry_date')
+			);
+		}
+
+		foreach($tickets as $ticket)
+		{
+			$period = date('Ym', $ticket['entry_date']);
+			$value_set = array
+			(
+				'ticket_id'	=> $ticket['id'],
+				'amount'	=> $ticket['budget'],
+				'period'	=> $period,
+				'created_on'=> $ticket['entry_date']
+			);
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_tts_budget ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.695';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

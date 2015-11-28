@@ -1119,6 +1119,21 @@
 			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
 			'uc' => array()
 		),
+		'fm_tts_budget' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'ticket_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'amount' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => false),
+				'period' => array('type' => 'int','precision' => '4','nullable' => false),
+				'remark' => array('type' => 'text','nullable' => true),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
+			'uc' => array()
+		),
 		'fm_org_unit' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
