@@ -5,16 +5,22 @@ $(function () {
 			'data': {
 				'url': function (node) {
 
-					console.log(node);
+//					console.log(node);
 
 					var oArgs = {};
 					if(node.id === '#')
 					{
-						oArgs ={menuaction:'phpgwapi.menu.get_local_menu_ajax',node:'property'};
+						oArgs ={menuaction:'phpgwapi.menu.get_local_menu_ajax',node:'top_level'};
 					}
 					else
 					{
-						var app = node.original.app + '|' + node.original.key;
+						
+						var app = node.original.app;
+						if(typeof(node.original.key) !== 'undefined')
+						{
+							app += '|' + node.original.key;
+						}
+
 						oArgs ={menuaction:'phpgwapi.menu.get_local_menu_ajax',node: app};
 					}
 
@@ -24,11 +30,27 @@ $(function () {
 					return {'id': node.id};
 				}
 			}
-		}
+		},
+		plugins: ["state", "search"]
+
 	});
 
 	var to = false;
 
+	$('#navbar_search').hide();
+
+	$('#collapseNavbar').on('click', function () {
+			$(this).attr('href', 'javascript:;');
+			$('#navbar').jstree('close_all');
+			$('#navbar_search').hide();
+		})
+
+	$('#expandNavbar').on('click', function () {
+		$(this).attr('href', 'javascript:;');
+		$('#navbar').jstree('open_all');
+		$('#navbar_search').show();
+	});
+	
 	$('#navbar_search').keyup(function () {
 		if (to) {
 			clearTimeout(to);
@@ -38,16 +60,15 @@ $(function () {
 			$('#navbar').jstree(true).search(v);
 		}, 250);
 	});
+
+
 	$('#navbar').bind('select_node.jstree', function (e, data) {
 		if (typeof (data.event) == 'undefined')
 		{
 			return false;
 		}
-		//		var treeInst = $('#treeDiv1').jstree(true);
-		//		treeInst.save_state();
 		setTimeout(function () {
-			update_content(data.node.a_attr.href);
-			//window.location.href = data.node.a_attr.href;
+			window.location.href = data.node.original.url;
 		}, 100);
 
 	});

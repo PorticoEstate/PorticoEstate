@@ -26,22 +26,19 @@
 		,	south: {
 			maxSize:				200
 		,	spacing_closed:			0			// HIDE resizer & toggler when 'closed'
+		,	spacing_open:			0
 		,	slidable:				false		// REFERENCE - cannot slide if spacing_closed = 0
 		,	initClosed:				false
+		,	resizable:				false
 			}
 
 		});
 
-		$('#collapseNavbar').on('click', function () {
-			$(this).attr('href', 'javascript:;');
-			$('#navbar').jstree('close_all');
-		})
 
-		$('#expandNavbar').on('click', function () {
-			$(this).attr('href', 'javascript:;');
-			$('#navbar').jstree('open_all');
-		});
-
+		/**
+		 * Experimental : requires live update of js and css
+		 * @param {type} requestUrl
+		 */
 		update_content = function(requestUrl)
 		{
 

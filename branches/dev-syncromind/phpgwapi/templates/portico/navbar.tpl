@@ -8,7 +8,6 @@
 					if(typeof(Storage)!=="undefined")
 					{
 						sessionStorage.cached_menu_tree_data = '';
-						sessionStorage.cached_mapping = '';
 					}
 
 					var sUrl = phpGWLink('logout.php');
@@ -59,9 +58,8 @@
 					</a>
 				</div>
 
-				<div id="navbar" class="ui-layout-content" style="overflow: auto;">
-{treemenu}
-				</div>
+				<div id="navbar" class="ui-layout-content" style="overflow: auto;">{treemenu}</div>
+				{tree_script}
 			</div>
 
 			<div id="center_content" class="ui-layout-center content">

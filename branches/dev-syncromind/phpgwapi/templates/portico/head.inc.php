@@ -32,7 +32,6 @@
 
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		phpgwapi_yui::load_widget('layout');
 		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
 	}
 
@@ -40,7 +39,7 @@
 	{
 		phpgwapi_jquery::load_widget('treeview');
 
-		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'jsmenu';//ajax_menu|jsmenu
+		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
 			$javascripts[] = "/phpgwapi/templates/portico/js/ajax_jsmenu.js";

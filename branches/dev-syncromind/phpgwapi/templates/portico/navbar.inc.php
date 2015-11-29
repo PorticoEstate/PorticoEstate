@@ -112,56 +112,10 @@
 			}
 		}
 
-		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
+		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu'
+			&& !phpgwapi_cache::session_get('navbar', 'compiled') == true
+		)
 		{
-			$exclude = array('logout', 'about', 'preferences');
-			$i = 1;
-			foreach ( $navbar as $app => $app_data )
-			{
-				if ( in_array($app, $exclude) )
-				{
-					continue;
-				}
-
-				$applications[] = array
-				(
-					'value'=> array
-					(
-						'id'	=> $i,
-						'app'	=> $app,
-						'label' => $app_data['text'],
-						'href'	=> str_replace('&amp;','&', $app_data['url']),
-					),
-					'children'	=> array()
-				);
-
-				$mapping[$i] = array
-				(
-					'id'		=> $i,
-					'name'		=> $app,
-					'expanded'	=> false,
-					'highlight'	=> $app == $currentapp ? true : false,
-					'is_leaf'	=> false
-				);
-				
-				$i ++;
-			}
-			$applications = json_encode($applications);
-			$mapping = json_encode($mapping);
-			$_menu_selection = str_replace('::', '|', $GLOBALS['phpgw_info']['flags']['menu_selection']);
-
-			$var['treemenu'] = <<<HTML
-				<script type="text/javascript">
-		 			var apps = {$applications};
-					var mapping = {$mapping};
-					var proxy_data = ['first_element_is_dummy'];
-					var menu_selection = '{$_menu_selection}';
-				</script>
-HTML;
-		}
-		else
-		{		
-//			prepare_navbar($navbar);
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
 			foreach($navbar as $app => $app_data)
@@ -178,20 +132,62 @@ HTML;
 			</ul>
 
 HTML;
+			
+			/**
+			 * Check for HTML5
+			 */
+			if(!preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			{
+				phpgwapi_cache::session_set('navbar', 'compiled', true);
+			}
 		}
 
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
 		{
-			$var['treemenu'] .= <<<JS
+			$var['tree_script'] = <<<JS
 				<script type="text/javascript">
+
 				$(function() {
-					$('#navbar').jstree({
+
+				if(typeof(Storage)!=="undefined")
+				{
+					var cached_menu_tree_data = $("#navbar").html();
+					if(cached_menu_tree_data)
+					{
+						sessionStorage.cached_menu_tree_data = cached_menu_tree_data;
+					}
+					else
+					{
+						cached_menu_tree_data = sessionStorage.cached_menu_tree_data;
+					}
+
+					if(typeof(cached_menu_tree_data) !='undefined' && cached_menu_tree_data)
+					{
+						$('#navbar').html(cached_menu_tree_data);
+					}
+				}
+
+				 $('#navbar').jstree({
 						core:{
 								multiple: false
 							 },
 						plugins: ["state", "search"]
 					});
-					var to = false;
+
+					$('#collapseNavbar').on('click', function () {
+							$(this).attr('href', 'javascript:;');
+							$('#navbar').jstree('close_all');
+							$('#navbar_search').hide();
+						})
+
+					$('#expandNavbar').on('click', function () {
+						$(this).attr('href', 'javascript:;');
+						$('#navbar').jstree('open_all');
+						$('#navbar_search').show();
+					});
+
+
+				    var to = false;
 					$('#navbar_search').keyup(function () {
 						if(to) { clearTimeout(to); }
 						to = setTimeout(function () {
@@ -204,8 +200,6 @@ HTML;
 						{
 							return false;
 						}
-				//		var treeInst = $('#treeDiv1').jstree(true);
-				//		treeInst.save_state();
 						setTimeout(function() {
 							update_content(data.node.a_attr.href);
 							//window.location.href = data.node.a_attr.href;

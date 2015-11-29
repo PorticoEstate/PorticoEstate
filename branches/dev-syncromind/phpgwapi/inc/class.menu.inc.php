@@ -370,9 +370,37 @@ HTML;
 			return $menu;
 		}
 
+		public function get_top_level_menu_ajax()
+		{
+			$navbar = $this->get('navbar');
+			$exclude = array('logout', 'about', 'preferences');
+			$top_level_menu = array();
+			foreach ( $navbar as $app => $app_data )
+			{
+				if ( in_array($app, $exclude) )
+				{
+					continue;
+				}
+
+				$top_level_menu[] = array
+				(
+					'app'	=> $app,
+					'text' => $app_data['text'],
+					'url'	=> str_replace('&amp;','&', $app_data['url']),
+					'children'	=> true
+				);
+
+			}
+			
+			return $top_level_menu;
+		}
 		public function get_local_menu_ajax()
 		{
 			$node		= phpgw::get_var('node');
+			if($node == 'top_level')
+			{
+				return $this->get_top_level_menu_ajax();
+			}
 
 			$selection = explode('|',$node);
 			$app = $selection[0];
@@ -400,8 +428,10 @@ HTML;
 							{
 								$menu[] = array
 								(
+									'app'		=> 'admin',
 									'key' 		=> $_app,
 									'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
+									'children'	=> count($navigation[$_app]) > 1 ? true : false,
 									'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
 									'url'		=> $GLOBALS['phpgw']->link('/index.php',
 													array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app))
@@ -462,14 +492,17 @@ HTML;
 				$menu[$i] = $vals;
 				$menu[$i]['app'] = $app;
 				$menu[$i]['key'] = $key;
-				$menu[$i]['is_leaf'] = true;
-				$menu[$i]['children'] = false;
 				if(isset($menu[$i]['children']))
 				{
 					$menu[$i]['is_leaf'] = false;
 					$menu[$i]['children'] = true;
 
 //					unset($menu[$i]['children']);
+				}
+				else
+				{
+					$menu[$i]['is_leaf'] = true;
+					$menu[$i]['children'] = false;
 				}
 				$i++;
 			}
