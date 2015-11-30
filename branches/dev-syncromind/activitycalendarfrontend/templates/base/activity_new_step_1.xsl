@@ -19,14 +19,14 @@
                         <dd>
                             <select name="organization_id" id="organization_id">
                                 <option value="">Ingen organisasjon valgt</option>
-                                <!--xsl:for-each select="organizations">
+                                <xsl:for-each select="organizations">
                                     <option>
                                         <xsl:attribute name="value">
                                             <xsl:value-of select="id" />
                                         </xsl:attribute>
                                         <xsl:value-of select="name" />
                                     </option>
-                                </xsl:for-each-->
+                                </xsl:for-each>
                             </select>
                         </dd>
                         <a id="displayText3" href="javascript:void(0);">Ikke i listen? Registrer ny organisasjon</a><br />

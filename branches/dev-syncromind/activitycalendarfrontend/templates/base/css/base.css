@@ -263,3 +263,6 @@ div.error {
 	border:1px solid #9F6000;
 	color: white;
 }
+
+h1 {font-size: 2em;letter-spacing: 0;}
+a {text-decoration: underline;}

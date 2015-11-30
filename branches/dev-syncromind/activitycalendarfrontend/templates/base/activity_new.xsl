@@ -1,18 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div>
         <div id="details">
-            <xsl:choose>
-                <xsl:when test="message">
-                    <div class="success">
-                        <xsl:value-of select="message" />
-                    </div>
-                </xsl:when>
-                <xsl:when test="error">
-                    <div class="error">
-                        <xsl:value-of select="error" />
-                    </div>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="message != ''">
+                <div class="success">
+                    <xsl:value-of select="message" />
+                </div>
+            </xsl:if>
+            <xsl:if test="error != ''">
+                <div class="error">
+                    <xsl:value-of select="error" />
+                </div>
+            </xsl:if>
         </div>
         <div class="pageTop">
             <h1><xsl:value-of select="php:function('lang', 'new_activity')" /></h1>
@@ -21,12 +19,12 @@
         <form method="POST" name="form" id="form">
             <input type="hidden" name="id">
                 <xsl:attribute name="value">
-                    
+                    <xsl:value-of select="activity/id" />
                 </xsl:attribute>
             </input>
             <input type="hidden" name="organization_id">
                 <xsl:attribute name="value">
-                    
+                    <xsl:value-of select="organization_id" />
                 </xsl:attribute>
             </input>
             <xsl:if test="new_organization">
@@ -51,7 +49,11 @@
                         </label>
                     </dt>
                     <dd>
-                        <input type="text" name="title" id="title" value="" size="83" maxlength="254" />
+                        <input type="text" name="title" id="title" size="83" maxlength="254">
+                            <xsl:attribute name="value">
+                                <xsl:value-of select="activity/title" />
+                            </xsl:attribute>
+                        </input>
                     </dd>
                     <dt>
                         <label for="org_description">
@@ -80,7 +82,21 @@
                     </dt>
                     <dd>
                         <select name="category" id="category">
-                            <option value="0">Ingen Kategori valgt</option>
+                            <option value="">Ingen Kategori valgt</option>
+                            <xsl:variable name="current_category_id" select="categories/current_category_id" />
+                            <xsl:for-each select="categories/list">
+                                <option>
+                                    <xsl:attribute name="value">
+                                        <xsl:value-of select="id" />
+                                    </xsl:attribute>
+                                    <xsl:if test="../current_category_id = id">
+                                        <xsl:attribute name="selected">
+                                            <xsl:value-of select="selected" />
+                                        </xsl:attribute>
+                                    </xsl:if>
+                                    <xsl:value-of select="name" />
+                                </option>
+                            </xsl:for-each>
                         </select>
                     </dd>
                 </fieldset>
@@ -99,12 +115,23 @@
                     </dt>
                     <dd>
                         <xsl:for-each select="targets">
-                            <input name="target[]" type="checkbox" value=""></input>
+                            <input name="target[]" type="checkbox">
+                                <xsl:if test="checked != ''">
+                                    <xsl:attribute name="checked">
+                                        <xsl:value-of select="checked" />
+                                    </xsl:attribute>
+                                </xsl:if>
+                                <xsl:attribute name="id">
+                                    <xsl:value-of select="id" />
+                                </xsl:attribute>
+                            </input>
+                            <xsl:value-of select="name" />
+                            <br />
                         </xsl:for-each>
                     </dd>
                     <dt>
                         <input type="checkbox" name="special_adaptation" id="special_adaptation" />
-                        <label for="special_adaptation"><xsl:value-of select="php:function('lang', 'special_adaptation')" /></label>
+                        <xsl:value-of select="concat(php:function('lang', 'special_adaptation'), ' ')" />
                         <a href="javascript:void(0);">
                             <xsl:attribute name="onclick">
                                 alert('<xsl:value-of select="php:function('lang', 'help_new_activity_spec_adapt')" />');return false;
@@ -129,13 +156,18 @@
                     </dt>
                     <dd>
                         <select name="internal_arena_id" id="internal_arena_id" style="width:200px;">
-                            <option value="0">Lokale ikke valgt</option>
+                            <option value="">Lokale ikke valgt</option>
                             <optgroup>
-                                <xsl:attribute name="value">
+                                <xsl:attribute name="label">
                                     <xsl:value-of select="php:function('lang', 'building')" />
                                 </xsl:attribute>
                                 <xsl:for-each select="buildings">
-                                    <option value=""></option>
+                                    <option>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="id" />
+                                        </xsl:attribute>
+                                        <xsl:value-of select="name" />
+                                    </option>
                                 </xsl:for-each>
                             </optgroup>
                             <optgroup>
@@ -143,7 +175,15 @@
                                     <xsl:value-of select="php:function('lang', 'external_arena')" />
                                 </xsl:attribute>
                                 <xsl:for-each select="arenas">
-                                    <option value=""></option>
+                                    <option>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="id" />
+                                        </xsl:attribute>
+                                        <xsl:attribute name="title">
+                                            <xsl:value-of select="name" />
+                                        </xsl:attribute>
+                                        <xsl:value-of select="name" />
+                                    </option>
                                 </xsl:for-each>
                             </optgroup>
                         </select>
@@ -154,7 +194,7 @@
                         <dl>
                             <dt>
                                 <label for="new_arena">
-                                    <xsl:value-of select="php:function('lang', 'register_new_arena')" />
+                                    <xsl:value-of select="concat(php:function('lang', 'register_new_arena'),' ')" />
                                     <a href="javascript:void(0);">
                                         <xsl:attribute name="onclick">
                                             alert('<xsl:value-of select="php:function('lang', 'help_new_arena')" />');return false;
@@ -194,10 +234,15 @@
                                 <label for="arena_number">Husnummer</label><br />
                                 <input type="text" name="arena_number" size="5" />
                             </dt><br />
-                            <dt style="clear:left;margin-roght:20px;float:left;">
+                            <dt style="clear:left;margin-right:20px;float:left;">
                                 <label for="postaddress">Postnummer (*)</label><br />
                                 <input type="text" name="postaddress" size="5" />
-                            </dt><br />
+                            </dt>
+                            <dt style="float:left;">
+                                <label for="arena_postaddress">Poststed (*)</label><br />
+                                <input type="text" name="arena_postaddress" size="40" />
+                            </dt>
+                            <br />
                         </dl>
                     </div>
                     <dt>
@@ -214,7 +259,13 @@
                     </dt>
                     <dd>
                         <xsl:for-each select="districts">
-                            <input name="district" type="radio" value=""></input><br />
+                            <input name="district" type="radio">
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="part_of_town_id" />
+                                </xsl:attribute>
+                            </input>
+                            <xsl:value-of select="name" />
+                            <br />
                         </xsl:for-each>
                     </dd>
                     <dt>
@@ -230,7 +281,11 @@
                         </label>
                     </dt>
                     <dd>
-                        <input type="text" name="time" id="time" value="" size="80" maxlength="254" />
+                        <input type="text" name="time" id="time" size="80" maxlength="254">
+                            <xsl:attribute name="value">
+                                <xsl:value-of select="activity/time" />
+                            </xsl:attribute>
+                        </input>
                     </dd>
                 </fieldset>
                 <fieldset id="arr">
@@ -267,8 +322,18 @@
                     <dd>
                         <select name="office" id="office">
                             <option value="0">Ingen kontor valgt</option>
-                            <xsl:for-each select="offices">
-                                <option value=""></option>
+                            <xsl:for-each select="offices/list">
+                                <option>
+                                    <xsl:if test="../selected_office = id">
+                                        <xsl:attribute name="selected">
+                                            selected
+                                        </xsl:attribute>
+                                    </xsl:if>
+                                    <xsl:attribute name="value">
+                                        <xsl:value-of select="id" />
+                                    </xsl:attribute>
+                                    <xsl:value-of select="name" />
+                                </option>
                             </xsl:for-each>
                         </select>
                     </dd>

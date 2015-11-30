@@ -1,18 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div>
         <div id="details">
-            <xsl:choose>
-                <xsl:when test="message">
-                    <div class="success">
-                        <xsl:value-of select="message" />
-                    </div>
-                </xsl:when>
-                <xsl:when test="error">
-                    <div class="error">
-                        <xsl:value-of select="error" />
-                    </div>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="message != ''">
+                <div class="success">
+                    <xsl:value-of select="message" />
+                </div>
+            </xsl:if>
+            <xsl:if test="error != ''">
+                <div class="error">
+                    <xsl:value-of select="error" />
+                </div>
+            </xsl:if>
         </div>
         <div class="pageTop">
             <h1><xsl:value-of select="php:function('lang', 'activity')" /></h1>
