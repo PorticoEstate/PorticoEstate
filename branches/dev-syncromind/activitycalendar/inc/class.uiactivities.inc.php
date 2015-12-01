@@ -275,7 +275,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			// Get the contract part id
 			$activity_id = (int)phpgw::get_var('id');
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
+			//$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
 			$categories	 = $this->so_activity->get_categories();
 			$targets	 = $this->so_activity->get_targets();
 			$offices	 = $this->so_activity->select_district_list();
@@ -290,6 +290,7 @@
 			{
 				$activity = new activitycalendar_activity();
 			}
+			
 			$new_group	 = $activity->get_new_group();
 			$g_id		 = phpgw::get_var('group_id');
 			$o_id		 = phpgw::get_var('organization_id');
@@ -322,6 +323,7 @@
 			{
 				$organizations = $this->so_org->get(null, null, 'org.name', true, null, null, null);
 			}
+			
 			if($new_group)
 			{
 				$group_array = $this->so_group->get(null, null, null, null, null, null, array(
@@ -331,7 +333,8 @@
 				{
 					$keys		 = array_keys($group_array);
 					$local_group = $group_array[$keys[0]];
-					//$group_name = $local_group->get_name();
+					$local_group_name = $local_group->get_name();
+					$local_group_id = $local_group->get_name();
 				}
 			}
 			else
@@ -339,189 +342,6 @@
 				$groups = $this->so_group->get(null, null, null, null, null, null, null);
 			}
 
-			if(isset($_POST['save_activity'])) // The user has pressed the save button
-			{
-				if(isset($activity)) // If an activity object is created
-				{
-					$old_state		 = $activity->get_state();
-					$new_state		 = phpgw::get_var('state');
-					// ... set all parameters
-					$activity->set_title(phpgw::get_var('title'));
-					$activity->set_organization_id(phpgw::get_var('organization_id'));
-					$activity->set_group_id(phpgw::get_var('group_id'));
-					$internal_arena	 = phpgw::get_var('internal_arena_id');
-					if(isset($internal_arena) && $internal_arena > 0)
-					{
-						$activity->set_arena(0);
-						$activity->set_internal_arena($internal_arena);
-					}
-					else
-					{
-						$activity->set_arena(phpgw::get_var('arena_id'));
-						$activity->set_internal_arena(0);
-					}
-					$district_array	 = phpgw::get_var('district');
-					$activity->set_district(implode(",", $district_array));
-					$activity->set_office(phpgw::get_var('office'));
-					$activity->set_state($new_state);
-					$activity->set_category(phpgw::get_var('category'));
-					$target_array	 = phpgw::get_var('target');
-					$activity->set_target(implode(",", $target_array));
-					$activity->set_description($desc);
-					$activity->set_time(phpgw::get_var('time'));
-					$activity->set_contact_persons($persons);
-					$activity->set_contact_person_2_address(phpgw::get_var('contact_person_2_address'));
-					$activity->set_contact_person_2_zip(phpgw::get_var('contact_person_2_zip'));
-					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
-
-					$target_ok	 = false;
-					$district_ok = false;
-					if($new_state != 5)
-					{
-						$target_ok	 = true;
-						$district_ok = true;
-					}
-					else
-					{
-						if($activity->get_target() && $activity->get_target() != '')
-						{
-							$target_ok = true;
-						}
-						if($activity->get_district() && $activity->get_district() != '')
-						{
-							$district_ok = true;
-						}
-					}
-
-					if($target_ok && $district_ok)
-					{
-						if($this->so_activity->store($activity)) // ... and then try to store the object
-						{
-							if($new_group)
-							{
-								//transfer group to booking
-								$group_array = $this->so_group->get(null, null, null, null, null, null, array(
-									'group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
-								if(count($group_array) > 0)
-								{
-									$keys	 = array_keys($group_array);
-									$group	 = $group_array[$keys[0]];
-								}
-
-								$group_info						 = array();
-								$group_info['name']				 = $group->get_name(); //new
-								$group_info['organization_id']	 = $activity->get_organization_id();
-								$group_info['description']		 = $group->get_description();
-
-								$contacts	 = $this->so_contact->get_local_contact_persons($group->get_id(), true);
-								$contact_1	 = $contacts[0];
-
-								$new_group_id = $this->so_group->transfer_group($group_info);
-								if($new_group_id)
-								{
-									//update activity with new org id
-									//add contact persons to booking
-									$contact1				 = array();
-									$contact1['name']		 = $contact_1->get_name();
-									$contact1['phone']		 = $contact_1->get_phone();
-									$contact1['mail']		 = $contact_1->get_email();
-									$contact1['group_id']	 = $new_group_id;
-									$this->so_activity->add_contact_person_group($contact1);
-
-									$message = lang('messages_saved_form');
-
-									//get organization_id for the group:
-									$group_org_id = $this->so_group->get_orgid_from_group($new_group_id);
-
-									//get affected activities and update with new org id
-									$update_activities = $this->so_activity->get_activities_for_update($group->get_id(), true);
-
-									foreach($update_activities as $act_id)
-									{
-										$act = $this->so_activity->get_single($act_id);
-										$act->set_organization_id($group_org_id);
-										$act->set_group_id($new_group_id);
-										$act->set_new_org(false);
-										$act->set_new_group(false);
-										$this->so_activity->store($act);
-									}
-
-									//set local group as stored
-									$group->set_change_type('added');
-									$group->set_transferred(true);
-
-									$this->so_group->update_local($group);
-									$message		 = lang('messages_saved_form');
-									//var_dump($new_group_id);
-									$contact_persons = $this->so_contact->get_booking_contact_persons($new_group_id, true);
-									//var_dump(2);
-									$cp1			 = $contact_persons[0];
-								}
-							}
-							$message = lang('messages_saved_form');
-						}
-						else
-						{
-							$error = lang('messages_form_error');
-						}
-
-						if(isset($activity_id) && $activity_id > 0)
-						{
-							$activity = $this->so_activity->get_single($activity_id);
-						}
-
-						if($old_state != $new_state && ($new_state == 3 || $new_state == 5))
-						{
-							$kontor	 = $this->so_activity->get_office_name($activity->get_office());
-							$subject = lang('mail_subject_update');
-							$body	 = lang('mail_body_state_' . $new_state, $activity->get_title(), $kontor);
-
-							if($activity->get_group_id() && $activity->get_group_id() > 0)
-							{
-								$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-								activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
-							}
-							else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
-							{
-								$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-								activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
-							}
-						}
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view',
-							'id' => $activity->get_id(), 'saved_ok' => 'yes'));
-					}
-					else
-					{
-						if(!$target_ok)
-						{
-							$error .= "<br/>" . lang('target_not_selected');
-						}
-						if(!$district_ok)
-						{
-							$error .= "<br/>" . lang('district_not_selected');
-						}
-						return $this->render('activity.php', array
-							(
-							'activity'		 => $activity,
-							'organizations'	 => $organizations,
-							'org_name'		 => $org_name,
-							'groups'		 => $groups,
-							'local_group'	 => $local_group,
-							'arenas'		 => $arenas,
-							'buildings'		 => $buildings,
-							'categories'	 => $categories,
-							'targets'		 => $targets,
-							'districts'		 => $districts,
-							'offices'		 => $offices,
-							'editable'		 => true,
-							'cancel_link'	 => $cancel_link,
-							'message'		 => isset($message) ? $message : phpgw::get_var('message'),
-							'error'			 => isset($error) ? $error : phpgw::get_var('error')
-						)
-						);
-					}
-				}
-			}
 			$editable = true;
 			if($activity->get_new_org())
 			{
@@ -620,12 +440,41 @@
 				$organization_options[] = array('id'=>$organization->get_id(), 'name'=>$organization->get_name(), 'selected'=>$selected);					
 			}
 			
+			$contpers_so = activitycalendar_socontactperson::get_instance();
+			
+			if($activity->get_group_id())
+			{
+				if($activity->get_new_group())
+				{
+					$contact_person_1 = $contpers_so->get_group_contact_name_local($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_group_contact_name_local($activity->get_contact_person_2());
+				}
+				else
+				{
+					$contact_person_1 = $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+				}
+			}
+			else if($activity->get_organization_id())
+			{
+				if($activity->get_new_org())
+				{
+					$contact_person_1 = $contpers_so->get_org_contact_name_local($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_org_contact_name_local($activity->get_contact_person_2());
+				}
+				else
+				{
+					$contact_person_1 = $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+				}
+			}
+						
 			/*return $this->render('activity.php', array
 				(
 				'activity'		 => $activity,
 				'organizations'	 => $organizations,
 				'org_name'		 => $org_name,
-				'groups'		 => $groups,
+				' '		 => $groups,
 				'local_group'	 => $local_group,
 				'arenas'		 => $arenas,
 				'buildings'		 => $buildings,
@@ -647,8 +496,8 @@
 			$data = array
 			(
 				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.save')),
-				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.save')),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.save')),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index')),
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				
@@ -667,25 +516,35 @@
 				'list_organization_options'		=> array('options' => $organization_options),
 				'organization_selected'			=> ($current_organization_id ? 1 : 0),
 				'organization_url'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'booking.uiorganization.show', 'id'=>$current_organization_id)),
+				'new_group'						=> ($new_group ? 1 : 0),
+				'local_group_name'				=> $local_group_name,
+				'local_group_id'				=> $local_group_id,
+				'group_selected'				=> ($activity->get_group_id() ? 1 : 0),
+				'group_selected_id'				=> $activity->get_group_id(),
+				'group_url'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'booking.uigroup.show', 'id'=>$activity->get_group_id())),
 				
-				/*'has_custom_address'			=> ($composite->has_custom_address()) ? 1 : 0,
-				'value_custom_address_1'		=> $composite->get_custom_address_1(),
-				'value_custom_house_number'		=> $composite->get_custom_house_number(),
-				'value_custom_address_2'		=> $composite->get_custom_address_2(),
-				'value_custom_postcode'			=> $composite->get_custom_postcode(),
-				'value_custom_place'			=> $composite->get_custom_place(),
-				'value_area_gros'				=> $composite->get_area_gros(). ' ' .$this->area_suffix,
-				'value_area_net'				=> $composite->get_area_net(). ' ' .$this->area_suffix,
-				'is_active'						=> ($composite->is_active()) ? 1 : 0,
-				'value_description'				=> $composite->get_description(),
-
-				'list_fields_of_responsibility_options'	=> array('options' => $fields_of_responsibility_options),
-				
-				'composite_id'					=> $composite_id,*/
+				'contact_person_1'				=> $contact_person_1,
+				'contact_person_2'				=> $contact_person_2,
+				'contact_person_2_address'		=> $activity->get_contact_person_2_address(),
+				'contact_person_2_zip'			=> $activity->get_contact_person_2_zip(),
 
 				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 			
+			phpgwapi_jquery::load_widget('autocomplete');
+
+			$_autocomplete = <<<JS
+
+				$(document).ready(function () 
+				{
+					var oArgs = {menuaction:'activitycalendarfrontend.uiactivity.get_address_search'};
+					var strURL = phpGWLink('index.php', oArgs);
+					JqueryPortico.autocompleteHelper(strURL, 'contact_person_2_address', '', 'contact_person_2_address_container');
+				});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+				
+			self::add_javascript('activitycalendar', 'activitycalendar', 'activities.edit.js');
 			self::render_template_xsl(array('activity'), array('edit' => $data));
 		}
 
@@ -790,6 +649,212 @@
 			}
 		}
 
+		public function save()
+		{
+			$activity_id = (int)phpgw::get_var('id');
+			// Retrieve the activity object or create a new one
+			if(isset($activity_id) && $activity_id > 0)
+			{
+				$activity = $this->so_activity->get_single($activity_id);
+			}
+			else
+			{
+				$activity = new activitycalendar_activity();
+			}
+			
+			$new_group	 = $activity->get_new_group();
+			$g_id		 = phpgw::get_var('group_id');
+			$o_id		 = phpgw::get_var('organization_id');
+			if($new_group)
+			{
+				$persons = $this->so_group->get_contacts_local($activity->get_group_id());
+				$desc	 = $this->so_group->get_description_local($activity->get_group_id());
+			}
+			else if(isset($g_id) && $g_id > 0)
+			{
+				$persons = $this->so_group->get_contacts($g_id);
+				$desc	 = $this->so_group->get_description($g_id);
+			}
+			else if(isset($o_id) && $o_id > 0)
+			{
+				$persons = $this->so_org->get_contacts($o_id);
+				$desc	 = $this->so_org->get_description($o_id);
+			}
+
+			if(strlen($desc) > 254)
+			{
+				$desc = substr($desc, 0, 254);
+			}
+			
+			if(isset($activity)) // If an activity object is created
+			{
+				$old_state		 = $activity->get_state();
+				$new_state		 = phpgw::get_var('state');
+				// ... set all parameters
+				$activity->set_title(phpgw::get_var('title'));
+				$activity->set_organization_id(phpgw::get_var('organization_id'));
+				$activity->set_group_id(phpgw::get_var('group_id'));
+				$internal_arena	 = phpgw::get_var('internal_arena_id');
+				if(isset($internal_arena) && $internal_arena > 0)
+				{
+					$activity->set_arena(0);
+					$activity->set_internal_arena($internal_arena);
+				}
+				else
+				{
+					$activity->set_arena(phpgw::get_var('arena_id'));
+					$activity->set_internal_arena(0);
+				}
+				$district_array	 = phpgw::get_var('district');
+				$activity->set_district(implode(",", $district_array));
+				$activity->set_office(phpgw::get_var('office'));
+				$activity->set_state($new_state);
+				$activity->set_category(phpgw::get_var('category'));
+				$target_array	 = phpgw::get_var('target');
+				$activity->set_target(implode(",", $target_array));
+				$activity->set_description($desc);
+				$activity->set_time(phpgw::get_var('time'));
+				$activity->set_contact_persons($persons);
+				$activity->set_contact_person_2_address(phpgw::get_var('contact_person_2_address'));
+				$activity->set_contact_person_2_zip(phpgw::get_var('contact_person_2_zip'));
+				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+
+				$target_ok	 = false;
+				$district_ok = false;
+				if($new_state != 5)
+				{
+					$target_ok	 = true;
+					$district_ok = true;
+				}
+				else
+				{
+					if($activity->get_target() && $activity->get_target() != '')
+					{
+						$target_ok = true;
+					}
+					if($activity->get_district() && $activity->get_district() != '')
+					{
+						$district_ok = true;
+					}
+				}
+
+				if($target_ok && $district_ok)
+				{
+					if($this->so_activity->store($activity)) // ... and then try to store the object
+					{
+						if($new_group)
+						{
+							//transfer group to booking
+							$group_array = $this->so_group->get(null, null, null, null, null, null, array(
+								'group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
+							if(count($group_array) > 0)
+							{
+								$keys	 = array_keys($group_array);
+								$group	 = $group_array[$keys[0]];
+							}
+
+							$group_info						 = array();
+							$group_info['name']				 = $group->get_name(); //new
+							$group_info['organization_id']	 = $activity->get_organization_id();
+							$group_info['description']		 = $group->get_description();
+
+							$contacts	 = $this->so_contact->get_local_contact_persons($group->get_id(), true);
+							$contact_1	 = $contacts[0];
+
+							$new_group_id = $this->so_group->transfer_group($group_info);
+							if($new_group_id)
+							{
+								//update activity with new org id
+								//add contact persons to booking
+								$contact1				 = array();
+								$contact1['name']		 = $contact_1->get_name();
+								$contact1['phone']		 = $contact_1->get_phone();
+								$contact1['mail']		 = $contact_1->get_email();
+								$contact1['group_id']	 = $new_group_id;
+								$this->so_activity->add_contact_person_group($contact1);
+
+								$message = lang('messages_saved_form');
+
+								//get organization_id for the group:
+								$group_org_id = $this->so_group->get_orgid_from_group($new_group_id);
+
+								//get affected activities and update with new org id
+								$update_activities = $this->so_activity->get_activities_for_update($group->get_id(), true);
+
+								foreach($update_activities as $act_id)
+								{
+									$act = $this->so_activity->get_single($act_id);
+									$act->set_organization_id($group_org_id);
+									$act->set_group_id($new_group_id);
+									$act->set_new_org(false);
+									$act->set_new_group(false);
+									$this->so_activity->store($act);
+								}
+
+								//set local group as stored
+								$group->set_change_type('added');
+								$group->set_transferred(true);
+
+								$this->so_group->update_local($group);
+								$message		 = lang('messages_saved_form');
+								
+								$contact_persons = $this->so_contact->get_booking_contact_persons($new_group_id, true);
+								
+								$cp1			 = $contact_persons[0];
+							}
+						}
+						//$message = lang('messages_saved_form');
+						phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+					}
+					else
+					{
+						//$error = lang('messages_form_error');
+						phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+					}
+
+					if(isset($activity_id) && $activity_id > 0)
+					{
+						$activity = $this->so_activity->get_single($activity_id);
+					}
+
+					if($old_state != $new_state && ($new_state == 3 || $new_state == 5))
+					{
+						$kontor	 = $this->so_activity->get_office_name($activity->get_office());
+						$subject = lang('mail_subject_update');
+						$body	 = lang('mail_body_state_' . $new_state, $activity->get_title(), $kontor);
+
+						if($activity->get_group_id() && $activity->get_group_id() > 0)
+						{
+							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
+							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
+						}
+						else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
+						{
+							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
+							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
+						}
+					}
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view',
+						'id' => $activity->get_id()));
+				}
+				else
+				{
+					if(!$target_ok)
+					{
+						//$error .= "<br/>" . lang('target_not_selected');
+						phpgwapi_cache::message_set(lang('target_not_selected'), 'error');
+					}
+					if(!$district_ok)
+					{
+						//$error .= "<br/>" . lang('district_not_selected');
+						phpgwapi_cache::message_set(lang('district_not_selected'), 'error');
+					}
+				}
+			}
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $activity->get_id()));
+		}
+		
 		/**
 		 * Add action links and labels for the context menu of the list items
 		 *
