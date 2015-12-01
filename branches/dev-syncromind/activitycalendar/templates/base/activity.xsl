@@ -89,7 +89,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'building')"/>
 						</label>
-						<select id="internal_arena_id" name="internal_arena_id">
+						<select id="internal_arena_id" name="internal_arena_id" onchange="javascript: check_internal();">
 							<xsl:apply-templates select="list_building_options/options"/>
 						</select>											
 					</div>
@@ -97,7 +97,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'external_arena')"/>
 						</label>
-						<select id="arena_id" name="arena_id" style="width: 300px;">
+						<select id="arena_id" name="arena_id" style="width: 300px;" onchange="javascript: check_external();">
 							<xsl:apply-templates select="list_arena_external_options/options"/>
 						</select>											
 					</div>
@@ -122,7 +122,7 @@
 						</label>
 						<div class="pure-custom">
 							<div>
-								<select id="organization_id" name="organization_id">
+								<select id="organization_id" name="organization_id" onchange="javascript:get_available_groups();">
 									<xsl:apply-templates select="list_organization_options/options"/>
 								</select>
 							</div>
@@ -132,7 +132,61 @@
 								</div>
 							</xsl:if>						
 						</div>								
-					</div>												
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'group')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:if test="new_group = 1">
+								<input type="hidden" name="group_id" id="group_id" value="{local_group_id}" />
+								<xsl:value-of select="php:function('lang', 'local_group_name')"/>
+							</xsl:if>		
+							<xsl:if test="new_group = 0">
+								<div id="div_group_id">
+									<select name="group_id" id="group_id">
+										<option value="0">Ingen gruppe valgt</option>
+									</select>
+								</div>
+								<xsl:if test="group_selected = 1">
+									<div>
+										<input type="hidden" name="group_selected_id" id="group_selected_id" value="{group_selected_id}" />
+										<xsl:value-of select="php:function('lang', 'edit_contact_info')"/><xsl:text>: </xsl:text><a href="{group_url}"><xsl:value-of select="php:function('lang', 'edit_contact_info_group')"/> </a>
+									</div>
+								</xsl:if>								
+							</xsl:if>						
+						</div>								
+					</div>
+					<h2><xsl:value-of select="php:function('lang', 'contact_info')"/></h2>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>
+						</label>
+						<xsl:value-of select="contact_person_1"/>
+					</div>	
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_2')"/>
+						</label>
+						<xsl:value-of select="contact_person_2"/>
+					</div>
+					<xsl:if test="contact_person_2_address != ''">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'contact_person_2_address')"/>
+							</label>
+							<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="{contact_person_2_address}"/>
+							<div id="contact_person_2_address_container"></div>									
+						</div>
+					</xsl:if>
+					<xsl:if test="contact_person_2_zip != ''">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'contact_person_2_zip')"/>
+							</label>
+							<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="{contact_person_2_zip}"/>
+						</div>
+					</xsl:if>					
 				</div>
 			</div>
 			<div class="proplist-col">
