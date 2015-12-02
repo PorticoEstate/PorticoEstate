@@ -887,7 +887,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 	 * Public method.
 	 */
 	function get_address_search() {
-		$search_string = phpgw::get_var('search');
+		$search_string = phpgw::get_var('query');
 		//var_dump($search_string);
 		return activitycalendar_soarena::get_instance()->get_address($search_string);
 	}
