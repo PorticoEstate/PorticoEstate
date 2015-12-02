@@ -252,11 +252,7 @@
 <!-- view  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
 	<div>
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="activity">
