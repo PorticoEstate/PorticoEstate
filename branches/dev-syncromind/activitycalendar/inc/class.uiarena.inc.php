@@ -13,6 +13,7 @@
 			'query'				 => true,
 			'view'				 => true,
 			'add'				 => true,
+			'save'				 => true,
 			'edit'				 => true,
 			'download'			 => true,
 			'get_address_search' => true
@@ -39,21 +40,92 @@
 		 */
 		public function get_address_search()
 		{
-			$search_string = phpgw::get_var('search');
+			$search_string = phpgw::get_var('query');
 			//var_dump($search_string);
 			return activitycalendar_soarena::get_instance()->get_address($search_string);
 		}
 
 		public function index()
 		{
-			// No messages so far
-			$errorMsgs	 = array();
-			$warningMsgs = array();
-			$infoMsgs	 = array();
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
 
+			$appname = lang('arenas');
 
-			$data = array();
-			$this->render('arena_list.php');
+			$function_msg = lang('list %1', $appname);
+			$type = 'all_arenas';
+
+			$data = array(
+				'datatable_name'	=> $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type'   => 'filter',
+								'name'   => 'active',
+								'text'   => lang('marked_as'),
+								'list'   => array
+											(
+												array('id' => 'all', 'name' => lang('all')),
+												array('id' => 'active', 'name' => lang('active')),
+												array('id' => 'inactive', 'name' => lang('inactive'))
+											)
+							),		
+							array(
+								'type'   => 'link',
+								'value'  => lang('new'),
+								'href'   => self::link(array(
+									'menuaction'	=> 'activitycalendar.uiarena.add'
+								)),
+								'class'  => 'new_item'
+							)							
+						)
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'activitycalendar.uiarena.index', 
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'activitycalendar.uiarena.download',
+							'type'		=> $type,
+							'export'    => true,
+							'allrows'   => true
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+							array('key'=>'id', 'label'=>lang('id'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'arena_name', 'label'=>lang('name'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'address', 'label'=>lang('address'), 'sortable'=>true, 'hidden'=>false)
+					)
+				)
+			);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiarena.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))		
+				);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),			
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiarena.edit'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		/**
@@ -61,36 +133,37 @@
 		 */
 		public function view()
 		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
+			// Get the contract part id
+			$arena_id	 = (int)phpgw::get_var('id');
 
-			$errorMsgs	 = array();
-			$infoMsgs	 = array();
-			$saved_OK	 = phpgw::get_var('saved_ok');
-			if($saved_OK)
+			$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
+			
+			if (empty($arena))
 			{
-				$message = lang('arena_saved_form');
+				phpgwapi_cache::message_set(lang('Could not find specified arena.'), 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.index'));
 			}
-			$arena		 = activitycalendar_soarena::get_instance()->get_single((int)phpgw::get_var('id'));
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
+			
+			$tabs = array();
+			$tabs['arena']	= array('label' => lang('arena'), 'link' => '#arena');
+			$active_tab = 'arena';
 
-			if(isset($_POST['edit_arena'])) // The user has pressed the save button
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.edit',
-					'id' => phpgw::get_var('id')));
-			}
-
-			if($arena == null) // Not found
-			{
-				$errorMsgs[] = lang('Could not find specified arena.');
-			}
 			$data = array
-				(
-				'arena'			 => $arena,
-				'cancel_link'	 => $cancel_link,
-				'message'		 => $message,
-				'errorMsgs'		 => $errorMsgs,
-				'infoMsgs'		 => $infoMsgs
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiarena.edit', 'id' => $arena->get_id())),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiarena.index')),
+				'lang_edit'						=> lang('edit'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'arena_name'					=> $arena->get_arena_name(),
+				'address'						=> $arena->get_address(),
+				'address_no'					=> $arena->get_addressnumber(),				
+				'active_value'					=> ($arena->is_active() ? lang('active_arena') : lang('inactive_arena'))
 			);
-			$this->render('arena.php', $data);
+			
+			self::render_template_xsl(array('arena'), array('view' => $data));
 		}
 
 		public function edit()
@@ -98,11 +171,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			// Get the contract part id
 			$arena_id	 = (int)phpgw::get_var('id');
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
 
-			$buildings = activitycalendar_soarena::get_instance()->get_buildings();
-			//var_dump($buildings);
-			// Retrieve the arena object or create a new one
 			if(isset($arena_id) && $arena_id > 0)
 			{
 				$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
@@ -111,91 +180,84 @@
 			{
 				$arena = new activitycalendar_arena();
 			}
-
-			if(isset($_POST['save_arena'])) // The user has pressed the save button
-			{
-				if(isset($arena)) // If a arena object is created
-				{
-					// ... set all parameters
-					$arena->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
-					$arena->set_arena_name(phpgw::get_var('arena_name'));
-					$arena->set_address(phpgw::get_var('address'));
-					$arena->set_addressnumber(phpgw::get_var('address_no'));
-					$arena->set_zip_code(phpgw::get_var('zip_code'));
-					$arena->set_city(phpgw::get_var('city'));
-					$arena->set_active(phpgw::get_var('arena_active') == 'yes' ? true : false);
-
-					if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
-					{
-						$message = lang('messages_saved_form');
-					}
-					else
-					{
-						$error = lang('messages_form_error');
-					}
-				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.view',
-					'id' => $arena->get_id(), 'saved_ok' => 'yes'));
-			}
-
-			return $this->render('arena.php', array
-				(
-				'arena'			 => $arena,
-				'buildings'		 => $buildings,
-				'editable'		 => true,
-				'cancel_link'	 => $cancel_link,
-				'message'		 => isset($message) ? $message : phpgw::get_var('message'),
-				'error'			 => isset($error) ? $error : phpgw::get_var('error')
-			)
+			
+			$is_active = $arena->is_active(); 
+			$active_options = array
+			(
+				array('id'=>'yes', 'name'=>lang('active'), 'selected'=>(($is_active) ? 1 : 0)),
+				array('id'=>'no', 'name'=>lang('inactive'), 'selected'=>((!$is_active) ? 1 : 0))
 			);
+			
+			$tabs = array();
+			$tabs['arena']	= array('label' => lang('arena'), 'link' => '#arena');
+			$active_tab = 'arena';
+
+			$data = array
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiarena.save')),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiarena.index')),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'arena_id'						=> $arena->get_id(),
+				'arena_name'					=> $arena->get_arena_name(),
+				'address'						=> $arena->get_address(),
+				'address_no'					=> $arena->get_addressnumber(),				
+				'list_active_options'			=> array('options' => $active_options),
+
+				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
+			);
+			
+			phpgwapi_jquery::load_widget('autocomplete');
+
+			$_autocomplete = <<<JS
+
+				$(document).ready(function () 
+				{
+					var oArgs = {menuaction:'activitycalendar.uiarena.get_address_search'};
+					var strURL = phpGWLink('index.php', oArgs);
+					JqueryPortico.autocompleteHelper(strURL, 'address', '', 'address_container');
+				});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+			
+			self::render_template_xsl(array('arena'), array('edit' => $data));			
 		}
 
 		public function query()
 		{
-			/* 		if(!$this->isExecutiveOfficer())
-			  {
-			  $this->render('permission_denied.php');
-			  return;
-			  }
-			 */
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
-			// YUI variables for paging and sorting
-			$start_index	 = phpgw::get_var('startIndex', 'int');
-			$num_of_objects	 = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		 = phpgw::get_var('sort');
-			$sort_ascending	 = phpgw::get_var('dir') == 'desc' ? false : true;
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $this->user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id'; 
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for		 = phpgw::get_var('query');
-			$search_type	 = phpgw::get_var('search_option');
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option');			
+
 			// Create an empty result set
 			$result_objects	 = array();
 			$result_count	 = 0;
 			//Retrieve the type of query and perform type specific logic
 			$query_type		 = phpgw::get_var('type');
 
-			$exp_param	 = phpgw::get_var('export');
-			$export		 = false;
-			if(isset($exp_param))
+			$export			= phpgw::get_var('export','bool');
+			if ($export)
 			{
-				$export			 = true;
-				$num_of_objects	 = null;
+				$num_of_objects = null;
 			}
-
-			//var_dump($query_type);
 
 			switch($query_type)
 			{
 				case 'all_arenas':
 					$filters		 = array('arena_type' => phpgw::get_var('arena_type'), 'active' => phpgw::get_var('active'));
 					$result_objects	 = activitycalendar_soarena::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count	 = activitycalendar_soarena::get_instance()->get_count($search_for, $search_type, $filters);
+					$result_count	 = activitycalendar_soarena::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 			}
 			//var_dump($result_objects);
@@ -210,47 +272,49 @@
 				}
 			}
 
-			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => $object_count);
-
-			if(!$export)
+			if($export)
 			{
-				//Add action column to each row in result table
-				array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
+				return $rows;
 			}
+			
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= $result_count;
+			$result_data['draw']    = $draw;
 
-			return $this->yui_results($result_data, 'total_records', 'results');
+			return $this->jquery_results($result_data);
 		}
 
-		/**
-		 * Add action links and labels for the context menu of the list items
-		 *
-		 * @param $value pointer to
-		 * @param $key ?
-		 * @param $params [composite_id, type of query, editable]
-		 */
-		public function add_actions(&$value, $key, $params)
+		public function save()
 		{
-			//Defining new columns
-			$value['ajax']		 = array();
-			$value['actions']	 = array();
-			$value['labels']	 = array();
-
-			$query_type = $params[0];
-
-			switch($query_type)
+			$arena_id = (int)phpgw::get_var('id');
+			// Retrieve the activity object or create a new one
+			if(isset($arena_id) && $arena_id > 0)
 			{
-				case 'all_arenas':
-					$value['ajax'][]	 = false;
-					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.edit',
-						'id' => $value['id'])));
-					$value['labels'][]	 = lang('edit');
-					$value['ajax'][]	 = false;
-					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.view',
-						'id' => $value['id'])));
-					$value['labels'][]	 = lang('show');
-					break;
+				$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
 			}
+			else
+			{
+				$arena = new activitycalendar_arena();
+			}
+			
+			$arena->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
+			$arena->set_arena_name(phpgw::get_var('arena_name'));
+			$arena->set_address(phpgw::get_var('address'));
+			$arena->set_addressnumber(phpgw::get_var('address_no'));
+			$arena->set_zip_code(phpgw::get_var('zip_code'));
+			$arena->set_city(phpgw::get_var('city'));
+			$arena->set_active(phpgw::get_var('arena_active') == 'yes' ? true : false);
+
+			if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
+			{
+				phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+			}
+			else
+			{
+				phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+			}
+								
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $arena->get_id()));
 		}
 
 		public function download_export()
