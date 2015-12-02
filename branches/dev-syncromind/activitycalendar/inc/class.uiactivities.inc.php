@@ -530,7 +530,7 @@
 				array('id'=>'5', 'name'=>lang('rejected'), 'selected'=>(($selected_state == 4) ? 1 : 0))
 			);
 			
-			$category_options[] = array('id'=>'0', 'name'=>lang('Ingen kategori valgt'), 'selected'=>0);
+			$category_options[] = array('id'=>'', 'name'=>lang('Ingen kategori valgt'), 'selected'=>0);
 			$current_category_id = $activity->get_category();
 			foreach($categories as $category)
 			{
@@ -557,7 +557,7 @@
 				$district_checks[] = array('value'=>$d['part_of_town_id'], 'label'=>$d['name'], 'checked'=>$checked, 'name'=>'district[]');				
 			}
 			
-			$building_options[] = array('id'=>'0', 'name'=>lang('Ingen kommunale bygg valgt'), 'selected'=>0);
+			$building_options[] = array('id'=>'', 'name'=>lang('Ingen kommunale bygg valgt'), 'selected'=>0);
 			$current_internal_arena_id = $activity->get_internal_arena();
 			foreach($buildings as $building_id => $building_name)
 			{
@@ -565,7 +565,7 @@
 				$building_options[] = array('id'=>$building_id, 'name'=>$building_name, 'selected'=>$selected);					
 			}
 			
-			$arena_external_options[] = array('id'=>'0', 'name'=>lang('Ingen arena valgt'), 'selected'=>0);
+			$arena_external_options[] = array('id'=>'', 'name'=>lang('Ingen arena valgt'), 'selected'=>0);
 			$current_arena_id = $activity->get_arena();
 			foreach($arenas as $arena)
 			{
@@ -573,7 +573,7 @@
 				$arena_external_options[] = array('id'=>$arena->get_id(), 'name'=>$arena->get_arena_name(), 'selected'=>$selected);					
 			}
 			
-			$office_options[] = array('id'=>'0', 'name'=>lang('Ingen kontor valgt'), 'selected'=>0);
+			$office_options[] = array('id'=>'', 'name'=>lang('Ingen kontor valgt'), 'selected'=>0);
 			$selected_office = $activity->get_office();
 			foreach($offices as $office)
 			{
