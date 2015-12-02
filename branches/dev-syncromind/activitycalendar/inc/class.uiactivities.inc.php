@@ -26,6 +26,7 @@
 			'view'						 => true,
 			'add'						 => true,
 			'edit'						 => true,
+			'save'						 => true,
 			'download'					 => true,
 			'send_mail'					 => true,
 			'get_organization_groups'	 => true,
@@ -237,37 +238,186 @@
 		 */
 		public function view()
 		{
-			$errorMsgs	 = array();
-			$infoMsgs	 = array();
+			
+			$act_so		 = activitycalendar_soactivity::get_instance();
+			
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
+			// Get the contract part id
+			$activity_id = (int)phpgw::get_var('id');
+			
+			$activity = $this->so_activity->get_single($activity_id);
 
-			$activity	 = $this->so_activity->get_single((int)phpgw::get_var('id'));
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
-			$saved_OK	 = phpgw::get_var('saved_ok');
-			if($saved_OK)
+			if (empty($activity))
 			{
-				$message = lang('activity_saved_form');
+				phpgwapi_cache::message_set(lang('Could not find specified activity.'), 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index'));
 			}
-
-			if($activity == null) // Not found
+			
+			if($activity->get_group_id())
 			{
-				$errorMsgs[] = lang('Could not find specified activity.');
+				if($activity->get_new_group())
+				{
+					$description = activitycalendar_sogroup::get_instance()->get_description_local($activity->get_group_id());
+				}
+				else
+				{
+					$description = activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
+				}
 			}
-
-			if(isset($_POST['edit_activity'])) // The user has pressed the save button
+			else if($activity->get_organization_id())
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.edit',
-					'id' => phpgw::get_var('id')));
+				if($activity->get_new_org())
+				{
+					$description = activitycalendar_soorganization::get_instance()->get_description_local($activity->get_organization_id());
+				}
+				else
+				{
+					$description = activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
+				}
 			}
+			
+			$state_name = '';
+			if ($activity->get_state())
+			{
+				$state_name = lang('state_' . $activity->get_state());
+			}
+			
+			$category_name = '';
+			$current_category_id = $activity->get_category();	
+			if ($current_category_id)
+			{
+				$category_name = $act_so->get_category_name($current_category_id);
+			}
+			
+			$current_target_ids	= $activity->get_target();				
+			$target_names = array();
+			if (count($current_target_ids))
+			{
+				$current_target_id_array = explode(",", $current_target_ids);
+				foreach($current_target_id_array as $curr_target)
+				{
+					$target_names[] = array('name' => $act_so->get_target_name($curr_target));
+				}
+			}
+			
+			$current_district_ids = $activity->get_district();			
+			$district_names = array();
+			if(count($current_district_ids))
+			{
+				$current_district_id_array	 = explode(",", $current_district_ids);
+				foreach($current_district_id_array as $curr_district)
+				{
+					$district_names[] = array('name' => $act_so->get_district_name($curr_district));
+				}
+			}
+		
+			$building_name = '';
+			if($activity->get_internal_arena())
+			{
+				$building_name = activitycalendar_soarena::get_instance()->get_building_name($activity->get_internal_arena());
+			}
+								
+			$arena_name = '';
+			if($activity->get_arena())
+			{
+				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($activity->get_arena());
+			}
+						
+			$office_name = '';
+			if($activity->get_office())
+			{
+				$office_name = $act_so->get_office_name($activity->get_office());
+			}
+								
+			$current_organization_id = $activity->get_organization_id();
+			$organization_name = '';
+			if($current_organization_id)
+			{
+				if($activity->get_new_org())
+				{
+					$organization_name = activitycalendar_soorganization::get_instance()->get_organization_name_local($current_organization_id);
+				}
+				else
+				{
+					$organization_name = activitycalendar_soorganization::get_instance()->get_organization_name($current_organization_id);
+				}
+			}
+						
+			if($activity->get_group_id())
+			{
+				if($activity->get_new_group())
+				{
+					$group_name = activitycalendar_sogroup::get_instance()->get_group_name_local($activity->get_group_id());
+				}
+				else
+				{
+					$group_name = activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+				}
+			}
+							
+			$contpers_so = activitycalendar_socontactperson::get_instance();
+			
+			if($activity->get_group_id())
+			{
+				if($activity->get_new_group())
+				{
+					$contact_person_1 = $contpers_so->get_group_contact_name_local($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_group_contact_name_local($activity->get_contact_person_2());
+				}
+				else
+				{
+					$contact_person_1 = $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+				}
+			}
+			else if($activity->get_organization_id())
+			{
+				if($activity->get_new_org())
+				{
+					$contact_person_1 = $contpers_so->get_org_contact_name_local($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_org_contact_name_local($activity->get_contact_person_2());
+				}
+				else
+				{
+					$contact_person_1 = $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+					$contact_person_2 = $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+				}
+			}
+			
+			$tabs = array();
+			$tabs['activity']	= array('label' => lang('activity'), 'link' => '#activity');
+			$active_tab = 'activity';
 
 			$data = array
-				(
-				'activity'		 => $activity,
-				'cancel_link'	 => $cancel_link,
-				'message'		 => $message,
-				'errorMsgs'		 => $errorMsgs,
-				'infoMsgs'		 => $infoMsgs
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index')),
+				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $activity->get_id())),
+				'lang_edit'						=> lang('edit'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'value_title'					=> $activity->get_title(),
+				'value_description'				=> $description,
+				'value_time'					=> $activity->get_time(),
+				
+				'contact_person_1'				=> $contact_person_1,
+				'contact_person_2'				=> $contact_person_2,
+				'contact_person_2_address'		=> $activity->get_contact_person_2_address(),
+				'contact_person_2_zip'			=> $activity->get_contact_person_2_zip(),
+					
+				'state_name'					=> $state_name,
+				'category_name'					=> $category_name,
+				'list_target_names'				=> $target_names,
+				'list_district_names'			=> $district_names,
+				'special_adaptation_checked'	=> ($activity->get_special_adaptation() ? 1 : 0),
+				'building_name'					=> $building_name,
+				'arena_name'					=> $arena_name,
+				'office_name'					=> $office_name,
+				'organization_name'				=> $organization_name,
+				'group_name'					=> $group_name
 			);
-			$this->render('activity.php', $data);
+				
+			self::render_template_xsl(array('activity'), array('view' => $data));
 		}
 
 		public function edit()
@@ -275,7 +425,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			// Get the contract part id
 			$activity_id = (int)phpgw::get_var('id');
-			//$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
+
 			$categories	 = $this->so_activity->get_categories();
 			$targets	 = $this->so_activity->get_targets();
 			$offices	 = $this->so_activity->select_district_list();
@@ -334,7 +484,7 @@
 					$keys		 = array_keys($group_array);
 					$local_group = $group_array[$keys[0]];
 					$local_group_name = $local_group->get_name();
-					$local_group_id = $local_group->get_name();
+					$local_group_id = $local_group->get_id();
 				}
 			}
 			else
@@ -342,11 +492,10 @@
 				$groups = $this->so_group->get(null, null, null, null, null, null, null);
 			}
 
-			$editable = true;
 			if($activity->get_new_org())
 			{
-				$error		 = lang('org_not_transferred');
-				$editable	 = false;
+				phpgwapi_cache::message_set(lang('org_not_transferred'), 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id()));
 			}
 
 			if($activity->get_group_id())
@@ -433,7 +582,7 @@
 			}
 			
 			$organization_options[] = array('id'=>'', 'name'=>lang('Ingen organisasjon valgt'), 'selected'=>0);
-			$current_organization_id = $activity->get_organization_id();
+			$current_organization_id = $activity->get_organization_id();			
 			foreach($organizations as $organization)
 			{
 				$selected = ($current_organization_id == $organization->get_id()) ? 1 : 0;
@@ -468,30 +617,10 @@
 					$contact_person_2 = $contpers_so->get_org_contact_name($activity->get_contact_person_2());
 				}
 			}
-						
-			/*return $this->render('activity.php', array
-				(
-				'activity'		 => $activity,
-				'organizations'	 => $organizations,
-				'org_name'		 => $org_name,
-				' '		 => $groups,
-				'local_group'	 => $local_group,
-				'arenas'		 => $arenas,
-				'buildings'		 => $buildings,
-				'categories'	 => $categories,
-				'targets'		 => $targets,
-				'districts'		 => $districts,
-				'offices'		 => $offices,
-				'editable'		 => $editable,
-				'cancel_link'	 => $cancel_link,
-				'message'		 => isset($message) ? $message : phpgw::get_var('message'),
-				'error'			 => isset($error) ? $error : phpgw::get_var('error')
-			)
-			);*/
 			
 			$tabs = array();
-			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
-			$active_tab = 'details';
+			$tabs['activity']	= array('label' => lang('activity'), 'link' => '#activity');
+			$active_tab = 'activity';
 
 			$data = array
 			(
