@@ -316,16 +316,19 @@
 				while($this->db->next_record())
 				{
 					//$result_arr = $this->db->f('name');
-					if($curr_index == 0)
+					/*if($curr_index == 0)
 					{
 						$result_arr[] = "<option value='0'>Velg gateadresse</option>";
 					}
 					$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-					$curr_index++;
+					$curr_index++;*/
+					
+					$result_arr[]['name'] = $this->db->f('descr');
 				}
 			}
-			$result = implode(' ', $result_arr);
-			return $result;
+			//$result = implode(' ', $result_arr);
+			//return $result;
+			return array('ResultSet' => array('Result' => $result_arr));
 		}
 
 		public function get_arena_id_by_name($arena_name)
