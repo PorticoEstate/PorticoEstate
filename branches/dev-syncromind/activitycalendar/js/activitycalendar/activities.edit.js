@@ -28,10 +28,10 @@ function get_available_groups()
 
 	}, '', "POST");
 }
-
+  
 function check_internal()
 {
-	if (document.getElementById('internal_arena_id').value != null && document.getElementById('internal_arena_id').value > 0)
+	if (document.getElementById('internal_arena_id').value !== '')
 	{
 		//disable external arena drop-down
 		document.getElementById('arena_id').disabled = "disabled";
@@ -45,7 +45,7 @@ function check_internal()
 
 function check_external()
 {
-	if (document.getElementById('arena_id').value != null && document.getElementById('arena_id').value > 0)
+	if (document.getElementById('arena_id').value !== '')
 	{
 		//disable internal arena drop-down
 		document.getElementById('internal_arena_id').disabled = "disabled";
