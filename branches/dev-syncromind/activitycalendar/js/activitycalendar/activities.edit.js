@@ -1,5 +1,12 @@
 function get_available_groups()
 {
+	var selectBox = $( "select[id='group_id']" );
+	
+	if (selectBox.length == 0)
+	{
+		return;
+	}
+	
 	var org_id = document.getElementById('organization_id').value;
 	var group_id = document.getElementById('group_selected_id').value;
 	var div_group_id = document.getElementById('div_group_id'); 
