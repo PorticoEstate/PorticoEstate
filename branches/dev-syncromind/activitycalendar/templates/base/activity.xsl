@@ -21,7 +21,7 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details">
+				<div id="activity">
 					<input type="hidden" name="id" value="{activity_id}"/>
 					<div class="pure-control-group">
 						<label>
@@ -33,7 +33,9 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'description')"/>
 						</label>
-						<input type="text" name="title" id="title" value="{value_description}"></input>
+						<div class="pure-custom">
+							<xsl:value-of select="value_description"/>
+						</div>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -140,21 +142,179 @@
 						<div class="pure-custom">
 							<xsl:if test="new_group = 1">
 								<input type="hidden" name="group_id" id="group_id" value="{local_group_id}" />
-								<xsl:value-of select="php:function('lang', 'local_group_name')"/>
+								<xsl:value-of select="local_group_name"/>
 							</xsl:if>		
 							<xsl:if test="new_group = 0">
 								<div id="div_group_id">
 									<select name="group_id" id="group_id">
-										<option value="0">Ingen gruppe valgt</option>
+										<option value="">Ingen gruppe valgt</option>
 									</select>
 								</div>
 								<xsl:if test="group_selected = 1">
-									<div>
-										<input type="hidden" name="group_selected_id" id="group_selected_id" value="{group_selected_id}" />
+									<div>										
 										<xsl:value-of select="php:function('lang', 'edit_contact_info')"/><xsl:text>: </xsl:text><a href="{group_url}"><xsl:value-of select="php:function('lang', 'edit_contact_info_group')"/> </a>
 									</div>
 								</xsl:if>								
-							</xsl:if>						
+							</xsl:if>
+							<input type="hidden" name="group_selected_id" id="group_selected_id" value="{group_selected_id}" />				
+						</div>								
+					</div>
+					<h2><xsl:value-of select="php:function('lang', 'contact_info')"/></h2>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>
+						</label>
+						<xsl:value-of select="contact_person_1"/>
+					</div>	
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_2')"/>
+						</label>
+						<xsl:value-of select="contact_person_2"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_2_address')"/>
+						</label>
+						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="{contact_person_2_address}"/>
+						<div id="contact_person_2_address_container"></div>									
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contact_person_2_zip')"/>
+						</label>
+						<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="{contact_person_2_zip}"/>
+					</div>				
+				</div>
+			</div>
+			<div class="proplist-col">
+				<input type="submit" class="pure-button pure-button-primary" name="save_contract" value="{lang_save}" onMouseout="window.status='';return true;"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>	
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
+			</div>
+		</form>
+	</div>
+</xsl:template>
+
+
+<!-- view  -->
+<xsl:template xmlns:php="http://php.net/xsl" match="view">
+	<div>
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+
+		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="activity">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'title')"/>
+						</label>
+						<xsl:value-of select="value_title"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'description')"/>
+						</label>
+						<xsl:value-of select="value_description"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'state')"/>
+						</label>
+						<xsl:value-of select="state_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'category')"/>
+						</label>
+						<xsl:value-of select="category_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'target')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:for-each select="list_target_names">
+								<div>
+									<xsl:value-of select="name"/>
+								</div>
+							</xsl:for-each>
+						</div>	
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'district')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:for-each select="list_district_names">
+								<div>
+									<xsl:value-of select="name"/>
+								</div>
+							</xsl:for-each>
+						</div>						
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'special_adaptation')"/>
+						</label>
+						<div class="pure-custom">
+							<input type="checkbox" name="special_adaptation" id="special_adaptation" disabled="disabled">
+								<xsl:if test="special_adaptation_checked = 1">
+									<xsl:attribute name="checked" value="checked"/>
+								</xsl:if>								
+							</input>
+						</div>						
+					</div>
+					<h2><xsl:value-of select="php:function('lang', 'where_when')"/></h2>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'arena')"/>
+						</label>					
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'building')"/>
+						</label>
+						<xsl:value-of select="building_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'external_arena')"/>
+						</label>
+						<xsl:value-of select="arena_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'time')"/>
+						</label>
+						<xsl:value-of select="value_time"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'office')"/>
+						</label>
+						<xsl:value-of select="office_name"/>
+					</div>
+					<h2><xsl:value-of select="php:function('lang', 'who')"/></h2>	
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'organization')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:value-of select="organization_name"/>
+						</div>								
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'group')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:value-of select="group_name"/>
 						</div>								
 					</div>
 					<h2><xsl:value-of select="php:function('lang', 'contact_info')"/></h2>
@@ -175,8 +335,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact_person_2_address')"/>
 							</label>
-							<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="{contact_person_2_address}"/>
-							<div id="contact_person_2_address_container"></div>									
+							<xsl:value-of select="contact_person_2_address"/>								
 						</div>
 					</xsl:if>
 					<xsl:if test="contact_person_2_zip != ''">
@@ -184,39 +343,16 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact_person_2_zip')"/>
 							</label>
-							<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="{contact_person_2_zip}"/>
+							<xsl:value-of select="contact_person_2_zip"/>
 						</div>
 					</xsl:if>					
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save_contract" value="{lang_save}" onMouseout="window.status='';return true;"/>
-				<xsl:variable name="cancel_url">
-					<xsl:value-of select="cancel_url"/>
+				<xsl:variable name="edit_url">
+					<xsl:value-of select="edit_url"/>
 				</xsl:variable>				
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
-			</div>
-		</form>
-		<form id="form_upload" name="form_upload" method="post" action="" enctype="multipart/form-data"></form>
-	</div>
-</xsl:template>
-
-
-<!-- view  -->
-<xsl:template xmlns:php="http://php.net/xsl" match="view">
-
-	<div>
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details">
-				</div>
-			</div>
-			<div class="proplist-col">
+				<input type="button" class="pure-button pure-button-primary" name="edit" value="{lang_edit}" onMouseout="window.status='';return true;" onClick="window.location = '{edit_url}';"/>				
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
 				</xsl:variable>				
