@@ -3,12 +3,12 @@
         <div id="details">
             <xsl:if test="message != ''">
                 <div class="success">
-                    <xsl:value-of select="message" />
+                    <xsl:value-of select="message" disable-output-escaping="yes" />
                 </div>
             </xsl:if>
             <xsl:if test="error != ''">
                 <div class="error">
-                    <xsl:value-of select="error" />
+                    <xsl:value-of select="error" disable-output-escaping="yes" />
                 </div>
             </xsl:if>
         </div>
@@ -16,7 +16,7 @@
             <h1><xsl:value-of select="php:function('lang', 'new_activity')" /></h1>
             <div><xsl:value-of select="php:function('lang', 'required_fields')" /></div>
         </div>
-        <form method="POST" name="form" id="form">
+        <form action="" method="POST" name="form" id="form">
             <input type="hidden" name="id">
                 <xsl:attribute name="value">
                     <xsl:value-of select="activity/id" />
@@ -27,7 +27,7 @@
                     <xsl:value-of select="organization_id" />
                 </xsl:attribute>
             </input>
-            <xsl:if test="new_organization">
+            <xsl:if test="new_organization = 1">
                 <input type="hidden" name="new_organization" value="yes" />
             </xsl:if>
             <input type="hidden" name="new_arena_hidden" id="new_arena_hidden" value="" />
@@ -121,7 +121,7 @@
                                         <xsl:value-of select="checked" />
                                     </xsl:attribute>
                                 </xsl:if>
-                                <xsl:attribute name="id">
+                                <xsl:attribute name="value">
                                     <xsl:value-of select="id" />
                                 </xsl:attribute>
                             </input>
@@ -164,7 +164,7 @@
                                 <xsl:for-each select="buildings">
                                     <option>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="id" />
+                                            <xsl:value-of select="concat('i_', id)" />
                                         </xsl:attribute>
                                         <xsl:value-of select="name" />
                                     </option>
@@ -311,13 +311,14 @@
                     <dt>
                         <label for="office">
                             Hvilket kulturkontor skal motta registreringen (*) 
+                        </label>
                             <a href="javascript:void(0);">
                                 <xsl:attribute name="onclick">
                                     alert('<xsl:value-of select="php:function('lang', 'help_new_activity_office')" />');return false;
                                 </xsl:attribute>
+                                <img alt="Hjelp" src="{helpImg}" />
                             </a>
-                            <img alt="Hjelp" src="{helpImg}" />
-                        </label>
+                        
                     </dt>
                     <dd>
                         <select name="office" id="office">
