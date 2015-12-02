@@ -27,7 +27,14 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'title')"/>
 						</label>
-						<input type="text" name="title" id="title" value="{value_title}"></input>
+						<input type="text" name="title" id="title" value="{value_title}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Tittel må fylles ut!')"/>
+							</xsl:attribute>							
+						</input>						
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -50,6 +57,12 @@
 							<xsl:value-of select="php:function('lang', 'category')"/>
 						</label>
 						<select id="category" name="category">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Kategori må fylles ut!')"/>
+							</xsl:attribute>							
 							<xsl:apply-templates select="list_category_options/options"/>
 						</select>						
 					</div>
@@ -92,6 +105,12 @@
 							<xsl:value-of select="php:function('lang', 'building')"/>
 						</label>
 						<select id="internal_arena_id" name="internal_arena_id" onchange="javascript: check_internal();">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Arena må fylles ut!')"/>
+							</xsl:attribute>							
 							<xsl:apply-templates select="list_building_options/options"/>
 						</select>											
 					</div>
@@ -107,13 +126,26 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'time')"/>
 						</label>
-						<input type="text" name="time" id="time" value="{value_time}" />
+						<input type="text" name="time" id="time" value="{value_time}" >
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Tid må fylles ut!')"/>
+							</xsl:attribute>							
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'office')"/>
 						</label>
 						<select id="office" name="office">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Hovedansvarlig kulturkontor må fylles ut!')"/>
+							</xsl:attribute>							
 							<xsl:apply-templates select="list_office_options/options"/>
 						</select>											
 					</div>
@@ -125,6 +157,12 @@
 						<div class="pure-custom">
 							<div>
 								<select id="organization_id" name="organization_id" onchange="javascript:get_available_groups();">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Organisasjon må fylles ut!')"/>
+									</xsl:attribute>									
 									<xsl:apply-templates select="list_organization_options/options"/>
 								</select>
 							</div>
@@ -196,6 +234,18 @@
 			</div>
 		</form>
 	</div>
+	<script type="text/javascript">
+		$("[name='target[]']:eq(0)")
+		  .valAttr('','validate_checkbox_group')
+		  .valAttr('qty','1')
+		  .valAttr('error-msg','Målgruppe må fylles ut!');
+
+		$("[name='district[]']:eq(0)")
+		  .valAttr('','validate_checkbox_group')
+		  .valAttr('qty','1')
+		  .valAttr('error-msg','Bydel må fylles ut!');
+		
+	</script>
 </xsl:template>
 
 
@@ -381,10 +431,10 @@
 <xsl:template match="choice">
 	<xsl:choose>
 		<xsl:when test="checked='checked'">
-			<input id="{name}" type="checkbox" name="{name}" value="{value}" checked="checked"/>
+			<input id="{name}" data-validation="checkbox_group" type="checkbox" name="{name}" value="{value}" checked="checked"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<input id="{name}" type="checkbox" name="{name}" value="{value}"/>
+			<input id="{name}" data-validation="checkbox_group" type="checkbox" name="{name}" value="{value}"/>
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:value-of select="label"/>
