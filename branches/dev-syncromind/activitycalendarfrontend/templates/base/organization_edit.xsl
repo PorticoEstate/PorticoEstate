@@ -1,25 +1,25 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div>
         <div id="details">
-            <xsl:choose>
-                <xsl:when test="message">
-                    <div class="success">
-                        <xsl:value-of select="message" />
-                    </div>
-                </xsl:when>
-                <xsl:when test="error">
-                    <div class="error">
-                        <xsl:value-of select="error" />
-                    </div>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="message != ''">
+                <div class="success">
+                    <xsl:value-of select="message" disable-output-escaping="yes" />
+                </div>
+            </xsl:if>
+            <xsl:if test="error != ''">
+                <div class="error">
+                    <xsl:value-of select="error" disable-output-escaping="yes" />
+                </div>
+            </xsl:if>
         </div>
         <div class="pageTop">
             <h1><xsl:value-of select="php:function('lang', 'edit_organization')" /></h1>
             <form action="" method="post" name="form" id="form">
                 <dl class="proplist-col">
                     <input type="hidden" name="organization_id" id="organization_id">
-                        <xsl:attribute name="value"></xsl:attribute>
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="organization/id" />
+                        </xsl:attribute>
                     </input>
                     <div style="overflow:auto;">
                         <p>
@@ -44,13 +44,17 @@
                         </dt>
                         <dd>
                             <input type="text" name="orgname" id="orgname" size="80" maxlength="254">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/name" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                         <dt><label for="orgno">Organisasjonsnummer</label></dt>
                         <dd>
                             <input type="text" name="orgno" maxlength="254">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/number" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                         <dt style="margin-right:20px;float:left;">
@@ -63,7 +67,9 @@
                             </a>
                             <br />
                             <input type="text" name="address" id="address" onkeyup="javascript:get_address_search()" size="50">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/address" />
+                                </xsl:attribute>
                             </input>
                             <br />
                             <div id="address_container" />
@@ -75,13 +81,17 @@
                         <dt style="clear:left;margin-right:20px;float:left;">
                             <label for="postzip">Postnummer</label><br />
                             <input type="text" name="postzip" size="5">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/zip_code" />
+                                </xsl:attribute>
                             </input>
                         </dt>
                         <dt style="float:left;">
                             <label for="postaddress">Poststed</label><br />
                             <input type="text" name="postaddress" size="40">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/city" />
+                                </xsl:attribute>
                             </input>
                         </dt><br /><br />
                     </div>
@@ -98,7 +108,9 @@
                     </dt>
                     <dd>
                         <input type="text" name="homepage" size="80">
-                            <xsl:attribute name="value"></xsl:attribute>
+                            <xsl:attribute name="value">
+                                <xsl:value-of select="organization/homepage" />
+                            </xsl:attribute>
                         </input>
                     </dd><br /><br />
                     <div style="overflow:auto;">
@@ -112,25 +124,33 @@
                         <dt><label for="contact1_name">Navn (*)</label></dt>
                         <dd>
                             <input name="org_contact1_name" id="org_contact1_name" size="80" type="text">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/contact1_name" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                         <dt><label for="contact1_phone">Telefon (*)</label></dt>
                         <dd>
                             <input name="org_contact1_phone" id="org_contact1_phone" type="text">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/contact1_phone" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                         <dt><label for="contact1_mail">E-post (*)</label></dt>
                         <dd>
                             <input name="org_contact1_mail" id="org_contact1_mail" size="50" type="text">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/contact1_mail" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                         <dt><label for="contact2_mail">Gjenta e-post (*)</label></dt>
                         <dd>
                             <input name="org_contact2_mail" id="org_contact2_mail" size="50" type="text">
-                                <xsl:attribute name="value"></xsl:attribute>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="organization/contact1_mail" />
+                                </xsl:attribute>
                             </input>
                         </dd>
                     </div>

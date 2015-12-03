@@ -181,7 +181,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
                 );
             }
             
-            $this->render_template_xsl('activity_new', array
+            return self::render_template_xsl('activity_new', array
                 (
                     'activity' => $activity_options,
                     'new_organization' => $new_org,
@@ -392,7 +392,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
                 $organization_options['edit_link'] = self::link(array('menuaction' => 'activitycalendarfrontend.uiactivity.edit_organization_values','organization_id' => $organization_options['id']));
 
 
-                $this->render_template_xsl('activity', array
+                return self::render_template_xsl('activity', array
                     (
 						'activity' => $activity_options,
 						'organization' => $organization_options,
@@ -409,25 +409,6 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 						'ajaxURL' => $ajaxUrl
                     )
 				);
-                
-//				$this->render('activity.php', array
-//						(
-//						'activity' => $activity,
-//						'organization' => $organization,
-//                        'organization_id' => $organization_id,
-//						'group' => $group,
-//						'contact1' => $persons[0],
-//						'arenas' => $arenas,
-//						'buildings' => $buildings,
-//						'categories' => $categories,
-//						'targets' => $targets,
-//						'districts' => $districts,
-//						'offices' => $offices,
-//						'message' => isset($message) ? $message : phpgw::get_var('message'),
-//						'error' => isset($error) ? $error : phpgw::get_var('error'),
-//						'ajaxURL' => $ajaxUrl
-//								)
-//				);
 			} else {
 				if (!$target_ok) {
 					$error .= "<br/>" . lang('target_not_selected');
@@ -457,7 +438,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
                     );
                 }
                 
-				return $this->render_template_xsl('activity_new', array (
+				return self::render_template_xsl('activity_new', array (
                         'activity' => $activity_options,
                         'organization_id' => $organization_id,
                         'contact1' => $persons[0],
@@ -520,6 +501,22 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
         $activity_options['contact1_mail'] = (isset($persons[0])) ? $persons[0]->get_email() : "";
         $activity_options['office'] = ($activity->get_office()) ? $this->so_activity->get_office_name($activity->get_office()) : "";
 
+        $activity_options['organization_id'] = $activity->get_organization_id();
+
+        $organization = $this->so_organization->get_single($activity_options['organization_id']);
+        $organization_options = Array();
+        $organization_options['id'] = $organization->get_id();
+        $organization_options['name'] = $organization->get_name();
+
+        $activity_options['contact_person_1_id'] = $activity->get_contact_person_1();
+        $activity_options['group_id'] = $activity->get_group_id();
+
+        $persons = $this->so_contact->get_local_contact_persons($activity_options['group_id'], true);
+        $person = $persons[0];
+        $activity_options['contact1_name'] = $person->get_name();
+        $activity_options['contact1_phone'] = $person->get_phone();
+        $activity_options['contact1_mail'] = $person->get_email();
+
         if ($activity->get_target()) {
             $current_target_ids = $activity->get_target();
             $current_target_id_array = explode(",", $current_target_ids);
@@ -536,11 +533,11 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
             }
         }
 
-		$data = array
-				(
-				'activity' => $activity_options,
-				'errorMsgs' => $errorMsgs,
-				'infoMsgs' => $infoMsgs
+		$data = array (
+            'activity' => $activity_options,
+            'organization' => $organization_options,
+            'errorMsgs' => $errorMsgs,
+            'infoMsgs' => $infoMsgs
 		);
 
 		$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -557,6 +554,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 		$config = $c->config_data;
 
 		$ajaxUrl = $c->config_data['AJAXURL'];
+        $helpImg = $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif');
 
 		$id = intval(phpgw::get_var('id', 'GET'));
 
@@ -566,6 +564,46 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 		$districts = $this->so_activity->get_districts();
 		$buildings = $this->so_arena->get_buildings();
 		$arenas = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+
+        $category_options = Array();
+        foreach ($categories as $c) {
+            $category_options['list'][] = array(
+                'id' => $c->get_id(),
+                'name' => $c->get_name()
+            );
+        }
+        
+        $building_options = Array();
+        foreach ($buildings as $building_id => $building_name) {
+            $building_options['list'][] = array(
+                'id' => $building_id,
+                'name' => $building_name
+            );
+        }
+        
+        $arena_options = Array();
+        foreach ($arenas as $a) {
+            $arena_options['list'][] = array(
+                'id' => $a->get_id(),
+                'name' => $a->get_arena_name()
+            );
+        }
+        
+        $district_options = Array();
+        foreach ($districts as $d) {
+            $district_options['list'][] = array(
+                'part_of_town_id' => $d['part_of_town_id'],
+                'name' => $d['name']
+            );
+        }
+        
+        $office_options = Array();
+        foreach ($offices as $o) {
+            $office_options['list'][] = array(
+                'id' => $o['id'],
+                'name' => $o['name']
+            );
+        }
 
 		if (isset($_POST['step_1'])) { //change_request
 			$activity_id = phpgw::get_var('activity_id');
@@ -579,12 +617,12 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 			//{
 			$this->send_email_to_selection(array($activity));
 			$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
-			return $this->render('activity_edit_step_1.php', array
-									(
-									'activities' => $activities,
-									'message' => $message,
-									'ajaxURL' => $ajaxUrl
-											)
+			return self::render_template_xsl('activity_edit_step_1', array
+                (
+                    'activities' => $activities,
+                    'message' => $message,
+                    'ajaxURL' => $ajaxUrl
+                )
 			);
 			//}
 		} else {
@@ -593,22 +631,34 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				//select activity to edit
 				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 				$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array('edit_from_frontend' => 'yes'));
-				return $this->render('activity_edit_step_1.php', array
-										(
-										'activities' => $activities,
-										'organizations' => $organizations,
-										'ajaxURL' => $ajaxUrl
-												)
-				);
+                $organization_options = Array();
+                foreach ($organizations as $o) {
+                    $organization_options[] = array(
+                        'id' => $o->get_id(),
+                        'name' => $o->get_name()
+                    );
+                }
+                
+                self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
+                
+                return self::render_template_xsl('activity_edit_step_1', array(
+                        'activities' => $activities,
+                        'organizations' => $organization_options,
+                        'ajaxURL' => $ajaxUrl
+                    )
+                );
 			}
 			if (!isset($secret_param) || $secret_param == '') {
 				//select activity to edit
 				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
-				return $this->render('activity_edit_step_1.php', array
-										(
-										'activities' => $activities,
-										'ajaxURL' => $ajaxUrl
-												)
+                
+                self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
+                
+				return self::render_template_xsl('activity_edit_step_1', array
+                    (
+                        'activities' => $activities,
+                        'ajaxURL' => $ajaxUrl
+                    )
 				);
 			} else {
 				// Retrieve the activity object or create a new one
@@ -616,22 +666,28 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 					$activity = $this->so_activity->get_single($id);
 				} else {
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
-					return $this->render('activity_edit_step_1.php', array
-											(
-											'activities' => $activities,
-											'ajaxURL' => $ajaxUrl
-													)
+                    
+                    self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
+                    
+					return self::render_template_xsl('activity_edit_step_1', array
+                        (
+                            'activities' => $activities,
+                            'ajaxURL' => $ajaxUrl
+                        )
 					);
 				}
 
 				if ($activity->get_secret() != phpgw::get_var('secret', 'GET')) {
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
-					return $this->render('activity_edit_step_1.php', array
-											(
-											'activities' => $activities,
-											'ajaxURL' => $ajaxUrl
-													)
+                    
+                    self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
+                    
+					return self::render_template_xsl('activity_edit_step_1', array
+                        (
+                            'activities' => $activities,
+                            'ajaxURL' => $ajaxUrl
+                        )
 					);
 				}
 
@@ -654,8 +710,66 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				if (strlen($desc) > 254) {
 					$desc = substr($desc, 0, 254);
 				}
-				$organization = $this->so_organization->get_single($activity->get_organization_id());
+                
+                $activity_options = Array();
+                $activity_options['id'] = ($activity->get_id()) ? $activity->get_id() : "0";
+                $activity_options['title'] = $activity->get_title();
+                $activity_options['description'] = $activity->get_description();
+                $activity_options['category'] = ($activity->get_category()) ? $this->so_activity->get_category_name($activity->get_category()) : "";
+                $activity_options['targets'] = "";
+                $activity_options['special_adaptation'] = ($activity->get_special_adaptation()) ? true : false;
+                $activity_options['internal_arena'] = ($activity->get_internal_arena()) ? true : false;
+                $activity_options['building_name'] = $this->so_arena->get_building_name($activity->get_internal_arena());
+                $activity_options['arena'] = ($activity->get_arena()) ? true : false;
+                $activity_options['arena_name'] = $this->so_arena->get_arena_name($activity->get_arena());
+                $activity_options['districts'] = "";
+                $activity_options['time'] = $activity->get_time();
+                $activity_options['contact_person_1'] = ($activity->get_contact_person_1()) ? true : false;
+                $activity_options['contact1_name'] = (isset($persons_array[0])) ? $persons_array[0]->get_name() : "";
+                $activity_options['contact1_phone'] = (isset($persons_array[0])) ? $persons_array[0]->get_phone() : "";
+                $activity_options['contact1_mail'] = (isset($persons_array[0])) ? $persons_array[0]->get_email() : "";
+                $activity_options['office'] = ($activity->get_office()) ? $this->so_activity->get_office_name($activity->get_office()) : "";
+                $activity_options['group_id'] = $activity->get_group_id();
 
+                $category_options['current_category_id'] = ($activity->get_category()) ? $activity->get_category() : "";
+                $district_options['current_district_id'] = ($activity->get_district()) ? $activity->get_district() : "";
+                $office_options['selected_office'] = ($activity->get_office()) ? $activity->get_office() : "";
+                $building_options['selected_internal_arena'] = ($activity->get_internal_arena()) ? $activity->get_internal_arena() : "";
+                $arena_options['selected_arena'] = ($activity->get_arena()) ? $activity->get_arena() : "";
+
+                $current_target_ids = $activity->get_target();
+                $current_target_id_array = explode(",", $current_target_ids);
+                $target_options = Array();
+                foreach ($targets as $t) {
+                    $checked = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
+                    $target_options[] = array(
+                        'id' => $t->get_id(),
+                        'name' => $t->get_name(),
+                        'checked' => $checked
+                    );
+                }
+                
+                if ($activity->get_target()) {
+                    $current_target_ids = $activity->get_target();
+                    $current_target_id_array = explode(",", $current_target_ids);
+                    foreach ($current_target_id_array as $ct) {
+                        $activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
+                    }
+                }
+
+                if ($activity->get_district()) {
+                    $current_district_ids = $activity->get_district();
+                    $current_district_id_array = explode(",", $current_district_ids);
+                    foreach ($current_district_id_array as $cd) {
+                        $activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
+                    }
+                }
+                
+				$organization = $this->so_organization->get_single($activity->get_organization_id());
+                $organization_options = Array();
+                $organization_options['id'] = $organization->get_id();
+                $organization_options['name'] = $organization->get_name();
+                
 				$change_activity_request = FALSE;
 				if (isset($_POST['save_activity'])) { // The user has pressed the save button
 					if (isset($activity)) { // If an activity object is created
@@ -705,6 +819,65 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 							$district_ok = true;
 						}
 
+                        $activity_options = Array();
+                        $activity_options['id'] = ($activity->get_id()) ? $activity->get_id() : "0";
+                        $activity_options['title'] = $activity->get_title();
+                        $activity_options['description'] = $activity->get_description();
+                        $activity_options['category'] = ($activity->get_category()) ? $this->so_activity->get_category_name($activity->get_category()) : "";
+                        $activity_options['targets'] = "";
+                        $activity_options['special_adaptation'] = ($activity->get_special_adaptation()) ? true : false;
+                        $activity_options['internal_arena'] = ($activity->get_internal_arena()) ? true : false;
+                        $activity_options['building_name'] = $this->so_arena->get_building_name($activity->get_internal_arena());
+                        $activity_options['arena'] = ($activity->get_arena()) ? true : false;
+                        $activity_options['arena_name'] = $this->so_arena->get_arena_name($activity->get_arena());
+                        $activity_options['districts'] = "";
+                        $activity_options['time'] = $activity->get_time();
+                        $activity_options['contact_person_1'] = ($activity->get_contact_person_1()) ? true : false;
+                        $activity_options['contact1_name'] = (isset($persons_array[0])) ? $persons_array[0]->get_name() : "";
+                        $activity_options['contact1_phone'] = (isset($persons_array[0])) ? $persons_array[0]->get_phone() : "";
+                        $activity_options['contact1_mail'] = (isset($persons_array[0])) ? $persons_array[0]->get_email() : "";
+                        $activity_options['office'] = ($activity->get_office()) ? $this->so_activity->get_office_name($activity->get_office()) : "";
+                        $activity_options['group_id'] = $activity->get_group_id();
+
+                        $category_options['current_category_id'] = ($activity->get_category()) ? $activity->get_category() : "";
+                        $district_options['current_district_id'] = ($activity->get_district()) ? $activity->get_district() : "";
+                        $office_options['selected_office'] = ($activity->get_office()) ? $activity->get_office() : "";
+                        $building_options['selected_internal_arena'] = ($activity->get_internal_arena()) ? $activity->get_internal_arena() : "";
+                        $arena_options['selected_arena'] = ($activity->get_arena()) ? $activity->get_arena() : "";
+
+                        $current_target_ids = $activity->get_target();
+                        $current_target_id_array = explode(",", $current_target_ids);
+                        $target_options = Array();
+                        foreach ($targets as $t) {
+                            $checked = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
+                            $target_options[] = array(
+                                'id' => $t->get_id(),
+                                'name' => $t->get_name(),
+                                'checked' => $checked
+                            );
+                        }
+
+                        if ($activity->get_target()) {
+                            $current_target_ids = $activity->get_target();
+                            $current_target_id_array = explode(",", $current_target_ids);
+                            foreach ($current_target_id_array as $ct) {
+                                $activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
+                            }
+                        }
+
+                        if ($activity->get_district()) {
+                            $current_district_ids = $activity->get_district();
+                            $current_district_id_array = explode(",", $current_district_ids);
+                            foreach ($current_district_id_array as $cd) {
+                                $activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
+                            }
+                        }
+
+                        $organization = $this->so_organization->get_single($activity->get_organization_id());
+                        $organization_options = Array();
+                        $organization_options['id'] = $organization->get_id();
+                        $organization_options['name'] = $organization->get_name();
+
 						if ($target_ok && $district_ok) {
 
 							if ($this->so_activity->store($activity)) { // ... and then try to store the object
@@ -725,10 +898,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 
 							$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-							$this->render('activity.php', array
-									(
-									'activity' => $activity,
-									'organization' => $organization,
+							return self::render_template_xsl('activity', array
+                                (
+									'activity' => $activity_options,
+									'organization' => $organization_options,
 									'group' => $group,
 									'contact1' => $persons_array_tmp[0],
 									'arenas' => $arenas,
@@ -739,8 +912,9 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 									'offices' => $offices,
 									'message' => isset($message) ? $message : phpgw::get_var('message'),
 									'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                    'helpImg' => $helpImg,
 									'ajaxURL' => $ajaxUrl
-											)
+                                )
 							);
 						} else {
 							if (!$target_ok) {
@@ -749,48 +923,55 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 							if (!$district_ok) {
 								$error .= "<br/>" . lang('district_not_selected');
 							}
-							return $this->render('activity_edit.php', array
-													(
-													'activity' => $activity,
-													'organization' => $organization,
-													'contact1' => $persons_array[0],
-													'org_name' => $org_name,
-													'group' => $group,
-													'arenas' => $arenas,
-													'buildings' => $buildings,
-													'categories' => $categories,
-													'targets' => $targets,
-													'districts' => $districts,
-													'offices' => $offices,
-													'editable' => true,
-													'cancel_link' => $cancel_link,
-													'message' => isset($message) ? $message : phpgw::get_var('message'),
-													'error' => isset($error) ? $error : phpgw::get_var('error'),
-													'ajaxURL' => $ajaxUrl
-															)
+                            
+                            self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit.js');
+                            
+							return self::render('activity_edit', array
+                                (
+                                    'activity' => $activity_options,
+                                    'organization' => $organization_options,
+                                    'contact1' => $persons_array[0],
+                                    'org_name' => $org_name,
+                                    'group' => $group,
+                                    'arenas' => $arena_options,
+                                    'buildings' => $building_options,
+                                    'categories' => $category_options,
+                                    'targets' => $target_options,
+                                    'districts' => $district_options,
+                                    'offices' => $office_options,
+                                    'editable' => true,
+                                    'cancel_link' => $cancel_link,
+                                    'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                    'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                    'helpImg' => $helpImg,
+                                    'ajaxURL' => $ajaxUrl
+                                )
 							);
 						}
 					}
 				} else if (isset($_POST['change_request'])) {
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+                    
+                    self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit.js');
 
-					$this->render('activity_edit.php', array
-							(
-							'activity' => $activity,
-							'organization' => $organization,
+					return self::render_template_xsl('activity_edit', array
+                        (
+							'activity' => $activity_options,
+							'organization' => $organization_options,
 							'group' => $group,
 							'contact1' => $persons_array[0],
-							'arenas' => $arenas,
-							'buildings' => $buildings,
-							'categories' => $categories,
-							'targets' => $targets,
-							'districts' => $districts,
-							'offices' => $offices,
+							'arenas' => $arena_options,
+							'buildings' => $building_options,
+							'categories' => $category_options,
+							'targets' => $target_options,
+							'districts' => $district_options,
+							'offices' => $office_options,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error'),
+                            'helpImg' => $helpImg,
 							'ajaxURL' => $ajaxUrl
-									)
+                        )
 					);
 				} else if (isset($_POST['activity_ok'])) { // The user has pressed the save button
 					if (isset($activity)) { // If an activity object is created
@@ -801,10 +982,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 						}
 						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-						$this->render('activity.php', array
-								(
-								'activity' => $activity,
-								'organization' => $organization,
+						return self::render_template_xsl('activity', array
+                            (
+								'activity' => $activity_options,
+								'organization' => $organization_options,
 								'group' => $group,
 								'contact1' => $persons_array[0],
 								'arenas' => $arenas,
@@ -815,17 +996,18 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 								'offices' => $offices,
 								'message' => isset($message) ? $message : phpgw::get_var('message'),
 								'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                'helpImg' => $helpImg,
 								'ajaxURL' => $ajaxUrl
-										)
+                            )
 						);
 					}
 				} else {
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-					$this->render('activity.php', array
-							(
-							'activity' => $activity,
-							'organization' => $organization,
+					return self::render_template_xsl('activity', array
+                        (
+							'activity' => $activity_options,
+							'organization' => $organization_options,
 							'group' => $group,
 							'contact1' => $persons_array[0],
 							'arenas' => $arenas,
@@ -838,8 +1020,9 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 							'change_request' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error'),
+                            'helpImg' => $helpImg,
 							'ajaxURL' => $ajaxUrl
-									)
+                        )
 					);
 				}
 			}
@@ -895,6 +1078,9 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 	function edit_organization_values() {
 		$org_id = phpgw::get_var('organization_id');
 		if (isset($org_id)) {
+            
+            $helpImg = $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif');
+            
 			if (isset($_POST['save_org'])) { //save updated organization info
 				$organization = $this->so_organization->get_single($org_id);
 
@@ -926,10 +1112,11 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$message = lang('change_request_ok', $org_info['name']);
 
 				$this->render('organization_reciept.php', array
-						(
+                    (
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error')
-								)
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+                        'helpImg' => $helpImg
+                    )
 				);
 			} else {
 				$c = createobject('phpgwapi.config', 'activitycalendarfrontend');
@@ -942,14 +1129,30 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				foreach ($person_arr as $p) {
 					$persons[] = $p;
 				}
+                
+                $organization_options = Array();
+                $organization_options['id'] = $organization->get_id();
+                $organization_options['name'] = $organization->get_name();
+                $organization_options['number'] = $organization->get_organization_number();
+                $organization_options['address'] = $organization->get_address();
+                $organization_options['zip_code'] = $organization->get_zip_code();
+                $organization_options['city'] = $organization->get_city();
+                $organization_options['homepage'] = $organization->get_homepage();
+                
+                $organization_options['contact1_name'] = $persons[0]->get_name();
+                $organization_options['contact1_phone'] = $persons[0]->get_phone();
+                $organization_options['contact1_mail'] = $persons[0]->get_email();
+                
+                self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'organization_edit.js');
 
-				$this->render('organization_edit.php', array
+				return self::render_template_xsl('organization_edit', array
 						(
-						'organization' => $organization,
+						'organization' => $organization_options,
 						'contact1' => $persons[0],
 						'editable' => true,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
+                        'helpImg' => $helpImg,
 						'ajaxURL' => $ajaxUrl
 								)
 				);

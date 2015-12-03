@@ -17,9 +17,9 @@
         </div>
         <form action="" method="post" name="form" id="form">
             <input type="hidden" name="id">
-                <xsl:attributed name="value">
+                <xsl:attribute name="value">
                     <xsl:value-of select="activity/id" />
-                </xsl:attributed>
+                </xsl:attribute>
             </input>
             <dl class="proplist-col">
                 <div class="form-buttons">
@@ -117,7 +117,7 @@
                                     <xsl:attribute name="href">
                                         <xsl:value-of select="organization/edit_link" />
                                     </xsl:attribute>
-                                    <xsl:value-of select="php:function('lang', 'edit_organization')" />
+                                    <xsl:value-of select="concat(' ', php:function('lang', 'edit_organization'))" />
                                 </a>
                             </xsl:if>
                         </xsl:if>
@@ -155,9 +155,9 @@
                             </xsl:attribute>
                         </input>
                         <input type="submit" name="change_request">
-                            <xsl:attributed name="value">
+                            <xsl:attribute name="value">
                                 <xsl:value-of select="php:function('lang', 'change_activity')" />
-                            </xsl:attributed>
+                            </xsl:attribute>
                         </input>
                     </xsl:if>
                 </div>

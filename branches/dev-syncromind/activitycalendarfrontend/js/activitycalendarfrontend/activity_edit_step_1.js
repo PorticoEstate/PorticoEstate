@@ -25,7 +25,7 @@ function get_activities()
 //    var divcontent_start = "<select name=\"activity_id\" id=\"activity_id\">";
 //    var divcontent_end = "</select>";
     
-    var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_organization_activities', orgid: 'org_id'}, true);
+    var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_organization_activities', orgid: org_id}, true);
     var attr = [{name: 'name', value: 'activity_id'}, {name: 'id', value: 'activity_id'}];
     
 
@@ -39,10 +39,10 @@ function get_activities()
 //    }
 //    var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
     
-    div_select.hide();
+//    div_select.hide();
 
     if (org_id && org_id != current_org_id_get_activities) {
-        div_select.show();
+//        div_select.show();
         populateSelect_activityCalendar(url, div_select, attr);
         current_org_id_get_activities = org_id;
     }
