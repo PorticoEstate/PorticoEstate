@@ -21,7 +21,8 @@
 			'changed_organizations'		 => true,
 			'get_organization_groups'	 => true,
 			'show'						 => true,
-			'edit'						 => true
+			'edit'						 => true,
+			'save'						 => true
 		);
 
 		public function __construct()
@@ -37,66 +38,74 @@
 		}
 
 		public function index()
-		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+		{		
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->index_json();
+				return $this->query();
 			}
 
-			$this->render('organization_list.php');
+			$appname = lang('organizations');
+
+			$function_msg = lang('list %1', $appname);
+			$type = 'all_organizations';
+
+			$data = array(
+				'datatable_name'	=> $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array()
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'activitycalendar.uiorganization.index', 
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'activitycalendar.uiorganization.download',
+							'type'		=> $type,
+							'export'    => true,
+							'allrows'   => true
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+							array('key'=>'organization_number', 'label'=>lang('organization_number'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'name', 'label'=>lang('name'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true, 'hidden'=>false)
+					)
+				)
+			);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'activitycalendar.uiorganization.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))		
+				);
+			
+			self::render_template_xsl('datatable_jquery', $data);			
 		}
 
-		public function changed_organizations()
+		public function save()
 		{
-			self::set_active_menu('activitycalendar::organizationList::changed_organizations');
-			$this->render('organization_list_changed.php');
-		}
-
-		public function index_json()
-		{
-			$organizations = activitycalendar_soorganization::get_instance()->get(); //get organizations
-			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
-
-			foreach($organizations["results"] as &$organization)
-			{
-
-				$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
-
-				if($contact)
-				{
-					$organization += array(
-						"primary_contact_name"	 => ($contact["name"]) ? $contact["name"] : '',
-						"primary_contact_phone"	 => ($contact["phone"]) ? $contact["phone"] : '',
-						"primary_contact_email"	 => ($contact["email"]) ? $contact["email"] : '',
-					);
-				}
-			}
-
-			return $this->yui_results($organizations);
-		}
-
-		public function edit()
-		{
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			$id			 = (int)phpgw::get_var('id');
-			$type		 = phpgw::get_var('type');
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
-			unset($org_info);
-			unset($contact1);
-			unset($contact2);
+
 			$so_org		 = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
-			$so_contact	 = activitycalendar_socontactperson::get_instance();
-			$org_array	 = $so_org->get(null, null, null, null, null, null, array('id' => $id,
-				'changed_orgs' => 'true'));
+			//$so_contact	 = activitycalendar_socontactperson::get_instance();
+			$org_array	 = $so_org->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
 			if(count($org_array) > 0)
 			{
 				$keys	 = array_keys($org_array);
 				$org	 = $org_array[$keys[0]];
 			}
-			//var_dump($org);
-			$districts = $so_activity->get_districts();
-
+			
 			if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
 				$orgno		 = phpgw::get_var('orgno');
@@ -294,12 +303,61 @@
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
+		}
+		
+		public function changed_organizations()
+		{
+			self::set_active_menu('activitycalendar::organizationList::changed_organizations');
+			$this->render('organization_list_changed.php');
+		}
+
+		public function index_json()
+		{
+			$organizations = activitycalendar_soorganization::get_instance()->get(); //get organizations
+			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+
+			foreach($organizations["results"] as &$organization)
+			{
+
+				$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
+
+				if($contact)
+				{
+					$organization += array(
+						"primary_contact_name"	 => ($contact["name"]) ? $contact["name"] : '',
+						"primary_contact_phone"	 => ($contact["phone"]) ? $contact["phone"] : '',
+						"primary_contact_email"	 => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
+			}
+
+			return $this->yui_results($organizations);
+		}
+
+		public function edit()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
+			$id			 = (int)phpgw::get_var('id');
+			$type		 = phpgw::get_var('type');
+			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
+
+			$so_org		 = activitycalendar_soorganization::get_instance();
+			$so_activity = activitycalendar_soactivity::get_instance();
+			$so_contact	 = activitycalendar_socontactperson::get_instance();
+			$org_array	 = $so_org->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
+			if(count($org_array) > 0)
+			{
+				$keys	 = array_keys($org_array);
+				$org	 = $org_array[$keys[0]];
+			}
+			//var_dump($org);
+			$districts = $so_activity->get_districts();
 
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
 			$cp1			 = $contact_persons[0];
 			$cp2			 = $contact_persons[1];
 
-			$data = array
+			/*$data = array
 				(
 				'organization'	 => $org,
 				'districts'		 => $districts,
@@ -311,7 +369,62 @@
 				'infoMsgs'		 => $infoMsgs
 			);
 
-			return $this->render('organization.php', $data);
+			return $this->render('organization.php', $data);*/
+
+			$curr_district = $org->get_district();
+			if(!is_numeric($curr_district))
+			{
+				$curr_district = activitycalendar_soactivity::get_instance()->get_district_from_name($org->get_district());
+			}
+			$district_options[] = array('id'=>'', 'name'=>lang('Ingen bydel valgt'), 'selected'=>0);
+			foreach($districts as $d)
+			{
+				$selected = ($curr_district == $d['part_of_town_id']) ? 1 : 0;
+				$district_options[] = array('id'=>$d['part_of_town_id'], 'name'=>$d['name'], 'selected'=>$selected);					
+			}
+									
+			$tabs = array();
+			$tabs['organization']	= array('label' => lang('organization'), 'link' => '#organization');
+			$active_tab = 'organization';
+
+			$data = array
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.save')),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.changed_organizations')),
+				'lang_update_org'				=> lang('update_org'),
+				'lang_reject'					=> lang('reject'),
+				'lang_store'					=> lang('store'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'organization_id'				=> $org->get_id(),
+				'original_org_id'				=> ($org->get_original_org_id()) ? $org->get_original_org_id() : '',
+				'organization_name'				=> $org->get_name(),
+				'organization_no'				=> $org->get_organization_number(),
+				'homepage'						=> $org->get_homepage(),
+				'email'							=> $org->get_email(),
+				'phone'							=> $org->get_address().' '.$org->get_addressnumber(),
+				'zip_code'						=> $org->get_zip_code(),
+				'city'							=> $org->get_city(),
+				'description'					=> $org->get_description(),
+				
+				'contact1_id'					=> $cp1->get_id(),
+				'contact1_name'					=> $cp1->get_name(),
+				'contact1_phone'				=> $cp1->get_phone(),
+				'contact1_email'				=> $cp1->get_email(),
+						
+				'contact2_id'					=> ($cp2) ? $cp2->get_id() : '',
+				'contact2_name'					=> ($cp2) ? $cp2->get_name() : '',
+				'contact2_phone'				=> ($cp2) ? $cp2->get_phone() : '',
+				'contact2_email'				=> ($cp2) ? $cp2->get_email() : '',
+				
+				'list_district_options'			=> array('options' => $district_options),
+
+				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
+			);
+			
+			self::render_template_xsl(array('organization'), array('edit' => $data));	
+			
 		}
 
 		public function show()
