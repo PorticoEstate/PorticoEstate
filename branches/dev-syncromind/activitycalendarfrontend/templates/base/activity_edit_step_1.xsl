@@ -32,8 +32,8 @@
                         </dt>
                         <dd>
                             <div id="activity_select">
-                                <select name="activity_id" id="activity_id">
-                                    <option value="0">Ingen aktivitet valgt</option>
+                                <select name="activity_id" id="activity_id" data-validation="required" data-validation-error-msg="Du må velge en aktivitet som skal endres!">
+                                    <option value="">Ingen aktivitet valgt</option>
                                 </select>
                             </div>
                             <br /><br />

@@ -99,6 +99,8 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
                 'name' => $o['name']
             );
         }
+        
+        phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 		if (isset($_POST['step_1']))
         { //activity shall be registred on a new organization
@@ -555,7 +557,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 
 		$ajaxUrl = $c->config_data['AJAXURL'];
         $helpImg = $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif');
-
+        
 		$id = intval(phpgw::get_var('id', 'GET'));
 
 		$categories = $this->so_activity->get_categories();
@@ -604,6 +606,8 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
                 'name' => $o['name']
             );
         }
+        
+        phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 		if (isset($_POST['step_1'])) { //change_request
 			$activity_id = phpgw::get_var('activity_id');
@@ -1070,7 +1074,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 	 * Public method.
 	 */
 	function get_address_search() {
-		$search_string = phpgw::get_var('query');
+		$search_string = phpgw::get_var('search');
 		//var_dump($search_string);
 		return activitycalendar_soarena::get_instance()->get_address($search_string);
 	}
@@ -1080,6 +1084,8 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 		if (isset($org_id)) {
             
             $helpImg = $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif');
+            
+            phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
             
 			if (isset($_POST['save_org'])) { //save updated organization info
 				$organization = $this->so_organization->get_single($org_id);
@@ -1111,7 +1117,7 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 
 				$message = lang('change_request_ok', $org_info['name']);
 
-				$this->render('organization_reciept.php', array
+				return self::render_template_xsl('organization_reciept', array
                     (
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),

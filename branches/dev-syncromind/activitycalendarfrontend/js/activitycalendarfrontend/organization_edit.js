@@ -91,3 +91,74 @@ function isOK()
         return true;
     }
 }
+
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'contact_phone',
+        validatorFunction: function(){
+            var contact_phone = $('#org_contact1_phone').val();
+            var v = true;
+            if(contact_phone == null || contact_phone == '') {
+                v = false;
+            }
+            return v;
+        },
+        errorMessage: 'Telefonnummer til kontaktperson må fylles ut!',
+        errorMessageKey: 'contact_phone'
+    });
+    $.formUtils.addValidator({
+        name: 'contact_phone_length',
+        validatorFunction: function(){
+            var contact_phone = $('#org_contact1_phone').val();
+            var v = true;
+            if((contact_phone != null || contact_phone != '') && contact_phone.length < 8) {
+                v = false;
+            }
+            return v;
+        },
+        errorMessage: 'Telefonnummer må inneholde minst 8 siffer!',
+        errorMessageKey: 'contact_phone_length'
+    });
+    $.formUtils.addValidator({
+        name: 'contact_mail',
+        validatorFunction: function(){
+            var contact_mail = $('#org_contact1_mail').val();
+            var v = true;
+            if(contact_mail == null || contact_mail == '') {
+                v = false;
+            }
+            return v;
+        },
+        errorMessage: 'E-post for kontaktperson må fylles ut!',
+        errorMessageKey: 'contact_mail'
+    });
+    $.formUtils.addValidator({
+        name: 'contact_mail2',
+        validatorFunction: function(){
+            var contact_mail2 = $('#org_contact2_mail').val();
+            var v = true;
+            if(contact_mail2 == null || contact_mail2 == '') {
+                v = false;
+            }
+            return v;
+        },
+        errorMessage: 'Begge felter for E-post må fylles ut!',
+        errorMessageKey: 'contact_mail2'
+    });
+    $.formUtils.addValidator({
+        name: 'contact_mail2_confirm',
+        validatorFunction: function(){
+            var contact_mail1 = $('#org_contact1_mail').val();
+            var contact_mail2 = $('#org_contact2_mail').val();
+            var v = true;
+            if(contact_mail2 != null || contact_mail2 != '') {
+                if (contact_mail1 != contact_mail2) {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'E-post må være den samme i begge felt!',
+        errorMessageKey: 'contact_mail2_confirm'
+    });
+}

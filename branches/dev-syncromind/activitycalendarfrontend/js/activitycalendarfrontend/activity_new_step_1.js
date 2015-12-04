@@ -14,7 +14,17 @@ $(function(){
         $("#toggleText3").show();
         text.innerHTML = "";
         org_id.value = "new_org";
-    })
+        
+        $('#organization_id').attr('data-validation', '').removeClass('valid error').attr('style', '');
+        $('.form-error').remove();
+        $('#orgname').attr('data-validation', 'orgname');
+        $('#org_contact1_name').attr('data-validation', 'org_contact1_name');
+        $('#org_contact1_phone').attr('data-validation', 'org_contact1_phone org_contact1_phone_length');
+        $('#org_contact1_mail').attr('data-validation', 'org_contact1_mail');
+        $('#org_contact2_mail').attr('data-validation', 'org_contact2_mail org_contact2_mail_confirm');
+        
+        
+    });
 });
 function toggle() {
     var ele = document.getElementById("toggleText");
@@ -168,4 +178,142 @@ function isOK()
     {
         return true;
     }
+}
+
+
+
+
+
+if ($.formUtils) {
+    $.formUtils.addValidator({
+        name: 'organization_id',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_id = $('#organization_id').val();
+            var v = true;
+            if(o_id_h == null || o_id_h == ''){
+                if(o_id == null || o_id == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Du må velge om aktiviteten skal knyttes mot en eksisterende\norganisasjon, eller om det skal registreres en ny organisasjon!',
+        errorMessageKey: 'organization_id'
+    });    
+    $.formUtils.addValidator({
+        name: 'orgname',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_name = $('#orgname').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_name == null || o_name == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Organisasjonsnavn må fylles ut!',
+        errorMessageKey: 'orgname'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact1_name',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact1_name = $('#org_contact1_name').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_contact1_name == null || o_contact1_name == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Navn på kontaktperson må fylles ut!',
+        errorMessageKey: 'org_contact1_name'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact1_phone',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact1_phone = $('#org_contact1_phone').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_contact1_phone == null || o_contact1_phone == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Telefonnummer til kontaktperson må fylles ut!',
+        errorMessageKey: 'org_contact1_phone'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact1_phone_length',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact1_phone = $('#org_contact1_phone').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if((o_contact1_phone != null || o_contact1_phone != '') && o_contact1_phone.length < 8) {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Telefonnummer må inneholde minst 8 siffer!',
+        errorMessageKey: 'org_contact1_phone_length'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact1_mail',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact1_mail = $('#org_contact1_mail').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_contact1_mail == null || o_contact1_mail == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'E-post for kontaktperson må fylles ut!',
+        errorMessageKey: 'org_contact1_mail'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact2_mail',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact2_mail = $('#org_contact2_mail').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_contact2_mail == null || o_contact2_mail == '') {
+                    v = false;
+                }
+            }
+            return v;
+        },
+        errorMessage: 'Begge felter for E-post må fylles ut!',
+        errorMessageKey: 'org_contact2_mail'
+    });
+    $.formUtils.addValidator({
+        name: 'org_contact2_mail_confirm',
+        validatorFunction: function(){
+            var o_id_h = $('#organization_id_hidden').val();
+            var o_contact1_mail = $('#org_contact1_mail').val();
+            var o_contact2_mail = $('#org_contact2_mail').val();
+            var v = true;
+            if(o_id_h != null && o_id_h != ''){
+                if(o_contact2_mail != null || o_contact2_mail != '') {
+                    if (o_contact1_mail != o_contact2_mail) {
+                        v = false;
+                    }
+                }
+            }
+            return v;
+        },
+        errorMessage: 'E-post må være den samme i begge felt!',
+        errorMessageKey: 'org_contact2_mail_confirm'
+    });
 }

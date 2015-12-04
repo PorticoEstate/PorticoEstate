@@ -33,7 +33,7 @@
                 <dt><label for="district">Bydel (*)</label></dt>
                 <dd>
                     <select name="org_district">
-                        <option value="0">Ingen bydel valgt</option>
+                        <option value="">Ingen bydel valgt</option>
                         <xsl:for-each select="districts">
                             <option value=""></option>
                         </xsl:for-each>
