@@ -877,17 +877,25 @@ function populateSelect (url, selection, container, attr) {
 }
 
 function populateSelect_activityCalendar (url, container, attr) {
+    container.html("");
     var select = document.createElement('select');
     var option = document.createElement('option');
     if (attr){
         $.each(attr, function(i, v){
             select.setAttribute(v['name'],v['value']);
-        })
+        });
     }
-    $.get(url, function(r){
-        select.innerHTML = r;
-        container.html("");
-        if (r) {
+    option.setAttribute('value', '');    
+    option.text = 'Velg gateadresse';
+    $.get(url, function(data){
+        var r = data.ResultSet.Result;
+        $.each(r, function(index, value) {
+           var option = document.createElement('option');
+           option.text = value.name;
+           option.setAttribute('value', value.name);
+           select.appendChild(option);
+        });
+        if (r.length > 0) {
             container.append(select);
         }
     }).fail(function(){
