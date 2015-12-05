@@ -202,13 +202,17 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>
 						</label>
-						<xsl:value-of select="contact_person_1"/>
+						<div class="pure-custom">
+							<xsl:value-of select="contact_person_1" disable-output-escaping="yes"/>
+						</div>
 					</div>	
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_2')"/>
 						</label>
-						<xsl:value-of select="contact_person_2"/>
+						<div class="pure-custom">
+							<xsl:value-of select="contact_person_2" disable-output-escaping="yes"/>
+						</div>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -368,13 +372,17 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>
 						</label>
-						<xsl:value-of select="contact_person_1"/>
+						<div class="pure-custom">
+							<xsl:value-of select="contact_person_1" disable-output-escaping="yes"/>
+						</div>						
 					</div>	
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_2')"/>
 						</label>
-						<xsl:value-of select="contact_person_2"/>
+						<div class="pure-custom">
+							<xsl:value-of select="contact_person_2" disable-output-escaping="yes"/>
+						</div>						
 					</div>
 					<xsl:if test="contact_person_2_address != ''">
 						<div class="pure-control-group">
