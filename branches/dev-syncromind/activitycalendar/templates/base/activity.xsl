@@ -241,12 +241,12 @@
 	<script type="text/javascript">
 		$("[name='target[]']:eq(0)")
 		  .valAttr('','validate_checkbox_group')
-		  .valAttr('qty','1')
+		  .valAttr('qty','min1')
 		  .valAttr('error-msg','Målgruppe må fylles ut!');
 
 		$("[name='district[]']:eq(0)")
 		  .valAttr('','validate_checkbox_group')
-		  .valAttr('qty','1')
+		  .valAttr('qty','min1')
 		  .valAttr('error-msg','Bydel må fylles ut!');
 		
 	</script>
@@ -435,10 +435,10 @@
 <xsl:template match="choice">
 	<xsl:choose>
 		<xsl:when test="checked='checked'">
-			<input id="{name}" data-validation="checkbox_group" type="checkbox" name="{name}" value="{value}" checked="checked"/>
+			<input id="{name}" data-validation="validate_checkbox_group" type="checkbox" name="{name}" value="{value}" checked="checked"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<input id="{name}" data-validation="checkbox_group" type="checkbox" name="{name}" value="{value}"/>
+			<input id="{name}" data-validation="validate_checkbox_group" type="checkbox" name="{name}" value="{value}"/>
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:value-of select="label"/>
