@@ -20,7 +20,7 @@
 			'query'						 => true,
 			'changed_organizations'		 => true,
 			'get_organization_groups'	 => true,
-			'show'						 => true,
+			'view'						 => true,
 			'edit'						 => true,
 			'save'						 => true
 		);
@@ -74,20 +74,11 @@
 							array('key'=>'name', 'label'=>lang('name'), 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true, 'hidden'=>false),
-							array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true, 'hidden'=>false)
+							array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'operations', 'label'=>lang('operations'), 'sortable'=>false, 'className'=>'center')
 					)
 				)
 			);
-
-			$data['datatable']['actions'][] = array
-				(
-					'my_name'		=> 'show',
-					'text'			=> lang('show'),
-					'action'		=> self::link(array(
-							'menuaction'	=> 'activitycalendar.uiorganization.view'
-					)),
-					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))		
-				);
 			
 			self::render_template_xsl('datatable_jquery', $data);			
 		}
@@ -107,7 +98,7 @@
 			}
 			
 			if(isset($_POST['store_organization'])) // The user has pressed the store button
-			{
+			{	
 				$orgno		 = phpgw::get_var('orgno');
 				$district	 = phpgw::get_var('org_district');
 				if(isset($district) && is_numeric($district))
@@ -172,7 +163,7 @@
 					$contact1['org_id']	 = $new_org_id;
 					$so_activity->add_contact_person_org($contact1);
 
-					$message = lang('messages_saved_form');
+					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 
 					//get affected activities and update with new org id
 					$update_activities = $so_activity->get_activities_for_update($id);
@@ -192,7 +183,7 @@
 				}
 				else
 				{
-					$error = lang('messages_form_error');
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
 				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
@@ -212,7 +203,7 @@
 				}
 				else
 				{
-					$error = lang('messages_form_error');
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
 				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
@@ -290,11 +281,11 @@
 				$contact2			 = array();
 				$contact2['name']	 = $contact2_name;
 				$contact2['phone']	 = $contact2_phone;
-				$contact2['mail']	 = $contact_mail_2;
+				$contact2['mail']	 = $contact2_email;
 				$contact2['org_id']	 = $original_org_id;
 				$so_activity->add_contact_person_org($contact2);
 
-				$message = lang('messages_saved_form');
+				phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 
 				//set local organization as stored
 				$org->set_change_type("added");
@@ -308,7 +299,45 @@
 		public function changed_organizations()
 		{
 			self::set_active_menu('activitycalendar::organizationList::changed_organizations');
-			$this->render('organization_list_changed.php');
+			
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$appname = lang('changed_organizations_groups');
+
+			$function_msg = lang('list %1', $appname);
+			$type = 'changed_organizations';
+
+			$data = array(
+				'datatable_name'	=> $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array()
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'activitycalendar.uiorganization.index', 
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+							array('key'=>'organization_number', 'label'=>lang('organization_number'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'name', 'label'=>lang('name'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'district', 'label'=>lang('district'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'office', 'label'=>lang('office'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'change_type', 'label'=>lang('change_type'), 'sortable'=>false, 'hidden'=>false),
+							array('key'=>'operations', 'label'=>lang('operations'), 'sortable'=>false, 'className'=>'center')
+					)
+				)
+			);
+			
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function index_json()
@@ -338,8 +367,6 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			$id			 = (int)phpgw::get_var('id');
-			$type		 = phpgw::get_var('type');
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
 
 			$so_org		 = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
@@ -350,26 +377,12 @@
 				$keys	 = array_keys($org_array);
 				$org	 = $org_array[$keys[0]];
 			}
-			//var_dump($org);
+	
 			$districts = $so_activity->get_districts();
 
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
 			$cp1			 = $contact_persons[0];
 			$cp2			 = $contact_persons[1];
-
-			/*$data = array
-				(
-				'organization'	 => $org,
-				'districts'		 => $districts,
-				'contactperson1' => $cp1,
-				'contactperson2' => $cp2,
-				'cancel_link'	 => $cancel_link,
-				'editable'		 => true,
-				'errorMsgs'		 => $errorMsgs,
-				'infoMsgs'		 => $infoMsgs
-			);
-
-			return $this->render('organization.php', $data);*/
 
 			$curr_district = $org->get_district();
 			if(!is_numeric($curr_district))
@@ -403,7 +416,8 @@
 				'organization_no'				=> $org->get_organization_number(),
 				'homepage'						=> $org->get_homepage(),
 				'email'							=> $org->get_email(),
-				'phone'							=> $org->get_address().' '.$org->get_addressnumber(),
+				'address'						=> $org->get_address().' '.$org->get_addressnumber(),
+				'phone'							=> $org->get_phone(),
 				'zip_code'						=> $org->get_zip_code(),
 				'city'							=> $org->get_city(),
 				'description'					=> $org->get_description(),
@@ -427,89 +441,84 @@
 			
 		}
 
-		public function show()
+		public function view()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
-			$id			 = (int)phpgw::get_var('id');
-			$type		 = phpgw::get_var('type');
-			$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
-			$socontact	 = activitycalendar_socontactperson::get_instance();
-			/* 		if($type)
-			  {
-			  if(isset($_POST['edit_group'])) // The user has pressed the save button
-			  {
-			  $GLOBALS['phpgw']->redirect_link('/index.php', (array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => phpgw::get_var('id'), 'type' => phpgw::get_var('type'))));
-			  }
-			  $saved_OK = phpgw::get_var('saved_ok');
-			  if($saved_OK)
-			  {
-			  $message = lang('group_saved_form');
-			  }
-			  //var_dump($type);
-			  //$edit_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations', 'id' => $id, 'type' => $type));
-			  $so = activitycalendar_sogroup::get_instance();
-			  $group_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
-			  if(count($group_array) > 0){
-			  $keys = array_keys($group_array);
-			  $group = $group_array[$keys[0]];
-			  //				_debug_array($group);
-			  }
-			  $contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
-			  $cp1 = $contact_persons[0];
-			  $cp2 = $contact_persons[1];
 
-			  $data = array
-			  (
-			  'group' 	=> $group,
-			  'contactperson1' => $cp1,
-			  'contactperson2' => $cp2,
-			  'cancel_link' => $cancel_link,
-			  'message' => $message,
-			  'errorMsgs' => $errorMsgs,
-			  'infoMsgs' => $infoMsgs
-			  );
-			  return $this->render('group.php', $data);
-			  }
-			  else
-			  { */
-			//var_dump('org');
-			if(isset($_POST['edit_organization'])) // The user has pressed the save button
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.edit',
-					'id' => phpgw::get_var('id')));
-			}
-			$saved_OK = phpgw::get_var('saved_ok');
-			if($saved_OK)
-			{
-				$message = lang('organization_saved_form');
-			}
-			//$edit_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations', 'id' => $id));
-			$so			 = activitycalendar_soorganization::get_instance();
-			$org_array	 = $so->get(null, null, null, null, null, null, array('id' => $id,
-				'changed_orgs' => 'true'));
+			$id			 = (int)phpgw::get_var('id');
+
+			$so_org		 = activitycalendar_soorganization::get_instance();
+			$so_contact	 = activitycalendar_socontactperson::get_instance();
+			$org_array	 = $so_org->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
 			if(count($org_array) > 0)
 			{
 				$keys	 = array_keys($org_array);
 				$org	 = $org_array[$keys[0]];
 			}
 
-			$contact_persons = $socontact->get_local_contact_persons($org->get_id());
+			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
 			$cp1			 = $contact_persons[0];
 			$cp2			 = $contact_persons[1];
 
-			$data = array
-				(
-				'organization'	 => $org,
-				'contactperson1' => $cp1,
-				'contactperson2' => $cp2,
-				'cancel_link'	 => $cancel_link,
-				'message'		 => $message,
-				'errorMsgs'		 => $errorMsgs,
-				'infoMsgs'		 => $infoMsgs
-			);
+			if($org->get_change_type() == 'new')
+			{
+				if($org->get_district())
+				{
+					$dictrict = activitycalendar_soactivity::get_instance()->get_district_from_id($org->get_district());
+				}
+			}
+			else
+			{
+				if($org->get_district() && is_numeric($org->get_district()))
+				{
 
-			return $this->render('organization.php', $data);
-			//}
+					$dictrict = activitycalendar_soactivity::get_instance()->get_district_from_id($org->get_district());
+				}
+				else
+				{
+					$dictrict = $org->get_district();
+				}
+			}
+									
+			$tabs = array();
+			$tabs['organization']	= array('label' => lang('organization'), 'link' => '#organization');
+			$active_tab = 'organization';
+
+			$data = array
+			(
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.changed_organizations')),
+				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.edit','id' => $id)),
+				'lang_edit'						=> lang('edit'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'organization_id'				=> $org->get_id(),
+				'original_org_id'				=> ($org->get_original_org_id()) ? $org->get_original_org_id() : '',
+				'organization_name'				=> $org->get_name(),
+				'organization_no'				=> $org->get_organization_number(),
+				'homepage'						=> $org->get_homepage(),
+				'email'							=> $org->get_email(),
+				'address'						=> $org->get_address().' '.$org->get_addressnumber(),
+				'phone'							=> $org->get_phone(),
+				'zip_code'						=> $org->get_zip_code(),
+				'city'							=> $org->get_city(),
+				'description'					=> $org->get_description(),
+				'dictrict'						=> $dictrict,
+				'transferred'					=> ($org->get_transferred() ? 1 : ''),
+				
+				'contact1_id'					=> $cp1->get_id(),
+				'contact1_name'					=> $cp1->get_name(),
+				'contact1_phone'				=> $cp1->get_phone(),
+				'contact1_email'				=> $cp1->get_email(),
+						
+				'contact2_id'					=> ($cp2) ? $cp2->get_id() : '',
+				'contact2_name'					=> ($cp2) ? $cp2->get_name() : '',
+				'contact2_phone'				=> ($cp2) ? $cp2->get_phone() : '',
+				'contact2_email'				=> ($cp2) ? $cp2->get_email() : ''
+								
+			);
+			
+			self::render_template_xsl(array('organization'), array('view' => $data));	
 		}
 
 		/**
@@ -669,7 +678,7 @@
 		 * Public method. Called when a user wants to view information about a party.
 		 * @param HTTP::id	the party ID
 		 */
-		public function view()
+		/*public function view()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 			// Get the contract part id
@@ -698,7 +707,7 @@
 			{
 				$this->render('permission_denied.php', array('error' => lang('permission_denied_view_party')));
 			}
-		}
+		}*/
 
 		public function download_agresso()
 		{
@@ -716,11 +725,6 @@
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
-			//Defining new columns
-			/*$value['ajax']		 = array();
-			$value['actions']	 = array();
-			$value['labels']	 = array();*/
-			
 			$actions = array();
 			
 			$query_type = $params[0];
@@ -728,7 +732,6 @@
 			switch($query_type)
 			{
 				case 'all_organizations':
-					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
 						$url = html_entity_decode(self::link(array('menuaction' => 'booking.uigroup.show',
@@ -743,24 +746,22 @@
 					break;
 
 				case 'changed_organizations':
-					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'])));
 					}
 					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
@@ -772,24 +773,22 @@
 					}
 					break;
 				case 'new_organizations':
-					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'])));
 					}
 					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
-							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 								'id' => $value['id'], 'type' => 'group')));
 						}
 						else
@@ -801,21 +800,19 @@
 					}
 					break;
 				case 'changed_groups':
-					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'])));
 					}
 					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
 							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
@@ -830,21 +827,19 @@
 					}
 					break;
 				case 'new_groups':
-					//$value['ajax'][] = false;
 					if($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'], 'type' => 'group')));
 					}
 					else
 					{
-						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
+						$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.view',
 							'id' => $value['id'])));
 					}
 					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 					if($value['transferred'] == false)
 					{
-						//$value['ajax'][] = false;
 						if($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
 							$url = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
