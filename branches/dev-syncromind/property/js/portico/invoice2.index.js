@@ -1,23 +1,12 @@
+
+
 $(document).ready(function(){
-
-//	$("body").layout(
-//		{
-//			applyDemoStyles:			true,
-//			east__size:					350,
-//			east__fxSpeed:				100,
-//			livePaneResizing:			true,
-//			animatePaneSizing:			true,
-//			stateManagement__enabled:	true
-// });
-
-
-
-$(document).ready(function () {
-	$('body').layout({ applyDemoStyles: true });
-});
 
 	var api = oTable0.api();
 	api.on( 'draw', sum_columns );
+
+	var image_iframe = '<iframe id="image_content" width="100%" height="1000"><p>Your browser does not support iframes.</p></iframe>';
+	$("#layoutcontent_east").html(image_iframe);
 
 });
 
@@ -47,41 +36,3 @@ $(document).ready(function () {
 		$(api.column(2).footer()).html("<div align=\"right\">"+amount+"</div>");
 		$(api.column(3).footer()).html("<div align=\"right\">"+approved_amount+"</div>");
 	}
-
-var arURLParts = strBaseURL.split('?');
-var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
-
-YUI_config = {
-    //Don't combine the files
-    combine: true,
-    //Ignore things that are already loaded (in this process)
-    ignoreRegistered: false,
-    //Set the base path
-	comboBase: comboBase,
-    base: '',
-    //And the root
-    root: '',
-    //Require your deps
-    require: [ ]
-};
-
-
-//YUI({
-//  classNamePrefix: 'pure'
-//}).use(
-//	'gallery-sm-menu',
-//		function(Y) {
-//                Y.on("domready", function () {
-//                   var horizontalMenu = new Y.Menu(
-//                        {
-//							container         : '#horizontal-menu',
-//							sourceNode        : '#std-menu-items',
-//							orientation       : 'horizontal',
-//							hideOnOutsideClick: false,
-//							hideOnClick       : false
-//                        }
-//                    );
-//					horizontalMenu.render();
-//					horizontalMenu.show();
-//                });
-//});

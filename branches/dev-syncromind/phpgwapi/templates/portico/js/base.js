@@ -23,6 +23,15 @@
 			,	slideTrigger_open:		"mouseover"
 			,	initClosed:				true
 			}
+		,	east: {
+				initClosed:				true
+			,	initHidden:				true
+			,	spacing_closed:			0
+		//	,   closable:				false
+			,	resizable:				true
+			,   slidable:				true
+
+			}
 		,	south: {
 			maxSize:				200
 		,	spacing_closed:			0			// HIDE resizer & toggler when 'closed'
@@ -34,6 +43,13 @@
 
 		});
 
+		pageLayout.hide("east");
+//
+//		console.log(localStorage);
+//		if (typeof(localStorage['pageLayout_west_closed']) != 'undefined' && localStorage['pageLayout_west_closed'] == 1)
+//		{
+//			pageLayout.show("west");
+//		}
 
 		/**
 		 * Experimental : requires live update of js and css

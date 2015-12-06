@@ -562,8 +562,18 @@
 					'name'	 => lang('dimb'),
 				),
 			);
+			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
 
-			$data											 = array
+			if(isset($GLOBALS['phpgw_info']['server']['system_name']))
+			{
+				 $powered_by = $GLOBALS['phpgw_info']['server']['system_name'] . ' ' . lang('version') . ' ' . $version;
+			}
+			else
+			{
+				$powered_by = lang('Powered by phpGroupWare version %1', $version);
+			}
+
+			$data	 = array
 				(
 				'datatable_def'	 => $datatable_def,
 				'email_base_url' => json_encode($GLOBALS['phpgw']->link('/index.php', array(
@@ -593,16 +603,17 @@
 					'voucher_list' => array('options' => $voucher_list),
 				),
 				'voucher_info'			 => $this->get_single_line($line_id),
-				'update_action'			 => self::link(array('menuaction' => 'property.uiinvoice2.update_voucher'))
+				'update_action'			 => self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
+				'powered_by'			=> $powered_by
 			);
 //_debug_array($data);die();			
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-
+//			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
+/*
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
+*/
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('layout');
 			phpgwapi_jquery::load_widget('numberformat');
@@ -610,11 +621,14 @@
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'portico', 'invoice2.index.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+/*			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-menu-min.js');
 			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-base-min.js');
 			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-item-min.js');
 			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu-templates/gallery-sm-menu-templates-min.js');
+*/
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('invoice');
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 

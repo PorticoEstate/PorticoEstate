@@ -149,10 +149,10 @@
 
 	flush();
 
-	echo '<body>';
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
+		echo '<body>';
 		register_shutdown_function('parse_footer_end_noframe');
 	}
 	

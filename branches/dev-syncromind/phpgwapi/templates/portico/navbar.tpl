@@ -62,6 +62,11 @@
 				{tree_script}
 			</div>
 
+			<div class="ui-layout-east">
+				<div id = "layouheader_east" class="layouheader"></div>
+				<div id = "layoutcontent_east"></div>
+			</div>
+
 			<div id="center_content" class="ui-layout-center content">
 				<h1 id="top">{current_app_title}</h1>
 					

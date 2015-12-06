@@ -28,87 +28,30 @@
 	{
 		background-color: #DDF0FF;
 	}
-#navcontainer ul
-{
-margin: 0;
-padding: 0;
-list-style-type: none;
-text-align: right;
-}
-
-#navcontainer ul li { display: inline; }
-
-#navcontainer ul li a
-{
-text-decoration: none;
-padding: .2em 1em;
-color: #fff;
-background-color: #036;
-}
-
-#navcontainer ul li a:hover
-{
-color: #fff;
-background-color: #369;
-}
 	</style>
 
 	<xsl:call-template name="invoice" />
-	<div id="popupBox"></div>	
-	<div id="curtain"></div>
 </xsl:template>
 
 <xsl:template name="invoice" xmlns:php="http://php.net/xsl">
-	<!-- loads translations into array for use with javascripts -->
-	<!--
+
 	<script type="text/javascript">
+$(document).ready(function(){
+		pageLayout.open("east");		
+		pageLayout.sizePane("east", 400);
+//		pageLayout.hide("west");
+//		localStorage['pageLayout_west_closed'] = 1;
+});
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>
-	-->
 		<script type="text/javascript">
 			var email_base_url = <xsl:value-of select="//email_base_url"/>;
 		</script>
-			<div class="ui-layout-north">
-				<div id="navcontainer">
-					<ul>
-						<li>
-							<a href="#">
-								<xsl:value-of select="user_fullname"/>
-							</a>
-						</li>
-						<li>
-							<a href="{home_url}" class="icon icon-home">
-								<xsl:value-of select="home_text"/>
-							</a>
-						</li>
-						<!--li>
-							<a href="{about_url}" class="icon icon-about">
-								<xsl:value-of select="about_text"/>
-							</a>
-						</li>
-						<li>
-							<a href="{preferences_url}" class="icon icon-preferences">
-								<xsl:value-of select="preferences_text"/>
-							</a>
-						</li-->
-						<li>
-							<a href="{logout_url}" class="icon icon-logout">
-								<xsl:value-of select="logout_text"/>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="ui-layout-center">
-				<div class="header">
-					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
-				</div>
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<xsl:call-template name="msgbox"/>
 				</xsl:when>
 			</xsl:choose>
-				<div class="body">
 					<div id="voucher_details">
 						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%" border="0">
@@ -150,25 +93,6 @@ background-color: #369;
 							</table>
 						</form>
 					</div>
-				</div>
-			</div>
-			<div class="ui-layout-east">
-				<div class="header">
-					<h2>Bilde</h2>
-				</div>
-				<div class="body">
-				  	<div id="image">
-						<xsl:choose>
-							<xsl:when test="voucher_info/voucher/image_url  != ''">
-								<iframe id="image_content" width="100%" height="1000" src = "{voucher_info/voucher/image_url}" ><p>Your browser does not support iframes.</p></iframe>
-							</xsl:when>
-							<xsl:otherwise>
-								<iframe id="image_content" width="100%" height="1000" ><p>Your browser does not support iframes.</p></iframe>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
 </xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
@@ -508,9 +432,9 @@ background-color: #369;
 	<xsl:template xmlns:php="http://php.net/xsl" name="approve">
 		<xsl:apply-templates select="voucher_info/generic/approved_list"/>
 		<tr class ='row_off'>
-			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
-			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
 			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+				<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
+				<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
 			<td class="th_text" valign="top" align="left">
