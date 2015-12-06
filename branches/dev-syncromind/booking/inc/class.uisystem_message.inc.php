@@ -38,9 +38,7 @@
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 //			self::add_javascript('booking', 'booking', 'datatable.js');
                         phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-            
+           
 			$data = array(
 				'form' => array(
 					'toolbar' => array(

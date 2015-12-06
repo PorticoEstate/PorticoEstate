@@ -52,15 +52,15 @@
 		public function __construct($currentapp ='', $yui = '')
 		{
 			// start: to be removed
-			phpgw::import_class('phpgwapi.yui');
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('history');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('animation');
+//			phpgw::import_class('phpgwapi.yui');
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('history');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('calendar');
+//			phpgwapi_yui::load_widget('autocomplete');
+//			phpgwapi_yui::load_widget('animation');
 			//end: to be removed
 
 			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
@@ -77,9 +77,8 @@
 			if($yui == 'yui3')
 			{
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+				self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
-
-			self::add_javascript('phpgwapi', $yui, 'common.js');
 
 			self::add_javascript('phpgwapi', "jquery", 'common.js');
 

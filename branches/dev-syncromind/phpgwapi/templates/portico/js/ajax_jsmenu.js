@@ -69,7 +69,7 @@ $(function () {
 		}
 		setTimeout(function () {
 			window.location.href = data.node.original.url;
-		}, 100);
+		}, 200);
 
 	});
 });
