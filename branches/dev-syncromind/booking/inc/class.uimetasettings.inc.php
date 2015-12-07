@@ -34,8 +34,15 @@
 				}
 				$config->save_repository();
 			}
-			$this->use_yui_editor();
-			self::render_template('metasettings', array('config_data' =>$config->config_data));
+			
+			$tabs = array();
+			$tabs['meta'] = array('label' => lang('metadata settings'), 'link' => '#meta');
+			$active_tab = 'meta';
+			
+			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			phpgwapi_jquery::init_ckeditor('field_frontpagetext');
+
+			self::render_template('metasettings', array('config_data' =>$config->config_data, 'meta' => $meta));
 		}
 
 		function query()
