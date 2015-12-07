@@ -37,7 +37,7 @@
 			$group['logoff_link'] = 'logoff.php'.$auth_forward;
 			if ($bouser->is_organization_admin()) $group['logged_on'] = true;
 
-			self::render_template('group', array('group' => $group, 'loggedin' => $loggedin, 'edit_self_link' => $edit_self_link));
+			self::render_template_xsl('group', array('group' => $group, 'loggedin' => $loggedin, 'edit_self_link' => $edit_self_link));
 		}
 	}
 

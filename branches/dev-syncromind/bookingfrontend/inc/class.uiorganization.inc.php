@@ -38,7 +38,7 @@
 			}
 			else
 			{
-				self::render_template('access_denied');
+				self::render_template_xsl('access_denied');
 			}
 		}
 		
@@ -65,6 +65,6 @@
 
 			phpgwapi_jquery::load_widget("core");
                         
-			self::render_template('organization', array('organization' => $organization));
+			self::render_template_xsl('organization', array('organization' => $organization));
 		}
 	}

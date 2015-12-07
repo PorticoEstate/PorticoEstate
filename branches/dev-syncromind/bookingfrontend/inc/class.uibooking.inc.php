@@ -268,7 +268,7 @@
             
 			if ($step < 2) 
 			{
-				self::render_template('booking_new', array('booking' => $booking, 
+				self::render_template_xsl('booking_new', array('booking' => $booking, 
 					'activities' => $activities, 
 					'agegroups' => $agegroups, 
 					'audience' => $audience, 
@@ -285,7 +285,7 @@
 			} 
 			else if ($step == 2) 
 			{
-				self::render_template('booking_new_preview', array('booking' => $booking, 
+				self::render_template_xsl('booking_new_preview', array('booking' => $booking, 
 					'activities' => $activities,
 					'agegroups' => $agegroups,
 					'audience' => $audience,
@@ -319,7 +319,7 @@
 			if ($booking['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
-				self::render_template('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+				self::render_template_xsl('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 				return false;
 			}
 
@@ -348,7 +348,7 @@
 					$step++;
 				}
 			} 
-			self::render_template('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+			self::render_template_xsl('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 		}
 
 		public function edit()
@@ -512,7 +512,7 @@
             
 			if ($step < 2) 
 			{
-				self::render_template('booking_edit', array('booking' => $booking, 
+				self::render_template_xsl('booking_edit', array('booking' => $booking, 
 					'activities' => $activities, 
 					'agegroups' => $agegroups, 
 					'audience' => $audience, 
@@ -526,7 +526,7 @@
 			} 
 			else if ($step >= 2) 
 			{
-				self::render_template('booking_edit_preview', array('booking' => $booking, 
+				self::render_template_xsl('booking_edit_preview', array('booking' => $booking, 
 					'bookings' => $bookings,
 					'agegroups' => $agegroups,
 					'audience' => $audience,
@@ -640,7 +640,7 @@
             
             phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'booking_form');
 
-			self::render_template('booking_massupdate',
+			self::render_template_xsl('booking_massupdate',
 					array('booking' => $booking,
 						  'agegroups' => $agegroups,
 						  'audience' => $audience,
@@ -805,7 +805,7 @@
 //				$this->use_yui_editor();
                 
                 phpgwapi_jquery::init_ckeditor('field-message');
-				self::render_template('booking_cancel', array('booking'=>$booking));
+				self::render_template_xsl('booking_cancel', array('booking'=>$booking));
 
 			} else {
 	
@@ -1044,7 +1044,7 @@
 				if ($step < 2) 
 	            {
                     phpgwapi_jquery::init_ckeditor('field-message');
-	    			self::render_template('booking_delete', array('booking' => $booking,
+	    			self::render_template_xsl('booking_delete', array('booking' => $booking,
 						'recurring' => $recurring,
 						'outseason' => $outseason,
 						'interval' => $field_interval,
@@ -1055,7 +1055,7 @@
 	            }
 				elseif ($step == 2) 
 	            {
-					self::render_template('booking_delete_preview', array('booking' => $booking,
+					self::render_template_xsl('booking_delete_preview', array('booking' => $booking,
 						'step' => $step,
 						'recurring' => $_POST['recurring'],
 						'outseason' => $_POST['outseason'],
@@ -1109,7 +1109,7 @@
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel', 'id' => $booking['id']));
             }
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
-			self::render_template('booking_info', array('booking'=>$booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
+			self::render_template_xsl('booking_info', array('booking'=>$booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

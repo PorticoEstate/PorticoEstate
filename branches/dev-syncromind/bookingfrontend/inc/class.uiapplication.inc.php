@@ -83,7 +83,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
+			self::render_template_xsl('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
 		}
 		
 		

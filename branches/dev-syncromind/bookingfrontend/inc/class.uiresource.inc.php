@@ -49,7 +49,7 @@
 				'resource'	=>	$resource
 			);
 			
-			self::render_template('resource', $data);
+			self::render_template_xsl('resource', $data);
 		}
 
 		public function schedule()

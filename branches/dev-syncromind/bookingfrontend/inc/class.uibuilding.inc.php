@@ -339,7 +339,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
         $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
                         
-        self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
+        self::render_template_xsl('building_schedule', array('building' => $building, 'backend' => $backend));
     }
 
     public function extraschedule()
@@ -362,7 +362,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
         self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
         phpgwapi_jquery::load_widget("datepicker");
         $building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-        self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
+        self::render_template_xsl('building_schedule', array('building' => $building, 'backend' => $backend));
     }
 
     public function show()

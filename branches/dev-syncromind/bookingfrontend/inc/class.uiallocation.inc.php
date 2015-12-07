@@ -112,7 +112,7 @@
 //				$this->use_yui_editor();
                 
                 phpgwapi_jquery::init_ckeditor('field-message');
-				self::render_template('allocation_cancel', array('allocation'=>$allocation));
+				self::render_template_xsl('allocation_cancel', array('allocation'=>$allocation));
 
 			} else {
 
@@ -298,7 +298,7 @@
 				if ($step < 2) 
 	            {
                     phpgwapi_jquery::init_ckeditor('field-message');
-	    			self::render_template('allocation_delete', array('allocation' => $allocation,
+	    			self::render_template_xsl('allocation_delete', array('allocation' => $allocation,
 						'recurring' => $recurring,
 						'outseason' => $outseason,
 						'interval' => $field_interval,
@@ -307,7 +307,7 @@
 	            }
 				elseif ($step == 2) 
 	            {
-					self::render_template('allocation_delete_preview', array('allocation' => $allocation,
+					self::render_template_xsl('allocation_delete_preview', array('allocation' => $allocation,
 						'step' => $step,
 						'recurring' => $_POST['recurring'],
 						'outseason' => $_POST['outseason'],
@@ -359,7 +359,7 @@
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.cancel', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
             }
 			$allocation['when'] = pretty_timestamp($allocation['from_']).' - '.pretty_timestamp($allocation['to_']);
-			self::render_template('allocation_info', array('allocation'=>$allocation, 'user_can_delete_allocations' => $user_can_delete_allocations));
+			self::render_template_xsl('allocation_info', array('allocation'=>$allocation, 'user_can_delete_allocations' => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

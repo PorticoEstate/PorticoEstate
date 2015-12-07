@@ -157,7 +157,7 @@
             
             phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'), 'event_form');
 
-            self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+            self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
         }
 
         public function cancel()
@@ -235,7 +235,7 @@
             
             phpgwapi_jquery::init_ckeditor('field-message');
 
-            self::render_template('event_delete', array('event' => $event, 'activities' => $activities, 'can_delete_events' => $can_delete_events));
+            self::render_template_xsl('event_delete', array('event' => $event, 'activities' => $activities, 'can_delete_events' => $can_delete_events));
         }
 
         public function building_users($building_id, $type=false, $activities=array()) {
@@ -348,7 +348,7 @@
                 $event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel', 'id' => $event['id']));
             }
 
-            self::render_template('event_info', array('event'=>$event,'orginfo' => $orginfo, 'user_can_delete_bookings' => $user_can_delete_bookings));
+            self::render_template_xsl('event_info', array('event'=>$event,'orginfo' => $orginfo, 'user_can_delete_bookings' => $user_can_delete_bookings));
             $GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
         }
 
@@ -370,7 +370,7 @@
 			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
-				self::render_template('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+				self::render_template_xsl('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 				return false;
 			}
 
@@ -399,6 +399,6 @@
 					$step++;
 				}
 			}
-			self::render_template('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+			self::render_template_xsl('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 		}
 	}
