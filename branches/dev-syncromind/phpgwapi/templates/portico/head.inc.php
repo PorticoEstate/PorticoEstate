@@ -90,6 +90,26 @@
 		}
 	}
 
+
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'portico':
+			$selecte_portico = ' selected = "selected"';
+			$selecte_pure = '';
+			break;
+		case 'pure':
+			$selecte_portico = '';
+			$selecte_pure = ' selected = "selected"';
+			break;
+	}
+
+	$template_selector = <<<HTML
+
+   <select id = "template_selector">
+	<option value="pure"{$selecte_pure}>Template 1</option>
+	<option value="portico"{$selecte_portico}>Template 2</option>
+   </select>
+HTML;
 	// Construct navbar_config by taking into account the current selected menu
 	// The only problem with this loop is that leafnodes will be included
 	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
@@ -139,7 +159,8 @@
 		'border_layout_config' => $_border_layout_config,
 		'navbar_config' => $_navbar_config,
 		'lang_collapse_all'	=> lang('collapse all'),
-		'lang_expand_all'	=> lang('expand all')
+		'lang_expand_all'	=> lang('expand all'),
+		'template_selector'	=> $template_selector
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

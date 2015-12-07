@@ -17,7 +17,8 @@
 			<div class="ui-layout-north">
 				<div id="logo">{site_title}</div>
 					<div id="navigation">
-						<a href="{print_url}" class="icon icon-print" target="_blank">
+					{template_selector}
+					<a href="{print_url}" class="icon icon-print" target="_blank">
 						{print_text}
 					</a>
 					<a href="{home_url}" class="icon icon-home">

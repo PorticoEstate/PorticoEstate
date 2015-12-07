@@ -45,7 +45,7 @@
 		Header('Location: ' . $GLOBALS['phpgw']->link('/preferences/index.php') . "#$appname");
 		exit;
 	}
-	
+
 	$user    = phpgw::get_var('user', 'string', 'POST');
 	$forced  = phpgw::get_var('forced', 'string', 'POST');
 	$default = phpgw::get_var('default', 'string', 'POST');

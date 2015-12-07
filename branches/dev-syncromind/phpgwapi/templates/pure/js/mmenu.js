@@ -100,6 +100,25 @@ $(document).ready(function(){
 	});
 
 
+	$("#template_selector").change(function () {
+
+		var template = $(this).val();
+		//user[template_set] = template;
+		var oArgs = {appname: 'preferences', type: 'user'};
+		var requestUrl = phpGWLink('preferences/preferences.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			data: {user: {template_set: template}, submit: true},
+			url: requestUrl,
+			success: function (data) {
+				console.log(data);
+				location.reload(true);
+			}
+		});
+	});
+
 });	
 
 function update_bookmark_menu(bookmark_candidate){

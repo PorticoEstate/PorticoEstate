@@ -7,9 +7,9 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgwapi_yui::load_widget('button');
-	phpgwapi_yui::load_widget('container');
+//	phpgw::import_class('phpgwapi.yui');
+//	phpgwapi_yui::load_widget('button');
+//	phpgwapi_yui::load_widget('container');
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
@@ -89,6 +89,27 @@ HTML;
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
+
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'portico':
+			$selecte_portico = ' selected = "selected"';
+			$selecte_pure = '';
+			break;
+		case 'pure':
+			$selecte_portico = '';
+			$selecte_pure = ' selected = "selected"';
+			break;
+	}
+
+	$template_selector = <<<HTML
+
+   <select id = "template_selector">
+	<option value="pure"{$selecte_pure}>Template 1</option>
+	<option value="portico"{$selecte_portico}>Template 2</option>
+   </select>
+HTML;
+
 	$tpl_vars = array
 	(
 		'noheader'					=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
@@ -101,6 +122,7 @@ HTML;
 		'webserver_url'				=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'				=> $GLOBALS['phpgw']->common->get_on_events(),
 		'menu_stylesheet_widescreen'=> $menu_stylesheet_widescreen,
+		'template_selector'			=> $template_selector
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
