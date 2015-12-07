@@ -1016,15 +1016,15 @@ function createTableSchedule (d,u,c,r,cl,dt) {
                                 classes += " " + colorCell;
                                 tableBodyTrTd.setAttribute('class', classes);
                             }else{
-                                tableBodyTrTdText = "...";
+                                tableBodyTrTdText = "free";
                                 if (vc['formatter'] == "frontendScheduleDateColumn") {
-                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'],tableBodyTr.getAttribute('resource'))});
+                                    tableBodyTrTd.addEventListener('click', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'],tableBodyTr.getAttribute('resource'))});
                                 }
                                 if (vc['formatter'] == "backendScheduleDateColumn") {
-                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'])});
+                                    tableBodyTrTd.addEventListener('click', function(){schedule.newApplicationForm(vc['date'],vd['_from'],vd['_to'])});
                                 }
                                 if (vc['formatter'] == "seasonDateColumn") {
-                                    tableBodyTrTd.addEventListener('dblclick', function(){schedule.newAllocationForm({'_from':vd['_from'], '_to':vd['_to'], 'wday':vc['key']})});
+                                    tableBodyTrTd.addEventListener('click', function(){schedule.newAllocationForm({'_from':vd['_from'], '_to':vd['_to'], 'wday':vc['key']})});
                                 }								
                             }
                         }
