@@ -60,9 +60,14 @@
 					}
 	 			}
 			}
-			$billing = array( 'internal' => $internal_value,
-				'external' => $external_value );
+			
+			$tabs = array();
+			$tabs['settings'] = array('label' => lang('settings'), 'link' => '#settings');
+			$active_tab = 'settings';
 
+			$billing = array( 'internal' => $internal_value, 'external' => $external_value );			
+			$billing['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+						
 			self::render_template('settings', array('config_data' =>$config->config_data, 'billing' => $billing ) );
 		}
 
