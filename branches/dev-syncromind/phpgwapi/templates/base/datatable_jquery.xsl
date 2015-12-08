@@ -170,14 +170,14 @@
                                                             <![CDATA[
                                                                 JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
                                                                                                     'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
-                                                            ]]>                                                        
+                                                            ]]>
                                                         }
                                                         filter_selected = "";
                                                         oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
                                                         $('#filter_'+name+'_name').val('');
                                                         $('#filter_'+name+'_id').val('');
                                                     }
-                                                });                                                
+                                                });
                                             </xsl:if>
                                                 if (filter_depends) {
                                                     <![CDATA[
@@ -190,69 +190,7 @@
                                                                                             'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
                                                     ]]>
                                                 }
-
-                                                
                                             });
-
-                                            YAHOO.util.Event.onDOMReady(function() {
-                                                var app = "<xsl:value-of select="app"/>";
-                                                var name = "<xsl:value-of select="name"/>";
-                                                var ui = "<xsl:value-of select="ui"/>";
-
-                                                var itemSelectCallback = false;
-                                                <xsl:if test="onItemSelect">
-                                                    itemSelectCallback = <xsl:value-of select="onItemSelect"/>;
-                                                </xsl:if>
-
-                                                var onClearSelectionCallback = false;
-                                                <xsl:if test="onClearSelection">
-                                                    onClearSelectionCallback = <xsl:value-of select="onClearSelection"/>;
-                                                </xsl:if>
-
-                                                var requestGenerator = false;
-                                                <xsl:if test="requestGenerator">
-                                                    requestGenerator = <xsl:value-of select="requestGenerator"/>;
-                                                </xsl:if>
-
-                                                <![CDATA[
-    //                                              var oAC = YAHOO.portico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
-    //                                                                                              'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
-                                                    
-
-                                                    var oArgs = {menuaction: app + '.ui'+ui+'.index'};
-                                                    var requestUrl = phpGWLink('index.php', oArgs, true);
-                                                    requestUrl += 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container';
-    //                                              alert('FIXME: autocompleteHelper::requestUrl ' + requestUrl );
-
-                                                    if (requestGenerator) {
-                                                        oAC.generateRequest = requestGenerator;
-                                                    }
-
-                                                    if (itemSelectCallback) {
-                                                        oAC.itemSelectEvent.subscribe(itemSelectCallback);
-                                                    }
-
-                                                    YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function()
-                                                    {
-                                                        if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
-                                                        {
-                                                            YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
-                                                            if (onClearSelectionCallback) {
-                                                                onClearSelectionCallback();
-                                                            }
-                                                        }
-                                                    });
-
-                                                    YAHOO.portico.addPreSerializeQueryFormListener(function(form)
-                                                    {
-                                                        if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
-                                                        {
-                                                            YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
-                                                        } 
-                                                    });
-                                                ]]>
-                                            });
-
                                         </script>
                                     </td>
                                 </xsl:when>
