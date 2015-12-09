@@ -4,6 +4,7 @@ var	myPaginator_2, myDataTable_2;
 var	myPaginator_3, myDataTable_3;
 var	myPaginator_4, myDataTable_4;
 var	myPaginator_5, myDataTable_5;
+var	myPaginator_6, myDataTable_6;
 var d;
 var vendor_id = 0;
 
@@ -11,6 +12,7 @@ var vendor_id = 0;
 this.myParticularRenderEvent = function()
 {
 	this.addFooterDatatable(myPaginator_4,myDataTable_4);
+	this.addFooterDatatable2(myPaginator_5,myDataTable_5);
 }
 
 this.addFooterDatatable = function(paginator,datatable)
@@ -36,6 +38,32 @@ this.addFooterDatatable = function(paginator,datatable)
 	td_empty(1);
 
 	myfoot = tableYUI.createTFoot();
+	myfoot.setAttribute("id","myfoot");
+	myfoot.appendChild(newTR);
+}
+this.addFooterDatatable2 = function(paginator,datatable)
+{
+	//call getSumPerPage(name of column) in property.js
+	tmp_sum1 = getTotalSum('amount',2,paginator,datatable);
+
+	if(typeof(tableYUI2)=='undefined')
+	{
+		tableYUI2 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[3].parentNode;
+		tableYUI2.setAttribute("id","tableYUI2");
+	}
+	else
+	{
+		tableYUI2.deleteTFoot();
+	}
+
+	//Create ROW
+	newTR = document.createElement('tr');
+
+	td_sum('Sum');
+	td_sum(tmp_sum1);
+	td_empty(1);
+
+	myfoot = tableYUI2.createTFoot();
 	myfoot.setAttribute("id","myfoot");
 	myfoot.appendChild(newTR);
 }

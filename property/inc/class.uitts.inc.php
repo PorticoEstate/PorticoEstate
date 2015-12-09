@@ -829,6 +829,9 @@
 							$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 						}
 
+						$building_parts = $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart));
+						array_unshift ($building_parts,array('id'=>'','name'=>lang('building part')));
+
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
 									'id' => 'sel_building_part', // testing traditional listbox for long list
@@ -837,7 +840,7 @@
 									'type' => 'select',
 									'style' => 'filter',
 									//'values' => $this->bo->get_building_part($this->building_part),
-									'values'	=> $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart)),
+									'values'	=> $building_parts,
 									'onchange'=> 'onChangeSelect("building_part");',
 									'tab_index' => $i++
 						);
@@ -2433,6 +2436,8 @@
 				$access_order = true;
 			}
 
+			$ticket = $this->bo->read_single($id, $values);
+
 			if(isset($values['save']))
 			{
 				if(!$this->acl_edit)
@@ -2484,7 +2489,7 @@
 
 				if($access_order)
 				{
-					if((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget']) )
+					if(!$ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])) )
 					{
 						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Missing value'));
 					}
@@ -2597,7 +2602,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-			$ticket = $this->bo->read_single($id, $values);
 
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
