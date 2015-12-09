@@ -336,7 +336,6 @@ div.allocation-list
 }
 #dt-dlg_c .underlay {overflow:hidden;}
 .inprogress {position:absolute;} /* transitional progressive enhancement state */
-}
 
 dl.rental-description {
 	width: 70%;
