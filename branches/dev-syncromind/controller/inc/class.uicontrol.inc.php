@@ -63,19 +63,19 @@
 		private $delete;
 		private $home_alternative;
 		public $public_functions = array
-		(
-			'index' => true,
-			'control_list' => true,
-			'view' => true,
-			'view_control_details' => true,
-			'save_control_details' => true,
-			'view_control_groups' => true,
-			'save_control_groups' => true,
-			'view_control_items' => true,
-			'save_control_items' => true,
-			'view_check_list' => true,
-			'get_controls_by_control_area' => true,
-			'get_control_details' => true
+			(
+			'index'							 => true,
+			'control_list'					 => true,
+			'view'							 => true,
+			'view_control_details'			 => true,
+			'save_control_details'			 => true,
+			'view_control_groups'			 => true,
+			'save_control_groups'			 => true,
+			'view_control_items'			 => true,
+			'save_control_items'			 => true,
+			'view_check_list'				 => true,
+			'get_controls_by_control_area'	 => true,
+			'get_control_details'			 => true
 		);
 
 		public function __construct()
@@ -100,14 +100,13 @@
 			$this->so_check_list		 = CreateObject('controller.socheck_list');
 			$this->so_check_item		 = CreateObject('controller.socheck_item');
 
-			$config				 = CreateObject('phpgwapi.config', 'controller');
+			$config					 = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
-			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
-			$this->home_alternative = isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'] == 1 ? true : false;
+			$this->_category_acl	 = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+			$this->home_alternative	 = isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'] == 1 ? true : false;
 
 			self::set_active_menu('controller::control');
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
-
 		}
 
 		/**
@@ -137,16 +136,16 @@
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
 
-			$control_areas		 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $control_area_id,
-				'globals' => true, 'use_acl' => $this->_category_acl));
+			$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => $control_area_id,
+				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
 				$control_areas_array[] = array
 					(
-					'id' => $cat_list['cat_id'],
-					'name' => $cat_list['name'],
+					'id'	 => $cat_list['cat_id'],
+					'name'	 => $cat_list['name'],
 				);
 			}
 			// END categories
@@ -159,94 +158,94 @@
 
 			$data = array(
 				'datatable_name' => 'Kontroller', //lang('controls'),
-				'form' => array(
+				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter',
-								'name' => 'status',
-								'text' => lang('Status'),
-								'list' => array(
+							array('type'	 => 'filter',
+								'name'	 => 'status',
+								'text'	 => lang('Status'),
+								'list'	 => array(
 									array(
-										'id' => 'none',
-										'name' => lang('Not selected')
+										'id'	 => 'none',
+										'name'	 => lang('Not selected')
 									),
 									array(
-										'id' => 'NEW',
-										'name' => lang('NEW')
+										'id'	 => 'NEW',
+										'name'	 => lang('NEW')
 									),
 									array(
-										'id' => 'PENDING',
-										'name' => lang('PENDING')
+										'id'	 => 'PENDING',
+										'name'	 => lang('PENDING')
 									),
 									array(
-										'id' => 'REJECTED',
-										'name' => lang('REJECTED')
+										'id'	 => 'REJECTED',
+										'name'	 => lang('REJECTED')
 									),
 									array(
-										'id' => 'ACCEPTED',
-										'name' => lang('ACCEPTED')
+										'id'	 => 'ACCEPTED',
+										'name'	 => lang('ACCEPTED')
 									)
 								)
 							),
 							//as categories
-							array('type' => 'filter',
-								'name' => 'control_areas',
-								'text' => lang('Control_area'),
-								'list' => $control_areas_array,
+							array('type'	 => 'filter',
+								'name'	 => 'control_areas',
+								'text'	 => lang('Control_area'),
+								'list'	 => $control_areas_array,
 							),
-							array('type' => 'filter',
-								'name' => 'responsibilities',
-								'text' => lang('Responsibility'),
-								'list' => $this->so->get_roles(),
+							array('type'	 => 'filter',
+								'name'	 => 'responsibilities',
+								'text'	 => lang('Responsibility'),
+								'list'	 => $this->so->get_roles(),
 							),
-							array('type' => 'filter',
-								'name' => 'district_id',
-								'text' => lang('district'),
-								'list' => $district_list,
+							array('type'	 => 'filter',
+								'name'	 => 'district_id',
+								'text'	 => lang('district'),
+								'list'	 => $district_list,
 							),
 							array(
-								'type' => 'link',
-								'value' => lang('New control'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
-								'class' => 'new_item'
+								'type'	 => 'link',
+								'value'	 => lang('New control'),
+								'href'	 => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
+								'class'	 => 'new_item'
 							),
 						),
 					),
 				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol.control_list',
-						'phpgw_return_as' => 'json')),
-					'allrows'	=> true,
-					'field' => array(
+				'datatable'		 => array(
+					'source'	 => self::link(array('menuaction'		 => 'controller.uicontrol.control_list',
+						'phpgw_return_as'	 => 'json')),
+					'allrows'	 => true,
+					'field'		 => array(
 						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable' => true,
-							'formatter' => 'JqueryPortico.formatLink'
+							'key'		 => 'id',
+							'label'		 => lang('ID'),
+							'sortable'	 => true,
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'title',
-							'label' => lang('Control title'),
-							'sortable' => true,
-							'formatter' => 'JqueryPortico.formatLink'
+							'key'		 => 'title',
+							'label'		 => lang('Control title'),
+							'sortable'	 => true,
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'description',
-							'label' => lang('description'),
-							'sortable' => false
+							'key'		 => 'description',
+							'label'		 => lang('description'),
+							'sortable'	 => false
 						),
 						array(
-							'key' => 'control_area_name',
-							'label' => lang('Control area'),
-							'sortable' => false
+							'key'		 => 'control_area_name',
+							'label'		 => lang('Control area'),
+							'sortable'	 => false
 						),
 						array(
-							'key' => 'responsibility_name',
-							'label' => lang('Responsibility'),
-							'sortable' => false
+							'key'		 => 'responsibility_name',
+							'label'		 => lang('Responsibility'),
+							'sortable'	 => false
 						),
 						array(
-							'key' => 'link',
+							'key'	 => 'link',
 							'hidden' => true
 						)
 					)
@@ -255,12 +254,12 @@
 
 			if(!$this->home_alternative)
 			{
-				$data['datatable']['field'][] =	array(
-							'key' => 'show_locations',
-							'label' => '',
-							'sortable' => false,
-							'formatter' => 'JqueryPortico.formatLinkGeneric'
-						);
+				$data['datatable']['field'][] = array(
+					'key'		 => 'show_locations',
+					'label'		 => '',
+					'sortable'	 => false,
+					'formatter'	 => 'JqueryPortico.formatLinkGeneric'
+				);
 			}
 
 			self::render_template_xsl(array('datatable_jquery'), $data);
@@ -287,8 +286,8 @@
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
 
-			$control_areas		 = $cats->formatted_xslt_list(array('format' => 'filter', 'globals' => true,
-				'use_acl' => $this->_category_acl));
+			$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
 
 			if($control != null)
@@ -309,14 +308,14 @@
 
 			$data = array
 				(
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'details','control_tabview'),
-				'view' => "control_details",
-				'editable' => true,
-				'control' => ($control != null) ? $control : null,
-				'control_areas_array' => $control_areas_array,
-				'procedures_array' => $procedures_array,
-				'role_array' => $role_array,
-				'repeat_type_array' => $repeat_type_array
+				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, 'details', 'control_tabview'),
+				'view'					 => "control_details",
+				'editable'				 => true,
+				'control'				 => ($control != null) ? $control : null,
+				'control_areas_array'	 => $control_areas_array,
+				'procedures_array'		 => $procedures_array,
+				'role_array'			 => $role_array,
+				'repeat_type_array'		 => $repeat_type_array
 			);
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -436,12 +435,12 @@
 			$tabs = $this->make_tab_menu($control_id);
 
 			$data = array
-			(
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'control_groups','control_tabview'),
-				'view' => "control_groups",
-				'editable' => true,
-				'control' => $control,
-				'control_area' => $control_area,
+				(
+				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, 'control_groups', 'control_tabview'),
+				'view'			 => "control_groups",
+				'editable'		 => true,
+				'control'		 => $control,
+				'control_area'	 => $control_area,
 				'control_groups' => $control_groups,
 			);
 
@@ -560,19 +559,19 @@
 					}
 				}
 
-				$groups_with_control_items[] = array("control_group" => $control_group->toArray(),
-					"group_control_items" => $control_items_for_group_array);
+				$groups_with_control_items[] = array("control_group"			 => $control_group->toArray(),
+					"group_control_items"	 => $control_items_for_group_array);
 			}
 
 			$tabs = $this->make_tab_menu($control_id);
 
 			$data = array
-			(
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'control_items','control_tabview'),
-				'view' => 'control_items',
-				'control_group_ids' => implode($control_group_ids, ","),
-				'control' => $control,
-				'groups_with_control_items' => $groups_with_control_items
+				(
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 'control_items', 'control_tabview'),
+				'view'						 => 'control_items',
+				'control_group_ids'			 => implode($control_group_ids, ","),
+				'control'					 => $control,
+				'groups_with_control_items'	 => $groups_with_control_items
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -670,18 +669,18 @@
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id());
 
 				if(count($saved_control_items) > 0)
-					$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(),
-						"control_items" => $saved_control_items);
+					$saved_groups_with_items_array[] = array("control_group"	 => $control_group->toArray(),
+						"control_items"	 => $saved_control_items);
 			}
 
 			$tabs = $this->make_tab_menu($control_id);
 
 			$data = array
-			(
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'check_list','control_tabview'),
-				'view' => "sort_check_list",
-				'control' => $control,
-				'saved_groups_with_items_array' => $saved_groups_with_items_array
+				(
+				'tabs'							 => phpgwapi_jquery::tabview_generate($tabs, 'check_list', 'control_tabview'),
+				'view'							 => "sort_check_list",
+				'control'						 => $control,
+				'saved_groups_with_items_array'	 => $saved_groups_with_items_array
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -699,7 +698,7 @@
 			$control	 = $this->so->get_single($control_id);
 
 			$data = array
-			(
+				(
 				'control' => $control
 			);
 
@@ -716,9 +715,9 @@
 				$control = $this->so->get_single($control_id);
 
 				$tabs['details'] = array(
-					'label' => "1: " . lang('Details'),
-					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details',
-						'id' => $control->get_id()))
+					'label'	 => "1: " . lang('Details'),
+					'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details',
+						'id'		 => $control->get_id()))
 				);
 
 				$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
@@ -726,8 +725,8 @@
 				if(count($saved_control_groups) > 0)
 				{
 					$tabs['control_groups'] = array(
-						'label' => "2: " . lang('Choose_control_groups'),
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups',
+						'label'	 => "2: " . lang('Choose_control_groups'),
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups',
 							'control_id' => $control->get_id()))
 					);
 
@@ -736,39 +735,39 @@
 					if(count($saved_control_items) > 0)
 					{
 						$tabs['control_items']	 = array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items',
+							'label'	 => "3: " . lang('Choose_control_items'),
+							'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items',
 								'control_id' => $control->get_id())));
-						$tabs['check_list']	 = array('label' => "4: " . lang('Sort_check_list'),
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list',
+						$tabs['check_list']		 = array('label'	 => "4: " . lang('Sort_check_list'),
+							'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list',
 								'control_id' => $control->get_id())));
 					}
 					else
 					{
 						$tabs['control_items']	 = array('label' => "3: " . lang('Choose_control_items'));
-						$tabs['check_list']	 = array('label' => "4: " . lang('Sort_check_list'));
+						$tabs['check_list']		 = array('label' => "4: " . lang('Sort_check_list'));
 					}
 				}
 				else
 				{
 					$tabs['control_groups']	 = array('label' => "2: " . lang('Choose_control_groups'));
 					$tabs['control_items']	 = array('label' => "3: " . lang('Choose_control_items'));
-					$tabs['check_list']	 = array('label' => "4: " . lang('Sort_check_list'));
+					$tabs['check_list']		 = array('label' => "4: " . lang('Sort_check_list'));
 				}
 			}
 			else
 			{
 				$tabs = array(
-					'details' => array(
+					'details'		 => array(
 						'label' => "1: " . lang('Details')
-						),
+					),
 					'control_groups' => array(
 						'label' => "2: " . lang('Choose_control_groups')
 					),
-					'control_items' => array(
+					'control_items'	 => array(
 						'label' => "3: " . lang('Choose_control_items')
 					),
-					'check_list' => array(
+					'check_list'	 => array(
 						'label' => "4: " . lang('Sort_check_list')
 				));
 			}
@@ -824,7 +823,7 @@
 				$results['total_records'] = 0;
 			}
 
-			$results['draw']			 = phpgw::get_var('draw', 'int');
+			$results['draw'] = phpgw::get_var('draw', 'int');
 
 			return $this->jquery_results($results);
 		}
@@ -846,17 +845,17 @@
 
 			$value['ajax'][]	 = false;
 			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_control_details',
-				'id' => $value['control_id'])));
+				'id'		 => $value['control_id'])));
 			$value['labels'][]	 = lang('View control');
 
 			$value['ajax'][]	 = false;
 			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control',
-				'id' => $value['control_id'])));
+				'id'		 => $value['control_id'])));
 			$value['labels'][]	 = lang('View locations for control');
 
 			$value['ajax'][]	 = false;
-			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list',
-				'location_code' => $value['location_code'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'controller.uicheck_list.add_check_list',
+				'location_code'	 => $value['location_code'])));
 			$value['labels'][]	 = lang('add_check_list_to_location');
 		}
 
@@ -870,18 +869,18 @@
 
 		public function query()
 		{
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
 			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
 			);
 
 
@@ -901,7 +900,7 @@
 			$search_for = $params['query'];
 
 			// YUI variables for paging and sorting
-			$start_index	 =$params['start'];
+			$start_index	 = $params['start'];
 			$num_of_objects	 = $params['results'] > 0 ? $params['results'] : null;
 			$sort_field		 = $params['order'];
 
@@ -910,7 +909,7 @@
 				$sort_field = 'controller_control.id';
 			}
 
-			$sort_ascending =$params['sort'] == 'desc' ? false : true;
+			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 
 			//Create an empty result set
 			$records = array();
@@ -945,9 +944,9 @@
 			foreach($results["results"] as &$res)
 			{
 				$res['show_locations'] = array(
-					'href' => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_year_for_locations',
+					'href'	 => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_year_for_locations',
 						'control_id' => $res['id'])),
-					'label' => $label,
+					'label'	 => $label,
 				);
 			}
 

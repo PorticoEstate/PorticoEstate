@@ -1,35 +1,36 @@
 <?php
-	/**
-	* phpGroupWare - controller: a part of a Facilities Management System.
-	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
-	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package property
-	* @subpackage controller
- 	* @version $Id$
-	*/
 
+	/**
+	 * phpGroupWare - controller: a part of a Facilities Management System.
+	 *
+	 * @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
+	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
+	 * @package property
+	 * @subpackage controller
+	 * @version $Id$
+	 */
 	abstract class controller_socommon
 	{
+
 		protected $db;
 		protected $like;
 		protected $join;
@@ -37,10 +38,10 @@
 
 		public function __construct()
 		{
-			$this->db		   = clone $GLOBALS['phpgw']->db;
-			$this->like			= & $this->db->like;
-			$this->join			= & $this->db->join;
-			$this->left_join	= & $this->db->left_join;
+			$this->db		 = clone $GLOBALS['phpgw']->db;
+			$this->like		 = & $this->db->like;
+			$this->join		 = & $this->db->join;
+			$this->left_join = & $this->db->left_join;
 		}
 
 		/**
@@ -78,15 +79,15 @@
 
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
-
 		/*
 
-		/**
+		  /**
 		 * Unmarchal database values according to type
 		 * @param $value the field value
 		 * @param $type	a string dictating value type
 		 * @return the php value
 		 */
+
 		protected function unmarshal($value, $type)
 		{
 			if($type == 'bool')
@@ -95,20 +96,20 @@
 			}
 			else if($type == 'boolean')
 			{
-				return (boolean) $value;
+				return (boolean)$value;
 			}
 			else if($type == 'int')
 			{
-				return (int) $value;
+				return (int)$value;
 			}
 			else if($type == 'float')
 			{
-				return (float) $value;
+				return (float)$value;
 			}
 			else if($type == 'string')
 			{
-				return (string) str_replace('</ol></li>', '</ol>' ,$value);
-			//	return (string) $value;
+				return (string)str_replace('</ol></li>', '</ol>', $value);
+				//	return (string) $value;
 			}
 			else if($value === null || $value == 'NULL')
 			{
@@ -130,7 +131,7 @@
 			if($result && $this->db->next_record())
 			{
 				return $this->unmarshal($this->db->f('count', true), 'int');
-			} 
+			}
 		}
 
 		/**
@@ -182,25 +183,24 @@
 		 */
 		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 		{
-			$results = array();			// Array to store result objects
-			$map = array();				// Array to hold number of records per target object
-			$check_map = array();		// Array to hold the actual number of record read per target object
-			$object_ids = array(); 		// All of the object ids encountered
-			$added_object_ids = array();// All of the added objects ids
-
+			$results			 = array();   // Array to store result objects
+			$map				 = array();	// Array to hold number of records per target object
+			$check_map			 = array();  // Array to hold the actual number of record read per target object
+			$object_ids			 = array();   // All of the object ids encountered
+			$added_object_ids	 = array();// All of the added objects ids
 			// Retrieve information about the table name and the name and alias of id column
 			// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
 			// 						for all the result objects are traversed
 			$id_field_name_info = $this->get_id_field_name(true);
 			if(is_array($id_field_name_info))
 			{
-				$break_on_limit = true;
-				$id_field_name = $id_field_name_info['translated'];
+				$break_on_limit	 = true;
+				$id_field_name	 = $id_field_name_info['translated'];
 			}
 			else
 			{
-				$break_on_limit = false;
-				$id_field_name = $id_field_name_info;
+				$break_on_limit	 = false;
+				$id_field_name	 = $id_field_name_info;
 			}
 
 			// Special case: Sort on id field. Always changed to the id field name.
@@ -208,8 +208,8 @@
 			//		results are reached and we are sure that the records are ordered by the id
 			if($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{
-				$sort_field = $id_field_name;
-				$break_when_num_of_objects_reached = true;
+				$sort_field							 = $id_field_name;
+				$break_when_num_of_objects_reached	 = true;
 			}
 			else
 			{
@@ -227,13 +227,13 @@
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
 
-			$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
-			$this->db->query($sql,__LINE__, __FILE__, false, true);
+			$sql_parts = explode('1=1', $sql); // Split the query to insert extra condition on test for break
+			$this->db->query($sql, __LINE__, __FILE__, false, true);
 
-			while ($this->db->next_record()) // Runs through all of the results
+			while($this->db->next_record()) // Runs through all of the results
 			{
-				$should_populate_object = false; // Default value - we won't populate object
-				$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
+				$should_populate_object	 = false; // Default value - we won't populate object
+				$result_id				 = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
 
 				if(in_array($result_id, $added_object_ids)) // Object with this id already added
 				{
@@ -250,39 +250,39 @@
 					{
 						if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
 						{
-							$should_populate_object = true; // We should populate this object
-							$added_object_ids[] = $result_id; // We keep the id
+							$should_populate_object	 = true; // We should populate this object
+							$added_object_ids[]		 = $result_id; // We keep the id
 						}
 					}
 				}
 				if($should_populate_object)
 				{
-					$result = &$results[$result_id];
-					$results[$result_id] = $this->populate($result_id,$result);
-					$last_result_id = $result_id;
-					$map[$result_id] = (int)$map[$result_id] +1;
+					$result				 = &$results[$result_id];
+					$results[$result_id] = $this->populate($result_id, $result);
+					$last_result_id		 = $result_id;
+					$map[$result_id]	 = (int)$map[$result_id] + 1;
 				}
 
 				//Stop looping when array not sorted on other then id and wanted number of results is reached
-				if(count($results) == $num_of_objects  && $last_result_id != $result_id && $break_when_num_of_objects_reached)
+				if(count($results) == $num_of_objects && $last_result_id != $result_id && $break_when_num_of_objects_reached)
 				{
 					break;
 				}
 				// else stop looping when wanted number of results is reached all records for result objects are read
-				else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
+				else if($break_on_limit && (count($results) == $num_of_objects) && $last_result_id != $result_id)
 				{
 					$id_ok = 0;
-					foreach ($map as $_result_id => $_count)
+					foreach($map as $_result_id => $_count)
 					{
 						if(!isset($check_map[$_result_id]))
 						{
 							// Query the number of records for the specific object in question
-							$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
-							$db2->query($sql2,__LINE__, __FILE__);
+							$sql2					 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
+							$db2->query($sql2, __LINE__, __FILE__);
 							$db2->next_record();
-							$check_map[$_result_id] = $db2->num_rows();
+							$check_map[$_result_id]	 = $db2->num_rows();
 						}
-						if(	$check_map[$_result_id] == $_count )
+						if($check_map[$_result_id] == $_count)
 						{
 							$id_ok++;
 						}
@@ -335,7 +335,6 @@
 		 * matching objects, or the objects themself.
 		 * @return string with SQL.
 		 */
-
 		protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
 
 		protected abstract function populate(int $object_id, &$object);
@@ -345,15 +344,14 @@
 		protected abstract function update($object);
 
 		/**
-		* Store the object in the database.  If the object has no ID it is assumed to be new and
-		* inserted for the first time.  The object is then updated with the new insert id.
-		*/
-
+		 * Store the object in the database.  If the object has no ID it is assumed to be new and
+		 * inserted for the first time.  The object is then updated with the new insert id.
+		 */
 		public function store(&$object)
 		{
-			if ($object->validates())
+			if($object->validates())
 			{
-				if ($object->get_id() > 0)
+				if($object->get_id() > 0)
 				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $this->update($object);

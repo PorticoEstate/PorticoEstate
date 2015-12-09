@@ -99,7 +99,6 @@
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
-
 		}
 
 		public function view_calendar_for_month()
@@ -177,8 +176,8 @@
 					$location_id	 = $component->get_location_id();
 					$component_id	 = $component->get_id();
 
-					$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id,
-						'id' => $component_id));
+					$short_desc = execMethod('property.soentity.get_short_description', array('location_id'	 => $location_id,
+						'id'			 => $component_id));
 					$component->set_xml_short_desc($short_desc);
 
 					$controls_for_component_array		 = $component->get_controls_array();
@@ -195,7 +194,7 @@
 						$month_calendar	 = new month_calendar($control, $year, $month, $component, null, "component");
 						$calendar_array	 = $month_calendar->build_calendar($control->get_check_lists_array());
 
-						$controls_components_calendar_array[] = array("control" => $control->toArray(),
+						$controls_components_calendar_array[] = array("control"		 => $control->toArray(),
 							"calendar_array" => $calendar_array);
 					}
 
@@ -204,8 +203,8 @@
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-				$property_array = execMethod('property.solocation.read', array('type_id' => 1,
-					'allrows' => true));
+				$property_array = execMethod('property.solocation.read', array('type_id'	 => 1,
+					'allrows'	 => true));
 
 				// Gets array of locations assigned to current user
 				$my_locations = $this->get_my_assigned_locations($location_code);
@@ -362,7 +361,7 @@
 					$id			 = $component->get_id();
 
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $id));
+						'location_id'	 => $location_id, 'id'			 => $id));
 					$component->set_xml_short_desc($short_desc_arr);
 
 					$controls_for_component_array		 = $component->get_controls_array();
@@ -386,7 +385,7 @@
 							$year_calendar_agg	 = new year_calendar_agg($control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
 							$calendar_array		 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 
-							$controls_components_calendar_array[] = array("control" => $control->toArray(),
+							$controls_components_calendar_array[] = array("control"		 => $control->toArray(),
 								"calendar_array" => $calendar_array);
 						}
 						else
@@ -400,7 +399,7 @@
 							$year_calendar	 = new year_calendar($control, $year, $component, null, "component");
 							$calendar_array	 = $year_calendar->build_calendar($control->get_check_lists_array());
 
-							$controls_components_calendar_array[] = array("control" => $control->toArray(),
+							$controls_components_calendar_array[] = array("control"		 => $control->toArray(),
 								"calendar_array" => $calendar_array);
 						}
 					}
@@ -465,17 +464,17 @@
 		{
 			static $_location_name = array();
 
-			$control_id		= phpgw::get_var('control_id', 'int');
-			$control		= $this->so_control->get_single($control_id);
-			$year			= phpgw::get_var('year', 'int');
-			$location_id	= phpgw::get_var('location_id', 'int');
-			$component_id	= phpgw::get_var('component_id', 'int');
-			$serie_id		= phpgw::get_var('serie_id', 'int');
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$control		 = $this->so_control->get_single($control_id);
+			$year			 = phpgw::get_var('year', 'int');
+			$location_id	 = phpgw::get_var('location_id', 'int');
+			$component_id	 = phpgw::get_var('component_id', 'int');
+			$serie_id		 = phpgw::get_var('serie_id', 'int');
 
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$bookmarks			 = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
+			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
 			if(is_array($bookmarks))
 			{
 				$bookmark_locations = array_keys($bookmarks);
@@ -555,7 +554,7 @@
 				foreach($components_for_control_array as $component)
 				{
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-						'location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+						'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
 					if(!isset($_location_name[$component->get_location_code()]))
 					{
 						$_location		 = execMethod('property.solocation.read_single', $component->get_location_code());
@@ -591,7 +590,7 @@
 
 					$year_calendar_agg					 = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 					$calendar_array						 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-					$components_with_calendar_array[]	 = array("component" => $component->toArray(),
+					$components_with_calendar_array[]	 = array("component"		 => $component->toArray(),
 						"calendar_array" => $calendar_array);
 				}
 			}
@@ -624,7 +623,7 @@
 				foreach($components_for_control_array as $component)
 				{
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-						'location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+						'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
 
 					//FIXME - make generic
 
@@ -683,7 +682,7 @@
 					$year_calendar	 = new year_calendar($control, $year, $component, null, "component");
 					$calendar_array	 = $year_calendar->build_calendar($check_lists_array);
 
-					$components_with_calendar_array[] = array("component" => $component->toArray(),
+					$components_with_calendar_array[] = array("component"		 => $component->toArray(),
 						"calendar_array" => $calendar_array);
 				}
 			}
@@ -703,8 +702,7 @@
 				'components_with_calendar_array' => $components_with_calendar_array,
 				'current_year'					 => $year,
 				'location_code'					 => $location_code,
-				'serie_id'						=> $serie_id,
-
+				'serie_id'						 => $serie_id,
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager',
@@ -716,10 +714,10 @@
 
 		public function view_calendar_month_for_locations()
 		{
-			static $_location_name	= array();
-			$control_id				= phpgw::get_var('control_id', 'int');
-			$control				= $this->so_control->get_single($control_id);
-			if(!$year				= intval(phpgw::get_var('year')))
+			static $_location_name	 = array();
+			$control_id				 = phpgw::get_var('control_id', 'int');
+			$control				 = $this->so_control->get_single($control_id);
+			if(!$year					 = intval(phpgw::get_var('year')))
 			{
 				$year = date('Y');
 			}
@@ -728,9 +726,9 @@
 				$month = date('m');
 			}
 
-			$location_id	= phpgw::get_var('location_id', 'int');
-			$component_id	= phpgw::get_var('component_id', 'int');
-			$serie_id		= phpgw::get_var('serie_id', 'int');
+			$location_id	 = phpgw::get_var('location_id', 'int');
+			$component_id	 = phpgw::get_var('component_id', 'int');
+			$serie_id		 = phpgw::get_var('serie_id', 'int');
 
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -750,7 +748,7 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array	 = $this->so_control->get_locations_for_control($control_id);
-				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id,$serie_id);
+				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id, $serie_id);
 				foreach($locations_for_control_array as $location)
 				{
 					$locations_list[] = array
@@ -805,7 +803,7 @@
 			foreach($components_for_control_array as $component)
 			{
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-					'location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+					'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
 				if(!isset($_location_name[$component->get_location_code()]))
 				{
 					$_location		 = execMethod('property.solocation.read_single', $component->get_location_code());
@@ -861,7 +859,7 @@
 				$calendar_array	 = $month_calendar->build_calendar($check_lists_array);
 
 
-				$components_with_calendar_array[] = array("component" => $component->toArray(),
+				$components_with_calendar_array[] = array("component"		 => $component->toArray(),
 					"calendar_array" => $calendar_array);
 			}
 
@@ -883,7 +881,7 @@
 				'current_month_nr'				 => $month,
 				'locations_list'				 => $locations_list,
 				'location_code'					 => $location_code,
-				'serie_id'						=> $serie_id,
+				'serie_id'						 => $serie_id,
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_month_for_locations',

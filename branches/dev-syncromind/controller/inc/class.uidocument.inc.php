@@ -497,7 +497,7 @@
 				);
 
 				$data = array
-				(
+					(
 					'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, 'documents', 'procedure_tabview'),
 					'view'			 => "view_documents_for_procedure",
 					'procedure_id'	 => !empty($procedure) ? $procedure->get_id() : 0,

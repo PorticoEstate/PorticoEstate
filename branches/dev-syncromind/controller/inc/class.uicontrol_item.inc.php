@@ -85,8 +85,8 @@
 			$dir = phpgw::get_var('dir');
 			if($dir)
 			{
-				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json',
-					'sort_dir' => 'desc');
+				$query_array = array('menuaction'		 => 'controller.uicontrol_item.index', 'phpgw_return_as'	 => 'json',
+					'sort_dir'			 => 'desc');
 			}
 			else
 			{
@@ -100,8 +100,8 @@
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
 
-			$control_areas			 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $control_area_id,
-				'globals' => true, 'use_acl' => $this->_category_acl));
+			$control_areas			 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => $control_area_id,
+				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array2	 = array();
 			foreach($control_areas['cat_list'] as $cat_list)
@@ -220,8 +220,8 @@
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
 
-			$control_areas		 = $cats->formatted_xslt_list(array('format' => 'filter', 'globals' => true,
-				'use_acl' => $this->_category_acl));
+			$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
 
 			$control_groups_array = $this->so_control_group->get_control_group_array();
@@ -256,16 +256,16 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
 			}
 
-			$control_item_id = phpgw::get_var('id');
-			$title = phpgw::get_var('title');
-			$required = phpgw::get_var('required') == 'on' ? true : false;
-			$type = phpgw::get_var('control_item_type');
-			$control_group_id = phpgw::get_var('control_group');
-			$control_area_id = phpgw::get_var('control_area');
-			$what_to_do_txt = phpgw::get_var('what_to_do','html');
-			$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
-			$how_to_do_txt = phpgw::get_var('how_to_do','html');
-			$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
+			$control_item_id	 = phpgw::get_var('id');
+			$title				 = phpgw::get_var('title');
+			$required			 = phpgw::get_var('required') == 'on' ? true : false;
+			$type				 = phpgw::get_var('control_item_type');
+			$control_group_id	 = phpgw::get_var('control_group');
+			$control_area_id	 = phpgw::get_var('control_area');
+			$what_to_do_txt		 = phpgw::get_var('what_to_do', 'html');
+			$what_to_do_txt		 = str_replace("&nbsp;", " ", $what_to_do_txt);
+			$how_to_do_txt		 = phpgw::get_var('how_to_do', 'html');
+			$how_to_do_txt		 = str_replace("&nbsp;", " ", $how_to_do_txt);
 
 			if($control_item_id > 0)
 			{
@@ -339,7 +339,7 @@
 				}
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view',
-					'id' => $saved_control_item_id));
+					'id'		 => $saved_control_item_id));
 			}
 			else
 			{

@@ -74,7 +74,7 @@
 
 				$check_list_status_info = $check_list_status_manager->get_status_for_check_list();
 
-				$this->calendar_array[date("j", $date_ts)]["status"]	 = $check_list_status_info->get_status();
+				$this->calendar_array[date("j", $date_ts)]["status"] = $check_list_status_info->get_status();
 				$this->calendar_array[date("j", $date_ts)]["info"]	 = $check_list_status_info->serialize();
 			}
 		}
@@ -87,7 +87,7 @@
 				$check_list_status_info		 = $check_list_status_manager->get_status_for_check_list();
 
 				$this->calendar_array[date("j", $check_list->get_deadline())]["status"]	 = $check_list_status_info->get_status();
-				$this->calendar_array[date("j", $check_list->get_deadline())]["info"]		 = $check_list_status_info->serialize();
+				$this->calendar_array[date("j", $check_list->get_deadline())]["info"]	 = $check_list_status_info->serialize();
 			}
 
 			return $this->calendar_array;

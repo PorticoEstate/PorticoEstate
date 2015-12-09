@@ -46,7 +46,7 @@
 		private $edit;
 		private $delete;
 		public $public_functions = array
-		(
+			(
 			'index'							 => true,
 			'query'							 => true,
 			'edit'							 => true,
@@ -89,8 +89,8 @@
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
 
-			$control_areas			 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
-				'globals' => true, 'use_acl' => $this->_category_acl));
+			$control_areas			 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => '',
+				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array2	 = array();
 			foreach($control_areas['cat_list'] as $cat_list)
@@ -123,8 +123,8 @@
 					),
 				),
 				'datatable'		 => array(
-					'source'	 => self::link(array('menuaction' => 'controller.uiprocedure.index',
-						'phpgw_return_as' => 'json')),
+					'source'	 => self::link(array('menuaction'		 => 'controller.uiprocedure.index',
+						'phpgw_return_as'	 => 'json')),
 					'allrows'	 => true,
 					'field'		 => array(
 						array(
@@ -179,14 +179,14 @@
 
 			if(isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
-                            //var_dump($_POST);
-                            //var_dump(strtotime(phpgw::get_var('start_date')));
-                            //die;
+				//var_dump($_POST);
+				//var_dump(strtotime(phpgw::get_var('start_date')));
+				//die;
 				if(!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $procedure_id));
+						'id'		 => $procedure_id));
 				}
 
 				if(isset($procedure)) // Edit procedure
@@ -245,7 +245,7 @@
 						}
 					}
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $proc_id));
+						'id'		 => $proc_id));
 				}
 			}
 			else if(isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
@@ -254,7 +254,7 @@
 				{
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $procedure_id));
+						'id'		 => $procedure_id));
 				}
 
 				$old_procedure = $this->so->get_single($procedure_id);
@@ -307,7 +307,7 @@
 					}
 
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $proc_id));
+						'id'		 => $proc_id));
 				}
 			}
 			else if(isset($_POST['cancel_procedure'])) // The user has pressed the cancel button
@@ -315,7 +315,7 @@
 				if(isset($procedure_id) && $procedure_id > 0)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $procedure_id));
+						'id'		 => $procedure_id));
 				}
 				else
 				{
@@ -334,8 +334,8 @@
 				$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	 = true;
 
-				$control_areas			 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $procedure->get_control_area_id(),
-					'globals' => true, 'use_acl' => $this->_category_acl));
+				$control_areas			 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => $procedure->get_control_area_id(),
+					'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 				array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 				$control_areas_array2	 = array();
 				//_debug_array($control_areas);
@@ -407,7 +407,7 @@
 
 
 				$data = array
-				(
+					(
 					'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, 'procedure', 'procedure_tabview'),
 					'view'			 => "view_procedure",
 					'value_id'		 => !empty($procedure) ? $procedure->get_id() : 0,
@@ -466,7 +466,7 @@
 			if(isset($_POST['edit_procedure']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
-					'id' => $procedure_id));
+					'id'		 => $procedure_id));
 			}
 			else
 			{
@@ -495,35 +495,35 @@
 				$procedure->set_responsibility(str_replace('&nbsp;', ' ', $procedure->get_responsibility()));
 				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
 
-				
+
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
 				{
 					//$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
-                                        $procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date()));
+					$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date()));
 				}
-                                else
-                                {
-                                        $procedure->set_start_date("");
-                                }
+				else
+				{
+					$procedure->set_start_date("");
+				}
 				if($procedure->get_end_date() && $procedure->get_end_date() != null)
 				{
 					//$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
-                                        $procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date()));
+					$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date()));
 				}
-                                else
-                                {
-                                        $procedure->set_end_date("");
-                                }
+				else
+				{
+					$procedure->set_end_date("");
+				}
 				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
 				{
 					//$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
-                                        $procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date()));
+					$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date()));
 				}
-                                else
-                                {
-                                    $procedure->set_revision_date("");
-                                }
-                                $procedure_array = $procedure->toArray();
+				else
+				{
+					$procedure->set_revision_date("");
+				}
+				$procedure_array = $procedure->toArray();
 
 				if(!$view_revision)
 				{
@@ -535,18 +535,18 @@
 					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
 					foreach($revised_procedures as $rev)
 					{
-						$rev['link']	 = self::link(array('menuaction' => 'controller.uiprocedure.view',
-							'id' => $rev['id'], 'view_revision' => 'yes'));
+						$rev['link']	 = self::link(array('menuaction'	 => 'controller.uiprocedure.view',
+							'id'			 => $rev['id'], 'view_revision'	 => 'yes'));
 						$table_values[]	 = array('row' => $rev);
 					}
 				}
-                                
+
 				$tabs = array(
 					'procedure'	 => array('label' => lang('Procedure'), 'link' => '#procedure'),
 					'documents'	 => array(
 						'label'	 => lang('View_documents_for_procedure'),
-						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uidocument.show',
-							'procedure_id' => $procedure->get_id(), 'type' => 'procedure'))
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'controller.uidocument.show',
+							'procedure_id'	 => $procedure->get_id(), 'type'			 => 'procedure'))
 					)
 				);
 
@@ -590,8 +590,8 @@
 				$group_procedure = $this->so->get_single($control_group->get_procedure_id());
 				if(isset($group_procedure))
 				{
-					$group_procedures_array[] = array("control_group" => $control_group->toArray(),
-						"procedure" => $group_procedure->toArray());
+					$group_procedures_array[] = array("control_group"	 => $control_group->toArray(),
+						"procedure"		 => $group_procedure->toArray());
 				}
 			}
 
@@ -745,11 +745,11 @@
 				default:
 					$value['ajax'][]	 = false;
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uiprocedure.view',
-						'id' => $value['id'])));
+						'id'		 => $value['id'])));
 					$value['labels'][]	 = lang('show');
 					$value['ajax'][]	 = false;
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uiprocedure.edit',
-						'id' => $value['id'])));
+						'id'		 => $value['id'])));
 					$value['labels'][]	 = lang('edit');
 			}
 		}

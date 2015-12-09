@@ -1,40 +1,39 @@
 <?php
-	/**
-	* phpGroupWare - controller: a part of a Facilities Management System.
-	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
-	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package property
-	* @subpackage controller
- 	* @version $Id$
-	*/
 
+	/**
+	 * phpGroupWare - controller: a part of a Facilities Management System.
+	 *
+	 * @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
+	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
+	 * @package property
+	 * @subpackage controller
+	 * @version $Id$
+	 */
 	abstract class controller_model
 	{
-		protected $validation_errors = array();
-		protected $validation_warnings = array();
 
+		protected $validation_errors	 = array();
+		protected $validation_warnings	 = array();
 		protected $consistency_warnings = array();
-
 		protected $field_of_responsibility_id;
 		protected $field_of_responsibility_name;
 		protected $permission_array;
@@ -94,29 +93,27 @@
 		public function toArray()
 		{
 
-	// Alternative 1
-	//			return get_object_vars($this);
-
-	// Alternative 2
-				$exclude = array
+			// Alternative 1
+			//			return get_object_vars($this);
+			// Alternative 2
+			$exclude = array
 				(
-					'get_field', // feiler (foreldreklassen)
-					'get_so',//unødvendig 
-				);
+				'get_field', // feiler (foreldreklassen)
+				'get_so', //unødvendig
+			);
 
-				$class_methods = get_class_methods($this);
-				$control_item_arr = array();
-				foreach ($class_methods as $class_method)
+			$class_methods		 = get_class_methods($this);
+			$control_item_arr	 = array();
+			foreach($class_methods as $class_method)
+			{
+				if(stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
 				{
-					if( stripos($class_method , 'get_' ) === 0  && !in_array($class_method, $exclude))
-					{
-						$_class_method_part = explode('get_', $class_method);
-						$control_item_arr[$_class_method_part[1]] = $this->$class_method();
-					}
+					$_class_method_part							 = explode('get_', $class_method);
+					$control_item_arr[$_class_method_part[1]]	 = $this->$class_method();
 				}
-
-	//			_debug_array($control_item_arr);
-				return $control_item_arr;
 			}
 
+			//			_debug_array($control_item_arr);
+			return $control_item_arr;
+		}
 	}

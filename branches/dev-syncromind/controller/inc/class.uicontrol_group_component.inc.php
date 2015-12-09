@@ -128,8 +128,8 @@
 				$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	 = true;
 
-				$control_areas		 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
-					'globals' => true, 'use_acl' => $this->_category_acl));
+				$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => '',
+					'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 				array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 				$control_areas_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
@@ -153,8 +153,8 @@
 						'bim_types' => $bim_types
 					),
 					'datatable'				 => array(
-						'source' => self::link(array('menuaction' => 'controller.uicontrol_group_component.index',
-							'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction'		 => 'controller.uicontrol_group_component.index',
+							'phpgw_return_as'	 => 'json')),
 						'field'	 => array(
 							array(
 								'key'		 => 'location_id',
@@ -198,7 +198,7 @@
 				$results['results'][]		 = $control_group;
 			}
 
-			$results['sort']			 = 'id';
+			$results['sort'] = 'id';
 			array_walk($results['results'], array($this, 'add_links'), array($type));
 
 			$results['total_records']	 = count($results);
@@ -273,8 +273,8 @@
 			$value['labels']	 = array();
 
 			$value['ajax'][]	 = false;
-			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view',
-				'location_code' => $value['location_code'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'property.uilocation.view',
+				'location_code'	 => $value['location_code'])));
 			$value['labels'][]	 = lang('show');
 		}
 

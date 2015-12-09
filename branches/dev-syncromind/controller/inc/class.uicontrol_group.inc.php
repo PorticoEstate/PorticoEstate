@@ -55,7 +55,7 @@
 		private $edit;
 		private $delete;
 		public $public_functions = array
-		(
+			(
 			'index'								 => true,
 			'query'								 => true,
 			'edit'								 => true,
@@ -80,7 +80,6 @@
 			$this->edit		 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
-
 		}
 
 		public function index()
@@ -101,7 +100,7 @@
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
 				$control_areas_array2[] = array
-				(
+					(
 					'id'	 => $cat_list['cat_id'],
 					'name'	 => $cat_list['name'],
 				);
@@ -128,10 +127,10 @@
 					),
 				),
 				'datatable'		 => array(
-					'source' => self::link(array('menuaction'		 => 'controller.uicontrol_group.index',
+					'source'	 => self::link(array('menuaction'		 => 'controller.uicontrol_group.index',
 						'phpgw_return_as'	 => 'json')),
-					'allrows'	=> true,
-					'field'	 => array(
+					'allrows'	 => true,
+					'field'		 => array(
 						array(
 							'key'		 => 'id',
 							'label'		 => lang('ID'),
@@ -181,7 +180,7 @@
 		public function edit()
 		{
 			$tabs				 = array
-			(
+				(
 				'control_group'	 => array('label' => lang('Control_group'), 'link' => '#control_group'),
 				'control_items'	 => array('label' => lang('Control_items'), 'link' => '#control_items')
 			);
@@ -316,7 +315,7 @@
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
 					$control_area_array[] = array
-					(
+						(
 						'id'		 => $cat_list['cat_id'],
 						'name'		 => $cat_list['name'],
 						'selected'	 => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
@@ -338,7 +337,7 @@
 					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
 					{
 						$procedure_options[] = array
-						(
+							(
 							'id'		 => $procedure->get_id(),
 							'name'		 => $procedure->get_title(),
 							'selected'	 => 'yes'
@@ -347,7 +346,7 @@
 					else
 					{
 						$procedure_options[] = array
-						(
+							(
 							'id'	 => $procedure->get_id(),
 							'name'	 => $procedure->get_title()
 						);
@@ -378,8 +377,8 @@
 				}
 
 				$data = array
-				(
-					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, 'control_items','control_group_tabview'),
+					(
+					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, 'control_items', 'control_group_tabview'),
 					'value_id'				 => !empty($control_group) ? $control_group->get_id() : 0,
 					'editable'				 => true,
 					'procedure'				 => array('options' => $procedure_options),
@@ -441,7 +440,7 @@
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
 					$control_area_array[] = array
-					(
+						(
 						'id'		 => $cat_list['cat_id'],
 						'name'		 => $cat_list['name'],
 						'selected'	 => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
@@ -462,7 +461,7 @@
 				foreach($procedure_array as $procedure)
 				{
 					$procedure_options[] = array
-					(
+						(
 						'id'		 => $procedure->get_id(),
 						'name'		 => $procedure->get_title(),
 						'selected'	 => $procedure->get_id() == $control_group->get_procedure_id() ? 1 : 0
@@ -526,9 +525,9 @@
 					$attributes = $custom->find('property', ".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '', '', '', true, true);
 
 					$operator1 = array
-					(
-						array
 						(
+						array
+							(
 							'id'	 => 'eq',
 							'name'	 => '='
 						),
@@ -537,17 +536,17 @@
 					$operator2 = array
 						(
 						array
-						(
+							(
 							'id'	 => 'eq',
 							'name'	 => '='
 						),
 						array
-						(
+							(
 							'id'	 => 'lt',
 							'name'	 => '<'
 						),
 						array
-						(
+							(
 							'id'	 => 'gt',
 							'name'	 => '>'
 						),
@@ -595,11 +594,11 @@
 				//---
 
 				$data = array
-				(
+					(
 					'entities'				 => array('options' => $entity_list),
 					'categories'			 => array('options' => $category_list),
 					'attributes'			 => $attributes,
-					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $tab_to_display,'control_group_tabview'),
+					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $tab_to_display, 'control_group_tabview'),
 					'value_id'				 => !empty($control_group) ? $control_group->get_id() : 0,
 					'editable'				 => true,
 					'procedure'				 => array('options' => $procedure_options),
@@ -761,10 +760,10 @@
 			{
 				$sort_field = 'controller_control_group.id';
 			}
-			$sort_ascending	 = $params['sort'] == 'desc' ? false : true;
+			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 
-			$result_objects		 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$object_count		 = $this->so->get_count($search_for, $search_type, $filters);
+			$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count	 = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 
 			$results = array();
@@ -796,7 +795,7 @@
 			$entity_so = CreateObject('property.soadmin_entity');
 
 			$tabs				 = array
-			(
+				(
 				'control_group'	 => array('label' => lang('Control_group'), 'link' => '#control_group'),
 				'control_items'	 => array('label' => lang('Control_items'), 'link' => '#control_items')
 			);
@@ -840,28 +839,28 @@
 				$attributes	 = $custom->find('property', ".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '', '', '', true, true);
 
 				$operator1 = array
-				(
-					array
 					(
+					array
+						(
 						'id'	 => 'eq',
 						'name'	 => '='
 					),
 				);
 
 				$operator2 = array
-				(
-					array
 					(
+					array
+						(
 						'id'	 => 'eq',
 						'name'	 => '='
 					),
 					array
-					(
+						(
 						'id'	 => 'lt',
 						'name'	 => '<'
 					),
 					array
-					(
+						(
 						'id'	 => 'gt',
 						'name'	 => '>'
 					),
@@ -915,8 +914,8 @@
 				}
 
 				$data = array
-				(
-					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, 'control_group','control_group_tabview'),
+					(
+					'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, 'control_group', 'control_group_tabview'),
 					'value_id'				 => !empty($control_group) ? $control_group->get_id() : 0,
 					'control_group'			 => $control_group_array,
 					'entity'				 => $entity,
@@ -970,7 +969,7 @@
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
 					$control_area_array[] = array
-					(
+						(
 						'id'	 => $cat_list['cat_id'],
 						'name'	 => $cat_list['name'],
 					);
