@@ -1,4 +1,5 @@
-  <!-- $Id: dashboard.xsl 12604 2015-11-23 17:06:11Z nelson224 $ -->
+
+<!-- $Id: dashboard.xsl 12604 2015-11-23 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -13,7 +14,9 @@
 	<div>
 		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">
-				<h3><xsl:value-of select="php:function('lang', 'organization')"/></h3>
+				<h3>
+					<xsl:value-of select="php:function('lang', 'organization')"/>
+				</h3>
 				<div>					
 					<div>
 						<xsl:for-each select="datatable_def">
@@ -30,25 +33,35 @@
 						</xsl:for-each>
 					</div>
 				</div>
-				<h3><xsl:value-of select="php:function('lang', 'activities')"/></h3>
+				<h3>
+					<xsl:value-of select="php:function('lang', 'activities')"/>
+				</h3>
 				<div>
 					<div class="pure-custom">
 						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'activity_state')"/></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'activity_state')"/>
+							</label>
 							<select id="activity_state" name="activity_state">
 								<xsl:apply-templates select="list_activity_state_options/options"/>
 							</select>
-							<label><xsl:value-of select="php:function('lang', 'office')"/></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'office')"/>
+							</label>
 							<select id="activity_district" name="activity_district">
 								<xsl:apply-templates select="list_activity_district_options/options"/>
 							</select>
 						</div>
 						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'Category')"/></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Category')"/>
+							</label>
 							<select id="activity_category" name="activity_category">
 								<xsl:apply-templates select="list_activity_category_options/options"/>
 							</select>													
-							<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'date')"/>
+							</label>
 							<input type="text" id="date_change" name="date_change" value=""></input>
 						</div>														
 					</div>

@@ -1,4 +1,5 @@
-  <!-- $Id: organization.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: organization.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -76,17 +77,22 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Postnummer/Sted')"/>
 						</label>
-						<input type="text" id="zip_code" name="zip_code" value="{zip_code}" size="6"/> <input type="text" id="city" name="city" value="{city}"/>						
+						<input type="text" id="zip_code" name="zip_code" value="{zip_code}" size="6"/>
+						<input type="text" id="city" name="city" value="{city}"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Beskrivelse')"/>
 						</label>							
-						<textarea rows="10" cols="100" id="org_description" name="org_description"><xsl:value-of select="description"/></textarea>						
+						<textarea rows="10" cols="100" id="org_description" name="org_description">
+							<xsl:value-of select="description"/>
+						</textarea>
 					</div>
 					
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'Kontaktperson 1')"/></label>										
+						<label>
+							<xsl:value-of select="php:function('lang', 'Kontaktperson 1')"/>
+						</label>
 					</div>
 					<input type="hidden" id="contact1_id" name="contact1_id" value="{contact1_id}"/>					
 					<div class="pure-control-group">
@@ -110,7 +116,9 @@
 					
 					<xsl:if test="contact2_id != ''">
 						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'Kontaktperson 2')"/></label>									
+							<label>
+								<xsl:value-of select="php:function('lang', 'Kontaktperson 2')"/>
+							</label>
 						</div>
 						<input type="hidden" id="contact2_id" name="contact2_id" value="{contact2_id}"/>
 						<div class="pure-control-group">
@@ -209,7 +217,8 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Postnummer/Sted')"/>
 						</label>
-						<xsl:value-of select="zip_code"/> <xsl:value-of select="city"/>						
+						<xsl:value-of select="zip_code"/>
+						<xsl:value-of select="city"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -219,7 +228,9 @@
 					</div>
 					
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'Kontaktperson 1')"/></label>										
+						<label>
+							<xsl:value-of select="php:function('lang', 'Kontaktperson 1')"/>
+						</label>
 					</div>
 					<input type="hidden" id="contact1_id" name="contact1_id" value="{contact1_id}"/>					
 					<div class="pure-control-group">
@@ -243,7 +254,9 @@
 					
 					<xsl:if test="contact2_id != ''">
 						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'Kontaktperson 2')"/></label>									
+							<label>
+								<xsl:value-of select="php:function('lang', 'Kontaktperson 2')"/>
+							</label>
 						</div>
 						<input type="hidden" id="contact2_id" name="contact2_id" value="{contact2_id}"/>
 						<div class="pure-control-group">

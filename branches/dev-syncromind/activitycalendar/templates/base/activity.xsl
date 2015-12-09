@@ -1,4 +1,5 @@
-  <!-- $Id: activity.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: activity.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -94,7 +95,9 @@
 							</input>
 						</div>						
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'where_when')"/></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'where_when')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'arena')"/>
@@ -149,7 +152,9 @@
 							<xsl:apply-templates select="list_office_options/options"/>
 						</select>											
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'who')"/></h2>	
+					<h2>
+						<xsl:value-of select="php:function('lang', 'who')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'organization')"/>
@@ -168,7 +173,11 @@
 							</div>
 							<xsl:if test="organization_selected = 1">
 								<div>
-									<xsl:value-of select="php:function('lang', 'edit_contact_info')"/><xsl:text>: </xsl:text><a href="{organization_url}"><xsl:value-of select="php:function('lang', 'edit_contact_info_org')"/> </a>
+									<xsl:value-of select="php:function('lang', 'edit_contact_info')"/>
+									<xsl:text>: </xsl:text>
+									<a href="{organization_url}">
+										<xsl:value-of select="php:function('lang', 'edit_contact_info_org')"/>
+									</a>
 								</div>
 							</xsl:if>						
 						</div>								
@@ -190,14 +199,20 @@
 								</div>
 								<xsl:if test="group_selected = 1">
 									<div>										
-										<xsl:value-of select="php:function('lang', 'edit_contact_info')"/><xsl:text>: </xsl:text><a href="{group_url}"><xsl:value-of select="php:function('lang', 'edit_contact_info_group')"/> </a>
+										<xsl:value-of select="php:function('lang', 'edit_contact_info')"/>
+										<xsl:text>: </xsl:text>
+										<a href="{group_url}">
+											<xsl:value-of select="php:function('lang', 'edit_contact_info_group')"/>
+										</a>
 									</div>
 								</xsl:if>								
 							</xsl:if>
 							<input type="hidden" name="group_selected_id" id="group_selected_id" value="{group_selected_id}" />				
 						</div>								
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'contact_info')"/></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'contact_info')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>
@@ -240,14 +255,14 @@
 	</div>
 	<script type="text/javascript">
 		$("[name='target[]']:eq(0)")
-		  .valAttr('','validate_checkbox_group')
-		  .valAttr('qty','min1')
-		  .valAttr('error-msg','Målgruppe må fylles ut!');
+		.valAttr('','validate_checkbox_group')
+		.valAttr('qty','min1')
+		.valAttr('error-msg','Målgruppe må fylles ut!');
 
 		$("[name='district[]']:eq(0)")
-		  .valAttr('','validate_checkbox_group')
-		  .valAttr('qty','min1')
-		  .valAttr('error-msg','Bydel må fylles ut!');
+		.valAttr('','validate_checkbox_group')
+		.valAttr('qty','min1')
+		.valAttr('error-msg','Bydel må fylles ut!');
 		
 	</script>
 </xsl:template>
@@ -320,7 +335,9 @@
 							</input>
 						</div>						
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'where_when')"/></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'where_when')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'arena')"/>
@@ -350,7 +367,9 @@
 						</label>
 						<xsl:value-of select="office_name"/>
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'who')"/></h2>	
+					<h2>
+						<xsl:value-of select="php:function('lang', 'who')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'organization')"/>
@@ -367,7 +386,9 @@
 							<xsl:value-of select="group_name"/>
 						</div>								
 					</div>
-					<h2><xsl:value-of select="php:function('lang', 'contact_info')"/></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'contact_info')"/>
+					</h2>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_1')"/>

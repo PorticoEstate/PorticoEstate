@@ -140,14 +140,14 @@
 		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 		{
 			$results			 = array();   // Array to store result objects
-			$map				 = array();	// Array to hold number of records per target object
+			$map				 = array(); // Array to hold number of records per target object
 			$check_map			 = array();  // Array to hold the actual number of record read per target object
 			$object_ids			 = array();   // All of the object ids encountered
 			$added_object_ids	 = array();// All of the added objects ids
 			// Retrieve information about the table name and the name and alias of id column
 			// $break_on_limit - 	flag indicating whether to break the loop when the number of records
 			// 						for all the result objects are traversed
-			$id_field_name_info = $this->get_id_field_name(true);
+			$id_field_name_info	 = $this->get_id_field_name(true);
 			if(is_array($id_field_name_info))
 			{
 				$break_on_limit	 = true;

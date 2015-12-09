@@ -62,7 +62,9 @@
 		}
 
 		public function get_description()
-		{ return $this->description;}
+		{
+			return $this->description;
+		}
 
 		public function set_organization_id($organization_id)
 		{
@@ -90,7 +92,9 @@
 		}
 
 		public function get_shortname()
-		{ return $this->shortname;}
+		{
+			return $this->shortname;
+		}
 
 		public function set_transferred($transferred)
 		{

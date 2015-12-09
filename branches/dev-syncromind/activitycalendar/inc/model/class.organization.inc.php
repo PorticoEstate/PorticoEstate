@@ -59,7 +59,9 @@
 		}
 
 		public function get_homepage()
-		{ return $this->homepage;}
+		{
+			return $this->homepage;
+		}
 
 		public function set_change_type($change_type)
 		{

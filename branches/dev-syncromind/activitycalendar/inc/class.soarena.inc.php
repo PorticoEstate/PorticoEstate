@@ -316,13 +316,13 @@
 				while($this->db->next_record())
 				{
 					//$result_arr = $this->db->f('name');
-					/*if($curr_index == 0)
-					{
-						$result_arr[] = "<option value='0'>Velg gateadresse</option>";
-					}
-					$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-					$curr_index++;*/
-					
+					/* if($curr_index == 0)
+					  {
+					  $result_arr[] = "<option value='0'>Velg gateadresse</option>";
+					  }
+					  $result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
+					  $curr_index++; */
+
 					$result_arr[]['name'] = $this->db->f('descr');
 				}
 			}

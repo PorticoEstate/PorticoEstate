@@ -12,8 +12,8 @@
 	{
 
 		protected static $so;
-		protected $soap = false;
-		public $soap_functions = array
+		protected $soap			 = false;
+		public $soap_functions	 = array
 			(
 			'get_activities' => array
 				(
@@ -21,7 +21,7 @@
 				'out'	 => array('array')
 			)
 		);
-		public $xmlrpc_methods = array
+		public $xmlrpc_methods	 = array
 			(
 			array
 				(
@@ -824,8 +824,8 @@
 				$this->db->query("SELECT * FROM bb_group_contact WHERE group_id={$group_id} LIMIT 1", __LINE__, __FILE__);
 				while($this->db->next_record())
 				{
-					$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-						'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
+					$result = array('name'	 => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
+						'phone'	 => $this->db->f('phone'), 'email'	 => $this->db->f('email'));
 				}
 			}
 			else if($org_id)
@@ -834,8 +834,8 @@
 				$this->db->query("SELECT * FROM bb_organization_contact WHERE organization_id={$org_id} LIMIT 1", __LINE__, __FILE__);
 				while($this->db->next_record())
 				{
-					$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-						'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
+					$result = array('name'	 => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
+						'phone'	 => $this->db->f('phone'), 'email'	 => $this->db->f('email'));
 				}
 			}
 			return $result;

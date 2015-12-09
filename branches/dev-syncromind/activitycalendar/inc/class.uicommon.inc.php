@@ -31,13 +31,13 @@
 		if(!isset($array[$key]))
 			$array[$key] = $value;
 	}
-	
 	define('MANAGER', 'MANAGER');
 	define('EXECUTIVE_OFFICER', 'EXECUTIVE_OFFICER');
 	define('ADMINISTRATOR', 'ADMINISTRATOR');
 
 	abstract class activitycalendar_uicommon extends phpgwapi_uicommon_jquery
 	{
+
 		protected static $old_exception_handler;
 
 		const LOCATION_ROOT		 = '.';
@@ -53,7 +53,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			
+
 			self::set_active_menu('activitycalendar');
 
 			$this->acl		 = & $GLOBALS['phpgw']->acl;
@@ -65,7 +65,7 @@
 			  ADMINISTRATOR => $this->isAdministrator()
 			  ); */
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
-			
+
 			$this->user_rows_per_page = ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 10;
 		}
 
@@ -177,7 +177,6 @@
 			}
 			return $gab_id;
 		}
-
 		/**
 		 * Method for JSON queries.
 		 * 
@@ -229,38 +228,41 @@
 		 */
 		public function download()
 		{
-            $list = $this->query();
+			$list = $this->query();
 
-            $keys = array();
+			$keys = array();
 
-            if(count($list[0]) > 0) {
-                foreach($list[0] as $key => $value) {
-                    if(!is_array($value)) {
-                        array_push($keys, $key);
-                    }
-                }
-            }
-            
-            // Remove newlines from output
-            $count = count($list);
-            for($i = 0; $i < $count; $i++)
-            {
- 				foreach ($list[$i] as $key => &$data)
- 				{
-	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
- 				}
-            }
+			if(count($list[0]) > 0)
+			{
+				foreach($list[0] as $key => $value)
+				{
+					if(!is_array($value))
+					{
+						array_push($keys, $key);
+					}
+				}
+			}
 
-             // Use keys as headings
-            $headings = array();
-            $count_keys = count($keys);
-            for($j=0;$j<$count_keys;$j++)
-            {
-            	array_push($headings, lang($keys[$j]));
-            }
+			// Remove newlines from output
+			$count = count($list);
+			for($i = 0; $i < $count; $i++)
+			{
+				foreach($list[$i] as $key => &$data)
+				{
+					$data = str_replace(array("\n", "\r\n", "<br>"), '', $data);
+				}
+			}
 
-            $property_common = CreateObject('property.bocommon');
-            $property_common->download($list, $keys, $headings);
+			// Use keys as headings
+			$headings	 = array();
+			$count_keys	 = count($keys);
+			for($j = 0; $j < $count_keys; $j++)
+			{
+				array_push($headings, lang($keys[$j]));
+			}
+
+			$property_common = CreateObject('property.bocommon');
+			$property_common->download($list, $keys, $headings);
 		}
 
 		/**
