@@ -437,19 +437,15 @@
 		}
 
 		/**
-		* Execute a query with limited result set
+		* Get the limit statement for a query with limited result set
 		*
 		* @param string $sql the query to be executed
 		* @param integer $offset row to start from
-		* @param integer $line the line method was called from - use __LINE__
-		* @param string $file the file method was called from - use __FILE__
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
-		* @return integer current query id if sucesful and null if fails
+		* @return string offset and limit
 		*/
-
-		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
+		function get_offset($sql = '', $offset, $num_rows = 0)
 		{
-			$this->_get_fetchmode();
 			$offset		= (int)$offset;
 			$num_rows	= (int)$num_rows;
 
@@ -485,6 +481,25 @@
 					$sql .= " LIMIT {$num_rows}";
 					$sql .=  $offset ? " OFFSET {$offset}" : '';
 			}
+			return $sql;
+		}
+
+		/**
+		* Execute a query with limited result set
+		*
+		* @param string $sql the query to be executed
+		* @param integer $offset row to start from
+		* @param integer $line the line method was called from - use __LINE__
+		* @param string $file the file method was called from - use __FILE__
+		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
+		* @return integer current query id if sucesful and null if fails
+		*/
+
+		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
+		{
+			$this->_get_fetchmode();
+
+			$sql = $this->get_offset($sql, $offset, $num_rows);
 
 			if ($this->debug)
 			{

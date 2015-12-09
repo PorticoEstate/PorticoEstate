@@ -1497,6 +1497,8 @@
 				$access_order = true;
 			}
 
+			$ticket = $this->bo->read_single($id, $values);
+
 			if(isset($values['save']))
 			{
 				if(!$this->acl_edit)
@@ -1549,7 +1551,7 @@
 
 				if($access_order)
 				{
-					if((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget']))
+					if(!$ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])))
 					{
 						$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Missing value'));
 					}
@@ -1651,7 +1653,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values, $values_attribute);
 			}
 
-			$ticket = $this->bo->read_single($id, $values);
 
 			if(isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
@@ -2344,10 +2345,26 @@
 				)
 			);
 
-			$payments		 = $this->bo->get_payments($id);
+			$budgets = $this->bo->get_budgets($id);
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_4',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(array('key' => 'period', 'label' => lang('period'), 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'resizeable' => true,
+						'formatter' => 'FormatterAmount2'),
+					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => false, 'resizeable' => true)),
+				'data'		 => json_encode($budgets),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+			$payments		 = $this->bo->get_payments($id);
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_5',
 				'requestUrl' => "''",
 				'ColumnDefs' => array(array('key' => 'period', 'label' => lang('period'), 'sortable' => true,
 						'resizeable' => true),
@@ -2375,7 +2392,7 @@
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_5',
+				'container'	 => 'datatable-container_6',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
 					'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
 					'phpgw_return_as' => 'json'))),
@@ -2438,7 +2455,7 @@
 //			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[order_cat_id]','selected' => $ticket['order_cat_id']));
 
 			$year	 = date('Y') - 1;
-			$limit	 = $year + 3;
+			$limit	 = $year + 4;
 
 			while($year < $limit)
 			{

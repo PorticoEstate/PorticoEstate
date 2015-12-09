@@ -707,6 +707,58 @@
 										</input>
 										<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 									</div>
+
+
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
+										</label>
+										<input type="text" name="values[budget]">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+											</xsl:attribute>
+										</input>
+										<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+										<xsl:variable name="lang_period">
+											<xsl:value-of select="php:function('lang', 'period')"/>
+										</xsl:variable>
+
+										<select name="values[budget_period]">
+											<xsl:attribute name="title">
+												<xsl:value-of select='$lang_period'/>
+											</xsl:attribute>
+											<xsl:apply-templates select="year_list/options"/>
+										</select>
+
+										<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_period'/> ]
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'budget')"/>
+										</label>
+
+										<div class = 'pure-u-md-1-3'>
+											<!--div  id="paging_4"> </div>
+											<div class="pure-table" id="datatable-container_4"/-->
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_4'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl'/>
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+														<xsl:with-param name="data" select ='data'/>
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="config" select ='config'/>
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+
+										</div>
+									</div>
+
+
+
+
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'payment')"/>
@@ -739,7 +791,7 @@
 											<!--div  id="paging_4"> </div>
 											<div class="pure-table" id="datatable-container_4"/-->
 											<xsl:for-each select="datatable_def">
-												<xsl:if test="container = 'datatable-container_4'">
+												<xsl:if test="container = 'datatable-container_5'">
 													<xsl:call-template name="table_setup">
 														<xsl:with-param name="container" select ='container'/>
 														<xsl:with-param name="requestUrl" select ='requestUrl'/>
@@ -916,7 +968,7 @@
 						<div class="pure-table" id="datatable-container_5"/>
 						<div id="datatable-buttons_5"/-->
 						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_5'">
+							<xsl:if test="container = 'datatable-container_6'">
 								<xsl:call-template name="table_setup">
 									<xsl:with-param name="container" select ='container'/>
 									<xsl:with-param name="requestUrl" select ='requestUrl'/>
