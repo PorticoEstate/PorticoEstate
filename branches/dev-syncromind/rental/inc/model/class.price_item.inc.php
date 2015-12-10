@@ -7,8 +7,8 @@
 	 */
 	class rental_price_item extends rental_model
 	{
-		public static $so;
 
+		public static $so;
 		protected $id;
 		protected $title;
 		protected $agresso_id;
@@ -22,11 +22,11 @@
 		protected $price_type_id;
 		protected $price_type_title;
 		protected $price_types = array(
-					1 => 'year',
-					2 => 'month',
-					3 => 'day',
-					4 => 'hour',
-				);
+			1	 => 'year',
+			2	 => 'month',
+			3	 => 'day',
+			4	 => 'hour',
+		);
 
 		//protected $is_one_time;
 
@@ -38,8 +38,8 @@
 		 */
 		public function __construct($id = 0)
 		{
-			$this->id = $id;
-			$this->is_area = true;
+			$this->id		 = $id;
+			$this->is_area	 = true;
 		}
 
 		public function get_id()
@@ -79,9 +79,12 @@
 
 		public function get_type_text()
 		{
-			if ($this->is_area()) {
+			if($this->is_area())
+			{
 				return lang('price_item_type_area');
-			} else {
+			}
+			else
+			{
 				return lang('price_item_type_apiece');
 			}
 		}
@@ -90,17 +93,20 @@
 		{
 			$this->is_area = (boolean)$is_area;
 		}
-		
+
 		public function is_inactive()
 		{
 			return $this->is_inactive;
 		}
-		
+
 		public function get_status_text()
 		{
-			if ($this->is_inactive()) {
+			if($this->is_inactive())
+			{
 				return lang('price_item_inactive');
-			} else {
+			}
+			else
+			{
 				return lang('price_item_active');
 			}
 		}
@@ -112,7 +118,7 @@
 
 		public function get_price()
 		{
-			if (!$this->price)
+			if(!$this->price)
 				$this->price = 0;
 
 			return $this->price;
@@ -131,18 +137,18 @@
 		public function serialize()
 		{
 			return array(
-				'id' => $this->get_id(),
-				'title' => $this->get_title(),
-				'agresso_id' => $this->get_agresso_id(),
-				'is_area' => $this->get_type_text(),
-				'is_inactive' => $this->get_status_text(),
-				'is_adjustable' => $this->get_adjustable_text(),
-				'standard' => $this->get_standard_text(),
-				'price' => $this->get_price(),
-				'responsibility_id' => $this->get_responsibility_id(),
-				'responsibility_title' => lang($this->get_responsibility_title()),
-				'price_type_title' => lang($this->get_price_type_title()),
-				//'is_one_time' => $this->is_one_time()
+				'id'					 => $this->get_id(),
+				'title'					 => $this->get_title(),
+				'agresso_id'			 => $this->get_agresso_id(),
+				'is_area'				 => $this->get_type_text(),
+				'is_inactive'			 => $this->get_status_text(),
+				'is_adjustable'			 => $this->get_adjustable_text(),
+				'standard'				 => $this->get_standard_text(),
+				'price'					 => $this->get_price(),
+				'responsibility_id'		 => $this->get_responsibility_id(),
+				'responsibility_title'	 => lang($this->get_responsibility_title()),
+				'price_type_title'		 => lang($this->get_price_type_title()),
+			//'is_one_time' => $this->is_one_time()
 			);
 		}
 
@@ -174,8 +180,7 @@
 		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 		{
 			$so = self::get_so();
-			return $so->get_price_item_array($start, $results, $sort, $dir,
-																			 $query, $search_option, $filters);
+			return $so->get_price_item_array($start, $results, $sort, $dir, $query, $search_option, $filters);
 		}
 
 		/**
@@ -185,7 +190,8 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if(self::$so == null)
+			{
 				self::$so = CreateObject('rental.soprice_item');
 			}
 
@@ -201,10 +207,10 @@
 
 			// Check that we have a correct agresso id
 			/*
-			if ($this->get_agresso_id() && !rental_validator::valid_agresso_id($this->get_agresso_id(), $this->validation_errors['agresso_id'])) {
-				$valid = false;
-			}
-			*/
+			  if ($this->get_agresso_id() && !rental_validator::valid_agresso_id($this->get_agresso_id(), $this->validation_errors['agresso_id'])) {
+			  $valid = false;
+			  }
+			 */
 
 			return $valid;
 		}
@@ -213,6 +219,7 @@
 		{
 			return $this->price_types;
 		}
+
 		public function get_price_type_id()
 		{
 			return $this->price_type_id;
@@ -242,54 +249,66 @@
 		{
 			$this->responsibility_id = $responsibility_id;
 		}
-		
-		public function get_responsibility_title(){
+
+		public function get_responsibility_title()
+		{
 			return $this->responsibility_title;
 		}
-		
-		public function set_responsibility_title($responsibility_title){
+
+		public function set_responsibility_title($responsibility_title)
+		{
 			$this->responsibility_title = $responsibility_title;
 		}
-		public function is_adjustable(){
+
+		public function is_adjustable()
+		{
 			return $this->is_adjustable;
 		}
-		
+
 		public function get_adjustable_text()
 		{
-			if ($this->is_adjustable()) {
+			if($this->is_adjustable())
+			{
 				return lang('price_item_adjustable');
-			} else {
+			}
+			else
+			{
 				return lang('price_item_not_adjustable');
 			}
 		}
-		
-		public function set_is_adjustable($is_adjustable){
+
+		public function set_is_adjustable($is_adjustable)
+		{
 			$this->is_adjustable = (boolean)$is_adjustable;
 		}
-		
-		public function is_standard(){
+
+		public function is_standard()
+		{
 			return $this->standard;
 		}
-		
+
 		public function get_standard_text()
 		{
-			if ($this->is_standard()) {
+			if($this->is_standard())
+			{
 				return lang('yes');
-			} else {
+			}
+			else
+			{
 				return lang('no');
 			}
 		}
-		
-		public function set_standard($standard){
+
+		public function set_standard($standard)
+		{
 			$this->standard = (boolean)$standard;
 		}
-		
-/*		public function is_one_time(){
-			return $this->is_one_time;
-		}
-		
-		public function set_is_one_time($is_one_time){
-			$this->is_one_time = (boolean)$is_one_time;
-		}
-*/
+		/* 		public function is_one_time(){
+		  return $this->is_one_time;
+		  }
+
+		  public function set_is_one_time($is_one_time){
+		  $this->is_one_time = (boolean)$is_one_time;
+		  }
+		 */
 	}

@@ -26,9 +26,9 @@
 		private $pdf_templates	 = array();
 		public $public_functions = array
 			(
-			'index'				 => true,
-			'view'				 => true,
-			'makePDF'			 => true
+			'index'		 => true,
+			'view'		 => true,
+			'makePDF'	 => true
 		);
 
 		public function __construct()
@@ -40,9 +40,8 @@
 
 		public function query()
 		{
-
+			
 		}
-
 
 		/**
 		 * View a list of all contracts
@@ -66,7 +65,7 @@
 			if($adjustment_id)
 			{
 				$cancel_link = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts',
-					'id' => $adjustment_id));
+					'id'		 => $adjustment_id));
 				$cancel_text = 'contract_regulation_back';
 			}
 
@@ -242,7 +241,7 @@
 				if(rental_sodocument::get_instance()->store($document))
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
-						'id' => $contract_id, 'tab' => 'documents'));
+						'id'		 => $contract_id, 'tab'		 => 'documents'));
 				}
 				else
 				{

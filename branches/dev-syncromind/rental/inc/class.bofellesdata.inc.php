@@ -28,10 +28,10 @@
 
 		// Instance variable
 		protected static $bo;
-		protected $connected = false;
+		protected $connected	 = false;
 		protected $status;
-		protected $db		 = null;
-		protected $unit_ids	 = array();
+		protected $db			 = null;
+		protected $unit_ids		 = array();
 		var $public_functions = array
 			(
 			'get_all_org_units_autocomplete' => true,
@@ -293,7 +293,7 @@
 
 		public function get_all_org_units_autocomplete()
 		{
-			if(!$db		 = $this->get_db())
+			if(!$db = $this->get_db())
 			{
 				return;
 			}
@@ -601,9 +601,9 @@
 							}
 							if($count < (count($search_words) - 1))
 							{
-								$selector	 = $selector . " OR ";
+								$selector = $selector . " OR ";
 							}
-							$count		 = ($count + 1);
+							$count = ($count + 1);
 						}
 						$selector = $selector . ")";
 
@@ -719,12 +719,12 @@
 			if($db->Type == "postgres")
 			{
 				$columns = "count(*) as cnt";
-				$ret = 'cnt';
+				$ret	 = 'cnt';
 			}
 			else
 			{
 				$columns = "count(*) as CNT";
-				$ret = 'CNT';
+				$ret	 = 'CNT';
 			}
 			$tables	 = "V_ORG_ENHET";
 			$joins	 = "LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) " .
@@ -756,9 +756,9 @@
 							}
 							if($count < (count($search_words) - 1))
 							{
-								$selector	 = $selector . " OR ";
+								$selector = $selector . " OR ";
 							}
-							$count		 = ($count + 1);
+							$count = ($count + 1);
 						}
 						$selector = $selector . ")";
 

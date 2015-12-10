@@ -1,6 +1,7 @@
-  <!-- $Id: price_item.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: price_item.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
-    <xsl:choose>
+	<xsl:choose>
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit" />
 		</xsl:when>
@@ -280,7 +281,9 @@
 
 <xsl:template xmlns:php="http://php.net/xsl" match="adjustment_price">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
-	<h3><xsl:value-of select="php:function('lang', 'manual_adjust_price_item')"/></h3>
+	<h3>
+		<xsl:value-of select="php:function('lang', 'manual_adjust_price_item')"/>
+	</h3>
 	<div>
 		<xsl:call-template name="top-toolbar" />
 		<br/>

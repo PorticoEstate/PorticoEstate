@@ -47,38 +47,38 @@
 		<tr class="row_on">
 			<td>{lang_create_user_based_on_email_group}:</td>
 			<td>
-			 <select name="newsettings[create_user_based_on_email_group]">
-{hook_create_user_based_on_email_group}
-			 </select>
+				<select name="newsettings[create_user_based_on_email_group]">
+					{hook_create_user_based_on_email_group}
+				</select>
 			</td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_entity_config_move_in}:</td>
 			<td>
-{hook_entity_config_move_in}
+				{hook_entity_config_move_in}
 			</td>
 		</tr>
 
 		<tr class="row_on">
 			<td>{lang_category_config_move_in}:</td>
 			<td>
-			 <select name="newsettings[category_config_move_in]">
-{hook_category_config_move_in}
-			 </select>
+				<select name="newsettings[category_config_move_in]">
+					{hook_category_config_move_in}
+				</select>
 			</td>
 		</tr>
-				<tr class="row_off">
+		<tr class="row_off">
 			<td>{lang_entity_config_move_out}:</td>
 			<td>
-{hook_entity_config_move_out}
+				{hook_entity_config_move_out}
 			</td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_category_config_move_out}:</td>
 			<td>
-			 <select name="newsettings[category_config_move_out]">
-{hook_category_config_move_out}
-			 </select>
+				<select name="newsettings[category_config_move_out]">
+					{hook_category_config_move_out}
+				</select>
 			</td>
 		</tr>
 		<tr class="row_on">
@@ -154,7 +154,7 @@
 			<td>{lang_login_external_db_password}:</td>
 			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
 		</tr>
-		
+
 		<tr class="row_on">
 			<td>{lang_path_to_wkhtmltopdf}:</td>
 			<td><input name="newsettings[path_to_wkhtmltopdf]" value="{value_path_to_wkhtmltopdf}"></td>

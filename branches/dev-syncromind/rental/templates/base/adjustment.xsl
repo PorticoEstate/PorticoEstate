@@ -1,4 +1,5 @@
-  <!-- $Id: adjustment.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+  
+<!-- $Id: adjustment.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">

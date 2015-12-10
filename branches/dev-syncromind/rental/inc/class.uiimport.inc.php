@@ -1680,7 +1680,7 @@
         	sort($this->errors);
         	sort($this->warnings);
         	sort($this->messages);
-        	
+
             $msgs = array_merge(
             	array('----------------Errors--------------------'),
             	$this->errors,
@@ -1694,9 +1694,9 @@
             if(is_dir($path.'/logs') || mkdir($path.'/logs')) {
                 file_put_contents("$path/logs/$step.log", implode(PHP_EOL, $msgs));
             }
-            else { // Path not writeable
+            else // Path not writeable
+			{
 
             }
         }
 	}
-?>

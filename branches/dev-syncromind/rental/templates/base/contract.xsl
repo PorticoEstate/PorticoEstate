@@ -1,4 +1,5 @@
-  <!-- $Id: contract.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: contract.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -16,11 +17,21 @@
 		<div class="toolbar">
 			<div class="pure-g">
 				<div class="pure-u-1-3">
-					<div><xsl:value-of select="php:function('lang', 'contract_number')"/>:<xsl:value-of select="value_contract_number"/></div>
-					<div><xsl:value-of select="php:function('lang', 'parties')"/>:<xsl:value-of select="value_parties"/></div>
-					<div><xsl:value-of select="php:function('lang', 'last_updated')"/>:<xsl:value-of select="value_last_updated"/></div>
-					<div><xsl:value-of select="php:function('lang', 'name')"/>:<xsl:value-of select="value_name"/></div>
-					<div><xsl:value-of select="php:function('lang', 'composite')"/>:<xsl:value-of select="value_composite"/></div>
+					<div>
+						<xsl:value-of select="php:function('lang', 'contract_number')"/>:<xsl:value-of select="value_contract_number"/>
+					</div>
+					<div>
+						<xsl:value-of select="php:function('lang', 'parties')"/>:<xsl:value-of select="value_parties"/>
+					</div>
+					<div>
+						<xsl:value-of select="php:function('lang', 'last_updated')"/>:<xsl:value-of select="value_last_updated"/>
+					</div>
+					<div>
+						<xsl:value-of select="php:function('lang', 'name')"/>:<xsl:value-of select="value_name"/>
+					</div>
+					<div>
+						<xsl:value-of select="php:function('lang', 'composite')"/>:<xsl:value-of select="value_composite"/>
+					</div>
 				</div>
 				<div class="pure-u-2-3">
 					<xsl:for-each select="datatable_def">
@@ -48,7 +59,12 @@
 		<xsl:when test="//list_consistency_warnings!=''">
 			<xsl:for-each select="list_consistency_warnings">
 				<dl>
-					<dt><xsl:value-of select="php:function('lang', 'contract_warning')"/></dt><dd><xsl:value-of select="warning"/></dd>
+					<dt>
+						<xsl:value-of select="php:function('lang', 'contract_warning')"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="warning"/>
+					</dd>
 				</dl>
 			</xsl:for-each>			
 		</xsl:when>
@@ -195,13 +211,15 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'security_amount')"/>
 						</label>
-						<xsl:value-of select="security_amount_simbol"/> <input type="text" name="security_amount" value="{value_security_amount}"></input>
+						<xsl:value-of select="security_amount_simbol"/>
+						<input type="text" name="security_amount" value="{value_security_amount}"></input>
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'rented_area')"/>
 						</label>
-						<input type="text" name="rented_area" value="{value_rented_area}"></input> <xsl:value-of select="rented_area_simbol"/>
+						<input type="text" name="rented_area" value="{value_rented_area}"></input>
+						<xsl:value-of select="rented_area_simbol"/>
 					</div>
 					<xsl:choose>
 						<xsl:when test="is_adjustable">				
@@ -243,7 +261,9 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'comment')"/>
 						</label>
-						<textarea cols="40" rows="10" name="comment" id="comment"><xsl:value-of select="value_comment"/></textarea>
+						<textarea cols="40" rows="10" name="comment" id="comment">
+							<xsl:value-of select="value_comment"/>
+						</textarea>
 					</div>
 					<xsl:choose>
 						<xsl:when test="value_publish_comment">
@@ -287,9 +307,13 @@
 								</label>
 								<div class="pure-custom">
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_for')"/>
+										</label>
 										<input type="text" id="composite_query" name="composite_query" value=""></input>
-										<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_where')"/>
+										</label>
 										<select id="composite_search_options" name="composite_search_options">
 											<xsl:apply-templates select="list_composite_search/options"/>
 										</select>										
@@ -297,13 +321,17 @@
 									<div class="pure-control-group">
 										<xsl:choose>
 											<xsl:when test="//list_furnish_types/options!=''">
-												<label><xsl:value-of select="php:function('lang', 'furnish_type')"/></label>
+												<label>
+													<xsl:value-of select="php:function('lang', 'furnish_type')"/>
+												</label>
 												<select id="furnished_status" name="furnished_status">
 													<xsl:apply-templates select="list_furnish_types/options"/>
 												</select>
 											</xsl:when>
 										</xsl:choose>									
-										<label><xsl:value-of select="php:function('lang', 'availability')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'availability')"/>
+										</label>
 										<select id="is_active" name="is_active">
 											<xsl:apply-templates select="list_active/options"/>
 										</select>
@@ -354,19 +382,27 @@
 								</label>
 								<div class="pure-custom">
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_for')"/>
+										</label>
 										<input type="text" id="party_query" name="party_query" value=""></input>
-										<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_where')"/>
+										</label>
 										<select id="party_search_options" name="party_search_options">
 											<xsl:apply-templates select="list_party_search/options"/>
 										</select>										
 									</div>
 									<div class="pure-control-group">									
-										<label><xsl:value-of select="php:function('lang', 'part_of_contract')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'part_of_contract')"/>
+										</label>
 										<select id="party_type" name="party_type">
 											<xsl:apply-templates select="list_party_types/options"/>
 										</select>
-										<label><xsl:value-of select="php:function('lang', 'marked_as')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'marked_as')"/>
+										</label>
 										<select id="active" name="active">
 											<xsl:apply-templates select="list_status/options"/>
 										</select>																				
@@ -432,7 +468,9 @@
 								</label>
 								<div class="pure-custom">
 									<div class="pure-control-group">										
-										<label><xsl:value-of select="php:function('lang', 'invoice')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'invoice')"/>
+										</label>
 										<select id="invoice_id" name="invoice_id">
 											<xsl:apply-templates select="list_invoices/options"/>
 										</select>										
@@ -468,7 +506,9 @@
 										<input type="file" id="ctrl_upoad_path" name="file_path"/>
 									</div>
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'title')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'title')"/>
+										</label>
 										<input type="text" id="document_title" name="document_title"/>
 										<xsl:text> </xsl:text>
 										<select id="document_type" name="document_type">
@@ -488,13 +528,19 @@
 								</label>
 								<div class="pure-custom">
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_for')"/>
+										</label>
 										<input id="document_query" type="text" name="document_query" />
-										<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_where')"/>
+										</label>
 										<select id="document_search_option" name="document_search_option">
 											<xsl:apply-templates select="list_document_search/options"/>
 										</select>
-										<label><xsl:value-of select="php:function('lang', 'document_type')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'document_type')"/>
+										</label>
 										<select id="document_type_search" name="document_type_search">
 											<xsl:apply-templates select="list_document_types/options"/>
 										</select>																	
@@ -537,27 +583,41 @@
 								</label>
 								<div class="pure-custom">
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'date')"/>
+										</label>
 										<input type="text" id="date_notification" name="date_notification" size="10" value="" readonly="readonly"/>												
-										<label><xsl:value-of select="php:function('lang', 'recurrence')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'recurrence')"/>
+										</label>
 										<select id="notification_recurrence" name="notification_recurrence">
 											<xsl:apply-templates select="list_notification_recurrence/options"/>
 										</select>										
 									</div>
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'message')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'message')"/>
+										</label>
 										<input type="text" name="notification_message" id="notification_message" size="50" value="" />									
 									</div>
 									<div class="pure-control-group">
-										<label><xsl:value-of select="php:function('lang', 'user_or_group')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'user_or_group')"/>
+										</label>
 										<select id="notification_target" name="notification_target">
-											<option value=''><xsl:value-of select="php:function('lang', 'target_none')"/></option>
+											<option value=''>
+												<xsl:value-of select="php:function('lang', 'target_none')"/>
+											</option>
 											<xsl:apply-templates select="list_notification_user_group/option_group"/>
 										</select>
 										<xsl:text> </xsl:text>
-										<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
+										<label>
+											<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
+										</label>
 										<select id="notification_location" name="notification_location">
-											<option value=''><xsl:value-of select="php:function('lang', 'target_none')"/></option>
+											<option value=''>
+												<xsl:value-of select="php:function('lang', 'target_none')"/>
+											</option>
 											<xsl:apply-templates select="list_field_of_responsibility/options"/>
 										</select>
 										<xsl:text> </xsl:text>
@@ -710,13 +770,17 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'security_amount')"/>
 						</label>
-						<xsl:value-of select="security_amount_simbol"/> <xsl:text> </xsl:text> <xsl:value-of select="value_security_amount_view"/>
+						<xsl:value-of select="security_amount_simbol"/> 
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="value_security_amount_view"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'rented_area')"/>
 						</label>							
-						<xsl:value-of select="value_rented_area"/> <xsl:text> </xsl:text> <xsl:value-of select="rented_area_simbol"/>
+						<xsl:value-of select="value_rented_area"/> 
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="rented_area_simbol"/>
 					</div>
 					<xsl:choose>
 						<xsl:when test="is_adjustable = 1">				
@@ -725,7 +789,7 @@
 									<xsl:value-of select="php:function('lang', 'adjustable')"/>
 								</label>
 								<input type="checkbox" name="adjustable" id="adjustable" disabled="disabled">
-										<xsl:attribute name="checked" value="checked"/>
+									<xsl:attribute name="checked" value="checked"/>
 								</input>
 							</div>
 							<div class="pure-control-group">
@@ -839,7 +903,9 @@
 						</label>
 						<div class="pure-custom">
 							<div class="pure-control-group">										
-								<label><xsl:value-of select="php:function('lang', 'invoice')"/></label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'invoice')"/>
+								</label>
 								<select id="invoice_id" name="invoice_id">
 									<xsl:apply-templates select="list_invoices/options"/>
 								</select>										
@@ -868,13 +934,19 @@
 						</label>
 						<div class="pure-custom">
 							<div class="pure-control-group">
-								<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_for')"/>
+								</label>
 								<input id="document_query" type="text" name="document_query" />
-								<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_where')"/>
+								</label>
 								<select id="document_search_option" name="document_search_option">
 									<xsl:apply-templates select="list_document_search/options"/>
 								</select>
-								<label><xsl:value-of select="php:function('lang', 'document_type')"/></label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'document_type')"/>
+								</label>
 								<select id="document_type_search" name="document_type_search">
 									<xsl:apply-templates select="list_document_types/options"/>
 								</select>																	

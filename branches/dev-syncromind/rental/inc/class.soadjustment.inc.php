@@ -158,9 +158,9 @@
 				$adjustment->get_year()
 			);
 
-			$values_insert = $this->db->validate_insert($values);
-			$query	 = "INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES ({$values_insert})";
-			$result	 = $this->db->query($query);
+			$values_insert	 = $this->db->validate_insert($values);
+			$query			 = "INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES ({$values_insert})";
+			$result			 = $this->db->query($query);
 
 			$adjustment_id = $this->db->get_last_insert_id('rental_adjustment', 'id');
 			$adjustment->set_id($adjustment_id);
@@ -381,10 +381,10 @@
 
 						$notification = new rental_notification
 						(
-							0, // No notification identifier
-							$account_id, 0, // No location identifier
-							null, // No contract id
-							$ts_today, $location_label . '_' . $adj_interval, null, null, null, null
+						0, // No notification identifier
+	  $account_id, 0, // No location identifier
+	  null, // No contract id
+	  $ts_today, $location_label . '_' . $adj_interval, null, null, null, null
 						);
 						rental_soworkbench_notification::get_instance()->store($notification);
 					}

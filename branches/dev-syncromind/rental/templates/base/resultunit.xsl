@@ -1,4 +1,5 @@
-  <!-- $Id: resultunit.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: resultunit.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -12,10 +13,18 @@
 	<div class="toolbar-container">
 		<div class="pure-g">
 			<div class="pure-u-1-3">
-				<div><xsl:value-of select="php:function('lang', 'unit_id')"/> : <xsl:value-of select="value_org_unit_id"/></div>
-				<div><xsl:value-of select="php:function('lang', 'unit_name')"/> : <xsl:value-of select="value_org_unit_name"/></div>
-				<div><xsl:value-of select="php:function('lang', 'unit_leader_name')"/> : <xsl:value-of select="value_leader_fullname"/></div>
-				<div><xsl:value-of select="php:function('lang', 'unit_no_of_delegates')"/> : <xsl:value-of select="value_unit_no_of_delegates"/></div>
+				<div>
+					<xsl:value-of select="php:function('lang', 'unit_id')"/> : <xsl:value-of select="value_org_unit_id"/>
+				</div>
+				<div>
+					<xsl:value-of select="php:function('lang', 'unit_name')"/> : <xsl:value-of select="value_org_unit_name"/>
+				</div>
+				<div>
+					<xsl:value-of select="php:function('lang', 'unit_leader_name')"/> : <xsl:value-of select="value_leader_fullname"/>
+				</div>
+				<div>
+					<xsl:value-of select="php:function('lang', 'unit_no_of_delegates')"/> : <xsl:value-of select="value_unit_no_of_delegates"/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -32,7 +41,9 @@
 					<input type="hidden" value="{unit_id}" name="unit_id" id="unit_id" />
 					<input type="hidden" value="{unit_level}" name="unit_level" id="unit_level" />
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'username')"/></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'username')"/>
+						</label>
 						<input type="hidden" value="" name="account_id" id="account_id" />
 						<input type="text" id="username" name="username"/> 
 						<xsl:text> </xsl:text>
@@ -41,15 +52,21 @@
 						<div id='custom_message' class='custom-message'/>
 					</div>
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'firstname')"/></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'firstname')"/>
+						</label>
 						<input type="text" id="firstname" name="firstname"/>
 					</div>
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'lastname')"/></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'lastname')"/>
+						</label>
 						<input type="text" id="lastname" name="lastname"/>
 					</div>					
 					<div class="pure-control-group">
-						<label><xsl:value-of select="php:function('lang', 'email')"/></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'email')"/>
+						</label>
 						<input type="text" id="email" name="email"/>
 					</div>	
 					<div class="pure-control-group">

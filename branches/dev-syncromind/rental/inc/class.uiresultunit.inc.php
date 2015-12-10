@@ -214,7 +214,7 @@
 						'id'				 => $unit_id,
 						'phpgw_return_as'	 => 'json'
 					)) . ";
-							var parameters = " . json_encode(array('parameter' => array(array('name' => 'account_id',
+							var parameters = " . json_encode(array('parameter' => array(array('name'	 => 'account_id',
 								'source' => 'account_id'), array('name' => 'owner_id', 'source' => 'owner_id')))) . ";
 							removeDelegate(oArgs, parameters);
 						"
@@ -224,8 +224,8 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uidelegate.query',
-					'unit_id' => $unit_id, 'type' => 'included_delegates', 'phpgw_return_as' => 'json'))),
+				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'rental.uidelegate.query',
+					'unit_id'			 => $unit_id, 'type'				 => 'included_delegates', 'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => array(
 					array('key' => 'account_lastname', 'label' => lang('lastname'), 'sortable' => true),
 					array('key' => 'account_firstname', 'label' => lang('firstname'), 'sortable' => true)
@@ -249,18 +249,18 @@
 
 			$data = array
 				(
-				'datatable_def' => $datatable_def,
-				'cancel_url'	 => $GLOBALS['phpgw']->link('/index.php', $link_index),
-				'lang_search'	 => lang('search'),
-				'lang_add'		 => lang('add'),
-				'lang_cancel'	 => lang('cancel'),
+				'datatable_def'				 => $datatable_def,
+				'cancel_url'				 => $GLOBALS['phpgw']->link('/index.php', $link_index),
+				'lang_search'				 => lang('search'),
+				'lang_add'					 => lang('add'),
+				'lang_cancel'				 => lang('cancel'),
 				'value_org_unit_id'			 => $unit["ORG_UNIT_ID"],
 				'value_org_unit_name'		 => $unit["ORG_UNIT_NAME"],
 				'value_leader_fullname'		 => $unit["LEADER_FULLNAME"],
 				'value_unit_no_of_delegates' => $unit["UNIT_NO_OF_DELEGATES"],
-				'unit_id'	 => $unit_id,
-				'unit_level' => $unit_level,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'unit_id'					 => $unit_id,
+				'unit_level'				 => $unit_level,
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			self::add_javascript('rental', 'rental', 'resultunit.edit.js');
@@ -319,13 +319,13 @@
 				switch($res)
 				{
 					case 1:
-						$result['message']['msg'] = lang('delegation_successful');
+						$result['message']['msg']	 = lang('delegation_successful');
 						break;
 					case 2:
-						$result['message']['msg'] = lang('delegation_successful_message_sendt');
+						$result['message']['msg']	 = lang('delegation_successful_message_sendt');
 						break;
 					default:
-						$result['error']['msg'] = lang('delegation_error');
+						$result['error']['msg']		 = lang('delegation_error');
 						break;
 				}
 			}

@@ -6,12 +6,14 @@
 	/**
 	 * Intended for custom configuration on contracts.
 	 *
-	* @author Sigurd Nes <sigurdne@online.no>
+	 * @author Sigurd Nes <sigurdne@online.no>
 	 */
 	class rental_NLSH_add_contract_from_composite
 	{
+
 		function __construct()
 		{
+
 		}
 
 		/**
@@ -20,10 +22,10 @@
 		 */
 		function validate(&$data)
 		{
-			$contract = $data['contract'];
-			$location_arr = explode('-', $data['location_code']);
-			$loc1 = $location_arr[0];
-			$loc2 = $location_arr[1];
+			$contract		 = $data['contract'];
+			$location_arr	 = explode('-', $data['location_code']);
+			$loc1			 = $location_arr[0];
+			$loc2			 = $location_arr[1];
 
 			if($loc1 > 8006 && $loc1 < 8100)
 			{
@@ -47,12 +49,10 @@
 
 			$contract->set_responsibility_id($responsibility_id);
 			return;
-
 		}
 	}
-
 	$process = new rental_NLSH_add_contract_from_composite($data);
-	if($_error = $process->validate($data))
+	if($_error	 = $process->validate($data))
 	{
-		return 	$receipt['error'][]=array('msg'=>$_error);
+		return $receipt['error'][] = array('msg' => $_error);
 	}

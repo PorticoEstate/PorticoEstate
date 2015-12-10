@@ -23,7 +23,7 @@
 		{
 			if(self::$so == null)
 			{
-				self::$so = CreateObject('rental.sobilling');
+				self::$so							 = CreateObject('rental.sobilling');
 				$virtual_file_system				 = CreateObject('phpgwapi.vfs');
 				$virtual_file_system->override_acl	 = 1;
 				self::$so->vfs						 = $virtual_file_system;
@@ -161,7 +161,7 @@
 		public function add(&$billing)
 		{
 			$values	 = array
-			(
+				(
 				$this->marshal($billing->get_total_sum(), 'float'),
 				$billing->is_success() ? 'true' : 'false',
 				$this->marshal($billing->get_created_by(), 'int'),
@@ -187,7 +187,7 @@
 		public function update($billing)
 		{
 			$values	 = array
-			(
+				(
 				'total_sum = ' . $this->marshal($billing->get_total_sum(), 'float'),
 				"success = '" . ($billing->is_success() ? 'true' : 'false') . "'",
 				'timestamp_start = ' . $this->marshal($billing->get_timestamp_start(), 'int'),
@@ -305,7 +305,7 @@
 
 			foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 			{
-				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id, $contracts_overriding_billing_start) ? true : false, $bill_from_timestamp, $billing_end_timestamp, in_array($contract_id, $contracts_bill_only_one_time) ? true : false, false, $billing_term ); // Creates an invoice of the contract
+				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id, $contracts_overriding_billing_start) ? true : false, $bill_from_timestamp, $billing_end_timestamp, in_array($contract_id, $contracts_bill_only_one_time) ? true : false, false, $billing_term); // Creates an invoice of the contract
 				if($invoice != null)
 				{
 					$total_sum += $invoice->get_total_sum();
@@ -407,12 +407,12 @@
 					{
 						$result = $vfs->write
 						(
-							array
+						array
 							(
-								'string'	 => $file_path,
-								RELATIVE_NONE,
-								'content'	 => $export_data
-							)
+							'string'	 => $file_path,
+							RELATIVE_NONE,
+							'content'	 => $export_data
+						)
 						);
 						if($result)
 						{
@@ -469,5 +469,4 @@
 			}
 			return '';
 		}
-
 	}

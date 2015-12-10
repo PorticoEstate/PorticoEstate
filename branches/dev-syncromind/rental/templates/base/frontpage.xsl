@@ -1,4 +1,5 @@
-  <!-- $Id: frontpage.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
+
+<!-- $Id: frontpage.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
@@ -17,7 +18,9 @@
 		var params_terminated_contracts = <xsl:value-of select="params_terminated_contracts"/>;
 		var params_notifications = <xsl:value-of select="params_notifications"/>;
 	</script>
-	<h3><xsl:value-of select="php:function('lang', 'dashboard_title')"/></h3>
+	<h3>
+		<xsl:value-of select="php:function('lang', 'dashboard_title')"/>
+	</h3>
 	<div>
 		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">

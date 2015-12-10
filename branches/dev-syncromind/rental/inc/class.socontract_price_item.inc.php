@@ -363,9 +363,9 @@
 				$months			 = $months - 1;
 				$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
 			}
-			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+			$timestamp_end	 = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
 			//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
-			$q_total_price = "SELECT sum(total_price::numeric) AS sum_total ";
+			$q_total_price	 = "SELECT sum(total_price::numeric) AS sum_total ";
 			$q_total_price .= "FROM rental_contract_price_item ";
 			$q_total_price .= "WHERE contract_id={$contract_id} ";
 			$q_total_price .= "AND NOT is_billed ";

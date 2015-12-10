@@ -537,9 +537,9 @@
 		function adjust_contract_price_items(int $price_item_id, $new_price)
 		{
 			$this->db->transaction_begin();
-			$number_affected = 0;
-			$db2 = clone($this->db);
-			$q_contract_price_items = "SELECT * FROM rental_contract_price_item WHERE price_item_id={$price_item_id}";
+			$number_affected		 = 0;
+			$db2					 = clone($this->db);
+			$q_contract_price_items	 = "SELECT * FROM rental_contract_price_item WHERE price_item_id={$price_item_id}";
 			$this->db->query($q_contract_price_items);
 			while($this->db->next_record())
 			{
