@@ -7,16 +7,16 @@
 		function __construct()
 		{
 			parent::__construct('bb_contact_person', array(
-				'id'			 => array('type' => 'auto', 'nullable' => false),
-				'ssn'			 => array('type' => 'varchar', 'precision' => '12', 'nullable' => True,),
-				'name'			 => array('type' => 'varchar', 'precision' => '50', 'nullable' => False,
+				'id'			 => array('type' => 'int', 'nullable' => false),
+				'ssn'			 => array('type' => 'string', 'precision' => '12', 'nullable' => True,),
+				'name'			 => array('type' => 'string', 'precision' => '50', 'nullable' => False,
 					'query' => true,),
-				'homepage'		 => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
-				'phone'			 => array('type' => 'varchar', 'precision' => '50', 'nullable' => False,
+				'homepage'		 => array('type' => 'string', 'precision' => '50', 'nullable' => False),
+				'phone'			 => array('type' => 'string', 'precision' => '50', 'nullable' => False,
 					'default' => ''),
-				'email'			 => array('type' => 'varchar', 'precision' => '50', 'nullable' => False,
+				'email'			 => array('type' => 'string', 'precision' => '50', 'nullable' => False,
 					'default' => ''),
-				'description'	 => array('type' => 'varchar', 'precision' => '1000', 'nullable' => False,
+				'description'	 => array('type' => 'string', 'precision' => '1000', 'nullable' => False,
 					'default' => ''),
 			)
 			);

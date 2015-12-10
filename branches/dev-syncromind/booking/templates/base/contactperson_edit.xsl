@@ -33,25 +33,12 @@
 				</input>
 				<a class="cancel">
 					<xsl:attribute name="href">
-						<xsl:value-of select="booking/cancel_link"/>
+						<xsl:value-of select="person/cancel_link"/>
 					</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</a>
 			</div>
 		</form>
 	</div>
-
-	<script type="text/javascript">
-<![CDATA[
-var descEdit = new YAHOO.widget.SimpleEditor('contact-field-description', {
-    height: '300px',
-    width: '522px',
-    dompath: true,
-    animate: true,
-	handleSubmit: true
-});
-descEdit.render();
-]]>
-	</script>
 </xsl:template>
 

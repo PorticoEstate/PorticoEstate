@@ -18,18 +18,23 @@
 			$this->bo		 = CreateObject('booking.bocontactperson');
 			self::set_active_menu('booking::contacts');
 			$this->module	 = "booking";
+			$this->fields	 = array(
+				'name'			 => 'string',
+				'ssn'			 => 'string',
+				'homepage'		 => 'url',
+				'phone'			 => 'string',
+				'email'			 => 'email',
+				'description'	 => 'html',
+			);
 		}
 
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->index_json();
+				return $this->query();
 			}
 
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -52,17 +57,13 @@
 					),
 				),
 				'datatable'	 => array(
-					'source' => self::link(array('menuaction' => 'booking.uicontactperson.index',
-						'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction'		 => 'booking.uicontactperson.index',
+						'phpgw_return_as'	 => 'json')),
 					'field'	 => array(
 						array(
 							'key'		 => 'name',
 							'label'		 => lang('First name'),
-							'formatter'	 => 'YAHOO.booking.formatLink'
-						),
-						array(
-							'key'	 => 'surname',
-							'label'	 => lang('Surname'),
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key'	 => 'organization',
@@ -73,7 +74,7 @@
 							'label'	 => lang('Phone')
 						),
 						array(
-							'key'	 => 'mail',
+							'key'	 => 'email',
 							'label'	 => lang('Email')
 						),
 						array(
@@ -83,36 +84,33 @@
 					)
 				)
 			);
-			self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			if($id = phpgw::get_var('id', 'int'))
 			{
 				$person = $this->bo->read_single($id);
-				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
+				return $this->jquery_results(array("totalResultsAvailable" => 1, "results" => $person));
 			}
 
 			$persons = $this->bo->read();
 			array_walk($persons["results"], array($this, "_add_links"), "booking.uicontactperson.show");
-			return $this->yui_results($persons);
+			return $this->jquery_results($persons);
 		}
-		function query()
-		{
-			
-		}
+
 		public function show()
 		{
 			$person							 = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$person['contactpersons_link']	 = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 			$person['edit_link']			 = self::link(array('menuaction' => 'booking.uicontactperson.edit',
-				'id' => $person['id']));
+				'id'		 => $person['id']));
 
 			$data = array(
 				'group' => $group
 			);
-			self::render_template('contactperson', array('person' => $person,));
+			self::render_template_xsl('contactperson', array('person' => $person,));
 		}
 
 		public function edit()
@@ -124,7 +122,8 @@
 				$person['id']					 = $id;
 				$person['contactpersons_link']	 = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 				$person['edit_link']			 = self::link(array('menuaction' => 'booking.uicontactperson.edit',
-					'id' => $person['id']));
+					'id'		 => $person['id']));
+				$person['cancel_link']			 = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 			}
 			else
 			{
@@ -134,8 +133,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$person	 = array_merge($person, extract_values($_POST, array('ssn', 'name', 'homepage',
-					'phone', 'email', 'description',)));
+				$person	 = array_merge($person, extract_values($_POST, $this->fields));
 				$errors	 = $this->bo->validate($person);
 				if(!$errors)
 				{
@@ -148,19 +146,13 @@
 						$receipt = $this->bo->add($person);
 					}
 					$this->redirect(array('menuaction' => $this->module . '.uicontactperson.show',
-						'id' => $receipt['id']));
+						'id'		 => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
-
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
-			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
-			self::add_javascript('yahoo', 'yahoo/dom', 'dom-min.js');
-			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+			phpgwapi_jquery::init_ckeditor('contact-field-description');
 
 			self::add_template_file("contactperson_fields");
-			self::render_template('contactperson_edit', array('person' => $person,));
+			self::render_template_xsl('contactperson_edit', array('person' => $person,));
 		}
 	}
