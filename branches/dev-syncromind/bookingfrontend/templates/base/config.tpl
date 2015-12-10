@@ -4,22 +4,22 @@
 		<tr class="th">
 			<td colspan="2">&nbsp;<b>{title}</b></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
-	   <tr class="row_on">
-	    <td>{lang_remote_authentication}:</td>
-	    <td>
-	     <select name="newsettings[authentication_method]">
-{hook_authentication}
-	     </select>
-	    </td>
-	   </tr>
+		<tr class="row_on">
+			<td>{lang_remote_authentication}:</td>
+			<td>
+				<select name="newsettings[authentication_method]">
+					{hook_authentication}
+				</select>
+			</td>
+		</tr>
 		<tr class="row_on">
 			<td>{lang_custom_login_url}:</td>
 			<td><input name="newsettings[custom_login_url]" value="{value_custom_login_url}"></td>
@@ -83,28 +83,28 @@
 		</tr>
 		<tr class="row_off">
 			<td>{lang_url_to_external_logout}:
-			<br/> Redirect is computed if url ends with '='
+				<br/> Redirect is computed if url ends with '='
 			</td>
 			<td><input name="newsettings[external_logout]" value="{value_external_logout}"></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_bookingfrontend_host}:
-			<br/> Needed for the return from the external_logout
+				<br/> Needed for the return from the external_logout
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_customtemplate}:
-			<br/> Custom template for frontend
+				<br/> Custom template for frontend
 			</td>
 			<td><input name="newsettings[customtemplate]" value="{value_customtemplate}"/></td>
 		</tr>
 
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="th">
 			<td colspan="2">
-&nbsp;
+				&nbsp;
 			</td>
 		</tr>
 		<tr>

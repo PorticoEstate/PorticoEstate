@@ -193,36 +193,4 @@
             });
         ]]>
     </script>
-
-    <!--script type="text/javascript">
-    var endpoint = '<xsl:value-of select="module" />';
-    <![CDATA[
-    var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
-        height: '300px',
-        width: '522px',
-        dompath: true,
-        animate: true,
-        handleSubmit: true,
-            toolbar: {
-                titlebar: '',
-                buttons: [
-                   { group: 'textstyle', label: ' ',
-                        buttons: [
-                            { type: 'push', label: 'Bold', value: 'bold' },
-                            { type: 'separator' },
-                            { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink'}
-                        ]
-                    }
-                ]
-            }
-    });
-    descEdit.render();
-
-    YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiorganization.index&phpgw_return_as=json&',
-        'field_organization_name',
-        'field_organization_id',
-        'organization_container'
-    );
-    ]]>
-    </script-->
 </xsl:template>

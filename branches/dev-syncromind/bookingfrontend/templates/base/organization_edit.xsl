@@ -268,48 +268,27 @@
             <script type="text/javascript">
                 var endpoint = '<xsl:value-of select="module" />';
             </script>
-
-            <!--script type="text/javascript">
-            var endpoint = '<xsl:value-of select="module" />';
-            <![CDATA[
-            var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
-                height: '300px',
-                width: '522px',
-                dompath: true,
-                animate: true,
-                handleSubmit: true,
-                    toolbar: {
-                        titlebar: '',
-                        buttons: [
-                           { group: 'textstyle', label: ' ',
-                                buttons: [
-                                    { type: 'push', label: 'Bold', value: 'bold' },
-                                    { type: 'separator' },
-                                    { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink'}
-                                ]
-                            }
-                        ]
-                    }
-            });
-            descEdit.render();
-
-            ]]>
-            </script-->
-            <div class="form-buttons">
-                <input type="submit">
-                    <xsl:if test="new_form">
-                        <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="not(new_form)">
-                        <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
-                    </xsl:if>
-                </input>
-                <a class="cancel">
-                    <xsl:attribute name="href"><xsl:value-of select="organization/cancel_link"/></xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Cancel')" />
-                </a>
-            </div>
-        </form>
-    </div>
+			<div class="form-buttons">
+				<input type="submit">
+					<xsl:if test="new_form">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'Create')" />
+						</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="not(new_form)">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'Save')" />
+						</xsl:attribute>
+					</xsl:if>
+				</input>
+				<a class="cancel">
+					<xsl:attribute name="href">
+						<xsl:value-of select="organization/cancel_link"/>
+					</xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'Cancel')" />
+				</a>
+			</div>
+		</form>
+	</div>
 
 </xsl:template>
