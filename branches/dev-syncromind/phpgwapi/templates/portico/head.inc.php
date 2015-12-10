@@ -1,5 +1,4 @@
 <?php
-	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.template_portico');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )

@@ -33,7 +33,7 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	phpgw::import_class('controller.socheck_list');
 
@@ -47,7 +47,7 @@
 	include_class('controller', 'year_calendar_agg', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 
-	class controller_uicomponent extends phpgwapi_uicommon
+	class controller_uicomponent extends phpgwapi_uicommon_jquery
 	{
 
 		private $so;

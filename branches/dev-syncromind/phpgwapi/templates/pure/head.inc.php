@@ -7,9 +7,6 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-//	phpgw::import_class('phpgwapi.yui');
-//	phpgwapi_yui::load_widget('button');
-//	phpgwapi_yui::load_widget('container');
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
