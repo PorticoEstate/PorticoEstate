@@ -10,7 +10,7 @@
 	<xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-    <form action="" method="POST" id='report_form' class="pure-form pure-form-stacked" name="form">
+	<form action="" method="POST" id='report_form' class="pure-form pure-form-stacked" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="report/tabs"/>
@@ -54,15 +54,15 @@
 									</h4>
 								</label>
 								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
-                                    <xsl:attribute name="data-validation">
-                                        <xsl:text>number</xsl:text>
-                                    </xsl:attribute>
-                                   <xsl:attribute name="data-validation-allowing">
-                                        <xsl:text>positive</xsl:text>
-                                    </xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>number</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-allowing">
+										<xsl:text>positive</xsl:text>
+									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-                                    </xsl:attribute>
+									</xsl:attribute>
 									<option value="-1">
 										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 									</option>
@@ -136,7 +136,9 @@
 									</h4>
 								</label>
 								<div id="resources_container">
-									<span class="select_first_text"><xsl:value-of select="php:function('lang', 'Select a building first')" /></span>
+									<span class="select_first_text">
+										<xsl:value-of select="php:function('lang', 'Select a building first')" />
+									</span>
 								</div>
 							</div>
 						</div>
@@ -154,34 +156,42 @@
 									<div class="date-container">
 										<div class="pure-control-group">
 											<label for="start_date">
-												<h4><xsl:value-of select="php:function('lang', 'From')" /></h4>
+												<h4>
+													<xsl:value-of select="php:function('lang', 'From')" />
+												</h4>
 											</label>
 											<input class="datetime pure-input-1-2" id="start_date" name="start_date" type="text" value="{report/start_date}">
 												<xsl:attribute name="data-validation">
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
-                                                <xsl:attribute name="data-validation-error-msg">
-                                                    <xsl:value-of select="php:function('lang', 'Please enter a from date')" />
-                                                </xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+												</xsl:attribute>
 											</input>
 										</div>
 										<div class="pure-control-group">
 											<label for="end_date">
-												<h4><xsl:value-of select="php:function('lang', 'To')" /></h4>
+												<h4>
+													<xsl:value-of select="php:function('lang', 'To')" />
+												</h4>
 											</label>
 											<input class="datetime pure-input-1-2" id="end_date" name="end_date" type="text" value="{report/end_date}">
 												<xsl:attribute name="data-validation">
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
-                                                <xsl:attribute name="data-validation-error-msg">
-                                                    <xsl:value-of select="php:function('lang', 'Please enter an end date')" />
-                                                </xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+												</xsl:attribute>
 											</input>
 										</div>
 									</div>
 									
 									<div class="pure-g" >
-										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" ><h4><xsl:value-of select="php:function('lang', 'start time')" /></h4></div>
+										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" >
+											<h4>
+												<xsl:value-of select="php:function('lang', 'start time')" />
+											</h4>
+										</div>
 
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
 											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00" value="{report/start_hour}"></input>
@@ -193,7 +203,11 @@
 											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00" value="{report/start_minute}"></input>
 										</div>
 
-										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1"><h4><xsl:value-of select="php:function('lang', 'end time')" /></h4></div>
+										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1">
+											<h4>
+												<xsl:value-of select="php:function('lang', 'end time')" />
+											</h4>
+										</div>
 
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
 											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00" value="{report/end_hour}"></input>
@@ -222,11 +236,11 @@
 													<xsl:attribute name="data-validation">checkbox_group</xsl:attribute>
 													<xsl:attribute name="data-validation-qty">min1</xsl:attribute>
 													<!--xsl:if test="selected = 1"-->
-                                                    <xsl:attribute name="checked">checked</xsl:attribute>
+													<xsl:attribute name="checked">checked</xsl:attribute>
 													<!--/xsl:if-->
-                                                    <xsl:attribute name="data-validation-error-msg">
-                                                        <xsl:value-of select="php:function('lang', 'Please choose at least 1 weekday')" />
-                                                    </xsl:attribute>
+													<xsl:attribute name="data-validation-error-msg">
+														<xsl:value-of select="php:function('lang', 'Please choose at least 1 weekday')" />
+													</xsl:attribute>
 												</input>
 												<xsl:value-of select="name" />
 											</label>

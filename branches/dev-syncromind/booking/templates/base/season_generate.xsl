@@ -1,11 +1,11 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 	<xsl:call-template name="msgbox"/>
-    <form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
-        <input type="hidden" name="tab" value="" />
-        <div id="tab-content">
-            <xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
-            <div id="generate_allocations">
+	<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
+		<input type="hidden" name="tab" value="" />
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
+			<div id="generate_allocations">
 				<xsl:if test="step = 1">
 					<div class="pure-control-group">
 						<xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (1/2)
@@ -60,10 +60,14 @@
 						<xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (2/2)
 					</div>					
 					<input type="hidden" name="from_">
-						<xsl:attribute name="value"><xsl:value-of select="from_" /></xsl:attribute>
+						<xsl:attribute name="value">
+							<xsl:value-of select="from_" />
+						</xsl:attribute>
 					</input>
 					<input type="hidden" name="to_">
-						<xsl:attribute name="value"><xsl:value-of select="to_" /></xsl:attribute>
+						<xsl:attribute name="value">
+							<xsl:value-of select="to_" />
+						</xsl:attribute>
 					</input>
 					<div class="pure-control-group">
 						<label></label>
@@ -117,24 +121,30 @@
 						</div>
 					</div>
 				</xsl:if>
-            </div>
-        </div>
+			</div>
+		</div>
 		<div class="form-buttons">
 			<xsl:if test="step = 1">
 				<input type="submit" class="pure-button pure-button-primary" name="calculate">
-					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Preview')" /></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Preview')" />
+					</xsl:attribute>
 				</input>
 			</xsl:if>
 			<xsl:if test="step = 2">
 				<input type="submit" class="pure-button pure-button-primary" name="create">
-					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Create')" />
+					</xsl:attribute>
 				</input>
 			</xsl:if>
 			<input type="button" class="pure-button pure-button-primary" name="cancel">
 				<xsl:attribute name="onclick">window.location="<xsl:value-of select="season/wtemplate_link"/>"</xsl:attribute>
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel')" /></xsl:attribute>	
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'Cancel')" />
+				</xsl:attribute>
 			</input>			
 		</div>
-    </form>
+	</form>
 
 </xsl:template>

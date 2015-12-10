@@ -1,19 +1,23 @@
 <xsl:template name="contactpersonmagic" xmlns:php="http://php.net/xsl">
-    <div id="contactpersonform" style="visibility:hidden;">
-        <div class="hd"><xsl:value-of select="php:function('lang', 'New contact')" /></div>
-        <div class="bd">
-            <form method="POST" id="thepersonform">
-				<xsl:attribute name="action"><xsl:value-of select="contact_form_link" /></xsl:attribute>
-                <xsl:call-template name="contactpersonfields" />
-            </form>
-        </div>
-    </div>
-<script type="text/javascript">
-var lang_submit = '<xsl:value-of select="php:function('lang', 'Save')"/>';
-var lang_cancel = '<xsl:value-of select="php:function('lang', 'Cancel')" />';
-var contactFormLink = '<xsl:value-of select="contact_form_link" />';
-var newContactText = '<xsl:value-of select="php:function('lang', 'New contact')" />';
-var editContactText = '<xsl:value-of select="php:function('lang', 'Edit contact')" />'
+	<div id="contactpersonform" style="visibility:hidden;">
+		<div class="hd">
+			<xsl:value-of select="php:function('lang', 'New contact')" />
+		</div>
+		<div class="bd">
+			<form method="POST" id="thepersonform">
+				<xsl:attribute name="action">
+					<xsl:value-of select="contact_form_link" />
+				</xsl:attribute>
+				<xsl:call-template name="contactpersonfields" />
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var lang_submit = '<xsl:value-of select="php:function('lang', 'Save')"/>';
+		var lang_cancel = '<xsl:value-of select="php:function('lang', 'Cancel')" />';
+		var contactFormLink = '<xsl:value-of select="contact_form_link" />';
+		var newContactText = '<xsl:value-of select="php:function('lang', 'New contact')" />';
+		var editContactText = '<xsl:value-of select="php:function('lang', 'Edit contact')" />'
 <![CDATA[
 var handleSubmit = function() {this.submit();};
 var handleCancel = function() {this.cancel();};
@@ -84,6 +88,6 @@ function editContact(fieldid) {
 }
 
 ]]>
-</script>
+	</script>
 
 </xsl:template>

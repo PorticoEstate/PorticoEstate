@@ -4,8 +4,8 @@
 		<tr class="th">
 			<td colspan="2">&nbsp;<b>{title}</b></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -39,11 +39,11 @@
 			</td>
 		</tr>
 
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="th">
 			<td colspan="2">
-&nbsp;
+				&nbsp;
 			</td>
 		</tr>
 		<tr>

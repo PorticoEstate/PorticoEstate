@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
-        <xsl:call-template name="msgbox"/>
-        <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
+	<div id="content">
+		<xsl:call-template name="msgbox"/>
+		<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="billing/tabs"/>
 				<div id="settings" class="booking-container">
@@ -213,13 +213,13 @@
 					</div>
 				</div>
 			</div>
-            <div class="form-buttons">
-                <input type="submit" class="button pure-button pure-button-primary">
-                    <xsl:attribute name="value">
-                        <xsl:value-of select="php:function('lang', 'Save')"/>
-                    </xsl:attribute>
-                </input>
-            </div>
-        </form>
-    </div>
+			<div class="form-buttons">
+				<input type="submit" class="button pure-button pure-button-primary">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Save')"/>
+					</xsl:attribute>
+				</input>
+			</div>
+		</form>
+	</div>
 </xsl:template>

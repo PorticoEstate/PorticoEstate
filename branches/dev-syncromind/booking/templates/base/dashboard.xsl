@@ -1,9 +1,11 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
 	<div id="content">
-	    <h3><xsl:value-of select="php:function('lang', 'Active applications')" /></h3>
+		<h3>
+			<xsl:value-of select="php:function('lang', 'Active applications')" />
+		</h3>
     
-	    <div id="apps_container"/>
+		<div id="apps_container"/>
 
 	</div>
 	<script type="text/javascript">
