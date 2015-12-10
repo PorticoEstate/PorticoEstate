@@ -8,20 +8,19 @@
 	 * @package booking
 	 * @version $Id: class.hook_helper.inc.php 13774 2015-08-25 13:29:40Z sigurdne $
 	 */
-
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
 	phpgw::import_class('phpgwapi.datetime');
@@ -33,23 +32,23 @@
 	 */
 	class booking_hook_helper
 	{
-/*
-			$args = array
-			(
-				'id'		=> $category['id'],
-				'location'	=> $function_name,
-			);
+		/*
+		  $args = array
+		  (
+		  'id'		=> $category['id'],
+		  'location'	=> $function_name,
+		  );
 
-			$GLOBALS['phpgw']->hooks->single($args, 'booking');
-*/
+		  $GLOBALS['phpgw']->hooks->single($args, 'booking');
+		 */
 
 		/**
 		 * Handle a new activity being added, create location to hold ACL-data
 		 */
 		function activity_add($data)
 		{
-			$GLOBALS['phpgw']->locations->add(".application.{$data['id']}",$data['name'],'booking',false,	null,false,true);
-			$GLOBALS['phpgw']->locations->add(".resource.{$data['id']}",$data['name'],'booking',false,	null,false,true);
+			$GLOBALS['phpgw']->locations->add(".application.{$data['id']}", $data['name'], 'booking', false, null, false, true);
+			$GLOBALS['phpgw']->locations->add(".resource.{$data['id']}", $data['name'], 'booking', false, null, false, true);
 		}
 
 		/**

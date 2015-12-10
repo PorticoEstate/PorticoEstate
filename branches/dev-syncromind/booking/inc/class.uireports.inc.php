@@ -82,10 +82,10 @@
 				$report['variable_vertical']	 = phpgw::get_var('variable_vertical');
 				$report['all_buildings']		 = phpgw::get_var('all_buildings', 'bool');
 				//			_debug_array($report);
-				$from_			 = phpgwapi_datetime::date_to_timestamp($report['start_date']);
-				$to_			 = phpgwapi_datetime::date_to_timestamp($report['end_date']);
+				$from_							 = phpgwapi_datetime::date_to_timestamp($report['start_date']);
+				$to_							 = phpgwapi_datetime::date_to_timestamp($report['end_date']);
 
-				if($report['all_buildings'] && (($to_ - $from_) > 24*3600*31))
+				if($report['all_buildings'] && (($to_ - $from_) > 24 * 3600 * 31))
 				{
 					$errors[] = lang('Maximum 1 month for all buildings');
 				}
@@ -149,16 +149,16 @@
 				array('id' => 'audience', 'name' => lang('audience')),
 				array('id' => 'activity', 'name' => lang('activities')),
 			);
-			$report_types	 = array(
+			$report_types					 = array(
 				array(
-					'id' => 'participants_per_agegroupe',
-					'name' => lang('participants_per_agegroupe'),
-					'selected' => $report_type == 'participants_per_agegroupe' ? 1 : 0
+					'id'		 => 'participants_per_agegroupe',
+					'name'		 => lang('participants_per_agegroupe'),
+					'selected'	 => $report_type == 'participants_per_agegroupe' ? 1 : 0
 				),
 				array(
-					'id' => 'cover_ratio',
-					'name' => lang('cover ratio'),
-					'selected' => $report_type == 'cover_ratio' ? 1 : 0
+					'id'		 => 'cover_ratio',
+					'name'		 => lang('cover ratio'),
+					'selected'	 => $report_type == 'cover_ratio' ? 1 : 0
 				),
 			);
 
@@ -180,8 +180,8 @@
 				'file'), 'report_form');
 
 			$this->add_template_helpers();
-			self::render_template_xsl('report_new', array('report'	 => $report, 'activities' => $activities,
-				'agegroups'	 => $agegroups, 'audience'	 => $audience, 'report_types' => $report_types));
+			self::render_template_xsl('report_new', array('report'		 => $report, 'activities'	 => $activities,
+				'agegroups'		 => $agegroups, 'audience'		 => $audience, 'report_types'	 => $report_types));
 		}
 
 		/**
@@ -313,9 +313,9 @@
 
 					if($data['start_hour'] && $data['end_hour'])
 					{
-						$Overlap = new OverlapCalculator($time_in, $time_out);
-						$entry['boundary_from'] = date('H:i', $time_in);
-						$entry['boundary_to'] = date('H:i', $time_out);
+						$Overlap				 = new OverlapCalculator($time_in, $time_out);
+						$entry['boundary_from']	 = date('H:i', $time_in);
+						$entry['boundary_to']	 = date('H:i', $time_out);
 					}
 
 					while($db->next_record())
@@ -627,7 +627,8 @@ HTML;
 
 			$data				 = array();
 			$data['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$data['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
+			$data['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
 
 			self::render_template_xsl('report_participants', array('data'		 => $data, 'from'		 => $from,
 				'to'		 => $to, 'buildings'	 => $buildings['results']));

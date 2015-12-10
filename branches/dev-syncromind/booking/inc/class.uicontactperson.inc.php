@@ -3,88 +3,93 @@
 
 	class booking_uicontactperson extends booking_uicommon
 	{
-		public $public_functions = array
-		(
-			'index'			=>	true,
-			'show'          =>  true,
-			'edit'          => true,
-		);
 
+		public $public_functions = array
+			(
+			'index'	 => true,
+			'show'	 => true,
+			'edit'	 => true,
+		);
 		protected $module;
 
 		public function __construct()
 		{
 			parent::__construct();
-			$this->bo = CreateObject('booking.bocontactperson');
+			$this->bo		 = CreateObject('booking.bocontactperson');
 			self::set_active_menu('booking::contacts');
-			$this->module = "booking";
+			$this->module	 = "booking";
 		}
-        public function index()
-        {
-            if(phpgw::get_var('phpgw_return_as') == 'json') {
-                return $this->index_json();
-            }
+
+		public function index()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->index_json();
+			}
 
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			$data = array(
-				'form' => array(
+				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'link',
-								'value' => lang('New contact'),
-								'href' => self::link(array('menuaction' => 'booking.uicontactperson.edit'))
+								'type'	 => 'link',
+								'value'	 => lang('New contact'),
+								'href'	 => self::link(array('menuaction' => 'booking.uicontactperson.edit'))
 							),
 							array(
-								'type' => 'text',
-								'name' => 'query'
+								'type'	 => 'text',
+								'name'	 => 'query'
 							),
 							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
+								'type'	 => 'submit',
+								'name'	 => 'search',
+								'value'	 => lang('Search')
 							),
 						)
 					),
 				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uicontactperson.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
+				'datatable'	 => array(
+					'source' => self::link(array('menuaction' => 'booking.uicontactperson.index',
+						'phpgw_return_as' => 'json')),
+					'field'	 => array(
 						array(
-							'key' => 'name',
-							'label' => lang('First name'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'key'		 => 'name',
+							'label'		 => lang('First name'),
+							'formatter'	 => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'surname',
-							'label' => lang('Surname'),
+							'key'	 => 'surname',
+							'label'	 => lang('Surname'),
 						),
 						array(
-							'key' => 'organization',
-							'label' => lang('Organization')
+							'key'	 => 'organization',
+							'label'	 => lang('Organization')
 						),
 						array(
-							'key' => 'phone',
-							'label' => lang('Phone')
+							'key'	 => 'phone',
+							'label'	 => lang('Phone')
 						),
 						array(
-							'key' => 'mail',
-							'label' => lang('Email')
+							'key'	 => 'mail',
+							'label'	 => lang('Email')
 						),
 						array(
-							'key' => 'link',
+							'key'	 => 'link',
 							'hidden' => true
 						)
 					)
 				)
 			);
 			self::render_template('datatable', $data);
-        }
-        public function index_json()
-        {   
-			if ($id = phpgw::get_var('id', 'int')) {
+		}
+
+		public function index_json()
+		{
+			if($id = phpgw::get_var('id', 'int'))
+			{
 				$person = $this->bo->read_single($id);
 				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
 			}
@@ -92,43 +97,58 @@
 			$persons = $this->bo->read();
 			array_walk($persons["results"], array($this, "_add_links"), "booking.uicontactperson.show");
 			return $this->yui_results($persons);
-        }
+		}
+		function query()
+		{
+			
+		}
 		public function show()
 		{
-			$person = $this->bo->read_single(phpgw::get_var('id', 'int'));
-			$person['contactpersons_link'] = self::link(array('menuaction' => 'booking.uicontactperson.index'));
-			$person['edit_link'] = self::link(array('menuaction' => 'booking.uicontactperson.edit', 'id' => $person['id']));
+			$person							 = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$person['contactpersons_link']	 = self::link(array('menuaction' => 'booking.uicontactperson.index'));
+			$person['edit_link']			 = self::link(array('menuaction' => 'booking.uicontactperson.edit',
+				'id' => $person['id']));
 
 			$data = array(
-				'group'	=>	$group
+				'group' => $group
 			);
-			self::render_template('contactperson', array('person' => $person, ));
+			self::render_template('contactperson', array('person' => $person,));
 		}
+
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
-			if ($id) {
-				$person = $this->bo->read_single($id);
-				$person['id'] = $id;
-				$person['contactpersons_link'] = self::link(array('menuaction' => 'booking.uicontactperson.index'));
-				$person['edit_link'] = self::link(array('menuaction' => 'booking.uicontactperson.edit', 'id' => $person['id']));
-			} else {
+			if($id)
+			{
+				$person							 = $this->bo->read_single($id);
+				$person['id']					 = $id;
+				$person['contactpersons_link']	 = self::link(array('menuaction' => 'booking.uicontactperson.index'));
+				$person['edit_link']			 = self::link(array('menuaction' => 'booking.uicontactperson.edit',
+					'id' => $person['id']));
+			}
+			else
+			{
 				$person = array();
 			}
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$person = array_merge($person, extract_values($_POST, array('ssn', 'name', 'homepage', 'phone', 'email', 'description',)));
-				$errors = $this->bo->validate($person);
+				$person	 = array_merge($person, extract_values($_POST, array('ssn', 'name', 'homepage',
+					'phone', 'email', 'description',)));
+				$errors	 = $this->bo->validate($person);
 				if(!$errors)
 				{
-					if ($id) {
+					if($id)
+					{
 						$receipt = $this->bo->update($person);
-					} else {
+					}
+					else
+					{
 						$receipt = $this->bo->add($person);
 					}
-					$this->redirect(array('menuaction' => $this->module . '.uicontactperson.show', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => $this->module . '.uicontactperson.show',
+						'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -143,6 +163,4 @@
 			self::add_template_file("contactperson_fields");
 			self::render_template('contactperson_edit', array('person' => $person,));
 		}
-
-    }
-
+	}

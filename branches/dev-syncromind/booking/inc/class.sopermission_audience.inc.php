@@ -1,8 +1,9 @@
 <?php
 	phpgw::import_class('booking.sopermission');
-	
+
 	class booking_sopermission_audience extends booking_sopermission
 	{
+
 		/**
 		 * Override to return nothing as were not interested in 
 		 * any data from the object
@@ -12,5 +13,5 @@
 		protected function build_object_relations()
 		{
 			return null;
-		}	
+		}
 	}

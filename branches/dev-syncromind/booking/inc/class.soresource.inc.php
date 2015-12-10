@@ -1,66 +1,66 @@
 <?php
 	phpgw::import_class('booking.socommon');
-	
+
 	class booking_soresource extends booking_socommon
 	{
-		const TYPE_LOCATION = 'Location';
-		const TYPE_EQUIPMENT = 'Equipment';
-		
+
+		const TYPE_LOCATION	 = 'Location';
+		const TYPE_EQUIPMENT	 = 'Equipment';
+
 		function __construct()
 		{
-			parent::__construct('bb_resource', 
-				array(
-					'id'			=> array('type' => 'int'),
-					'active'		=> array('type' => 'int', 'required' => true),
-					'sort'			=> array('type' => 'int', 'required' => false),
-					'building_id'	=> array('type' => 'int', 'required' => true),
-					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'type'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
-					'activity_id'			=> array('type' => 'int', 'required' => false),
-					'organizations_ids'		=> array('type' => 'string'),
-					'building_name'	=> array('type' => 'string',
-						  'query'		=> true,
-						  'join' 		=> array(
-							'table' 	=> 'bb_building',
-							'fkey' 		=> 'building_id',
-							'key' 		=> 'id',
-							'column' 	=> 'name'
+			parent::__construct('bb_resource', array(
+				'id'				 => array('type' => 'int'),
+				'active'			 => array('type' => 'int', 'required' => true),
+				'sort'				 => array('type' => 'int', 'required' => false),
+				'building_id'		 => array('type' => 'int', 'required' => true),
+				'name'				 => array('type' => 'string', 'query' => true, 'required' => true),
+				'type'				 => array('type' => 'string', 'query' => true, 'required' => true),
+				'description'		 => array('type' => 'string', 'query' => true, 'required' => false),
+				'activity_id'		 => array('type' => 'int', 'required' => false),
+				'organizations_ids'	 => array('type' => 'string'),
+				'building_name'		 => array('type'	 => 'string',
+					'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_building',
+						'fkey'	 => 'building_id',
+						'key'	 => 'id',
+						'column' => 'name'
 					)),
-					'building_street'	=> array('type' => 'string',
-						  'query'		=> true,
-						  'join' 		=> array(
-							'table' 	=> 'bb_building',
-							'fkey' 		=> 'building_id',
-							'key' 		=> 'id',
-							'column' 	=> 'street'
+				'building_street'	 => array('type'	 => 'string',
+					'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_building',
+						'fkey'	 => 'building_id',
+						'key'	 => 'id',
+						'column' => 'street'
 					)),
-					'building_city'	=> array('type' => 'string',
-						  'query'		=> true,
-						  'join' 		=> array(
-							'table' 	=> 'bb_building',
-							'fkey' 		=> 'building_id',
-							'key' 		=> 'id',
-							'column' 	=> 'city'
+				'building_city'		 => array('type'	 => 'string',
+					'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_building',
+						'fkey'	 => 'building_id',
+						'key'	 => 'id',
+						'column' => 'city'
 					)),
-					'building_district'	=> array('type' => 'string',
-						  'query'		=> true,
-						  'join' 		=> array(
-							'table' 	=> 'bb_building',
-							'fkey' 		=> 'building_id',
-							'key' 		=> 'id',
-							'column' 	=> 'district'
+				'building_district'	 => array('type'	 => 'string',
+					'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_building',
+						'fkey'	 => 'building_id',
+						'key'	 => 'id',
+						'column' => 'district'
 					)),
-					'activity_name'	=> array('type' => 'string', 'query' => true, 
-						  'join' 		=> array(
-							'table' 	=> 'bb_activity',
-							'fkey' 		=> 'activity_id',
-							'key' 		=> 'id',
-							'column' 	=> 'name'
+				'activity_name'		 => array('type'	 => 'string', 'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_activity',
+						'fkey'	 => 'activity_id',
+						'key'	 => 'id',
+						'column' => 'name'
 					))
-				)
+			)
 			);
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		function get_metainfo($id)
@@ -70,22 +70,23 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-						  'building' => $this->db->f('building', false),
-						  'district' => $this->db->f('district', false),
-						  'city' => $this->db->f('city', false),
-						  'description' => $this->db->f('description', false));
+			return array('name'			 => $this->db->f('name', false),
+				'building'		 => $this->db->f('building', false),
+				'district'		 => $this->db->f('district', false),
+				'city'			 => $this->db->f('city', false),
+				'description'	 => $this->db->f('description', false));
 		}
-		
+
 		public static function allowed_types()
 		{
 			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT);
 		}
-		
+
 		function doValidate($entity, booking_errorstack $errors)
 		{
 			parent::doValidate($entity, $errors);
-			if (!isset($errors['type']) && !in_array($entity['type'], self::allowed_types(), true)) {
+			if(!isset($errors['type']) && !in_array($entity['type'], self::allowed_types(), true))
+			{
 				$errors['type'] = lang('Invalid Resource Type');
 			}
 		}
@@ -95,10 +96,10 @@
 
 			if(isset($filters['activity_id']) && $filters['activity_id'])
 			{
-				$soactivity = createObject('booking.soactivity');
-				$children = $soactivity->get_children($filters['activity_id']);
-				$activity_ids = array_merge(array($filters['activity_id']),$children);
-				$filters['activity_id'] = $activity_ids;
+				$soactivity				 = createObject('booking.soactivity');
+				$children				 = $soactivity->get_children($filters['activity_id']);
+				$activity_ids			 = array_merge(array($filters['activity_id']), $children);
+				$filters['activity_id']	 = $activity_ids;
 			}
 			$conditions = parent::_get_conditions($query, $filters);
 			return $conditions;
