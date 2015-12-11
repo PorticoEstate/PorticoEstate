@@ -44,7 +44,6 @@
 			</xsl:choose>
 				<div class="body">
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>

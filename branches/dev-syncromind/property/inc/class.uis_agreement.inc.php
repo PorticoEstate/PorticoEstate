@@ -1153,7 +1153,6 @@
 			if(isset($values['attributes']) && is_array($values['attributes']))
 			{
 
-//				phpgwapi_yui::tabview_setup('edit_tabview');
 //				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location			 = $this->acl_location;
@@ -1609,7 +1608,6 @@
 				(
 				'datatable_def'	 => $datatable_def,
 				'td_count'		 => $td_count,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array('menuaction' => "property.uis_agreement.edit",
 					'id' => $id)),
 				'link_import'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.import',
@@ -2008,7 +2006,6 @@
 			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
 			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
 
-			//$tabs = array();
 
 			if(isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -2031,8 +2028,6 @@
 					}
 				}
 
-				//phpgwapi_yui::tabview_setup('edit_tabview');
-				//$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location			 = $this->acl_location . '.detail';
 				$attributes_groups	 = $this->bo->get_attribute_groups($location, $values['attributes']);
@@ -2048,10 +2043,6 @@
 				unset($attributes_groups);
 				unset($s_agreement['attributes']);
 
-				/* if($content)
-				  {
-				  $tabs['history']	= array('label' => lang('history'), 'link' => '#history');
-				  } */
 			}
 
 			$content_values = array();
@@ -2147,40 +2138,9 @@
 				)
 			);
 
-//			$datavalues[0] = array
-//				(
-//					'name'					=> "0",
-//					'values' 				=> json_encode($content_values),
-//					'total_records'			=> count($content_values),
-//					'is_paginator'			=> 0,
-//					'permission'			=> json_encode($permissions['rowactions']),
-//					'footer'				=> 0
-//				);
-//
-//			$myColumnDefs[0] = array
-//				(
-//					'name'		=> "0",
-//					'values'	=>	json_encode(array(	array('key' => 'item_id','label'=>lang('ID'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'cost','label'=>lang('Cost'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'this_index','label'=>lang('index'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'index_count','label'=>lang('index_count'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'index_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true)))
-//				);
-//
-//			$myButtons[0] = array
-//			(
-//					'name'		=> "0",
-//					'values'	=>	json_encode(array(	array('type'=>'text', 'label'=>'New index', 'classname'=> 'index-opt'),
-//														array('id' =>'values[new_index]', 'type'=>'inputText', size=>12, 'classname'=> 'index-opt'),
-//														array('id' =>'values[update]','type'=>'buttons',	'value'=>'Update',	'label'=>'Update',	'funct'=> 'onAddClick' , 'classname'=> ''),
-//														array('id' =>'delete','type'=>'buttons',	'value'=>'Delete',	'label'=>lang('delete last index'),	'funct'=> 'onDeleteClick' , 'classname'=> '')
-//				))
-//			);
-
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array('menuaction' => "property.uis_agreement.edit_item",
 					'id' => $id, 's_agreement_id' => $s_agreement_id)),
 				'datatable'		 => $datavalues,
@@ -2418,7 +2378,6 @@
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array('menuaction' => "property.uis_agreement.view_item")),
 				'datatable'		 => $datavalues,
 				'myColumnDefs'	 => $myColumnDefs,
@@ -2778,7 +2737,6 @@
 				(
 				'datatable_def'	 => $datatable_def,
 				'lang_budget'	 => lang('budget'),
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array('menuaction' => "property.uis_agreement.view")),
 				'datatable'		 => $datavalues,
 				'myColumnDefs'	 => $myColumnDefs,

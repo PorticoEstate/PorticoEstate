@@ -434,7 +434,7 @@
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::add_javascript('property', 'portico', 'pricebook.index.js');
-			self::render_template_xsl('uipricebook.index', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		private function query_group_filter()

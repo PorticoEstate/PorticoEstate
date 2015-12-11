@@ -53,7 +53,6 @@ $(document).ready(function(){
 				</xsl:when>
 			</xsl:choose>
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%" border="0">
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />

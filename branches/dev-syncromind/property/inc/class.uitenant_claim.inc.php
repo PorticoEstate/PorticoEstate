@@ -829,7 +829,6 @@
 				'lang_start_date'		 => lang('Project start date'),
 				'value_start_date'		 => $project_values['start_date'],
 				'value_entry_date'		 => $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uitenant_claim.edit",
 					claim_id => $claim_id)),
 				'lang_end_date'	 => lang('Project end date'),

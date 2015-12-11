@@ -30,9 +30,7 @@
 	 * Description
 	 * @package property
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uiagreement extends phpgwapi_uicommon_jquery
 	{
@@ -1487,12 +1485,8 @@
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uiagreement.edit",
 					id => $id)),
-//					'datatable'								=> $datavalues,
-//					'myColumnDefs'							=> $myColumnDefs,
-//					'myButtons'								=> $myButtons,
 				'allow_allrows'	 => true,
 				'allrows'		 => $this->allrows,
 				'start_record'	 => $this->start,
@@ -1575,7 +1569,6 @@
 				'lang_no_status' => lang('Select status'),
 				'textareacols'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				//'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'		 => phpgwapi_jquery::formvalidator_generate(array('location', 'date',
 					'security', 'file'))
@@ -1854,12 +1847,8 @@
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uiagreement.edit_item",
 					agreement_id => $agreement_id, id => $id, role => $this->role)),
-				'datatable'		 => $datavalues,
-				'myColumnDefs'	 => $myColumnDefs,
-				'myButtons'		 => $myButtons,
 				'activity_descr'		 => $activity_descr,
 				'lang_descr'			 => lang('Descr'),
 				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -2009,7 +1998,6 @@
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uiagreement.view_item")),
 				'datatable'		 => $datavalues,
 				'myColumnDefs'	 => $myColumnDefs,
@@ -2306,10 +2294,7 @@
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uiagreement.view")),
-//					'datatable'					=> $datavalues,
-//					'myColumnDefs'				=> $myColumnDefs,
 				'allow_allrows'		 => true,
 				'allrows'			 => $this->allrows,
 				'start_record'		 => $this->start,

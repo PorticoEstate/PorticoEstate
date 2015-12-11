@@ -628,16 +628,6 @@
 				);
 			}
 
-			$module_def = array
-				(
-				array('key' => 'appname', 'label' => lang('appname'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'location', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'category', 'label' => lang('category'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'active', 'label' => lang('active'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'delete_module', 'label' => lang('delete'), 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'FormatterCenter')
-			);
-
 			$responsibility_module = isset($values['module']) && $values['module'] ? $values['module'] : array();
 
 			foreach($responsibility_module as &$module)
@@ -656,26 +646,32 @@
 				}
 			}
 
-			//---datatable settings--------------------------
-			$datavalues[0]	 = array
+
+			$datatable_def[] = array
 				(
-				'name'			 => "0",
-				'values'		 => json_encode($responsibility_module),
-				'total_records'	 => count($responsibility_module),
-				'is_paginator'	 => 0,
-				'footer'		 => 0
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(
+						array('key' => 'appname', 'label' => lang('appname'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'location', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'category', 'label' => lang('category'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'active', 'label' => lang('active'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'delete_module', 'label' => lang('delete'), 'sortable' => false,	'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter')),
+				'data'		 => json_encode($responsibility_module),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
 			);
-			$myColumnDefs[0] = array
-				(
-				'name'	 => "0",
-				'values' => json_encode($module_def)
-			);
-			//-----------------------------------------------
+
+
+//-----------------------------------------------
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 				(
+				'datatable_def'	 => $datatable_def,
 				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'	 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'value_appname'	 => $this->appname,
@@ -687,10 +683,6 @@
 				'apps_list'		 => array('options' => execMethod('property.bojasper.get_apps', $this->appname)),
 				'location_list'	 => array('options' => $location_list),
 				'td_count'		 => '""',
-				'base_java_url'	 => "{menuaction:'property.uiresponsible.edit'}",
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
-				'datatable'		 => $datavalues,
-				'myColumnDefs'	 => $myColumnDefs,
 				'lang_category'	 => lang('category'),
 				'lang_no_cat'	 => lang('no category'),
 				'cat_select'	 => $this->cats->formatted_xslt_list(array
@@ -703,20 +695,10 @@
 					'security', 'file'))
 			);
 
-			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('loader');
-
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'responsible.edit', 'property');
-			//-----------------------datatable settings---
-
 			$appname = 'Responsible';
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::$function_msg::" . lang($this->appname);
-			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible','datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 		}
 
@@ -822,6 +804,8 @@
 			//-----------------------------------------------
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 
 			$data = array
 				(
@@ -836,22 +820,8 @@
 				'responsibility_list'	 => array('options' => execMethod('property.boresponsible.get_responsibilities', array(
 						'appname' => $this->appname, 'selected' => $values['responsibility_id']))),
 				'level_list'			 => array('checkbox' => $level_list),
-				'td_count'				 => '""',
-				'base_java_url'			 => "{menuaction:'property.uiresponsible.edit'}",
-				'property_js'			 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
-				'datatable'				 => $datavalues,
-				'myColumnDefs'			 => $myColumnDefs,
+				'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 			);
-
-			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('loader');
-
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'responsible.edit', 'property');
-			//-----------------------datatable settings---
 
 			$appname = 'Responsible';
 

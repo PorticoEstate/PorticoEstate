@@ -31,7 +31,6 @@
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uitts extends phpgwapi_uicommon_jquery
 	{

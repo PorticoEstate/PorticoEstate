@@ -2,7 +2,6 @@
 	<xsl:template match="data">
 		<div id="content">
 			<xsl:call-template name="msgbox"/>
-			<xsl:call-template name="yui_property_i18n"/>
 			<h4>
 				<xsl:value-of select="lang/resource_schedule"/>
 			</h4>

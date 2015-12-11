@@ -757,7 +757,6 @@
 				'location_list'		 => $location_list,
 				'td_count'			 => '""',
 				'base_java_url'		 => "{menuaction:'property.uijasper.edit'}",
-				'property_js'		 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'datatable'			 => $datavalues,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'			 => phpgwapi_jquery::formvalidator_generate(array('location', 'date',
