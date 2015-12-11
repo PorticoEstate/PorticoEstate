@@ -30,9 +30,7 @@
 	 * Description
 	 * @package property
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uitemplate extends phpgwapi_uicommon_jquery
 	{
@@ -79,24 +77,6 @@
 			$this->chapter_id	 = $this->bo->chapter_id;
 			$this->allrows		 = $this->bo->allrows;
 		}
-		/* function property_uitemplate()
-		  {
-		  $GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		  $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
-
-		  $this->bo					= CreateObject('property.botemplate',true);
-		  $this->bowo_hour			= CreateObject('property.bowo_hour');
-		  $this->bocommon				= CreateObject('property.bocommon');
-
-		  $this->start				= $this->bo->start;
-		  $this->query				= $this->bo->query;
-		  $this->sort					= $this->bo->sort;
-		  $this->order				= $this->bo->order;
-		  $this->filter				= $this->bo->filter;
-		  $this->cat_id				= $this->bo->cat_id;
-		  $this->chapter_id			= $this->bo->chapter_id;
-		  $this->allrows				= $this->bo->allrows;
-		  } */
 
 		function save_sessiondata()
 		{
@@ -551,158 +531,7 @@
 					)
 				)
 			);
-//			$datatable = array();
-//			$values_combo_box = array();
 
-			/* if( phpgw::get_var('phpgw_return_as') != 'json' )
-			  {
-			  $datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-			  (
-			  'menuaction'			=> 'property.uitemplate.hour',
-			  'query'            		=> $this->query,
-			  'template_id'			=> $template_id,
-
-			  ));
-			  $datatable['config']['allow_allrows'] = true;
-			  $datatable['config']['base_java_url'] = "menuaction:'property.uitemplate.hour',"
-			  ."template_id:'{$template_id}'";
-			  $datatable['actions']['form'] = array
-			  (
-			  array
-			  (
-			  'action'	=> $GLOBALS['phpgw']->link('/index.php',
-			  array
-			  (
-			  'menuaction' 		=> 'property.uitemplate.hour',
-			  'query' 			=> $this->query,
-			  'template_id'		=> $template_id
-			  )
-			  ),
-			  'fields'	=> array
-			  (
-			  'field' => array
-			  (
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_done',
-			  'value'	=> lang('done'),
-			  'tab_index' => 4
-			  ),
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_new',
-			  'value'	=> lang('add'),
-			  'tab_index' => 3
-			  ),
-			  array
-			  ( //boton     SEARCH
-			  'id' => 'btn_search',
-			  'name' => 'search',
-			  'value'    => lang('search'),
-			  'type' => 'button',
-			  'tab_index' => 2
-			  ),
-			  array
-			  ( // TEXT INPUT
-			  'name'     => 'query',
-			  'id'     => 'txt_query',
-			  'value'    => '',//$query,
-			  'type' => 'text',
-			  'onkeypress' => 'return pulsar(event)',
-			  'size'    => 28,
-			  'tab_index' => 1
-			  )
-			  )
-			  )
-			  )
-			  );
-			  } */
-
-//			$uicols = array (
-//				array(
-//					'col_name'=>hour_id,		'visible'=>false,	'name'=>hour_id,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>template_id,	'visible'=>false,	'name'=>template_id,	'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>counter,		'visible'=>false,	'name'=>counter,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>records,		'visible'=>true,	'name'=>record,			'label'=>lang('Record'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>building_part ,	'visible'=>true,	'name'=>building_part,	'label'=>lang('Building part'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'building_part','formatter'=>''),
-//				array(
-//					'col_name'=>code,			'visible'=>true,	'name'=>'',				'label'=>lang('Code'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>grouping_descr,	'visible'=>true,	'name'=>grouping_descr,	'label'=>lang('Grouping'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>hours_descr,	'visible'=>true,	'name'=>hours_descr,	'label'=>lang('Description'),	'className'=>'leftClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>unit,			'visible'=>true,	'name'=>unit,			'label'=>lang('Unit'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-//				array(
-//					'col_name'=>billperae,		'visible'=>true,	'name'=>billperae,		'label'=>lang('Bill per unit'),	'className'=>'rightClasss',		'sortable'=>true,	'sort_field'=>'billperae',	'formatter'=>'')
-//				);
-//
-//			$template_list	= $this->bo->read_template_hour($template_id);
-//			$i=0;
-//			$grouping_descr_old='';			
-//			while (is_array($template_list) && list(,$template) = each($template_list))
-//			{
-//
-//				if($template['grouping_descr']!=$grouping_descr_old)
-//				{
-//					$new_grouping = true;
-//				}
-//				else
-//				{
-//					$new_grouping = false;
-//				}
-//
-//				$grouping_descr_old = $template['grouping_descr'];
-//
-//				if($template['activity_num'])
-//				{
-//					$code = $template['activity_num'];
-//				}
-//				else
-//				{
-//					$code = str_replace("-",$template['tolerance'],$template['ns3420_id']);
-//				}
-//
-//				$content[] = array
-//					(
-//						'hour_id'			=>	$template['hour_id'],
-//						'template_id'		=>	$template_id,
-//						'counter'			=> $i,
-//						'record'			=> $template['record'],
-//						'grouping_descr'	=> $template['grouping_descr'],
-//						'building_part'		=> $template['building_part'],
-//						'code'				=> $code,
-//						'hours_descr'		=> $template['remark']!= "" ? $template['hours_descr']."<br>".$template['remark'] : $template['hours_descr'],
-//						'unit'				=> $template['unit'],
-//						'billperae'			=> $template['billperae'],
-//					);
-//				unset($new_grouping);
-//				unset($grouping_descr_old);
-//				unset($code);
-//
-//				$i++;
-//			}
-//
-//			$j=0;
-//			if (isset($content) && is_array($content))
-//			{
-//				foreach($content as $template)
-//				{
-//					for ($i=0;$i<count($uicols);$i++)
-//					{
-//						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['col_name'];
-//						$datatable['rows']['row'][$j]['column'][$i]['value']		= $template[$uicols[$i]['name']];
-//					}
-//					$j++;
-//				}
-//			}
-//			$data['datatable']['actions'][] = array();
 			$parameters		 = array();
 			$parameters[]	 = array('parameter' => array(array('name' => 'hour_id', 'source' => 'hour_id'),
 					array('name' => 'template_id', 'source' => 'template_id')));
@@ -728,117 +557,8 @@
 				'parameters'	 => json_encode($parameters[1])
 			);
 
-//			$data['datatable']['actions'][] = array
-//				(
-//					'my_name'		=> 'add',
-//					'text' 			=> lang('add'),
-//					'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour','template_id'=> $template_id)),
-//				);
 			unset($parameters);
 
-//			for ($i=0;$i<count($uicols);$i++)
-//			{
-//				$datatable['headers']['header'][$i]['name']			= $uicols[$i]['col_name'];
-//				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['label'];
-//				$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i]['visible'];
-//				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
-//				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
-//				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
-//				$datatable['headers']['header'][$i]['formatter']	= ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
-//			}
-			// path for property.js
-//			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
-//
-//			// Pagination and sort values
-//			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-//			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-//			$datatable['pagination']['records_returned']= count($content);
-//			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-//
-//			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-//			{
-//				$datatable['sorting']['order'] 			= $uicols[1]['col_name']; // name key Column in myColumnDef
-//				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-//			}
-//			else
-//			{
-//				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-//				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-//			}
-//
-//			phpgwapi_yui::load_widget('dragdrop');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('menu');
-//			phpgwapi_yui::load_widget('connection');
-//			phpgwapi_yui::load_widget('loader');
-//			phpgwapi_yui::load_widget('tabview');
-//			phpgwapi_yui::load_widget('paginator');
-//			phpgwapi_yui::load_widget('animation');
-//
-//			//-- BEGIN----------------------------- JSON CODE ------------------------------
-//
-//			//values for Pagination
-//			$json = array
-//				(
-//					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-//					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-//					'startIndex' 		=> $datatable['pagination']['records_start'],
-//					'sort'				=> $datatable['sorting']['order'],
-//					'dir'				=> $datatable['sorting']['sort'],
-//					'records'			=> array()
-//				);
-//
-//			// values for datatable
-//			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-//				foreach( $datatable['rows']['row'] as $row )
-//				{
-//					$json_row = array();
-//					foreach( $row['column'] as $column)
-//					{
-//						$json_row[$column['name']] = $column['value'];
-//					}
-//					$json['records'][] = $json_row;
-//				}
-//			}
-//
-//			// right in datatable
-//			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-//			{
-//				$json ['rights'] = $datatable['rowactions']['action'];
-//			}
-//
-//			if( phpgw::get_var('phpgw_return_as') == 'json' )
-//			{
-//				return $json;
-//			}
-//
-//
-//			$datatable['json_data'] = json_encode($json);
-//			//-------------------- JSON CODE ----------------------
-//
-//			// Prepare template variables and process XSLT
-//			$template_vars = array();
-//			$template_vars['datatable'] = $datatable;
-//			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-//
-//			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-//			{
-//				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-//			}
-//			// Prepare CSS Style
-//			$GLOBALS['phpgw']->css->validate_file('datatable');
-//			$GLOBALS['phpgw']->css->validate_file('property');
-//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-//
-//			//Title of Page
-//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('template') . ': ' . lang('view template detail');
-//
-//			// Prepare YUI Library
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'template.hour', 'property' );
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

@@ -26,14 +26,12 @@
 	 * @subpackage admin
 	 * @version $Id$
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uijasper extends phpgwapi_uicommon_jquery
 	{
@@ -636,104 +634,6 @@
 			$tabs			 = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab		 = 'general';
-//			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
-
-			/* if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
-			  {
-			  if($GLOBALS['phpgw']->session->is_repost())
-			  {
-			  //				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
-			  }
-
-
-			  if(!isset($values['location']) || !$values['location'])
-			  {
-			  $receipt['error'][]=array('msg'=>lang('Please select a location!'));
-			  }
-
-			  if(!isset($values['title']) || !$values['title'])
-			  {
-			  $receipt['error'][]=array('msg'=>lang('Please enter a title!'));
-			  }
-
-			  if($id)
-			  {
-			  $values['id']=$id;
-			  }
-			  else
-			  {
-			  $id = $values['id'];
-			  }
-
-			  if(!$receipt['error'])
-			  {
-			  $receipt = $this->bo->save($values);
-			  $id = $receipt['id'];
-
-			  //-------------start files
-			  $bofiles	= CreateObject('property.bofiles');
-			  $file = array();
-			  if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
-			  {
-			  $file_name = str_replace (' ','_',$_FILES['file']['name']);
-			  $values['file_name'] = $file_name;
-
-			  $to_file	= "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
-
-			  if ($old_file = $bofiles->vfs->ls(array(
-			  'string' => "{$bofiles->fakebase}/jasper/{$id}",
-			  'relatives' => Array(RELATIVE_NONE)
-			  )))
-			  {
-			  $bofiles->vfs->rm(array(
-			  'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
-			  'relatives' => Array(RELATIVE_NONE)
-			  ));
-			  $receipt['message'][]=array('msg'=>lang('old file %1 removed',$old_file[0]['name']));
-			  }
-
-
-			  $file = array
-			  (
-			  'from_file'	=> $_FILES['file']['tmp_name'],
-			  'to_file'	=> $to_file
-			  );
-
-
-			  unset($to_file);
-
-
-			  if ($file)
-			  {
-			  $bofiles->create_document_dir("jasper/{$id}");
-			  $bofiles->vfs->override_acl = 1;
-
-			  if($bofiles->vfs->cp (array (
-			  'from'	=> $file['from_file'],
-			  'to'	=> $file['to_file'],
-			  'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-			  {
-			  $receipt['message'][]=array('msg'=>lang('file %1 uploaded', $file_name));
-			  }
-			  else
-			  {
-			  $receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
-			  }
-			  $bofiles->vfs->override_acl = 0;
-			  }
-			  unset($file);
-			  unset($file_name);
-			  }
-			  //-------------end files
-
-			  if (isset($values['save']) && $values['save'])
-			  {
-			  $GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
-			  $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
-			  }
-			  }
-			  } */
-
 			if(isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uijasper.index',
@@ -815,7 +715,6 @@
 				}
 			}
 
-			//---datatable settings--------------------------
 			$datavalues[0] = array
 				(
 				'name'			 => "0",
@@ -824,12 +723,6 @@
 				'is_paginator'	 => 0,
 				'footer'		 => 0
 			);
-//			$myColumnDefs[0] = array
-//				(
-//					'name'		=> "0",
-//					'values'	=>	json_encode($type_def)
-//				);		
-			//-----------------------------------------------
 
 			$datatable_def[] = array
 				(
@@ -843,7 +736,6 @@
 				)
 			);
 
-//            echo '<pre>'; print_r($datatable_def);echo '</pre>'; exit();
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
@@ -867,21 +759,11 @@
 				'base_java_url'		 => "{menuaction:'property.uijasper.edit'}",
 				'property_js'		 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'datatable'			 => $datavalues,
-//					'myColumnDefs'					=> $myColumnDefs,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'			 => phpgwapi_jquery::formvalidator_generate(array('location', 'date',
 					'security', 'file'))
 			);
 
-			//---datatable settings--------------------
-//			phpgwapi_yui::load_widget('dragdrop');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('loader');
-//
-//			$GLOBALS['phpgw']->css->validate_file('property');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'jasper.edit', 'property' );
-			//-----------------------datatable settings---
 
 			$appname = 'JasperReports';
 
@@ -891,8 +773,6 @@
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl(array('jasper', 'datatable_inline'), array('edit' => $data));
-
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		function view()

@@ -26,9 +26,7 @@
 	 * @subpackage admin
 	 * @version $Id$
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	 * Description

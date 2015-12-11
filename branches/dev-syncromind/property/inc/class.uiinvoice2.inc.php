@@ -606,14 +606,7 @@
 				'update_action'			 => self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
 				'powered_by'			=> $powered_by
 			);
-//_debug_array($data);die();			
-//			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-/*
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-*/
+
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('layout');
 			phpgwapi_jquery::load_widget('numberformat');
@@ -621,12 +614,6 @@
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'portico', 'invoice2.index.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-/*			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-menu-min.js');
-			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-base-min.js');
-			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-item-min.js');
-			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu-templates/gallery-sm-menu-templates-min.js');
-*/
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('invoice');
 

@@ -679,8 +679,6 @@ JS;
 
 		function date_search()
 		{
-			//cramirez: necesary for windows.open . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('date_search'));
 			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 			//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
@@ -2672,28 +2670,4 @@ JS;
 
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
-		/*
-		  protected function _generate_tabs2($tabs_ = array(), $suppress = array(), $selected = 'general')
-		  {
-		  $tabs = array
-		  (
-		  'general'		=> array('label' => lang('general'), 'link' => '#general'),
-		  'location'		=> array('label' => lang('location'), 'link' => '#location'),
-		  'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-		  'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-		  'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
-		  'history'		=> array('label' => lang('history'), 'link' => '#history')
-		  );
-		  $tabs = array_merge($tabs, $tabs_);
-		  foreach($suppress as $tab => $remove)
-		  {
-		  if($remove)
-		  {
-		  unset($tabs[$tab]);
-		  }
-		  }
-		  phpgwapi_yui::tabview_setup('project_tabview');
-
-		  return  phpgwapi_yui::tabview_generate($tabs, $selected);
-		  } */
 	}

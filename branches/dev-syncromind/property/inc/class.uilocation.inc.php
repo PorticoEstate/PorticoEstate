@@ -30,10 +30,8 @@
 	 * Description
 	 * @package property
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uilocation extends phpgwapi_uicommon_jquery
 	{
@@ -1767,7 +1765,6 @@ JS;
 				}
 			}
 
-			//phpgwapi_yui::tabview_setup('location_edit_tabview');
 			$tabs			 = array();
 			$tabs['general'] = array('label' => $location_types[($type_id - 1)]['name'], 'link' => '#general');
 

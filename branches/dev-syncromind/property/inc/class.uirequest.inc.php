@@ -26,10 +26,8 @@
 	 * @subpackage project
 	 * @version $Id$
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	 * Description
@@ -1699,18 +1697,6 @@ JS;
 					}
 				}
 			}
-
-//_debug_Array($values);die();
-
-			/*
-			  'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false, 'formatter' => FormatterRight),
-			  array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-			  array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-			  array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
-			  array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
-			  array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false)))
-
-			 */
 
 //------ Start pagination
 

@@ -30,9 +30,7 @@
 	 * Description
 	 * @package property
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uiwo_hour extends phpgwapi_uicommon_jquery
 	{
@@ -1225,33 +1223,6 @@
 				$sms_data['encoded_text']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 			}
 			$lang_reminder = '';
-			/*
-			  $action_params = array
-			  (
-			  'appname'			=> 'property',
-			  'location'			=> '.project.workorder',
-			  'id'				=> $workorder_id,
-			  'responsible'		=> $workorder['vendor_id'],
-			  'responsible_type'  => 'vendor',
-			  'action'			=> 'remind',
-			  'deadline'			=> '',
-			  'created_by'		=> '',
-			  );
-
-
-			  $pending_action = execMethod('property.sopending_action.get_pending_action', $action_params);
-
-			  $lang_reminder = '';
-			  if( $pending_action )
-			  {
-			  $reminder = (int)$pending_action[0]['reminder'] +1;
-			  $lang_reminder = lang('reminder') . " # {$reminder}";
-			  }
-			  else if ($this->boworkorder->order_sent_adress)
-			  {
-			  $lang_reminder = lang('reminder') . " # 1";
-			  }
-			 */
 			if($this->boworkorder->order_sent_adress || $sent_ok)
 			{
 				$lang_reminder = lang('reminder');

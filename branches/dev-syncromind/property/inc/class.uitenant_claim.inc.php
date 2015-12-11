@@ -30,9 +30,7 @@
 	 * Description
 	 * @package property
 	 */
-	#phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uitenant_claim extends phpgwapi_uicommon_jquery
 	{
@@ -171,9 +169,6 @@
 					'perm' => PHPGW_ACL_READ, 'acl_location' => $this->acl_location));
 			}
 
-			#$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
-			#$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt','');
-			#$datatable = array();
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query(array('project_id' => $project_id));
@@ -300,115 +295,6 @@
 				'project_id' => $this->project_id,
 				'query'		 => $this->query
 			);
-
-			/* $datatable['actions']['form'] = array
-			  (
-			  array
-			  (
-			  'action'	=> $GLOBALS['phpgw']->link('/index.php',
-			  array
-			  (
-			  'menuaction' 		=> 'property.uitenant_claim.index',
-			  'query'            		=> $this->query,
-			  'cat_id'				=> $this->cat_id
-			  )
-			  ),
-			  'fields'	=> array
-			  (
-			  'field' => array
-			  (
-			  array
-			  ( //boton 	CATEGORY
-			  'id' => 'btn_cat_id',
-			  'name' => 'cat_id',
-			  'value'	=> lang('Category'),
-			  'type' => 'button',
-			  'style' => 'filter',
-			  'tab_index' => 1
-
-			  ),
-			  array
-			  ( //boton 	STATUS
-			  'id' => 'btn_district_id',
-			  'name' => 'district_id',
-			  'value'	=> lang('District'),
-			  'type' => 'button',
-			  'style' => 'filter',
-			  'tab_index' => 2
-			  ),
-			  array
-			  ( //boton 	STATUS
-			  'id' => 'btn_status_id',
-			  'name' => 'status_id',
-			  'value'	=> lang('Status'),
-			  'type' => 'button',
-			  'style' => 'filter',
-			  'tab_index' => 3
-			  ),
-			  array
-			  ( //boton 	USER
-			  'id' => 'sel_user_id',
-			  'name' => 'user_id',
-			  'value'	=> lang('User'),
-			  'type' => 'select',
-			  'style' => 'filter',
-			  'values' => $values_combo_box[3],
-			  'onchange'=> 'onChangeSelect();',
-			  'tab_index' => 4
-			  ),
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_new',
-			  'value'	=> lang('add'),
-			  'tab_index' => 7
-			  ),
-			  array
-			  ( //boton     SEARCH
-			  'id' => 'btn_search',
-			  'name' => 'search',
-			  'value'    => lang('search'),
-			  'type' => 'button',
-			  'tab_index' => 6
-			  ),
-			  array
-			  ( // TEXT INPUT
-			  'name'     => 'query',
-			  'id'     => 'txt_query',
-			  'value'    => '',//$query,
-			  'type' => 'text',
-			  'onkeypress' => 'return pulsar(event)',
-			  'size'    => 28,
-			  'tab_index' => 5
-			  ),
-			  ),
-			  'hidden_value' => array
-			  (
-			  array
-			  ( //div values  combo_box_0
-			  'id' => 'values_combo_box_0',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[0])
-			  ),
-			  array
-			  ( //div values  combo_box_1
-			  'id' => 'values_combo_box_1',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[1])
-			  ),
-			  array
-			  ( //div values  combo_box_2
-			  'id' => 'values_combo_box_2',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[2])
-			  ),
-			  array
-			  ( //div values  combo_box_3
-			  'id' => 'values_combo_box_3',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[3])
-			  ),
-
-			  )
-			  )
-			  )
-			  ); */
 
 			$parameters = array
 				(
@@ -814,32 +700,6 @@
 				}
 			}
 
-			//---datatable0 settings---------------------------------------------------
-//			$datavalues[0] = array
-//				(
-//					'name'			=> "0",
-//					'values' 		=> json_encode($project_values['workorder_budget']),
-//					'total_records'	=> count($project_values['workorder_budget']),
-//					'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
-//					'is_paginator'	=> 1,
-//					'footer'		=> 0
-//				);
-//			$myColumnDefs[0] = array
-//				(
-//					'name'			=> "0",
-//					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-//															array('key' => 'budget',	'label'=>lang('Budget'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//															array('key' => 'budget_hidden','hidden'=>true),
-//															array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//															array('key' => 'calculation_hidden','hidden'=>true),
-//															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//															array('key' => 'actual_cost_hidden','hidden'=>true),
-//															array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-//															array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
-//															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-//															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-//															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
-//				);
 
 			$myColumnDefs0 = array
 				(
@@ -916,24 +776,6 @@
 				$z++;
 			}
 
-//			$datavalues[1] = array
-//			(
-//				'name'					=> "1",
-//				'values' 				=> json_encode($content_files),
-//				'total_records'			=> count($content_files),
-//				'edit_action'			=> "''",
-//				'is_paginator'			=> 1,
-//				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-//				'footer'				=> 0
-//			);
-//
-//			$myColumnDefs[1] = array
-//				(
-//					'name'		=> "1",
-//					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-//					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
-//				);
-
 			$myColumnDefs1 = array
 				(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
@@ -953,26 +795,6 @@
 					array('disablePagination' => true)
 				)
 			);
-//--------------files
-//			$datavalues[2] = array
-//				(
-//					'name'					=> "2",
-//					'values' 				=> json_encode($record_history),
-//					'total_records'			=> count($record_history),
-//					'edit_action'			=> "''",
-//					'is_paginator'			=> 0,
-//					'footer'				=> 0
-//				);
-//
-//			$myColumnDefs[2] = array
-//				(
-//					'name'		=> "2",
-//					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
-//														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
-//														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
-//				);
 
 			$myColumnDefs2 = array
 				(
@@ -1010,9 +832,6 @@
 				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
 				'base_java_url'	 => json_encode(array(menuaction => "property.uitenant_claim.edit",
 					claim_id => $claim_id)),
-//					'datatable'							=> $datavalues,
-//					'myColumnDefs'						=> $myColumnDefs,
-				//'myButtons'						=> $myButtons,
 				'lang_end_date'	 => lang('Project end date'),
 				'value_end_date' => $project_values['end_date'],
 				'lang_charge_tenant' => lang('Charge tenant'),
@@ -1094,7 +913,6 @@
 					'security', 'file'))
 			);
 
-//            echo '<pre>'; print_r($data); echo '</pre>';
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id ? lang('edit claim') : lang('add claim'));
 
 			phpgwapi_jquery::load_widget('core');
@@ -1104,30 +922,6 @@
 
 			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'files'), array(
 				'edit' => $data));
-
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-//
-//			//_debug_array($data);die;
-//
-//			//---datatable settings--------------------
-//			phpgwapi_yui::load_widget('dragdrop');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('menu');
-//			phpgwapi_yui::load_widget('connection');
-//			phpgwapi_yui::load_widget('loader');
-//			phpgwapi_yui::load_widget('tabview');
-//			phpgwapi_yui::load_widget('paginator');
-//			phpgwapi_yui::load_widget('animation');
-//
-//			$GLOBALS['phpgw']->css->validate_file('datatable');
-//			$GLOBALS['phpgw']->css->validate_file('property');
-//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uitenant.edit', 'property' );
-			//-----------------------datatable settings---
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function delete()
@@ -1259,19 +1053,6 @@
 				}
 			}
 
-			/*
-			  for ($i=0;$i<count($project_values['workorder_budget']);$i++)
-			  {
-			  $claimed= $this->bo->check_claim_workorder($project_values['workorder_budget'][$i]['workorder_id']);
-
-			  if($claimed)
-			  {
-			  $project_values['workorder_budget'][$i]['claimed'] = $claimed;
-			  }
-			  }
-
-			 */
-
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'	 => $values['b_account_id'],
 				'b_account_name' => $values['b_account_name'],
@@ -1366,7 +1147,6 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'nextmatchs'), array(
 				'view' => $data));
 		}

@@ -30,10 +30,8 @@
 	 * Description
 	 * @package property
 	 */
-//	phpgw::import_class('phpgwapi.yui');
 
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uiinvestment extends phpgwapi_uicommon_jquery
 	{
@@ -193,13 +191,6 @@
 					}
 				}
 
-				/* $my_district = "";
-				  $my_district .= "<input type=\"hidden\" name=\"values[entity_id][".$counter."]\" value=\"".$investment['entity_id']."\" class=\"entity_id\"  />";
-				  $my_district .= "<input type=\"hidden\" name=\"values[investment_id][".$counter."]\" value=\"".$investment['investment_id']."\" class=\"investment_id\"  />";
-				  $my_district .= "<input type=\"hidden\" name=\"values[initial_value][".$counter."]\" value=\"".$investment['initial_value']."\" class=\"initial_value\"  />";
-				  $my_district .= "<input type=\"hidden\" name=\"values[value][".$counter."]\" value=\"".$investment['value']."\" class=\"value\"  />";
-				  $my_district .= $investment['district_id']; */
-
 				$content[] = array
 					(
 					'order_dummy'		 => $investment['part_of_town'],
@@ -210,9 +201,9 @@
 					'descr'				 => $investment['descr'],
 					'entity_name'		 => $investment['entity_name'],
 					'initial_value_ex'	 => ($investment['initial_value'] == "" ? 0 : $investment['initial_value']),
-					'initial_value'		 => number_format($investment['initial_value'], 0, ',', ''), //to avoid error in YUI's sum
+					'initial_value'		 => number_format($investment['initial_value'], 0, ',', ''),
 					'value_ex'			 => ($investment['value'] == "" ? 0 : $investment['value']),
-					'value'				 => number_format($investment['value'], 0, ',', ''), //to avoid error in YUI's sum
+					'value'				 => number_format($investment['value'], 0, ',', ''),
 					'this_index'		 => $investment['this_index'],
 					'this_write_off_ex'	 => $investment['this_write_off'],
 					'this_write_off'	 => number_format($investment['this_write_off'], 0, ',', ''),
