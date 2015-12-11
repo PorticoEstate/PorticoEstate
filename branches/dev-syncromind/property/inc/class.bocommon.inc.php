@@ -1415,7 +1415,7 @@
 
 			$parts				 = $this->socommon->select_part_of_town($district_id);
 			$part_of_town_list	 = array();
-			//cr@ccfirst.com 09/09/08 validate for YUI.
+
 			if(is_array($parts) && (count($parts)))
 			{
 				foreach($parts as $entry)

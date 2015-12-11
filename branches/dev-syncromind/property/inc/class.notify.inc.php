@@ -132,141 +132,6 @@
 		}
 
 		/**
-		 * Get definition for an inline YUI table
-		 *
-		 * @param array $data location and the number of preceding tables in the same page
-		 * @return array table def data and prepared content.
-		 */
-		public function get_yui_table_def($data = array())
-		{
-			if(!isset($data['count']))
-			{
-				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");
-			}
-
-			$content = array();
-
-			if(isset($data['location_id']) && isset($data['location_item_id']))
-			{
-				$content = $this->read($data);
-			}
-
-			$count		 = (int)$data['count'];
-			$datavalues	 = array
-				(
-				'name'			 => "{$count}",
-				'values'		 => json_encode($content),
-				'total_records'	 => count($content),
-				'edit_action'	 => json_encode($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.view_person'))),
-				'is_paginator'	 => 1,
-				'footer'		 => 0
-			);
-
-			$column_defs = array
-				(
-				'name'	 => "{$count}",
-				'values' => json_encode(array(array('key' => 'id', 'hidden' => true),
-					//		array('key' => 'email','hidden' => true),
-					//		array('key' => 'sms','hidden' => true),
-					array('key' => 'contact_id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,
-						'formatter' => 'YAHOO.widget.DataTable.formatLink_notify'),
-					array('key' => 'first_name', 'label' => lang('first name'), 'sortable' => true,
-						'resizeable' => true),
-					array('key' => 'last_name', 'label' => lang('last name'), 'sortable' => true,
-						'resizeable' => true),
-					array('key' => 'email', 'label' => lang('email'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'sms', 'label' => 'SMS', 'sortable' => false, 'resizeable' => true),
-					array('key' => 'notification_method', 'label' => lang('method'), 'sortable' => true,
-						'resizeable' => true),
-					array('key' => 'is_active_text', 'label' => lang('active'), 'sortable' => true,
-						'resizeable' => true),
-					array('key' => 'entry_date', 'label' => lang('entry_date'), 'sortable' => true,
-						'resizeable' => true),
-					array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,
-						'formatter' => 'myFormatterCheck_notify', 'width' => 30)
-				))
-			);
-
-			$buttons = array
-				(
-				'name'	 => "{$count}",
-				'values' => json_encode(array(
-					array('id' => 'check_all', 'type' => 'buttons', 'value' => '', 'label' => lang('check all'),
-						'funct' => 'check_all_notify', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'notify[email]', 'type' => 'buttons', 'value' => 'email', 'label' => lang('email'),
-						'funct' => 'onActionsClick_notify', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'notify[sms]', 'type' => 'buttons', 'value' => 'sms', 'label' => 'SMS',
-						'funct' => 'onActionsClick_notify', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'notify[enable]', 'type' => 'buttons', 'value' => 'enable', 'label' => lang('enable'),
-						'funct' => 'onActionsClick_notify', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'notify[disable]', 'type' => 'buttons', 'value' => 'disable',
-						'label' => lang('disable'), 'funct' => 'onActionsClick_notify', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-					array('id' => 'notify[delete]', 'type' => 'buttons', 'value' => 'delete', 'label' => lang('Delete'),
-						'funct' => 'onActionsClick_notify', 'classname' => 'actionButton', 'value_hidden' => ""),
-				))
-			);
-
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'notify', 'property');
-
-			$lang_view	 = lang('view');
-			$code		 = <<<JS
-	var  myPaginator_{$count}, myDataTable_{$count};
-	var Button_{$count}_0, Button_{$count}_1, Button_{$count}_2;
-	var notify_table_count = {$count};
-	var notify_lang_view = "{$lang_view}";
-	var notify_lang_alert = "Posten må lagres før kontakter kan tilordnes";
-
-	this.refresh_notify_contact=function()
-	{
-		if(document.getElementById('notify_contact').value)
-		{
-			base_java_notify_url['contact_id'] = document.getElementById('notify_contact').value;
-		}
-
-		if(document.getElementById('notify_contact').value != notify_contact)
-		{
-			base_java_notify_url['action'] = 'refresh_notify_contact';
-			execute_async(myDataTable_{$count}, base_java_notify_url);
-			notify_contact = document.getElementById('notify_contact').value;
-		}
-	}
-
-	this.onActionsClick_notify=function()
-	{
-		flag = false;
-		//clean hidden buttons actions
-		cleanValuesHiddenActionsButtons();
-
-		//validate ckecks true
-		array_checks = YAHOO.util.Dom.getElementsByClassName('mychecks');
-		for ( var i in array_checks )
-		{
-			if(array_checks[i].checked)
-			{
-				flag = true;
-				break;
-			}
-		}
-
-		if(flag)
-		{
-			//asign value to hidden
-			YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
-
-			formObject = document.body.getElementsByTagName('form');
-			YAHOO.util.Connect.setForm(formObject[0]);//First form
-			base_java_notify_url['action'] = 'refresh_notify_contact';
-			execute_async(myDataTable_{$count},base_java_notify_url);
-		}
-	}
-JS;
-			$GLOBALS['phpgw']->js->add_code($namespace, $code);
-
-			return array('datavalues' => $datavalues, 'column_defs' => $column_defs, 'buttons' => $buttons);
-		}
-
-		/**
 		 * Get definition for an inline jquery table
 		 *
 		 * @param array $data location and the number of preceding tables in the same page
@@ -276,12 +141,12 @@ JS;
 		{
 			if(!isset($data['count']))
 			{
-				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");
+				throw new Exception("property_notify::get_jquery_table_def() - Missing count in input");
 			}
 
 			if(!isset($data['requestUrl']) || !$requestUrl = $data['requestUrl'])
 			{
-				throw new Exception("property_notify::get_yui_table_def() - Missing requestUrl in input");
+				throw new Exception("property_notify::get_jquery_table_def() - Missing requestUrl in input");
 			}
 
 			$requestUrl = str_replace('&amp;', '&', $requestUrl);

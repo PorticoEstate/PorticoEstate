@@ -222,13 +222,6 @@
 
 		function read_obligations($data = array())
 		{
-			//cramirez: add strtoupper function for $this->sort. in YUI use asc/desc (lowercase letters)
-			/* $obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
-			  'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
-			  'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
-			  'year' => $this->year,'month' => $this->month, 'grouping' => $this->grouping, 'revision' => $this->revision,
-			  'details' => $this->details,'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id,
-			  'direction'	=> $this->direction)); */
 
 			$obligations = $this->so->read_obligations(array
 				(

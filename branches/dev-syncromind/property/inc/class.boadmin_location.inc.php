@@ -107,8 +107,8 @@
 
 		function read_config()
 		{
-			$standard = $this->so->read_config(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order));
+			$standard = $this->so->read_config(array('start'	 => $this->start, 'query'	 => $this->query,
+				'sort'	 => $this->sort, 'order'	 => $this->order));
 
 			$this->total_records = $this->so->total_records;
 
@@ -196,14 +196,14 @@
 			return $group_list;
 		}
 
-		function read_attrib_group($location, $allrows = '')
+		function read_attrib_group($data = array())
 		{
-			if($allrows)
+			if($data['allrows'] || phpgw::get_var('allrows') == 1)
 			{
-				$this->allrows = $allrows;
+				$data['allrows'] = true;
 			}
 
-			$attrib				 = $this->custom->find_group('property', $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->custom->find_group('property', '.location.' . $data['type_id'], $data['start'], $data['query'], $data['sort'], $data['order'], $data['allrows']);
 			$this->total_records = $this->custom->total_records;
 
 			return $attrib;
@@ -214,9 +214,18 @@
 			return $this->custom->get_group('property', $location, $id, true);
 		}
 
-		function resort_attrib_group($location, $id, $resort)
+		function resort_attrib_group($data)
 		{
-			$this->custom->resort_group($id, $resort, 'property', $location);
+			$resort	 = isset($data['resort']) ? $data['resort'] : 'up';
+			$type_id = isset($data['type_id']) ? $data['type_id'] : '';
+			$id		 = (isset($data['id']) ? $data['id'] : '');
+
+			if(!$type_id || !$id)
+			{
+				return;
+			}
+
+			$this->custom->resort_group($id, $resort, 'property', '.location.' . $type_id);
 		}
 
 		public function save_attrib_group($group, $action = '')
@@ -399,4 +408,4 @@
 				return $location;
 			}
 		}
-	}
+	}	

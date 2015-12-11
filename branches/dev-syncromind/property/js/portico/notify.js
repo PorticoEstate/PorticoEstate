@@ -17,7 +17,7 @@ var notify_contact = 0;
 	{
 		if(!base_java_notify_url['location_item_id'])
 		{
-			alert(notify_lang_alert); // notify_lang_alert is defined in php-class property_notify::get_yui_table_def()
+			alert(notify_lang_alert);
 			return;
 		}	
 		var oArgs = {menuaction:'property.uilookup.addressbook',column:'notify_contact'};

@@ -30,7 +30,6 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
 
 	class property_fileuploader
 	{
