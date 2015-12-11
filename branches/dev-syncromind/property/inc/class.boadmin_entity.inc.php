@@ -304,8 +304,8 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->read_attrib_group(array('entity_id' => $template_entity_id,
-				'cat_id' => $template_cat_id, 'allrows' => true));
+			$attrib_group_list = $this->read_attrib_group(array('entity_id'	 => $template_entity_id,
+				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
 
 			foreach($attrib_group_list as $attrib_group)
 			{
@@ -320,8 +320,8 @@
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id,
-				'allrows' => true));
+			$attrib_list = $this->read_attrib(array('entity_id'	 => $template_entity_id, 'cat_id'	 => $template_cat_id,
+				'allrows'	 => true));
 
 			$template_attribs = array();
 			foreach($attrib_list as $attrib)
@@ -386,8 +386,8 @@
 
 		function get_attrib_group_list($entity_id, $cat_id, $selected)
 		{
-			$group_list = $this->read_attrib_group(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
-				'allrows' => true));
+			$group_list = $this->read_attrib_group(array('entity_id'	 => $entity_id, 'cat_id'	 => $cat_id,
+				'allrows'	 => true));
 
 			foreach($group_list as &$group)
 			{
@@ -523,21 +523,23 @@
 			}
 		}
 
-		function read_custom_function($entity_id = '', $cat_id = '', $allrows = '', $acl_location = '')
+		function read_custom_function($data = array())
 		{
-			if($allrows)
+
+			if(!$data['location'] && $data['entity_id'] && $data['cat_id'])
 			{
-				$this->allrows = $allrows;
+				$data['location'] = ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}";
 			}
 
-			if(!$acl_location && $entity_id && $cat_id)
+			$data['appname'] = $this->type_app[$this->type];
+			switch($data['order'])
 			{
-				$acl_location = ".{$this->type}.{$entity_id}.{$cat_id}";
+				case'sorting';
+					$data['order'] = 'custom_sort';
+					break;
 			}
 
-			$values = $GLOBALS['phpgw']->custom_functions->find(array('start'		 => $this->start,
-				'query'		 => $this->query, 'sort'		 => $this->sort, 'order'		 => $this->order,
-				'appname'	 => $this->type_app[$this->type], 'location'	 => $acl_location, 'allrows'	 => $this->allrows));
+			$values = $GLOBALS['phpgw']->custom_functions->find($data);
 
 			$this->total_records = $GLOBALS['phpgw']->custom_functions->total_records;
 

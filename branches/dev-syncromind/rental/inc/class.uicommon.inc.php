@@ -1,5 +1,4 @@
 <?php
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	//define("RENTAL_TEMPLATE_PATH", "rental/templates/base/");
@@ -40,24 +39,6 @@
 			parent::__construct();
 
 			self::set_active_menu('rental');
-			/* self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
-			  self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
-			  self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			  self::add_stylesheet('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			  self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			  self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
-			  self::add_stylesheet('rental/templates/base/css/base.css');
-			  self::add_javascript('rental', 'rental', 'common.js');
-			  $this->tmpl_search_path = array();
-			  array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
-			  array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			  array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-			  /*phpgwapi_yui::load_widget('datatable');
-			  phpgwapi_yui::load_widget('paginator');
-			  phpgwapi_yui::load_widget('menu');
-			  phpgwapi_yui::load_widget('calendar');
-			  phpgwapi_yui::load_widget('autocomplete');
-			  phpgwapi_yui::load_widget('animation'); */
 
 			//$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 

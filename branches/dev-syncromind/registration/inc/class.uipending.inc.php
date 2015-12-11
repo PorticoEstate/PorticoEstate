@@ -26,7 +26,6 @@
  	* @version $Id: class.uicheck_list.inc.php 8628 2012-01-21 10:42:05Z vator $
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
 
 	class registration_uipending extends phpgwapi_uicommon
@@ -80,9 +79,6 @@
 
 		function index()
 		{
-
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			if($values = phpgw::get_var('values'))
 			{
@@ -187,8 +183,6 @@
 					)
 				);
 			
-				phpgwapi_yui::load_widget('paginator');
-
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
 				self::render_template_xsl(array('pending_users'), $data);
 			}	
@@ -205,8 +199,6 @@
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			self::add_javascript('registration', 'yahoo', 'pending.index2.js');
 
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$status_list = array
 			(

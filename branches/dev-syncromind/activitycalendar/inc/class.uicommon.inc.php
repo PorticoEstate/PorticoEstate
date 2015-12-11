@@ -1,5 +1,4 @@
 <?php
-	//phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	//define("ACTIVITYCALENDAR_TEMPLATE_PATH", "activitycalendar/templates/base/");
