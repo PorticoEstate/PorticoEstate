@@ -682,22 +682,7 @@
 					'delete_file'	 => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}
-			/*
-			 * yui-result
-			  $data = array(
-			  'ResultSet' => array(
-			  'totalResultsAvailable' => $total_records,
-			  'startIndex' => $start,
-			  'sortKey' => 'type',
-			  'sortDir' => "ASC",
-			  'Result' => $values,
-			  'pageSize' => $num_rows,
-			  'activePage' => floor($start / $num_rows) + 1
-			  )
-			  );
-			  return $data;
-			 */
-			//Jquery result
+
 			return array(
 				'recordsTotal'		 => $total_records,
 				'recordsFiltered'	 => $total_records,
@@ -708,48 +693,6 @@
 
 		function get_summation()
 		{
-			/* $id 	= phpgw::get_var('id', 'int', 'REQUEST');
-			  $year 	= phpgw::get_var('year', 'int', 'REQUEST');
-
-			  if( !$this->acl_read)
-			  {
-			  return;
-			  }
-
-			  $values = $this->bo->get_summation($id, $year);
-
-			  $total_records = count($values);
-
-			  $num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
-			  $start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
-
-			  $allrows = true;
-			  $num_rows = $total_records;
-
-			  if($allrows)
-			  {
-			  $out = $values;
-			  }
-			  else
-			  {
-			  $page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-			  $values_part = array_chunk($values, $num_rows);
-			  $out = $values_part[$page];
-			  }
-
-
-			  $data = array(
-			  'ResultSet' => array(
-			  'totalResultsAvailable' => $total_records,
-			  'startIndex' => $start,
-			  'sortKey' => 'building_part',
-			  'sortDir' => "ASC",
-			  'Result' => $out,
-			  'pageSize' => $num_rows,
-			  'activePage' => floor($start / $num_rows) + 1
-			  )
-			  );
-			  return $data; */
 
 			$id		 = phpgw::get_var('id', 'int', 'REQUEST');
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST');
@@ -820,21 +763,7 @@
 			}
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
-			/* yui-data
-			  $data = array(
-			  'ResultSet' => array(
-			  'totalResultsAvailable' => $total_records,
-			  'startIndex' => $start,
-			  'sortKey' => $sortKey,
-			  'sortDir' => $sortDir,
-			  'Result' => $values,
-			  'pageSize' => $num_rows,
-			  'activePage' => floor($start / $num_rows) + 1
-			  )
-			  );
-			  return $data;
-			 *
-			 */
+
 			return array(
 				'recordsTotal'		 => $total_records,
 				'recordsFiltered'	 => $total_records,
