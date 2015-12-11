@@ -40,7 +40,7 @@
 		private static $counter = 0;
 
 		/**
-		 * Load all the dependencies for a YUI widget
+		 * Load all the dependencies for a jQuery widget
 		 *
 		 * @param string $widget the name of the widget to load, such as autocomplete
 		 *

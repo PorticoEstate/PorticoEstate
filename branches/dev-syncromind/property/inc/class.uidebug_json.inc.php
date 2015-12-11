@@ -26,7 +26,6 @@
 	 * @subpackage project
 	 * @version $Id$
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description

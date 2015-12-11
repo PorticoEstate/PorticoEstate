@@ -731,7 +731,7 @@
 		}
 
 		/**
-		 * Function to get related via Ajax-call using api-version of yui
+		 * Function to get related via Ajax-call
 		 *
 		 */
 		function get_related()
@@ -790,7 +790,7 @@
 		}
 
 		/**
-		 * Function to get related via Ajax-call using api-version of yui
+		 * Function to get related via Ajax-call
 		 *
 		 */
 		function get_target()

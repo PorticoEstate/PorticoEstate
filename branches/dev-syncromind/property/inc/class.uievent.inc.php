@@ -396,21 +396,6 @@
 
 			unset($parameters);
 
-			/* if($this->acl_add)
-			  {
-			  $data['datatable']['actions'][] = array
-			  (
-			  'my_name' 			=> 'add',
-			  'statustext' 	=> lang('add'),
-			  'text'			=> lang('add'),
-			  'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-			  (
-			  'menuaction'	=> 'property.uievent.edit',
-			  'type'			=> $type,
-			  'type_id'		=> $type_id
-			  ))
-			  );
-			  } */
 
 			self::add_javascript('property', 'portico', 'event.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
@@ -597,7 +582,6 @@
 			$tabs		 = array();
 			$active_tab	 = 'general';
 
-			//phpgwapi_yui::tabview_setup('general_edit_tabview');
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$tabs['repeat']	 = array('label' => lang('repeat'), 'link' => '#repeat');
 			if($id)
@@ -661,7 +645,6 @@
 				'lang_delete_statustext' => lang('delete the record'),
 				'textareacols'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				//'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 				'active_tab'	 => $active_tab,
 				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
@@ -808,6 +791,8 @@ JS;
 
 		function schedule2($id = 0)
 		{
+			throw new Exception('FIXME: uievent::schedule2()');
+
 			if(!$id)
 			{
 				$id = phpgw::get_var('id', 'int');
@@ -1000,29 +985,16 @@ JS;
 				'value_location_item_id' => $event['location_item_id'],
 				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'tabs'			 => phpgwapi_yui::tabview_generate($tabs, $active_tab)
+				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
-
-			//_debug_array($data);die;
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
-			//		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'event.schedule', 'property');
 
 			return $data;
