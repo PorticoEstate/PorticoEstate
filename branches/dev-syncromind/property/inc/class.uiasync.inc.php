@@ -26,7 +26,6 @@
 	 * @subpackage admin
 	 * @version $Id$
 	 */
-	//phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
@@ -387,43 +386,6 @@
 			$tabs			 = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab		 = 'general';
-
-//			$GLOBALS['phpgw']->xslttpl->add_file(array('async'));
-
-			/* if ($values['save'])
-			  {
-			  if($id)
-			  {
-			  $values['id']=$id;
-			  $action='edit';
-			  }
-			  else
-			  {
-			  $id =	$values['id'];
-			  }
-
-			  $data = str_replace(' ' ,'',stripslashes($values['data']));
-			  $data = stripslashes($values['data']);
-
-			  $data= explode(",", $data);
-
-			  if(is_array($data))
-			  {
-			  foreach($data as $set)
-			  {
-			  $set= explode("=", $set);
-			  $data_set[$set[0]]=$set[1];
-			  }
-			  }
-
-			  if($values['data'])
-			  {
-			  $values['data']=serialize($data_set);
-			  }
-
-			  $receipt = $this->bo->save($values,$action);
-			  $id = $receipt['id'];
-			  } */
 
 			if($id)
 			{
