@@ -19,7 +19,7 @@
 	<xsl:call-template name="top-toolbar" />
 	<xsl:call-template name="prizebook_table" />
   	<xsl:call-template name="wo_hour_table" />
-	<xsl:call-template name="down-toolbar" />
+	<xsl:call-template name="end-toolbar" />
 </xsl:template>
 
 <xsl:template name="top-toolbar">
@@ -65,13 +65,13 @@
 	</xsl:for-each>
 </xsl:template>
 
-<xsl:template name="down-toolbar">
+<xsl:template name="end-toolbar">
 	<div class="toolbar-container">
 		<div class="toolbar">
 			<form class="pure-form pure-form-stacked">
 				<div class="pure-g">
 					<div class="pure-u-1">
-						<xsl:for-each select="//down-toolbar/fields/field">
+						<xsl:for-each select="//end-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
 									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
@@ -415,7 +415,7 @@
 				});
 			</xsl:if>
 
-			<xsl:for-each select="//down-toolbar/fields/field">
+			<xsl:for-each select="//end-toolbar/fields/field">
 				<xsl:if test="type = 'button'">
 					$('#<xsl:value-of select="id"/>').click( function() 
 					{

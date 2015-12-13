@@ -303,7 +303,7 @@
 							'className' => 'center')
 					)
 				),
-				'down-toolbar'	 => array(
+				'end-toolbar'	 => array(
 					'fields' => array(
 						'field' => array(
 							array(

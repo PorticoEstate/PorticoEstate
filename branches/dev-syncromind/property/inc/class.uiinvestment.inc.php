@@ -47,11 +47,12 @@
 		var $currentapp;
 		var $public_functions = array
 			(
-			'query'		 => true,
-			'index'		 => true,
-			'history'	 => true,
-			'add'		 => true,
-			'delete'	 => true
+			'query'			=> true,
+			'index'			=> true,
+			'history'		=> true,
+			'get_history'	=> true,
+			'add'			=> true,
+			'delete'		=> true
 		);
 
 		function __construct()
@@ -336,7 +337,7 @@
 							'className' => 'center'),
 					)
 				),
-				'down-toolbar'	 => array(
+				'end-toolbar'	 => array(
 					'fields' => array(
 						'field' => array(
 							array(
@@ -388,7 +389,7 @@
 
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('property', 'portico', 'investment.index.js');
-			self::render_template_xsl('uiinvestment.index', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		function update_investment($values = '')
@@ -416,19 +417,8 @@
 			return $receipt;
 		}
 
-		function history()
+		function get_history_cols()
 		{
-			$values			 = phpgw::get_var('values');
-			$entity_type	 = phpgw::get_var('entity_type');
-			$entity_id		 = phpgw::get_var('entity_id', 'int');
-			$investment_id	 = phpgw::get_var('investment_id', 'int');
-
-			if($values)
-			{
-				$receipt	 = $this->update_investment($values);
-				$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			}
-
 			$uicols = array(
 				'input_type' => array('text', 'text', 'text', 'text', 'text', 'text', 'hidden'),
 				'name'		 => array('initial_value', 'value', 'this_index', 'this_write_off', 'date',
@@ -441,6 +431,20 @@
 				'hidden'	 => array(false, false, false, false, true, false, true)
 			);
 
+			return $uicols;
+
+		}
+		function get_history()
+		{
+			$draw	 = phpgw::get_var('draw', 'int');
+			$entity_id		 = phpgw::get_var('entity_id', 'int');
+			$investment_id	 = phpgw::get_var('investment_id', 'int');
+			$values			 = phpgw::get_var('values');
+			if($values)
+			{
+				return $this->update_investment($values);
+			}
+
 			$investment_list = $this->bo->read_single($entity_id, $investment_id);
 
 			$dateformat						 = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
@@ -451,9 +455,7 @@
 			ksort($dlarr);
 			$dateformat						 = (implode($sep, $dlarr));
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
-			phpgwapi_jquery::load_widget('datepicker');
-
+			$uicols = $this->get_history_cols();
 			$values = array();
 			if(isset($investment_list) && is_array($investment_list))
 			{
@@ -485,6 +487,24 @@
 					$values[] = $json_row;
 				}
 			}
+			$result_data = array('results' => $values);
+
+			$result_data['total_records']	 = count($values);
+			$result_data['draw']			 = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+
+		function history()
+		{
+			$entity_type	 = phpgw::get_var('entity_type');
+			$entity_id		 = phpgw::get_var('entity_id', 'int');
+			$investment_id	 = phpgw::get_var('investment_id', 'int');
+
+			$uicols = $this->get_history_cols();
+
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			phpgwapi_jquery::load_widget('datepicker');
 
 			$column_def		 = array();
 			$count_uicols	 = count($uicols['name']);
@@ -504,9 +524,10 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiinvestment.get_history',
+					'entity_id' => $entity_id, 'investment_id' => $investment_id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $column_def,
-				'data'		 => json_encode($values),
+				'data'		 => '',
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -527,7 +548,7 @@
 				)
 			);
 
-			$down_toolbar = array
+			$end_toolbar = array
 				(
 				array(
 					'type'	 => 'label',
@@ -561,7 +582,7 @@
 					'tab_index'	 => 5,
 					'style'		 => 'filter',
 					'group'		 => '1',
-					'action'	 => ''
+					'action'	 => 'onclikUpdateinvestment()'
 				)
 			);
 
@@ -573,12 +594,18 @@
 			$info[2]['name']	 = lang('Investment Id');
 			$info[2]['value']	 = $investment_id;
 
+			$hidden[0]['name']	 = 'entity_id';
+			$hidden[0]['value']	 = $entity_id;
+			$hidden[1]['name']	 = 'investment_id';
+			$hidden[1]['value']	 = $investment_id;
+
 			$data = array
 				(
 				'datatable_def'	 => $datatable_def,
 				'top_toolbar'	 => $top_toolbar,
-				'down_toolbar'	 => $down_toolbar,
+				'end_toolbar'	 => $end_toolbar,
 				'info'			 => $info,
+				'hidden'		 => $hidden,
 				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 			);
 
@@ -587,6 +614,7 @@
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			self::add_javascript('property', 'portico', 'investment.history.js');
 
 			self::render_template_xsl(array('investment', 'datatable_inline'), array('history' => $data));
 		}

@@ -322,7 +322,71 @@
 </xsl:template>
 
 <xsl:template match="datatable">
-    <xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="top-toolbar" />
+	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="end-toolbar" />
+</xsl:template>
+
+<xsl:template name="top-toolbar">
+	<div class="toolbar-container">
+		<div class="toolbar" >
+			<form class="pure-form pure-form-stacked">
+				<div class="pure-g">
+					<div class="pure-u-1-3">
+						<xsl:apply-templates select="//datatable/workorder_data" />
+					</div>
+					<div class="pure-u-2-3">
+						<xsl:for-each select="//top-toolbar/fields/field">
+							<xsl:choose>
+								<xsl:when test="type='button'">
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:for-each>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</xsl:template>
+
+<xsl:template name="end-toolbar">
+	<div class="toolbar-container">
+		<div class="toolbar">
+			<form class="pure-form pure-form-stacked">
+				<div class="pure-g">
+					<div class="pure-u-1">
+						<xsl:for-each select="//end-toolbar/fields/field">
+							<xsl:choose>
+								<xsl:when test="type = 'date-picker'">
+									<td valign="top">
+										<div>
+											<input id="filter_{name}" name="filter_{name}" type="text"></input>
+										</div>
+									</td>
+								</xsl:when>
+								<xsl:when test="type='button'">
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary" onclick="{action}">
+										<xsl:value-of select="value"/>
+									</button>
+								</xsl:when>
+								<xsl:when test="type='label'">
+									<xsl:value-of select="value"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input id="{id}" type="{type}" name="{name}" value="{value}">
+										<xsl:if test="type = 'checkbox' and checked = '1'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition">

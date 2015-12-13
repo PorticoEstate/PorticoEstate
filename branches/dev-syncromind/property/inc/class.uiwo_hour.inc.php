@@ -782,7 +782,7 @@
 						)
 					)
 				),
-				'down-toolbar'	 => array
+				'end-toolbar'	 => array
 					(
 					'fields' => array
 						(
