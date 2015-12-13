@@ -5,11 +5,13 @@
 
 	<!-- New template-->
 	<xsl:template match="contact_data">
-		<tr>
-			<td valign="top">
+	<div class="pure-control-group">
+
+		<div class="pure-u-1 pure-u-md-1-3">
+			<label>
 				<xsl:value-of select="lang_contact"/>
-			</td>
-			<td>
+			</label>
+			<div class="pure-u-md-1-3">
 				<table>
 					<tr>
 						<td>
@@ -37,6 +39,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</table>
-			</td>
-		</tr>
+			</div>
+		</div>
+	</div>
 	</xsl:template>
