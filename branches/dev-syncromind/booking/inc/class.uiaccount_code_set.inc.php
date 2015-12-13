@@ -68,8 +68,6 @@
 
 			self::add_javascript('booking', 'booking', 'account_code_set.js');
 //			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
 			$data							 = array(
 				'form' => array(
 					'toolbar' => array(
@@ -131,17 +129,6 @@
 
 			return $results;
 		}
-
-//		public function index_json()
-//		{
-//			$account_code_sets = $this->bo->read();
-//			array_walk($account_code_sets["results"], array($this, "_add_links"), $this->module.".uiaccount_code_set.show");
-//			//foreach($account_code_sets["results"] as &$account_code_set) {}
-//			
-//			$results = $this->yui_results($account_code_sets);
-//			
-//			return $results;
-//		}
 
 		protected function add_default_display_data(&$account_code_set)
 		{

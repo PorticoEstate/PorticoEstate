@@ -50,9 +50,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -153,36 +151,6 @@
 			}
 			return $this->jquery_results($seasons);
 		}
-
-//		public function index_json()
-//		{
-//			$seasons = $this->bo->read();
-//			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
-//			
-//			foreach($seasons['results'] as &$season) {
-//				$season['status'] = lang($season['status']);
-//				$season['from_'] = pretty_timestamp($season['from_']);
-//				$season['to_'] = pretty_timestamp($season['to_']);
-//
-//				$resources = $this->resource_bo->read_single($season['id']);
-//				if (isset($season['resources'])) {
-//					$filters['filters']['id'] = $season['resources'];
-//					$resources = $this->resource_bo->so->read($filters);
-//					$temparray = array();
-//					foreach($resources['results'] as $resource) {
-//						$temparray[] = $resource['name'];
-//					}
-//					$season['resource_list'] = implode(', ', $temparray);
-//				}
-//
-//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$season['officer_name']."'";
-//				$this->db->query($sql);
-//				while ($record = array_shift($this->db->resultSet)) {
-//					$season['officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
-//				}
-//			}
-//			return $this->yui_results($seasons);
-//		}
 
 		public function add()
 		{

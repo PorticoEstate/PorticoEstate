@@ -60,10 +60,6 @@
 				return $this->query();
 			}
 
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
-
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -136,27 +132,6 @@
 			return $this->jquery_results($permissions);
 		}
 
-//		public function index_json()
-//		{
-//			$this->db = $GLOBALS['phpgw']->db;
-//
-//			$permissions = $this->bo->read();
-//			foreach($permissions['results'] as &$permission)
-//			{
-//				$permission['link'] = $this->generate_link('edit', array('id' => $permission['id']));
-//				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
-//				$permission['actions'] = array(
-//					$this->generate_link('delete', array('id' => $permission['id'])),
-//				);
-//
-//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$permission['subject_name']."'";
-//				$this->db->query($sql);
-//				while ($record = array_shift($this->db->resultSet)) {
-//					$permission['subject_name'] = $record['account_firstname']." ".$record['account_lastname'];
-//				}
-//			}
-//			return $this->yui_results($permissions);
-//		}
 
 		public function index_accounts()
 		{

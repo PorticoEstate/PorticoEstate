@@ -70,7 +70,6 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'));
 
-//			$this->use_yui_editor();
 			self::render_template_xsl('system_message', array('system_message' => $system_message));
 		}
 	}

@@ -118,9 +118,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -223,41 +221,6 @@
 			return $results;
 		}
 
-//		public function index_json()
-//		{
-//			$groups = $this->bo->read();
-//			array_walk($groups["results"], array($this, "_add_links"), $this->module.".uigroup.show");
-//			foreach($groups["results"] as &$group) {
-//				
-//				$contact = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
-//				$contact2 = (isset($group['contacts']) && isset($group['contacts'][1])) ? $group['contacts'][1] : null;
-//				
-//				if ($contact) {
-//					$group += array(
-//								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
-//								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
-//								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
-//					);
-//				}
-//				if ($contact2) {
-//					$group += array(
-//								"secondary_contact_name"  => ($contact2["name"])  ? $contact2["name"] : '',
-//								"secondary_contact_phone" => ($contact2["phone"]) ? $contact2["phone"] : '',
-//								"secondary_contact_email" => ($contact2["email"]) ? $contact2["email"] : '',
-//					);
-//				}
-//			}
-//			
-//			$results = $this->yui_results($groups);
-//			
-//			if (is_array($parent_entity = $this->get_parent_if_inline())) {
-//				if ($this->bo->allow_create(array($this->get_current_parent_type().'_id' => $parent_entity['id']))) {
-//					$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
-//				}
-//			}
-//			
-//			return $results;
-//		}
 
 		public function edit()
 		{
@@ -344,7 +307,6 @@
 				$group[$this->get_current_parent_type() . '_name'] = $parent_entity['name'];
 			}
 
-//			$this->use_yui_editor();
 			$activities	 = $this->activity_bo->fetch_activities();
 			$activities	 = $activities['results'];
 

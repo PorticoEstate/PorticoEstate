@@ -43,7 +43,6 @@
 
 			$settings			 = array();
 			$settings['tabs']	 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-//			$this->use_yui_editor();
 			self::render_template_xsl('event_mail_settings', array('config_data' => $config->config_data,
 				'data' => $settings));
 		}

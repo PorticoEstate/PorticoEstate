@@ -77,7 +77,6 @@
 				$children[$activity['parent_id']][] = $activity;
 			}
 			$treedata	 = json_encode($this->treeitem($children, null, $show_all));
-//			phpgwapi_yui::load_widget('treeview');
 			phpgwapi_jquery::load_widget('treeview');
 			$links		 = array(
 				'show_inactive'	 => self::link(array('menuaction' => 'booking.uiactivity.index',

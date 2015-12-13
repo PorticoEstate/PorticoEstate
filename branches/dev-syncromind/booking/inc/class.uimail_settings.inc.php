@@ -41,7 +41,6 @@
 				}
 				$config->save_repository();
 			}
-//			$this->use_yui_editor();
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Mail Settings'), 'link' => '#mail_settings');
 			$active_tab		 = 'generic';

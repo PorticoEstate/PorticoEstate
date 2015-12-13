@@ -77,9 +77,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
@@ -218,41 +216,4 @@
 			return $this->jquery_results($applications);
 		}
 
-		public function index_json()
-		{
-			$this->db = $GLOBALS['phpgw']->db;
-
-			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(
-				null, $this->current_account_id()) : array(1, $this->current_account_id()));
-			foreach($applications['results'] as &$application)
-			{
-				$application['status']				 = lang($application['status']);
-				$application['type']				 = lang($application['type']);
-				$application['created']				 = pretty_timestamp($application['created']);
-				$application['modified']			 = pretty_timestamp($application['modified']);
-				$application['frontend_modified']	 = pretty_timestamp($application['frontend_modified']);
-				$application['resources']			 = $this->resource_bo->so->read(array('filters' => array(
-						'id' => $application['resources'])));
-				$application['resources']			 = $application['resources']['results'];
-				if($application['resources'])
-				{
-					$names = array();
-					foreach($application['resources'] as $res)
-					{
-						$names[] = $res['name'];
-					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
-				}
-
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $application['case_officer_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
-				{
-					$application['case_officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
-				}
-			}
-			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
-
-			return $this->yui_results($applications);
-		}
 	}

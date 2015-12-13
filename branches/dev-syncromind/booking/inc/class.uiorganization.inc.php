@@ -1,5 +1,4 @@
 <?php
-//	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('booking.uicommon');
 
 	class booking_uiorganization extends booking_uicommon
@@ -53,7 +52,9 @@
 		public function building_users()
 		{
 			if(!phpgw::get_var('phpgw_return_as') == 'json')
-			{ return;}
+			{
+				return;
+			}
 
 			if(($building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null)))
 			{
@@ -71,9 +72,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -247,7 +246,6 @@
 			$activities					 = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-//			$this->use_yui_editor();
 			phpgwapi_jquery::init_ckeditor('field_description');
 
 			$this->add_template_helpers();
@@ -320,10 +318,7 @@
 			$activities	 = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-//			$this->use_yui_editor();
 			phpgwapi_jquery::init_ckeditor('field_description');
-
-//			$this->rich_text_editor('field-description');
 
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array('organization' => $organization,

@@ -127,8 +127,6 @@
 				$allocation['to_']	 = pretty_timestamp($allocation['to_']);
 				$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
 
-//				$this->use_yui_editor();
-
 				phpgwapi_jquery::init_ckeditor('field-message');
 				self::render_template_xsl('allocation_cancel', array('allocation' => $allocation));
 			}

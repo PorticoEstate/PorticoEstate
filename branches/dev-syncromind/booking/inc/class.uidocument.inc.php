@@ -143,10 +143,6 @@
 
 			$this->redirect_to_parent_if_inline();
 
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
-
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -242,38 +238,6 @@
 			}
 			return $this->jquery_results($documents);
 		}
-
-//		public function index_json()
-//		{
-//			$documents = $this->bo->read();
-//			foreach($documents['results'] as &$document)
-//			{
-//				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
-//				$document['category'] = lang(self::humanize($document['category']));
-//				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
-//				
-//				$document_actions = array();
-//				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
-//				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
-//				
-//				$document['actions'] = $document_actions;
-//			}
-//			if (phpgw::get_var('no_images'))
-//			{
-//				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
-//
-//				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
-//				// reindexing the results array solves the problem
-//				$doc_backup = $documents;
-//				unset($documents['results']);
-//				foreach($doc_backup['results'] as $doc)
-//				{
-//					$documents['results'][] = $doc;
-//				}
-//				$documents['total_records'] = count($documents['results']);
-//			}
-//			return $this->yui_results($documents);
-//		}
 
 		private function is_image($document)
 		{

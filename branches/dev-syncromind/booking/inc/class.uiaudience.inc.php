@@ -73,11 +73,6 @@
 				$this->bo->actUnSet();
 			}
 
-
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
-//			phpgwapi_yui::load_widget('treeview');
 			$sessionLink = $this->link(array('menuaction' => 'booking.uiaudience.index', 'sessionShowAll' => 'activate'));
 			$data		 = array(
 				'form'		 => array(
@@ -155,18 +150,6 @@
 			return $this->jquery_results($groups);
 		}
 
-//		public function index_json()
-//		{
-//			
-//			$groups = $this->bo->read();
-//			
-//			foreach($groups['results'] as &$audience)
-//			{
-//				$audience['link'] = $this->link(array('menuaction' => 'booking.uiaudience.edit', 'id' => $audience['id']));
-//				$audience['active'] = $audience['active'] ? lang('Active') : lang('Inactive');
-//			}
-//			return $this->yui_results($groups);
-//		}
 
 		public function add()
 		{

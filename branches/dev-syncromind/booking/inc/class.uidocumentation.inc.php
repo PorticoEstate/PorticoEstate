@@ -39,10 +39,6 @@
 				return $this->query();
 			}
 
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
-
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -120,24 +116,6 @@
 			return $this->jquery_results($documents);
 		}
 
-//		public function index_json()
-//		{
-//			$documents = $this->bo->read();
-//			
-//			foreach($documents['results'] as &$document)
-//			{
-//				$document['link'] = self::link(array('menuaction' => $this->module.'.uidocumentation.download', 'id' => $document['id']));
-//				$document['category'] = lang(self::humanize($document['category']));
-//				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
-//				
-//				$document_actions = array();
-//				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.edit', 'id' => $document['id']));
-//				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.delete', 'id' => $document['id']));
-//				
-//				$document['actions'] = $document_actions;
-//			}
-//			return $this->yui_results($documents);
-//		}
 
 		public function index_images()
 		{

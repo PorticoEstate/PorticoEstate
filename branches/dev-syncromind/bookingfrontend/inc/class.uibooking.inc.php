@@ -860,8 +860,6 @@
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
 					'id' => $allocation['building_id']));
 
-//				$this->use_yui_editor();
-
 				phpgwapi_jquery::init_ckeditor('field-message');
 				self::render_template_xsl('booking_cancel', array('booking' => $booking));
 			}

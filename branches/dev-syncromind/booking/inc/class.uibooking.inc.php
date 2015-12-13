@@ -54,9 +54,7 @@
 				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'allocation_list.js');
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			phpgwapi_jquery::load_widget('autocomplete');
 			$data = array(
 				'form'		 => array(

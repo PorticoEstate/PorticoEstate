@@ -47,9 +47,7 @@
 			{
 				return $this->query();
 			}
-//		self::add_javascript('booking', 'booking', 'datatable.js');
-//		phpgwapi_yui::load_widget('datatable');
-//		phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -182,55 +180,6 @@
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
 			return $this->jquery_results($events);
-		}
-
-		public function index_json()
-		{
-			if(isset($_SESSION['showall']))
-			{
-				unset($filters['building_name']);
-				unset($filters['activity_id']);
-			}
-			else
-			{
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
-			}
-
-			$params	 = array(
-				'start'		 => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'		 => phpgw::get_var('query'),
-				'sort'		 => phpgw::get_var('sort'),
-				'dir'		 => phpgw::get_var('dir'),
-				'filters'	 => $filters
-			);
-			$events	 = $this->bo->so->read($params);
-
-			foreach($events['results'] as &$event)
-			{
-				$event['from_']	 = pretty_timestamp($event['from_']);
-				$event['to_']	 = pretty_timestamp($event['to_']);
-			}
-
-			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
-			return $this->yui_results($events);
 		}
 
 		private function _combine_dates($from_, $to_)

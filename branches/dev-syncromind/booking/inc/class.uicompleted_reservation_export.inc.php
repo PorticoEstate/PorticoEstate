@@ -102,9 +102,6 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_to');
 			phpgwapi_jquery::load_widget('datepicker');
 
-//			self::add_javascript('booking', 'booking', 'datatable.js');            
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
 				'form'		 => array(
@@ -359,26 +356,6 @@
 				}
 			}
 		}
-
-//		public function index_json()
-//		{
-//			$this->db = $GLOBALS['phpgw']->db;
-//			$exports = $this->bo->read();
-//			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
-//
-//			foreach($exports["results"] as &$export) {
-//				$export = $this->bo->so->initialize_entity($export);
-//				$this->add_default_display_data($export);
-//
-//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
-//				$this->db->query($sql);
-//				while ($record = array_shift($this->db->resultSet)) {
-//					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
-//				}
-//			}
-//			$results = $this->yui_results($exports);
-//			return $results;
-//		}
 
 		public function show()
 		{

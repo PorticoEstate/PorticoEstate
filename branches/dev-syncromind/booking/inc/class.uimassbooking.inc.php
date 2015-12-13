@@ -37,9 +37,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -100,19 +98,6 @@
 //				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
 			return $this->jquery_results($buildings);
-		}
-
-		public function index_json()
-		{
-
-			$buildings = $this->bo->read();
-			foreach($buildings['results'] as &$building)
-			{
-				$building['link']	 = $this->link(array('menuaction' => 'booking.uimassbooking.schedule',
-					'id' => $building['id']));
-				$building['active']	 = $building['active'] ? lang('Active') : lang('Inactive');
-			}
-			return $this->yui_results($buildings);
 		}
 
 		private function item_link(&$item, $key)

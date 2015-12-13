@@ -81,7 +81,9 @@
 		public function find_buildings_used_by()
 		{
 			if(!phpgw::get_var('phpgw_return_as') == 'json')
-			{ return;}
+			{
+				return;
+			}
 
 			if(($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null)))
 			{
@@ -99,9 +101,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -199,7 +199,6 @@
 			$this->flash_form_errors($errors);
 			$building['buildings_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
-//			$this->use_yui_editor();
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::init_ckeditor('field_description');
@@ -249,7 +248,6 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-//			$this->use_yui_editor();
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::init_ckeditor('field_description');

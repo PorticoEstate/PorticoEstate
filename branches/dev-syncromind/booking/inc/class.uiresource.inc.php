@@ -50,9 +50,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
@@ -167,13 +165,11 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('autocomplete');
+
 			phpgwapi_jquery::init_ckeditor('field_description');
 			$activity_data			 = $this->activity_bo->fetch_activities();
 			$resource['types']		 = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-//			$this->use_yui_editor();
 			$tabs					 = array();
 			$tabs['generic']		 = array('label' => lang('Permission Edit'), 'link' => '#resource');
 			$active_tab				 = 'generic';
@@ -219,7 +215,6 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
-//			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::init_ckeditor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
@@ -227,7 +222,6 @@
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
-//			$this->use_yui_editor();
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
 			$active_tab		 = 'generic';

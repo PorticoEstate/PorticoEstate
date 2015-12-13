@@ -244,9 +244,6 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('booking', 'booking', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
 				'form'		 => array(
@@ -613,7 +610,6 @@
 					'event_id' => $association['id'], 'application_id' => $association['application_id']));
 				$association['type']	 = lang($association['type']);
 			}
-//                        return $this->yui_results($associations);
 			return $associations;
 		}
 

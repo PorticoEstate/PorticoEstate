@@ -31,11 +31,11 @@
 			if($id = phpgw::get_var('id', 'int'))
 			{
 				$person = $this->bo->read_single($id);
-				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
+				return $this->jquery_results(array("total_records" => 1, "results" => $person));
 			}
 
 			$persons = $this->bo->read();
 			array_walk($persons["results"], array($this, "_add_links"), "bookingfrontend.uicontactperson.show");
-			return $this->yui_results($persons);
+			return $this->jquery_results($persons);
 		}
 	}
