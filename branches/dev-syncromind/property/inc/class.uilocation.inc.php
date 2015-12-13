@@ -1329,6 +1329,7 @@ JS;
 						'allrows'		 => true,
 						'download_type'	 => 'responsiblility_role'
 					)),
+					'ungroup_buttons'=> true,
 					'allrows'		 => true,
 					'editor_action'	 => '',
 					'field'			 => array()

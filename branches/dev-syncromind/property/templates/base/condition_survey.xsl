@@ -256,8 +256,6 @@
                         }
                     </script>
 
-                    <xsl:call-template name="datasource-definition" />
-
 						<div class="pure-control-group">
 
                             <label>
@@ -438,53 +436,6 @@
     </form>
 
 </xsl:template>
-
-<xsl:template name="datasource-definition">
-    <script>
-        var columnDefs = [];
-        YAHOO.util.Event.onDOMReady(function(){
-        <xsl:for-each select="datatable_def">
-            columnDefs = [
-            <xsl:for-each select="ColumnDefs">
-                {
-                resizeable: true,
-                key: "<xsl:value-of select="key"/>",
-                <xsl:if test="label">
-                    label: "<xsl:value-of select="label"/>",
-                </xsl:if>
-                sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-                <xsl:if test="hidden">
-                    hidden: true,
-                </xsl:if>
-                <xsl:if test="formatter">
-                    formatter: <xsl:value-of select="formatter"/>,
-                </xsl:if>
-                <xsl:if test="editor">
-                    editor: <xsl:value-of select="editor"/>,
-                </xsl:if>
-                className: "<xsl:value-of select="className"/>"
-                }<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-            </xsl:for-each>
-            ];
-			
- //           YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
-        </xsl:for-each>
-
-        var PaginatorName2 = 'paginator_containerdatatable-container_2';
-        var DatatableName2 = 'datatable_containerdatatable-container_2';
-
-        var  myPaginator_2 = YAHOO.portico.Paginator[PaginatorName2];
-        var  myDataTable_2 = YAHOO.portico.DataTable[DatatableName2];
-
-        myDataTable_2.subscribe("renderEvent", function()
-        {
-        addFooterDatatable2(myPaginator_2,myDataTable_2);
-        });
-        });
-    </script>
-
-</xsl:template>
-
 
 <xsl:template match="options">
     <option value="{id}">
