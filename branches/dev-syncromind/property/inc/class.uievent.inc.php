@@ -27,7 +27,6 @@
 	 * @version $Id$
 	 */
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	 * Description
@@ -51,9 +50,7 @@
 			'view'			 => true,
 			'edit'			 => true,
 			'delete'		 => true,
-			'schedule'		 => true,
 			'schedule2'		 => true,
-			'schedule_week'	 => true,
 			'_get_filters'	 => true,
 			'updatereceipt'	 => true,
 		);
@@ -122,8 +119,8 @@
 			);
 
 			$values_combo_box[1] = $this->bocommon->get_user_list_right2('filter', 2, $this->user_id, $this->acl_location);
-			array_unshift($values_combo_box[1], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'name' => lang('mine tasks')));
+			array_unshift($values_combo_box[1], array('id'	 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'name'	 => lang('mine tasks')));
 			$default_value		 = array('id' => '', 'name' => lang('no user'));
 			array_unshift($values_combo_box[1], $default_value);
 			$combos[]			 = array
@@ -176,8 +173,8 @@
 			$this->acl_location = '.scheduled_events';
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -432,12 +429,12 @@
 				return;
 			}
 
-			$location				 = phpgw::get_var('location');
-			$attrib_id				 = phpgw::get_var('attrib_id');
-			$item_id				 = phpgw::get_var('item_id');//might be bigint
-			$id						 = phpgw::get_var('id', 'int');
-			$values					 = phpgw::get_var('values');
-			$values['responsible_id'] = phpgw::get_var('contact', 'int', 'POST');
+			$location					 = phpgw::get_var('location');
+			$attrib_id					 = phpgw::get_var('attrib_id');
+			$item_id					 = phpgw::get_var('item_id');//might be bigint
+			$id							 = phpgw::get_var('id', 'int');
+			$values						 = phpgw::get_var('values');
+			$values['responsible_id']	 = phpgw::get_var('contact', 'int', 'POST');
 
 			$receipt = array();
 
@@ -577,72 +574,75 @@
 
 			$data = array
 				(
-				'datatable_def'	 => '',
-				'contact_data'	 => $contact_data,
-				'link_schedule'	 => $GLOBALS['phpgw']->link('/index.php', $link_schedule_data),
-				'lang_start_date_statustext' => lang('Select the date for the event'),
-				'lang_start_date'			 => lang('date'),
-				'value_start_date'			 => $values['start_date'],
-				'value_enabled'				 => isset($values['enabled']) ? $values['enabled'] : '',
-				'lang_enabled'				 => lang('enabled'),
-				'lang_end_date_statustext'	 => lang('Select the estimated end date for the event'),
-				'lang_end_date'				 => lang('end date'),
-				'value_end_date'			 => $values['end_date'],
-				'repeat_type'				 => $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
-				'lang_repeat_type'			 => lang('repeat type'),
-				'repeat_day'		 => $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
-				'lang_repeat_day'	 => lang('repeat day'),
+				'datatable_def'						 => '',
+				'contact_data'						 => $contact_data,
+				'link_schedule'						 => $GLOBALS['phpgw']->link('/index.php', $link_schedule_data),
+				'lang_start_date_statustext'		 => lang('Select the date for the event'),
+				'lang_start_date'					 => lang('date'),
+				'value_start_date'					 => $values['start_date'],
+				'value_enabled'						 => isset($values['enabled']) ? $values['enabled'] : '',
+				'lang_enabled'						 => lang('enabled'),
+				'lang_end_date_statustext'			 => lang('Select the estimated end date for the event'),
+				'lang_end_date'						 => lang('end date'),
+				'value_end_date'					 => $values['end_date'],
+				'repeat_type'						 => $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
+				'lang_repeat_type'					 => lang('repeat type'),
+				'repeat_day'						 => $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
+				'lang_repeat_day'					 => lang('repeat day'),
 				'lang_repeat_interval'				 => lang('interval'),
 				'value_repeat_interval'				 => isset($values['repeat_interval']) ? $values['repeat_interval'] : 0,
 				'lang_repeat_interval_statustext'	 => lang('interval'),
-				'lang_action'	 => lang('action'),
-				'action'		 => $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
-				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'	 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.index',
-					'type' => $type, 'type_id' => $type_id)),
-				'lang_id'		 => lang('ID'),
-				'lang_descr'	 => lang('Description'),
-				'lang_save'		 => lang('save'),
-				'lang_cancel'	 => lang('cancel'),
-				'lookup'		 => $lookup,
-				'lang_apply'	 => lang('apply'),
-				'value_id'		 => isset($values['id']) ? $values['id'] : '',
-				'lang_next_run'			 => lang('next run'),
-				'value_next_run'		 => isset($values['next']) ? $values['next'] : '',
-				'value_descr'			 => $values['descr'],
-				'lang_descr_text'		 => lang('Enter a description of the record'),
-				'lang_save_text'		 => lang('Save the record'),
-				'lang_apply_statustext'	 => lang('Apply the values'),
-				'lang_cancel_statustext' => lang('Leave the actor untouched and return back to the list'),
-				'lang_save_statustext'	 => lang('Save the actor and return back to the list'),
-				'lang_delete'			 => lang('delete'),
-				'lang_delete_text'		 => lang('delete the record'),
-				'lang_delete_statustext' => lang('delete the record'),
-				'textareacols'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
-				'textarearows'	 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				'active_tab'	 => $active_tab,
-				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'lang_action'						 => lang('action'),
+				'action'							 => $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
+				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.index',
+					'type'		 => $type, 'type_id'	 => $type_id)),
+				'lang_id'							 => lang('ID'),
+				'lang_descr'						 => lang('Description'),
+				'lang_save'							 => lang('save'),
+				'lang_cancel'						 => lang('cancel'),
+				'lookup'							 => $lookup,
+				'lang_apply'						 => lang('apply'),
+				'value_id'							 => isset($values['id']) ? $values['id'] : '',
+				'lang_next_run'						 => lang('next run'),
+				'value_next_run'					 => isset($values['next']) ? $values['next'] : '',
+				'value_descr'						 => $values['descr'],
+				'lang_descr_text'					 => lang('Enter a description of the record'),
+				'lang_save_text'					 => lang('Save the record'),
+				'lang_apply_statustext'				 => lang('Apply the values'),
+				'lang_cancel_statustext'			 => lang('Leave the actor untouched and return back to the list'),
+				'lang_save_statustext'				 => lang('Save the actor and return back to the list'),
+				'lang_delete'						 => lang('delete'),
+				'lang_delete_text'					 => lang('delete the record'),
+				'lang_delete_statustext'			 => lang('delete the record'),
+				'textareacols'						 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
+				'textarearows'						 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
+				'active_tab'						 => $active_tab,
+				'tabs'								 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			$schedule = array();
 
 			if($id)
 			{
-				$link_shedule2 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.schedule2',
-					'id' => $id, 'phpgw_return_as' => 'json'));
+				$link_shedule2 = $GLOBALS['phpgw']->link('/index.php', array('menuaction'		 => 'property.uievent.schedule2',
+					'id'				 => $id, 'phpgw_return_as'	 => 'json'));
 
 				$buttons = array
 					(
-					array('id' => 'set_receipt', 'type' => 'buttons', 'value' => 'Receipt', 'label' => lang('Receipt'),
-						'funct' => 'onActionsClick', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'delete_receipt', 'type' => 'buttons', 'value' => 'Delete Receipt',
-						'label' => lang('Delete receipt'), 'funct' => 'onActionsClick', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-					array('id' => 'enable_alarm', 'type' => 'buttons', 'value' => 'Enable', 'label' => lang('enable'),
-						'funct' => 'onActionsClick', 'classname' => 'actionButton', 'value_hidden' => ""),
-					array('id' => 'disable_alarm', 'type' => 'buttons', 'value' => 'Disable', 'label' => lang('disable'),
-						'funct' => 'onActionsClick', 'classname' => 'actionButton', 'value_hidden' => "")
+					array('id'			 => 'set_receipt', 'type'			 => 'buttons', 'value'			 => 'Receipt',
+						'label'			 => lang('Receipt'),
+						'funct'			 => 'onActionsClick', 'classname'		 => 'actionButton', 'value_hidden'	 => ""),
+					array('id'			 => 'delete_receipt', 'type'			 => 'buttons', 'value'			 => 'Delete Receipt',
+						'label'			 => lang('Delete receipt'), 'funct'			 => 'onActionsClick', 'classname'		 => 'actionButton',
+						'value_hidden'	 => ""),
+					array('id'			 => 'enable_alarm', 'type'			 => 'buttons', 'value'			 => 'Enable',
+						'label'			 => lang('enable'),
+						'funct'			 => 'onActionsClick', 'classname'		 => 'actionButton', 'value_hidden'	 => ""),
+					array('id'			 => 'disable_alarm', 'type'			 => 'buttons', 'value'			 => 'Disable',
+						'label'			 => lang('disable'),
+						'funct'			 => 'onActionsClick', 'classname'		 => 'actionButton', 'value_hidden'	 => "")
 				);
 
 				$tabletools = array();
@@ -718,7 +718,6 @@ JS;
 						array('disablePagination' => true)
 					)
 				);
-				//$schedule = $this->schedule2($id);
 				$data['datatable_def']	 = $datatable_def;
 			}
 			else
@@ -733,7 +732,6 @@ JS;
 			$appname = lang('event');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			self::render_template_xsl(array('event', 'datatable_inline'), array('edit' => $data));
 		}
 
@@ -746,23 +744,6 @@ JS;
 			}
 
 			return $this->bo->delete($id);
-		}
-
-		public function schedule()
-		{
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-			$id												 = phpgw::get_var('id', 'int', 'GET');
-
-			$resource			 = $this->bo->read_single($id);
-			$resource['cols'][]	 = array('label' => lang('date'), 'key' => 'date');
-			$resource['cols'][]	 = array('label' => lang('exception'), 'key' => 'exception');
-
-			$lang['resource_schedule']	 = lang('Resource schedule');
-			$lang['schedule']			 = lang('Schedule');
-			$lang['time']				 = lang('Time');
-
-			self::add_javascript('property', 'yahoo', 'schedule.js');
-			self::render_template('event_schedule', array('resource' => $resource, 'lang' => $lang));
 		}
 
 		function schedule2($id = 0)
@@ -811,8 +792,8 @@ JS;
 					'location_id'		 => $entry['location_id'],
 					'location_item_id'	 => $entry['location_item_id'],
 					'remark'			 => $entry['descr'],
-					'url'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent.show',
-						'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
+					'url'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'		 => 'booking.uievent.show',
+						'location_id'		 => $entry['location_id'], 'location_item_id'	 => $entry['location_item_id']))
 				);
 				$i++;
 			}
@@ -882,23 +863,5 @@ JS;
 				$result_data['draw'] = $draw;
 				return $this->jquery_results($result_data);
 			}
-		}
-
-		public function schedule_week()
-		{
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-			$id												 = phpgw::get_var('id', 'int', 'GET');
-			$resource										 = $this->bo->init_schedule_week($id, 'property.uievent', 'property.uievent');
-
-			$lang['resource_schedule']	 = lang('Resource schedule');
-			$lang['prev_week']			 = lang('Previous week');
-			$lang['next_week']			 = lang('Next week');
-			$lang['week']				 = lang('Week');
-			$lang['buildings']			 = lang('Buildings');
-			$lang['schedule']			 = lang('Schedule');
-			$lang['time']				 = lang('Time');
-
-			self::add_javascript('property', 'yahoo', 'schedule.js');
-			self::render_template('event_schedule_week', array('resource' => $resource, 'lang' => $lang));
 		}
 	}
