@@ -544,11 +544,11 @@
 			);
 			$active_tab = 'main';
 
-			phpgwapi_yui::tabview_setup('edit_user_tabview');
+			phpgwapi_jquery::tabview_setup('edit_user_tabview');
 
 			$data = array
 			(
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_id'				=> $id,
 				'user_data'				=> $user_data,
 				'location_data'			=> $location_data,

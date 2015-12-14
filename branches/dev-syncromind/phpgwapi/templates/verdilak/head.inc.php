@@ -7,8 +7,7 @@
 	* @subpackage gui
 	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
-	
+
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
@@ -27,27 +26,6 @@
 	}
 
 	$stylesheets = array();
-	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-	{
-
-		phpgwapi_yui::load_widget('dragdrop');
-		phpgwapi_yui::load_widget('element');
-		phpgwapi_yui::load_widget('container');
-		phpgwapi_yui::load_widget('connection');
-		phpgwapi_yui::load_widget('resize');
-		phpgwapi_yui::load_widget('layout');
-
-		$stylesheets = array
-		(
-			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-		);
-	}
-
-	phpgwapi_yui::load_widget('button');
-
 	$stylesheets[] = '/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css';
 	$stylesheets[] = '/phpgwapi/js/yahoo/button/assets/skins/sam/button.css';
 	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';

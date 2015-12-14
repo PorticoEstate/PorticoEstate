@@ -201,7 +201,7 @@
 				'is_one_time'		 => $this->is_one_time(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not
-				// happy about empty values if a custom parser is set, so we use the YUI built
+				// happy about empty values if a custom parser is set, so we use the
 				// in "date" parser which requires a format like: 2009/07/30 to work. 
 				// EHL: Removed 2009-10-27, due to change to int datatype. 
 				'date_start'		 => $this->get_date_start() != NULL ? date($date_format, $this->get_date_start()) : '',

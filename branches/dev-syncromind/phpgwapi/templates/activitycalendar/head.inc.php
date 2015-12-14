@@ -1,5 +1,4 @@
 <?php
-	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.template_portico');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
@@ -17,24 +16,6 @@
 
 	$javascripts = array();
 
-	phpgwapi_yui::load_widget('dragdrop');
-	phpgwapi_yui::load_widget('element');
-	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('connection');
-	phpgwapi_yui::load_widget('resize');
-	phpgwapi_yui::load_widget('layout');
-
-	phpgwapi_yui::load_widget('button');
-//	$stylesheets = array
-//		(
-//			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-//			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-//			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-//			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-//		);
-//	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-//	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
-    
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
