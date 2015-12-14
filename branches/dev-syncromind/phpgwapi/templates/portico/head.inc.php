@@ -105,8 +105,8 @@
 	$template_selector = <<<HTML
 
    <select id = "template_selector">
-	<option value="pure"{$selecte_pure}>Template 1</option>
-	<option value="portico"{$selecte_portico}>Template 2</option>
+	<option value="pure"{$selecte_pure}>Mobil</option>
+	<option value="portico"{$selecte_portico}>Desktop</option>
    </select>
 HTML;
 	// Construct navbar_config by taking into account the current selected menu
