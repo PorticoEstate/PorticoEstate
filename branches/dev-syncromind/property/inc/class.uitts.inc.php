@@ -811,6 +811,12 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'tts.index.js');
 
+			$start_date	 = urldecode($this->start_date);
+			$end_date	 = urldecode($this->end_date);
+
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('list ticket');
 
@@ -831,12 +837,31 @@
 								'href'		 => '#',
 								'class'		 => '',
 								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
+							),
+							array
+								(
+								'type'	 => 'date-picker',
+								'id'	 => 'start_date',
+								'name'	 => 'start_date',
+								'value'	 => $start_date,
+								'text'	 => lang('from')
+							),
+							array
+								(
+								'type'	 => 'date-picker',
+								'id'	 => 'end_date',
+								'name'	 => 'end_date',
+								'value'	 => $end_date,
+								'text'	 => lang('to')
 							)
 						),
 					),
 				),
 				'datatable'		 => array(
-					'source'		 => self::link(array('menuaction' => 'property.uitts.index', 'phpgw_return_as' => 'json')),
+					'source'		 => self::link(array('menuaction' => 'property.uitts.index',
+						'start_date'		 => $start_date,
+						'end_date'			 => $end_date,
+						'phpgw_return_as' => 'json')),
 					'download'		 => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
 					'allrows'		 => true,

@@ -548,8 +548,8 @@
 			static $vendor_cache	 = array();
 
 			$interlink	 = CreateObject('property.interlink');
-			$start_date	 = $this->bocommon->date_to_timestamp($start_date);
-			$end_date	 = $this->bocommon->date_to_timestamp($end_date);
+			$data['start_date']	 = $this->bocommon->date_to_timestamp($data['start_date']);
+			$data['end_date']	 = $this->bocommon->date_to_timestamp($data['end_date']);
 
 			$custom_filtermethod = array();
 			foreach($this->get_custom_filters() as $custom_filter)
