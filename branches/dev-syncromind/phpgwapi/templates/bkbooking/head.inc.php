@@ -46,13 +46,6 @@ JS;
 	$javascripts = array();
 
 	phpgwapi_jquery::load_widget('core');
-//	$stylesheets = array
-//		(
-//			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-//			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-//			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-//			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-//		);
 
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
@@ -60,10 +53,6 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
-
-
-//	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-//	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
@@ -81,7 +70,6 @@ JS;
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
- //   $javascripts[] = "/phpgwapi/js/jquery/js/jquery-1.7.2.min.js";
 
 	//FIXME: To consider...
 	/*

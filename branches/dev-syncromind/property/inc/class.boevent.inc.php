@@ -375,7 +375,7 @@
 
 			//$times['min']= '*'; // for testing the  - every minute
 
-			$account_id = execMethod('property.soresponsible.get_contact_user_id', $data['contact_id']);
+			$account_id = execMethod('property.soresponsible.get_contact_user_id', $data['responsible_id']);
 
 			$timer_data = array
 				(

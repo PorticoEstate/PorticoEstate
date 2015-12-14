@@ -599,23 +599,23 @@
 											"sExtends": "download",
 											"sButtonText": "<xsl:value-of select="php:function('lang', 'download')"/>",
 											"sUrl": '<xsl:value-of select="download"/>'
-										},
+										}
 										</xsl:when>
 									</xsl:choose>
 									<xsl:choose>
 										<xsl:when test="//datatable/actions != ''">
 											<xsl:choose>
 												<xsl:when test="ungroup_buttons=''">
-//													{
+//													,{
 //														sExtends: "div",
 //														sButtonText: "Knapper nedenfor gjelder pr valgt element "
-//													},
+//													}
 												</xsl:when>
 											</xsl:choose>
 											<xsl:for-each select="//datatable/actions">
 												<xsl:choose>
 													<xsl:when test="type = 'custom'">
-														{
+														,{
 															sExtends: "select",
 															sButtonText: "<xsl:value-of select="text"/>",
 															fnClick: function (nButton, oConfig, oFlash) {
@@ -630,10 +630,10 @@
 															}
 
 														}
-														<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+														<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
 													</xsl:when>
 													<xsl:otherwise>
-														{
+														,{
 															sExtends: "select",
 															sButtonText: "<xsl:value-of select="text"/>",
 															fnClick: function (nButton, oConfig, oFlash) {
@@ -709,7 +709,7 @@
 																}
 															}
 														}
-														<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+														<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:for-each>

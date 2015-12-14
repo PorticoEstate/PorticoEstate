@@ -222,21 +222,6 @@
 				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
-//                            el metodo read de la clase boevent no recibe variable fechas
-//                            array(
-//                                'type' => 'date-picker',
-//                                'id'   => 'start_date',
-//                                'name' => 'start_date',
-//                                'value'=> '',
-//                                'text' => lang('from')
-//                            ),
-//                            array(
-//                                'type' => 'date-picker',
-//                                'id'   => 'end_date',
-//                                'name' => 'end_date',
-//                                'value'=> '',
-//                                'text' => lang('to')
-//                            )
 						)
 					)
 				),
@@ -323,14 +308,7 @@
 							'sortable'	 => FALSE,
 							'hidden'	 => FALSE,
 							'formatter'	 => 'JqueryPortico.formatLinkEvent'
-						),
-//                        array(
-//                            'key' => 'select',
-//                            'label' => lang('select'),
-//                            'sortable' => FALSE,
-//                            'hidden' => FALSE,
-//                            'formatter' => 'JqueryPortico.formatCheckEvent'
-//                        ),
+						)
 					)
 				)
 			);
@@ -459,10 +437,8 @@
 			$item_id				 = phpgw::get_var('item_id');//might be bigint
 			$id						 = phpgw::get_var('id', 'int');
 			$values					 = phpgw::get_var('values');
-			$values['contact_id']	 = phpgw::get_var('contact', 'int', 'POST');
+			$values['responsible_id'] = phpgw::get_var('contact', 'int', 'POST');
 
-			//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
 			$receipt = array();
 
 			if(is_array($values))
@@ -479,7 +455,7 @@
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter a description'));
 					}
-					if(!isset($values['contact_id']) || !$values['contact_id'])
+					if(!isset($values['responsible_id']) || !$values['responsible_id'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a responsible'));
 					}
@@ -595,7 +571,7 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
-				'contact_id' => $values['contact_id'],
+				'contact_id' => $values['responsible_id'],
 				'field'		 => 'contact',
 				'type'		 => 'form'));
 
@@ -791,8 +767,6 @@ JS;
 
 		function schedule2($id = 0)
 		{
-			throw new Exception('FIXME: uievent::schedule2()');
-
 			if(!$id)
 			{
 				$id = phpgw::get_var('id', 'int');
@@ -908,96 +882,6 @@ JS;
 				$result_data['draw'] = $draw;
 				return $this->jquery_results($result_data);
 			}
-
-			//--------------------JSON code-----
-			//------- alarm--------
-			$datavalues[0] = array
-				(
-				'name'			 => "0",
-				'values'		 => json_encode($values),
-				'total_records'	 => count($values),
-				'is_paginator'	 => 0,
-				'permission'	 => '""',
-				'footer'		 => 1
-			);
-
-			$myColumnDefs[0] = array
-				(
-				'name'	 => "0",
-				'values' => json_encode(array(
-					array('key' => 'number', 'label' => '#', 'sortable' => true, 'resizeable' => true,
-						'width' => 20),
-					array('key' => 'time', 'label' => lang('plan'), 'sortable' => true, 'resizeable' => true,
-						'width' => 80),
-					array('key' => 'performed', 'label' => lang('performed'), 'sortable' => true,
-						'resizeable' => true, 'width' => 80),
-					array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true,
-						'width' => 80),
-					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true, 'resizeable' => true,
-						'width' => 140),
-					array('key' => 'enabled', 'label' => lang('enabled'), 'sortable' => true, 'resizeable' => true,
-						'formatter' => 'FormatterCenter', 'width' => 30),
-					array('key' => 'alarm_id', 'label' => 'alarm_id', 'sortable' => true, 'resizeable' => true,
-						'hidden' => false),
-					array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,
-						'formatter' => 'myFormatterCheck', 'width' => 30)))
-			);
-
-			$myButtons[0] = array
-				(
-				'name'	 => "0",
-				'values' => json_encode(array(
-					array('id' => 'values[set_receipt]', 'type' => 'buttons', 'value' => 'Receipt',
-						'label' => lang('Receipt'), 'funct' => 'onActionsClick', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-					array('id' => 'values[delete_receipt]', 'type' => 'buttons', 'value' => 'Delete Receipt',
-						'label' => lang('Delete receipt'), 'funct' => 'onActionsClick', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-					array('id' => 'values[enable_alarm]', 'type' => 'buttons', 'value' => 'Enable',
-						'label' => lang('enable'), 'funct' => 'onActionsClick', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-					array('id' => 'values[disable_alarm]', 'type' => 'buttons', 'value' => 'Disable',
-						'label' => lang('disable'), 'funct' => 'onActionsClick', 'classname' => 'actionButton',
-						'value_hidden' => ""),
-				))
-			);
-
-			$td_count = 0;
-
-			//--------------------------------------------JSON CODE------------
-
-			$link_data = array
-				(
-				'menuaction' => 'property.uievent.schedule2',
-				'id'		 => $id
-			);
-
-
-			$data = array
-				(
-				'td_count'		 => 6,
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
-				'base_java_url'	 => "{menuaction:'property.uievent.schedule2',id:'{$id}'}",
-				'datatable'		 => $datavalues,
-				'myColumnDefs'	 => $myColumnDefs,
-				'myButtons'		 => $myButtons,
-				'value_location_id'		 => $event['location_id'],
-				'value_location_item_id' => $event['location_item_id'],
-				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
-			);
-
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-
-
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'event.schedule', 'property');
-
-			return $data;
 		}
 
 		public function schedule_week()
