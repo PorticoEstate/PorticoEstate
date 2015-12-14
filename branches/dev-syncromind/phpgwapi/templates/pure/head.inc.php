@@ -53,6 +53,7 @@ HTML;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";

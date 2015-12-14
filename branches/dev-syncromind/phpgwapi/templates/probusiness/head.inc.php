@@ -11,15 +11,21 @@
  */
 	
 	// css file handling
-	$theme_styles = array();
+	$stylesheets = array();
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+
 	$css_file = PHPGW_SERVER_ROOT . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	if (file_exists($css_file))
 	{
-		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
+		$stylesheets[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	}
 	else
 	{
-		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
+		$stylesheets[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
 	}
 
 	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
@@ -28,7 +34,7 @@
 	$tpl->set_file(array('head' => 'head.tpl'));
 	$tpl->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
 
-	foreach ( $theme_styles as $style )
+	foreach ( $stylesheets as $style )
 	{
 		$tpl->set_var('theme_style', $style);
 		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);

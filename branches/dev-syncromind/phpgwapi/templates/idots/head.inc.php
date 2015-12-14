@@ -9,7 +9,6 @@
 	* @version $Id: head.inc.php,v 1.4 2004/12/30 06:47:34 skwashd Exp 
 	*/
 	
-	phpgw::import_class('phpgwapi.yui');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -41,7 +40,11 @@
 		);
 	}
 
-	phpgwapi_yui::load_widget('button');
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 
 	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';
 	$stylesheets[] = '/phpgwapi/templates/idots/css/base.css';
@@ -61,7 +64,6 @@
 	
 	$app = $app ? ' ['.(isset($GLOBALS['phpgw_info']['apps'][$app]) ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app)).']':'';
 
-	phpgwapi_yui::load_widget('menu');
 	$GLOBALS['phpgw']->template->set_var(array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
