@@ -1,7 +1,6 @@
 <?php
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	phpgw::import_class('phpgwapi.jquery');
-	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.template_portico');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
@@ -47,15 +46,6 @@ JS;
 	$javascripts = array();
 
 	phpgwapi_jquery::load_widget('core');
-	phpgwapi_yui::load_widget('dragdrop');
-	phpgwapi_yui::load_widget('element');
-	phpgwapi_yui::load_widget('container');
-	phpgwapi_yui::load_widget('connection');
-	phpgwapi_yui::load_widget('resize');
-	phpgwapi_yui::load_widget('layout');
-
-	phpgwapi_yui::load_widget('button');
-
 //	$stylesheets = array
 //		(
 //			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
