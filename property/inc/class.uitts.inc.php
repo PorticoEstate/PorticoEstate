@@ -2436,8 +2436,6 @@
 				$access_order = true;
 			}
 
-			$ticket = $this->bo->read_single($id, $values);
-
 			if(isset($values['save']))
 			{
 				if(!$this->acl_edit)
@@ -2489,10 +2487,13 @@
 
 				if($access_order)
 				{
-					if(!$ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])) )
+					//test for budget
+					$_ticket = $this->bo->read_single($id);
+					if(!$_ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])) )
 					{
 						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Missing value'));
 					}
+					unset($_ticket);
 
 					$sogeneric		= CreateObject('property.sogeneric');
 					$sogeneric->get_location_info('ticket_status',false);
@@ -2602,6 +2603,7 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
+			$ticket = $this->bo->read_single($id, $values);
 
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
