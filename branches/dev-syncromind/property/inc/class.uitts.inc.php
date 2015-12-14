@@ -718,6 +718,7 @@
 				$filter_buildingpart	 = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 
 				if($filter_key = array_search('.b_account', $filter_buildingpart))
+
 				{
 					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 				}
@@ -1203,6 +1204,7 @@
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 
 					if((isset($values['save']) && $values['save']))
+
 					{
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.index'));
 					}
@@ -1496,8 +1498,6 @@
 				$access_order = true;
 			}
 
-			$ticket = $this->bo->read_single($id, $values);
-
 			if(isset($values['save']))
 			{
 				if(!$this->acl_edit)
@@ -1550,10 +1550,13 @@
 
 				if($access_order)
 				{
-					if(!$ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])))
+					//test for budget
+					$_ticket = $this->bo->read_single($id);
+					if(!$_ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])))
 					{
 						$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Missing value'));
 					}
+					unset($_ticket);
 
 					$sogeneric	 = CreateObject('property.sogeneric');
 					$sogeneric->get_location_info('ticket_status', false);
@@ -1652,6 +1655,7 @@
 				$values = $this->bocommon->preserve_attribute_values($values, $values_attribute);
 			}
 
+			$ticket = $this->bo->read_single($id, $values);
 
 			if(isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
