@@ -3,7 +3,7 @@ body, div, input, p, select, textarea
 	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 1em;
 }
-
+/*
 a
 {
 	text-decoration: none;
@@ -13,7 +13,7 @@ a:hover, a:active
 {
 	text-decoration: underline;
 }
-
+*/
 img
 {
 	border: 0px;
@@ -81,33 +81,6 @@ ol.source li
 	white-space: pre;
 }
 
-
-
-/** Sigurd :: test **/
-
-BODY {
-	font-family: Lucida Grande, Lucida Sans, Arial, Helvetica, sans-serif;
-	font-size: 100%;
-	color: #000;
-	margin: 0;
-	padding: 0;
-}
-
-A {
-	color: #00D;
-	text-decoration: none;
-}
-A:visited {
-	color: #60C;
-}
-A:hover {
-	color: #00F;
-	text-decoration: underline;
-}
-A:visited:hover {
-	color: #00D;
-	text-decoration: none;
-}
 
 
 TD {
@@ -206,40 +179,6 @@ LI {
 }
 
 
-IFRAME {
-	border-top: 1px solid #777;
-	background-color: #FFF;
-}
-
-TR.main {
-	background-color: #fff;
-}
-
-TD.content {
-	padding: 1em 2em 3em;
-}
-
-TD.sidebarLeft {
-	background-color: #a4c2c2;
-}
-TD.sidebarLeft P {
-	/*	font: 1em Georgia, "Times New Roman", Times, serif;*/
-	color: #366;
-	line-height: 1.5em;
-	padding: 20px;
-	margin: 0;
-}
-
-TD.sidebarRight {
-	padding: 1em;
-	padding-left: 0;
-}
-DIV.bookmarks {
-	background-color: #a4c2c2;
-	padding: 0.5em;
-}
-
-/* Generic Classes */
 
 .bold		{ font-weight: bold; }
 .notBold	{ font-weight: normal; }
@@ -260,8 +199,7 @@ DIV.bookmarks {
 /*
 *	STYLES FOR: documentation and tips pages
 *
-*	Created with ThemeRoller...
-*	http://ui.jquery.com/themeroller/?bgColorDefault=e0e0e0&bgTextureDefault=02_glass.png&bgImgOpacityDefault=80&borderColorDefault=cccccc&fcDefault=444444&iconColorDefault=888888&bgColorHover=d8d8d8&bgTextureHover=02_glass.png&bgImgOpacityHover=90&borderColorHover=888888&fcHover=111111&iconColorHover=222222&bgColorActive=8ab9ff&bgTextureActive=02_glass.png&bgImgOpacityActive=50&borderColorActive=2694e8&fcActive=000000&iconColorActive=ffffff&bgColorContent=f3f3f3&fcContent=362b36&ffDefault=Lucida%20Grande,%20Lucida%20Sans,%20Arial,%20sans-serif&fwDefault=normal&fsDefault=1.2&fsDefaultUnit=em#bgColorDefault=d6d6d6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=80&borderColorDefault=bbbbbb&fcDefault=000000&iconColorDefault=444444&bgColorHover=eeeeee&bgTextureHover=02_glass.png&bgImgOpacityHover=90&borderColorHover=cccccc&fcHover=000066&iconColorHover=000066&bgColorActive=80ade5&bgTextureActive=04_highlight_hard.png&bgImgOpacityActive=100&borderColorActive=266cc0&fcActive=000000&iconColorActive=ffffff&bgColorContent=D1E6FC&bgTextureContent=10_dots_medium.png&bgImgOpacityContent=90&borderColorContent=bbbbbb&fcContent=000000&iconColorContent=222222&ffDefault=Lucida+Grande%2C+Lucida+Sans%2C+Arial%2C+sans-serif&fwDefault=normal&fsDefault=1&fsDefaultUnit=em
+*
 */
 
 
@@ -271,31 +209,7 @@ body {
 	background-color: #f9f9f9;
 }
 
-TABLE.TOC {
-	border: 1px solid #BBB;
-	border-collapse: collapse;
-	margin: 1em 0;
-}
-.TOC TR.rTitle TD{
-	font-size:		0.95em;
-	font-weight:	bold;
-	letter-spacing:	1px;
-	padding-top:	4px;
-	padding-bottom:	5px;
-	background:		#99B5B5;
-	color:			#FFF
-}
-.TOC TR.r0 {
-	background:	#FFF;
-}
-.TOC TR.r0 {
-	background:	#EEE;
-}
-.TOC TD {
-	padding: 2px 10px 4px;
-	white-space: nowrap;
-	border-left: 1px solid #BBB;
-}
+
 
 
 H5 {
