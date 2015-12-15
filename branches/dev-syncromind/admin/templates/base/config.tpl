@@ -3,7 +3,7 @@
 	{error}
 </div>
 <form method="post" action="{action_url}">
-<table class = "pure-table">
+<table class="pure-table pure-table-bordered">
 	<thead>
 		<tr>
 			<th colspan="2">{title}</th>

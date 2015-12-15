@@ -1,5 +1,5 @@
 <!-- BEGIN TABHOLDER -->
-<table width="80%" border="0" align="center" cellspacing="2" cellpadding="2">
+<table width="95%" border="0" align="center" cellspacing="2" cellpadding="2">
 	<tbody>
 		<tr>
 			{principal_tabs_inc}

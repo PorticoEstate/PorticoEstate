@@ -26,7 +26,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	* phpGroupWare Administration - Accounts User Interface
@@ -779,7 +779,6 @@
 				'data'	=> array('label' => lang('group data'), 'link' => '#group'),
 				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
-			phpgwapi_yui::tabview_setup('group_edit_tabview');
 
 			// this is in the api, so lets not waste loops looking for it the app tpl dirs
 			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3);
@@ -811,7 +810,7 @@
 				'msgbox_data'		=> $error_list,
 				'select_size'		=> 5,
 				'value_account_name'=> $group->lid,
-				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, 'data')
+				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, 'data','group_edit_tabview')
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('group_edit' => $data));
@@ -1180,8 +1179,6 @@
 				'groups'	=> array('label' => lang('groups'), 'link' => '#groups'),
 				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
-			phpgwapi_yui::tabview_setup('account_edit_tabview');
-
 
 			$data = array
 			(
@@ -1225,7 +1222,7 @@
 				'app_list'				=> $app_list,
 				'url_contacts'			=> $url_contacts,
 				'url_contacts_text'		=> $url_contacts_text,
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'data')
+				'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, 'data','account_edit_tabview')
 			);
 
 			/*

@@ -1,6 +1,6 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-<table border="0" align="center">
+<table class="pure-table pure-table-bordered">
    <tr bgcolor="{th_bg}">
     <td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
    </tr>

@@ -236,7 +236,7 @@
 			echo '<hr><p><b>'.lang('Jobs').":</b>\n";
 			if ($jobs = $async->read('%'))
 			{
-				echo "<table border=1>\n<tr>\n<th>Id</th><th>".lang('Next run').'</th><th>'.lang('Times').'</th><th>'.lang('Method').'</th><th>'.lang('Data')."</th><th>".lang('LoginID')."</th></tr>\n";
+				echo "<table  class=\"pure-table  pure-table-bordered\" border=1>\n<tr>\n<th>Id</th><th>".lang('Next run').'</th><th>'.lang('Times').'</th><th>'.lang('Method').'</th><th>'.lang('Data')."</th><th>".lang('LoginID')."</th></tr>\n";
 				foreach($jobs as $job)
 				{
 					echo "<tr>\n<td>{$job['id']}</td><td>".$GLOBALS['phpgw']->common->show_date($job['next'])."</td><td>";

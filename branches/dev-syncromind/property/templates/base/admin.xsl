@@ -815,6 +815,7 @@
 
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="id_table_header">
+		<thead>
 		<tr class="th">
 			<td class="th_text" width="10%" align="center">
 				<xsl:value-of select="php:function('lang', 'select')"/>
@@ -829,6 +830,7 @@
 				<xsl:value-of select="php:function('lang', 'date')"/>
 			</td>
 		</tr>
+		</thead>
 	</xsl:template>
 
 	<!-- New template-->
@@ -837,7 +839,7 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form method="post" action="{$form_action}">
-		<table cellpadding="2" cellspacing="2" width="90%" align="center">
+		<table width="90%" class="pure-table pure-table-bordered">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
