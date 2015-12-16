@@ -2,7 +2,7 @@
 <center>{errors}</center>
 
 <!-- BEGIN input -->
-<form action="{form_action}" method="POST">
+<form action="{form_action}" method="POST" id="form">
  <table border="0" width="40%" align="center">
 
   <tr>
@@ -10,7 +10,8 @@
   </tr>
   <tr>
    <td>{lang_username}</td>
-   <td>{domain_from_host}<input name="r_reg[loginid]" value="{value_username}"></td>
+   <td>{domain_from_host}<input name="r_reg[loginid]" value="{value_username}" data-validation="length alphanumeric" data-validation-length="3-10"/>
+   </td>
   </tr>
  
   <tr>
