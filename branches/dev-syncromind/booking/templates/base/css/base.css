@@ -259,7 +259,6 @@ dl.proplist-col dd.address {
     float: right;
     border: none;
     text-decoration: none;
-    background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
     width: 25px;
     height: 15px;
     cursor: pointer;

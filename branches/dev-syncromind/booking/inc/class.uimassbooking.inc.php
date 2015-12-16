@@ -136,6 +136,6 @@
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
-			self::render_template('massbooking_schedule', array('building' => $building, 'backend' => $backend));
+			self::render_template_xsl('massbooking_schedule', array('building' => $building, 'backend' => $backend));
 		}
 	}

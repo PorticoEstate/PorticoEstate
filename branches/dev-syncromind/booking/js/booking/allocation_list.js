@@ -1,8 +1,8 @@
 var seasonFilterBuildingId = false;
 
 function updateBuildingFilter(sType, aArgs) {
-	YAHOO.util.Dom.get("filter_season_name").value = "";
-	YAHOO.util.Dom.get("filter_season_id").value = "";
+	$('#filter_season_name').val('');
+	$('#filter_season_id').val('');
 	seasonFilterBuildingId = aArgs[2].id;
 }
 

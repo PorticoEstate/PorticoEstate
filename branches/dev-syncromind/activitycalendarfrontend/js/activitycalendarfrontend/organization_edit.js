@@ -1,31 +1,12 @@
 var current_address = "";
 function get_address_search()
 {
-//    var address = document.getElementById('address').value;
-//    var div_address = document.getElementById('address_container');
-//    div_address.style.display="block";
-
 	var address = $('#address').val();
 	var div_address = $('#address_container');
-
-	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
-//    url = "<?php echo $ajaxURL ?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
-//
-//    var divcontent_start = "<select name=\"address_select\" id=\"address_select\" size=\"5\" onChange='setAddressValue(this)'>";
-//    var divcontent_end = "</select>";
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
 	var attr = [{name: 'name', value: 'address_select'}, {name: 'id', value: 'address_select'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
 
-//    var callback = {
-//        success: function(response){
-//            div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
-//        },
-//        failure: function(o) {
-//            alert("AJAX doesn't work"); //FAILURE
-//        }
-//    }
-//    var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 
 	div_address.hide();
 
