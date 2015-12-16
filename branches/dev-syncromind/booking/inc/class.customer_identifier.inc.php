@@ -155,61 +155,6 @@
 
 		public function install(booking_uicommon $ui, &$entity = null)
 		{
-
-//			$js = <<<JST
-//			(function() {
-//				var Dom = YAHOO.util.Dom;
-//				var Event = YAHOO.util.Event;
-//
-//				var select_input_id = 'field_{$this->identifier_type_field}';
-//				var select_input = Dom.get(select_input_id);
-//				
-//				if (!select_input) { return; }
-//				
-//				var selectedIndex = document.getElementById(select_input_id).selectedIndex;
-//
-//				var items = Dom.getElementsBy(function(){return true;}, 'option', select_input);
-//				var all_cust_fields = {};
-//				var cust_field;
-//				for (var i = items.length - 1; i >= 0; i--){
-//					if (items[i].value.length <= 0) { continue; }
-//					cust_field = Dom.get('field_{$this->field_prefix}'+items[i].value);
-//					all_cust_fields[items[i].value] = cust_field;
-//
-//					if (i == selectedIndex) { continue; }
-//					Dom.setStyle(cust_field, 'display', 'none')
-//				};
-//
-//				var enableCustField = function(field_type) {
-//					for (var key in all_cust_fields) {
-//						Dom.setStyle(all_cust_fields[key], 'display', 'none');
-//					}
-//
-//					if (all_cust_fields[field_type] == undefined) { return; }
-//
-//					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
-//					if (all_cust_fields[field_type].name == 'customer_ssn') {
-//						all_cust_fields[field_type].placeholder = '6 siffer (DDMMÅÅ) eller 11 siffer';
-//					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
-//						all_cust_fields[field_type].placeholder = '9 siffer';
-//					}
-//					all_cust_fields[field_type].focus();
-//					all_cust_fields[field_type].select();
-//				}
-//				
-//				Event.addListener(select_input, 'change', function(e) {
-//					enableCustField(this[this.selectedIndex].value);
-//				});
-//
-//				// Wouldn't work in IE6:
-//				// Dom.batch(items, function(opt) {
-//				// 	Event.addListener(opt, 'click', function(e) {
-//				// 		enableCustField(this.value);
-//				// 	})
-//				// });
-//			})();
-//JST;
-
 			$js = <<<JST
 			(function() {
 

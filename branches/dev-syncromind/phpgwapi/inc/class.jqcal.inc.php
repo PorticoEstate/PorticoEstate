@@ -1,27 +1,25 @@
 <?php
 	/**
-	* jQuery datepicker wrapper-class
-	*
-	* @author Sigurd Nes
-	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	* @package phpgwapi
-	* @subpackage gui
-	* @version $Id$
-	*/
-
+	 * jQuery datepicker wrapper-class
+	 *
+	 * @author Sigurd Nes
+	 * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
+	 * @package phpgwapi
+	 * @subpackage gui
+	 * @version $Id$
+	 */
 	/**
-	* Import the jQuery class
-	*/
+	 * Import the jQuery class
+	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-
 	/**
-	* jQuery datepicker wrapper-class
-	*
-	* @package phpgwapi
-	* @subpackage gui
-	*/
+	 * jQuery datepicker wrapper-class
+	 *
+	 * @package phpgwapi
+	 * @subpackage gui
+	 */
 	class phpgwapi_jqcal
 	{
 
@@ -33,12 +31,11 @@
 		{
 			phpgwapi_jquery::load_widget('datepicker');
 
-			$theme = 'ui-lightness';
+			$theme					 = 'ui-lightness';
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
-			$this->img_cal = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-			$this->dateformat = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$this->lang_select_date      = lang('select date');
-
+			$this->img_cal			 = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+			$this->dateformat		 = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$this->lang_select_date	 = lang('select date');
 		}
 
 		function add_listener($name, $type = 'date', $value = '')
@@ -46,17 +43,17 @@
 			switch($type)
 			{
 				case 'datetime':
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");	
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
-					$_type = 'datetime';
+					$_type	 = 'datetime';
 					break;
-                                case 'time':
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");	
+				case 'time':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
-					$_type = 'time';
+					$_type	 = 'time';
 					break;
 				default:
-					$_type = 'date';
+					$_type	 = 'date';
 			}
 
 			$this->_input_modern($name, $_type);
@@ -64,11 +61,11 @@
 		}
 
 		/**
-		* Add an event listener to the trigger icon - used for XSLT
-		*
-		* @access private
-		* @param string $name the element ID
-		*/
+		 * Add an event listener to the trigger icon - used for XSLT
+		 *
+		 * @access private
+		 * @param string $name the element ID
+		 */
 		function _input_modern($id, $type)
 		{
 			$js = <<<JS
