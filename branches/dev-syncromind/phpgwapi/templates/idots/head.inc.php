@@ -29,17 +29,6 @@
 
 
 	$stylesheets = array();
-	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-	{
-
-		$stylesheets = array
-		(
-			'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
-			'/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css',
-			'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
-		);
-	}
-
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";

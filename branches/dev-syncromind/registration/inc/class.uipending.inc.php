@@ -162,7 +162,6 @@
 							'key' => 'location_code',
 							'label' => lang('location'),
 							'sortable'	=> false,
-	//						'editor' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 						),
 						array(
 								'key' => 'checked',
