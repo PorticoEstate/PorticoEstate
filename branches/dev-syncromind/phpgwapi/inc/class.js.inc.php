@@ -128,6 +128,7 @@
 		public function get_script_links()
 		{
 			$combine = true;
+			$combine = false; // Temporary
 			
 			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
