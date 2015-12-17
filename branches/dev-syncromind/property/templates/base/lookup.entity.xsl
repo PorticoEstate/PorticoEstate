@@ -315,12 +315,228 @@
 				JqueryPortico.columns.push(columns[i]);
 			}
 		}
+]]>
+		var lang_ButtonText_columns = "<xsl:value-of select="php:function('lang', 'columns')"/>";
 
+//			var download_url = '<xsl:value-of select="download"/>';
+			var exclude_colvis = [];
+			var editor_cols = [];
+			var editor_action = '<xsl:value-of select="editor_action"/>';
+			var disablePagination = '<xsl:value-of select="disablePagination"/>';
 
+			<![CDATA[
+				TableTools.BUTTONS.download = {
+					"sAction": "text",
+					"sTag": "default",
+					"sFieldBoundary": "",
+					"sFieldSeperator": "\t",
+					"sNewLine": "<br>",
+					"sToolTip": "",
+					"sButtonClass": "DTTT_button_text",
+					"sButtonClassHover": "DTTT_button_text_hover",
+					"sButtonText": "Download",
+					"mColumns": "all",
+					"bHeader": true,
+					"bFooter": true,
+					"sDiv": "",
+					"fnMouseover": null,
+					"fnMouseout": null,
+					"fnClick": function( nButton, oConfig ) {
+						var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
+						oParams.length = -1;
+						oParams.columns = null;
+						oParams.start = null;
+						oParams.draw = null;
+						var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+						for (var attrname in addtional_filterdata)
+						{
+							oParams[attrname] = addtional_filterdata[attrname];
+						}
+						var iframe = document.createElement('iframe');
+						iframe.style.height = "0px";
+						iframe.style.width = "0px";
+						iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
+						if(confirm("This will take some time..."))
+						{
+							document.body.appendChild( iframe );
+						}
+					},
+					"fnSelect": null,
+					"fnComplete": null,
+					"fnInit": null
+				};
+			]]>
+			<xsl:choose>
+				<xsl:when test="//datatable/actions">
+					var button_def = [
+									{
+										sExtends: 'copy',
+										sButtonText: "<xsl:value-of select="php:function('lang', 'copy')"/>"
+									},
+									{
+										sExtends: 'select_all',
+										sButtonText: "<xsl:value-of select="php:function('lang', 'select all')"/>",
+										fnClick: function (nButton, oConfig, oFlash) {
+											TableTools.fnGetInstance('datatable-container').fnSelectAll();
+											//In case there are checkboxes
+											$(".mychecks").each(function()
+											{
+												$(this).prop("checked", true);
+											});
+										}
+									},
+									{
+										sExtends: 'select_none',
+										sButtonText: "<xsl:value-of select="php:function('lang', 'select none')"/>",
+										fnClick: function (nButton, oConfig, oFlash) {
+											TableTools.fnGetInstance('datatable-container').fnSelectNone();
+											//In case there are checkboxes
+											$(".mychecks").each(function()
+											{
+												$(this).prop("checked", false);
+											});
+										}
+									}
+									<xsl:choose>
+										<xsl:when test="download">
+										,{
+											"sExtends": "download",
+											"sButtonText": "<xsl:value-of select="php:function('lang', 'download')"/>",
+											"sUrl": '<xsl:value-of select="download"/>'
+										}
+										</xsl:when>
+									</xsl:choose>
+									<xsl:choose>
+										<xsl:when test="//datatable/actions != ''">
+											<xsl:choose>
+												<xsl:when test="ungroup_buttons=''">
+//													,{
+//														sExtends: "div",
+//														sButtonText: "Knapper nedenfor gjelder pr valgt element "
+//													}
+												</xsl:when>
+											</xsl:choose>
+											<xsl:for-each select="//datatable/actions">
+												<xsl:choose>
+													<xsl:when test="type = 'custom'">
+														,{
+															sExtends: "select",
+															sButtonText: "<xsl:value-of select="text"/>",
+															fnClick: function (nButton, oConfig, oFlash) {
+																<xsl:if test="confirm_msg">
+																	var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+																	var r = confirm(confirm_msg);
+																	if (r != true) {
+																		return false;
+																	}
+																</xsl:if>
+																<xsl:value-of select="custom_code"/>
+															}
+
+														}
+														<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
+													</xsl:when>
+													<xsl:otherwise>
+														,{
+															sExtends: "select",
+															sButtonText: "<xsl:value-of select="text"/>",
+															fnClick: function (nButton, oConfig, oFlash) {
+																var receiptmsg = [];
+																var selected = fnGetSelected();
+																var numSelected = selected.length;
+
+																if (numSelected ==0){
+																	alert('None selected');
+																	return false;
+																}
+
+																<xsl:if test="confirm_msg">
+																	var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+																	var r = confirm(confirm_msg);
+																	if (r != true) {
+																		return false;
+																	}
+																</xsl:if>
+
+																var target = "<xsl:value-of select="target"/>";
+																if(!target)
+																{
+																	target = '_self';
+																}
+
+																if (numSelected &gt; 1){
+																	target = '_blank';
+																}
+
+																var n = 0;
+																for (; n &lt; numSelected; ) {
+																	// console.log(selected[n]);
+																	var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
+																	// console.log(aData);
+
+																	//delete stuff comes here
+																	var action = "<xsl:value-of select="action"/>";
+
+																	<xsl:if test="parameters">
+																		var parameters = <xsl:value-of select="parameters"/>;
+																		// console.log(parameters.parameter);
+																		var i = 0;
+																		len = parameters.parameter.length;
+																		for (; i &lt; len; ) {
+																			action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+																			i++;
+																		}
+																	</xsl:if>
+
+																	// look for the word "DELETE" in URL
+																	if(substr_count(action,'delete')>0)
+																	{
+																		action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+																		execute_ajax(action, function(result){
+																			document.getElementById("message").innerHTML += '<br/>' + result;
+																			oTable.fnDraw();
+																		});
+																	}
+																	else if (target == 'ajax')
+																	{
+																		action += "&amp;phpgw_return_as=json";
+																		execute_ajax(action, function(result){
+																			document.getElementById("message").innerHTML += '<br/>' + result;
+																			oTable.fnDraw();
+																		});
+																	}
+																	else
+																	{
+																		window.open(action,target);
+																	}
+																	n++;
+																}
+															}
+														}
+														<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:for-each>
+										</xsl:when>
+									</xsl:choose>
+								];
+								JqueryPortico.TableTools = {
+									"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+									"sRowSelect": "multi",
+									"aButtons": button_def
+								};
+				</xsl:when>
+				<xsl:otherwise>
+					JqueryPortico.TableTools = false;
+				</xsl:otherwise>
+			</xsl:choose>
+<![CDATA[
 		$(document).ready(function() 
 		{
 		
-			oTable = JqueryPortico.inlineTableHelper("datatable-container", ajax_url, JqueryPortico.columns);
+			var options ={};
+			options.TableTools = JqueryPortico.TableTools;
+			oTable = JqueryPortico.inlineTableHelper("datatable-container", ajax_url, JqueryPortico.columns, options);
 ]]>
 			/**
 			* Add left click action..
@@ -380,21 +596,64 @@
 					$('#' + result.datatable_def.container).empty();
 					$('#' + result.datatable_def.container).append(result.datatable_head);
 
+					var TableTools = JqueryPortico.TableTools;
+					var download = result.datatable_def.download || false;
+					if(download)
+					{
+						for (i=0;i<TableTools.aButtons.length;i++)
+						{
+							if(TableTools.aButtons[i].sExtends == "download")
+							{
+								TableTools.aButtons[i].sUrl = phpGWLink('index.php',download);
+							}
+						}
+					}
+					options ={};
+					options.TableTools = TableTools;
+					var render;
 					var columns = [];
 					var PreColumns = result.datatable_def.ColumnDefs;
 					for (i=0;i<PreColumns.length;i++)
 					{
+						if(typeof(PreColumns[i].formatter) != 'undefined' && PreColumns[i].formatter)
+						{
+							render = eval(PreColumns[i].formatter);
+						}
+						else
+						{
+							render = false;
+						}
+
 						if (PreColumns[i].hidden == false)
 						{
-							columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className, "orderable":PreColumns[i].sortable});
+							columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className, "orderable":PreColumns[i].sortable, "render":render} );
 						}
-					}																							
+					}
 					var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
-					oTable = JqueryPortico.inlineTableHelper(result.datatable_def.container, requestUrl, columns);
+					oTable = JqueryPortico.inlineTableHelper(result.datatable_def.container, requestUrl, columns , options);
 				}, data, "GET", "json"
 			);
 		}
-			
+
+
+		function execute_ajax(requestUrl, callback, data,type, dataType)
+		{
+			api = oTable.api();
+			type = typeof type !== 'undefined' ? type : 'POST';
+			dataType = typeof dataType !== 'undefined' ? dataType : 'html';
+			data = typeof data !== 'undefined' ? data : {};
+
+			$.ajax({
+				type: type,
+				dataType: dataType,
+				data: data,
+				url: requestUrl,
+				success: function(result) {
+					callback(result);
+				}
+			});
+		}
+
 ]]>
 	</script>
 

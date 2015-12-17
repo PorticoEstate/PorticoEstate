@@ -32,12 +32,11 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicheck_list_for_component extends phpgwapi_uicommon
+	class controller_uicheck_list_for_component extends phpgwapi_uicommon_jquery
 	{
 
 		var $cat_id;
@@ -61,6 +60,9 @@
 		function __construct()
 		{
 			parent::__construct();
+
+			throw new Exception('Is this class used? (controller_uicheck_list_for_component)');
+
 
 			$this->bo			 = CreateObject('property.bolocation', true);
 			$this->bocommon		 = & $this->bo->bocommon;
@@ -93,7 +95,7 @@
 			}
 			$bim_types = $this->so_control->get_bim_types();
 
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+	//		$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 			$controls_array		 = $this->so_control->get_controls_by_control_area($control_areas_array[0]['id']);
 			$control_id			 = $control_areas_array[0]['id'];
 
@@ -145,10 +147,8 @@
 				)
 			);
 
-			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
 			self::render_template_xsl(array('control_component_tabs', 'common', 'view_component_for_control'), $data);
@@ -252,7 +252,6 @@
 				);
 
 
-				phpgwapi_yui::load_widget('paginator');
 				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');

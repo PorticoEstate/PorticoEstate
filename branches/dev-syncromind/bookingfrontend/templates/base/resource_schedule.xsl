@@ -1,7 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<!--xsl:call-template name="yui_booking_i18n"/-->
-	<iframe id="yui-history-iframe" src="{webserver_url}/phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
-	<input id="yui-history-field" type="hidden"/>
 	
 	<div id="content">
 		<ul class="pathway">
@@ -36,11 +34,6 @@
 		</button>
 
 		<xsl:call-template name="msgbox"/>
-		<!--ul id="week-selector">
-			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
-			<li id="cal_container"/>
-			<li><a href="#" onclick="YAHOO.booking.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
-		</ul-->
 		<ul id="week-selector">
 			<li>
 				<a id="btnPrevWeek" class="moveWeek" onclick="schedule.prevWeek(); return false">

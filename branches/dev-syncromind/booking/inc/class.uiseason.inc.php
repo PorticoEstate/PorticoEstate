@@ -398,7 +398,7 @@
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			//self::add_javascript('booking', 'booking', 'season.wtemplate.js');
 			phpgwapi_jquery::load_widget("datepicker");
-			self::render_template('season_wtemplate', array('season' => $season));
+			self::render_template_xsl('season_wtemplate', array('season' => $season));
 		}
 
 		public function wtemplate_json()

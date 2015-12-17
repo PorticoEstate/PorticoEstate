@@ -600,7 +600,6 @@ dl.proplist dd.address, dl.proplist-col dd.address {
     white-space: nowrap;
 }
 .date-container .close-btn {
-    background: transparent url("../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
     border: medium none;
     color: white;
     cursor: pointer;

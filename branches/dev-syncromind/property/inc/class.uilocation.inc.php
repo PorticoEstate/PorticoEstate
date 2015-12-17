@@ -459,7 +459,7 @@
 				';
 
 			$values_combo_box[0] = execMethod('property.soadmin_location.read', array());
-			$combos[]			 = array('type'	 => 'filter',
+			$combos[]			 = array('type'	 => 'filter-category',
 				'name'	 => 'type_id',
 				'extra'	 => '',
 				'text'	 => lang('Type'),
@@ -1253,6 +1253,41 @@ JS;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		function get_uicols_responsiblility_role()
+		{
+			$uicols = $this->bo->uicols;
+			$uicols['name'][]		 = 'responsible_contact';
+			$uicols['descr'][]		 = lang('responsible');
+			$uicols['sortable'][]	 = false;
+			$uicols['format'][]		 = '';
+			$uicols['formatter'][]	 = '';
+			$uicols['input_type'][]	 = '';
+
+			$uicols['name'][]		 = 'responsible_contact_id';
+			$uicols['descr'][]		 = 'dummy';
+			$uicols['sortable'][]	 = false;
+			$uicols['format'][]		 = '';
+			$uicols['formatter'][]	 = '';
+			$uicols['input_type'][]	 = 'hidden';
+
+			$uicols['name'][]		 = 'responsible_item';
+			$uicols['descr'][]		 = 'dummy';
+			$uicols['sortable'][]	 = false;
+			$uicols['format'][]		 = '';
+			$uicols['formatter'][]	 = '';
+			$uicols['input_type'][]	 = 'hidden';
+
+			$uicols['name'][]		 = 'select';
+			$uicols['descr'][]		 = lang('select');
+			$uicols['sortable'][]	 = false;
+			$uicols['format'][]		 = '';
+			$uicols['formatter'][]	 = $this->acl_edit ? 'myFormatterCheck' : '';
+			$uicols['input_type'][]	 = '';
+
+			return $uicols;
+		}
+
+
 		function responsiblility_role()
 		{
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
@@ -1290,7 +1325,121 @@ JS;
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->query_role();
+				if(phpgw::get_var('head'))
+				{
+					$this->bo->get_responsible(array('user_id' => $user_id, 'role_id' => $role_id,
+						'type_id' => $type_id,  'dry_run' => true));
+
+					$uicols = $this->get_uicols_responsiblility_role();
+
+					$entity_def			 = array();
+
+					$head				 = '<thead>';
+					$count_uicols_name	 = count($uicols['name']);
+					for($k = 0; $k < $count_uicols_name; $k++)
+					{
+						$params = array(
+							'key'		 => $uicols['name'][$k],
+							'label'		 => $uicols['descr'][$k],
+							'sortable'	 => false,
+							'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
+						);
+						$params['formatter'] = ""
+							. "formatter = function (dummy1, dummy2, oData) {"
+							. "return oData['{$uicols['name'][$k]}'];"
+							. "}";
+
+						if(!empty($uicols['formatter'][$k]))
+						{
+							$params['formatter'] = <<<JS
+								formatter = function (dummy1, dummy2, oData) {
+								try {
+									var ret = {$uicols['formatter'][$k]}('{$uicols['name'][$k]}', oData);
+								}
+								catch(err) {
+									return err.message;
+								}
+								return ret;
+							}
+JS;
+						}
+						if(in_array($uicols['name'][$k], $searc_levels))
+						{
+							$params['formatter'] = <<<JS
+								formatter = function (dummy1, dummy2, oData) {
+								try {
+									var ret = JqueryPortico.searchLink('{$uicols['name'][$k]}', oData);
+								}
+								catch(err) {
+									return err.message;
+								}
+								return ret;
+							}
+JS;
+						}
+						if($uicols['name'][$k] == 'loc1')
+						{
+							$params['formatter'] = <<<JS
+								formatter = function (dummy1, dummy2, oData) {
+								try {
+									var ret = JqueryPortico.searchLink('{$uicols['name'][$k]}', oData);
+								}
+								catch(err) {
+									return err.message;
+								}
+								return ret;
+							}
+JS;
+							$params['sortable']	 = true;
+						}
+						else if(isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
+						{
+							$params['sortable'] = true;
+						}
+
+						array_push($entity_def, $params);
+
+						if($uicols['input_type'][$k] != 'hidden')
+						{
+							$head .= '<th>' . $uicols['descr'][$k] . '</th>';
+						}
+					}
+					$head .= '</thead>';
+
+					$datatable_def = array
+						(
+						'container'	 => 'datatable-container',
+						'requestUrl' => self::link(array(
+							'menuaction'		 => 'property.uilocation.responsiblility_role',
+							'type_id'			 => $type_id,
+							'second_display'	 => 1,
+							'status'			 => $this->status,
+							'location_code'		 => $this->location_code,
+							'entity_id'			 => $this->entity_id,
+							'phpgw_return_as'	 => 'json'
+						)),
+						'ColumnDefs' => $entity_def,
+						'download'		 => array('menuaction'	 => 'property.uilocation.download',
+							'type_id'		 => $type_id,
+							'role_id'		 => $role_id,
+							'export'		 => true,
+							'allrows'		 => true,
+							'download_type'	 => 'responsiblility_role'
+							),
+					);
+
+					$data = array
+						(
+						'datatable_def'	 => $datatable_def,
+						'datatable_head' => $head,
+					);
+
+					return $data;
+				}
+				else
+				{
+					return $this->query_role();
+				}
 			}
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -1300,7 +1449,7 @@ JS;
 			$this->bo->get_responsible(array('user_id' => $user_id, 'role_id' => $role_id,
 				'type_id' => $type_id, 'allrows' => $this->allrows, 'dry_run' => true));
 
-			$uicols = $this->bo->uicols;
+			$uicols = $this->get_uicols_responsiblility_role();
 
 			$appname		 = lang('location');
 			$function_msg	 = lang('role');
@@ -1342,34 +1491,6 @@ JS;
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
-
-			$uicols['name'][]		 = 'responsible_contact';
-			$uicols['descr'][]		 = lang('responsible');
-			$uicols['sortable'][]	 = false;
-			$uicols['format'][]		 = '';
-			$uicols['formatter'][]	 = '';
-			$uicols['input_type'][]	 = '';
-
-			$uicols['name'][]		 = 'responsible_contact_id';
-			$uicols['descr'][]		 = 'dummy';
-			$uicols['sortable'][]	 = false;
-			$uicols['format'][]		 = '';
-			$uicols['formatter'][]	 = '';
-			$uicols['input_type'][]	 = 'hidden';
-
-			$uicols['name'][]		 = 'responsible_item';
-			$uicols['descr'][]		 = 'dummy';
-			$uicols['sortable'][]	 = false;
-			$uicols['format'][]		 = '';
-			$uicols['formatter'][]	 = '';
-			$uicols['input_type'][]	 = 'hidden';
-
-			$uicols['name'][]		 = 'select';
-			$uicols['descr'][]		 = lang('select');
-			$uicols['sortable'][]	 = false;
-			$uicols['format'][]		 = '';
-			$uicols['formatter'][]	 = $this->acl_edit ? 'myFormatterCheck' : '';
-			$uicols['input_type'][]	 = '';
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -1463,7 +1584,9 @@ JS;
 			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::render_template_xsl('datatable_jquery', $data);
+//			self::render_template_xsl('datatable_jquery', $data);
+			self::render_template_xsl('lookup.entity', $data);
+
 		}
 
 		public function get_history_data()

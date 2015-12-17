@@ -275,25 +275,7 @@
 
 		public function render_template($files, $data)
 		{
-			if($this->flash_msgs)
-			{
-				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
-			}
-			else
-			{
-				$this->add_template_file('msgbox');
-			}
-
-			$this->reset_flash_msgs();
-
-			$this->add_yui_translation($data);
-			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
-
-			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
-			$GLOBALS['phpgw']->xslttpl->set_output($output);
-			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));
-			$this->add_template_file($files);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));
+			parent::render_template_xsl($files, $data);
 		}
 
 		public function send_file($file_path, $options = array())

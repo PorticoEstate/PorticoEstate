@@ -1,5 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--div class="close"><a onclick="YAHOO.booking.closeOverlay(); return false" href=""><xsl:value-of select="php:function('lang', 'Close')"/></a></div-->
 	<h3>
 		<xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/>
 	</h3>
