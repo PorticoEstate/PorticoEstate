@@ -1,5 +1,4 @@
 <?php
-phpgw::import_class('phpgwapi.yui');
 phpgw::import_class('bim.soitem');
 phpgw::import_class('bim.sobim');
 phpgw::import_class('bim.sovfs');

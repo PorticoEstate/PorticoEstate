@@ -1,5 +1,4 @@
 <?php
-phpgw::import_class('phpgwapi.yui');
 phpgw::import_class('bim.bobimitem');
 phpgw::import_class('bim.sobimitem');
 /*
