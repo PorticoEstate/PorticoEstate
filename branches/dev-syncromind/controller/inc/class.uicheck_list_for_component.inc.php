@@ -216,7 +216,7 @@
 								'key'		 => 'id',
 								'label'		 => lang('ID'),
 								'sortable'	 => true,
-								'formatter'	 => 'YAHOO.portico.formatLink'
+								'formatter'	 => 'JqueryPortico.formatLink'
 							),
 							array(
 								'key'		 => 'guid',
@@ -232,7 +232,6 @@
 								'key'		 => 'checked',
 								'label'		 => 'Velg',
 								'sortable'	 => false,
-								'formatter'	 => 'YAHOO.widget.DataTable.formatCheckbox',
 								'className'	 => 'mychecks'
 							),
 							array(
@@ -254,7 +253,6 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_component_tabs', 'common', 'add_component_to_control'), $data);

@@ -318,7 +318,6 @@
 				'repeat_type_array'		 => $repeat_type_array
 			);
 
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
 			$this->use_yui_editor(array('description'));
@@ -445,7 +444,6 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
@@ -576,7 +574,6 @@
 
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data);
@@ -685,7 +682,6 @@
 
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');

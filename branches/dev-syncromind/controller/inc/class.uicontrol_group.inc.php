@@ -394,7 +394,6 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 				self::render_template_xsl(array('control_group/control_group_tabs', 'control_group/control_group',
 					'control_group/control_group_items'), $data);
@@ -618,12 +617,8 @@
 				  $GLOBALS['phpgw']->richtext->generate_script();
 				 */
 
-				//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
-
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::add_javascript('controller', 'controller', 'ajax.js');
 				self::add_javascript('controller', 'controller', 'control_group_to_component.js');
 				self::render_template_xsl(array('control_group/control_group_tabs', 'control_group/control_group',
 					'control_group/control_group_items'), $data);
@@ -927,7 +922,6 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control group');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::render_template_xsl(array('control_group/control_group_tabs', 'control_group/control_group',
 					'control_group/control_group_items'), $data);
 			}

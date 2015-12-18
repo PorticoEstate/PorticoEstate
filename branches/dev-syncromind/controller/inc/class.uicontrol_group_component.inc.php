@@ -27,17 +27,9 @@
 	 * @subpackage controller
 	 * @version $Id$
 	 */
-	/**
-	 * Import the jQuery class
-	 */
-	phpgw::import_class('phpgwapi.jquery');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
-
-	//phpgw::import_class('bim.sobimitem');
-
-	class controller_uicontrol_group_component extends phpgwapi_uicommon
+	class controller_uicontrol_group_component extends phpgwapi_uicommon_jquery
 	{
 
 		var $cat_id;
@@ -160,7 +152,7 @@
 								'key'		 => 'location_id',
 								'label'		 => lang('ID'),
 								'sortable'	 => true,
-								'formatter'	 => 'YAHOO.portico.formatLink'
+								'formatter'	 => 'JqueryPortico.formatLink'
 							),
 							array(
 								'key'		 => 'name',
@@ -171,20 +163,17 @@
 								'key'		 => 'checked',
 								'label'		 => 'Velg',
 								'sortable'	 => false,
-								'formatter'	 => 'YAHOO.widget.DataTable.formatCheckbox',
 								'className'	 => 'mychecks'
 							)
 						)
 					)
 				);
 
-				phpgwapi_yui::load_widget('paginator');
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
-				self::render_template_xsl(array('control_group_component_tabs', 'common', 'add_component_to_control_group'), $data);
+				self::render_template_xsl(array('control_group_component_tabs', 'add_component_to_control_group'), $data);
 			}
 		}
 

@@ -6,8 +6,6 @@
 		#cal_container #datepicker {width: 2px;opacity: 0;position: absolute;display:none;}
 		#cal_container #numberWeek {width: 20px;display: inline-block;}
 	</style>
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
-	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
