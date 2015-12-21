@@ -337,6 +337,7 @@
 						$price_item->set_price($this->unmarshal($this->db->f('price'), 'float'));
 						$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 						$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+						$price_item->set_price_type_id($this->unmarshal($this->db->f('type'), true), 'int');
 
 						$price_items[] = $price_item;
 					}
