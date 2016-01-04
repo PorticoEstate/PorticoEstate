@@ -7,7 +7,6 @@
 			</dt>
 		</dl>
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
 		<xsl:choose>
 			<xsl:when test="step = 2">
 				<p>

@@ -5,7 +5,6 @@
 			<xsl:value-of select="php:function('lang', 'New application')"/>
 		</h3>
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
 
 		<form action="" method="POST" id='application_form' name="form">
 			<xsl:if test="config/application_new_application">

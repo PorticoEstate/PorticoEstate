@@ -7,7 +7,6 @@
 		<div id ='details'>
 			<xsl:choose>
 				<xsl:when test="view = 'control_details'">
-					<!--xsl:call-template name="yui_phpgw_i18n"/-->
 					<div class="identifier-header">
 						<h1>
 							<xsl:value-of select="php:function('lang', 'Control')"/>

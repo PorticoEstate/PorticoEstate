@@ -7,7 +7,6 @@
 			</dt>
 		</dl>
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
 		<dl class="form">
 			<dd>
 				<xsl:value-of select="php:function('lang', 'Booking Cancel Information')"/>

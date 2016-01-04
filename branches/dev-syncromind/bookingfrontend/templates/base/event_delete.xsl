@@ -12,7 +12,6 @@
 		</div>
         
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
         
 		<div class="pure-g">
 			<div class="pure-u-1">

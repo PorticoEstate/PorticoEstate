@@ -7,7 +7,6 @@
 			</dt>
 		</dl>
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
 
 		<form action="" method="POST" id="booking_form">
 			<input type="hidden" name="season_id" value="{booking/season_id}"/>

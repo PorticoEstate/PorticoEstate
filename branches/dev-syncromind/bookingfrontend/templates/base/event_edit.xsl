@@ -7,7 +7,6 @@
 			<li>#<xsl:value-of select="event/id"/></li>
 		</ul>
 		<xsl:call-template name="msgbox"/>
-		<!--xsl:call-template name="yui_booking_i18n"/-->
 
 		<form action="" method="POST" id="event_form" name="event_form">
 			<div class="pure-g">
