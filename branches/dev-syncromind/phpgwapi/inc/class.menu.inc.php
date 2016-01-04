@@ -411,6 +411,15 @@ HTML;
 			}
 			$menu = array();
 
+			$parent_node = array();
+			if(isset($selection[1]))
+			{
+				for ($i=1;$i<count($selection);$i++)
+				{
+					$parent_node[] =  $selection[$i];
+				}
+			}
+
 			$_section = 'navigation';
 			if($app == 'admin')
 			{
@@ -491,13 +500,11 @@ HTML;
 				$vals['url'] = str_replace('&amp;','&', $vals['url']);
 				$menu[$i] = $vals;
 				$menu[$i]['app'] = $app;
-				$menu[$i]['key'] = $key;
+				$menu[$i]['key'] = implode('|', array_merge($parent_node,array($key)));
 				if(isset($menu[$i]['children']))
 				{
 					$menu[$i]['is_leaf'] = false;
 					$menu[$i]['children'] = true;
-
-//					unset($menu[$i]['children']);
 				}
 				else
 				{
