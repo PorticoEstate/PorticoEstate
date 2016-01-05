@@ -68,7 +68,6 @@ class bim_uiitem {
             return $json;
         }
 		$datatable['json_data'] = json_encode($json);
-		$this->loadYuiWidgets();
 
         // Prepare template variables and process XSLT
         $template_vars = array();
@@ -82,10 +81,6 @@ class bim_uiitem {
         //Title of Page
         $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
 
-        // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'bim' );
-
-        //$this->save_sessiondata();
     }
     private function populateJson(&$datatable) {
      	$json = array
@@ -138,8 +133,6 @@ class bim_uiitem {
 		$this->populateColumnNames($datatable, $uicols, $uicols_count);
         
 
-        // path for property.js
-        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
         // Pagination and sort values
 		$this->setPagination($datatable, $item_list);
@@ -375,31 +368,12 @@ class bim_uiitem {
 
         unset($parameters);
     }
-    private function loadYuiWidgets() {
-    	phpgwapi_yui::load_widget('dragdrop');
-        phpgwapi_yui::load_widget('datatable');
-        phpgwapi_yui::load_widget('menu');
-        phpgwapi_yui::load_widget('connection');
-        //// cramirez: necesary for include a partucular js
-        phpgwapi_yui::load_widget('loader');
-        //cramirez: necesary for use opener . Avoid error JS
-        phpgwapi_yui::load_widget('tabview');
-        phpgwapi_yui::load_widget('paginator');
-        //FIXME this one is only needed when $lookup==true - so there is probably an error
-        phpgwapi_yui::load_widget('animation');
-    }
+ 
     private function setupCss() {
     	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
             $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
         }
-        // Prepare CSS Style
-        $GLOBALS['phpgw']->css->validate_file('datatable');
-        $GLOBALS['phpgw']->css->validate_file('property');
-        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-        
+         
         $GLOBALS['phpgw']->css->add_external_file('bim/templates/base/css/bim.css');
     }
     private function setupBimCss() {
@@ -500,14 +474,7 @@ XML;
 	}
     
     public function showModels() {
-    	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
-    	/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw']->common->phpgw_header(true);*/
-    	
-    	
-    	
+     	
     	$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showmodels'));
     	$bobimmodel = new bobimmodel_impl();
     	$sobimmodel = new sobimmodel_impl($this->db);
@@ -520,42 +487,7 @@ XML;
      	);
      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelData' => $data));
         $this->setupBimCss();
-       // echo '<script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>';
-        $ble =  <<<HTML
-        <script>YUI().use("event-delegate", function(Y) {
- 
-    Y.delegate("click", function(e) {
- 
-        //  The list item that matched the provided selector is the
-        //  default 'this' object
-        Y.log("Default scope: " + this.get("id"));
- 
-        //  The list item that matched the provided selector is
-        //  also available via the event's currentTarget property
-        //  in case the 'this' object is overridden in the subscription.
-        Y.log("Clicked list item: " + e.currentTarget.get("id"));
- 
-        //  The actual click target, which could be the matched item or a
-        //  descendant of it.
-        Y.log("Event target: " + e.target);
- 
-        //  The delegation container is added to the event facade
-        Y.log("Delegation container: " + e.container.get("id"));
- 
- 
-    }, "#container44", "li");
- 
-});</script>
-HTML;
-        
-        $someOutput =  '<div id="container44"><ul id="list"><li id="li-1">List Item 1</li>
-        <li id="li-2">List Item 2</li> 
-	        <li id="li-3">List Item 3</li> 
-	        <li id="li-4">List Item 4</li> 
-	        <li id="li-5">List Item 5</li> 
-	    </ul> 
-	</div> <script>doDelegate()</script>';
-    }
+     }
     
     private $form_upload_field_filename ="ifc_file_name";
     private $form_upload_field_modelname ="ifc_model_name";
