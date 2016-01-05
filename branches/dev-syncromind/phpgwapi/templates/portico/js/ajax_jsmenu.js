@@ -1,6 +1,6 @@
 $(function () {
-
-	$('#navbar').jstree({
+/*
+	$('#navbar_').jstree({
 		'core': {
 			'data': {
 				'url': function (node) {
@@ -34,6 +34,68 @@ $(function () {
 		plugins: ["state", "search"]
 
 	});
+	$('#navbar_').bind('select_node.jstree', function (e, data) {
+		if (typeof (data.event) == 'undefined')
+		{
+			return false;
+		}
+		setTimeout(function () {
+			window.location.href = data.node.original.url;
+		}, 200);
+
+	});
+*/
+	$("#navbar")
+    .on("select_node.jstree", function (e, data) {
+		if (typeof (data.event) == 'undefined')
+		{
+			return false;
+		}
+//		console.log(data);return
+
+/*	
+      console.log(data.changed.selected); // newly selected
+      console.log(data.changed.deselected); // newly deselected
+*/
+	  setTimeout(function () {
+			window.location.href = data.node.original.url;
+		}, 200);
+
+    })
+    .jstree({
+		'core': {
+			'data': {
+				'url': function (node) {
+
+//					console.log(node);
+
+					var oArgs = {};
+					if(node.id === '#')
+					{
+						oArgs ={menuaction:'phpgwapi.menu.get_local_menu_ajax',node:'top_level'};
+					}
+					else
+					{
+
+						var app = node.original.app;
+						if(typeof(node.original.key) !== 'undefined')
+						{
+							app += '|' + node.original.key;
+						}
+
+						oArgs ={menuaction:'phpgwapi.menu.get_local_menu_ajax',node: app};
+					}
+
+					return phpGWLink('index.php', oArgs, true);
+				},
+				'data': function (node) {
+					return {'id': node.id};
+				},
+				href: { href: "URI" }
+			}
+		},
+      "plugins" : ["state", "search", "changed" ]
+    });
 
 	var to = false;
 
@@ -61,15 +123,4 @@ $(function () {
 		}, 250);
 	});
 
-
-	$('#navbar').bind('select_node.jstree', function (e, data) {
-		if (typeof (data.event) == 'undefined')
-		{
-			return false;
-		}
-		setTimeout(function () {
-			window.location.href = data.node.original.url;
-		}, 200);
-
-	});
 });
