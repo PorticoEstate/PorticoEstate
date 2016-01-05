@@ -25,7 +25,7 @@ div.bimObject dl dd {
 	width:66%;
 	float:left;
 	margin:0 0 0.5em 0.25em;
-	}
+}
 
 div.showModels {
 	width:100%;
@@ -35,7 +35,7 @@ div.showModels table {
 	width:100%;
 }
 div.showModels #modelsLoader  {
-	 text-align:center;
+	text-align:center;
     margin-top:0px;
     margin-bottom:0px;
     padding:0px;
