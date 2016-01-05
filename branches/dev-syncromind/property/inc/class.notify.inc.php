@@ -52,9 +52,9 @@
 		 */
 		function __construct()
 		{
-			$this->_db		 = & $GLOBALS['phpgw']->db;
-			$this->_join	 = & $this->_db->join;
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->_db = & $GLOBALS['phpgw']->db;
+			$this->_join = & $this->_db->join;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		/**
@@ -70,8 +70,8 @@
 				return array();
 			}
 
-			$location_id		 = (int)$data['location_id'];
-			$location_item_id	 = $data['location_item_id']; // in case of bigint
+			$location_id = (int)$data['location_id'];
+			$location_item_id = $data['location_item_id']; // in case of bigint
 
 			$sql = "SELECT phpgw_notification.id, phpgw_notification.contact_id,phpgw_notification.user_id,"
 			. " phpgw_notification.is_active,phpgw_notification.entry_date,phpgw_notification.notification_method,"
@@ -81,25 +81,25 @@
 			. " WHERE location_id = {$location_id} AND location_item_id = '{$location_item_id}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$values		 = array();
-			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$lang_yes	 = lang('yes');
-			$lang_no	 = lang('no');
+			$values = array();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$lang_yes = lang('yes');
+			$lang_no = lang('no');
 
 			while($this->_db->next_record())
 			{
 				$values[] = array
 					(
-					'id'					 => $this->_db->f('id'),
-					'location_id'			 => $location_id,
-					'location_item_id'		 => $location_item_id,
-					'contact_id'			 => $this->_db->f('contact_id'),
-					'is_active'				 => $this->_db->f('is_active'),
-					'notification_method'	 => $this->_db->f('notification_method', true),
-					'user_id'				 => $this->_db->f('user_id'),
-					'entry_date'			 => $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'), $dateformat),
-					'first_name'			 => $this->_db->f('first_name', true),
-					'last_name'				 => $this->_db->f('last_name', true)
+					'id' => $this->_db->f('id'),
+					'location_id' => $location_id,
+					'location_item_id' => $location_item_id,
+					'contact_id' => $this->_db->f('contact_id'),
+					'is_active' => $this->_db->f('is_active'),
+					'notification_method' => $this->_db->f('notification_method', true),
+					'user_id' => $this->_db->f('user_id'),
+					'entry_date' => $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'), $dateformat),
+					'first_name' => $this->_db->f('first_name', true),
+					'last_name' => $this->_db->f('last_name', true)
 				);
 			}
 
@@ -112,19 +112,19 @@
 			{
 				$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data', $entry['contact_id']);
 
-				$entry['email']			 = $comms[$entry['contact_id']]['work email'];
-				$entry['sms']			 = $comms[$entry['contact_id']]['mobile (cell) phone'];
+				$entry['email'] = $comms[$entry['contact_id']]['work email'];
+				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];
 				$entry['is_active_text'] = $entry['is_active'] ? $lang_yes : $lang_no;
 
 				$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id = " . (int)$entry['contact_id'];
 				$this->_db->query($sql, __LINE__, __FILE__);
 				if($this->_db->next_record())
 				{
-					$account_id	 = $this->_db->f('account_id');
-					$prefs		 = $socommon->create_preferences('property', $account_id);
+					$account_id = $this->_db->f('account_id');
+					$prefs = $socommon->create_preferences('property', $account_id);
 
-					$entry['email']	 = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
-					$entry['sms']	 = isset($entry['sms']) && $entry['sms'] ? $entry['sms'] : $prefs['cellphone'];
+					$entry['email'] = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
+					$entry['sms'] = isset($entry['sms']) && $entry['sms'] ? $entry['sms'] : $prefs['cellphone'];
 				}
 			}
 
@@ -158,20 +158,20 @@
 				$content = $this->read($data);
 			}
 
-			$count		 = (int)$data['count'];
-			$datavalues	 = array
+			$count = (int)$data['count'];
+			$datavalues = array
 				(
-				'name'			 => "{$count}",
-				'values'		 => json_encode($content),
-				'total_records'	 => count($content),
-				'edit_action'	 => json_encode($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.view_person'))),
-				'is_paginator'	 => 1,
-				'footer'		 => 0
+				'name' => "{$count}",
+				'values' => json_encode($content),
+				'total_records' => count($content),
+				'edit_action' => json_encode($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.view_person'))),
+				'is_paginator' => 1,
+				'footer' => 0
 			);
 
 			$column_defs = array
 				(
-				'name'	 => "{$count}",
+				'name' => "{$count}",
 				'values' => array(array('key' => 'id', 'hidden' => true),
 					array('key' => 'contact_id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,
 						'formatter' => 'formatLink_notify'),
@@ -214,10 +214,10 @@
 			{
 				$tabletools[] = array
 					(
-					'my_name'		 => $entry['value'],
-					'text'			 => lang($entry['value']),
-					'type'			 => 'custom',
-					'custom_code'	 => "
+					'my_name' => $entry['value'],
+					'text' => lang($entry['value']),
+					'type' => 'custom',
+					'custom_code' => "
 										var oTT = TableTools.fnGetInstance( 'datatable-container_{$count}' );
 										var selected = oTT.fnGetSelectedData();
 
@@ -240,8 +240,8 @@
 
 			$GLOBALS['phpgw']->js->validate_file('portico', 'notify', 'property');
 
-			$lang_view	 = lang('view');
-			$code		 = <<<JS
+			$lang_view = lang('view');
+			$code = <<<JS
 
 	var notify_lang_view = "{$lang_view}";
 	var notify_lang_alert = "Posten må lagres før kontakter kan tilordnes";
@@ -296,9 +296,9 @@ JS;
 
 		protected function refresh_notify_contact()
 		{
-			$location_id		 = (int)phpgw::get_var('location_id', 'int');
-			$location_item_id	 = (int)phpgw::get_var('location_item_id', 'int');
-			$contact_id			 = (int)phpgw::get_var('contact_id', 'int');
+			$location_id = (int)phpgw::get_var('location_id', 'int');
+			$location_item_id = (int)phpgw::get_var('location_item_id', 'int');
+			$contact_id = (int)phpgw::get_var('contact_id', 'int');
 
 			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
@@ -307,9 +307,9 @@ JS;
 				return;
 			}
 
-			$update	 = false;
-			$type	 = phpgw::get_var('type');
-			if($notify	 = phpgw::get_var('notify'))
+			$update = false;
+			$type = phpgw::get_var('type');
+			if($notify = phpgw::get_var('notify'))
 			{
 				$ids = $notify['ids'];
 				$ids = phpgw::get_var('ids');
@@ -321,19 +321,19 @@ JS;
 					switch($type)
 					{
 						case 'email':
-							$value_set['notification_method']	 = 'email';
+							$value_set['notification_method'] = 'email';
 							break;
 						case 'sms':
-							$value_set['notification_method']	 = 'sms';
+							$value_set['notification_method'] = 'sms';
 							break;
 						case 'enable':
-							$value_set['is_active']				 = 1;
+							$value_set['is_active'] = 1;
 							break;
 						case 'disable':
-							$value_set['is_active']				 = '';
+							$value_set['is_active'] = '';
 							break;
 						case 'delete':
-							$sql								 = "DELETE FROM phpgw_notification WHERE id IN (" . implode(',', $ids) . ')';
+							$sql = "DELETE FROM phpgw_notification WHERE id IN (" . implode(',', $ids) . ')';
 							break;
 						default:
 							break;
@@ -341,9 +341,9 @@ JS;
 
 					if($value_set)
 					{
-						$value_set	 = $this->_db->validate_update($value_set);
+						$value_set = $this->_db->validate_update($value_set);
 //						_debug_array("UPDATE phpgw_notification SET {$value_set} WHERE id IN (". implode(',', $ids) . ')');
-						$sql		 = "UPDATE phpgw_notification SET {$value_set} WHERE id IN (" . implode(',', $ids) . ')';
+						$sql = "UPDATE phpgw_notification SET {$value_set} WHERE id IN (" . implode(',', $ids) . ')';
 					}
 					$this->_db->query($sql, __LINE__, __FILE__);
 				}
@@ -358,13 +358,13 @@ JS;
 				{
 					$values_insert = array
 						(
-						'location_id'			 => $location_id,
-						'location_item_id'		 => $location_item_id,
-						'contact_id'			 => $contact_id,
-						'is_active'				 => 1,
-						'entry_date'			 => time(),
-						'user_id'				 => $this->account,
-						'notification_method'	 => 'email'
+						'location_id' => $location_id,
+						'location_item_id' => $location_item_id,
+						'contact_id' => $contact_id,
+						'is_active' => 1,
+						'entry_date' => time(),
+						'user_id' => $this->account,
+						'notification_method' => 'email'
 					);
 
 					$this->_db->query("INSERT INTO phpgw_notification (" . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -378,11 +378,11 @@ JS;
 			{
 				$result_data = array
 					(
-					'data'				 => $content,
-					'total_records'		 => $total_records,
-					'draw'				 => phpgw::get_var('draw', 'int'),
-					'recordsTotal'		 => $total_records,
-					'recordsFiltered'	 => $total_records
+					'data' => $content,
+					'total_records' => $total_records,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
 				);
 
 				return $result_data;

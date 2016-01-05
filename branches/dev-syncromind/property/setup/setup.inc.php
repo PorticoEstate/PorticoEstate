@@ -1,37 +1,35 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage setup
- 	* @version $Id$
-	*/
-
-	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.695';
-	$setup_info['property']['app_order']	= 8;
-	$setup_info['property']['enable']		= 1;
-	$setup_info['property']['app_group']	= 'office';
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage setup
+	 * @version $Id$
+	 */
+	$setup_info['property']['name'] = 'property';
+	$setup_info['property']['version'] = '0.9.17.695';
+	$setup_info['property']['app_order'] = 8;
+	$setup_info['property']['enable'] = 1;
+	$setup_info['property']['app_group'] = 'office';
 
 	$setup_info['property']['author'] = array
-	(
-		'name'	=> 'Sigurd Nes',
-		'email'	=> 'sigurdne@online.no'
+		(
+		'name' => 'Sigurd Nes',
+		'email' => 'sigurdne@online.no'
 	);
 
 	$setup_info['property']['maintainer'] = array
-	(
-		'name'	=> 'Sigurd Nes',
-		'email'	=> 'sigurdne@online.no'
+		(
+		'name' => 'Sigurd Nes',
+		'email' => 'sigurdne@online.no'
 	);
 
-	$setup_info['property']['license']  = 'GPL';
-	$setup_info['property']['description'] =
-	'<div align="left">
+	$setup_info['property']['license'] = 'GPL';
+	$setup_info['property']['description'] = '<div align="left">
 
 	<b>FM</b> (Facilities-management) providing:
 	<ol>
@@ -66,8 +64,7 @@
 	<b>Workorder</b> can be used as a general tool for producing tender for bidding - the document is presented as a pdf-document.
 	</div>';
 
-	$setup_info['property']['note'] =
-		'I am also planning to add maintenance planning as events in the calendar app.';
+	$setup_info['property']['note'] = 'I am also planning to add maintenance planning as events in the calendar app.';
 
 
 	$setup_info['property']['tables'] = array(
@@ -220,41 +217,41 @@
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
-	(
+		(
 		'manual',
 		'settings',
 		'help',
 		'config',
-		'menu'					=> 'property.menu.get_menu',
-		'cat_add'				=> 'property.cat_hooks.cat_add',
-		'cat_delete'			=> 'property.cat_hooks.cat_delete',
-		'cat_edit'				=> 'property.cat_hooks.cat_edit',
-		'home'					=> 'property.hook_helper.home_backend',
-		'home_mobilefrontend'	=> 'property.hook_helper.home_mobilefrontend',
-		'addaccount'			=> 'property.hook_helper.clear_userlist',
-		'editaccount'			=> 'property.hook_helper.clear_userlist',
-		'deleteaccount'			=> 'property.hook_helper.clear_userlist',
-		'addgroup'				=> 'property.hook_helper.clear_userlist',
-		'deletegroup'			=> 'property.hook_helper.clear_userlist',
-		'editgroup'				=> 'property.hook_helper.clear_userlist',
-		'registration'			=> 'property.hook_helper.add_location_contact'
+		'menu' => 'property.menu.get_menu',
+		'cat_add' => 'property.cat_hooks.cat_add',
+		'cat_delete' => 'property.cat_hooks.cat_delete',
+		'cat_edit' => 'property.cat_hooks.cat_edit',
+		'home' => 'property.hook_helper.home_backend',
+		'home_mobilefrontend' => 'property.hook_helper.home_mobilefrontend',
+		'addaccount' => 'property.hook_helper.clear_userlist',
+		'editaccount' => 'property.hook_helper.clear_userlist',
+		'deleteaccount' => 'property.hook_helper.clear_userlist',
+		'addgroup' => 'property.hook_helper.clear_userlist',
+		'deletegroup' => 'property.hook_helper.clear_userlist',
+		'editgroup' => 'property.hook_helper.clear_userlist',
+		'registration' => 'property.hook_helper.add_location_contact'
 	);
 
 	/* Dependencies for this app to work */
 	$setup_info['property']['depends'][] = array
-	(
-		'appname'  => 'phpgwapi',
+		(
+		'appname' => 'phpgwapi',
 		'versions' => Array('0.9.17', '0.9.18')
 	);
 
 	$setup_info['property']['depends'][] = array
-	(
-		'appname'  => 'admin',
+		(
+		'appname' => 'admin',
 		'versions' => Array('0.9.17', '0.9.18')
 	);
 
 	$setup_info['property']['depends'][] = array
-	(
-		'appname'  => 'preferences',
+		(
+		'appname' => 'preferences',
 		'versions' => Array('0.9.17', '0.9.18')
 	);

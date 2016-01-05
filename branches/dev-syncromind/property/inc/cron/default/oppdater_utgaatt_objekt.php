@@ -39,10 +39,10 @@
 		{
 			parent::__construct();
 
-			$this->function_name	 = get_class($this);
-			$this->sub_location		 = lang('location');
-			$this->function_msg		 = lang('Update the not active category for locations');
-			$this->soadmin_location	 = CreateObject('property.soadmin_location');
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('location');
+			$this->function_msg = lang('Update the not active category for locations');
+			$this->soadmin_location = CreateObject('property.soadmin_location');
 		}
 
 		function execute()
@@ -110,15 +110,15 @@
 
 						foreach($metadata as $field => $val)
 						{
-							$cols[]	 = $field;
-							$vals[]	 = $this->db->f($field);
+							$cols[] = $field;
+							$vals[] = $this->db->f($field);
 						}
 
-						$cols[]	 = 'exp_date';
-						$vals[]	 = date($this->db->datetime_format(), time());
+						$cols[] = 'exp_date';
+						$vals[] = date($this->db->datetime_format(), time());
 
-						$cols	 = implode(",", $cols);
-						$vals	 = $this->db->validate_insert($vals);
+						$cols = implode(",", $cols);
+						$vals = $this->db->validate_insert($vals);
 
 						$sql = "INSERT INTO fm_location" . ($type_id - 1) . "_history ($cols) VALUES ($vals)";
 						$this->db->query($sql, __LINE__, __FILE__);

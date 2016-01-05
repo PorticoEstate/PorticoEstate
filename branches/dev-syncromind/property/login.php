@@ -33,9 +33,9 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 		(
 		'disable_template_class' => true,
-		'login'					 => true,
-		'currentapp'			 => 'login',
-		'noheader'				 => true
+		'login' => true,
+		'currentapp' => 'login',
+		'noheader' => true
 	);
 	if(file_exists('../header.inc.php'))
 	{
@@ -132,17 +132,17 @@
 		}
 		// _debug_array($GLOBALS['phpgw_info']['server']['lang_ctimes']);
 
-		$lang				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-		$apps				 = $GLOBALS['phpgw_info']['user']['apps'];
-		$apps['phpgwapi']	 = true; // check the api too
+		$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+		$apps = $GLOBALS['phpgw_info']['user']['apps'];
+		$apps['phpgwapi'] = true; // check the api too
 		while(list($app, $data) = each($apps))
 		{
 			$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
 
 			if(file_exists($fname))
 			{
-				$ctime	 = filectime($fname);
-				$ltime	 = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
+				$ctime = filectime($fname);
+				$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
 				//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
 
 				if($ctime != $ltime)
@@ -159,8 +159,8 @@
 	 */
 	function update_langs()
 	{
-		$GLOBALS['phpgw_setup']		 = CreateObject('phpgwapi.setup');
-		$GLOBALS['phpgw_setup']->db	 = $GLOBALS['phpgw']->db;
+		$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup');
+		$GLOBALS['phpgw_setup']->db = $GLOBALS['phpgw']->db;
 
 		$GLOBALS['phpgw_setup']->detection->check_lang(false); // get installed langs
 		$langs = $GLOBALS['phpgw_info']['setup']['installed_langs'];
@@ -168,10 +168,10 @@
 		{
 			$langs[$lang] = $lang;
 		}
-		$_POST['submit']		 = true;
-		$_POST['lang_selected']	 = $langs;
-		$_POST['upgrademethod']	 = 'dumpold';
-		$included				 = 'from_login';
+		$_POST['submit'] = true;
+		$_POST['lang_selected'] = $langs;
+		$_POST['upgrademethod'] = 'dumpold';
+		$included = 'from_login';
 
 		/**
 		 * Include languages setup
@@ -184,20 +184,20 @@
 	$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
 	$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 
-	$login	 = phpgw::get_var('login', 'string', 'POST');
-	$passwd	 = phpgw::get_var('passwd', 'string', 'POST');
+	$login = phpgw::get_var('login', 'string', 'POST');
+	$passwd = phpgw::get_var('passwd', 'string', 'POST');
 
 	if($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 	{
-		$submit	 = true;
-		$login	 = phpgw::get_var('PHP_AUTH_USER', 'string', 'SERVER');
-		$passwd	 = phpgw::get_var('PHP_AUTH_PW', 'string', 'SERVER');
+		$submit = true;
+		$login = phpgw::get_var('PHP_AUTH_USER', 'string', 'SERVER');
+		$passwd = phpgw::get_var('PHP_AUTH_PW', 'string', 'SERVER');
 	}
 
 	if($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
 	{
-		$submit	 = true;
-		$login	 = phpgw::get_var('REMOTE_USER', 'string', 'SERVER');
+		$submit = true;
+		$login = phpgw::get_var('REMOTE_USER', 'string', 'SERVER');
 
 		$passwd = '';
 	}
@@ -209,10 +209,10 @@
 		# an X.509 subject looks like:
 		# /CN=john.doe/OU=Department/O=Company/C=xx/Email=john@comapy.tld/L=City/
 		# the username is deliberately lowercase, to ease LDAP integration
-		$sslattribs	 = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
-		$sslattribs	 = explode('/', $sslattribs);
+		$sslattribs = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
+		$sslattribs = explode('/', $sslattribs);
 		# skip the part in front of the first '/' (nothing)
-		while($sslattrib	 = next($sslattribs))
+		while($sslattrib = next($sslattribs))
 		{
 			list($key, $val) = explode('=', $sslattrib);
 			$sslattributes[$key] = $val;
@@ -226,9 +226,9 @@
 			# the same SSL-certificate.
 			if(!isset($_POST['login']) && isset($sslattributes['Email']))
 			{
-				$login	 = $sslattributes['Email'];
+				$login = $sslattributes['Email'];
 				# not checked against the database, but delivered to authentication module
-				$passwd	 = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
+				$passwd = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
 			}
 		}
 		unset($key);
@@ -238,10 +238,7 @@
 
 	if((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 	{
-		if($_SERVER['REQUEST_METHOD'] != 'POST' &&
-		!isset($_SERVER['PHP_AUTH_USER']) &&
-		!isset($_SERVER['REMOTE_USER']) &&
-		!isset($_SERVER['SSL_CLIENT_S_DN'])
+		if($_SERVER['REQUEST_METHOD'] != 'POST' && !isset($_SERVER['PHP_AUTH_USER']) && !isset($_SERVER['REMOTE_USER']) && !isset($_SERVER['SSL_CLIENT_S_DN'])
 		)
 		{
 			$GLOBALS['phpgw']->redirect('login.php', array('cd' => '5'));
@@ -250,8 +247,8 @@
 // start mapping
 		if(isset($_POST['loginusertype']) && $_POST['loginusertype'] == 'tenant')
 		{
-			$db		 = & $GLOBALS['phpgw']->db;
-			$join	 = $db->join;
+			$db = & $GLOBALS['phpgw']->db;
+			$join = $db->join;
 
 			$_passwd = md5($passwd);
 
@@ -269,9 +266,9 @@
 				exit;
 			}
 
-			$tenant_id	 = $db->f('id');
-			$login		 = $db->f('account_lid');
-			$passwd		 = $db->f('account_pwd');
+			$tenant_id = $db->f('id');
+			$login = $db->f('account_lid');
+			$passwd = $db->f('account_pwd');
 //_debug_array($passwd);die();
 			if(isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'])
 			{
@@ -333,7 +330,7 @@
 		$tmpl->set_var(
 		array(
 			'domain_selects' => '',
-			'logindomain'	 => phpgw::get_var('SERVER_NAME', 'string', 'SERVER')
+			'logindomain' => phpgw::get_var('SERVER_NAME', 'string', 'SERVER')
 		)
 		);
 		$tmpl->parse('domain_from_hosts', 'domain_from_host');
@@ -357,8 +354,8 @@
 		$tmpl->parse('domain_selects', 'domain_select');
 		$tmpl->set_var(
 		array(
-			'domain_from_hosts'	 => '',
-			'lang_domain'		 => lang('domain')
+			'domain_from_hosts' => '',
+			'lang_domain' => lang('domain')
 		)
 		);
 	}
@@ -366,8 +363,8 @@
 	{
 		$tmpl->set_var(
 		array(
-			'domain_selects'	 => '',
-			'domain_from_hosts'	 => ''
+			'domain_selects' => '',
+			'domain_from_hosts' => ''
 		)
 		);
 	}
@@ -391,15 +388,15 @@
 	$tmpl->parse('usertype_selects', 'usertype_select');
 	$tmpl->set_var(
 	array(
-		'usertype_from_hosts'	 => '',
-		'lang_usertype'			 => lang('usertype')
+		'usertype_from_hosts' => '',
+		'lang_usertype' => lang('usertype')
 	)
 	);
 
 	if(isset($_COOKIE['last_loginid']))
 	{
-		$accounts	 = CreateObject('phpgwapi.accounts');
-		$prefs		 = CreateObject('phpgwapi.preferences', $accounts->name2id(phpgw::get_var('last_loginid', 'string', 'COOKIE')));
+		$accounts = CreateObject('phpgwapi.accounts');
+		$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id(phpgw::get_var('last_loginid', 'string', 'COOKIE')));
 
 		if(!$prefs->account_id)
 		{

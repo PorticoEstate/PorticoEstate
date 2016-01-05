@@ -36,33 +36,33 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->join		 = & $this->db->join;
-			$this->like		 = & $this->db->like;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
+			$this->like = & $this->db->like;
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants	 = $GLOBALS['phpgw']->acl->get_grants('property', '.jasper');
+			$this->grants = $GLOBALS['phpgw']->acl->get_grants('property', '.jasper');
 		}
 
 		public function read($data)
 		{
-			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query		 = isset($data['query']) ? $data['query'] : '';
-			$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order		 = isset($data['order']) ? $data['order'] : '';
-			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
+			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
-			$app		 = isset($data['app']) ? $data['app'] : '';
-			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
+			$app = isset($data['app']) ? $data['app'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$grants = & $this->grants;
 
-			$table		 = 'fm_jasper';
-			$app_filter	 = '';
+			$table = 'fm_jasper';
+			$app_filter = '';
 			if($app)
 			{
-				$app_id		 = (int)$GLOBALS['phpgw_info']['apps'][$app]['id'];
-				$app_filter	 = "{$this->join} phpgw_locations ON (phpgw_locations.app_id = {$app_id} AND phpgw_locations.location_id = {$table}.location_id)";
+				$app_id = (int)$GLOBALS['phpgw_info']['apps'][$app]['id'];
+				$app_filter = "{$this->join} phpgw_locations ON (phpgw_locations.app_id = {$app_id} AND phpgw_locations.location_id = {$table}.location_id)";
 			}
 
 			if($order)
@@ -97,7 +97,7 @@
 
 			if($query)
 			{
-				$query		 = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
 				$querymethod = "AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 
@@ -121,17 +121,17 @@
 			{
 				$jasper[] = array
 					(
-					'id'			 => $this->db->f('id'),
-					'descr'			 => $this->db->f('descr', true),
-					'location_id'	 => $this->db->f('location_id'),
-					'title'			 => $this->db->f('title', true),
-					'formats'		 => @unserialize($this->db->f('formats', true)),
-					'version'		 => $this->db->f('version'),
-					'user_id'		 => $this->db->f('user_id'),
-					'access'		 => $this->db->f('access'),
-					'entry_date'	 => $this->db->f('entry_date'),
-					'modified_by'	 => $this->db->f('modified_by'),
-					'modified_date'	 => $this->db->f('modified_date')
+					'id' => $this->db->f('id'),
+					'descr' => $this->db->f('descr', true),
+					'location_id' => $this->db->f('location_id'),
+					'title' => $this->db->f('title', true),
+					'formats' => @unserialize($this->db->f('formats', true)),
+					'version' => $this->db->f('version'),
+					'user_id' => $this->db->f('user_id'),
+					'access' => $this->db->f('access'),
+					'entry_date' => $this->db->f('entry_date'),
+					'modified_by' => $this->db->f('modified_by'),
+					'modified_date' => $this->db->f('modified_date')
 				);
 			}
 			return $jasper;
@@ -140,8 +140,8 @@
 		public function read_single($id)
 		{
 
-			$id		 = (int)$id;
-			$table	 = 'fm_jasper';
+			$id = (int)$id;
+			$table = 'fm_jasper';
 
 			$sql = "SELECT * FROM $table  WHERE id = $id";
 
@@ -152,34 +152,34 @@
 			{
 				$jasper = array
 					(
-					'id'			 => $this->db->f('id'),
-					'descr'			 => $this->db->f('descr', true),
-					'location_id'	 => $this->db->f('location_id'),
-					'title'			 => $this->db->f('title', true),
-					'formats'		 => @unserialize($this->db->f('formats', true)),
-					'version'		 => $this->db->f('version'),
-					'user_id'		 => $this->db->f('user_id'),
-					'access'		 => $this->db->f('access'),
-					'entry_date'	 => $this->db->f('entry_date'),
-					'modified_by'	 => $this->db->f('modified_by'),
-					'modified_date'	 => $this->db->f('modified_date')
+					'id' => $this->db->f('id'),
+					'descr' => $this->db->f('descr', true),
+					'location_id' => $this->db->f('location_id'),
+					'title' => $this->db->f('title', true),
+					'formats' => @unserialize($this->db->f('formats', true)),
+					'version' => $this->db->f('version'),
+					'user_id' => $this->db->f('user_id'),
+					'access' => $this->db->f('access'),
+					'entry_date' => $this->db->f('entry_date'),
+					'modified_by' => $this->db->f('modified_by'),
+					'modified_date' => $this->db->f('modified_date')
 				);
 
 				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name,is_id"
 				. " FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
 				$this->db->query($sql, __LINE__, __FILE__);
-				$i	 = 0;
+				$i = 0;
 				while($this->db->next_record())
 				{
 					$jasper['input'][] = array
 						(
-						'counter'		 => $i,
-						'id'			 => $this->db->f('id'),
-						'input_type_id'	 => $this->db->f('input_type_id'),
-						'input_name'	 => $this->db->f('input_name', true),
-						'datatype'		 => $this->db->f('type_name', true),
-						'type_name'		 => $this->db->f('type_name', true),
-						'is_id'			 => $this->db->f('is_id')
+						'counter' => $i,
+						'id' => $this->db->f('id'),
+						'input_type_id' => $this->db->f('input_type_id'),
+						'input_name' => $this->db->f('input_name', true),
+						'datatype' => $this->db->f('type_name', true),
+						'type_name' => $this->db->f('type_name', true),
+						'is_id' => $this->db->f('is_id')
 					);
 					$i++;
 				}
@@ -190,20 +190,20 @@
 		public function add($jasper)
 		{
 			$receipt = array();
-			$table	 = 'fm_jasper';
+			$table = 'fm_jasper';
 
 			$value_set = array
 				(
-				'location_id'	 => $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
-				'title'			 => $this->db->db_addslashes($jasper['title']),
-				'descr'			 => $this->db->db_addslashes($jasper['descr']),
-				'formats'		 => serialize($jasper['formats']),
-				'version'		 => 1,
-				'access'		 => $jasper['access'],
-				'user_id'		 => $this->account,
-				'entry_date'	 => time(),
-				'modified_by'	 => $this->account,
-				'modified_date'	 => time()
+				'location_id' => $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
+				'title' => $this->db->db_addslashes($jasper['title']),
+				'descr' => $this->db->db_addslashes($jasper['descr']),
+				'formats' => serialize($jasper['formats']),
+				'version' => 1,
+				'access' => $jasper['access'],
+				'user_id' => $this->account,
+				'entry_date' => time(),
+				'modified_by' => $this->account,
+				'modified_date' => time()
 			);
 
 			$values = $this->db->validate_insert(array_values($value_set));
@@ -216,8 +216,8 @@
 
 			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
 			{
-				$jasper['input_name']	 = $this->db->db_addslashes($jasper['input_name']);
-				$jasper['input_type']	 = (int)$jasper['input_type'];
+				$jasper['input_name'] = $this->db->db_addslashes($jasper['input_name']);
+				$jasper['input_type'] = (int)$jasper['input_type'];
 
 				$is_id = (int)$jasper['is_id'];
 				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
@@ -226,17 +226,17 @@
 
 			if($this->db->transaction_commit())
 			{
-				$receipt['message'][]	 = array('msg' => lang('JasperReport %1 has been saved', $id));
-				$receipt['id']			 = $id;
+				$receipt['message'][] = array('msg' => lang('JasperReport %1 has been saved', $id));
+				$receipt['id'] = $id;
 			}
 			return $receipt;
 		}
 
 		public function edit($jasper)
 		{
-			$receipt		 = array();
-			$jasper['id']	 = (int)$jasper['id'];
-			$receipt['id']	 = $jasper['id'];
+			$receipt = array();
+			$jasper['id'] = (int)$jasper['id'];
+			$receipt['id'] = $jasper['id'];
 
 			$table = 'fm_jasper';
 
@@ -252,13 +252,13 @@
 
 			$value_set = array
 				(
-				'location_id'	 => $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
-				'title'			 => $this->db->db_addslashes($jasper['title']),
-				'descr'			 => $this->db->db_addslashes($jasper['descr']),
-				'formats'		 => serialize($jasper['formats']),
-				'access'		 => $jasper['access'],
-				'modified_by'	 => $this->account,
-				'modified_date'	 => time()
+				'location_id' => $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
+				'title' => $this->db->db_addslashes($jasper['title']),
+				'descr' => $this->db->db_addslashes($jasper['descr']),
+				'formats' => serialize($jasper['formats']),
+				'access' => $jasper['access'],
+				'modified_by' => $this->account,
+				'modified_date' => time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -284,9 +284,9 @@
 			}
 			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
 			{
-				$jasper['input_name']	 = $this->db->db_addslashes($jasper['input_name']);
-				$jasper['input_type']	 = (int)$jasper['input_type'];
-				$is_id					 = (int)$jasper['is_id'];
+				$jasper['input_name'] = $this->db->db_addslashes($jasper['input_name']);
+				$jasper['input_type'] = (int)$jasper['input_type'];
+				$is_id = (int)$jasper['is_id'];
 
 				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
 				. " VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}',$is_id)", __LINE__, __FILE__);
@@ -319,8 +319,8 @@
 			{
 				$input_types[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'descr'	 => $this->db->f('descr', true)
+					'id' => $this->db->f('id'),
+					'descr' => $this->db->f('descr', true)
 				);
 			}
 			return $input_types;
@@ -335,8 +335,8 @@
 			{
 				$format_types[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('id')
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('id')
 				);
 			}
 			return $format_types;

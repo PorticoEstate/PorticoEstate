@@ -47,21 +47,21 @@
 		var $acl_location = '.project';
 		var $public_functions = array
 			(
-			'read'			 => true,
-			'read_single'	 => true,
-			'save'			 => true,
-			'delete'		 => true,
-			'check_perms'	 => true
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'check_perms' => true
 		);
 
 		function __construct($session = false)
 		{
-			$this->so					 = CreateObject('property.soproject');
-			$this->bocommon				 = & $this->so->bocommon;
-			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
-			$this->cats->supress_info	 = true;
-			$this->interlink			 = & $this->so->interlink;
-			$this->custom				 = & $this->so->custom;
+			$this->so = CreateObject('property.soproject');
+			$this->bocommon = & $this->so->bocommon;
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$this->cats->supress_info = true;
+			$this->interlink = & $this->so->interlink;
+			$this->custom = & $this->so->custom;
 
 			if($session)
 			{
@@ -90,24 +90,24 @@
 				}
 			}
 
-			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			 = phpgw::get_var('query');
-			$sort			 = phpgw::get_var('sort');
-			$order			 = phpgw::get_var('order');
-			$filter			 = phpgw::get_var('filter', 'int');
-			$filter_year	 = phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
-			$cat_id			 = phpgw::get_var('cat_id', 'int');
-			$status_id		 = phpgw::get_var('status_id');
-			$user_id		 = phpgw::get_var('user_id', 'int');
-			$wo_hour_cat_id	 = phpgw::get_var('wo_hour_cat_id', 'int');
-			$district_id	 = phpgw::get_var('district_id', 'int');
-			$criteria_id	 = phpgw::get_var('criteria_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$filter_year = phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
+			$cat_id = phpgw::get_var('cat_id', 'int');
+			$status_id = phpgw::get_var('status_id');
+			$user_id = phpgw::get_var('user_id', 'int');
+			$wo_hour_cat_id = phpgw::get_var('wo_hour_cat_id', 'int');
+			$district_id = phpgw::get_var('district_id', 'int');
+			$criteria_id = phpgw::get_var('criteria_id', 'int');
 			$project_type_id = phpgw::get_var('project_type_id', 'int');
 
 			$this->allrows = phpgw::get_var('allrows', 'bool');
 
-			$this->start		 = $start ? $start : 0;
-			$this->filter_year	 = $filter_year;
+			$this->start = $start ? $start : 0;
+			$this->filter_year = $filter_year;
 
 			if(isset($_POST['query']) || isset($_GET['query']))
 			{
@@ -167,18 +167,18 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'project');
 
-			$this->start			 = isset($data['start']) ? $data['start'] : '';
-			$this->query			 = isset($data['query']) ? $data['query'] : '';
-			$this->filter			 = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort				 = isset($data['sort']) ? $data['sort'] : '';
-			$this->order			 = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id			 = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->status_id		 = isset($data['status_id']) ? $data['status_id'] : '';
-			$this->user_id			 = isset($data['user_id']) ? $data['user_id'] : '';
-			$this->wo_hour_cat_id	 = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
-			$this->district_id		 = isset($data['district_id']) ? $data['district_id'] : '';
-			$this->criteria_id		 = isset($data['criteria_id']) ? $data['criteria_id'] : '';
-			$this->project_type_id	 = isset($data['project_type_id']) ? $data['project_type_id'] : '';
+			$this->start = isset($data['start']) ? $data['start'] : '';
+			$this->query = isset($data['query']) ? $data['query'] : '';
+			$this->filter = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort = isset($data['sort']) ? $data['sort'] : '';
+			$this->order = isset($data['order']) ? $data['order'] : '';
+			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->status_id = isset($data['status_id']) ? $data['status_id'] : '';
+			$this->user_id = isset($data['user_id']) ? $data['user_id'] : '';
+			$this->wo_hour_cat_id = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
+			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
+			$this->criteria_id = isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$this->project_type_id = isset($data['project_type_id']) ? $data['project_type_id'] : '';
 		}
 
 		function column_list($selected = array())
@@ -187,7 +187,7 @@
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : '';
 			}
-			$filter	 = array('list' => ''); // translates to "list IS NULL"
+			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find('property', '.project', 0, '', '', '', true, false, $filter);
 			$columns = array_merge($columns, $this->get_column_list());
 			return $this->bocommon->select_multi_list($selected, $columns);
@@ -195,7 +195,7 @@
 
 		function get_column_list()
 		{
-			$columns					 = array();
+			$columns = array();
 			/*
 			  $columns['planned_cost'] = array
 			  (
@@ -206,41 +206,41 @@
 			  'classname'	=> 'rightClasss'
 			  );
 			 */
-			$columns['ecodimb']			 = array
+			$columns['ecodimb'] = array
 				(
-				'id'		 => 'ecodimb',
-				'name'		 => lang('accounting dim b'),
-				'sortable'	 => true
+				'id' => 'ecodimb',
+				'name' => lang('accounting dim b'),
+				'sortable' => true
 			);
-			$columns['entry_date']		 = array
+			$columns['entry_date'] = array
 				(
-				'id'		 => 'entry_date',
-				'name'		 => lang('entry date'),
-				'sortable'	 => true
+				'id' => 'entry_date',
+				'name' => lang('entry date'),
+				'sortable' => true
 			);
-			$columns['start_date']		 = array
+			$columns['start_date'] = array
 				(
-				'id'		 => 'start_date',
-				'name'		 => lang('start date'),
-				'sortable'	 => true
+				'id' => 'start_date',
+				'name' => lang('start date'),
+				'sortable' => true
 			);
-			$columns['end_date']		 = array
+			$columns['end_date'] = array
 				(
-				'id'		 => 'end_date',
-				'name'		 => lang('end date'),
-				'sortable'	 => true
+				'id' => 'end_date',
+				'name' => lang('end date'),
+				'sortable' => true
 			);
-			$columns['billable_hours']	 = array
+			$columns['billable_hours'] = array
 				(
-				'id'		 => 'billable_hours',
-				'name'		 => lang('billable hours'),
-				'sortable'	 => true
+				'id' => 'billable_hours',
+				'name' => lang('billable hours'),
+				'sortable' => true
 			);
-			$columns['vendor_names']	 = array
+			$columns['vendor_names'] = array
 				(
-				'id'		 => 'vendor_names',
-				'name'		 => lang('vendor'),
-				'sortable'	 => false
+				'id' => 'vendor_names',
+				'name' => lang('vendor'),
+				'sortable' => false
 			);
 
 			return $columns;
@@ -252,23 +252,23 @@
 				(
 				array
 					(
-					'id'	 => 1,
-					'name'	 => lang('operation')
+					'id' => 1,
+					'name' => lang('operation')
 				),
 				array
 					(
-					'id'	 => 4,
-					'name'	 => lang('maintenance')
+					'id' => 4,
+					'name' => lang('maintenance')
 				),
 				array
 					(
-					'id'	 => 2,
-					'name'	 => lang('investment')
+					'id' => 2,
+					'name' => lang('investment')
 				),
 				array
 					(
-					'id'	 => 3,
-					'name'	 => lang('buffer')
+					'id' => 3,
+					'name' => lang('buffer')
 				),
 			);
 			return $this->bocommon->select_list($selected, $values);
@@ -300,13 +300,13 @@
 		function select_branch_p_list($project_id = '')
 		{
 
-			$selected		 = $this->so->branch_p_list($project_id);
-			$branch_entries	 = $this->so->select_branch_list();
+			$selected = $this->so->branch_p_list($project_id);
+			$branch_entries = $this->so->select_branch_list();
 
 			$j = 0;
 			while(is_array($branch_entries) && list(, $branch) = each($branch_entries))
 			{
-				$branch_list[$j]['id']	 = $branch['id'];
+				$branch_list[$j]['id'] = $branch['id'];
 				$branch_list[$j]['name'] = $branch['name'];
 
 				for($i = 0; $i < count($selected); $i++)
@@ -337,43 +337,43 @@
 				(
 				array
 					(
-					'id'	 => '1',
-					'name'	 => lang('project group')
+					'id' => '1',
+					'name' => lang('project group')
 				),
 				array
 					(
-					'id'	 => '2',
-					'name'	 => lang('project id')
+					'id' => '2',
+					'name' => lang('project id')
 				),
 				array
 					(
-					'id'	 => '3',
-					'name'	 => lang('address')
+					'id' => '3',
+					'name' => lang('address')
 				),
 				array
 					(
-					'id'	 => '4',
-					'name'	 => lang('location code')
+					'id' => '4',
+					'name' => lang('location code')
 				),
 				array
 					(
-					'id'	 => '5',
-					'name'	 => lang('title')
+					'id' => '5',
+					'name' => lang('title')
 				),
 				array
 					(
-					'id'	 => '6',
-					'name'	 => lang('module')
+					'id' => '6',
+					'name' => lang('module')
 				),
 				array
 					(
-					'id'	 => '7',
-					'name'	 => lang('accounting dim b')
+					'id' => '7',
+					'name' => lang('accounting dim b')
 				),
 				array
 					(
-					'id'	 => '8',
-					'name'	 => lang('budget account group')
+					'id' => '8',
+					'name' => lang('budget account group')
 				)
 			);
 
@@ -382,70 +382,70 @@
 
 		function get_criteria($id = '')
 		{
-			$criteria	 = array();
+			$criteria = array();
 			$criteria[1] = array
 				(
-				'field'		 => 'project_group',
-				'type'		 => 'int',
-				'matchtype'	 => 'exact',
-				'front'		 => '',
-				'back'		 => ''
+				'field' => 'project_group',
+				'type' => 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
 			);
 			$criteria[2] = array
 				(
-				'field'		 => 'fm_project.id',
-				'type'		 => 'int',
-				'matchtype'	 => 'exact',
-				'front'		 => '',
-				'back'		 => ''
+				'field' => 'fm_project.id',
+				'type' => 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
 			);
 			$criteria[3] = array
 				(
-				'field'		 => 'fm_project.address',
-				'type'		 => 'varchar',
-				'matchtype'	 => 'like',
-				'front'		 => "'%",
-				'back'		 => "%'",
+				'field' => 'fm_project.address',
+				'type' => 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'",
 			);
 			$criteria[4] = array
 				(
-				'field'		 => 'fm_project.location_code',
-				'type'		 => 'varchar',
-				'matchtype'	 => 'like',
-				'front'		 => "'",
-				'back'		 => "%'"
+				'field' => 'fm_project.location_code',
+				'type' => 'varchar',
+				'matchtype' => 'like',
+				'front' => "'",
+				'back' => "%'"
 			);
 			$criteria[5] = array
 				(
-				'field'		 => 'fm_project.name',
-				'type'		 => 'varchar',
-				'matchtype'	 => 'like',
-				'front'		 => "'%",
-				'back'		 => "%'"
+				'field' => 'fm_project.name',
+				'type' => 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'"
 			);
 			$criteria[6] = array
 				(
-				'field'		 => 'fm_project.p_num',
-				'type'		 => 'varchar',
-				'matchtype'	 => 'exact',
-				'front'		 => "'",
-				'back'		 => "'"
+				'field' => 'fm_project.p_num',
+				'type' => 'varchar',
+				'matchtype' => 'exact',
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[7] = array
 				(
-				'field'		 => 'fm_project.ecodimb',
-				'type'		 => 'int',
-				'matchtype'	 => 'exact',
-				'front'		 => '',
-				'back'		 => ''
+				'field' => 'fm_project.ecodimb',
+				'type' => 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
 			);
 			$criteria[8] = array
 				(
-				'field'		 => 'fm_project.account_group',
-				'type'		 => 'int',
-				'matchtype'	 => 'exact',
-				'front'		 => '',
-				'back'		 => ''
+				'field' => 'fm_project.account_group',
+				'type' => 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
 			);
 
 			if($id)
@@ -480,22 +480,22 @@
 //				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
 
 			$project = $this->so->read(array(
-				'start'				 => $data['start'],
-				'query'				 => $data['query'],
-				'sort'				 => $data['sort'],
-				'order'				 => $data['order'],
-				'allrows'			 => isset($data['allrows']) ? $data['allrows'] : '',
-				'dry_run'			 => $data['dry_run'],
-				'filter'			 => $this->filter,
-				'cat_id'			 => $this->cat_id,
-				'status_id'			 => $this->status_id,
-				'wo_hour_cat_id'	 => $this->wo_hour_cat_id,
-				'start_date'		 => $this->bocommon->date_to_timestamp($data['start_date']),
-				'end_date'			 => $this->bocommon->date_to_timestamp($data['end_date']),
-				'district_id'		 => $this->district_id,
-				'criteria'			 => $this->get_criteria($this->criteria_id),
-				'project_type_id'	 => $this->project_type_id,
-				'filter_year'		 => $this->filter_year
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'dry_run' => $data['dry_run'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'start_date' => $this->bocommon->date_to_timestamp($data['start_date']),
+				'end_date' => $this->bocommon->date_to_timestamp($data['end_date']),
+				'district_id' => $this->district_id,
+				'criteria' => $this->get_criteria($this->criteria_id),
+				'project_type_id' => $this->project_type_id,
+				'filter_year' => $this->filter_year
 			));
 
 			$this->total_records = $this->so->total_records;
@@ -504,24 +504,24 @@
 
 			$this->uicols = $this->so->uicols;
 
-			$custom_cols		 = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
-			$column_list		 = $this->get_column_list();
-			$get_vendor_names	 = false;
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
+			$column_list = $this->get_column_list();
+			$get_vendor_names = false;
 
 			foreach($custom_cols as $col_id)
 			{
 				if(!ctype_digit($col_id))
 				{
-					$this->uicols['input_type'][]	 = 'text';
-					$this->uicols['name'][]			 = $col_id;
-					$this->uicols['descr'][]		 = $column_list[$col_id]['name'];
-					$this->uicols['statustext'][]	 = $column_list[$col_id]['name'];
-					$this->uicols['exchange'][]		 = false;
-					$this->uicols['align'][]		 = '';
-					$this->uicols['datatype'][]		 = false;
-					$this->uicols['sortable'][]		 = $column_list[$col_id]['sortable'];
-					$this->uicols['formatter'][]	 = $column_list[$col_id]['formatter'];
-					$this->uicols['classname'][]	 = $column_list[$col_id]['classname'];
+					$this->uicols['input_type'][] = 'text';
+					$this->uicols['name'][] = $col_id;
+					$this->uicols['descr'][] = $column_list[$col_id]['name'];
+					$this->uicols['statustext'][] = $column_list[$col_id]['name'];
+					$this->uicols['exchange'][] = false;
+					$this->uicols['align'][] = '';
+					$this->uicols['datatype'][] = false;
+					$this->uicols['sortable'][] = $column_list[$col_id]['sortable'];
+					$this->uicols['formatter'][] = $column_list[$col_id]['formatter'];
+					$this->uicols['classname'][] = $column_list[$col_id]['classname'];
 					if($col_id == 'vendor_names')
 					{
 						$get_vendor_names = true;
@@ -531,16 +531,16 @@
 
 			if(!isset($data['skip_origin']) || !$data['skip_origin'])
 			{
-				$this->uicols['input_type'][]	 = 'text';
-				$this->uicols['name'][]			 = 'ticket';
-				$this->uicols['descr'][]		 = lang('ticket');
-				$this->uicols['statustext'][]	 = false;
-				$this->uicols['exchange'][]		 = false;
-				$this->uicols['align'][]		 = '';
-				$this->uicols['datatype'][]		 = 'link';
-				$this->uicols['sortable'][]		 = '';
-				$this->uicols['formatter'][]	 = '';
-				$this->uicols['classname'][]	 = '';
+				$this->uicols['input_type'][] = 'text';
+				$this->uicols['name'][] = 'ticket';
+				$this->uicols['descr'][] = lang('ticket');
+				$this->uicols['statustext'][] = false;
+				$this->uicols['exchange'][] = false;
+				$this->uicols['align'][] = '';
+				$this->uicols['datatype'][] = 'link';
+				$this->uicols['sortable'][] = '';
+				$this->uicols['formatter'][] = '';
+				$this->uicols['classname'][] = '';
 			}
 
 			$cols_extra = $this->so->cols_extra;
@@ -549,7 +549,7 @@
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
-				$entry['end_date']	 = $GLOBALS['phpgw']->common->show_date($entry['end_date'], $dateformat);
+				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'], $dateformat);
 				if($get_vendor_names && isset($entry['vendor_list']) && $entry['vendor_list'])
 				{
 					$vendor_names = array();
@@ -569,13 +569,13 @@
 					{
 						$entry['ticket'] = array
 							(
-							'url'		 => $GLOBALS['phpgw']->link('/index.php', array
+							'url' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 								'menuaction' => 'property.uitts.view',
-								'id'		 => $origin[0]['data'][0]['id']
+								'id' => $origin[0]['data'][0]['id']
 							)
 							),
-							'text'		 => $origin[0]['data'][0]['id'],
+							'text' => $origin[0]['data'][0]['id'],
 							'statustext' => $origin[0]['data'][0]['statustext'],
 						);
 					}
@@ -599,9 +599,9 @@
 				return $values;
 			}
 
-			$dateformat				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values['start_date']	 = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
-			$values['end_date']		 = isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat) : '';
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+			$values['end_date'] = isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat) : '';
 
 			if($values['location_code'])
 			{
@@ -610,11 +610,11 @@
 
 			if($values['tenant_id'] > 0)
 			{
-				$tenant_data								 = $this->bocommon->read_single_tenant($values['tenant_id']);
-				$values['location_data']['tenant_id']		 = $values['tenant_id'];
-				$values['location_data']['contact_phone']	 = $tenant_data['contact_phone'];
-				$values['location_data']['last_name']		 = $tenant_data['last_name'];
-				$values['location_data']['first_name']		 = $tenant_data['first_name'];
+				$tenant_data = $this->bocommon->read_single_tenant($values['tenant_id']);
+				$values['location_data']['tenant_id'] = $values['tenant_id'];
+				$values['location_data']['contact_phone'] = $tenant_data['contact_phone'];
+				$values['location_data']['last_name'] = $tenant_data['last_name'];
+				$values['location_data']['first_name'] = $tenant_data['first_name'];
 			}
 			else
 			{
@@ -626,17 +626,17 @@
 
 			if($values['p_num'])
 			{
-				$soadmin_entity	 = CreateObject('property.soadmin_entity');
-				$category		 = $soadmin_entity->read_single_category($values['p_entity_id'], $values['p_cat_id']);
+				$soadmin_entity = CreateObject('property.soadmin_entity');
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'], $values['p_cat_id']);
 
-				$values['p'][$values['p_entity_id']]['p_num']		 = $values['p_num'];
-				$values['p'][$values['p_entity_id']]['p_entity_id']	 = $values['p_entity_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_id']	 = $values['p_cat_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_name']	 = $category['name'];
+				$values['p'][$values['p_entity_id']]['p_num'] = $values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id'] = $values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id'] = $values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			$values['origin']	 = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
-			$values['target']	 = $this->interlink->get_relation('property', '.project', $project_id, 'target');
+			$values['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
+			$values['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
 			//_debug_array($values);
 			return $values;
@@ -644,9 +644,9 @@
 
 		private function get_vendor_name($vendor_id = 0)
 		{
-			static $vendor_name	 = array();
-			static $attributes	 = array();
-			static $contacts	 = null;
+			static $vendor_name = array();
+			static $attributes = array();
+			static $contacts = null;
 
 			if(isset($vendor_name[$vendor_id]) && $vendor_name[$vendor_id])
 			{
@@ -699,9 +699,9 @@
 		{
 			if($project = $this->so->read_single($project_id))
 			{
-				$dateformat				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$project['start_date']	 = $GLOBALS['phpgw']->common->show_date($project['start_date'], $dateformat);
-				$project['end_date']	 = isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'], $dateformat) : '';
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$project['start_date'] = $GLOBALS['phpgw']->common->show_date($project['start_date'], $dateformat);
+				$project['end_date'] = isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'], $dateformat) : '';
 			}
 
 			if($project['location_code'])
@@ -711,11 +711,11 @@
 
 			if($project['tenant_id'] > 0)
 			{
-				$tenant_data								 = $this->bocommon->read_single_tenant($project['tenant_id']);
-				$project['location_data']['tenant_id']		 = $project['tenant_id'];
-				$project['location_data']['contact_phone']	 = $tenant_data['contact_phone'];
-				$project['location_data']['last_name']		 = $tenant_data['last_name'];
-				$project['location_data']['first_name']		 = $tenant_data['first_name'];
+				$tenant_data = $this->bocommon->read_single_tenant($project['tenant_id']);
+				$project['location_data']['tenant_id'] = $project['tenant_id'];
+				$project['location_data']['contact_phone'] = $tenant_data['contact_phone'];
+				$project['location_data']['last_name'] = $tenant_data['last_name'];
+				$project['location_data']['first_name'] = $tenant_data['first_name'];
 			}
 			else
 			{
@@ -731,70 +731,70 @@
 
 		function read_record_history($id)
 		{
-			$historylog		 = CreateObject('property.historylog', 'project');
-			$history_array	 = $historylog->return_array(array('O'), array(), '', '', $id);
-			$i				 = 0;
+			$historylog = CreateObject('property.historylog', 'project');
+			$history_array = $historylog->return_array(array('O'), array(), '', '', $id);
+			$i = 0;
 			foreach($history_array as $value)
 			{
 
-				$record_history[$i]['value_date']	 = $GLOBALS['phpgw']->common->show_date($value['datetime']);
-				$record_history[$i]['value_user']	 = $value['owner'];
+				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user'] = $value['owner'];
 
 				switch($value['status'])
 				{
 					case 'B':
-						$type	 = lang('Budget');
+						$type = lang('Budget');
 						break;
 					case 'BR':
-						$type	 = lang('reserve');
+						$type = lang('reserve');
 						break;
 					case 'R':
-						$type	 = lang('Re-opened');
+						$type = lang('Re-opened');
 						break;
 					case 'RM':
-						$type	 = lang('remark');
+						$type = lang('remark');
 						break;
 					case 'X':
-						$type	 = lang('Closed');
+						$type = lang('Closed');
 						break;
 					case 'O':
-						$type	 = lang('Opened');
+						$type = lang('Opened');
 						break;
 					case 'A':
-						$type	 = lang('Re-assigned');
+						$type = lang('Re-assigned');
 						break;
 					case 'P':
-						$type	 = lang('Priority changed');
+						$type = lang('Priority changed');
 						break;
 					case 'CO':
-						$type	 = lang('Initial Coordinator');
+						$type = lang('Initial Coordinator');
 						break;
 					case 'C':
-						$type	 = lang('Coordinator changed');
+						$type = lang('Coordinator changed');
 						break;
 					case 'TO':
-						$type	 = lang('Initial Category');
+						$type = lang('Initial Category');
 						break;
 					case 'T':
-						$type	 = lang('Category changed');
+						$type = lang('Category changed');
 						break;
 					case 'SO':
-						$type	 = lang('Initial Status');
+						$type = lang('Initial Status');
 						break;
 					case 'S':
-						$type	 = lang('Status changed');
+						$type = lang('Status changed');
 						break;
 					case 'SC':
-						$type	 = lang('Status confirmed');
+						$type = lang('Status confirmed');
 						break;
 					case 'AP':
-						$type	 = lang('Ask for approval');
+						$type = lang('Ask for approval');
 						break;
 					case 'ON':
-						$type	 = lang('Owner notified');
+						$type = lang('Owner notified');
 						break;
 					case 'MS':
-						$type	 = lang('Sent by sms');
+						$type = lang('Sent by sms');
 						break;
 					default:
 						break;
@@ -845,23 +845,23 @@
 				}
 				else if($value['status'] == 'T' || $value['status'] == 'TO')
 				{
-					$category								 = $this->cats->return_single($value['new_value']);
-					$record_history[$i]['value_new_value']	 = $category[0]['name'];
+					$category = $this->cats->return_single($value['new_value']);
+					$record_history[$i]['value_new_value'] = $category[0]['name'];
 					if($value['old_value'])
 					{
-						$category								 = $this->cats->return_single($value['old_value']);
-						$record_history[$i]['value_old_value']	 = $category[0]['name'];
+						$category = $this->cats->return_single($value['old_value']);
+						$record_history[$i]['value_old_value'] = $category[0]['name'];
 					}
 				}
 				else if($value['status'] == 'B' || $value['status'] == 'BR')
 				{
-					$record_history[$i]['value_new_value']	 = number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	 = number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value'] = number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value'] = number_format($value['old_value'], 0, ',', ' ');
 				}
 				else if($value['status'] != 'O' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	 = $value['new_value'];
-					$record_history[$i]['value_old_value']	 = $value['old_value'];
+					$record_history[$i]['value_new_value'] = $value['new_value'];
+					$record_history[$i]['value_old_value'] = $value['old_value'];
 				}
 				else
 				{
@@ -876,12 +876,12 @@
 
 		public function get_files($id = 0)
 		{
-			$vfs				 = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl	 = 1;
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
 			$files = $vfs->ls(array(
-				'string'	 => "/property/project/{$id}",
-				'relatives'	 => array(RELATIVE_NONE)
+				'string' => "/property/project/{$id}",
+				'relatives' => array(RELATIVE_NONE)
 			));
 
 			$vfs->override_acl = 0;
@@ -912,8 +912,8 @@
 
 			$project['location_code'] = implode("-", $location);
 
-			$project['start_date']	 = phpgwapi_datetime::date_to_timestamp($project['start_date']);
-			$project['end_date']	 = phpgwapi_datetime::date_to_timestamp($project['end_date']);
+			$project['start_date'] = phpgwapi_datetime::date_to_timestamp($project['start_date']);
+			$project['end_date'] = phpgwapi_datetime::date_to_timestamp($project['end_date']);
 
 			if(is_array($values_attribute))
 			{
@@ -923,9 +923,9 @@
 			// Custom rules - pre commit
 			$criteria = array
 				(
-				'appname'	 => 'property',
-				'location'	 => '.project',
-				'allrows'	 => true
+				'appname' => 'property',
+				'location' => '.project',
+				'allrows' => true
 			);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);

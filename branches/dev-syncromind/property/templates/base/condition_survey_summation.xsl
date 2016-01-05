@@ -8,13 +8,13 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
 			</xsl:otherwise>
 		</xsl:choose>
-  	</func:result>
+	</func:result>
 </func:function>
 
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
@@ -27,7 +27,9 @@
 		<div class="yui-content">
 			<dl class="proplist-col">
 				<dt>
-					<label for="category"><xsl:value-of select="php:function('lang', 'condition survey')" /></label>
+					<label for="category">
+						<xsl:value-of select="php:function('lang', 'condition survey')" />
+					</label>
 				</dt>
 				<dd>
 					<select id="survey_id" name="survey_id" onChange="update_summation();" >
@@ -35,7 +37,8 @@
 					</select>
 				</dd>
 				<dt>
-					<label for="category"><xsl:value-of select="php:function('lang', 'year')" /> 0</label>
+					<label for="category">
+						<xsl:value-of select="php:function('lang', 'year')" /> 0</label>
 				</dt>
 				<dd>
 					<select id="year" name="year" onChange="update_summation();" >
@@ -46,13 +49,13 @@
 		</div>
 		<div>
 			<xsl:for-each select="datatable_def">
-					<xsl:if test="container = 'datatable-container_0'">
-						<xsl:call-template name="table_setup">
-						  <xsl:with-param name="container" select ='container'/>
-						  <xsl:with-param name="requestUrl" select ='requestUrl' />
-						  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-						</xsl:call-template>
-					</xsl:if>
+				<xsl:if test="container = 'datatable-container_0'">
+					<xsl:call-template name="table_setup">
+						<xsl:with-param name="container" select ='container'/>
+						<xsl:with-param name="requestUrl" select ='requestUrl' />
+						<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+					</xsl:call-template>
+				</xsl:if>
 			</xsl:for-each>
 		</div>
 		<!--<xsl:call-template name="datasource-definition" />
@@ -85,7 +88,7 @@
 								<th>
 									<xsl:value-of select="label"/>
 								</th>
-								</xsl:if>
+							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
 							<th>
@@ -111,56 +114,56 @@
 	</table>
 	<script>
 		var PreColumns = [
-				<xsl:for-each select="$ColumnDefs">
-				{
-					data:			"<xsl:value-of select="key"/>",
-					<xsl:if test="className">
-						<xsl:choose>
-							<xsl:when test="className">
-								<xsl:if test="className ='right'">
-									class:	'dt-right',
-								</xsl:if>
-								<xsl:if test="className ='center'">
-									class:	'dt-center',
-								</xsl:if>
-							</xsl:when>
-							<xsl:otherwise>
-									class:	'dt-left',
-							</xsl:otherwise>
-						</xsl:choose>
+		<xsl:for-each select="$ColumnDefs">
+			{
+			data:			"<xsl:value-of select="key"/>",
+			<xsl:if test="className">
+				<xsl:choose>
+					<xsl:when test="className">
+						<xsl:if test="className ='right'">
+							class:	'dt-right',
+						</xsl:if>
+						<xsl:if test="className ='center'">
+							class:	'dt-center',
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						class:	'dt-left',
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+			<xsl:choose>
+				<xsl:when test="hidden">
+					<xsl:if test="hidden =0">
+						visible			:true,
 					</xsl:if>
-					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-					<xsl:choose>
-						<xsl:when test="hidden">
-							<xsl:if test="hidden =0">
-								visible			:true,
-							</xsl:if>
-							<xsl:if test="hidden =1">
-								class:			'none',
-								visible:		false,
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-								visible:		true,
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="formatter">
-					 render: function (dummy1, dummy2, oData) {
-							try {
-								var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
-							}
-							catch(err) {
-								return err.message;
-							}
-							return ret;
-                         },
+					<xsl:if test="hidden =1">
+						class:			'none',
+						visible:		false,
 					</xsl:if>
-					<xsl:if test="editor">
-						editor: <xsl:value-of select="editor"/>,
-					</xsl:if>					
-					defaultContent:	"<xsl:value-of select="defaultContent"/>"
-				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-			</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					visible:		true,
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="formatter">
+				render: function (dummy1, dummy2, oData) {
+				try {
+				var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
+				}
+				catch(err) {
+				return err.message;
+				}
+				return ret;
+				},
+			</xsl:if>
+			<xsl:if test="editor">
+				editor: <xsl:value-of select="editor"/>,
+			</xsl:if>
+			defaultContent:	"<xsl:value-of select="defaultContent"/>"
+			}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+		</xsl:for-each>
 		];
 		<![CDATA[
 				columns = [];
@@ -179,43 +182,43 @@
 		
 		$(document).ready(function ()
 		{		
-			var api = oTable.api();
-			api.on( 'draw', sum_columns );
+		var api = oTable.api();
+		api.on( 'draw', sum_columns );
 		});
 
 		function sum_columns()
 		{
-			var api = oTable.api();
-			// Remove the formatting to get integer data for summation
-			var intVal = function ( i ) {
-				return typeof i === 'string' ?
-					i.replace(/[\$,]/g, '')*1 :
-					typeof i === 'number' ?
-						i : 0;
-			};
+		var api = oTable.api();
+		// Remove the formatting to get integer data for summation
+		var intVal = function ( i ) {
+		return typeof i === 'string' ?
+		i.replace(/[\$,]/g, '')*1 :
+		typeof i === 'number' ?
+		i : 0;
+		};
 			
-			var columns = ["2", "3", "4", "5", "6", "7", "8"];
+		var columns = ["2", "3", "4", "5", "6", "7", "8"];
 			
-			columns.forEach(function(col) 
-			{
-				data = api.column( col, { page: 'current'} ).data();
-				pageTotal = data.length ?
-					data.reduce(function (a, b){
-							return intVal(a) + intVal(b);
-					}) : 0;
+		columns.forEach(function(col)
+		{
+		data = api.column( col, { page: 'current'} ).data();
+		pageTotal = data.length ?
+		data.reduce(function (a, b){
+		return intVal(a) + intVal(b);
+		}) : 0;
 				
-				pageTotal = $.number( pageTotal, 0, ',', ' ' );
-				$(api.column(col).footer()).html(pageTotal);	
-			});	
+		pageTotal = $.number( pageTotal, 0, ',', ' ' );
+		$(api.column(col).footer()).html(pageTotal);
+		});
 		}
 		
 		function update_summation()
 		{
-			var survey_id = document.getElementById("survey_id").value;
-			var year = document.getElementById("year").value;
-			var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id, year: year};
-			var strURL = phpGWLink('index.php', oArgs, true);
-			JqueryPortico.updateinlineTableHelper(oTable, strURL);
+		var survey_id = document.getElementById("survey_id").value;
+		var year = document.getElementById("year").value;
+		var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id, year: year};
+		var strURL = phpGWLink('index.php', oArgs, true);
+		JqueryPortico.updateinlineTableHelper(oTable, strURL);
 		}
 		
 	</script>

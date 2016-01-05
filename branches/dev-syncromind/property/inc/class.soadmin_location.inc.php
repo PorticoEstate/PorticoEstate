@@ -36,10 +36,10 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->join		 = & $this->db->join;
-			$this->like		 = & $this->db->like;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
+			$this->like = & $this->db->like;
 		}
 
 		function reset_fm_cache()
@@ -51,10 +51,10 @@
 		{
 			$data['order'] = ($data['order'] == 'location_id') ? 'id' : $data['order'];
 
-			$start	 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query	 = isset($data['query']) ? $data['query'] : '';
-			$sort	 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order	 = isset($data['order']) ? $data['order'] : '';
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
@@ -73,8 +73,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query	 = $this->db->db_addslashes($query);
-				$query	 = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -99,9 +99,9 @@
 			{
 				$standard[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('name'),
-					'descr'	 => $this->db->f('descr')
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('name'),
+					'descr' => $this->db->f('descr')
 				);
 			}
 			return $standard;
@@ -120,9 +120,9 @@
 
 			//	if(is_array($data))
 			{
-				$query	 = (isset($data['query']) ? $data['query'] : '');
-				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order	 = (isset($data['order']) ? $data['order'] : '');
+				$query = (isset($data['query']) ? $data['query'] : '');
+				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order = (isset($data['order']) ? $data['order'] : '');
 			}
 
 			if($order)
@@ -137,8 +137,8 @@
 			$querymethod = '';
 			if(isset($query))
 			{
-				$query	 = $this->db->db_addslashes($query);
-				$query	 = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where name $this->like '%$query%' or column_name $this->like '%$query%'";
 			}
@@ -154,16 +154,16 @@
 			{
 				$config[] = array
 					(
-					'column_name'		 => $this->db->f('column_name'),
-					'input_text'		 => $this->db->f('input_text'),
-					'f_key'				 => $this->db->f('f_key'),
-					'lookup_form'		 => $this->db->f('lookup_form'),
-					'ref_to_category'	 => $this->db->f('ref_to_category'),
-					'query_value'		 => $this->db->f('query_value'),
-					'reference_table'	 => $this->db->f('reference_table'),
-					'reference_id'		 => $this->db->f('reference_id'),
-					'location_name'		 => $this->db->f('name'),
-					'location_type'		 => $this->db->f('location_type')
+					'column_name' => $this->db->f('column_name'),
+					'input_text' => $this->db->f('input_text'),
+					'f_key' => $this->db->f('f_key'),
+					'lookup_form' => $this->db->f('lookup_form'),
+					'ref_to_category' => $this->db->f('ref_to_category'),
+					'query_value' => $this->db->f('query_value'),
+					'reference_table' => $this->db->f('reference_table'),
+					'reference_id' => $this->db->f('reference_id'),
+					'location_name' => $this->db->f('name'),
+					'location_type' => $this->db->f('location_type')
 				);
 			}
 			return $config;
@@ -179,8 +179,8 @@
 		function read_single($id)
 		{
 
-			$id		 = (int)$id;
-			$table	 = 'fm_location_type';
+			$id = (int)$id;
+			$table = 'fm_location_type';
 
 			$sql = "SELECT * FROM $table  where id={$id}";
 
@@ -191,11 +191,11 @@
 			{
 				$standard = array
 					(
-					'id'			 => $this->db->f('id'),
-					'name'			 => $this->db->f('name'),
-					'descr'			 => $this->db->f('descr'),
-					'list_info'		 => $this->db->f('list_info', true),
-					'list_address'	 => $this->db->f('list_address'),
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('name'),
+					'descr' => $this->db->f('descr'),
+					'list_info' => $this->db->f('list_info', true),
+					'list_address' => $this->db->f('list_address'),
 					'list_documents' => $this->db->f('list_documents')
 				);
 			}
@@ -205,8 +205,8 @@
 		function add($standard)
 		{
 
-			$standard['name']	 = $this->db->db_addslashes($standard['name']);
-			$standard['descr']	 = $this->db->db_addslashes($standard['descr']);
+			$standard['name'] = $this->db->db_addslashes($standard['name']);
+			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
 
 			$standard['id'] = $this->db->next_id('fm_location_type');
 
@@ -214,130 +214,130 @@
 
 			$this->init_process();
 
-			$j								 = 1;
-			$default_attrib['id'][]			 = $j;
+			$j = 1;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'location_code';
-			$default_attrib['type'][]		 = 'V';
-			$default_attrib['precision'][]	 = 4 * $standard['id'];
-			$default_attrib['nullable'][]	 = 'false';
-			$default_attrib['input_text'][]	 = 'location_code';
-			$default_attrib['statustext'][]	 = 'location_code';
+			$default_attrib['type'][] = 'V';
+			$default_attrib['precision'][] = 4 * $standard['id'];
+			$default_attrib['nullable'][] = 'false';
+			$default_attrib['input_text'][] = 'location_code';
+			$default_attrib['statustext'][] = 'location_code';
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = "loc{$standard['id']}_name";
-			$default_attrib['type'][]		 = 'V';
-			$default_attrib['precision'][]	 = 50;
-			$default_attrib['nullable'][]	 = 'true';
-			$default_attrib['input_text'][]	 = "loc{$standard['id']}_name";
-			$default_attrib['statustext'][]	 = "loc{$standard['id']}_name";
+			$default_attrib['type'][] = 'V';
+			$default_attrib['precision'][] = 50;
+			$default_attrib['nullable'][] = 'true';
+			$default_attrib['input_text'][] = "loc{$standard['id']}_name";
+			$default_attrib['statustext'][] = "loc{$standard['id']}_name";
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'entry_date';
-			$default_attrib['type'][]		 = 'I';
-			$default_attrib['precision'][]	 = 4;
-			$default_attrib['nullable'][]	 = 'true';
-			$default_attrib['input_text'][]	 = 'entry_date';
-			$default_attrib['statustext'][]	 = 'entry_date';
+			$default_attrib['type'][] = 'I';
+			$default_attrib['precision'][] = 4;
+			$default_attrib['nullable'][] = 'true';
+			$default_attrib['input_text'][] = 'entry_date';
+			$default_attrib['statustext'][] = 'entry_date';
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'category';
-			$default_attrib['type'][]		 = 'I';
-			$default_attrib['precision'][]	 = 4;
-			$default_attrib['nullable'][]	 = 'false';
-			$default_attrib['input_text'][]	 = 'category';
-			$default_attrib['statustext'][]	 = 'category';
+			$default_attrib['type'][] = 'I';
+			$default_attrib['precision'][] = 4;
+			$default_attrib['nullable'][] = 'false';
+			$default_attrib['input_text'][] = 'category';
+			$default_attrib['statustext'][] = 'category';
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'user_id';
-			$default_attrib['type'][]		 = 'I';
-			$default_attrib['precision'][]	 = 4;
-			$default_attrib['nullable'][]	 = 'false';
-			$default_attrib['input_text'][]	 = 'user_id';
-			$default_attrib['statustext'][]	 = 'user_id';
+			$default_attrib['type'][] = 'I';
+			$default_attrib['precision'][] = 4;
+			$default_attrib['nullable'][] = 'false';
+			$default_attrib['input_text'][] = 'user_id';
+			$default_attrib['statustext'][] = 'user_id';
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$status_id						 = $j;
-			$default_attrib['id'][]			 = $j;
+			$status_id = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'status';
-			$default_attrib['type'][]		 = 'LB';
-			$default_attrib['precision'][]	 = false;
-			$default_attrib['nullable'][]	 = 'true';
-			$default_attrib['input_text'][]	 = 'Status';
-			$default_attrib['statustext'][]	 = 'Status';
+			$default_attrib['type'][] = 'LB';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] = 'true';
+			$default_attrib['input_text'][] = 'Status';
+			$default_attrib['statustext'][] = 'Status';
 			$default_attrib['attrib_sort'][] = 1;
-			$default_attrib['custom'][]		 = 1;
+			$default_attrib['custom'][] = 1;
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'remark';
-			$default_attrib['type'][]		 = 'T';
-			$default_attrib['precision'][]	 = false;
-			$default_attrib['nullable'][]	 = 'True';
-			$default_attrib['input_text'][]	 = 'Remark';
-			$default_attrib['statustext'][]	 = 'Remark';
+			$default_attrib['type'][] = 'T';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] = 'True';
+			$default_attrib['input_text'][] = 'Remark';
+			$default_attrib['statustext'][] = 'Remark';
 			$default_attrib['attrib_sort'][] = 2;
-			$default_attrib['custom'][]		 = 1;
+			$default_attrib['custom'][] = 1;
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'change_type';
-			$default_attrib['type'][]		 = 'I';
-			$default_attrib['precision'][]	 = 4;
-			$default_attrib['nullable'][]	 = 'true';
-			$default_attrib['input_text'][]	 = 'change_type';
-			$default_attrib['statustext'][]	 = 'change_type';
+			$default_attrib['type'][] = 'I';
+			$default_attrib['precision'][] = 4;
+			$default_attrib['nullable'][] = 'true';
+			$default_attrib['input_text'][] = 'change_type';
+			$default_attrib['statustext'][] = 'change_type';
 			$default_attrib['attrib_sort'][] = '';
-			$default_attrib['custom'][]		 = '';
+			$default_attrib['custom'][] = '';
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'area_gross';
-			$default_attrib['type'][]		 = 'N';
-			$default_attrib['precision'][]	 = false;
-			$default_attrib['nullable'][]	 = 'True';
-			$default_attrib['input_text'][]	 = 'gross area';
-			$default_attrib['statustext'][]	 = 'Sum of the areas included within the outside face of the exterior walls of a building.';
+			$default_attrib['type'][] = 'N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] = 'True';
+			$default_attrib['input_text'][] = 'gross area';
+			$default_attrib['statustext'][] = 'Sum of the areas included within the outside face of the exterior walls of a building.';
 			$default_attrib['attrib_sort'][] = 3;
-			$default_attrib['custom'][]		 = 1;
+			$default_attrib['custom'][] = 1;
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'area_net';
-			$default_attrib['type'][]		 = 'N';
-			$default_attrib['precision'][]	 = false;
-			$default_attrib['nullable'][]	 = 'True';
-			$default_attrib['input_text'][]	 = 'Net area';
-			$default_attrib['statustext'][]	 = 'The wall-to-wall floor area of a room.';
+			$default_attrib['type'][] = 'N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] = 'True';
+			$default_attrib['input_text'][] = 'Net area';
+			$default_attrib['statustext'][] = 'The wall-to-wall floor area of a room.';
 			$default_attrib['attrib_sort'][] = 4;
-			$default_attrib['custom'][]		 = 1;
+			$default_attrib['custom'][] = 1;
 
 			$j++;
-			$default_attrib['id'][]			 = $j;
+			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'area_usable';
-			$default_attrib['type'][]		 = 'N';
-			$default_attrib['precision'][]	 = false;
-			$default_attrib['nullable'][]	 = 'True';
-			$default_attrib['input_text'][]	 = 'Usable area';
-			$default_attrib['statustext'][]	 = 'Generally measured from "paint to paint" inside the permanent walls and to the middle of partitions separating rooms.';
+			$default_attrib['type'][] = 'N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] = 'True';
+			$default_attrib['input_text'][] = 'Usable area';
+			$default_attrib['statustext'][] = 'Generally measured from "paint to paint" inside the permanent walls and to the middle of partitions separating rooms.';
 			$default_attrib['attrib_sort'][] = 5;
-			$default_attrib['custom'][]		 = 1;
+			$default_attrib['custom'][] = 1;
 
 
-			$fd					 = array();
+			$fd = array();
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => false);
 
 			for($i = 1; $i < $standard['id'] + 1; $i++)
@@ -353,15 +353,15 @@
 
 				$pk[$i - 1] = 'loc' . $i;
 
-				$default_attrib['id'][]			 = $i + $j;
+				$default_attrib['id'][] = $i + $j;
 				$default_attrib['column_name'][] = "loc{$i}";
-				$default_attrib['type'][]		 = 'V';
-				$default_attrib['precision'][]	 = 4;
-				$default_attrib['nullable'][]	 = 'false';
-				$default_attrib['input_text'][]	 = "loc{$i}";
-				$default_attrib['statustext'][]	 = "loc{$i}";
+				$default_attrib['type'][] = 'V';
+				$default_attrib['precision'][] = 4;
+				$default_attrib['nullable'][] = 'false';
+				$default_attrib['input_text'][] = "loc{$i}";
+				$default_attrib['statustext'][] = "loc{$i}";
 				$default_attrib['attrib_sort'][] = '';
-				$default_attrib['custom'][]		 = '';
+				$default_attrib['custom'][] = '';
 			}
 
 			$fk_table = 'fm_location' . ($standard['id'] - 1);
@@ -376,28 +376,28 @@
 				$fd['part_of_town_id'] = array('type' => 'int', 'precision' => 2, 'nullable' => true);
 			}
 
-			$fd['loc' . $standard['id'] . '_name']	 = array('type' => 'varchar', 'precision' => 50,
+			$fd['loc' . $standard['id'] . '_name'] = array('type' => 'varchar', 'precision' => 50,
 				'nullable' => true);
-			$fd['entry_date']						 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['category']							 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['user_id']							 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['remark']							 = array('type' => 'text', 'nullable' => true);
-			$fd['status']							 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['change_type']						 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['area_gross']						 = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
+			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['category'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['remark'] = array('type' => 'text', 'nullable' => true);
+			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['change_type'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['area_gross'] = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 				'nullable' => True, 'default' => '0.00');
-			$fd['area_net']							 = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
+			$fd['area_net'] = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 				'nullable' => True, 'default' => '0.00');
-			$fd['area_usable']						 = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
+			$fd['area_usable'] = array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 				'nullable' => True, 'default' => '0.00');
-			$fd['modified_by']						 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['modified_on']						 = array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp');
+			$fd['modified_by'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['modified_on'] = array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp');
 
-			$ix	 = array('location_code');
-			$uc	 = array();
+			$ix = array('location_code');
+			$uc = array();
 
-			$fd_history				 = $fd;
-			$fd_history['exp_date']	 = array('type' => 'timestamp', 'nullable' => true, 'default' => 'current_timestamp');
+			$fd_history = $fd;
+			$fd_history['exp_date'] = array('type' => 'timestamp', 'nullable' => true, 'default' => 'current_timestamp');
 
 			$add_columns_in_tables = $this->get_tables_to_alter();
 
@@ -410,8 +410,8 @@
 
 				$this->oProc->CreateTable('fm_location' . $standard['id'] . '_category', array(
 					'fd' => array(
-						'id'	 => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-						'descr'	 => array('type' => 'varchar', 'precision' => '50', 'nullable' => true)
+						'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true)
 					),
 					'pk' => array('id'),
 					'fk' => array(),
@@ -505,7 +505,7 @@
 				'fm_condition_survey'
 			);
 
-			$entity		 = CreateObject('property.soadmin_entity');
+			$entity = CreateObject('property.soadmin_entity');
 			$entity_list = $entity->read(array('allrows' => true));
 			foreach($entity_list as $entry)
 			{
@@ -524,10 +524,10 @@
 			$table = 'fm_location_type';
 
 			$value_set = array(
-				'name'			 => $this->db->db_addslashes($values['name']),
-				'descr'			 => $this->db->db_addslashes($values['descr']),
-				'list_info'		 => (isset($values['list_info']) ? serialize($values['list_info']) : ''),
-				'list_address'	 => (isset($values['list_address']) ? $values['list_address'] : ''),
+				'name' => $this->db->db_addslashes($values['name']),
+				'descr' => $this->db->db_addslashes($values['descr']),
+				'list_info' => (isset($values['list_info']) ? serialize($values['list_info']) : ''),
+				'list_address' => (isset($values['list_address']) ? $values['list_address'] : ''),
 				'list_documents' => (isset($values['list_documents']) ? $values['list_documents'] : ''),
 			);
 
@@ -535,8 +535,8 @@
 
 			$this->db->query("UPDATE $table SET $value_set WHERE id='" . $values['id'] . "'", __LINE__, __FILE__);
 
-			$receipt['id']			 = $values['id'];
-			$receipt['message'][]	 = array('msg' => lang('Standard has been edited'));
+			$receipt['id'] = $values['id'];
+			$receipt['message'][] = array('msg' => lang('Standard has been edited'));
 
 			return $receipt;
 		}
@@ -568,9 +568,9 @@
 				$this->oProc->DropColumn($entry, array(), "loc{$id}");
 			}
 
-			$attrib_table	 = 'phpgw_cust_attribute';
-			$choice_table	 = 'phpgw_cust_choice';
-			$location_id	 = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$id}");
+			$attrib_table = 'phpgw_cust_attribute';
+			$choice_table = 'phpgw_cust_choice';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$id}");
 
 			$this->db->query("DELETE FROM {$attrib_table} WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM {$choice_table} WHERE location_id = {$location_id}", __LINE__, __FILE__);
@@ -589,9 +589,9 @@
 
 		function init_process()
 		{
-			$this->oProc						 = CreateObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb					 = & $this->db;
-			$this->oProc->m_odb->Halt_On_Error	 = 'yes';
+			$this->oProc = CreateObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
+			$this->oProc->m_odb = & $this->db;
+			$this->oProc->m_odb->Halt_On_Error = 'yes';
 		}
 
 		function save_config($values = '', $column_name = '')
@@ -599,17 +599,17 @@
 			$this->db->query("SELECT * FROM fm_location_config  WHERE column_name='$column_name' ", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$column_info['type']		 = $this->db->f('datatype');
-			$column_info['precision']	 = $this->db->f('precision_');
-			$column_info['scale']		 = $this->db->f('scale');
-			$column_info['default']		 = $this->db->f('default_value');
-			$column_info['nullable']	 = $this->db->f('nullable');
-			$location_type				 = $this->db->f('location_type');
-			$location_id				 = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
+			$column_info['type'] = $this->db->f('datatype');
+			$column_info['precision'] = $this->db->f('precision_');
+			$column_info['scale'] = $this->db->f('scale');
+			$column_info['default'] = $this->db->f('default_value');
+			$column_info['nullable'] = $this->db->f('nullable');
+			$location_type = $this->db->f('location_type');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 
-			$custom				 = createObject('property.custom_fields');
-			$table_def			 = $custom->get_table_def('fm_location' . $location_type);
-			$history_table_def	 = $custom->get_table_def('fm_location' . $location_type . '_history');
+			$custom = createObject('property.custom_fields');
+			$table_def = $custom->get_table_def('fm_location' . $location_type);
+			$history_table_def = $custom->get_table_def('fm_location' . $location_type . '_history');
 			//_debug_array($table_def);
 			//_debug_array($history_table_def);
 			if(!($location_type == $values[$column_name]))
@@ -620,8 +620,7 @@
 
 				//			$this->oProc->m_odb->transaction_begin();
 				$this->db->transaction_begin();
-				if($this->oProc->AddColumn('fm_location' . $values[$column_name], $column_name, $column_info) &&
-				$this->oProc->AddColumn('fm_location' . $values[$column_name] . '_history', $column_name, $column_info))
+				if($this->oProc->AddColumn('fm_location' . $values[$column_name], $column_name, $column_info) && $this->oProc->AddColumn('fm_location' . $values[$column_name] . '_history', $column_name, $column_info))
 				{
 					if($column_name == 'street_id')
 					{
@@ -693,11 +692,11 @@
 			while($this->db->next_record())
 			{
 				$location_type[] = array(
-					'id'			 => $this->db->f('id'),
-					'name'			 => stripslashes($this->db->f('name')),
-					'descr'			 => stripslashes($this->db->f('descr')),
-					'list_info'		 => unserialize($this->db->f('list_info')),
-					'list_address'	 => $this->db->f('list_address'),
+					'id' => $this->db->f('id'),
+					'name' => stripslashes($this->db->f('name')),
+					'descr' => stripslashes($this->db->f('descr')),
+					'list_info' => unserialize($this->db->f('list_info')),
+					'list_address' => $this->db->f('list_address'),
 					'list_documents' => $this->db->f('list_documents')
 				);
 			}

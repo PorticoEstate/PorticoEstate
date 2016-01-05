@@ -36,19 +36,19 @@
 
 		var $type;
 		var $type_id;
-		var $location_info	 = array();
-		var $tree			 = array();
+		var $location_info = array();
+		var $tree = array();
 		protected $table;
-		var $appname			 = 'property';
+		var $appname = 'property';
 
 		function __construct($type = '', $type_id = 0)
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->custom	 = createObject('property.custom_fields');
-			$this->_db		 = & $GLOBALS['phpgw']->db;
-			$this->_db2		 = clone($this->_db);
-			$this->_like	 = & $this->_db->like;
-			$this->_join	 = & $this->_db->join;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->custom = createObject('property.custom_fields');
+			$this->_db = & $GLOBALS['phpgw']->db;
+			$this->_db2 = clone($this->_db);
+			$this->_like = & $this->_db->like;
+			$this->_join = & $this->_db->join;
 
 			if($type)
 			{
@@ -58,24 +58,24 @@
 
 		function read($data)
 		{
-			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query			 = isset($data['query']) ? $data['query'] : '';
-			$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			 = isset($data['order']) ? $data['order'] : '';
-			$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
+			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
-			$filter			 = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
-			$results		 = isset($data['results']) ? (int)$data['results'] : 0;
+			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
-			$values	 = array();
-			if(!isset($this->location_info['table']) || !$table	 = $this->location_info['table'])
+			$values = array();
+			if(!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
 			}
 
 
-			$_join_method	 = array();
-			$_filter_array	 = array();
+			$_join_method = array();
+			$_filter_array = array();
 			if($custom_criteria)
 			{
 				foreach($custom_criteria as $_custom_criteria)
@@ -140,32 +140,32 @@
 				}
 			}
 
-			$uicols					 = array();
-			$uicols['input_type'][]	 = 'text';
-			$uicols['name'][]		 = $this->location_info['id']['name'];
-			$uicols['descr'][]		 = lang('id');
-			$uicols['datatype'][]	 = $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
-			$uicols['sortable'][]	 = true;
-			$uicols['formatter'][]	 = '';
+			$uicols = array();
+			$uicols['input_type'][] = 'text';
+			$uicols['name'][] = $this->location_info['id']['name'];
+			$uicols['descr'][] = lang('id');
+			$uicols['datatype'][] = $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
+			$uicols['sortable'][] = true;
+			$uicols['formatter'][] = '';
 
 			foreach($this->location_info['fields'] as $field)
 			{
-				$uicols['input_type'][]	 = isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
-				$uicols['name'][]		 = $field['name'];
-				$uicols['descr'][]		 = $field['descr'];
-				$uicols['datatype'][]	 = $field['type'];
-				$uicols['sortable'][]	 = isset($field['sortable']) && $field['sortable'] ? true : false;
-				$uicols['formatter'][]	 = $field['type'] == 'int' ? 'FormatterRight' : '';
+				$uicols['input_type'][] = isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
+				$uicols['name'][] = $field['name'];
+				$uicols['descr'][] = $field['descr'];
+				$uicols['datatype'][] = $field['type'];
+				$uicols['sortable'][] = isset($field['sortable']) && $field['sortable'] ? true : false;
+				$uicols['formatter'][] = $field['type'] == 'int' ? 'FormatterRight' : '';
 			}
 
 			$custom_fields = false;
 			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
-				$custom_fields		 = true;
-				$choice_table		 = 'phpgw_cust_choice';
-				$attribute_table	 = 'phpgw_cust_attribute';
-				$location_id		 = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
-				$attribute_filter	 = " location_id = {$location_id}";
+				$custom_fields = true;
+				$choice_table = 'phpgw_cust_choice';
+				$attribute_table = 'phpgw_cust_attribute';
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
+				$attribute_filter = " location_id = {$location_id}";
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"] : '';
 
@@ -180,29 +180,29 @@
 				$i = count($uicols['name']);
 				while($this->_db->next_record())
 				{
-					$uicols['input_type'][]	 = 'text';
-					$uicols['name'][]		 = $this->_db->f('column_name');
-					$uicols['descr'][]		 = $this->_db->f('input_text');
-					$uicols['statustext'][]	 = $this->_db->f('statustext');
-					$uicols['datatype'][$i]	 = $this->_db->f('datatype');
-					$uicols['attib_id'][$i]	 = $this->_db->f('id');
+					$uicols['input_type'][] = 'text';
+					$uicols['name'][] = $this->_db->f('column_name');
+					$uicols['descr'][] = $this->_db->f('input_text');
+					$uicols['statustext'][] = $this->_db->f('statustext');
+					$uicols['datatype'][$i] = $this->_db->f('datatype');
+					$uicols['attib_id'][$i] = $this->_db->f('id');
 					$uicols['formatter'][$i] = $this->_db->f('datatype') == 'I' ? 'FormatterRight' : '';
-					$cols_return_extra[]	 = array(
-						'name'		 => $this->_db->f('column_name'),
-						'datatype'	 => $this->_db->f('datatype'),
-						'attrib_id'	 => $this->_db->f('id')
+					$cols_return_extra[] = array(
+						'name' => $this->_db->f('column_name'),
+						'datatype' => $this->_db->f('datatype'),
+						'attrib_id' => $this->_db->f('id')
 					);
 
 					$i++;
 				}
 			}
 
-			$where			 = 'WHERE';
-			$filtermethod	 = '';
+			$where = 'WHERE';
+			$filtermethod = '';
 			if(isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
 			{
-				$filtermethod	 = "{$where} user_id = {$this->account} OR public = 1";
-				$where			 = 'AND';
+				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
+				$where = 'AND';
 			}
 
 			if(isset($this->location_info['filter']) && $this->location_info['filter'] && is_array($this->location_info['filter']))
@@ -212,13 +212,13 @@
 				{
 					if(preg_match('/^##/', $_argument_value))
 					{
-						$_argument_value_name	 = trim($_argument_value, '#');
-						$_argument_value		 = $values[$_argument_value_name];
+						$_argument_value_name = trim($_argument_value, '#');
+						$_argument_value = $values[$_argument_value_name];
 					}
 					if(preg_match('/^\$this->/', $_argument_value))
 					{
-						$_argument_value_name	 = ltrim($_argument_value, '$this->');
-						$_argument_value		 = $this->$_argument_value_name;
+						$_argument_value_name = ltrim($_argument_value, '$this->');
+						$_argument_value = $this->$_argument_value_name;
 					}
 
 					$_filtermethod[] = "{$_argument} = '{$_argument_value}'";
@@ -227,8 +227,8 @@
 
 				if($_filtermethod)
 				{
-					$filtermethod	 = "{$where} " . implode(' AND ', $_filtermethod);
-					$where			 = 'AND';
+					$filtermethod = "{$where} " . implode(' AND ', $_filtermethod);
+					$where = 'AND';
 				}
 			}
 
@@ -260,15 +260,15 @@
 					$id_query = "'{$query}'";
 				}
 
-				$_query_start	 = '';
-				$_query_end		 = '';
+				$_query_start = '';
+				$_query_end = '';
 
 				if($filtermethod)
 				{
-					$_query_start	 = '(';
-					$_query_end		 = ')';
+					$_query_start = '(';
+					$_query_end = ')';
 				}
-				$query		 = $this->_db->db_addslashes($query);
+				$query = $this->_db->db_addslashes($query);
 				$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
 				//_debug_array($filtermethod);
 				//_debug_array($where);die();
@@ -335,7 +335,7 @@
 			}
 
 			$cols_return = $uicols['name'];
-			$j			 = 0;
+			$j = 0;
 
 			$dataset = array();
 			while($this->_db->next_record())
@@ -344,9 +344,9 @@
 				{
 					$dataset[$j][$field] = array
 						(
-						'value'		 => $this->_db->f($field, true),
-						'datatype'	 => $uicols['datatype'][$key],
-						'attrib_id'	 => $uicols['attib_id'][$key]
+						'value' => $this->_db->f($field, true),
+						'datatype' => $uicols['datatype'][$key],
+						'attrib_id' => $uicols['attib_id'][$key]
 					);
 				}
 				$j++;
@@ -385,10 +385,10 @@
 
 		function get_location_info($type, $type_id)
 		{
-			$type_id		 = (int)$type_id;
-			$this->type		 = $type;
-			$this->type_id	 = $type_id;
-			$info			 = array();
+			$type_id = (int)$type_id;
+			$this->type = $type;
+			$this->type_id = $type_id;
+			$info = array();
 
 			if(!$type)
 			{
@@ -401,38 +401,38 @@
 				case 'part_of_town':
 					$info = array
 						(
-						'table'			 => 'fm_part_of_town',
-						'id'			 => array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
-						'fields'		 => array
+						'table' => 'fm_part_of_town',
+						'id' => array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'name',
-								'descr'		 => lang('name'),
-								'type'		 => 'varchar',
-								'nullable'	 => false,
-								'size'		 => 20
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'size' => 20
 							),
 							array
 								(
-								'name'		 => 'district_id',
-								'descr'		 => lang('district'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
+								'name' => 'district_id',
+								'descr' => lang('district'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'district', 'selected' => '##district_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'district', 'selected' => '##district_id##')
 								)
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('part of town'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('part of town'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::town',
 						/*
 						  'default'			=> array
@@ -442,226 +442,226 @@
 						  'modified_date'	=> array('edit'	=> 'time()'),
 						  ),
 						 */
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 
 					break;
 
 				case 'project_group':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_project_group',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_project_group',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'budget',
-								'descr'	 => lang('budget'),
-								'type'	 => 'int'
+								'name' => 'budget',
+								'descr' => lang('budget'),
+								'type' => 'int'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::project_group'
 					);
 					break;
 				case 'dimb':
-					$info	 = array
+					$info = array
 						(
-						'table'				 => 'fm_ecodimb',
-						'id'				 => array('name' => 'id', 'type' => 'int'),
-						'fields'			 => array
+						'table' => 'fm_ecodimb',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'org_unit_id',
-								'descr'		 => lang('department'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'org_unit_id',
+								'descr' => lang('department'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'org_unit', 'selected' => '##org_unit_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'org_unit', 'selected' => '##org_unit_id##')
 								)
 							)
 						),
-						'custom_criteria'	 => array
+						'custom_criteria' => array
 							(
 							'dimb_role_user' => array
 								(
-								'join'	 => array("{$this->_db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"),
+								'join' => array("{$this->_db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"),
 								'filter' => array('fm_ecodimb_role_user.user_id = ' . (int)$this->account)
 							)
 						),
-						'edit_msg'			 => lang('edit'),
-						'add_msg'			 => lang('add'),
-						'name'				 => lang('dimb'),
-						'acl_app'			 => 'property',
-						'acl_location'		 => '.admin',
-						'menu_selection'	 => 'admin::property::accounting::accounting_dimb'
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('dimb'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::accounting_dimb'
 					);
 					break;
 				case 'dimd':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ecodimd',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_ecodimd',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('dimd'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('dimd'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_dimd'
 					);
 					break;
 				case 'periodization':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_eco_periodization',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_eco_periodization',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'active',
-								'descr'		 => lang('active'),
-								'type'		 => 'checkbox',
-								'default'	 => 'checked'
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('periodization'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('periodization'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::periodization'
 					);
 					break;
 				case 'tax':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ecomva',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_ecomva',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'percent',
-								'descr'	 => lang('percent'),
-								'type'	 => 'int'
+								'name' => 'percent',
+								'descr' => lang('percent'),
+								'type' => 'int'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_tax'
 					);
 					break;
 				case 'voucher_cat':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ecobilag_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_ecobilag_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_cats'
 					);
 					break;
 				case 'voucher_type':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ecoart',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_ecoart',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_type'
 					);
 					break;
 				case 'tender_chapter':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_chapter',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_chapter',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tender'
 					);
 					break;
@@ -673,22 +673,22 @@
 					{
 						$info = array
 							(
-							'table'			 => "fm_location{$type_id}_category",
-							'id'			 => array('name' => 'id', 'type' => 'varchar'),
-							'fields'		 => array
+							'table' => "fm_location{$type_id}_category",
+							'id' => array('name' => 'id', 'type' => 'varchar'),
+							'fields' => array
 								(
 								array
 									(
-									'name'	 => 'descr',
-									'descr'	 => lang('descr'),
-									'type'	 => 'varchar'
+									'name' => 'descr',
+									'descr' => lang('descr'),
+									'type' => 'varchar'
 								)
 							),
-							'edit_msg'		 => lang('edit'),
-							'add_msg'		 => lang('add'),
-							'name'			 => '',
-							'acl_app'		 => 'property',
-							'acl_location'	 => '.admin',
+							'edit_msg' => lang('edit'),
+							'add_msg' => lang('add'),
+							'name' => '',
+							'acl_app' => 'property',
+							'acl_location' => '.admin',
 							'menu_selection' => "admin::property::location::location::category_{$type_id}"
 						);
 					}
@@ -698,408 +698,408 @@
 					}
 					break;
 				case 'owner_cats':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_owner_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_owner_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
 					break;
 				case 'tenant_cats':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_tenant_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_tenant_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('tenant category'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('tenant category'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
 					break;
 				case 'vendor_cats':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_vendor_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_vendor_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('vendor category'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('vendor category'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::vendor::vendor_cats'
 					);
 					break;
 				case 'vendor':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_vendor',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_vendor',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'contact_phone',
-								'descr'	 => lang('contact phone'),
-								'type'	 => 'varchar'
+								'name' => 'contact_phone',
+								'descr' => lang('contact phone'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'category',
-								'descr'		 => lang('category'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'category',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'vendor_cats', 'selected' => '##category##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'vendor_cats', 'selected' => '##category##')
 								)
 							),
 							array
 								(
 								//FIXME
-								'name'		 => 'member_of',
-								'descr'		 => lang('member'),
-								'type'		 => 'multiple_select',
-								'nullable'	 => true,
-								'filter'	 => true,
-								'sortable'	 => false,
-								'hidden'	 => true,
+								'name' => 'member_of',
+								'descr' => lang('member'),
+								'type' => 'multiple_select',
+								'nullable' => true,
+								'filter' => true,
+								'sortable' => false,
+								'hidden' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bocommon.get_categories',
-									'method_input'	 => array('app' => 'property', 'acl_location' => '.vendor',
+									'valueset' => false,
+									'method' => 'property.bocommon.get_categories',
+									'method_input' => array('app' => 'property', 'acl_location' => '.vendor',
 										'selected' => '##member_of##')
 								)
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('vendor'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.vendor',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('vendor'),
+						'acl_app' => 'property',
+						'acl_location' => '.vendor',
 						'menu_selection' => 'property::invoice::vendor',
-						'default'		 => array
+						'default' => array
 							(
-							'owner_id'	 => array('add' => '$this->account'),
+							'owner_id' => array('add' => '$this->account'),
 							'entry_date' => array('add' => 'time()'),
 						//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 					);
 					break;
 				case 'owner':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_owner',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_owner',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'remark',
-								'descr'	 => lang('remark'),
-								'type'	 => 'text'
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'		 => 'category',
-								'descr'		 => lang('category'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'category',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'owner_cats', 'selected' => '##category##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'owner_cats', 'selected' => '##category##')
 								)
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('owner'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.owner',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('owner'),
+						'acl_app' => 'property',
+						'acl_location' => '.owner',
 						'menu_selection' => 'admin::property::owner',
-						'default'		 => array
+						'default' => array
 							(
-							'owner_id'	 => array('add' => '$this->account'),
+							'owner_id' => array('add' => '$this->account'),
 							'entry_date' => array('add' => 'time()'),
 						//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 					);
 					break;
 				case 'tenant':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_tenant',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_tenant',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'contact_email',
-								'descr'		 => lang('contact_email'),
-								'type'		 => 'varchar',
-								'sortable'	 => true,
+								'name' => 'contact_email',
+								'descr' => lang('contact_email'),
+								'type' => 'varchar',
+								'sortable' => true,
 							),
 							array
 								(
-								'name'		 => 'category',
-								'descr'		 => lang('category'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'category',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'tenant_cats', 'selected' => '##category##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'tenant_cats', 'selected' => '##category##')
 								)
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('tenant'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.tenant',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('tenant'),
+						'acl_app' => 'property',
+						'acl_location' => '.tenant',
 						'menu_selection' => 'admin::property::tenant',
-						'default'		 => array
+						'default' => array
 							(
-							'owner_id'	 => array('add' => '$this->account'),
+							'owner_id' => array('add' => '$this->account'),
 							'entry_date' => array('add' => 'time()'),
 						//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 					);
 					break;
 				case 'district':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_district',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_district',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('district'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('district'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::district'
 					);
 					break;
 				case 'street':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_streetaddress',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_streetaddress',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('streetaddress'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('streetaddress'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::street'
 					);
 					break;
 				case 's_agreement':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_s_agreement_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_s_agreement_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::agreement::service_agree_cats'
 					);
 					break;
 				case 'tenant_claim':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_tenant_claim_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_tenant_claim_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::claims_cats'
 					);
 					break;
 				case 'wo_hours':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_wo_hours_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_wo_hours_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => '',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => '',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::workorder_detail'
 					);
 					break;
 				case 'r_condition_type':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_request_condition_type',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_request_condition_type',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => 'condition type',
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => 'condition type',
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_condition'
 					);
 					break;
 				case 'authorities_demands':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_authorities_demands',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_authorities_demands',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('authorities demands'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('authorities demands'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::authorities_demands',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 					break;
 				case 'b_account':
 				case 'b_account_category':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_b_account_category',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_b_account_category',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'active',
-								'descr'		 => lang('active'),
-								'type'		 => 'checkbox',
-								'default'	 => 'checked',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
@@ -1107,291 +1107,291 @@
 							),
 							array
 								(
-								'name'	 => 'project_group',
-								'descr'	 => lang('mandatory project group'),
-								'type'	 => 'checkbox'
+								'name' => 'project_group',
+								'descr' => lang('mandatory project group'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('budget account group'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('budget account group'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
 					break;
 
 				case 'dimb_role':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ecodimb_role',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_ecodimb_role',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit role'),
-						'add_msg'		 => lang('add role'),
-						'name'			 => lang('dimb role'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit role'),
+						'add_msg' => lang('add role'),
+						'name' => lang('dimb role'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::dimb_role'
 					);
 					break;
 				case 'condition_survey_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_condition_survey_status',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_condition_survey_status',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'sorting',
-								'descr'		 => lang('sorting'),
-								'type'		 => 'integer',
-								'sortable'	 => true
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'in_progress',
-								'descr'	 => lang('In progress'),
-								'type'	 => 'checkbox'
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'delivered',
-								'descr'	 => lang('delivered'),
-								'type'	 => 'checkbox'
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('request status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('request status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::condition_survey_status'
 					);
 					break;
 
 				case 'request_responsible_unit':
-					$_lang_responsible_unit	 = lang('responsible unit');
-					$info					 = array
+					$_lang_responsible_unit = lang('responsible unit');
+					$info = array
 						(
-						'table'			 => 'fm_request_responsible_unit',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_request_responsible_unit',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit') . ' ' . $_lang_responsible_unit,
-						'add_msg'		 => lang('add') . ' ' . $_lang_responsible_unit,
-						'name'			 => $_lang_responsible_unit,
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit') . ' ' . $_lang_responsible_unit,
+						'add_msg' => lang('add') . ' ' . $_lang_responsible_unit,
+						'name' => $_lang_responsible_unit,
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_responsible_unit'
 					);
 					break;
 
 				case 'ticket_priority':
-					$_lang_priority	 = lang('priority');
-					$info			 = array
+					$_lang_priority = lang('priority');
+					$info = array
 						(
-						'table'			 => 'fm_tts_priority',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_tts_priority',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 						),
-						'edit_msg'		 => lang('edit') . ' ' . $_lang_priority,
-						'add_msg'		 => lang('add') . ' ' . $_lang_priority,
-						'name'			 => $_lang_priority,
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit') . ' ' . $_lang_priority,
+						'add_msg' => lang('add') . ' ' . $_lang_priority,
+						'name' => $_lang_priority,
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::ticket::ticket_priority'
 					);
 					break;
 
 				//-------- ID type varchar
 				case 'project_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_project_status',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_project_status',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'approved',
-								'descr'	 => lang('approved'),
-								'type'	 => 'checkbox'
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('project status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('project status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::project_status'
 					);
 					break;
 				case 'workorder_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_workorder_status',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_workorder_status',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'approved',
-								'descr'	 => lang('approved'),
-								'type'	 => 'checkbox'
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'in_progress',
-								'descr'	 => lang('In progress'),
-								'type'	 => 'checkbox'
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'delivered',
-								'descr'	 => lang('delivered'),
-								'type'	 => 'checkbox'
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('workorder status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('workorder status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::workorder_status'
 					);
 					break;
 				case 'request_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_request_status',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_request_status',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'sorting',
-								'descr'		 => lang('sorting'),
-								'type'		 => 'integer',
-								'sortable'	 => true
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'in_progress',
-								'descr'	 => lang('In progress'),
-								'type'	 => 'checkbox'
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'delivered',
-								'descr'	 => lang('delivered'),
-								'type'	 => 'checkbox'
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('request status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('request status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_status'
 					);
 					break;
 				case 'agreement_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_agreement_status',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_agreement_status',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('agreement status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('agreement status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::agreement::agreement_status'
 					);
 					break;
@@ -1402,25 +1402,25 @@
 
 					$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
 
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_building_part',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_building_part',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'filter_1',
-								'descr'		 => isset($filter_buildingpart[1]) && $filter_buildingpart[1] ? $filter_buildingpart[1] : 'Filter 1',
-								'type'		 => 'checkbox',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'filter_1',
+								'descr' => isset($filter_buildingpart[1]) && $filter_buildingpart[1] ? $filter_buildingpart[1] : 'Filter 1',
+								'type' => 'checkbox',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
@@ -1428,11 +1428,11 @@
 							),
 							array
 								(
-								'name'		 => 'filter_2',
-								'descr'		 => isset($filter_buildingpart[2]) && $filter_buildingpart[2] ? $filter_buildingpart[2] : 'Filter 2',
-								'type'		 => 'checkbox',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'filter_2',
+								'descr' => isset($filter_buildingpart[2]) && $filter_buildingpart[2] ? $filter_buildingpart[2] : 'Filter 2',
+								'type' => 'checkbox',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
@@ -1440,11 +1440,11 @@
 							),
 							array
 								(
-								'name'		 => 'filter_3',
-								'descr'		 => isset($filter_buildingpart[3]) && $filter_buildingpart[3] ? $filter_buildingpart[3] : 'Filter 3',
-								'type'		 => 'checkbox',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'filter_3',
+								'descr' => isset($filter_buildingpart[3]) && $filter_buildingpart[3] ? $filter_buildingpart[3] : 'Filter 3',
+								'type' => 'checkbox',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
@@ -1452,258 +1452,258 @@
 							),
 							array
 								(
-								'name'		 => 'filter_4',
-								'descr'		 => isset($filter_buildingpart[4]) && $filter_buildingpart[4] ? $filter_buildingpart[4] : 'Filter 4',
-								'type'		 => 'checkbox',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'filter_4',
+								'descr' => isset($filter_buildingpart[4]) && $filter_buildingpart[4] ? $filter_buildingpart[4] : 'Filter 4',
+								'type' => 'checkbox',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
 								)
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('building part'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('building part'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::building_part'
 					);
 					break;
 				case 'document_status':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_document_status',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_document_status',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit status'),
-						'add_msg'		 => lang('add status'),
-						'name'			 => lang('document status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit status'),
+						'add_msg' => lang('add status'),
+						'name' => lang('document status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::document_status'
 					);
 					break;
 				case 'ns3420':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_ns3420',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_ns3420',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'parent_id',
-								'descr'		 => lang('parent'),
-								'type'		 => 'select',
-								'sortable'	 => true,
-								'nullable'	 => true,
-								'filter'	 => false,
-								'role'		 => 'parent',
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type'		 => 'ns3420', 'role'		 => 'parent', 'selected'	 => '##parent_id##',
-										'id_in_name' => 'num', 'mapping'	 => array('name' => 'tekst1')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'ns3420', 'role' => 'parent', 'selected' => '##parent_id##',
+										'id_in_name' => 'num', 'mapping' => array('name' => 'tekst1')
 									)
 								)
 							),
 							array
 								(
-								'name'		 => 'num',
-								'descr'		 => lang('num'),
-								'type'		 => 'varchar',
-								'nullable'	 => false,
-								'sortable'	 => true
+								'name' => 'num',
+								'descr' => lang('num'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'tekst1',
-								'descr'	 => 'tekst1',
-								'type'	 => 'varchar'
+								'name' => 'tekst1',
+								'descr' => 'tekst1',
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'tekst2',
-								'descr'	 => 'tekst2',
-								'type'	 => 'varchar'
+								'name' => 'tekst2',
+								'descr' => 'tekst2',
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'tekst3',
-								'descr'	 => 'tekst3',
-								'type'	 => 'varchar'
+								'name' => 'tekst3',
+								'descr' => 'tekst3',
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'tekst4',
-								'descr'	 => 'tekst4',
-								'type'	 => 'varchar'
+								'name' => 'tekst4',
+								'descr' => 'tekst4',
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'tekst5',
-								'descr'	 => 'tekst5',
-								'type'	 => 'varchar'
+								'name' => 'tekst5',
+								'descr' => 'tekst5',
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'tekst6',
-								'descr'	 => 'tekst6',
-								'type'	 => 'varchar'
+								'name' => 'tekst6',
+								'descr' => 'tekst6',
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('ns3420'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('ns3420'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::ns3420',
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 					break;
 				case 'unit':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_standard_unit',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_standard_unit',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit unit'),
-						'add_msg'		 => lang('add unit'),
-						'name'			 => lang('unit'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit unit'),
+						'add_msg' => lang('add unit'),
+						'name' => lang('unit'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::unit'
 					);
 					break;
 				case 'budget_account':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_b_account',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_b_account',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'descr',
-								'descr'		 => lang('descr'),
-								'type'		 => 'varchar',
-								'nullable'	 => false,
-								'size'		 => 60,
-								'sortable'	 => true
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'size' => 60,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'category',
-								'descr'		 => lang('category'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'category',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'b_account', 'selected' => '##category##')//b_account_category
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'b_account', 'selected' => '##category##')//b_account_category
 								)
 							),
 							array
 								(
-								'name'		 => 'mva',
-								'descr'		 => lang('tax code'),
-								'type'		 => 'int',
-								'nullable'	 => true,
-								'size'		 => 4,
-								'sortable'	 => true
+								'name' => 'mva',
+								'descr' => lang('tax code'),
+								'type' => 'int',
+								'nullable' => true,
+								'size' => 4,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'responsible',
-								'descr'		 => lang('responsible'),
-								'type'		 => 'select',
-								'filter'	 => true,
+								'name' => 'responsible',
+								'descr' => lang('responsible'),
+								'type' => 'select',
+								'filter' => true,
 								'get_single' => 'get_user',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bocommon.get_user_list_right2',
-									'method_input'	 => array('selected' => '##responsible##', 'right' => 128,
+									'valueset' => false,
+									'method' => 'property.bocommon.get_user_list_right2',
+									'method_input' => array('selected' => '##responsible##', 'right' => 128,
 										'acl_location' => '.invoice')
 								)
 							),
 							array
 								(
-								'name'		 => 'active',
-								'descr'		 => lang('active'),
-								'type'		 => 'checkbox',
-								'default'	 => 'checked'
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('budget account'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.b_account',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('budget account'),
+						'acl_app' => 'property',
+						'acl_location' => '.b_account',
 						'menu_selection' => 'property::invoice::budget_account',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 
 					break;
 				case 'voucher_process_code':
 					$info = array
 						(
-						'table'			 => 'fm_ecobilag_process_code',
-						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_ecobilag_process_code',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 						),
-						'edit_msg'		 => lang('edit process code'),
-						'add_msg'		 => lang('add process code'),
-						'name'			 => lang('process code'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit process code'),
+						'add_msg' => lang('add process code'),
+						'name' => lang('process code'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::process_code',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						)
 					);
 					break;
@@ -1712,50 +1712,50 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_org_unit',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'fm_org_unit',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'name',
-								'descr'		 => lang('name'),
-								'type'		 => 'varchar',
-								'nullable'	 => false,
-								'size'		 => 60,
-								'sortable'	 => true
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'size' => 60,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'parent_id',
-								'descr'		 => lang('parent'),
-								'type'		 => 'select',
-								'sortable'	 => true,
-								'nullable'	 => true,
-								'filter'	 => false,
-								'role'		 => 'parent',
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'org_unit', 'role' => 'parent', 'selected' => '##parent_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'org_unit', 'role' => 'parent', 'selected' => '##parent_id##')
 								)
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('department'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('department'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::org_unit',
-						'default'		 => array
+						'default' => array
 							(
-							'created_by'	 => array('add' => '$this->account'),
-							'created_on'	 => array('add' => 'time()'),
-							'modified_by'	 => array('edit' => '$this->account'),
-							'modified_on'	 => array('edit' => 'time()'),
+							'created_by' => array('add' => '$this->account'),
+							'created_on' => array('add' => 'time()'),
+							'modified_by' => array('edit' => '$this->account'),
+							'modified_on' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 					break;
 
@@ -1765,130 +1765,130 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_ecodimb_role_user',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_ecodimb_role_user',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'ecodimb',
-								'descr'		 => lang('dim b'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'ecodimb',
+								'descr' => lang('dim b'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'dimb', 'selected' => '##ecodimb##')//b_account_category
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'dimb', 'selected' => '##ecodimb##')//b_account_category
 								)
 							),
 							array
 								(
-								'name'		 => 'role_id',
-								'descr'		 => lang('role type'),
-								'type'		 => 'select',
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'role_id',
+								'descr' => lang('role type'),
+								'type' => 'select',
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'dimb_role', 'selected' => '##role_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'dimb_role', 'selected' => '##role_id##')
 								)
 							),
 							array
 								(
-								'name'		 => 'user_id',
-								'descr'		 => lang('user'),
-								'type'		 => 'select',
-								'filter'	 => true,
+								'name' => 'user_id',
+								'descr' => lang('user'),
+								'type' => 'select',
+								'filter' => true,
 								'get_single' => 'get_user',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bocommon.get_user_list_right2',
-									'method_input'	 => array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.invoice')
+									'valueset' => false,
+									'method' => 'property.bocommon.get_user_list_right2',
+									'method_input' => array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.invoice')
 								)
 							),
 							array
 								(
-								'name'		 => 'default_user',
-								'descr'		 => lang('default'),
-								'type'		 => 'checkbox',
-								'default'	 => 'checked'
+								'name' => 'default_user',
+								'descr' => lang('default'),
+								'type' => 'checkbox',
+								'default' => 'checked'
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('dimb role'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('dimb role'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::dimb_role_user',
-						'default'		 => array
+						'default' => array
 							(
 							'created_by' => array('add' => '$this->account'),
 							'created_on' => array('add' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 					break;
 
 				case 'order_dim1':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_order_dim1',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_order_dim1',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'num',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'descr',
-								'descr'		 => lang('descr'),
-								'type'		 => 'varchar',
-								'nullable'	 => false
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar',
+								'nullable' => false
 							),
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('order_dim1'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('order_dim1'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::order_dim1'
 					);
 					break;
 				case 'branch':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_branch',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_branch',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'num',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('branch'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('branch'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::branch'
 					);
 
@@ -1896,28 +1896,28 @@
 				case 'key_location':
 					$info = array
 						(
-						'table'			 => 'fm_key_loc',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_key_loc',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'num',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('key location'),
-								'type'	 => 'text'
+								'name' => 'descr',
+								'descr' => lang('key location'),
+								'type' => 'text'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('branch'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('branch'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::key_location'
 					);
 
@@ -1926,34 +1926,34 @@
 				case 'async':
 					$info = array
 						(
-						'table'			 => 'fm_async_method',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_async_method',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'data',
-								'descr'	 => lang('data'),
-								'type'	 => 'text'
+								'name' => 'data',
+								'descr' => lang('data'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'text'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('Async services'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('Async services'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::async'
 					);
 					break;
@@ -1961,46 +1961,46 @@
 				case 'event_action':
 					$info = array
 						(
-						'table'			 => 'fm_event_action',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_event_action',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'action',
-								'descr'	 => lang('action'),
-								'type'	 => 'varchar'
+								'name' => 'action',
+								'descr' => lang('action'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'data',
-								'descr'	 => lang('data'),
-								'type'	 => 'text'
+								'name' => 'data',
+								'descr' => lang('data'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'text'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('event action'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('event action'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::event_action',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						)
 					);
 
@@ -2010,185 +2010,185 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_tts_status',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_tts_status',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'sorting',
-								'descr'		 => lang('sorting'),
-								'type'		 => 'integer',
-								'sortable'	 => true
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'color',
-								'descr'	 => lang('color'),
-								'type'	 => 'varchar'
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'approved',
-								'descr'	 => lang('approved'),
-								'type'	 => 'checkbox'
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'in_progress',
-								'descr'	 => lang('In progress'),
-								'type'	 => 'checkbox'
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'delivered',
-								'descr'	 => lang('delivered'),
-								'type'	 => 'checkbox'
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'actual_cost',
-								'descr'	 => lang('mandatory actual cost'),
-								'type'	 => 'checkbox'
+								'name' => 'actual_cost',
+								'descr' => lang('mandatory actual cost'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('ticket status'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('ticket status'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::ticket::ticket_status'
 					);
 					break;
 
 
 				case 'regulations':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'fm_regulations',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_regulations',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'parent_id',
-								'descr'		 => lang('parent'),
-								'type'		 => 'select',
-								'sortable'	 => true,
-								'nullable'	 => true,
-								'filter'	 => false,
-								'role'		 => 'parent',
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'regulations', 'role' => 'parent', 'selected' => '##parent_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'regulations', 'role' => 'parent', 'selected' => '##parent_id##')
 								)
 							),
 							array
 								(
-								'name'		 => 'name',
-								'descr'		 => lang('name'),
-								'type'		 => 'varchar',
-								'sortable'	 => true,
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'sortable' => true,
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'text'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'	 => 'external_ref',
-								'descr'	 => lang('external ref'),
-								'type'	 => 'link'
+								'name' => 'external_ref',
+								'descr' => lang('external ref'),
+								'type' => 'link'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('regulations'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('regulations'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::regulations',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						)
 					);
 					break;
 //START HELPDESK - APP
 				case 'helpdesk_status':
 					// the helpdesk app
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'phpgw_helpdesk_status',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'phpgw_helpdesk_status',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'sorting',
-								'descr'		 => lang('sorting'),
-								'type'		 => 'integer',
-								'sortable'	 => true
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'color',
-								'descr'	 => lang('color'),
-								'type'	 => 'varchar'
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'approved',
-								'descr'	 => lang('approved'),
-								'type'	 => 'checkbox'
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'in_progress',
-								'descr'	 => lang('In progress'),
-								'type'	 => 'checkbox'
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'delivered',
-								'descr'	 => lang('delivered'),
-								'type'	 => 'checkbox'
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('event action'),
-						'acl_app'		 => 'helpdesk',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('event action'),
+						'acl_app' => 'helpdesk',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::helpdesk::ticket_status'
 					);
 					break;
@@ -2197,28 +2197,28 @@
 				case 'pending_action_type':
 					$info = array
 						(
-						'table'			 => 'fm_action_pending_category',
-						'id'			 => array('name' => 'num', 'type' => 'varchar'),
-						'fields'		 => array
+						'table' => 'fm_action_pending_category',
+						'id' => array('name' => 'num', 'type' => 'varchar'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'text'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('Pending action type'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('Pending action type'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::action_type'
 					);
 
@@ -2228,42 +2228,42 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_order_template',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_order_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'content',
-								'descr'	 => lang('content'),
-								'type'	 => 'text'
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'	 => 'public',
-								'descr'	 => lang('public'),
-								'type'	 => 'checkbox'
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('order template'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.ticket.order',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('order template'),
+						'acl_app' => 'property',
+						'acl_location' => '.ticket.order',
 						'menu_selection' => 'property::helpdesk::order_template',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => true
+						'check_grant' => true
 					);
 
 					break;
@@ -2271,42 +2271,42 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_response_template',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_response_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'content',
-								'descr'	 => lang('content'),
-								'type'	 => 'text'
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'	 => 'public',
-								'descr'	 => lang('public'),
-								'type'	 => 'checkbox'
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('response template'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.ticket',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('response template'),
+						'acl_app' => 'property',
+						'acl_location' => '.ticket',
 						'menu_selection' => 'property::helpdesk::response_template',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => true
+						'check_grant' => true
 					);
 
 					break;
@@ -2315,64 +2315,64 @@
 
 					$info = array
 						(
-						'table'			 => 'fm_responsibility_role',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_responsibility_role',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'remark',
-								'descr'	 => lang('remark'),
-								'type'	 => 'text'
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'		 => 'location_level',
-								'descr'		 => lang('location level'),
-								'type'		 => 'select',
+								'name' => 'location_level',
+								'descr' => lang('location level'),
+								'type' => 'select',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'preferences.boadmin_acl.get_locations',
-									'method_input'	 => array('acl_app' => 'property', 'selected' => '##location##')
+									'valueset' => false,
+									'method' => 'preferences.boadmin_acl.get_locations',
+									'method_input' => array('acl_app' => 'property', 'selected' => '##location##')
 								)
 							),
 							array
 								(
-								'name'		 => 'responsibility_id',
-								'descr'		 => lang('responsibility'),
-								'type'		 => 'select',
+								'name' => 'responsibility_id',
+								'descr' => lang('responsibility'),
+								'type' => 'select',
 								'values_def' => array
 									(
-									'valueset'			 => false,
-									'get_single_value'	 => 'property.soresponsible.get_responsibility_name',
-									'method'			 => 'property.boresponsible.get_responsibilities',
-									'method_input'		 => array('appname' => '$this->appname', 'selected' => '##responsibility_id##')
+									'valueset' => false,
+									'get_single_value' => 'property.soresponsible.get_responsibility_name',
+									'method' => 'property.boresponsible.get_responsibilities',
+									'method_input' => array('appname' => '$this->appname', 'selected' => '##responsibility_id##')
 								)
 							)
 						),
-						'edit_action'	 => 'property.uiresponsible.edit_role',
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('responsibility role'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_action' => 'property.uiresponsible.edit_role',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('responsibility role'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::responsibility_role',
-						'default'		 => array
+						'default' => array
 							(
-							'appname'		 => array('add' => '$this->appname'),
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'appname' => array('add' => '$this->appname'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false,
-						'filter'		 => array('appname' => '$this->appname')
+						'check_grant' => false,
+						'filter' => array('appname' => '$this->appname')
 					);
 
 					break;
@@ -2380,45 +2380,45 @@
 				case 'custom_menu_items':
 					$info = array
 						(
-						'table'			 => 'fm_custom_menu_items',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_custom_menu_items',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'parent_id',
-								'descr'		 => lang('parent'),
-								'type'		 => 'select',
-								'sortable'	 => true,
-								'nullable'	 => true,
-								'filter'	 => false,
-								'role'		 => 'parent',
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'custom_menu_items', 'role' => 'parent',
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'custom_menu_items', 'role' => 'parent',
 										'selected' => '##parent_id##', 'mapping' => array('name' => 'text'))
 								)
 							),
 							array
 								(
-								'name'	 => 'text',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'text',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'url',
-								'descr'	 => lang('url'),
-								'type'	 => 'text'
+								'name' => 'url',
+								'descr' => lang('url'),
+								'type' => 'text'
 							),
 							array
 								(
-								'name'		 => 'target',
-								'descr'		 => lang('target'),
-								'type'		 => 'select',
-								'filter'	 => false,
+								'name' => 'target',
+								'descr' => lang('target'),
+								'type' => 'select',
+								'filter' => false,
 								'values_def' => array
 									(
 									'valueset' => array(array('id' => '_blank', 'name' => '_blank'), array(
@@ -2427,75 +2427,75 @@
 							),
 							array
 								(
-								'name'		 => 'location',
-								'descr'		 => lang('location'),
-								'type'		 => 'select',
-								'filter'	 => true,
+								'name' => 'location',
+								'descr' => lang('location'),
+								'type' => 'select',
+								'filter' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'preferences.boadmin_acl.get_locations',
-									'method_input'	 => array('acl_app' => 'property', 'selected' => '##location##')
+									'valueset' => false,
+									'method' => 'preferences.boadmin_acl.get_locations',
+									'method_input' => array('acl_app' => 'property', 'selected' => '##location##')
 								)
 							),
 							array
 								(
-								'name'		 => 'local_files',
-								'descr'		 => lang('local files'),
-								'type'		 => 'checkbox',
-								'default'	 => ''
+								'name' => 'local_files',
+								'descr' => lang('local files'),
+								'type' => 'checkbox',
+								'default' => ''
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('custom menu items'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('custom menu items'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::custom_menu_items',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false,
-						'mapping'		 => array('name' => 'text')
+						'check_grant' => false,
+						'mapping' => array('name' => 'text')
 					);
 
 					break;
 				case 'location_contact':
 					$info = array
 						(
-						'table'			 => 'fm_location_contact',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_location_contact',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'contact_id',
-								'descr'		 => lang('contact'),
-								'type'		 => 'int', //contact
-								'nullable'	 => false,
+								'name' => 'contact_id',
+								'descr' => lang('contact'),
+								'type' => 'int', //contact
+								'nullable' => false,
 							),
 							array
 								(
-								'name'		 => 'location_code',
-								'descr'		 => lang('location_code'),
-								'type'		 => 'varchar', //location
-								'nullable'	 => false,
+								'name' => 'location_code',
+								'descr' => lang('location_code'),
+								'type' => 'varchar', //location
+								'nullable' => false,
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('location contact'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('location contact'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::location_contact',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						)
 					);
 
@@ -2508,40 +2508,40 @@
 					{
 						$valueset_month[] = array
 							(
-							'id'	 => $i,
-							'name'	 => $i
+							'id' => $i,
+							'name' => $i
 						);
 					}
 
 					$info = array
 						(
-						'table'			 => 'fm_eco_periodization_outline',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_eco_periodization_outline',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'periodization_id',
-								'descr'		 => lang('periodization'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'periodization_id',
+								'descr' => lang('periodization'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'periodization', 'selected' => '##periodization_id##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'periodization', 'selected' => '##periodization_id##')
 								)
 							),
 							array
 								(
-								'name'		 => 'month',
-								'descr'		 => lang('month'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'month',
+								'descr' => lang('month'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => $valueset_month,
@@ -2549,63 +2549,63 @@
 							),
 							array
 								(
-								'name'		 => 'value',
-								'descr'		 => lang('value'),
-								'type'		 => 'numeric',
-								'nullable'	 => true,
-								'size'		 => 4,
-								'sortable'	 => true
+								'name' => 'value',
+								'descr' => lang('value'),
+								'type' => 'numeric',
+								'nullable' => true,
+								'size' => 4,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'dividend',
-								'descr'		 => lang('fraction::dividend'),
-								'type'		 => 'integer',
-								'nullable'	 => true,
-								'size'		 => 4,
-								'sortable'	 => true
+								'name' => 'dividend',
+								'descr' => lang('fraction::dividend'),
+								'type' => 'integer',
+								'nullable' => true,
+								'size' => 4,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'divisor',
-								'descr'		 => lang('fraction::divisor'),
-								'type'		 => 'integer',
-								'nullable'	 => true,
-								'size'		 => 4,
-								'sortable'	 => true
+								'name' => 'divisor',
+								'descr' => lang('fraction::divisor'),
+								'type' => 'integer',
+								'nullable' => true,
+								'size' => 4,
+								'sortable' => true
 							),
 							array
 								(
-								'name'		 => 'remark',
-								'descr'		 => lang('remark'),
-								'type'		 => 'varchar',
-								'nullable'	 => false,
-								'size'		 => 60,
-								'sortable'	 => true
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'size' => 60,
+								'sortable' => true
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('periodization'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('periodization'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::periodization_outline'
 					);
 
 					break;
 
 				case 'period_transition':
-					$valueset_month	 = array();
-					$valueset_day	 = array();
-					$valueset_hour	 = array();
+					$valueset_month = array();
+					$valueset_day = array();
+					$valueset_hour = array();
 
 					$lang_default = lang('default');
 					for($i = 1; $i < 14; $i++)
 					{
 						$valueset_month[] = array
 							(
-							'id'	 => $i,
-							'name'	 => $i == 13 ? "{$i} ({$lang_default})" : $i
+							'id' => $i,
+							'name' => $i == 13 ? "{$i} ({$lang_default})" : $i
 						);
 					}
 
@@ -2613,8 +2613,8 @@
 					{
 						$valueset_day[] = array
 							(
-							'id'	 => $i,
-							'name'	 => $i
+							'id' => $i,
+							'name' => $i
 						);
 					}
 
@@ -2622,25 +2622,25 @@
 					{
 						$valueset_hour[] = array
 							(
-							'id'	 => $i,
-							'name'	 => $i
+							'id' => $i,
+							'name' => $i
 						);
 					}
 
 					$info = array
 						(
-						'table'			 => 'fm_eco_period_transition',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_eco_period_transition',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'month',
-								'descr'		 => lang('month'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'filter'	 => true,
-								'sortable'	 => true,
+								'name' => 'month',
+								'descr' => lang('month'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => $valueset_month,
@@ -2648,12 +2648,12 @@
 							),
 							array
 								(
-								'name'		 => 'day',
-								'descr'		 => lang('day'),
-								'type'		 => 'select',
-								'nullable'	 => false,
-								'size'		 => 4,
-								'sortable'	 => true,
+								'name' => 'day',
+								'descr' => lang('day'),
+								'type' => 'select',
+								'nullable' => false,
+								'size' => 4,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => $valueset_day,
@@ -2661,12 +2661,12 @@
 							),
 							array
 								(
-								'name'		 => 'hour',
-								'descr'		 => lang('hour'),
-								'type'		 => 'select',
-								'nullable'	 => true,
-								'size'		 => 4,
-								'sortable'	 => true,
+								'name' => 'hour',
+								'descr' => lang('hour'),
+								'type' => 'select',
+								'nullable' => true,
+								'size' => 4,
+								'sortable' => true,
 								'values_def' => array
 									(
 									'valueset' => $valueset_hour,
@@ -2674,25 +2674,25 @@
 							),
 							array
 								(
-								'name'		 => 'remark',
-								'descr'		 => lang('remark'),
-								'type'		 => 'varchar',
-								'nullable'	 => true,
-								'size'		 => 60,
-								'sortable'	 => true
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'varchar',
+								'nullable' => true,
+								'size' => 60,
+								'sortable' => true
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('period transition'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('period transition'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::period_transition',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						)
 					);
 
@@ -2701,43 +2701,43 @@
 				case 'entity_group':
 					$info = array
 						(
-						'table'			 => 'fm_entity_group',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'fm_entity_group',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'descr',
-								'descr'	 => lang('descr'),
-								'type'	 => 'varchar'
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'active',
-								'descr'		 => lang('active'),
-								'type'		 => 'checkbox',
-								'default'	 => 'checked'
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('entity group'),
-						'acl_app'		 => 'property',
-						'acl_location'	 => '.admin.entity',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('entity group'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin.entity',
 						'menu_selection' => 'admin::property::entity::entity_group',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('add' => 'time()', 'edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('add' => 'time()', 'edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 
 					break;
@@ -2746,73 +2746,73 @@
 				case 'bb_office':
 					$info = array
 						(
-						'table'			 => 'bb_office',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'bb_office',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'	 => 'description',
-								'descr'	 => lang('description'),
-								'type'	 => 'text'
+								'name' => 'description',
+								'descr' => lang('description'),
+								'type' => 'text'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
-						'acl_app'		 => 'booking',
-						'acl_location'	 => '.office',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
+						'acl_app' => 'booking',
+						'acl_location' => '.office',
 						'menu_selection' => 'booking::settings::office',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 
 					break;
 				case 'bb_office_user':
 					$info = array
 						(
-						'table'			 => 'bb_office_user',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'bb_office_user',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'		 => 'office',
-								'descr'		 => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
-								'type'		 => 'select',
-								'filter'	 => true,
+								'name' => 'office',
+								'descr' => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
+								'type' => 'select',
+								'filter' => true,
 								'values_def' => array
 									(
-									'valueset'		 => false,
-									'method'		 => 'property.bogeneric.get_list',
-									'method_input'	 => array('type' => 'bb_office', 'selected' => '##office##')
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'bb_office', 'selected' => '##office##')
 								)
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => $GLOBALS['phpgw']->translation->translate('office user', array(), false, 'booking'),
-						'acl_app'		 => 'booking',
-						'acl_location'	 => '.office.user',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => $GLOBALS['phpgw']->translation->translate('office user', array(), false, 'booking'),
+						'acl_app' => 'booking',
+						'acl_location' => '.office.user',
 						'menu_selection' => 'booking::settings::office::office_user',
-						'default'		 => array
+						'default' => array
 							(
-							'user_id'		 => array('add' => '$this->account'),
-							'entry_date'	 => array('add' => 'time()'),
-							'modified_date'	 => array('edit' => 'time()'),
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
 						),
-						'check_grant'	 => false
+						'check_grant' => false
 					);
 
 					break;
@@ -2822,47 +2822,47 @@
 				case 'controller_check_item_status':
 					$info = array
 						(
-						'table'			 => 'controller_check_item_status',
-						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
+						'table' => 'controller_check_item_status',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'sorting',
-								'descr'		 => lang('sorting'),
-								'type'		 => 'integer',
-								'sortable'	 => true
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
 							),
 							array
 								(
-								'name'	 => 'open',
-								'descr'	 => lang('open'),
-								'type'	 => 'checkbox'
+								'name' => 'open',
+								'descr' => lang('open'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'pending',
-								'descr'	 => lang('pending'),
-								'type'	 => 'checkbox'
+								'name' => 'pending',
+								'descr' => lang('pending'),
+								'type' => 'checkbox'
 							),
 							array
 								(
-								'name'	 => 'closed',
-								'descr'	 => lang('closed'),
-								'type'	 => 'checkbox'
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
-						'edit_msg'		 => lang('edit'),
-						'add_msg'		 => lang('add'),
-						'name'			 => lang('status'),
-						'acl_app'		 => 'controller',
-						'acl_location'	 => 'admin',
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('status'),
+						'acl_app' => 'controller',
+						'acl_location' => 'admin',
 						'menu_selection' => 'admin::controller::check_item_status'
 					);
 					break;
@@ -2870,55 +2870,55 @@
 // END CONTROLLER TABLES
 // START RENTAL TABLES
 				case 'composite_standard':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'rental_composite_standard',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'rental_composite_standard',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 							array
 								(
-								'name'		 => 'factor',
-								'descr'		 => lang('factor'),
-								'type'		 => 'numeric',
-								'nullable'	 => false,
-								'size'		 => 4,
-								'sortable'	 => true
+								'name' => 'factor',
+								'descr' => lang('factor'),
+								'type' => 'numeric',
+								'nullable' => false,
+								'size' => 4,
+								'sortable' => true
 							)
 						),
-						'edit_msg'		 => lang('edit unit'),
-						'add_msg'		 => lang('add unit'),
-						'name'			 => lang('unit'),
-						'acl_app'		 => 'rental',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit unit'),
+						'add_msg' => lang('add unit'),
+						'name' => lang('unit'),
+						'acl_app' => 'rental',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::rental::composite_standard'
 					);
 					break;
 				case 'responsibility_unit':
-					$info	 = array
+					$info = array
 						(
-						'table'			 => 'rental_contract_responsibility_unit',
-						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
+						'table' => 'rental_contract_responsibility_unit',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
 							(
 							array
 								(
-								'name'	 => 'name',
-								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
 							),
 						),
-						'edit_msg'		 => lang('edit unit'),
-						'add_msg'		 => lang('add unit'),
-						'name'			 => lang('unit'),
-						'acl_app'		 => 'rental',
-						'acl_location'	 => '.admin',
+						'edit_msg' => lang('edit unit'),
+						'add_msg' => lang('add unit'),
+						'name' => lang('unit'),
+						'acl_app' => 'rental',
+						'acl_location' => '.admin',
 						'menu_selection' => 'admin::rental::responsibility_unit'
 					);
 					break;
@@ -3048,9 +3048,9 @@
 			$i = 0;
 			while($this->_db->next_record())
 			{
-				$_extra	 = $this->_db->f($id_in_name);
-				$id		 = $this->_db->f('id');
-				if(!$name	 = $this->_db->f('name', true))
+				$_extra = $this->_db->f($id_in_name);
+				$id = $this->_db->f('id');
+				if(!$name = $this->_db->f('name', true))
 				{
 					$name = $this->_db->f('descr', true);
 				}
@@ -3062,8 +3062,8 @@
 
 				$values[$i] = array
 					(
-					'id'	 => $id,
-					'name'	 => $name
+					'id' => $id,
+					'name' => $name
 				);
 
 				foreach($return_fields as $return_field)
@@ -3115,8 +3115,8 @@
 				}
 			}
 
-			$cols	 = array();
-			$vals	 = array();
+			$cols = array();
+			$vals = array();
 
 			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
@@ -3126,8 +3126,8 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[]	 = $input_name;
-						$vals[]	 = $value;
+						$cols[] = $input_name;
+						$vals[] = $value;
 					}
 				}
 			}
@@ -3137,8 +3137,8 @@
 			{
 				if(isset($value) && $value)
 				{
-					$cols[]	 = $input_name;
-					$vals[]	 = $this->_db->db_addslashes($value);
+					$cols[] = $input_name;
+					$vals[] = $this->_db->db_addslashes($value);
 				}
 			}
 
@@ -3149,8 +3149,8 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[]	 = $input_name;
-						$vals[]	 = $value;
+						$cols[] = $input_name;
+						$vals[] = $value;
 					}
 				}
 			}
@@ -3175,21 +3175,21 @@
 				$this->_db->query("SELECT {$this->location_info['id']['name']} AS id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data[$this->location_info['id']['name']]}'", __LINE__, __FILE__);
 				if($this->_db->next_record())
 				{
-					$receipt['error'][]	 = array('msg' => lang('duplicate key value'));
-					$receipt['error'][]	 = array('msg' => lang('record has not been saved'));
+					$receipt['error'][] = array('msg' => lang('duplicate key value'));
+					$receipt['error'][] = array('msg' => lang('record has not been saved'));
 					return $receipt;
 				}
 				$id = $data[$this->location_info['id']['name']];
 			}
 			else
 			{
-				$id		 = $this->_db->next_id($table);
-				$cols[]	 = 'id';
-				$vals[]	 = $id;
+				$id = $this->_db->next_id($table);
+				$cols[] = 'id';
+				$vals[] = $id;
 			}
 
-			$cols	 = implode(",", $cols);
-			$vals	 = $this->_db->validate_insert($vals);
+			$cols = implode(",", $cols);
+			$vals = $this->_db->validate_insert($vals);
 
 			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})", __LINE__, __FILE__);
 
@@ -3203,8 +3203,8 @@
 			  }
 			 */
 			$this->_db->transaction_commit();
-			$receipt['id']			 = $id;
-			$receipt['message'][]	 = array('msg' => lang('record has been saved'));
+			$receipt['id'] = $id;
+			$receipt['message'][] = array('msg' => lang('record has been saved'));
 			return $receipt;
 		}
 
@@ -3417,9 +3417,9 @@
 
 			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}", __LINE__, __FILE__);
 
-			$return_fields	 = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
+			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 //-----------
-			$mapping		 = array();
+			$mapping = array();
 			if(isset($data['mapping']) && $data['mapping'])
 			{
 				$mapping = $data['mapping'];
@@ -3429,13 +3429,13 @@
 				$mapping = array('name' => 'name');
 			}
 
-			$values	 = array();
-			$i		 = 0;
+			$values = array();
+			$i = 0;
 			while($this->_db->next_record())
 			{
-				$_extra	 = $this->_db->f($id_in_name);
-				$id		 = $this->_db->f('id');
-				$name	 = $this->_db->f($mapping['name'], true);
+				$_extra = $this->_db->f($id_in_name);
+				$id = $this->_db->f('id');
+				$name = $this->_db->f($mapping['name'], true);
 
 				if($_extra)
 				{
@@ -3444,9 +3444,9 @@
 
 				$values[$i] = array
 					(
-					'id'		 => $id,
-					'name'		 => $name,
-					'parent_id'	 => 0
+					'id' => $id,
+					'name' => $name,
+					'parent_id' => 0
 				);
 
 				foreach($return_fields as $return_field)
@@ -3470,7 +3470,7 @@
 
 		public function get_children2($data, $parent, $level, $reset = false)
 		{
-			$parent	 = (int)$parent;
+			$parent = (int)$parent;
 			$mapping = array();
 			if(isset($data['mapping']) && $data['mapping'])
 			{
@@ -3485,8 +3485,8 @@
 			{
 				$this->tree = array();
 			}
-			$db		 = clone($this->_db);
-			if(!$table	 = $this->table)
+			$db = clone($this->_db);
+			if(!$table = $this->table)
 			{
 				return $this->tree;
 			}
@@ -3496,12 +3496,12 @@
 
 			while($db->next_record())
 			{
-				$id				 = $db->f('id');
-				$this->tree[]	 = array
+				$id = $db->f('id');
+				$this->tree[] = array
 					(
-					'id'		 => $id,
-					'name'		 => str_repeat('..', $level) . $db->f($mapping['name'], true),
-					'parent_id'	 => $parent
+					'id' => $id,
+					'name' => str_repeat('..', $level) . $db->f($mapping['name'], true),
+					'parent_id' => $parent
 				);
 				$this->get_children2($data, $id, $level + 1);
 			}
@@ -3566,8 +3566,8 @@
 		 */
 		public function read_tree($data)
 		{
-			$parent_id	 = isset($data['node_id']) && $data['node_id'] ? (int)$data['node_id'] : 0;
-			$tree		 = array();
+			$parent_id = isset($data['node_id']) && $data['node_id'] ? (int)$data['node_id'] : 0;
+			$tree = array();
 
 			$this->get_location_info($data['type'], $data['type_id']);
 
@@ -3609,8 +3609,8 @@
 			{
 				$fields[] = $field['name'];
 			}
-			$node	 = array();
-			$i		 = 0;
+			$node = array();
+			$i = 0;
 			while($this->_db2->next_record())
 			{
 				$id = $this->_db2->f('id');

@@ -5,156 +5,160 @@
  */
 var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uis_agreement.edit_alarm'});
 
-onActionsClick_notify=function(type, ids, requestUrl){
+onActionsClick_notify = function (type, ids, requestUrl) {
 
-    $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{ids:ids,type:type},
-            success: function(data) {
-                    if( data != null)
-                    {
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		data: {ids: ids, type: type},
+		success: function (data) {
+			if (data != null)
+			{
 
-                    }
-					JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
-            }
-    });
+			}
+			JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+		}
+	});
 }
 
-onAddClick_Alarm= function(type){
-    
-    var day = $('#day_list').val();
-    var hour = $('#hour_list').val();
-    var minute = $('#minute_list').val();
-    var user = $('#user_list').val();
-    var id = $('#agreementid').val();
+onAddClick_Alarm = function (type) {
 
-    if(day != '0' && hour != '0' && minute != '0'){
-        
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{day:day,hour:hour,minute:minute,user_list:user,type:type,id:id},
-            success: function(data) {
-                obj = JSON.parse(data);
-                var newstr = obj.replace("&amp;", "&","gi");
-                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
-            }
-        });
-    }
-    else
-    {
-        return false;
-    }   
+	var day = $('#day_list').val();
+	var hour = $('#hour_list').val();
+	var minute = $('#minute_list').val();
+	var user = $('#user_list').val();
+	var id = $('#agreementid').val();
+
+	if (day != '0' && hour != '0' && minute != '0') {
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: "" + sUrl_agreement + "&phpgw_return_as=json",
+			data: {day: day, hour: hour, minute: minute, user_list: user, type: type, id: id},
+			success: function (data) {
+				obj = JSON.parse(data);
+				var newstr = obj.replace("&amp;", "&", "gi");
+				JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+			}
+		});
+	} else
+	{
+		return false;
+	}
 }
 
-onUpdateClickAlarm = function(type){
+onUpdateClickAlarm = function (type) {
 
-    var oDate = $('#values_date').val();
-    var oIndex = $('#new_index').val();
-    var id = $('#agreementid').val();
+	var oDate = $('#values_date').val();
+	var oIndex = $('#new_index').val();
+	var id = $('#agreementid').val();
 
-    var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
-    var selected = oTT.fnGetSelectedData();
-    var numSelected = 	selected.length;
+	var oTT = TableTools.fnGetInstance('datatable-container_1');
+	var selected = oTT.fnGetSelectedData();
+	var numSelected = selected.length;
 
-    if (numSelected == '0'){
-        alert('None selected');
-        return false;
-    }else if(numSelected != '0' && oDate == '' && oIndex == ''){
-        alert('None index and date');
-        return false;
-    }else if(numSelected != '0' && oDate!='' && oIndex == ''){
-        alert('None Index');
-        return false;
-    }else if(numSelected != '0' && oDate=='' && oIndex != ''){
-        alert('None Date');
-        return false;
-    }
-    
-    var ids = [];
-    var mcost = {}; var icoun = {};
-    for ( var n = 0; n < selected.length; ++n )
-    {
-        var aData = selected[n];
-        ids.push(aData['item_id']);
-        mcost[aData['item_id']] = aData['cost'];
-        icoun[aData['item_id']] = aData['index_count'];
-    }
-    $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{id:id,ids:ids,mcost:mcost,icoun:icoun,type:type,date:oDate,index:oIndex},
-            success: function(data) {
-                obj = JSON.parse(data);
-                var newstr = obj.replace("&amp;", "&","gi");
-                JqueryPortico.updateinlineTableHelper(oTable1, newstr);
-                $('#values_date').val('');
-                $('#new_index').val('');
-            }
-    });
+	if (numSelected == '0') {
+		alert('None selected');
+		return false;
+	} else if (numSelected != '0' && oDate == '' && oIndex == '') {
+		alert('None index and date');
+		return false;
+	} else if (numSelected != '0' && oDate != '' && oIndex == '') {
+		alert('None Index');
+		return false;
+	} else if (numSelected != '0' && oDate == '' && oIndex != '') {
+		alert('None Date');
+		return false;
+	}
+
+	var ids = [];
+	var mcost = {};
+	var icoun = {};
+	for (var n = 0; n < selected.length; ++n)
+	{
+		var aData = selected[n];
+		ids.push(aData['item_id']);
+		mcost[aData['item_id']] = aData['cost'];
+		icoun[aData['item_id']] = aData['index_count'];
+	}
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		data: {id: id, ids: ids, mcost: mcost, icoun: icoun, type: type, date: oDate, index: oIndex},
+		success: function (data) {
+			obj = JSON.parse(data);
+			var newstr = obj.replace("&amp;", "&", "gi");
+			JqueryPortico.updateinlineTableHelper(oTable1, newstr);
+			$('#values_date').val('');
+			$('#new_index').val('');
+		}
+	});
 }
 
-onUpdateClickItems = function(type){
-    var oDate = $('#values_date').val();
-    var oIndex = $('#new_index').val();
-    var id = $('#agreementid').val();
-    
-    //obteniendo el ultimo registro de edit_item
-    var oSelid = $("#selidsul").val(); //1118
-    var omcost = $("#mcostul").val(); //1118
-    var oindex = $("#icountul").val();//3
-    
-    if(oDate == '' && oIndex == ''){
-        alert('None index and date');
-        return false;
-    }else if(oDate!='' && oIndex == ''){
-        alert('None Index');
-        return false;
-    }else if(oDate=='' && oIndex != ''){
-        alert('None Date');
-        return false;
-    }
-    
-    var ids = []; var mcost = {}; var icoun = {};
-    ids.push(oSelid);mcost[oSelid] = omcost; icoun[oSelid] = oindex;
-    
-     $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{id:id,ids:ids,mcost:mcost,icoun:icoun,type:type,date:oDate,index:oIndex},
-            success: function(data) {
-                obj = JSON.parse(data);
-                var newstr = obj.replace("&amp;", "&","gi");
-                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
-                $('#values_date').val('');
-                $('#new_index').val('');
-            }
-        }); 
+onUpdateClickItems = function (type) {
+	var oDate = $('#values_date').val();
+	var oIndex = $('#new_index').val();
+	var id = $('#agreementid').val();
+
+	//obteniendo el ultimo registro de edit_item
+	var oSelid = $("#selidsul").val(); //1118
+	var omcost = $("#mcostul").val(); //1118
+	var oindex = $("#icountul").val();//3
+
+	if (oDate == '' && oIndex == '') {
+		alert('None index and date');
+		return false;
+	} else if (oDate != '' && oIndex == '') {
+		alert('None Index');
+		return false;
+	} else if (oDate == '' && oIndex != '') {
+		alert('None Date');
+		return false;
+	}
+
+	var ids = [];
+	var mcost = {};
+	var icoun = {};
+	ids.push(oSelid);
+	mcost[oSelid] = omcost;
+	icoun[oSelid] = oindex;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		data: {id: id, ids: ids, mcost: mcost, icoun: icoun, type: type, date: oDate, index: oIndex},
+		success: function (data) {
+			obj = JSON.parse(data);
+			var newstr = obj.replace("&amp;", "&", "gi");
+			JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+			$('#values_date').val('');
+			$('#new_index').val('');
+		}
+	});
 }
 
-onActionsClickDeleteLastIndex=function(type){
-    
-    var id = $('#agreementid').val();
-    
-    //obteniendo el ultimo registro de edit_item
-    var oSelid = $("#selidsul").val(); //1118
+onActionsClickDeleteLastIndex = function (type) {
 
-    $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{ids:oSelid,type:type,id:id},
-            success: function(data) {
-                 obj = JSON.parse(data);
-                var newstr = obj.replace("&amp;", "&","gi");
-                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
-                $('#values_date').val('');
-                $('#new_index').val('');
-            }
-    });
+	var id = $('#agreementid').val();
+
+	//obteniendo el ultimo registro de edit_item
+	var oSelid = $("#selidsul").val(); //1118
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		data: {ids: oSelid, type: type, id: id},
+		success: function (data) {
+			obj = JSON.parse(data);
+			var newstr = obj.replace("&amp;", "&", "gi");
+			JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+			$('#values_date').val('');
+			$('#new_index').val('');
+		}
+	});
 }

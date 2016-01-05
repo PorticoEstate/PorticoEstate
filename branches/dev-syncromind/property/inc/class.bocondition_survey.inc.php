@@ -40,10 +40,10 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $location_info	 = array();
+		var $location_info = array();
 		var $appname;
 		var $allrows;
-		public $acl_location	 = '.project.condition_survey';
+		public $acl_location = '.project.condition_survey';
 		var $public_functions = array
 			(
 			'addfiles' => true
@@ -51,33 +51,33 @@
 
 		function __construct($session = false)
 		{
-			$this->so			 = CreateObject('property.socondition_survey');
-			$this->custom		 = & $this->so->custom;
-			$this->bocommon		 = CreateObject('property.bocommon');
-			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->so = CreateObject('property.socondition_survey');
+			$this->custom = & $this->so->custom;
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
-			$this->cats->supress_info	 = true;
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$this->cats->supress_info = true;
 
-			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	 = phpgw::get_var('query');
-			$sort	 = phpgw::get_var('sort');
-			$order	 = phpgw::get_var('order');
-			$filter	 = phpgw::get_var('filter', 'int');
-			$cat_id	 = phpgw::get_var('cat_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 			$appname = phpgw::get_var('appname', 'string');
 
 			if($appname)
 			{
-				$this->appname		 = $appname;
-				$this->so->appname	 = $appname;
+				$this->appname = $appname;
+				$this->so->appname = $appname;
 			}
 
-			$type			 = phpgw::get_var('type');
-			$type_id		 = phpgw::get_var('type_id', 'int', 'REQUEST', 0);
-			$this->type		 = $type;
-			$this->type_id	 = $type_id;
+			$type = phpgw::get_var('type');
+			$type_id = phpgw::get_var('type_id', 'int', 'REQUEST', 0);
+			$this->type = $type;
+			$this->type_id = $type_id;
 
 			if($session)
 			{
@@ -85,13 +85,13 @@
 				$this->use_session = true;
 			}
 
-			$this->start	 = $start ? $start : 0;
-			$this->query	 = isset($_REQUEST['query']) ? $query : $this->query;
-			$this->sort		 = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order	 = isset($_REQUEST['order']) && $_REQUEST['order'] ? $order : $this->order;
-			$this->filter	 = isset($_REQUEST['filter']) ? $filter : $this->filter;
-			$this->cat_id	 = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
-			$this->allrows	 = isset($allrows) ? $allrows : false;
+			$this->start = $start ? $start : 0;
+			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
+			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->order = isset($_REQUEST['order']) && $_REQUEST['order'] ? $order : $this->order;
+			$this->filter = isset($_REQUEST['filter']) ? $filter : $this->filter;
+			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
+			$this->allrows = isset($allrows) ? $allrows : false;
 		}
 
 		public function save_sessiondata($data)
@@ -108,13 +108,13 @@
 
 			//		_debug_array($data);
 
-			$this->start	 = $data['start'];
-			$this->query	 = $data['query'];
-			$this->filter	 = $data['filter'];
-			$this->sort		 = $data['sort'];
-			$this->order	 = $data['order'];
-			$this->cat_id	 = $data['cat_id'];
-			$this->allrows	 = $data['allrows'];
+			$this->start = $data['start'];
+			$this->query = $data['query'];
+			$this->filter = $data['filter'];
+			$this->sort = $data['sort'];
+			$this->order = $data['order'];
+			$this->cat_id = $data['cat_id'];
+			$this->allrows = $data['allrows'];
 		}
 
 		function column_list($selected = '', $allrows = '')
@@ -124,8 +124,8 @@
 				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']["columns_{$this->acl_location}"];
 			}
 
-			$filter		 = array('list' => ''); // translates to "list IS NULL"
-			$columns	 = $this->custom->find('property', $this->acl_location, 0, '', '', '', true, false, $filter);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property', $this->acl_location, 0, '', '', '', true, false, $filter);
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
 			return $column_list;
@@ -133,16 +133,16 @@
 
 		public function addfiles()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app']		 = false;
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
-			$acl			 = & $GLOBALS['phpgw']->acl;
-			$acl_add		 = $acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit		 = $acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$id				 = phpgw::get_var('id', 'int');
-			$check			 = phpgw::get_var('check', 'bool');
-			$fileuploader	 = CreateObject('property.fileuploader');
+			$acl = & $GLOBALS['phpgw']->acl;
+			$acl_add = $acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit = $acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$id = phpgw::get_var('id', 'int');
+			$check = phpgw::get_var('check', 'bool');
+			$fileuploader = CreateObject('property.fileuploader');
 
 			if(!$acl_add && !$acl_edit)
 			{
@@ -160,9 +160,9 @@
 			{
 				if(!empty($_FILES))
 				{
-					$tempFile	 = $_FILES['Filedata']['tmp_name'];
-					$targetPath	 = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
-					$targetFile	 = str_replace('//', '/', $targetPath) . $_FILES['Filedata']['name'];
+					$tempFile = $_FILES['Filedata']['tmp_name'];
+					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
+					$targetFile = str_replace('//', '/', $targetPath) . $_FILES['Filedata']['name'];
 					move_uploaded_file($tempFile, $targetFile);
 					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'], '', $targetFile);
 				}
@@ -196,8 +196,8 @@
 			$custom_fields = false;
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
 			{
-				$custom_fields		 = true;
-				$data['attributes']	 = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+				$custom_fields = true;
+				$data['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			$values = array();
@@ -217,8 +217,8 @@
 				$contacts = CreateObject('property.sogeneric');
 				$contacts->get_location_info('vendor', false);
 
-				$custom						 = createObject('property.custom_fields');
-				$vendor_data['attributes']	 = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$custom = createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data = $contacts->read_single(array('id' => $values['vendor_id']), $vendor_data);
 				if(is_array($vendor_data))
@@ -324,15 +324,15 @@
 
 //_debug_array($surveys);
 //_debug_array($data);
-			$values	 = array();
-			$i		 = 0;
+			$values = array();
+			$i = 0;
 			foreach($data as $entry)
 			{
 				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
-				$i				 = "{$entry['building_part']}_{$entry['category']}";
+				$i = "{$entry['building_part']}_{$entry['category']}";
 
-				$values[$entry['condition_survey_id']][$i]['building_part']	 = $entry['building_part'];
-				$values[$entry['condition_survey_id']][$i]['category']		 = $entry['category'];
+				$values[$entry['condition_survey_id']][$i]['building_part'] = $entry['building_part'];
+				$values[$entry['condition_survey_id']][$i]['category'] = $entry['category'];
 
 				$diff = $entry['year'] - $year;
 				if($diff < 0)
@@ -341,8 +341,8 @@
 				}
 				else
 				{
-					$period	 = ceil($diff / 5) + 1;
-					$period	 = $period < 6 ? $period : 6;
+					$period = ceil($diff / 5) + 1;
+					$period = $period < 6 ? $period : 6;
 				}
 
 				for($j = 1; $j < 7; $j++)
@@ -366,7 +366,7 @@
 				foreach($entry as $type => $_entry)
 				{
 					$_values[$type]['building_part'] = $_entry['building_part'];
-					$_values[$type]['category']		 = $_entry['category'];
+					$_values[$type]['category'] = $_entry['category'];
 					$_values[$type]['period_1'] += $_entry['period_1'];
 					$_values[$type]['period_2'] += $_entry['period_2'];
 					$_values[$type]['period_3'] += $_entry['period_3'];
@@ -387,7 +387,7 @@
 			foreach($ret as $key => $row)
 			{
 				$building_part[$key] = $row['building_part'];
-				$category[$key]		 = $row['category'];
+				$category[$key] = $row['category'];
 			}
 
 			// Sort the data with account_lastname ascending, account_firstname ascending
@@ -406,8 +406,8 @@
 
 			if(!isset($category_name[$cat_id]))
 			{
-				$category				 = $this->cats->return_single($cat_id);
-				$category_name[$cat_id]	 = $category[0]['name'];
+				$category = $this->cats->return_single($cat_id);
+				$category_name[$cat_id] = $category[0]['name'];
 			}
 			return $category_name[$cat_id];
 		}

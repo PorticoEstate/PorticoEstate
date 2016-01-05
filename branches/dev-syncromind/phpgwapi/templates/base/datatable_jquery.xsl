@@ -672,6 +672,7 @@
 
 																	//delete stuff comes here
 																	var action = "<xsl:value-of select="action"/>";
+																	var my_name = "<xsl:value-of select="my_name"/>";
 
 																	<xsl:if test="parameters">
 																		var parameters = <xsl:value-of select="parameters"/>;
@@ -684,8 +685,8 @@
 																		}
 																	</xsl:if>
 
-																	// look for the word "DELETE" in URL
-																	if(substr_count(action,'delete')>0)
+																	// look for the word "DELETE" in URL and my_name
+																	if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
 																	{
 																		action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																		execute_ajax(action, function(result){

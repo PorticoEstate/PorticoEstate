@@ -1,10 +1,9 @@
 <?php
-
 	$GLOBALS['phpgw_info']['flags'] = array
-	(
-		'noheader'		=> true,
-		'nonavbar'		=> true,
-		'currentapp'	=> 'property'
+		(
+		'noheader' => true,
+		'nonavbar' => true,
+		'currentapp' => 'property'
 	);
 
 	include_once('../header.inc.php');
@@ -13,10 +12,10 @@
 	$content = html_entity_decode(phpgw::get_var('content'));
 	if($content)
 	{
-		$wiki_parser	= CreateObject('phpgwapi.wiki2html');
-		$syntax 		= phpgw::get_var('syntax');
+		$wiki_parser = CreateObject('phpgwapi.wiki2html');
+		$syntax = phpgw::get_var('syntax');
 		$wiki_parser->set_syntax($syntax);
-		$html			.=  $wiki_parser->process($content);
+		$html .= $wiki_parser->process($content);
 
 //		Alternative call - given default syntax textile
 //		$html			=  execMethod('phpgwapi.wiki2html.process',$content);

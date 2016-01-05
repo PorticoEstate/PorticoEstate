@@ -66,29 +66,29 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $location_info		 = array();
+		var $location_info = array();
 		var $cached_events;
-		protected $event_functions	 = array();
+		protected $event_functions = array();
 		var $public_functions = array
 			(
-			'event_schedule_data'		 => true,
-			'event_schedule_week_data'	 => true,
+			'event_schedule_data' => true,
+			'event_schedule_week_data' => true,
 //				'action'					=> true
 		);
 
 		function __construct($session = false)
 		{
-			$this->so			 = CreateObject('property.soevent');
-			$this->custom		 = CreateObject('property.custom_fields');//& $this->so->custom;
-			$this->sbox			 = CreateObject('phpgwapi.sbox');
-			$this->asyncservice	 = CreateObject('phpgwapi.asyncservice');
+			$this->so = CreateObject('property.soevent');
+			$this->custom = CreateObject('property.custom_fields');//& $this->so->custom;
+			$this->sbox = CreateObject('phpgwapi.sbox');
+			$this->asyncservice = CreateObject('phpgwapi.asyncservice');
 
 			if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 			{
 				$this->event_functions[1] = array
 					(
-					'id'	 => 1,
-					'name'	 => 'Send SMS',
+					'id' => 1,
+					'name' => 'Send SMS',
 					'action' => 'property.boevent.send_sms'
 				);
 			}
@@ -97,8 +97,8 @@
 			{
 				$this->event_functions[2] = array
 					(
-					'id'	 => 2,
-					'name'	 => 'Send Email',
+					'id' => 2,
+					'name' => 'Send Email',
 					'action' => 'property.boevent.send_email'
 				);
 			}
@@ -108,29 +108,29 @@
 				$this->use_session = true;
 			}
 
-			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query		 = phpgw::get_var('query');
-			$sort		 = phpgw::get_var('sort');
-			$order		 = phpgw::get_var('order');
-			$filter		 = phpgw::get_var('filter', 'int');
-			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
-			$allrows	 = phpgw::get_var('allrows', 'bool');
-			$type		 = phpgw::get_var('type');
-			$type_id	 = phpgw::get_var('type_id', 'int');
-			$user_id	 = phpgw::get_var('user_id', 'int');
-			$status_id	 = phpgw::get_var('status_id');
+			$allrows = phpgw::get_var('allrows', 'bool');
+			$type = phpgw::get_var('type');
+			$type_id = phpgw::get_var('type_id', 'int');
+			$user_id = phpgw::get_var('user_id', 'int');
+			$status_id = phpgw::get_var('status_id');
 
-			$this->start		 = $start ? $start : 0;
-			$this->query		 = isset($_REQUEST['query']) ? $query : $this->query;
-			$this->sort			 = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order		 = isset($_REQUEST['order']) ? $order : $this->order;
-			$this->filter		 = isset($_REQUEST['filter']) ? $filter : $this->filter;
-			$this->cat_id		 = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
-			$this->location_id	 = isset($_REQUEST['location_id']) ? $location_id : $this->location_id;
-			$this->user_id		 = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
-			$this->allrows		 = isset($allrows) ? $allrows : false;
-			$this->status_id	 = isset($_REQUEST['status_id']) ? $status_id : $this->status_id;
+			$this->start = $start ? $start : 0;
+			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
+			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->order = isset($_REQUEST['order']) ? $order : $this->order;
+			$this->filter = isset($_REQUEST['filter']) ? $filter : $this->filter;
+			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
+			$this->location_id = isset($_REQUEST['location_id']) ? $location_id : $this->location_id;
+			$this->user_id = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
+			$this->allrows = isset($allrows) ? $allrows : false;
+			$this->status_id = isset($_REQUEST['status_id']) ? $status_id : $this->status_id;
 		}
 
 		public function save_sessiondata($data)
@@ -147,16 +147,16 @@
 
 			//		_debug_array($data);
 
-			$this->start		 = $data['start'];
-			$this->query		 = $data['query'];
-			$this->filter		 = $data['filter'];
-			$this->sort			 = $data['sort'];
-			$this->order		 = $data['order'];
-			$this->cat_id		 = $data['cat_id'];
-			$this->allrows		 = $data['allrows'];
-			$this->location_id	 = $data['location_id'];
-			$this->user_id		 = $data['user_id'];
-			$this->status_id	 = $data['status_id'];
+			$this->start = $data['start'];
+			$this->query = $data['query'];
+			$this->filter = $data['filter'];
+			$this->sort = $data['sort'];
+			$this->order = $data['order'];
+			$this->cat_id = $data['cat_id'];
+			$this->allrows = $data['allrows'];
+			$this->location_id = $data['location_id'];
+			$this->user_id = $data['user_id'];
+			$this->status_id = $data['status_id'];
 		}
 
 		public function read($data = array())
@@ -167,14 +167,14 @@
 
 			$values = $this->so->read($data);
 
-			static $locations	 = array();
-			static $urls		 = array();
-			$interlink			 = CreateObject('property.interlink');
-			$dateformat			 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			static $locations = array();
+			static $urls = array();
+			$interlink = CreateObject('property.interlink');
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach($values as &$entry)
 			{
-				$entry['date']			 = $GLOBALS['phpgw']->common->show_date($entry['schedule_time'], $dateformat);
-				$entry['receipt_date']	 = $GLOBALS['phpgw']->common->show_date($entry['receipt_date'], $dateformat);
+				$entry['date'] = $GLOBALS['phpgw']->common->show_date($entry['schedule_time'], $dateformat);
+				$entry['receipt_date'] = $GLOBALS['phpgw']->common->show_date($entry['receipt_date'], $dateformat);
 
 				if($locations[$entry['location_id']])
 				{
@@ -182,8 +182,8 @@
 				}
 				else
 				{
-					$location							 = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
-					$locations[$entry['location_id']]	 = $location;
+					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+					$locations[$entry['location_id']] = $location;
 				}
 
 				if($urls[$entry['location_id']][$entry['location_item_id']])
@@ -192,38 +192,38 @@
 				}
 				else
 				{
-					$entry['url']											 = $interlink->get_relation_link($location['location'], $entry['location_item_id']);
+					$entry['url'] = $interlink->get_relation_link($location['location'], $entry['location_item_id']);
 					$urls[$entry['location_id']][$entry['location_item_id']] = $entry['url'];
 				}
-				$entry['location_name']	 = $interlink->get_location_name($location['location']);
-				$entry['location']		 = $location['location'];
+				$entry['location_name'] = $interlink->get_location_name($location['location']);
+				$entry['location'] = $location['location'];
 			}
 
 			$this->total_records = $this->so->total_records;
-			$this->uicols		 = $this->so->uicols;
+			$this->uicols = $this->so->uicols;
 
 			return $values;
 		}
 
 		public function read_single($id)
 		{
-			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values		 = $this->so->read_single($id);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values = $this->so->read_single($id);
 			if($values)
 			{
-				$values['start_date']	 = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
-				$values['end_date']		 = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
+				$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+				$values['end_date'] = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
 				if($values['rpt_day'])
 				{
 					$rpt_day = array
 						(
-						1	 => 'Sunday',
-						2	 => 'Monday',
-						4	 => 'Tuesday',
-						8	 => 'Wednesday',
-						16	 => 'Thursday',
-						32	 => 'Friday',
-						64	 => 'Saturday'
+						1 => 'Sunday',
+						2 => 'Monday',
+						4 => 'Tuesday',
+						8 => 'Wednesday',
+						16 => 'Thursday',
+						32 => 'Friday',
+						64 => 'Saturday'
 					);
 
 					foreach($rpt_day as $mask => $name)
@@ -235,9 +235,9 @@
 					}
 				}
 
-				$location	 = phpgw::get_var('location');
-				$job_id		 = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
-				$job		 = execMethod('phpgwapi.asyncservice.read', $job_id);
+				$location = phpgw::get_var('location');
+				$job_id = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
+				$job = execMethod('phpgwapi.asyncservice.read', $job_id);
 
 				$values['next'] = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'], $dateformat);
 			}
@@ -254,8 +254,8 @@
 
 		public function save($data)
 		{
-			$data['start_date']	 = phpgwapi_datetime::date_to_timestamp($data['start_date']);
-			$data['end_date']	 = phpgwapi_datetime::date_to_timestamp($data['end_date']);
+			$data['start_date'] = phpgwapi_datetime::date_to_timestamp($data['start_date']);
+			$data['end_date'] = phpgwapi_datetime::date_to_timestamp($data['end_date']);
 //			_debug_array($data);die();
 			if(isset($data['id']) && $data['id'] > 0 && $this->so->read_single($data['id']))
 			{
@@ -272,13 +272,13 @@
 			 */
 			$rpt_day = array
 				(
-				1	 => 0, //'Sunday',
-				2	 => 1, //'Monday',
-				4	 => 2, //'Tuesday',
-				8	 => 3, //'Wednesday',
-				16	 => 4, //'Thursday',
-				32	 => 5, //'Friday',
-				64	 => 6  //'Saturday'
+				1 => 0, //'Sunday',
+				2 => 1, //'Monday',
+				4 => 2, //'Tuesday',
+				8 => 3, //'Wednesday',
+				16 => 4, //'Thursday',
+				32 => 5, //'Friday',
+				64 => 6  //'Saturday'
 			);
 
 			$repeat_day = array();
@@ -319,8 +319,8 @@
 					case '2': //'Weekly'
 						if($data['repeat_interval'])
 						{
-							$day	 = $data['repeat_interval'] * 7;
-							$times	 = array('day' => "*/{$day}");
+							$day = $data['repeat_interval'] * 7;
+							$times = array('day' => "*/{$day}");
 						}
 						else
 						{
@@ -379,13 +379,13 @@
 
 			$timer_data = array
 				(
-				'start'			 => $data['start_date'],
-				'enabled'		 => true,
-				'owner'			 => $account_id,
-				'enabled'		 => !!$data['enabled'],
+				'start' => $data['start_date'],
+				'enabled' => true,
+				'owner' => $account_id,
+				'enabled' => !!$data['enabled'],
 //					'action'		=> $action['action'],
-				'action'		 => $this->event_functions[$data['action']]['action'],
-				'action_data'	 => array('contact_id' => $data['contact_id'])
+				'action' => $this->event_functions[$data['action']]['action'],
+				'action_data' => array('contact_id' => $data['contact_id'])
 			);
 
 			if($data['end_date'])
@@ -402,8 +402,8 @@
 
 			$location = phpgw::get_var('location');
 
-			$id					 = "property{$location}::{$data['item_id']}::{$receipt['id']}";
-			$timer_data['id']	 = $id;
+			$id = "property{$location}::{$data['item_id']}::{$receipt['id']}";
+			$timer_data['id'] = $id;
 
 			$this->asyncservice->cancel_timer($id);
 			$this->asyncservice->set_timer($times, $id, 'property.boevent.action', $timer_data, $account_id);
@@ -412,10 +412,10 @@
 
 			$criteria = array
 				(
-				'start_date'		 => $event['start_date'],
-				'end_date'			 => $event['end_date'],
-				'location_id'		 => $event['location_id'],
-				'location_item_id'	 => $event['location_item_id']
+				'start_date' => $event['start_date'],
+				'end_date' => $event['end_date'],
+				'location_id' => $event['location_id'],
+				'location_item_id' => $event['location_item_id']
 			);
 
 			$this->find_scedules($criteria);
@@ -427,11 +427,11 @@
 
 		public function action($data)
 		{
-			$parts	 = explode('::', $data['id']);
-			$id		 = end($parts);
-			$now	 = time();
+			$parts = explode('::', $data['id']);
+			$id = end($parts);
+			$now = time();
 
-			$event			 = $this->so->read_single($id);
+			$event = $this->so->read_single($id);
 			$_perform_action = false;
 
 			foreach($event['event_schedule'] as $_schedule)
@@ -462,9 +462,9 @@
 
 				$this->so->cron_log(array
 					(
-					'cron'		 => true, // or false for manual...
-					'action'	 => isset($data['action']) && $data['action'] ? $data['action'] : 'dummy',
-					'message'	 => $message
+					'cron' => true, // or false for manual...
+					'action' => isset($data['action']) && $data['action'] ? $data['action'] : 'dummy',
+					'message' => $message
 				)
 				);
 			}
@@ -472,10 +472,10 @@
 
 		public function delete($id)
 		{
-			$values		 = $this->read_single($id);
-			$location	 = phpgw::get_var('location');
-			$job_id		 = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
-			$job		 = execMethod('phpgwapi.asyncservice.cancel_timer', $job_id);
+			$values = $this->read_single($id);
+			$location = phpgw::get_var('location');
+			$job_id = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
+			$job = execMethod('phpgwapi.asyncservice.cancel_timer', $job_id);
 
 			return $this->so->delete($id);
 		}
@@ -484,12 +484,12 @@
 		{
 			$rpt_type = array
 				(
-				0	 => 'None',
-				1	 => 'Daily',
-				2	 => 'Weekly',
-				3	 => 'Monthly (by date)',
-				4	 => 'Monthly (by day)',
-				5	 => 'Yearly'
+				0 => 'None',
+				1 => 'Daily',
+				2 => 'Weekly',
+				3 => 'Monthly (by date)',
+				4 => 'Monthly (by day)',
+				5 => 'Yearly'
 			);
 
 
@@ -500,17 +500,18 @@
 		{
 			$rpt_day = array
 				(
-				1	 => 'Sunday',
-				2	 => 'Monday',
-				4	 => 'Tuesday',
-				8	 => 'Wednesday',
-				16	 => 'Thursday',
-				32	 => 'Friday',
-				64	 => 'Saturday'
+				1 => 'Sunday',
+				2 => 'Monday',
+				4 => 'Tuesday',
+				8 => 'Wednesday',
+				16 => 'Thursday',
+				32 => 'Friday',
+				64 => 'Saturday'
 			);
 
-			$title	 = lang('(for weekly)');
-			$i		 = 0;$boxes	 = '';
+			$title = lang('(for weekly)');
+			$i = 0;
+			$boxes = '';
 			foreach($rpt_day as $mask => $name)
 			{
 				$boxes .= '<input type="checkbox" title = "' . $title . '"name="values[repeat_day][]" value="' . $mask . '"' . (isset($selected[$mask]) && $selected[$mask] ? ' checked' : '') . '></input> ' . lang($name) . "\n";
@@ -524,11 +525,11 @@
 		{
 			$responsible = CreateObject('property.soresponsible');
 
-			$location	 = phpgw::get_var('location');
-			$values		 = $responsible->read_type(array('start'		 => 0, 'query'		 => '', 'sort'		 => '',
-				'order'		 => '', 'location'	 => $location, 'allrows'	 => true,
-				'filter'	 => ''));
-			$list		 = array(0 => lang('none'));
+			$location = phpgw::get_var('location');
+			$values = $responsible->read_type(array('start' => 0, 'query' => '', 'sort' => '',
+				'order' => '', 'location' => $location, 'allrows' => true,
+				'filter' => ''));
+			$list = array(0 => lang('none'));
 			foreach($values as $entry)
 			{
 				$list[$entry['id']] = $entry['name'];
@@ -555,11 +556,11 @@
 
 		public function send_sms($data)
 		{
-			$parts			 = explode('::', $data['id']);
-			$id				 = $parts[1];
-			$location_arr	 = explode('.', $parts[0]);
-			$interlink		 = CreateObject('property.interlink');
-			$relation_link	 = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
+			$parts = explode('::', $data['id']);
+			$id = $parts[1];
+			$location_arr = explode('.', $parts[0]);
+			$interlink = CreateObject('property.interlink');
+			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
 			$contact_id = isset($data['action_data']['contact_id']) ? $data['action_data']['contact_id'] : 0;
 			if(!$contact_id)
@@ -569,14 +570,14 @@
 
 			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data', $contact_id);
 
-			$number	 = $comms[$contact_id]['mobile (cell) phone'];
+			$number = $comms[$contact_id]['mobile (cell) phone'];
 			$subject = lang('reminder');
 			$message = "<a href =\"{$relation_link}\">" . lang('record') . ' #' . $id . '</a>' . "\n";
 
 			$data = array
 				(
 				'p_num_text' => $number,
-				'message'	 => "{$subject}:\n{$message}"
+				'message' => "{$subject}:\n{$message}"
 			);
 
 			if(execMethod('sms.bosms.send_sms', $data))
@@ -587,11 +588,11 @@
 
 		public function send_email($data)
 		{
-			$parts			 = explode('::', $data['id']);
-			$id				 = $parts[1];
-			$location_arr	 = explode('.', $parts[0]);
-			$interlink		 = CreateObject('property.interlink');
-			$relation_link	 = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
+			$parts = explode('::', $data['id']);
+			$id = $parts[1];
+			$location_arr = explode('.', $parts[0]);
+			$interlink = CreateObject('property.interlink');
+			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
 			$contact_id = isset($data['action_data']['contact_id']) ? $data['action_data']['contact_id'] : 0;
 			if(!$contact_id)
@@ -599,11 +600,11 @@
 				return false;
 			}
 
-			$account_id	 = $GLOBALS['phpgw']->accounts->search_person($contact_id);
-			$socommon	 = CreateObject('property.socommon');
-			$prefs		 = $socommon->create_preferences('property', $account_id);
-			$comms		 = execMethod('addressbook.boaddressbook.get_comm_contact_data', $contact_id);
-			$_address	 = isset($comms[$contact_id]['work email']) && $comms[$contact_id]['work email'] ? $comms[$contact_id]['work email'] : $prefs['email'];
+			$account_id = $GLOBALS['phpgw']->accounts->search_person($contact_id);
+			$socommon = CreateObject('property.socommon');
+			$prefs = $socommon->create_preferences('property', $account_id);
+			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data', $contact_id);
+			$_address = isset($comms[$contact_id]['work email']) && $comms[$contact_id]['work email'] ? $comms[$contact_id]['work email'] : $prefs['email'];
 
 			$subject = lang('reminder');
 			$message = "<a href =\"{$relation_link}\">" . lang('record') . ' #' . $id . '</a>' . "\n";
@@ -619,11 +620,11 @@
 			{
 				$receipt['error'][] = array('msg' => $e->getMessage());
 				$GLOBALS['phpgw']->log->error(array(
-					'text'	 => 'property_boevent::send_email() failed with %1',
-					'p1'	 => $e->getMessage(),
-					'p2'	 => '',
-					'line'	 => __LINE__,
-					'file'	 => __FILE__
+					'text' => 'property_boevent::send_email() failed with %1',
+					'p1' => $e->getMessage(),
+					'p2' => '',
+					'line' => __LINE__,
+					'file' => __FILE__
 				));
 
 				return false;
@@ -665,14 +666,14 @@
 
 			if($params['start_date'])
 			{
-				$syear	 = date('Y', $params['start_date']);
-				$smonth	 = date('m', $params['start_date']);
-				$sday	 = date('d', $params['start_date']);
+				$syear = date('Y', $params['start_date']);
+				$smonth = date('m', $params['start_date']);
+				$sday = date('d', $params['start_date']);
 			}
 
-			$eyear	 = $params['end_date'] ? date('Y', $params['end_date']) : 0;
-			$emonth	 = $params['end_date'] ? date('m', $params['end_date']) : 0;
-			$eday	 = $params['end_date'] ? date('d', $params['end_date']) : 0;
+			$eyear = $params['end_date'] ? date('Y', $params['end_date']) : 0;
+			$emonth = $params['end_date'] ? date('m', $params['end_date']) : 0;
+			$eday = $params['end_date'] ? date('d', $params['end_date']) : 0;
 
 			$owner_id = (isset($params['owner']) ? $params['owner'] : 0);
 			if($owner_id == 0 && $this->is_group)
@@ -687,10 +688,10 @@
 
 			if(!$eyear && !$emonth && !$eday)
 			{
-				$edate	 = mktime(23, 59, 59, $smonth + 1, $sday + 1, $syear);
-				$eyear	 = date('Y', $edate);
-				$emonth	 = date('m', $edate);
-				$eday	 = date('d', $edate);
+				$edate = mktime(23, 59, 59, $smonth + 1, $sday + 1, $syear);
+				$eyear = date('Y', $edate);
+				$emonth = date('m', $edate);
+				$eday = date('d', $edate);
 			}
 			else
 			{
@@ -722,21 +723,21 @@
 
 			$find_criteria = array
 				(
-				'syear'				 => $syear,
-				'smonth'			 => $smonth,
-				'sday'				 => $sday,
-				'eyear'				 => $eyear,
-				'emonth'			 => $emonth,
-				'eday'				 => $eday,
-				'tz_offset'			 => 0,
-				'extra'				 => '',
-				'owner_id'			 => $owner_id,
-				'location_id'		 => $location_id,
-				'location_item_id'	 => $location_item_id
+				'syear' => $syear,
+				'smonth' => $smonth,
+				'sday' => $sday,
+				'eyear' => $eyear,
+				'emonth' => $emonth,
+				'eday' => $eday,
+				'tz_offset' => 0,
+				'extra' => '',
+				'owner_id' => $owner_id,
+				'location_id' => $location_id,
+				'location_item_id' => $location_item_id
 			);
 
-			$cached_event_ids			 = $this->so->list_events($find_criteria);
-			$cached_event_ids_repeating	 = $this->so->list_repeated_events($find_criteria);
+			$cached_event_ids = $this->so->list_events($find_criteria);
+			$cached_event_ids_repeating = $this->so->list_repeated_events($find_criteria);
 			//_debug_array($cached_event_ids_repeating);die();
 			unset($find_criteria);
 
@@ -756,15 +757,15 @@
 
 			foreach($cached_event_ids as $cached_event_id)
 			{
-				$event								 = $this->so->read_single($cached_event_id);
-				$startdate							 = intval(date('Ymd', $event['start_date']));
-				$enddate							 = intval(date('Ymd', $event['end_date']));
-				$this->cached_events[$startdate][]	 = $event;
+				$event = $this->so->read_single($cached_event_id);
+				$startdate = intval(date('Ymd', $event['start_date']));
+				$enddate = intval(date('Ymd', $event['end_date']));
+				$this->cached_events[$startdate][] = $event;
 				if($startdate != $enddate && !$cached_event_ids_repeating)
 				{
-					$start['year']	 = intval(substr($startdate, 0, 4));
-					$start['month']	 = intval(substr($startdate, 4, 2));
-					$start['mday']	 = intval(substr($startdate, 6, 2));
+					$start['year'] = intval(substr($startdate, 0, 4));
+					$start['month'] = intval(substr($startdate, 4, 2));
+					$start['mday'] = intval(substr($startdate, 6, 2));
 					for($j = $startdate, $k = 0; $j <= $enddate; $k++, $j = intval(date('Ymd', mktime(0, 0, 0, $start['month'], $start['mday'] + $k, $start['year']))))
 					{
 						$c_evt_day = 0;
@@ -840,33 +841,33 @@
 		function check_repeating_events($datetime)
 		{
 			@reset($this->repeating_events);
-			$search_date_full	 = date('Ymd', $datetime);
-			$search_date_year	 = date('Y', $datetime);
-			$search_date_month	 = date('m', $datetime);
-			$search_date_day	 = date('d', $datetime);
-			$search_date_dow	 = date('w', $datetime);
-			$search_date_week	 = date('YW', $datetime);
-			$search_beg_day		 = mktime(13, 0, 0, $search_date_month, $search_date_day, $search_date_year);
+			$search_date_full = date('Ymd', $datetime);
+			$search_date_year = date('Y', $datetime);
+			$search_date_month = date('m', $datetime);
+			$search_date_day = date('d', $datetime);
+			$search_date_dow = date('w', $datetime);
+			$search_date_week = date('YW', $datetime);
+			$search_beg_day = mktime(13, 0, 0, $search_date_month, $search_date_day, $search_date_year);
 			if($this->debug)
 			{
 				echo '<!-- Search Date Full = ' . $search_date_full . ' -->' . "\n";
 			}
-			$repeated	 = $this->repeating_events;
-			$r_events	 = count($repeated);
+			$repeated = $this->repeating_events;
+			$r_events = count($repeated);
 			for($i = 0; $i < $r_events; $i++)
 			{
 				if($this->repeating_events[$i]['repeat_type'] != 0)
 				{
 					$rep_events = $this->repeating_events[$i];
 
-					$id								 = $rep_events['id'];
-					$rep_events['start']['month']	 = date('m', $rep_events['start_date']);
-					$rep_events['start']['mday']	 = date('d', $rep_events['start_date']);
-					$rep_events['start']['year']	 = date('Y', $rep_events['start_date']);
+					$id = $rep_events['id'];
+					$rep_events['start']['month'] = date('m', $rep_events['start_date']);
+					$rep_events['start']['mday'] = date('d', $rep_events['start_date']);
+					$rep_events['start']['year'] = date('Y', $rep_events['start_date']);
 
 //					$event_beg_day = mktime(0,0,0,$rep_events['start']['month'],$rep_events['start']['mday'],$rep_events['start']['year']);
-					$event_beg_day	 = $rep_events['start_date'];
-					$event_beg_week	 = date('YW', $rep_events['start_date']);
+					$event_beg_day = $rep_events['start_date'];
+					$event_beg_week = date('YW', $rep_events['start_date']);
 
 					if(isset($rep_events['end_date']) && $rep_events['end_date'])
 					{
@@ -886,7 +887,7 @@
 					  $event_recur_time = mktime(0,0,0,1,1,2030);
 					  }
 					 */
-					$end_recur_date	 = date('Ymd', $event_recur_time);
+					$end_recur_date = date('Ymd', $event_recur_time);
 					$full_event_date = date('Ymd', $event_beg_day);
 
 					if($this->debug)
@@ -908,8 +909,8 @@
 					}
 					else
 					{
-						$freq	 = (isset($rep_events['repeat_interval']) && $rep_events['repeat_interval'] ? $rep_events['repeat_interval'] : 1);
-						$type	 = $rep_events['repeat_type'];
+						$freq = (isset($rep_events['repeat_interval']) && $rep_events['repeat_interval'] ? $rep_events['repeat_interval'] : 1);
+						$type = $rep_events['repeat_type'];
 						switch($type)
 						{
 							case MCAL_RECUR_DAILY:
@@ -932,8 +933,8 @@
 								}
 								break;
 							case MCAL_RECUR_WEEKLY:
-								$test			 = (($search_beg_day - $event_beg_day) / 604800) / $freq;
-								$test_subtract	 = floor($test);
+								$test = (($search_beg_day - $event_beg_day) / 604800) / $freq;
+								$test_subtract = floor($test);
 
 								//if (floor(($search_beg_day - $event_beg_day)/604800) % $freq)
 								if(!$rep_events['rpt_day'])
@@ -945,8 +946,8 @@
 								}
 								else
 								{
-									$test			 = ($search_date_week - $event_beg_week) / $freq;
-									$test_subtract	 = floor($test);
+									$test = ($search_date_week - $event_beg_week) / $freq;
+									$test_subtract = floor($test);
 									if(($test - $test_subtract))
 									{
 										continue;
@@ -956,25 +957,25 @@
 									switch($search_date_dow)
 									{
 										case 0:
-											$check	 = MCAL_M_SUNDAY;
+											$check = MCAL_M_SUNDAY;
 											break;
 										case 1:
-											$check	 = MCAL_M_MONDAY;
+											$check = MCAL_M_MONDAY;
 											break;
 										case 2:
-											$check	 = MCAL_M_TUESDAY;
+											$check = MCAL_M_TUESDAY;
 											break;
 										case 3:
-											$check	 = MCAL_M_WEDNESDAY;
+											$check = MCAL_M_WEDNESDAY;
 											break;
 										case 4:
-											$check	 = MCAL_M_THURSDAY;
+											$check = MCAL_M_THURSDAY;
 											break;
 										case 5:
-											$check	 = MCAL_M_FRIDAY;
+											$check = MCAL_M_FRIDAY;
 											break;
 										case 6:
-											$check	 = MCAL_M_SATURDAY;
+											$check = MCAL_M_SATURDAY;
 											break;
 									}
 
@@ -990,8 +991,7 @@
 									continue;
 								}
 
-								if((phpgwapi_datetime::day_of_week($rep_events['start']['year'], $rep_events['start']['month'], $rep_events['start']['mday']) == phpgwapi_datetime::day_of_week($search_date_year, $search_date_month, $search_date_day)) &&
-								(ceil($rep_events['start']['mday'] / 7) == ceil($search_date_day / 7)))
+								if((phpgwapi_datetime::day_of_week($rep_events['start']['year'], $rep_events['start']['month'], $rep_events['start']['mday']) == phpgwapi_datetime::day_of_week($search_date_year, $search_date_month, $search_date_day)) && (ceil($rep_events['start']['mday'] / 7) == ceil($search_date_day / 7)))
 								{
 									$this->sort_event($rep_events, $search_date_full);
 								}
@@ -1021,14 +1021,15 @@
 				}
 			} // end for loop
 		}
+
 // end function
 
 		function sort_event($event, $date)
 		{
-			$inserted				 = False;
+			$inserted = False;
 			$event['start']['month'] = date('m', $event['start_date']);
-			$event['start']['mday']	 = date('d', $event['start_date']);
-			$event['start']['year']	 = date('Y', $event['start_date']);
+			$event['start']['mday'] = date('d', $event['start_date']);
+			$event['start']['year'] = date('Y', $event['start_date']);
 
 			if(isset($event['repeat_exception']))
 			{
@@ -1067,9 +1068,9 @@
 				{
 					echo '<!-- Cached Events found for ' . $date . ' -->' . "\n";
 				}
-				$year	 = substr($date, 0, 4);
-				$month	 = substr($date, 4, 2);
-				$day	 = substr($date, 6, 2);
+				$year = substr($date, 0, 4);
+				$month = substr($date, 4, 2);
+				$day = substr($date, 6, 2);
 
 				if($this->debug)
 				{
@@ -1107,8 +1108,8 @@
 						{
 							echo '<!-- Adding event ID: ' . $event['id'] . ' to cached_events -->' . "\n";
 						}
-						$inserted						 = True;
-						$this->cached_events[$date][$i]	 = $event;
+						$inserted = True;
+						$this->cached_events[$date][$i] = $event;
 						break;
 					}
 				}
@@ -1132,11 +1133,11 @@
 				$date->modify('last monday');
 			}
 
-			$prev_date	 = clone $date;
-			$next_date	 = clone $date;
+			$prev_date = clone $date;
+			$next_date = clone $date;
 			$prev_date->modify('-1 week');
 			$next_date->modify('+1 week');
-			$resource	 = $this->read_single($id);
+			$resource = $this->read_single($id);
 			if($search)
 			{
 				$resource['buildings_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $search,
@@ -1147,16 +1148,16 @@
 				$resource['buildings_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $buildingmodule . '.index'));
 			}
 
-			$resource['building_link']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $buildingmodule . '.show',
+			$resource['building_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $buildingmodule . '.show',
 				'id' => $resource['building_id']));
-			$resource['resource_link']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.show',
+			$resource['resource_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.show',
 				'id' => $resource['id']));
-			$resource['date']			 = $date->format('Y-m-d');
-			$resource['week']			 = intval($date->format('W'));
-			$resource['year']			 = intval($date->format('Y'));
-			$resource['prev_link']		 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week',
+			$resource['date'] = $date->format('Y-m-d');
+			$resource['week'] = intval($date->format('W'));
+			$resource['year'] = intval($date->format('Y'));
+			$resource['prev_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week',
 				'id' => $resource['id'], 'date' => $prev_date->format('Y-m-d')));
-			$resource['next_link']		 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week',
+			$resource['next_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week',
 				'id' => $resource['id'], 'date' => $next_date->format('Y-m-d')));
 			for($i = 0; $i < 7; $i++)
 			{
@@ -1176,19 +1177,19 @@
 		{
 			//		    $date = new DateTime(phpgw::get_var('date')); Use this one when moving to php 5.3
 
-			$datetime		 = CreateObject('phpgwapi.datetime');
-			$date			 = $datetime->convertDate(phpgw::get_var('date'), 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$datetime_start	 = $datetime->date_to_timestamp($date);
+			$datetime = CreateObject('phpgwapi.datetime');
+			$date = $datetime->convertDate(phpgw::get_var('date'), 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$datetime_start = $datetime->date_to_timestamp($date);
 
 			$id = phpgw::get_var('resource_id', 'int');
 
-			$event		 = $this->so->read_single($id);
-			$criteria	 = array
+			$event = $this->so->read_single($id);
+			$criteria = array
 				(
-				'start_date'		 => $datetime_start,
-				'end_date'			 => $datetime_start + (86400 * 6),
-				'location_id'		 => $event['location_id'],
-				'location_item_id'	 => $event['location_item_id']
+				'start_date' => $datetime_start,
+				'end_date' => $datetime_start + (86400 * 6),
+				'location_id' => $event['location_id'],
+				'location_item_id' => $event['location_item_id']
 			);
 
 			$this->find_scedules($criteria);
@@ -1203,31 +1204,31 @@
 				}
 			}
 
-			$lang_exception	 = lang('exception');
-			$values			 = array();
+			$lang_exception = lang('exception');
+			$values = array();
 			for($i = 0; $i < $total_records; $i++)
 			{
 				$values[$i] = array
 					(
-					'resource'		 => 'descr',
-					'resource_id'	 => 11,
-					'time'			 => $i + 1,
-					'_from'			 => '16:30',
-					'_to'			 => '17:00'
+					'resource' => 'descr',
+					'resource_id' => 11,
+					'time' => $i + 1,
+					'_from' => '16:30',
+					'_to' => '17:00'
 				);
 
 				foreach($schedules as $_date => $set)
 				{
-					$__date						 = substr($_date, 0, 4) . '-' . substr($_date, 4, 2) . '-' . substr($_date, 6, 2);
-					$date						 = new DateTime($__date);
-					$day_of_week				 = $date->format('D');
-					$values[$i][$day_of_week]	 = array
+					$__date = substr($_date, 0, 4) . '-' . substr($_date, 4, 2) . '-' . substr($_date, 6, 2);
+					$date = new DateTime($__date);
+					$day_of_week = $date->format('D');
+					$values[$i][$day_of_week] = array
 						(
-						'exception'		 => $set[$i]['exception'],
+						'exception' => $set[$i]['exception'],
 						'lang_exception' => $lang_exception,
-						'type'			 => 'event',
-						'name'			 => $set[$i]['descr'],
-						'link'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent.show',
+						'type' => 'event',
+						'name' => $set[$i]['descr'],
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent.show',
 							'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
 					);
 				}
@@ -1236,8 +1237,8 @@
 			$data = array
 				(
 				'ResultSet' => array(
-					"totalResultsAvailable"	 => $total_records,
-					"Result"				 => $values
+					"totalResultsAvailable" => $total_records,
+					"Result" => $values
 				)
 			);
 			//_debug_array($data);die();
@@ -1257,10 +1258,10 @@
 
 			$criteria = array
 				(
-				'start_date'		 => $event['start_date'],
-				'end_date'			 => $event['end_date'],
-				'location_id'		 => $event['location_id'],
-				'location_item_id'	 => $event['location_item_id']
+				'start_date' => $event['start_date'],
+				'end_date' => $event['end_date'],
+				'location_id' => $event['location_id'],
+				'location_item_id' => $event['location_item_id']
 			);
 
 			$this->find_scedules($criteria);
@@ -1268,27 +1269,27 @@
 
 			$total_records = 0;
 
-			$lang_exception	 = lang('exception');
-			$values			 = array();
+			$lang_exception = lang('exception');
+			$values = array();
 
 			$i = 1;
 			foreach($schedules as $_date => $set)
 			{
-				$__date	 = substr($_date, 0, 4) . '-' . substr($_date, 4, 2) . '-' . substr($_date, 6, 2);
-				$date	 = phpgwapi_datetime::convertDate($__date, 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$__date = substr($_date, 0, 4) . '-' . substr($_date, 4, 2) . '-' . substr($_date, 6, 2);
+				$date = phpgwapi_datetime::convertDate($__date, 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
 				foreach($set as $entry)
 				{
 					$values[] = array
 						(
-						'time'	 => $i,
-						'date'	 => array
+						'time' => $i,
+						'date' => array
 							(
-							'exception'		 => $entry['exception'],
+							'exception' => $entry['exception'],
 							'lang_exception' => $lang_exception,
-							'type'			 => 'event',
-							'name'			 => $date,
-							'link'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent.show',
+							'type' => 'event',
+							'name' => $date,
+							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent.show',
 								'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
 						)
 					);
@@ -1300,8 +1301,8 @@
 			$data = array
 				(
 				'ResultSet' => array(
-					"totalResultsAvailable"	 => $total_records,
-					"Result"				 => $values
+					"totalResultsAvailable" => $total_records,
+					"Result" => $values
 				)
 			);
 
@@ -1319,12 +1320,12 @@
 
 		public function get_event_location()
 		{
-			$interlink	 = CreateObject('property.interlink');
-			$locations	 = $this->so->get_event_location();
+			$interlink = CreateObject('property.interlink');
+			$locations = $this->so->get_event_location();
 			foreach($locations as &$location)
 			{
-				$temp				 = $GLOBALS['phpgw']->locations->get_name($location['id']);
-				$location['name']	 = $interlink->get_location_name($temp['location']);
+				$temp = $GLOBALS['phpgw']->locations->get_name($location['id']);
+				$location['name'] = $interlink->get_location_name($temp['location']);
 			}
 			return $locations;
 		}

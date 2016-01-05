@@ -35,27 +35,27 @@
 	class property_soproject
 	{
 
-		var $total_records	 = 0;
-		private $global_lock	 = false;
-		private $vendor_list	 = array();
+		var $total_records = 0;
+		private $global_lock = false;
+		private $vendor_list = array();
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bocommon = CreateObject('property.bocommon');
 			$this->interlink = CreateObject('property.interlink');
-			$this->custom	 = createObject('property.custom_fields');
+			$this->custom = createObject('property.custom_fields');
 
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->db2		 = clone ($this->db);
-			$this->join		 = & $this->db->join;
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->db2 = clone ($this->db);
+			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like		 = & $this->db->like;
+			$this->like = & $this->db->like;
 
-			$this->acl		 = & $GLOBALS['phpgw']->acl;
+			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl->set_account_id($this->account);
-			$this->grants	 = $this->acl->get_grants('property', '.project');
-			$this->config	 = CreateObject('phpgwapi.config', 'property');
+			$this->grants = $this->acl->get_grants('property', '.project');
+			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 		}
 
@@ -67,8 +67,8 @@
 			{
 				$status[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('descr', true)
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('descr', true)
 				);
 			}
 			return $status;
@@ -83,8 +83,8 @@
 			{
 				$branch[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('descr', true)
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('descr', true)
 				);
 			}
 			return $branch;
@@ -98,8 +98,8 @@
 			{
 				$location[] = array
 					(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('descr', true)
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('descr', true)
 				);
 			}
 			return $location;
@@ -107,24 +107,24 @@
 
 		function read($data)
 		{
-			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$filter			 = $data['filter'] ? (int)$data['filter'] : 0;
-			$query			 = isset($data['query']) ? $data['query'] : '';
-			$sort			 = isset($data['sort']) ? $data['sort'] : 'DESC';
-			$order			 = isset($data['order']) ? $data['order'] : 'project_id';
-			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
-			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
-			$end_date		 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
-			$overdue		 = isset($data['overdue']) && $data['overdue'] ? (int)$data['overdue'] : 0;
-			$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
-			$wo_hour_cat_id	 = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
-			$district_id	 = isset($data['district_id']) ? $data['district_id'] : '';
-			$dry_run		 = isset($data['dry_run']) ? $data['dry_run'] : '';
-			$criteria		 = isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter = $data['filter'] ? (int)$data['filter'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : 'project_id';
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
+			$start_date = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
+			$end_date = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
+			$overdue = isset($data['overdue']) && $data['overdue'] ? (int)$data['overdue'] : 0;
+			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$wo_hour_cat_id = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
+			$district_id = isset($data['district_id']) ? $data['district_id'] : '';
+			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
+			$criteria = isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 			$project_type_id = $data['project_type_id'] ? (int)$data['project_type_id'] : 0;
-			$filter_year	 = isset($data['filter_year']) ? $data['filter_year'] : '';
-			$results		 = (isset($data['results']) ? $data['results'] : 0);
+			$filter_year = isset($data['filter_year']) ? $data['filter_year'] : '';
+			$results = (isset($data['results']) ? $data['results'] : 0);
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -132,8 +132,8 @@
 			{
 				$entity_table = 'fm_project';
 
-				$cols			 = $entity_table . '.location_code';
-				$cols_return[]	 = 'location_code';
+				$cols = $entity_table . '.location_code';
+				$cols_return[] = 'location_code';
 
 				$cols.= ",project_type_id";
 				$cols_return[] = 'project_type_id';
@@ -151,52 +151,52 @@
 				 */
 
 				$cols .= ",$entity_table.id as project_id";
-				$cols_return[]			 = 'project_id';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'project_id';
-				$uicols['descr'][]		 = lang('Project');
-				$uicols['statustext'][]	 = lang('Project ID');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = 'linktToProject';
-				$uicols['classname'][]	 = '';
-				$uicols['sortable'][]	 = true;
+				$cols_return[] = 'project_id';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'project_id';
+				$uicols['descr'][] = lang('Project');
+				$uicols['statustext'][] = lang('Project ID');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'linktToProject';
+				$uicols['classname'][] = '';
+				$uicols['sortable'][] = true;
 
 				$cols .= ", project_group";
-				$cols_return[]			 = 'project_group';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'project_group';
-				$uicols['descr'][]		 = lang('group');
-				$uicols['statustext'][]	 = lang('Project group');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = '';
-				$uicols['classname'][]	 = 'rightClasss';
-				$uicols['sortable'][]	 = true;
+				$cols_return[] = 'project_group';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'project_group';
+				$uicols['descr'][] = lang('group');
+				$uicols['statustext'][] = lang('Project group');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = true;
 
 				$cols .= ", fm_project_status.descr as status";
-				$cols_return[]			 = 'status';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'status';
-				$uicols['descr'][]		 = lang('status');
-				$uicols['statustext'][]	 = lang('status');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = '';
-				$uicols['classname'][]	 = '';
-				$uicols['sortable'][]	 = true;
+				$cols_return[] = 'status';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'status';
+				$uicols['descr'][] = lang('status');
+				$uicols['statustext'][] = lang('status');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+				$uicols['classname'][] = '';
+				$uicols['sortable'][] = true;
 
 				$cols.= ",$entity_table.entry_date";
-				$cols_return[]	 = 'entry_date';
+				$cols_return[] = 'entry_date';
 				$cols.= ",$entity_table.start_date";
-				$cols_return[]	 = 'start_date';
+				$cols_return[] = 'start_date';
 				$cols.= ",$entity_table.end_date";
-				$cols_return[]	 = 'end_date';
+				$cols_return[] = 'end_date';
 				$cols.= ",$entity_table.ecodimb";
-				$cols_return[]	 = 'ecodimb';
+				$cols_return[] = 'ecodimb';
 
 				/*
 				  $uicols['input_type'][]		= 'text';
@@ -211,17 +211,17 @@
 				  $uicols['sortable'][]		= '';
 				 */
 				$cols.= ",$entity_table.name as name";
-				$cols_return[]			 = 'name';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'name';
-				$uicols['descr'][]		 = lang('name');
-				$uicols['statustext'][]	 = lang('Project name');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = '';
-				$uicols['classname'][]	 = '';
-				$uicols['sortable'][]	 = '';
+				$cols_return[] = 'name';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'name';
+				$uicols['descr'][] = lang('name');
+				$uicols['statustext'][] = lang('Project name');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+				$uicols['classname'][] = '';
+				$uicols['sortable'][] = '';
 
 				$cols.= ",loc1_name";
 //				$cols_return[] 				= 'loc1_name';
@@ -238,75 +238,75 @@
 				  $uicols['sortable'][]		= '';
 				 */
 				$cols.= ",account_lid as coordinator";
-				$cols_return[]			 = 'coordinator';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'coordinator';
-				$uicols['descr'][]		 = lang('Coordinator');
-				$uicols['statustext'][]	 = lang('Project coordinator');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = '';
-				$uicols['classname'][]	 = '';
-				$uicols['sortable'][]	 = '';
+				$cols_return[] = 'coordinator';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'coordinator';
+				$uicols['descr'][] = lang('Coordinator');
+				$uicols['statustext'][] = lang('Project coordinator');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+				$uicols['classname'][] = '';
+				$uicols['sortable'][] = '';
 
 //				$cols.= ",(fm_project.budget + fm_project.reserve) as budget";
-				$cols_return[]			 = 'budget';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'budget';
-				$uicols['descr'][]		 = lang('budget');
-				$uicols['statustext'][]	 = lang('Project budget');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = 'myFormatCount2';
-				$uicols['classname'][]	 = 'rightClasss';
-				$uicols['sortable'][]	 = '';
+				$cols_return[] = 'budget';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'budget';
+				$uicols['descr'][] = lang('budget');
+				$uicols['statustext'][] = lang('Project budget');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'myFormatCount2';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = '';
 
 //				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
 //				$cols_return[] = 'combined_cost';
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'obligation';
-				$uicols['descr'][]		 = lang('obligation');
-				$uicols['statustext'][]	 = lang('obligation');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = 'myFormatCount2';
-				$uicols['classname'][]	 = 'rightClasss';
-				$uicols['sortable'][]	 = '';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'obligation';
+				$uicols['descr'][] = lang('obligation');
+				$uicols['statustext'][] = lang('obligation');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'myFormatCount2';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = '';
 
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'actual_cost';
-				$uicols['descr'][]		 = lang('Actual cost');
-				$uicols['statustext'][]	 = lang('Actual cost - paid so far');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = 'myFormatCount2';
-				$uicols['classname'][]	 = 'rightClasss';
-				$uicols['sortable'][]	 = '';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'actual_cost';
+				$uicols['descr'][] = lang('Actual cost');
+				$uicols['statustext'][] = lang('Actual cost - paid so far');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'myFormatCount2';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = '';
 
 //				$cols .= ',planned_cost';
 //				$cols_return[] = 'planned_cost';
 
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = 'diff';
-				$uicols['descr'][]		 = lang('difference');
-				$uicols['statustext'][]	 = lang('difference');
-				$uicols['exchange'][]	 = false;
-				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
-				$uicols['formatter'][]	 = 'myFormatCount2';
-				$uicols['classname'][]	 = 'rightClasss';
-				$uicols['sortable'][]	 = '';
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'diff';
+				$uicols['descr'][] = lang('difference');
+				$uicols['statustext'][] = lang('difference');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'myFormatCount2';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = '';
 
 				$cols.= ",$entity_table.user_id";
 
 //				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
 //				$cols_return[] = 'billable_hours';
 
-				$joinmethod	 = " {$this->join} phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
+				$joinmethod = " {$this->join} phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis = '(';
 
 				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
@@ -337,17 +337,17 @@
 
 				//----- wo_hour_status
 
-				$sql = $this->bocommon->generate_sql(array('entity_table'	 => $entity_table,
-					'cols'			 => $cols, 'cols_return'	 => $cols_return,
-					'uicols'		 => $uicols, 'joinmethod'	 => $joinmethod, 'paranthesis'	 => $paranthesis,
+				$sql = $this->bocommon->generate_sql(array('entity_table' => $entity_table,
+					'cols' => $cols, 'cols_return' => $cols_return,
+					'uicols' => $uicols, 'joinmethod' => $joinmethod, 'paranthesis' => $paranthesis,
 					'force_location' => true, 'location_level' => 0));
 
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id, $sql);
 
-				$uicols				 = $this->bocommon->uicols;
-				$cols_return		 = $this->bocommon->cols_return;
-				$type_id			 = $this->bocommon->type_id;
-				$this->cols_extra	 = $this->bocommon->cols_extra;
+				$uicols = $this->bocommon->uicols;
+				$cols_return = $this->bocommon->cols_return;
+				$type_id = $this->bocommon->type_id;
+				$this->cols_extra = $this->bocommon->cols_extra;
 
 				$this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id, $uicols);
 				$this->bocommon->fm_cache('cols_return_project_' . !!$wo_hour_cat_id, $cols_return);
@@ -356,14 +356,14 @@
 			}
 			else
 			{
-				$uicols				 = $this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id);
-				$cols_return		 = $this->bocommon->fm_cache('cols_return_project_' . !!$wo_hour_cat_id);
-				$type_id			 = $this->bocommon->fm_cache('type_id_project_' . !!$wo_hour_cat_id);
-				$this->cols_extra	 = $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
+				$uicols = $this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id);
+				$cols_return = $this->bocommon->fm_cache('cols_return_project_' . !!$wo_hour_cat_id);
+				$type_id = $this->bocommon->fm_cache('type_id_project_' . !!$wo_hour_cat_id);
+				$this->cols_extra = $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
 
-			$user_columns	 = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
-			$_user_columns	 = array();
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
+			$_user_columns = array();
 			foreach($user_columns as $user_column_id)
 			{
 				if(ctype_digit($user_column_id))
@@ -371,9 +371,9 @@
 					$_user_columns[] = $user_column_id;
 				}
 			}
-			$user_column_filter	 = '';
-			$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', '.project');
-			$attribute_filter	 = " location_id = {$location_id}";
+			$user_column_filter = '';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project');
+			$attribute_filter = " location_id = {$location_id}";
 
 			if($_user_columns)
 			{
@@ -388,19 +388,19 @@
 			$_attrib = array();
 			while($this->db->next_record())
 			{
-				$_column_name			 = $this->db->f('column_name');
-				$_attrib[$_column_name]	 = $this->db->f('id');
+				$_column_name = $this->db->f('column_name');
+				$_attrib[$_column_name] = $this->db->f('id');
 				$_custom_cols.= ", fm_project.{$_column_name}";
-				$cols_return[]			 = $_column_name;
-				$uicols['input_type'][]	 = 'text';
-				$uicols['name'][]		 = $_column_name;
-				$uicols['descr'][]		 = $this->db->f('input_text');
-				$uicols['statustext'][]	 = $this->db->f('statustext');
-				$uicols['datatype'][]	 = $this->db->f('datatype');
-				$uicols['sortable'][]	 = true;
-				$uicols['exchange'][]	 = false;
-				$uicols['formatter'][]	 = '';
-				$uicols['classname'][]	 = '';
+				$cols_return[] = $_column_name;
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = $_column_name;
+				$uicols['descr'][] = $this->db->f('input_text');
+				$uicols['statustext'][] = $this->db->f('statustext');
+				$uicols['datatype'][] = $this->db->f('datatype');
+				$uicols['sortable'][] = true;
+				$uicols['exchange'][] = false;
+				$uicols['formatter'][] = '';
+				$uicols['classname'][] = '';
 			}
 
 			$this->uicols = $uicols;
@@ -466,16 +466,16 @@
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
-				$filtermethod	 = " WHERE fm_project.loc1 in ('" . implode("','", $access_location) . "')";
-				$where			 = 'AND';
+				$filtermethod = " WHERE fm_project.loc1 in ('" . implode("','", $access_location) . "')";
+				$where = 'AND';
 			}
 
 			if($cat_id > 0)
 			{
-				$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
-				$cats->supress_info	 = true;
-				$cat_list_project	 = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
-				$cat_filter			 = array($cat_id);
+				$cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+				$cats->supress_info = true;
+				$cat_list_project = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
 				foreach($cat_list_project as $_category)
 				{
 					$cat_filter[] = $_category['id'];
@@ -553,8 +553,8 @@
 
 			if($start_date)
 			{
-				$end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-				$start_date	 = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+				$end_date = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
 
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where = 'AND';
@@ -562,9 +562,9 @@
 
 			if($overdue)
 			{
-				$end_date		 = $overdue + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$end_date = $overdue + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$filtermethod .= " $where fm_project.end_date <= $end_date AND fm_project.start_date <= $end_date ";
-				$_status_filter	 = array();
+				$_status_filter = array();
 				$this->db->query("SELECT * FROM fm_project_status WHERE closed IS NULL");
 				while($this->db->next_record())
 				{
@@ -582,22 +582,22 @@
 			{
 				$filter_year = (int)$filter_year;
 				$filtermethod .= " $where (fm_project_budget.year={$filter_year} OR fm_project_buffer_budget.year={$filter_year})";
-				$where		 = 'AND';
+				$where = 'AND';
 			}
 
 			$querymethod = '';
 			if($query)
 			{
-				$query	 = $this->db->db_addslashes($query);
-				$query	 = str_replace(",", '.', $query);
+				$query = $this->db->db_addslashes($query);
+				$query = str_replace(",", '.', $query);
 				if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.p_num')
 				{
-					$query		 = explode(".", $query);
+					$query = explode(".", $query);
 					$querymethod = " $where (fm_project.p_entity_id='" . (int)$query[1] . "' AND fm_project.p_cat_id='" . (int)$query[2] . "' AND fm_project.p_num='" . (int)$query[3] . "')";
 				}
 				else if(stristr($query, '.'))
 				{
-					$query		 = explode(".", $query);
+					$query = explode(".", $query);
 					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc" . $type_id . "='" . $query[1] . "')";
 				}
 				else
@@ -605,8 +605,8 @@
 
 					$matchtypes = array
 						(
-						'exact'	 => '=',
-						'like'	 => $this->like
+						'exact' => '=',
+						'like' => $this->like
 					);
 
 					if(count($criteria) > 1)
@@ -655,15 +655,15 @@
 
 			if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 			{
-				$sql_minimized		 = 'SELECT DISTINCT fm_project.id ' . substr($sql_full, strripos($sql_full, 'FROM'));
-				$sql_count			 = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
+				$sql_minimized = 'SELECT DISTINCT fm_project.id ' . substr($sql_full, strripos($sql_full, 'FROM'));
+				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
 				$this->db->query($sql_count, __LINE__, __FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{
-				$sql_count			 = 'SELECT DISTINCT fm_project.id ' . substr($sql_full, strripos($sql_full, 'FROM'));
+				$sql_count = 'SELECT DISTINCT fm_project.id ' . substr($sql_full, strripos($sql_full, 'FROM'));
 				$this->db->query($sql_count, __LINE__, __FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
@@ -695,9 +695,9 @@
 					unset($_fetch_single);
 				}
 
-				$project_list		 = array();
+				$project_list = array();
 //_debug_array($cols_return);
-				$count_cols_return	 = count($cols_return);
+				$count_cols_return = count($cols_return);
 
 				while($this->db->next_record())
 				{
@@ -717,19 +717,19 @@
 					}
 					$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
 
-					$location_code	 = $this->db->f('location_code');
-					$location		 = explode('-', $location_code);
-					$count_location	 = count($location);
+					$location_code = $this->db->f('location_code');
+					$location = explode('-', $location_code);
+					$count_location = count($location);
 
 					for($m = 0; $m < $count_location; $m++)
 					{
-						$project['loc' . ($m + 1)]					 = $location[$m];
+						$project['loc' . ($m + 1)] = $location[$m];
 						$project['query_location']['loc' . ($m + 1)] = implode("-", array_slice($location, 0, ($m + 1)));
 					}
 
-					$project['combined_cost']	 = 0;
-					$project['actual_cost']		 = 0;
-					$project['billable_hours']	 = 0;
+					$project['combined_cost'] = 0;
+					$project['actual_cost'] = 0;
+					$project['billable_hours'] = 0;
 				}
 //_debug_array($project_list);
 				unset($project);
@@ -741,7 +741,7 @@
 				}
 
 				$dataset = array();
-				$j		 = 0;
+				$j = 0;
 
 				foreach($project_list as $project)
 				{
@@ -749,9 +749,9 @@
 					{
 						$dataset[$j][$field] = array
 							(
-							'value'		 => $value,
-							'datatype'	 => isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
-							'attrib_id'	 => isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
+							'value' => $value,
+							'datatype' => isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
+							'attrib_id' => isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
 						);
 					}
 					$j++;
@@ -760,10 +760,10 @@
 				$values = $this->custom->translate_value($dataset, $location_id);
 				foreach($values as &$project)
 				{
-					$project['combined_cost']	 = 0;
-					$project['budget']			 = 0;
-					$project['obligation']		 = 0;
-					$project['actual_cost']		 = 0;
+					$project['combined_cost'] = 0;
+					$project['budget'] = 0;
+					$project['obligation'] = 0;
+					$project['actual_cost'] = 0;
 
 					if($project['project_type_id'] == 3)//buffer
 					{
@@ -779,9 +779,9 @@
 					else
 					{
 
-						$year					 = (int)$filter_year;
-						$project_budget			 = $this->get_budget($project['project_id']);
-						$project['vendor_list']	 = $this->vendor_list;
+						$year = (int)$filter_year;
+						$project_budget = $this->get_budget($project['project_id']);
+						$project['vendor_list'] = $this->vendor_list;
 						foreach($project_budget as $entry)
 						{
 							if($year && $entry['year'] == $year)
@@ -853,9 +853,9 @@
 
 		function read_single($project_id, $values = array())
 		{
-			$project_id	 = (int)$project_id;
-			$project	 = array();
-			$sql		 = "SELECT fm_project.*, fm_project_status.closed FROM fm_project"
+			$project_id = (int)$project_id;
+			$project = array();
+			$sql = "SELECT fm_project.*, fm_project_status.closed FROM fm_project"
 			. " {$this->join} fm_project_status ON fm_project.status = fm_project_status.id"
 			. " WHERE fm_project.id={$project_id}";
 
@@ -866,39 +866,39 @@
 			{
 				$project = array
 					(
-					'project_id'		 => $this->db->f('id'),
-					'project_type_id'	 => $this->db->f('project_type_id'),
-					'title'				 => $this->db->f('title'),
-					'name'				 => $this->db->f('name'),
-					'location_code'		 => $this->db->f('location_code'),
-					'key_fetch'			 => $this->db->f('key_fetch'),
-					'key_deliver'		 => $this->db->f('key_deliver'),
-					'other_branch'		 => $this->db->f('other_branch'),
-					'key_responsible'	 => $this->db->f('key_responsible'),
-					'descr'				 => $this->db->f('descr', true),
-					'status'			 => $this->db->f('status'),
-					'closed'			 => $this->db->f('closed'),
-					'budget'			 => (int)$this->db->f('budget'),
+					'project_id' => $this->db->f('id'),
+					'project_type_id' => $this->db->f('project_type_id'),
+					'title' => $this->db->f('title'),
+					'name' => $this->db->f('name'),
+					'location_code' => $this->db->f('location_code'),
+					'key_fetch' => $this->db->f('key_fetch'),
+					'key_deliver' => $this->db->f('key_deliver'),
+					'other_branch' => $this->db->f('other_branch'),
+					'key_responsible' => $this->db->f('key_responsible'),
+					'descr' => $this->db->f('descr', true),
+					'status' => $this->db->f('status'),
+					'closed' => $this->db->f('closed'),
+					'budget' => (int)$this->db->f('budget'),
 					//		'planned_cost'			=> (int)$this->db->f('planned_cost'),
-					'reserve'			 => (int)$this->db->f('reserve'),
-					'tenant_id'			 => $this->db->f('tenant_id'),
-					'user_id'			 => $this->db->f('user_id'),
-					'coordinator'		 => $this->db->f('coordinator'),
-					'access'			 => $this->db->f('access'),
-					'start_date'		 => $this->db->f('start_date'),
-					'end_date'			 => $this->db->f('end_date'),
-					'cat_id'			 => $this->db->f('category'),
-					'grants'			 => (int)$this->grants[$this->db->f('user_id')],
-					'p_num'				 => $this->db->f('p_num'),
-					'p_entity_id'		 => $this->db->f('p_entity_id'),
-					'p_cat_id'			 => $this->db->f('p_cat_id'),
-					'contact_phone'		 => $this->db->f('contact_phone'),
-					'project_group'		 => $this->db->f('project_group'),
-					'ecodimb'			 => $this->db->f('ecodimb'),
-					'b_account_id'		 => $this->db->f('account_group'),
-					'contact_id'		 => $this->db->f('contact_id'),
-					'inherit_location'	 => $this->db->f('inherit_location'),
-					'periodization_id'	 => $this->db->f('periodization_id')
+					'reserve' => (int)$this->db->f('reserve'),
+					'tenant_id' => $this->db->f('tenant_id'),
+					'user_id' => $this->db->f('user_id'),
+					'coordinator' => $this->db->f('coordinator'),
+					'access' => $this->db->f('access'),
+					'start_date' => $this->db->f('start_date'),
+					'end_date' => $this->db->f('end_date'),
+					'cat_id' => $this->db->f('category'),
+					'grants' => (int)$this->grants[$this->db->f('user_id')],
+					'p_num' => $this->db->f('p_num'),
+					'p_entity_id' => $this->db->f('p_entity_id'),
+					'p_cat_id' => $this->db->f('p_cat_id'),
+					'contact_phone' => $this->db->f('contact_phone'),
+					'project_group' => $this->db->f('project_group'),
+					'ecodimb' => $this->db->f('ecodimb'),
+					'b_account_id' => $this->db->f('account_group'),
+					'contact_id' => $this->db->f('contact_id'),
+					'inherit_location' => $this->db->f('inherit_location'),
+					'periodization_id' => $this->db->f('periodization_id')
 				);
 
 				if(isset($values['attributes']) && is_array($values['attributes']))
@@ -910,8 +910,8 @@
 					}
 				}
 
-				$location_code			 = $this->db->f('location_code');
-				$project['power_meter']	 = $this->get_power_meter($location_code);
+				$location_code = $this->db->f('location_code');
+				$project['power_meter'] = $this->get_power_meter($location_code);
 			}
 
 			if($project)
@@ -965,7 +965,7 @@
 				$this->db->next_record();
 
 				$xmldata = $this->db->f('xml_representation');
-				$xml	 = new DOMDocument('1.0', 'utf-8');
+				$xml = new DOMDocument('1.0', 'utf-8');
 				$xml->loadXML($xmldata);
 				return $xml->getElementsByTagName('maaler_nr')->item(0)->nodeValue;
 			}
@@ -979,9 +979,9 @@
 
 		function project_workorder_data($data = array())
 		{
-			$project_id	 = (int)$data['project_id'];
-			$year		 = (int)$data['year'];
-			$values		 = array();
+			$project_id = (int)$data['project_id'];
+			$year = (int)$data['year'];
+			$values = array();
 
 			$filter_year = '';
 			if($year)
@@ -1001,30 +1001,30 @@
 
 			while($this->db->next_record())
 			{
-				$values[]	 = array
+				$values[] = array
 					(
-					'workorder_id'			 => $this->db->f('workorder_id'),
-					'title'					 => $this->db->f('title', true),
-					'vendor_id'				 => $this->db->f('vendor_id'),
-					'charge_tenant'			 => $this->db->f('charge_tenant'),
-					'status'				 => $this->db->f('status'),
-					'closed'				 => !!$this->db->f('closed'),
-					'mail_recipients'		 => explode(',', trim($this->db->f('mail_recipients'), ',')),
-					'b_account_id'			 => $this->db->f('b_account_id'),
-					'addition_percentage'	 => (int)$this->db->f('addition'),
-					'calculation'			 => $this->db->f('calculation'),
-					'combined_cost'			 => 0,
-					'budget'				 => 0,
-					'obligation'			 => 0,
-					'actual_cost'			 => 0,
+					'workorder_id' => $this->db->f('workorder_id'),
+					'title' => $this->db->f('title', true),
+					'vendor_id' => $this->db->f('vendor_id'),
+					'charge_tenant' => $this->db->f('charge_tenant'),
+					'status' => $this->db->f('status'),
+					'closed' => !!$this->db->f('closed'),
+					'mail_recipients' => explode(',', trim($this->db->f('mail_recipients'), ',')),
+					'b_account_id' => $this->db->f('b_account_id'),
+					'addition_percentage' => (int)$this->db->f('addition'),
+					'calculation' => $this->db->f('calculation'),
+					'combined_cost' => 0,
+					'budget' => 0,
+					'obligation' => 0,
+					'actual_cost' => 0,
 				);
-				$_orders[]	 = $this->db->f('workorder_id');
+				$_orders[] = $this->db->f('workorder_id');
 			}
 
 			if($_orders)
 			{
-				$soworkorder	 = CreateObject('property.soworkorder');
-				$order_budgets	 = array();
+				$soworkorder = CreateObject('property.soworkorder');
+				$order_budgets = array();
 				foreach($_orders as $_order_id)
 				{
 					$order_budgets[$_order_id] = $soworkorder->get_budget($_order_id);
@@ -1066,8 +1066,8 @@
 				//		$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				//		$_actual_cost = round($actual_cost/$_taxfactor);
 
-				$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
-				$entry['diff']	 = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
+				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
+				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
 			}
 
 			return $values;
@@ -1086,36 +1086,36 @@
 
 		function increment_project_id()
 		{
-			$name		 = 'project';
-			$now		 = time();
+			$name = 'project';
+			$now = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$next_id	 = $this->db->f('value') + 1;
-			$start_date	 = (int)$this->db->f('start_date');
+			$next_id = $this->db->f('value') + 1;
+			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 		}
 
 		function next_project_id()
 		{
-			$name	 = 'project';
-			$now	 = time();
+			$name = 'project';
+			$now = time();
 			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$id		 = $this->db->f('value') + 1;
+			$id = $this->db->f('value') + 1;
 			return $id;
 		}
 
 		function add($project, $values_attribute = array())
 		{
-			$receipt	 = array();
-			$historylog	 = CreateObject('property.historylog', 'project');
+			$receipt = array();
+			$historylog = CreateObject('property.historylog', 'project');
 
 			while(is_array($project['location']) && list($input_name, $value) = each($project['location']))
 			{
 				if($value)
 				{
-					$cols[]	 = $input_name;
-					$vals[]	 = $value;
+					$cols[] = $input_name;
+					$vals[] = $value;
 				}
 			}
 
@@ -1123,8 +1123,8 @@
 			{
 				if($value)
 				{
-					$cols[]	 = $input_name;
-					$vals[]	 = $value;
+					$cols[] = $input_name;
+					$vals[] = $value;
 				}
 			}
 
@@ -1135,23 +1135,23 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[]	 = $input_name;
-						$vals[]	 = $value;
+						$cols[] = $input_name;
+						$vals[] = $value;
 					}
 				}
 			}
 
 			if($cols)
 			{
-				$cols	 = "," . implode(",", $cols);
-				$vals	 = ",'" . implode("','", $vals) . "'";
+				$cols = "," . implode(",", $cols);
+				$vals = ",'" . implode("','", $vals) . "'";
 			}
 
 			if($project['street_name'])
 			{
-				$address[]	 = $project['street_name'];
-				$address[]	 = $project['street_number'];
-				$address	 = $this->db->db_addslashes(implode(" ", $address));
+				$address[] = $project['street_name'];
+				$address[] = $project['street_number'];
+				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if(!$address)
@@ -1159,12 +1159,12 @@
 				$address = $this->db->db_addslashes($project['location_name']);
 			}
 
-			$project['descr']	 = $this->db->db_addslashes($project['descr']);
-			$project['name']	 = $this->db->db_addslashes($project['name']);
+			$project['descr'] = $this->db->db_addslashes($project['descr']);
+			$project['name'] = $this->db->db_addslashes($project['name']);
 
 			$this->db->transaction_begin();
-			$id		 = $this->next_project_id();
-			$values	 = array
+			$id = $this->next_project_id();
+			$values = array
 				(
 				$id,
 				$project['project_type_id'],
@@ -1229,11 +1229,11 @@
 				{
 					$interlink_data = array
 						(
-						'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
-						'location1_item_id'	 => $project['origin'][0]['data'][0]['id'],
-						'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.project'),
-						'location2_item_id'	 => $id,
-						'account_id'		 => $this->account
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
+						'location1_item_id' => $project['origin'][0]['data'][0]['id'],
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project'),
+						'location2_item_id' => $id,
+						'account_id' => $this->account
 					);
 
 					$this->interlink->add($interlink_data, $this->db);
@@ -1279,8 +1279,8 @@
 			{
 				foreach($location as $location_entry)
 				{
-					$cols[]	 = 'loc' . $i;
-					$vals[]	 = $location_entry;
+					$cols[] = 'loc' . $i;
+					$vals[] = $location_entry;
 
 					$i++;
 				}
@@ -1288,8 +1288,8 @@
 
 			if($cols)
 			{
-				$cols	 = "," . implode(",", $cols);
-				$vals	 = ",'" . implode("','", $vals) . "'";
+				$cols = "," . implode(",", $cols);
+				$vals = ",'" . implode("','", $vals) . "'";
 			}
 
 			$this->db->query("SELECT count(*) as cnt FROM $meter_table where location_code='$location_code' and category=1", __LINE__, __FILE__);
@@ -1318,8 +1318,8 @@
 
 		function generate_meter_id($meter_table)
 		{
-			$prefix	 = 'meter';
-			$pos	 = strlen($prefix);
+			$prefix = 'meter';
+			$pos = strlen($prefix);
 			$this->db->query("select max(num) as current from $meter_table where num $this->like ('$prefix%')");
 			$this->db->next_record();
 
@@ -1331,14 +1331,14 @@
 
 		function edit($project, $values_attribute = array())
 		{
-			$historylog	 = CreateObject('property.historylog', 'project');
-			$receipt	 = array();
+			$historylog = CreateObject('property.historylog', 'project');
+			$receipt = array();
 
 			if($project['street_name'])
 			{
-				$address[]	 = $project['street_name'];
-				$address[]	 = $project['street_number'];
-				$address	 = $this->db->db_addslashes(implode(" ", $address));
+				$address[] = $project['street_name'];
+				$address[] = $project['street_number'];
+				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if(!$address)
@@ -1346,31 +1346,31 @@
 				$address = $this->db->db_addslashes($project['location_name']);
 			}
 
-			$project['descr']	 = $this->db->db_addslashes($project['descr']);
-			$project['name']	 = $this->db->db_addslashes($project['name']);
+			$project['descr'] = $this->db->db_addslashes($project['descr']);
+			$project['name'] = $this->db->db_addslashes($project['name']);
 
 			$value_set = array
 				(
-				'project_type_id'	 => $project['project_type_id'],
-				'project_group'		 => $project['project_group'],
-				'name'				 => $project['name'],
-				'status'			 => $project['status'],
-				'category'			 => $project['cat_id'],
-				'start_date'		 => $project['start_date'],
-				'end_date'			 => $project['end_date'],
-				'coordinator'		 => $project['coordinator'],
-				'descr'				 => $project['descr'],
-				'reserve'			 => (int)$project['reserve'],
-				'key_deliver'		 => $project['key_deliver'],
-				'key_fetch'			 => $project['key_fetch'],
-				'other_branch'		 => $project['other_branch'],
-				'key_responsible'	 => $project['key_responsible'],
-				'location_code'		 => $project['location_code'],
-				'address'			 => $address,
-				'ecodimb'			 => $project['ecodimb'],
-				'account_group'		 => $project['b_account_id'],
-				'contact_id'		 => $project['contact_id'],
-				'inherit_location'	 => $project['inherit_location'],
+				'project_type_id' => $project['project_type_id'],
+				'project_group' => $project['project_group'],
+				'name' => $project['name'],
+				'status' => $project['status'],
+				'category' => $project['cat_id'],
+				'start_date' => $project['start_date'],
+				'end_date' => $project['end_date'],
+				'coordinator' => $project['coordinator'],
+				'descr' => $project['descr'],
+				'reserve' => (int)$project['reserve'],
+				'key_deliver' => $project['key_deliver'],
+				'key_fetch' => $project['key_fetch'],
+				'other_branch' => $project['other_branch'],
+				'key_responsible' => $project['key_responsible'],
+				'location_code' => $project['location_code'],
+				'address' => $address,
+				'ecodimb' => $project['ecodimb'],
+				'account_group' => $project['b_account_id'],
+				'contact_id' => $project['contact_id'],
+				'inherit_location' => $project['inherit_location'],
 			);
 
 			if(isset($project['budget_periodization']) && $project['budget_periodization'])
@@ -1401,23 +1401,23 @@
 
 			$this->db->query("SELECT status,category,coordinator,budget,reserve FROM fm_project WHERE id = {$project['id']}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$old_status		 = $this->db->f('status');
-			$old_category	 = (int)$this->db->f('category');
+			$old_status = $this->db->f('status');
+			$old_category = (int)$this->db->f('category');
 			$old_coordinator = (int)$this->db->f('coordinator');
-			$old_budget		 = (int)$this->db->f('budget');
-			$old_reserve	 = (int)$this->db->f('reserve');
+			$old_budget = (int)$this->db->f('budget');
+			$old_reserve = (int)$this->db->f('reserve');
 
 			$this->db->query("UPDATE fm_project SET $value_set WHERE id= {$project['id']}", __LINE__, __FILE__);
 
-			$_closed_period	 = array
+			$_closed_period = array
 				(
-				'closed_b_period'		 => isset($project['closed_b_period']) && $project['closed_b_period'] ? $project['closed_b_period'] : array(),
-				'closed_orig_b_period'	 => isset($project['closed_orig_b_period']) && $project['closed_orig_b_period'] ? $project['closed_orig_b_period'] : array()
+				'closed_b_period' => isset($project['closed_b_period']) && $project['closed_b_period'] ? $project['closed_b_period'] : array(),
+				'closed_orig_b_period' => isset($project['closed_orig_b_period']) && $project['closed_orig_b_period'] ? $project['closed_orig_b_period'] : array()
 			);
-			$_active_period	 = array
+			$_active_period = array
 				(
-				'active_b_period'		 => isset($project['active_b_period']) && $project['active_b_period'] ? $project['active_b_period'] : array(),
-				'active_orig_b_period'	 => isset($project['active_orig_b_period']) && $project['active_orig_b_period'] ? $project['active_orig_b_period'] : array()
+				'active_b_period' => isset($project['active_b_period']) && $project['active_b_period'] ? $project['active_b_period'] : array(),
+				'active_orig_b_period' => isset($project['active_orig_b_period']) && $project['active_orig_b_period'] ? $project['active_orig_b_period'] : array()
 			);
 
 			$this->close_period_from_budget($project['id'], $_closed_period);
@@ -1512,8 +1512,8 @@
 
 				while($this->db->next_record())
 				{
-					$workorder_id	 = $this->db->f('id');
-					$workorders[]	 = $workorder_id;
+					$workorder_id = $this->db->f('id');
+					$workorders[] = $workorder_id;
 					phpgwapi_cache::system_clear('property', "budget_order_{$workorder_id}");
 				}
 
@@ -1531,10 +1531,10 @@
 						$historylog_workorder->add('NP', $workorder_id, $new_project_id, $project['id']);
 					}
 
-					$sql					 = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
+					$sql = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
-					$old_budget_new_project	 = (int)$this->db->f('sum_budget');
+					$old_budget_new_project = (int)$this->db->f('sum_budget');
 
 					$sql = "SELECT * FROM fm_project_budget WHERE project_id = " . (int)$project['id'];
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -1544,15 +1544,15 @@
 					{
 						$budget[] = array
 							(
-							'project_id'	 => (int)$project['id'],
-							'year'			 => $this->db->f('year'),
-							'month'			 => $this->db->f('month'),
-							'budget'		 => (int)$this->db->f('budget'),
-							'user_id'		 => $this->db->f('user_id'),
-							'entry_date'	 => $this->db->f('entry_date'),
-							'modified_date'	 => $this->db->f('modified_date'),
-							'closed'		 => $this->db->f('closed'),
-							'active'		 => $this->db->f('active')
+							'project_id' => (int)$project['id'],
+							'year' => $this->db->f('year'),
+							'month' => $this->db->f('month'),
+							'budget' => (int)$this->db->f('budget'),
+							'user_id' => $this->db->f('user_id'),
+							'entry_date' => $this->db->f('entry_date'),
+							'modified_date' => $this->db->f('modified_date'),
+							'closed' => $this->db->f('closed'),
+							'active' => $this->db->f('active')
 						);
 					}
 
@@ -1567,20 +1567,20 @@
 						}
 						else
 						{
-							$value_set	 = array
+							$value_set = array
 								(
-								'project_id'	 => $new_project_id,
-								'year'			 => $entry['year'],
-								'month'			 => $entry['month'],
-								'budget'		 => $entry['budget'],
-								'user_id'		 => $entry['user_id'],
-								'entry_date'	 => $entry['entry_date'],
-								'modified_date'	 => $entry['modified_date'],
-								'closed'		 => $entry['closed'],
-								'active'		 => $entry['active']
+								'project_id' => $new_project_id,
+								'year' => $entry['year'],
+								'month' => $entry['month'],
+								'budget' => $entry['budget'],
+								'user_id' => $entry['user_id'],
+								'entry_date' => $entry['entry_date'],
+								'modified_date' => $entry['modified_date'],
+								'closed' => $entry['closed'],
+								'active' => $entry['active']
 							);
-							$cols		 = implode(',', array_keys($value_set));
-							$values		 = $this->db->validate_insert(array_values($value_set));
+							$cols = implode(',', array_keys($value_set));
+							$values = $this->db->validate_insert(array_values($value_set));
 							$this->db->query("INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 						}
 					}
@@ -1590,17 +1590,17 @@
 						$historylog->add('B', $project['id'], 0, $old_budget);
 					}
 
-					$sql					 = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$new_project_id}";
+					$sql = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$new_project_id}";
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
-					$new_budget_new_project	 = (int)$this->db->f('sum_budget');
+					$new_budget_new_project = (int)$this->db->f('sum_budget');
 
-					$sql				 = "SELECT ecodimb FROM fm_project WHERE id = {$new_project_id}";
+					$sql = "SELECT ecodimb FROM fm_project WHERE id = {$new_project_id}";
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 					$ecodimb_new_project = (int)$this->db->f('ecodimb');
 
-					$sql				 = "SELECT reserve FROM fm_project WHERE id = " . (int)$project['id'];
+					$sql = "SELECT reserve FROM fm_project WHERE id = " . (int)$project['id'];
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 					$reserve_old_project = (int)$this->db->f('reserve');
@@ -1656,8 +1656,8 @@
 
 			if(($old_status != $project['status']) || $project['confirm_status'])
 			{
-				$close_pending_action	 = false;
-				$close_workorders		 = false;
+				$close_pending_action = false;
+				$close_workorders = false;
 				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$project['status']}'");
 				$this->db->next_record();
 				if($this->db->f('closed'))
@@ -1672,14 +1672,14 @@
 
 					$action_params = array
 						(
-						'appname'			 => 'property',
-						'location'			 => '.project',
-						'id'				 => (int)$project['id'],
-						'responsible'		 => $this->account,
-						'responsible_type'	 => 'user',
-						'action'			 => 'approval',
-						'remark'			 => '',
-						'deadline'			 => ''
+						'appname' => 'property',
+						'location' => '.project',
+						'id' => (int)$project['id'],
+						'responsible' => $this->account,
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'remark' => '',
+						'deadline' => ''
 					);
 
 					execMethod('property.sopending_action.close_pending_action', $action_params);
@@ -1759,8 +1759,8 @@
 			 */
 			$this->_update_project_budget($project['id']);
 
-			$receipt['id']			 = $project['id'];
-			$receipt['message'][]	 = array('msg' => lang('project %1 has been edited', $project['id']));
+			$receipt['id'] = $project['id'];
+			$receipt['message'][] = array('msg' => lang('project %1 has been edited', $project['id']));
 
 			$this->db->transaction_commit();
 
@@ -1780,23 +1780,23 @@
 
 		public function get_buffer_budget($project_id)
 		{
-			$sql	 = "SELECT * FROM fm_project_buffer_budget WHERE buffer_project_id = {$project_id}";
+			$sql = "SELECT * FROM fm_project_buffer_budget WHERE buffer_project_id = {$project_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$values	 = array();
+			$values = array();
 			while($this->db->next_record())
 			{
 				$values[] = array
 					(
-					'buffer_project_id'	 => $this->db->f('buffer_project_id'),
-					'year'				 => $this->db->f('year'),
-					'amount_in'			 => $this->db->f('amount_in'),
-					'amount_out'		 => $this->db->f('amount_out'),
-					'from_project'		 => $this->db->f('from_project'),
-					'to_project'		 => $this->db->f('to_project'),
-					'user_id'			 => $this->db->f('user_id'),
-					'entry_date'		 => $this->db->f('entry_date'),
-					'active'			 => !!$this->db->f('active'),
-					'remark'			 => $this->db->f('remark', true)
+					'buffer_project_id' => $this->db->f('buffer_project_id'),
+					'year' => $this->db->f('year'),
+					'amount_in' => $this->db->f('amount_in'),
+					'amount_out' => $this->db->f('amount_out'),
+					'from_project' => $this->db->f('from_project'),
+					'to_project' => $this->db->f('to_project'),
+					'user_id' => $this->db->f('user_id'),
+					'entry_date' => $this->db->f('entry_date'),
+					'active' => !!$this->db->f('active'),
+					'remark' => $this->db->f('remark', true)
 				);
 			}
 			return $values;
@@ -1804,8 +1804,8 @@
 
 		private function _update_buffer_budget($project_id, $year, $amount, $from_project, $to_project, $transfer_remark)
 		{
-			$year	 = (int)$year;
-			$amount	 = (int)$amount;
+			$year = (int)$year;
+			$amount = (int)$amount;
 
 			if(!$year)
 			{
@@ -1814,13 +1814,13 @@
 
 			if($from_project || (!$from_project && !$to_project))
 			{
-				$amount_in	 = $amount;
-				$amount_out	 = null;
+				$amount_in = $amount;
+				$amount_out = null;
 			}
 			else if($to_project && !$from_project)
 			{
-				$amount_in	 = null;
-				$amount_out	 = $amount;
+				$amount_in = null;
+				$amount_out = $amount;
 			}
 			else
 			{
@@ -1834,23 +1834,23 @@
 
 			$value_set = array
 				(
-				'buffer_project_id'	 => $project_id,
-				'year'				 => $year,
-				'amount_in'			 => $amount_in,
-				'amount_out'		 => $amount_out,
-				'from_project'		 => $from_project,
-				'to_project'		 => $to_project,
-				'user_id'			 => $this->account,
-				'entry_date'		 => time(),
-				'active'			 => 1,
-				'remark'			 => $this->db->db_addslashes($transfer_remark)
+				'buffer_project_id' => $project_id,
+				'year' => $year,
+				'amount_in' => $amount_in,
+				'amount_out' => $amount_out,
+				'from_project' => $from_project,
+				'to_project' => $to_project,
+				'user_id' => $this->account,
+				'entry_date' => time(),
+				'active' => 1,
+				'remark' => $this->db->db_addslashes($transfer_remark)
 			);
 
-			$from_project	 = (int)$from_project;
-			$to_project		 = (int)$to_project;
+			$from_project = (int)$from_project;
+			$to_project = (int)$to_project;
 
-			$cols	 = implode(',', array_keys($value_set));
-			$values	 = $this->db->validate_insert(array_values($value_set));
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO fm_project_buffer_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 			/**
@@ -1859,25 +1859,25 @@
 			$check_for_buffer_target = $from_project + $to_project;//only one of them has value...
 			$this->db->query("SELECT project_type_id FROM fm_project WHERE id = {$check_for_buffer_target}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$project_type_id		 = $this->db->f('project_type_id');
+			$project_type_id = $this->db->f('project_type_id');
 			if($project_type_id == 3)//buffer
 			{
 				$value_set = array
 					(
-					'buffer_project_id'	 => $to_project,
-					'year'				 => $year,
-					'amount_in'			 => $amount_out,
-					'amount_out'		 => $amount_in,
-					'from_project'		 => $project_id,
-					'to_project'		 => '',
-					'user_id'			 => $this->account,
-					'entry_date'		 => time(),
-					'active'			 => 1,
-					'remark'			 => $this->db->db_addslashes($transfer_remark)
+					'buffer_project_id' => $to_project,
+					'year' => $year,
+					'amount_in' => $amount_out,
+					'amount_out' => $amount_in,
+					'from_project' => $project_id,
+					'to_project' => '',
+					'user_id' => $this->account,
+					'entry_date' => time(),
+					'active' => 1,
+					'remark' => $this->db->db_addslashes($transfer_remark)
 				);
 
-				$cols	 = implode(',', array_keys($value_set));
-				$values	 = $this->db->validate_insert(array_values($value_set));
+				$cols = implode(',', array_keys($value_set));
+				$values = $this->db->validate_insert(array_values($value_set));
 				$this->db->query("INSERT INTO fm_project_buffer_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 				return;
@@ -1902,8 +1902,8 @@
 			{
 				$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$from_project}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$periodization_id	 = $this->db->f('periodization_id');
-				$transferred		 = $this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
+				$periodization_id = $this->db->f('periodization_id');
+				$transferred = $this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
 				if(!$transferred == $amount_in)
 				{
 					throw new Exception('property_soproject::update_buffer_budget() - failed to transfer the full amount');
@@ -1913,14 +1913,14 @@
 
 		function update_budget($project_id, $year, $periodization_id, $budget, $budget_periodization_all = false, $action = 'update', $activate = 0)
 		{
-			$project_id	 = (int)$project_id;
-			$year		 = $year ? (int)$year : date('Y');
+			$project_id = (int)$project_id;
+			$year = $year ? (int)$year : date('Y');
 
 
 			if($action == 'subtract')
 			{
 				$incoming_budget = $budget;
-				$acc_partial	 = 0;
+				$acc_partial = 0;
 
 				$orig_budget = $this->get_budget($project_id);
 
@@ -1929,9 +1929,9 @@
 				{
 					if($entry['year'] == $year && $entry['active'])
 					{
-						$partial_budget	 = 0;
-						$month			 = (int)substr($entry['period'], -2);
-						$hit			 = true; // found at least one.
+						$partial_budget = 0;
+						$month = (int)substr($entry['period'], -2);
+						$hit = true; // found at least one.
 						if($entry['budget'] >= 0)
 						{
 							if($entry['diff'] > 0)
@@ -1944,9 +1944,9 @@
 								}
 								else
 								{
-									$partial_budget	 = $budget;
-									$partial_budget	 = $partial_budget > 0 ? $partial_budget : 0;
-									$budget			 = 0;
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget > 0 ? $partial_budget : 0;
+									$budget = 0;
 								}
 							}
 						}
@@ -1961,9 +1961,9 @@
 								}
 								else
 								{
-									$partial_budget	 = $budget;
-									$partial_budget	 = $partial_budget < 0 ? $partial_budget : 0;
-									$budget			 = 0;
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget < 0 ? $partial_budget : 0;
+									$budget = 0;
 								}
 							}
 						}
@@ -1992,9 +1992,9 @@
 				return $acc_partial;
 			}
 
-			$periodization_id		 = (int)$periodization_id;
-			$periodization_outline	 = array();
-			$skip_period			 = 0;
+			$periodization_id = (int)$periodization_id;
+			$periodization_outline = array();
+			$skip_period = 0;
 
 			if($periodization_id)
 			{
@@ -2008,10 +2008,10 @@
 					}
 					$periodization_outline[] = array
 						(
-						'month'		 => $month,
-						'value'		 => $this->db->f('value'),
-						'dividend'	 => $this->db->f('dividend'),
-						'divisor'	 => $this->db->f('divisor')
+						'month' => $month,
+						'value' => $this->db->f('value'),
+						'dividend' => $this->db->f('dividend'),
+						'divisor' => $this->db->f('divisor')
 					);
 				}
 				if($skip_period && $skip_period == count($periodization_outline))
@@ -2023,10 +2023,10 @@
 			{
 				$periodization_outline[] = array
 					(
-					'month'		 => 0,
-					'value'		 => 100,
-					'dividend'	 => 1,
-					'divisor'	 => 1,
+					'month' => 0,
+					'value' => 100,
+					'dividend' => 1,
+					'divisor' => 1,
 				);
 			}
 
@@ -2067,26 +2067,26 @@
 				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action, $activate);
 			}
 
-			$sql		 = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$project_id}";
+			$sql = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$project_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$sum_budget	 = (int)$this->db->f('sum_budget');
-			$sql		 = "UPDATE fm_project SET budget = {$sum_budget} WHERE id = {$project_id}";
+			$sum_budget = (int)$this->db->f('sum_budget');
+			$sql = "UPDATE fm_project SET budget = {$sum_budget} WHERE id = {$project_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			return $sum_budget;
 		}
 
 		private function _update_budget($project_id, $year, $month, $budget, $action = 'update', $active = 0)
 		{
-			$month		 = (int)$month;
-			$budget		 = (int)$budget;
-			$now		 = time();
-			$active		 = (int)$active;
-			$sql		 = "SELECT budget,active FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
+			$month = (int)$month;
+			$budget = (int)$budget;
+			$now = time();
+			$active = (int)$active;
+			$sql = "SELECT budget,active FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			if($old_budget	 = $this->db->f('budget'))
+			if($old_budget = $this->db->f('budget'))
 			{
 				if($action == 'add')
 				{
@@ -2111,31 +2111,31 @@
 			{
 				$value_set = array
 					(
-					'project_id'	 => $project_id,
-					'year'			 => $year,
-					'month'			 => $month,
-					'budget'		 => $budget,
-					'user_id'		 => $this->account,
-					'entry_date'	 => $now,
-					'modified_date'	 => $now,
-					'active'		 => $active // only for new entries
+					'project_id' => $project_id,
+					'year' => $year,
+					'month' => $month,
+					'budget' => $budget,
+					'user_id' => $this->account,
+					'entry_date' => $now,
+					'modified_date' => $now,
+					'active' => $active // only for new entries
 				);
 
 //_debug_array($value_set);die();
 
-				$cols	 = implode(',', array_keys($value_set));
-				$values	 = $this->db->validate_insert(array_values($value_set));
+				$cols = implode(',', array_keys($value_set));
+				$values = $this->db->validate_insert(array_values($value_set));
 				$this->db->query("INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			}
 		}
 
 		function get_budget($project_id)
 		{
-			$project_id				 = (int)$project_id;
-			$closed_period			 = array();
-			$active_period			 = array();
-			$project_budget			 = array();
-			$project_total_budget	 = 0;
+			$project_id = (int)$project_id;
+			$closed_period = array();
+			$active_period = array();
+			$project_budget = array();
+			$project_total_budget = 0;
 
 			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget,"
 			. " fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, project_type_id"
@@ -2151,11 +2151,11 @@
 			while($this->db->next_record())
 			{
 				$project_type_id = (int)$this->db->f('project_type_id');
-				$period			 = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
+				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
 
 				$project_budget[$period] = (int)$this->db->f('budget');
-				$closed_period[$period]	 = !!$this->db->f('closed');
-				$active_period[$period]	 = !!$this->db->f('active');
+				$closed_period[$period] = !!$this->db->f('closed');
+				$active_period[$period] = !!$this->db->f('active');
 			}
 
 			$project_total_budget = array_sum($project_budget);
@@ -2165,8 +2165,8 @@
 			. " WHERE project_id = {$project_id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			$_order_list	 = array();
-			$_vendor_list	 = array();
+			$_order_list = array();
+			$_vendor_list = array();
 			while($this->db->next_record())
 			{
 				$_order_list[] = $this->db->f('order_id');
@@ -2191,8 +2191,8 @@
 
 				foreach($order_budget as $budget_entry)
 				{
-					$period	 = $budget_entry['period'];
-					$year	 = $budget_entry['year'];
+					$period = $budget_entry['period'];
+					$year = $budget_entry['year'];
 
 					$_found_actual_cost = false;
 					if(isset($project_budget[$period]))
@@ -2245,16 +2245,16 @@
 			$_values = array();
 			foreach($project_budget as $period => $_budget)
 			{
-				$sort_period[]		 = $period;
-				$_values[$period]	 = array
+				$sort_period[] = $period;
+				$_values[$period] = array
 					(
-					'project_id'		 => $project_id,
-					'period'			 => $period,
-					'budget'			 => $_budget,
-					'sum_orders'		 => $_orders[$period]['sum_orders'],
-					'sum_oblications'	 => $_orders[$period]['sum_oblications'],
-					'actual_cost'		 => $_orders[$period]['actual_cost'],
-					'deviation_acc'		 => 0
+					'project_id' => $project_id,
+					'period' => $period,
+					'budget' => $_budget,
+					'sum_orders' => $_orders[$period]['sum_orders'],
+					'sum_oblications' => $_orders[$period]['sum_oblications'],
+					'actual_cost' => $_orders[$period]['actual_cost'],
+					'deviation_acc' => 0
 				);
 				unset($_orders[$period]);
 			}
@@ -2265,16 +2265,16 @@
 			{
 				foreach($_orders as $period => $_budget)
 				{
-					$sort_period[]		 = $period;
-					$_values[$period]	 = array
+					$sort_period[] = $period;
+					$_values[$period] = array
 						(
-						'project_id'		 => $project_id,
-						'period'			 => $period,
-						'budget'			 => 0,
-						'sum_orders'		 => $_budget['sum_orders'],
-						'sum_oblications'	 => $_budget['sum_oblications'],
-						'actual_cost'		 => $_budget['actual_cost'],
-						'deviation_acc'		 => 0
+						'project_id' => $project_id,
+						'period' => $period,
+						'budget' => 0,
+						'sum_orders' => $_budget['sum_orders'],
+						'sum_oblications' => $_budget['sum_oblications'],
+						'actual_cost' => $_budget['actual_cost'],
+						'deviation_acc' => 0
 					);
 				}
 			}
@@ -2293,24 +2293,24 @@
 				}
 			}
 
-			$corretion		 = $total_sum >= 0 ? 1 : -1;
-			$deviation_acc	 = 0;
-			$budget_acc		 = 0;
-			$_year			 = 0;
+			$corretion = $total_sum >= 0 ? 1 : -1;
+			$deviation_acc = 0;
+			$budget_acc = 0;
+			$_year = 0;
 			foreach($values as &$entry)
 			{
-				$entry['year']	 = substr($entry['period'], 0, 4);
-				$month			 = substr($entry['period'], 4, 2);
-				$entry['month']	 = $month == '00' ? '' : $month;
+				$entry['year'] = substr($entry['period'], 0, 4);
+				$month = substr($entry['period'], 4, 2);
+				$entry['month'] = $month == '00' ? '' : $month;
 
 				/**
 				 * operation: start over each year
 				 */
 				if($project_type_id == 1 && $_year != $entry['year'])
 				{
-					$_year			 = $entry['year'];
-					$deviation_acc	 = 0;
-					$budget_acc		 = 0;
+					$_year = $entry['year'];
+					$deviation_acc = 0;
+					$budget_acc = 0;
 				}
 
 				/**
@@ -2318,24 +2318,24 @@
 				 */
 				if($project_type_id == 4 && $_year != $entry['year'])
 				{
-					$_year			 = $entry['year'];
-					$deviation_acc	 = 0;
-					$budget_acc		 = 0;
+					$_year = $entry['year'];
+					$deviation_acc = 0;
+					$budget_acc = 0;
 				}
 
 				if(abs($entry['actual_cost']) > 0)
 				{
-					$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
-					$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 
-					$_deviation	 = $entry['budget'] - $entry['actual_cost'];
-					$deviation	 = $_deviation;
+					$_deviation = $entry['budget'] - $entry['actual_cost'];
+					$deviation = $_deviation;
 					$deviation_acc += $deviation;
 				}
 				else
 				{
-					$entry['diff']	 = 0;
-					$deviation		 = 0;
+					$entry['diff'] = 0;
+					$deviation = 0;
 				}
 
 				$entry['deviation_period'] = $deviation;
@@ -2343,10 +2343,10 @@
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 
-				$entry['deviation_percent_period']	 = $corretion * $deviation / $entry['budget'] * 100;
-				$entry['deviation_percent_acc']		 = $corretion * $entry['deviation_acc'] / $total_sum * 100;
-				$entry['closed']					 = $closed_period[$entry['period']];
-				$entry['active']					 = $active_period[$entry['period']];
+				$entry['deviation_percent_period'] = $corretion * $deviation / $entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $corretion * $entry['deviation_acc'] / $total_sum * 100;
+				$entry['closed'] = $closed_period[$entry['period']];
+				$entry['active'] = $active_period[$entry['period']];
 			}
 
 			return $values;
@@ -2357,20 +2357,20 @@
 			$project_id = (int)$project_id;
 			foreach($data as $entry)
 			{
-				$when	 = explode('_', $entry);
-				$sql	 = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year = " . (int)$when[0] . ' AND month = ' . (int)$when[1];
+				$when = explode('_', $entry);
+				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year = " . (int)$when[0] . ' AND month = ' . (int)$when[1];
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 		}
 
 		function close_period_from_budget($project_id, $data)
 		{
-			$project_id				 = (int)$project_id;
-			$closed_orig_b_period	 = isset($data['closed_orig_b_period']) && $data['closed_orig_b_period'] ? $data['closed_orig_b_period'] : array();
-			$closed_b_period		 = isset($data['closed_b_period']) && $data['closed_b_period'] ? $data['closed_b_period'] : array();
+			$project_id = (int)$project_id;
+			$closed_orig_b_period = isset($data['closed_orig_b_period']) && $data['closed_orig_b_period'] ? $data['closed_orig_b_period'] : array();
+			$closed_b_period = isset($data['closed_b_period']) && $data['closed_b_period'] ? $data['closed_b_period'] : array();
 
-			$close_period	 = array();
-			$open_period	 = array();
+			$close_period = array();
+			$open_period = array();
 
 			foreach($closed_orig_b_period as $period)
 			{
@@ -2390,15 +2390,15 @@
 
 			foreach($close_period as $period)
 			{
-				$when	 = explode('_', $period);
-				$sql	 = "UPDATE fm_project_budget SET closed = 1 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET closed = 1 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			foreach($open_period as $period)
 			{
-				$when	 = explode('_', $period);
-				$sql	 = "UPDATE fm_project_budget SET closed = 0 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET closed = 0 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 //_debug_array($close_period);
@@ -2407,9 +2407,9 @@
 
 		function activate_period_from_budget($project_id, $data)
 		{
-			$project_id		 = (int)$project_id;
-			$close_period	 = array();
-			$open_period	 = array();
+			$project_id = (int)$project_id;
+			$close_period = array();
+			$open_period = array();
 
 			foreach($data['active_orig_b_period'] as $period)
 			{
@@ -2429,15 +2429,15 @@
 
 			foreach($active_period as $period)
 			{
-				$when	 = explode('_', $period);
-				$sql	 = "UPDATE fm_project_budget SET active = 1 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET active = 1 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			foreach($inactive_period as $period)
 			{
-				$when	 = explode('_', $period);
-				$sql	 = "UPDATE fm_project_budget SET active = 0 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET active = 0 WHERE project_id = {$project_id} AND year =" . (int)$when[0] . ' AND month = ' . (int)$when[1];
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 //_debug_array($close_period);
@@ -2456,8 +2456,8 @@
 
 				$this->db->next_record();
 
-				$old_status		 = $this->db->f('status');
-				$old_category	 = (int)$this->db->f('category');
+				$old_status = $this->db->f('status');
+				$old_category = (int)$this->db->f('category');
 				$old_coordinator = (int)$this->db->f('coordinator');
 
 				if($old_status != $status)
@@ -2498,11 +2498,11 @@
 				{
 					$interlink_data = array
 						(
-						'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
-						'location1_item_id'	 => $add_request['request_id'][$i],
-						'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.project'),
-						'location2_item_id'	 => $id,
-						'account_id'		 => $this->account
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
+						'location1_item_id' => $add_request['request_id'][$i],
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project'),
+						'location2_item_id' => $id,
+						'account_id' => $this->account
 					);
 
 					$this->interlink->add($interlink_data);
@@ -2569,13 +2569,13 @@
 		{
 			$this->db->transaction_begin();
 
-			$id					 = (int)$id;
-			$year				 = (int)$year;
-			$latest_year		 = (int)$budget['latest_year'];
+			$id = (int)$id;
+			$year = (int)$year;
+			$latest_year = (int)$budget['latest_year'];
 			$this->db->query("SELECT periodization_id, project_type_id FROM fm_project WHERE id = {$id}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$periodization_id	 = $this->db->f('periodization_id');
-			$project_type_id	 = $this->db->f('project_type_id');
+			$periodization_id = $this->db->f('periodization_id');
+			$project_type_id = $this->db->f('project_type_id');
 
 			if($project_type_id == 2) // investment
 			{
@@ -2600,8 +2600,8 @@
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
 
-				$subtract				 = $last_budget - $paid_last_year;
-				$_perform_subtraction	 = false;
+				$subtract = $last_budget - $paid_last_year;
+				$_perform_subtraction = false;
 
 				if($last_budget >= 0)
 				{
@@ -2627,7 +2627,7 @@
 				if($_perform_subtraction)
 				{
 					$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
-					$new_budget	 = $last_budget - $paid_last_year;
+					$new_budget = $last_budget - $paid_last_year;
 				}
 				else
 				{
@@ -2698,9 +2698,9 @@
 //				die();
 			}
 
-			$start_date	 = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
+			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
 			$start_date -= 3600 * 24;
-			$end_date	 = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
+			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
 
 			$filter = '';
 			if($user_id)
@@ -2739,11 +2739,11 @@
 						$filter .= " AND fm_open_workorder_view.project_id IS NULL";
 					}
 
-					$table			 = 'fm_project';
-					$status_table	 = 'fm_project_status';
-					$title_field	 = 'fm_project.name as title';
+					$table = 'fm_project';
+					$status_table = 'fm_project_status';
+					$title_field = 'fm_project.name as title';
 					$this->_update_status_project($execute, $status_new, $ids);
-					$sql			 = "SELECT DISTINCT {$table}.id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
+					$sql = "SELECT DISTINCT {$table}.id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
 					. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL)  {$filter}"
@@ -2761,10 +2761,10 @@
 						$filter .= " AND fm_workorder.account_id = '{$b_account_id}'";
 					}
 
-					$table			 = 'fm_workorder';
-					$status_table	 = 'fm_workorder_status';
-					$title_field	 = 'fm_workorder.title';
-					$actual_cost	 = ',actual_cost';
+					$table = 'fm_workorder';
+					$status_table = 'fm_workorder_status';
+					$title_field = 'fm_workorder.title';
+					$actual_cost = ',actual_cost';
 
 					$join_method = "{$this->join} {$status_table} ON  {$table}.status = {$status_table}.id";
 					$join_method .= " {$this->join} fm_project ON  {$table}.project_id = fm_project.id";
@@ -2772,16 +2772,16 @@
 					if($paid)
 					{
 						$join_method .= " {$this->join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id";
-						$actual_cost	 = ',fm_orders_actual_cost_view.actual_cost';
-						$group_method	 = '';
+						$actual_cost = ',fm_orders_actual_cost_view.actual_cost';
+						$group_method = '';
 					}
 					else
 					{
-						$start_period	 = (date('Y') - 1) . '00';
-						$end_period		 = (date('Y') - 1) . 13;
+						$start_period = (date('Y') - 1) . '00';
+						$end_period = (date('Y') - 1) . 13;
 						$join_method .= " {$this->left_join} fm_ecobilagoverf ON ( fm_workorder.id = fm_ecobilagoverf.pmwrkord_code AND fm_ecobilagoverf.periode > $start_period AND fm_ecobilagoverf.periode < $end_period)";
-						$actual_cost	 = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
-						$group_method	 = "GROUP BY fm_workorder.id, fm_workorder.project_id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id,fm_workorder.title,fm_workorder.start_date,fm_workorder.continuous";
+						$actual_cost = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
+						$group_method = "GROUP BY fm_workorder.id, fm_workorder.project_id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id,fm_workorder.title,fm_workorder.start_date,fm_workorder.continuous";
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
@@ -2797,32 +2797,32 @@
 
 			$project_types = array
 				(
-				1	 => lang('operation'),
-				2	 => lang('investment'),
-				3	 => lang('buffer'),
-				4	 => lang('maintenance')
+				1 => lang('operation'),
+				2 => lang('investment'),
+				3 => lang('buffer'),
+				4 => lang('maintenance')
 			);
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			$values		 = array();
-			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values = array();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			while($this->db->next_record())
 			{
 				$values[] = array
 					(
-					'id'				 => $this->db->f('id'),
-					'project_id'		 => $this->db->f('project_id'),
-					'closed'			 => $this->db->f('closed'),
-					'title'				 => $this->db->f('title', true),
-					'status'			 => $this->db->f('status', true),
-					'actual_cost'		 => (float)$this->db->f('actual_cost'),
-					'start_date'		 => $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'), $dateformat),
-					'num_open'			 => (int)$this->db->f('num_open'),
-					'project_type_id'	 => $this->db->f('project_type_id'),
-					'continuous'		 => $this->db->f('continuous') ? X : '',
-					'project_type'		 => $project_types[$this->db->f('project_type_id')],
-					'b_account_id'		 => $this->db->f('account_id')// only applies to workorders
+					'id' => $this->db->f('id'),
+					'project_id' => $this->db->f('project_id'),
+					'closed' => $this->db->f('closed'),
+					'title' => $this->db->f('title', true),
+					'status' => $this->db->f('status', true),
+					'actual_cost' => (float)$this->db->f('actual_cost'),
+					'start_date' => $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'), $dateformat),
+					'num_open' => (int)$this->db->f('num_open'),
+					'project_type_id' => $this->db->f('project_type_id'),
+					'continuous' => $this->db->f('continuous') ? X : '',
+					'project_type' => $project_types[$this->db->f('project_type_id')],
+					'b_account_id' => $this->db->f('account_id')// only applies to workorders
 				);
 			}
 
@@ -2831,14 +2831,14 @@
 				$sql = sprintf($sql_budget, $entry['id']);
 				$this->db->query($sql, __LINE__, __FILE__);
 
-				$budget			 = array();
-				$_budget		 = array();
-				$_year			 = 0;
-				$_active_amount	 = array();
+				$budget = array();
+				$_budget = array();
+				$_year = 0;
+				$_active_amount = array();
 
 				while($this->db->next_record())
 				{
-					$_year	 = $this->db->f('year');
+					$_year = $this->db->f('year');
 					$_amount = $this->db->f('amount');
 					$_active = $this->db->f('active') ? X : 0;
 					if($_active)
@@ -2854,9 +2854,9 @@
 					$budget[] = $__year . ' [' . number_format((int)$_active_amount[$__year], 0, ',', '.') . '/' . number_format((int)$__budget, 0, ',', '.') . ']';
 				}
 
-				$entry['budget']		 = implode(' ;', $budget);
-				$entry['latest_year']	 = $_year;
-				$entry['active_amount']	 = array_sum($_active_amount);
+				$entry['budget'] = implode(' ;', $budget);
+				$entry['latest_year'] = $_year;
+				$entry['active_amount'] = array_sum($_active_amount);
 			}
 
 			return $values;
@@ -2893,20 +2893,20 @@
 
 				$action_params_approved = array
 					(
-					'appname'			 => 'property',
-					'location'			 => '.project',
-					'id'				 => $id,
-					'responsible'		 => $this->account,
-					'responsible_type'	 => 'user',
-					'action'			 => 'approval',
-					'remark'			 => '',
-					'deadline'			 => ''
+					'appname' => 'property',
+					'location' => '.project',
+					'id' => $id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'remark' => '',
+					'deadline' => ''
 				);
 
 				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$status_new}'");
 				$this->db->next_record();
-				$approved	 = $this->db->f('approved');
-				$closed		 = $this->db->f('closed');
+				$approved = $this->db->f('approved');
+				$closed = $this->db->f('closed');
 
 				if($approved || $closed)
 				{
@@ -2958,8 +2958,8 @@
 
 				$this->db->query("SELECT status, vendor_id FROM fm_workorder WHERE id = '{$id}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$old_status	 = $this->db->f('status');
-				$vendor_id	 = $this->db->f('vendor_id');
+				$old_status = $this->db->f('status');
+				$vendor_id = $this->db->f('vendor_id');
 
 				if($old_status != $status_new)
 				{
@@ -2971,14 +2971,14 @@
 
 				$action_params_approved = array
 					(
-					'appname'			 => 'property',
-					'location'			 => '.project.workorder',
-					'id'				 => $id,
-					'responsible'		 => $this->account,
-					'responsible_type'	 => 'user',
-					'action'			 => 'approval',
-					'remark'			 => '',
-					'deadline'			 => ''
+					'appname' => 'property',
+					'location' => '.project.workorder',
+					'id' => $id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'remark' => '',
+					'deadline' => ''
 				);
 
 				/*
@@ -3022,9 +3022,9 @@
 
 		public function get_user_list()
 		{
-			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
-			$sql	 = 'SELECT DISTINCT coordinator AS user_id FROM fm_project';
+			$values = array();
+			$users = $GLOBALS['phpgw']->accounts->get_list('accounts', $start = -1, $sort = 'ASC', $order = 'account_lastname', $query, $offset = -1);
+			$sql = 'SELECT DISTINCT coordinator AS user_id FROM fm_project';
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$account_lastname = array();
@@ -3033,13 +3033,13 @@
 				$user_id = $this->db->f('user_id');
 				if(isset($users[$user_id]))
 				{
-					$name				 = $users[$user_id]->__toString();
-					$values[]			 = array
+					$name = $users[$user_id]->__toString();
+					$values[] = array
 						(
-						'id'	 => $user_id,
-						'name'	 => $name
+						'id' => $user_id,
+						'name' => $name
 					);
-					$account_lastname[]	 = $name;
+					$account_lastname[] = $name;
 				}
 			}
 
@@ -3053,8 +3053,8 @@
 
 		public function get_periodizations_with_outline()
 		{
-			$values	 = array();
-			$sql	 = 'SELECT DISTINCT fm_eco_periodization.id, fm_eco_periodization.descr FROM fm_eco_periodization'
+			$values = array();
+			$sql = 'SELECT DISTINCT fm_eco_periodization.id, fm_eco_periodization.descr FROM fm_eco_periodization'
 			. " {$this->join} fm_eco_periodization_outline ON fm_eco_periodization.id = fm_eco_periodization_outline.periodization_id"
 			. " ORDER BY id ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -3065,8 +3065,8 @@
 
 				$values[] = array
 					(
-					'id'	 => $id,
-					'name'	 => $id . ' - ' . $this->db->f('descr'),
+					'id' => $id,
+					'name' => $id . ' - ' . $this->db->f('descr'),
 				);
 			}
 
@@ -3086,14 +3086,14 @@
 				$start_year = date('Y');
 			}
 
-			$end_year	 = date('Y') + 1;
-			$year_list	 = array();
+			$end_year = date('Y') + 1;
+			$year_list = array();
 			for($i = $start_year; $i < $end_year; $i++)
 			{
 				$year_list[] = array
 					(
-					'id'	 => $i,
-					'name'	 => $i
+					'id' => $i,
+					'name' => $i
 				);
 			}
 			$year_list = array_reverse($year_list);
@@ -3108,15 +3108,15 @@
 				return array();
 			}
 
-			$current_year	 = date('Y');
-			$found			 = false;
-			$year_list		 = array();
-			$sql			 = 'SELECT min(start_date) AS start_date, max(end_date) AS end_date FROM fm_workorder WHERE project_id = ' . (int)$id;
+			$current_year = date('Y');
+			$found = false;
+			$year_list = array();
+			$sql = 'SELECT min(start_date) AS start_date, max(end_date) AS end_date FROM fm_workorder WHERE project_id = ' . (int)$id;
 			$this->db->query($sql, __LINE__, __FILE__);
 			if($this->db->next_record())
 			{
-				$start_year	 = $this->db->f('start_date') ? date('Y', $this->db->f('start_date')) : date('Y');
-				$end_year	 = $this->db->f('end_date') ? date('Y', $this->db->f('end_date')) : date('Y');
+				$start_year = $this->db->f('start_date') ? date('Y', $this->db->f('start_date')) : date('Y');
+				$end_year = $this->db->f('end_date') ? date('Y', $this->db->f('end_date')) : date('Y');
 
 				for($i = $start_year; $i < ($end_year + 1); $i++)
 				{
@@ -3127,8 +3127,8 @@
 
 					$year_list[] = array
 						(
-						'id'	 => $i,
-						'name'	 => $i
+						'id' => $i,
+						'name' => $i
 					);
 				}
 			}
@@ -3138,8 +3138,8 @@
 				{
 					$year_list[] = array
 						(
-						'id'	 => $current_year,
-						'name'	 => $current_year
+						'id' => $current_year,
+						'name' => $current_year
 					);
 				}
 				else
@@ -3168,7 +3168,7 @@
 				$values[] = array
 					(
 					'project_id' => $this->db->f('project_id'),
-					'year'		 => $this->db->f('year'),
+					'year' => $this->db->f('year'),
 				);
 			}
 			foreach($values as $key => $value)
@@ -3197,10 +3197,10 @@
 				return;
 			}
 
-			$project_id		 = (int)$project_id;
-			$year			 = $year ? (int)$year : date('Y');
-			$current_year	 = date('Y');
-			$activate		 = false;
+			$project_id = (int)$project_id;
+			$year = $year ? (int)$year : date('Y');
+			$current_year = date('Y');
+			$activate = false;
 
 			if($year == $current_year)
 			{
@@ -3211,8 +3211,8 @@
 			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$id		 = $this->db->f('id');
-				$ids[]	 = $id;
+				$id = $this->db->f('id');
+				$ids[] = $id;
 				phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 			}
 			if(!$ids)
@@ -3258,8 +3258,8 @@
 		 */
 		protected function _update_project_budget($project_id)
 		{
-			$years	 = array();
-			$ids	 = array();
+			$years = array();
+			$ids = array();
 			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
 			while($this->db->next_record())
 			{

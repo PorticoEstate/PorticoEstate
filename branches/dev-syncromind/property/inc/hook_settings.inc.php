@@ -28,22 +28,22 @@
 	 */
 	$select_property_filter = array
 		(
-		''		 => lang('Owner type'),
-		'owner'	 => lang('Owner')
+		'' => lang('Owner type'),
+		'owner' => lang('Owner')
 	);
 	create_select_box('Choose property filter', 'property_filter', $select_property_filter, 'Filter by owner or owner type');
 
 	$yes_and_no = array
 		(
-		'yes'	 => 'Yes',
-		'no'	 => 'No'
+		'yes' => 'Yes',
+		'no' => 'No'
 	);
 
 	create_select_box('Group filters in single query', 'group_filters', $yes_and_no, 'Group filters - means that one has to hit the search button to apply the filter');
 
-	$status_list_tts		 = execMethod('property.botts._get_status_list');
-	$status_list_workorder	 = execMethod('property.soworkorder.select_status_list');
-	$status_list_project	 = execMethod('property.soproject.select_status_list');
+	$status_list_tts = execMethod('property.botts._get_status_list');
+	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
+	$status_list_project = execMethod('property.soproject.select_status_list');
 
 	if($status_list_tts)
 	{
@@ -115,8 +115,8 @@
 
 	create_select_box('show quick link for changing status for tickets', 'tts_status_link', $yes_and_no, 'Enables to set status wihout entering the ticket');
 
-	$acc		 = & $GLOBALS['phpgw']->accounts;
-	$group_list	 = $acc->get_list('groups');
+	$acc = & $GLOBALS['phpgw']->accounts;
+	$group_list = $acc->get_list('groups');
 	foreach($group_list as $entry)
 	{
 		$_groups[$entry->id] = $entry->lid;
@@ -148,8 +148,8 @@
 
 	$cats = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 
-	$cat_data	 = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
-	$cat_list	 = $cat_data['cat_list'];
+	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
+	$cat_list = $cat_data['cat_list'];
 
 	if(is_array($cat_list))
 	{
@@ -164,17 +164,17 @@
 
 	$yes_and_no = array
 		(
-		'1'	 => 'Yes',
-		'2'	 => 'No'
+		'1' => 'Yes',
+		'2' => 'No'
 	);
 
 
-	$degree				 = array();
+	$degree = array();
 	// Choose the correct degree to display
-	$degree_comment[0]	 = ' - ' . lang('None');
-	$degree_comment[1]	 = ' - ' . lang('Minor');
-	$degree_comment[2]	 = ' - ' . lang('Medium');
-	$degree_comment[3]	 = ' - ' . lang('Serious');
+	$degree_comment[0] = ' - ' . lang('None');
+	$degree_comment[1] = ' - ' . lang('Minor');
+	$degree_comment[2] = ' - ' . lang('Medium');
+	$degree_comment[3] = ' - ' . lang('Serious');
 	for($i = 0; $i <= 3; $i++)
 	{
 		$degree[$i] = $i . $degree_comment[$i];
@@ -201,11 +201,11 @@
 
 	$default_start_page = array
 		(
-		'location'	 => lang('Location'),
-		'project'	 => lang('Project'),
-		'tts'		 => lang('Ticket'),
-		'invoice'	 => lang('Invoice'),
-		'document'	 => lang('Document')
+		'location' => lang('Location'),
+		'project' => lang('Project'),
+		'tts' => lang('Ticket'),
+		'invoice' => lang('Invoice'),
+		'document' => lang('Document')
 	);
 	create_select_box('Default start page', 'default_start_page', $default_start_page, 'Select your start-submodule');
 
@@ -215,8 +215,8 @@
 
 	$cats->set_appname('property', '.project');
 
-	$cat_data	 = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
-	$cat_list	 = $cat_data['cat_list'];
+	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
+	$cat_list = $cat_data['cat_list'];
 
 	if(is_array($cat_list))
 	{
@@ -240,18 +240,18 @@
 
 	$default_project_type = array
 		(
-		'1'	 => lang('operation'),
-		'2'	 => lang('investment'),
-		'3'	 => lang('buffer')
+		'1' => lang('operation'),
+		'2' => lang('investment'),
+		'3' => lang('buffer')
 	);
 
 	create_select_box('Default project type', 'default_project_type', $default_project_type, 'Select your default project type');
 
 	$default_project_filter_year = array
 		(
-		(date('Y') - 1)	 => (date('Y') - 1),
-		'current_year'	 => lang('current year'),
-		'all'			 => lang('all'),
+		(date('Y') - 1) => (date('Y') - 1),
+		'current_year' => lang('current year'),
+		'all' => lang('all'),
 	);
 
 	create_select_box('Default project year filter', 'default_project_filter_year', $default_project_filter_year, 'Select your default project year filter');
@@ -263,7 +263,7 @@
 
 	create_input_box('Your Cellphone', 'cellphone');
 	create_input_box('RessursNr', 'ressursnr');
-	$ecodimb	 = CreateObject('property.sogeneric');
+	$ecodimb = CreateObject('property.sogeneric');
 	$ecodimb->get_location_info('dimb', false);
 	$values_dimb = $ecodimb->read(array('sort' => 'ASC', 'order' => 'id', 'allrows' => true));
 
@@ -290,8 +290,8 @@
 	$GLOBALS['phpgw']->preferences->save_repository();
 
 	$cats->set_appname('property', '.vendor');
-	$cat_data	 = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
-	$cat_list	 = $cat_data['cat_list'];
+	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
+	$cat_list = $cat_data['cat_list'];
 
 	if(is_array($cat_list))
 	{

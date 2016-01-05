@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="contact_form">
-		<xsl:apply-templates select="contact_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="contact_data">
+<!-- $Id$ -->
+<xsl:template name="contact_form">
+	<xsl:apply-templates select="contact_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="contact_data">
 	<div class="pure-control-group">
 
 		<div class="pure-u-1 pure-u-md-1-3">
@@ -42,4 +43,4 @@
 			</div>
 		</div>
 	</div>
-	</xsl:template>
+</xsl:template>

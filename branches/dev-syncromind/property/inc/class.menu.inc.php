@@ -39,12 +39,12 @@
 		 */
 		public function get_menu($type = '')
 		{
-			$incoming_app									 = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
-			$acl											 = & $GLOBALS['phpgw']->acl;
-			$menus											 = array();
+			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+			$acl = & $GLOBALS['phpgw']->acl;
+			$menus = array();
 
-			$entity		 = CreateObject('property.soadmin_entity');
+			$entity = CreateObject('property.soadmin_entity');
 			$entity_list = $entity->read(array('allrows' => true));
 
 			$start_page = 'location';
@@ -57,18 +57,18 @@
 				(
 				'property' => array
 					(
-					'text'	 => lang('property'),
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$start_page}.index")),
-					'image'	 => array('property', 'navbar'),
-					'order'	 => 35,
-					'group'	 => 'facilities management'
+					'text' => lang('property'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$start_page}.index")),
+					'image' => array('property', 'navbar'),
+					'order' => 35,
+					'group' => 'facilities management'
 				),
 			);
 
 			$menus['toolbar'] = array();
 
-			$soadmin_location	 = CreateObject('property.soadmin_location');
-			$locations			 = $soadmin_location->select_location_type();
+			$soadmin_location = CreateObject('property.soadmin_location');
+			$locations = $soadmin_location->select_location_type();
 
 			if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
@@ -78,10 +78,10 @@
 					{
 						$admin_children_entity["entity_{$entry['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 								'entity_id' => $entry['id'])),
-							'text'	 => $entry['name'],
-							'image'	 => array('property', 'entity_' . $entry['id'])
+							'text' => $entry['name'],
+							'image' => array('property', 'entity_' . $entry['id'])
 						);
 
 						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute');
@@ -101,179 +101,179 @@
 				}
 				$admin_children_entity['convert_to_eav'] = array
 					(
-					'text'	 => lang('convert to eav'),
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.convert_to_eav'))
+					'text' => lang('convert to eav'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.convert_to_eav'))
 				);
 
 				$admin_children_entity['entity_group'] = array
 					(
-					'text'	 => lang('entity group'),
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+					'text' => lang('entity group'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 						'type' => 'entity_group'))
 				);
 
 				$admin_children_tenant = array
 					(
-					'tenant_cats'		 => array
+					'tenant_cats' => array
 						(
-						'text'	 => lang('Tenant Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Tenant Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'tenant_cats'))
 					),
 					'tenant_global_cats' => array
 						(
-						'text'	 => lang('Tenant Global Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('Tenant Global Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.tenant', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::tenant::tenant_global_cats'))
 					),
-					'tenant_attribs'	 => array
+					'tenant_attribs' => array
 						(
-						'text'	 => lang('Tenant Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('Tenant Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.tenant', 'menu_selection' => 'admin::property::tenant::tenant_attribs'))
 					),
-					'claims_cats'		 => array
+					'claims_cats' => array
 						(
-						'text'	 => lang('Tenant Claim Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Tenant Claim Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'tenant_claim'))
 					)
 				);
 
 				$admin_children_vendor = array
 					(
-					'vendor_cats'		 => array
+					'vendor_cats' => array
 						(
-						'text'	 => lang('Vendor Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Vendor Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'vendor_cats'))
 					),
 					'vendor_global_cats' => array
 						(
-						'text'	 => lang('Vendor Global Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('Vendor Global Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.vendor', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::vendor::vendor_global_cats'))
 					),
-					'vendor_attribs'	 => array
+					'vendor_attribs' => array
 						(
-						'text'	 => lang('Vendor Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('Vendor Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.vendor', 'menu_selection' => 'admin::property::vendor::vendor_attribs'))
 					)
 				);
 
 				$admin_children_project = array
 					(
-					'project_cats'					 => array
+					'project_cats' => array
 						(
-						'text'	 => lang('project categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('project categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.project', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::project::project_cats'))
 					),
-					'project_attribs'				 => array
+					'project_attribs' => array
 						(
-						'text'	 => lang('project attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('project attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.project', 'menu_selection' => 'admin::property::project::project_attribs'))
 					),
-					'workorder_status'				 => array
+					'workorder_status' => array
 						(
-						'text'	 => lang('Workorders status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Workorders status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'workorder_status'))
 					),
-					'project_status'				 => array
+					'project_status' => array
 						(
-						'text'	 => lang('project status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('project status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'project_status'))
 					),
-					'project_group'					 => array
+					'project_group' => array
 						(
-						'text'	 => lang('project group'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('project group'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'project_group'))
 					),
-					'workorder_detail'				 => array
+					'workorder_detail' => array
 						(
-						'text'	 => lang('Workorder Detail Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Workorder Detail Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'wo_hours'))
 					),
-					'workorder_recalculate'			 => array
+					'workorder_recalculate' => array
 						(
-						'text'	 => lang('Workorder recalculate actual cost'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate'))
+						'text' => lang('Workorder recalculate actual cost'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate'))
 					),
-					'project_functions'				 => array
+					'project_functions' => array
 						(
-						'text'	 => lang('custom functions'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+						'text' => lang('custom functions'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 							'appname' => 'property', 'location' => '.project', 'menu_selection' => 'admin::property::project::project_functions'))
 					),
-					'check_missing_project_budget'	 => array
+					'check_missing_project_budget' => array
 						(
-						'text'	 => lang('check missing project budget'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget'))
+						'text' => lang('check missing project budget'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget'))
 					)
 				);
 
 				$admin_children_ticket = array
 					(
-					'ticket_cats'		 => array
+					'ticket_cats' => array
 						(
-						'text'	 => lang('Ticket Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('Ticket Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::ticket::ticket_cats'))
 					),
-					'ticket_status'		 => array
+					'ticket_status' => array
 						(
-						'text'	 => lang('Ticket status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Ticket status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'ticket_status'))
 					),
-					'ticket_priority'	 => array
+					'ticket_priority' => array
 						(
-						'text'	 => lang('Ticket priority'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Ticket priority'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'ticket_priority'))
 					),
-					'ticket_config'		 => array
+					'ticket_config' => array
 						(
-						'text'	 => lang('ticket config'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+						'text' => lang('ticket config'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 							'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')))
 					),
-					'ticket_attribs'	 => array
+					'ticket_attribs' => array
 						(
-						'text'	 => lang('ticket Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('ticket Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.ticket', 'menu_selection' => 'admin::property::ticket::ticket_attribs'))
 					),
-					'ticket_functions'	 => array
+					'ticket_functions' => array
 						(
-						'text'	 => lang('custom functions'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+						'text' => lang('custom functions'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 							'appname' => 'property', 'location' => '.ticket', 'menu_selection' => 'admin::property::ticket::ticket_functions'))
 					),
 				);
 
 				$admin_children_owner = array
 					(
-					'owner_cats'	 => array
+					'owner_cats' => array
 						(
-						'text'	 => lang('Owner Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Owner Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'owner_cats'))
 					),
-					'owner_attribs'	 => array
+					'owner_attribs' => array
 						(
-						'text'	 => lang('Owner Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('Owner Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.owner', 'menu_selection' => 'admin::property::owner::owner_attribs'))
 					)
 				);
@@ -281,28 +281,28 @@
 
 				$admin_children_accounting = array
 					(
-					'accounting_cats'	 => array
+					'accounting_cats' => array
 						(
-						'text'	 => lang('Accounting Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'b_account'))
 					),
-					'budget_account'	 => array
+					'budget_account' => array
 						(
-						'text'	 => lang('budget account'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('budget account'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'budget_account'))
 					),
-					'org_unit'			 => array
+					'org_unit' => array
 						(
-						'text'	 => lang('department'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('department'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'org_unit'))
 					),
-					'accounting_dimb'	 => array
+					'accounting_dimb' => array
 						(
-						'text'	 => lang('Accounting dim b'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting dim b'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'dimb'))
 					),
 					/*
@@ -324,97 +324,97 @@
 					  'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'dimb_role_user') )
 					  ),
 					 */
-					'dimb_role_user2'	 => array
+					'dimb_role_user2' => array
 						(
-						'text'	 => lang('dimb role user'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index'))
+						'text' => lang('dimb role user'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index'))
 					),
-					'accounting_dimd'		 => array
+					'accounting_dimd' => array
 						(
-						'text'	 => lang('Accounting dim d'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting dim d'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'dimd'))
 					),
-					'periodization'			 => array
+					'periodization' => array
 						(
-						'text'	 => lang('periodization'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('periodization'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'periodization'))
 					),
-					'periodization_outline'	 => array
+					'periodization_outline' => array
 						(
-						'text'	 => lang('periodization outline'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('periodization outline'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'periodization_outline'))
 					),
-					'period_transition'		 => array
+					'period_transition' => array
 						(
-						'text'	 => lang('period transition'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('period transition'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'period_transition'))
 					),
-					'accounting_config'		 => array
+					'accounting_config' => array
 						(
-						'text'	 => lang('Configuration'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+						'text' => lang('Configuration'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 							'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')))
 					),
-					'accounting_tax'		 => array
+					'accounting_tax' => array
 						(
-						'text'	 => lang('Accounting tax'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting tax'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'tax'))
 					),
-					'process_code'			 => array
+					'process_code' => array
 						(
-						'text'	 => lang('voucher process code'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('voucher process code'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'voucher_process_code'))
 					),
-					'voucher_cats'			 => array
+					'voucher_cats' => array
 						(
-						'text'	 => lang('Accounting voucher category'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting voucher category'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'voucher_cat'))
 					),
-					'voucher_type'			 => array
+					'voucher_type' => array
 						(
-						'text'	 => lang('Accounting voucher type'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting voucher type'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'voucher_type'))
 					)
 				);
 
 				$admin_children_agreement = array
 					(
-					'agreement_status'			 => array
+					'agreement_status' => array
 						(
-						'text'	 => lang('Agreement status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Agreement status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'agreement_status'))
 					),
-					'agreement_attribs'			 => array
+					'agreement_attribs' => array
 						(
-						'text'	 => lang('Agreement Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('Agreement Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.agreement', 'menu_selection' => 'admin::property::agreement::agreement_attribs'))
 					),
-					'service_agree_cats'		 => array
+					'service_agree_cats' => array
 						(
-						'text'	 => lang('service agreement categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('service agreement categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 's_agreement'))
 					),
-					'service_agree_attribs'		 => array
+					'service_agree_attribs' => array
 						(
-						'text'	 => lang('service agreement Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('service agreement Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.s_agreement', 'menu_selection' => 'admin::property::agreement::service_agree_attribs'))
 					),
 					'service_agree_item_attribs' => array
 						(
-						'text'	 => lang('service agreement item Attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('service agreement item Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.s_agreement.detail', 'menu_selection' => 'admin::property::agreement::service_agree_item_attribs'))
 					)
 				);
@@ -423,334 +423,334 @@
 				{
 					$admin_children_location_children["attribute_loc_{$location['id']}"] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
 							'type_id' => $location['id'])),
-						'text'	 => $location['name'] . ' ' . lang('attributes'),
+						'text' => $location['name'] . ' ' . lang('attributes'),
 					);
-					$admin_children_location_children["category_{$location['id']}"]		 = array
+					$admin_children_location_children["category_{$location['id']}"] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'location', 'type_id' => $location['id'])),
-						'text'	 => $location['name'] . ' ' . lang('categories'),
+						'text' => $location['name'] . ' ' . lang('categories'),
 					);
 				}
 
 				$admin_children_location = array
 					(
-					'street'			 => array
+					'street' => array
 						(
-						'text'	 => lang('Street'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Street'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'street'))
 					),
-					'district'			 => array
+					'district' => array
 						(
-						'text'	 => lang('District'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('District'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'district'))
 					),
-					'district'			 => array
+					'district' => array
 						(
-						'text'	 => lang('District'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('District'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'district'))
 					),
-					'town'				 => array
+					'town' => array
 						(
-						'text'	 => lang('Part of town'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Part of town'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'part_of_town'))
 					),
-					'location'			 => array
+					'location' => array
 						(
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
-						'text'		 => lang('Location type'),
-						'children'	 => $admin_children_location_children
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
+						'text' => lang('Location type'),
+						'children' => $admin_children_location_children
 					),
-					'config'			 => array
+					'config' => array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
-						'text'	 => lang('Config')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
+						'text' => lang('Config')
 					),
-					'update_location'	 => array
+					'update_location' => array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
-						'text'	 => lang('update location')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
+						'text' => lang('update location')
 					),
-					'location_contact'	 => array
+					'location_contact' => array
 						(
-						'text'	 => lang('location contact'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('location contact'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'location_contact'))
 					)
 				);
 
 				$menus['admin'] = array
 					(
-					'index'						 => array
+					'index' => array
 						(
-						'text'		 => lang('Configuration'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+						'text' => lang('Configuration'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
 							'appname' => 'property')),
-						'children'	 => array
+						'children' => array
 							(
 							'custom_config' => array
 								(
-								'text'	 => lang('custom config'),
-								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+								'text' => lang('custom config'),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 									'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')))
 							)
 						)
 					),
-					'import'					 => array
+					'import' => array
 						(
-						'text'	 => lang('Generic import'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
+						'text' => lang('Generic import'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
 					),
-					'entity'					 => array
+					'entity' => array
 						(
-						'text'		 => lang('Admin entity'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index')),
-						'children'	 => $admin_children_entity
+						'text' => lang('Admin entity'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index')),
+						'children' => $admin_children_entity
 					),
-					'location'					 => array
+					'location' => array
 						(
-						'text'		 => lang('Admin Location'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
-						'image'		 => array('property', 'location'),
-						'children'	 => $admin_children_location
+						'text' => lang('Admin Location'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
+						'image' => array('property', 'location'),
+						'children' => $admin_children_location
 					),
-					'inactive_cats'				 => array
+					'inactive_cats' => array
 						(
-						'text'	 => lang('Update the not active category for locations'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_cat'))
+						'text' => lang('Update the not active category for locations'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_cat'))
 					),
-					'project'					 => array
+					'project' => array
 						(
-						'text'		 => lang('project'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('project'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.project', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::project::project_cats')),
-						'children'	 => $admin_children_project
+						'children' => $admin_children_project
 					),
-					'ticket'					 => array
+					'ticket' => array
 						(
-						'text'		 => lang('helpdesk'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('helpdesk'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::ticket::ticket_cats')),
-						'children'	 => $admin_children_ticket
+						'children' => $admin_children_ticket
 					),
-					'tenant'					 => array
+					'tenant' => array
 						(
-						'text'		 => lang('Tenant'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Tenant'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'tenant', 'admin' => true)),
-						'image'		 => array('property', 'location_tenant'),
-						'children'	 => $admin_children_tenant
+						'image' => array('property', 'location_tenant'),
+						'children' => $admin_children_tenant
 					),
-					'owner'						 => array
+					'owner' => array
 						(
-						'text'		 => lang('Owner'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Owner'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'owner', 'admin' => true)),
-						'children'	 => $admin_children_owner
+						'children' => $admin_children_owner
 					),
-					'vendor'					 => array
+					'vendor' => array
 						(
-						'text'		 => lang('Vendor'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Vendor'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'vendor', 'admin' => true)),
-						'children'	 => $admin_children_vendor
+						'children' => $admin_children_vendor
 					),
-					'doc_cats'					 => array
+					'doc_cats' => array
 						(
-						'text'	 => lang('document categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('document categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.document', 'global_cats' => 'true'))
 					),
-					'building_part'				 => array
+					'building_part' => array
 						(
-						'text'	 => lang('Building Part'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Building Part'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'building_part'))
 					),
-					'tender'					 => array
+					'tender' => array
 						(
-						'text'	 => lang('Tender chapter'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Tender chapter'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'tender_chapter'))
 					),
-					'id_control'				 => array
+					'id_control' => array
 						(
-						'text'	 => lang('ID Control'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.edit_id'))
+						'text' => lang('ID Control'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.edit_id'))
 					),
-					'permissions'				 => array
+					'permissions' => array
 						(
-						'text'	 => lang('Permissions'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.list_acl'))
+						'text' => lang('Permissions'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.list_acl'))
 					),
-					'user_contact'				 => array
+					'user_contact' => array
 						(
-						'text'	 => lang('User contact info'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.contact_info'))
+						'text' => lang('User contact info'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.contact_info'))
 					),
-					'request_cats'				 => array
+					'request_cats' => array
 						(
-						'text'	 => lang('request categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('request categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.project.request', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::request_cats'))
 					),
-					'request_status'			 => array
+					'request_status' => array
 						(
-						'text'	 => lang('Request status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Request status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'request_status'))
 					),
-					'request_responsible_unit'	 => array
+					'request_responsible_unit' => array
 						(
-						'text'	 => lang('responsible unit'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('responsible unit'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'request_responsible_unit'))
 					),
-					'request_condition'			 => array
+					'request_condition' => array
 						(
-						'text'	 => lang('Request condition_type'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Request condition_type'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'r_condition_type'))
 					),
-					'condition_survey_cats'		 => array
+					'condition_survey_cats' => array
 						(
-						'text'	 => lang('condition survey Categories'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+						'text' => lang('condition survey Categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
 							'appname' => 'property', 'location' => '.project.condition_survey', 'global_cats' => 'true',
 							'menu_selection' => 'admin::property::condition_survey_cats'))
 					),
-					'condition_survey_status'	 => array
+					'condition_survey_status' => array
 						(
-						'text'	 => lang('condition survey status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('condition survey status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'condition_survey_status'))
 					),
-					'authorities_demands'		 => array
+					'authorities_demands' => array
 						(
-						'text'	 => lang('authorities demands'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('authorities demands'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'authorities_demands'))
 					),
-					'regulations'				 => array
+					'regulations' => array
 						(
-						'text'	 => lang('regulations'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('regulations'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'regulations'))
 					),
-					'request_attribs'			 => array
+					'request_attribs' => array
 						(
-						'text'	 => lang('request attributes'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+						'text' => lang('request attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
 							'appname' => 'property', 'location' => '.project.request', 'menu_selection' => 'admin::property::request_attribs'))
 					),
-					'order_dim1'				 => array
+					'order_dim1' => array
 						(
-						'text'	 => lang('order_dim1'), //translation have to refeflect the (local) meaning
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('order_dim1'), //translation have to refeflect the (local) meaning
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'order_dim1'))
 					),
-					'agreement'					 => array
+					'agreement' => array
 						(
-						'text'		 => lang('Agreement'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Agreement'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'agreement_status')),
-						'image'		 => array('property', 'agreement'),
-						'children'	 => $admin_children_agreement
+						'image' => array('property', 'agreement'),
+						'children' => $admin_children_agreement
 					),
-					'document_status'			 => array
+					'document_status' => array
 						(
-						'text'	 => lang('Document Status'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Document Status'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'document_status'))
 					),
-					'unit'						 => array
+					'unit' => array
 						(
-						'text'	 => lang('Unit'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Unit'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'unit'))
 					),
-					'ns3420'					 => array
+					'ns3420' => array
 						(
-						'text'	 => lang('ns3420'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('ns3420'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'ns3420'))
 					),
-					'key_location'				 => array
+					'key_location' => array
 						(
-						'text'	 => lang('Key location'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Key location'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'key_location'))
 					),
-					'branch'					 => array
+					'branch' => array
 						(
-						'text'	 => lang('Branch'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Branch'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'branch'))
 					),
-					'accounting'				 => array
+					'accounting' => array
 						(
-						'text'		 => lang('Accounting'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('Accounting'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'budget_account')),
-						'children'	 => $admin_children_accounting
+						'children' => $admin_children_accounting
 					),
-					'admin_async'				 => array
+					'admin_async' => array
 						(
-						'text'	 => lang('Admin Async services'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.index'))
+						'text' => lang('Admin Async services'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.index'))
 					),
-					'async'						 => array
+					'async' => array
 						(
-						'text'	 => lang('Async services'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index'))
+						'text' => lang('Async services'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index'))
 					),
-					'event_action'				 => array
+					'event_action' => array
 						(
-						'text'	 => lang('event action'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('event action'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'event_action'))
 					),
-					'list_functions'			 => array
+					'list_functions' => array
 						(
-						'text'	 => lang('Admin custom functions'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+						'text' => lang('Admin custom functions'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 							'appname' => 'property'))
 					),
-					'migrate_db'				 => array
+					'migrate_db' => array
 						(
-						'text'	 => lang('Migrate to alternative db'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index'))
+						'text' => lang('Migrate to alternative db'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index'))
 					),
-					'custom_menu_items'			 => array
+					'custom_menu_items' => array
 						(
-						'text'	 => lang('custom menu items'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('custom menu items'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'custom_menu_items'))
 					),
-					'responsibility_role'		 => array
+					'responsibility_role' => array
 						(
-						'text'	 => lang('responsibility role'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('responsibility role'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'responsibility_role'))
 					),
-					'responsible_matrix'		 => array
+					'responsible_matrix' => array
 						(
-						'text'	 => lang('responsible matrix'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index')),
+						'text' => lang('responsible matrix'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index')),
 					),
-					'pending_action_type'		 => array
+					'pending_action_type' => array
 						(
-						'text'	 => lang('pending action type'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'text' => lang('pending action type'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'pending_action_type'))
 					)
 				);
@@ -762,23 +762,23 @@
 					(
 					array
 						(
-						'text'	 => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-						'url'	 => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property',
+						'text' => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+						'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property',
 							'type' => 'user'))
 					),
 					array
 						(
-						'text'	 => $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs',
+						'text' => $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs',
 							'acl_app' => 'property'))
 					)
 				);
 
 				$menus['toolbar'][] = array
 					(
-					'text'	 => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-					'url'	 => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property')),
-					'image'	 => array('property', 'preferences')
+					'text' => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property')),
+					'image' => array('property', 'preferences')
 				);
 			}
 
@@ -794,10 +794,10 @@
 					{
 						$children["loc_{$location['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
 								'type_id' => $location['id'])),
-							'text'	 => $location['name'],
-							'image'	 => array('property', 'location_' . $location['id'])
+							'text' => $location['name'],
+							'image' => array('property', 'location_' . $location['id'])
 						);
 					}
 				}
@@ -811,30 +811,30 @@
 				{
 					$children['tenant'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
 							'lookup_tenant' => 1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
-						'text'	 => lang('Tenant'),
-						'image'	 => array('property', 'location_tenant')
+						'text' => lang('Tenant'),
+						'image' => array('property', 'location_tenant')
 					);
 				}
 
-				$children['gabnr']				 = array
+				$children['gabnr'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigab.index')),
-					'text'	 => lang('gabnr'),
-					'image'	 => array('property', 'location_gabnr')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigab.index')),
+					'text' => lang('gabnr'),
+					'image' => array('property', 'location_gabnr')
 				);
-				$children['summary']			 = array
+				$children['summary'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.summary')),
-					'text'	 => lang('Summary'),
-					'image'	 => array('property', 'location_summary')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.summary')),
+					'text' => lang('Summary'),
+					'image' => array('property', 'location_summary')
 				);
 				$children['responsibility_role'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.responsiblility_role')),
-					'text'	 => lang('responsibility role'),
-					'image'	 => array('property', 'responsibility_role')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.responsiblility_role')),
+					'text' => lang('responsibility role'),
+					'image' => array('property', 'responsibility_role')
 				);
 
 				/* 				if ( $acl->check('.location', 16, 'property') )
@@ -853,11 +853,11 @@
 				 */
 				$menus['navigation']['location'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
 						'type_id' => 1)),
-					'text'		 => lang('Location'),
-					'image'		 => array('property', 'location'),
-					'children'	 => $children
+					'text' => lang('Location'),
+					'image' => array('property', 'location'),
+					'children' => $children
 				);
 			}
 
@@ -865,16 +865,16 @@
 			{
 				$menus['navigation']['ifc'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiifc.import')),
-					'text'		 => lang('IFC'),
-					'image'		 => array('property', 'ifc'),
-					'children'	 => array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiifc.import')),
+					'text' => lang('IFC'),
+					'image' => array('property', 'ifc'),
+					'children' => array
 						(
 						'import' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiifc.import')),
-							'text'	 => lang('import'),
-							'image'	 => array('property', 'ifc_import'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiifc.import')),
+							'text' => lang('import'),
+							'image' => array('property', 'ifc_import'),
 						)
 					)
 				);
@@ -884,9 +884,9 @@
 			{
 				$menus['navigation']['helpdesk'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index')),
-					'text'	 => lang('Helpdesk'),
-					'image'	 => array('property', 'helpdesk')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index')),
+					'text' => lang('Helpdesk'),
+					'image' => array('property', 'helpdesk')
 				);
 			}
 
@@ -896,10 +896,10 @@
 					(
 					'order_template' => array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'order_template')),
-						'text'	 => lang('order template'),
-						'image'	 => array('property', 'helpdesk')
+						'text' => lang('order template'),
+						'image' => array('property', 'helpdesk')
 					)
 				);
 			}
@@ -908,10 +908,10 @@
 			{
 				$menus['navigation']['helpdesk']['children']['response_template'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 						'type' => 'response_template')),
-					'text'	 => lang('response template'),
-					'image'	 => array('property', 'helpdesk')
+					'text' => lang('response template'),
+					'image' => array('property', 'helpdesk')
 				);
 			}
 
@@ -937,55 +937,55 @@
 				 */
 				$menus['navigation']['project'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
-					'text'		 => lang('Project'),
-					'image'		 => array('property', 'project'),
-					'children'	 => array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
+					'text' => lang('Project'),
+					'image' => array('property', 'project'),
+					'children' => array
 						(
-						'project'					 => array
+						'project' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
-							'text'	 => lang('Project'),
-							'image'	 => array('property', 'project'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
+							'text' => lang('Project'),
+							'image' => array('property', 'project'),
 						//		'children'	=> $project_children
 						),
-						'workorder'					 => array
+						'workorder' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.index')),
-							'text'	 => lang('Workorder'),
-							'image'	 => array('property', 'project_workorder')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.index')),
+							'text' => lang('Workorder'),
+							'image' => array('property', 'project_workorder')
 						),
-						'condition_survey'			 => array
+						'condition_survey' => array
 							(
-							'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.index')),
-							'text'		 => lang('condition survey'),
-							'image'		 => array('property', 'condition_survey'),
-							'children'	 => array
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.index')),
+							'text' => lang('condition survey'),
+							'image' => array('property', 'condition_survey'),
+							'children' => array
 								(
 								'summation' => array
 									(
-									'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.summation')),
-									'text'	 => lang('summation'),
-									'image'	 => array('property', 'invoice')
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.summation')),
+									'text' => lang('summation'),
+									'image' => array('property', 'invoice')
 								)
 							)
 						),
-						'request'					 => array
+						'request' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.index')),
-							'text'	 => lang('Request'),
-							'image'	 => array('property', 'project_request')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.index')),
+							'text' => lang('Request'),
+							'image' => array('property', 'project_request')
 						),
-						'template'					 => array
+						'template' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitemplate.index')),
-							'text'	 => lang('template'),
-							'image'	 => array('property', 'project_template')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitemplate.index')),
+							'text' => lang('template'),
+							'image' => array('property', 'project_template')
 						),
 						'project_bulk_update_status' => array
 							(
-							'text'	 => lang('bulk update status'),
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status'))
+							'text' => lang('bulk update status'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status'))
 						)
 					)
 				);
@@ -995,9 +995,9 @@
 			{
 				$menus['navigation']['scheduled_events'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.index')),
-					'text'	 => lang('scheduled events'),
-					'image'	 => array('scheduled_events', 'project')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.index')),
+					'text' => lang('scheduled events'),
+					'image' => array('scheduled_events', 'project')
 				);
 			}
 
@@ -1008,25 +1008,25 @@
 				{
 					$children['investment'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvestment.index')),
-						'text'	 => lang('Investment value')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvestment.index')),
+						'text' => lang('Investment value')
 					);
 
 					$children['import'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.import')),
-						'text'	 => lang('Import invoice')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.import')),
+						'text' => lang('Import invoice')
 					);
 
-					$children['export']		 = array
+					$children['export'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export')),
-						'text'	 => lang('Export invoice')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export')),
+						'text' => lang('Export invoice')
 					);
-					$children['rollback']	 = array
+					$children['rollback'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.rollback')),
-						'text'	 => lang('Roll back')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.rollback')),
+						'text' => lang('Roll back')
 					);
 				}
 
@@ -1034,64 +1034,64 @@
 				{
 					$children['add'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.add')),
-						'text'	 => lang('Add')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.add')),
+						'text' => lang('Add')
 					);
 				}
 
 				$menus['navigation']['invoice'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
-					'text'		 => lang('Invoice'),
-					'image'		 => array('property', 'invoice'),
-					'children'	 => array_merge(array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
+					'text' => lang('Invoice'),
+					'image' => array('property', 'invoice'),
+					'children' => array_merge(array
 						(
-						'deposition'	 => array
+						'deposition' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.reporting',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.reporting',
 								'type' => 'deposition')),
-							'text'	 => lang('deposition')
+							'text' => lang('deposition')
 						),
 						'reconciliation' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.reporting',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.reporting',
 								'type' => 'reconciliation')),
-							'text'	 => lang('reconciliation')
+							'text' => lang('reconciliation')
 						),
-						'paid'			 => array
+						'paid' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index',
 								'paid' => true)),
-							'text'	 => lang('Paid')
+							'text' => lang('Paid')
 						),
-						'consume'		 => array
+						'consume' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.consume')),
-							'text'	 => lang('consume')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.consume')),
+							'text' => lang('consume')
 						),
 						'budget_account' => array
 							(
-							'text'	 => lang('budget account'),
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'text' => lang('budget account'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 								'type' => 'budget_account'))
 						),
-						'vendor'		 => array
+						'vendor' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 								'type' => 'vendor')),
-							'text'	 => lang('Vendor')
+							'text' => lang('Vendor')
 						),
-						'tenant'		 => array
+						'tenant' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 								'type' => 'tenant')),
-							'text'	 => lang('Tenant')
+							'text' => lang('Tenant')
 						),
-						'claim'			 => array
+						'claim' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.index')),
-							'text'	 => lang('Tenant claim'),
-							'image'	 => array('property', 'project_tenant_claim')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.index')),
+							'text' => lang('Tenant claim'),
+							'image' => array('property', 'project_tenant_claim')
 						)
 					), $children)
 				);
@@ -1101,20 +1101,20 @@
 			{
 				$menus['navigation']['budget'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
-					'text'		 => lang('Budget'),
-					'image'		 => array('property', 'budget'),
-					'children'	 => array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
+					'text' => lang('Budget'),
+					'image' => array('property', 'budget'),
+					'children' => array
 						(
-						'budget'		 => array
+						'budget' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
-							'text'	 => lang('budget')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
+							'text' => lang('budget')
 						),
-						'obligations'	 => array
+						'obligations' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.obligations')),
-							'text'	 => lang('obligations')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.obligations')),
+							'text' => lang('obligations')
 						)
 					)
 				);
@@ -1123,8 +1123,8 @@
 				{
 					$menus['navigation']['budget']['children']['basis'] = array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.basis')),
-						'text'	 => lang('basis')
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.basis')),
+						'text' => lang('basis')
 					);
 				}
 			}
@@ -1136,46 +1136,46 @@
 				{
 					$admin_menu = array
 						(
-						'group'		 => array
+						'group' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.agreement_group')),
-							'text'	 => lang('Agreement group')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.agreement_group')),
+							'text' => lang('Agreement group')
 						),
 						'activities' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.activity')),
-							'text'	 => lang('Activities')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.activity')),
+							'text' => lang('Activities')
 						),
-						'agreement'	 => array
+						'agreement' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
-							'text'	 => lang('Agreement')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
+							'text' => lang('Agreement')
 						)
 					);
 				}
 
 				$menus['navigation']['agreement'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
-					'text'		 => lang('Agreement'),
-					'image'		 => array('property', 'agreement'),
-					'children'	 => array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
+					'text' => lang('Agreement'),
+					'image' => array('property', 'agreement'),
+					'children' => array
 						(
-						'pricebook'	 => array
+						'pricebook' => array
 							(
-							'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
-							'text'		 => lang('Pricebook'),
-							'children'	 => $admin_menu
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiagreement.index')),
+							'text' => lang('Pricebook'),
+							'children' => $admin_menu
 						),
-						'service'	 => array
+						'service' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.index')),
-							'text'	 => lang('Service')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.index')),
+							'text' => lang('Service')
 						),
-						'alarm'		 => array
+						'alarm' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.list_alarm')),
-							'text'	 => lang('alarm')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.list_alarm')),
+							'text' => lang('alarm')
 						)
 					)
 				);
@@ -1186,24 +1186,24 @@
 
 			if($acl->check('.document', PHPGW_ACL_READ, 'property'))
 			{
-				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
-				$menus['navigation']['documentation']	 = array
+				$laws_url = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
+				$menus['navigation']['documentation'] = array
 					(
-					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
-					'text'		 => lang('Documentation'),
-					'image'		 => array('property', 'documentation'),
-					'children'	 => array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
+					'text' => lang('Documentation'),
+					'image' => array('property', 'documentation'),
+					'children' => array
 						(
-						'legislation'	 => array
+						'legislation' => array
 							(
-							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
+							'text' => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
 							// degrade gracefully hack
-							'url'	 => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
+							'url' => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
 						),
-						'location'		 => array
+						'location' => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
-							'text'	 => lang('location')
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
+							'text' => lang('location')
 						)
 					)
 				);
@@ -1215,9 +1215,9 @@
 						{
 							$menus['navigation']['documentation']['children']["entity_{$entry['id']}"] = array
 								(
-								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index',
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index',
 									'entity_id' => $entry['id'])),
-								'text'	 => $entry['name']
+								'text' => $entry['name']
 							);
 						}
 					}
@@ -1225,8 +1225,8 @@
 
 				$menus['navigation']['documentation']['children']['gallery'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigallery.index')),
-					'text'	 => lang('gallery')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigallery.index')),
+					'text' => lang('gallery')
 				);
 
 				$custom_menu_items = $custom_menus->read(array('type' => 'custom_menu_items'), array(
@@ -1235,10 +1235,10 @@
 				{
 					$menus['navigation']['documentation']['children'][] = array
 						(
-						'url'			 => $item['url'],
-						'text'			 => $item['text'],
-						'target'		 => $item['target'] ? $item['target'] : '_blank',
-						'local_files'	 => $item['local_files']
+						'url' => $item['url'],
+						'text' => $item['text'],
+						'target' => $item['target'] ? $item['target'] : '_blank',
+						'local_files' => $item['local_files']
 					);
 				}
 			}
@@ -1247,9 +1247,9 @@
 			{
 				$menus['navigation']['custom'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicustom.index')),
-					'text'	 => lang('Custom'),
-					'image'	 => array('property', 'custom')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicustom.index')),
+					'text' => lang('Custom'),
+					'image' => array('property', 'custom')
 				);
 			}
 
@@ -1261,10 +1261,10 @@
 					{
 						$menus['navigation']["entity_{$entry['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uientity.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uientity.index',
 								'entity_id' => $entry['id'])),
-							'text'	 => $entry['name'],
-							'image'	 => array('property', 'entity_' . $entry['id'])
+							'text' => $entry['name'],
+							'image' => array('property', 'entity_' . $entry['id'])
 						);
 
 						if($type != 'horisontal')
@@ -1308,9 +1308,9 @@
 			{
 				$menus['navigation']['jasper'] = array
 					(
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uijasper.index')),
-					'text'	 => JasperReports,
-					'image'	 => array('property', 'report')
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uijasper.index')),
+					'text' => JasperReports,
+					'image' => array('property', 'report')
 				);
 			}
 

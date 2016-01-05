@@ -9,7 +9,7 @@
 	<script type="text/javascript">
 		function <xsl:value-of select="field"/>_contact_lookup()
 		{
-			TINY.box.show({iframe:'<xsl:value-of select="contact_link"/>', boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:'<xsl:value-of select="contact_link"/>', boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 	</script>
 	<div class="pure-control-group">

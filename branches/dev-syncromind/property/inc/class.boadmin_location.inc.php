@@ -46,18 +46,18 @@
 		protected $custom;
 		var $public_functions = array
 			(
-			'read'			 => true,
-			'read_single'	 => true,
-			'save'			 => true,
-			'delete'		 => true,
-			'check_perms'	 => true
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'check_perms' => true
 		);
 
 		function __construct($session = false)
 		{
-			$this->so		 = CreateObject('property.soadmin_location');
-			$this->bocommon	 = CreateObject('property.bocommon');
-			$this->custom	 = createObject('property.custom_fields');
+			$this->so = CreateObject('property.soadmin_location');
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom = createObject('property.custom_fields');
 
 			if($session)
 			{
@@ -65,17 +65,17 @@
 				$this->use_session = true;
 			}
 
-			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	 = phpgw::get_var('query');
-			$sort	 = phpgw::get_var('sort');
-			$order	 = phpgw::get_var('order');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			$this->start	 = $start ? $start : 0;
-			$this->query	 = isset($query) ? $query : $this->query;
-			$this->sort		 = isset($sort) && $sort ? $sort : '';
-			$this->order	 = isset($order) && $order ? $order : '';
-			$this->allrows	 = isset($allrows) && $allrows ? $allrows : '';
+			$this->start = $start ? $start : 0;
+			$this->query = isset($query) ? $query : $this->query;
+			$this->sort = isset($sort) && $sort ? $sort : '';
+			$this->order = isset($order) && $order ? $order : '';
+			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata($data)
@@ -92,7 +92,7 @@
 
 			$this->start = $data['start'];
 			$this->query = $data['query'];
-			$this->sort	 = $data['sort'];
+			$this->sort = $data['sort'];
 			$this->order = $data['order'];
 		}
 
@@ -100,15 +100,15 @@
 		{
 			# $data = array()
 			#array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order)
-			$standard			 = $this->so->read($data);
+			$standard = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $standard;
 		}
 
 		function read_config()
 		{
-			$standard = $this->so->read_config(array('start'	 => $this->start, 'query'	 => $this->query,
-				'sort'	 => $this->sort, 'order'	 => $this->order));
+			$standard = $this->so->read_config(array('start' => $this->start, 'query' => $this->query,
+				'sort' => $this->sort, 'order' => $this->order));
 
 			$this->total_records = $this->so->total_records;
 
@@ -146,7 +146,7 @@
 			}
 			else if($type_id && $id && $attrib)
 			{
-				$ok		 = 0;
+				$ok = 0;
 				$receipt = array();
 
 				if($this->custom->delete('property', ".location.{$type_id}", $id, "fm_location{$type_id}_history", true))
@@ -183,8 +183,8 @@
 
 		function get_attrib_group_list($type_id, $selected)
 		{
-			$location	 = ".location.{$type_id}";
-			$group_list	 = $this->read_attrib_group($location, true);
+			$location = ".location.{$type_id}";
+			$group_list = $this->read_attrib_group($location, true);
 
 			foreach($group_list as &$group)
 			{
@@ -216,9 +216,9 @@
 
 		function resort_attrib_group($data)
 		{
-			$resort	 = isset($data['resort']) ? $data['resort'] : 'up';
+			$resort = isset($data['resort']) ? $data['resort'] : 'up';
 			$type_id = isset($data['type_id']) ? $data['type_id'] : '';
-			$id		 = (isset($data['id']) ? $data['id'] : '');
+			$id = (isset($data['id']) ? $data['id'] : '');
 
 			if(!$type_id || !$id)
 			{
@@ -255,8 +255,8 @@
 				{
 					return array
 						(
-						'id'	 => 0,
-						'error'	 => array
+						'id' => 0,
+						'error' => array
 							(
 							array('msg' => lang('group already exists, please choose another name')),
 							array('msg' => lang('Attribute group has NOT been saved'))
@@ -266,8 +266,8 @@
 
 				return array
 					(
-					'id'	 => $id,
-					'msg'	 => array('msg' => lang('group has been created'))
+					'id' => $id,
+					'msg' => array('msg' => lang('group has been created'))
 				);
 			}
 		}
@@ -279,7 +279,7 @@
 				$data['allrows'] = true;
 			}
 
-			$attrib				 = $this->custom->find(
+			$attrib = $this->custom->find(
 			'property', '.location.' . $data['type_id'], $data['start'], $data['query'], $data['sort'], $data['order'], $data['allrows']
 			);
 			$this->total_records = $this->custom->total_records;
@@ -308,9 +308,9 @@
 
 		function resort_attrib($data = array())
 		{
-			$resort	 = isset($data['resort']) ? $data['resort'] : 'up';
+			$resort = isset($data['resort']) ? $data['resort'] : 'up';
 			$type_id = isset($data['type_id']) ? $data['type_id'] : '';
-			$id		 = (isset($data['id']) ? $data['id'] : '');
+			$id = (isset($data['id']) ? $data['id'] : '');
 
 			if(!$type_id || !$id)
 			{
@@ -322,10 +322,10 @@
 
 		public function save_attrib($attrib, $action = '')
 		{
-			$attrib['appname']	 = 'property';
-			$attrib['location']	 = '.location.' . $attrib['type_id'];
-			$primary_table		 = 'fm_location' . $attrib['type_id'];
-			$history_table		 = $primary_table . '_history';
+			$attrib['appname'] = 'property';
+			$attrib['location'] = '.location.' . $attrib['type_id'];
+			$primary_table = 'fm_location' . $attrib['type_id'];
+			$history_table = $primary_table . '_history';
 
 			if($action == 'edit' && $attrib['id'])
 			{
@@ -352,8 +352,8 @@
 				{
 					return array
 						(
-						'id'	 => 0,
-						'error'	 => array
+						'id' => 0,
+						'error' => array
 							(
 							array('msg' => lang('field already exists, please choose another name')),
 							array('msg' => lang('Attribute has NOT been saved'))
@@ -363,8 +363,8 @@
 
 				return array
 					(
-					'id'	 => $id,
-					'msg'	 => array('msg' => lang('Custom field has been created'))
+					'id' => $id,
+					'msg' => array('msg' => lang('Custom field has been created'))
 				);
 			}
 		}
@@ -382,9 +382,9 @@
 
 		function select_nullable($selected = '')
 		{
-			$nullable[0]['id']	 = 'true';
+			$nullable[0]['id'] = 'true';
 			$nullable[0]['name'] = lang('true');
-			$nullable[1]['id']	 = 'false';
+			$nullable[1]['id'] = 'false';
 			$nullable[1]['name'] = lang('false');
 
 			return $this->bocommon->select_list($selected, $nullable);

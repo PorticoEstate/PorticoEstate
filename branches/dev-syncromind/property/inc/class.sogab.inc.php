@@ -39,17 +39,17 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon	 = CreateObject('property.bocommon');
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->db2		 = clone($this->db);
-			$this->join		 = & $this->db->join;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->db2 = clone($this->db);
+			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like		 = & $this->db->like;
+			$this->like = & $this->db->like;
 
-			$this->config			 = CreateObject('phpgwapi.config', 'property');
+			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-			$this->gab_insert_level	 = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
+			$this->gab_insert_level = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
 		}
 
 		function read($data)
@@ -57,18 +57,18 @@
 
 			if(is_array($data))
 			{
-				$start			 = isset($data['start']) && $data['start'] ? $data['start'] : '0';
-				$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order			 = isset($data['order']) ? $data['order'] : '';
-				$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$location_code	 = isset($data['location_code']) ? $data['location_code'] : '';
-				$gaards_nr		 = isset($data['gaards_nr']) ? (int)$data['gaards_nr'] : '';
-				$bruksnr		 = isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
-				$feste_nr		 = isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
-				$seksjons_nr	 = isset($data['seksjons_nr']) ? (int)$data['seksjons_nr'] : '';
-				$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
-				$address		 = isset($data['address']) ? $this->db->db_addslashes($data['address']) : '';
-				$check_payments	 = isset($data['check_payments']) ? $data['check_payments'] : '';
+				$start = isset($data['start']) && $data['start'] ? $data['start'] : '0';
+				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order = isset($data['order']) ? $data['order'] : '';
+				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
+				$gaards_nr = isset($data['gaards_nr']) ? (int)$data['gaards_nr'] : '';
+				$bruksnr = isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
+				$feste_nr = isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
+				$seksjons_nr = isset($data['seksjons_nr']) ? (int)$data['seksjons_nr'] : '';
+				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+				$address = isset($data['address']) ? $this->db->db_addslashes($data['address']) : '';
+				$check_payments = isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
 			switch($order)
@@ -95,8 +95,8 @@
 					$ordermethod = ' ORDER BY gab_id ASC';
 			}
 
-			$where			 = 'WHERE';
-			$filtermethod	 = '';
+			$where = 'WHERE';
+			$filtermethod = '';
 
 			if($cat_id > 0)
 			{
@@ -111,8 +111,8 @@
 			}
 			if($location_code)
 			{
-				$location_code	 = explode('-', $location_code);
-				$i				 = 1;
+				$location_code = explode('-', $location_code);
+				$i = 1;
 				foreach($location_code as $_loc)
 				{
 					$loc[] = $_loc;
@@ -159,8 +159,8 @@
 				$j = $this->gab_insert_level;
 			}
 
-			$joinmethod	 = "$this->join fm_location" . ($j);
-			$on			 = 'ON';
+			$joinmethod = "$this->join fm_location" . ($j);
+			$on = 'ON';
 			for($i = ($j); $i > 0; $i--)
 			{
 				$joinmethod .= " $on (fm_gab_location.loc" . ($i) . " = fm_location" . ($j) . ".loc" . ($i) . ")";
@@ -174,15 +174,15 @@
 				//				$sql = "SELECT DISTINCT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
 				//				$sql = "SELECT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
 
-				$spvend_code	 = 9901;
-				$spbudact_code	 = '11954111';
+				$spvend_code = 9901;
+				$spbudact_code = '11954111';
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
 					case 'postgres':
-						$due_date	 = "to_char(forfallsdato,'MM/YYYY') as due_date";
+						$due_date = "to_char(forfallsdato,'MM/YYYY') as due_date";
 						break;
 					default:
-						$due_date	 = "to_char(forfallsdato,'MM/YYYY') as due_date";
+						$due_date = "to_char(forfallsdato,'MM/YYYY') as due_date";
 				}
 
 				$sql = "SELECT sum(belop) as paid, count(fm_ecobilagoverf.loc1) as hits, {$due_date}, fm_ecobilagoverf.loc1, owner"
@@ -214,11 +214,11 @@
 				{
 					$gab_list[] = array
 						(
-						'gab_id'		 => $this->db->f('gab_id'),
-						'location_code'	 => $this->db->f('location_code'),
-						'address'		 => $this->db->f('address', true),
-						'hits'			 => $this->db->f('hits'),
-						'owner'			 => $this->db->f('owner')
+						'gab_id' => $this->db->f('gab_id'),
+						'location_code' => $this->db->f('location_code'),
+						'address' => $this->db->f('address', true),
+						'hits' => $this->db->f('hits'),
+						'owner' => $this->db->f('owner')
 					);
 				}
 			}
@@ -233,41 +233,41 @@
 					$dateformat = 'd-m-Y';
 				}
 
-				$gross_list	 = array();
-				$dates		 = array();
+				$gross_list = array();
+				$dates = array();
 				while($this->db->next_record())
 				{
-					$gross_list[]					 = array
+					$gross_list[] = array
 						(
-						'gab_id'		 => '00000000000000000000', //$this->db->f('gab_id'),
-						'location_code'	 => $this->db->f('loc1'),
-						'address'		 => $this->db->f('address', true),
-						'hits'			 => $this->db->f('hits'),
-						'owner'			 => $this->db->f('owner'),
-						'paid'			 => $this->db->f('paid'),
-						'due_date'		 => $this->db->f('due_date'),
+						'gab_id' => '00000000000000000000', //$this->db->f('gab_id'),
+						'location_code' => $this->db->f('loc1'),
+						'address' => $this->db->f('address', true),
+						'hits' => $this->db->f('hits'),
+						'owner' => $this->db->f('owner'),
+						'paid' => $this->db->f('paid'),
+						'due_date' => $this->db->f('due_date'),
 					);
 					$dates[$this->db->f('due_date')] = true;
 				}
 
-				$dates			 = array_keys($dates);
-				$payment_date	 = array();
+				$dates = array_keys($dates);
+				$payment_date = array();
 				$location_buffer = array();
-				$i				 = 0;
+				$i = 0;
 				foreach($gross_list as $entry)
 				{
 					if(!isset($location_buffer[$entry['location_code']]))
 					{
-						$gab_list[$i]								 = array
+						$gab_list[$i] = array
 							(
-							'location_code'	 => $entry['location_code'],
-							'gab_id'		 => $entry['gab_id'],
-							'address'		 => $entry['address'],
-							'hits'			 => $entry['hits'],
-							'owner'			 => $entry['owner']
+							'location_code' => $entry['location_code'],
+							'gab_id' => $entry['gab_id'],
+							'address' => $entry['address'],
+							'hits' => $entry['hits'],
+							'owner' => $entry['owner']
 						);
-						$location_buffer[$entry['location_code']]	 = true;
-						$j											 = $i;
+						$location_buffer[$entry['location_code']] = true;
+						$j = $i;
 						$i++;
 					}
 					foreach($dates as $date)
@@ -320,10 +320,10 @@
 				{
 					$start = 0;
 				}
-				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order	 = (isset($data['order']) ? $data['order'] : '');
-				$cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : 0);
-				$gab_id	 = (isset($data['gab_id']) ? $data['gab_id'] : '0');
+				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order = (isset($data['order']) ? $data['order'] : '');
+				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$gab_id = (isset($data['gab_id']) ? $data['gab_id'] : '0');
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 			}
 
@@ -332,15 +332,15 @@
 
 			$cols = $entity_table . '.*';
 
-			$cols_return[]	 = 'location_code';
-			$cols_return[]	 = 'gab_id';
-			$cols_return[]	 = 'owner';
-			$cols_return[]	 = 'address';
+			$cols_return[] = 'location_code';
+			$cols_return[] = 'gab_id';
+			$cols_return[] = 'owner';
+			$cols_return[] = 'address';
 
-			$sql = $this->bocommon->generate_sql(array('entity_table'	 => $entity_table, 'cols'			 => $cols,
-				'cols_return'	 => $cols_return,
-				'uicols'		 => $uicols, 'joinmethod'	 => $joinmethod, 'paranthesis'	 => $paranthesis,
-				'query'			 => $query));
+			$sql = $this->bocommon->generate_sql(array('entity_table' => $entity_table, 'cols' => $cols,
+				'cols_return' => $cols_return,
+				'uicols' => $uicols, 'joinmethod' => $joinmethod, 'paranthesis' => $paranthesis,
+				'query' => $query));
 
 
 			if($order)
@@ -363,22 +363,22 @@
 			//echo $sql;
 			$this->uicols = $this->bocommon->uicols;
 
-			$this->uicols['input_type'][]	 = 'text';
-			$this->uicols['name'][]			 = 'owner';
-			$this->uicols['descr'][]		 = lang('owner');
-			$this->uicols['statustext'][]	 = lang('owner');
-			$this->uicols['input_type'][]	 = 'text';
-			$this->uicols['name'][]			 = 'location_code';
-			$this->uicols['descr'][]		 = 'location code';
-			$this->uicols['statustext'][]	 = 'location code';
-			$this->uicols['input_type'][]	 = 'text';
-			$this->uicols['name'][]			 = 'address';
-			$this->uicols['descr'][]		 = lang('address');
-			$this->uicols['statustext'][]	 = lang('address');
+			$this->uicols['input_type'][] = 'text';
+			$this->uicols['name'][] = 'owner';
+			$this->uicols['descr'][] = lang('owner');
+			$this->uicols['statustext'][] = lang('owner');
+			$this->uicols['input_type'][] = 'text';
+			$this->uicols['name'][] = 'location_code';
+			$this->uicols['descr'][] = 'location code';
+			$this->uicols['statustext'][] = 'location code';
+			$this->uicols['input_type'][] = 'text';
+			$this->uicols['name'][] = 'address';
+			$this->uicols['descr'][] = lang('address');
+			$this->uicols['statustext'][] = lang('address');
 
-			$cols_return		 = $this->bocommon->cols_return;
-			$type_id			 = $this->bocommon->type_id;
-			$this->cols_extra	 = $this->bocommon->cols_extra;
+			$cols_return = $this->bocommon->cols_return;
+			$type_id = $this->bocommon->type_id;
+			$this->cols_extra = $this->bocommon->cols_extra;
 
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -401,12 +401,12 @@
 					$gab_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
 
-				$location_code	 = $this->db->f('location_code');
-				$location		 = explode('-', $location_code);
+				$location_code = $this->db->f('location_code');
+				$location = explode('-', $location_code);
 				for($m = 0; $m < count($location); $m++)
 				{
-					$gab_list[$j]['loc' . ($m + 1)]					 = $location[$m];
-					$gab_list[$j]['query_location']['loc' . ($m + 1)]	 = implode("-", array_slice($location, 0, ($m + 1)));
+					$gab_list[$j]['loc' . ($m + 1)] = $location[$m];
+					$gab_list[$j]['query_location']['loc' . ($m + 1)] = implode("-", array_slice($location, 0, ($m + 1)));
 				}
 
 				$j++;
@@ -422,9 +422,9 @@
 
 			if($this->db->next_record())
 			{
-				$gab['location_code']	 = $location_code;
-				$gab['remark']			 = $this->db->f('remark');
-				$gab['owner']			 = $this->db->f('owner');
+				$gab['location_code'] = $location_code;
+				$gab['remark'] = $this->db->f('remark');
+				$gab['owner'] = $this->db->f('owner');
 			}
 
 			//_debug_array($gab);
@@ -445,8 +445,8 @@
 
 		function add($gab)
 		{
-			$location	 = explode('-', $gab['location_code']);
-			$next_type	 = count($location) + 1;
+			$location = explode('-', $gab['location_code']);
+			$next_type = count($location) + 1;
 
 			//_debug_array($gab);
 
@@ -478,19 +478,19 @@
 				{
 					if(!$this->exist_gab_location($gab_id, $this->db->f('location_code')))
 					{
-						$gab_insert[] = array('location_code'	 => $this->db->f('location_code'),
-							'gab_id'		 => $gab_id,
-							'location_name'	 => $this->db->f('location_name'),
-							'remark'		 => $gab['remark'],
-							'owner'			 => $gab['owner']);
+						$gab_insert[] = array('location_code' => $this->db->f('location_code'),
+							'gab_id' => $gab_id,
+							'location_name' => $this->db->f('location_name'),
+							'remark' => $gab['remark'],
+							'owner' => $gab['owner']);
 					}
 					else
 					{
-						$gab_update[] = array('location_code'	 => $this->db->f('location_code'),
-							'gab_id'		 => $gab_id,
-							'location_name'	 => $this->db->f('location_name'),
-							'remark'		 => $gab['remark'],
-							'owner'			 => $gab['owner']);
+						$gab_update[] = array('location_code' => $this->db->f('location_code'),
+							'gab_id' => $gab_id,
+							'location_name' => $this->db->f('location_name'),
+							'remark' => $gab['remark'],
+							'owner' => $gab['owner']);
 					}
 				}
 			}
@@ -498,13 +498,13 @@
 			{
 				if(count($location) == $this->gab_insert_level)
 				{
-					$gab_insert[] = array('location_code'	 => $gab['location_code'],
-						'gab_id'		 => $gab_id,
-						'street_name'	 => $gab['street_name'],
-						'street_number'	 => $gab['street_number'],
-						'location_name'	 => $gab['location_name'],
-						'remark'		 => $gab['remark'],
-						'owner'			 => $gab['owner']);
+					$gab_insert[] = array('location_code' => $gab['location_code'],
+						'gab_id' => $gab_id,
+						'street_name' => $gab['street_name'],
+						'street_number' => $gab['street_number'],
+						'location_name' => $gab['location_name'],
+						'remark' => $gab['remark'],
+						'owner' => $gab['owner']);
 				}
 			}
 
@@ -539,22 +539,22 @@
 				{
 					if($value)
 					{
-						$col[]	 = 'loc' . ($input_name + 1);
-						$val[]	 = $value;
+						$col[] = 'loc' . ($input_name + 1);
+						$val[] = $value;
 					}
 				}
 
 				if($col)
 				{
-					$cols	 = "," . implode(",", $col);
-					$vals	 = ",'" . implode("','", $val) . "'";
+					$cols = "," . implode(",", $col);
+					$vals = ",'" . implode("','", $val) . "'";
 				}
 
 				if($gab_insert[$i]['street_name'])
 				{
-					$address[]	 = $gab_insert[$i]['street_name'];
-					$address[]	 = $gab_insert[$i]['street_number'];
-					$address	 = $this->db->db_addslashes(implode(" ", $address));
+					$address[] = $gab_insert[$i]['street_name'];
+					$address[] = $gab_insert[$i]['street_number'];
+					$address = $this->db->db_addslashes(implode(" ", $address));
 				}
 
 				if(!$address)
@@ -626,8 +626,8 @@
 					user_id			='" . $this->account
 				. "' WHERE location_code= '" . $gab['location_code'] . "' and gab_id= '" . $gab['gab_id'] . "'", __LINE__, __FILE__);
 
-				$receipt['message'][]	 = array('msg' => lang('gab %1 has been edited', "'" . $gab['gab_id'] . "'"));
-				$receipt['message'][]	 = array('msg' => lang('at location %1', $gab['location_code']));
+				$receipt['message'][] = array('msg' => lang('gab %1 has been edited', "'" . $gab['gab_id'] . "'"));
+				$receipt['message'][] = array('msg' => lang('at location %1', $gab['location_code']));
 			}
 			else
 			{

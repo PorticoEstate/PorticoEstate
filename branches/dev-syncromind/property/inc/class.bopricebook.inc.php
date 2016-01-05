@@ -43,19 +43,19 @@
 		var $cat_id;
 		var $public_functions = array
 			(
-			'read'			 => true,
-			'read_single'	 => true,
-			'save'			 => true,
-			'delete'		 => true,
-			'check_perms'	 => true
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'check_perms' => true
 		);
 
 		function __construct($session = false)
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so		 = CreateObject('property.sopricebook');
-			$this->socommon	 = CreateObject('property.socommon');
-			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->so = CreateObject('property.sopricebook');
+			$this->socommon = CreateObject('property.socommon');
+			$this->bocommon = CreateObject('property.bocommon');
 
 			if($session)
 			{
@@ -63,12 +63,12 @@
 				$this->use_session = true;
 			}
 
-			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	 = phpgw::get_var('query');
-			$sort	 = phpgw::get_var('sort');
-			$order	 = phpgw::get_var('order');
-			$filter	 = phpgw::get_var('filter', 'int');
-			$cat_id	 = phpgw::get_var('cat_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
 			if($start)
@@ -120,12 +120,12 @@
 
 			//_debug_array($data);
 
-			$this->start	 = $data['start'];
-			$this->query	 = $data['query'];
-			$this->filter	 = $data['filter'];
-			$this->sort		 = $data['sort'];
-			$this->order	 = $data['order'];
-			$this->cat_id	 = $data['cat_id'];
+			$this->start = $data['start'];
+			$this->query = $data['query'];
+			$this->filter = $data['filter'];
+			$this->sort = $data['sort'];
+			$this->order = $data['order'];
+			$this->cat_id = $data['cat_id'];
 		}
 
 		function select_status_list($format = '', $selected = '')
@@ -149,7 +149,7 @@
 //            $data = array()
 //			$pricebook = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
-			$pricebook			 = $this->so->read($data);
+			$pricebook = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -159,17 +159,17 @@
 //			$agreement_group = $this->so->read_agreement_group(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 
-			$agreement_group	 = $this->so->read_agreement_group($data);
+			$agreement_group = $this->so->read_agreement_group($data);
 			$this->total_records = $this->so->total_records;
 			return $agreement_group;
 		}
 
 		function read_activity_prize($activity_id, $agreement_id)
 		{
-			$pricebook			 = $this->so->read_activity_prize(array('start'			 => $this->start,
-				'query'			 => $this->query, 'sort'			 => $this->sort, 'order'			 => $this->order,
-				'filter'		 => $this->filter, 'cat_id'		 => $this->cat_id, 'allrows'		 => $this->allrows,
-				'activity_id'	 => $activity_id, 'agreement_id'	 => $agreement_id));
+			$pricebook = $this->so->read_activity_prize(array('start' => $this->start,
+				'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order,
+				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+				'activity_id' => $activity_id, 'agreement_id' => $agreement_id));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -258,13 +258,13 @@
 				}
 
 				$update[] = array(
-					'new_m_cost'	 => $new_m_cost,
-					'new_w_cost'	 => $new_w_cost,
+					'new_m_cost' => $new_m_cost,
+					'new_w_cost' => $new_w_cost,
 					'new_total_cost' => $new_total_cost,
-					'activity_id'	 => $values['activity_id'][$n],
-					'agreement_id'	 => $values['agreement_id'][$n],
-					'new_index'		 => $new_index,
-					'new_date'		 => $date,
+					'activity_id' => $values['activity_id'][$n],
+					'agreement_id' => $values['agreement_id'][$n],
+					'new_index' => $new_index,
+					'new_date' => $date,
 				);
 			}
 			//_debug_array($update);
@@ -289,11 +289,11 @@
 			$date = mktime(2, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 //			$date= date($GLOBALS['phpgw']->db->date_format(),$date);
 
-			$m_cost			 = str_replace(",", ".", $values['m_cost']);
-			$w_cost			 = str_replace(",", ".", $values['w_cost']);
-			$total_cost		 = $m_cost + $w_cost;
-			$activity_id	 = $values['activity_id'][0];
-			$agreement_id	 = $values['agreement_id'][0];
+			$m_cost = str_replace(",", ".", $values['m_cost']);
+			$w_cost = str_replace(",", ".", $values['w_cost']);
+			$total_cost = $m_cost + $w_cost;
+			$activity_id = $values['activity_id'][0];
+			$agreement_id = $values['agreement_id'][0];
 
 			$receipt = $this->so->add_activity_first_prize($m_cost, $w_cost, $total_cost, $activity_id, $agreement_id, $date);
 
@@ -373,8 +373,8 @@
 			}
 			else
 			{
-				$values['activity_id']	 = $this->socommon->next_id('fm_activities');
-				$receipt				 = $this->so->add_activity($values);
+				$values['activity_id'] = $this->socommon->next_id('fm_activities');
+				$receipt = $this->so->add_activity($values);
 			}
 			return $receipt;
 		}
@@ -392,8 +392,8 @@
 			}
 			else
 			{
-				$values['agreement_group_id']	 = $this->socommon->next_id('fm_agreement_group');
-				$receipt						 = $this->so->add_agreement_group($values);
+				$values['agreement_group_id'] = $this->socommon->next_id('fm_agreement_group');
+				$receipt = $this->so->add_agreement_group($values);
 			}
 			return $receipt;
 		}

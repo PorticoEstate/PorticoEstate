@@ -8,16 +8,16 @@
 	{
 
 		protected $db;
-		protected $config		 = array();
-		protected $status_text	 = array();
+		protected $config = array();
+		protected $status_text = array();
 		protected $custom_config;
 		protected $account;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if($this->acl_location != '.entity.2.17')
 			{
@@ -27,10 +27,10 @@
 
 		function update_data($values, $values_attribute = array())
 		{
-			$sql		 = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
+			$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$maaler_nr	 = $this->db->f('maaler_nr');
+			$maaler_nr = $this->db->f('maaler_nr');
 
 			if($action != 'edit')
 			{
@@ -41,7 +41,7 @@
 				}
 			}
 
-			$sql			 = "SELECT beskrivelse FROM fm_entity_1_14 WHERE location_code='{$values['location_code']}'";
+			$sql = "SELECT beskrivelse FROM fm_entity_1_14 WHERE location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$bod_beskrivelse = $this->db->f('beskrivelse');
@@ -90,8 +90,8 @@
 
 								$this->db->query("SELECT maaler_stand, id FROM fm_entity_1_11 WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'", __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value	 = $this->db->f('maaler_stand');
-								$id			 = $this->db->f('id');
+								$old_value = $this->db->f('maaler_stand');
+								$id = $this->db->f('id');
 								if($id)
 								{
 									$attrib_id = 8;
@@ -112,8 +112,8 @@
 
 								$this->db->query("SELECT beskrivelse, id FROM fm_entity_1_14 WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value	 = $this->db->f('beskrivelse');
-								$id			 = $this->db->f('id');
+								$old_value = $this->db->f('beskrivelse');
+								$id = $this->db->f('id');
 								if($id)
 								{
 									$attrib_id = 1;
@@ -142,11 +142,11 @@
 						case 'br_slokk_app_skiftet':
 							if($entry['value'])
 							{
-								$new_value	 = $entry['value'];
+								$new_value = $entry['value'];
 								$this->db->query("SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value	 = $this->db->f('skiftet');
-								$id			 = $this->db->f('id');
+								$old_value = $this->db->f('skiftet');
+								$id = $this->db->f('id');
 								if($id)
 								{
 									$attrib_id = 2;
@@ -180,9 +180,9 @@
 
 		private function add_bod($beskrivelse, $location_code, $address)
 		{
-			$table		 = 'fm_entity_1_14';
-			$location	 = explode('-', $location_code);
-			$value_set	 = array();
+			$table = 'fm_entity_1_14';
+			$location = explode('-', $location_code);
+			$value_set = array();
 
 			$i = 1;
 			if(isset($location) AND is_array($location))
@@ -195,26 +195,26 @@
 				}
 			}
 
-			$value_set['id']			 = $this->bocommon->next_id($table);
-			$value_set['num']			 = $value_set['id'];
-			$value_set['address']		 = $address;
-			$value_set['beskrivelse']	 = $beskrivelse;
-			$value_set['location_code']	 = $location_code;
-			$value_set['entry_date']	 = time();
-			$value_set['user_id']		 = $this->account;
+			$value_set['id'] = $this->bocommon->next_id($table);
+			$value_set['num'] = $value_set['id'];
+			$value_set['address'] = $address;
+			$value_set['beskrivelse'] = $beskrivelse;
+			$value_set['location_code'] = $location_code;
+			$value_set['entry_date'] = time();
+			$value_set['user_id'] = $this->account;
 
-			$cols		 = implode(',', array_keys($value_set));
-			$values		 = $this->db->validate_insert(array_values($value_set));
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
-			$historylog	 = CreateObject('property.historylog', 'entity_1_14');
-			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id	 = 1, time());
+			$historylog = CreateObject('property.historylog', 'entity_1_14');
+			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id = 1, time());
 		}
 
 		private function br_slokk_app($date, $location_code, $address)
 		{
-			$table		 = 'fm_entity_1_10';
-			$location	 = explode('-', $location_code);
-			$value_set	 = array();
+			$table = 'fm_entity_1_10';
+			$location = explode('-', $location_code);
+			$value_set = array();
 
 			$i = 1;
 			if(isset($location) AND is_array($location))
@@ -227,19 +227,19 @@
 				}
 			}
 
-			$value_set['id']			 = $this->bocommon->next_id($table);
-			$value_set['num']			 = $value_set['id'];
-			$value_set['address']		 = $address;
-			$value_set['skiftet']		 = $date;
-			$value_set['location_code']	 = $location_code;
-			$value_set['entry_date']	 = time();
-			$value_set['user_id']		 = $this->account;
+			$value_set['id'] = $this->bocommon->next_id($table);
+			$value_set['num'] = $value_set['id'];
+			$value_set['address'] = $address;
+			$value_set['skiftet'] = $date;
+			$value_set['location_code'] = $location_code;
+			$value_set['entry_date'] = time();
+			$value_set['user_id'] = $this->account;
 
-			$cols		 = implode(',', array_keys($value_set));
-			$values		 = $this->db->validate_insert(array_values($value_set));
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
-			$historylog	 = CreateObject('property.historylog', 'entity_1_10');
-			$historylog->add('SO', $value_set['id'], $date, false, $attrib_id	 = 2, time());
+			$historylog = CreateObject('property.historylog', 'entity_1_10');
+			$historylog->add('SO', $value_set['id'], $date, false, $attrib_id = 2, time());
 		}
 	}
 	$data_sync = new entity_data_sync();

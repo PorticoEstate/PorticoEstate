@@ -37,10 +37,10 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->join		 = & $this->db->join;
-			$this->like		 = & $this->db->like;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
+			$this->like = & $this->db->like;
 		}
 
 		function get_initials($id)
@@ -71,8 +71,8 @@
 			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr DESC,start_date DESC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$name	 = '';
-			$fm_ids	 = array();
+			$name = '';
+			$fm_ids = array();
 			while($this->db->next_record())
 			{
 				$old = false;
@@ -80,16 +80,16 @@
 				{
 					$old = true;
 				}
-				$new_name	 = $this->db->f('name');
-				$fm_ids[]	 = array
+				$new_name = $this->db->f('name');
+				$fm_ids[] = array
 					(
-					'name'		 => $new_name,
-					'descr'		 => $this->db->f('descr'),
-					'value'		 => $this->db->f('value'),
+					'name' => $new_name,
+					'descr' => $this->db->f('descr'),
+					'value' => $this->db->f('value'),
 					'start_date' => $this->db->f('start_date'),
-					'old'		 => $old
+					'old' => $old
 				);
-				$name		 = $new_name;
+				$name = $new_name;
 			}
 
 			return array_reverse($fm_ids);
@@ -117,9 +117,9 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				while($this->db->next_record())
 				{
-					$value			 = $this->db->f('value');
-					$descr			 = $this->db->f('descr');
-					$old_start_date	 = $this->db->f('start_date');
+					$value = $this->db->f('value');
+					$descr = $this->db->f('descr');
+					$old_start_date = $this->db->f('start_date');
 				}
 
 				if($start_date > $old_start_date)

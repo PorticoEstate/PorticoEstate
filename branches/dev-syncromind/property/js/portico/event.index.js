@@ -5,49 +5,50 @@
  */
 var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uievent.updatereceipt'});
 
-function onSave ()
+function onSave()
 {
-    var api = oTable.api();
+	var api = oTable.api();
 //  console.log(api.data().length);
-    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-    var selected = oTT.fnGetSelectedData();
-    var numSelected = selected.length;
+	var oTT = TableTools.fnGetInstance('datatable-container');
+	var selected = oTT.fnGetSelectedData();
+	var numSelected = selected.length;
 
-    if (numSelected == '0'){
-        alert('None selected');
-        return false;
-    }
-    
-    var ids = []; var mckec = {};
-    for ( var n = 0; n < selected.length; ++n )
-    {
-        var aData = selected[n];
-        ids.push(aData['id']);
-        mckec[aData['id']+"_"+aData['schedule_time']] = aData['id'];
-    }
-    
-    $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{ids:ids,mckec:mckec},
-            success: function(result) {
-				document.getElementById("message").innerHTML = '';
+	if (numSelected == '0') {
+		alert('None selected');
+		return false;
+	}
 
-				if (typeof(result.message) !== 'undefined')
-				{
-					$.each(result.message, function (k, v) {
-						document.getElementById("message").innerHTML += v.msg + "<br/>";
-					});
-				}
+	var ids = [];
+	var mckec = {};
+	for (var n = 0; n < selected.length; ++n)
+	{
+		var aData = selected[n];
+		ids.push(aData['id']);
+		mckec[aData['id'] + "_" + aData['schedule_time']] = aData['id'];
+	}
 
-				if (typeof(result.error) !== 'undefined')
-				{
-					$.each(result.error, function (k, v) {
-						document.getElementById("message").innerHTML += v.msg + "<br/>";
-					});
-				}
-                oTable.fnDraw();
-            }
-    });
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		data: {ids: ids, mckec: mckec},
+		success: function (result) {
+			document.getElementById("message").innerHTML = '';
+
+			if (typeof (result.message) !== 'undefined')
+			{
+				$.each(result.message, function (k, v) {
+					document.getElementById("message").innerHTML += v.msg + "<br/>";
+				});
+			}
+
+			if (typeof (result.error) !== 'undefined')
+			{
+				$.each(result.error, function (k, v) {
+					document.getElementById("message").innerHTML += v.msg + "<br/>";
+				});
+			}
+			oTable.fnDraw();
+		}
+	});
 }

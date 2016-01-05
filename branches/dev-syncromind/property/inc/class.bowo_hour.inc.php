@@ -42,17 +42,17 @@
 		var $cat_id;
 		var $public_functions = array
 			(
-			'read'			 => true,
-			'read_single'	 => true,
-			'save'			 => true,
-			'delete'		 => true,
-			'check_perms'	 => true
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'check_perms' => true
 		);
 
 		function __construct($session = false)
 		{
-			$this->so		 = CreateObject('property.sowo_hour');
-			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->so = CreateObject('property.sowo_hour');
+			$this->bocommon = CreateObject('property.bocommon');
 
 			if($session)
 			{
@@ -60,14 +60,14 @@
 				$this->use_session = true;
 			}
 
-			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query		 = phpgw::get_var('query');
-			$sort		 = phpgw::get_var('sort');
-			$order		 = phpgw::get_var('order');
-			$filter		 = phpgw::get_var('filter', 'int');
-			$cat_id		 = phpgw::get_var('cat_id', 'int');
-			$chapter_id	 = phpgw::get_var('chapter_id', 'int');
-			$allrows	 = phpgw::get_var('allrows', 'bool');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+			$chapter_id = phpgw::get_var('chapter_id', 'int');
+			$allrows = phpgw::get_var('allrows', 'bool');
 
 			if($start)
 			{
@@ -120,14 +120,14 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'wo_hour');
 
-			$this->start		 = $data['start'];
-			$this->query		 = $data['query'];
-			$this->filter		 = $data['filter'];
-			$this->sort			 = $data['sort'];
-			$this->order		 = $data['order'];
-			$this->cat_id		 = $data['cat_id'];
-			$this->allrows		 = $data['allrows'];
-			$this->chapter_id	 = $data['chapter_id'];
+			$this->start = $data['start'];
+			$this->query = $data['query'];
+			$this->filter = $data['filter'];
+			$this->sort = $data['sort'];
+			$this->order = $data['order'];
+			$this->cat_id = $data['cat_id'];
+			$this->allrows = $data['allrows'];
+			$this->chapter_id = $data['chapter_id'];
 		}
 
 		function get_chapter_list($format = '', $selected = '')
@@ -165,9 +165,9 @@
 
 				$tolerance_list[] = array
 					(
-					'id'		 => $tolerance_entry['id'],
-					'name'		 => $tolerance_entry['id'],
-					'selected'	 => $sel_tolerance_entry
+					'id' => $tolerance_entry['id'],
+					'name' => $tolerance_entry['id'],
+					'selected' => $sel_tolerance_entry
 				);
 			}
 
@@ -205,9 +205,9 @@
 
 				$building_part_list[] = array
 					(
-					'id'		 => $building_part_entry['id'],
-					'name'		 => '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
-					'selected'	 => $sel_building_part_entry
+					'id' => $building_part_entry['id'],
+					'name' => '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
+					'selected' => $sel_building_part_entry
 				);
 			}
 
@@ -224,14 +224,14 @@
 
 		function read($workorder_id = '')
 		{
-			$hour				 = $this->so->read(array('workorder_id' => $workorder_id));
+			$hour = $this->so->read(array('workorder_id' => $workorder_id));
 			$this->total_records = $this->so->total_records;
 			return $hour;
 		}
 
 		function read_deviation($data)
 		{
-			$deviation			 = $this->so->read_deviation(array('workorder_id' => $data['workorder_id'],
+			$deviation = $this->so->read_deviation(array('workorder_id' => $data['workorder_id'],
 				'hour_id' => $data['hour_id']));
 			$this->total_records = $this->so->total_records;
 			return $deviation;
@@ -292,18 +292,18 @@
 
 				$hour[] = array
 					(
-					'activity_id'	 => $values['activity_id'][$n],
-					'activity_num'	 => $values['activity_num'][$n],
-					'hours_descr'	 => $values['descr'][$n],
-					'unit'			 => $values['unit'][$n],
-					'cost'			 => $cost,
-					'quantity'		 => $quantity,
-					'billperae'		 => $values['total_cost'][$n],
-					'ns3420_id'		 => $values['ns3420_id'][$n],
-					'dim_d'			 => $values['dim_d'][$n],
-					'workorder_id'	 => $workorder_id,
-					'wo_hour_cat'	 => $values['wo_hour_cat'][$n],
-					'cat_per_cent'	 => $values['cat_per_cent'][$n]
+					'activity_id' => $values['activity_id'][$n],
+					'activity_num' => $values['activity_num'][$n],
+					'hours_descr' => $values['descr'][$n],
+					'unit' => $values['unit'][$n],
+					'cost' => $cost,
+					'quantity' => $quantity,
+					'billperae' => $values['total_cost'][$n],
+					'ns3420_id' => $values['ns3420_id'][$n],
+					'dim_d' => $values['dim_d'][$n],
+					'workorder_id' => $workorder_id,
+					'wo_hour_cat' => $values['wo_hour_cat'][$n],
+					'cat_per_cent' => $values['cat_per_cent'][$n]
 				);
 			}
 
@@ -336,28 +336,28 @@
 					$values['cat_per_cent'][$n] = 100;
 				}
 
-				$quantity	 = str_replace(",", ".", $quantity);
-				$cost		 = ($values['billperae'][$n] * $quantity);
+				$quantity = str_replace(",", ".", $quantity);
+				$cost = ($values['billperae'][$n] * $quantity);
 
 				$hour[] = array
 					(
-					'chapter_id'	 => $values['chapter_id'][$n],
-					'activity_id'	 => $values['activity_id'][$n],
-					'activity_num'	 => $values['activity_num'][$n],
-					'hours_descr'	 => $values['hours_descr'][$n],
-					'remark'		 => $values['remark'][$n],
-					'unit'			 => $values['unit'][$n],
-					'cost'			 => $cost,
-					'quantity'		 => $quantity,
-					'new_grouping'	 => $values['grouping_descr'][$n],
-					'billperae'		 => $values['billperae'][$n],
-					'ns3420_id'		 => $values['ns3420_id'][$n],
-					'tolerance'		 => $values['tolerance'][$n],
-					'building_part'	 => $values['building_part'][$n],
-					'dim_d'			 => $values['dim_d'][$n],
-					'workorder_id'	 => $workorder_id,
-					'wo_hour_cat'	 => $values['wo_hour_cat'][$n],
-					'cat_per_cent'	 => $values['cat_per_cent'][$n]
+					'chapter_id' => $values['chapter_id'][$n],
+					'activity_id' => $values['activity_id'][$n],
+					'activity_num' => $values['activity_num'][$n],
+					'hours_descr' => $values['hours_descr'][$n],
+					'remark' => $values['remark'][$n],
+					'unit' => $values['unit'][$n],
+					'cost' => $cost,
+					'quantity' => $quantity,
+					'new_grouping' => $values['grouping_descr'][$n],
+					'billperae' => $values['billperae'][$n],
+					'ns3420_id' => $values['ns3420_id'][$n],
+					'tolerance' => $values['tolerance'][$n],
+					'building_part' => $values['building_part'][$n],
+					'dim_d' => $values['dim_d'][$n],
+					'workorder_id' => $workorder_id,
+					'wo_hour_cat' => $values['wo_hour_cat'][$n],
+					'cat_per_cent' => $values['cat_per_cent'][$n]
 				);
 			}
 			//_debug_array($hour);
@@ -383,8 +383,8 @@
 		function save_hour($values, $workorder_id)
 		{
 			$values['billperae'] = str_replace(",", ".", $values['billperae']);
-			$values['quantity']	 = str_replace(",", ".", $values['quantity']);
-			$values['cost']		 = $values['billperae'] * $values['quantity'];
+			$values['quantity'] = str_replace(",", ".", $values['quantity']);
+			$values['cost'] = $values['billperae'] * $values['quantity'];
 			if($values['ns3420_descr'])
 			{
 				$values['descr'] = $values['ns3420_descr'];
@@ -429,17 +429,17 @@
 
 						$values = array
 							(
-							'activity_num'		 => $entry[0],
-							'descr'				 => $descr,
-							'unit'				 => $entry[2],
-							'cost'				 => $entry[6],
-							'quantity'			 => $entry[5],
-							'billperae'			 => $entry[4],
-							'ns3420_id'			 => '',
-							'dim_d'				 => '',
-							'new_grouping'		 => $section_name,
-							'building_part_id'	 => '',
-							'tolerance_id'		 => '',
+							'activity_num' => $entry[0],
+							'descr' => $descr,
+							'unit' => $entry[2],
+							'cost' => $entry[6],
+							'quantity' => $entry[5],
+							'billperae' => $entry[4],
+							'ns3420_id' => '',
+							'dim_d' => '',
+							'new_grouping' => $section_name,
+							'building_part_id' => '',
+							'tolerance_id' => '',
 						);
 						try
 						{

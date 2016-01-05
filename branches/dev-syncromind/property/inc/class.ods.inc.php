@@ -63,10 +63,10 @@
 
 		function parseOds($file)
 		{
-			$tmp	 = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$tmp = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			copy($file, $tmp . '/' . basename($file));
-			$path	 = $tmp . '/' . basename($file);
-			$uid	 = uniqid();
+			$path = $tmp . '/' . basename($file);
+			$uid = uniqid();
 			mkdir($tmp . '/' . $uid);
 			shell_exec('unzip ' . escapeshellarg($path) . ' -d ' . escapeshellarg($tmp . '/' . $uid));
 			$this->parse(file_get_contents($tmp . '/' . $uid . '/content.xml'));
@@ -117,8 +117,8 @@
 		 */
 		function advancedrmdir($path)
 		{
-			$origipath	 = $path;
-			$handler	 = opendir($path);
+			$origipath = $path;
+			$handler = opendir($path);
 			while(true)
 			{
 				$item = readdir($handler);
@@ -137,13 +137,13 @@
 					{
 						break;
 					}
-					$path	 = substr($path, 0, strrpos($path, "/"));
+					$path = substr($path, 0, strrpos($path, "/"));
 					$handler = opendir($path);
 				}
 				else if(is_dir($path . "/" . $item))
 				{
 					closedir($handler);
-					$path	 = $path . "/" . $item;
+					$path = $path . "/" . $item;
 					$handler = opendir($path);
 				}
 				else

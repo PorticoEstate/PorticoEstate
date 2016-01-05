@@ -38,23 +38,23 @@
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 
 		var $debug;
-		var $client_code			 = 14;
-		protected $connection		 = false;
-		protected $global_lock		 = false;
-		protected $orders_affected	 = array();
+		var $client_code = 14;
+		protected $connection = false;
+		protected $global_lock = false;
+		protected $orders_affected = array();
 		protected $min_period;
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
-			$this->currentapp								 = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->db										 = & $GLOBALS['phpgw']->db;
-			$this->join										 = & $this->db->join;
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
 
-			$this->soXport				 = CreateObject('property.soXport');
-			$this->config				 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
-			$this->cats->supress_info	 = true;
+			$this->soXport = CreateObject('property.soXport');
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$this->cats->supress_info = true;
 
 			if(!isset($this->config->config_data['common']['method']))
 			{
@@ -67,8 +67,8 @@
 				$this->cleanup_old();
 			}
 
-			$sogeneric		 = CreateObject('property.sogeneric', 'period_transition');
-			$period_config	 = $sogeneric->read(array('allrows' => true));
+			$sogeneric = CreateObject('property.sogeneric', 'period_transition');
+			$period_config = $sogeneric->read(array('allrows' => true));
 
 			$period_transition = array();
 			foreach($period_config as $entry)
@@ -80,35 +80,35 @@
 
 			if(isset($period_transition[$current_month]))
 			{
-				$_lag_day		 = (int)$period_transition[$current_month]['day'];
-				$_lag_hour		 = (int)$period_transition[$current_month]['hour'];
-				$_lag_seconds	 = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+				$_lag_day = (int)$period_transition[$current_month]['day'];
+				$_lag_hour = (int)$period_transition[$current_month]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
 			else if(isset($period_transition[13]))
 			{
-				$_lag_day		 = (int)$period_transition[13]['day'];
-				$_lag_hour		 = (int)$period_transition[13]['hour'];
-				$_lag_seconds	 = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+				$_lag_day = (int)$period_transition[13]['day'];
+				$_lag_hour = (int)$period_transition[13]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
 			else
 			{
-				$_lag			 = date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
-				$_lag_seconds	 = $_lag * 24 * 3600;
+				$_lag = date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
+				$_lag_seconds = $_lag * 24 * 3600;
 			}
 
 			$_lag_seconds -= phpgwapi_datetime::user_timezone();
 
 //_debug_array($period_transition);			
-			$time						 = time();
-			$timestamp_at_start_month	 = mktime($hour						 = 0, $minute						 = 0, $second						 = 0, $month						 = date("n"), $day						 = 0, $year						 = date("Y"));
+			$time = time();
+			$timestamp_at_start_month = mktime($hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y"));
 
 			if(($time - $timestamp_at_start_month) < $_lag_seconds)
 			{
 				$time = $time - $_lag_seconds;
 			}
 
-			$month	 = date('n', $time);
-			$year	 = date('Y', $time);
+			$month = date('n', $time);
+			$year = date('Y', $time);
 
 			$this->min_period = sprintf("%s%02d", $year, $month);
 		}
@@ -116,26 +116,26 @@
 		protected function cleanup_old()
 		{
 			$this->db->transaction_begin();
-			$date	 = date($this->db->datetime_format(), time());
-			$sql	 = "UPDATE fm_ecobilag SET saksigndato = '{$date}', saksbehandlerid = 'admin' WHERE external_ref IS NULL AND saksigndato IS NULL";
+			$date = date($this->db->datetime_format(), time());
+			$sql = "UPDATE fm_ecobilag SET saksigndato = '{$date}', saksbehandlerid = 'admin' WHERE external_ref IS NULL AND saksigndato IS NULL";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
-			$sql	 = "UPDATE fm_ecobilag SET budsjettsigndato = '{$date}', budsjettansvarligid = 'admin' WHERE external_ref IS NULL AND budsjettsigndato IS NULL";
+			$sql = "UPDATE fm_ecobilag SET budsjettsigndato = '{$date}', budsjettansvarligid = 'admin' WHERE external_ref IS NULL AND budsjettsigndato IS NULL";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
-			$sql	 = "UPDATE fm_ecobilag SET utbetalingsigndato = '{$date}', utbetalingid = 'admin' WHERE external_ref IS NULL AND utbetalingsigndato IS NULL";
+			$sql = "UPDATE fm_ecobilag SET utbetalingsigndato = '{$date}', utbetalingid = 'admin' WHERE external_ref IS NULL AND utbetalingsigndato IS NULL";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->overfor('on');
 
-			$sql		 = "SELECT min(bilagsnr) as bilagsnr FROM fm_ecobilagoverf";
+			$sql = "SELECT min(bilagsnr) as bilagsnr FROM fm_ecobilagoverf";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$bilagsnr	 = (int)$this->db->f('bilagsnr');
+			$bilagsnr = (int)$this->db->f('bilagsnr');
 			if($bilagsnr)
 			{
-				$correction	 = $bilagsnr - 1;
-				$sql		 = "UPDATE fm_ecobilagoverf SET bilagsnr = bilagsnr - {$correction}";
+				$correction = $bilagsnr - 1;
+				$sql = "UPDATE fm_ecobilagoverf SET bilagsnr = bilagsnr - {$correction}";
 //_debug_array($sql);
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
@@ -174,8 +174,8 @@
 
 
 			//Add vouchers with split-line and approved amount = 0.00
-			$extra_candidates	 = array();
-			$sql				 = "SELECT DISTINCT bilagsnr FROM fm_ecobilag WHERE (godkjentbelop = '0' OR godkjentbelop = '0.00') AND budsjettsigndato IS NULL";
+			$extra_candidates = array();
+			$sql = "SELECT DISTINCT bilagsnr FROM fm_ecobilag WHERE (godkjentbelop = '0' OR godkjentbelop = '0.00') AND budsjettsigndato IS NULL";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
@@ -195,9 +195,9 @@
 				$transfer_extra = true;
 				while($this->db->next_record())
 				{
-					$oppsynsigndato		 = $this->db->f('oppsynsigndato');
-					$saksigndato		 = $this->db->f('saksigndato');
-					$budsjettsigndato	 = $this->db->f('budsjettsigndato');
+					$oppsynsigndato = $this->db->f('oppsynsigndato');
+					$saksigndato = $this->db->f('saksigndato');
+					$budsjettsigndato = $this->db->f('budsjettsigndato');
 
 					if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] == 1)
 					{
@@ -275,8 +275,8 @@
 
 			$vendor_info = array
 				(
-				'org_nr'	 => $this->db->f('org_nr'),
-				'konto_nr'	 => $this->db->f('konto_nr')
+				'org_nr' => $this->db->f('org_nr'),
+				'konto_nr' => $this->db->f('konto_nr')
 			);
 
 			return $vendor_info;
@@ -284,28 +284,28 @@
 
 		protected function get_order_info($order_id = '')
 		{
-			$order_info	 = array();
-			$sql		 = "SELECT type FROM fm_orders WHERE id='$order_id'";
+			$order_info = array();
+			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			switch($this->db->f('type'))
 			{
 				case 'workorder':
-					$sql2					 = "SELECT title, category FROM fm_workorder WHERE id='$order_id'";
+					$sql2 = "SELECT title, category FROM fm_workorder WHERE id='$order_id'";
 					$this->db->query($sql2, __LINE__, __FILE__);
 					$this->db->next_record();
-					$order_info['title']	 = $this->db->f('title');
-					$cat_id					 = (int)$this->db->f('category');
-					$category				 = $this->cats->return_single($cat_id);
-					$category_arr			 = explode('-', $category[0]['name']);
-					$order_info['category']	 = (int)trim($category_arr[0]);
+					$order_info['title'] = $this->db->f('title');
+					$cat_id = (int)$this->db->f('category');
+					$category = $this->cats->return_single($cat_id);
+					$category_arr = explode('-', $category[0]['name']);
+					$order_info['category'] = (int)trim($category_arr[0]);
 					break;
 				case 's_agreement':
-					$sql2					 = "SELECT descr as title FROM fm_s_agreement WHERE id='$order_id'";
+					$sql2 = "SELECT descr as title FROM fm_s_agreement WHERE id='$order_id'";
 					$this->db->query($sql2, __LINE__, __FILE__);
 					$this->db->next_record();
-					$order_info['title']	 = $this->db->f('title');
+					$order_info['title'] = $this->db->f('title');
 					break;
 			}
 
@@ -314,44 +314,44 @@
 
 		protected function select_invoice_rollback($date, $Filnavn, $rollback_voucher, $rollback_internal_voucher)
 		{
-			$date_array	 = phpgwapi_datetime::date_array($date);
-			$day		 = $date_array['day'];
-			$month		 = $date_array['month'];
-			$year		 = $date_array['year'];
+			$date_array = phpgwapi_datetime::date_array($date);
+			$day = $date_array['day'];
+			$month = $date_array['month'];
+			$year = $date_array['year'];
 
 			switch($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mssql':
-					$datepart_year	 = "datepart(year,overftid)";
-					$datepart_month	 = "datepart(month,overftid)";
-					$datepart_day	 = "datepart(day,overftid)";
+					$datepart_year = "datepart(year,overftid)";
+					$datepart_month = "datepart(month,overftid)";
+					$datepart_day = "datepart(day,overftid)";
 					break;
 				case 'mysql':
-					$datepart_year	 = "YEAR(overftid)";
-					$datepart_month	 = "MONTH(overftid)";
-					$datepart_day	 = "DAYOFMONTH(overftid)";
+					$datepart_year = "YEAR(overftid)";
+					$datepart_month = "MONTH(overftid)";
+					$datepart_day = "DAYOFMONTH(overftid)";
 					break;
 				case 'pgsql':
-					$datepart_year	 = "date_part('year',overftid)";
-					$datepart_month	 = "date_part('month',overftid)";
-					$datepart_day	 = "date_part('day',overftid)";
+					$datepart_year = "date_part('year',overftid)";
+					$datepart_month = "date_part('month',overftid)";
+					$datepart_day = "date_part('day',overftid)";
 					break;
 				case 'postgres':
-					$datepart_year	 = "date_part('year',overftid)";
-					$datepart_month	 = "date_part('month',overftid)";
-					$datepart_day	 = "date_part('day',overftid)";
+					$datepart_year = "date_part('year',overftid)";
+					$datepart_month = "date_part('month',overftid)";
+					$datepart_day = "date_part('day',overftid)";
 					break;
 			}
 
 			if($rollback_voucher)
 			{
-				$rollback_voucher	 = (int)$rollback_voucher;
-				$sql				 = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher} AND manual_record IS NULL";
+				$rollback_voucher = (int)$rollback_voucher;
+				$sql = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher} AND manual_record IS NULL";
 			}
 			else if($rollback_internal_voucher)
 			{
-				$rollback_internal_voucher	 = (int)$rollback_internal_voucher;
-				$sql						 = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
+				$rollback_internal_voucher = (int)$rollback_internal_voucher;
+				$sql = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
 			}
 			else
 			{
@@ -364,52 +364,52 @@
 			{
 				$invoice_rollback[] = array
 					(
-					'id'					 => $this->db->f('id'),
-					'bilagsnr'				 => $this->db->f('bilagsnr'),
-					'bilagsnr_ut'			 => $this->db->f('bilagsnr_ut'),
-					'kidnr'					 => $this->db->f('kidnr'),
-					'typeid'				 => $this->db->f('typeid'),
-					'kildeid'				 => $this->db->f('kildeid'),
-					'pmwrkord_code'			 => $this->db->f('pmwrkord_code'),
-					'belop'					 => $this->db->f('belop'),
-					'fakturadato'			 => $this->db->f('fakturadato'),
-					'periode'				 => $this->db->f('periode'),
-					'periodization'			 => $this->db->f('periodization'),
-					'periodization_start'	 => $this->db->f('periodization_start'),
-					'forfallsdato'			 => $this->db->f('forfallsdato'),
-					'fakturanr'				 => $this->db->f('fakturanr'),
-					'spbudact_code'			 => $this->db->f('spbudact_code'),
-					'regtid'				 => $this->db->f('regtid'),
-					'artid'					 => $this->db->f('artid'),
-					'godkjentbelop'			 => (int)$this->db->f('godkjentbelop') == 0 ? $this->db->f('belop') : $this->db->f('godkjentbelop'), //restore original amount
-					'spvend_code'			 => $this->db->f('spvend_code'),
-					'dima'					 => $this->db->f('dima'),
-					'loc1'					 => $this->db->f('loc1'),
-					'dimb'					 => $this->db->f('dimb'),
-					'mvakode'				 => $this->db->f('mvakode'),
-					'dimd'					 => $this->db->f('dimd'),
-					'dime'					 => $this->db->f('dime'),
-					'project_id'			 => $this->db->f('project_id'),
-					'kostra_id'				 => $this->db->f('kostra_id'),
-					'item_type'				 => $this->db->f('item_type'),
-					'item_id'				 => $this->db->f('item_id'),
-					'oppsynsmannid'			 => $this->db->f('oppsynsmannid'),
-					'saksbehandlerid'		 => $this->db->f('saksbehandlerid'),
-					'budsjettansvarligid'	 => $this->db->f('budsjettansvarligid'),
-					'oppsynsigndato'		 => $this->db->f('oppsynsigndato'),
-					'saksigndato'			 => $this->db->f('saksigndato'),
+					'id' => $this->db->f('id'),
+					'bilagsnr' => $this->db->f('bilagsnr'),
+					'bilagsnr_ut' => $this->db->f('bilagsnr_ut'),
+					'kidnr' => $this->db->f('kidnr'),
+					'typeid' => $this->db->f('typeid'),
+					'kildeid' => $this->db->f('kildeid'),
+					'pmwrkord_code' => $this->db->f('pmwrkord_code'),
+					'belop' => $this->db->f('belop'),
+					'fakturadato' => $this->db->f('fakturadato'),
+					'periode' => $this->db->f('periode'),
+					'periodization' => $this->db->f('periodization'),
+					'periodization_start' => $this->db->f('periodization_start'),
+					'forfallsdato' => $this->db->f('forfallsdato'),
+					'fakturanr' => $this->db->f('fakturanr'),
+					'spbudact_code' => $this->db->f('spbudact_code'),
+					'regtid' => $this->db->f('regtid'),
+					'artid' => $this->db->f('artid'),
+					'godkjentbelop' => (int)$this->db->f('godkjentbelop') == 0 ? $this->db->f('belop') : $this->db->f('godkjentbelop'), //restore original amount
+					'spvend_code' => $this->db->f('spvend_code'),
+					'dima' => $this->db->f('dima'),
+					'loc1' => $this->db->f('loc1'),
+					'dimb' => $this->db->f('dimb'),
+					'mvakode' => $this->db->f('mvakode'),
+					'dimd' => $this->db->f('dimd'),
+					'dime' => $this->db->f('dime'),
+					'project_id' => $this->db->f('project_id'),
+					'kostra_id' => $this->db->f('kostra_id'),
+					'item_type' => $this->db->f('item_type'),
+					'item_id' => $this->db->f('item_id'),
+					'oppsynsmannid' => $this->db->f('oppsynsmannid'),
+					'saksbehandlerid' => $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid' => $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato' => $this->db->f('oppsynsigndato'),
+					'saksigndato' => $this->db->f('saksigndato'),
 					//			'budsjettsigndato'		=> $this->db->f('budsjettsigndato'), // må anvises på nytt etter tilbakerulling
-					'merknad'				 => $this->db->f('merknad', true),
-					'line_text'				 => $this->db->f('line_text', true),
-					'splitt'				 => $this->db->f('splitt'),
-					'ordrebelop'			 => $this->db->f('ordrebelop'),
+					'merknad' => $this->db->f('merknad', true),
+					'line_text' => $this->db->f('line_text', true),
+					'splitt' => $this->db->f('splitt'),
+					'ordrebelop' => $this->db->f('ordrebelop'),
 					//			'utbetalingid'			=> $this->db->f('utbetalingid'),
 					//			'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
-					'external_ref'			 => $this->db->f('external_ref'),
-					'external_voucher_id'	 => $this->db->f('external_voucher_id'),
-					'currency'				 => $this->db->f('currency'),
-					'process_log'			 => $this->db->f('process_log', true),
-					'process_code'			 => $this->db->f('process_code'),
+					'external_ref' => $this->db->f('external_ref'),
+					'external_voucher_id' => $this->db->f('external_voucher_id'),
+					'currency' => $this->db->f('currency'),
+					'process_log' => $this->db->f('process_log', true),
+					'process_code' => $this->db->f('process_code'),
 				);
 			}
 
@@ -618,8 +618,8 @@
 						$this->db->transaction_commit();
 					}
 
-					$receipt['message'][]	 = array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
-					$receipt['message'][]	 = array('msg' => lang('File %1 is deleted', $Filnavn));
+					$receipt['message'][] = array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
+					$receipt['message'][] = array('msg' => lang('File %1 is deleted', $Filnavn));
 				}
 				else
 				{
@@ -739,7 +739,7 @@
 			$purchaseorderstatus = 'OK';
 			if(!$bilagsnr_ut)
 			{
-				$Filnavn			 = str_replace('_OK_', '_E_', $Filnavn);
+				$Filnavn = str_replace('_OK_', '_E_', $Filnavn);
 				$purchaseorderstatus = 'Feil';
 			}
 
@@ -751,13 +751,13 @@
 				(
 				0 => array
 					(
-					'TRANSACTIONTYPE'	 => 'X114',
-					'TRANSFER'			 => array
+					'TRANSACTIONTYPE' => 'X114',
+					'TRANSFER' => array
 						(
 						0 => array
 							(
-							'TRANSFERDATE'	 => date('d.m.Y', $localtime), //28.05.2009
-							'TRANSFERTIME'	 => date('H:i:s', $localtime)//14:29:52
+							'TRANSFERDATE' => date('d.m.Y', $localtime), //28.05.2009
+							'TRANSFERTIME' => date('H:i:s', $localtime)//14:29:52
 						)
 					)
 				)
@@ -767,23 +767,23 @@
 				(
 				0 => array
 					(
-					'TRANSACTIONTYPE'			 => 'X114',
-					'KEY'						 => $oRsBilag[0]['external_voucher_id'], //dummy
-					'VOUCHERID'					 => $bilagsnr_ut,
-					'INVNUM'					 => $oRsBilag[0]['fakturanr'],
-					'INVDAT'					 => date('d.m.Y', strtotime($oRsBilag[0]['fakturadato'])), //DD.MM.YYYY
-					'DUEDAT'					 => date('d.m.Y', strtotime($oRsBilag[0]['forfallsdato'])), //DD.MM.YYYY
-					'SCANNINGNO'				 => $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
-					'PROFILE'					 => 'TRAINVPOMA',
-					'CLIENT.CODE'				 => $this->client_code, //14,
-					'POATTRIB1'					 => '', //dummy
-					'POATTRIB2'					 => '', //dummy
-					'POPURCHASER'				 => '', //dummy
-					'PREVOUCHERID'				 => '', //dummy
-					'PURCHASEORDERNO'			 => $oRsBilag[0]['order_id'], // 1409220008
-					'PURCHASEORDEROWNER.CODE'	 => $oRsBilag[0]['spvend_code'], // 100644
-					'PURCHASEORDERSTATUS.CODE'	 => $purchaseorderstatus,
-					'GENERALCOMMENT'			 => ''//$comment, // Denne er fakturert i 3 deler OBS OBS!
+					'TRANSACTIONTYPE' => 'X114',
+					'KEY' => $oRsBilag[0]['external_voucher_id'], //dummy
+					'VOUCHERID' => $bilagsnr_ut,
+					'INVNUM' => $oRsBilag[0]['fakturanr'],
+					'INVDAT' => date('d.m.Y', strtotime($oRsBilag[0]['fakturadato'])), //DD.MM.YYYY
+					'DUEDAT' => date('d.m.Y', strtotime($oRsBilag[0]['forfallsdato'])), //DD.MM.YYYY
+					'SCANNINGNO' => $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
+					'PROFILE' => 'TRAINVPOMA',
+					'CLIENT.CODE' => $this->client_code, //14,
+					'POATTRIB1' => '', //dummy
+					'POATTRIB2' => '', //dummy
+					'POPURCHASER' => '', //dummy
+					'PREVOUCHERID' => '', //dummy
+					'PURCHASEORDERNO' => $oRsBilag[0]['order_id'], // 1409220008
+					'PURCHASEORDEROWNER.CODE' => $oRsBilag[0]['spvend_code'], // 100644
+					'PURCHASEORDERSTATUS.CODE' => $purchaseorderstatus,
+					'GENERALCOMMENT' => ''//$comment, // Denne er fakturert i 3 deler OBS OBS!
 				)
 			);
 
@@ -800,8 +800,8 @@
 				$periode = $_periode;
 			}
 
-			$sum_amount	 = 0;
-			$comment	 = array();
+			$sum_amount = 0;
+			$comment = array();
 			foreach($oRsBilag as $line)
 			{
 				if($line['process_log'])
@@ -811,8 +811,8 @@
 
 				$BelopFelt = 'godkjentbelop';
 
-				$amount	 = $line[$BelopFelt] * 100;
-				$amount	 = number_format($amount, 0, '', '');
+				$amount = $line[$BelopFelt] * 100;
+				$amount = number_format($amount, 0, '', '');
 
 				if($line['order_id'])
 				{
@@ -838,18 +838,18 @@
 					}
 				}
 
-				$oRsOverfBilag					 = $line;
-				$oRsOverfBilag['filnavn']		 = $Filnavn ? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
-				$oRsOverfBilag['ordrebelop']	 = $line[$BelopFelt];
-				$oRsOverfBilag['pmwrkord_code']	 = $line['order_id'];
-				$oRsOverfBilag['bilagsnr_ut']	 = $bilagsnr_ut;
-				$oRsOverfBilag['periode']		 = $periode;
+				$oRsOverfBilag = $line;
+				$oRsOverfBilag['filnavn'] = $Filnavn ? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+				$oRsOverfBilag['ordrebelop'] = $line[$BelopFelt];
+				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
+				$oRsOverfBilag['bilagsnr_ut'] = $bilagsnr_ut;
+				$oRsOverfBilag['periode'] = $periode;
 
 				if($line['dime'])
 				{
-					$category		 = $this->cats->return_single($line['dime']);
-					$category_arr	 = explode('-', $category[0]['name']);
-					$dim6			 = (int)trim($category_arr[0]);
+					$category = $this->cats->return_single($line['dime']);
+					$category_arr = explode('-', $category[0]['name']);
+					$dim6 = (int)trim($category_arr[0]);
 				}
 				else
 				{
@@ -884,29 +884,29 @@
 				$sum_amount += $amount;
 				$accountline[] = array
 					(
-					'TRANSACTIONTYPE'	 => 'R114',
-					'ACCOUNTLINK.CODE'	 => $line['spbudact_code'], // 4180
-					'CURRENCY'			 => $line['currency'],
-					'AMOUNT'			 => $amount, // 312500
-					'TAXCODE'			 => $line['mvakode'],
-					'APPROVER.FULLNAME'	 => $line['budsjettansvarligid'], //Batch 04 - 14
-					'DIMENSION.D1.CODE'	 => $line['dimb'], // 1111
-					'DIMENSION.D2.CODE'	 => '', //$line['dima'], // 62000
-					'DIMENSION.D3.CODE'	 => '',
-					'DIMENSION.D4.CODE'	 => $line['project_id'], // dummy
-					'DIMENSION.D5.CODE'	 => $dim5, // dummy
-					'DIMENSION.D6.CODE'	 => $dim6, // dummy
-					'DIMENSION.D7.CODE'	 => $dim7, // dummy
-					'DIMENSION.D8.CODE'	 => $dim8, // dummy
-					'POITEMDESCRIPTION'	 => $descr, // Sugerør,plast,fleksibelt,20cm
-					'POITEMNUMBER'		 => $itemnumber, //200200
-					'POITEMTYPE'		 => 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
-					'POLINENUMBER'		 => $linenumber, // 10
-					'RECEIVER.FULLNAME'	 => $line['budsjettansvarligid'], // Batch 04 - 14
-					'STATUS'			 => 5,
-					'SUBACCOUNT'		 => $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'	 => $line['periodization'], //0
-					'ALLOCATION.PERIOD'	 => $line['periodization_start'] //dummy
+					'TRANSACTIONTYPE' => 'R114',
+					'ACCOUNTLINK.CODE' => $line['spbudact_code'], // 4180
+					'CURRENCY' => $line['currency'],
+					'AMOUNT' => $amount, // 312500
+					'TAXCODE' => $line['mvakode'],
+					'APPROVER.FULLNAME' => $line['budsjettansvarligid'], //Batch 04 - 14
+					'DIMENSION.D1.CODE' => $line['dimb'], // 1111
+					'DIMENSION.D2.CODE' => '', //$line['dima'], // 62000
+					'DIMENSION.D3.CODE' => '',
+					'DIMENSION.D4.CODE' => $line['project_id'], // dummy
+					'DIMENSION.D5.CODE' => $dim5, // dummy
+					'DIMENSION.D6.CODE' => $dim6, // dummy
+					'DIMENSION.D7.CODE' => $dim7, // dummy
+					'DIMENSION.D8.CODE' => $dim8, // dummy
+					'POITEMDESCRIPTION' => $descr, // Sugerør,plast,fleksibelt,20cm
+					'POITEMNUMBER' => $itemnumber, //200200
+					'POITEMTYPE' => 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
+					'POLINENUMBER' => $linenumber, // 10
+					'RECEIVER.FULLNAME' => $line['budsjettansvarligid'], // Batch 04 - 14
+					'STATUS' => 5,
+					'SUBACCOUNT' => $periode, //200905 Accounting period YYYYMM
+					'ALLOCATION.KEY' => $line['periodization'], //0
+					'ALLOCATION.PERIOD' => $line['periodization_start'] //dummy
 				);
 			}
 
@@ -918,29 +918,29 @@
 
 				$accountline[] = array
 					(
-					'TRANSACTIONTYPE'	 => 'R114',
-					'ACCOUNTLINK.CODE'	 => $_vendor_category == 1 ? 2400 : 2460,
-					'CURRENCY'			 => $oRsBilag[0]['currency'],
-					'AMOUNT'			 => (-1 * $sum_amount),
-					'TAXCODE'			 => $oRsBilag[0]['mvakode'],
-					'APPROVER.FULLNAME'	 => '',
-					'DIMENSION.D1.CODE'	 => '',
-					'DIMENSION.D2.CODE'	 => '',
-					'DIMENSION.D3.CODE'	 => '',
-					'DIMENSION.D4.CODE'	 => '',
-					'DIMENSION.D5.CODE'	 => '',
-					'DIMENSION.D6.CODE'	 => '',
-					'DIMENSION.D7.CODE'	 => '',
-					'DIMENSION.D8.CODE'	 => '',
-					'POITEMDESCRIPTION'	 => '',
-					'POITEMNUMBER'		 => '',
-					'POITEMTYPE'		 => 'C',
-					'POLINENUMBER'		 => '',
-					'RECEIVER.FULLNAME'	 => '',
-					'STATUS'			 => 5,
-					'SUBACCOUNT'		 => '',
-					'ALLOCATION.KEY'	 => '',
-					'ALLOCATION.PERIOD'	 => '',
+					'TRANSACTIONTYPE' => 'R114',
+					'ACCOUNTLINK.CODE' => $_vendor_category == 1 ? 2400 : 2460,
+					'CURRENCY' => $oRsBilag[0]['currency'],
+					'AMOUNT' => (-1 * $sum_amount),
+					'TAXCODE' => $oRsBilag[0]['mvakode'],
+					'APPROVER.FULLNAME' => '',
+					'DIMENSION.D1.CODE' => '',
+					'DIMENSION.D2.CODE' => '',
+					'DIMENSION.D3.CODE' => '',
+					'DIMENSION.D4.CODE' => '',
+					'DIMENSION.D5.CODE' => '',
+					'DIMENSION.D6.CODE' => '',
+					'DIMENSION.D7.CODE' => '',
+					'DIMENSION.D8.CODE' => '',
+					'POITEMDESCRIPTION' => '',
+					'POITEMNUMBER' => '',
+					'POITEMTYPE' => 'C',
+					'POLINENUMBER' => '',
+					'RECEIVER.FULLNAME' => '',
+					'STATUS' => 5,
+					'SUBACCOUNT' => '',
+					'ALLOCATION.KEY' => '',
+					'ALLOCATION.PERIOD' => '',
 				);
 			}
 
@@ -957,8 +957,8 @@
 						(
 						0 => array
 							(
-							'INVOICEHEADER'	 => $invoiceheader,
-							'ACCOUNTLINES'	 => array
+							'INVOICEHEADER' => $invoiceheader,
+							'ACCOUNTLINES' => array
 								(
 								0 => array
 									(
@@ -973,13 +973,13 @@
 			$export_data = array
 				(
 				'TRANSACTIONINFORMATION' => $transactioninformation,
-				'INVOICES'				 => $invoices
+				'INVOICES' => $invoices
 			);
 
 			$xmltool = CreateObject('phpgwapi.xmltool');
 
-			$buffer	 = $xmltool->import_var('INVOICEIMPORT', $export_data, true, true);
-			$buffer	 = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
+			$buffer = $xmltool->import_var('INVOICEIMPORT', $export_data, true, true);
+			$buffer = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
 
 			//Slett bilaget i fm_ecobilag
 			if($download == 'on' && !$this->debug)
@@ -1005,8 +1005,8 @@
 					return $message;
 				}
 
-				$file_written	 = false;
-				$fp				 = fopen($Filnavn, "wb");
+				$file_written = false;
+				$fp = fopen($Filnavn, "wb");
 				fwrite($fp, $buffer);
 
 				if(fclose($fp))
@@ -1052,12 +1052,12 @@
 
 		protected function increment_voucher_id()
 		{
-			$name		 = 'bilagsnr_ut';
-			$now		 = time();
+			$name = 'bilagsnr_ut';
+			$now = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$next_id	 = $this->db->f('value') + 1;
-			$start_date	 = (int)$this->db->f('start_date');
+			$next_id = $this->db->f('value') + 1;
+			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 
 			return $next_id;
@@ -1065,8 +1065,8 @@
 
 		protected function _delete_from_fm_ecobilag($bilagsnr)
 		{
-			$bilagsnr	 = (int)$bilagsnr;
-			$sql		 = "DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
+			$bilagsnr = (int)$bilagsnr;
+			$sql = "DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
@@ -1093,17 +1093,17 @@
 				switch($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
-						$transfer_ok	 = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
+						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
 						break;
 					case 'ssh';
-						$sftp			 = ssh2_sftp($connection);
-						$stream			 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
-						$data_to_send	 = @file_get_contents($Filnavn);
+						$sftp = ssh2_sftp($connection);
+						$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+						$data_to_send = @file_get_contents($Filnavn);
 						fwrite($stream, $data_to_send);
-						$transfer_ok	 = @fclose($stream);
+						$transfer_ok = @fclose($stream);
 						break;
 					default:
-						$transfer_ok	 = false;
+						$transfer_ok = false;
 				}
 				if($transfer_ok)
 				{
@@ -1129,10 +1129,10 @@
 
 		protected function phpftp_connect()
 		{
-			$server		 = $this->config->config_data['common']['host'];
-			$user		 = $this->config->config_data['common']['user'];
-			$password	 = $this->config->config_data['common']['password'];
-			$port		 = 22;
+			$server = $this->config->config_data['common']['host'];
+			$user = $this->config->config_data['common']['user'];
+			$password = $this->config->config_data['common']['password'];
+			$port = 22;
 
 			switch($this->config->config_data['common']['method'])
 			{

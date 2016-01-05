@@ -18,7 +18,7 @@
 	<div id="message" class='message'/>
 	<xsl:call-template name="top-toolbar" />
 	<xsl:call-template name="prizebook_table" />
-  	<xsl:call-template name="wo_hour_table" />
+	<xsl:call-template name="wo_hour_table" />
 	<xsl:call-template name="end-toolbar" />
 </xsl:template>
 
@@ -33,7 +33,9 @@
 					<xsl:for-each select="//top-toolbar/fields/field">
 						<xsl:choose>
 							<xsl:when test="type='button'">
-								<a id="{id}" class="pure-button pure-button-primary" href="{href}" onclick="{onclick}"><xsl:value-of select="value"/></a>
+								<a id="{id}" class="pure-button pure-button-primary" href="{href}" onclick="{onclick}">
+									<xsl:value-of select="value"/>
+								</a>
 							</xsl:when>
 						</xsl:choose>									
 					</xsl:for-each>
@@ -44,10 +46,18 @@
 </xsl:template>
 
 <xsl:template match="workorder_data">
-	<div><xsl:value-of select="lang_project_id"/>:<span id="project_id"></span></div>
-	<div><xsl:value-of select="lang_workorder_id"/>:<span id="workorder_id"></span></div>
-	<div><xsl:value-of select="lang_workorder_title"/>:<span id="workorder_title"></span></div>
-	<div><xsl:value-of select="lang_vendor_name"/>:<span id="vendor_name"></span></div>
+	<div>
+		<xsl:value-of select="lang_project_id"/>:<span id="project_id"></span>
+	</div>
+	<div>
+		<xsl:value-of select="lang_workorder_id"/>:<span id="workorder_id"></span>
+	</div>
+	<div>
+		<xsl:value-of select="lang_workorder_title"/>:<span id="workorder_title"></span>
+	</div>
+	<div>
+		<xsl:value-of select="lang_vendor_name"/>:<span id="vendor_name"></span>
+	</div>
 </xsl:template>
 
 <xsl:template name="prizebook_table">
@@ -74,7 +84,9 @@
 						<xsl:for-each select="//end-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary">
+										<xsl:value-of select="value"/>
+									</button>
 								</xsl:when>
 								<xsl:when test="type='label'">
 									<xsl:value-of select="value"/>
@@ -98,58 +110,87 @@
 <xsl:template name="wo_hour_table">
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
-				<xsl:for-each select="//datatable/field">
-					<xsl:choose>
-						<xsl:when test="hidden">
-							<xsl:if test="hidden =0">
-								<th>
-									<xsl:value-of select="label"/>
-								</th>
-								</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
+			<xsl:for-each select="//datatable/field">
+				<xsl:choose>
+					<xsl:when test="hidden">
+						<xsl:if test="hidden =0">
 							<th>
 								<xsl:value-of select="label"/>
 							</th>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<th>
+							<xsl:value-of select="label"/>
+						</th>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
 		</thead>
 		<tfoot>
 			<tr>
-				<th colspan="2" class="dt-right"><div id="lang_sum_calculation"></div><xsl:value-of select="//table_sum/lang_sum_calculation"/></th>
+				<th colspan="2" class="dt-right">
+					<div id="lang_sum_calculation"></div>
+					<xsl:value-of select="//table_sum/lang_sum_calculation"/>
+				</th>
 				<th colspan="4"></th>
-				<th class="dt-right"><div id="value_sum_calculation"></div></th>
-				<th class="dt-right"><div id="sum_deviation"></div></th>
-				<th class="dt-right"><div id="sum_result"></div></th>
+				<th class="dt-right">
+					<div id="value_sum_calculation"></div>
+				</th>
+				<th class="dt-right">
+					<div id="sum_deviation"></div>
+				</th>
+				<th class="dt-right">
+					<div id="sum_result"></div>
+				</th>
 				<th></th>
 				<th></th>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><div id="lang_addition_rs"></div><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
+				<td colspan="2" class="dt-right">
+					<div id="lang_addition_rs"></div>
+					<xsl:value-of select="//table_sum/lang_addition_rs"/>
+				</td>
 				<td colspan="6"></td>
-				<td class="dt-right"><div id="value_addition_rs"></div></td>
+				<td class="dt-right">
+					<div id="value_addition_rs"></div>
+				</td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><div id="lang_addition_percentage"></div><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
+				<td colspan="2" class="dt-right">
+					<div id="lang_addition_percentage"></div>
+					<xsl:value-of select="//table_sum/lang_addition_percentage"/>
+				</td>
 				<td colspan="6"></td>
-				<td class="dt-right"><div id="value_addition_percentage"></div></td>
+				<td class="dt-right">
+					<div id="value_addition_percentage"></div>
+				</td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><div id="lang_sum_tax"></div><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
+				<td colspan="2" class="dt-right">
+					<div id="lang_sum_tax"></div>
+					<xsl:value-of select="//table_sum/lang_sum_tax"/>
+				</td>
 				<td colspan="6"></td>
-				<td class="dt-right"><div id="value_sum_tax"></div></td>
+				<td class="dt-right">
+					<div id="value_sum_tax"></div>
+				</td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<th colspan="2" class="dt-right"><div id="lang_total_sum"></div><xsl:value-of select="//table_sum/lang_total_sum"/></th>
+				<th colspan="2" class="dt-right">
+					<div id="lang_total_sum"></div>
+					<xsl:value-of select="//table_sum/lang_total_sum"/>
+				</th>
 				<th colspan="6"></th>
-				<th class="dt-right"><div id="value_total_sum"></div></th>
+				<th class="dt-right">
+					<div id="value_total_sum"></div>
+				</th>
 				<th></th>
 				<th></th>
 			</tr>
@@ -159,57 +200,57 @@
 
 		if (JqueryPortico.inlineTablesRendered == 0)
 		{
-			JqueryPortico.inlineTablesRendered = 1;
+		JqueryPortico.inlineTablesRendered = 1;
 		}
 		
 		var columns = [
-			<xsl:for-each select="//datatable/field">
-				{
-					data:			"<xsl:value-of select="key"/>",
-					class:			"<xsl:value-of select="className"/>",
-					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-					<xsl:choose>
-						<xsl:when test="hidden">
-							<xsl:if test="hidden =0">
-								visible			:true,
-							</xsl:if>
-							<xsl:if test="hidden =1">
-								class:			'none', //FIXME - virker ikke...'responsive' plukker den fram igjen
-								visible			:false,
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-								visible			:true,
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="formatter">
-					 render: function (dummy1, dummy2, oData) {
-							try {
-								var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
-							}
-							catch(err) {
-								return err.message;
-							}
-							return ret;
-                         },
-
+		<xsl:for-each select="//datatable/field">
+			{
+			data:			"<xsl:value-of select="key"/>",
+			class:			"<xsl:value-of select="className"/>",
+			orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+			<xsl:choose>
+				<xsl:when test="hidden">
+					<xsl:if test="hidden =0">
+						visible			:true,
 					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="editor">
-							<xsl:if test="editor =0">
-								editor:	false,
-							</xsl:if>
-							<xsl:if test="editor =1">
-								editor:	true,
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-								editor:	false,
-						</xsl:otherwise>
-					</xsl:choose>
-					defaultContent:	"<xsl:value-of select="defaultContent"/>"
-				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-			</xsl:for-each>
+					<xsl:if test="hidden =1">
+						class:			'none', //FIXME - virker ikke...'responsive' plukker den fram igjen
+						visible			:false,
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					visible			:true,
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="formatter">
+				render: function (dummy1, dummy2, oData) {
+				try {
+				var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
+				}
+				catch(err) {
+				return err.message;
+				}
+				return ret;
+				},
+
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="editor">
+					<xsl:if test="editor =0">
+						editor:	false,
+					</xsl:if>
+					<xsl:if test="editor =1">
+						editor:	true,
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					editor:	false,
+				</xsl:otherwise>
+			</xsl:choose>
+			defaultContent:	"<xsl:value-of select="defaultContent"/>"
+			}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+		</xsl:for-each>
 		];
 <![CDATA[
 		JqueryPortico.columns = [];
@@ -229,216 +270,216 @@
 		var oTable = null;
 		$(document).ready(function() {
 
-			var ajax_url = '<xsl:value-of select="source"/>';
-			var download_url = '<xsl:value-of select="download"/>';
-			var exclude_colvis = [];
-			var editor_cols = [];
-			var editor_action = '<xsl:value-of select="editor_action"/>';
+		var ajax_url = '<xsl:value-of select="source"/>';
+		var download_url = '<xsl:value-of select="download"/>';
+		var exclude_colvis = [];
+		var editor_cols = [];
+		var editor_action = '<xsl:value-of select="editor_action"/>';
 			
 			
-			<xsl:choose>
-				<xsl:when test="//datatable/actions">
-						JqueryPortico.TableTools = 	{
-								"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-								"sRowSelect": "multi",
-								"aButtons":
-									[
-											{
-							                    "sExtends":    "collection",
-												"sButtonText": "Operation",
-												"aButtons": [
-													'copy',
-													"select_all",
-													"select_none"
-												<xsl:choose>
-														<xsl:when test="download">
-													,{
-														"sExtends": "download",
-														"sButtonText": "Download",
-														"sUrl": '<xsl:value-of select="download"/>'
-													}
-													</xsl:when>
-												</xsl:choose>
-												<xsl:choose>
-														<xsl:when test="//datatable/actions">
-													,
-													{
-														sExtends: "div",
-														sButtonText: "Knapper nedenfor gjelder pr valgt element "
-													},
-														</xsl:when>
-												</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="//datatable/actions">
+				JqueryPortico.TableTools = 	{
+				"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+				"sRowSelect": "multi",
+				"aButtons":
+				[
+				{
+				"sExtends":    "collection",
+				"sButtonText": "Operation",
+				"aButtons": [
+				'copy',
+				"select_all",
+				"select_none"
+				<xsl:choose>
+					<xsl:when test="download">
+						,{
+						"sExtends": "download",
+						"sButtonText": "Download",
+						"sUrl": '<xsl:value-of select="download"/>'
+						}
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="//datatable/actions">
+						,
+						{
+						sExtends: "div",
+						sButtonText: "Knapper nedenfor gjelder pr valgt element "
+						},
+					</xsl:when>
+				</xsl:choose>
 
-												<xsl:for-each select="//datatable/actions">
-													<xsl:choose>
-														<xsl:when test="type = 'custom'">
-															{
-																sExtends:		"select",
-																sButtonText:	"<xsl:value-of select="text"/>",
-																fnClick:		function (nButton, oConfig, oFlash) {
+				<xsl:for-each select="//datatable/actions">
+					<xsl:choose>
+						<xsl:when test="type = 'custom'">
+							{
+							sExtends:		"select",
+							sButtonText:	"<xsl:value-of select="text"/>",
+							fnClick:		function (nButton, oConfig, oFlash) {
 
-																					<xsl:if test="confirm_msg">
-																						var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-																						var r = confirm(confirm_msg);
-																						if (r != true) {
-																							return false;
-																						}
-																					</xsl:if>
+							<xsl:if test="confirm_msg">
+								var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+								var r = confirm(confirm_msg);
+								if (r != true) {
+								return false;
+								}
+							</xsl:if>
 
-																					var action = "<xsl:value-of select="action"/>";
+							var action = "<xsl:value-of select="action"/>";
 
-																					<xsl:if test="parameters">
-																						var parameters = <xsl:value-of select="parameters"/>;
-																						var i = 0;
-																						len = parameters.parameter.length;
-																						for (; i &lt; len; ) {
-																							action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-																							i++;
-																						}
-																					</xsl:if>
+							<xsl:if test="parameters">
+								var parameters = <xsl:value-of select="parameters"/>;
+								var i = 0;
+								len = parameters.parameter.length;
+								for (; i &lt; len; ) {
+								action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+								i++;
+								}
+							</xsl:if>
 
-																					<xsl:value-of select="custom_code"/>	
-																		}
+							<xsl:value-of select="custom_code"/>
+							}
 
-															}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-														</xsl:when>
-														<xsl:otherwise>
-															{
-																sExtends:		"select",
-																sButtonText:	"<xsl:value-of select="text"/>",
-																fnClick:		function (nButton, oConfig, oFlash) {
-																				var receiptmsg = [];
-																				var selected = fnGetSelected();
-																				var numSelected = 	selected.length;
+							}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							{
+							sExtends:		"select",
+							sButtonText:	"<xsl:value-of select="text"/>",
+							fnClick:		function (nButton, oConfig, oFlash) {
+							var receiptmsg = [];
+							var selected = fnGetSelected();
+							var numSelected = 	selected.length;
 
-																				if (numSelected ==0){
-																					alert('None selected');
-																					return false;
-																				}
+							if (numSelected ==0){
+							alert('None selected');
+							return false;
+							}
 
-																				<xsl:if test="confirm_msg">
-																					var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-																					var r = confirm(confirm_msg);
-																					if (r != true) {
-																						return false;
-																					}
-																				</xsl:if>
+							<xsl:if test="confirm_msg">
+								var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+								var r = confirm(confirm_msg);
+								if (r != true) {
+								return false;
+								}
+							</xsl:if>
 
-																				var target = "<xsl:value-of select="target"/>";
-																				if(!target)
-																				{
-																					target = '_self';
-																				}
+							var target = "<xsl:value-of select="target"/>";
+							if(!target)
+							{
+							target = '_self';
+							}
 
-																				if (numSelected &gt; 1){
-																					target = '_blank';
-																				}
+							if (numSelected &gt; 1){
+							target = '_blank';
+							}
 
-																				var n = 0;
-																				for (; n &lt; numSelected; ) {
+							var n = 0;
+							for (; n &lt; numSelected; ) {
 
-																	//				console.log(selected[n]);
-																					var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
-																	//				console.log(aData);
+							//				console.log(selected[n]);
+							var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
+							//				console.log(aData);
 
-																					//delete stuff comes here
-																					var action = "<xsl:value-of select="action"/>";
+							//delete stuff comes here
+							var action = "<xsl:value-of select="action"/>";
 
-																					<xsl:if test="parameters">
-																						var parameters = <xsl:value-of select="parameters"/>;
-																	//						console.log(parameters.parameter);
-																						var i = 0;
-																						len = parameters.parameter.length;
-																						for (; i &lt; len; ) {
-																							action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-																							i++;
-																						}
-																					</xsl:if>
+							<xsl:if test="parameters">
+								var parameters = <xsl:value-of select="parameters"/>;
+								//						console.log(parameters.parameter);
+								var i = 0;
+								len = parameters.parameter.length;
+								for (; i &lt; len; ) {
+								action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+								i++;
+								}
+							</xsl:if>
 																					
-																					// look for the word "DELETE" in URL
-																					if(substr_count(action,'delete')>0)
-																					{               
-																							action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-																							execute_ajax(action, function(result){
-																								document.getElementById("message").innerHTML += '<br/>' + result;
-																							});
-																							oTable.fnDraw();
-																					}
-																					else if (target == 'ajax')
-																					{
-																							action += "&amp;phpgw_return_as=json";
-																							execute_ajax(action, function(result){
-																								document.getElementById("message").innerHTML += '<br/>' + result;
-																							});
-																							oTable.fnDraw();
-																					}
-																					else
-																					{
-																						window.open(action,target);
-																					}
+							// look for the word "DELETE" in URL
+							if(substr_count(action,'delete')>0)
+							{
+							action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+							execute_ajax(action, function(result){
+							document.getElementById("message").innerHTML += '<br/>' + result;
+							});
+							oTable.fnDraw();
+							}
+							else if (target == 'ajax')
+							{
+							action += "&amp;phpgw_return_as=json";
+							execute_ajax(action, function(result){
+							document.getElementById("message").innerHTML += '<br/>' + result;
+							});
+							oTable.fnDraw();
+							}
+							else
+							{
+							window.open(action,target);
+							}
 
-																					n++;
-																				}
-																		}
+							n++;
+							}
+							}
 
-															}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:for-each>
+							}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
 
-												]
-											}
-                                        ]
-								};
+				]
+				}
+				]
+				};
 
-				</xsl:when>
-				<xsl:otherwise>
-					JqueryPortico.TableTools = {
-						"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-					};
-				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				JqueryPortico.TableTools = {
+				"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+				};
+			</xsl:otherwise>
+		</xsl:choose>
 
-			/**
-			* Add left click action..
-			*/
-			<xsl:if test="//left_click_action != ''">
-				$("#datatable-container").on("click", "tr", function() {
-					var iPos = oTable.fnGetPosition( this );
-					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
-					try {
-						<xsl:value-of select="//left_click_action"/>
-					}
-					catch(err) {
-					    document.getElementById("message").innerHTML = err.message;
-					}
+		/**
+		* Add left click action..
+		*/
+		<xsl:if test="//left_click_action != ''">
+			$("#datatable-container").on("click", "tr", function() {
+			var iPos = oTable.fnGetPosition( this );
+			var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
+			try {
+			<xsl:value-of select="//left_click_action"/>
+			}
+			catch(err) {
+			document.getElementById("message").innerHTML = err.message;
+			}
+			});
+		</xsl:if>
+
+		<xsl:for-each select="//end-toolbar/fields/field">
+			<xsl:if test="type = 'button'">
+				$('#<xsl:value-of select="id"/>').click( function()
+				{
+				var sUrl = '<xsl:value-of select="url"/>';
+				var params = <xsl:value-of select="params"/>;
+				$.each(params, function(i, item)
+				{
+				if($("#"+item.obj).is(':checked'))
+				{
+				sUrl += '&amp;' + item.param + '=' + 1;
+				}
+				});
+				window.open(sUrl,'_self');
 				});
 			</xsl:if>
-
-			<xsl:for-each select="//end-toolbar/fields/field">
-				<xsl:if test="type = 'button'">
-					$('#<xsl:value-of select="id"/>').click( function() 
-					{
-						var sUrl = '<xsl:value-of select="url"/>';
-						var params = <xsl:value-of select="params"/>;
-						$.each(params, function(i, item) 
-						{
-							if($("#"+item.obj).is(':checked')) 
-							{
-								sUrl += '&amp;' + item.param + '=' + 1;
-							}
-						});					
-						window.open(sUrl,'_self');
-					});
-				</xsl:if>
-			</xsl:for-each>
+		</xsl:for-each>
 			
-			var options = {disablePagination:true, disableFilter:true};
-			options.TableTools = JqueryPortico.TableTools;
+		var options = {disablePagination:true, disableFilter:true};
+		options.TableTools = JqueryPortico.TableTools;
 			
-			var source = "<xsl:value-of select="source"/>";
+		var source = "<xsl:value-of select="source"/>";
 
-			oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
+		oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
 			
 <![CDATA[
 

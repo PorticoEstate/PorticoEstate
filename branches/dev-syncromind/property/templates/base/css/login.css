@@ -1,7 +1,7 @@
 body
 {
-/*	background: #537991 url('../images/logo-large.png') no-repeat fixed top left;
-	color: #999*/
+	/*	background: #537991 url('../images/logo-large.png') no-repeat fixed top left;
+		color: #999*/
 }
 
 body.MSIE
@@ -19,7 +19,7 @@ body.MSIE
 	top: 100px;
 	left: 175px;
 }
- 
+
 /* following rules are invisible to IE 5 \*/
 #horizon
 {
@@ -30,7 +30,7 @@ body.MSIE
 	min-width: 800px; 
 }
 /* end IE 5 hack */ 
-	  
+
 input[type=text], input[type=password], select
 {
 	width: 100px;

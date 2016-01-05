@@ -36,9 +36,9 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 		(
 		'disable_Template_class' => true,
-		'currentapp'			 => 'login',
-		'noheader'				 => true,
-		'noapi'					 => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
+		'currentapp' => 'login',
+		'noheader' => true,
+		'noapi' => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'soapclientsession';
@@ -50,8 +50,8 @@
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
-	$GLOBALS['phpgw_info']['message']['errors']	 = array();
-	$system_name								 = $GLOBALS['phpgw_info']['server']['system_name'];
+	$GLOBALS['phpgw_info']['message']['errors'] = array();
+	$system_name = $GLOBALS['phpgw_info']['server']['system_name'];
 
 	if(!isset($_GET['domain']) || !$_GET['domain'])
 	{
@@ -59,25 +59,25 @@
 	}
 	else
 	{
-		$_REQUEST['domain']	 = $_GET['domain'];
-		$_domain_info		 = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+		$_REQUEST['domain'] = $_GET['domain'];
+		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
 		if(!$_domain_info)
 		{
 			$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::not a valid domain";
 		}
 		else
 		{
-			$GLOBALS['phpgw_domain']					 = array();
-			$GLOBALS['phpgw_domain'][$_GET['domain']]	 = $_domain_info;
+			$GLOBALS['phpgw_domain'] = array();
+			$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
 		}
 	}
 
 	require_once PHPGW_API_INC . '/functions.inc.php';
 
 	$location_id = phpgw::get_var('location_id', 'int');
-	$section	 = phpgw::get_var('section', 'string');
-	$bygningsnr	 = (int)phpgw::get_var('bygningsnr', 'int');
-	$fileid		 = phpgw::get_var('fileid', 'string');
+	$section = phpgw::get_var('section', 'string');
+	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
+	$fileid = phpgw::get_var('fileid', 'string');
 
 	if(!$fileid && !$bygningsnr)
 	{
@@ -86,12 +86,12 @@
 
 	$c = CreateObject('admin.soconfig', $location_id);
 
-	$login			 = $c->config_data[$section]['anonymous_user'];
-	$passwd			 = $c->config_data[$section]['anonymous_pass'];
-	$location_url	 = $c->config_data[$section]['location_url'];
-	$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
-	$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
-	$classname		 = $c->config_data[$section]['arkd'];
+	$login = $c->config_data[$section]['anonymous_user'];
+	$passwd = $c->config_data[$section]['anonymous_pass'];
+	$location_url = $c->config_data[$section]['location_url'];
+	$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
+	$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
+	$classname = $c->config_data[$section]['arkd'];
 
 	$_POST['submitit'] = "";
 
@@ -127,14 +127,14 @@
 	 */
 	require_once PHPGW_API_INC . '/soap_client/bra5/Bra5Autoload.php';
 
-	$wdsl	 = "{$location_url}?WSDL";
+	$wdsl = "{$location_url}?WSDL";
 	$options = array();
 
-	$options[Bra5WsdlClass::WSDL_URL]			 = $wdsl;
-	$options[Bra5WsdlClass::WSDL_ENCODING]		 = 'UTF-8';
+	$options[Bra5WsdlClass::WSDL_URL] = $wdsl;
+	$options[Bra5WsdlClass::WSDL_ENCODING] = 'UTF-8';
 	//$options[Bra5WsdlClass::WSDL_CACHE_WSDL] = WSDL_CACHE_NONE;
-	$options[Bra5WsdlClass::WSDL_TRACE]			 = false;
-	$options[Bra5WsdlClass::WSDL_SOAP_VERSION]	 = SOAP_1_2;
+	$options[Bra5WsdlClass::WSDL_TRACE] = false;
+	$options[Bra5WsdlClass::WSDL_SOAP_VERSION] = SOAP_1_2;
 
 	$wsdlObject = new Bra5WsdlClass($options);
 
@@ -155,12 +155,12 @@
 		if($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid)))
 		{
 			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
-			$file		 = base64_decode($file_result->getFileAsByteArrayResult);
+			$file = base64_decode($file_result->getFileAsByteArrayResult);
 			/*
 			  $bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
 			  $filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
 			 */
-			$browser	 = CreateObject('phpgwapi.browser');
+			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header("{$fileid}.pdf", 'application/pdf');
 
 			echo $file;
@@ -173,7 +173,7 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}
-	$bra5ServiceSearch	 = new Bra5ServiceSearch();
+	$bra5ServiceSearch = new Bra5ServiceSearch();
 	/*
 	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where = "Byggnr = {$bygningsnr}",$_maxhits = 2)))
 	  {
@@ -184,16 +184,16 @@
 	  print_r($bra5ServiceSearch->getLastError());
 	  }
 	 */
-	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname		 = 'Eiendomsarkiver', $classname, $_where				 = "Byggnr = {$bygningsnr}", $_maxhits			 = -1)))
+	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where = "Byggnr = {$bygningsnr}", $_maxhits = -1)))
 	{
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
 	}
 
-	$html				 = <<<HTML
+	$html = <<<HTML
 	<table>
 HTML;
-	$bra5ServiceLogout	 = new Bra5ServiceLogout();
+	$bra5ServiceLogout = new Bra5ServiceLogout();
 	$bra5ServiceLogout->Logout(new Bra5StructLogout($secKey));
 
 	if(!$_result)
@@ -222,12 +222,12 @@ HTML;
 	$html . '</th>';
 
 	$location_id = phpgw::get_var('location_id', 'int');
-	$section	 = phpgw::get_var('section', 'string');
+	$section = phpgw::get_var('section', 'string');
 
 	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/bra5/soap.php', array(
-		'domain'		 => $_GET['domain'],
-		'location_id'	 => $location_id,
-		'section'		 => $section
+		'domain' => $_GET['domain'],
+		'location_id' => $location_id,
+		'section' => $section
 	)
 	);
 	foreach($_result[0]->getAttributes()->Attribute as $attribute)

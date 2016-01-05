@@ -39,7 +39,7 @@
 	class property_uiproject extends phpgwapi_uicommon_jquery
 	{
 
-		private $receipt	 = array();
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -57,22 +57,22 @@
 		var $bypass_error = false;
 		var $public_functions = array
 			(
-			'query'							 => true,
-			'download'						 => true,
-			'index'							 => true,
-			'view'							 => true,
-			'edit'							 => true,
-			'add'							 => true,
-			'delete'						 => true,
-			'save'							 => true,
-			'date_search'					 => true,
-			'columns'						 => true,
-			'bulk_update_status'			 => true,
-			'project_group'					 => true,
-			'view_file'						 => true,
-			'get_orders'					 => true,
-			'get_vouchers'					 => true,
-			'check_missing_project_budget'	 => true
+			'query' => true,
+			'download' => true,
+			'index' => true,
+			'view' => true,
+			'edit' => true,
+			'add' => true,
+			'delete' => true,
+			'save' => true,
+			'date_search' => true,
+			'columns' => true,
+			'bulk_update_status' => true,
+			'project_group' => true,
+			'view_file' => true,
+			'get_orders' => true,
+			'get_vouchers' => true,
+			'check_missing_project_budget' => true
 		);
 
 		function __construct()
@@ -80,36 +80,36 @@
 			parent::__construct();
 
 			//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
-			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::project';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
 
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo		 = CreateObject('property.boproject', true);
-			$this->bocommon	 = & $this->bo->bocommon;
-			$this->cats		 = & $this->bo->cats;
-			$this->custom	 = & $this->bo->custom;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bo = CreateObject('property.boproject', true);
+			$this->bocommon = & $this->bo->bocommon;
+			$this->cats = & $this->bo->cats;
+			$this->custom = & $this->bo->custom;
 
-			$this->acl			 = & $GLOBALS['phpgw']->acl;
-			$this->acl_location	 = '.project';
-			$this->acl_read		 = $this->acl->check('.project', PHPGW_ACL_READ, 'property');
-			$this->acl_add		 = $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
-			$this->acl_edit		 = $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete	 = $this->acl->check('.project', PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage	 = $this->acl->check('.project', 16, 'property');
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = '.project';
+			$this->acl_read = $this->acl->check('.project', PHPGW_ACL_READ, 'property');
+			$this->acl_add = $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
+			$this->acl_edit = $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete = $this->acl->check('.project', PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage = $this->acl->check('.project', 16, 'property');
 
-			$this->start			 = $this->bo->start;
-			$this->query			 = $this->bo->query;
-			$this->sort				 = $this->bo->sort;
-			$this->order			 = $this->bo->order;
-			$this->filter			 = $this->bo->filter;
-			$this->cat_id			 = $this->bo->cat_id;
-			$this->status_id		 = $this->bo->status_id;
-			$this->wo_hour_cat_id	 = $this->bo->wo_hour_cat_id;
-			$this->district_id		 = $this->bo->district_id;
-			$this->user_id			 = $this->bo->user_id;
-			$this->criteria_id		 = $this->bo->criteria_id;
-			$this->project_type_id	 = $this->bo->project_type_id;
-			$this->filter_year		 = $this->bo->filter_year;
+			$this->start = $this->bo->start;
+			$this->query = $this->bo->query;
+			$this->sort = $this->bo->sort;
+			$this->order = $this->bo->order;
+			$this->filter = $this->bo->filter;
+			$this->cat_id = $this->bo->cat_id;
+			$this->status_id = $this->bo->status_id;
+			$this->wo_hour_cat_id = $this->bo->wo_hour_cat_id;
+			$this->district_id = $this->bo->district_id;
+			$this->user_id = $this->bo->user_id;
+			$this->criteria_id = $this->bo->criteria_id;
+			$this->project_type_id = $this->bo->project_type_id;
+			$this->filter_year = $this->bo->filter_year;
 			$this->decimal_separator = ',';
 		}
 
@@ -117,18 +117,18 @@
 		{
 			$data = array
 				(
-				'start'				 => $this->start,
-				'query'				 => $this->query,
-				'sort'				 => $this->sort,
-				'order'				 => $this->order,
-				'filter'			 => $this->filter,
-				'cat_id'			 => $this->cat_id,
-				'status_id'			 => $this->status_id,
-				'wo_hour_cat_id'	 => $this->wo_hour_cat_id,
-				'district_id'		 => $this->district_id,
-				'user_id'			 => $this->user_id,
-				'criteria_id'		 => $this->criteria_id,
-				'project_type_id'	 => $this->project_type_id
+				'start' => $this->start,
+				'query' => $this->query,
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'district_id' => $this->district_id,
+				'user_id' => $this->user_id,
+				'criteria_id' => $this->criteria_id,
+				'project_type_id' => $this->project_type_id
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -141,8 +141,8 @@
 				return;
 			}
 
-			$values	 = $this->query();
-			$uicols	 = $this->bo->uicols;
+			$values = $this->query();
+			$uicols = $this->bo->uicols;
 			$this->bocommon->download($values, $uicols['name'], $uicols['descr'], $uicols['input_type']);
 		}
 
@@ -169,8 +169,8 @@
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$values = phpgw::get_var('values');
 
@@ -190,18 +190,18 @@
 				'menuaction' => 'property.uiproject.columns',
 			);
 
-			$selected	 = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 				(
-				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'	 => $this->bo->column_list($selected, $this->type_id, $allrows		 = true),
-				'function_msg'	 => $function_msg,
-				'form_action'	 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'lang_columns'	 => lang('columns'),
-				'lang_none'		 => lang('None'),
-				'lang_save'		 => lang('save'),
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list' => $this->bo->column_list($selected, $this->type_id, $allrows = true),
+				'function_msg' => $function_msg,
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'lang_columns' => lang('columns'),
+				'lang_none' => lang('None'),
+				'lang_save' => lang('save'),
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
@@ -210,31 +210,31 @@
 
 		private function _get_Filters()
 		{
-			$values_combo_box	 = array();
-			$combos				 = array();
+			$values_combo_box = array();
+			$combos = array();
 
 			$values_combo_box[0] = $this->bo->get_project_types($this->project_type_id);
 			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('project type')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'project_type_id',
-				'text'	 => lang('Project Type'),
-				'list'	 => $values_combo_box[0]
+				'type' => 'filter',
+				'name' => 'project_type_id',
+				'text' => lang('Project Type'),
+				'list' => $values_combo_box[0]
 			);
 
 			$values_combo_box[1] = $this->bocommon->select_district_list('filter', $this->district_id);
-			$default_value		 = array('id' => '', 'name' => lang('no district'));
+			$default_value = array('id' => '', 'name' => lang('no district'));
 			array_unshift($values_combo_box[1], $default_value);
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'district_id',
-				'text'	 => lang('District'),
-				'list'	 => $values_combo_box[1]
+				'type' => 'filter',
+				'name' => 'district_id',
+				'text' => lang('District'),
+				'list' => $values_combo_box[1]
 			);
 
-			$_cats				 = $this->cats->return_sorted_array(0, false, '', '', '', false, false);
+			$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, false);
 			$values_combo_box[2] = array();
 			foreach($_cats as $_cat)
 			{
@@ -244,71 +244,71 @@
 				}
 			}
 
-			$default_value	 = array('id' => '', 'name' => lang('no category'));
+			$default_value = array('id' => '', 'name' => lang('no category'));
 			array_unshift($values_combo_box[2], $default_value);
-			$combos[]		 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'cat_id',
-				'text'	 => lang('Category'),
-				'list'	 => $values_combo_box[2]
+				'type' => 'filter',
+				'name' => 'cat_id',
+				'text' => lang('Category'),
+				'list' => $values_combo_box[2]
 			);
 
 			$values_combo_box[3] = $this->bo->select_status_list('filter', $this->status_id);
 			array_unshift($values_combo_box[3], array('id' => 'all', 'name' => lang('all')));
 			array_unshift($values_combo_box[3], array('id' => 'open', 'name' => lang('open')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'status_id',
-				'text'	 => lang('Status'),
-				'list'	 => $values_combo_box[3]
+				'type' => 'filter',
+				'name' => 'status_id',
+				'text' => lang('Status'),
+				'list' => $values_combo_box[3]
 			);
 
 			$values_combo_box[4] = $this->bocommon->select_category_list(array('format' => 'filter',
 				'selected' => $this->wo_hour_cat_id, 'type' => 'wo_hours', 'order' => 'id'));
-			$default_value		 = array('id' => '', 'name' => lang('no hour category'));
+			$default_value = array('id' => '', 'name' => lang('no hour category'));
 			array_unshift($values_combo_box[4], $default_value);
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'wo_hour_cat_id',
-				'text'	 => lang('Hour Category'),
-				'list'	 => $values_combo_box[4]
+				'type' => 'filter',
+				'name' => 'wo_hour_cat_id',
+				'text' => lang('Hour Category'),
+				'list' => $values_combo_box[4]
 			);
 
 			$values_combo_box[5] = $this->bo->get_criteria_list($this->criteria_id);
-			$default_value		 = array('id' => '', 'name' => lang('no criteria'));
+			$default_value = array('id' => '', 'name' => lang('no criteria'));
 			array_unshift($values_combo_box[5], $default_value);
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'criteria_id',
-				'text'	 => lang('Criteria'),
-				'list'	 => $values_combo_box[5]
+				'type' => 'filter',
+				'name' => 'criteria_id',
+				'text' => lang('Criteria'),
+				'list' => $values_combo_box[5]
 			);
 
 			$values_combo_box[6] = $this->bo->get_filter_year_list($this->filter_year);
 			array_unshift($values_combo_box[6], array('id' => 'all', 'name' => lang('all') . ' ' . lang('year')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'filter_year',
-				'text'	 => lang('Year'),
-				'list'	 => $values_combo_box[6]
+				'type' => 'filter',
+				'name' => 'filter_year',
+				'text' => lang('Year'),
+				'list' => $values_combo_box[6]
 			);
 
 			$values_combo_box[7] = $this->bo->get_user_list($this->filter);
 			array_unshift($values_combo_box[7], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'name' => lang('mine projects')));
-			$default_value		 = array('id' => '', 'name' => lang('no user'));
+			$default_value = array('id' => '', 'name' => lang('no user'));
 			array_unshift($values_combo_box[7], $default_value);
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'filter',
-				'text'	 => lang('User'),
-				'list'	 => $values_combo_box[7]
+				'type' => 'filter',
+				'name' => 'filter',
+				'text' => lang('User'),
+				'list' => $values_combo_box[7]
 			);
 
 			return $combos;
@@ -329,16 +329,16 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$lookup	 = phpgw::get_var('lookup', 'bool');
-			$from	 = phpgw::get_var('from');
+			$lookup = phpgw::get_var('lookup', 'bool');
+			$from = phpgw::get_var('from');
 
-			$second_display		 = phpgw::get_var('second_display', 'bool');
-			$default_district	 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
 			if($default_district && !$second_display && !$this->district_id)
 			{
-				$this->bo->district_id	 = $default_district;
-				$this->district_id		 = $default_district;
+				$this->bo->district_id = $default_district;
+				$this->district_id = $default_district;
 			}
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
@@ -353,66 +353,66 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
 
-			$appname		 = lang('Project');
-			$function_msg	 = lang('list Project');
+			$appname = lang('Project');
+			$function_msg = lang('list Project');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
 				'datatable_name' => $appname . ': ' . $function_msg,
-				'form'			 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type'	 => 'link',
-								'value'	 => lang('new'),
-								'href'	 => self::link(array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array(
 									'menuaction' => 'property.uiproject.add'
 								)),
-								'class'	 => 'new_item'
+								'class' => 'new_item'
 							),
 							array(
-								'type'		 => 'link',
-								'value'		 => lang('columns'),
-								'href'		 => '#',
-								'class'		 => '',
-								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"
 							),
 							array
 								(
-								'type'	 => 'date-picker',
-								'id'	 => 'start_date',
-								'name'	 => 'start_date',
-								'value'	 => '',
-								'text'	 => lang('from')
+								'type' => 'date-picker',
+								'id' => 'start_date',
+								'name' => 'start_date',
+								'value' => '',
+								'text' => lang('from')
 							),
 							array
 								(
-								'type'	 => 'date-picker',
-								'id'	 => 'end_date',
-								'name'	 => 'end_date',
-								'value'	 => '',
-								'text'	 => lang('to')
+								'type' => 'date-picker',
+								'id' => 'end_date',
+								'name' => 'end_date',
+								'value' => '',
+								'text' => lang('to')
 							)
 						)
 					)
 				),
-				'datatable'		 => array(
-					'source'		 => self::link(array(
-						'menuaction'		 => 'property.uiproject.index',
-						'lookup'			 => $lookup,
-						'from'				 => $from,
-						'phpgw_return_as'	 => 'json'
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uiproject.index',
+						'lookup' => $lookup,
+						'from' => $from,
+						'phpgw_return_as' => 'json'
 					)),
-					'download'		 => self::link(array(
-						'menuaction'	 => 'property.uiproject.download',
-						'export'		 => true,
-						'skip_origin'	 => true,
-						'allrows'		 => true
+					'download' => self::link(array(
+						'menuaction' => 'property.uiproject.download',
+						'export' => true,
+						'skip_origin' => true,
+						'allrows' => true
 					)),
-					'allrows'		 => true,
-					'editor_action'	 => '',
-					'field'			 => array()
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array()
 				)
 			);
 
@@ -424,17 +424,17 @@
 			}
 
 			$this->bo->read(array('dry_run' => true));
-			$uicols				 = $this->bo->uicols;
-			$count_uicols_name	 = count($uicols['name']);
+			$uicols = $this->bo->uicols;
+			$count_uicols_name = count($uicols['name']);
 
 			for($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array
 					(
-					'key'		 => $uicols['name'][$k],
-					'label'		 => $uicols['descr'][$k],
-					'sortable'	 => ($uicols['sortable'][$k]) ? true : false,
-					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
+					'key' => $uicols['name'][$k],
+					'label' => $uicols['descr'][$k],
+					'sortable' => ($uicols['sortable'][$k]) ? true : false,
+					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
 				if($uicols['name'][$k] == 'project_id')
@@ -464,7 +464,7 @@
 						(
 						array
 							(
-							'name'	 => 'id',
+							'name' => 'id',
 							'source' => 'project_id'
 						),
 					)
@@ -476,7 +476,7 @@
 						(
 						array
 							(
-							'name'	 => 'project_id',
+							'name' => 'project_id',
 							'source' => 'project_id'
 						),
 					)
@@ -486,10 +486,10 @@
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'	 => 'view',
+						'my_name' => 'view',
 						'statustext' => lang('view the project'),
-						'text'		 => lang('view'),
-						'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+						'text' => lang('view'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiproject.view'
 						)),
@@ -498,14 +498,14 @@
 
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'	 => 'view',
+						'my_name' => 'view',
 						'statustext' => lang('view the project'),
-						'text'		 => lang('open view in new window'),
-						'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+						'text' => lang('open view in new window'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiproject.view'
 						)),
-						'target'	 => '_blank',
+						'target' => '_blank',
 						'parameters' => json_encode($parameters)
 					);
 
@@ -515,14 +515,14 @@
 					{
 						$data['datatable']['actions'][] = array
 							(
-							'my_name'	 => 'edit',
-							'text'		 => lang('open JasperReport %1 in new window', $report['title']),
-							'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+							'my_name' => 'edit',
+							'text' => lang('open JasperReport %1 in new window', $report['title']),
+							'action' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 								'menuaction' => 'property.uijasper.view',
-								'jasper_id'	 => $report['id']
+								'jasper_id' => $report['id']
 							)),
-							'target'	 => '_blank',
+							'target' => '_blank',
 							'parameters' => json_encode($parameters)
 						);
 					}
@@ -532,10 +532,10 @@
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'	 => 'edit',
+						'my_name' => 'edit',
 						'statustext' => lang('edit the project'),
-						'text'		 => lang('edit'),
-						'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+						'text' => lang('edit'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiproject.edit'
 						)),
@@ -544,23 +544,23 @@
 
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'	 => 'edit',
+						'my_name' => 'edit',
 						'statustext' => lang('edit the project'),
-						'text'		 => lang('open edit in new window'),
-						'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+						'text' => lang('open edit in new window'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiproject.edit'
 						)),
-						'target'	 => '_blank',
+						'target' => '_blank',
 						'parameters' => json_encode($parameters)
 					);
 
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'	 => 'edit',
+						'my_name' => 'edit',
 						'statustext' => lang('Add a workorder to this project'),
-						'text'		 => lang('Add a workorder to this project'),
-						'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+						'text' => lang('Add a workorder to this project'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiworkorder.edit'
 						)),
@@ -572,14 +572,14 @@
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name'		 => 'delete',
-						'text'			 => lang('delete'),
-						'confirm_msg'	 => lang('do you really want to delete this entry'),
-						'action'		 => $GLOBALS['phpgw']->link('/index.php', array
+						'my_name' => 'delete',
+						'text' => lang('delete'),
+						'confirm_msg' => lang('do you really want to delete this entry'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'property.uiproject.delete'
 						)),
-						'parameters'	 => json_encode($parameters2)
+						'parameters' => json_encode($parameters2)
 					);
 				}
 			}
@@ -592,8 +592,8 @@
 				$lookup_target = array
 					(
 					'menuaction' => 'property.ui' . $from . '.edit',
-					'origin'	 => phpgw::get_var('origin'),
-					'origin_id'	 => phpgw::get_var('origin_id')
+					'origin' => phpgw::get_var('origin'),
+					'origin_id' => phpgw::get_var('origin_id')
 				);
 
 				for($i = 0; $i < $count_uicols_name; $i++)
@@ -606,8 +606,8 @@
 						$function_detail .= "window.open(url,'_self');";
 					}
 				}
-				$datatable['exchange_values']	 = $function_exchange_values;
-				$datatable['valida']			 = $function_detail;
+				$datatable['exchange_values'] = $function_exchange_values;
+				$datatable['valida'] = $function_detail;
 
 				$query = phpgw::get_var('query');
 				if(!empty($query))
@@ -632,30 +632,30 @@ JS;
 
 		public function query()
 		{
-			$search		 = phpgw::get_var('search');
-			$order		 = phpgw::get_var('order');
-			$draw		 = phpgw::get_var('draw', 'int');
-			$columns	 = phpgw::get_var('columns');
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$start_date = urldecode(phpgw::get_var('start_date'));
+			$end_date = urldecode(phpgw::get_var('end_date'));
 			$skip_origin = phpgw::get_var('skip_origin', 'bool');
 
 			if($start_date && empty($end_date))
 			{
-				$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$end_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
 			}
 
 			$params = array(
-				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'			 => $search['value'],
-				'order'			 => $columns[$order[0]['column']]['data'],
-				'sort'			 => $order[0]['dir'],
-				'allrows'		 => phpgw::get_var('length', 'int') == -1,
-				'start_date'	 => $start_date,
-				'end_date'		 => $end_date,
-				'skip_origin'	 => $skip_origin
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'skip_origin' => $skip_origin
 			);
 
 			$values = $this->bo->read($params);
@@ -665,10 +665,10 @@ JS;
 				return $values;
 			}
 
-			$result_data					 = array('results' => $values);
-			$result_data['total_records']	 = $this->bo->total_records;
-			$result_data['draw']			 = $draw;
-			$link_data						 = array
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			$link_data = array
 				(
 				'menuaction' => 'property.uiproject.edit'
 			);
@@ -680,15 +680,15 @@ JS;
 		function date_search()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('date_search'));
-			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 			//	$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
-			$values['start_date']							 = phpgw::get_var('start_date', 'string', 'POST');
-			$values['end_date']								 = phpgw::get_var('end_date', 'string', 'POST');
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$values['start_date'] = phpgw::get_var('start_date', 'string', 'POST');
+			$values['end_date'] = phpgw::get_var('end_date', 'string', 'POST');
 
-			$function_msg	 = lang('Date search');
-			$appname		 = lang('project');
+			$function_msg = lang('Date search');
+			$appname = lang('project');
 
 			if(!$values['end_date'])
 			{
@@ -701,13 +701,13 @@ JS;
 			$data = array
 				(
 				'lang_start_date_statustext' => lang('Select the estimated end date for the Project'),
-				'lang_start_date'			 => lang('Start date'),
-				'value_start_date'			 => $values['start_date'],
-				'lang_end_date_statustext'	 => lang('Select the estimated end date for the Project'),
-				'lang_end_date'				 => lang('End date'),
-				'value_end_date'			 => $values['end_date'],
+				'lang_start_date' => lang('Start date'),
+				'value_start_date' => $values['start_date'],
+				'lang_end_date_statustext' => lang('Select the estimated end date for the Project'),
+				'lang_end_date' => lang('End date'),
+				'value_end_date' => $values['end_date'],
 				'lang_submit_statustext' => lang('Select this dates'),
-				'lang_submit'			 => lang('Submit')
+				'lang_submit' => lang('Submit')
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -721,13 +721,13 @@ JS;
 		{
 			$id = (int)phpgw::get_var('id', 'int');
 
-			$values						 = phpgw::get_var('values');
-			$values_attribute			 = phpgw::get_var('values_attribute');
-			$values['project_group']	 = phpgw::get_var('project_group');
-			$values['ecodimb']			 = phpgw::get_var('ecodimb');
-			$values['b_account_id']		 = phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name']	 = phpgw::get_var('b_account_name', 'string', 'POST');
-			$values['contact_id']		 = phpgw::get_var('contact', 'int', 'POST');
+			$values = phpgw::get_var('values');
+			$values_attribute = phpgw::get_var('values_attribute');
+			$values['project_group'] = phpgw::get_var('project_group');
+			$values['ecodimb'] = phpgw::get_var('ecodimb');
+			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
@@ -747,7 +747,7 @@ JS;
 
 			if(phpgw::get_var('origin') == '.project.request' && phpgw::get_var('origin_id', 'int') && !$bypass)
 			{
-				$id			 = phpgw::get_var('project_id', 'int');
+				$id = phpgw::get_var('project_id', 'int');
 				$add_request = array('request_id' => array(phpgw::get_var('origin_id', 'int')));
 			}
 
@@ -767,28 +767,28 @@ JS;
 				{
 					if(!isset($values['ecodimb']) || !$values['ecodimb'])
 					{
-						$this->receipt['error'][]	 = array('msg' => lang('Please select dimb!'));
-						$error_id					 = true;
+						$this->receipt['error'][] = array('msg' => lang('Please select dimb!'));
+						$error_id = true;
 					}
 
 					$approve_role = execMethod('property.boinvoice.check_role', $values['ecodimb']);
 					if(!$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
 					{
-						$this->receipt['error'][]	 = array('msg' => lang('you are not approved for this dimb: %1', $values['ecodimb']));
-						$error_id					 = true;
+						$this->receipt['error'][] = array('msg' => lang('you are not approved for this dimb: %1', $values['ecodimb']));
+						$error_id = true;
 					}
 				}
 			}
 
 			if(!isset($values['location']))
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please select a location !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
+				$error_id = true;
 			}
 
 			if(isset($values['b_account_id']) && $values['b_account_id'])
 			{
-				$sogeneric	 = CreateObject('property.sogeneric');
+				$sogeneric = CreateObject('property.sogeneric');
 				$sogeneric->get_location_info('b_account_category', false);
 				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
 
@@ -796,8 +796,8 @@ JS;
 				{
 					if(!isset($values['project_group']) || !$values['project_group'])
 					{
-						$this->receipt['error'][]	 = array('msg' => lang('Please select a project group!'));
-						$error_id					 = true;
+						$this->receipt['error'][] = array('msg' => lang('Please select a project group!'));
+						$error_id = true;
 					}
 				}
 			}
@@ -814,28 +814,28 @@ JS;
 
 			if(!isset($values['end_date']) || !$values['end_date'])
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please select an end date!'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please select an end date!'));
+				$error_id = true;
 			}
 
 			if(!isset($values['project_type_id']) || !$values['project_type_id'])
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please select a project type!'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please select a project type!'));
+				$error_id = true;
 			}
 
 			if(!$values['name'])
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please enter a project NAME !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please enter a project NAME !'));
+				$error_id = true;
 			}
 
 			if(!isset($config->config_data['project_optional_category']) || !$config->config_data['project_optional_category'])
 			{
 				if(!$values['cat_id'])
 				{
-					$this->receipt['error'][]	 = array('msg' => lang('Please select a category !'));
-					$error_id					 = true;
+					$this->receipt['error'][] = array('msg' => lang('Please select a category !'));
+					$error_id = true;
 				}
 			}
 
@@ -850,26 +850,26 @@ JS;
 
 			if(!$values['coordinator'])
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please select a coordinator !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please select a coordinator !'));
+				$error_id = true;
 			}
 
 			if(!$values['status'])
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('Please select a status !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('Please select a status !'));
+				$error_id = true;
 			}
 
 			if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'], '-')))
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('budget') . ': ' . lang('Please enter an integer !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter an integer !'));
+				$error_id = true;
 			}
 
 			if(isset($values['reserve']) && $values['reserve'] && !ctype_digit(ltrim($values['reserve'], '-')))
 			{
-				$this->receipt['error'][]	 = array('msg' => lang('reserve') . ': ' . lang('Please enter an integer !'));
-				$error_id					 = true;
+				$this->receipt['error'][] = array('msg' => lang('reserve') . ': ' . lang('Please enter an integer !'));
+				$error_id = true;
 			}
 
 			if(isset($values_attribute) && is_array($values_attribute))
@@ -915,8 +915,8 @@ JS;
 				$to_file = "{$bofiles->fakebase}/project/{$id}/{$file_name}";
 
 				if($bofiles->vfs->file_exists(array(
-					'string'	 => $to_file,
-					'relatives'	 => Array(RELATIVE_NONE)
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
 				)))
 				{
 					$this->receipt['error'][] = array('msg' => lang('This file already exists !'));
@@ -927,9 +927,9 @@ JS;
 					$bofiles->vfs->override_acl = 1;
 
 					if(!$bofiles->vfs->cp(array(
-						'from'		 => $_FILES['file']['tmp_name'],
-						'to'		 => $to_file,
-						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from' => $_FILES['file']['tmp_name'],
+						'to' => $to_file,
+						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
 						$this->receipt['error'][] = array('msg' => lang('Failed to upload file !'));
 					}
@@ -940,18 +940,18 @@ JS;
 
 		public function save()
 		{
-			$id					 = phpgw::get_var('id', 'int');
-			$values_attribute	 = phpgw::get_var('values_attribute');
-			$config				 = CreateObject('phpgwapi.config', 'property');
-			$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$id = phpgw::get_var('id', 'int');
+			$values_attribute = phpgw::get_var('values_attribute');
+			$config = CreateObject('phpgwapi.config', 'property');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config->read();
 
 			$values = $this->_populate();
 
 			if($id)
 			{
-				$action			 = 'edit';
-				$values['id']	 = $id;
+				$action = 'edit';
+				$values['id'] = $id;
 			}
 
 			if($values['copy_project'])
@@ -963,10 +963,10 @@ JS;
 			{
 				try
 				{
-					$receipt		 = $this->bo->save($values, $action, $values_attribute);
-					$values['id']	 = $receipt['id'];
-					$id				 = $receipt['id'];
-					$this->receipt	 = $receipt;
+					$receipt = $this->bo->save($values, $action, $values_attribute);
+					$values['id'] = $receipt['id'];
+					$id = $receipt['id'];
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -988,9 +988,9 @@ JS;
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-						$action_params['responsible']	 = $_account_id;
-						$from_name						 = $GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$action_params['responsible'] = $_account_id;
+						$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
+						$from_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 						$subject = lang('Approval') . ": " . $id;
 						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
@@ -1000,14 +1000,14 @@ JS;
 
 						$action_params = array
 							(
-							'appname'			 => 'property',
-							'location'			 => '.project',
-							'id'				 => $id,
-							'responsible'		 => '',
-							'responsible_type'	 => 'user',
-							'action'			 => 'approval',
-							'remark'			 => '',
-							'deadline'			 => ''
+							'appname' => 'property',
+							'location' => '.project',
+							'id' => $id,
+							'responsible' => '',
+							'responsible_type' => 'user',
+							'action' => 'approval',
+							'remark' => '',
+							'deadline' => ''
 						);
 
 						if(isset($values['mail_address']) && is_array($values['mail_address']))
@@ -1016,14 +1016,14 @@ JS;
 							{
 								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
-									$rcpt							 = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
-									$action_params['responsible']	 = $_account_id;
+									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+									$action_params['responsible'] = $_account_id;
 									execMethod('property.sopending_action.set_pending_action', $action_params);
 									if(!$rcpt)
 									{
-										$this->receipt['error'][]	 = array('msg' => "uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
-										$this->receipt['error'][]	 = array('msg' => $GLOBALS['phpgw']->send->err['desc']);
-										$this->bypass_error			 = true;
+										$this->receipt['error'][] = array('msg' => "uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
+										$this->receipt['error'][] = array('msg' => $GLOBALS['phpgw']->send->err['desc']);
+										$this->bypass_error = true;
 									}
 									else
 									{
@@ -1034,7 +1034,7 @@ JS;
 							}
 						}
 
-						$toarray	 = array();
+						$toarray = array();
 						$toarray_sms = array();
 						if(isset($receipt['notice_owner']) && is_array($receipt['notice_owner']))
 						{
@@ -1052,8 +1052,8 @@ JS;
 
 						$notify_list = execMethod('property.notify.read', array
 							(
-							'location_id'		 => $location_id,
-							'location_item_id'	 => $id
+							'location_id' => $location_id,
+							'location_item_id' => $id
 						)
 						);
 
@@ -1061,16 +1061,16 @@ JS;
 
 						if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 						{
-							$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
-							$sms		 = CreateObject('sms.sms');
+							$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+							$sms = CreateObject('sms.sms');
 
 							foreach($notify_list as $entry)
 							{
 								if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
 								{
 									$sms->websend2pv($this->account, $entry['sms'], $sms_text);
-									$toarray_sms[]			 = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
-									$receipt['message'][]	 = array('msg' => lang('%1 is notified', "{$entry['first_name']} {$entry['last_name']}"));
+									$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+									$receipt['message'][] = array('msg' => lang('%1 is notified', "{$entry['first_name']} {$entry['last_name']}"));
 								}
 							}
 							unset($entry);
@@ -1093,9 +1093,9 @@ JS;
 
 						if($toarray)
 						{
-							$to			 = implode(';', $toarray);
-							$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-							$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+							$to = implode(';', $toarray);
+							$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
+							$from_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 							$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
 								'id' => $id), false, true) . '">' . lang('project %1 has been edited', $id) . '</a>' . "\n";
@@ -1114,9 +1114,9 @@ JS;
 
 							if(!$returncode) // not nice, but better than failing silently
 							{
-								$this->receipt['error'][]	 = array('msg' => "uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
-								$this->receipt['error'][]	 = array('msg' => $GLOBALS['phpgw']->send->err['desc']);
-								$this->bypass_error			 = true;
+								$this->receipt['error'][] = array('msg' => "uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
+								$this->receipt['error'][] = array('msg' => $GLOBALS['phpgw']->send->err['desc']);
+								$this->bypass_error = true;
 							}
 							else
 							{
@@ -1176,21 +1176,21 @@ JS;
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$config		 = CreateObject('phpgwapi.config', 'property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$bolocation	 = CreateObject('property.bolocation');
+			$bolocation = CreateObject('property.bolocation');
 
 			if($mode == 'edit')
 			{
-				$values						 = phpgw::get_var('values');
-				$values_attribute			 = phpgw::get_var('values_attribute');
-				$add_request				 = phpgw::get_var('add_request');
-				$values['project_group']	 = phpgw::get_var('project_group');
-				$values['ecodimb']			 = phpgw::get_var('ecodimb');
-				$values['b_account_id']		 = phpgw::get_var('b_account_id', 'int', 'POST');
-				$values['b_account_name']	 = phpgw::get_var('b_account_name', 'string', 'POST');
-				$values['contact_id']		 = phpgw::get_var('contact', 'int', 'POST');
-				$auto_create				 = false;
+				$values = phpgw::get_var('values');
+				$values_attribute = phpgw::get_var('values_attribute');
+				$add_request = phpgw::get_var('add_request');
+				$values['project_group'] = phpgw::get_var('project_group');
+				$values['ecodimb'] = phpgw::get_var('ecodimb');
+				$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
+				$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
+				$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
+				$auto_create = false;
 
 				$datatable = array();
 
@@ -1209,7 +1209,7 @@ JS;
 
 				if(phpgw::get_var('origin') == '.project.request' && phpgw::get_var('origin_id', 'int') && !$bypass)
 				{
-					$id			 = phpgw::get_var('project_id', 'int');
+					$id = phpgw::get_var('project_id', 'int');
 					$add_request = array('request_id' => array(phpgw::get_var('origin_id', 'int')));
 				}
 
@@ -1224,32 +1224,32 @@ JS;
 				}
 				else
 				{
-					$location_code								 = phpgw::get_var('location_code');
-					$tenant_id									 = phpgw::get_var('tenant_id', 'int');
-					$values['descr']							 = phpgw::get_var('descr');
-					$p_entity_id								 = phpgw::get_var('p_entity_id', 'int');
-					$p_cat_id									 = phpgw::get_var('p_cat_id', 'int');
-					$values['p'][$p_entity_id]['p_entity_id']	 = $p_entity_id;
-					$values['p'][$p_entity_id]['p_cat_id']		 = $p_cat_id;
-					$values['p'][$p_entity_id]['p_num']			 = phpgw::get_var('p_num');
+					$location_code = phpgw::get_var('location_code');
+					$tenant_id = phpgw::get_var('tenant_id', 'int');
+					$values['descr'] = phpgw::get_var('descr');
+					$p_entity_id = phpgw::get_var('p_entity_id', 'int');
+					$p_cat_id = phpgw::get_var('p_cat_id', 'int');
+					$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
+					$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
+					$values['p'][$p_entity_id]['p_num'] = phpgw::get_var('p_num');
 
-					$origin		 = phpgw::get_var('origin');
-					$origin_id	 = phpgw::get_var('origin_id', 'int');
+					$origin = phpgw::get_var('origin');
+					$origin_id = phpgw::get_var('origin_id', 'int');
 
 					if($origin == '.ticket' && $origin_id && !$values['descr'])
 					{
-						$boticket		 = CreateObject('property.botts');
-						$ticket			 = $boticket->read_single($origin_id);
+						$boticket = CreateObject('property.botts');
+						$ticket = $boticket->read_single($origin_id);
 						$values['descr'] = $ticket['details'];
-						$values['name']	 = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-						$ticket_notes	 = $boticket->read_additional_notes($origin_id);
-						$i				 = count($ticket_notes) - 1;
+						$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+						$ticket_notes = $boticket->read_additional_notes($origin_id);
+						$i = count($ticket_notes) - 1;
 						if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
 						{
 							$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 						}
-						$values['contact_id']		 = $ticket['contact_id'];
-						$tts_status_create_project	 = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
+						$values['contact_id'] = $ticket['contact_id'];
+						$tts_status_create_project = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
 						if($tts_status_create_project)
 						{
 							$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
@@ -1268,7 +1268,7 @@ JS;
 							$boadmin_entity = CreateObject('property.boadmin_entity');
 						}
 
-						$entity_category						 = $boadmin_entity->read_single_category($p_entity_id, $p_cat_id);
+						$entity_category = $boadmin_entity->read_single_category($p_entity_id, $p_cat_id);
 						$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
 					}
 
@@ -1281,8 +1281,8 @@ JS;
 
 				if(isset($values['origin']) && $values['origin'])
 				{
-					$origin		 = $values['origin'];
-					$origin_id	 = $values['origin_id'];
+					$origin = $values['origin'];
+					$origin_id = $values['origin_id'];
 				}
 
 				$interlink = CreateObject('property.interlink');
@@ -1292,10 +1292,10 @@ JS;
 					unset($values['origin']);
 					unset($values['origin_id']);
 					$values['origin'][0]['location'] = $origin;
-					$values['origin'][0]['descr']	 = $interlink->get_location_name($origin);
-					$values['origin'][0]['data'][]	 = array(
-						'id'	 => $origin_id,
-						'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
+					$values['origin'][0]['data'][] = array(
+						'id' => $origin_id,
+						'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
 				}
 			}
@@ -1310,17 +1310,17 @@ JS;
 				{
 					if(isset($values['location']) && is_array($values['location']))
 					{
-						$location_code			 = implode("-", $values['location']);
+						$location_code = implode("-", $values['location']);
 						$values['extra']['view'] = true;
 						$values['location_data'] = $bolocation->read_single($location_code, $values['extra']);
 					}
 
 					if(isset($values['extra']['p_num']))
 					{
-						$values['p'][$values['extra']['p_entity_id']]['p_num']		 = $values['extra']['p_num'];
+						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
 						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_id']	 = $values['extra']['p_cat_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_name']	 = phpgw::get_var('entity_cat_name_' . $values['extra']['p_entity_id'], 'string', 'POST');
+						$values['p'][$values['extra']['p_entity_id']]['p_cat_id'] = $values['extra']['p_cat_id'];
+						$values['p'][$values['extra']['p_entity_id']]['p_cat_name'] = phpgw::get_var('entity_cat_name_' . $values['extra']['p_entity_id'], 'string', 'POST');
 					}
 				}
 			}
@@ -1368,8 +1368,8 @@ JS;
 			}
 			else
 			{
-				$function_msg	 = lang('Add Project');
-				$values			 = $this->bo->read_single(0, $values);
+				$function_msg = lang('Add Project');
+				$values = $this->bo->read_single(0, $values);
 			}
 
 			$tabs = array();
@@ -1382,9 +1382,9 @@ JS;
 						$link_history_data = array
 							(
 							'menuaction' => 'property.uiproject.attrib_history',
-							'attrib_id'	 => $attribute['id'],
-							'id'		 => $id,
-							'edit'		 => true
+							'attrib_id' => $attribute['id'],
+							'id' => $id,
+							'edit' => true
 						);
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php', $link_history_data);
@@ -1403,45 +1403,45 @@ JS;
 			//_debug_array($values);
 			$location_data = $bolocation->initiate_ui_location(array
 				(
-				'values'		 => (isset($values['location_data']) ? $values['location_data'] : ''),
-				'type_id'		 => -1, // calculated from location_types
-				'no_link'		 => false, // disable lookup links for location type less than type_id
-				'tenant'		 => true,
-				'lookup_type'	 => $lookup_type,
-				'lookup_entity'	 => $this->bocommon->get_lookup_entity('project'),
-				'entity_data'	 => (isset($values['p']) ? $values['p'] : ''),
+				'values' => (isset($values['location_data']) ? $values['location_data'] : ''),
+				'type_id' => -1, // calculated from location_types
+				'no_link' => false, // disable lookup links for location type less than type_id
+				'tenant' => true,
+				'lookup_type' => $lookup_type,
+				'lookup_entity' => $this->bocommon->get_lookup_entity('project'),
+				'entity_data' => (isset($values['p']) ? $values['p'] : ''),
 				'required_level' => 1
 			)
 			);
 
-			$b_account_data	 = array();
-			$ecodimb_data	 = array();
+			$b_account_data = array();
+			$ecodimb_data = array();
 
 			if(isset($config->config_data['budget_at_project']) && $config->config_data['budget_at_project'])
 			{
 				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
-					'b_account_id'	 => $values['b_account_id'],
+					'b_account_id' => $values['b_account_id'],
 					'b_account_name' => $values['b_account_name'],
-					'role'			 => 'group',
-					'type'			 => $lookup_type
+					'role' => 'group',
+					'type' => $lookup_type
 				)
 				);
 
 				$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 					(
-					'ecodimb'		 => $values['ecodimb'],
-					'ecodimb_descr'	 => $values['ecodimb_descr'],
-					'disabled'		 => $mode == 'view'
+					'ecodimb' => $values['ecodimb'],
+					'ecodimb_descr' => $values['ecodimb_descr'],
+					'disabled' => $mode == 'view'
 				));
 			}
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array
 				(
-				'contact_id'	 => $values['contact_id'],
-				'contact_name'	 => $values['contact_name'],
-				'field'			 => 'contact',
-				'type'			 => $lookup_type
+				'contact_id' => $values['contact_id'],
+				'contact_name' => $values['contact_name'],
+				'field' => 'contact',
+				'type' => $lookup_type
 			)
 			);
 
@@ -1460,18 +1460,18 @@ JS;
 			$link_data = array
 				(
 				'menuaction' => 'property.uiproject.save',
-				'id'		 => $id
+				'id' => $id
 			);
 
 			$link_request_data = array
 				(
 				'menuaction' => 'property.uirequest.index',
-				'query'		 => (isset($values['location_data']['loc1']) ? $values['location_data']['loc1'] : ''),
+				'query' => (isset($values['location_data']['loc1']) ? $values['location_data']['loc1'] : ''),
 				'project_id' => (isset($id) ? $id : '')
 			);
 
-			$supervisor_email	 = array();
-			if($need_approval		 = isset($config->config_data['project_approval']) ? $config->config_data['project_approval'] : '')
+			$supervisor_email = array();
+			if($need_approval = isset($config->config_data['project_approval']) ? $config->config_data['project_approval'] : '')
 			{
 				$invoice = CreateObject('property.soinvoice');
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
@@ -1480,9 +1480,9 @@ JS;
 
 					$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
 						(
-						'dimb_id'		 => $values['ecodimb'],
-						'role_id'		 => 2,
-						'query_start'	 => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						'dimb_id' => $values['ecodimb'],
+						'role_id' => 2,
+						'query_start' => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 						'get_netto_list' => true
 					)
 					);
@@ -1490,22 +1490,22 @@ JS;
 					{
 						foreach($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
 						{
-							$prefs				 = $this->bocommon->create_preferences('property', $supervisor_id);
-							$supervisor_email[]	 = array
+							$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+							$supervisor_email[] = array
 								(
-								'id'		 => $supervisor_id,
-								'address'	 => $prefs['email'],
-								'default'	 => $entry['default_user'],
+								'id' => $supervisor_id,
+								'address' => $prefs['email'],
+								'default' => $entry['default_user'],
 							);
 						}
 					}
 
-					$supervisor2_id		 = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
-					$prefs2				 = $this->bocommon->create_preferences('property', $supervisor2_id);
-					$supervisor_email[]	 = array
+					$supervisor2_id = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
+					$prefs2 = $this->bocommon->create_preferences('property', $supervisor2_id);
+					$supervisor_email[] = array
 						(
-						'id'		 => $supervisor2_id,
-						'address'	 => $prefs2['email'],
+						'id' => $supervisor2_id,
+						'address' => $prefs2['email'],
 					);
 //					$supervisor_email = array_reverse($supervisor_email);
 					unset($prefs);
@@ -1524,11 +1524,11 @@ JS;
 
 					if($supervisor_id)
 					{
-						$prefs				 = $this->bocommon->create_preferences('property', $supervisor_id);
-						$supervisor_email[]	 = array
+						$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+						$supervisor_email[] = array
 							(
-							'id'		 => $supervisor_id,
-							'address'	 => $prefs['email'],
+							'id' => $supervisor_id,
+							'address' => $prefs['email'],
 						);
 
 						if(isset($prefs['approval_from']))
@@ -1539,12 +1539,12 @@ JS;
 
 							if(isset($prefs2['email']))
 							{
-								$supervisor_email[]	 = array
+								$supervisor_email[] = array
 									(
-									'id'		 => $prefs['approval_from'],
-									'address'	 => $prefs2['email'],
+									'id' => $prefs['approval_from'],
+									'address' => $prefs2['email'],
 								);
-								$supervisor_email	 = array_reverse($supervisor_email);
+								$supervisor_email = array_reverse($supervisor_email);
 							}
 							unset($prefs2);
 						}
@@ -1553,8 +1553,8 @@ JS;
 				}
 			}
 
-			$project_status		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'] : '');
-			$project_category	 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'] : '');
+			$project_status = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'] : '');
+			$project_category = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'] : '');
 			if(!isset($values['status']))
 			{
 				$values['status'] = $project_status;
@@ -1579,9 +1579,9 @@ JS;
 
 			if(isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
-				$remainder_percent	 = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
-				$values['sum']		 = $values['sum'] + $values['reserve'];
+				$reserve_remainder = $values['reserve'] - $values['deviation'];
+				$remainder_percent = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
+				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
 			$value_remainder = $values['sum'];
@@ -1591,30 +1591,30 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
 			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
-				'project_group'			 => $values['project_group'],
-				'project_group_descr'	 => $values['project_group_descr']));
+				'project_group' => $values['project_group'],
+				'project_group_descr' => $values['project_group_descr']));
 
 
 			//---datatable settings---------------------------------------------------
 
 			$sum_actual_cost = 0;
 			$sum_oblications = 0;
-			$rows_per_page	 = 10;
-			$initial_page	 = 1;
+			$rows_per_page = 10;
+			$initial_page = 1;
 
-			$s_budget		 = 0;
-			$s_orders		 = 0;
-			$s_actual_cost	 = 0;
-			$s_diff			 = 0;
-			$s_deviation	 = 0;
+			$s_budget = 0;
+			$s_orders = 0;
+			$s_actual_cost = 0;
+			$s_diff = 0;
+			$s_deviation = 0;
 
 			if($id)
 			{
-				$content_budget	 = $this->bo->get_budget($id);
-				$lang_delete	 = lang('Check to delete period');
-				$lang_close		 = lang('Check to close period');
-				$lang_active	 = lang('Check to activate period');
-				$values['sum']	 = 0;
+				$content_budget = $this->bo->get_budget($id);
+				$lang_delete = lang('Check to delete period');
+				$lang_close = lang('Check to close period');
+				$lang_active = lang('Check to activate period');
+				$values['sum'] = 0;
 
 				if($content_budget && $values['periodization_id'])
 				{
@@ -1636,15 +1636,15 @@ JS;
 						$values['sum'] += $b_entry['budget'];
 					}
 
-					$checked	 = $b_entry['closed'] ? 'checked="checked"' : '';
-					$checked2	 = $b_entry['active'] ? 'checked="checked"' : '';
+					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
+					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';
 
-					$b_entry['flag_active']	 = $b_entry['active'];
-					$b_entry['delete_year']	 = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
-					$b_entry['closed']		 = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
-					$b_entry['closed_orig']	 = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
-					$b_entry['active']		 = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
-					$b_entry['active_orig']	 = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
+					$b_entry['flag_active'] = $b_entry['active'];
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
+					$b_entry['closed'] = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
+					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
+					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
+					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
 
 					$s_budget += $b_entry['budget'];
 					$s_orders += $b_entry['sum_orders'];
@@ -1657,20 +1657,20 @@ JS;
 
 			if(isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
-				$remainder_percent	 = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
-				$values['sum']		 = $values['sum'] + $values['reserve'];
+				$reserve_remainder = $values['reserve'] - $values['deviation'];
+				$remainder_percent = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
+				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
 			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
-			$values['sum']	 = number_format($values['sum'], 0, $this->decimal_separator, ' ');
+			$values['sum'] = number_format($values['sum'], 0, $this->decimal_separator, ' ');
 			$value_remainder = number_format($value_remainder, 0, $this->decimal_separator, ' ');
 
 			if(isset($values['project_type_id']) && $values['project_type_id'] == 3)
 			{
-				$s_amount_in	 = 0;
-				$s_amount_out	 = 0;
-				$content_budget	 = $this->bo->get_buffer_budget($id);
+				$s_amount_in = 0;
+				$s_amount_out = 0;
+				$content_budget = $this->bo->get_buffer_budget($id);
 				foreach($content_budget as & $b_entry)
 				{
 					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
@@ -1728,11 +1728,11 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_0',
+				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
-				'data'		 => json_encode($content_budget),
+				'data' => json_encode($content_budget),
 				'ColumnDefs' => $budget_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1764,12 +1764,12 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_1',
+				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
 					'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
-				'data'		 => json_encode(array()),
+				'data' => json_encode(array()),
 				'ColumnDefs' => $orders_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1803,12 +1803,12 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_2',
+				'container' => 'datatable-container_2',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_vouchers',
 					'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
-				'data'		 => json_encode(array()),
+				'data' => json_encode(array()),
 				'ColumnDefs' => $invoice_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1821,10 +1821,10 @@ JS;
 
 			$notify_info = execMethod('property.notify.get_jquery_table_def', array
 				(
-				'location_id'		 => $location_id,
-				'location_item_id'	 => $id,
-				'count'				 => count($datatable_def), //3
-				'requestUrl'		 => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
+				'location_id' => $location_id,
+				'location_item_id' => $id,
+				'count' => count($datatable_def), //3
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
 					'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
 					'phpgw_return_as' => 'json'))),
 			)
@@ -1832,14 +1832,14 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_3',
+				'container' => 'datatable-container_3',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
 					'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
 					'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $notify_info['column_defs']['values'],
-				'data'		 => json_encode(array()),
+				'data' => json_encode(array()),
 				'tabletools' => $mode == 'edit' ? $notify_info['tabletools'] : array(),
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1858,11 +1858,11 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_4',
+				'container' => 'datatable-container_4',
 				'requestUrl' => "''",
 				'ColumnDefs' => $history_def,
-				'data'		 => json_encode($record_history),
-				'config'	 => array(
+				'data' => json_encode($record_history),
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1872,7 +1872,7 @@ JS;
 			$link_file_data = array
 				(
 				'menuaction' => 'property.uiproject.view_file',
-				'id'		 => $id
+				'id' => $id
 			);
 
 			$link_to_files = (isset($config->config_data['files_url']) ? $config->config_data['files_url'] : '');
@@ -1881,10 +1881,10 @@ JS;
 
 			$_files = $this->bo->get_files($id);
 
-			$lang_view_file		 = lang('click to view file');
-			$lang_delete_file	 = lang('Check to delete file');
-			$z					 = 0;
-			$content_files		 = array();
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z = 0;
+			$content_files = array();
 			foreach($_files as $_file)
 			{
 				if($link_to_files)
@@ -1909,11 +1909,11 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_5',
+				'container' => 'datatable-container_5',
 				'requestUrl' => "''",
-				'data'		 => json_encode($content_files),
+				'data' => json_encode($content_files),
 				'ColumnDefs' => $files_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1921,8 +1921,8 @@ JS;
 
 //--------------files
 
-			$lang_delete_request_statustext	 = lang('Check to delete this request from this project');
-			$_origin						 = array();
+			$lang_delete_request_statustext = lang('Check to delete this request from this project');
+			$_origin = array();
 			if(isset($values['origin']) && $values['origin'])
 			{
 				foreach($values['origin'] as $__origin)
@@ -1937,9 +1937,9 @@ JS;
 
 						$_origin[] = array
 							(
-							'url'	 => "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
-							'type'	 => $__origin['descr'],
-							'title'	 => $_origin_data['title'],
+							'url' => "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'type' => $__origin['descr'],
+							'title' => $_origin_data['title'],
 							'status' => $_origin_data['statustext'],
 							//			'user'			=> $GLOBALS['phpgw']->accounts->get($_origin_data['account_id'])->__toString(),
 							//			'entry_date'	=> $GLOBALS['phpgw']->common->show_date($_origin_data['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
@@ -1961,11 +1961,11 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_6',
+				'container' => 'datatable-container_6',
 				'requestUrl' => "''",
-				'data'		 => json_encode($_origin),
+				'data' => json_encode($_origin),
 				'ColumnDefs' => $origin_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -1975,23 +1975,23 @@ JS;
 
 			$suppresscoordination = isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 
-			$year	 = date('Y') - 1;
-			$limit	 = $year + 8;
+			$year = date('Y') - 1;
+			$limit = $year + 8;
 
 			while($year < $limit)
 			{
 				$year_list[] = array
 					(
-					'id'	 => $year,
-					'name'	 => $year
+					'id' => $year,
+					'name' => $year
 				);
 				$year++;
 			}
 
 			$periodization_list = $this->bo->get_periodizations_with_outline();
 
-			$sub_entry_action_data	 = array();
-			$sub_entry_action_data	 = array
+			$sub_entry_action_data = array();
+			$sub_entry_action_data = array
 				(
 				'menuaction' => 'property.uiworkorder.edit',
 				'project_id' => $id
@@ -2010,10 +2010,10 @@ JS;
 				$sub_entry_action_data = array
 					(
 					'menuaction' => 'property.uiproject.edit',
-					'bypass'	 => 1,
-					'parent_id'	 => $id,
-					'origin'	 => '.project',
-					'origin_id'	 => $id
+					'bypass' => 1,
+					'parent_id' => $id,
+					'origin' => '.project',
+					'origin_id' => $id
 				);
 			}
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -2022,138 +2022,138 @@ JS;
 
 			$data = array
 				(
-				'datatable_def'					 => $datatable_def,
-				'project_types'					 => array('options' => $this->bo->get_project_types($project_type_id)),
-				'project_type_id'				 => $values['project_type_id'],
-				'inherit_location'				 => $id ? $values['inherit_location'] : 1,
-				'mode'							 => $mode,
-				'suppressmeter'					 => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
-				'suppresscoordination'			 => $suppresscoordination,
-				'custom_attributes'				 => array('attributes' => $values['attributes']),
-				'lookup_functions'				 => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
-				'b_account_data'				 => $b_account_data,
-				'ecodimb_data'					 => $ecodimb_data,
-				'contact_data'					 => $contact_data,
+				'datatable_def' => $datatable_def,
+				'project_types' => array('options' => $this->bo->get_project_types($project_type_id)),
+				'project_type_id' => $values['project_type_id'],
+				'inherit_location' => $id ? $values['inherit_location'] : 1,
+				'mode' => $mode,
+				'suppressmeter' => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppresscoordination' => $suppresscoordination,
+				'custom_attributes' => array('attributes' => $values['attributes']),
+				'lookup_functions' => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
+				'b_account_data' => $b_account_data,
+				'ecodimb_data' => $ecodimb_data,
+				'contact_data' => $contact_data,
 				//'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
-				'tabs'							 => self::_generate_tabs($tabs, array('documents' => $id ? false : true,
+				'tabs' => self::_generate_tabs($tabs, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
-				'msgbox_data'					 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'value_origin'					 => isset($values['origin']) ? $values['origin'] : '',
-				'value_origin_type'				 => isset($origin) ? $origin : '',
-				'value_origin_id'				 => isset($origin_id) ? $origin_id : '',
-				'year_list'						 => array('options' => $year_list),
-				'order_time_span'				 => array('options' => $this->bo->get_order_time_span($id)),
-				'periodization_list'			 => array('options' => $periodization_list),
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
+				'value_origin_type' => isset($origin) ? $origin : '',
+				'value_origin_id' => isset($origin_id) ? $origin_id : '',
+				'year_list' => array('options' => $year_list),
+				'order_time_span' => array('options' => $this->bo->get_order_time_span($id)),
+				'periodization_list' => array('options' => $periodization_list),
 				'lang_select_request_statustext' => lang('Add request for this project'),
-				'lang_request_statustext'		 => lang('Link to the request for this project'),
-				'link_select_request'			 => $GLOBALS['phpgw']->link('/index.php', $link_request_data),
+				'lang_request_statustext' => lang('Link to the request for this project'),
+				'link_select_request' => $GLOBALS['phpgw']->link('/index.php', $link_request_data),
 				'add_sub_entry_action' => $GLOBALS['phpgw']->link('/index.php', $sub_entry_action_data),
-				'lang_add_sub_entry'				 => $values['project_type_id'] == 3 ? lang('add project') : lang('Add workorder'),
-				'lang_add_sub_entry_statustext'		 => $values['project_type_id'] == 3 ? lang('add a project to this buffer') : lang('Add a workorder to this project'),
-				'lang_no_workorders'				 => lang('No workorder budget'),
-				'workorder_link'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit')),
-				'record_history'					 => $record_history,
-				'table_header_history'				 => $table_header_history,
-				'lang_history'						 => lang('History'),
-				'lang_no_history'					 => lang('No history'),
-				'lang_start_date_statustext'		 => lang('Select the estimated end date for the Project'),
-				'lang_start_date'					 => lang('Project start date'),
-				'value_start_date'					 => $values['start_date'],
-				'lang_end_date_statustext'			 => lang('Select the estimated end date for the Project'),
-				'lang_end_date'						 => lang('Project end date'),
-				'value_end_date'					 => isset($values['end_date']) ? $values['end_date'] : '',
-				'lang_copy_project'					 => lang('Copy project ?'),
-				'lang_copy_project_statustext'		 => lang('Choose Copy Project to copy this project to a new project'),
-				'lang_charge_tenant'				 => lang('Charge tenant'),
-				'lang_charge_tenant_statustext'		 => lang('Choose charge tenant if the tenant i to pay for this project'),
-				'charge_tenant'						 => isset($values['charge_tenant']) ? $values['charge_tenant'] : '',
-				'lang_power_meter'					 => lang('Power meter'),
-				'lang_power_meter_statustext'		 => lang('Enter the power meter'),
-				'value_power_meter'					 => isset($values['power_meter']) ? $values['power_meter'] : '',
-				'value_budget'						 => isset($values['budget']) ? $values['budget'] : '',
-				'lang_reserve'						 => lang('reserve'),
-				'value_reserve'						 => isset($values['reserve']) ? $values['reserve'] : '',
-				'lang_reserve_statustext'			 => lang('Enter the reserve'),
-				'value_sum'							 => isset($values['sum']) ? $values['sum'] : '',
-				'lang_reserve_remainder'			 => lang('reserve remainder'),
-				'value_reserve_remainder'			 => isset($reserve_remainder) ? $reserve_remainder : '',
-				'value_reserve_remainder_percent'	 => isset($remainder_percent) ? $remainder_percent : '',
+				'lang_add_sub_entry' => $values['project_type_id'] == 3 ? lang('add project') : lang('Add workorder'),
+				'lang_add_sub_entry_statustext' => $values['project_type_id'] == 3 ? lang('add a project to this buffer') : lang('Add a workorder to this project'),
+				'lang_no_workorders' => lang('No workorder budget'),
+				'workorder_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit')),
+				'record_history' => $record_history,
+				'table_header_history' => $table_header_history,
+				'lang_history' => lang('History'),
+				'lang_no_history' => lang('No history'),
+				'lang_start_date_statustext' => lang('Select the estimated end date for the Project'),
+				'lang_start_date' => lang('Project start date'),
+				'value_start_date' => $values['start_date'],
+				'lang_end_date_statustext' => lang('Select the estimated end date for the Project'),
+				'lang_end_date' => lang('Project end date'),
+				'value_end_date' => isset($values['end_date']) ? $values['end_date'] : '',
+				'lang_copy_project' => lang('Copy project ?'),
+				'lang_copy_project_statustext' => lang('Choose Copy Project to copy this project to a new project'),
+				'lang_charge_tenant' => lang('Charge tenant'),
+				'lang_charge_tenant_statustext' => lang('Choose charge tenant if the tenant i to pay for this project'),
+				'charge_tenant' => isset($values['charge_tenant']) ? $values['charge_tenant'] : '',
+				'lang_power_meter' => lang('Power meter'),
+				'lang_power_meter_statustext' => lang('Enter the power meter'),
+				'value_power_meter' => isset($values['power_meter']) ? $values['power_meter'] : '',
+				'value_budget' => isset($values['budget']) ? $values['budget'] : '',
+				'lang_reserve' => lang('reserve'),
+				'value_reserve' => isset($values['reserve']) ? $values['reserve'] : '',
+				'lang_reserve_statustext' => lang('Enter the reserve'),
+				'value_sum' => isset($values['sum']) ? $values['sum'] : '',
+				'lang_reserve_remainder' => lang('reserve remainder'),
+				'value_reserve_remainder' => isset($reserve_remainder) ? $reserve_remainder : '',
+				'value_reserve_remainder_percent' => isset($remainder_percent) ? $remainder_percent : '',
 //					'lang_planned_cost'					=> lang('planned cost'),
 //					'value_planned_cost'				=> $values['planned_cost'],
-				'location_data'						 => $location_data,
-				'location_type'						 => 'form',
-				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
-				'lang_year'							 => lang('Year'),
-				'lang_category'						 => lang('category'),
-				'lang_save'							 => lang('save'),
-				'lang_done'							 => lang('done'),
-				'lang_name'							 => lang('Name'),
-				'lang_project_id'					 => lang('Project ID'),
-				'value_project_id'					 => isset($id) ? $id : '',
-				'project_group_data'				 => $project_group_data,
-				'value_name'						 => isset($values['name']) ? $values['name'] : '',
-				'lang_name_statustext'				 => lang('Enter Project Name'),
-				'lang_other_branch'					 => lang('Other branch'),
-				'lang_other_branch_statustext'		 => lang('Enter other branch if not found in the list'),
-				'value_other_branch'				 => isset($values['other_branch']) ? $values['other_branch'] : '',
-				'lang_descr_statustext'				 => lang('Enter a description of the project'),
-				'lang_descr'						 => lang('Description'),
-				'value_descr'						 => isset($values['descr']) ? $values['descr'] : '',
-				'lang_remark_statustext'			 => lang('Enter a remark to add to the history of the project'),
-				'lang_remark'						 => lang('remark'),
-				'value_remark'						 => isset($values['remark']) ? $values['remark'] : '',
-				'lang_done_statustext'				 => lang('Back to the list'),
-				'lang_save_statustext'				 => lang('Save the project'),
-				'lang_no_cat'						 => lang('Select category'),
-				'value_cat_id'						 => isset($values['cat_id']) ? $values['cat_id'] : '',
-				'cat_select'						 => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+				'location_data' => $location_data,
+				'location_type' => 'form',
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index')),
+				'lang_year' => lang('Year'),
+				'lang_category' => lang('category'),
+				'lang_save' => lang('save'),
+				'lang_done' => lang('done'),
+				'lang_name' => lang('Name'),
+				'lang_project_id' => lang('Project ID'),
+				'value_project_id' => isset($id) ? $id : '',
+				'project_group_data' => $project_group_data,
+				'value_name' => isset($values['name']) ? $values['name'] : '',
+				'lang_name_statustext' => lang('Enter Project Name'),
+				'lang_other_branch' => lang('Other branch'),
+				'lang_other_branch_statustext' => lang('Enter other branch if not found in the list'),
+				'value_other_branch' => isset($values['other_branch']) ? $values['other_branch'] : '',
+				'lang_descr_statustext' => lang('Enter a description of the project'),
+				'lang_descr' => lang('Description'),
+				'value_descr' => isset($values['descr']) ? $values['descr'] : '',
+				'lang_remark_statustext' => lang('Enter a remark to add to the history of the project'),
+				'lang_remark' => lang('remark'),
+				'value_remark' => isset($values['remark']) ? $values['remark'] : '',
+				'lang_done_statustext' => lang('Back to the list'),
+				'lang_save_statustext' => lang('Save the project'),
+				'lang_no_cat' => lang('Select category'),
+				'value_cat_id' => isset($values['cat_id']) ? $values['cat_id'] : '',
+				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $values['cat_id'], 'required' => isset($config->config_data['project_optional_category']) && $config->config_data['project_optional_category'] ? false : true)),
-				'lang_workorder_id'					 => lang('Workorder ID'),
-				'lang_sum'							 => lang('Sum'),
-				'value_remainder'					 => $value_remainder,
-				'lang_remainder'					 => lang('remainder'),
-				'lang_coordinator'					 => lang('Coordinator'),
-				'lang_user_statustext'				 => lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
-				'select_user_name'					 => 'values[coordinator]',
-				'lang_no_user'						 => lang('Select coordinator'),
-				'user_list'							 => $this->bocommon->get_user_list_right2('select', 4, $values['coordinator'], $this->acl_location),
-				'status_list'						 => $this->bo->select_status_list('select', $values['status']),
-				'status_name'						 => 'values[status]',
-				'status_required'					 => true,
-				'lang_no_status'					 => lang('Select status'),
-				'lang_status'						 => lang('Status'),
-				'lang_status_statustext'			 => lang('What is the current status of this project ?'),
-				'lang_confirm_status'				 => lang('Confirm status'),
-				'lang_confirm_statustext'			 => lang('Confirm status to the history'),
-				'branch_list'						 => $this->bo->select_branch_p_list((isset($id) ? $id : '')),
-				'lang_branch'						 => lang('branch'),
-				'lang_branch_statustext'			 => lang('Select the branches for this project'),
-				'key_responsible_list'				 => $this->bo->select_branch_list((isset($values['key_responsible']) ? $values['key_responsible'] : '')),
-				'lang_no_key_responsible'			 => lang('Select key responsible'),
-				'lang_key_responsible'				 => lang('key responsible'),
-				'lang_key_responsible_statustext'	 => lang('Select the key responsible for this project'),
-				'key_fetch_list'			 => $this->bo->select_key_location_list((isset($values['key_fetch']) ? $values['key_fetch'] : '')),
-				'lang_no_key_fetch'			 => lang('Where to fetch the key'),
-				'lang_key_fetch'			 => lang('key fetch location'),
-				'lang_key_fetch_statustext'	 => lang('Select where to fetch the key'),
-				'key_deliver_list'				 => $this->bo->select_key_location_list((isset($values['key_deliver']) ? $values['key_deliver'] : '')),
-				'lang_no_key_deliver'			 => lang('Where to deliver the key'),
-				'lang_key_deliver'				 => lang('key deliver location'),
-				'lang_key_deliver_statustext'	 => lang('Select where to deliver the key'),
-				'need_approval'					 => $need_approval,
-				'lang_ask_approval'				 => lang('Ask for approval'),
-				'lang_ask_approval_statustext'	 => lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'	 => $supervisor_email,
-				'currency'				 => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-				'base_java_url'			 => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
-				'base_java_notify_url'	 => "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
-				'edit_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
+				'lang_workorder_id' => lang('Workorder ID'),
+				'lang_sum' => lang('Sum'),
+				'value_remainder' => $value_remainder,
+				'lang_remainder' => lang('remainder'),
+				'lang_coordinator' => lang('Coordinator'),
+				'lang_user_statustext' => lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
+				'select_user_name' => 'values[coordinator]',
+				'lang_no_user' => lang('Select coordinator'),
+				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['coordinator'], $this->acl_location),
+				'status_list' => $this->bo->select_status_list('select', $values['status']),
+				'status_name' => 'values[status]',
+				'status_required' => true,
+				'lang_no_status' => lang('Select status'),
+				'lang_status' => lang('Status'),
+				'lang_status_statustext' => lang('What is the current status of this project ?'),
+				'lang_confirm_status' => lang('Confirm status'),
+				'lang_confirm_statustext' => lang('Confirm status to the history'),
+				'branch_list' => $this->bo->select_branch_p_list((isset($id) ? $id : '')),
+				'lang_branch' => lang('branch'),
+				'lang_branch_statustext' => lang('Select the branches for this project'),
+				'key_responsible_list' => $this->bo->select_branch_list((isset($values['key_responsible']) ? $values['key_responsible'] : '')),
+				'lang_no_key_responsible' => lang('Select key responsible'),
+				'lang_key_responsible' => lang('key responsible'),
+				'lang_key_responsible_statustext' => lang('Select the key responsible for this project'),
+				'key_fetch_list' => $this->bo->select_key_location_list((isset($values['key_fetch']) ? $values['key_fetch'] : '')),
+				'lang_no_key_fetch' => lang('Where to fetch the key'),
+				'lang_key_fetch' => lang('key fetch location'),
+				'lang_key_fetch_statustext' => lang('Select where to fetch the key'),
+				'key_deliver_list' => $this->bo->select_key_location_list((isset($values['key_deliver']) ? $values['key_deliver'] : '')),
+				'lang_no_key_deliver' => lang('Where to deliver the key'),
+				'lang_key_deliver' => lang('key deliver location'),
+				'lang_key_deliver_statustext' => lang('Select where to deliver the key'),
+				'need_approval' => $need_approval,
+				'lang_ask_approval' => lang('Ask for approval'),
+				'lang_ask_approval_statustext' => lang('Check this to send a mail to your supervisor for approval'),
+				'value_approval_mail_address' => $supervisor_email,
+				'currency' => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'base_java_url' => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
+				'base_java_notify_url' => "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+				'edit_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
 					'id' => $id)),
-				'lang_edit_statustext'	 => lang('Edit this entry '),
-				'lang_edit'				 => lang('Edit'),
-				'decimal_separator'		 => $this->decimal_separator,
-				'validator'				 => phpgwapi_jquery::formvalidator_generate(array('location',
+				'lang_edit_statustext' => lang('Edit this entry '),
+				'lang_edit' => lang('Edit'),
+				'decimal_separator' => $this->decimal_separator,
+				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
 
@@ -2167,10 +2167,10 @@ JS;
 					$values['location']["loc$i"] = $location[($i - 1)];
 				}
 
-				$values['street_name']	 = $values['location_data']['street_name'];
+				$values['street_name'] = $values['location_data']['street_name'];
 				$values['street_number'] = $values['location_data']['street_number'];
 				$values['location_name'] = $values['location_data']["loc{$level}_name"];
-				$values['extra']		 = $values['p'][0];
+				$values['extra'] = $values['p'][0];
 
 				unset($values['location_data']);
 
@@ -2187,8 +2187,8 @@ JS;
 				}
 			}
 
-			$appname										 = lang('project');
-			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname = lang('project');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
@@ -2203,15 +2203,15 @@ JS;
 			$project_id = phpgw::get_var('project_id', 'int');
 			if(empty($project_id))
 			{
-				$result_data					 = array('results' => array());
-				$result_data['total_records']	 = 0;
-				$result_data['draw']			 = 0;
+				$result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
 
 				return $this->jquery_results($result_data);
 			}
 
-			$year	 = phpgw::get_var('year', 'int');
-			$draw	 = phpgw::get_var('draw', 'int');
+			$year = phpgw::get_var('year', 'int');
+			$draw = phpgw::get_var('draw', 'int');
 
 			$values = $this->bo->get_orders(array('project_id' => $project_id, 'year' => $year));
 			foreach($values as & $_order_entry)
@@ -2219,8 +2219,8 @@ JS;
 				$_order_entry['send_order'] = '';
 				if(isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
 				{
-					$_title						 = implode(';', $_order_entry['mail_recipients']);
-					$_order_entry['send_order']	 = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
+					$_title = implode(';', $_order_entry['mail_recipients']);
+					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
 				}
 			}
 
@@ -2228,8 +2228,8 @@ JS;
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records']	 = $total_records;
-			$result_data['draw']			 = $draw;
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
 
@@ -2253,47 +2253,47 @@ JS;
 			$project_id = phpgw::get_var('project_id', 'int');
 			if(empty($project_id))
 			{
-				$result_data					 = array('results' => array());
-				$result_data['total_records']	 = 0;
-				$result_data['draw']			 = 0;
+				$result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
 
 				return $this->jquery_results($result_data);
 			}
 
-			$year	 = phpgw::get_var('year', 'int');
-			$draw	 = phpgw::get_var('draw', 'int');
+			$year = phpgw::get_var('year', 'int');
+			$draw = phpgw::get_var('draw', 'int');
 
-			$active_invoices	 = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
 				'project_id' => $project_id, 'year' => $year));
 			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
 				'project_id' => $project_id, 'year' => $year, 'paid' => true));
-			$invoices			 = array_merge($active_invoices, $historical_invoices);
+			$invoices = array_merge($active_invoices, $historical_invoices);
 
 			foreach($invoices as $entry)
 			{
 				$values[] = array
 					(
-					'voucher_id'			 => $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'],
-					'voucher_out_id'		 => $entry['voucher_out_id'],
-					'workorder_id'			 => $entry['workorder_id'],
-					'status'				 => $entry['status'],
-					'period'				 => $entry['period'],
-					'periodization'			 => $entry['periodization'],
-					'periodization_start'	 => $entry['periodization_start'],
-					'invoice_id'			 => $entry['invoice_id'],
-					'budget_account'		 => $entry['budget_account'],
-					'dima'					 => $entry['dima'],
-					'dimb'					 => $entry['dimb'],
-					'dimd'					 => $entry['dimd'],
-					'type'					 => $entry['type'],
-					'amount'				 => $entry['amount'],
-					'approved_amount'		 => $entry['approved_amount'],
-					'vendor'				 => $entry['vendor'],
-					'project_group'			 => $entry['project_id'],
-					'currency'				 => $entry['currency'],
-					'budget_responsible'	 => $entry['budget_responsible'],
-					'budsjettsigndato'		 => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-					'transfer_time'			 => $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'voucher_id' => $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id' => $entry['voucher_out_id'],
+					'workorder_id' => $entry['workorder_id'],
+					'status' => $entry['status'],
+					'period' => $entry['period'],
+					'periodization' => $entry['periodization'],
+					'periodization_start' => $entry['periodization_start'],
+					'invoice_id' => $entry['invoice_id'],
+					'budget_account' => $entry['budget_account'],
+					'dima' => $entry['dima'],
+					'dimb' => $entry['dimb'],
+					'dimd' => $entry['dimd'],
+					'type' => $entry['type'],
+					'amount' => $entry['amount'],
+					'approved_amount' => $entry['approved_amount'],
+					'vendor' => $entry['vendor'],
+					'project_group' => $entry['project_id'],
+					'currency' => $entry['currency'],
+					'budget_responsible' => $entry['budget_responsible'],
+					'budsjettsigndato' => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time' => $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
 			}
 
@@ -2301,8 +2301,8 @@ JS;
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records']	 = $total_records;
-			$result_data['draw']			 = $draw;
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
 
@@ -2347,20 +2347,20 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project_bulk_update_status';
 
-			$start_date		 = phpgw::get_var('start_date');
-			$end_date		 = phpgw::get_var('end_date');
-			$get_list		 = phpgw::get_var('get_list', 'bool', 'POST');
-			$execute		 = phpgw::get_var('execute', 'bool', 'POST');
-			$status_filter	 = phpgw::get_var('status_filter');
-			$status_new		 = phpgw::get_var('status_new');
-			$type			 = phpgw::get_var('type', 'string', 'REQUEST', 'project');
-			$ecodimb		 = phpgw::get_var('ecodimb');
-			$ids			 = phpgw::get_var('ids');
-			$paid			 = phpgw::get_var('paid', 'bool', 'POST');
-			$closed_orders	 = phpgw::get_var('closed_orders', 'bool', 'POST');
+			$start_date = phpgw::get_var('start_date');
+			$end_date = phpgw::get_var('end_date');
+			$get_list = phpgw::get_var('get_list', 'bool', 'POST');
+			$execute = phpgw::get_var('execute', 'bool', 'POST');
+			$status_filter = phpgw::get_var('status_filter');
+			$status_new = phpgw::get_var('status_new');
+			$type = phpgw::get_var('type', 'string', 'REQUEST', 'project');
+			$ecodimb = phpgw::get_var('ecodimb');
+			$ids = phpgw::get_var('ids');
+			$paid = phpgw::get_var('paid', 'bool', 'POST');
+			$closed_orders = phpgw::get_var('closed_orders', 'bool', 'POST');
 			$transfer_budget = phpgw::get_var('transfer_budget', 'integer');
-			$b_account_id	 = phpgw::get_var('b_account_id', 'integer');
-			$b_account_name	 = phpgw::get_var('b_account_name');
+			$b_account_id = phpgw::get_var('b_account_id', 'integer');
+			$b_account_name = phpgw::get_var('b_account_name');
 
 			if(isset($_POST['user_id']))
 			{
@@ -2377,10 +2377,10 @@ JS;
 
 			foreach($ids as $id)
 			{
-				$new_budget[$id]['budget_amount']	 = phpgw::get_var("{$id}::budget_amount");
-				$new_budget[$id]['obligation']		 = phpgw::get_var("{$id}::obligation");
-				$new_budget[$id]['order_amount']	 = phpgw::get_var("{$id}::order_amount");
-				$new_budget[$id]['latest_year']		 = phpgw::get_var("{$id}::latest_year");
+				$new_budget[$id]['budget_amount'] = phpgw::get_var("{$id}::budget_amount");
+				$new_budget[$id]['obligation'] = phpgw::get_var("{$id}::obligation");
+				$new_budget[$id]['order_amount'] = phpgw::get_var("{$id}::order_amount");
+				$new_budget[$id]['latest_year'] = phpgw::get_var("{$id}::latest_year");
 			}
 
 			$link_data = array
@@ -2398,13 +2398,13 @@ JS;
 
 			foreach($list as &$entry)
 			{
-				$_obligation		 = '';
+				$_obligation = '';
 				$entry['new_budget'] = '';
 
 				if($entry['project_type_id'] == 1 || $entry['project_type_id'] == 4 || $entry['continuous']) // operation or continuous
 				{
 					$_obligation = 0;
-					$_order		 = 0;
+					$_order = 0;
 
 					if(!$entry['closed'] && $type == 'project')
 					{
@@ -2456,7 +2456,7 @@ JS;
 			switch($type)
 			{
 				case 'project':
-					$myColumnDefs	 = array
+					$myColumnDefs = array
 						(
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'formatter' => 'JqueryPortico.formatLink'),
 						array('key' => 'start_date', 'label' => lang('date'), 'sortable' => false),
@@ -2472,8 +2472,8 @@ JS;
 						array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'className' => 'center',
 							'formatter' => 'myFormatterCheck')
 					);
-					$b_account_data	 = array();
-					$td_count		 = 9;
+					$b_account_data = array();
+					$td_count = 9;
 					break;
 
 				case 'workorder':
@@ -2499,14 +2499,14 @@ JS;
 							'formatter' => 'myFormatterCheck')
 					);
 
-					$b_account_data	 = $this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'	 => $b_account_id,
-						'disabled'		 => '',
-						'parent'		 => $project['b_account_id'],
-						'type'			 => 'form'
+					$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id' => $b_account_id,
+						'disabled' => '',
+						'parent' => $project['b_account_id'],
+						'type' => 'form'
 					)
 					);
-					$td_count		 = 12;
+					$td_count = 12;
 					break;
 			}
 
@@ -2518,18 +2518,18 @@ JS;
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_0',
+				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
-				'data'		 => json_encode($list),
+				'data' => json_encode($list),
 				'tabletools' => $tabletools,
 				'ColumnDefs' => $myColumnDefs,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
 			);
 
-			$user_list	 = $this->bocommon->get_user_list('select', $user_id, $extra		 = false, $default	 = $user_id, $start		 = -1, $sort		 = 'ASC', $order		 = 'account_lastname', $query		 = '', $offset		 = -1);
+			$user_list = $this->bocommon->get_user_list('select', $user_id, $extra = false, $default = $user_id, $start = -1, $sort = 'ASC', $order = 'account_lastname', $query = '', $offset = -1);
 			foreach($user_list as &$entry)
 			{
 				$entry['id'] = $entry['user_id'];
@@ -2539,17 +2539,17 @@ JS;
 			switch($type)
 			{
 				case 'project':
-					$status_list_filter	 = execMethod('property.bogeneric.get_list', array('type' => 'project_status'));
-					$status_list_new	 = execMethod('property.bogeneric.get_list', array('type' => 'project_status',
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status'));
+					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'project_status',
 						'selected' => $status_new));
 					break;
 				case 'workorder':
-					$status_list_filter	 = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status'));
-					$status_list_new	 = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status'));
+					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',
 						'selected' => $status_new));
 					break;
 				default:
-					$status_list_filter	 = array();
+					$status_list_filter = array();
 			}
 
 			if($status_list_filter)
@@ -2563,18 +2563,18 @@ JS;
 				(
 				array
 					(
-					'id'	 => '0',
-					'name'	 => lang('select')
+					'id' => '0',
+					'name' => lang('select')
 				),
 				array
 					(
-					'id'	 => 'workorder',
-					'name'	 => lang('workorder')
+					'id' => 'workorder',
+					'name' => lang('workorder')
 				),
 				array
 					(
-					'id'	 => 'project',
-					'name'	 => lang('project')
+					'id' => 'project',
+					'name' => lang('project')
 				)
 			);
 
@@ -2583,50 +2583,50 @@ JS;
 				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
 			}
 
-			$year	 = date('Y') - 2;
-			$limit	 = $year + 4;
+			$year = date('Y') - 2;
+			$limit = $year + 4;
 
 			while($year < $limit)
 			{
 				$year_list[] = array
 					(
-					'id'	 => $year,
-					'name'	 => $year
+					'id' => $year,
+					'name' => $year
 				);
 				$year++;
 			}
 
-			$tabs			 = array();
+			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab		 = 'generic';
+			$active_tab = 'generic';
 
 			$data = array
 				(
-				'datatable_def'			 => $datatable_def,
-				'year_list'				 => array('options' => $year_list),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'update_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status')),
-				'status_list_filter'	 => array('options' => $status_list_filter),
-				'status_list_new'		 => array('options' => $status_list_new),
-				'type_list'				 => array('options' => $type_array),
-				'user_list'				 => array('options' => $user_list),
-				'ecodimb_list'			 => array('options' => $this->bocommon->select_category_list(array(
+				'datatable_def' => $datatable_def,
+				'year_list' => array('options' => $year_list),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'update_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status')),
+				'status_list_filter' => array('options' => $status_list_filter),
+				'status_list_new' => array('options' => $status_list_new),
+				'type_list' => array('options' => $type_array),
+				'user_list' => array('options' => $user_list),
+				'ecodimb_list' => array('options' => $this->bocommon->select_category_list(array(
 						'type' => 'dimb', 'selected' => $ecodimb))),
-				'start_date'			 => $start_date,
-				'end_date'				 => $end_date,
-				'total_records'			 => $total_records,
-				'paid'					 => $paid,
-				'closed_orders'			 => $closed_orders,
-				'check_paid'			 => $type == 'workorder' ? 1 : 0,
-				'check_closed_orders'	 => $type == 'project' ? 1 : 0,
-				'type'					 => $type,
-				'b_account_data'		 => $b_account_data,
-				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'td_count'				 => $td_count
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'total_records' => $total_records,
+				'paid' => $paid,
+				'closed_orders' => $closed_orders,
+				'check_paid' => $type == 'workorder' ? 1 : 0,
+				'check_closed_orders' => $type == 'project' ? 1 : 0,
+				'type' => $type,
+				'b_account_data' => $b_account_data,
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'td_count' => $td_count
 			);
 
-			$appname		 = lang('project');
-			$function_msg	 = lang('bulk update status');
+			$appname = lang('project');
+			$function_msg = lang('bulk update status');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -2648,15 +2648,15 @@ JS;
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array())
 		{
-			$active_tab	 = 'general';
-			$tabs		 = array
+			$active_tab = 'general';
+			$tabs = array
 				(
-				'general'		 => array('label' => lang('general'), 'link' => '#general'),
-				'location'		 => array('label' => lang('location'), 'link' => '#location'),
-				'budget'		 => array('label' => lang('Time and budget'), 'link' => '#budget'),
-				'coordination'	 => array('label' => lang('coordination'), 'link' => '#coordination'),
-				'documents'		 => array('label' => lang('documents'), 'link' => '#documents'),
-				'history'		 => array('label' => lang('history'), 'link' => '#history')
+				'general' => array('label' => lang('general'), 'link' => '#general'),
+				'location' => array('label' => lang('location'), 'link' => '#location'),
+				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget'),
+				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination'),
+				'documents' => array('label' => lang('documents'), 'link' => '#documents'),
+				'history' => array('label' => lang('history'), 'link' => '#history')
 			);
 
 			$tabs = array_merge($tabs, $tabs_);

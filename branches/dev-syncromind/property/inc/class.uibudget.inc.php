@@ -46,52 +46,52 @@
 		var $filter;
 		var $public_functions = array
 			(
-			'index'					 => true,
-			'query'					 => true,
-			'basis'					 => true,
-			'query_basis'			 => true,
-			'obligations'			 => true,
-			'get_filters_dependent'	 => true,
-			'view'					 => true,
-			'edit'					 => true,
-			'add'					 => true,
-			'save'					 => true,
-			'edit_basis'			 => true,
-			'add_basis'				 => true,
-			'save_basis'			 => true,
-			'download'				 => true,
-			'delete'				 => true,
-			'delete_basis'			 => true
+			'index' => true,
+			'query' => true,
+			'basis' => true,
+			'query_basis' => true,
+			'obligations' => true,
+			'get_filters_dependent' => true,
+			'view' => true,
+			'edit' => true,
+			'add' => true,
+			'save' => true,
+			'edit_basis' => true,
+			'add_basis' => true,
+			'save_basis' => true,
+			'download' => true,
+			'delete' => true,
+			'delete_basis' => true
 		);
 
 		function __construct()
 		{
 			parent::__construct();
 
-			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::budget';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		 = CreateObject('property.bobudget', true);
-			$this->bocommon	 = & $this->bo->bocommon;
-			$this->cats		 = & $this->bo->cats;
+			$this->bo = CreateObject('property.bobudget', true);
+			$this->bocommon = & $this->bo->bocommon;
+			$this->cats = & $this->bo->cats;
 
-			$this->start		 = $this->bo->start;
-			$this->query		 = $this->bo->query;
-			$this->sort			 = $this->bo->sort;
-			$this->order		 = $this->bo->order;
-			$this->filter		 = $this->bo->filter;
-			$this->cat_id		 = $this->bo->cat_id;
-			$this->dimb_id		 = $this->bo->dimb_id;
-			$this->allrows		 = $this->bo->allrows;
-			$this->district_id	 = $this->bo->district_id;
-			$this->year			 = $this->bo->year;
-			$this->month		 = $this->bo->month;
-			$this->grouping		 = $this->bo->grouping;
-			$this->revision		 = $this->bo->revision;
-			$this->details		 = $this->bo->details;
-			$this->direction	 = $this->bo->direction;
+			$this->start = $this->bo->start;
+			$this->query = $this->bo->query;
+			$this->sort = $this->bo->sort;
+			$this->order = $this->bo->order;
+			$this->filter = $this->bo->filter;
+			$this->cat_id = $this->bo->cat_id;
+			$this->dimb_id = $this->bo->dimb_id;
+			$this->allrows = $this->bo->allrows;
+			$this->district_id = $this->bo->district_id;
+			$this->year = $this->bo->year;
+			$this->month = $this->bo->month;
+			$this->grouping = $this->bo->grouping;
+			$this->revision = $this->bo->revision;
+			$this->details = $this->bo->details;
+			$this->direction = $this->bo->direction;
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
 		}
@@ -100,16 +100,16 @@
 		{
 			$data = array
 				(
-				'start'		 => $this->start,
-				'query'		 => $this->query,
-				'sort'		 => $this->sort,
-				'order'		 => $this->order,
-				'filter'	 => $this->filter,
-				'cat_id'	 => $this->cat_id,
-				'dimb_id'	 => $this->dimb_id,
-				'allrows'	 => $this->allrows,
-				'direction'	 => $this->direction,
-				'month'		 => $this->month
+				'start' => $this->start,
+				'query' => $this->query,
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'dimb_id' => $this->dimb_id,
+				'allrows' => $this->allrows,
+				'direction' => $this->direction,
+				'month' => $this->month
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -117,8 +117,8 @@
 		private function _get_filters($selected = 0)
 		{
 			$link = self::link(array(
-				'menuaction'		 => 'property.uibudget.get_filters_dependent',
-				'phpgw_return_as'	 => 'json'
+				'menuaction' => 'property.uibudget.get_filters_dependent',
+				'phpgw_return_as' => 'json'
 			));
 
 			$code = '
@@ -147,47 +147,47 @@
 
 			$values_combo_box[0] = $this->bo->get_year_filter_list($this->year);
 			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('no year')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'year',
-				'extra'	 => $code,
-				'text'	 => lang('year'),
-				'list'	 => $values_combo_box[0]
+				'type' => 'filter',
+				'name' => 'year',
+				'extra' => $code,
+				'text' => lang('year'),
+				'list' => $values_combo_box[0]
 			);
 
 			$values_combo_box[1] = $this->bo->get_revision_filter_list($this->revision);
 			array_unshift($values_combo_box[1], array('id' => '', 'name' => lang('no revision')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'revision',
-				'extra'	 => '',
-				'text'	 => lang('revision'),
-				'list'	 => $values_combo_box[1]
+				'type' => 'filter',
+				'name' => 'revision',
+				'extra' => '',
+				'text' => lang('revision'),
+				'list' => $values_combo_box[1]
 			);
 
 			$values_combo_box[2] = $this->bocommon->select_district_list('filter', $this->district_id);
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no district')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'district_id',
-				'extra'	 => '',
-				'text'	 => lang('district'),
-				'list'	 => $values_combo_box[2]
+				'type' => 'filter',
+				'name' => 'district_id',
+				'extra' => '',
+				'text' => lang('district'),
+				'list' => $values_combo_box[2]
 			);
 
 
 			$values_combo_box[3] = $this->bo->get_grouping_filter_list($this->grouping);
 			array_unshift($values_combo_box[3], array('id' => '', 'name' => lang('no grouping')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'grouping',
-				'extra'	 => '',
-				'text'	 => lang('grouping'),
-				'list'	 => $values_combo_box[3]
+				'type' => 'filter',
+				'name' => 'grouping',
+				'extra' => '',
+				'text' => lang('grouping'),
+				'list' => $values_combo_box[3]
 			);
 
 			$cat_filter = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id',
@@ -196,19 +196,19 @@
 			{
 				$values_combo_box[4][] = array
 					(
-					'id'		 => $_cat['cat_id'],
-					'name'		 => $_cat['name'],
-					'selected'	 => $_cat['selected'] ? 1 : 0
+					'id' => $_cat['cat_id'],
+					'name' => $_cat['name'],
+					'selected' => $_cat['selected'] ? 1 : 0
 				);
 			}
 			array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('no category')));
 			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'cat_id',
-				'extra'	 => '',
-				'text'	 => lang('Category'),
-				'list'	 => $values_combo_box[4]
+				'type' => 'filter',
+				'name' => 'cat_id',
+				'extra' => '',
+				'text' => lang('Category'),
+				'list' => $values_combo_box[4]
 			);
 
 			$values_combo_box[5] = $this->bocommon->select_category_list(array('type' => 'dimb'));
@@ -219,11 +219,11 @@
 			array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('no dimb')));
 			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'dimb_id',
-				'extra'	 => '',
-				'text'	 => lang('dimb'),
-				'list'	 => $values_combo_box[5]
+				'type' => 'filter',
+				'name' => 'dimb_id',
+				'extra' => '',
+				'text' => lang('dimb'),
+				'list' => $values_combo_box[5]
 			);
 
 			return $combos;
@@ -234,8 +234,8 @@
 			$basis = true;
 
 			$link = self::link(array(
-				'menuaction'		 => 'property.uibudget.get_filters_dependent',
-				'phpgw_return_as'	 => 'json'
+				'menuaction' => 'property.uibudget.get_filters_dependent',
+				'phpgw_return_as' => 'json'
 			));
 
 			$code = '
@@ -264,59 +264,59 @@
 
 			$values_combo_box[0] = $this->bo->get_year_filter_list($this->year, $basis);
 			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('no year')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'year',
-				'extra'	 => $code,
-				'text'	 => lang('year'),
-				'list'	 => $values_combo_box[0]
+				'type' => 'filter',
+				'name' => 'year',
+				'extra' => $code,
+				'text' => lang('year'),
+				'list' => $values_combo_box[0]
 			);
 
 			$values_combo_box[1] = $this->bo->get_revision_filter_list($this->revision, $basis);
 			array_unshift($values_combo_box[1], array('id' => '', 'name' => lang('no revision')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'revision',
-				'extra'	 => '',
-				'text'	 => lang('revision'),
-				'list'	 => $values_combo_box[1]
+				'type' => 'filter',
+				'name' => 'revision',
+				'extra' => '',
+				'text' => lang('revision'),
+				'list' => $values_combo_box[1]
 			);
 
 			$values_combo_box[2] = $this->bocommon->select_district_list('filter', $this->district_id);
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no district')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'district_id',
-				'extra'	 => '',
-				'text'	 => lang('district'),
-				'list'	 => $values_combo_box[2]
+				'type' => 'filter',
+				'name' => 'district_id',
+				'extra' => '',
+				'text' => lang('district'),
+				'list' => $values_combo_box[2]
 			);
 
 
 			$values_combo_box[3] = $this->bo->get_grouping_filter_list($this->grouping, $basis);
 			array_unshift($values_combo_box[3], array('id' => '', 'name' => lang('no grouping')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'grouping',
-				'extra'	 => '',
-				'text'	 => lang('grouping'),
-				'list'	 => $values_combo_box[3]
+				'type' => 'filter',
+				'name' => 'grouping',
+				'extra' => '',
+				'text' => lang('grouping'),
+				'list' => $values_combo_box[3]
 			);
 
 
 			$values_combo_box[4] = $this->bocommon->select_category_list(array('type' => 'dimb'));
 			array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('no dimb')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'dimb_id',
-				'extra'	 => '',
-				'text'	 => lang('dimb'),
-				'list'	 => $values_combo_box[4]
+				'type' => 'filter',
+				'name' => 'dimb_id',
+				'extra' => '',
+				'text' => lang('dimb'),
+				'list' => $values_combo_box[4]
 			);
 
 			return $combos;
@@ -324,15 +324,15 @@
 
 		private function _get_filters_obligations($selected = 0)
 		{
-			$values_combo_box[0] = $this->bo->get_year_filter_list($this->year, $basis				 = false);
+			$values_combo_box[0] = $this->bo->get_year_filter_list($this->year, $basis = false);
 			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('no year')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'year',
-				'extra'	 => '',
-				'text'	 => lang('year'),
-				'list'	 => $values_combo_box[0]
+				'type' => 'filter',
+				'name' => 'year',
+				'extra' => '',
+				'text' => lang('year'),
+				'list' => $values_combo_box[0]
 			);
 
 			for($i = 1; $i < 13; $i++)
@@ -342,34 +342,34 @@
 			array_unshift($values_combo_box[1], array('id' => '', 'name' => lang('month')));
 			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'month',
-				'extra'	 => '',
-				'text'	 => lang('month'),
-				'list'	 => $values_combo_box[1]
+				'type' => 'filter',
+				'name' => 'month',
+				'extra' => '',
+				'text' => lang('month'),
+				'list' => $values_combo_box[1]
 			);
 
 			$values_combo_box[2] = $this->bocommon->select_district_list('filter', $this->district_id);
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no district')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'district_id',
-				'extra'	 => '',
-				'text'	 => lang('district'),
-				'list'	 => $values_combo_box[2]
+				'type' => 'filter',
+				'name' => 'district_id',
+				'extra' => '',
+				'text' => lang('district'),
+				'list' => $values_combo_box[2]
 			);
 
 
 			$values_combo_box[3] = $this->bo->get_b_group_list($this->grouping);
 			array_unshift($values_combo_box[3], array('id' => '', 'name' => lang('no grouping')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'grouping',
-				'extra'	 => '',
-				'text'	 => lang('grouping'),
-				'list'	 => $values_combo_box[3]
+				'type' => 'filter',
+				'name' => 'grouping',
+				'extra' => '',
+				'text' => lang('grouping'),
+				'list' => $values_combo_box[3]
 			);
 
 
@@ -379,30 +379,30 @@
 			{
 				$values_combo_box[4][] = array
 					(
-					'id'		 => $_cat['cat_id'],
-					'name'		 => $_cat['name'],
-					'selected'	 => $_cat['selected'] ? 1 : 0
+					'id' => $_cat['cat_id'],
+					'name' => $_cat['name'],
+					'selected' => $_cat['selected'] ? 1 : 0
 				);
 			}
 			array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('no category')));
 			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'cat_id',
-				'extra'	 => '',
-				'text'	 => lang('Category'),
-				'list'	 => $values_combo_box[4]
+				'type' => 'filter',
+				'name' => 'cat_id',
+				'extra' => '',
+				'text' => lang('Category'),
+				'list' => $values_combo_box[4]
 			);
 
 			$values_combo_box[5] = $this->bocommon->select_category_list(array('type' => 'org_unit'));
 			array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('department')));
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'org_unit_id',
-				'extra'	 => '',
-				'text'	 => lang('department'),
-				'list'	 => $values_combo_box[5]
+				'type' => 'filter',
+				'name' => 'org_unit_id',
+				'extra' => '',
+				'text' => lang('department'),
+				'list' => $values_combo_box[5]
 			);
 
 			$values_combo_box[6] = $this->bocommon->select_category_list(array('type' => 'dimb'));
@@ -413,35 +413,35 @@
 			array_unshift($values_combo_box[6], array('id' => '', 'name' => lang('no dimb')));
 			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'dimb_id',
-				'extra'	 => '',
-				'text'	 => lang('dimb'),
-				'list'	 => $values_combo_box[6]
+				'type' => 'filter',
+				'name' => 'dimb_id',
+				'extra' => '',
+				'text' => lang('dimb'),
+				'list' => $values_combo_box[6]
 			);
 
 			$values_combo_box[7] = array
 				(
 				array
 					(
-					'id'		 => 'expenses',
-					'name'		 => lang('expenses'),
-					'selected'	 => $this->direction == 'expenses' ? 1 : 0
+					'id' => 'expenses',
+					'name' => lang('expenses'),
+					'selected' => $this->direction == 'expenses' ? 1 : 0
 				),
 				array
 					(
-					'id'		 => 'income',
-					'name'		 => lang('income'),
-					'selected'	 => $this->direction == 'income' ? 1 : 0
+					'id' => 'income',
+					'name' => lang('income'),
+					'selected' => $this->direction == 'income' ? 1 : 0
 				)
 			);
-			$combos[]			 = array
+			$combos[] = array
 				(
-				'type'	 => 'filter',
-				'name'	 => 'direction',
-				'extra'	 => '',
-				'text'	 => lang('direction'),
-				'list'	 => $values_combo_box[7]
+				'type' => 'filter',
+				'name' => 'direction',
+				'extra' => '',
+				'text' => lang('direction'),
+				'list' => $values_combo_box[7]
 			);
 
 			return $combos;
@@ -462,8 +462,8 @@
 
 		function index()
 		{
-			$acl_location	 = '.budget';
-			$acl_read		 = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
+			$acl_location = '.budget';
+			$acl_read = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
@@ -476,33 +476,33 @@
 				return $this->query();
 			}
 
-			$acl_add	 = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit	 = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
-			$acl_delete	 = $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
+			$acl_add = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_delete = $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
 			$data = array(
 				'datatable_name' => lang('list budget'),
-				'form'			 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array()
 					)
 				),
-				'datatable'		 => array(
-					'source'		 => self::link(array(
-						'menuaction'		 => 'property.uibudget.index',
-						'phpgw_return_as'	 => 'json'
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uibudget.index',
+						'phpgw_return_as' => 'json'
 					)),
-					'download'		 => self::link(array(
+					'download' => self::link(array(
 						'menuaction' => 'property.uibudget.download',
-						'export'	 => true,
-						'allrows'	 => true,
-						'download'	 => 'budget'
+						'export' => true,
+						'allrows' => true,
+						'download' => 'budget'
 					)),
-					'allrows'		 => true,
-					'editor_action'	 => '',
-					'field'			 => array()
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array()
 				)
 			);
 
@@ -517,12 +517,12 @@
 			{
 				$data['form']['toolbar']['item'][] = array
 					(
-					'type'	 => 'link',
-					'value'	 => lang('new'),
-					'href'	 => self::link(array(
+					'type' => 'link',
+					'value' => lang('new'),
+					'href' => self::link(array(
 						'menuaction' => 'property.uibudget.add'
 					)),
-					'class'	 => 'new_item'
+					'class' => 'new_item'
 				);
 			}
 
@@ -555,18 +555,18 @@
 			$parameters = array('parameter' => array(array('name' => 'budget_id', 'source' => 'budget_id')));
 
 			$data['datatable']['actions'][] = array(
-				'my_name'	 => 'edit',
-				'text'		 => lang('edit'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.edit')),
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.edit')),
 				'parameters' => json_encode($parameters)
 			);
 
 			$data['datatable']['actions'][] = array(
-				'my_name'		 => 'delete',
-				'text'			 => lang('delete'),
-				'confirm_msg'	 => lang('do you really want to delete this entry'),
-				'action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete')),
-				'parameters'	 => json_encode($parameters)
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'confirm_msg' => lang('do you really want to delete this entry'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete')),
+				'parameters' => json_encode($parameters)
 			);
 
 			/* if($acl_add)
@@ -603,10 +603,10 @@
 
 		public function query()
 		{
-			$search		 = phpgw::get_var('search');
-			$order		 = phpgw::get_var('order');
-			$draw		 = phpgw::get_var('draw', 'int');
-			$columns	 = phpgw::get_var('columns');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 			$order_field = '';
 
 			switch($columns[$order[0]['column']]['data'])
@@ -622,12 +622,12 @@
 			}
 
 			$params = array(
-				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
-				'order'		 => $order_field,
-				'sort'		 => $order[0]['dir'],
-				'allrows'	 => phpgw::get_var('length', 'int') == -1
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $order_field,
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$values = $this->bo->read($params);
@@ -637,18 +637,18 @@
 				return $values;
 			}
 
-			$result_data					 = array('results' => $values);
-			$result_data['total_records']	 = $this->bo->total_records;
-			$result_data['draw']			 = $draw;
-			$result_data['sum_budget']		 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
 
 		function basis()
 		{
-			$acl_location	 = '.budget';
-			$acl_read		 = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
+			$acl_location = '.budget';
+			$acl_read = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
@@ -661,33 +661,33 @@
 				return $this->query_basis();
 			}
 
-			$acl_add	 = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit	 = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
-			$acl_delete	 = $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
+			$acl_add = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_delete = $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
 
 			$data = array(
 				'datatable_name' => lang('list budget'),
-				'form'			 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array()
 					)
 				),
-				'datatable'		 => array(
-					'source'		 => self::link(array(
-						'menuaction'		 => 'property.uibudget.basis',
-						'phpgw_return_as'	 => 'json'
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uibudget.basis',
+						'phpgw_return_as' => 'json'
 					)),
-					'download'		 => self::link(array(
+					'download' => self::link(array(
 						'menuaction' => 'property.uibudget.download',
-						'export'	 => true,
-						'allrows'	 => true,
-						'download'	 => 'basis'
+						'export' => true,
+						'allrows' => true,
+						'download' => 'basis'
 					)),
-					'allrows'		 => true,
-					'editor_action'	 => '',
-					'field'			 => array()
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array()
 				)
 			);
 
@@ -702,12 +702,12 @@
 			{
 				$data['form']['toolbar']['item'][] = array
 					(
-					'type'	 => 'link',
-					'value'	 => lang('new'),
-					'href'	 => self::link(array(
+					'type' => 'link',
+					'value' => lang('new'),
+					'href' => self::link(array(
 						'menuaction' => 'property.uibudget.add_basis'
 					)),
-					'class'	 => 'new_item'
+					'class' => 'new_item'
 				);
 			}
 
@@ -737,18 +737,18 @@
 			$parameters = array('parameter' => array(array('name' => 'budget_id', 'source' => 'budget_id')));
 
 			$data['datatable']['actions'][] = array(
-				'my_name'	 => 'edit',
-				'text'		 => lang('edit'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.edit_basis')),
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.edit_basis')),
 				'parameters' => json_encode($parameters)
 			);
 
 			$data['datatable']['actions'][] = array(
-				'my_name'		 => 'delete',
-				'text'			 => lang('delete'),
-				'confirm_msg'	 => lang('do you really want to delete this entry'),
-				'action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete_basis')),
-				'parameters'	 => json_encode($parameters)
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'confirm_msg' => lang('do you really want to delete this entry'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete_basis')),
+				'parameters' => json_encode($parameters)
 			);
 
 			/* if($acl_add)
@@ -773,10 +773,10 @@
 
 		public function query_basis()
 		{
-			$search		 = phpgw::get_var('search');
-			$order		 = phpgw::get_var('order');
-			$draw		 = phpgw::get_var('draw', 'int');
-			$columns	 = phpgw::get_var('columns');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 			$order_field = '';
 
 			switch($columns[$order[0]['column']]['data'])
@@ -792,12 +792,12 @@
 			}
 
 			$params = array(
-				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
-				'order'		 => $order_field,
-				'sort'		 => $order[0]['dir'],
-				'allrows'	 => phpgw::get_var('length', 'int') == -1
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $order_field,
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$values = $this->bo->read_basis($params);
@@ -807,17 +807,17 @@
 				return $values;
 			}
 
-			$result_data					 = array('results' => $values);
-			$result_data['total_records']	 = $this->bo->total_records;
-			$result_data['draw']			 = $draw;
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
 		}
 
 		function obligations()
 		{
-			$acl_location	 = '.budget.obligations';
-			$acl_read		 = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
+			$acl_location = '.budget.obligations';
+			$acl_read = $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
 			if(!$acl_read)
 			{
@@ -834,25 +834,25 @@
 
 			$data = array(
 				'datatable_name' => lang('list obligations'),
-				'form'			 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array()
 					)
 				),
-				'datatable'		 => array(
-					'source'		 => self::link(array(
-						'menuaction'		 => 'property.uibudget.obligations',
-						'phpgw_return_as'	 => 'json'
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uibudget.obligations',
+						'phpgw_return_as' => 'json'
 					)),
-					'download'		 => self::link(array(
+					'download' => self::link(array(
 						'menuaction' => 'property.uibudget.download',
-						'export'	 => true,
-						'allrows'	 => true,
-						'download'	 => 'obligations'
+						'export' => true,
+						'allrows' => true,
+						'download' => 'obligations'
 					)),
-					'allrows'		 => true,
-					'editor_action'	 => '',
-					'field'			 => array()
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array()
 				)
 			);
 
@@ -917,18 +917,18 @@
 
 		public function query_obligations()
 		{
-			$search	 = phpgw::get_var('search');
-			$order	 = phpgw::get_var('order');
-			$draw	 = phpgw::get_var('draw', 'int');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
 			$params = array(
-				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
-				'order'		 => $columns[$order[0]['column']]['data'],
-				'sort'		 => $order[0]['dir'],
-				'allrows'	 => phpgw::get_var('length', 'int') == -1
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$location_list = $this->bo->read_obligations($params);
@@ -942,55 +942,55 @@
 			{
 				//$details = $this->details ? false : true;
 
-				$start_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, 1, 1, $this->year), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$end_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, 12, 31, $this->year), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, 1, 1, $this->year), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, 12, 31, $this->year), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
 				//$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 				foreach($location_list as $entry)
 				{
 					$values[] = array
 						(
-						'grouping'			 => $entry['grouping'],
-						'b_account'			 => $entry['b_account'],
-						'district_id'		 => $entry['district_id'],
-						'ecodimb'			 => $entry['ecodimb'],
-						'hits_ex'			 => $entry['hits'],
-						'hits'				 => number_format($entry['hits'], 0, ',', ' '),
-						'budget_cost_ex'	 => $entry['budget_cost'],
-						'budget_cost'		 => number_format($entry['budget_cost'], 0, ',', ' '),
-						'obligation_ex'		 => $entry['obligation'],
-						'obligation'		 => number_format($entry['obligation'], 0, ',', ' '),
-						'link_obligation'	 => urldecode($GLOBALS['phpgw']->link('/index.php', array(
+						'grouping' => $entry['grouping'],
+						'b_account' => $entry['b_account'],
+						'district_id' => $entry['district_id'],
+						'ecodimb' => $entry['ecodimb'],
+						'hits_ex' => $entry['hits'],
+						'hits' => number_format($entry['hits'], 0, ',', ' '),
+						'budget_cost_ex' => $entry['budget_cost'],
+						'budget_cost' => number_format($entry['budget_cost'], 0, ',', ' '),
+						'obligation_ex' => $entry['obligation'],
+						'obligation' => number_format($entry['obligation'], 0, ',', ' '),
+						'link_obligation' => urldecode($GLOBALS['phpgw']->link('/index.php', array(
 							'menuaction' => 'property.uiworkorder.index', 'filter' => 'all', 'paid' => 1,
 							'district_id' => $entry['district_id'], 'b_group' => $entry['grouping'], 'b_account' => $entry['b_account'],
 							'start_date' => $start_date, 'end_date' => $end_date, 'ecodimb' => $entry['ecodimb'],
 							'status_id' => 'all', 'obligation' => true))),
-						'actual_cost_ex'	 => $entry['actual_cost'],
+						'actual_cost_ex' => $entry['actual_cost'],
 						'actual_cost_period' => number_format($entry['actual_cost_period'], 0, ',', ' '),
-						'actual_cost'		 => number_format($entry['actual_cost'], 0, ',', ' '),
-						'link_actual_cost'	 => urldecode($GLOBALS['phpgw']->link('/index.php', array(
+						'actual_cost' => number_format($entry['actual_cost'], 0, ',', ' '),
+						'link_actual_cost' => urldecode($GLOBALS['phpgw']->link('/index.php', array(
 							'menuaction' => 'property.uiinvoice.consume', 'district_id' => $entry['district_id'],
 							'b_account_class' => $entry['grouping'], 'b_account' => $entry['b_account'],
 							'start_date' => $start_date, 'end_date' => $end_date, 'ecodimb' => $entry['ecodimb'],
 							'submit_search' => true))),
-						'diff_ex'			 => $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
-						'diff'				 => number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
-						'percent'			 => $entry['percent'],
-						'year'				 => $this->year,
-						'month'				 => $this->month
+						'diff_ex' => $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
+						'diff' => number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
+						'percent' => $entry['percent'],
+						'year' => $this->year,
+						'month' => $this->month
 					);
 				}
 			}
 
-			$result_data						 = array('results' => $values);
-			$result_data['total_records']		 = $this->bo->total_records;
-			$result_data['draw']				 = $draw;
-			$result_data['sum_budget']			 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
-			$result_data['sum_obligation']		 = number_format($this->bo->sum_obligation_cost, 0, ',', ' ');
-			$result_data['sum_actual']			 = number_format($this->bo->sum_actual_cost, 0, ',', ' ');
-			$result_data['sum_actual_period']	 = number_format($this->bo->sum_actual_cost_period, 0, ',', ' ');
-			$result_data['sum_diff']			 = number_format(($this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost), 0, ',', ' ');
-			$result_data['sum_hits']			 = number_format($this->bo->sum_hits, 0, ',', ' ');
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_obligation'] = number_format($this->bo->sum_obligation_cost, 0, ',', ' ');
+			$result_data['sum_actual'] = number_format($this->bo->sum_actual_cost, 0, ',', ' ');
+			$result_data['sum_actual_period'] = number_format($this->bo->sum_actual_cost_period, 0, ',', ' ');
+			$result_data['sum_diff'] = number_format(($this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost), 0, ',', ' ');
+			$result_data['sum_hits'] = number_format($this->bo->sum_hits, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
@@ -1002,9 +1002,9 @@
 
 		function edit($values = array())
 		{
-			$acl_location	 = '.budget';
-			$acl_add		 = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit		 = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_location = '.budget';
+			$acl_add = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 
 			if(!$acl_add && !$acl_edit)
 			{
@@ -1027,86 +1027,86 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.uibudget.save',
-				'budget_id'	 => $budget_id
+				'budget_id' => $budget_id
 			);
 
 			//$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
-				'b_account_id'	 => $values['b_account_id'],
+				'b_account_id' => $values['b_account_id'],
 				'b_account_name' => isset($values['b_account_name']) ? $values['b_account_name'] : '',
-				'type'			 => isset($values['b_account_id']) && $values['b_account_id'] > 0 ? 'view' : 'form',
-				'required'		 => true
+				'type' => isset($values['b_account_id']) && $values['b_account_id'] > 0 ? 'view' : 'form',
+				'required' => true
 			));
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array(
-				'ecodimb'		 => $values['ecodimb'],
-				'ecodimb_descr'	 => $values['ecodimb_descr']));
+				'ecodimb' => $values['ecodimb'],
+				'ecodimb_descr' => $values['ecodimb_descr']));
 
-			$tabs			 = array();
+			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab		 = 'generic';
+			$active_tab = 'generic';
 
-			$data											 = array
+			$data = array
 				(
-				'ecodimb_data'				 => $ecodimb_data,
-				'lang_category'				 => lang('category'),
-				'lang_no_cat'				 => lang('Select category'),
-				'cat_select'				 => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+				'ecodimb_data' => $ecodimb_data,
+				'lang_category' => lang('category'),
+				'lang_no_cat' => lang('Select category'),
+				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $values['cat_id'])),
-				'b_account_data'			 => $b_account_data,
-				'value_b_account'			 => $values['b_account_id'],
-				'lang_revision'				 => lang('revision'),
-				'lang_revision_statustext'	 => lang('Select revision'),
-				'revision_list'				 => $this->bo->get_revision_list($values['revision']),
-				'lang_year'				 => lang('year'),
-				'lang_year_statustext'	 => lang('Budget year'),
-				'year'					 => $this->bocommon->select_list($values['year'] ? $values['year'] : date('Y'), $this->bo->get_year_list()),
-				'lang_district'				 => lang('District'),
-				'lang_no_district'			 => lang('no district'),
-				'lang_district_statustext'	 => lang('Select the district'),
-				'select_district_name'		 => 'values[district_id]',
-				'district_list'				 => $this->bocommon->select_district_list('select', $values['district_id']),
-				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'				 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
-				'lang_budget_id'		 => lang('ID'),
-				'value_budget_id'		 => $budget_id,
-				'lang_budget_cost'		 => lang('budget cost'),
-				'lang_remark'			 => lang('remark'),
-				'lang_save'				 => lang('save'),
-				'lang_cancel'			 => lang('cancel'),
-				'lang_apply'			 => lang('apply'),
-				'value_remark'			 => $values['remark'],
-				'value_budget_cost'		 => $values['budget_cost'],
-				'lang_name_statustext'	 => lang('Enter a name for the query'),
+				'b_account_data' => $b_account_data,
+				'value_b_account' => $values['b_account_id'],
+				'lang_revision' => lang('revision'),
+				'lang_revision_statustext' => lang('Select revision'),
+				'revision_list' => $this->bo->get_revision_list($values['revision']),
+				'lang_year' => lang('year'),
+				'lang_year_statustext' => lang('Budget year'),
+				'year' => $this->bocommon->select_list($values['year'] ? $values['year'] : date('Y'), $this->bo->get_year_list()),
+				'lang_district' => lang('District'),
+				'lang_no_district' => lang('no district'),
+				'lang_district_statustext' => lang('Select the district'),
+				'select_district_name' => 'values[district_id]',
+				'district_list' => $this->bocommon->select_district_list('select', $values['district_id']),
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'edit_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
+				'lang_budget_id' => lang('ID'),
+				'value_budget_id' => $budget_id,
+				'lang_budget_cost' => lang('budget cost'),
+				'lang_remark' => lang('remark'),
+				'lang_save' => lang('save'),
+				'lang_cancel' => lang('cancel'),
+				'lang_apply' => lang('apply'),
+				'value_remark' => $values['remark'],
+				'value_budget_cost' => $values['budget_cost'],
+				'lang_name_statustext' => lang('Enter a name for the query'),
 				'lang_remark_statustext' => lang('Enter a remark'),
-				'lang_apply_statustext'	 => lang('Apply the values'),
+				'lang_apply_statustext' => lang('Apply the values'),
 				'lang_cancel_statustext' => lang('Leave the budget untouched and return to the list'),
-				'lang_save_statustext'	 => lang('Save the budget and return to the list'),
-				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator'				 => phpgwapi_jquery::formvalidator_generate(array('location',
+				'lang_save_statustext' => lang('Save the budget and return to the list'),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
-			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('budget') . ': ' . ($budget_id ? lang('edit budget') : lang('add budget'));
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id ? lang('edit budget') : lang('add budget'));
 
 			self::render_template_xsl(array('budget'), array('edit' => $data));
 		}
 
 		public function save()
 		{
-			$budget_id	 = phpgw::get_var('budget_id', 'int');
-			$values		 = phpgw::get_var('values');
+			$budget_id = phpgw::get_var('budget_id', 'int');
+			$values = phpgw::get_var('values');
 
-			$values['b_account_id']		 = phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name']	 = phpgw::get_var('b_account_name', 'string', 'POST');
-			$values['ecodimb']			 = phpgw::get_var('ecodimb');
+			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['ecodimb'] = phpgw::get_var('ecodimb');
 
 			if(!$values['b_account_id'] > 0)
 			{
-				$values['b_account_id']		 = '';
-				$this->receipt['error'][]	 = array('msg' => lang('Please select a budget account !'));
+				$values['b_account_id'] = '';
+				$this->receipt['error'][] = array('msg' => lang('Please select a budget account !'));
 			}
 			if($budget_id)
 			{
@@ -1121,9 +1121,9 @@
 			{
 				try
 				{
-					$receipt			 = $this->bo->save($values);
+					$receipt = $this->bo->save($values);
 					$values['budget_id'] = $receipt['budget_id'];
-					$this->receipt		 = $receipt;
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -1152,9 +1152,9 @@
 
 		function edit_basis($values = array())
 		{
-			$acl_location	 = '.budget';
-			$acl_add		 = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit		 = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
+			$acl_location = '.budget';
+			$acl_add = $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit = $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 
 			if(!$acl_add && !$acl_edit)
 			{
@@ -1166,10 +1166,10 @@
 
 			if($this->receipt['error'])
 			{
-				$year_selected	 = $values['year'];
-				$district_id	 = $values['district_id'];
-				$revision		 = $values['revision'];
-				$b_group		 = $values['b_group'];
+				$year_selected = $values['year'];
+				$district_id = $values['district_id'];
+				$revision = $values['revision'];
+				$b_group = $values['b_group'];
 
 				unset($values['year']);
 				unset($values['district_id']);
@@ -1191,74 +1191,74 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.uibudget.save_basis',
-				'budget_id'	 => $budget_id
+				'budget_id' => $budget_id
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-			$year[0]['id']	 = date(Y);
-			$year[1]['id']	 = date(Y) + 1;
-			$year[2]['id']	 = date(Y) + 2;
-			$year[3]['id']	 = date(Y) + 3;
+			$year[0]['id'] = date(Y);
+			$year[1]['id'] = date(Y) + 1;
+			$year[2]['id'] = date(Y) + 2;
+			$year[3]['id'] = date(Y) + 3;
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array(
-				'ecodimb'		 => $values['ecodimb'],
-				'ecodimb_descr'	 => $values['ecodimb_descr']));
+				'ecodimb' => $values['ecodimb'],
+				'ecodimb_descr' => $values['ecodimb_descr']));
 
-			$tabs			 = array();
+			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab		 = 'generic';
+			$active_tab = 'generic';
 
 			$data = array
 				(
-				'ecodimb_data'						 => $ecodimb_data,
-				'lang_category'						 => lang('category'),
-				'lang_no_cat'						 => lang('Select category'),
-				'cat_select'						 => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+				'ecodimb_data' => $ecodimb_data,
+				'lang_category' => lang('category'),
+				'lang_no_cat' => lang('Select category'),
+				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $values['cat_id'])),
-				'lang_distribute'					 => lang('distribute'),
-				'lang_distribute_year'				 => lang('distribute year'),
-				'lang_distribute_year_statustext'	 => lang('of years'),
-				'distribute_year_list'				 => $this->bo->get_distribute_year_list($values['distribute_year']),
-				'lang_revision'				 => lang('revision'),
-				'lang_revision_statustext'	 => lang('Select revision'),
-				'revision_list'				 => $this->bo->get_revision_list($revision),
-				'lang_b_group'				 => lang('budget group'),
-				'lang_b_group_statustext'	 => lang('Select budget group'),
-				'b_group_list'				 => $this->bo->get_b_group_list($b_group),
-				'lang_year'				 => lang('year'),
-				'lang_year_statustext'	 => lang('Budget year'),
-				'year'					 => $this->bocommon->select_list($year_selected, $year),
-				'lang_district'				 => lang('District'),
-				'lang_no_district'			 => lang('no district'),
-				'lang_district_statustext'	 => lang('Select the district'),
-				'select_district_name'		 => 'values[district_id]',
-				'district_required'			 => 1,
-				'district_list'				 => $this->bocommon->select_district_list('select', $district_id),
-				'value_year'		 => $values['year'],
-				'value_district_id'	 => $values['district_id'],
-				'value_b_group'		 => $values['b_group'],
-				'value_revision'	 => $values['revision'],
-				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'				 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.basis')),
-				'lang_budget_id'		 => lang('ID'),
-				'value_budget_id'		 => $budget_id,
-				'value_distribute_id'	 => $budget_id ? $budget_id : 'new',
-				'lang_budget_cost'		 => lang('budget cost'),
-				'lang_remark'			 => lang('remark'),
-				'lang_save'				 => lang('save'),
-				'lang_cancel'			 => lang('cancel'),
-				'lang_apply'			 => lang('apply'),
-				'value_remark'			 => $values['remark'],
-				'value_budget_cost'		 => $values['budget_cost'],
-				'lang_name_statustext'	 => lang('Enter a name for the query'),
+				'lang_distribute' => lang('distribute'),
+				'lang_distribute_year' => lang('distribute year'),
+				'lang_distribute_year_statustext' => lang('of years'),
+				'distribute_year_list' => $this->bo->get_distribute_year_list($values['distribute_year']),
+				'lang_revision' => lang('revision'),
+				'lang_revision_statustext' => lang('Select revision'),
+				'revision_list' => $this->bo->get_revision_list($revision),
+				'lang_b_group' => lang('budget group'),
+				'lang_b_group_statustext' => lang('Select budget group'),
+				'b_group_list' => $this->bo->get_b_group_list($b_group),
+				'lang_year' => lang('year'),
+				'lang_year_statustext' => lang('Budget year'),
+				'year' => $this->bocommon->select_list($year_selected, $year),
+				'lang_district' => lang('District'),
+				'lang_no_district' => lang('no district'),
+				'lang_district_statustext' => lang('Select the district'),
+				'select_district_name' => 'values[district_id]',
+				'district_required' => 1,
+				'district_list' => $this->bocommon->select_district_list('select', $district_id),
+				'value_year' => $values['year'],
+				'value_district_id' => $values['district_id'],
+				'value_b_group' => $values['b_group'],
+				'value_revision' => $values['revision'],
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'edit_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.basis')),
+				'lang_budget_id' => lang('ID'),
+				'value_budget_id' => $budget_id,
+				'value_distribute_id' => $budget_id ? $budget_id : 'new',
+				'lang_budget_cost' => lang('budget cost'),
+				'lang_remark' => lang('remark'),
+				'lang_save' => lang('save'),
+				'lang_cancel' => lang('cancel'),
+				'lang_apply' => lang('apply'),
+				'value_remark' => $values['remark'],
+				'value_budget_cost' => $values['budget_cost'],
+				'lang_name_statustext' => lang('Enter a name for the query'),
 				'lang_remark_statustext' => lang('Enter a remark'),
-				'lang_apply_statustext'	 => lang('Apply the values'),
+				'lang_apply_statustext' => lang('Apply the values'),
 				'lang_cancel_statustext' => lang('Leave the budget untouched and return to the list'),
-				'lang_save_statustext'	 => lang('Save the budget and return to the list'),
-				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator'				 => phpgwapi_jquery::formvalidator_generate(array('location',
+				'lang_save_statustext' => lang('Save the budget and return to the list'),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
 
@@ -1269,9 +1269,9 @@
 
 		public function save_basis()
 		{
-			$budget_id			 = phpgw::get_var('budget_id', 'int');
-			$values				 = phpgw::get_var('values');
-			$values['ecodimb']	 = phpgw::get_var('ecodimb');
+			$budget_id = phpgw::get_var('budget_id', 'int');
+			$values = phpgw::get_var('values');
+			$values['ecodimb'] = phpgw::get_var('ecodimb');
 
 			if(!$values['b_group'] && !$budget_id)
 			{
@@ -1301,9 +1301,9 @@
 			{
 				try
 				{
-					$receipt			 = $this->bo->save_basis($values);
+					$receipt = $this->bo->save_basis($values);
 					$values['budget_id'] = $receipt['budget_id'];
-					$this->receipt		 = $receipt;
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -1352,18 +1352,18 @@
 
 			$data = array
 				(
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'delete_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete',
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete',
 					'budget_id' => $budget_id)),
-				'lang_confirm_msg'		 => lang('do you really want to delete this entry'),
-				'lang_yes'				 => lang('yes'),
-				'lang_yes_statustext'	 => lang('Delete the entry'),
-				'lang_no_statustext'	 => lang('Back to the list'),
-				'lang_no'				 => lang('no')
+				'lang_confirm_msg' => lang('do you really want to delete this entry'),
+				'lang_yes' => lang('yes'),
+				'lang_yes_statustext' => lang('Delete the entry'),
+				'lang_no_statustext' => lang('Back to the list'),
+				'lang_no' => lang('no')
 			);
 
-			$appname		 = lang('budget');
-			$function_msg	 = lang('delete budget');
+			$appname = lang('budget');
+			$function_msg = lang('delete budget');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
@@ -1398,18 +1398,18 @@
 
 			$data = array
 				(
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'delete_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete_basis',
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.delete_basis',
 					'budget_id' => $budget_id)),
-				'lang_confirm_msg'		 => lang('do you really want to delete this entry'),
-				'lang_yes'				 => lang('yes'),
-				'lang_yes_statustext'	 => lang('Delete the entry'),
-				'lang_no_statustext'	 => lang('Back to the list'),
-				'lang_no'				 => lang('no')
+				'lang_confirm_msg' => lang('do you really want to delete this entry'),
+				'lang_yes' => lang('yes'),
+				'lang_yes_statustext' => lang('Delete the entry'),
+				'lang_no_statustext' => lang('Back to the list'),
+				'lang_no' => lang('no')
 			);
 
-			$appname		 = lang('budget');
-			$function_msg	 = lang('delete budget');
+			$appname = lang('budget');
+			$function_msg = lang('delete budget');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
@@ -1421,8 +1421,8 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('budget', 'nextmatchs'));
 
-			$list	 = $this->bo->read_budget($budget_id);
-			$uicols	 = $this->bo->uicols;
+			$list = $this->bo->read_budget($budget_id);
+			$uicols = $this->bo->uicols;
 
 			//_debug_array($uicols);
 
@@ -1442,9 +1442,9 @@
 
 			for($i = 0; $i < count($uicols); $i++)
 			{
-				$table_header[$i]['header']	 = $uicols[$i]['descr'];
-				$table_header[$i]['width']	 = '15%';
-				$table_header[$i]['align']	 = 'left';
+				$table_header[$i]['header'] = $uicols[$i]['descr'];
+				$table_header[$i]['width'] = '15%';
+				$table_header[$i]['align'] = 'left';
 			}
 
 			//_debug_array($content);
@@ -1457,11 +1457,11 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.uibudget.view',
-				'sort'		 => $this->sort,
-				'order'		 => $this->order,
-				'budget_id'	 => $budget_id,
-				'filter'	 => $this->filter,
-				'query'		 => $this->query
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'budget_id' => $budget_id,
+				'filter' => $this->filter,
+				'query' => $this->query
 			);
 
 
@@ -1477,38 +1477,38 @@
 			$link_download = array
 				(
 				'menuaction' => 'property.uibudget.download',
-				'sort'		 => $this->sort,
-				'order'		 => $this->order,
-				'filter'	 => $this->filter,
-				'query'		 => $this->query,
-				'budget_id'	 => $budget_id,
-				'allrows'	 => $this->allrows
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'filter' => $this->filter,
+				'query' => $this->query,
+				'budget_id' => $budget_id,
+				'allrows' => $this->allrows
 			);
 
 			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
 
 			$data = array
 				(
-				'lang_download'		 => 'download',
-				'link_download'		 => $GLOBALS['phpgw']->link('/index.php', $link_download),
+				'lang_download' => 'download',
+				'link_download' => $GLOBALS['phpgw']->link('/index.php', $link_download),
 				'lang_download_help' => lang('Download table to your browser'),
-				'allow_allrows'					 => true,
-				'allrows'						 => $this->allrows,
-				'start_record'					 => $this->start,
-				'record_limit'					 => $record_limit,
-				'num_records'					 => count($list),
-				'all_records'					 => $this->bo->total_records,
-				'link_url'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'img_path'						 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
-				'select_action'					 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'lang_searchfield_statustext'	 => lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'	 => lang('Submit the search string'),
-				'query'							 => $this->query,
-				'lang_search'					 => lang('search'),
-				'table_header'					 => $table_header,
-				'values'						 => $content,
-				'done_action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
-				'lang_done'		 => lang('done'),
+				'allow_allrows' => true,
+				'allrows' => $this->allrows,
+				'start_record' => $this->start,
+				'record_limit' => $record_limit,
+				'num_records' => count($list),
+				'all_records' => $this->bo->total_records,
+				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
+				'select_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'lang_searchfield_statustext' => lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext' => lang('Submit the search string'),
+				'query' => $this->query,
+				'lang_search' => lang('search'),
+				'table_header' => $table_header,
+				'values' => $content,
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
+				'lang_done' => lang('done'),
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
@@ -1520,8 +1520,8 @@
 			{
 				case 'basis':
 					//$list= $this->bo->read_basis();
-					$list	 = $this->query_basis();
-					$names	 = array
+					$list = $this->query_basis();
+					$names = array
 						(
 						'year',
 						'revision',
@@ -1531,7 +1531,7 @@
 						'category',
 						'budget_cost'
 					);
-					$descr	 = array
+					$descr = array
 						(
 						lang('year'),
 						lang('revision'),
@@ -1544,8 +1544,8 @@
 					break;
 				case 'budget':
 					//$list= $this->bo->read();
-					$list	 = $this->query();
-					$names	 = array
+					$list = $this->query();
+					$names = array
 						(
 						'year',
 						'revision',
@@ -1557,7 +1557,7 @@
 						'category',
 						'budget_cost'
 					);
-					$descr	 = array
+					$descr = array
 						(
 						lang('year'),
 						lang('revision'),
@@ -1573,26 +1573,26 @@
 				case 'obligations':
 
 					//$gross_list= $this->bo->read_obligations();
-					$gross_list	 = $this->query_obligations();
+					$gross_list = $this->query_obligations();
 					//$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
-					$list		 = array();
+					$list = array();
 					foreach($gross_list as $entry)
 					{
 						$list[] = array
 							(
-							'grouping'			 => $entry['grouping'],
-							'b_account'			 => $entry['b_account'],
-							'district_id'		 => $entry['district_id'],
-							'ecodimb'			 => $entry['ecodimb'],
-							'hits'				 => $entry['hits'],
-							'budget_cost'		 => $entry['budget_cost'],
-							'obligation'		 => $entry['obligation'],
+							'grouping' => $entry['grouping'],
+							'b_account' => $entry['b_account'],
+							'district_id' => $entry['district_id'],
+							'ecodimb' => $entry['ecodimb'],
+							'hits' => $entry['hits'],
+							'budget_cost' => $entry['budget_cost'],
+							'obligation' => $entry['obligation'],
 							'actual_cost_period' => $entry['actual_cost_period'],
-							'actual_cost'		 => $entry['actual_cost'],
-							'diff'				 => ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
+							'actual_cost' => $entry['actual_cost'],
+							'diff' => ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
 						);
 					}
-					$names	 = array
+					$names = array
 						(
 						'grouping',
 						'b_account',
@@ -1605,7 +1605,7 @@
 						'actual_cost',
 						'diff'
 					);
-					$descr	 = array
+					$descr = array
 						(
 						lang('grouping'),
 						lang('budget account'),

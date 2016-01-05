@@ -1030,50 +1030,50 @@
 	<div class="proplist-col">
 		<xsl:choose>
 			<xsl:when test="request_link != ''">
-					<xsl:variable name="request_link">
-						<xsl:value-of select="request_link"/>
+				<xsl:variable name="request_link">
+					<xsl:value-of select="request_link"/>
+				</xsl:variable>
+				<form method="post" action="{$request_link}">
+					<xsl:variable name="lang_generate_request">
+						<xsl:value-of select="php:function('lang', 'Generate Request')"/>
 					</xsl:variable>
-					<form method="post" action="{$request_link}">
-						<xsl:variable name="lang_generate_request">
-							<xsl:value-of select="php:function('lang', 'Generate Request')"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_request}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'click this to generate a request with this information')"/>
-							</xsl:attribute>
-						</input>
-					</form>
+					<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_request}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'click this to generate a request with this information')"/>
+						</xsl:attribute>
+					</input>
+				</form>
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>
 			<xsl:when test="order_link != ''">
-					<xsl:variable name="order_link">
-						<xsl:value-of select="order_link"/>
+				<xsl:variable name="order_link">
+					<xsl:value-of select="order_link"/>
+				</xsl:variable>
+				<form method="post" action="{$order_link}">
+					<xsl:variable name="lang_generate_project">
+						<xsl:value-of select="php:function('lang', 'generate new project')"/>
 					</xsl:variable>
-					<form method="post" action="{$order_link}">
-						<xsl:variable name="lang_generate_project">
-							<xsl:value-of select="php:function('lang', 'generate new project')"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_project}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
-							</xsl:attribute>
-						</input>
-					</form>
+					<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_project}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
+						</xsl:attribute>
+					</input>
+				</form>
 
-					<xsl:variable name="add_to_project_link">
-						<xsl:value-of select="add_to_project_link"/>
+				<xsl:variable name="add_to_project_link">
+					<xsl:value-of select="add_to_project_link"/>
+				</xsl:variable>
+				<form method="post" action="{$add_to_project_link}">
+					<xsl:variable name="lang_add_to_project">
+						<xsl:value-of select="php:function('lang', 'add to project')"/>
 					</xsl:variable>
-					<form method="post" action="{$add_to_project_link}">
-						<xsl:variable name="lang_add_to_project">
-							<xsl:value-of select="php:function('lang', 'add to project')"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_add_to_project}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
-							</xsl:attribute>
-						</input>
-					</form>
+					<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_add_to_project}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
+						</xsl:attribute>
+					</input>
+				</form>
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>

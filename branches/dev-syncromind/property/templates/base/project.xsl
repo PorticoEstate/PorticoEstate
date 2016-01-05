@@ -1,31 +1,32 @@
-  <!-- $Id$ -->
+
+<!-- $Id$ -->
 
 <xsl:template match="data">
-    <xsl:choose>
+	<xsl:choose>
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit"/>
 		</xsl:when>
 		<xsl:when test="bulk_update_status">
 			<xsl:apply-templates select="bulk_update_status"/>
 		</xsl:when>
-    </xsl:choose>
+	</xsl:choose>
 </xsl:template>
 
 <!-- New template-->
 <!-- add / edit -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
-    <script type="text/javascript">
+	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		function add_sub_entry()
 		{
-			document.add_sub_entry_form.submit();
+		document.add_sub_entry_form.submit();
 		}
 		var project_type_id = '<xsl:value-of select="project_type_id"/>';
 		var project_id = '<xsl:value-of select="value_project_id"/>';
 		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
-   </script>
+	</script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
 			<dl>
@@ -35,23 +36,23 @@
 			</dl>
 		</xsl:when>
 	</xsl:choose>
-    <table cellpadding="2" cellspacing="2" align="center">
-	<xsl:choose>
-	    <xsl:when test="value_project_id &gt; 0  and mode='edit'">
-		<td valign="top">
-		    <xsl:variable name="lang_add_sub_entry">
-			<xsl:value-of select="lang_add_sub_entry"/>
-		    </xsl:variable>
-		    <input type="button" class="pure-button pure-button-primary" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
-			<xsl:attribute name="title">
-			    <xsl:value-of select="lang_add_sub_entry_statustext"/>
-			</xsl:attribute>
-		    </input>
-		</td>
-	    </xsl:when>
-	</xsl:choose>
-    </table>
-    <form ENCTYPE="multipart/form-data" method="post" id="form" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
+	<table cellpadding="2" cellspacing="2" align="center">
+		<xsl:choose>
+			<xsl:when test="value_project_id &gt; 0  and mode='edit'">
+				<td valign="top">
+					<xsl:variable name="lang_add_sub_entry">
+						<xsl:value-of select="lang_add_sub_entry"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_add_sub_entry_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</xsl:when>
+		</xsl:choose>
+	</table>
+	<form ENCTYPE="multipart/form-data" method="post" id="form" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
@@ -70,7 +71,7 @@
 										</label>
 										<input type="checkbox" name="values[copy_project]" value="True">
 											<xsl:attribute name="title">
-											<xsl:value-of select="lang_copy_project_statustext"/>
+												<xsl:value-of select="lang_copy_project_statustext"/>
 											</xsl:attribute>
 										</input>
 									</div>
@@ -80,7 +81,9 @@
 								<label for="name">
 									<xsl:value-of select="lang_project_id"/>
 								</label>
-								<div class="pure-custom"><xsl:value-of select="value_project_id"/></div>
+								<div class="pure-custom">
+									<xsl:value-of select="value_project_id"/>
+								</div>
 							</div>
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
@@ -122,7 +125,9 @@
 									<div class="pure-custom">
 										<xsl:for-each select="data">
 											<div>
-												<a href="{link}" title="{statustext}"><xsl:value-of select="id"/></a>
+												<a href="{link}" title="{statustext}">
+													<xsl:value-of select="id"/>
+												</a>
 												<xsl:text> </xsl:text>
 											</div>
 										</xsl:for-each>
@@ -172,7 +177,7 @@
 						</label>
 						<textarea cols="60" rows="6" name="values[descr]">
 							<xsl:attribute name="title">
-							<xsl:value-of select="lang_descr_statustext"/>
+								<xsl:value-of select="lang_descr_statustext"/>
 							</xsl:attribute>
 							<xsl:value-of select="value_descr"/>
 						</textarea>
@@ -204,7 +209,7 @@
 								</label>
 								<input type="checkbox" name="values[confirm_status]" value="True">
 									<xsl:attribute name="title">
-									<xsl:value-of select="lang_confirm_statustext"/>
+										<xsl:value-of select="lang_confirm_statustext"/>
 									</xsl:attribute>
 								</input>
 							</div>
@@ -221,12 +226,12 @@
 										<div>
 											<input type="checkbox" name="values[approval][{id}]" value="True">
 												<xsl:attribute name="title">
-												<xsl:value-of select="//lang_ask_approval_statustext"/>
+													<xsl:value-of select="//lang_ask_approval_statustext"/>
 												</xsl:attribute>
 											</input>
 											<input type="text" name="values[mail_address][{id}]" value="{address}">
 												<xsl:attribute name="title">
-												<xsl:value-of select="//lang_ask_approval_statustext"/>
+													<xsl:value-of select="//lang_ask_approval_statustext"/>
 												</xsl:attribute>
 											</input>
 											<xsl:if test="default = '1'">
@@ -244,7 +249,7 @@
 						</label>
 						<textarea cols="60" rows="6" name="values[remark]">
 							<xsl:attribute name="title">
-							<xsl:value-of select="lang_remark_statustext"/>
+								<xsl:value-of select="lang_remark_statustext"/>
 							</xsl:attribute>
 							<xsl:value-of select="value_remark"/>
 						</textarea>
@@ -263,10 +268,10 @@
 								</label>
 								<input type="checkbox" name="values[inherit_location]" value="1">
 									<xsl:if test="inherit_location = 1">
-									<xsl:attribute name="checked" value="checked"/>
+										<xsl:attribute name="checked" value="checked"/>
 									</xsl:if>
 									<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'inherit location')"/>
+										<xsl:value-of select="php:function('lang', 'inherit location')"/>
 									</xsl:attribute>
 								</input>
 							</div>
@@ -284,7 +289,7 @@
 								</label>
 								<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12" onMouseout="window.status='';return true;">
 									<xsl:attribute name="title">
-									<xsl:value-of select="lang_power_meter_statustext"/>
+										<xsl:value-of select="lang_power_meter_statustext"/>
 									</xsl:attribute>
 								</input>
 							</div>
@@ -295,305 +300,305 @@
 
 			<div id="budget">
 				<!--fieldset-->
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:value-of select="lang_start_date"/>
-						</label>
-						<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_start_date_statustext"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-						</input>
-					</div>
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:value-of select="lang_end_date"/>
-						</label>
-						<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_end_date_statustext"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:text>!please select an end date!</xsl:text>
-							</xsl:attribute>
-						</input>
-					</div>
-					<xsl:call-template name="project_group_form"/>
-					<xsl:choose>
-						<xsl:when test="ecodimb_data!=''">
-							<xsl:call-template name="ecodimb_form"/>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="b_account_data!=''">
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<xsl:call-template name="b_account_form"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="b_account_view"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="value_project_id!='' and mode='edit' and project_type_id !=3">
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'move')"/>
-								</label>
-								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:value-of select="php:function('lang', 'budget')"/>
-						</label>
-						<div class="pure-custom">
-							<div>
-								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								<select name="values[budget_year]">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'year')"/>
-									</xsl:attribute>
-									<option value="0">
-										<xsl:value-of select="php:function('lang', 'year')"/>
-									</option>
-									<xsl:apply-templates select="year_list/options"/>
-								</select>
-								<xsl:choose>
-									<xsl:when test="project_type_id ='3'">
-										<input type="checkbox" name="values[budget_reset_buffer]" value="1">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'delete')"/>
-												<xsl:text> </xsl:text>
-												<xsl:value-of select="php:function('lang', 'buffer')"/>
-												<xsl:text> </xsl:text>
-												<xsl:value-of select="php:function('lang', 'budget')"/>
-											</xsl:attribute>
-										</input>
-									</xsl:when>
-								</xsl:choose>
-								<xsl:choose>
-									<xsl:when test="project_type_id !='3'">
-										<select name="values[budget_periodization]">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'periodization')"/>
-											</xsl:attribute>
-											<option value="0">
-												<xsl:value-of select="php:function('lang', 'periodization')"/>
-											</option>
-											<xsl:apply-templates select="periodization_list/options"/>
-										</select>
-										<input type="checkbox" name="values[budget_periodization_all]" value="True">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'all')"/>
-												<xsl:text> </xsl:text>
-												<xsl:value-of select="php:function('lang', 'periods')"/>
-											</xsl:attribute>
-										</input>
-										<input type="checkbox" name="values[budget_periodization_activate]" value="1">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'activate')"/>
-											</xsl:attribute>
-											<xsl:attribute name="checked" value="checked"/>
-										</input>
-									</xsl:when>
-								</xsl:choose>
-							</div>
-						</div>
-					</div>
-					<!--div class="pure-control-group"-->
-						<label for="name">
-							<xsl:value-of select="php:function('lang', 'budget')"/>
-						</label>
-						<!--div class="pure-custom">
-							<div-->
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl' />
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="data" select ='data' />
-											<xsl:with-param name="config" select ='config' />
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							<!--/div>
-						</div-->
-					<!--div-->
-					<xsl:choose>
-						<xsl:when test="value_project_id!='' and mode='edit'">
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'transfer')"/>
-								</label>
-								<div class="pure-custom">
-									<table>
-										<tr>
-											<td>
-												<xsl:value-of select="php:function('lang', 'amount')"/>
-											</td>
-											<td>
-												<xsl:value-of select="php:function('lang', 'project')"/>
-											</td>
-											<td>
-												<xsl:value-of select="php:function('lang', 'remark')"/>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" name="values[transfer_amount]" value="">
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'amount to transfer')"/>
-													</xsl:attribute>
-												</input>
-											</td>
-											<td>
-												<input type="text" name="values[transfer_target]" value="">
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'target project')"/>
-													</xsl:attribute>
-												</input>
-											</td>
-											<td>
-												<input type="text" name="values[transfer_remark]" value="">
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'remark')"/>
-													</xsl:attribute>
-												</input>
-											</td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="project_type_id !='3'">
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_reserve"/>
-								</label>
-								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[reserve]" value="{value_reserve}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_reserve_statustext"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-							</div>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_sum"/>
-								</label>
-								<xsl:value-of select="value_sum"/>
-								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-							</div>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_remainder"/>
-								</label>
-								<xsl:value-of select="value_remainder"/>
-								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-							</div>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_reserve_remainder"/>
-								</label>
-								<xsl:value-of select="value_reserve_remainder"/>
-								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								<xsl:text> </xsl:text> ( <xsl:value-of select="value_reserve_remainder_percent"/>
-								<xsl:text> % )</xsl:text>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-						</xsl:otherwise>
-					</xsl:choose>
-					<!--div class="pure-control-group"-->
-						<label for="name">
-							<xsl:value-of select="lang_workorder_id"/>
-						</label>
+				<div class="pure-control-group">
+					<label for="name">
+						<xsl:value-of select="lang_start_date"/>
+					</label>
+					<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_start_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label for="name">
+						<xsl:value-of select="lang_end_date"/>
+					</label>
+					<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_end_date_statustext"/>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:text>!please select an end date!</xsl:text>
+						</xsl:attribute>
+					</input>
+				</div>
+				<xsl:call-template name="project_group_form"/>
+				<xsl:choose>
+					<xsl:when test="ecodimb_data!=''">
+						<xsl:call-template name="ecodimb_form"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="b_account_data!=''">
 						<xsl:choose>
-							<xsl:when test="sum_workorder_budget=''">
-								<xsl:value-of select="lang_no_workorders"/>
+							<xsl:when test="mode='edit'">
+								<xsl:call-template name="b_account_form"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<!--div class="pure-custom">
-									<div-->
-										<select id = "order_time_span" name="order_time_span">
-											<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'select')"/>
-											</xsl:attribute>
-											<option value="0">
-											<xsl:value-of select="php:function('lang', 'select')"/>
-											</option>
-											<xsl:apply-templates select="order_time_span/options"/>
-										</select>
-									<!--/div>
-									<div-->
-										<xsl:for-each select="datatable_def">
-											<xsl:if test="container = 'datatable-container_1'">
-												<xsl:call-template name="table_setup">
-													<xsl:with-param name="container" select ='container'/>
-													<xsl:with-param name="requestUrl" select ='requestUrl' />
-													<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-													<xsl:with-param name="tabletools" select ='tabletools' />
-													<xsl:with-param name="data" select ='data' />
-													<xsl:with-param name="config" select ='config' />
-												</xsl:call-template>
-											</xsl:if>
-										</xsl:for-each>
-									<!--/div>
-								</div-->
+								<xsl:call-template name="b_account_view"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					<!--/div-->
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:value-of select="php:function('lang', 'invoice')"/>
-						</label>
-						<div class="pure-custom">
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_2'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl' />
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-										<xsl:with-param name="tabletools" select ='tabletools' />
-										<xsl:with-param name="data" select ='data' />
-										<xsl:with-param name="config" select ='config' />
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="value_project_id!='' and mode='edit' and project_type_id !=3">
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'move')"/>
+							</label>
+							<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+							</input>
+						</div>
+					</xsl:when>
+				</xsl:choose>
+				<div class="pure-control-group">
+					<label for="name">
+						<xsl:value-of select="php:function('lang', 'budget')"/>
+					</label>
+					<div class="pure-custom">
+						<div>
+							<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+							</input>
+							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+							<select name="values[budget_year]">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'year')"/>
+								</xsl:attribute>
+								<option value="0">
+									<xsl:value-of select="php:function('lang', 'year')"/>
+								</option>
+								<xsl:apply-templates select="year_list/options"/>
+							</select>
+							<xsl:choose>
+								<xsl:when test="project_type_id ='3'">
+									<input type="checkbox" name="values[budget_reset_buffer]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'delete')"/>
+											<xsl:text> </xsl:text>
+											<xsl:value-of select="php:function('lang', 'buffer')"/>
+											<xsl:text> </xsl:text>
+											<xsl:value-of select="php:function('lang', 'budget')"/>
+										</xsl:attribute>
+									</input>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="project_type_id !='3'">
+									<select name="values[budget_periodization]">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'periodization')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'periodization')"/>
+										</option>
+										<xsl:apply-templates select="periodization_list/options"/>
+									</select>
+									<input type="checkbox" name="values[budget_periodization_all]" value="True">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'all')"/>
+											<xsl:text> </xsl:text>
+											<xsl:value-of select="php:function('lang', 'periods')"/>
+										</xsl:attribute>
+									</input>
+									<input type="checkbox" name="values[budget_periodization_activate]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'activate')"/>
+										</xsl:attribute>
+										<xsl:attribute name="checked" value="checked"/>
+									</input>
+								</xsl:when>
+							</xsl:choose>
 						</div>
 					</div>
+				</div>
+				<!--div class="pure-control-group"-->
+				<label for="name">
+					<xsl:value-of select="php:function('lang', 'budget')"/>
+				</label>
+				<!--div class="pure-custom">
+				<div-->
+				<xsl:for-each select="datatable_def">
+					<xsl:if test="container = 'datatable-container_0'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl' />
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+							<xsl:with-param name="tabletools" select ='tabletools' />
+							<xsl:with-param name="data" select ='data' />
+							<xsl:with-param name="config" select ='config' />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
+				<!--/div>
+				</div-->
+				<!--div-->
+				<xsl:choose>
+					<xsl:when test="value_project_id!='' and mode='edit'">
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'transfer')"/>
+							</label>
+							<div class="pure-custom">
+								<table>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'amount')"/>
+										</td>
+										<td>
+											<xsl:value-of select="php:function('lang', 'project')"/>
+										</td>
+										<td>
+											<xsl:value-of select="php:function('lang', 'remark')"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" name="values[transfer_amount]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'amount to transfer')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+										<td>
+											<input type="text" name="values[transfer_target]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'target project')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+										<td>
+											<input type="text" name="values[transfer_remark]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'remark')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="project_type_id !='3'">
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="lang_reserve"/>
+							</label>
+							<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[reserve]" value="{value_reserve}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_reserve_statustext"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+							</input>
+							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+						</div>
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="lang_sum"/>
+							</label>
+							<xsl:value-of select="value_sum"/>
+							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+						</div>
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="lang_remainder"/>
+							</label>
+							<xsl:value-of select="value_remainder"/>
+							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+						</div>
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="lang_reserve_remainder"/>
+							</label>
+							<xsl:value-of select="value_reserve_remainder"/>
+							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+							<xsl:text> </xsl:text> ( <xsl:value-of select="value_reserve_remainder_percent"/>
+							<xsl:text> % )</xsl:text>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+				<!--div class="pure-control-group"-->
+				<label for="name">
+					<xsl:value-of select="lang_workorder_id"/>
+				</label>
+				<xsl:choose>
+					<xsl:when test="sum_workorder_budget=''">
+						<xsl:value-of select="lang_no_workorders"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<!--div class="pure-custom">
+						<div-->
+						<select id = "order_time_span" name="order_time_span">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="order_time_span/options"/>
+						</select>
+						<!--/div>
+						<div-->
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_1'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+						<!--/div>
+						</div-->
+					</xsl:otherwise>
+				</xsl:choose>
+				<!--/div-->
+				<div class="pure-control-group">
+					<label for="name">
+						<xsl:value-of select="php:function('lang', 'invoice')"/>
+					</label>
+					<div class="pure-custom">
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_2'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+				</div>
 				<!--/fieldset-->
 			</div>
 
@@ -649,7 +654,7 @@
 								</label>
 								<input type="text" name="values[other_branch]" value="{value_other_branch}">
 									<xsl:attribute name="title">
-									<xsl:value-of select="lang_other_branch_statustext"/>
+										<xsl:value-of select="lang_other_branch_statustext"/>
 									</xsl:attribute>
 								</input>
 							</div>
@@ -662,7 +667,7 @@
 								</xsl:variable>
 								<select name="values[key_fetch]" class="forms" title="{$lang_key_fetch_statustext}">
 									<option value="">
-									<xsl:value-of select="lang_no_key_fetch"/>
+										<xsl:value-of select="lang_no_key_fetch"/>
 									</option>
 									<xsl:apply-templates select="key_fetch_list"/>
 								</select>
@@ -676,7 +681,7 @@
 								</xsl:variable>
 								<select name="values[key_deliver]" class="forms" onMouseover="window.status='{$lang_key_deliver_statustext}'; return true;" onMouseout="window.status='';return true;">
 									<option value="">
-									<xsl:value-of select="lang_no_key_deliver"/>
+										<xsl:value-of select="lang_no_key_deliver"/>
 									</option>
 									<xsl:apply-templates select="key_deliver_list"/>
 								</select>
@@ -690,7 +695,7 @@
 								</xsl:variable>
 								<select name="values[key_responsible]" class="forms" onMouseover="window.status='{$lang_key_responsible_statustext}'; return true;" onMouseout="window.status='';return true;">
 									<option value="">
-									<xsl:value-of select="lang_no_key_responsible"/>
+										<xsl:value-of select="lang_no_key_responsible"/>
 									</option>
 									<xsl:apply-templates select="key_responsible_list"/>
 								</select>
@@ -783,7 +788,7 @@
 				</xsl:attribute>
 			</input>
 		</div>
-    </form>
+	</form>
 	
 	<xsl:variable name="done_action">
 		<xsl:value-of select="done_action"/>
@@ -795,8 +800,8 @@
 	</xsl:variable>
 	<form name="edit_form" id="edit_form" method="post" action="{$edit_action}"></form>
 							
-    <!-- AQUI VA EL SCRIPT -->
-    <xsl:choose>
+	<!-- AQUI VA EL SCRIPT -->
+	<xsl:choose>
 		<xsl:when test="mode='edit'">
 			<xsl:variable name="add_sub_entry_action">
 				<xsl:value-of select="add_sub_entry_action"/>
@@ -804,84 +809,84 @@
 			<form method="post" name="add_sub_entry_form" action="{$add_sub_entry_action}">
 			</form>
 		</xsl:when>
-    </xsl:choose>
+	</xsl:choose>
 </xsl:template>
 
 
 <!-- New template-->
 <xsl:template match="branch_list">
-    <xsl:variable name="id">
-	<xsl:value-of select="id"/>
-    </xsl:variable>
-    <xsl:choose>
-	<xsl:when test="selected">
-	    <option value="{$id}" selected="selected">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:when>
-	<xsl:otherwise>
-	    <option value="{$id}">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:otherwise>
-    </xsl:choose>
+	<xsl:variable name="id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+	<xsl:choose>
+		<xsl:when test="selected">
+			<option value="{$id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:when>
+		<xsl:otherwise>
+			<option value="{$id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- New template-->
 <xsl:template match="key_responsible_list">
-    <xsl:variable name="id">
-	<xsl:value-of select="id"/>
-    </xsl:variable>
-    <xsl:choose>
-	<xsl:when test="selected">
-	    <option value="{$id}" selected="selected">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:when>
-	<xsl:otherwise>
-	    <option value="{$id}">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:otherwise>
-    </xsl:choose>
+	<xsl:variable name="id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+	<xsl:choose>
+		<xsl:when test="selected">
+			<option value="{$id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:when>
+		<xsl:otherwise>
+			<option value="{$id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- New template-->
 <xsl:template match="key_fetch_list">
-    <xsl:variable name="id">
-	<xsl:value-of select="id"/>
-    </xsl:variable>
-    <xsl:choose>
-	<xsl:when test="selected">
-	    <option value="{$id}" selected="selected">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:when>
-	<xsl:otherwise>
-	    <option value="{$id}">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:otherwise>
-    </xsl:choose>
+	<xsl:variable name="id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+	<xsl:choose>
+		<xsl:when test="selected">
+			<option value="{$id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:when>
+		<xsl:otherwise>
+			<option value="{$id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- New template-->
 <xsl:template match="key_deliver_list">
-    <xsl:variable name="id">
-	<xsl:value-of select="id"/>
-    </xsl:variable>
-    <xsl:choose>
-	<xsl:when test="selected">
-	    <option value="{$id}" selected="selected">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:when>
-	<xsl:otherwise>
-	    <option value="{$id}">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	    </option>
-	</xsl:otherwise>
-    </xsl:choose>
+	<xsl:variable name="id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+	<xsl:choose>
+		<xsl:when test="selected">
+			<option value="{$id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:when>
+		<xsl:otherwise>
+			<option value="{$id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- New template-->
@@ -1067,10 +1072,10 @@
 
 <!-- New template-->
 <xsl:template match="options">
-    <option value="{id}">
-	<xsl:if test="selected != 0">
-	    <xsl:attribute name="selected" value="selected"/>
-	</xsl:if>
-	<xsl:value-of disable-output-escaping="yes" select="name"/>
-    </option>
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

@@ -11,12 +11,12 @@
 
 	/* $Id$ */
 
-	$phpgw_flags		 = array(
+	$phpgw_flags = array(
 		'currentapp' => 'manual'
 	);
 	$phpgw_info['flags'] = $phpgw_flags;
 	include('../../header.inc.php');
-	$appname			 = 'property';
+	$appname = 'property';
 	include(PHPGW_SERVER_ROOT . '/' . $appname . '/setup/setup.inc.php');
 ?>
 <img src="<?php echo $phpgw->common->image($appname, 'navbar.gif');?>" border="0"><p/>

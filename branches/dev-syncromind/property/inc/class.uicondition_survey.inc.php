@@ -33,42 +33,42 @@
 	{
 
 		private $bo;
-		private $receipt		 = array();
+		private $receipt = array();
 		public $public_functions = array
 			(
-			'query'						 => true,
-			'index'						 => true,
-			'view'						 => true,
-			'add'						 => true,
-			'edit'						 => true,
-			'save'						 => true,
-			'delete'					 => true,
-			'delete_imported_records'	 => true,
-			'get_vendors'				 => true,
-			'get_users'					 => true,
-			'edit_survey_title'			 => true,
-			'get_files'					 => true,
-			'get_request'				 => true,
-			'get_summation'				 => true,
-			'view_file'					 => true,
-			'import'					 => true,
-			'download'					 => true,
-			'summation'					 => true
+			'query' => true,
+			'index' => true,
+			'view' => true,
+			'add' => true,
+			'edit' => true,
+			'save' => true,
+			'delete' => true,
+			'delete_imported_records' => true,
+			'get_vendors' => true,
+			'get_users' => true,
+			'edit_survey_title' => true,
+			'get_files' => true,
+			'get_request' => true,
+			'get_summation' => true,
+			'view_file' => true,
+			'import' => true,
+			'download' => true,
+			'summation' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$this->bo			 = CreateObject('property.bocondition_survey');
-			$this->bocommon		 = & $this->bo->bocommon;
-			$this->acl			 = & $GLOBALS['phpgw']->acl;
-			$this->acl_location	 = $this->bo->acl_location;
-			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage	 = $this->acl->check($this->acl_location, 16, 'property');
+			$this->bo = CreateObject('property.bocondition_survey');
+			$this->bocommon = & $this->bo->bocommon;
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = $this->bo->acl_location;
+			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage = $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey";
 			//			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
@@ -84,13 +84,13 @@
 
 			$values = $this->query();
 
-			$descr		 = array();
-			$columns	 = array();
-			$columns[]	 = 'id';
-			$columns[]	 = 'title';
-			$columns[]	 = 'descr';
-			$columns[]	 = 'address';
-			$columns[]	 = 'cnt';
+			$descr = array();
+			$columns = array();
+			$columns[] = 'id';
+			$columns[] = 'title';
+			$columns[] = 'descr';
+			$columns[] = 'address';
+			$columns[] = 'cnt';
 
 			foreach($columns as $_column)
 			{
@@ -124,42 +124,42 @@
 
 			$data = array(
 				'datatable_name' => lang('condition survey'),
-				'form'			 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type'	 => 'filter',
-								'name'	 => 'cat_id',
-								'text'	 => lang('category') . ':',
-								'list'	 => $categories,
+							array('type' => 'filter',
+								'name' => 'cat_id',
+								'text' => lang('category') . ':',
+								'list' => $categories,
 							),
 							array(
-								'type'	 => 'link',
-								'value'	 => lang('new'),
-								'href'	 => self::link(array('menuaction' => 'property.uicondition_survey.add')),
-								'class'	 => 'new_item'
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
+								'class' => 'new_item'
 							)
 						),
 					),
 				),
-				'datatable'		 => array(
-					'source'		 => self::link(array('menuaction' => 'property.uicondition_survey.index',
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index',
 						'phpgw_return_as' => 'json')),
-					'download'		 => self::link(array('menuaction' => 'property.uicondition_survey.download',
+					'download' => self::link(array('menuaction' => 'property.uicondition_survey.download',
 						'export' => true, 'allrows' => true)),
-					'allrows'		 => true,
-					'editor_action'	 => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
-					'field'			 => array(
+					'allrows' => true,
+					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
+					'field' => array(
 						array(
-							'key'		 => 'id',
-							'label'		 => lang('ID'),
-							'sortable'	 => true,
-							'formatter'	 => 'JqueryPortico.formatLink'
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key'		 => 'title',
-							'label'		 => lang('title'),
-							'sortable'	 => true,
-							'editor'	 => true
+							'key' => 'title',
+							'label' => lang('title'),
+							'sortable' => true,
+							'editor' => true
 						),
 						/* 						array(
 						  'key' => 'descr',
@@ -167,38 +167,38 @@
 						  'sortable' => false,
 						  ), */
 						array(
-							'key'		 => 'address',
-							'label'		 => lang('buildingname'),
-							'sortable'	 => true
+							'key' => 'address',
+							'label' => lang('buildingname'),
+							'sortable' => true
 						),
 						array(
-							'key'		 => 'vendor',
-							'label'		 => lang('vendor'),
-							'sortable'	 => true
+							'key' => 'vendor',
+							'label' => lang('vendor'),
+							'sortable' => true
 						),
 						array(
-							'key'		 => 'year',
-							'label'		 => lang('year'),
-							'sortable'	 => true,
-							'className'	 => 'center'
+							'key' => 'year',
+							'label' => lang('year'),
+							'sortable' => true,
+							'className' => 'center'
 						),
 						array(
-							'key'		 => 'multiplier',
-							'label'		 => lang('multiplier'),
-							'sortable'	 => false,
-							'className'	 => 'right'
+							'key' => 'multiplier',
+							'label' => lang('multiplier'),
+							'sortable' => false,
+							'className' => 'right'
 						),
 						array(
-							'key'		 => 'cnt',
-							'label'		 => lang('count'),
-							'sortable'	 => false,
-							'className'	 => 'center'
+							'key' => 'cnt',
+							'label' => lang('count'),
+							'sortable' => false,
+							'className' => 'center'
 						),
 						array(
-							'key'		 => 'link',
-							'label'		 => 'dummy',
-							'sortable'	 => false,
-							'hidden'	 => true,
+							'key' => 'link',
+							'label' => 'dummy',
+							'sortable' => false,
+							'hidden' => true,
 						)
 					)
 				),
@@ -210,7 +210,7 @@
 					(
 					array
 						(
-						'name'	 => 'id',
+						'name' => 'id',
 						'source' => 'id'
 					),
 				)
@@ -218,9 +218,9 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name'	 => 'view_survey',
-				'text'		 => lang('view'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+				'my_name' => 'view_survey',
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uicondition_survey.view'
 				)),
@@ -229,9 +229,9 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name'	 => 'edit_survey',
-				'text'		 => lang('edit'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+				'my_name' => 'edit_survey',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uicondition_survey.edit'
 				)),
@@ -240,9 +240,9 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name'	 => 'import_survey',
-				'text'		 => lang('import'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
+				'my_name' => 'import_survey',
+				'text' => lang('import'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uicondition_survey.import'
 				)),
@@ -254,14 +254,14 @@
 			{
 				$data['datatable']['actions'][] = array
 					(
-					'my_name'		 => 'delete_imported_records',
-					'text'			 => lang('delete imported records'),
-					'confirm_msg'	 => lang('do you really want to delete this entry') . '?',
-					'action'		 => $GLOBALS['phpgw']->link('/index.php', array
+					'my_name' => 'delete_imported_records',
+					'text' => lang('delete imported records'),
+					'confirm_msg' => lang('do you really want to delete this entry') . '?',
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 						'menuaction' => 'property.uicondition_survey.delete_imported_records'
 					)),
-					'parameters'	 => json_encode($parameters)
+					'parameters' => json_encode($parameters)
 				);
 			}
 
@@ -269,14 +269,14 @@
 			{
 				$data['datatable']['actions'][] = array
 					(
-					'my_name'		 => 'delete_survey',
-					'text'			 => lang('delete'),
-					'confirm_msg'	 => lang('do you really want to delete this entry') . '?',
-					'action'		 => $GLOBALS['phpgw']->link('/index.php', array
+					'my_name' => 'delete_survey',
+					'text' => lang('delete'),
+					'confirm_msg' => lang('do you really want to delete this entry') . '?',
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 						'menuaction' => 'property.uicondition_survey.delete'
 					)),
-					'parameters'	 => json_encode($parameters)
+					'parameters' => json_encode($parameters)
 				);
 			}
 
@@ -289,23 +289,23 @@
 		 */
 		public function query()
 		{
-			$search	 = phpgw::get_var('search');
-			$order	 = phpgw::get_var('order');
-			$draw	 = phpgw::get_var('draw', 'int');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
 
 
 			$params = array(
-				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
-				'sort'		 => phpgw::get_var('sort'),
-				'dir'		 => phpgw::get_var('dir'),
-				'cat_id'	 => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows'	 => phpgw::get_var('length', 'int') == -1
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'sort' => phpgw::get_var('sort'),
+				'dir' => phpgw::get_var('dir'),
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
-			$result_objects	 = array();
-			$result_count	 = 0;
+			$result_objects = array();
+			$result_count = 0;
 
 			$values = $this->bo->read($params);
 			if(phpgw::get_var('export', 'bool'))
@@ -315,8 +315,8 @@
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records']	 = $this->bo->total_records;
-			$result_data['draw']			 = $draw;
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
 
 			array_walk($result_data['results'], array($this, '_add_links'), array('menuaction' => 'property.uicondition_survey.view'));
 
@@ -377,29 +377,29 @@
 			phpgwapi_cache::session_clear('property.request', 'session_data');
 
 			//phpgwapi_jquery::tabview_setup('survey_edit_tabview');
-			$tabs				 = array();
-			$tabs['generic']	 = array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab			 = 'generic';
-			$tabs['documents']	 = array('label' => lang('documents'), 'link' => "#documents",
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			$tabs['documents'] = array('label' => lang('documents'), 'link' => "#documents",
 				'disable' => 1);
-			$tabs['request']	 = array('label' => lang('request'), 'link' => "#request", 'disable' => 1);
-			$tabs['summation']	 = array('label' => lang('summation'), 'link' => "#summation",
+			$tabs['request'] = array('label' => lang('request'), 'link' => "#request", 'disable' => 1);
+			$tabs['summation'] = array('label' => lang('summation'), 'link' => "#summation",
 				'disable' => 1);
-			$tabs['import']		 = array('label' => lang('import'), 'link' => "#import", 'disable' => 1);
+			$tabs['import'] = array('label' => lang('import'), 'link' => "#import", 'disable' => 1);
 
 			if($id)
 			{
 				if($mode == 'edit')
 				{
-					$tabs['import']['link']		 = '#import';
-					$tabs['import']['disable']	 = 0;
+					$tabs['import']['link'] = '#import';
+					$tabs['import']['disable'] = 0;
 				}
-				$tabs['documents']['link']		 = '#documents';
-				$tabs['documents']['disable']	 = 0;
-				$tabs['request']['link']		 = '#request';
-				$tabs['request']['disable']		 = 0;
-				$tabs['summation']['link']		 = '#summation';
-				$tabs['summation']['disable']	 = 0;
+				$tabs['documents']['link'] = '#documents';
+				$tabs['documents']['disable'] = 0;
+				$tabs['request']['link'] = '#request';
+				$tabs['request']['disable'] = 0;
+				$tabs['summation']['link'] = '#summation';
+				$tabs['summation']['disable'] = 0;
 
 				if(!$values)
 				{
@@ -414,17 +414,17 @@
 
 			$categories = $this->_get_categories($values['cat_id']);
 
-			$bolocation		 = CreateObject('property.bolocation');
-			$location_data	 = $bolocation->initiate_ui_location(array
+			$bolocation = CreateObject('property.bolocation');
+			$location_data = $bolocation->initiate_ui_location(array
 				(
-				'values'		 => $values['location_data'],
-				'type_id'		 => 2,
+				'values' => $values['location_data'],
+				'type_id' => 2,
 				'required_level' => 1,
-				'no_link'		 => $_no_link, // disable lookup links for location type less than type_id
-				'lookup_type'	 => $mode == 'edit' ? 'form2' : 'view2',
-				'tenant'		 => false,
-				'lookup_entity'	 => array(),
-				'entity_data'	 => isset($values['p']) ? $values['p'] : ''
+				'no_link' => $_no_link, // disable lookup links for location type less than type_id
+				'lookup_type' => $mode == 'edit' ? 'form2' : 'view2',
+				'tenant' => false,
+				'lookup_entity' => array(),
+				'entity_data' => isset($values['p']) ? $values['p'] : ''
 			));
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -438,14 +438,14 @@
 			);
 
 
-			$datatable_def	 = array();
+			$datatable_def = array();
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_0',
+				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files',
 					'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $file_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -475,7 +475,7 @@
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_1',
+				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request',
 					'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def
@@ -503,11 +503,11 @@
 
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_2',
+				'container' => 'datatable-container_2',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation',
 					'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $summation_def,
-				'config'	 => array(
+				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
@@ -518,17 +518,17 @@
 
 			$data = array
 				(
-				'datatable_def'		 => $datatable_def,
-				'msgbox_data'		 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'survey'			 => $values,
-				'location_data2'	 => $location_data,
-				'lang_coordinator'	 => isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
-				'categories'		 => array('options' => $categories),
-				'status_list'		 => array('options' => execMethod('property.bogeneric.get_list', array(
+				'datatable_def' => $datatable_def,
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'survey' => $values,
+				'location_data2' => $location_data,
+				'lang_coordinator' => isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
+				'categories' => array('options' => $categories),
+				'status_list' => array('options' => execMethod('property.bogeneric.get_list', array(
 						'type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
-				'editable'			 => $mode == 'edit',
-				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'multiple_uploader'	 => $mode == 'edit' ? true : ''
+				'editable' => $mode == 'edit',
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'multiple_uploader' => $mode == 'edit' ? true : ''
 			);
 
 			//print_r($data['tabs']); die;
@@ -632,26 +632,26 @@
 			$link_file_data = array
 				(
 				'menuaction' => 'property.uicondition_survey.view_file',
-				'id'		 => $id
+				'id' => $id
 			);
 
 
 			$link_view_file = self::link($link_file_data);
 
-			$vfs				 = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl	 = 1;
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
 			$files = $vfs->ls(array(
-				'string'	 => "/property/condition_survey/{$id}",
-				'relatives'	 => array(RELATIVE_NONE)));
+				'string' => "/property/condition_survey/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
 
 //------ Start pagination
 
-			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$total_records	 = count($files);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$total_records = count($files);
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
@@ -662,15 +662,15 @@
 			else
 			{
 				//	$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-				$page		 = ceil(( $start / $num_rows));
-				$files_part	 = array_chunk($files, $num_rows);
-				$out		 = $files_part[$page];
+				$page = ceil(( $start / $num_rows));
+				$files_part = array_chunk($files, $num_rows);
+				$out = $files_part[$page];
 			}
 
 //------ End pagination
 
 
-			$lang_view	 = lang('click to view file');
+			$lang_view = lang('click to view file');
 			$lang_delete = lang('click to delete file');
 
 			$values = array();
@@ -678,24 +678,24 @@
 			{
 				$values[] = array
 					(
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file'	 => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
+					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}
 
 			return array(
-				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => $total_records,
-				'draw'				 => phpgw::get_var('draw', 'int'),
-				'data'				 => $values,
+				'recordsTotal' => $total_records,
+				'recordsFiltered' => $total_records,
+				'draw' => phpgw::get_var('draw', 'int'),
+				'data' => $values,
 			);
 		}
 
 		function get_summation()
 		{
 
-			$id		 = phpgw::get_var('id', 'int', 'REQUEST');
-			$year	 = phpgw::get_var('year', 'int', 'REQUEST');
+			$id = phpgw::get_var('id', 'int', 'REQUEST');
+			$year = phpgw::get_var('year', 'int', 'REQUEST');
 
 			if(!$this->acl_read)
 			{
@@ -706,11 +706,11 @@
 
 			$total_records = count($values);
 
-			$num_rows	 = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
-			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 
-			$allrows	 = true;
-			$num_rows	 = $total_records;
+			$allrows = true;
+			$num_rows = $total_records;
 
 			if($allrows)
 			{
@@ -718,16 +718,16 @@
 			}
 			else
 			{
-				$page		 = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+				$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
 				$values_part = array_chunk($values, $num_rows);
-				$out		 = $values_part[$page];
+				$out = $values_part[$page];
 			}
 
 			return array(
-				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => $total_records,
-				'draw'				 => phpgw::get_var('draw', 'int'),
-				'data'				 => $out
+				'recordsTotal' => $total_records,
+				'recordsFiltered' => $total_records,
+				'draw' => phpgw::get_var('draw', 'int'),
+				'data' => $out
 			);
 		}
 
@@ -740,21 +740,21 @@
 				return;
 			}
 
-			$borequest	 = CreateObject('property.borequest');
-			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$sortKey	 = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
-			$sortDir	 = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
+			$borequest = CreateObject('property.borequest');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$sortKey = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
+			$sortDir = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
 
 			$criteria = array
 				(
-				'condition_survey_id'	 => $id,
-				'start'					 => $start,
-				'order'					 => $sortKey,
-				'sort'					 => $sortDir
+				'condition_survey_id' => $id,
+				'start' => $start,
+				'order' => $sortKey,
+				'sort' => $sortDir
 			);
 
-			$values			 = $borequest->read_survey_data($criteria);
-			$total_records	 = $borequest->total_records;
+			$values = $borequest->read_survey_data($criteria);
+			$total_records = $borequest->total_records;
 
 			$base_url = self::link(array('menuaction' => 'property.uirequest.edit'));
 			foreach($values as &$_entry)
@@ -765,10 +765,10 @@
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
 			return array(
-				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => $total_records,
-				'draw'				 => phpgw::get_var('draw', 'int'),
-				'data'				 => $values,
+				'recordsTotal' => $total_records,
+				'recordsFiltered' => $total_records,
+				'draw' => phpgw::get_var('draw', 'int'),
+				'data' => $values,
 			);
 		}
 
@@ -822,8 +822,8 @@
 
 				$to_file = $bofiles->fakebase . '/condition_survey/' . $id . '/' . $file_name;
 				if($bofiles->vfs->file_exists(array(
-					'string'	 => $to_file,
-					'relatives'	 => Array(RELATIVE_NONE)
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
 				)))
 				{
 					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
@@ -834,9 +834,9 @@
 					$bofiles->vfs->override_acl = 1;
 
 					if(!$bofiles->vfs->cp(array(
-						'from'		 => $_FILES['file']['tmp_name'],
-						'to'		 => $to_file,
-						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from' => $_FILES['file']['tmp_name'],
+						'to' => $to_file,
+						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
 						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
 					}
@@ -866,8 +866,8 @@
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
 
-			$step		 = phpgw::get_var('step', 'int', 'REQUEST');
-			$sheet_id	 = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+			$step = phpgw::get_var('step', 'int', 'REQUEST');
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
 
 			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'int', 'REQUEST');
 
@@ -887,8 +887,8 @@
 			}
 			else
 			{
-				$start_line	 = phpgwapi_cache::system_get('property', 'import_sheet_start_line');
-				$start_line	 = $start_line ? $start_line : 1;
+				$start_line = phpgwapi_cache::system_get('property', 'import_sheet_start_line');
+				$start_line = $start_line ? $start_line : 1;
 			}
 
 
@@ -910,20 +910,20 @@
 
 			if($step == 1 || isset($_FILES['import_file']['tmp_name']))
 			{
-				$file		 = $_FILES['import_file']['tmp_name'];
+				$file = $_FILES['import_file']['tmp_name'];
 				$cached_file = "{$file}_temporary_import_file";
 				// save a copy to survive multiple steps
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file', $cached_file);
-				$step		 = 1;
+				$step = 1;
 
 				// Add the file to documents
 				$bofiles = CreateObject('property.bofiles');
 				$to_file = "{$bofiles->fakebase}/condition_survey/{$id}/" . str_replace(' ', '_', $_FILES['import_file']['name']);
 
 				$bofiles->vfs->rm(array(
-					'string'	 => $to_file,
-					'relatives'	 => array(
+					'string' => $to_file,
+					'relatives' => array(
 						RELATIVE_NONE
 					)
 				)
@@ -933,9 +933,9 @@
 				$bofiles->vfs->override_acl = 1;
 
 				$bofiles->vfs->cp(array(
-					'from'		 => $_FILES['import_file']['tmp_name'],
-					'to'		 => $to_file,
-					'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
+					'from' => $_FILES['import_file']['tmp_name'],
+					'to' => $to_file,
+					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 				$bofiles->vfs->override_acl = 0;
 				unset($bofiles);
 			}
@@ -945,48 +945,48 @@
 			switch($step)
 			{
 				case 0:
-					$active_tab		 = 'step_1';
-					$lang_submit	 = lang('continue');
-					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => '#step_1');
-					$tabs['step_2']	 = array('label' => lang('choose sheet'), 'link' => null);
-					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => null);
-					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => null);
+					$active_tab = 'step_1';
+					$lang_submit = lang('continue');
+					$tabs['step_1'] = array('label' => lang('choose file'), 'link' => '#step_1');
+					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => null);
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 1:
-					$active_tab		 = 'step_2';
-					$lang_submit	 = lang('continue');
-					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => self::link(array(
+					$active_tab = 'step_2';
+					$lang_submit = lang('continue');
+					$tabs['step_1'] = array('label' => lang('choose file'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 0,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_2']	 = array('label' => lang('choose sheet'), 'link' => '#step_2');
-					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => null);
-					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => null);
+					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => '#step_2');
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 2:
-					$active_tab		 = 'step_3';
-					$lang_submit	 = lang('continue');
-					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => self::link(array(
+					$active_tab = 'step_3';
+					$lang_submit = lang('continue');
+					$tabs['step_1'] = array('label' => lang('choose file'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 0,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_2']	 = array('label' => lang('choose sheet'), 'link' => self::link(array(
+					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 1,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => '#step_3');
-					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => null);
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => '#step_3');
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 3:
-					$active_tab		 = 'step_4';
-					$lang_submit	 = lang('import');
-					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => self::link(array(
+					$active_tab = 'step_4';
+					$lang_submit = lang('import');
+					$tabs['step_1'] = array('label' => lang('choose file'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 0,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_2']	 = array('label' => lang('choose sheet'), 'link' => self::link(array(
+					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 1,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => self::link(array(
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => self::link(array(
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 2,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
-					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => '#step_4');
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => '#step_4');
 					break;
 				/*
 				  case 4://temporary
@@ -1011,7 +1011,7 @@
 				try
 				{
 					$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-					$AllSheets	 = $objPHPExcel->getSheetNames();
+					$AllSheets = $objPHPExcel->getSheetNames();
 
 					$sheets = array();
 					if($AllSheets)
@@ -1019,9 +1019,9 @@
 						foreach($AllSheets as $key => $sheet)
 							$sheets[] = array
 								(
-								'id'		 => $key,
-								'name'		 => $sheet,
-								'selected'	 => $sheet_id == $key
+								'id' => $key,
+								'name' => $sheet,
+								'selected' => $sheet_id == $key
 							);
 					}
 
@@ -1040,12 +1040,12 @@
 
 			$survey = $this->bo->read_single(array('id' => $id, 'view' => $mode == 'view'));
 
-			$rows				 = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-			$highestColumm		 = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex	 = PHPExcel_Cell::columnIndexFromString($highestColumm);
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
 
-			$i			 = 0;
-			$html_table	 = '<table border="1">';
+			$i = 0;
+			$html_table = '<table border="1">';
 			if($rows > 1 && $step == 2)
 			{
 
@@ -1064,8 +1064,8 @@
 					}
 					$i++;
 
-					$row_key	 = $i;
-					$_checked	 = '';
+					$row_key = $i;
+					$_checked = '';
 					if($start_line == $row_key)
 					{
 						$_checked = 'checked="checked"';
@@ -1092,23 +1092,23 @@
 			{
 				$_options = array
 					(
-					'_skip_import_'				 => 'Utelates fra import/implisitt',
-					'import_type'				 => 'import type',
-					'building_part'				 => 'bygningsdels kode',
-					'descr'						 => 'Tilstandbeskrivelse',
-					'title'						 => 'Tiltak/overskrift',
-					'condition_degree'			 => 'Tilstandsgrad',
-					'condition_type'			 => 'Konsekvenstype',
-					'consequence'				 => 'Konsekvensgrad',
-					'probability'				 => 'Sannsynlighet',
-					'due_year'					 => 'År (innen)',
-					'amount_investment'			 => 'Beløp investering',
-					'amount_operation'			 => 'Beløp drift',
-					'amount_potential_grants'	 => 'Potensial for offentlig støtte',
+					'_skip_import_' => 'Utelates fra import/implisitt',
+					'import_type' => 'import type',
+					'building_part' => 'bygningsdels kode',
+					'descr' => 'Tilstandbeskrivelse',
+					'title' => 'Tiltak/overskrift',
+					'condition_degree' => 'Tilstandsgrad',
+					'condition_type' => 'Konsekvenstype',
+					'consequence' => 'Konsekvensgrad',
+					'probability' => 'Sannsynlighet',
+					'due_year' => 'År (innen)',
+					'amount_investment' => 'Beløp investering',
+					'amount_operation' => 'Beløp drift',
+					'amount_potential_grants' => 'Potensial for offentlig støtte',
 				);
 
-				$custom		 = createObject('phpgwapi.custom_fields');
-				$attributes	 = $custom->find('property', '.project.request', 0, '', '', '', true, true);
+				$custom = createObject('phpgwapi.custom_fields');
+				$attributes = $custom->find('property', '.project.request', 0, '', '', '', true, true);
 
 				foreach($attributes as $attribute)
 				{
@@ -1119,9 +1119,9 @@
 
 				for($j = 0; $j < $highestColumnIndex; $j++)
 				{
-					$_column	 = $this->getexcelcolumnname($j);
-					$_value		 = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
-					$selected	 = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
+					$_column = $this->getexcelcolumnname($j);
+					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
 					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true);
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
@@ -1130,8 +1130,8 @@
 			else if($rows > 1 && $step == 4)
 			{
 
-				$rows	 = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-				$rows	 = $rows ? $rows + 1 : 0;
+				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$rows = $rows ? $rows + 1 : 0;
 
 				$import_data = array();
 
@@ -1179,28 +1179,28 @@
 				$survey['location_data'] = execMethod('property.solocation.read_single', $survey['location_code']);
 			}
 
-			$bolocation		 = CreateObject('property.bolocation');
-			$location_data	 = $bolocation->initiate_ui_location(array
+			$bolocation = CreateObject('property.bolocation');
+			$location_data = $bolocation->initiate_ui_location(array
 				(
-				'values'		 => $survey['location_data'],
-				'type_id'		 => 2,
-				'lookup_type'	 => 'view2',
-				'tenant'		 => false,
-				'lookup_entity'	 => array(),
-				'entity_data'	 => isset($survey['p']) ? $survey['p'] : ''
+				'values' => $survey['location_data'],
+				'type_id' => 2,
+				'lookup_type' => 'view2',
+				'tenant' => false,
+				'lookup_entity' => array(),
+				'entity_data' => isset($survey['p']) ? $survey['p'] : ''
 			));
 
 			$data = array
 				(
-				'lang_submit'	 => $lang_submit,
-				'survey'		 => $survey,
+				'lang_submit' => $lang_submit,
+				'survey' => $survey,
 				'location_data2' => $location_data,
-				'step'			 => $step + 1,
-				'sheet_id'		 => $sheet_id,
-				'start_line'	 => $start_line,
-				'html_table'	 => $html_table,
-				'sheets'		 => array('options' => $sheets),
-				'tabs'			 => $GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
+				'step' => $step + 1,
+				'sheet_id' => $sheet_id,
+				'start_line' => $start_line,
+				'html_table' => $html_table,
+				'sheets' => array('options' => $sheets),
+				'tabs' => $GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
@@ -1254,8 +1254,8 @@
 				{
 					$values[] = array
 						(
-						'id'	 => $account->id,
-						'name'	 => $account->__toString(),
+						'id' => $account->id,
+						'name' => $account->__toString(),
 					);
 				}
 			}
@@ -1278,8 +1278,8 @@
 
 			$query = phpgw::get_var('query');
 
-			$sogeneric	 = CreateObject('property.sogeneric', 'vendor');
-			$values		 = $sogeneric->read(array('query' => $query));
+			$sogeneric = CreateObject('property.sogeneric', 'vendor');
+			$values = $sogeneric->read(array('query' => $query));
 			foreach($values as &$entry)
 			{
 				$entry['name'] = $entry['org_name'];
@@ -1306,7 +1306,7 @@
 
 			if($id)
 			{
-				$values			 = $this->bo->read_single(array('id' => $id, 'view' => true));
+				$values = $this->bo->read_single(array('id' => $id, 'view' => true));
 				$values['title'] = phpgw::get_var('value');
 
 				try
@@ -1402,34 +1402,34 @@
 
 			$params = array
 				(
-				'start'		 => 0,
-				'sort'		 => 'id',
-				'dir'		 => 'asc',
-				'cat_id'	 => 0,
-				'allrows'	 => true
+				'start' => 0,
+				'sort' => 'id',
+				'dir' => 'asc',
+				'cat_id' => 0,
+				'allrows' => true
 			);
 
 			$survey_list = $this->bo->read($params);
 
-			$surveys	 = array();
-			$surveys[]	 = array
+			$surveys = array();
+			$surveys[] = array
 				(
-				'id'	 => 0,
-				'name'	 => lang('select'),
+				'id' => 0,
+				'name' => lang('select'),
 			);
-			$surveys[]	 = array
+			$surveys[] = array
 				(
-				'id'	 => -1,
-				'name'	 => lang('all'),
+				'id' => -1,
+				'name' => lang('all'),
 			);
 
 			foreach($survey_list as $survey)
 			{
 				$surveys[] = array
 					(
-					'id'			 => $survey['id'],
-					'name'			 => $survey['title'],
-					'description'	 => $survey['address'],
+					'id' => $survey['id'],
+					'name' => $survey['title'],
+					'description' => $survey['address'],
 				);
 			}
 
@@ -1443,8 +1443,8 @@
 			{
 				$years[] = array
 					(
-					'id'	 => $current_year,
-					'name'	 => $current_year
+					'id' => $current_year,
+					'name' => $current_year
 				);
 				$current_year++;
 			}
@@ -1469,10 +1469,10 @@
 					'formatter' => 'JqueryPortico.FormatterAmount0'),
 			);
 
-			$datatable_def	 = array();
+			$datatable_def = array();
 			$datatable_def[] = array
 				(
-				'container'	 => 'datatable-container_0',
+				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation',
 					'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $summation_def
@@ -1480,9 +1480,9 @@
 
 			$data = array
 				(
-				'datatable_def'	 => $datatable_def,
-				'surveys'		 => array('options' => $surveys),
-				'years'			 => array('options' => $years),
+				'datatable_def' => $datatable_def,
+				'surveys' => array('options' => $surveys),
+				'years' => array('options' => $years),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -1505,63 +1505,63 @@
 				(
 				array
 					(
-					'name'		 => 'title',
-					'type'		 => 'string',
-					'required'	 => true
+					'name' => 'title',
+					'type' => 'string',
+					'required' => true
 				),
 				array
 					(
-					'name'		 => 'descr',
-					'type'		 => 'string',
-					'required'	 => true
+					'name' => 'descr',
+					'type' => 'string',
+					'required' => true
 				),
 				array
 					(
-					'name'		 => 'cat_id',
-					'type'		 => 'integer',
-					'required'	 => true
+					'name' => 'cat_id',
+					'type' => 'integer',
+					'required' => true
 				),
 				array
 					(
-					'name'		 => 'report_date',
-					'type'		 => 'string',
-					'required'	 => true
+					'name' => 'report_date',
+					'type' => 'string',
+					'required' => true
 				),
 				array
 					(
-					'name'		 => 'status_id',
-					'type'		 => 'integer',
-					'required'	 => true
+					'name' => 'status_id',
+					'type' => 'integer',
+					'required' => true
 				),
 				array
 					(
-					'name'		 => 'vendor_id',
-					'type'		 => 'integer',
-					'required'	 => false
+					'name' => 'vendor_id',
+					'type' => 'integer',
+					'required' => false
 				),
 				array
 					(
-					'name'		 => 'vendor_name',
-					'type'		 => 'string',
-					'required'	 => false
+					'name' => 'vendor_name',
+					'type' => 'string',
+					'required' => false
 				),
 				array
 					(
-					'name'		 => 'coordinator_id',
-					'type'		 => 'integer',
-					'required'	 => false
+					'name' => 'coordinator_id',
+					'type' => 'integer',
+					'required' => false
 				),
 				array
 					(
-					'name'		 => 'coordinator_name',
-					'type'		 => 'string',
-					'required'	 => false
+					'name' => 'coordinator_name',
+					'type' => 'string',
+					'required' => false
 				),
 				array
 					(
-					'name'		 => 'multiplier',
-					'type'		 => 'float',
-					'required'	 => false
+					'name' => 'multiplier',
+					'type' => 'float',
+					'required' => false
 				),
 			);
 
@@ -1623,11 +1623,11 @@
 
 		private function _get_categories($selected = 0)
 		{
-			$cats				 = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
-			$cats->supress_info	 = true;
-			$categories			 = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $selected,
+			$cats = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$cats->supress_info = true;
+			$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $selected,
 				'globals' => true, 'use_acl' => $this->_category_acl));
-			$default_value		 = array('cat_id' => '', 'name' => lang('no category'));
+			$default_value = array('cat_id' => '', 'name' => lang('no category'));
 			array_unshift($categories['cat_list'], $default_value);
 
 			foreach($categories['cat_list'] as & $_category)

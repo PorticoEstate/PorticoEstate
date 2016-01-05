@@ -52,8 +52,8 @@
 		 */
 		function __construct($fakebase = '/property')
 		{
-			$this->vfs		 = CreateObject('phpgwapi.vfs');
-			$this->rootdir	 = $this->vfs->basedir;
+			$this->vfs = CreateObject('phpgwapi.vfs');
+			$this->rootdir = $this->vfs->basedir;
 			if($fakebase)
 			{
 				$this->fakebase = $fakebase;
@@ -88,14 +88,14 @@
 			$receipt = array();
 
 			if(!$this->vfs->file_exists(array(
-				'string'	 => $this->fakebase,
-				'relatives'	 => array(RELATIVE_NONE)
+				'string' => $this->fakebase,
+				'relatives' => array(RELATIVE_NONE)
 			)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir(array(
-					'string'	 => $this->fakebase,
-					'relatives'	 => array(
+					'string' => $this->fakebase,
+					'relatives' => array(
 						RELATIVE_NONE
 					)
 				)))
@@ -117,14 +117,14 @@
 				$catalog .= "/{$entry}";
 
 				if(!$this->vfs->file_exists(array(
-					'string'	 => "{$this->fakebase}{$catalog}",
-					'relatives'	 => array(RELATIVE_NONE)
+					'string' => "{$this->fakebase}{$catalog}",
+					'relatives' => array(RELATIVE_NONE)
 				)))
 				{
 					$this->vfs->override_acl = 1;
 					if(!$this->vfs->mkdir(array(
-						'string'	 => "{$this->fakebase}{$catalog}",
-						'relatives'	 => array(
+						'string' => "{$this->fakebase}{$catalog}",
+						'relatives' => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -161,15 +161,15 @@
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if($this->vfs->file_exists(array(
-					'string'	 => $file,
-					'relatives'	 => array(RELATIVE_NONE)
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE)
 				)))
 				{
 					$this->vfs->override_acl = 1;
 
 					if(!$this->vfs->rm(array(
-						'string'	 => $file,
-						'relatives'	 => array(
+						'string' => $file,
+						'relatives' => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -196,15 +196,15 @@
 		 */
 		function view_file($type = '', $file = '', $jasper = '')
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			if(!$file)
 			{
-				$file_name	 = html_entity_decode(urldecode(phpgw::get_var('file_name')));
-				$id			 = phpgw::get_var('id');
-				$file		 = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
+				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
+				$id = phpgw::get_var('id');
+				$file = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 
 			// prevent path traversal
@@ -214,15 +214,15 @@
 			}
 
 			if($this->vfs->file_exists(array(
-				'string'	 => $file,
-				'relatives'	 => array(RELATIVE_NONE)
+				'string' => $file,
+				'relatives' => array(RELATIVE_NONE)
 			)))
 			{
 				$ls_array = $this->vfs->ls(array(
-					'string'		 => $file,
-					'relatives'		 => array(RELATIVE_NONE),
-					'checksubdirs'	 => false,
-					'nofiles'		 => true
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE),
+					'checksubdirs' => false,
+					'nofiles' => true
 				));
 
 				if(!$jasper)
@@ -230,8 +230,8 @@
 					$this->vfs->override_acl = 1;
 
 					$document = $this->vfs->read(array(
-						'string'	 => $file,
-						'relatives'	 => array(RELATIVE_NONE)));
+						'string' => $file,
+						'relatives' => array(RELATIVE_NONE)));
 
 					$this->vfs->override_acl = 0;
 
@@ -243,8 +243,8 @@
 				{
 					$output_type = 'PDF';
 
-					$report_source	 = "{$this->rootdir}{$file}";
-					$jasper_wrapper	 = CreateObject('phpgwapi.jasper_wrapper');
+					$report_source = "{$this->rootdir}{$file}";
+					$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
 					try
 					{
 						$jasper_wrapper->execute('', $output_type, $report_source);
@@ -269,23 +269,23 @@
 		 */
 		function get_attachments($path, $values)
 		{
-			$mime_magic	 = createObject('phpgwapi.mime_magic');
+			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
 			foreach($values as $file_name)
 			{
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if($this->vfs->file_exists(array(
-					'string'	 => $file,
-					'relatives'	 => array(RELATIVE_NONE))))
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE))))
 				{
 					$mime = $mime_magic->filename2mime($file_name);
 
 					$attachments[] = array
 						(
-						'file'	 => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
-						'name'	 => $file_name,
-						'type'	 => $mime
+						'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+						'name' => $file_name,
+						'type' => $mime
 					);
 				}
 			}

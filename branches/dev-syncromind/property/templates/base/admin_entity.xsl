@@ -2148,7 +2148,7 @@
 		<xsl:value-of select="php:function('lang', 'delete value')"/>
 	</xsl:variable>
 	<xsl:variable name="lang_delete_title">
-			<xsl:value-of select="php:function('lang', 'delete this value from the list of multiple choice')"/>
+		<xsl:value-of select="php:function('lang', 'delete this value from the list of multiple choice')"/>
 	</xsl:variable>
 	<table class="pure-table pure-table-bordered">
 		<xsl:choose>

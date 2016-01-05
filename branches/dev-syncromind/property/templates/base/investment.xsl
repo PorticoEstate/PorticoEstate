@@ -24,7 +24,7 @@
 				</dl>
 			</xsl:when>
 		</xsl:choose>
-	    <div id="message" class='message'/>
+		<div id="message" class='message'/>
 		<xsl:for-each select="datatable_def">
 			<xsl:if test="container = 'datatable-container_0'">
 				<xsl:call-template name="table_setup">

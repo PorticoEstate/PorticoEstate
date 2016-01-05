@@ -43,7 +43,9 @@
 			</div>
 			<div class="pure-u-2-3">
 				<xsl:for-each select="top_toolbar">
-					<a class="pure-button pure-button-primary" href="{url}"><xsl:value-of select="value"/></a>						
+					<a class="pure-button pure-button-primary" href="{url}">
+						<xsl:value-of select="value"/>
+					</a>
 				</xsl:for-each>
 			</div>
 		</div>

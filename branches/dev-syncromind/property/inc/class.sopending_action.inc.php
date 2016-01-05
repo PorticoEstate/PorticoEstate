@@ -50,11 +50,11 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->join		 = & $this->db->join;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like		 = & $this->db->like;
+			$this->like = & $this->db->like;
 		}
 
 		/**
@@ -73,13 +73,13 @@
 		 */
 		public function set_pending_action($data = array())
 		{
-			$appname	 = $data['appname'];
-			$location	 = $data['location'];
-			$item_id	 = $data['id']; //possible bigint
+			$appname = $data['appname'];
+			$location = $data['location'];
+			$item_id = $data['id']; //possible bigint
 			$responsible = (int)$data['responsible'];
-			$action		 = $this->db->db_addslashes($data['action']);
-			$remark		 = $this->db->db_addslashes($data['remark']);
-			$deadline	 = (int)$data['deadline'];
+			$action = $this->db->db_addslashes($data['action']);
+			$remark = $this->db->db_addslashes($data['remark']);
+			$deadline = (int)$data['deadline'];
 
 			if(!$item_id)
 			{
@@ -93,7 +93,7 @@
 				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
 
-			$sql			 = "SELECT id FROM fm_action_pending_category WHERE num = '{$action}'";
+			$sql = "SELECT id FROM fm_action_pending_category WHERE num = '{$action}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$action_category = $this->db->f('id');
@@ -133,8 +133,8 @@
 			$this->db->next_record();
 			if($this->db->f('reminder'))
 			{
-				$reminder	 = $this->db->f('reminder') + 1;
-				$id			 = $this->db->f('id');
+				$reminder = $this->db->f('reminder') + 1;
+				$id = $this->db->f('id');
 
 				$value_set = array
 					(
@@ -152,9 +152,9 @@
 					$value_set['action_performed'] = phpgwapi_datetime::user_localtime();
 				}
 
-				$value_set	 = $this->db->validate_update($value_set);
-				$sql		 = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
-				$ok			 = !!$this->db->query($sql, __LINE__, __FILE__);
+				$value_set = $this->db->validate_update($value_set);
+				$sql = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
+				$ok = !!$this->db->query($sql, __LINE__, __FILE__);
 
 				if(isset($data['close']) && $data['close'])
 				{
@@ -185,11 +185,11 @@
 				$deadline, //action_deadline
 				phpgwapi_datetime::user_localtime(), //created_on
 				$this->account, //created_by
-				$remark		 //remark
+				$remark   //remark
 			);
 
-			$values	 = $this->db->validate_insert($values);
-			$sql	 = "INSERT INTO fm_action_pending ("
+			$values = $this->db->validate_insert($values);
+			$sql = "INSERT INTO fm_action_pending ("
 			. "item_id, location_id, responsible, responsible_type,"
 			. "action_category, action_requested, reminder, action_deadline,"
 			. "created_on, created_by, remark) VALUES ( $values $vals)";
@@ -219,18 +219,19 @@
 		 */
 		public function get_pending_action($data = array())
 		{
-			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$appname			 = isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
-			$location			 = isset($data['location']) && $data['location'] ? $data['location'] : '';
-			$item_id			 = isset($data['id']) && $data['id'] ? $data['id'] : '';$data['id']; //possible bigint
-			$responsible		 = (int)$data['responsible'];
-			$responsible_type	 = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
-			$action				 = isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
-			$deadline			 = isset($data['deadline']) && $data['deadline'] ? (int)$data['deadline'] : 0;
-			$created_by			 = isset($data['created_by']) && $data['created_by'] ? (int)$data['created_by'] : 0;
-			$sort				 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order				 = isset($data['order']) ? $data['order'] : '';
-			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$appname = isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
+			$location = isset($data['location']) && $data['location'] ? $data['location'] : '';
+			$item_id = isset($data['id']) && $data['id'] ? $data['id'] : '';
+			$data['id']; //possible bigint
+			$responsible = (int)$data['responsible'];
+			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
+			$action = isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
+			$deadline = isset($data['deadline']) && $data['deadline'] ? (int)$data['deadline'] : 0;
+			$created_by = isset($data['created_by']) && $data['created_by'] ? (int)$data['created_by'] : 0;
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
+			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 
 			if(!in_array($responsible_type, $this->valid_responsible_types))
 			{
@@ -244,8 +245,8 @@
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
 			}
 
-			$ret		 = array();
-			$condition	 = " WHERE action_performed IS NULL AND expired_on IS NULL AND num = '{$action}' AND location_id = {$location_id}";
+			$ret = array();
+			$condition = " WHERE action_performed IS NULL AND expired_on IS NULL AND num = '{$action}' AND location_id = {$location_id}";
 
 			if($responsible)
 			{

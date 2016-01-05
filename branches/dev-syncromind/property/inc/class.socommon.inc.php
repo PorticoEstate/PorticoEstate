@@ -54,15 +54,15 @@
 			}
 			else // for setup
 			{
-				$this->db			 = CreateObject('phpgwapi.db');
+				$this->db = CreateObject('phpgwapi.db');
 				$this->db->fetchmode = 'ASSOC';
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
-					$this->db->Host		 = $GLOBALS['phpgw_info']['server']['db_host'];
-					$this->db->Type		 = $GLOBALS['phpgw_info']['server']['db_type'];
-					$this->db->Database	 = $GLOBALS['phpgw_info']['server']['db_name'];
-					$this->db->User		 = $GLOBALS['phpgw_info']['server']['db_user'];
-					$this->db->Password	 = $GLOBALS['phpgw_info']['server']['db_pass'];
+					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+					$this->db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
+					$this->db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
+					$this->db->User = $GLOBALS['phpgw_info']['server']['db_user'];
+					$this->db->Password = $GLOBALS['phpgw_info']['server']['db_pass'];
 				}
 				else
 				{
@@ -72,11 +72,11 @@
 						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
-					$phpgw_domain							 = $GLOBALS['phpgw_domain'];
-					$this->db->Host							 = $phpgw_domain[$ConfigDomain]['db_host'];
-					$this->db->Database						 = $phpgw_domain[$ConfigDomain]['db_name'];
-					$this->db->User							 = $phpgw_domain[$ConfigDomain]['db_user'];
-					$this->db->Password						 = $phpgw_domain[$ConfigDomain]['db_pass'];
+					$phpgw_domain = $GLOBALS['phpgw_domain'];
+					$this->db->Host = $phpgw_domain[$ConfigDomain]['db_host'];
+					$this->db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
+					$this->db->User = $phpgw_domain[$ConfigDomain]['db_user'];
+					$this->db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
 				}
 			}
 
@@ -85,12 +85,12 @@
 			switch($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'pgsql':
-					$this->join	 = " JOIN ";
-					$this->like	 = "ILIKE";
+					$this->join = " JOIN ";
+					$this->like = "ILIKE";
 					break;
 				case 'postgres':
-					$this->join	 = " JOIN ";
-					$this->like	 = "ILIKE";
+					$this->join = " JOIN ";
+					$this->like = "ILIKE";
 					break;
 				default:
 				//do nothing for now
@@ -181,9 +181,9 @@
 
 			$tenant_data = array
 				(
-				'first_name'	 => $this->db->f('first_name'),
-				'last_name'		 => $this->db->f('last_name'),
-				'contact_phone'	 => $this->db->f('contact_phone')
+				'first_name' => $this->db->f('first_name'),
+				'last_name' => $this->db->f('last_name'),
+				'contact_phone' => $this->db->f('contact_phone')
 			);
 
 			//_debug_array($tenant_data);
@@ -204,8 +204,8 @@
 
 		function select_part_of_town($district_id = '')
 		{
-			$filter			 = '';
-			$part_of_town	 = array();
+			$filter = '';
+			$part_of_town = array();
 			if($district_id)
 			{
 				$filter = "WHERE district_id = '$district_id'";
@@ -216,9 +216,9 @@
 			{
 				$part_of_town[] = array
 					(
-					'id'			 => $this->db->f('part_of_town_id'),
-					'name'			 => $this->db->f('name', true),
-					'district_id'	 => $this->db->f('district_id')
+					'id' => $this->db->f('part_of_town_id'),
+					'name' => $this->db->f('name', true),
+					'district_id' => $this->db->f('district_id')
 				);
 			}
 
@@ -232,8 +232,8 @@
 			$i = 0;
 			while($this->db->next_record())
 			{
-				$district[$i]['id']		 = $this->db->f('id');
-				$district[$i]['name']	 = stripslashes($this->db->f('descr'));
+				$district[$i]['id'] = $this->db->f('id');
+				$district[$i]['name'] = stripslashes($this->db->f('descr'));
 				$i++;
 			}
 
@@ -278,8 +278,8 @@
 			{
 				$entity[] = array
 					(
-					'id'	 => $this->db->f('entity_id'),
-					'name'	 => $this->db->f('name', true)
+					'id' => $this->db->f('entity_id'),
+					'name' => $this->db->f('name', true)
 				);
 			}
 			return $entity;
@@ -294,8 +294,8 @@
 			{
 				$entity[] = array
 					(
-					'id'	 => $this->db->f('entity_id'),
-					'name'	 => $this->db->f('name', true)
+					'id' => $this->db->f('entity_id'),
+					'name' => $this->db->f('name', true)
 				);
 			}
 			return $entity;
@@ -324,11 +324,11 @@
 				throw new Exception("property_socommon::increment_id() - not a valid name: '{$name}'");
 			}
 
-			$now		 = time();
+			$now = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$next_id	 = $this->db->f('value') + 1;
-			$start_date	 = (int)$this->db->f('start_date');
+			$next_id = $this->db->f('value') + 1;
+			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 			return $next_id;
 		}
@@ -348,11 +348,11 @@
 				$db = CreateObject('phpgwapi.db');
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
-					$db->Host		 = $GLOBALS['phpgw_info']['server']['db_host'];
-					$db->Type		 = $GLOBALS['phpgw_info']['server']['db_type'];
-					$db->Database	 = $GLOBALS['phpgw_info']['server']['db_name'];
-					$db->User		 = $GLOBALS['phpgw_info']['server']['db_user'];
-					$db->Password	 = $GLOBALS['phpgw_info']['server']['db_pass'];
+					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+					$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
+					$db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
+					$db->User = $GLOBALS['phpgw_info']['server']['db_user'];
+					$db->Password = $GLOBALS['phpgw_info']['server']['db_pass'];
 				}
 				else
 				{
@@ -361,12 +361,12 @@
 					{
 						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
-					$phpgw_domain							 = $GLOBALS['phpgw_domain'];
+					$phpgw_domain = $GLOBALS['phpgw_domain'];
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
-					$db->Host								 = $phpgw_domain[$ConfigDomain]['db_host'];
-					$db->Database							 = $phpgw_domain[$ConfigDomain]['db_name'];
-					$db->User								 = $phpgw_domain[$ConfigDomain]['db_user'];
-					$db->Password							 = $phpgw_domain[$ConfigDomain]['db_pass'];
+					$db->Host = $phpgw_domain[$ConfigDomain]['db_host'];
+					$db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
+					$db->User = $phpgw_domain[$ConfigDomain]['db_user'];
+					$db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
 				}
 			}
 
@@ -391,15 +391,15 @@
 		{
 			$access_list = $GLOBALS['phpgw']->acl->get_location_list('property', $required);
 
-			$needle			 = ".location.1.";
-			$needle_len		 = strlen($needle);
+			$needle = ".location.1.";
+			$needle_len = strlen($needle);
 			$access_location = array();
 			foreach($access_list as $location)
 			{
 				if(strrpos($location, $needle) === 0)
 				{
-					$target_len			 = strlen($location) - $needle_len;
-					$access_location[]	 = substr($location, -$target_len);
+					$target_len = strlen($location) - $needle_len;
+					$access_location[] = substr($location, -$target_len);
 				}
 			}
 			return $access_location;

@@ -43,30 +43,30 @@
 		var $gab_insert_level;
 		var $public_functions = array
 			(
-			'read'			 => true,
-			'read_single'	 => true,
-			'save'			 => true,
-			'delete'		 => true,
-			'check_perms'	 => true
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'check_perms' => true
 		);
 
 		function __construct($session = false)
 		{
-			$this->solocation		 = CreateObject('property.solocation');
-			$this->so				 = CreateObject('property.sogab');
-			$this->gab_insert_level	 = $this->so->gab_insert_level;
+			$this->solocation = CreateObject('property.solocation');
+			$this->so = CreateObject('property.sogab');
+			$this->gab_insert_level = $this->so->gab_insert_level;
 			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
 			}
 
-			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	 = phpgw::get_var('query');
-			$sort	 = phpgw::get_var('sort');
-			$order	 = phpgw::get_var('order');
-			$filter	 = phpgw::get_var('filter', 'int');
-			$cat_id	 = phpgw::get_var('cat_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$filter = phpgw::get_var('filter', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
 			if($start)
@@ -118,13 +118,13 @@
 
 			//_debug_array($data);
 
-			$this->start	 = isset($data['start']) ? $data['start'] : '';
-			$this->query	 = isset($data['query']) ? $data['query'] : '';
-			$this->filter	 = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort		 = isset($data['sort']) ? $data['sort'] : '';
-			$this->order	 = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$this->start = isset($data['start']) ? $data['start'] : '';
+			$this->query = isset($data['query']) ? $data['query'] : '';
+			$this->filter = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort = isset($data['sort']) ? $data['sort'] : '';
+			$this->order = isset($data['order']) ? $data['order'] : '';
+			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
 		function read($data)
@@ -141,17 +141,17 @@
 
 			$gab = $this->so->read(array
 				(
-				'start'			 => $data['start'],
-				'sort'			 => $data['sort'],
-				'order'			 => $data['order'],
-				'allrows'		 => $data['allrows'],
-				'cat_id'		 => $this->cat_id,
-				'location_code'	 => $data['location_code'],
-				'gaards_nr'		 => $data['gaards_nr'],
-				'bruksnr'		 => $data['bruksnr'],
-				'feste_nr'		 => $data['feste_nr'],
-				'seksjons_nr'	 => $data['seksjons_nr'],
-				'address'		 => $data['address'],
+				'start' => $data['start'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'cat_id' => $this->cat_id,
+				'location_code' => $data['location_code'],
+				'gaards_nr' => $data['gaards_nr'],
+				'bruksnr' => $data['bruksnr'],
+				'feste_nr' => $data['feste_nr'],
+				'seksjons_nr' => $data['seksjons_nr'],
+				'address' => $data['address'],
 				'check_payments' => $data['check_payments'])
 			);
 
@@ -175,7 +175,7 @@
 			  }
 			 */
 			$this->total_records = $this->so->total_records;
-			$this->payment_date	 = $this->so->payment_date;
+			$this->payment_date = $this->so->payment_date;
 			return $gab;
 		}
 
@@ -183,18 +183,18 @@
 		function read_detail($data = '', $allrows = 0)
 		{
 			$gab = $this->so->read_detail(array(
-				'start'		 => $data['start'],
-				'sort'		 => $data['sort'],
-				'order'		 => $data['order'],
-				'cat_id'	 => $this->cat_id,
-				'gab_id'	 => $data['gab_id'],
-				'allrows'	 => $allrows)
+				'start' => $data['start'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'cat_id' => $this->cat_id,
+				'gab_id' => $data['gab_id'],
+				'allrows' => $allrows)
 			);
 
 			$this->total_records = $this->so->total_records;
 
-			$this->uicols	 = $this->so->uicols;
-			$cols_extra		 = $this->so->cols_extra;
+			$this->uicols = $this->so->uicols;
+			$cols_extra = $this->so->cols_extra;
 
 
 			for($i = 0; $i < count($gab); $i++)

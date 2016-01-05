@@ -8,13 +8,13 @@
 			'index' => true
 		);
 
-		const DELIMITER	 = ";";
-		const ENCLOSING	 = "'";
+		const DELIMITER = ";";
+		const ENCLOSING = "'";
 
 		// List of messages, warnings and errors to be displayed to the user after the import
-		protected $messages	 = array();
-		protected $warnings	 = array();
-		protected $errors	 = array();
+		protected $messages = array();
+		protected $warnings = array();
+		protected $errors = array();
 		// File system path to import folder on server
 		protected $file;
 		protected $district;
@@ -23,8 +23,8 @@
 		protected $conv_type;
 		protected $location_id;
 		protected $import_conversion;
-		protected $steps	 = 0;
-		protected $fields	 = array();
+		protected $steps = 0;
+		protected $fields = array();
 		protected $table;
 		protected $debug;
 		protected $identificator;
@@ -44,26 +44,26 @@
 
 			set_time_limit(10000);
 //			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->table	 = phpgw::get_var('table');
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->table = phpgw::get_var('table');
 
 			$this->valid_tables = array
 				(
-				'fm_vendor'						 => array('name' => 'fm_vendor (' . lang('vendor') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_condition_survey'			 => array('name' => 'fm_condition_survey (' . lang('condition survey') . ')',
+				'fm_vendor' => array('name' => 'fm_vendor (' . lang('vendor') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_condition_survey' => array('name' => 'fm_condition_survey (' . lang('condition survey') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_ecodimb'					 => array('name' => 'fm_ecodimb (' . lang('dimb') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_budget'						 => array('name' => 'fm_budget (' . lang('budget') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_org_unit'					 => array('name' => 'fm_org_unit (' . lang('department') . ')',
+				'fm_ecodimb' => array('name' => 'fm_ecodimb (' . lang('dimb') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_budget' => array('name' => 'fm_budget (' . lang('budget') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_org_unit' => array('name' => 'fm_org_unit (' . lang('department') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_project_group'				 => array('name' => 'fm_project_group', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_eco_periodization_outline'	 => array('name' => 'fm_eco_periodization_outline (' . lang('periodization outline') . ')',
+				'fm_project_group' => array('name' => 'fm_project_group', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_eco_periodization_outline' => array('name' => 'fm_eco_periodization_outline (' . lang('periodization outline') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_eco_periodization'			 => array('name' => 'fm_eco_periodization (' . lang('periodization') . ')',
+				'fm_eco_periodization' => array('name' => 'fm_eco_periodization (' . lang('periodization') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_ecodimd'					 => array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'phpgw_categories'				 => array('name' => 'phpgw_categories (' . lang('categories') . ')',
+				'fm_ecodimd' => array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'phpgw_categories' => array('name' => 'phpgw_categories (' . lang('categories') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
@@ -89,12 +89,12 @@
 		public function index()
 		{
 			// Set the submit button label to its initial state
-			$this->import_button_label				 = "Start import";
-			$this->download_template_button_label	 = 'Download template';
+			$this->import_button_label = "Start import";
+			$this->download_template_button_label = 'Download template';
 
-			$check_method		 = 0;
-			$get_identificator	 = false;
-			if($this->conv_type	 = phpgw::get_var('conv_type'))
+			$check_method = 0;
+			$get_identificator = false;
+			if($this->conv_type = phpgw::get_var('conv_type'))
 			{
 				$check_method ++;
 				$get_identificator = true;
@@ -137,8 +137,8 @@
 				}
 
 
-				$start_time	 = time(); // Start time of import
-				$start		 = date("G:i:s", $start_time);
+				$start_time = time(); // Start time of import
+				$start = date("G:i:s", $start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
@@ -162,7 +162,7 @@
 				}
 
 
-				$this->debug			 = phpgw::get_var('debug', 'bool');
+				$this->debug = phpgw::get_var('debug', 'bool');
 				$this->import_conversion = new import_conversion($this->location_id, $this->debug);
 
 				// Get the path for user input or use a default path
@@ -172,14 +172,14 @@
 				{
 					$files[] = array
 						(
-						'name'	 => $_FILES['file']['tmp_name'],
-						'type'	 => $_FILES['file']['type']
+						'name' => $_FILES['file']['tmp_name'],
+						'type' => $_FILES['file']['type']
 					);
 				}
 				else
 				{
-					$path	 = phpgw::get_var('path', 'string');
-					$files	 = $this->get_files($path);
+					$path = phpgw::get_var('path', 'string');
+					$files = $this->get_files($path);
 				}
 
 				if(!$files)
@@ -196,13 +196,13 @@
 						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 						case 'application/vnd.oasis.opendocument.spreadsheet':
 						case 'application/vnd.ms-excel':
-							$this->csvdata	 = $this->getexceldata($file['name'], $get_identificator);
-							$valid_type		 = true;
+							$this->csvdata = $this->getexceldata($file['name'], $get_identificator);
+							$valid_type = true;
 							break;
 						case 'text/csv':
 						case 'text/comma-separated-values':
-							$this->csvdata	 = $this->getcsvdata($file['name'], $get_identificator);
-							$valid_type		 = true;
+							$this->csvdata = $this->getcsvdata($file['name'], $get_identificator);
+							$valid_type = true;
 							break;
 						default:
 							throw new Exception("Not a valid filetype: {$file['type']}");
@@ -210,20 +210,20 @@
 
 					if($valid_type)
 					{
-						$result			 = $this->import();
-						$this->messages	 = array_merge($this->messages, $this->import_conversion->messages);
-						$this->warnings	 = array_merge($this->warnings, $this->import_conversion->warnings);
-						$this->errors	 = array_merge($this->errors, $this->import_conversion->errors);
-						$this->csvdata	 = array();
+						$result = $this->import();
+						$this->messages = array_merge($this->messages, $this->import_conversion->messages);
+						$this->warnings = array_merge($this->warnings, $this->import_conversion->warnings);
+						$this->errors = array_merge($this->errors, $this->import_conversion->errors);
+						$this->csvdata = array();
 						echo '<li class="info">Import: finished step ' . $result . '</li>';
 					}
 				}
 
 
 				echo "</ul>";
-				$end_time	 = time();
-				$difference	 = ($end_time - $start_time) / 60;
-				$end		 = date("G:i:s", $end_time);
+				$end_time = time();
+				$difference = ($end_time - $start_time) / 60;
+				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
 				if($this->errors)
@@ -263,7 +263,7 @@
 			else
 			{
 				$import_settings = phpgwapi_cache::session_get('property', 'import_settings');
-				$import_message	 = phpgwapi_cache::session_get('property', 'import_message');
+				$import_message = phpgwapi_cache::session_get('property', 'import_message');
 
 				phpgwapi_cache::session_clear('property', 'import_message');
 				$conv_list = $this->get_import_conv($import_settings['conv_type']);
@@ -295,8 +295,8 @@ HTML;
 HTML;
 				}
 
-				$entity			 = CreateObject('property.soadmin_entity');
-				$entity_list	 = $entity->read(array('allrows' => true));
+				$entity = CreateObject('property.soadmin_entity');
+				$entity_list = $entity->read(array('allrows' => true));
 				$category_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
 				foreach($entity_list as $entry)
 				{
@@ -311,11 +311,11 @@ HTML;
 					}
 				}
 
-				$home	 = $GLOBALS['phpgw']->link('/home.php');
-				$action	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'));
+				$home = $GLOBALS['phpgw']->link('/home.php');
+				$action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'));
 
-				$debug_checked	 = isset($import_settings['debug']) && $import_settings['debug'] ? 'checked =  "checked"' : '';
-				$html			 = <<<HTML
+				$debug_checked = isset($import_settings['debug']) && $import_settings['debug'] ? 'checked =  "checked"' : '';
+				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder">{$import_message}</div>
 				<form action="{$action}" method="post" enctype="multipart/form-data">
@@ -394,9 +394,9 @@ HTML;
 
 		protected function get_template($location_id = 0)
 		{
-			$_identificator	 = array();
-			$data			 = array();
-			$_fields		 = array();
+			$_identificator = array();
+			$data = array();
+			$_fields = array();
 			if(!$location_id && $this->table)
 			{
 				$_permission = $this->valid_tables[$this->table]['permission'];
@@ -428,15 +428,15 @@ HTML;
 			else if($location_id)
 			{
 				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$_identificator	 = array
+				$_identificator = array
 					(
 					'identificator' => "location::{$system_location['appname']}::{$system_location['location']}"
 				);
 
 				$filename = "fm_entity_{$category['entity_id']}_{$category['id']}";
 
-				$entity_id	 = $category['entity_id'];
-				$cat_id		 = $category['id'];
+				$entity_id = $category['entity_id'];
+				$cat_id = $category['id'];
 
 				if($category['is_eav'])
 				{
@@ -453,8 +453,8 @@ HTML;
 						$_fields[$field] = true;
 					}
 
-					$custom		 = createObject('property.custom_fields');
-					$attributes	 = $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
+					$custom = createObject('property.custom_fields');
+					$attributes = $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
 
 
 					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id ORDER BY id ASC";
@@ -469,7 +469,7 @@ HTML;
 						}
 
 						$xmldata = $this->db->f('xml_representation', true);
-						$xml	 = new DOMDocument('1.0', 'utf-8');
+						$xml = new DOMDocument('1.0', 'utf-8');
 						$xml->loadXML($xmldata);
 
 						foreach($attributes as $attribute)
@@ -488,7 +488,7 @@ HTML;
 				else
 				{
 					$this->table = "fm_entity_{$category['entity_id']}_{$category['id']}";
-					$metadata	 = $this->db->metadata($this->table);
+					$metadata = $this->db->metadata($this->table);
 					foreach($metadata as $field => $info)
 					{
 						$_fields[$field] = true;
@@ -505,11 +505,11 @@ HTML;
 			}
 			if(!$_identificator && $this->table)
 			{
-				$_identificator	 = array
+				$_identificator = array
 					(
 					'identificator' => "table::{$this->table}"
 				);
-				$filename		 = $this->table;
+				$filename = $this->table;
 			}
 			else if(!$_identificator && $this->conv_type)
 			{
@@ -529,9 +529,9 @@ HTML;
 				{
 					require_once $file;
 				}
-				$_import_conversion	 = new import_conversion(0, false, true);
-				$fields				 = $_import_conversion->fields;
-				$filename			 = $_import_conversion->filename_template;
+				$_import_conversion = new import_conversion(0, false, true);
+				$fields = $_import_conversion->fields;
+				$filename = $_import_conversion->filename_template;
 			}
 
 			$fields = $fields ? $fields : array_keys($_fields);
@@ -644,7 +644,7 @@ HTML;
 
 			$datalines = $this->csvdata;
 
-			$ok	 = true;
+			$ok = true;
 			$_ok = false;
 			$this->db->transaction_begin();
 
@@ -688,7 +688,7 @@ HTML;
 
 			if($get_identificator)
 			{
-				$_identificator_arr	 = $this->getcsv($handle);
+				$_identificator_arr = $this->getcsv($handle);
 				$this->identificator = $_identificator_arr[0];
 			}
 
@@ -704,8 +704,8 @@ HTML;
 
 			fclose($handle);
 
-			$this->messages[]	 = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
-			$this->messages[]	 = "'{$path}' contained " . count($result) . " lines";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
 		}
@@ -756,8 +756,8 @@ HTML;
 				$result[] = $_result;
 			}
 
-			$this->messages[]	 = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
-			$this->messages[]	 = "'{$path}' contained " . count($result) . " lines";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
 		}
@@ -794,9 +794,10 @@ HTML;
 
 		protected function get_import_conv($selected = '')
 		{
-			$dir_handle	 = @opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
-			$i			 = 0;$myfilearray = array();
-			while($file		 = readdir($dir_handle))
+			$dir_handle = @opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
+			$i = 0;
+			$myfilearray = array();
+			while($file = readdir($dir_handle))
 			{
 				if((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}"))
 				{
@@ -813,9 +814,9 @@ HTML;
 
 				$conv_list[] = array
 					(
-					'id'		 => $myfilearray[$i],
-					'name'		 => $fname,
-					'selected'	 => $myfilearray[$i] == $selected ? 1 : 0
+					'id' => $myfilearray[$i],
+					'name' => $fname,
+					'selected' => $myfilearray[$i] == $selected ? 1 : 0
 				);
 			}
 
@@ -832,8 +833,8 @@ HTML;
 
 			$mime_magic = createObject('phpgwapi.mime_magic');
 
-			$file_list	 = array();
-			$dir		 = new DirectoryIterator($dirname);
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname);
 			if(is_object($dir))
 			{
 				foreach($dir as $file)
@@ -845,11 +846,11 @@ HTML;
 						continue;
 					}
 
-					$file_name	 = $file->__toString();
+					$file_name = $file->__toString();
 					$file_list[] = array
 						(
-						'name'	 => (string)"{$dirname}/{$file_name}",
-						'type'	 => $mime_magic->filename2mime($file_name)
+						'name' => (string)"{$dirname}/{$file_name}",
+						'type' => $mime_magic->filename2mime($file_name)
 					);
 				}
 			}

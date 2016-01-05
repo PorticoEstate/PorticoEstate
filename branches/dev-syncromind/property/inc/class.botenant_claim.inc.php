@@ -43,8 +43,8 @@
 
 		function __construct($session = false)
 		{
-			$this->bocommon	 = CreateObject('property.bocommon');
-			$this->so		 = CreateObject('property.sotenant_claim');
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->so = CreateObject('property.sotenant_claim');
 
 			if($session)
 			{
@@ -52,15 +52,15 @@
 				$this->use_session = true;
 			}
 
-			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query		 = phpgw::get_var('query');
-			$sort		 = phpgw::get_var('sort');
-			$order		 = phpgw::get_var('order');
-			$user_id	 = phpgw::get_var('user_id', 'int');
-			$status		 = phpgw::get_var('status');
-			$cat_id		 = phpgw::get_var('cat_id', 'int');
-			$allrows	 = phpgw::get_var('allrows', 'bool');
-			$project_id	 = phpgw::get_var('project_id', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$order = phpgw::get_var('order');
+			$user_id = phpgw::get_var('user_id', 'int');
+			$status = phpgw::get_var('status');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+			$allrows = phpgw::get_var('allrows', 'bool');
+			$project_id = phpgw::get_var('project_id', 'int');
 			$district_id = phpgw::get_var('district_id', 'int');
 
 			$this->district_id = isset($_REQUEST['district_id']) ? $district_id : $this->district_id;
@@ -122,14 +122,14 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim');
 
-			$this->start		 = $data['start'];
-			$this->query		 = $data['query'];
-			$this->user_id		 = isset($data['user_id']) ? $data['user_id'] : '';
-			$this->status		 = $data['status'];
-			$this->sort			 = $data['sort'];
-			$this->order		 = $data['order'];
-			$this->cat_id		 = $data['cat_id'];
-			$this->district_id	 = isset($data['district_id']) ? $data['district_id'] : '';
+			$this->start = $data['start'];
+			$this->query = $data['query'];
+			$this->user_id = isset($data['user_id']) ? $data['user_id'] : '';
+			$this->status = $data['status'];
+			$this->sort = $data['sort'];
+			$this->order = $data['order'];
+			$this->cat_id = $data['cat_id'];
+			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
 		}
 
 		function check_perms($has, $needed)
@@ -141,8 +141,8 @@
 		{
 			if(is_array($data))
 			{
-				$format		 = (isset($data['format']) ? $data['format'] : '');
-				$selected	 = (isset($data['selected']) ? $data['selected'] : $data['default']);
+				$format = (isset($data['format']) ? $data['format'] : '');
+				$selected = (isset($data['selected']) ? $data['selected'] : $data['default']);
 			}
 			else
 			{
@@ -151,19 +151,19 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('status_' . $format));
 
-			$status[0]['id']	 = 'ready';
-			$status[0]['name']	 = lang('ready for processing claim');
-			$status[1]['id']	 = 'closed';
-			$status[1]['name']	 = lang('Closed');
+			$status[0]['id'] = 'ready';
+			$status[0]['name'] = lang('ready for processing claim');
+			$status[1]['id'] = 'closed';
+			$status[1]['name'] = lang('Closed');
 			if($format == "filter")
 			{
-				$status[2]['id']	 = 'all';
-				$status[2]['name']	 = lang('All');
+				$status[2]['id'] = 'all';
+				$status[2]['name'] = lang('All');
 			}
 			else
 			{
-				$status[2]['id']	 = 'open';
-				$status[2]['name']	 = lang('Open');
+				$status[2]['id'] = 'open';
+				$status[2]['name'] = lang('Open');
 			}
 
 			return $this->bocommon->select_list($selected, $status);
@@ -181,31 +181,31 @@
 			#	'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
 			#	'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
 
-			$claims				 = $this->so->read($data);
+			$claims = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
 			foreach($claims as &$entry)
 			{
-				$entry['entry_date']	 = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$entry['status']		 = lang($entry['status']);
-				$entry['user']			 = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
-				$location_info			 = execMethod('property.solocation.read_single', $entry['location_code']);
-				$entry['loc1_name']		 = $location_info['loc1_name'];
-				$entry['loc_category']	 = $location_info['category_name'];
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$entry['status'] = lang($entry['status']);
+				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+				$location_info = execMethod('property.solocation.read_single', $entry['location_code']);
+				$entry['loc1_name'] = $location_info['loc1_name'];
+				$entry['loc_category'] = $location_info['category_name'];
 			}
 			return $claims;
 		}
 
 		function check_claim_project($project_id)
 		{
-			$claim				 = $this->so->check_claim_project($project_id);
+			$claim = $this->so->check_claim_project($project_id);
 			$this->total_records = $this->so->total_records;
 			return $claim;
 		}
 
 		function check_claim_workorder($workorder_id)
 		{
-			$claim				 = $this->so->check_claim_workorder($workorder_id);
+			$claim = $this->so->check_claim_workorder($workorder_id);
 			$this->total_records = $this->so->total_records;
 			return $claim;
 		}
@@ -222,36 +222,36 @@
 			{
 				if($claim['claim_id'] != 0)
 				{
-					$claim_id	 = $claim['claim_id'];
-					$receipt	 = $this->so->edit($claim);
-					$action		 = lang('altered');
+					$claim_id = $claim['claim_id'];
+					$receipt = $this->so->edit($claim);
+					$action = lang('altered');
 				}
 			}
 			else
 			{
 				$receipt = $this->so->add($claim);
-				$action	 = lang('added');
+				$action = lang('added');
 			}
 
 
-			$this->config		 = CreateObject('phpgwapi.config', 'property');
+			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-			$claim_notify_mails	 = $this->config->config_data['tenant_claim_notify_mails'];
+			$claim_notify_mails = $this->config->config_data['tenant_claim_notify_mails'];
 			if($claim_notify_mails)
 			{
 				// notify via email
-				$current_user_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
-				$current_prefs_user	 = $this->bocommon->create_preferences('property', $current_user_id);
-				$from				 = $current_prefs_user['email'];
-				$subject			 = lang("Tenant claim %1", $receipt['claim_id']) . ' ' . $action;
-				$body				 = lang('Reminder');
+				$current_user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$current_prefs_user = $this->bocommon->create_preferences('property', $current_user_id);
+				$from = $current_prefs_user['email'];
+				$subject = lang("Tenant claim %1", $receipt['claim_id']) . ' ' . $action;
+				$body = lang('Reminder');
 
 				if(!is_object($GLOBALS['phpgw']->send))
 				{
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 				}
-				$subject		 = $GLOBALS['phpgw']->send->encode_subject($subject);
-				$notify_mails	 = explode(',', $claim_notify_mails);
+				$subject = $GLOBALS['phpgw']->send->encode_subject($subject);
+				$notify_mails = explode(',', $claim_notify_mails);
 				foreach($notify_mails as $to)
 				{
 					$GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, '', '', '', $from, $from);
@@ -275,40 +275,45 @@
 
 		function read_record_history($id)
 		{
-			$historylog		 = CreateObject('property.historylog', 'tenant_claim');
-			$history_array	 = $historylog->return_array(array('O'), array(), '', '', $id);
+			$historylog = CreateObject('property.historylog', 'tenant_claim');
+			$history_array = $historylog->return_array(array('O'), array(), '', '', $id);
 
 			$status_text = array();
 
-			$status_text['ready']	 = lang('ready for processing claim');
-			$status_text['open']	 = lang('open');
-			$status_text['closed']	 = lang('closed');
+			$status_text['ready'] = lang('ready for processing claim');
+			$status_text['open'] = lang('open');
+			$status_text['closed'] = lang('closed');
 
 			$i = 0;
 			foreach($history_array as $value)
 			{
 
-				$record_history[$i]['value_date']	 = $GLOBALS['phpgw']->common->show_date($value['datetime']);
-				$record_history[$i]['value_user']	 = $value['owner'];
+				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user'] = $value['owner'];
 
 				switch($value['status'])
 				{
-					case 'S': $type = lang('Status changed');break;
+					case 'S': $type = lang('Status changed');
+						break;
 					default:
 				}
 
 				if($value['new_value'] == 'O')
-				{ $value['new_value'] = lang('Opened');}
+				{
+					$value['new_value'] = lang('Opened');
+				}
 				if($value['new_value'] == 'X')
-				{ $value['new_value'] = lang('Closed');}
+				{
+					$value['new_value'] = lang('Closed');
+				}
 
 				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
 				if($value['status'] == 'S')
 				{
-					$record_history[$i]['value_new_value']	 = $status_text[$value['new_value']];
-					$record_history[$i]['value_old_value']	 = $status_text[$value['old_value']];
+					$record_history[$i]['value_new_value'] = $status_text[$value['new_value']];
+					$record_history[$i]['value_old_value'] = $status_text[$value['old_value']];
 				}
 				else
 				{
@@ -323,12 +328,12 @@
 
 		public function get_files($id = 0)
 		{
-			$vfs				 = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl	 = 1;
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
 			$files = $vfs->ls(array(
-				'string'	 => "/property/tenant_claim/{$id}",
-				'relatives'	 => array(RELATIVE_NONE)
+				'string' => "/property/tenant_claim/{$id}",
+				'relatives' => array(RELATIVE_NONE)
 			));
 
 			$vfs->override_acl = 0;

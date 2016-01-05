@@ -1,5 +1,5 @@
 <?php
-	$db		 = & $GLOBALS['phpgw']->db;
+	$db = & $GLOBALS['phpgw']->db;
 //_debug_array($data);
 //_debug_array($id);
 	$_closed = false;
@@ -24,21 +24,21 @@
 	$projects = array();
 	if($_closed) // take action
 	{
-		$interlink	 = CreateObject('property.interlink');
-		$targets	 = $interlink->get_relation('property', '.ticket', $id, 'target');
+		$interlink = CreateObject('property.interlink');
+		$targets = $interlink->get_relation('property', '.ticket', $id, 'target');
 		foreach($targets as $target)
 		{
 			if($target['location'] == '.project')
 			{
 				foreach($target['data'] as $_data)
 				{
-					$project	 = execMethod('property.soproject.read_single', $_data['id']);
-					$projects[]	 = array
+					$project = execMethod('property.soproject.read_single', $_data['id']);
+					$projects[] = array
 						(
-						'id'			 => $_data['id'],
-						'coordinator'	 => $project['coordinator'],
-						'link'			 => $_data['link'],
-						'statustext'	 => $_data['statustext']
+						'id' => $_data['id'],
+						'coordinator' => $project['coordinator'],
+						'link' => $_data['link'],
+						'statustext' => $_data['statustext']
 					);
 				}
 			}
@@ -49,37 +49,37 @@
 			$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 		}
 
-		$validator	 = CreateObject('phpgwapi.EmailAddressValidator');
-		$socommon	 = CreateObject('property.socommon');
+		$validator = CreateObject('phpgwapi.EmailAddressValidator');
+		$socommon = CreateObject('property.socommon');
 
 		foreach($projects as $project_info)
 		{
-			$prefs			 = $socommon->create_preferences('property', $project_info['coordinator']);
-			$account_name	 = $GLOBALS['phpgw']->accounts->get($project_info['coordinator'])->__toString();
+			$prefs = $socommon->create_preferences('property', $project_info['coordinator']);
+			$account_name = $GLOBALS['phpgw']->accounts->get($project_info['coordinator'])->__toString();
 			if($validator->check_email_address($prefs['email']))
 			{
 				// Email address is technically valid
 				// avoid problems with the delimiter in the send class
 				if(strpos($account_name, ','))
 				{
-					$_account_name	 = explode(',', $account_name);
-					$account_name	 = ltrim($_account_name[1]) . ' ' . $_account_name[0];
+					$_account_name = explode(',', $account_name);
+					$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
 				}
 
-				$_to		 = "{$account_name}<{$prefs['email']}>";
-				$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
+				$_to = "{$account_name}<{$prefs['email']}>";
+				$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
 
 				if(strpos($from_name, ','))
 				{
-					$_from_name	 = explode(',', $from_name);
-					$from_name	 = ltrim($_from_name[1]) . ' ' . $_from_name[0];
+					$_from_name = explode(',', $from_name);
+					$from_name = ltrim($_from_name[1]) . ' ' . $_from_name[0];
 				}
 
-				$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
-				$cc			 = '';
-				$bcc		 = '';
-				$subject	 = "Status er endret for melding tilknyttet prosjekt {$project_info['id']}";
-				$body		 = "<H2>{$subject}</H2>";
+				$from_email = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+				$cc = '';
+				$bcc = '';
+				$subject = "Status er endret for melding tilknyttet prosjekt {$project_info['id']}";
+				$body = "<H2>{$subject}</H2>";
 				$body .= "</br><a href='http://{$GLOBALS['phpgw_info']['server']['hostname']}{$project_info['link']}'>{$subject} - klikk her for å oppdatere status for prosjektet</a>";
 
 				try
