@@ -82,6 +82,13 @@
 						'key'	 => 'booking_id',
 						'column' => 'resource_id'
 					)),
+				'costs'						 => array('type'		 => 'string',
+					'manytomany' => array(
+						'table'	 => 'bb_booking_cost',
+						'key'	 => 'booking_id',
+						'column' => array('time', 'author', 'comment', 'cost'),
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
+					)),
 			)
 			);
 		}
@@ -753,6 +760,22 @@
 					'description'	 => $this->db->f('description', false),
 					'from_'			 => $this->db->f('from_', false),
 					'to_'			 => $this->db->f('to_', false),
+				);
+			}
+			return $results;
+		}
+
+		function get_ordered_costs($id)
+		{
+			$results = array();
+			$this->db->query("SELECT * FROM bb_booking_cost WHERE booking_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$results[] = array(
+					'time'		 => $this->db->f('time'),
+					'author'	 => $this->db->f('author',true),
+					'comment'	 => $this->db->f('comment', true),
+					'cost'		 => $this->db->f('cost')
 				);
 			}
 			return $results;

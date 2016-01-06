@@ -141,6 +141,9 @@ generate allocations from week template	booking	no	Lag tildelinger fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe/Lag
 history and comments (%1)	booking	no	Historikk (%1)
+History of Cost (%1)	booking	no	Prishistorikk (%1)
+cost is set	booking	no	Ny pris er angitt
+cost comment	booking	no	Kommentar til ny pris
 hms document	booking	no	HMS dokument
 homepage	booking	no	Hjemmeside
 id	booking	no	ID

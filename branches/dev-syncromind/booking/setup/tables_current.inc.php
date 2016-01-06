@@ -231,6 +231,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_allocation_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'allocation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_allocation' => array('allocation_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_booking' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
@@ -256,6 +271,21 @@
 				'bb_allocation' => array('allocation_id' => 'id'),
 				'bb_application' => array('application_id' => 'id'),
 				'bb_activity' => array('activity_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_booking_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'booking_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -631,6 +661,21 @@
 			'bb_event' => array('event_id' => 'id')),
 			'ix' => array(),
 			'uc' => array('event_id', 'from_', 'to_')
+		),
+		'bb_event_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'bb_event' => array('event_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
 		),
 		'bb_completed_reservation_export' => array(
 			'fd' => array(

@@ -66,6 +66,13 @@
 						'key'	 => 'allocation_id',
 						'column' => 'resource_id'
 					)),
+				'costs'						 => array('type'		 => 'string',
+					'manytomany' => array(
+						'table'	 => 'bb_allocation_cost',
+						'key'	 => 'allocation_id',
+						'column' => array('time', 'author', 'comment', 'cost'),
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
+					)),
 			)
 			);
 		}
@@ -314,4 +321,21 @@
 			$sql		 = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
 		}
+
+		function get_ordered_costs($id)
+		{
+			$results = array();
+			$this->db->query("SELECT * FROM bb_allocation_cost WHERE allocation_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$results[] = array(
+					'time'		 => $this->db->f('time'),
+					'author'	 => $this->db->f('author',true),
+					'comment'	 => $this->db->f('comment', true),
+					'cost'		 => $this->db->f('cost')
+				);
+			}
+			return $results;
+		}
+
 	}

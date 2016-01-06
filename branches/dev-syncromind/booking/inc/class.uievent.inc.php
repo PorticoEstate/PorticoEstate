@@ -238,6 +238,21 @@
 			);
 		}
 
+		protected function add_cost_history(&$event, $comment = '', $cost = '0.00')
+		{
+			if(!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$event['costs'][] = array(
+				'time'		 => 'now',
+				'author'	 => $this->current_account_fullname(),
+				'comment'	 => $comment,
+				'cost'		 => $cost
+			);
+		}
+
 		protected function create_sendt_mail_notification_comment_text($event, $errors)
 		{
 			$data = array();
@@ -466,6 +481,10 @@
 				if($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
 				{
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
+				}
+				if($_POST['cost'] != 0)
+				{
+					$this->add_cost_history($event, lang('cost is set'), phpgw::get_var('cost','float'));
 				}
 				if(($_POST['organization_name'] != '' or $_POST['org_id2'] != '') and isset($errors['contact_name']))
 				{
@@ -710,6 +729,12 @@
 				{
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				}
+
+				if($_POST['cost'] != $_POST['cost_orig'])
+				{
+					$this->add_cost_history($event, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+				}
+
 				if(!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
 					if(( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
@@ -960,6 +985,7 @@
 			$activities					 = $activities['results'];
 #			$comments = array_reverse($event['comments']);
 			$comments					 = $this->bo->so->get_ordered_comments($id);
+			$cost_history				 = $this->bo->so->get_ordered_costs($id);
 			$agegroups					 = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups					 = $agegroups['results'];
 			$audience					 = $this->audience_bo->fetch_target_audience($top_level_activity);
@@ -975,7 +1001,7 @@
 			$event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //              echo '<pre>'; print_r($event);echo '</pre>';
 			self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments, 'cost_history' => $cost_history));
 		}
 
 		public function delete()

@@ -400,6 +400,10 @@
 
 				$today	 = getdate();
 				$booking = extract_values($_POST, $this->fields);
+				if($_POST['cost'])
+				{
+					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+				}
 
 				$timestamp			 = strtotime($booking['from_']);
 				$booking['from_']	 = date("Y-m-d H:i:s", $timestamp);
@@ -732,6 +736,10 @@
 
 				array_set_default($_POST, 'resources', array());
 				$booking					 = array_merge($booking, extract_values($_POST, $this->fields));
+				if($_POST['cost'] != $_POST['cost_orig'])
+				{
+					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+				}
 				$booking['allocation_id']	 = $booking['allocation_id'] ? $booking['allocation_id'] : null;
 				$this->agegroup_bo->extract_form_data($booking);
 				$group						 = $this->group_bo->read_single(intval(phpgw::get_var('group_id', 'int')));
@@ -767,6 +775,7 @@
 			$audience					 = $audience['results'];
 			$activities					 = $this->activity_bo->fetch_activities();
 			$activities					 = $activities['results'];
+			$cost_history				 = $this->bo->so->get_ordered_costs($id);
 			$booking['audience_json']	 = json_encode(array_map('intval', $booking['audience']));
 
 			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
@@ -777,7 +786,7 @@
 				'date', 'security', 'file'));
 
 			self::render_template_xsl('booking_edit', array('booking' => $booking, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience));
+				'agegroups' => $agegroups, 'audience' => $audience, 'cost_history' => $cost_history));
 		}
 
 		public function delete()
@@ -954,7 +963,8 @@
 
 		public function show()
 		{
-			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			$booking = $this->bo->read_single($id);
 
 			$activity_path		 = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : 0;
@@ -971,6 +981,7 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$booking['resource_ids'] = $resource_ids;
+			$cost_history				 = $this->bo->so->get_ordered_costs($id);
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
@@ -980,7 +991,7 @@
 				$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			}
 
-			self::render_template_xsl('booking', array('booking' => $booking));
+			self::render_template_xsl('booking', array('booking' => $booking, 'cost_history' => $cost_history));
 		}
 
 		public function info()
@@ -1010,5 +1021,20 @@
 			$booking['when'] = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
 			self::render_template('booking_info', array('booking' => $booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		protected function add_cost_history(&$booking, $comment = '', $cost = '0.00')
+		{
+			if(!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$booking['costs'][] = array(
+				'time'		 => 'now',
+				'author'	 => $this->current_account_fullname(),
+				'comment'	 => $comment,
+				'cost'		 => $cost
+			);
 		}
 	}

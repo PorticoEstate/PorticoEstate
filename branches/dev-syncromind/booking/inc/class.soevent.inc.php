@@ -69,6 +69,13 @@
 						'column' => array('time', 'author', 'comment', 'type'),
 						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
 					)),
+				'costs'						 => array('type'		 => 'string',
+					'manytomany' => array(
+						'table'	 => 'bb_event_cost',
+						'key'	 => 'event_id',
+						'column' => array('time', 'author', 'comment', 'cost'),
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
+					)),
 				'resources'						 => array('type'		 => 'int', 'required'	 => true,
 					'manytomany' => array(
 						'table'	 => 'bb_event_resource',
@@ -109,6 +116,22 @@
 					'author'	 => $this->db->f('author', false),
 					'comment'	 => $this->db->f('comment', false),
 					'type'		 => $this->db->f('type', false));
+			}
+			return $results;
+		}
+
+		function get_ordered_costs($id)
+		{
+			$results = array();
+			$this->db->query("SELECT * FROM bb_event_cost WHERE event_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$results[] = array(
+					'time'		 => $this->db->f('time'),
+					'author'	 => $this->db->f('author',true),
+					'comment'	 => $this->db->f('comment', true),
+					'cost'		 => $this->db->f('cost')
+				);
 			}
 			return $results;
 		}

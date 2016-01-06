@@ -25,6 +25,25 @@
 						</label>
 						<xsl:value-of select="booking/cost"/>
 					</div>
+							<div>
+								<div class="heading">
+									<legend>
+										<h3><xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" /></h3>
+									</legend>
+								</div>
+								<xsl:for-each select="cost_history[author]">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+										</label>
+										<span>
+											<xsl:value-of select="comment"/>
+											<xsl:text> :: </xsl:text>
+											<xsl:value-of select="cost"/>
+										</span>
+									</div>
+								</xsl:for-each>
+							</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Season')" />

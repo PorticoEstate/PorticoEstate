@@ -255,6 +255,21 @@
 			return $this->yui_results($allocations);
 		}
 
+		protected function add_cost_history(&$allocation, $comment = '', $cost = '0.00')
+		{
+			if(!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$allocation['costs'][] = array(
+				'time'		 => 'now',
+				'author'	 => $this->current_account_fullname(),
+				'comment'	 => $comment,
+				'cost'		 => $cost
+			);
+		}
+
 		public function add()
 		{
 			$errors			 = array();
@@ -267,6 +282,10 @@
 				$season					 = $this->season_bo->read_single($_POST['season_id']);
 				array_set_default($_POST, 'resources', array());
 				$allocation				 = extract_values($_POST, $this->fields);
+				if($_POST['cost'])
+				{
+					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+				}
 				$allocation['active']	 = '1';
 				$allocation['completed'] = '0';
 
@@ -512,7 +531,10 @@
 				$allocation		 = array_merge($allocation, extract_values($_POST, $this->fields));
 				$organization	 = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int', 'POST')));
 
-
+				if($_POST['cost'] != $_POST['cost_orig'])
+				{
+					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+				}
 
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
@@ -544,10 +566,12 @@
 			$allocation['tabs']				 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$allocation['validator']		 = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
+			$cost_history				 = $this->bo->so->get_ordered_costs($id);
+
 			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
 
-			self::render_template_xsl('allocation_edit', array('allocation' => $allocation));
+			self::render_template_xsl('allocation_edit', array('allocation' => $allocation, 'cost_history' => $cost_history));
 		}
 
 		public function delete()

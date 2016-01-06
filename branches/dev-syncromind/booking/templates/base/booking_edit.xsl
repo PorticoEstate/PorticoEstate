@@ -196,6 +196,39 @@
 									</xsl:attribute>
 								</input>
 							</div>
+
+							<div id="field_cost_comment" class="pure-control-group">
+								<label for="field_cost_comment">
+									<xsl:value-of select="php:function('lang', 'Cost comment')" />
+								</label>
+								<input id="field_cost_comment" name="cost_comment" type="text">
+									<xsl:attribute name="placeholder">
+										<xsl:value-of select="php:function('lang', 'Cost comment')" />
+									</xsl:attribute>
+								</input>
+								<input id="field_cost_orig" name="cost_orig" type="hidden" value= "{booking/cost}"/>
+							</div>
+							<div>
+								<div class="heading">
+									<legend>
+										<h3><xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" /></h3>
+									</legend>
+								</div>
+								<xsl:for-each select="cost_history[author]">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+										</label>
+										<span>
+											<xsl:value-of select="comment"/>
+											<xsl:text> :: </xsl:text>
+											<xsl:value-of select="cost"/>
+										</span>
+									</div>
+								</xsl:for-each>
+							</div>
+
+
 						</div>
 						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
 							<div class="heading">

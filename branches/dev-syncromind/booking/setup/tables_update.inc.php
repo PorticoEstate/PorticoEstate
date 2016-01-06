@@ -3255,3 +3255,73 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.2.22';
+	/**
+	 * Update booking version from 0.2.22 to 0.2.23
+	 *
+	 */
+	function booking_upgrade0_2_22()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_allocation_cost',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'allocation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_allocation' => array('allocation_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_cost', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+						'bb_event' => array('event_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_booking_cost', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'booking_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.23';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

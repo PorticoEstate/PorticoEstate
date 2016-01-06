@@ -1,6 +1,19 @@
 var building_id_selection = "";
 var organization_id_selection = "";
 $(document).ready(function () {
+
+	$('#field_cost_comment').hide();
+	$('#field_cost').on('input propertychange paste', function() {
+		if($('#field_cost').val() != $('#field_cost_orig').val())
+		{
+			$('#field_cost_comment').show();
+		}
+		else
+		{
+			$('#field_cost_comment').hide();
+		}
+	});
+
 	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&',
 			'field_building_name', 'field_building_id', 'building_container');
 
