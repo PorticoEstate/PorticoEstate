@@ -157,7 +157,7 @@ if($list_form)
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
-		null,
+		new Array(),
 		null,
 		<?php echo $disable_left_click ? 'true' : 'false'; ?>
 	);
