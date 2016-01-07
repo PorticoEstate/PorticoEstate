@@ -502,7 +502,7 @@
 
 
 			$location			 = ".application.{$top_level_activity}";
-			$organized_fields	 = $this->get_attributes($location);
+			$organized_fields	 = ExecMethod('booking.custom_fields.get_fields', $location);
 			$variable_vertical	 = '';
 			$variable_horizontal = '';
 			foreach($organized_fields as $group)
@@ -542,31 +542,6 @@ HTML;
 				'variable_vertical'		 => $variable_vertical,
 				'variable_horizontal'	 => $variable_horizontal
 			);
-		}
-
-		/**
-		 *
-		 * @param type $location
-		 * @return  array the grouped attributes
-		 */
-		private function get_attributes($location)
-		{
-			$appname	 = 'booking';
-			$attributes	 = $GLOBALS['phpgw']->custom_fields->find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
-			return $this->get_attribute_groups($appname, $location, $attributes);
-		}
-
-		/**
-		 * Arrange attributes within groups
-		 *
-		 * @param string  $location    the name of the location of the attribute
-		 * @param array   $attributes  the array of the attributes to be grouped
-		 *
-		 * @return array the grouped attributes
-		 */
-		private function get_attribute_groups($appname, $location, $attributes = array())
-		{
-			return $GLOBALS['phpgw']->custom_fields->get_attribute_groups($appname, $location, $attributes);
 		}
 
 		public function participants()
