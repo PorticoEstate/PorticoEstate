@@ -59,20 +59,80 @@
 		public function get_fields($location)
 		{
 			$appname	 = 'booking';
-			$attributes	 = parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
-			return $this->get_field_groups($appname, $location, $attributes);
+			return	parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
 		}
 
+
+		/**
+		 *
+		 * @param string $location
+		 * @param array $fields
+		 * @return  array the grouped attributes
+		 */
+		public function organize_fields($location, $fields = array())
+		{
+			$field_groups =  $this->get_field_groups('booking', $location, $fields);
+			$i = -1;
+			$attributes = array();
+			$_dummy = array(array());
+			foreach($field_groups as $_key => $group)
+			{
+				if(!isset($group['attributes']))
+				{
+					$group['attributes'] = $_dummy;
+				}
+				if(isset($group['group_sort']))
+				{
+					if($group['level'] == 0)
+					{
+						$_tab_name = str_replace(' ', '_', $group['name']);
+						$active_tab = $active_tab ? $active_tab : $_tab_name;
+						$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}",
+							'disable' => 0);
+						$group['link'] = $_tab_name;
+						$attributes[] = $group;
+						$i ++;
+					}
+					else
+					{
+						$attributes[$i]['attributes'][] = array
+							(
+							'datatype' => 'section',
+							'descr' => '<H' . ($group['level'] + 1) . "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
+							'level' => $group['level'],
+						);
+						$attributes[$i]['attributes'] = array_merge($attributes[$i]['attributes'], $group['attributes']);
+					}
+					unset($_tab_name);
+				}
+				else
+				{
+					$attributes[] = $group;
+				}
+			}
+			return $attributes;
+		}
+		/**
+		 *
+		 * @param type $location
+		 * @return  array the grouped attributes
+		 */
+		public function get_organized_fields($location)
+		{
+			$appname = 'booking';
+			$fields	 = parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			return  $this->get_field_groups($appname, $location, $fields);
+		}
 		/**
 		 * Arrange attributes within groups
 		 *
 		 * @param string  $location    the name of the location of the attribute
-		 * @param array   $attributes  the array of the attributes to be grouped
+		 * @param array   $fields  the array of the attributes to be grouped
 		 *
 		 * @return array the grouped attributes
 		 */
-		private function get_field_groups($appname, $location, $attributes = array())
+		private function get_field_groups($appname, $location, $fields = array())
 		{
-			return parent::get_attribute_groups($appname, $location, $attributes);
+			return parent::get_attribute_groups($appname, $location, $fields, true);
 		}
 	}

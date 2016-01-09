@@ -43,6 +43,7 @@ Never	common	no	Aldri
 quota	common	no	Kvote
 are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache
 current activities	booking	no	Aktiviteter
+select	booking	no	Velg
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
 -- select a season --	booking	no	Velg en sesong

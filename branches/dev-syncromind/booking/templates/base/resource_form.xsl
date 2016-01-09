@@ -1,5 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="msgbox"/>
+	<script type="text/javascript">
+		var resource_id = <xsl:value-of select="resource/id"/>;
+	</script>
+
 	<form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -113,6 +117,7 @@
 						</textarea>
 					</div>
 				</div>
+				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'organzations_ids')" />

@@ -17,6 +17,7 @@
 			'query'					 => true,
 			'add'					 => true,
 			'edit'					 => true,
+			'get_custom'			 => true,
 			'show'					 => true,
 			'schedule'				 => true,
 			'toggle_show_inactive'	 => true,
@@ -207,6 +208,16 @@
 			{
 				$resource	 = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors		 = $this->bo->validate($resource);
+			//	$location		 = $this->get_location();
+				$fields		= ExecMethod('booking.custom_fields.get_fields',$this->get_location());
+				$values_attribute = phpgw::get_var('values_attribute');
+				$json_representation = array();
+				foreach($fields as $attrib_id => &$attrib)
+				{
+					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
+			//		$attrib['value'] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
+				}
+				$resource['json_representation'] = json_encode($json_representation);
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($resource);
@@ -233,6 +244,55 @@
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
 
+
+		private function get_location()
+		{
+			$activity_id		 = phpgw::get_var('activity_id', 'int');
+			$activity_path		 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : 0;
+			return ".resource.{$top_level_activity}";
+		}
+
+		public function get_custom()
+		{
+			$resource_id		 = phpgw::get_var('resource_id', 'int');
+			$resource			= $this->bo->read_single($resource_id);
+			$custom_values = json_decode($resource['json_representation']);
+//			_debug_array($custom_values);
+
+
+			$location			 = $this->get_location();
+			$custom_fields		= createObject('booking.custom_fields');
+			$fields	= $custom_fields->get_fields($location);
+			foreach($fields as $attrib_id => &$attrib)
+			{
+				$attrib['value'] = isset($custom_values->$attrib['name']) ? $custom_values->$attrib['name'] : null;
+
+				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				{
+					foreach($attrib['choice'] as &$choice)
+					{
+						if(is_array($attrib['value']))
+						{
+							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
+						}
+						else
+						{
+							$choice['selected'] = $choice['id'] == $attrib['value'] ? 1 : 0;
+						}
+					}
+				}
+			}
+//			_debug_array($fields);
+			$organized_fields	 = $custom_fields->organize_fields($location, $fields);
+
+			$data = array(
+				'attributes_group'	=> $organized_fields,
+			);
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('custom_fields' => $data));
+		}
+
 		public function show()
 		{
 			$resource						 = $this->bo->read_single(phpgw::get_var('id', 'int'));
@@ -257,6 +317,7 @@
 			$data				 = array(
 				'resource' => $resource
 			);
+			self::add_javascript('booking', 'booking', 'resource_new.js'); // to render custom fields
 			self::render_template_xsl('resource', $data);
 		}
 

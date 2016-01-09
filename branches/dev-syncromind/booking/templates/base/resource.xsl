@@ -37,6 +37,8 @@
 						<xsl:value-of select="php:function('lang', string(resource/type))"/>
 					</span>
 				</div>
+				<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
+				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Documents')" />

@@ -115,6 +115,7 @@
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'sort' => array('type' => 'int','precision' => '4','nullable' => False,'default' => 0),
 				'organizations_ids' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'json_representation' => array('type' => 'json', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
