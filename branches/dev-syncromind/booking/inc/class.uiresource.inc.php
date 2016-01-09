@@ -208,8 +208,10 @@
 			{
 				$resource	 = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors		 = $this->bo->validate($resource);
-			//	$location		 = $this->get_location();
-				$fields		= ExecMethod('booking.custom_fields.get_fields',$this->get_location());
+				$location		 = $this->get_location();
+				$location_id	= $GLOBALS['phpgw']->locations->get_id('booking', $location);
+
+				$fields		= ExecMethod('booking.custom_fields.get_fields',$location);
 				$values_attribute = phpgw::get_var('values_attribute');
 				$json_representation = array();
 				foreach($fields as $attrib_id => &$attrib)
@@ -217,7 +219,10 @@
 					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 			//		$attrib['value'] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 				}
-				$resource['json_representation'] = json_encode($json_representation);
+				$resource['json_representation'] = array(
+					'schema_location' => $location_id,
+					'data' => $json_representation
+				);
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($resource);
@@ -255,9 +260,9 @@
 
 		public function get_custom()
 		{
-			$resource_id		 = phpgw::get_var('resource_id', 'int');
+			$resource_id		= phpgw::get_var('resource_id', 'int');
 			$resource			= $this->bo->read_single($resource_id);
-			$custom_values = json_decode($resource['json_representation']);
+			$custom_values		= $resource['json_representation']->data;
 //			_debug_array($custom_values);
 
 

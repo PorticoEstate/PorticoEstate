@@ -6,25 +6,26 @@
 
 		protected $db_null = 'NULL';
 		protected $valid_field_types = array(
-			'date'		 => true,
-			'time'		 => true,
-			'timestamp'	 => true,
-			'string'	 => true,
-			'int'		 => true,
-			'decimal'	 => true,
-			'intarray'	 => true,
+			'date' => true,
+			'time' => true,
+			'timestamp' => true,
+			'string' => true,
+			'int' => true,
+			'decimal' => true,
+			'intarray' => true,
+			'json'		=> true
 		);
-		public static $AUTO_CREATED_ON		 = array('created_on' => array('type' => 'timestamp',
+		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp',
 				'auto' => true, 'add_callback' => '_set_created_on'));
-		public static $AUTO_CREATED_BY		 = array('created_by' => array('type' => 'int',
+		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int',
 				'auto' => true, 'add_callback' => '_set_created_by'));
-		public static $REL_CREATED_BY_NAME	 = array(
-			'type'	 => 'string',
-			'query'	 => true,
-			'join'	 => array(
-				'table'	 => 'phpgw_accounts',
-				'fkey'	 => 'created_by',
-				'key'	 => 'account_id',
+		public static $REL_CREATED_BY_NAME = array(
+			'type' => 'string',
+			'query' => true,
+			'join' => array(
+				'table' => 'phpgw_accounts',
+				'fkey' => 'created_by',
+				'key' => 'account_id',
 				'column' => 'account_lid'
 			)
 		);
@@ -35,11 +36,11 @@
 
 		public function __construct($table_name, $fields)
 		{
-			$this->table_name	 = $table_name;
-			$this->fields		 = $fields;
-			$this->db			 = $GLOBALS['phpgw']->db;
-			$this->join			 = & $this->db->join;
-			$this->like			 = & $this->db->like;
+			$this->table_name = $table_name;
+			$this->fields = $fields;
+			$this->db = $GLOBALS['phpgw']->db;
+			$this->join = & $this->db->join;
+			$this->like = & $this->db->like;
 		}
 
 		public function get_db()
@@ -74,14 +75,14 @@
 
 		protected function _set_created_on($field, &$entity)
 		{
-			$params			 = current(self::$AUTO_CREATED_ON);
-			$entity[$field]	 = 'now';
+			$params = current(self::$AUTO_CREATED_ON);
+			$entity[$field] = 'now';
 		}
 
 		protected function _set_created_by($field, &$entity)
 		{
-			$params			 = current(self::$AUTO_CREATED_BY);
-			$entity[$field]	 = $this->_marshal(booking_account_helper::current_account_id(), $params['type']);
+			$params = current(self::$AUTO_CREATED_BY);
+			$entity[$field] = $this->_marshal(booking_account_helper::current_account_id(), $params['type']);
 		}
 
 		public function get_columns()
@@ -134,8 +135,8 @@
 
 		public function _get_cols_and_joins()
 		{
-			$cols	 = array();
-			$joins	 = array();
+			$cols = array();
+			$joins = array();
 
 			foreach($this->fields as $field => $params)
 			{
@@ -145,15 +146,15 @@
 				}
 				else if(isset($params['join']) && $params['join'])
 				{
-					$join_table_alias	 = $this->build_join_table_alias($field, $params);
-					$cols[]				 = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
-					$joins[]			 = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+					$join_table_alias = $this->build_join_table_alias($field, $params);
+					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
+					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
 				}
 				else
 				{
-					$value_expression	 = isset($params['expression']) ?
+					$value_expression = isset($params['expression']) ?
 					'(' . strtr($params['expression'], array('%%table%%' => $this->table_name)) . ')' : "{$this->table_name}.{$field}";
-					$cols[]				 = "{$value_expression} AS {$field}";
+					$cols[] = "{$value_expression} AS {$field}";
 				}
 			}
 			return array($cols, $joins);
@@ -217,6 +218,10 @@
 				}
 				return '(' . join(',', $values) . ')';
 			}
+			else if($type == 'json')
+			{
+				return "'" .json_encode($value). "'";;
+			}
 
 			//Sanity check
 			if(!$this->valid_field_type($type))
@@ -230,9 +235,8 @@
 		function _unmarshal($value, $type)
 		{
 			$type = strtolower($type);
-			if(
-			($value === null) || ($type != 'string' && (strlen(trim($value)) === 0)) /* phpgw always returns empty strings (i.e '') for null values */
-			)
+			/* phpgw always returns empty strings (i.e '') for null values */
+			if(	($value === null) || ($type != 'string' && (strlen(trim($value)) === 0)))
 			{
 				return null;
 			}
@@ -243,6 +247,10 @@
 			else if($type == 'decimal')
 			{
 				return floatval($value);
+			}
+			else if($type == 'json')
+			{
+				return json_decode($value);
 			}
 
 			//Sanity check
@@ -275,10 +283,10 @@
 
 		function read_single($id)
 		{
-			$pk_params	 = $this->primary_key_conditions($id);
-			$cols_joins	 = $this->_get_cols_and_joins();
-			$cols		 = join(',', $cols_joins[0]);
-			$joins		 = join(' ', $cols_joins[1]);
+			$pk_params = $this->primary_key_conditions($id);
+			$cols_joins = $this->_get_cols_and_joins();
+			$cols = join(',', $cols_joins[0]);
+			$joins = join(' ', $cols_joins[1]);
 			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__);
 			if($this->db->next_record())
 			{
@@ -286,8 +294,8 @@
 				{
 					if($params['manytomany'])
 					{
-						$table	 = $params['manytomany']['table'];
-						$key	 = $params['manytomany']['key'];
+						$table = $params['manytomany']['table'];
+						$key = $params['manytomany']['key'];
 
 						if(is_array($params['manytomany']['column']))
 						{
@@ -296,8 +304,8 @@
 							{
 								$column[] = is_array($paramsOrFieldName) ? $fieldOrInt : $paramsOrFieldName;
 							}
-							$column			 = join(',', $column);
-							$order_method	 = '';
+							$column = join(',', $column);
+							$order_method = '';
 
 							if(is_array($params['manytomany']['order']))
 							{
@@ -313,13 +321,13 @@
 								{
 									if(is_array($paramsOrCol))
 									{
-										$col	 = $intOrCol;
-										$type	 = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+										$col = $intOrCol;
+										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
 									}
 									else
 									{
-										$col	 = $paramsOrCol;
-										$type	 = $params['type'];
+										$col = $paramsOrCol;
+										$type = $params['type'];
 									}
 
 									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
@@ -329,7 +337,7 @@
 						}
 						else
 						{
-							$column		 = $params['manytomany']['column'];
+							$column = $params['manytomany']['column'];
 							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
 							while($this->db->next_record())
@@ -352,14 +360,14 @@
 			$clauses = array('1=1');
 			if($query)
 			{
-				$like_pattern	 = "'%" . $this->db->db_addslashes($query) . "%'";
-				$like_clauses	 = array();
+				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
+				$like_clauses = array();
 				foreach($this->fields as $field => $params)
 				{
 					if($params['query'])
 					{
-						$table	 = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
-						$column	 = $params['join'] ? $params['join']['column'] : $field;
+						$table = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
+						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
 							$like_clauses[] = "{$table}.{$column} = " . $this->db->db_addslashes($query);
@@ -410,7 +418,9 @@
 					//tokens with actual table_name in the clause.
 					$where_clauses = (array)$val;
 					if(count($where_clauses) == 0)
-					{ continue;}
+					{
+						continue;
+					}
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
@@ -430,16 +440,16 @@
 		 */
 		function read($params)
 		{
-			$start		 = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-			$results	 = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
-			$sort		 = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-			$dir		 = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
-			$query		 = isset($params['query']) && $params['query'] ? $params['query'] : null;
-			$filters	 = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-			$cols_joins	 = $this->_get_cols_and_joins();
-			$cols		 = join(',', $cols_joins[0]);
-			$joins		 = join(' ', $cols_joins[1]);
-			$condition	 = $this->_get_conditions($query, $filters);
+			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
+			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
+			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
+			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
+			$cols_joins = $this->_get_cols_and_joins();
+			$cols = join(',', $cols_joins[0]);
+			$joins = join(' ', $cols_joins[1]);
+			$condition = $this->_get_conditions($query, $filters);
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
@@ -496,9 +506,9 @@
 				{
 					if($params['manytomany'])
 					{
-						$table	 = $params['manytomany']['table'];
-						$key	 = $params['manytomany']['key'];
-						$ids	 = join(',', array_keys($id_map));
+						$table = $params['manytomany']['table'];
+						$key = $params['manytomany']['key'];
+						$ids = join(',', array_keys($id_map));
 						if(is_array($params['manytomany']['column']))
 						{
 							$colnames = array();
@@ -512,35 +522,35 @@
 							$row[$field] = array();
 							while($this->db->next_record())
 							{
-								$id		 = $this->_unmarshal($this->db->f($key, false), 'int');
-								$data	 = array();
+								$id = $this->_unmarshal($this->db->f($key, false), 'int');
+								$data = array();
 								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
 									if(is_array($paramsOrCol))
 									{
-										$col	 = $intOrCol;
-										$type	 = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+										$col = $intOrCol;
+										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
 									}
 									else
 									{
-										$col	 = $paramsOrCol;
-										$type	 = $params['type'];
+										$col = $paramsOrCol;
+										$type = $params['type'];
 									}
 
 									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
 								}
-								$row[$field][]					 = $data;
+								$row[$field][] = $data;
 								$results[$id_map[$id]][$field][] = $data;
 							}
 						}
 						else
 						{
-							$column		 = $params['manytomany']['column'];
+							$column = $params['manytomany']['column'];
 							$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
 							$row[$field] = array();
 							while($this->db->next_record())
 							{
-								$id								 = $this->_unmarshal($this->db->f($key, false), 'int');
+								$id = $this->_unmarshal($this->db->f($key, false), 'int');
 								$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
 							}
 						}
@@ -548,11 +558,11 @@
 				}
 			}
 			return array(
-				'total_records'	 => $total_records,
-				'results'		 => $results,
-				'start'			 => $start,
-				'sort'			 => is_array($sort) ? $sort[0] : $sort,
-				'dir'			 => $dir
+				'total_records' => $total_records,
+				'results' => $results,
+				'start' => $start,
+				'sort' => is_array($sort) ? $sort[0] : $sort,
+				'dir' => $dir
 			);
 		}
 
@@ -590,9 +600,9 @@
 						{
 							if(!$this->is_auto_field_def($params, $supported_action))
 								continue;
-							$params['action_callback']	 = $this->get_auto_field_def_callback($params, $supported_action);
-							$params['action']			 = $supported_action;
-							$action_auto_fields[$field]	 = $params;
+							$params['action_callback'] = $this->get_auto_field_def_callback($params, $supported_action);
+							$params['action'] = $supported_action;
+							$action_auto_fields[$field] = $params;
 						}
 						$this->auto_fields[$supported_action] = $action_auto_fields;
 					}
@@ -622,8 +632,8 @@
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
 				{
-					$table	 = $params['manytomany']['table'];
-					$key	 = $params['manytomany']['key'];
+					$table = $params['manytomany']['table'];
+					$key = $params['manytomany']['key'];
 
 					if(is_array($params['manytomany']['column']))
 					{
@@ -643,17 +653,19 @@
 							{
 								if(is_array($paramsOrCol))
 								{
-									$col	 = $intOrCol;
-									$type	 = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+									$col = $intOrCol;
+									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
 								}
 								else
 								{
-									$col	 = $paramsOrCol;
-									$type	 = $params['type'];
+									$col = $paramsOrCol;
+									$type = $params['type'];
 								}
 
 								if($col == 'id')
-								{ continue;}
+								{
+									continue;
+								}
 
 								$data[] = $this->_marshal($v[$col], $type);
 							}
@@ -672,8 +684,8 @@
 					}
 				}
 			}
-			$receipt['id']			 = $id;
-			$receipt['message'][]	 = array('msg' => lang('Entity %1 has been saved', $receipt['id']));
+			$receipt['id'] = $id;
+			$receipt['message'][] = array('msg' => lang('Entity %1 has been saved', $receipt['id']));
 			return $receipt;
 		}
 
@@ -703,8 +715,15 @@
 			$values = $this->get_table_values($entry, __FUNCTION__);
 			foreach($values as $key => $val)
 			{
-				$val			 = str_replace('&nbsp;', ' ', $val);
-				$values[$key]	 = trim($val);
+				if(is_array($val))
+				{
+					$values[$key] = $val;
+				}
+				else
+				{
+					$val = str_replace('&nbsp;', ' ', $val);
+					$values[$key] = trim($val);			
+				}
 			}
 
 			array_walk($values, array($this, 'column_update_expression'));
@@ -717,9 +736,9 @@
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
 				{
-					$table				 = $params['manytomany']['table'];
-					$key				 = $params['manytomany']['key'];
-					$update_queries[]	 = "DELETE FROM $table WHERE $key=$id";
+					$table = $params['manytomany']['table'];
+					$key = $params['manytomany']['key'];
+					$update_queries[] = "DELETE FROM $table WHERE $key=$id";
 
 					if(is_array($params['manytomany']['column']))
 					{
@@ -739,22 +758,24 @@
 							{
 								if(is_array($paramsOrCol))
 								{
-									$col	 = $intOrCol;
-									$type	 = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+									$col = $intOrCol;
+									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
 								}
 								else
 								{
-									$col	 = $paramsOrCol;
-									$type	 = $params['type'];
+									$col = $paramsOrCol;
+									$type = $params['type'];
 								}
 
 								if($col == 'id')
-								{ continue;}
+								{
+									continue;
+								}
 
 								$data[] = $this->_marshal($v[$col], $type);
 							}
-							$v					 = join(',', $data);
-							$update_queries[]	 = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
+							$v = join(',', $data);
+							$update_queries[] = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
 						}
 					}
 					else
@@ -762,8 +783,8 @@
 						$colname = $params['manytomany']['column'];
 						foreach($entry[$field] as $v)
 						{
-							$v					 = $this->_marshal($v, $params['type']);
-							$update_queries[]	 = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
+							$v = $this->_marshal($v, $params['type']);
+							$update_queries[] = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
 						}
 					}
 				}
@@ -772,8 +793,8 @@
 			{
 				$this->db->query($update_query, __LINE__, __FILE__);
 			}
-			$receipt['id']			 = $id;
-			$receipt['message'][]	 = array('msg' => lang('Entity %1 has been updated', $entry['id']));
+			$receipt['id'] = $id;
+			$receipt['message'][] = array('msg' => lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;
 		}
 
@@ -786,8 +807,8 @@
 		 */
 		public function validate_uniqueness()
 		{
-			$args	 = func_get_args();
-			$entity	 = array_shift($args);
+			$args = func_get_args();
+			$entity = array_shift($args);
 			$filters = array();
 			foreach($args as $unique_field)
 			{
@@ -820,10 +841,12 @@
 			foreach($fields as $field => $params)
 			{
 				if(!is_array($params))
-				{ continue;}
+				{
+					continue;
+				}
 
-				$v		 = trim($entity[$field]);
-				$empty	 = false;
+				$v = trim($entity[$field]);
+				$empty = false;
 
 				if(isset($params['manytomany']) && isset($params['manytomany']['column']))
 				{
@@ -850,8 +873,8 @@
 				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
 				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
-					$errors[$error_key]	 = lang("Field %1 is required", lang($error_key));
-					$empty				 = true;
+					$errors[$error_key] = lang("Field %1 is required", lang($error_key));
+					$empty = true;
 				}
 				if($params['type'] == 'date' && !empty($entity[$field]))
 				{

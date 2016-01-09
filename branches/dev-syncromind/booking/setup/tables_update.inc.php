@@ -3337,7 +3337,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource','json_representation',
 			array(
-				'type' => 'json',
+				'type' => 'jsonb',
 				'nullable' => true
 			)
 		);
