@@ -3341,6 +3341,10 @@
 				'nullable' => true
 			)
 		);
+		
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@ (LEFTARG = jsonb, RIGHTARG = text, PROCEDURE = jsonb_exists)',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any)',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all)',__LINE__,__FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

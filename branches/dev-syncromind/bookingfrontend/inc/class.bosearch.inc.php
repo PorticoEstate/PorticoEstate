@@ -13,7 +13,7 @@
 			$this->soevent			 = CreateObject('booking.soevent');
 		}
 
-		function search($searchterm, $activity_top_level, $building_id, $filter_part_of_town)
+		function search($searchterm, $activity_top_level, $building_id, $filter_part_of_town,$criteria = array())
 		{
 			$building_filter = array();
 
@@ -90,7 +90,10 @@
 					$_filter_resource['activity_id'] = $activity_top_level;
 				}
 
-				$_filter_resource['building_id'] = $building_filter;
+				if($building_filter)
+				{
+					$_filter_resource['building_id'] = $building_filter;
+				}
 
 				if($building_id)
 				{
@@ -99,6 +102,11 @@
 				if(isset($filter_part_of_town[0]) && $filter_part_of_town[0])
 				{
 					$_filter_resource['part_of_town_id'] = $filter_part_of_town;
+				}
+
+				if($criteria)
+				{
+					$_filter_resource['custom_fields_criteria'] = $criteria;
 				}
 
 				$res_result = $this->soresource->read(array("query" => $searchterm, "sort" => "name",

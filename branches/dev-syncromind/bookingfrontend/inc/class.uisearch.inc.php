@@ -118,7 +118,7 @@
 			if($building_id || $type || $activity_top_level || (isset($filter_part_of_town[0]) && $filter_part_of_town[0]))
 			{
 				$data = array(
-					'results' => $this->bo->search($searchterm, $activity_top_level, $building_id, $filter_part_of_town)
+					'results' => $this->bo->search($searchterm, $activity_top_level, $building_id, $filter_part_of_town, $criteria)
 				);
 			}
 			self::render_template_xsl('search_details', $data);

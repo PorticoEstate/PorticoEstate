@@ -350,6 +350,15 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false, $_fetch_single = false)
 		{
+
+/**
+ * Note: JSONB operator '?' is troublesom: convert to '~@'
+ * CREATE OPERATOR ~@ (LEFTARG = jsonb, RIGHTARG = text, PROCEDURE = jsonb_exists);
+ * CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any);
+ * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
+ */
+
+
 			self::_get_fetchmode();
 			self::set_fetch_single($_fetch_single);
 

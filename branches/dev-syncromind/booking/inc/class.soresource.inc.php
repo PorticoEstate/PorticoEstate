@@ -94,7 +94,7 @@
 
 		function _get_conditions($query, $filters)
 		{
-
+			static $custom_fields_arr = array();
 			if(isset($filters['activity_id']) && $filters['activity_id'])
 			{
 				$soactivity				 = createObject('booking.soactivity');
@@ -103,6 +103,55 @@
 				$filters['activity_id']	 = $activity_ids;
 			}
 			$conditions = parent::_get_conditions($query, $filters);
+
+			$custom_condition_arr = array();
+			if(isset($filters['custom_fields_criteria']) && is_array($filters['custom_fields_criteria']))
+			{
+				foreach($filters['custom_fields_criteria'] as $custom_fields_criteria)
+				{
+					$sub_condition = array();
+					$location_id = $custom_fields_criteria['location_id'];
+
+					if(!isset($custom_fields_arr[$location_id]))
+					{
+						$custom_fields = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
+						$custom_fields_arr[$location_id] = $custom_fields;
+						$sub_condition[] = " json_representation @> '{\"schema_location\":$location_id}'";
+					}
+
+					$field_name = $custom_fields[$custom_fields_criteria['attribute_id']]['name'];
+					$field_value = isset($custom_fields_criteria['choice_id']) ? $custom_fields_criteria['choice_id'] : false;
+
+					if(!$field_value)
+					{
+						continue;
+					}
+					
+					
+					if($custom_fields[$custom_fields_criteria['attribute_id']]['datatype'] == 'CH') // in array
+					{
+						/**
+						 * Note: JSONB operator '?' is troublesome: convert to '~@'
+						 * CREATE OPERATOR ~@ (LEFTARG = jsonb, RIGHTARG = text, PROCEDURE = jsonb_exists);
+						 * CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any);
+						 * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
+						 */
+						$sub_condition[] = " json_representation #> '{data,$field_name}' ~@ '$field_value'";
+					}
+					else // discrete value
+					{
+						$sub_condition[] = " json_representation #> '{data,$field_name}' = '\"$field_value\"'";
+					}
+
+
+					$custom_condition_arr[] = '(' . implode(' AND ', $sub_condition) . ')';
+				}
+			}
+
+			if($custom_condition_arr)
+			{
+				$conditions .= ' AND ' . implode(' OR ', $custom_condition_arr);
+			}
 			return $conditions;
 		}
 	}

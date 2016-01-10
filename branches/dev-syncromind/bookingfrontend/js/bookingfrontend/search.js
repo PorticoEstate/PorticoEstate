@@ -26,7 +26,7 @@ $(document).ready(function () {
 // Filter tree
 	$("#treeDiv1").jstree({
 		core: {
-			multiple: false,
+			multiple: true,
 			data: filter_tree,
 			themes: {"stripes": true}
 		},
