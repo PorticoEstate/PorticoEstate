@@ -79,12 +79,13 @@
 						'opened'			 => false,
 						'selected'			 => $activity['id'] == $activity_top_level ? true : false,
 						'checked'			 => false,
-						'checkbox_disabled'	 => true,
-						'checkbox_hide'		 => true
+				//		'checkbox_disabled'	 => true,
+				//		'checkbox_hide'		 => true
 					),
 					'parent'	 => '#',
 					'a_attr'	 => array('href' => $_url, 'activity_top_level' => $activity['id'],
-						'class' => "no_checkbox"),
+				//		'class' => "no_checkbox"
+						),
 					'children'	 => $organized_fields,
 				);
 			}
