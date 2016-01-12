@@ -1497,7 +1497,7 @@
 		 * @param type $parent_id
 		 * @return type
 		 */
-		public function get_attribute_tree($appname, $location, $parent_id = 0)
+		public function get_attribute_tree($appname, $location, $parent_id = 0, $cat_id = 0)
 		{
 			$this->node_id++;
 
@@ -1530,14 +1530,15 @@
 					'db_id'		=> $id,
 					'parent'	=> $this->_db2->f('parent_id'),
 					'text'		=> $this->_db2->f('name',true),
+					'cat_id'	=> $cat_id
 				);
 				$this->node_id++;
 			}
 
 			foreach($tree as &$node)
 			{
-				$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id']);
-				$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id']);
+				$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id'], $cat_id);
+				$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
 				if($children)
 				{
 					$node['children'] = $children;
@@ -1566,7 +1567,7 @@
 		 * @param type $parent
 		 * @return type
 		 */
-		public function get_group_children($location_id, $parent_id, $parent)
+		public function get_group_children($location_id, $parent_id, $parent, $cat_id = 0)
 		{
 
 			$parent = (int)$parent;
@@ -1587,13 +1588,14 @@
 					'parent'	=> $parent,
 					'parent_id'	=> $this->_db2->f('parent_id'),
 					'text'	=> $this->_db2->f('name',true),
+					'cat_id' => $cat_id
 				);
 				$this->node_id++;
 			}
 
 			foreach($children as &$child)
 			{
-				$_children = $this->get_group_children($location_id, $child['db_id'], $child['id']);
+				$_children = $this->get_group_children($location_id, $child['db_id'], $child['id'], $cat_id);
 				if($_children)
 				{
 					$child['children'] = $_children;
@@ -1610,7 +1612,7 @@
 		 * @param type $group_id
 		 * @return type
 		 */
-		public function get_attribute_children($location_id, $parent, $group_id)
+		public function get_attribute_children($location_id, $parent, $group_id, $cat_id = 0)
 		{
 			$children = array();
 
@@ -1631,6 +1633,7 @@
 					'attribute_id'	=> $id,
 					'parent'		=> $parent,
 					'text'			=> $this->_db2->f('input_text',true),
+					'cat_id'		=> $cat_id
 				);
 				$this->node_id++;
 			}
@@ -1648,6 +1651,7 @@
 						$_choice['attribute_id']= $child['db_id'];
 						$_choice['choice_id']	= $_choice['id'];
 						$_choice['id']			= "ajson{$this->node_id}";
+						$_choice['cat_id']		= $cat_id;
 						$this->node_id++;
 					}
 					$child['children'] = $_choices;

@@ -13,38 +13,54 @@
 			$this->soevent			 = CreateObject('booking.soevent');
 		}
 
-		function search($searchterm, $activity_top_level, $building_id, $filter_part_of_town,$criteria = array())
+		function search($searchterm, $building_id, $filter_part_of_town, $activity_criteria = array())
 		{
-			$building_filter = array();
+			$building_filter = array(-1);
+			$activity_top_levels = array_keys($activity_criteria);
 
-			if($type = phpgw::get_var('type', 'string'))
+			$_filter_search_type	 = explode(',', phpgw::get_var('filter_search_type', 'string'));
+			$types = array();
+			foreach($_filter_search_type as $key => $value)
 			{
-				$types = array($type);
-			}
-			else
-			{
-				$types = array('building', 'resource'); //default
+				if($value)
+				{
+					$types[] = $value;
+				}
 			}
 
-			$bui_result		 = $org_result		 = $res_result		 = $event_result	 = array();
+			if($type= phpgw::get_var('type', 'string', 'REQUEST', null))
+			{
+				$types[] = $type;
+			}
+
+			$bui_result	 = $org_result	 = $res_result	 = $event_result = array();
+
+			$_filter_building = array("active" => "1");
+			if(!isset($filter_part_of_town) || ! $filter_part_of_town)
+			{
+				$part_of_towns = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
+
+				$filter_part_of_town = array();
+				foreach($part_of_towns as &$part_of_town)
+				{
+					$filter_part_of_town[] = $part_of_town['id'];
+				}
+			}
+
+			$_filter_building['part_of_town_id'] = $filter_part_of_town;
+
+			if($activity_criteria && !$building_id)
+			{
+				$buildings				 = $this->sobuilding->get_buildings_from_activity($activity_top_levels);
+				$_filter_building['id']	 = $buildings;
+			}
+			if($building_id)
+			{
+				$_filter_building['id'] = $building_id;
+			}
 
 			if(in_array('building', $types))
 			{
-				$_filter_building = array("active" => "1");
-				if(isset($filter_part_of_town[0]) && $filter_part_of_town[0])
-				{
-					$_filter_building['part_of_town_id'] = $filter_part_of_town;
-				}
-
-				if($activity_top_level && !$building_id)
-				{
-					$buildings				 = $this->sobuilding->get_buildings_from_activity($activity_top_level);
-					$_filter_building['id']	 = $buildings;
-				}
-				if($building_id)
-				{
-					$_filter_building['id'] = $building_id;
-				}
 
 				$bui_result = $this->sobuilding->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => $_filter_building));
@@ -85,10 +101,10 @@
 			{
 				$_filter_resource = array("active" => "1");
 
-				if($activity_top_level)
-				{
-					$_filter_resource['activity_id'] = $activity_top_level;
-				}
+//				if($activity_top_levels)
+//				{
+//					$_filter_resource['activity_id'] = $activity_top_levels;
+//				}
 
 				if($building_filter)
 				{
@@ -99,14 +115,20 @@
 				{
 					$_filter_resource['building_id'][] = $building_id;
 				}
-				if(isset($filter_part_of_town[0]) && $filter_part_of_town[0])
+				if(isset($filter_part_of_town) && $filter_part_of_town && !$bui_result)
 				{
-					$_filter_resource['part_of_town_id'] = $filter_part_of_town;
+					$_bui_result = $this->sobuilding->read(array("filters" => $_filter_building));
+					foreach($_bui_result['results'] as $_bui)
+					{
+						$_filter_resource['building_id'][]		 = $_bui['id'];
+					}
+
+					$_filter_resource['building_id'] = array_unique($_filter_resource['building_id']);
 				}
 
-				if($criteria)
+				if($activity_criteria)
 				{
-					$_filter_resource['custom_fields_criteria'] = $criteria;
+					$_filter_resource['custom_fields_criteria'] = $activity_criteria;
 				}
 
 				$res_result = $this->soresource->read(array("query" => $searchterm, "sort" => "name",

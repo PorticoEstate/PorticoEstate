@@ -95,11 +95,16 @@
 		 * @param type $activity_id
 		 * @return array building ids
 		 */
-		function get_buildings_from_activity($activity_id = 0)
+		function get_buildings_from_activity($activities = array())
 		{
 			$soactivity		 = createObject('booking.soactivity');
-			$children		 = $soactivity->get_children($activity_id);
-			$activity_ids	 = array_merge(array($activity_id), $children);
+
+			$activity_ids = array();
+			foreach($activities as $activity_id)
+			{
+				$children		= array_merge(array($activity_id), $soactivity->get_children($activity_id));
+				$activity_ids	= array_merge($activity_ids, $children);
+			}
 			$buildings		 = array();
 			if(!$activity_ids)
 			{

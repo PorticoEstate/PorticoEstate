@@ -51,8 +51,39 @@
 				</xsl:for-each>
 			</ul>
 		</div>
+		<div>
+			<div class="heading">
+				<xsl:value-of select="php:function('lang', 'type')" />
+			</div>
+			<ul id="search_type">
+				<li>
+					<label>
+						<input type="checkbox" name="search_type[]" value="building"/>
+						<xsl:value-of select="php:function('lang', 'building')" />
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="search_type[]" value="resource" checked="checked"/>
+						<xsl:value-of select="php:function('lang', 'resource')" />
+					</label>
+				</li>
+				<!--li>
+					<label>
+						<input type="checkbox" name="search_type[]" value="organization"/>
+						<xsl:value-of select="php:function('lang', 'organization')" />
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="search_type[]" value="event"/>
+						<xsl:value-of select="php:function('lang', 'event')" />
+					</label>
+				</li-->
+			</ul>
+		</div>
 
-		<div id="document">
+		<div id="activity_tree">
 			<fieldset>
 				<!-- Some style for the expand/contract section-->
 				<style>

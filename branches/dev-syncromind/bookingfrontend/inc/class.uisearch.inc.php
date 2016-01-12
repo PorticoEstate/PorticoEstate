@@ -72,7 +72,15 @@
 					'building_id'			 => $building_id,
 					'filter_part_of_town'	 => $imploded_filter_part_of_town));
 
-				$organized_fields	 = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}");
+				$dummy_sub = array();
+				$organized_fields	 = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}", 0,  $activity['id']);
+				if($organized_fields)
+				{
+					$dummy_sub[] = array(
+						'text'		 => $activity['name'],
+						'activity_top_level' => $activity['id'],
+						);
+				}
 				$filter_tree[]		 = array(
 					'text'		 => $activity['id'] == $activity_top_level ? "[{$activity['name']}]" : $activity['name'],
 					'state'		 => array(
@@ -83,10 +91,12 @@
 				//		'checkbox_hide'		 => true
 					),
 					'parent'	 => '#',
-					'a_attr'	 => array('href' => $_url, 'activity_top_level' => $activity['id'],
-				//		'class' => "no_checkbox"
-						),
-					'children'	 => $organized_fields,
+//					'a_attr'	 => array('href' => $_url,
+//						'activity_top_level' => $activity['id'],
+//						'class' => "no_checkbox"
+//						),
+					'activity_top_level' => $activity['id'],
+					'children'	 => array_merge($dummy_sub,$organized_fields),
 				);
 			}
 //_debug_array($filter_tree);
@@ -107,19 +117,44 @@
 		function query()
 		{
 			$searchterm						 = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
-			$type							 = phpgw::get_var('type', 'string', 'REQUEST', null);
 			$activity_top_level				 = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id					 = phpgw::get_var('building_id', 'int', 'REQUEST', null);
-			$filter_part_of_town			 = explode(',', phpgw::get_var('filter_part_of_town', 'string'));
-			$imploded_filter_part_of_town	 = implode(',', $filter_part_of_town);
+			$_filter_part_of_town			 = explode(',', phpgw::get_var('filter_part_of_town', 'string'));
 			$search							 = null;
 
-			$criteria = phpgw::get_var('criteria');
-//			_debug_array($criteria);die();
-			if($building_id || $type || $activity_top_level || (isset($filter_part_of_town[0]) && $filter_part_of_town[0]))
+			$filter_part_of_town = array();
+			foreach($_filter_part_of_town as $key => $value)
+			{
+				if($value)
+				{
+					$filter_part_of_town[] = $value;
+				}
+			}
+
+			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
+			$activity_criteria = array();
+			foreach($criteria as $entry)
+			{
+				if(isset($entry['activity_top_level']) && $entry['activity_top_level'])
+				{
+					$activity_criteria[$entry['activity_top_level']]['activity_top_level'] =  $entry['activity_top_level'];
+				}
+				if(isset($entry['choice_id']) && isset($entry['cat_id']))
+				{
+					$activity_criteria[$entry['cat_id']]['activity_top_level'] =  $entry['cat_id'];
+					$activity_criteria[$entry['cat_id']]['choice'][] =  $entry;
+				}
+			}
+
+//			_debug_array($building_id);
+//			_debug_array($filter_part_of_town);
+//			_debug_array($activity_criteria);
+//			_debug_array($criteria);
+//			die();
+			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town)
 			{
 				$data = array(
-					'results' => $this->bo->search($searchterm, $activity_top_level, $building_id, $filter_part_of_town, $criteria)
+					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $activity_criteria)
 				);
 			}
 			self::render_template_xsl('search_details', $data);

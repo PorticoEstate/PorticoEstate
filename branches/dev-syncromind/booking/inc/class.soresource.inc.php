@@ -95,40 +95,56 @@
 		function _get_conditions($query, $filters)
 		{
 			static $custom_fields_arr = array();
+			$activity_ids = array();
+			$soactivity				 = createObject('booking.soactivity');
 			if(isset($filters['activity_id']) && $filters['activity_id'])
 			{
-				$soactivity				 = createObject('booking.soactivity');
-				$children				 = $soactivity->get_children($filters['activity_id']);
-				$activity_ids			 = array_merge(array($filters['activity_id']), $children);
-				$filters['activity_id']	 = $activity_ids;
+			//	children				 = $soactivity->get_children($filters['activity_id']);
+			//	$activity_ids			 = array_merge(array($filters['activity_id']), $children);
+			//	$filters['activity_id']	 = $activity_ids;
 			}
 			$conditions = parent::_get_conditions($query, $filters);
 
 			$custom_condition_arr = array();
 			if(isset($filters['custom_fields_criteria']) && is_array($filters['custom_fields_criteria']))
 			{
-				foreach($filters['custom_fields_criteria'] as $custom_fields_criteria)
+	//			_debug_array($filters['custom_fields_criteria']);
+				$custom_fields_criteria = array();
+				foreach($filters['custom_fields_criteria'] as $activity_top_level => $_custom_fields_criteria)
+				{
+					if(!isset($activity_ids[$activity_top_level]))
+					{
+						$activity_ids[$activity_top_level] = array_merge(array($activity_top_level),  $soactivity->get_children($activity_top_level));
+					}
+					if(isset($_custom_fields_criteria['choice']))
+					{
+						$custom_fields_criteria = array_merge($custom_fields_criteria, $_custom_fields_criteria['choice']);
+					}
+				}
+				unset($activity_top_level);
+
+				foreach ($custom_fields_criteria as $criteria)
 				{
 					$sub_condition = array();
-					$location_id = $custom_fields_criteria['location_id'];
+					$location_id = $criteria['location_id'];
 
 					if(!isset($custom_fields_arr[$location_id]))
 					{
 						$custom_fields = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
 						$custom_fields_arr[$location_id] = $custom_fields;
-						$sub_condition[] = " json_representation @> '{\"schema_location\":$location_id}'";
 					}
 
-					$field_name = $custom_fields[$custom_fields_criteria['attribute_id']]['name'];
-					$field_value = isset($custom_fields_criteria['choice_id']) ? $custom_fields_criteria['choice_id'] : false;
+					$field_name = $custom_fields[$criteria['attribute_id']]['name'];
+					$field_value = isset($criteria['choice_id']) ? $criteria['choice_id'] : false;
 
 					if(!$field_value)
 					{
 						continue;
 					}
 					
+					$sub_condition[] = " json_representation @> '{\"schema_location\":$location_id}'";
 					
-					if($custom_fields[$custom_fields_criteria['attribute_id']]['datatype'] == 'CH') // in array
+					if($custom_fields[$criteria['attribute_id']]['datatype'] == 'CH') // in array
 					{
 						/**
 						 * Note: JSONB operator '?' is troublesome: convert to '~@'
@@ -144,14 +160,37 @@
 					}
 
 
-					$custom_condition_arr[] = '(' . implode(' AND ', $sub_condition) . ')';
+					$custom_condition_arr[$criteria['cat_id']][] = '(' . implode(' AND ', $sub_condition) . ')';
 				}
 			}
 
-			if($custom_condition_arr)
+			$_conditions = array();
+			if(isset($filters['custom_fields_criteria']) && is_array($filters['custom_fields_criteria']))
 			{
-				$conditions .= ' AND ' . implode(' OR ', $custom_condition_arr);
+				foreach($filters['custom_fields_criteria'] as $activity_top_level => $_custom_fields_criteria)
+				{
+					if(isset($custom_condition_arr[$activity_top_level]))
+					{
+						$_conditions[] = '(' .$conditions . ' AND (activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . ') AND' . implode(' OR ', $custom_condition_arr[$activity_top_level]) . '))';
+					}
+					else
+					{
+						$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . '))';
+					}
+				}
 			}
+
+
+//			if($custom_condition_arr)
+//			{
+//				foreach ($custom_condition_arr as $activity_top_level => $custom_condition)
+//				{
+//					$_conditions[] = $conditions . ' AND ' . implode(' OR ', $custom_condition);
+//				}
+//				$conditions = $conditions . ' OR ' . implode(' OR ', $_conditions);
+//			}
+			$conditions =  implode(' OR ', $_conditions);
+			_debug_array($conditions);
 			return $conditions;
 		}
 	}

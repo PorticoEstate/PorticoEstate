@@ -2,6 +2,8 @@ var filter_tree = null;
 var building_id_selection = "";
 var part_of_town_string = "";
 var part_of_towns = [];
+var search_types = [];
+var search_type_string = "";
 var selected_building_id = null;
 
 var selected_criteria = [];
@@ -17,6 +19,10 @@ $(document).ready(function () {
 
 	$("#part_of_town :checkbox").on('click', function () {
 		selected_building_id = null;
+		update_search(selected_criteria);
+
+	});
+	$("#search_type :checkbox").on('click', function () {
 		update_search(selected_criteria);
 
 	});
@@ -61,13 +67,13 @@ $(document).ready(function () {
 
 		var parents = data.node.parents;
 		var level = parents.length;
-		var activity_top_level = 0;
+//		var activity_top_level = 0;
 		if (!deselect)
 		{
 			//Top node
 			if (level < 2)
 			{
-				activity_top_level = data.node.a_attr.activity_top_level;
+//				activity_top_level = data.node.a_attr.activity_top_level;
 			}
 			else
 			{
@@ -76,13 +82,13 @@ $(document).ready(function () {
 
 				var treeInst = $('#treeDiv1').jstree(true);
 				top_node = treeInst.get_node(top_node_id)
-				activity_top_level = top_node.a_attr.activity_top_level;
+//				activity_top_level = top_node.a_attr.activity_top_level;
 			}
 		}
-		$('#activity_top_level').val(activity_top_level);
+//		$('#activity_top_level').val(activity_top_level);
 
-		var href = data.node.a_attr.href;
-		if (href == "#")
+	//	var href = data.node.a_attr.href;
+	//	if (href == "#")
 		{
 			selected_criteria = $("#treeDiv1").jstree('get_selected', true);
 		}
@@ -106,15 +112,23 @@ $(document).ready(function () {
 		});
 		part_of_town_string = part_of_towns.join(',');
 
+		search_types = [];
+		$("#search_type :checkbox:checked").each(function () {
+			search_types.push($(this).val());
+		});
+		search_type_string = search_types.join(',');
+
+
 		update_autocompleteHelper();
 
-		var activity_top_level = $('#activity_top_level').val();
+//		var activity_top_level = $('#activity_top_level').val();
 
 		var oArgs = {
 			menuaction: 'bookingfrontend.uisearch.query',
-			activity_top_level: activity_top_level,
+//			activity_top_level: activity_top_level,
 			building_id: selected_building_id,
-			filter_part_of_town: part_of_town_string
+			filter_part_of_town: part_of_town_string,
+			filter_search_type: search_type_string
 		};
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs);
 
