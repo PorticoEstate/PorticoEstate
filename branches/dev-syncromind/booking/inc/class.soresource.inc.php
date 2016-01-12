@@ -179,6 +179,10 @@
 					}
 				}
 			}
+			else
+			{
+				$_conditions[] = $conditions;
+			}
 
 
 //			if($custom_condition_arr)
