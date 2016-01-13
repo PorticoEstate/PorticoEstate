@@ -14,85 +14,97 @@
 </xsl:template>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:if test="results/total_records_sum &gt; 0">
-		<h5>
-			<u>
-				<strong>
-					<xsl:value-of select="php:function('lang', 'Found %1 results', results/total_records_sum)" />
-				</strong>
-			</u>
-		</h5>
-		<br />
-		<br />
-		<ol id="result">
-			<xsl:for-each select="results/results">
-				<li>
-					<div class="header">
-						<a class="bui_single_view_link">
-							<xsl:attribute name="href">
-								<xsl:value-of select="link"/>
-							</xsl:attribute>
-							<xsl:value-of select="name"/>
-						</a>
-						(<xsl:value-of select="php:function('lang', string(type))"/>)
-					</div>
-					<div class="details">
-						<div>
-							<dl>
-								<dt>
-									<h4>
-										<xsl:value-of select="php:function('lang', 'Description')" />
-									</h4>
-								</dt>
-								<dd class="description">
-									<xsl:variable name="tag_stripped_description">
-										<xsl:call-template name="strip-tags">
-											<xsl:with-param name="text" select="description"/>
-										</xsl:call-template>
-									</xsl:variable>
-									<xsl:choose>
-										<xsl:when test="string-length($tag_stripped_description) &gt; 1">
-											<xsl:choose>
-												<xsl:when test="string-length($tag_stripped_description) &gt; 100">
-													<xsl:value-of select="substring($tag_stripped_description, 0, 97)"/>...
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="$tag_stripped_description"/>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="php:function('lang', 'No description yet')" />
-										</xsl:otherwise>
-									</xsl:choose>
-									<div id="{img_container}"/>
-									<script type="text/javascript">
-										$(document).ready(function () {
-										JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
-										});
-									</script>
-								</dd>
-								<xsl:if test="string-length(homepage) &gt; 1">
+	<xsl:choose>
+		<xsl:when test="results/total_records_sum &gt; 0">
+			<h5>
+				<u>
+					<strong>
+						<xsl:value-of select="php:function('lang', 'Found %1 results', results/total_records_sum)" />
+					</strong>
+				</u>
+			</h5>
+			<br />
+			<br />
+			<ol id="result">
+				<xsl:for-each select="results/results">
+					<li>
+						<div class="header">
+							<a class="bui_single_view_link">
+								<xsl:attribute name="href">
+									<xsl:value-of select="link"/>
+								</xsl:attribute>
+								<xsl:value-of select="name"/>
+							</a>
+							(<xsl:value-of select="php:function('lang', string(type))"/>)
+						</div>
+						<div class="details">
+							<div>
+								<dl>
 									<dt>
 										<h4>
-											<xsl:value-of select="php:function('lang', 'Homepage')" />
+											<xsl:value-of select="php:function('lang', 'Description')" />
 										</h4>
 									</dt>
 									<dd class="description">
-										<a>
-											<xsl:attribute name="href">
-												<xsl:value-of select="homepage"/>
-											</xsl:attribute>
-											<xsl:value-of select="homepage"/>
-										</a>
+										<xsl:variable name="tag_stripped_description">
+											<xsl:call-template name="strip-tags">
+												<xsl:with-param name="text" select="description"/>
+											</xsl:call-template>
+										</xsl:variable>
+										<xsl:choose>
+											<xsl:when test="string-length($tag_stripped_description) &gt; 1">
+												<xsl:choose>
+													<xsl:when test="string-length($tag_stripped_description) &gt; 100">
+														<xsl:value-of select="substring($tag_stripped_description, 0, 97)"/>...
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="$tag_stripped_description"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="php:function('lang', 'No description yet')" />
+											</xsl:otherwise>
+										</xsl:choose>
+										<div id="{img_container}"/>
+										<script type="text/javascript">
+											$(document).ready(function () {
+											JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
+											});
+										</script>
 									</dd>
-								</xsl:if>
-							</dl>
+									<xsl:if test="string-length(homepage) &gt; 1">
+										<dt>
+											<h4>
+												<xsl:value-of select="php:function('lang', 'Homepage')" />
+											</h4>
+										</dt>
+										<dd class="description">
+											<a>
+												<xsl:attribute name="href">
+													<xsl:value-of select="homepage"/>
+												</xsl:attribute>
+												<xsl:value-of select="homepage"/>
+											</a>
+										</dd>
+									</xsl:if>
+								</dl>
+							</div>
+							<div class="clr"></div>
 						</div>
-						<div class="clr"></div>
-					</div>
-				</li>
-			</xsl:for-each>
-		</ol>
-	</xsl:if>
+					</li>
+				</xsl:for-each>
+			</ol>
+		</xsl:when>
+		<xsl:otherwise>
+			<h5>
+				<u>
+					<strong>
+						<xsl:value-of select="php:function('lang', 'Found %1 results', 0)" />
+					</strong>
+				</u>
+			</h5>
+
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
