@@ -27,31 +27,8 @@
 				F.eks. "<i>Haukelandshallen</i>", "<i>Nordnes bydelshus</i>", "<i>idrett</i>" eller "<i>kor</i>".
 			</div>
 		</form>
-		<div>
-			<div class="heading">
-				<xsl:value-of select="php:function('lang', 'part of town')" />
-			</div>
-			<ul id="part_of_town">
-				<xsl:for-each select="part_of_towns">
-					<li>
-						<label>
-							<input type="checkbox" name="part_of_town[]">
-								<xsl:attribute name="value">
-									<xsl:value-of select="id"/>
-								</xsl:attribute>
-								<xsl:if test="checked = 1">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-							</input>
-							<xsl:value-of select="name"/>
-						</label>
-					</li>
-				</xsl:for-each>
-			</ul>
-		</div>
-		<div>
+		<div class="pure-g">
+		<div class="pure-u-1-3">
 			<div class="heading">
 				<xsl:value-of select="php:function('lang', 'type')" />
 			</div>
@@ -82,8 +59,35 @@
 				</li-->
 			</ul>
 		</div>
+		<div class="pure-u-1-3">
+			<div class="heading">
+				<xsl:value-of select="php:function('lang', 'part of town')" />
+			</div>
+			<ul id="part_of_town">
+				<xsl:for-each select="part_of_towns">
+					<li>
+						<label>
+							<input type="checkbox" name="part_of_town[]">
+								<xsl:attribute name="value">
+									<xsl:value-of select="id"/>
+								</xsl:attribute>
+								<xsl:if test="checked = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:value-of select="name"/>
+						</label>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</div>
 
-		<div id="activity_tree">
+		<div class="pure-u-1-3" id="activity_tree">
+			<div class="heading">
+				<xsl:value-of select="php:function('lang', 'tema')" />
+			</div>
 			<fieldset>
 				<!-- Some style for the expand/contract section-->
 				<style>
@@ -106,6 +110,7 @@
 				</div>
 				<div id="treeDiv1"></div>
 			</fieldset>
+		</div>
 		</div>
 
 		<div id="no_result">

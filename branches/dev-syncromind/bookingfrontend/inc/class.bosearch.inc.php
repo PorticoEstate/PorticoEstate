@@ -59,7 +59,7 @@
 				$_filter_building['id'] = $building_id;
 			}
 
-			if(in_array('building', $types))
+//			if(in_array('building', $types))
 			{
 
 				$bui_result = $this->sobuilding->read(array("query" => $searchterm, "sort" => "name",
@@ -99,7 +99,7 @@
 				}
 			}
 
-			if(in_array('resource', $types))
+//			if(in_array('resource', $types))
 			{
 				$_filter_resource = array("active" => "1");
 
@@ -157,7 +157,7 @@
 					);
 					foreach($bui_result['results'] as $bui)
 					{
-						if(in_array($bui['id'],$_resource_buildings ))
+						if(isset($_resource_buildings[$bui['id']] ))
 						{
 							$_bui_result['results'][] = $bui;
 						}
@@ -165,7 +165,16 @@
 					$bui_result = $_bui_result;
 				}
 			}
-//			_debug_array($res_result);
+			if(!in_array('building', $types))
+			{
+				$bui_result = array();
+			}
+			if(!in_array('resource', $types))
+			{
+				$res_result = array();
+			}
+//			_debug_array($_resource_buildings);
+//			_debug_array($bui_result);
 			if(in_array('event', $types))
 			{
 				$now				 = date('Y-m-d');
