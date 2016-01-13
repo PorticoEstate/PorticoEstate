@@ -93,14 +93,14 @@ $(document).ready(function () {
 //				activity_top_level = top_node.a_attr.activity_top_level;
 			}
 		}
-		else
-		{
-			if (level < 2)
-			{
-				activity_location = data.node.original.activity_location;
-				$("#" + activity_location).prop( "checked", false );
-			}
-		}
+//		else
+//		{
+//			if (level < 2)
+//			{
+//				activity_location = data.node.original.activity_location;
+//				$("#" + activity_location).prop( "checked", false );
+//			}
+//		}
 //		$('#activity_top_level').val(activity_top_level);
 
 	//	var href = data.node.a_attr.href;

@@ -97,26 +97,29 @@
 			static $custom_fields_arr = array();
 			$activity_ids = array();
 			$soactivity				 = createObject('booking.soactivity');
-			if(isset($filters['activity_id']) && $filters['activity_id'])
-			{
-			//	children				 = $soactivity->get_children($filters['activity_id']);
-			//	$activity_ids			 = array_merge(array($filters['activity_id']), $children);
-			//	$filters['activity_id']	 = $activity_ids;
-			}
+
 			$conditions = parent::_get_conditions($query, $filters);
 
 			$custom_condition_arr = array();
-			if(isset($filters['custom_fields_criteria']) && is_array($filters['custom_fields_criteria']))
+			$custom_fields_criteria = array();
+			if(isset($filters['filter_top_level']) && is_array($filters['filter_top_level']))
 			{
-	//			_debug_array($filters['custom_fields_criteria']);
-				$custom_fields_criteria = array();
-				foreach($filters['custom_fields_criteria'] as $activity_top_level => $_custom_fields_criteria)
+				foreach($filters['filter_top_level'] as $activity_top_level)
 				{
 					if(!isset($activity_ids[$activity_top_level]))
 					{
-						$activity_ids[$activity_top_level] = array_merge(array($activity_top_level),  $soactivity->get_children($activity_top_level));
+						$activity_ids[$activity_top_level] = array_merge(array($activity_top_level),  $soactivity->get_children($activity_top_level, 0, true));
 					}
-					if(isset($_custom_fields_criteria['choice']))
+				}
+				unset($activity_top_level);
+			}
+//			_debug_array($activity_ids);
+			if(isset($filters['custom_fields_criteria']) && is_array($filters['custom_fields_criteria']))
+			{
+	//			_debug_array($filters['custom_fields_criteria']);
+				foreach($filters['custom_fields_criteria'] as $activity_top_level => $_custom_fields_criteria)
+				{
+					if(isset($_custom_fields_criteria['choice']) && isset($activity_ids[$activity_top_level]))
 					{
 						$custom_fields_criteria = array_merge($custom_fields_criteria, $_custom_fields_criteria['choice']);
 					}
@@ -169,6 +172,11 @@
 			{
 				foreach($filters['custom_fields_criteria'] as $activity_top_level => $_custom_fields_criteria)
 				{
+					if(!isset($activity_ids[$activity_top_level]))
+					{
+						continue;
+					}
+
 					if(isset($custom_condition_arr[$activity_top_level]))
 					{
 						$_conditions[] = '(' .$conditions . ' AND (activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . ') AND' . implode(' OR ', $custom_condition_arr[$activity_top_level]) . '))';
@@ -177,22 +185,28 @@
 					{
 						$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . '))';
 					}
+					$activity_ids[$activity_top_level] = array();
 				}
+				unset($activity_top_level);
+
+			}
+			$__activity_ids = array();
+			foreach($activity_ids as $activity_top_level => $_activity_ids)
+			{
+				$__activity_ids = array_merge($__activity_ids,$_activity_ids);
+			}
+
+			if($__activity_ids)
+			{
+				$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $__activity_ids) . '))';
 			}
 			else
 			{
-				$_conditions[] = $conditions;
+
+	//			$_conditions[] =  $conditions;
+
 			}
 
-
-//			if($custom_condition_arr)
-//			{
-//				foreach ($custom_condition_arr as $activity_top_level => $custom_condition)
-//				{
-//					$_conditions[] = $conditions . ' AND ' . implode(' OR ', $custom_condition);
-//				}
-//				$conditions = $conditions . ' OR ' . implode(' OR ', $_conditions);
-//			}
 			$conditions =  implode(' OR ', $_conditions);
 //			_debug_array($conditions);
 			return $conditions;

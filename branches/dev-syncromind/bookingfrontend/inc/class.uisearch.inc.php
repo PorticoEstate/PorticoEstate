@@ -156,9 +156,17 @@
 			$activity_criteria = array();
 			foreach($criteria as $entry)
 			{
+				if(isset($entry['activity_top_level']) && !in_array($entry['activity_top_level'],$filter_top_level))
+				{
+					continue;
+				}
 				if(isset($entry['activity_top_level']) && $entry['activity_top_level'])
 				{
 					$activity_criteria[$entry['activity_top_level']]['activity_top_level'] =  $entry['activity_top_level'];
+				}
+				if(isset($entry['cat_id']) && !in_array($entry['cat_id'],$filter_top_level))
+				{
+					continue;
 				}
 				if(isset($entry['choice_id']) && isset($entry['cat_id']))
 				{

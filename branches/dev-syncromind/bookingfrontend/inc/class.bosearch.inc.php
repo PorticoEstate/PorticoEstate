@@ -16,6 +16,7 @@
 		function search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array())
 		{
 			$building_filter = array(-1);
+			$filter_top_level = $filter_top_level ? $filter_top_level : array(-1);
 			$_filter_search_type	 = explode(',', phpgw::get_var('filter_search_type', 'string'));
 			$types = array();
 			foreach($_filter_search_type as $key => $value)
@@ -101,10 +102,10 @@
 			{
 				$_filter_resource = array("active" => "1");
 
-//				if($filter_top_level)
-//				{
-//					$_filter_resource['activity_id'] = $filter_top_level;
-//				}
+				if($filter_top_level)
+				{
+					$_filter_resource['filter_top_level'] = $filter_top_level;
+				}
 
 				if($building_filter)
 				{

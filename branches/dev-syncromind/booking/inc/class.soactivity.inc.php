@@ -76,8 +76,12 @@
 			return $values;
 		}
 
-		public function get_children($parent, $level = 0)
+		public function get_children($parent, $level = 0, $reset = false)
 		{
+			if($reset)
+			{
+				$this->activity_tree = array();
+			}
 			$parent	 = (int)$parent;
 			$db		 = clone($this->db);
 			$sql	 = "SELECT * FROM bb_activity WHERE  parent_id = {$parent} ORDER BY name ASC";
