@@ -63,9 +63,15 @@
 
 			$activities = ExecMethod('booking.boactivity.get_top_level');
 
+			$top_levels = array();
 			$filter_tree = array();
 			foreach($activities as &$activity)
 			{
+				$top_levels[] = array(
+					'id'		=>	$activity['id'],
+					'location'	=> "resource_{$activity['id']}",
+					'name'		=> $activity['name']
+				);
 				$_url = self::link(array(
 					'menuaction'			 => 'bookingfrontend.uisearch.index',
 					'activity_top_level'	 => $activity['id'],
@@ -74,12 +80,13 @@
 
 				$dummy_sub = array();
 				$organized_fields	 = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}", 0,  $activity['id']);
-				if($organized_fields)
+				if(!$organized_fields)
 				{
-					$dummy_sub[] = array(
-						'text'		 => $activity['name'],
-						'activity_top_level' => $activity['id'],
-						);
+					continue;
+//					$dummy_sub[] = array(
+//						'text'		 => $activity['name'],
+//						'activity_top_level' => $activity['id'],
+//						);
 				}
 				$filter_tree[]		 = array(
 					'text'		 => $activity['id'] == $activity_top_level ? "[{$activity['name']}]" : $activity['name'],
@@ -96,7 +103,9 @@
 //						'class' => "no_checkbox"
 //						),
 					'activity_top_level' => $activity['id'],
-					'children'	 => array_merge($dummy_sub,$organized_fields),
+					'activity_location' => "resource_{$activity['id']}",
+//					'children'	 => array_merge($dummy_sub,$organized_fields),
+					'children'	 => $organized_fields,
 				);
 			}
 //_debug_array($filter_tree);
@@ -108,6 +117,7 @@
 				$part_of_town['checked'] = in_array($part_of_town['id'], $filter_part_of_town);
 			}
 
+			$params['top_levels'] = $top_levels;
 			$params['filter_tree'] = json_encode($filter_tree);
 
 
@@ -120,7 +130,6 @@
 			$activity_top_level				 = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id					 = phpgw::get_var('building_id', 'int', 'REQUEST', null);
 			$_filter_part_of_town			 = explode(',', phpgw::get_var('filter_part_of_town', 'string'));
-			$search							 = null;
 
 			$filter_part_of_town = array();
 			foreach($_filter_part_of_town as $key => $value)
@@ -130,6 +139,18 @@
 					$filter_part_of_town[] = $value;
 				}
 			}
+			unset($value);
+			$_filter_top_level			 = explode(',', phpgw::get_var('filter_top_level', 'string'));
+
+			$filter_top_level = array();
+			foreach($_filter_top_level as $key => $value)
+			{
+				if($value)
+				{
+					$filter_top_level[] = $value;
+				}
+			}
+			unset($value);
 
 			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
 			$activity_criteria = array();
@@ -151,10 +172,10 @@
 //			_debug_array($activity_criteria);
 //			_debug_array($criteria);
 //			die();
-			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_search_type'))
+			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town || $filter_top_level ||phpgw::get_var('filter_search_type'))
 			{
 				$data = array(
-					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $activity_criteria)
+					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town,$filter_top_level, $activity_criteria)
 				);
 			}
 			self::render_template_xsl('search_details', $data);

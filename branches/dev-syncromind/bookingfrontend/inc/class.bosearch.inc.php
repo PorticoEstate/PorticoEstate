@@ -13,11 +13,9 @@
 			$this->soevent			 = CreateObject('booking.soevent');
 		}
 
-		function search($searchterm, $building_id, $filter_part_of_town, $activity_criteria = array())
+		function search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array())
 		{
 			$building_filter = array(-1);
-			$activity_top_levels = array_keys($activity_criteria);
-
 			$_filter_search_type	 = explode(',', phpgw::get_var('filter_search_type', 'string'));
 			$types = array();
 			foreach($_filter_search_type as $key => $value)
@@ -49,9 +47,9 @@
 
 			$_filter_building['part_of_town_id'] = $filter_part_of_town;
 
-			if($activity_criteria && !$building_id)
+			if($filter_top_level && !$building_id)
 			{
-				$buildings				 = $this->sobuilding->get_buildings_from_activity($activity_top_levels);
+				$buildings				 = $this->sobuilding->get_buildings_from_activity($filter_top_level);
 				$_filter_building['id']	 = $buildings;
 			}
 			if($building_id)
@@ -103,9 +101,9 @@
 			{
 				$_filter_resource = array("active" => "1");
 
-//				if($activity_top_levels)
+//				if($filter_top_level)
 //				{
-//					$_filter_resource['activity_id'] = $activity_top_levels;
+//					$_filter_resource['activity_id'] = $filter_top_level;
 //				}
 
 				if($building_filter)

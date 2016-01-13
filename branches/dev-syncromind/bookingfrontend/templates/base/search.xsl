@@ -28,7 +28,7 @@
 			</div>
 		</form>
 		<div class="pure-g">
-		<div class="pure-u-1-3">
+		<div class="pure-u-1-4">
 			<div class="heading">
 				<xsl:value-of select="php:function('lang', 'type')" />
 			</div>
@@ -59,7 +59,7 @@
 				</li-->
 			</ul>
 		</div>
-		<div class="pure-u-1-3">
+		<div class="pure-u-1-4">
 			<div class="heading">
 				<xsl:value-of select="php:function('lang', 'part of town')" />
 			</div>
@@ -83,10 +83,37 @@
 				</xsl:for-each>
 			</ul>
 		</div>
-
-		<div class="pure-u-1-3" id="activity_tree">
+		<div class="pure-u-1-4">
 			<div class="heading">
-				<xsl:value-of select="php:function('lang', 'tema')" />
+				<xsl:value-of select="php:function('lang', 'Activity')" />
+			</div>
+			<ul id="top_level">
+				<xsl:for-each select="top_levels">
+					<li>
+						<label>
+							<input type="checkbox" name="top_levels[]">
+								<xsl:attribute name="value">
+									<xsl:value-of select="id"/>
+								</xsl:attribute>
+								<xsl:attribute name="id">
+									<xsl:value-of select="location"/>
+								</xsl:attribute>
+								<xsl:if test="checked = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:value-of select="name"/>
+						</label>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</div>
+
+		<div class="pure-u-1-4" id="activity_tree">
+			<div class="heading">
+				<xsl:value-of select="php:function('lang', 'Resource')" />
 			</div>
 			<fieldset>
 				<!-- Some style for the expand/contract section-->
