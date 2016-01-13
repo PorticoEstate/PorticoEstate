@@ -194,7 +194,7 @@
 //				$conditions = $conditions . ' OR ' . implode(' OR ', $_conditions);
 //			}
 			$conditions =  implode(' OR ', $_conditions);
-			_debug_array($conditions);
+//			_debug_array($conditions);
 			return $conditions;
 		}
 	}

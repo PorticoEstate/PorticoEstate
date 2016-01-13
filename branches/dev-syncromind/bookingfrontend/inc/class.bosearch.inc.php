@@ -78,7 +78,9 @@
 						$bui['homepage'] = 'http://' . $bui['homepage'];
 					}
 				}
+				unset($bui);
 			}
+//			_debug_array($bui_result);
 
 			if(in_array('organization', $types))
 			{
@@ -135,6 +137,7 @@
 					"dir" => "asc", "filters" => $_filter_resource));
 				foreach($res_result['results'] as &$res)
 				{
+					$_resource_buildings[$res['building_id']] = true;
 					$res['name']			 = $res['building_name'] . ' / ' . $res['name'];
 					$res['type']			 = "resource";
 					$res['link']			 = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show',
@@ -143,8 +146,26 @@
 					$res['img_url']			 = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_resource.index_images',
 						'filter_owner_id' => $res['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
 				}
-			}
 
+				if($bui_result)
+				{
+					$_bui_result = array(
+						'total_records' => count($_resource_buildings),
+						'start' => $bui_result['start'],
+						'sort' => $bui_result['sort'],
+						'dir' => $bui_result['dir']
+					);
+					foreach($bui_result['results'] as $bui)
+					{
+						if(in_array($bui['id'],$_resource_buildings ))
+						{
+							$_bui_result['results'][] = $bui;
+						}
+					}
+					$bui_result = $_bui_result;
+				}
+			}
+//			_debug_array($res_result);
 			if(in_array('event', $types))
 			{
 				$now				 = date('Y-m-d');
