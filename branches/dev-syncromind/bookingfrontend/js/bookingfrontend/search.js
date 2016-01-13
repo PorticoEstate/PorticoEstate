@@ -23,7 +23,7 @@ $(document).ready(function () {
 
 	});
 	$("#search_type :checkbox").on('click', function () {
-		update_search(selected_criteria);
+		update_search(selected_criteria, true);
 
 	});
 	//initate autocomplete;
@@ -94,9 +94,11 @@ $(document).ready(function () {
 		}
 
 	}
-	update_search = function (selected_criteria) {
+	update_search = function (selected_criteria, keep_building) {
 
 		var criteria = [];
+
+		var keep_building_for_now = keep_building || false;
 
 		for (var i = 0; i < selected_criteria.length; ++i)
 		{
@@ -105,8 +107,11 @@ $(document).ready(function () {
 //		console.log(criteria);
 
 		part_of_towns = [];
-		$('#field_building_id').val('');
-		$("#field_building_name").val('');
+		if(!keep_building_for_now)
+		{
+			$('#field_building_id').val('');
+			$("#field_building_name").val('');
+		}
 		$("#part_of_town :checkbox:checked").each(function () {
 			part_of_towns.push($(this).val());
 		});
