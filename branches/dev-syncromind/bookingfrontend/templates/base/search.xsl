@@ -41,7 +41,7 @@
 				</li>
 				<li>
 					<label>
-						<input type="checkbox" name="search_type[]" value="resource" checked="checked"/>
+						<input type="checkbox" name="search_type[]" value="resource"/>
 						<xsl:value-of select="php:function('lang', 'resource')" />
 					</label>
 				</li>

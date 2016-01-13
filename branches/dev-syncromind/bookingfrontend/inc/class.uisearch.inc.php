@@ -151,7 +151,7 @@
 //			_debug_array($activity_criteria);
 //			_debug_array($criteria);
 //			die();
-			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town)
+			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_search_type'))
 			{
 				$data = array(
 					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $activity_criteria)
