@@ -9,6 +9,7 @@
 			'index_json' => true,
 			'query'		 => true,
 			'show'		 => true,
+			'get_custom' => true,
 			'schedule'	 => true
 		);
 
@@ -17,6 +18,7 @@
 			parent::__construct();
 			$this->bo			 = CreateObject('booking.boresource');
 			$this->building_bo	 = CreateObject('booking.bobuilding');
+			$this->activity_bo	 = CreateObject('booking.boactivity');
 			$old_top			 = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
@@ -55,6 +57,54 @@
 			);
 
 			self::render_template_xsl('resource', $data);
+		}
+
+		private function get_location()
+		{
+			$activity_id		 = phpgw::get_var('activity_id', 'int');
+			$activity_path		 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : 0;
+			return ".resource.{$top_level_activity}";
+		}
+
+		public function get_custom()
+		{
+			$resource_id		= phpgw::get_var('resource_id', 'int');
+			$resource			= $this->bo->read_single($resource_id);
+			$custom_values		= $resource['json_representation']->data;
+//			_debug_array($custom_values);
+
+
+			$location			 = $this->get_location();
+			$custom_fields		= createObject('booking.custom_fields');
+			$fields	= $custom_fields->get_fields($location);
+			foreach($fields as $attrib_id => &$attrib)
+			{
+				$attrib['value'] = isset($custom_values->$attrib['name']) ? $custom_values->$attrib['name'] : null;
+
+				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				{
+					foreach($attrib['choice'] as &$choice)
+					{
+						if(is_array($attrib['value']))
+						{
+							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
+						}
+						else
+						{
+							$choice['selected'] = $choice['id'] == $attrib['value'] ? 1 : 0;
+						}
+					}
+				}
+			}
+//			_debug_array($fields);
+			$organized_fields	 = $custom_fields->organize_fields($location, $fields);
+
+			$data = array(
+				'attributes_group'	=> $organized_fields,
+			);
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('custom_fields' => $data));
 		}
 
 		public function schedule()
