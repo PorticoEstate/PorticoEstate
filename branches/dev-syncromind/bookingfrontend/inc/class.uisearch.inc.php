@@ -65,7 +65,7 @@
 
 			$top_levels = array();
 			$filter_tree = array();
-			foreach($activities as &$activity)
+			foreach($activities as $activity)
 			{
 				$top_levels[] = array(
 					'id'		=>	$activity['id'],
@@ -78,18 +78,13 @@
 					'building_id'			 => $building_id,
 					'filter_part_of_town'	 => $imploded_filter_part_of_town));
 
-				$dummy_sub = array();
 				$organized_fields	 = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}", 0,  $activity['id']);
 				if(!$organized_fields)
 				{
 					continue;
-//					$dummy_sub[] = array(
-//						'text'		 => $activity['name'],
-//						'activity_top_level' => $activity['id'],
-//						);
 				}
 				$filter_tree[]		 = array(
-					'text'		 => $activity['id'] == $activity_top_level ? "[{$activity['name']}]" : $activity['name'],
+					'text'		 => $activity['name'],
 					'state'		 => array(
 						'opened'			 => false,
 						'selected'			 => $activity['id'] == $activity_top_level ? true : false,
@@ -104,7 +99,7 @@
 //						),
 					'activity_top_level' => $activity['id'],
 					'activity_location' => "resource_{$activity['id']}",
-//					'children'	 => array_merge($dummy_sub,$organized_fields),
+//					'id' => "resource_{$activity['id']}",
 					'children'	 => $organized_fields,
 				);
 			}
@@ -151,6 +146,15 @@
 				}
 			}
 			unset($value);
+
+			if(!$filter_top_level)
+			{
+				$activities = ExecMethod('booking.boactivity.get_top_level');
+				foreach($activities as $activity)
+				{
+					$filter_top_level[] = $activity['id'];
+				}
+			}
 
 			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
 			$activity_criteria = array();

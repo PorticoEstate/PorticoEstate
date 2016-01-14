@@ -48,7 +48,7 @@
 
 			$_filter_building['part_of_town_id'] = $filter_part_of_town;
 
-			if($filter_top_level && !$building_id)
+			if($filter_top_level && !$building_id && !$searchterm)
 			{
 				$buildings				 = $this->sobuilding->get_buildings_from_activity($filter_top_level);
 				$_filter_building['id']	 = $buildings;
@@ -107,7 +107,7 @@
 					$_filter_resource['filter_top_level'] = $filter_top_level;
 				}
 
-				if($building_filter)
+				if($building_filter && !$searchterm)
 				{
 					$_filter_resource['building_id'] = $building_filter;
 				}
@@ -116,7 +116,7 @@
 				{
 					$_filter_resource['building_id'][] = $building_id;
 				}
-				if(isset($filter_part_of_town) && $filter_part_of_town && !$bui_result)
+				if(isset($filter_part_of_town) && $filter_part_of_town)// && !$bui_result)
 				{
 					$_bui_result = $this->sobuilding->read(array("filters" => $_filter_building));
 					foreach($_bui_result['results'] as $_bui)
@@ -146,7 +146,7 @@
 						'filter_owner_id' => $res['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
 				}
 
-				if($bui_result)
+				if(isset($bui_result['total_records']) && $bui_result['total_records'] > 0)
 				{
 					$_bui_result = array(
 						'total_records' => count($_resource_buildings),

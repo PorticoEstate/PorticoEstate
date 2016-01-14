@@ -1,4 +1,7 @@
 part of town	common	no	Bydel
+fetching data	bookingfrontend	no	Henter data
+please wait	bookingfrontend	no	Vent litt...
+I am feeling lucky	bookingfrontend	no	Jeg prøver lykken
 current activities	bookingfrontend	no	Aktiviteter
 -- select an activity --	bookingfrontend	no	Velg en aktivitet
 why?	bookingfrontend	no	Hvorfor?

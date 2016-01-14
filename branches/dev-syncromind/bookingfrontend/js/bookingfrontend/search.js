@@ -10,6 +10,13 @@ var selected_building_id = null;
 
 var selected_criteria = [];
 $(document).ready(function () {
+
+	$("#loading").dialog({
+    hide: 'slide',
+//	show: 'slide',
+	autoOpen: false
+});
+
 	update_autocompleteHelper = function () {
 		oArgs = {
 			menuaction: 'bookingfrontend.uibuilding.index',
@@ -19,16 +26,20 @@ $(document).ready(function () {
 		JqueryPortico.autocompleteHelper(requestUrl, 'field_building_name', 'field_building_id', 'building_container');
 	}
 
+	$("#submit_searchterm").on('click', function () {
+		update_search(selected_criteria, true);
+	});
 	$("#search_type :checkbox").on('click', function () {
 		update_search(selected_criteria, true);
 
 	});
-	$("#part_of_town :checkbox").on('click', function () {
-		selected_building_id = null;
-		update_search(selected_criteria);
+	$("#top_level :checkbox").on('click', function () {
+		update_search(selected_criteria, true);
 
 	});
-	$("#top_level :checkbox").on('click', function () {
+
+	$("#part_of_town :checkbox").on('click', function () {
+		selected_building_id = null;
 		update_search(selected_criteria);
 
 	});
@@ -40,6 +51,7 @@ $(document).ready(function () {
 		core: {
 			multiple: true,
 			data: filter_tree,
+			check_callback : true,
 			themes: {"stripes": true}
 		},
 		checkbox: {whole_node: true, three_state: false, cascade: "up+down+undetermined"},
@@ -54,7 +66,7 @@ $(document).ready(function () {
 		}
 		update_activity_top_level(data, true);
 
-		update_search(selected_criteria);
+		update_search(selected_criteria, true);
 
 	});
 
@@ -66,12 +78,12 @@ $(document).ready(function () {
 		}
 		update_activity_top_level(data, false);
 
-		update_search(selected_criteria);
+		update_search(selected_criteria, true);
 	});
 
 
 	update_activity_top_level = function (data, deselect) {
-
+//console.log(data);
 		var parents = data.node.parents;
 		var level = parents.length;
 //		var activity_top_level = 0;
@@ -140,9 +152,22 @@ $(document).ready(function () {
 		part_of_town_string = part_of_towns.join(',');
 
 		top_levels = [];
-		$("#top_level :checkbox:checked").each(function () {
-			top_levels.push($(this).val());
+//		$("#top_level :checkbox:checked").each(function () {
+//			top_levels.push($(this).val());
+//		});
+
+		$("#top_level :checkbox").each(function () {
+            if($(this).prop("checked") == true)
+			{
+                top_levels.push($(this).val());
+            }
+			else
+			{
+//				Not working
+//				$("#treeDiv1").jstree("uncheck_node", "j1_" + $(this).val());
+			}
 		});
+		
 		top_level_string = top_levels.join(',');
 
 
@@ -164,11 +189,16 @@ $(document).ready(function () {
 		requestUrl += '&phpgw_return_as=stripped_html';
 		$.ajax({
 			type: 'POST',
-			data: {criteria: criteria},
+			data: {criteria: criteria, searchterm: $("#field_searchterm").val()},
 			url: requestUrl,
+			beforeSend: function(){
+			   $("#loading").dialog('open');
+			},
 			success: function (data) {
 				if (data != null)
 				{
+					$("#loading").dialog('close');
+//		            $('#loading').html("<p>Result Complete...</p>");
 					$("#no_result").html('');
 					$("#result").html(data);
 				}
@@ -185,6 +215,12 @@ $(document).ready(function () {
 	$('#expand1').on('click', function () {
 		$(this).attr('href', 'javascript:;');
 		$('#treeDiv1').jstree('open_all');
+	});
+
+	$('#reset').on('click', function () {
+		$(this).attr('href', 'javascript:;');
+		selected_building_id = null;
+		update_search(selected_criteria);
 	});
 
 });
