@@ -145,15 +145,15 @@
 						</xsl:attribute>
 
 					</input>
+					<a id="reset" title="Reset" href="#">
+						<xsl:value-of select="php:function('lang', 'reset')"/>
+					</a>
+
 				</div>
 				<!--xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/-->
 				<div class="hint">
 					F.eks. "<i>Haukelandshallen</i>", "<i>Nordnes bydelshus</i>".
 				</div>
-				<br/>
-				<a id="reset" title="Reset" href="#">
-					<xsl:value-of select="php:function('lang', 'reset')"/>
-				</a>
 
 			</div>
 			<div class="pure-u-1 pure-u-lg-1-3">
