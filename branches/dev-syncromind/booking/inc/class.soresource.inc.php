@@ -95,10 +95,11 @@
 		function _get_conditions($query, $filters)
 		{
 			static $custom_fields_arr = array();
-			$activity_ids = array();
-			$soactivity				 = createObject('booking.soactivity');
-
 			$conditions = parent::_get_conditions($query, $filters);
+
+			$soactivity				 = createObject('booking.soactivity');
+			$activity_ids = array();
+
 
 			$custom_condition_arr = array();
 			$custom_fields_criteria = array();
@@ -200,11 +201,10 @@
 			{
 				$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $__activity_ids) . '))';
 			}
-			else
+
+			if(!$_conditions)
 			{
-
-	//			$_conditions[] =  $conditions;
-
+				$_conditions[] =  $conditions;
 			}
 
 			$conditions =  implode(' OR ', $_conditions);
