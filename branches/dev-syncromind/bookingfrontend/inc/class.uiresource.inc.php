@@ -97,13 +97,13 @@
 					}
 				}
 			}
-//			_debug_array($fields);
 			$organized_fields	 = $custom_fields->organize_fields($location, $fields);
+//			_debug_array($organized_fields);
 
 			$data = array(
 				'attributes_group'	=> $organized_fields,
 			);
-			$GLOBALS['phpgw']->xslttpl->add_file(array('attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('custom_fields' => $data));
 		}
 

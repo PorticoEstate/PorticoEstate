@@ -12,18 +12,6 @@
 		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		};
 	</script>
-
-	<xsl:for-each select="attributes_group">
-		<div id="{link}">
-			<fieldset>
-				<xsl:apply-templates select="attributes"/>
-			</fieldset>
-		</div>
-	</xsl:for-each>
-</xsl:template>
-
-<!-- New template-->
-<xsl:template xmlns:php="http://php.net/xsl" match="attributes">
 	<xsl:variable name="lang_hour">
 		<xsl:value-of select="php:function('lang', 'hour')" />
 	</xsl:variable>
@@ -40,6 +28,39 @@
 	<xsl:variable name="textarearows">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textarearows')" />
 	</xsl:variable>
+
+	<xsl:for-each select="attributes_group">
+		<div id="{link}">
+			<fieldset>
+				<xsl:apply-templates select="attributes">
+					<xsl:with-param name="lang_hour">
+						<xsl:value-of select="$lang_hour" />
+					</xsl:with-param>
+					<xsl:with-param name="lang_min">
+						<xsl:value-of select="$lang_min" />
+					</xsl:with-param>
+					<xsl:with-param name="statustext">
+						<xsl:value-of select="$statustext" />
+					</xsl:with-param>
+					<xsl:with-param name="textareacols">
+						<xsl:value-of select="$textareacols" />
+					</xsl:with-param>
+					<xsl:with-param name="textarearows">
+						<xsl:value-of select="$textarearows" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</fieldset>
+		</div>
+	</xsl:for-each>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template xmlns:php="http://php.net/xsl" match="attributes">
+	<xsl:param name="lang_hour" />
+	<xsl:param name="lang_min" />
+	<xsl:param name="statustext" />
+	<xsl:param name="textareacols" />
+	<xsl:param name="textarearows" />
 
 	<xsl:choose>
 		<xsl:when test="datatype='section'">
