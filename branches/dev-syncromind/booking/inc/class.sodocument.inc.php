@@ -4,12 +4,12 @@
 	abstract class booking_sodocument extends booking_socommon
 	{
 
-		const CATEGORY_HMS_DOCUMENT	 = 'HMS_document';
-		const CATEGORY_PRICE_LIST		 = 'price_list';
-		const CATEGORY_PICTURE		 = 'picture';
-		const CATEGORY_DRAWING		 = 'drawing';
-		const CATEGORY_REGULATION		 = 'regulation';
-		const CATEGORY_OTHER			 = 'other';
+		const CATEGORY_HMS_DOCUMENT = 'HMS_document';
+		const CATEGORY_PRICE_LIST = 'price_list';
+		const CATEGORY_PICTURE = 'picture';
+		const CATEGORY_DRAWING = 'drawing';
+		const CATEGORY_REGULATION = 'regulation';
+		const CATEGORY_OTHER = 'other';
 
 		protected
 		$defaultCategories = array(
@@ -21,7 +21,7 @@
 			self::CATEGORY_OTHER,
 		),
 		$uploadRootDir,
-		$ownerType		 = null;
+		$ownerType = null;
 		protected static
 		$document_owners = array(
 			'building',
@@ -33,18 +33,18 @@
 			$this->ownerType = substr(get_class($this), 19);
 
 			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), array(
-				'id'			 => array('type' => 'int'),
-				'name'			 => array('type' => 'string', 'query' => true),
-				'owner_id'		 => array('type' => 'int', 'required' => true),
-				'category'		 => array('type' => 'string', 'required' => true),
-				'description'	 => array('type' => 'string', 'required' => false),
-				'owner_name'	 => array(
-					'type'	 => 'string',
-					'query'	 => true,
-					'join'	 => array(
-						'table'	 => sprintf('bb_%s', $this->get_owner_type()),
-						'fkey'	 => 'owner_id',
-						'key'	 => 'id',
+				'id' => array('type' => 'int'),
+				'name' => array('type' => 'string', 'query' => true),
+				'owner_id' => array('type' => 'int', 'required' => true),
+				'category' => array('type' => 'string', 'required' => true),
+				'description' => array('type' => 'string', 'required' => false),
+				'owner_name' => array(
+					'type' => 'string',
+					'query' => true,
+					'join' => array(
+						'table' => sprintf('bb_%s', $this->get_owner_type()),
+						'fkey' => 'owner_id',
+						'key' => 'id',
 						'column' => 'name'
 					)
 				)
@@ -125,8 +125,8 @@
 
 			if(!$document['id'])
 			{
-				$fileValidator	 = createObject('booking.sfValidatorFile');
-				$files			 = $document['files'];
+				$fileValidator = createObject('booking.sfValidatorFile');
+				$files = $document['files'];
 				unset($document['files']);
 				try
 				{
@@ -155,12 +155,14 @@
 		function add($document)
 		{
 			if(!$this->newFile)
-			{ throw new LogicException('Missing file');}
+			{
+				throw new LogicException('Missing file');
+			}
 
 			$this->db->transaction_begin();
 
-			$document['name']	 = $this->newFile->getOriginalName();
-			$receipt			 = parent::add($document);
+			$document['name'] = $this->newFile->getOriginalName();
+			$receipt = parent::add($document);
 
 			$filePath = $this->generate_filename($receipt['id'], $document['name']);
 			$this->newFile->save($filePath);
@@ -169,9 +171,9 @@
 			// automatically resize pictures that are too big
 			if(preg_match('/(jpg|jpeg|gif|bmp|png)$/i', $this->newFile->getOriginalName()))
 			{
-				$config			 = CreateObject('phpgwapi.config', 'booking');
+				$config = CreateObject('phpgwapi.config', 'booking');
 				$config->read();
-				$image_maxwidth	 = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;
+				$image_maxwidth = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;
 				$image_maxheight = isset($config->config_data['image_maxheight']) && $config->config_data['image_maxheight'] ? $config->config_data['image_maxheight'] : 300;
 
 				$thumb = new Imagick($filePath);
@@ -235,7 +237,9 @@
 		public function is_image(array &$entity)
 		{
 			if($entity['category'] != self::CATEGORY_PICTURE)
-			{ return false;}
+			{
+				return false;
+			}
 
 			switch(strtolower($this->get_file_extension($entity)))
 			{
@@ -252,11 +256,13 @@
 		public function read_images($params = array())
 		{
 			if(!isset($params['filters']))
-			{ $params['filters'] = array();}
+			{
+				$params['filters'] = array();
+			}
 			$params['filters']['category'] = booking_sodocument::CATEGORY_PICTURE;
 
-			$documents	 = $this->read($params);
-			$images		 = array('results' => array(), 'total_records' => 0);
+			$documents = $this->read($params);
+			$images = array('results' => array(), 'total_records' => 0);
 			foreach($documents['results'] as &$document)
 			{
 				if($document['is_image'])
