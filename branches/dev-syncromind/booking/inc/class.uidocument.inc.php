@@ -13,13 +13,13 @@
 		$module;
 		public
 		$public_functions = array(
-			'index'		 => true,
-			'query'		 => true,
-			'show'		 => true,
-			'add'		 => true,
-			'edit'		 => true,
-			'download'	 => true,
-			'delete'	 => true,
+			'index' => true,
+			'query' => true,
+			'show' => true,
+			'add' => true,
+			'edit' => true,
+			'download' => true,
+			'delete' => true,
 		);
 
 		public function __construct()
@@ -49,7 +49,9 @@
 		protected function get_document_owner_type()
 		{
 			if(!$this->documentOwnerType)
-			{ $this->set_document_owner_type();}
+			{
+				$this->set_document_owner_type();
+			}
 			return $this->documentOwnerType;
 		}
 
@@ -57,12 +59,12 @@
 		{
 			if(is_null($type))
 			{
-				$class			 = get_class($this);
-				$r				 = new ReflectionObject($this);
-				while(__CLASS__ != ($current_class	 = $r->getParentClass()->getName()))
+				$class = get_class($this);
+				$r = new ReflectionObject($this);
+				while(__CLASS__ != ($current_class = $r->getParentClass()->getName()))
 				{
-					$class	 = $current_class;
-					$r		 = $r->getParentClass();
+					$class = $current_class;
+					$r = $r->getParentClass();
 				}
 				$type = substr($class, 19);
 			}
@@ -144,46 +146,46 @@
 			$this->redirect_to_parent_if_inline();
 
 			$data = array(
-				'form'		 => array(
+				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 						)
 					),
 				),
-				'datatable'	 => array(
+				'datatable' => array(
 					'source' => $this->get_owner_typed_link('index', array('phpgw_return_as' => 'json')),
-					'field'	 => array(
+					'field' => array(
 						array(
-							'key'		 => 'name',
-							'label'		 => lang('Document Name'),
-							'formatter'	 => 'JqueryPortico.formatLink',
+							'key' => 'name',
+							'label' => lang('Document Name'),
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
-							'key'	 => 'owner_name',
-							'label'	 => lang($this->get_document_owner_type()),
+							'key' => 'owner_name',
+							'label' => lang($this->get_document_owner_type()),
 						),
 						array(
-							'key'	 => 'description',
-							'label'	 => lang('Description'),
+							'key' => 'description',
+							'label' => lang('Description'),
 						),
 						array(
-							'key'	 => 'category',
-							'label'	 => lang('Category'),
+							'key' => 'category',
+							'label' => lang('Category'),
 						),
 						array(
-							'key'		 => 'opcion_edit',
-							'label'		 => lang('Edit'),
-							'formatter'	 => 'JqueryPortico.formatLinkGeneric',
-							'sortable'	 => false
+							'key' => 'opcion_edit',
+							'label' => lang('Edit'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+							'sortable' => false
 						),
 						array(
-							'key'		 => 'opcion_delete',
-							'label'		 => lang('Delete'),
-							'formatter'	 => 'JqueryPortico.formatLinkGeneric',
-							'sortable'	 => false
+							'key' => 'opcion_delete',
+							'label' => lang('Delete'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+							'sortable' => false
 						),
 						array(
-							'key'	 => 'link',
+							'key' => 'link',
 							'hidden' => true
 						)
 					)
@@ -194,9 +196,9 @@
 			if($this->bo->allow_create())
 			{
 				array_unshift($data['form']['toolbar']['item'], array(
-					'type'	 => 'link',
-					'value'	 => lang('New document'),
-					'href'	 => $this->get_owner_typed_link('add')
+					'type' => 'link',
+					'value' => lang('New document'),
+					'href' => $this->get_owner_typed_link('add')
 				));
 			}
 
@@ -209,8 +211,8 @@
 			$documents = $this->bo->read();
 			foreach($documents['results'] as &$document)
 			{
-				$document['link']		 = $this->get_owner_typed_link('download', array('id' => $document['id']));
-				$document['category']	 = lang(self::humanize($document['category']));
+				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
+				$document['category'] = lang(self::humanize($document['category']));
 				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
 //				$document_actions = array();
 //				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
@@ -219,16 +221,16 @@
 //				$document['actions'] = $document_actions;
 
 				if($this->bo->allow_write($document))
-					$document['opcion_edit']	 = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+					$document['opcion_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
 				if($this->bo->allow_delete($document))
-					$document['opcion_delete']	 = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+					$document['opcion_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
 			}
 			if(phpgw::get_var('no_images'))
 			{
-				$documents['results']	 = array_filter($documents['results'], array($this, 'is_image'));
+				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
 				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
 				// reindexing the results array solves the problem
-				$doc_backup				 = $documents;
+				$doc_backup = $documents;
 				unset($documents['results']);
 				foreach($doc_backup['results'] as $doc)
 				{
@@ -260,39 +262,41 @@
 		{
 			$types = array();
 			foreach($this->bo->get_categories() as $type)
-			{ $types[$type] = self::humanize($type);}
+			{
+				$types[$type] = self::humanize($type);
+			}
 			return $types;
 		}
 
 		protected function add_default_display_data(&$document_data)
 		{
-			$document_data['owner_pathway']		 = $this->get_owner_pathway($document_data);
-			$document_data['owner_type']		 = $this->get_document_owner_type();
-			$document_data['owner_type_label']	 = ucfirst($document_data['owner_type']);
-			$document_data['inline']			 = $this->is_inline();
-			$document_data['document_types']	 = $this->get_document_categories();
-			$document_data['documents_link']	 = $this->get_owner_typed_link('index');
-			$document_data['cancel_link']		 = $this->get_owner_typed_link('index');
+			$document_data['owner_pathway'] = $this->get_owner_pathway($document_data);
+			$document_data['owner_type'] = $this->get_document_owner_type();
+			$document_data['owner_type_label'] = ucfirst($document_data['owner_type']);
+			$document_data['inline'] = $this->is_inline();
+			$document_data['document_types'] = $this->get_document_categories();
+			$document_data['documents_link'] = $this->get_owner_typed_link('index');
+			$document_data['cancel_link'] = $this->get_owner_typed_link('index');
 		}
 
 		public function show()
 		{
-			$id			 = phpgw::get_var('id', 'int');
-			$document	 = $this->bo->read_single($id);
+			$id = phpgw::get_var('id', 'int');
+			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
 			self::render_template('document', array('document' => $document));
 		}
 
 		public function add()
 		{
-			$errors		 = array();
-			$document	 = array();
+			$errors = array();
+			$document = array();
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$document			 = extract_values($_POST, $this->fields);
-				$document['files']	 = $this->get_files();
-				$errors				 = $this->bo->validate($document);
+				$document = extract_values($_POST, $this->fields);
+				$document['files'] = $this->get_files();
+				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
 					try
@@ -316,18 +320,18 @@
 
 			if(is_array($parentData = $this->get_parent_if_inline()))
 			{
-				$document['owner_id']	 = $parentData['id'];
-				$document['owner_name']	 = $parentData['name'];
+				$document['owner_id'] = $parentData['id'];
+				$document['owner_name'] = $parentData['name'];
 			}
 
 			$this->flash_form_errors($errors);
 
-			$tabs			 = array();
+			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Document New'), 'link' => '#document');
-			$active_tab		 = 'generic';
+			$active_tab = 'generic';
 
-			$document['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$document['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$document['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
 			self::render_template_xsl('document_form', array('document' => $document));
@@ -335,14 +339,14 @@
 
 		public function edit()
 		{
-			$id			 = phpgw::get_var('id', 'int');
-			$document	 = $this->bo->read_single($id);
+			$id = phpgw::get_var('id', 'int');
+			$document = $this->bo->read_single($id);
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$document	 = array_merge($document, extract_values($_POST, $this->fields));
-				$errors		 = $this->bo->validate($document);
+				$document = array_merge($document, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
 					try
@@ -365,12 +369,12 @@
 
 			$this->flash_form_errors($errors);
 
-			$tabs			 = array();
+			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Document Edit'), 'link' => '#document');
-			$active_tab		 = 'generic';
+			$active_tab = 'generic';
 
-			$document['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$document['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$document['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
 			self::render_template_xsl('document_form', array('document' => $document));
@@ -402,5 +406,7 @@
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
 		protected function get_owner_pathway(array $forDocumentData)
-		{ return array();}
+		{
+			return array();
+		}
 	}
