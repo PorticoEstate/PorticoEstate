@@ -1535,27 +1535,42 @@
 				$this->node_id++;
 			}
 
-			foreach($tree as &$node)
+			if($tree)
 			{
-				$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id'], $cat_id);
-				$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
-				if($children)
+				foreach($tree as &$node)
 				{
-					$node['children'] = $children;
-				}
-
-				if($attribute_children)
-				{
+					$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id'], $cat_id);
+					$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
 					if($children)
 					{
-						$node['children'] = array_merge($children, $attribute_children);
+						$node['children'] = $children;
 					}
-					else
+
+					if($attribute_children)
 					{
-						$node['children'] = $attribute_children;
+						if($children)
+						{
+							$node['children'] = array_merge($children, $attribute_children);
+						}
+						else
+						{
+							$node['children'] = $attribute_children;
+						}
 					}
 				}
-
+			}
+			else
+			{
+				$tree = $this->get_attribute_children($location_id, "ajson{$this->node_id}", 0, $cat_id);
+				$this->node_id++;
+				foreach($tree as &$node)
+				{
+					$children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
+					if($children)
+					{
+						$node['children'] = $children;
+					}
+				}
 			}
 			return $tree;
 		}

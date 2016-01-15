@@ -99,10 +99,11 @@ $(document).ready(function () {
 			{
 				//Find top node
 				var top_node_id = parents[(level - 2)];
-
 				var treeInst = $('#treeDiv1').jstree(true);
 				top_node = treeInst.get_node(top_node_id)
-//				activity_top_level = top_node.a_attr.activity_top_level;
+				activity_location = top_node.original.activity_location;
+				$("#" + activity_location).prop( "checked", true );
+
 			}
 		}
 //		else
@@ -113,7 +114,6 @@ $(document).ready(function () {
 //				$("#" + activity_location).prop( "checked", false );
 //			}
 //		}
-//		$('#activity_top_level').val(activity_top_level);
 
 	//	var href = data.node.a_attr.href;
 	//	if (href == "#")

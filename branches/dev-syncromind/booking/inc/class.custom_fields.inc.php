@@ -131,8 +131,8 @@
 		 *
 		 * @return array the grouped attributes
 		 */
-		private function get_field_groups($appname, $location, $fields = array())
+		private function get_field_groups($appname, $location, $fields = array(), $skip_no_group = false)
 		{
-			return parent::get_attribute_groups($appname, $location, $fields, true);
+			return parent::get_attribute_groups($appname, $location, $fields, $skip_no_group);
 		}
 	}
