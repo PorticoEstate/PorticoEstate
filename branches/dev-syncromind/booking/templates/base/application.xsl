@@ -148,6 +148,40 @@
 							</xsl:for-each>
 						</div>
 					</div>
+
+					<div class="pure-g">
+						<div class="pure-u-1">
+							<div class="heading">
+								<legend>
+									<h3>1.1 <xsl:value-of select="php:function('lang', 'attachments')" /></h3>
+								</legend>
+							</div>
+							<div id="attachments_container"/>
+						<form method="POST" enctype='multipart/form-data' id='file_form'>
+							<input name="name" id='field_name' type='file' >
+								<xsl:attribute name='title'>
+									<xsl:value-of select="document/name"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>mime size</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-allowing">
+									<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-max-size">
+									<xsl:text>2M</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt , pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+							</input>
+							<br/>
+							<input type="submit" value="{php:function('lang', 'Add attachment')}" />
+						</form>
+
+						</div>
+					</div>
+
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
@@ -541,7 +575,7 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name')"/>;
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
@@ -551,6 +585,7 @@
         var associatedURL = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
         var documentsURL = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;
             documentsURL += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources;
+		var attachmentsResourceURL = 'index.php?menuaction=booking.uidocument_application.index&sort=name&no_images=1&filter_owner_id=' + app_id + '&phpgw_return_as=json&';
         ]]>
 
 		var colDefsResources = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
@@ -577,5 +612,9 @@
 		createTable('resources_container',resourcesURL,colDefsResources);
 		createTable('associated_container',associatedURL,colDefsAssociated,'results');
 		createTable('regulation_documents',documentsURL,colDefsDocuments);
+
+		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource);
+
 	</script>
 </xsl:template>

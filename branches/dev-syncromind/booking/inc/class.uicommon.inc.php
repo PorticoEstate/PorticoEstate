@@ -339,6 +339,7 @@
 				case 'pqi': return 'application/cprplayer';
 				case 'tsp': return 'application/dsptype';
 				case 'xls': return 'application/x-msexcel';
+				case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 				case 'pfr': return 'application/font-tdpfr';
 				case 'spl': return 'application/x-futuresplash';
 				case 'stk': return 'application/hyperstudio';
@@ -348,6 +349,7 @@
 				case 'mbd': return 'application/mbed';
 				case 'mfp': return 'application/mirage';
 				case 'doc': return 'application/x-msword';
+				case 'docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 				case 'orq': return 'application/ocsp-request';
 				case 'ors': return 'application/ocsp-response';
 				case 'bin': return 'application/octet-stream';

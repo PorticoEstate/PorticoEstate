@@ -38,7 +38,49 @@
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'],
 					'secret' => $application['secret']));
 			}
+			/** Start attachment **/
+			if($_FILES)
+			{
+				$document_application = createObject('booking.uidocument_application');
 
+				$oldfiles = $document_application->bo->so->read(array('filters'=> array('owner_id' => $application['id'])));
+				$files = $this->get_files();
+				$file_exist = false;
+
+				if($oldfiles['results'])
+				{
+					foreach($oldfiles['results'] as $old_file)
+					{
+						if($old_file['name'] == $files['name']['name'])
+						{
+							$file_exist = true;
+							phpgwapi_cache::message_set(lang('file exists'));
+							break;
+						}
+					}
+				}
+
+				$document = array(
+					'category'	=> 'other',
+					'owner_id' => $application['id'],
+					'files' => $this->get_files()
+				);
+				$document_errors = $document_application->bo->validate($document);
+
+				if(!$document_errors && !$file_exist)
+				{
+					try
+					{
+						booking_bocommon_authorized::disable_authorization();
+						$document_receipt = $document_application->bo->add($document);
+					}
+					catch(booking_unauthorized_exception $e)
+					{
+						phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
+					}
+				}
+			}
+			/** End attachment **/
 
 			$building_info					 = $this->bo->so->get_building_info($id);
 			$application['building_id']		 = $building_info['id'];
@@ -83,6 +125,9 @@
 			$agegroups					 = $agegroups['results'];
 			$audience					 = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience					 = $audience['results'];
+
+			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
+
 			self::render_template_xsl('application', array('application' => $application,
 				'audience' => $audience, 'agegroups' => $agegroups, 'frontend' => 'true'));
 		}

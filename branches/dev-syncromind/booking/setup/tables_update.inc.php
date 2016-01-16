@@ -3341,7 +3341,7 @@
 				'nullable' => true
 			)
 		);
-		
+
 		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@ (LEFTARG = jsonb, RIGHTARG = text, PROCEDURE = jsonb_exists)',__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any)',__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all)',__LINE__,__FILE__);
@@ -3352,3 +3352,38 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.2.24';
+	/**
+	 * Update booking version from 0.2.24 to 0.2.25
+	 *
+	 */
+	function booking_upgrade0_2_24()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_document_application',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					"bb_application" => array('owner_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.25';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

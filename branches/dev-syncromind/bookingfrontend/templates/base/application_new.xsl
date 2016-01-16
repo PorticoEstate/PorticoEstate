@@ -6,7 +6,7 @@
 		</h3>
 		<xsl:call-template name="msgbox"/>
 
-		<form action="" method="POST" id='application_form' name="form">
+		<form action="" method="POST" id='application_form' enctype='multipart/form-data' name="form">
 			<xsl:if test="config/application_new_application">
 				<p style="width: 750px;">
 					<xsl:value-of select="config/application_new_application"/>
@@ -456,6 +456,37 @@
 						</xsl:if>
 					</dl>
 				</div>
+				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<dl class="form-col">
+						<div class="heading">9. <xsl:value-of select="php:function('lang', 'Attachment')" /></div>
+
+						<dt>
+						<label for="field_name">
+							<xsl:value-of select="php:function('lang', 'Document')" />
+						</label>
+						</dt>
+						<dd>
+						<input name="name" id='field_name' type='file' >
+							<xsl:attribute name='title'>
+								<xsl:value-of select="document/name"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>mime size</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-allowing">
+								<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-max-size">
+								<xsl:text>2M</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+							</xsl:attribute>
+						</input>
+						</dd>
+					</dl>
+				</div>
+
 			</div>
 
 			<div class="form-buttons">

@@ -725,6 +725,7 @@
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 
 				$errors = $this->validate($application);
+
 				if($_POST['contact_email'] != $_POST['contact_email2'])
 				{
 					$errors['email']				 = lang('The e-mail addresses you entered do not match');
@@ -747,6 +748,7 @@
 					$errors['application_deactivated'] = lang('Application on this building is not possible.');
 				}
 
+
 				if(!$errors)
 				{
 					$comment_text = $this->create_accepted_documents_comment_text($application);
@@ -757,6 +759,33 @@
 
 					$receipt			 = $this->bo->add($application);
 					$application['id']	 = $receipt['id'];
+
+
+					/** Start attachment **/
+					$document_application = createObject('booking.uidocument_application');
+
+					$document = array(
+						'category'	=> 'other',
+						'owner_id' => $application['id'],
+						'files' => $this->get_files()
+					);
+					$document_errors = $document_application->bo->validate($document);
+
+					if(!$document_errors)
+					{
+						try
+						{
+							booking_bocommon_authorized::disable_authorization();
+							$document_receipt = $document_application->bo->add($document);
+						}
+						catch(booking_unauthorized_exception $e)
+						{
+							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
+						}
+					}
+
+					/** End attachment **/
+
 					$this->bo->send_notification($application, true);
 					$this->bo->so->update_id_string();
 					phpgwapi_cache::message_set(lang("Your application has now been registered and a confirmation email has been sent to you.") . "<br />" .
@@ -1140,6 +1169,50 @@
 					$update	 = true;
 					$notify	 = true;
 				}
+				else if($_FILES)
+				{
+				/** Start attachment **/
+					$document_application = createObject('booking.uidocument_application');
+
+					$oldfiles = $document_application->bo->so->read(array('filters'=> array('owner_id' => $application['id'])));
+					$files = $this->get_files();
+					$file_exist = false;
+
+					if($oldfiles['results'])
+					{
+						foreach($oldfiles['results'] as $old_file)
+						{
+							if($old_file['name'] == $files['name']['name'])
+							{
+								$file_exist = true;
+								phpgwapi_cache::message_set(lang('file exists'));
+								break;
+							}
+						}
+					}
+
+					$document = array(
+						'category'	=> 'other',
+						'owner_id' => $application['id'],
+						'files' => $this->get_files()
+					);
+					$document_errors = $document_application->bo->validate($document);
+
+					if(!$document_errors && !$file_exist)
+					{
+						try
+						{
+							booking_bocommon_authorized::disable_authorization();
+							$document_receipt = $document_application->bo->add($document);
+						}
+						catch(booking_unauthorized_exception $e)
+						{
+							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
+						}
+					}
+
+					/** End attachment **/
+				}
 
 				$update AND $receipt = $this->bo->update($application);
 				$notify AND $this->bo->send_notification($application);
@@ -1211,24 +1284,15 @@
 			}
 			$collision_dates	 = array("data" => implode(',', $collision_dates));
 			self::check_date_availability($application);
-//            echo '<pre>';print_r($application); echo '</pre>';
-//            echo '<pre>';print_r($audience); echo '</pre>';
-//            echo '<pre>';print_r($agegroups); echo '</pre>';
-//            echo '<pre>';print_r($num_associations); echo '</pre>';
-//            echo '<pre>';print_r($from); echo '</pre>';
-//            echo '<pre>';print_r($collision_dates); echo '</pre>';
-//            echo '<pre>';print_r($comments); echo '</pre>';
-//            echo '<pre>';print_r($application_text); echo '</pre>';
 			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
+
 
 			self::render_template_xsl('application', array('application'		 => $application,
 				'audience'			 => $audience, 'agegroups'			 => $agegroups,
 				'num_associations'	 => $num_associations, 'assoc'				 => $from, 'collision'			 => $collision_dates,
 				'comments'			 => $comments, 'config'			 => $application_text));
-//            self::render_template_xsl('application', array('application' => $application));
-//        var_dump($application);
-//        var_dump($application);
-//        exit();
+
 		}
 
 		function get_activity_data()

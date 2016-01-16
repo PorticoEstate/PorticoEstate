@@ -26,19 +26,24 @@
 		$document_owners = array(
 			'building',
 			'resource',
+			'application'
 		);
 
 		function __construct()
 		{
 			$this->ownerType = substr(get_class($this), 19);
 
-			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), array(
+			$fields = array(
 				'id' => array('type' => 'int'),
 				'name' => array('type' => 'string', 'query' => true),
 				'owner_id' => array('type' => 'int', 'required' => true),
 				'category' => array('type' => 'string', 'required' => true),
 				'description' => array('type' => 'string', 'required' => false),
-				'owner_name' => array(
+			);
+
+			if($this->get_owner_type()!='application')
+			{
+				$fields['owner_name'] = array(
 					'type' => 'string',
 					'query' => true,
 					'join' => array(
@@ -47,9 +52,9 @@
 						'key' => 'id',
 						'column' => 'name'
 					)
-				)
-			)
-			);
+				);
+			}
+			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), $fields	);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);

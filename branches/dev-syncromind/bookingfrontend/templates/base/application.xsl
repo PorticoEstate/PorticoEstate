@@ -119,6 +119,37 @@
 						</form>
 					</dd>
 				</dl>
+				<dl class="proplist">
+					<dt class="heading">
+						<xsl:value-of select="php:function('lang', 'attachments')" />
+					</dt>
+					<dd>
+						<div id="attachments_container"/>
+					</dd>
+					<dd>
+						<form method="POST" enctype='multipart/form-data' id='file_form'>
+							<input name="name" id='field_name' type='file' >
+								<xsl:attribute name='title'>
+									<xsl:value-of select="document/name"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>mime size</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-allowing">
+									<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-max-size">
+									<xsl:text>2M</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+							</input>
+							<br/>
+							<input type="submit" value="{php:function('lang', 'Add attachment')}" />
+						</form>
+					</dd>
+				</dl>
 			</div>
 		</div>
 
@@ -178,7 +209,7 @@
 					<dd>
 						<xsl:value-of select="application/building_name"/>
 						(<a href="javascript: void(0)"
-						onclick="window.open('{application/schedule_link}',
+							onclick="window.open('{application/schedule_link}',
                                  '', 
                                    'width=1048, height=600, scrollbars=yes');
                                       return false;">
@@ -477,7 +508,7 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resources Type', 'ID', 'Type', 'From', 'To', 'Document')" />;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resources Type', 'ID', 'Type', 'From', 'To', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
@@ -487,6 +518,7 @@
             var applicationURL = 'index.php?menuaction=bookingfrontend.uiapplication.associated&phpgw_return_as=json&filter_application_id=' + app_id;
             var documentURL = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;
                 documentURL += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources;
+			var attachmentsResourceURL = 'index.php?menuaction=bookingfrontend.uidocument_application.index&sort=name&no_images=1&filter_owner_id=' + app_id + '&phpgw_return_as=json&';
 
         ]]>
 
@@ -504,5 +536,9 @@
 
 		var colDefsDocument = [{key: 'name', label: lang['Document'], formatter: genericLink}];
 		createTable('regulation_documents', documentURL, colDefsDocument);
+
+		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource);
+
 	</script>
 </xsl:template>
