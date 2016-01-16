@@ -119,9 +119,38 @@
 						</form>
 					</dd>
 				</dl>
+			</div>
+		</div>
+
+		<div class="pure-g">
+			<div class="pure-u-1">
+				<dl class="proplist">
+					<dt class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+					<xsl:for-each select="application/comments[author]">
+						<dt>
+							<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+						</dt>
+						<xsl:choose>
+							<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
+								<dd>
+									<xsl:value-of select="comment" disable-output-escaping="yes"/>
+								</dd>
+							</xsl:when>
+							<xsl:otherwise>
+								<dd>
+									<div style="width: 80%;">
+										<xsl:value-of select="comment"/>
+									</div>
+								</dd>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</dl>
+			</div>
+			<div class="pure-u-1">
 				<dl class="proplist">
 					<dt class="heading">
-						<xsl:value-of select="php:function('lang', 'attachments')" />
+						1.1 <xsl:value-of select="php:function('lang', 'attachments')" />
 					</dt>
 					<dd>
 						<div id="attachments_container"/>
@@ -149,33 +178,6 @@
 							<input type="submit" value="{php:function('lang', 'Add attachment')}" />
 						</form>
 					</dd>
-				</dl>
-			</div>
-		</div>
-
-		<div class="pure-g">
-			<div class="pure-u-1">
-				<dl class="proplist">
-					<dt class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
-					<xsl:for-each select="application/comments[author]">
-						<dt>
-							<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-						</dt>
-						<xsl:choose>
-							<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
-								<dd>
-									<xsl:value-of select="comment" disable-output-escaping="yes"/>
-								</dd>
-							</xsl:when>
-							<xsl:otherwise>
-								<dd>
-									<div style="width: 80%;">
-										<xsl:value-of select="comment"/>
-									</div>
-								</dd>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
 				</dl>
 			</div>
 		</div>
