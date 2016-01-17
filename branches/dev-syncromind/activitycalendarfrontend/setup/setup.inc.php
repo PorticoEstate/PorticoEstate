@@ -1,7 +1,7 @@
 <?php
 
 $setup_info['activitycalendarfrontend']['name'] = 'activitycalendarfrontend';
-$setup_info['activitycalendarfrontend']['version'] = '0.1';
+$setup_info['activitycalendarfrontend']['version'] = '0.1.1';
 $setup_info['activitycalendarfrontend']['app_order'] = 61;
 $setup_info['activitycalendarfrontend']['enable'] = 1;
 $setup_info['activitycalendarfrontend']['app_group'] = 'office';
@@ -22,7 +22,7 @@ $setup_info['activitycalendarfrontend']['depends'][] = array(
 
 $setup_info['activitycalendarfrontend']['depends'][] = array(
     'appname' => 'booking',
-	'versions' => array('0.2.20','0.2.21','0.2.22')
+	'versions' => array('0.2.20','0.2.21','0.2.22','0.2.23','0.2.24','0.2.25')
 );
 
 $setup_info['activitycalendarfrontend']['depends'][] = array(

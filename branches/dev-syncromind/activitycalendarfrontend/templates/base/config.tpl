@@ -27,7 +27,7 @@
 		</tr>
 		<tr bgcolor="{row_off}">
 			<td>{lang_Anonymous_password}:</td>
-			<td><input type="password" name="newsettings[anonymous_pass]" value="{value_anonymous_pass}"></td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
 		</tr>
 		<tr bgcolor="{row_on}">
 

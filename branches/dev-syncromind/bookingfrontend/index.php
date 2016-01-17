@@ -45,8 +45,13 @@
 	// Make sure we're always logged in
 	if(!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-		$login				 = "bookingguest";
-		$passwd				 = "bkbooking";
+//		$login				 = "bookingguest";
+		$c		 = createobject('phpgwapi.config', 'bookingfrontend');
+		$c->read();
+		$config	 = $c->config_data;
+
+		$login				 = $c->config_data['anonymous_user'];
+		$passwd				 = $c->config_data['anonymous_passwd'];
 		$_POST['submitit']	 = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);

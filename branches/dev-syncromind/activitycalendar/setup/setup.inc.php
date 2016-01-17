@@ -30,7 +30,7 @@
 
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'booking',
-		'versions' => array('0.2.20','0.2.21','0.2.22')
+		'versions' => array('0.2.20','0.2.21','0.2.22','0.2.23','0.2.24','0.2.25')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(

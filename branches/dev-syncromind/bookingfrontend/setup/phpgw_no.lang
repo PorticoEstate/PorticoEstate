@@ -1,3 +1,10 @@
+attachment	bookingfrontend	no	Vedlegg
+please enter a descripction	bookingfrontend	no	Vennligst angi en beskrivelse
+please enter a contact name	bookingfrontend	no	Vennligst angi kontaktnavn
+please enter a contact email	bookingfrontend	no	Vennligst angi epost
+customer identifier type is required	bookingfrontend	no	Vennligst angi identifikasjon
+number of participants is required	bookingfrontend	no	Vennligst angi antall deltakere
+please choose at least 1 target audience	bookingfrontend	no	Vennligst angi målgruppe
 part of town	common	no	Bydel
 fetching data	bookingfrontend	no	Henter data
 please wait	bookingfrontend	no	Vent litt...

@@ -15,10 +15,9 @@
 
 		$c		 = createobject('phpgwapi.config', 'activitycalendarfrontend');
 		$c->read();
-		$config	 = $c->config_data;
 
 		$login				 = $c->config_data['anonymous_user'];
-		$passwd				 = $c->config_data['anonymous_pass'];
+		$passwd				 = $c->config_data['anonymous_passwd'];
 		$_POST['submitit']	 = "";
 
 		/* 		$login = "activitycalendar_guest";
