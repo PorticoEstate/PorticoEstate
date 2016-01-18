@@ -425,28 +425,23 @@ HTML;
 			{
 				if(!isset($selection[1]))
 				{
-
-					$navbar		= $this->get('navbar');
 					$navigation = $this->get('admin');
 
 					foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $_app => $app_info )
 					{
-						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navbar[$_app]))
+						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navigation[$_app]))
 						{
-							if(isset($navigation[$_app]))
-							{
-								$menu[] = array
-								(
-									'app'		=> 'admin',
-									'key' 		=> $_app,
-									'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
-									'children'	=> count($navigation[$_app]) > 1 ? true : false,
-									'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
-									'url'		=> $GLOBALS['phpgw']->link('/index.php',
-													array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app))
+							$menu[] = array
+							(
+								'app'		=> 'admin',
+								'key' 		=> $_app,
+								'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
+								'children'	=> count($navigation[$_app]) > 1 ? true : false,
+								'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
+								'url'		=> str_replace('&amp;','&', $GLOBALS['phpgw']->link('/index.php',
+												array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app)))
 
-								);
-							}
+							);
 						}
 					}
 
