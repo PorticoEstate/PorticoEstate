@@ -158,6 +158,7 @@ HTML;
 		if (!$nonavbar)
 		{
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+			$lang_bookmarks = lang('bookmarks');
 
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
@@ -190,7 +191,7 @@ HTML;
 		$var['topmenu'] .= <<<HTML
 
 				<li >
-					<a href="#">Bookmarks</a>
+					<a href="#">{$lang_bookmarks}</a>
 					<ul>
 HTML;
 

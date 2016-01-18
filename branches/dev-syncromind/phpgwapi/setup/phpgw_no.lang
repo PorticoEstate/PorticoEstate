@@ -1,8 +1,11 @@
+bookmarks	common	no	Snarveier
+bookmark added	common	no	Snarvei er lagret
+bookmark deleted	common	no	Snarvei er slettet
 access	common	no	Access
 access type	common	no	Access type
-account has been created	common	no	Account har blitt opprettet
-account has been deleted	common	no	Account har blitt slettet
-account has been updated	common	no	Account har blitt oppdatert
+account has been created	common	no	Bruker har blitt opprettet
+account has been deleted	common	no	Bruker har blitt slettet
+account has been updated	common	no	Bruker har blitt oppdatert
 add	common	no	Legg til
 admin	common	no	Admin
 administration	common	no	Administrasjon

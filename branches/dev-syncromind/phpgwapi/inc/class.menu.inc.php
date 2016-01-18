@@ -555,7 +555,7 @@ HTML;
 			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]))
 			{
 				unset($bookmarks[$bookmark_candidate]);
-				$status = lang('deleted');
+				$status = lang('bookmark deleted');
 			}
 			else
 			{
@@ -565,7 +565,7 @@ HTML;
 				}
 
 				$bookmarks[$bookmark_candidate] = true;
-				$status = lang('added');
+				$status = lang('bookmark added');
 			}
 
 			phpgwapi_cache::user_set('phpgwapi', "bookmark_menu", $bookmarks, $user_id);
