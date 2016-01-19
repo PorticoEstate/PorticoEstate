@@ -180,11 +180,11 @@
 
 					if(isset($custom_condition_arr[$activity_top_level]))
 					{
-						$_conditions[] = '(' .$conditions . ' AND (activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . ') AND' . implode(' OR ', $custom_condition_arr[$activity_top_level]) . '))';
+						$_conditions[] = '(' .$conditions . ' AND (bb_resource.activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . ') AND' . implode(' OR ', $custom_condition_arr[$activity_top_level]) . '))';
 					}
 					else
 					{
-						$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . '))';
+						$_conditions[] = '(' . $conditions . ' AND bb_resource.activity_id IN ('. implode(',', $activity_ids[$activity_top_level]) . '))';
 					}
 					$activity_ids[$activity_top_level] = array();
 				}
@@ -199,7 +199,7 @@
 
 			if($__activity_ids)
 			{
-				$_conditions[] = '(' . $conditions . ' AND activity_id IN ('. implode(',', $__activity_ids) . '))';
+				$_conditions[] = '(' . $conditions . ' AND bb_resource.activity_id IN ('. implode(',', $__activity_ids) . '))';
 			}
 
 			if(!$_conditions)

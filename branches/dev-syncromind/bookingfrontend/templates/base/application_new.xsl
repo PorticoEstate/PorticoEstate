@@ -93,7 +93,7 @@
 						</p>
 						</xsl:if-->
 						<dt>
-							<label for="field_activity">
+							<label for="field_agegroups">
 								<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
 							</label>
 						</dt>

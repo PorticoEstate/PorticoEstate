@@ -3,8 +3,6 @@ var regulations_select_all = "";
 
 $(document).ready(function () {
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true), 'field_building_name', 'field_building_id', 'building_container');
-//    JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
-//                                                  'field_building_name', 'field_building_id', 'building_container');
 
 	$("#field_activity").change(function () {
 		var building_id = $('#field_building_id').val();

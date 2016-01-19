@@ -815,12 +815,6 @@
 
 				array_set_default($application, 'resources', $resources);
 			}
-			if(!$activity_id)
-			{
-				$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
-				$activity_id	 = $_building['activity_id'];
-			}
-
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'int'));
 
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'string'));
@@ -845,12 +839,22 @@
 			$this->flash_form_errors($errors);
 			$application['resources_json']			 = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json']	 = json_encode($application['accepted_documents']);
+			$top_level_activity = false;
+			if(!$activity_id)
+			{
+				$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
+				$activity_id	 = $_building['activity_id'];
+				$top_level_activity	 = $activity_id;
+			}
 			if(!$activity_id)
 			{
 				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			}
-			$activity_path		 = $this->activity_bo->get_path($activity_id);
-			$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : -1;
+			if(!$top_level_activity)
+			{
+				$activity_path		 = $this->activity_bo->get_path($activity_id);
+				$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : -1;
+			}
 			$filter_activity_top = 0;
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
 			{

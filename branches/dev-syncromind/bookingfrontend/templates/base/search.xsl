@@ -180,22 +180,24 @@
 			</div>
 
 		</div>
-
-		<div id="no_result">
-			<xsl:if test="not(search)">
-				<div id="cloud">
-					<div class="frontpagetext">
-						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+		<div class="pure-g">
+			<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
+				<xsl:if test="not(search)">
+					<div id="cloud">
+						<div class="frontpagetext">
+							<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+						</div>
 					</div>
-				</div>
-				<div style="text-align:center;">
-					<img alt="" >
-						<xsl:attribute name="src">
-							<xsl:value-of select="frontimage"/>
-						</xsl:attribute>
-					</img>
-				</div>
-			</xsl:if>
+					<div style="text-align:center;">
+						<img alt="" >
+							<xsl:attribute name="src">
+								<xsl:value-of select="frontimage"/>
+							</xsl:attribute>
+						</img>
+					</div>
+				</xsl:if>
+			</div>
 		</div>
+
 	</div>
 </xsl:template>
