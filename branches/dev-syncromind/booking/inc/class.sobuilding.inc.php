@@ -25,6 +25,7 @@
 				'deactivate_sendmessage' => array('type' => 'int'),
 				'extra_kalendar'		 => array('type' => 'int'),
 				'location_code'			 => array('type' => 'string', 'required' => false),
+				'activity_id'			=> array('type' => 'int', 'required' => false),
 				'part_of_town_id'		 => array('type'		 => 'string',
 					'required'	 => false,
 					'join'		 => array(
@@ -37,7 +38,14 @@
 				'zip_code'				 => array('type' => 'string'),
 				'district'				 => array('type' => 'string', 'query' => true),
 				'city'					 => array('type' => 'string', 'query' => true),
-				'active'				 => array('type' => 'int')
+				'active'				 => array('type' => 'int'),
+				'activity_name'		 => array('type'	 => 'string', 'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_activity',
+						'fkey'	 => 'activity_id',
+						'key'	 => 'id',
+						'column' => 'name'
+					))
 			)
 			);
 		}

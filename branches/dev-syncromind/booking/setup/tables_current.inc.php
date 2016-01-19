@@ -19,6 +19,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'deactivate_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),

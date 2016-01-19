@@ -15,6 +15,14 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Activity')" />
+					</label>
+					<span>
+						<xsl:value-of select="building/activity_name"/>
+					</span>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Street')" />
 					</label>
 					<xsl:value-of select="building/street"/>

@@ -3387,3 +3387,63 @@
 		}
 	}
 
+	$test[] = '0.2.25';
+	/**
+	 * Update booking version from 0.2.25 to 0.2.26
+	 *
+	 */
+	function booking_upgrade0_2_25()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_building','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$soactivity = createObject('booking.soactivity');
+
+		$sql = "SELECT id FROM bb_activity WHERE parent_id = 0 OR parent_id IS NULL ORDER BY id";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$top_levels = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$top_levels[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		$activities = array_merge(array($top_levels[0]),$soactivity->get_children($top_levels[0]));
+
+		if($activities)
+		{
+			$sql = "SELECT building_id FROM bb_resource WHERE activity_id IN (" . implode(',', $activities) . ')';
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$buildings = array();
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$buildings[] = $GLOBALS['phpgw_setup']->oProc->f('building_id');
+			}
+
+			if($buildings)
+			{
+				$sql = "UPDATE bb_building SET activity_id = 1 WHERE id IN (" . implode(',', $buildings) . ')';
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				if(isset($top_levels[1]))
+				{
+					$sql = "UPDATE bb_building SET activity_id = {$top_levels[1]} WHERE activity_id IS NULL";
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				}
+
+				$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building','activity_id',array(
+						'type' => 'int',
+						'precision' => 4,
+						'nullable' => false
+					)
+				);
+
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.26';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -16,13 +16,15 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:choose>
 		<xsl:when test="results/total_records_sum &gt; 0">
-			<h5>
-				<u>
-					<strong>
-						<xsl:value-of select="php:function('lang', 'Found %1 results', results/total_records_sum)" />
-					</strong>
-				</u>
-			</h5>
+			<div id = "total_records" style="display: none;">
+				<h5>
+					<u>
+						<strong>
+							<xsl:value-of select="php:function('lang', 'Found %1 results', results/total_records_sum)" />
+						</strong>
+					</u>
+				</h5>
+			</div>
 			<br />
 			<br />
 			<ol id="result">
@@ -97,13 +99,15 @@
 			</ol>
 		</xsl:when>
 		<xsl:otherwise>
-			<h5>
-				<u>
-					<strong>
-						<xsl:value-of select="php:function('lang', 'Found %1 results', 0)" />
-					</strong>
-				</u>
-			</h5>
+			<div id = "total_records" style="display: none;">
+				<h5>
+					<u>
+						<strong>
+							<xsl:value-of select="php:function('lang', 'Found %1 results', 0)" />
+						</strong>
+					</u>
+				</h5>
+			</div>
 
 		</xsl:otherwise>
 	</xsl:choose>

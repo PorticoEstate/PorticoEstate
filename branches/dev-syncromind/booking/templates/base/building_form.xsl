@@ -19,6 +19,24 @@
 					</input>
 				</div>
 				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Activity')" />
+					</label>
+					<select id="field_activity_id" name="activity_id">
+						<option value="">
+							<xsl:value-of select="php:function('lang', 'select')" />
+						</option>
+						<xsl:for-each select="activitydata">
+							<option value="{id}">
+								<xsl:if test="activity_id=id">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="name" />
+							</option>
+						</xsl:for-each>
+					</select>
+				</div>
+				<div class="pure-control-group">
 					<label for="field_phone">
 						<xsl:value-of select="php:function('lang', 'Telephone')" />
 					</label>

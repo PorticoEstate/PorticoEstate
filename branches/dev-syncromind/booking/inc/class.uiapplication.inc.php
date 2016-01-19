@@ -815,6 +815,12 @@
 
 				array_set_default($application, 'resources', $resources);
 			}
+			if(!$activity_id)
+			{
+				$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
+				$activity_id	 = $_building['activity_id'];
+			}
+
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'int'));
 
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'string'));

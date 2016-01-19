@@ -31,6 +31,7 @@
 
 			$this->bo			 = CreateObject('booking.bobuilding');
 			$this->bo_booking	 = CreateObject('booking.bobooking');
+			$this->activity_bo	 = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::buildings');
 			$this->fields		 = array
 				(
@@ -56,6 +57,7 @@
 				'deactivate_sendmessage' => 'int',
 				'extra_kalendar'		 => 'string',
 				'calendar_text'			 => 'string',
+				'activity_id'		 => 'int',
 			);
 			$this->module		 = "booking";
 		}
@@ -103,6 +105,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => lang('building'),
 				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
@@ -122,6 +125,10 @@
 							'key'		 => 'name',
 							'label'		 => lang('Building'),
 							'formatter'	 => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key'	 => 'activity_name',
+							'label'	 => lang('Activity')
 						),
 						array(
 							'key'	 => 'street',
@@ -199,6 +206,7 @@
 			$this->flash_form_errors($errors);
 			$building['buildings_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$activity_data			 = $this->activity_bo->get_top_level();
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::init_ckeditor('field_description');
@@ -211,7 +219,7 @@
 			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
-			self::render_template_xsl('building_form', array('building' => $building, 'new_form' => true));
+			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data, 'new_form' => true));
 		}
 
 		public function edit()
@@ -247,6 +255,12 @@
 					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
+			$activity_data			 = $this->activity_bo->get_top_level();
+			foreach($activity_data as $acKey => $acValue)
+			{
+				$activity_data[$acKey]['activity_id'] = $building['activity_id'];
+			}
+
 			$this->flash_form_errors($errors);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -260,7 +274,7 @@
 			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
-			self::render_template_xsl('building_form', array('building' => $building));
+			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data));
 		}
 
 		public function show()
