@@ -866,6 +866,11 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = phpgw::get_var('id', 'int');
 			$config = CreateObject('phpgwapi.config', 'property');
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);

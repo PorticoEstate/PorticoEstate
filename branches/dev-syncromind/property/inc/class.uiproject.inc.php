@@ -940,6 +940,11 @@ JS;
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = phpgw::get_var('id', 'int');
 			$values_attribute = phpgw::get_var('values_attribute');
 			$config = CreateObject('phpgwapi.config', 'property');
@@ -1180,6 +1185,7 @@ JS;
 			$config->read();
 			$bolocation = CreateObject('property.bolocation');
 
+/*
 			if($mode == 'edit')
 			{
 				$values = phpgw::get_var('values');
@@ -1299,7 +1305,9 @@ JS;
 					);
 				}
 			}
+*/
 
+/*
 			if($save = phpgw::get_var('save', 'bool'))
 			{
 				$mode = 'edit';
@@ -1324,7 +1332,7 @@ JS;
 					}
 				}
 			}
-
+*/
 			//$record_history = '';
 			$record_history = array();
 			if($this->bypass_error || ((!$this->receipt['error'] || $add_request) && !$bypass) && $id)
@@ -1955,8 +1963,7 @@ JS;
 				array('key' => 'type', 'label' => lang('type'), 'sortable' => true),
 				array('key' => 'title', 'label' => lang('title'), 'sortable' => false),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => false),
-				array('key' => 'select', 'label' => lang('select'), 'className' => 'center',
-					'sortable' => false)
+				array('key' => 'select', 'label' => lang('select'), 'className' => 'center','sortable' => false)
 			);
 
 			$datatable_def[] = array

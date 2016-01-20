@@ -455,7 +455,25 @@
 		</div>
 		<xsl:choose>
 			<xsl:when test="files!=''">
-				<xsl:call-template name="file_list"/>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'files')"/>
+					</label>
+					<div>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_2'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+				</div>
 			</xsl:when>
 		</xsl:choose>
 		<div class="pure-control-group">
@@ -469,7 +487,7 @@
 					<label>
 						<xsl:value-of select="lang_history"/>
 					</label>
-					<div class="pure-custom">
+					<div>
 						<xsl:for-each select="//datatable_def">
 							<xsl:if test="container = 'datatable-container_1'">
 								<xsl:call-template name="table_setup">
@@ -774,18 +792,28 @@
 	<xsl:choose>
 		<xsl:when test="values_view_order!=''">
 			<div class="pure-control-group">
-				<xsl:for-each select="//datatable_def">
-					<xsl:if test="container = 'datatable-container_0'">
-						<xsl:call-template name="table_setup">
-							<xsl:with-param name="container" select ='container'/>
-							<xsl:with-param name="requestUrl" select ='requestUrl' />
-							<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-							<xsl:with-param name="tabletools" select ='tabletools' />
-							<xsl:with-param name="data" select ='data' />
-							<xsl:with-param name="config" select ='config' />
-						</xsl:call-template>
-					</xsl:if>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="use_yui_table='1'">
+						<xsl:for-each select="//datatable_def">
+							<xsl:if test="container = 'datatable-container_0'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<table border="1" style="width:100%">
+							<xsl:apply-templates select="table_header_view_order"/>
+							<xsl:apply-templates select="values_view_order"/>
+						</table>
+					</xsl:otherwise>
+				</xsl:choose>
 			</div>
 		</xsl:when>
 	</xsl:choose>
@@ -823,65 +851,45 @@
 	<xsl:variable name="sort_quantity">
 		<xsl:value-of select="sort_quantity"/>
 	</xsl:variable>
-	<tr class="th">
-		<td class="th_text" width="5%" align="right">
-			<xsl:value-of select="lang_post"/>
-		</td>
-		<td class="th_text" width="15%" align="left">
-			<xsl:value-of select="lang_code"/>
-		</td>
-		<td class="th_text" width="40%" align="left">
-			<xsl:value-of select="lang_descr"/>
-		</td>
-		<td class="th_text" width="4%" align="left">
-			<xsl:value-of select="lang_unit"/>
-		</td>
-		<td class="th_text" width="2%" align="right">
-			<xsl:value-of select="lang_quantity"/>
-		</td>
-		<td class="th_text" width="5%" align="right">
-			<xsl:value-of select="lang_billperae"/>
-		</td>
-		<td class="th_text" width="15%" align="right">
-			<xsl:value-of select="lang_cost"/>
-		</td>
-	</tr>
+	<thead>
+		<tr class="th">
+			<td class="th_text" width="5%" align="right">
+				<xsl:value-of select="php:function('lang', 'post')"/>
+			</td>
+			<td class="th_text" width="15%" align="left">
+				<xsl:value-of select="php:function('lang', 'Code')"/>
+			</td>
+			<td class="th_text" width="40%" align="left">
+				<xsl:value-of select="php:function('lang', 'descr')"/>
+			</td>
+			<td class="th_text" width="4%" align="left">
+				<xsl:value-of select="php:function('lang', 'Unit')"/>
+			</td>
+			<td class="th_text" width="2%" align="right">
+				<xsl:value-of select="php:function('lang', 'Quantity')"/>
+			</td>
+			<td class="th_text" width="5%" align="right">
+				<xsl:value-of select="php:function('lang', 'Bill per unit')"/>
+			</td>
+			<td class="th_text" width="15%" align="right">
+				<xsl:value-of select="php:function('lang', 'cost')"/>
+			</td>
+		</tr>
+	</thead>
 </xsl:template>
 
 <!-- New template-->
 <xsl:template match="values_view_order">
-	<xsl:variable name="lang_view_statustext">
-		<xsl:value-of select="lang_view_statustext"/>
-	</xsl:variable>
-	<xsl:variable name="lang_edit_statustext">
-		<xsl:value-of select="lang_edit_statustext"/>
-	</xsl:variable>
-	<xsl:variable name="lang_delete_statustext">
-		<xsl:value-of select="lang_delete_statustext"/>
-	</xsl:variable>
 	<xsl:choose>
 		<xsl:when test="new_grouping=1">
 			<tr>
-				<td class="th_text" align="center" colspan="10" width="100%">
+				<td align="left" colspan="8" width="100%">
 					<xsl:value-of select="grouping_descr"/>
 				</td>
 			</tr>
 		</xsl:when>
 	</xsl:choose>
 	<tr>
-		<xsl:attribute name="class">
-			<xsl:choose>
-				<xsl:when test="@class">
-					<xsl:value-of select="@class"/>
-				</xsl:when>
-				<xsl:when test="position() mod 2 = 0">
-					<xsl:text>row_off</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>row_on</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:attribute>
 		<td align="right">
 			<xsl:value-of select="post"/>
 		</td>

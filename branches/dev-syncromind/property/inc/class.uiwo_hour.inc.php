@@ -1423,10 +1423,11 @@ HTML;
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles = CreateObject('property.bofiles');
-						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']);
-						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']);
+						$attachments = $bofiles->get_attachments("/project/{$project['project_id']}/", $values['file_action']['project']);
+						$attachments = array_merge($attachments, $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']['workorder']));
+						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']['project']). ', ' . implode(', ', $values['file_action']['workorder']);
 					}
-
+					_debug_array($attachment_log);die();
 					if($send_as_pdf)
 					{
 						$pdfcode = $this->pdf_order($workorder_id, $show_cost);
@@ -1602,6 +1603,72 @@ HTML;
 				)
 			);
 
+			$content_files = array();
+			$link_to_files = (isset($this->config->config_data['files_url']) ? $this->config->config_data['files_url'] : '');
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			
+			$files = $workorder['files'] ? $workorder['files'] : array();
+			$lang_view_file = lang('click to view file');
+			$lang_select_file = lang('select');
+
+			for($z = 0; $z < count($files); $z++)
+			{
+				if($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_view_file}&amp;file_name={$files[$z]['file_name']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				}
+				$content_files[$z]['select_file'] = "<input type='checkbox' name='values[file_action][workorder][]' value='{$files[$z]['name']}' title='{$lang_select_file}'>";
+			}
+
+			$project_link_file_data = array
+				(
+				'menuaction' => 'property.uiproject.view_file',
+				'id' => $project['project_id']
+			);
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $project_link_file_data);
+
+
+			$files = $this->boproject->get_files($project['project_id']);
+
+			$i = $z;
+			for($z = 0; $z < count($files); $z++)
+			{
+				if($link_to_files)
+				{
+					$content_files[$i]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				}
+				else
+				{
+					$content_files[$i]['file_name'] = "<a href='{$link_view_file}&amp;file_name={$files[$z]['file_name']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				}
+				$content_files[$i]['select_file'] = "<input type='checkbox' name='values[file_action][project][]' value='{$files[$z]['name']}' title='{$lang_select_file}'>";
+				$i ++;
+			}
+
+			$files_def = array
+				(
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+					'resizeable' => true),
+				array('key' => 'select_file', 'label' => lang('select'), 'sortable' => false,
+					'resizeable' => true)
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_2',
+				'requestUrl' => "''",
+				'data' => json_encode($content_files),
+				'ColumnDefs' => $files_def,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -1663,7 +1730,7 @@ HTML;
 			$function_msg = $this->boworkorder->order_sent_adress ? lang('ReSend order') : lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::render_template_xsl(array('wo_hour', 'datatable_inline', 'files'), array(
+			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array(
 				'view' => $data));
 		}
 

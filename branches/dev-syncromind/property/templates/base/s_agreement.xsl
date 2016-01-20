@@ -1,32 +1,32 @@
   <!-- $Id$ -->
-	<xsl:template match="data">
-		<xsl:choose>
-                        <xsl:when test="add">
-                                <xsl:apply-templates select="add"/>
-                        </xsl:when>
-			<xsl:when test="edit">
-				<xsl:apply-templates select="edit"/>
-			</xsl:when>
-			<xsl:when test="edit_item">
-				<xsl:apply-templates select="edit_item"/>
-			</xsl:when>
-			<xsl:when test="view_item">
-				<xsl:apply-templates select="view_item"/>
-			</xsl:when>
-			<xsl:when test="view">
-				<xsl:apply-templates select="view"/>
-			</xsl:when>
-			<xsl:when test="list_attribute">
-				<xsl:apply-templates select="list_attribute"/>
-			</xsl:when>
-			<xsl:when test="edit_attrib">
-				<xsl:apply-templates select="edit_attrib"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="list"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+<xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="add">
+			<xsl:apply-templates select="add"/>
+		</xsl:when>
+		<xsl:when test="edit">
+			<xsl:apply-templates select="edit"/>
+		</xsl:when>
+		<xsl:when test="edit_item">
+			<xsl:apply-templates select="edit_item"/>
+		</xsl:when>
+		<xsl:when test="view_item">
+			<xsl:apply-templates select="view_item"/>
+		</xsl:when>
+		<xsl:when test="view">
+			<xsl:apply-templates select="view"/>
+		</xsl:when>
+		<xsl:when test="list_attribute">
+			<xsl:apply-templates select="list_attribute"/>
+		</xsl:when>
+		<xsl:when test="edit_attrib">
+			<xsl:apply-templates select="edit_attrib"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="list"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
 
 	<!-- New template-->
 	<xsl:template match="list">
@@ -256,208 +256,213 @@
 				<xsl:variable name="edit_url">
 					<xsl:value-of select="edit_url"/>
 				</xsl:variable>
-					<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$edit_url}" class="pure-form pure-form-aligned">
-							<xsl:choose>
-								<xsl:when test="value_s_agreement_id!=''">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="lang_id"/>
-										</label>
-											<xsl:value-of select="value_s_agreement_id"/>
+				<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$edit_url}" class="pure-form pure-form-aligned">
+					<xsl:choose>
+						<xsl:when test="value_s_agreement_id!=''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="lang_id"/>
+								</label>
+								<xsl:value-of select="value_s_agreement_id"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_name"/>
+						</label>
+						<input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_name_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_descr"/>
+						</label>
+						<textarea cols="60" rows="6" name="values[descr]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_descr_statustext"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_descr"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_category"/>
+						</label>
+						<xsl:call-template name="cat_select"/>
+					</div>
+					<xsl:call-template name="vendor_form"/>
+					<xsl:choose>
+						<xsl:when test="member_of_list2 != ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'member of')"/>
+								</label>
+								<label style="vertical-align:top;">
+									<div id="member_of">
+										<xsl:apply-templates select="member_of_list2"/>
 									</div>
-								</xsl:when>
-							</xsl:choose>
+								</label>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_budget"/>
+						</label>
+						<input type="text" name="values[budget]" value="{value_budget}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_budget_statustext"/>
+							</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_year"/>
+						</label>
+						<select name="values[year]" class="forms" title="{lang_year_statustext}">
+							<xsl:apply-templates select="year"/>
+						</select>
+					</div>
+					<xsl:call-template name="ecodimb_form"/>
+					<xsl:call-template name="b_account_form"/>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_category"/>
+						</label>
+						<xsl:call-template name="categories"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_start_date"/>
+						</label>
+						<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_start_date_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_end_date"/>
+						</label>
+						<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_end_date_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_termination_date"/>
+						</label>
+						<input type="text" id="values_termination_date" name="values[termination_date]" size="10" value="{value_termination_date}" readonly="readonly" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_termination_date_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_budget"/>
+						</label>
+						<!-- DataTable 2 EDIT -->
+						<!--div id="datatable-container_3"/-->
+						<div class="pure-custom">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_3'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+					<div class="pure-control-group">
+						<xsl:call-template name="attributes_values"/>
+					</div>
+					<xsl:choose>
+						<xsl:when test="files!=''">
+							<!-- <xsl:call-template name="file_list"/> -->
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="lang_name"/>
+									<xsl:value-of select="//lang_files"/>
 								</label>
-									<input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_name_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
+								<!-- DataTable 2 EDIT -->
+								<!--div id="datatable-container_2"/-->
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
-							<div class="pure-control-group">
-								<label> 
-									<xsl:value-of select="lang_descr"/>
-								</label>
-                                                                    <textarea cols="60" rows="6" name="values[descr]">
-                                                                            <xsl:attribute name="title">
-                                                                                    <xsl:value-of select="lang_descr_statustext"/>
-                                                                            </xsl:attribute>
-                                                                            <xsl:value-of select="value_descr"/>
-                                                                    </textarea>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_category"/>
-								</label>
-									<xsl:call-template name="cat_select"/>
-							</div>
-							<xsl:call-template name="vendor_form"/>
-							<xsl:choose>
-								<xsl:when test="member_of_list2 != ''">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'member of')"/>
-										</label>
-										<label style="vertical-align:top;">
-											<div id="member_of">
-												<xsl:apply-templates select="member_of_list2"/>
-											</div>
-										</label>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_budget"/>
-								</label>
-									<input type="text" name="values[budget]" value="{value_budget}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-                                                        </div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_year"/>
-								</label>
-									<select name="values[year]" class="forms" title="{lang_year_statustext}">
-										<xsl:apply-templates select="year"/>
-									</select>
-							</div>
-							<xsl:call-template name="ecodimb_form"/>
-							<xsl:call-template name="b_account_form"/>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_category"/>
-								</label>
-									<xsl:call-template name="categories"/>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_start_date"/>
-								</label>
-									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_start_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_end_date"/>
-								</label>
-									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_end_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_termination_date"/>
-								</label>
-									<input type="text" id="values_termination_date" name="values[termination_date]" size="10" value="{value_termination_date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_termination_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="lang_budget"/>
-								</label>
-									<!-- DataTable 2 EDIT -->
-									<!--div id="datatable-container_3"/-->
-                                                                        <div class="pure-custom">
-                                                                            <xsl:for-each select="datatable_def">
-                                                                                    <xsl:if test="container = 'datatable-container_3'">
-                                                                                            <xsl:call-template name="table_setup">
-                                                                                                    <xsl:with-param name="container" select ='container'/>
-                                                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
-                                                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-                                                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
-                                                                                                    <xsl:with-param name="data" select ='data' />
-                                                                                                    <xsl:with-param name="config" select ='config' />
-                                                                                            </xsl:call-template>
-                                                                                    </xsl:if>
-                                                                            </xsl:for-each>
-                                                                        </div>
-							</div>
-							<div class="pure-control-group">
-									<xsl:call-template name="attributes_values"/>
-							</div>
-							<xsl:choose>
-								<xsl:when test="files!=''">
-									<!-- <xsl:call-template name="file_list"/> -->
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="//lang_files"/>
-										</label>
-											<!-- DataTable 2 EDIT -->
-											<!--div id="datatable-container_2"/-->
-                                                                                        <div class="pure-custom">
-                                                                                            <xsl:for-each select="datatable_def">
-                                                                                                    <xsl:if test="container = 'datatable-container_2'">
-                                                                                                            <xsl:call-template name="table_setup">
-                                                                                                                    <xsl:with-param name="container" select ='container'/>
-                                                                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
-                                                                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-                                                                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
-                                                                                                                    <xsl:with-param name="data" select ='data' />
-                                                                                                                    <xsl:with-param name="config" select ='config' />
-                                                                                                            </xsl:call-template>
-                                                                                                    </xsl:if>
-                                                                                            </xsl:for-each>
-                                                                                        </div>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
-								<xsl:when test="fileupload = 1">
-									<xsl:call-template name="file_upload"/>
-								</xsl:when>
-							</xsl:choose>
-							<div class="pure-control-group">
-									<xsl:variable name="lang_save">
-										<xsl:value-of select="lang_save"/>
-									</xsl:variable>
-									<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_save_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="fileupload = 1">
+							<xsl:call-template name="file_upload"/>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="lang_save"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_save_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
                                                                         
-									<xsl:variable name="lang_apply">
-										<xsl:value-of select="lang_apply"/>
-									</xsl:variable>
-									<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_apply_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
+						<xsl:variable name="lang_apply">
+							<xsl:value-of select="lang_apply"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_apply_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
                                                                         
-									<xsl:variable name="lang_cancel">
-										<xsl:value-of select="lang_cancel"/>
-									</xsl:variable>
-									<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_cancel_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-                                                        </div>
+						<xsl:variable name="lang_cancel">
+							<xsl:value-of select="lang_cancel"/>
+						</xsl:variable>
+						<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_cancel_statustext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
 					</form>
 					<xsl:variable name="cancel_url">
 						<xsl:value-of select="cancel_url"/>
@@ -473,21 +478,21 @@
 							</div>
 							<!-- DataTable 0 EDIT -->
 							<div class="pure-control-group">
-									<!--div id="datatable-container_0"/-->
-                                                                        <div class="pure-custom">
-                                                                            <xsl:for-each select="datatable_def">
-                                                                                    <xsl:if test="container = 'datatable-container_0'">
-                                                                                            <xsl:call-template name="table_setup">
-                                                                                                    <xsl:with-param name="container" select ='container'/>
-                                                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
-                                                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-                                                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
-                                                                                                    <xsl:with-param name="data" select ='data' />
-                                                                                                    <xsl:with-param name="config" select ='config' />
-                                                                                            </xsl:call-template>
-                                                                                    </xsl:if>
-                                                                            </xsl:for-each>
-                                                                        </div>
+								<!--div id="datatable-container_0"/-->
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
 							<div class="pure-control-group">
 									<xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/>
