@@ -1135,7 +1135,7 @@ JS;
 
 			//phpgwapi_cache::message_set($receipt, 'message');
 
-			$this->edit($values, 'after_save');
+			$this->edit($values, 'edit');
 
 			return;
 		}
@@ -1643,22 +1643,25 @@ JS;
 						$sum_oblications += $b_entry['sum_oblications'];
 						$values['sum'] += $b_entry['budget'];
 					}
+					if($b_entry['active'])
+					{
+						$s_budget += $b_entry['budget'];
+						$s_orders += $b_entry['sum_orders'];
+						$s_actual_cost += $b_entry['actual_cost'];
+						$s_diff += $b_entry['diff'];
+						$s_deviation += $b_entry['deviation_period'];
+					}
 
 					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
 					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';
 
-					$b_entry['flag_active'] = $b_entry['active'];
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
 					$b_entry['closed'] = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
-					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
+					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked style='display:none'>";
 					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
-					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
+					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2 style='display:none'>";
 
-					$s_budget += $b_entry['budget'];
-					$s_orders += $b_entry['sum_orders'];
-					$s_actual_cost += $b_entry['actual_cost'];
-					$s_diff += $b_entry['diff'];
-					$s_deviation += $b_entry['deviation_period'];
+					
 				}
 				unset($b_entry);
 			}
@@ -1724,11 +1727,8 @@ JS;
 						'sortable' => false, 'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
 					array('key' => 'deviation_percent_acc', 'label' => lang('percent') . '::' . lang('accumulated'),
 						'sortable' => false, 'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
-					array('key' => 'closed', 'label' => lang('closed'), 'sortable' => false, 'className' => 'center'),
-					array('key' => 'closed_orig', 'hidden' => true),
-					array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'className' => 'center'),
-					array('key' => 'active_orig', 'hidden' => true),
-					array('key' => 'flag_active', 'hidden' => true),
+					array('key' => 'closed', 'label' => lang('closed'), 'sortable' => false, 'className' => 'center', 'formatter' => 'JqueryPortico.FormatterClosed'),
+					array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'className' => 'center', 'formatter' => 'JqueryPortico.FormatterActive'),
 					array('key' => 'delete_year', 'label' => lang('Delete'), 'sortable' => false,
 						'className' => 'center')
 				);
@@ -1742,7 +1742,8 @@ JS;
 				'ColumnDefs' => $budget_def,
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('initial_page'	=> $initial_page)
 				)
 			);
 
@@ -1791,7 +1792,7 @@ JS;
 					'formatter' => 'formatLink', 'value_footer' => lang('Sum')),
 				array('key' => 'voucher_id', 'label' => lang('bilagsnr'), 'sortable' => true,
 					'formatter' => $_formatter_voucher_link),
-				array('key' => 'voucher_out_id', 'hidden' => true),
+//				array('key' => 'voucher_out_id', 'hidden' => true),
 				array('key' => 'invoice_id', 'label' => lang('invoice number'), 'sortable' => false),
 				array('key' => 'vendor', 'label' => lang('vendor'), 'sortable' => false),
 				array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'className' => 'right',
@@ -1803,7 +1804,7 @@ JS;
 				array('key' => 'periodization_start', 'label' => lang('periodization start'),
 					'sortable' => false),
 				array('key' => 'currency', 'label' => lang('currency'), 'sortable' => false),
-				array('key' => 'type', 'label' => \lang('type'), 'sortable' => true),
+				array('key' => 'type', 'label' => lang('type'), 'sortable' => true),
 				array('key' => 'budget_responsible', 'label' => lang('budget responsible'), 'sortable' => true),
 				array('key' => 'budsjettsigndato', 'label' => lang('budsjettsigndato'), 'sortable' => true),
 				array('key' => 'transfer_time', 'label' => lang('transfer time'), 'sortable' => true)
@@ -2026,6 +2027,7 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
+			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
 			$data = array
 				(
@@ -2041,8 +2043,7 @@ JS;
 				'b_account_data' => $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
 				'contact_data' => $contact_data,
-				//'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
-				'tabs' => self::_generate_tabs($tabs, array('documents' => $id ? false : true,
+				'tabs' => self::_generate_tabs($tabs, $selected_tab, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
@@ -2653,17 +2654,16 @@ JS;
 			$this->edit(array(), $mode = 'view');
 		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array())
+		protected function _generate_tabs($tabs_ = array(), $active_tab = 'general', $suppress = array())
 		{
-			$active_tab = 'general';
 			$tabs = array
 				(
-				'general' => array('label' => lang('general'), 'link' => '#general'),
-				'location' => array('label' => lang('location'), 'link' => '#location'),
-				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget'),
-				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination'),
-				'documents' => array('label' => lang('documents'), 'link' => '#documents'),
-				'history' => array('label' => lang('history'), 'link' => '#history')
+				'general' => array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+				'location' => array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
+				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+				'documents' => array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+				'history' => array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')"),
 			);
 
 			$tabs = array_merge($tabs, $tabs_);

@@ -202,6 +202,19 @@ this.validate_form = function ()
 	return $('form').isValid(validateLanguage, conf);
 }
 
+JqueryPortico.FormatterClosed = function (key, oData) {
+	return "<div align=\"center\">" + oData['closed'] + oData['closed_orig'] + "</div>";
+};
+
+JqueryPortico.FormatterActive = function (key, oData) {
+	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
+};
+
+function set_tab(tab)
+{
+	document.form.tab.value = tab;
+}
+
 $(document).ready(function () {
 	$('form[name=form]').submit(function (e) {
 		e.preventDefault();
