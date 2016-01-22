@@ -69,7 +69,7 @@
 			parent::__construct();
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::budget';
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 

@@ -56,7 +56,7 @@
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
-		<input type="hidden" name="tab" value=""/>
+		<input id="project_tab" type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="general">

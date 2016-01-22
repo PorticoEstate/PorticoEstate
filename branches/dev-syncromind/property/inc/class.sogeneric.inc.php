@@ -815,7 +815,7 @@
 						'name' => lang('vendor'),
 						'acl_app' => 'property',
 						'acl_location' => '.vendor',
-						'menu_selection' => 'property::invoice::vendor',
+						'menu_selection' => 'property::economy::vendor',
 						'default' => array
 							(
 							'owner_id' => array('add' => '$this->account'),
@@ -1668,7 +1668,7 @@
 						'name' => lang('budget account'),
 						'acl_app' => 'property',
 						'acl_location' => '.b_account',
-						'menu_selection' => 'property::invoice::budget_account',
+						'menu_selection' => 'property::economy::budget_account',
 						'default' => array
 							(
 							'user_id' => array('add' => '$this->account'),

@@ -868,7 +868,7 @@
 		{
 			if(!$_POST)
 			{
-				return	$this->edit();
+				return $this->edit();
 			}
 
 			$id = phpgw::get_var('id', 'int');
@@ -1806,6 +1806,7 @@
 			$sum_oblications = 0;
 			$actual_cost = 0;
 			$diff = 0;
+			$deviation = 0;
 			foreach($content_budget as & $b_entry)
 			{
 				$checked = $b_entry['active'] ? 'checked="checked"' : '';
@@ -1830,14 +1831,18 @@
 					$b_entry['closed'] = $b_entry['closed'] ? 'X' : '';
 				}
 
-				$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' {$checked} {$disabled}>";
-				$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' {$checked} {$disabled}>";
+				if($b_entry['active'] == 1)
+				{
+					$budget += $b_entry['budget'];
+					$sum_orders += $b_entry['sum_orders'];
+					$sum_oblications += $b_entry['sum_oblications'];
+					$actual_cost += $b_entry['actual_cost'];
+					$diff += $b_entry['diff'];
+					$deviation += $b_entry['deviation_period'];
+				}
 
-				$budget += $b_entry['budget'];
-				$sum_orders += $b_entry['sum_orders'];
-				$sum_oblications += $b_entry['sum_oblications'];
-				$actual_cost += $b_entry['actual_cost'];
-				$diff += $b_entry['diff'];
+				$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' {$checked} {$disabled}>";
+				$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' {$checked} {$disabled} style='display:none'>";
 			}
 			unset($b_entry);
 
@@ -1857,7 +1862,7 @@
 				array('key' => 'diff', 'label' => lang('difference'), 'sortable' => false, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($diff, 0, $this->decimal_separator, ' ')),
 				array('key' => 'deviation_period', 'label' => lang('deviation'), 'sortable' => false,
-					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0'),
+					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($deviation, 0, $this->decimal_separator, ' ')),
 				array('key' => 'deviation_acc', 'label' => lang('deviation') . '::' . lang('accumulated'),
 					'sortable' => false, 'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0'),
 				array('key' => 'deviation_percent_period', 'label' => lang('deviation') . '::' . lang('percent'),
@@ -1865,9 +1870,8 @@
 				array('key' => 'deviation_percent_acc', 'label' => lang('percent') . '::' . lang('accumulated'),
 					'sortable' => false, 'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
 				array('key' => 'closed', 'label' => lang('closed'), 'sortable' => false, 'className' => 'center'),
-				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'className' => 'center'),
-				array('key' => 'active_orig', 'hidden' => true),
-				array('key' => 'flag_active', 'hidden' => true),
+				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'className' => 'center',
+					'formatter' => 'JqueryPortico.FormatterActive'),
 				array('key' => 'delete_period', 'label' => lang('Delete'), 'sortable' => false,
 					'className' => 'center')
 			);
@@ -1948,6 +1952,8 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
+			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -1960,7 +1966,7 @@
 				'lang_claim' => lang('claim'),
 				'suppressmeter' => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination' => $suppresscoordination,
-				'tabs' => self::_generate_tabs(array(), array('documents' => $id ? false : true,
+				'tabs' => self::_generate_tabs(array(), $active_tab, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
@@ -2505,17 +2511,15 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
+		protected function _generate_tabs($tabs_ = array(), $active_tab = 'general', $suppress = array())
 		{
 			$tabs = array
 				(
 				'general' => array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
-				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget',
-					'function' => "set_tab('budget')"),
+				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
 				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination',
 					'function' => "set_tab('coordination')"),
-				'documents' => array('label' => lang('documents'), 'link' => '#documents',
-					'function' => "set_tab('documents')"),
+				'documents' => array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
 				'history' => array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')"),
 			);
 			$tabs = array_merge($tabs, $tabs_);
@@ -2528,6 +2532,6 @@
 				}
 			}
 
-			return phpgwapi_jquery::tabview_generate($tabs, $selected);
+			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
 	}

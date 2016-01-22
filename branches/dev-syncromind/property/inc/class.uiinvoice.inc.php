@@ -70,7 +70,7 @@
 			parent::__construct();
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::invoice';
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo = CreateObject('property.boinvoice', true);
@@ -308,7 +308,11 @@
 			//-- ubica focus del menu derecho
 			if($paid)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::paid';
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::paid';
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::invoice::invoice';
 			}
 			//-- captura datos de URL
 			$start_date = urldecode($start_date);
@@ -2351,7 +2355,7 @@ JS;
 			$ecodimb = phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::consume';
 
 			//-- captura datos de URL
 			$start_date = urldecode($start_date);
@@ -3363,7 +3367,7 @@ JS;
 
 			$type = phpgw::get_var('type', 'string', 'GET', 'deposition');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::economy::{$type}";
 
 			$values = phpgw::get_var('values');
 

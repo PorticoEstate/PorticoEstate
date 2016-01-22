@@ -58,7 +58,7 @@
 			parent::__construct();
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::claim';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::claim';
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 

@@ -1004,6 +1004,7 @@
 			if($acl->check('.invoice', PHPGW_ACL_READ, 'property'))
 			{
 				$children = array();
+				$children_invoice = array();
 				if($acl->check('.invoice', PHPGW_ACL_PRIVATE, 'property'))
 				{
 					$children['investment'] = array
@@ -1012,18 +1013,25 @@
 						'text' => lang('Investment value')
 					);
 
-					$children['import'] = array
+					$children_invoice['invoice'] = array
+						(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
+							'text' => lang('Invoice'),
+							'image' => array('property', 'invoice'),
+					);
+
+					$children_invoice['import'] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.import')),
 						'text' => lang('Import invoice')
 					);
 
-					$children['export'] = array
+					$children_invoice['export'] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export')),
 						'text' => lang('Export invoice')
 					);
-					$children['rollback'] = array
+					$children_invoice['rollback'] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.rollback')),
 						'text' => lang('Roll back')
@@ -1032,20 +1040,23 @@
 
 				if($acl->check('.invoice', PHPGW_ACL_ADD, 'property'))
 				{
-					$children['add'] = array
+					$children_invoice['add'] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.add')),
 						'text' => lang('Add')
 					);
 				}
 
-				$menus['navigation']['invoice'] = array
+
+				$invoice = array_merge(array
 					(
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
-					'text' => lang('Invoice'),
-					'image' => array('property', 'invoice'),
-					'children' => array_merge(array
-						(
+						'invoice' => array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
+							'text' => lang('Invoice'),
+							'image' => array('property', 'invoice'),
+							'children'	=> $children_invoice,
+						),
 						'deposition' => array
 							(
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.reporting',
@@ -1093,13 +1104,13 @@
 							'text' => lang('Tenant claim'),
 							'image' => array('property', 'project_tenant_claim')
 						)
-					), $children)
-				);
+					), $children);
 			}
 
+			$budget = array();
 			if($acl->check('.budget', PHPGW_ACL_READ, 'property'))
 			{
-				$menus['navigation']['budget'] = array
+				$budget['budget'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.index')),
 					'text' => lang('Budget'),
@@ -1121,13 +1132,21 @@
 
 				if($acl->check('.budget.basis', PHPGW_ACL_READ, 'property'))
 				{
-					$menus['navigation']['budget']['children']['basis'] = array
+					$budget['budget']['children']['basis'] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uibudget.basis')),
 						'text' => lang('basis')
 					);
 				}
 			}
+
+			$menus['navigation']['economy'] = array
+					(
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
+					'text' => lang('economy'),
+					'image' => array('property', 'invoice'),
+					'children' => array_merge($invoice,$budget)
+					);
 
 			if($acl->check('.agreement', PHPGW_ACL_READ, 'property'))
 			{

@@ -52,7 +52,7 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::invoice';
 			$this->bo = CreateObject('property.boXport', true);
 			$this->invoice = CreateObject('property.boinvoice');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -569,7 +569,7 @@
 					'perm' => 16, 'acl_location' => $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::rollback';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::invoice::rollback';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 				'search_field'));

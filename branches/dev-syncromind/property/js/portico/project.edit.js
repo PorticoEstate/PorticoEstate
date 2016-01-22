@@ -212,7 +212,7 @@ JqueryPortico.FormatterActive = function (key, oData) {
 
 function set_tab(tab)
 {
-	document.form.tab.value = tab;
+	$("#project_tab").val(tab);
 }
 
 $(document).ready(function () {

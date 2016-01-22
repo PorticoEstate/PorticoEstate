@@ -75,8 +75,7 @@
 			$this->status_id = $this->bo->status_id;
 			$this->allrows = $this->bo->allrows;
 
-			self::set_active_menu('property::invoice::invoice');
-//			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
+			self::set_active_menu('property::economy::invoice');
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 		}

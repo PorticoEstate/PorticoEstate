@@ -84,7 +84,7 @@ function send_workorder()
 }
 function set_tab(tab)
 {
-	document.form.tab.value = tab;
+	$("#order_tab").val(tab);
 }
 
 this.showlightbox_manual_invoide = function (workorder_id)
@@ -138,3 +138,7 @@ window.addEventListener("load", function ()
 		}
 	}
 });
+
+JqueryPortico.FormatterActive = function (key, oData) {
+	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
+};
