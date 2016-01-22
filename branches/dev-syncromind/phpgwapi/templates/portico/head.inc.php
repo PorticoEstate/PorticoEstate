@@ -178,12 +178,11 @@ HTML;
 	
 	function parse_footer_end_noframe()
 	{
-		if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-		{
-		}
+		$javascript_end = $GLOBALS['phpgw']->common->get_javascript_end();
 
 		$footer = <<<HTML
 		</body>
+		{$javascript_end}
 	</html>
 HTML;
 		echo $footer;

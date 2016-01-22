@@ -8,5 +8,6 @@
 		</div>
 		<div id="popupBox"></div>	
 		<div id="curtain"></div>
+		{javascript_end}
 	</body>
 </html>

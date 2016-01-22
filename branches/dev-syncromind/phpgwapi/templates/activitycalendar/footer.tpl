@@ -7,4 +7,5 @@ Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen
 </div>
 
 	</body>
+	{javascript_end}
 </html>
