@@ -406,10 +406,10 @@
 				return lang('sorry - insufficient rights');
 			}
 
-			$new_priority = phpgw::get_var('new_priority', 'string', 'GET');
+			$new_priority = phpgw::get_var('new_priority', 'int');
 			$id = phpgw::get_var('id', 'int');
 
-			$ticket = $this->bo->read_single($id);
+//			$ticket = $this->bo->read_single($id);
 
 			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
 			if((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
@@ -864,7 +864,8 @@
 						'export' => true, 'allrows' => true)),
 					'allrows' => true,
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
-					'field' => $this->_get_fields()
+					'field' => $this->_get_fields(),
+					'group_buttons' => true,
 				)
 			);
 
@@ -948,8 +949,25 @@
 
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
+				$status['X'] = array
+					(
+						'status'			=> lang('closed'),
+					);
+				$status['O'] = array
+					(
+						'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+					);
 
-				unset($status['C']);
+				$custom_status	= $this->bo->get_custom_status();
+
+				foreach($custom_status as $custom)
+				{
+					$status["C{$custom['id']}"] = array
+						(
+							'status'			=> $custom['name'],
+						);
+				}
+
 				foreach($status as $status_code => $status_info)
 				{
 					$data['datatable']['actions'][] = array
@@ -979,7 +997,8 @@
 				}
 
 				$_priorities = $this->bo->get_priority_list();
-				foreach($_priorities as $_priority => $_priority_info)
+
+				foreach($_priorities as $_priority_info)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -991,7 +1010,7 @@
 							(
 							'menuaction' => 'property.uitts.edit_priority',
 							'edit_status' => true,
-							'new_priority' => $_priority,
+							'new_priority' => $_priority_info['id'],
 							'second_display' => true,
 							'sort' => $this->sort,
 							'order' => $this->order,
@@ -1008,6 +1027,10 @@
 				}
 			}
 
+			if(count($data['datatable']['actions']) < 10)
+			{
+				$data['datatable']['group_buttons'] = false;
+			}
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 

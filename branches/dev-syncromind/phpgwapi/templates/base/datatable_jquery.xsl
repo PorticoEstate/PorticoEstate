@@ -717,29 +717,42 @@
 										</xsl:when>
 									</xsl:choose>
 								];
-
 								<xsl:choose>
-									<xsl:when test="ungroup_buttons">
-										JqueryPortico.TableTools = {
+									<xsl:when test="group_buttons = '1'">
+										var group_buttons = true;
+									</xsl:when>
+									<xsl:otherwise>
+										var group_buttons = false;
+									</xsl:otherwise>
+								</xsl:choose>
+
+								if($(document).width() &lt; 1000)
+								{
+									group_buttons = true;
+								}
+
+								if(group_buttons === true)
+								{
+									JqueryPortico.TableTools = {
+										"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+										"sRowSelect": "multi",
+										"aButtons": [
+											{
+												"sExtends": "collection",
+												"sButtonText": "<xsl:value-of select="php:function('lang', 'collection')"/>",
+												"aButtons": button_def
+											}
+										]
+									};
+								}
+								else
+								{
+									JqueryPortico.TableTools = {
 											"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 											"sRowSelect": "multi",
 											"aButtons": button_def
 										};
-									</xsl:when>
-									<xsl:otherwise>
-										JqueryPortico.TableTools = {
-											"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-											"sRowSelect": "multi",
-											"aButtons": [
-												{
-													"sExtends": "collection",
-													"sButtonText": "<xsl:value-of select="php:function('lang', 'collection')"/>",
-													"aButtons": button_def
-												}
-											]
-										};
-									</xsl:otherwise>
-								</xsl:choose>
+								}
 				</xsl:when>
 				<xsl:otherwise>
 					JqueryPortico.TableTools = false;
