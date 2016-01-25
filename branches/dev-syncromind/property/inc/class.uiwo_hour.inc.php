@@ -1236,19 +1236,7 @@
 
 			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
 
-			$gabinfos = execMethod('property.sogab.read', array('location_code' => $location_code,
-				'allrows' => true));
-			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
-			{
-				$gabinfo = array_shift($gabinfos);
-				$gab_id = $gabinfo['gab_id'];
-			}
-
-			$formatted_gab_id = '';
-			if(isset($gab_id))
-			{
-				$formatted_gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
-			}
+			$formatted_gab_id = $this->get_gab_id($location_code);
 
 			$email_data = array
 				(
@@ -1906,6 +1894,8 @@ HTML;
 				)
 			));
 
+			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+
 			$delivery_address = lang('delivery address') . ':';
 			if(isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
 			{
@@ -1913,13 +1903,15 @@ HTML;
 			}
 			else
 			{
-				$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
 				foreach($address_element as $entry)
 				{
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
 			}
+
+			$formatted_gab_id = $this->get_gab_id($location_code);
+			$delivery_address .= "\nGnr/Bnr: {$formatted_gab_id}";
 
 			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
 
@@ -3349,4 +3341,24 @@ HTML;
 			$historylog = CreateObject('property.historylog', 'workorder');
 			$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
 		}
+
+		function get_gab_id($location_code)
+		{
+			$formatted_gab_id = '';
+			$gabinfos = execMethod('property.sogab.read', array('location_code' => $location_code,
+				'allrows' => true));
+			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+			{
+				$gabinfo = array_shift($gabinfos);
+				$gab_id = $gabinfo['gab_id'];
+			}
+
+			$formatted_gab_id = '';
+			if(isset($gab_id))
+			{
+				$formatted_gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
+			}
+			return $formatted_gab_id;
+		}
+
 	}
