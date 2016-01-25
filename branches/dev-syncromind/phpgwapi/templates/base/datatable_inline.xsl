@@ -338,6 +338,9 @@
 			<xsl:if test="order">
 				options<xsl:number value="($num - 1)"/>.order = <xsl:value-of select="order" />;
 			</xsl:if>
+			<xsl:if test="responsive">
+				options<xsl:number value="($num - 1)"/>.responsive = <xsl:value-of select="responsive" />;
+			</xsl:if>
 		</xsl:for-each>
 		if (JqueryPortico.TableTools<xsl:number value="($num - 1)"/>)
 		{

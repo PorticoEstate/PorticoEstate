@@ -2098,7 +2098,8 @@ JS;
 						'data' => json_encode(array()),
 						'ColumnDefs' => $history_def,
 						'config' => array(
-							array('disableFilter' => true)
+							array('disableFilter' => true),
+							array('responsive' => true)
 						)
 					);
 
