@@ -635,6 +635,10 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit_template();
+			}
 			$template_id = (int)phpgw::get_var('template_id');
 			$values = phpgw::get_var('values');
 			$receipt = array();

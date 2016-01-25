@@ -899,6 +899,10 @@ JS;
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
 			/*
 			 * Overrides with incoming data from POST
 			 */

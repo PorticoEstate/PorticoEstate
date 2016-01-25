@@ -586,6 +586,11 @@
 		 */
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = phpgw::get_var('id', 'int');
 
 			if($id)

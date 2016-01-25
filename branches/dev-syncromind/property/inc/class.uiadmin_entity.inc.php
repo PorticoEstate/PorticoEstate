@@ -632,6 +632,11 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = (int)phpgw::get_var('id');
 			$values = phpgw::get_var('values');
 			$config = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
@@ -793,6 +798,10 @@
 			if(!$this->acl_add)
 			{
 				return;
+			}
+			if(!$_POST)
+			{
+				return	$this->edit_category();
 			}
 
 			$entity_id = phpgw::get_var('entity_id', 'int');

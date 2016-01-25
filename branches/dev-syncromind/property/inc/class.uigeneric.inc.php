@@ -908,6 +908,11 @@
 		 */
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = phpgw::get_var($this->location_info['id']['name']);
 			$values = phpgw::get_var('values');
 

@@ -1096,6 +1096,11 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$budget_id = phpgw::get_var('budget_id', 'int');
 			$values = phpgw::get_var('values');
 
@@ -1269,6 +1274,11 @@
 
 		public function save_basis()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit_basis();
+			}
+
 			$budget_id = phpgw::get_var('budget_id', 'int');
 			$values = phpgw::get_var('values');
 			$values['ecodimb'] = phpgw::get_var('ecodimb');

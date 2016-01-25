@@ -380,6 +380,11 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$id = (int)phpgw::get_var('id');
 			$values = phpgw::get_var('values');
 
@@ -1027,6 +1032,11 @@
 
 		public function save_attrib()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit_attrib();
+			}
+
 			$type_id = (int)phpgw::get_var('type_id');
 			$id = (int)phpgw::get_var('id');
 			$values = phpgw::get_var('values');

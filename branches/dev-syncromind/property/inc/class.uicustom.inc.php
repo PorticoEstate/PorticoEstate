@@ -266,6 +266,11 @@
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$custom_id = phpgw::get_var('custom_id', 'int');
 			$values = phpgw::get_var('values');
 			$values['sql_text'] = $_POST['values']['sql_text'];

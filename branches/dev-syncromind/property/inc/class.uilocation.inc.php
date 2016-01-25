@@ -2365,6 +2365,11 @@ JS;
 
 		public function save()
 		{
+			if(!$_POST)
+			{
+				return	$this->edit();
+			}
+
 			$location_code = phpgw::get_var('location_code');
 			$values_attribute = phpgw::get_var('values_attribute');
 
