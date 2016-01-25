@@ -217,6 +217,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var disableFilter = options['disableFilter'] || false;
 	var TableTools_def = options['TableTools'] || false;
 	var order = options['order'] || [0, 'desc'];
+	var responsive = options['responsive'] || false;
 
 	data = data || {};
 
@@ -250,7 +251,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		order: order,
 		processing: true,
 		serverSide: serverSide_def,
-		responsive: true,
+		responsive: responsive,
 		deferRender: true,
 		data: data,
 		ajax: ajax_def,
