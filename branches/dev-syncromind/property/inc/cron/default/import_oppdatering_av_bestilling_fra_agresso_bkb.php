@@ -298,7 +298,8 @@
 				(
 				'agresso_prosjekt' => $agresso_prosjekt,
 				'actual_cost' => $new_actual_cost,
-				'actual_cost_year' => date('Y')
+				'actual_cost_year' => date('Y'),
+				'modified_date'		=> time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
