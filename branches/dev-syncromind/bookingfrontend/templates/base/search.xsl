@@ -10,6 +10,15 @@
 			<xsl:value-of select="php:function('lang', 'please wait')" />
 		</p>
 	</div>
+	<div class="pure-g">
+		<div class="pure-u-1" id="no_result">
+			<xsl:if test="not(search)">
+				<div id="cloud">
+					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+				</div>
+			</xsl:if>
+		</div>
+	</div>
 	<div id="content">
 		<form action="" method="GET" id="search">
 			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
@@ -51,28 +60,26 @@
 					<div class="heading">
 						<xsl:value-of select="php:function('lang', 'Resource')" />
 					</div>
-					<fieldset>
-						<!-- Some style for the expand/contract section-->
-						<style>
-							#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-							#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-							.no_checkbox>i.jstree-checkbox{ display:none}
-						</style>
-						<script type="text/javascript">
-							filter_tree = <xsl:value-of select="filter_tree"/>;
-						</script>
-						<!-- markup for expand/contract links -->
-						<div id="treecontrol">
-							<a id="collapse1" title="Collapse the entire tree below" href="#">
-								<xsl:value-of select="php:function('lang', 'collapse all')"/>
-							</a>
-							<xsl:text> | </xsl:text>
-							<a id="expand1" title="Expand the entire tree below" href="#">
-								<xsl:value-of select="php:function('lang', 'expand all')"/>
-							</a>
-						</div>
-						<div id="treeDiv1"></div>
-					</fieldset>
+					<!-- Some style for the expand/contract section-->
+					<style>
+						#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+						#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+						.no_checkbox>i.jstree-checkbox{ display:none}
+					</style>
+					<script type="text/javascript">
+						filter_tree = <xsl:value-of select="filter_tree"/>;
+					</script>
+					<!-- markup for expand/contract links -->
+					<div id="treecontrol">
+						<a id="collapse1" title="Collapse the entire tree below" href="#">
+							<xsl:value-of select="php:function('lang', 'collapse all')"/>
+						</a>
+						<xsl:text> | </xsl:text>
+						<a id="expand1" title="Expand the entire tree below" href="#">
+							<xsl:value-of select="php:function('lang', 'expand all')"/>
+						</a>
+					</div>
+					<div id="treeDiv1"></div>
 				</div>
 				<div class="pure-u-1">
 					<div class="heading">
@@ -185,7 +192,6 @@
 				<xsl:if test="not(search)">
 					<div id="cloud">
 						<div class="frontpagetext">
-							<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 						</div>
 					</div>
 					<div style="text-align:center;">

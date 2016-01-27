@@ -186,6 +186,12 @@ div#help h2 {
     margin: 3em 0;
     font-size: 120%;
 }
+
+/*#cloud{
+text-align:left;
+margin-left: 280px;
+}*/
+
 #cloud div { padding: .2em};
 #cloud strong { padding: .2em};
 
@@ -351,10 +357,6 @@ margin-left: 20px;
 text-align:left;
 }
 
-#cloud{
-text-align:left;
-margin-left: 280px;
-}
 
 #footer{
 border: none !important;

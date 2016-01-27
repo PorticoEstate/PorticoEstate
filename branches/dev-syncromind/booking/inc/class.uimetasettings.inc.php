@@ -13,6 +13,11 @@
 		{
 			parent::__construct();
 			self::set_active_menu('admin::bookingfrontend::metasettings');
+			$this->fields		 = array(
+				'metatag_author'	 => 'string',
+				'metatag_robots'	 => 'string',
+				'frontpagetext'		 => 'html',
+			);
 		}
 
 		public function index()
@@ -22,11 +27,13 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				foreach($_POST as $dim => $value)
+				$metasettings = extract_values($_POST, $this->fields);
+
+				foreach($metasettings as $dim => $value)
 				{
 					if(strlen(trim($value)) > 0)
 					{
-						$config->value($dim, phpgw::clean_value($value));
+						$config->value($dim, $value);
 					}
 					else
 					{
