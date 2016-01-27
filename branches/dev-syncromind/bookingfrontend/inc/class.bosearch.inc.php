@@ -27,6 +27,11 @@
 				}
 			}
 
+			if(!$types)
+			{
+				$types = array('building', 'resource');//default
+			}
+
 			if($type= phpgw::get_var('type', 'string', 'REQUEST', null))
 			{
 				$types[] = $type;

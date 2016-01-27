@@ -21,37 +21,6 @@
 				<div id = "total_records_top"></div>
 				<div class="pure-u-1">
 					<div class="heading">
-						<xsl:value-of select="php:function('lang', 'type')" />
-					</div>
-					<ul id="search_type">
-						<li>
-							<label>
-								<input type="checkbox" name="search_type[]" value="building" checked="checked="/>
-								<xsl:value-of select="php:function('lang', 'building')" />
-							</label>
-						</li>
-						<li>
-							<label>
-								<input type="checkbox" name="search_type[]" value="resource" checked="checked="/>
-								<xsl:value-of select="php:function('lang', 'resource')" />
-							</label>
-						</li>
-						<!--li>
-							<label>
-								<input type="checkbox" name="search_type[]" value="organization"/>
-								<xsl:value-of select="php:function('lang', 'organization')" />
-							</label>
-						</li>
-						<li>
-							<label>
-								<input type="checkbox" name="search_type[]" value="event"/>
-								<xsl:value-of select="php:function('lang', 'event')" />
-							</label>
-						</li-->
-					</ul>
-				</div>
-				<div class="pure-u-1">
-					<div class="heading">
 						<xsl:value-of select="php:function('lang', 'Activity')" />
 					</div>
 					<ul id="top_level">
@@ -127,6 +96,37 @@
 								</label>
 							</li>
 						</xsl:for-each>
+					</ul>
+				</div>
+				<div class="pure-u-1">
+					<div class="heading">
+						<xsl:value-of select="php:function('lang', 'type')" />
+					</div>
+					<ul id="search_type">
+						<li>
+							<label>
+								<input type="checkbox" name="search_type[]" value="building"/>
+								<xsl:value-of select="php:function('lang', 'building')" />
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="checkbox" name="search_type[]" value="resource"/>
+								<xsl:value-of select="php:function('lang', 'resource')" />
+							</label>
+						</li>
+						<!--li>
+							<label>
+								<input type="checkbox" name="search_type[]" value="organization"/>
+								<xsl:value-of select="php:function('lang', 'organization')" />
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="checkbox" name="search_type[]" value="event"/>
+								<xsl:value-of select="php:function('lang', 'event')" />
+							</label>
+						</li-->
 					</ul>
 				</div>
 				<div class="pure-u-1">
