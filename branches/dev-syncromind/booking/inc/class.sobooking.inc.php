@@ -300,7 +300,13 @@
 			$end		 = $end->format('Y-m-d H:i');
 			$building_id = intval($building_id);
 			$results	 = array();
-			$this->db->query("SELECT DISTINCT(bb_event.id) AS id FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id IN(SELECT id FROM bb_resource WHERE building_id=$building_id)) WHERE bb_event.active=1 AND ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end') OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end') OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))", __LINE__, __FILE__);
+			$sql = "SELECT DISTINCT(bb_event.id) AS id"
+			. " FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id"
+			. " IN(SELECT id FROM bb_resource JOIN bb_building_resource ON bb_building_resource.resource_id = bb_resource.id WHERE building_id=$building_id))"
+			. " WHERE bb_event.active=1 AND ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end')"
+			. " OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end')"
+			. " OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))";
+			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
@@ -314,7 +320,17 @@
 			$end		 = $end->format('Y-m-d H:i');
 			$resource_id = intval($resource_id);
 			$results	 = array();
-			$this->db->query("SELECT bb_allocation.id AS id FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id=$resource_id) JOIN bb_resource as res ON ( res.id=$resource_id) JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1) WHERE bb_season.building_id=res.building_id AND bb_season.active=1 AND bb_season.status='PUBLISHED' AND ((bb_allocation.from_ >= '$start'AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start' AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))", __LINE__, __FILE__);
+			$sql = "SELECT bb_allocation.id AS id"
+			. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id=$resource_id)"
+			. " JOIN bb_resource as res ON ( res.id=$resource_id)"
+			. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
+			. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
+			. " WHERE bb_season.building_id=bb_building_resource.building_id AND bb_season.active=1"
+			. " AND bb_season.status='PUBLISHED' AND ((bb_allocation.from_ >= '$start'"
+			. " AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start'"
+			. " AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
@@ -328,7 +344,18 @@
 			$end		 = $end->format('Y-m-d H:i');
 			$resource_id = intval($resource_id);
 			$results	 = array();
-			$this->db->query("SELECT bb_booking.id AS id FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id=$resource_id) JOIN bb_resource as res ON ( res.id=$resource_id) JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1) WHERE bb_season.building_id=res.building_id AND bb_season.active=1 AND bb_season.status='PUBLISHED' AND ((bb_booking.from_ >= '$start' AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start' AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start' AND bb_booking.to_ > '$end'))", __LINE__, __FILE__);
+			$sql = "SELECT bb_booking.id AS id"
+			. " FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id=$resource_id)"
+			. " JOIN bb_resource as res ON ( res.id=$resource_id)"
+			. " JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1)"
+			. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
+			. " WHERE bb_season.building_id=bb_building_resource.building_id AND bb_season.active=1"
+			. " AND bb_season.status='PUBLISHED' AND ((bb_booking.from_ >= '$start'"
+			. " AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start'"
+			. " AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start'"
+			. " AND bb_booking.to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
@@ -342,7 +369,11 @@
 			$end		 = $end->format('Y-m-d H:i');
 			$resource_id = intval($resource_id);
 			$results	 = array();
-			$this->db->query("SELECT id FROM bb_event JOIN bb_event_resource ON (event_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
+			$this->db->query("SELECT id FROM bb_event"
+			. " JOIN bb_event_resource ON (event_id=id AND resource_id=$resource_id)"
+			. " WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end')"
+			. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
+			. " AND to_ > '$end'))", __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
@@ -597,9 +628,10 @@
 			}
 			$results = array();
 			$sql	 = "SELECT br.id
-                    FROM bb_resource br, bb_activity ba
+                    FROM bb_resource br, bb_activity ba, bb_building_resource bre
                     WHERE ba.id = br.activity_id " . $type . "
-                    AND br.building_id = " . $building_id . "
+                    AND br.id = bre.resource_id
+                    AND bre.building_id = " . $building_id . "
                     AND br.active = 1
                     ORDER by br.sort";
 
@@ -626,15 +658,16 @@
                     bb_resource.id AS resource_id,
                     bb_resource.name AS resource_name,
                     bb_resource.sort AS sort,
-                    bb_resource.building_id AS building_id,
+                    bb_building_resource.building_id AS building_id,
                     bb_organization.name AS organization_name,
                     bb_organization.shortname AS organization_shortname
                     FROM bb_allocation
                     INNER JOIN bb_allocation_resource ON (bb_allocation.id = bb_allocation_resource.allocation_id)
-                    INNER JOIN bb_resource ON  (bb_allocation_resource.resource_id  = bb_resource.id)
+                    INNER JOIN bb_resource ON (bb_allocation_resource.resource_id  = bb_resource.id)
+                    INNER JOIN bb_building_resource ON (bb_building_resource.resource_id  = bb_resource.id)
                     INNER JOIN bb_organization ON  (bb_organization.id  = bb_allocation.organization_id)
                     WHERE bb_allocation.from_ > '" . $start . "' AND bb_allocation.to_ < '" . $end . "'
-                    AND bb_resource.building_id = (" . $building_id . ")
+                    AND bb_building_resource.building_id = (" . $building_id . ")
                      " . $resources . "
                     AND bb_allocation.active = 1
                     ORDER BY building_name, sort, from_;";
@@ -674,15 +707,16 @@
                     bb_resource.id AS resource_id,
                     bb_resource.name AS resource_name,
                     bb_resource.sort AS sort,
-                    bb_resource.building_id AS building_id,
+                    bb_building_resource.building_id AS building_id,
                     bb_group.name AS group_name,
                     bb_group.shortname AS group_shortname
                     FROM bb_booking
                     INNER JOIN bb_booking_resource ON (bb_booking_resource.booking_id = bb_booking.id)
                     INNER JOIN bb_resource ON  (bb_booking_resource.resource_id  = bb_resource.id)
+                    INNER JOIN bb_building_resource ON (bb_building_resource.resource_id  = bb_resource.id)
                     INNER JOIN bb_group ON (bb_group.id = bb_booking.group_id)
                     WHERE bb_booking.from_ > '" . $start . "' AND bb_booking.to_ < '" . $end . "'
-                    AND bb_resource.building_id = (" . $building_id . ")
+                    AND bb_building_resource.building_id = (" . $building_id . ")
                      " . $resources . "
                     AND bb_booking.active = 1
                     ORDER BY building_name,sort, from_;";
@@ -732,10 +766,11 @@
                     bb_resource.sort AS sort,
                     bb_resource.id AS resource_id,
                     bb_resource.name AS resource_name,
-                    bb_resource.building_id AS building_id
+                    bb_building_resource.building_id AS building_id
                     FROM bb_event
                     INNER JOIN bb_event_resource ON (bb_event_resource.event_id = bb_event.id)
                     INNER JOIN bb_resource ON (bb_resource.id = bb_event_resource.resource_id)
+                    INNER JOIN bb_building_resource ON (bb_building_resource.resource_id  = bb_resource.id)
                     WHERE
                     (
                     (bb_event.from_ >= '" . $start . "' AND bb_event.to_ <= '" . $end . "')
@@ -743,7 +778,7 @@
                     OR (bb_event.from_ >='" . $start . "' AND bb_event.from_ < '" . $end . "' AND bb_event.to_ > '" . $end . "')
                     OR (bb_event.from_ < '" . $start . "' AND bb_event.to_ > '" . $end . "')
                     )
-                    AND bb_resource.building_id = (" . $building_id . ")
+                    AND bb_building_resource.building_id = (" . $building_id . ")
                      " . $resources . "
                     AND bb_event.active = 1
                     ORDER BY building_name,sort,from_;";

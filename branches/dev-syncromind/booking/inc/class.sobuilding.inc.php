@@ -90,8 +90,9 @@
 			{ $params['filters']['where'] = array();}
 
 			$params['filters']['where'][] = '%%table%%.id IN (' .
-			'SELECT r.building_id FROM bb_allocation_resource ar ' .
+			'SELECT br.building_id FROM bb_allocation_resource ar ' .
 			'JOIN bb_resource r ON ar.resource_id = r.id ' .
+			'JOIN bb_building_resource br ON (br.resource_id  = r.id)  '.
 			'JOIN bb_allocation a ON a.id = ar.allocation_id AND (a.from_ - \'now\'::timestamp < \'300 days\') AND a.organization_id = ' . $this->_marshal($organization_id, 'int') . ' ' .
 			')';
 
@@ -118,11 +119,42 @@
 			{
 				return $buildings;
 			}
-			$sql = 'SELECT building_id FROM bb_resource WHERE activity_id IN (' . implode(',', $activity_ids) . ')';
+			$sql = 'SELECT id FROM bb_building WHERE activity_id IN (' . implode(',', $activity_ids) . ')';
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$buildings[] = $this->db->f('building_id');
+				$buildings[] = $this->db->f('id');
+			}
+			return $buildings;
+		}
+
+		/**
+		 * Returns buildingnames associated with the id
+		 * @param array $ids
+		 * @return array buildingnames
+		 */
+		function get_building_names($ids = array())
+		{
+			$buildings		 = array();
+			if(!$ids)
+			{
+				return $buildings;
+			}
+			$sql = 'SELECT bb_building.id, bb_building.name, bb_building.street, bb_building.zip_code, bb_building.district, bb_activity.name as activity'
+			. ' FROM bb_building JOIN bb_activity ON bb_building.activity_id = bb_activity.id'
+			. ' WHERE bb_building.id IN (' . implode(',', $ids) . ')';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$buildings[$this->db->f('id')] = array
+				(
+					'name'		=> $this->db->f('name',true),
+					'street'	=> $this->db->f('street',true),
+					'zip_code'	=> $this->db->f('zip_code'),
+					'district'	=> $this->db->f('district',true),
+					'activity'	=> $this->db->f('activity',true),
+				);
+
 			}
 			return $buildings;
 		}

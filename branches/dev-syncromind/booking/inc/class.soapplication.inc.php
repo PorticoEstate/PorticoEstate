@@ -116,7 +116,12 @@
 
 		function get_building_info($id)
 		{
-			$this->db->limit_query("SELECT bb_building.id, bb_building.name FROM bb_building, bb_resource, bb_application_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_application_resource.resource_id AND bb_application_resource.application_id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$id = (int) $id;
+			$sql = "SELECT bb_building.id, bb_building.name"
+			. " FROM bb_building, bb_resource, bb_application_resource, bb_building_resource"
+			. " WHERE bb_building.id= bb_building_resource.building_id AND  bb_resource.id = bb_building_resource.resource_id AND bb_resource.id=bb_application_resource.resource_id AND bb_application_resource.application_id=({$id})";
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;

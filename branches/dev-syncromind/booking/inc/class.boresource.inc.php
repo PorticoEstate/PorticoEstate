@@ -29,12 +29,16 @@
 
 			if(is_array($for_object))
 			{
-				if(!isset($for_object['building_id']))
+
+				/**FIXME: Sigurd 30 jan 2016: convert from single id to array of ids
+				 *
+				 */
+				if(!isset($for_object['buildings'][0]))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless building_id is provided');
 				}
 
-				$parent_building = $this->building_bo->read_single($for_object['building_id']);
+				$parent_building = $this->building_bo->read_single($for_object['buildings'][0]);
 			}
 
 			//Note that a null value for $parent_building is acceptable. That only signifies
@@ -115,21 +119,41 @@
 		{
 			$resources = $this->read();
 
+			$building_ids = array();
 			foreach($resources['results'] as &$resource)
 			{
 				$resource['link']		 = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
+//				$resource['full_name']	 = $resource['building_name'] . ' / ' . $resource['name'];
+				if(isset($resource['buildings']))
+				{
+					$building_ids = array_merge($building_ids, $resource['buildings']);
+				}
+			}
+			unset($resource);
+
+			$buildings = $this->building_bo->get_building_names(array_unique($building_ids));
+
+			foreach($resources['results'] as &$resource)
+			{
+				$_building_names = array();
+				if(is_array($resource['buildings']))
+				{
+
+					$resource['building_street'] = $buildings[$resource['buildings'][0]]['street'];
+					$resource['building_city'] = $buildings[$resource['buildings'][0]]['zip_code'];
+					$resource['building_district'] = $buildings[$resource['buildings'][0]]['district'];
+
+					foreach($resource['buildings'] as $building_id)
+					{
+						$_building_names[] = "{$buildings[$building_id]['name']} ({$buildings[$building_id]['activity']})";
+					}
+
+				}
+				$resource['building_name'] = implode(', <br/>', $_building_names);
+
 				$resource['full_name']	 = $resource['building_name'] . ' / ' . $resource['name'];
 			}
-//			$data = array(
-//				 'ResultSet' => array(
-//					'totalResultsAvailable' => $resources['total_records'], 
-//					'startIndex' => $resources['start'], 
-//					'sortKey' => $resources['sort'], 
-//					'sortDir' => $resources['dir'], 
-//					'Result' => $resources['results']
-//				)
-//			);
 
 			$data = array(
 				'total_records'	 => $resources['total_records'],
@@ -183,4 +207,23 @@
 			}
 			return $resource;
 		}
+
+		function add_building($entity, $resource_id, $building_id)
+		{
+			if($this->authorize_write($entity))
+			{
+				return parent::add_building($resource_id, $building_id);
+			}
+			return false;
+		}
+
+		function remove_building($entity, $resource_id, $building_id)
+		{
+			if($this->authorize_write($entity))
+			{
+				return parent::remove_building($resource_id, $building_id);
+			}
+			return false;
+		}
+
 	}

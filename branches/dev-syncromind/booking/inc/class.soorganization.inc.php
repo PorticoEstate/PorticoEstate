@@ -182,10 +182,11 @@
 			{
 				$params['filters']['where'][] = '%%table%%.id IN (' .
 				'SELECT DISTINCT o.id FROM bb_resource r ' .
-				'JOIN bb_allocation_resource ar ON ar.resource_id = r.id AND r.building_id = ' . $this->_marshal($building_id, 'int') . ' ' .
+				'JOIN bb_allocation_resource ar ON ar.resource_id = r.id '.
 				'JOIN bb_allocation a ON a.id = ar.allocation_id ' .
+				'JOIN bb_building_resource br ON r.id = br.resource_id AND br.building_id = ' . $this->_marshal($building_id, 'int') . ' ' .
 				'JOIN bb_organization o ON o.id = a.organization_id ' .
-				'JOIN bb_season s ON s.building_id = r.building_id ' .
+				'JOIN bb_season s ON s.building_id = br.building_id ' .
 				'WHERE s.active = 1 ' .
 				'AND s.from_ <= \'now\'::timestamp ' .
 				'AND s.to_ >= \'now\'::timestamp ' .
@@ -197,7 +198,8 @@
 			{
 				$params['filters']['where'][] = '%%table%%.id IN (' .
 				'SELECT DISTINCT o.id FROM bb_resource r ' .
-				'JOIN bb_allocation_resource ar ON ar.resource_id = r.id AND r.building_id = ' . $this->_marshal($building_id, 'int') . ' ' .
+				'JOIN bb_allocation_resource ar ON ar.resource_id = r.id ' .
+				'JOIN bb_building_resource br ON r.id = br.resource_id AND br.building_id = ' . $this->_marshal($building_id, 'int') . ' ' .
 				'JOIN bb_allocation a ON a.id = ar.allocation_id AND (a.from_ - \'now\'::timestamp < \'300 days\') ' .
 				'JOIN bb_organization o ON o.id = a.organization_id ' . $test . ' ORDER BY o.id ASC' .
 				')';

@@ -3447,3 +3447,66 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.2.26';
+	/**
+	 * Update booking version from 0.2.26 to 0.2.27
+	 *
+	 */
+	function booking_upgrade0_2_26()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_building_resource', array(
+				'fd' => array(
+					'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				),
+				'pk' => array('building_id', 'resource_id'),
+				'fk' => array(
+					'bb_building' => array('building_id' => 'id'),
+					'bb_resource' => array('resource_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT id, building_id FROM bb_resource',__LINE__,__FILE__);
+
+		// using stored prosedures
+		$sql = 'INSERT INTO bb_building_resource (building_id, resource_id)'
+							. ' VALUES(?, ?)';
+		$valueset = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$valueset[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $GLOBALS['phpgw_setup']->oProc->f('building_id'),
+					'type'	=> 1 //PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'type'	=>	1 //PDO::PARAM_INT
+				)
+			);
+		}
+
+		if($valueset)
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'building_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.27';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

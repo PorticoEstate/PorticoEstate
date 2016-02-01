@@ -137,10 +137,23 @@
 					$_filter_resource['custom_fields_criteria'] = $activity_criteria;
 				}
 
-				$res_result = $this->soresource->read(array("query" => $searchterm, "sort" => "name",
+				$_res_result = $this->soresource->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => $_filter_resource));
-				foreach($res_result['results'] as &$res)
+
+				$_check_duplicate = array();
+				$res_result = array(
+					'total_records' => 0,
+					'start' => $_res_result['start'],
+					'sort' => $_res_result['sort'],
+					'dir' => $_res_result['dir']
+				);
+				foreach($_res_result['results'] as &$res)
 				{
+					if(isset($_check_duplicate[$res['id']]))
+					{
+						continue;
+					}
+
 					$_resource_buildings[$res['building_id']] = true;
 					$res['name']			 = $res['building_name'] . ' / ' . $res['name'];
 					$res['type']			 = "resource";
@@ -149,6 +162,12 @@
 					$res['img_container']	 = "resource-" . $res['id'];
 					$res['img_url']			 = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_resource.index_images',
 						'filter_owner_id' => $res['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
+
+					$_check_duplicate[$res['id']] = true;
+
+					$res_result['total_records'] ++;
+					$res_result['results'][] = $res;
+
 				}
 
 				if(isset($bui_result['total_records']) && $bui_result['total_records'] > 0)

@@ -195,14 +195,16 @@
 			$resources = array();
 			if($data['all_buildings'])
 			{
-				$sql = "SELECT DISTINCT bb_resource.id FROM bb_building"
-				. " JOIN bb_resource ON bb_resource.building_id = bb_building.id"
+				$sql = "SELECT DISTINCT bb_building_resource.resource_id FROM bb_building"
+				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
+				. " JOIN bb_resource ON bb_building_resource.resource_id = bb_resource.id"
 				. " WHERE bb_building.active = 1"
-				. " AND activity_id IN (" . implode(',', $data['activity_ids']) . ')';
+				. " AND bb_resource.active = 1"
+				. " AND bb_building.activity_id IN (" . implode(',', $data['activity_ids']) . ')';
 				$db->query($sql);
 				while($db->next_record())
 				{
-					$resources[] = $db->f('id');
+					$resources[] = $db->f('resource_id');
 				}
 			}
 			else
@@ -237,9 +239,10 @@
 				$weekday	 = $dt->format('N');
 				$sql		 = "SELECT sb.wday AS wday, sb.from_ as boundary_from, sb.to_ as boundary_to,bu.id as building_id,"
 				. " bu.name as building_name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (sb.to_ - sb.from_)) as timespan"
-				. " FROM bb_building bu, bb_season se, bb_season_boundary sb, bb_resource re, bb_season_resource sr"
+				. " FROM bb_building bu, bb_season se, bb_season_boundary sb, bb_resource re, bb_season_resource sr, bb_building_resource br"
 				. " WHERE bu.id = se.building_id"
-				. " AND bu.id = re.building_id"
+				. " AND re.id = br.resource_id"
+				. " AND bu.id = br.building_id"
 				. " AND sr.season_id = se.id"
 				. " AND sr.resource_id = re.id"
 				. " AND sb.season_id = se.id"
@@ -300,7 +303,8 @@
 					INNER JOIN bb_agegroup ag ON ag.id = ea.agegroup_id and ag.active = 1
 					INNER JOIN bb_event_resource er ON er.event_id = ev.id
 					INNER JOIN bb_resource re ON re.id = er.resource_id
-					INNER JOIN bb_building bu ON bu.id = re.building_id
+					INNER JOIN bb_building_resource bre ON re.id = bre.resource_id
+					INNER JOIN bb_building bu ON bu.id = bre.building_id
 					WHERE date_trunc('day' ,ev.from_) >= to_date('{$check_date}' ,'YYYY-MM-DD')
 					AND date_trunc('day' ,ev.from_) <= to_date('{$check_date}', 'YYYY-MM-DD')
 					AND EXTRACT(DOW FROM ev.from_) = {$entry['wday']}
@@ -365,14 +369,16 @@
 			$resources = array();
 			if($data['all_buildings'])
 			{
-				$sql = "SELECT DISTINCT bb_resource.id FROM bb_building"
-				. " JOIN bb_resource ON bb_resource.building_id = bb_building.id"
+				$sql = "SELECT DISTINCT bb_building_resource.resource_id FROM bb_building"
+				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
+				. " JOIN bb_resource ON bb_building_resource.resource_id = bb_resource.id"
 				. " WHERE bb_building.active = 1"
-				. " AND activity_id IN (" . implode(',', $data['activity_ids']) . ')';
+				. " AND bb_resource.active = 1"
+				. " AND bb_building.activity_id IN (" . implode(',', $data['activity_ids']) . ')';
 				$db->query($sql);
 				while($db->next_record())
 				{
-					$resources[] = $db->f('id');
+					$resources[] = $db->f('resource_id');
 				}
 			}
 			else
@@ -457,12 +463,13 @@
 			$to		 = $db->to_timestamp(phpgwapi_datetime::date_to_timestamp($data['end_date']) + 24 * 3600 - 1);
 
 
-			$sql = "select distinct al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
-				from bb_allocation al
-				inner join bb_allocation_resource ar on ar.allocation_id = al.id
-				inner join bb_resource br on br.id = ar.resource_id and br.active = 1
-				inner join bb_building bu on bu.id = br.building_id
-				left join bb_booking bb on bb.allocation_id = al.id
+			$sql = "SELECT DISTINCT al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
+				FROM bb_allocation al
+				INNER JOIN bb_allocation_resource ar on ar.allocation_id = al.id
+				INNER JOIN bb_resource br on br.id = ar.resource_id and br.active = 1
+				INNER JOIN bb_building_resource bre ON br.id = bre.resource_id
+				INNER JOIN bb_building bu on bu.id = bre.building_id
+				LEFT JOIN bb_booking bb on bb.allocation_id = al.id
 				WHERE bb.id is null
 				AND al.from_ >= '{$from}'
 				AND al.to_ <= '{$to}'"
@@ -682,15 +689,16 @@ HTML;
 			$buildings	 = implode(",", $buildings);
 			$weekdays	 = implode(",", $weekdays);
 
-			$sql = "select distinct al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
-				from bb_allocation al
-				inner join bb_allocation_resource ar on ar.allocation_id = al.id
-				inner join bb_resource br on br.id = ar.resource_id and br.active = 1
-				inner join bb_building bu on bu.id = br.building_id
-				left join bb_booking bb on bb.allocation_id = al.id
-				where bb.id is null 
-				and al.from_ >= '" . $from . " 00:00:00'
-				and al.to_ <= '" . $to . " 23:59:59' ";
+			$sql = "SELECT DISTINCT al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
+				FROM bb_allocation al
+				INNER JOIN bb_allocation_resource ar on ar.allocation_id = al.id
+				INNER JOIN bb_resource br on br.id = ar.resource_id and br.active = 1
+				INNER JOIN bb_building_resource bre ON br.id = bre.resource_id
+				inner join bb_building bu on bu.id = bre.building_id
+				LEFT JOIN bb_booking bb on bb.allocation_id = al.id
+				WHERE bb.id is null
+				AND al.from_ >= '" . $from . " 00:00:00'
+				AND al.to_ <= '" . $to . " 23:59:59' ";
 
 			if($buildings)
 				$sql .= "and building_id in (" . $buildings . ") ";

@@ -13,14 +13,25 @@
 				'id'				 => array('type' => 'int'),
 				'active'			 => array('type' => 'int', 'required' => true),
 				'sort'				 => array('type' => 'int', 'required' => false),
-				'building_id'		 => array('type' => 'int', 'required' => true),
+//				'building_id'		 => array('type' => 'int', 'required' => true),
 				'name'				 => array('type' => 'string', 'query' => true, 'required' => true),
 				'type'				 => array('type' => 'string', 'query' => true, 'required' => true),
 				'description'		 => array('type' => 'string', 'query' => true, 'required' => false),
 				'activity_id'		 => array('type' => 'int', 'required' => false),
 				'organizations_ids'	 => array('type' => 'string'),
 				'json_representation'	 => array('type' => 'json'),
-				'building_name'		 => array('type'	 => 'string',
+				'building_id'		 => array(
+					'type'	 => 'int',
+					'query'	 => true,
+					'join_type'	 => 'manytomany',
+					'join'	 => array(
+						'table'	 => 'bb_building_resource',
+						'fkey'	 => 'id',
+						'key'	 => 'resource_id',
+						'column' => 'building_id'
+					)),
+
+/*				'building_name'		 => array('type'	 => 'string',
 					'query'	 => true,
 					'join'	 => array(
 						'table'	 => 'bb_building',
@@ -51,14 +62,20 @@
 						'fkey'	 => 'building_id',
 						'key'	 => 'id',
 						'column' => 'district'
-					)),
+					)),*/
 				'activity_name'		 => array('type'	 => 'string', 'query'	 => true,
 					'join'	 => array(
 						'table'	 => 'bb_activity',
 						'fkey'	 => 'activity_id',
 						'key'	 => 'id',
 						'column' => 'name'
-					))
+					)),
+				'buildings'			 => array('type'		 => 'int', 'required'	 => true,
+					'manytomany' => array(
+						'table'	 => 'bb_building_resource',
+						'key'	 => 'resource_id',
+						'column' => 'building_id'
+					)),
 			)
 			);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -66,16 +83,22 @@
 
 		function get_metainfo($id)
 		{
-			$this->db->limit_query("SELECT br.name, bb.name as building, bb.city, bb.district, br.description FROM bb_resource as br, bb_building as bb where br.building_id=bb.id and br.id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$id = (int)$id;
+			$sql = "SELECT bb_resource.name, bb_building.name as building, bb_building.city, bb_building.district, bb_resource.description"
+			. " FROM bb_resource JOIN bb_building_resource ON  bb_resource.id =bb_building_resource.resource_id"
+			. " JOIN bb_building ON bb_building_resource.building_id = bb_building.id"
+			. " WHERE bb_resource.id={$id}";
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
 			}
-			return array('name'			 => $this->db->f('name', false),
-				'building'		 => $this->db->f('building', false),
-				'district'		 => $this->db->f('district', false),
-				'city'			 => $this->db->f('city', false),
-				'description'	 => $this->db->f('description', false));
+			return array('name'			 => $this->db->f('name', true),
+				'building'		 => $this->db->f('building', true),
+				'district'		 => $this->db->f('district', true),
+				'city'			 => $this->db->f('city', true),
+				'description'	 => $this->db->f('description', true));
 		}
 
 		public static function allowed_types()
@@ -146,7 +169,7 @@
 						continue;
 					}
 					
-					$sub_condition[] = " json_representation @> '{\"schema_location\":$location_id}'";
+//					$sub_condition[] = " json_representation @> '{\"schema_location\":$location_id}'";
 					
 					if($custom_fields[$criteria['attribute_id']]['datatype'] == 'CH') // in array
 					{
@@ -156,11 +179,11 @@
 						 * CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any);
 						 * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
 						 */
-						$sub_condition[] = " json_representation #> '{data,$field_name}' ~@ '$field_value'";
+						$sub_condition[] = " json_representation #> '{{$location_id},{$field_name}}' ~@ '$field_value'";
 					}
 					else // discrete value
 					{
-						$sub_condition[] = " json_representation #> '{data,$field_name}' = '\"$field_value\"'";
+						$sub_condition[] = " json_representation #> '{{$location_id},{$field_name}}' = '\"$field_value\"'";
 					}
 
 
@@ -211,4 +234,48 @@
 //			_debug_array($conditions);
 			return $conditions;
 		}
+		
+		function add_building($resource_id, $building_id)
+		{
+
+			if(!$resource_id || !$building_id)
+			{
+				return false;
+			}
+
+			//check for duplicate
+			$this->db->query("SELECT resource_id FROM bb_building_resource " .
+			"WHERE resource_id = {$resource_id} AND building_id = {$building_id}" , __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				return false;
+			}
+			else
+			{
+				return	$this->db->query("INSERT INTO bb_building_resource (resource_id, building_id)"
+				. " VALUES ({$resource_id}, {$building_id})" , __LINE__, __FILE__);
+			}
+		}
+
+		function remove_building($resource_id, $building_id)
+		{
+
+			if(!$resource_id || !$building_id)
+			{
+				return false;
+			}
+
+			$this->db->query("SELECT resource_id FROM bb_building_resource " .
+			"WHERE resource_id = {$resource_id} AND building_id = {$building_id}" , __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				return $this->db->query("DELETE FROM bb_building_resource " .
+				"WHERE resource_id = {$resource_id} AND building_id = {$building_id}" , __LINE__, __FILE__);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 	}

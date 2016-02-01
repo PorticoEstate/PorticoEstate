@@ -7,6 +7,14 @@
 			<div id="resource" class="booking-container">
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Name')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="resource/name" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
 					<div class="custom-container">
@@ -15,11 +23,21 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
-						<xsl:value-of select="php:function('lang', 'Building')" />
+						<xsl:value-of select="php:function('lang', 'Building')"/>
 					</label>
-					<span>
-						<xsl:value-of select="resource/building_name"/>
-					</span>
+					<div class = 'pure-u-md-1-2'>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_0'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="config" select ='config'/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -28,6 +46,11 @@
 					<span>
 						<xsl:value-of select="resource/activity_name"/>
 					</span>
+					<script type="text/javascript">
+						var default_schema = "<xsl:value-of select="resource/activity_name"/>";
+						var schema_type = "view";
+					</script>
+
 				</div>
 				<div class="pure-control-group">
 					<label>

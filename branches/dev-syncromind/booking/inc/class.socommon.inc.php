@@ -133,7 +133,7 @@
 			return "{$params['join']['table']}_{$params['join']['column']}_{$field}";
 		}
 
-		public function _get_cols_and_joins()
+		public function _get_cols_and_joins($filters=array())
 		{
 			$cols = array();
 			$joins = array();
@@ -146,6 +146,11 @@
 				}
 				else if(isset($params['join']) && $params['join'])
 				{
+					if($params['join_type'] == 'manytomany' && ! isset($filters[$field]))
+					{
+						continue;
+					}
+
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
 					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
@@ -250,7 +255,7 @@
 			}
 			else if($type == 'json')
 			{
-				return json_decode($value);
+				return json_decode($value, true);
 			}
 
 			//Sanity check
@@ -370,7 +375,7 @@
 						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
-							$like_clauses[] = "{$table}.{$column} = " . $this->db->db_addslashes($query);
+							$like_clauses[] = "{$table}.{$column} = " . (int)$query;//$this->db->db_addslashes($query);
 						}
 						else
 						{
@@ -446,7 +451,7 @@
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-			$cols_joins = $this->_get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins($filters);
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);

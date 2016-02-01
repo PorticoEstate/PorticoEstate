@@ -1,20 +1,23 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
-		<ul class="pathway">
-			<li>
-				<a href="index.php?menuaction=bookingfrontend.uisearch.index">
-					<xsl:value-of select="php:function('lang', 'Home')" />
-				</a>
-			</li>
-			<li>
-				<a href="{resource/building_link}">
-					<xsl:value-of select="resource/building_name"/>
-				</a>
-			</li>
-			<li>
-				<xsl:value-of select="resource/name"/>
-			</li>
-		</ul>
+		<xsl:for-each select="pathway">
+			<ul class="pathway">
+				<li>
+					<a href="index.php?menuaction=bookingfrontend.uisearch.index">
+						<xsl:value-of select="lang_home" />
+					</a>
+				</li>
+				<li>
+					<a href="{building_link}">
+						<xsl:value-of select="building_name"/>
+					</a>
+				</li>
+				<li>
+					<xsl:value-of select="resource_name"/>
+				</li>
+			</ul>			
+		</xsl:for-each>
+
 		<div>
 			<button onclick="window.location.href='{resource/schedule_link}'">
 				<xsl:value-of select="php:function('lang', 'Resource schedule')" />

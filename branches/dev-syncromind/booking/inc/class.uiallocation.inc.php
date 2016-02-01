@@ -425,7 +425,7 @@
 					$timeTo[]	 = $dateTimeToE[1];
 				}
 
-				array_set_default($allocation, 'resources', array(get_var('resource', 'int')));
+				array_set_default($allocation, 'resources', array(phpgw::get_var('resource', 'int')));
 				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'int'));
 				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'string'));
 				array_set_default($allocation, 'from_', $timeFrom);

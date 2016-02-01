@@ -109,7 +109,6 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
-				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '150','nullable' => False),
 				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => True),
@@ -120,8 +119,20 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_building' => array('building_id' => 'id'),
 				'bb_activity' => array('activity_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_building_resource' => array(
+			'fd' => array(
+				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+			),
+			'pk' => array('building_id', 'resource_id'),
+			'fk' => array(
+				'bb_building' => array('building_id' => 'id'),
+				'bb_resource' => array('resource_id' => 'id')
+			),
 			'ix' => array(),
 			'uc' => array()
 		),
