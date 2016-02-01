@@ -147,14 +147,26 @@
 					'sort' => $_res_result['sort'],
 					'dir' => $_res_result['dir']
 				);
+				$_resource_buildings = array();
 				foreach($_res_result['results'] as &$res)
 				{
+					if (isset($res['buildings']) && is_array($res['buildings']))
+					{
+						foreach($res['buildings'] as $_building_id)
+						{
+							$_resource_buildings[$_building_id] = true;	
+						}
+					}
+					else if(isset($res['building_id']) && $res['building_id'])
+					{
+						$_resource_buildings[$res['building_id']] = true;
+					}
+
 					if(isset($_check_duplicate[$res['id']]))
 					{
 						continue;
 					}
 
-					$_resource_buildings[$res['building_id']] = true;
 					$res['name']			 = $res['building_name'] . ' / ' . $res['name'];
 					$res['type']			 = "resource";
 					$res['link']			 = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show',
@@ -173,7 +185,7 @@
 				if(isset($bui_result['total_records']) && $bui_result['total_records'] > 0)
 				{
 					$_bui_result = array(
-						'total_records' => count($_resource_buildings),
+						'total_records' => 0,
 						'start' => $bui_result['start'],
 						'sort' => $bui_result['sort'],
 						'dir' => $bui_result['dir']
@@ -183,6 +195,7 @@
 						if(isset($_resource_buildings[$bui['id']] ))
 						{
 							$_bui_result['results'][] = $bui;
+							$_bui_result['total_records'] ++;
 						}
 					}
 					$bui_result = $_bui_result;
