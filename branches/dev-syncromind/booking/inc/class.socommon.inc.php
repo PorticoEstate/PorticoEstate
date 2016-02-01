@@ -146,7 +146,7 @@
 				}
 				else if(isset($params['join']) && $params['join'])
 				{
-					if($params['join_type'] == 'manytomany' && ! isset($filters[$field]))
+					if($params['join_type'] == 'manytomany' && !isset($filters[$field]) && !$filters[$field])
 					{
 						continue;
 					}
@@ -375,6 +375,10 @@
 						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
+							if(!(int)$query)
+							{
+								continue;
+							}
 							$like_clauses[] = "{$table}.{$column} = " . (int)$query;//$this->db->db_addslashes($query);
 						}
 						else
