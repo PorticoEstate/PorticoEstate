@@ -2706,7 +2706,7 @@
 			if($user_id)
 			{
 				$user_id = (int)$user_id;
-				$filter .= "AND fm_{$type}.user_id = $user_id";
+				$filter .= "AND fm_{$type}.coordinator = $user_id";
 			}
 
 			if($ecodimb)
