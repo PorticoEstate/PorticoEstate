@@ -2370,14 +2370,16 @@ JS;
 			$b_account_id = phpgw::get_var('b_account_id', 'integer');
 			$b_account_name = phpgw::get_var('b_account_name');
 
-			if(isset($_POST['user_id']))
+			if(isset($_POST['coordinator']))
 			{
-				$user_id = phpgw::get_var('user_id', 'int');
+				$coordinator = phpgw::get_var('coordinator', 'int');
 			}
 			else
 			{
-				$user_id = $this->account;
+				$coordinator = $this->account;
 			}
+
+			$new_coordinator = phpgw::get_var('new_coordinator', 'int');
 
 			$ids = $ids ? $ids : array();
 
@@ -2401,7 +2403,7 @@ JS;
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id, $ids, $paid, $closed_orders, $ecodimb, $transfer_budget, $new_budget, $b_account_id);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $coordinator, $new_coordinator, $ids, $paid, $closed_orders, $ecodimb, $transfer_budget, $new_budget, $b_account_id);
 			}
 
 			foreach($list as &$entry)
@@ -2464,9 +2466,12 @@ JS;
 			switch($type)
 			{
 				case 'project':
+					$lang_coordinator = lang('coordinator');
+					$lang_new_coordinator = lang('new coordinator');
 					$myColumnDefs = array
 						(
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'formatter' => 'JqueryPortico.formatLink'),
+						array('key' => 'coordinator_name', 'label' => lang('coordinator'), 'sortable' => false),
 						array('key' => 'start_date', 'label' => lang('date'), 'sortable' => false),
 						array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
 						array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
@@ -2485,12 +2490,15 @@ JS;
 					break;
 
 				case 'workorder':
+					$lang_coordinator = lang('janitor');
+					$lang_new_coordinator = lang('new janitor');
 					$lang_actual_cost = $paid ? lang('actual cost') . ' ' . lang('total') : lang('actual cost') . ' ' . (date('Y') - 1);
 
 					$myColumnDefs = array
 						(
 						array('key' => 'project_id', 'label' => lang('project'), 'sortable' => true),
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'formatter' => 'JqueryPortico.formatLink'),
+						array('key' => 'coordinator_name', 'label' => lang('janitor'), 'sortable' => false),
 						array('key' => 'start_date', 'label' => lang('date'), 'sortable' => false),
 						array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
 						array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
@@ -2537,12 +2545,7 @@ JS;
 				)
 			);
 
-			$user_list = $this->bocommon->get_user_list('select', $user_id, $extra = false, $default = $user_id, $start = -1, $sort = 'ASC', $order = 'account_lastname', $query = '', $offset = -1);
-			foreach($user_list as &$entry)
-			{
-				$entry['id'] = $entry['user_id'];
-			}
-			unset($entry);
+			$user_list = $this->bocommon->get_user_list_right2('select', PHPGW_ACL_EDIT, $coordinator, $this->acl_location);
 
 			switch($type)
 			{
@@ -2630,7 +2633,8 @@ JS;
 				'type' => $type,
 				'b_account_data' => $b_account_data,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'td_count' => $td_count
+				'lang_coordinator' => $lang_coordinator,
+				'lang_new_coordinator' => $lang_new_coordinator,
 			);
 
 			$appname = lang('project');

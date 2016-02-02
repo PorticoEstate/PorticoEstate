@@ -2648,7 +2648,7 @@
 			$this->db->transaction_commit();
 		}
 
-		public function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0, $ids, $paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget_year = 0, $new_budget = array(), $b_account_id = 0)
+		public function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $coordinator, $new_coordinator, $ids, $paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget_year = 0, $new_budget = array(), $b_account_id = 0)
 		{
 			if($transfer_budget_year && $execute && $new_budget)
 			{
@@ -2702,11 +2702,33 @@
 			$start_date -= 3600 * 24;
 			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
 
-			$filter = '';
-			if($user_id)
+			if((int)$new_coordinator && $ids)
 			{
-				$user_id = (int)$user_id;
-				$filter .= "AND fm_{$type}.coordinator = $user_id";
+				$new_coordinator = (int)$new_coordinator;
+				switch($type)
+				{
+					case 'project':
+						$this->db->query("UPDATE fm_{$type} SET coordinator = {$new_coordinator} WHERE id IN (" . implode(',', $ids) . ")", __LINE__, __FILE__);
+						break;
+					case 'workorder':
+						$this->db->query("UPDATE fm_{$type} SET user_id = {$new_coordinator} WHERE id IN (" . implode(',', $ids) . ")", __LINE__, __FILE__);
+						break;
+				}
+			}
+
+			$filter = '';
+			if($coordinator)
+			{
+				$coordinator = (int)$coordinator;
+				switch($type)
+				{
+					case 'project':
+						$filter .= "AND fm_{$type}.coordinator = $coordinator";
+						break;
+					case 'workorder':
+						$filter .= "AND fm_{$type}.user_id = $coordinator";
+						break;
+				}
 			}
 
 			if($ecodimb)
@@ -2743,11 +2765,11 @@
 					$status_table = 'fm_project_status';
 					$title_field = 'fm_project.name as title';
 					$this->_update_status_project($execute, $status_new, $ids);
-					$sql = "SELECT DISTINCT {$table}.id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
+					$sql = "SELECT DISTINCT {$table}.id,{$table}.coordinator,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
 					. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL)  {$filter}"
-					. " GROUP BY {$table}.id, {$status_table}.closed, {$status_table}.descr ,{$table}.name, {$table}.start_date,project_type_id"
+					. " GROUP BY {$table}.id,{$table}.coordinator, {$status_table}.closed, {$status_table}.descr ,{$table}.name, {$table}.start_date,project_type_id"
 					. " ORDER BY {$table}.id DESC";
 
 					break;
@@ -2781,11 +2803,11 @@
 						$end_period = (date('Y') - 1) . 13;
 						$join_method .= " {$this->left_join} fm_ecobilagoverf ON ( fm_workorder.id = fm_ecobilagoverf.pmwrkord_code AND fm_ecobilagoverf.periode > $start_period AND fm_ecobilagoverf.periode < $end_period)";
 						$actual_cost = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
-						$group_method = "GROUP BY fm_workorder.id, fm_workorder.project_id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id,fm_workorder.title,fm_workorder.start_date,fm_workorder.continuous";
+						$group_method = "GROUP BY fm_workorder.id, fm_workorder.project_id, fm_workorder.account_id, fm_workorder.coordinator, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id,fm_workorder.title,fm_workorder.start_date,fm_workorder.continuous";
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, {$table}.project_id,{$status_table}.closed, {$table}.account_id, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
+					$sql = "SELECT {$table}.id, {$table}.project_id,{$table}.user_id as coordinator, {$status_table}.closed, {$table}.account_id, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
 					. " project_type_id, continuous"
 					. " FROM {$table} {$join_method}"
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR {$table}.start_date is NULL"
@@ -2813,6 +2835,7 @@
 					(
 					'id' => $this->db->f('id'),
 					'project_id' => $this->db->f('project_id'),
+					'coordinator' => $this->db->f('coordinator'),
 					'closed' => $this->db->f('closed'),
 					'title' => $this->db->f('title', true),
 					'status' => $this->db->f('status', true),
@@ -2825,7 +2848,7 @@
 					'b_account_id' => $this->db->f('account_id')// only applies to workorders
 				);
 			}
-
+//			_debug_array($values);die();
 			foreach($values as &$entry)
 			{
 				$sql = sprintf($sql_budget, $entry['id']);
@@ -2857,6 +2880,7 @@
 				$entry['budget'] = implode(' ;', $budget);
 				$entry['latest_year'] = $_year;
 				$entry['active_amount'] = array_sum($_active_amount);
+				$entry['coordinator_name'] = $GLOBALS['phpgw']->accounts->get($entry['coordinator'])->__toString();
 			}
 
 			return $values;

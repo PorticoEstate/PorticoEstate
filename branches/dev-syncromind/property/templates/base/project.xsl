@@ -933,9 +933,9 @@
 					</div>
 					<div class="pure-control-group">
 						<label for="name">
-							<xsl:value-of select="php:function('lang', 'user')"/>
+							<xsl:value-of select="lang_coordinator"/>
 						</label>
-						<select name="user_id">
+						<select name="coordinator">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select user')"/>
 							</xsl:attribute>
@@ -943,6 +943,24 @@
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>
 							<xsl:apply-templates select="user_list/options"/>
+						</select>
+					</div>
+					<div class="pure-control-group">
+						<label for="new_coordinator">
+							<xsl:value-of select="lang_new_coordinator"/>
+						</label>
+						<select name="new_coordinator">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select user')"/>
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:for-each select="user_list/options">
+								<option value="{id}">
+									<xsl:value-of disable-output-escaping="yes" select="name"/>
+								</option>
+							</xsl:for-each>
 						</select>
 					</div>
 					<div class="pure-control-group">
@@ -1044,6 +1062,12 @@
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:attribute>
 						</input>
+					</div>
+					<div class="pure-control-group">
+						<label for="name">
+							<xsl:value-of select="php:function('lang', 'count')"/>
+						</label>
+						<xsl:value-of select="total_records"/>
 					</div>
 					<div class="pure-control-group">
 						<label for="name"></label>

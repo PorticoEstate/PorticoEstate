@@ -1,3 +1,5 @@
+new coordinator	property	no	Ny koordinator
+transfer budget	property	no	Overfør budsjett
 economy	property	no	Økonomi
 %1 buildings has been updated to not active of %2 already not active	property	no	%1 Bygninger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
 %1 entrances has been updated to not active of %2 already not active	property	no	%1 Innganger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
@@ -959,6 +961,7 @@ is registered	property	no	er registert
 is there a demand from the authorities to correct this condition?	property	no	Finnes det myndighetskrav for å rette opp tilstanden?
 items	property	no	Detaljer
 janitor	property	no	Bestiller
+new janitor	property	no	Ny bestiller
 jasper reports	property	no	JasperReports
 jasper upload	property	no	opplasting av JasperReports
 key deliver location	property	no	Sted for å levere nøkkel
