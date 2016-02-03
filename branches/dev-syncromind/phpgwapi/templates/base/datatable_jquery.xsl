@@ -520,85 +520,77 @@
 			var editor_action = '<xsl:value-of select="editor_action"/>';
 			var disablePagination = '<xsl:value-of select="disablePagination"/>';
 
-			<![CDATA[
-				TableTools.BUTTONS.download = {
-					"sAction": "text",
-					"sTag": "default",
-					"sFieldBoundary": "",
-					"sFieldSeperator": "\t",
-					"sNewLine": "<br>",
-					"sToolTip": "",
-					"sButtonClass": "DTTT_button_text",
-					"sButtonClassHover": "DTTT_button_text_hover",
-					"sButtonText": "Download",
-					"mColumns": "all",
-					"bHeader": true,
-					"bFooter": true,
-					"sDiv": "",
-					"fnMouseover": null,
-					"fnMouseout": null,
-					"fnClick": function( nButton, oConfig ) {
-						var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
-						oParams.length = -1;
-						oParams.columns = null;
-						oParams.start = null;
-						oParams.draw = null;
-						var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
-						for (var attrname in addtional_filterdata)
-						{
-							oParams[attrname] = addtional_filterdata[attrname];
-						}
-						var iframe = document.createElement('iframe');
-						iframe.style.height = "0px";
-						iframe.style.width = "0px";
-						iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
-						if(confirm("This will take some time..."))
-						{
-							document.body.appendChild( iframe );
-						}
-					},
-					"fnSelect": null,
-					"fnComplete": null,
-					"fnInit": null
-				};
-			]]>
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
 					var button_def = [
+//									{
+//										extend: 'colvis',
+//										exclude: exclude_colvis,
+//										text: function ( dt, button, config ) {
+//											return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
+//										}
+//									},
 									{
-										sExtends: 'copy',
-										sButtonText: "<xsl:value-of select="php:function('lang', 'copy')"/>"
+										extend: 'copy',
+										text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
 									},
 									{
-										sExtends: 'select_all',
-										sButtonText: "<xsl:value-of select="php:function('lang', 'select all')"/>",
-										fnClick: function (nButton, oConfig, oFlash) {
-											TableTools.fnGetInstance('datatable-container').fnSelectAll();
-											//In case there are checkboxes
-											$(".mychecks").each(function()
-											{
-												$(this).prop("checked", true);
-											});
-										}
-									},
-									{
-										sExtends: 'select_none',
-										sButtonText: "<xsl:value-of select="php:function('lang', 'select none')"/>",
-										fnClick: function (nButton, oConfig, oFlash) {
-											TableTools.fnGetInstance('datatable-container').fnSelectNone();
-											//In case there are checkboxes
-											$(".mychecks").each(function()
-											{
-												$(this).prop("checked", false);
-											});
-										}
-									}
+											text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
+											action: function () {
+												var api = oTable.api();
+												api.rows().select();
+												$(".mychecks").each(function()
+												{
+													$(this).prop("checked", true);
+												});
+											}
+										},
+										{
+											text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
+											action: function () {
+												var api = oTable.api();
+												api.rows().deselect();
+												$(".mychecks").each(function()
+												{
+													$(this).prop("checked", false);
+												});
+											}
+										},
+										'copyFlash',
+										'csvFlash',
+										'excelFlash',
+										'pdfFlash'
+
+
 									<xsl:choose>
 										<xsl:when test="download">
 										,{
-											"sExtends": "download",
-											"sButtonText": "<xsl:value-of select="php:function('lang', 'download')"/>",
-											"sUrl": '<xsl:value-of select="download"/>'
+											text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+											action: function (e, dt, node, config) {
+											var sUrl = '<xsl:value-of select="download"/>';
+											<![CDATA[
+												var oParams = {};
+												oParams.length = -1;
+												oParams.columns = null;
+												oParams.start = null;
+												oParams.draw = null;
+												var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+												for (var attrname in addtional_filterdata)
+												{
+													oParams[attrname] = addtional_filterdata[attrname];
+												}
+												var iframe = document.createElement('iframe');
+												iframe.style.height = "0px";
+												iframe.style.width = "0px";
+												iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
+												alert(iframe.src);
+												if(confirm("This will take some time..."))
+												{
+													document.body.appendChild( iframe );
+												}
+												]]>
+											}
+
 										}
 										</xsl:when>
 									</xsl:choose>
@@ -607,8 +599,8 @@
 											<xsl:choose>
 												<xsl:when test="ungroup_buttons=''">
 //													,{
-//														sExtends: "div",
-//														sButtonText: "Knapper nedenfor gjelder pr valgt element "
+//														extend: "div",
+//														text: "Knapper nedenfor gjelder pr valgt element "
 //													}
 												</xsl:when>
 											</xsl:choose>
@@ -616,9 +608,10 @@
 												<xsl:choose>
 													<xsl:when test="type = 'custom'">
 														,{
-															sExtends: "select",
-															sButtonText: "<xsl:value-of select="text"/>",
-															fnClick: function (nButton, oConfig, oFlash) {
+															text: "<xsl:value-of select="text"/>",
+															enabled: false,
+															className: 'record',
+															action: function (e, dt, node, config) {
 																<xsl:if test="confirm_msg">
 																	var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
 																	var r = confirm(confirm_msg);
@@ -634,9 +627,10 @@
 													</xsl:when>
 													<xsl:otherwise>
 														,{
-															sExtends: "select",
-															sButtonText: "<xsl:value-of select="text"/>",
-															fnClick: function (nButton, oConfig, oFlash) {
+															text: "<xsl:value-of select="text"/>",
+															enabled: false,
+															className: 'record',
+															action: function (e, dt, node, config) {
 																var receiptmsg = [];
 																var selected = fnGetSelected();
 																var numSelected = selected.length;
@@ -730,32 +724,28 @@
 								{
 									group_buttons = true;
 								}
+									$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
+
 
 								if(group_buttons === true)
 								{
-									JqueryPortico.TableTools = {
-										"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-										"sRowSelect": "multi",
-										"aButtons": [
-											{
-												"sExtends": "collection",
-												"sButtonText": "<xsl:value-of select="php:function('lang', 'collection')"/>",
-												"aButtons": button_def
-											}
-										]
-									};
+									JqueryPortico.buttons = [
+															{
+																extend: 'collection',
+																text: "<xsl:value-of select="php:function('lang', 'collection')"/>",
+																collectionLayout: 'three-column',
+																buttons: button_def
+															}
+														];
+
 								}
 								else
 								{
-									JqueryPortico.TableTools = {
-											"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-											"sRowSelect": "multi",
-											"aButtons": button_def
-										};
+									JqueryPortico.buttons = button_def;
 								}
 				</xsl:when>
 				<xsl:otherwise>
-					JqueryPortico.TableTools = false;
+					JqueryPortico.buttons = false;
 				</xsl:otherwise>
 			</xsl:choose>
 			<![CDATA[
@@ -772,14 +762,18 @@
 					if (JqueryPortico.columns[i]['editor'] === true)
 					{
 						editor_cols.push({sUpdateURL:editor_action + '&field_name=' + JqueryPortico.columns[i]['data']});
-					} else {
+					}
+					else
+					{
 						editor_cols.push(null);
 					}
 				}
 
-				if(JqueryPortico.TableTools)
+				if(JqueryPortico.buttons)
 				{
-					var sDom_def = 'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">';
+//					var sDom_def = 'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">';
+					var sDom_def = 'lB<"clear">f<"top"ip>rt<"bottom"><"clear">';
+					var sDom_def = 'Bfrtlip';
 				}
 				else
 				{
@@ -792,6 +786,8 @@
 						processing: true,
 						serverSide: true,
 						responsive: true,
+						select: { style: 'multi' },
+//						select: true,
 						deferRender: true,
 						ajax: {
 							url: ajax_url,
@@ -857,26 +853,22 @@
 						lengthMenu: JqueryPortico.i18n.lengthmenu(),
 						language: JqueryPortico.i18n.datatable(),
 						columns: JqueryPortico.columns,
-						colVis: {
-							exclude: exclude_colvis,
-							 "buttonText": lang_ButtonText_columns
-						},
+//						colVis: {
+//							exclude: exclude_colvis,
+//							 "buttonText": lang_ButtonText_columns
+//						},
 						dom: sDom_def,
 						stateSave: true,
 						stateDuration: -1, //sessionstorage
 						tabIndex: 1,
-						oTableTools: JqueryPortico.TableTools
-//						,
-//						buttons: [
-//						{
-//							extend: 'colvis',
-//							exclude: exclude_colvis,
-//							text: function ( dt, button, config ) {
-//								return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
-//							}
-//
-//						}]
+						buttons: JqueryPortico.buttons
 					});
+
+ 					$('#datatable-container tbody').on( 'click', 'tr', function () {
+					      		var api = oTable.api();
+							var selectedRows = api.rows( { selected: true } ).count();
+							api.buttons( '.record' ).enable( selectedRows > 0 );
+					   } );
 				});
 			]]>
 
