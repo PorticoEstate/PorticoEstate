@@ -53,12 +53,12 @@
 		  margin-bottom: 5px;
 		}
 
-		.toggle-box + label + div {
+		.toggle-box + label + #toolbar {
 		  display: none;
 		  margin-bottom: 10px;
 		}
 
-		.toggle-box:checked + label + div {
+		.toggle-box:checked + label + #toolbar {
 		  display: block;
 		}
 
