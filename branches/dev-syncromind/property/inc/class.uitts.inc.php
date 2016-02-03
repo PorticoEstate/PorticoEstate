@@ -128,7 +128,7 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 ? true : false,
 				'status_id' => $this->bo->status_id,
 				'user_id' => $this->bo->user_id,
 				'reported_by' => $this->bo->reported_by,

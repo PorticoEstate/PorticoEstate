@@ -122,8 +122,9 @@
 			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 			$district_id = isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
 			$part_of_town_id = isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id'] : 0;
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$start_date = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$allrows = $results == -1 ? true : false;
 			$end_date = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
 			$external = isset($data['external']) ? $data['external'] : '';
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
@@ -686,7 +687,7 @@
 			{
 				if(!$allrows)
 				{
-					$this->db->limit_query($main_sql, $start, __LINE__, __FILE__);
+					$this->db->limit_query($main_sql, $start, __LINE__, __FILE__, $results);
 				}
 				else
 				{
