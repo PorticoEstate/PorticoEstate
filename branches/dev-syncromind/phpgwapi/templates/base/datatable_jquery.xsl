@@ -580,28 +580,36 @@
 				//											return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
 				//										}
 				//									},
-				{
-				text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
-				action: function () {
-						var api = oTable.api();
-						api.rows().select();
-						$(".mychecks").each(function()
+				<xsl:choose>
+					<xsl:when test="select_all">
 						{
-							$(this).prop("checked", true);
-						});
-					}
-				},
-				{
-				text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
-				action: function () {
-						var api = oTable.api();
-						api.rows().deselect();
-						$(".mychecks").each(function()
+						text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
+						action: function () {
+								var api = oTable.api();
+								api.rows().select();
+								$(".mychecks").each(function()
+								{
+									$(this).prop("checked", true);
+								});
+								var selectedRows = api.rows( { selected: true } ).count();
+								api.buttons( '.record' ).enable( selectedRows > 0 );
+
+							}
+						},
 						{
-							$(this).prop("checked", false);
-						});
-					}
-				},
+						text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
+						action: function () {
+								var api = oTable.api();
+								api.rows().deselect();
+								$(".mychecks").each(function()
+								{
+									$(this).prop("checked", false);
+								});
+								api.buttons( '.record' ).enable( false );
+							}
+						},
+					</xsl:when>
+				</xsl:choose>
 				{
 					extend: 'copy',
 					text: "<xsl:value-of select="php:function('lang', 'copy')"/>"

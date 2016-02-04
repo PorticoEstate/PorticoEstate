@@ -1509,7 +1509,8 @@ select a entity type	property	no	velg en entitetstype
 select agreement	property	no	Velg avtale
 select agreement group	property	no	Velg en avtale-gruppe
 select agreement_group	property	no	Velg avtalegruppe
-select all	property	no	velg alle
+select all	property	no	Velg alle
+select none	property	no	Velg ingen
 select a location	property	no	velg en lokalisering
 select a location!	property	no	Velg en lokalisering
 select a value	property	no	velg en verdi

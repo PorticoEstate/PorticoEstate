@@ -377,6 +377,8 @@
 												{
 													$(this).prop("checked", true);
 												});
+												var selectedRows = api.rows( { selected: true } ).count();
+												api.buttons( '.record' ).enable( selectedRows > 0 );
 											}
 										},
 										{
@@ -388,6 +390,7 @@
 												{
 													$(this).prop("checked", false);
 												});
+												api.buttons( '.record' ).enable( false );
 											}
 										},
 										{

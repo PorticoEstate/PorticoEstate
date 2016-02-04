@@ -92,6 +92,8 @@
 														{
 															$(this).prop("checked", true);
 														});
+														var selectedRows = api.rows( { selected: true } ).count();
+														api.buttons( '.record' ).enable( selectedRows > 0 );
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
@@ -105,6 +107,7 @@
 														{
 															$(this).prop("checked", false);
 														});
+														api.buttons( '.record' ).enable( false );
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
