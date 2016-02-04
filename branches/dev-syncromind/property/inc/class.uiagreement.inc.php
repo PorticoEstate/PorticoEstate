@@ -1244,8 +1244,8 @@
 					'text' => lang($alarm_data[alter_alarm][0][lang_enable]),
 					'type' => 'custom',
 					'custom_code' => "
-										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-										var selected = oTT.fnGetSelectedData();
+										var api = oTable0.api();
+										var selected = api.rows( { selected: true } ).data();
 										var numSelected = 	selected.length;
 
 										if (numSelected ==0){
@@ -1266,8 +1266,8 @@
 					'text' => lang($alarm_data[alter_alarm][0][lang_disable]),
 					'type' => 'custom',
 					'custom_code' => "
-										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-										var selected = oTT.fnGetSelectedData();
+										var api = oTable0.api();
+										var selected = api.rows( { selected: true } ).data();
 
 										var numSelected = 	selected.length;
 
@@ -1289,8 +1289,8 @@
 					'text' => lang($alarm_data[alter_alarm][0][lang_delete]),
 					'type' => 'custom',
 					'custom_code' => "
-										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-										var selected = oTT.fnGetSelectedData();
+										var api = oTable0.api();
+										var selected = api.rows( { selected: true } ).data();
 
 										var numSelected = 	selected.length;
 

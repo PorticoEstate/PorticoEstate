@@ -77,8 +77,9 @@ this.onActionsClick = function (action)
 		add_control();
 	}
 
-	var oTT = TableTools.fnGetInstance('datatable-container_4');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container_4' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
+
 	var numSelected = selected.length;
 
 	if (numSelected == 0) {

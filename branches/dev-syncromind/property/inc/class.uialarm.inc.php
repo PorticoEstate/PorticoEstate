@@ -269,8 +269,8 @@
 				'text' => lang('Disable'),
 				'type' => 'custom',
 				'custom_code' => "
-                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-                    var selected = oTT.fnGetSelectedData();
+					var api = oTable.api();
+					var selected = api.rows( { selected: true } ).data();
 
                     var numSelected = 	selected.length;
 
@@ -294,8 +294,8 @@
 				'text' => lang('Enable'),
 				'type' => 'custom',
 				'custom_code' => "
-                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-                    var selected = oTT.fnGetSelectedData();
+					var api = oTable.api();
+					var selected = api.rows( { selected: true } ).data();
 
                     var numSelected = 	selected.length;
 
@@ -319,8 +319,8 @@
 				'text' => lang('test cron'),
 				'type' => 'custom',
 				'custom_code' => "
-                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-                    var selected = oTT.fnGetSelectedData();
+					var api = oTable.api();
+					var selected = api.rows( { selected: true } ).data();
 
                     var numSelected = 	selected.length;
 
@@ -344,8 +344,8 @@
 				'text' => lang('Delete'),
 				'type' => 'custom',
 				'custom_code' => "
-                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-                    var selected = oTT.fnGetSelectedData();
+					var api = oTable.api();
+					var selected = api.rows( { selected: true } ).data();
 
                     var numSelected = 	selected.length;
 

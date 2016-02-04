@@ -106,8 +106,8 @@ getRequestData = function (dataSelected, parameters) {
 
 dismissNotification = function (oArgs, parameters) {
 
-	var oTT = TableTools.fnGetInstance('datatable-container_5');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container_5' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 	var nTable = 5;
 
 	if (selected.length == 0) {
@@ -129,8 +129,8 @@ dismissNotification = function (oArgs, parameters) {
 
 dismissNotificationAll = function (oArgs, parameters) {
 
-	var oTT = TableTools.fnGetInstance('datatable-container_5');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container_5' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 	var nTable = 5;
 
 	if (selected.length == 0) {

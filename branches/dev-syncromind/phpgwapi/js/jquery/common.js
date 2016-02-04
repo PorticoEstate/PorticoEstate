@@ -215,7 +215,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	options = options || {};
 	var disablePagination = options['disablePagination'] || false;
 	var disableFilter = options['disableFilter'] || false;
-	var TableTools_def = options['TableTools'] || false;
+	var buttons_def = options['TableTools'] || false;
+	var select = false;
 	var order = options['order'] || [0, 'desc'];
 	var responsive = options['responsive'] || false;
 
@@ -232,9 +233,11 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		var ajax_def = false;
 		var serverSide_def = false;
 	}
-	if (TableTools_def)
+	if (buttons_def)
 	{
-		var sDom_def = 'T<"clear">lfrtip';
+		var sDom_def = 'B<"clear">lfrtip';
+//		var sDom_def = 'Bfrtlip';
+		select = true;
 	}
 	else
 	{
@@ -253,6 +256,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		serverSide: serverSide_def,
 		responsive: responsive,
 		deferRender: true,
+		select: select,
 		data: data,
 		ajax: ajax_def,
 		fnServerParams: function (aoData) {
@@ -285,10 +289,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 		//	language:		JqueryPortico.i18n.datatable(),
 		columns: columns,
-		//	colVis: {
-		//					exclude: exclude_colvis
-		//	},
-		//	dom:			'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">',
 		//	stateSave:		true,
 		//	stateDuration: -1, //sessionstorage
 		//	tabIndex:		1,
@@ -303,8 +303,13 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 		},
 		sDom: sDom_def,
-		oTableTools: TableTools_def
+		buttons: buttons_def
 	});
+	$("#" + container + ' tbody').on( 'click', 'tr', function () {
+			var api = oTable.api();
+			var selectedRows = api.rows( { selected: true } ).count();
+			api.buttons( '.record' ).enable( selectedRows > 0 );
+	 } );
 
 
 //	});

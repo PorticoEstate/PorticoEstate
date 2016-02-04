@@ -75,110 +75,91 @@
 		
 	var oTable<xsl:number value="($num - 1)"/> = null;
 		
-<![CDATA[
-			TableTools.BUTTONS.download = {
-				"sAction": "text",
-				"sTag": "default",
-				"sFieldBoundary": "",
-				"sFieldSeperator": "\t",
-				"sNewLine": "<br>",
-				"sToolTip": "",
-				"sButtonClass": "DTTT_button_text",
-				"sButtonClassHover": "DTTT_button_text_hover",
-				"sButtonText": "Download",
-				"mColumns": "all",
-				"bHeader": true,
-				"bFooter": true,
-				"sDiv": "",
-				"fnMouseover": null,
-				"fnMouseout": null,
-				"fnClick": function( nButton, oConfig ) {
-					var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
-					oParams.length = -1;
-					oParams.columns = null;
-					oParams.start = null;
-					oParams.draw = null;
-					var iframe = document.createElement('iframe');
-					iframe.style.height = "0px";
-					iframe.style.width = "0px";
-					iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
-					if(confirm("This will take some time..."))
-					{
-						document.body.appendChild( iframe );
-					}
-				},
-				"fnSelect": null,
-				"fnComplete": null,
-				"fnInit": null
-			};
-	]]>
-	
 	<xsl:choose>
 			<xsl:when test="$tabletools">
-					JqueryPortico.TableTools<xsl:number value="($num - 1)"/> = 	{
-							"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-							"sRowSelect": "multi",
-							"aButtons":
+					JqueryPortico.buttons<xsl:number value="($num - 1)"/> = 	{
+							buttons: 
 								[
 									<xsl:for-each select="$tabletools">
 										<xsl:choose>
 											<xsl:when test="my_name = 'select_all'">
 												{
-													sExtends: 'select_all',
-													fnClick: function (nButton, oConfig, oFlash) {
-														TableTools.fnGetInstance('<xsl:value-of select="$container"/>').fnSelectAll();
-														//In case there are checkboxes
+													text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
+													action: function () {
+														var api = oTable<xsl:number value="($num - 1)"/>.api();
+														api.rows().select();
 														$(".mychecks").each(function()
 														{
-															 $(this).prop("checked", true);
+															$(this).prop("checked", true);
 														});
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
 											<xsl:when test="my_name = 'select_none'">
 												{
-													sExtends: 'select_none',
-													fnClick: function (nButton, oConfig, oFlash) {
-														TableTools.fnGetInstance('<xsl:value-of select="$container"/>').fnSelectNone();
-														//In case there are checkboxes
+													text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
+													action: function () {
+														var api = oTable<xsl:number value="($num - 1)"/>.api();
+														api.rows().deselect();
 														$(".mychecks").each(function()
 														{
-															 $(this).prop("checked", false);
+															$(this).prop("checked", false);
 														});
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
 											<xsl:when test="my_name = 'download'">
 												{
-													"sExtends": "download",
-													"sButtonText": "Download",
-													"sUrl": '<xsl:value-of select="download"/>'
+													text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+													action: function (e, dt, node, config) {
+													var sUrl = '<xsl:value-of select="download"/>';
+													var addtional_filterdata = oTable<xsl:number value="($num - 1)"/>.dataTableSettings[0]['ajax']['data'];
+													<![CDATA[
+														var oParams = {};
+														oParams.length = -1;
+														oParams.columns = null;
+														oParams.start = null;
+														oParams.draw = null;
+														for (var attrname in addtional_filterdata)
+														{
+															oParams[attrname] = addtional_filterdata[attrname];
+														}
+														var iframe = document.createElement('iframe');
+														iframe.style.height = "0px";
+														iframe.style.width = "0px";
+														iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
+														if(confirm("This will take some time..."))
+														{
+															document.body.appendChild( iframe );
+														}
+														]]>
+													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
 											<xsl:when test="type = 'custom'">
 												{
-													sExtends:		"select",
-													sButtonText:	"<xsl:value-of select="text"/>",
-													fnClick:		function (nButton, oConfig, oFlash) {
-
-																	<xsl:if test="confirm_msg">
-																		var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-																		var r = confirm(confirm_msg);
-																		if (r != true) {
-																			return false;
-																		}
-																	</xsl:if>
-
-																	<xsl:value-of select="custom_code"/>	
+													text: "<xsl:value-of select="text"/>",
+													enabled: false,
+													className: 'record',
+													action: function (e, dt, node, config) {
+														<xsl:if test="confirm_msg">
+															var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+															var r = confirm(confirm_msg);
+															if (r != true) {
+																return false;
 															}
+														</xsl:if>
+														<xsl:value-of select="custom_code"/>
+													}
 
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 											</xsl:when>
 											<xsl:otherwise>
 												{
-													sExtends:		"select",
-													sButtonText:	"<xsl:value-of select="text"/>",
-													fnClick:		function (nButton, oConfig, oFlash) {
+													text: "<xsl:value-of select="text"/>",
+													className: 'record',
+													enabled: false,
+													action: function (e, dt, node, config) {
 																	var receiptmsg = [];
 																	var selected = JqueryPortico.fnGetSelected(oTable<xsl:number value="($num - 1)"/>);
 																	var numSelected = 	selected.length;
@@ -342,9 +323,9 @@
 				options<xsl:number value="($num - 1)"/>.responsive = <xsl:value-of select="responsive" />;
 			</xsl:if>
 		</xsl:for-each>
-		if (JqueryPortico.TableTools<xsl:number value="($num - 1)"/>)
+		if (JqueryPortico.buttons<xsl:number value="($num - 1)"/>)
 		{
-			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
+			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.buttons<xsl:number value="($num - 1)"/>;
 		}
 
 		<xsl:variable name="dataset">

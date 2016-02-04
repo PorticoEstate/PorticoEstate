@@ -49,8 +49,8 @@ getRequestData = function (dataSelected, parameters) {
 
 function removePrice(oArgs, parameters)
 {
-	var oTT = TableTools.fnGetInstance('datatable-container_0');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container_0' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 	var nTable = 0;
 
 	if (selected.length == 0) {

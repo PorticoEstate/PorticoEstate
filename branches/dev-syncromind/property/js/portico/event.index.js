@@ -7,10 +7,8 @@ var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uievent.upd
 
 function onSave()
 {
-	var api = oTable.api();
-//  console.log(api.data().length);
-	var oTT = TableTools.fnGetInstance('datatable-container');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 	var numSelected = selected.length;
 
 	if (numSelected == '0') {

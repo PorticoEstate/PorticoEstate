@@ -11,8 +11,8 @@ var addEntity = function(oArgs, parameters) {
 
 var startTicket = function(oArgs, parameters) {
 	
-	var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container_0' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 
 	if (selected.length == 0){
 		alert('None selected');

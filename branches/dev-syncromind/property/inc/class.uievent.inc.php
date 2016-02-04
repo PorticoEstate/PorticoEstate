@@ -654,8 +654,8 @@
 						'text' => lang($entry['value']),
 						'type' => 'custom',
 						'custom_code' => "
-											var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-											var selected = oTT.fnGetSelectedData();
+											var api = oTable0.api();
+											var selected = api.rows( { selected: true } ).data();
 
 											var numSelected = 	selected.length;
 

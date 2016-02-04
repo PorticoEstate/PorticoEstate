@@ -1,8 +1,8 @@
 
 function sendMail(oArgs, parameters)
 {
-	var oTT = TableTools.fnGetInstance('datatable-container');
-	var selected = oTT.fnGetSelectedData();
+	var api =$( '#datatable-container' ).dataTable().api();
+	var selected = api.rows( { selected: true } ).data();
 	var nTable = '';
 
 	if (selected.length == 0) {

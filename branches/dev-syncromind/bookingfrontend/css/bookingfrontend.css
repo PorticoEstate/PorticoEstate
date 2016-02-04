@@ -730,3 +730,9 @@ select.valid {background-position: right 18px center !important;}
 
 .error,
 .valid {border-width: 1px;border-style: solid;box-shadow: 0 0 0 0 transparent inset;}
+
+.dataTables_wrapper {width: 98%;margin: 0 auto;}
+.dataTable thead,
+.dataTable th,
+.dataTable .th {background-color: transparent;}
+.dataTable {text-align: initial;}
