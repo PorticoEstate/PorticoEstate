@@ -587,31 +587,29 @@
 				{
 				text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 				action: function () {
-				var api = oTable.api();
-				api.rows().select();
-				$(".mychecks").each(function()
-				{
-				$(this).prop("checked", true);
-				});
-				}
+						var api = oTable.api();
+						api.rows().select();
+						$(".mychecks").each(function()
+						{
+							$(this).prop("checked", true);
+						});
+					}
 				},
 				{
 				text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
 				action: function () {
-				var api = oTable.api();
-				api.rows().deselect();
-				$(".mychecks").each(function()
-				{
-				$(this).prop("checked", false);
-				});
-				}
+						var api = oTable.api();
+						api.rows().deselect();
+						$(".mychecks").each(function()
+						{
+							$(this).prop("checked", false);
+						});
+					}
 				},
 				'copyFlash',
 				'csvFlash',
 				'excelFlash',
 				'pdfFlash'
-
-
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
@@ -902,10 +900,6 @@
 						lengthMenu: JqueryPortico.i18n.lengthmenu(),
 						language: JqueryPortico.i18n.datatable(),
 						columns: JqueryPortico.columns,
-//						colVis: {
-//							exclude: exclude_colvis,
-//							 "buttonText": lang_ButtonText_columns
-//						},
 						dom: sDom_def,
 						stateSave: true,
 						stateDuration: -1, //sessionstorage
@@ -914,9 +908,23 @@
 					});
 
  					$('#datatable-container tbody').on( 'click', 'tr', function () {
-					      		var api = oTable.api();
+					      	var api = oTable.api();
 							var selectedRows = api.rows( { selected: true } ).count();
 							api.buttons( '.record' ).enable( selectedRows > 0 );
+							var row = $(this);
+							var checkbox = row.find('input[type="checkbox"]');
+
+							if(checkbox)
+							{
+								if($(this).hasClass('selected'))
+								{
+									checkbox.prop("checked", true);
+								}
+								else
+								{
+									checkbox.prop("checked", false);
+								}
+							}
 					   } );
 				});
 			]]>

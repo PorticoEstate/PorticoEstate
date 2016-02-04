@@ -222,7 +222,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 
 	data = data || {};
 
-//	if (Object.keys(data).length == 0)
 	if (ajax_url)
 	{
 		var ajax_def = {url: ajax_url, data: {}, type: 'GET'};
@@ -237,7 +236,9 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	{
 		var sDom_def = 'B<"clear">lfrtip';
 //		var sDom_def = 'Bfrtlip';
+		var sDom_def = '<lfB<t>ip>'
 		select = true;
+		select = {style:'multi'};
 	}
 	else
 	{
@@ -309,6 +310,21 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			var api = oTable.api();
 			var selectedRows = api.rows( { selected: true } ).count();
 			api.buttons( '.record' ).enable( selectedRows > 0 );
+
+			var row = $(this);
+			var checkbox = row.find('input[type="checkbox"]');
+
+			if(checkbox)
+			{
+				if($(this).hasClass('selected'))
+				{
+					checkbox.prop("checked", true);
+				}
+				else
+				{
+					checkbox.prop("checked", false);
+				}
+			}
 	 } );
 
 
