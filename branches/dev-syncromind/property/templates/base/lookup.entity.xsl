@@ -369,10 +369,6 @@
 //										}
 //									},
 									{
-										extend: 'copy',
-										text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
-									},
-									{
 											text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 											action: function () {
 												var api = oTable.api();
@@ -394,12 +390,13 @@
 												});
 											}
 										},
-										'copyFlash',
+										{
+											extend: 'copy',
+											text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
+										},
 										'csvFlash',
 										'excelFlash',
 										'pdfFlash'
-
-
 									<xsl:choose>
 										<xsl:when test="download">
 										,{
@@ -421,7 +418,6 @@
 												iframe.style.height = "0px";
 												iframe.style.width = "0px";
 												iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
-												alert(iframe.src);
 												if(confirm("This will take some time..."))
 												{
 													document.body.appendChild( iframe );

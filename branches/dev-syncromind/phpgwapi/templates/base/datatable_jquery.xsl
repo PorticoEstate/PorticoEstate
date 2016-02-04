@@ -581,10 +581,6 @@
 				//										}
 				//									},
 				{
-				extend: 'copy',
-				text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
-				},
-				{
 				text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 				action: function () {
 						var api = oTable.api();
@@ -606,7 +602,10 @@
 						});
 					}
 				},
-				'copyFlash',
+				{
+					extend: 'copy',
+					text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
+				},
 				'csvFlash',
 				'excelFlash',
 				'pdfFlash'
