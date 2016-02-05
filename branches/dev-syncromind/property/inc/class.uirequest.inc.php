@@ -677,6 +677,7 @@
 						'allrows' => true,
 						'list_descr' => true)),
 					'allrows' => true,
+					'select_all' => !!$project_id,
 					'editor_action' => array(),
 					'field' => array()
 				)

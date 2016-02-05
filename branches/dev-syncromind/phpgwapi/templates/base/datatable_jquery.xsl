@@ -581,7 +581,7 @@
 				//										}
 				//									},
 				<xsl:choose>
-					<xsl:when test="select_all">
+					<xsl:when test="select_all = '1'">
 						{
 						text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 						action: function () {
@@ -621,28 +621,31 @@
 					<xsl:when test="download">
 						,{
 						text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+						className: 'download',
+						sUrl: '<xsl:value-of select="download"/>',
 						action: function (e, dt, node, config) {
-						var sUrl = '<xsl:value-of select="download"/>';
-											<![CDATA[
-												var oParams = {};
-												oParams.length = -1;
-												oParams.columns = null;
-												oParams.start = null;
-												oParams.draw = null;
-												var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
-												for (var attrname in addtional_filterdata)
-												{
-													oParams[attrname] = addtional_filterdata[attrname];
-												}
-												var iframe = document.createElement('iframe');
-												iframe.style.height = "0px";
-												iframe.style.width = "0px";
-												iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
-												if(confirm("This will take some time..."))
-												{
-													document.body.appendChild( iframe );
-												}
-												]]>
+						var sUrl = config.sUrl;
+
+							<![CDATA[
+								var oParams = {};
+								oParams.length = -1;
+								oParams.columns = null;
+								oParams.start = null;
+								oParams.draw = null;
+								var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+								for (var attrname in addtional_filterdata)
+								{
+									oParams[attrname] = addtional_filterdata[attrname];
+								}
+								var iframe = document.createElement('iframe');
+								iframe.style.height = "0px";
+								iframe.style.width = "0px";
+								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
+								if(confirm("This will take some time..."))
+								{
+									document.body.appendChild( iframe );
+								}
+								]]>
 						}
 
 						}
@@ -841,7 +844,6 @@
 						serverSide: true,
 						responsive: true,
 						select: { style: 'multi' },
-//						select: true,
 						deferRender: true,
 						ajax: {
 							url: ajax_url,

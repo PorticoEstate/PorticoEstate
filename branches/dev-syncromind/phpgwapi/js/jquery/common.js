@@ -220,6 +220,16 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var order = options['order'] || [0, 'desc'];
 	var responsive = options['responsive'] || false;
 
+	var lengthMenu = null;
+	try
+	{
+		lengthMenu = JqueryPortico.i18n.lengthmenu();
+	}
+	catch(err)
+	{
+		lengthMenu = [10, 25, 50, 100];
+	}
+
 	data = data || {};
 
 	if (ajax_url)
@@ -287,7 +297,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			 }
 			 }*/
 		},
-		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
+			lengthMenu:		lengthMenu,
 		//	language:		JqueryPortico.i18n.datatable(),
 		columns: columns,
 		//	stateSave:		true,

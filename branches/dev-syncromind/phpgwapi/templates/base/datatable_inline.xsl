@@ -114,9 +114,11 @@
 											<xsl:when test="my_name = 'download'">
 												{
 													text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+													className: 'download',
+													sUrl: '<xsl:value-of select="download"/>',
 													action: function (e, dt, node, config) {
-													var sUrl = '<xsl:value-of select="download"/>';
-													var addtional_filterdata = oTable<xsl:number value="($num - 1)"/>.dataTableSettings[0]['ajax']['data'];
+													  var sUrl = config.sUrl;
+													  var addtional_filterdata = oTable<xsl:number value="($num - 1)"/>.dataTableSettings[0]['ajax']['data'];
 													<![CDATA[
 														var oParams = {};
 														oParams.length = -1;

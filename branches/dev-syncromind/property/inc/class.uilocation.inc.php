@@ -1424,6 +1424,7 @@ JS;
 							'allrows' => true,
 							'download_type' => 'responsiblility_role'
 						),
+						'allrows' => true,
 					);
 
 					$data = array

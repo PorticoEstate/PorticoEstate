@@ -353,6 +353,7 @@
 		var lang_ButtonText_columns = "<xsl:value-of select="php:function('lang', 'columns')"/>";
 
 		//			var download_url = '<xsl:value-of select="download"/>';
+		var temp_buttons = [];
 		var exclude_colvis = [];
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
@@ -404,8 +405,10 @@
 										<xsl:when test="download">
 										,{
 											text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+											className: 'download',
+											sUrl: '<xsl:value-of select="download"/>',
 											action: function (e, dt, node, config) {
-											var sUrl = '<xsl:value-of select="download"/>';
+											  var sUrl = config.sUrl;
 											<![CDATA[
 												var oParams = {};
 												oParams.length = -1;
@@ -592,6 +595,7 @@
 		
 			var options ={};
 			options.TableTools = JqueryPortico.buttons;
+			temp_buttons = JqueryPortico.buttons;
 			oTable = JqueryPortico.inlineTableHelper("datatable-container", ajax_url, JqueryPortico.columns, options);
 ]]>
 		/**
@@ -647,23 +651,38 @@
 			JqueryPortico.execute_ajax(ajax_url,
 				function(result)
 				{
+
+					/**
+					* Sigurd: queryPortico.buttons is passed as reference - and destroyed in the "api.destroy();"
+					*/
+					var buttons_def_temp = JqueryPortico.buttons;
+					var buttons_def = [];
+					for (i=0;i<buttons_def_temp.length;i++)
+					{
+						buttons_def.push(buttons_def_temp[i]);
+					}
+
+
 					api = oTable.api();
 					api.destroy();
+
+					//Reset the destroyed values.
+					JqueryPortico.buttons = buttons_def;
 					$('#' + result.datatable_def.container).empty();
 					$('#' + result.datatable_def.container).append(result.datatable_head);
 
-					var buttons_def = JqueryPortico.buttons;
 					var download = result.datatable_def.download || false;
 					if(download)
 					{
 						for (i=0;i<buttons_def.length;i++)
 						{
-//							if(buttons_def.buttons[i].extend == "download")
-//							{
-//								buttons_def.buttons[i].sUrl = phpGWLink('index.php',download);
-//							}
+							if(typeof(buttons_def[i].className) != 'undefined' && buttons_def[i].className == "download")
+							{
+								buttons_def[i].sUrl = phpGWLink('index.php',download);
+							}
 						}
 					}
+console.log( buttons_def);
 					options ={};
 					options.TableTools = buttons_def;
 					var render;
