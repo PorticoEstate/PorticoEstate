@@ -740,16 +740,6 @@ JS;
 			}
 			$bypass = phpgw::get_var('bypass', 'bool');
 
-			if(phpgw::get_var('origin') == '.project.request' && phpgw::get_var('origin_id', 'int') && !$bypass)
-			{
-				$id = phpgw::get_var('project_id', 'int');
-				$add_request = array('request_id' => array(phpgw::get_var('origin_id', 'int')));
-			}
-
-			if($add_request)
-			{
-				$receipt = $this->bo->add_request($add_request, $id);
-			}
 
 			if($_POST && !$bypass && isset($insert_record) && is_array($insert_record))
 			{
@@ -941,6 +931,7 @@ JS;
 			}
 
 			$id = phpgw::get_var('id', 'int');
+			$add_request				= phpgw::get_var('add_request');
 			$values_attribute = phpgw::get_var('values_attribute');
 			$config = CreateObject('phpgwapi.config', 'property');
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
@@ -1175,160 +1166,25 @@ JS;
 				}
 			}
 
+			$bypass = phpgw::get_var('bypass', 'bool');
+			$add_request = phpgw::get_var('add_request');
+
+			if(phpgw::get_var('origin') == '.project.request' && phpgw::get_var('origin_id', 'int') && !$bypass)
+			{
+				$id = phpgw::get_var('project_id', 'int');
+				$add_request = array('request_id' => array(phpgw::get_var('origin_id', 'int')));
+			}
+
+			if( $mode == 'edit' && $add_request && $id)
+			{
+				$receipt = $this->bo->add_request($add_request, $id);
+			}
+
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 			$bolocation = CreateObject('property.bolocation');
 
-/*
-			if($mode == 'edit')
-			{
-				$values = phpgw::get_var('values');
-				$values_attribute = phpgw::get_var('values_attribute');
-				$add_request = phpgw::get_var('add_request');
-				$values['project_group'] = phpgw::get_var('project_group');
-				$values['ecodimb'] = phpgw::get_var('ecodimb');
-				$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-				$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
-				$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
-				$auto_create = false;
-
-				$datatable = array();
-
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
-
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", 'property');
-
-				if(isset($insert_record_entity) && is_array($insert_record_entity))
-				{
-					for($j = 0; $j < count($insert_record_entity); $j++)
-					{
-						$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
-					}
-				}
-				$bypass = phpgw::get_var('bypass', 'bool');
-
-				if(phpgw::get_var('origin') == '.project.request' && phpgw::get_var('origin_id', 'int') && !$bypass)
-				{
-					$id = phpgw::get_var('project_id', 'int');
-					$add_request = array('request_id' => array(phpgw::get_var('origin_id', 'int')));
-				}
-
-				if($add_request)
-				{
-					$receipt = $this->bo->add_request($add_request, $id);
-				}
-
-				if($_POST && !$bypass && isset($insert_record) && is_array($insert_record))
-				{
-					$values = $this->bocommon->collect_locationdata($values, $insert_record);
-				}
-				else
-				{
-					$location_code = phpgw::get_var('location_code');
-					$tenant_id = phpgw::get_var('tenant_id', 'int');
-					$values['descr'] = phpgw::get_var('descr');
-					$p_entity_id = phpgw::get_var('p_entity_id', 'int');
-					$p_cat_id = phpgw::get_var('p_cat_id', 'int');
-					$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
-					$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
-					$values['p'][$p_entity_id]['p_num'] = phpgw::get_var('p_num');
-
-					$origin = phpgw::get_var('origin');
-					$origin_id = phpgw::get_var('origin_id', 'int');
-
-					if($origin == '.ticket' && $origin_id && !$values['descr'])
-					{
-						$boticket = CreateObject('property.botts');
-						$ticket = $boticket->read_single($origin_id);
-						$values['descr'] = $ticket['details'];
-						$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-						$ticket_notes = $boticket->read_additional_notes($origin_id);
-						$i = count($ticket_notes) - 1;
-						if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
-						{
-							$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
-						}
-						$values['contact_id'] = $ticket['contact_id'];
-						$tts_status_create_project = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
-						if($tts_status_create_project)
-						{
-							$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
-						}
-
-						if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
-						{
-							$auto_create = true;
-						}
-					}
-
-					if($p_entity_id && $p_cat_id)
-					{
-						if(!is_object($boadmin_entity))
-						{
-							$boadmin_entity = CreateObject('property.boadmin_entity');
-						}
-
-						$entity_category = $boadmin_entity->read_single_category($p_entity_id, $p_cat_id);
-						$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
-					}
-
-					if($location_code)
-					{
-						$values['location_data'] = $bolocation->read_single($location_code, array(
-							'tenant_id' => $tenant_id, 'p_num' => $p_num, 'view' => true));
-					}
-				}
-
-				if(isset($values['origin']) && $values['origin'])
-				{
-					$origin = $values['origin'];
-					$origin_id = $values['origin_id'];
-				}
-
-				$interlink = CreateObject('property.interlink');
-
-				if(isset($origin) && $origin)
-				{
-					unset($values['origin']);
-					unset($values['origin_id']);
-					$values['origin'][0]['location'] = $origin;
-					$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
-					$values['origin'][0]['data'][] = array(
-						'id' => $origin_id,
-						'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
-					);
-				}
-			}
-*/
-
-/*
-			if($save = phpgw::get_var('save', 'bool'))
-			{
-				$mode = 'edit';
-
-				$id = $values['id'];
-
-				if($this->receipt['error'] && !$this->bypass_error)
-				{
-					if(isset($values['location']) && is_array($values['location']))
-					{
-						$location_code = implode("-", $values['location']);
-						$values['extra']['view'] = true;
-						$values['location_data'] = $bolocation->read_single($location_code, $values['extra']);
-					}
-
-					if(isset($values['extra']['p_num']))
-					{
-						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
-						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_id'] = $values['extra']['p_cat_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_name'] = phpgw::get_var('entity_cat_name_' . $values['extra']['p_entity_id'], 'string', 'POST');
-					}
-				}
-			}
-*/
-			//$record_history = '';
 			$record_history = array();
 			if($this->bypass_error || ((!$this->receipt['error'] || $add_request) && !$bypass) && $id)
 			{
