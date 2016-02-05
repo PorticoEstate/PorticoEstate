@@ -2516,11 +2516,13 @@
 						$this->db->query("UPDATE fm_request SET status='{$request_project_hookup_status}' WHERE id='" . $add_request['request_id'][$i] . "'", __LINE__, __FILE__);
 					}
 
-					$receipt['message'][] = array('msg' => lang('request %1 has been added', $add_request['request_id'][$i]));
+					phpgwapi_cache::message_set(lang('request %1 has been added', $add_request['request_id'][$i]), 'message');
+//					$receipt['message'][] = array('msg' => lang('request %1 has been added', $add_request['request_id'][$i]));
 				}
 				else
 				{
-					$receipt['error'][] = array('msg' => lang('request %1 has already been added to project %2', $add_request['request_id'][$i], $project_id));
+					phpgwapi_cache::message_set(lang('request %1 has already been added to project %2', $add_request['request_id'][$i], $project_id), 'error');
+//					$receipt['error'][] = array('msg' => lang('request %1 has already been added to project %2', $add_request['request_id'][$i], $project_id));
 				}
 			}
 
