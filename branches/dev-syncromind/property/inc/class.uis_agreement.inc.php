@@ -264,15 +264,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uis_agreement.edit',
-									'role' => $this->role
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -297,6 +288,10 @@
 						'menuaction' => 'property.uis_agreement.download',
 						'id' => $id
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uis_agreement.edit',
+									'role' => $this->role
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array()

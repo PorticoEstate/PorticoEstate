@@ -131,12 +131,6 @@
 								'name' => 'cat_id',
 								'text' => lang('category') . ':',
 								'list' => $categories,
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
-								'class' => 'new_item'
 							)
 						),
 					),
@@ -146,6 +140,7 @@
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uicondition_survey.download',
 						'export' => true, 'allrows' => true)),
+					'new_item'	=> self::link(array('menuaction' => 'property.uicondition_survey.add')),
 					'allrows' => true,
 					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
 					'field' => array(

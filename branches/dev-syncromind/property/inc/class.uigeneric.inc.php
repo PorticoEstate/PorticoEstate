@@ -320,17 +320,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uigeneric.add',
-									'appname' => $this->bo->appname,
-									'type' => $this->type,
-									'type_id' => $this->type_id
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -353,6 +342,12 @@
 						'type_id' => $this->type_id,
 						'export' => true,
 						'allrows' => true)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uigeneric.add',
+									'appname' => $this->bo->appname,
+									'type' => $this->type,
+									'type_id' => $this->type_id
+								)),
 					'allrows' => true,
 					'editor_action' => self::link(array('menuaction' => 'property.uigeneric.edit_field',
 						'appname' => $this->appname,

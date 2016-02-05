@@ -134,27 +134,16 @@
 
 			$data = array(
 				'datatable_name' => $appname,
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.edit',
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							)
-						)
-					)
-				),
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uiadmin_entity.index',
 						'type' => $this->type,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_entity.edit',
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -387,22 +376,6 @@
 
 			$data = array(
 				'datatable_name' => $appname,
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.edit_category',
-									'entity_id' => $entity_id,
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							)
-						)
-					)
-				),
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uiadmin_entity.category',
@@ -410,6 +383,11 @@
 						'type' => $this->type,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_entity.edit_category',
+									'entity_id' => $entity_id,
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -1260,18 +1238,6 @@
 							array
 								(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.edit_attrib_group',
-									'entity_id' => $entity_id,
-									'cat_id' => $cat_id,
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							),
-							array
-								(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array
 									(
@@ -1292,6 +1258,12 @@
 						'type' => $this->type,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_entity.edit_attrib_group',
+									'entity_id' => $entity_id,
+									'cat_id' => $cat_id,
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -1496,18 +1468,6 @@
 							array
 								(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.edit_attrib',
-									'entity_id' => $entity_id,
-									'cat_id' => $cat_id,
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							),
-							array
-								(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array
 									(
@@ -1529,6 +1489,12 @@
 						'type' => $this->type,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_entity.edit_attrib',
+									'entity_id' => $entity_id,
+									'cat_id' => $cat_id,
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -2084,18 +2050,6 @@
 							array
 								(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.edit_custom_function',
-									'entity_id' => $entity_id,
-									'cat_id' => $cat_id,
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							),
-							array
-								(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array
 									(
@@ -2117,6 +2071,12 @@
 						'type' => $this->type,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_entity.edit_custom_function',
+									'entity_id' => $entity_id,
+									'cat_id' => $cat_id,
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

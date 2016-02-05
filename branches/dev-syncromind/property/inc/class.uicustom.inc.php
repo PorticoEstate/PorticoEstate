@@ -120,16 +120,6 @@
 				'datatable_name' => $appname,
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uicustom.edit'
-								)),
-								'class' => 'new_item'
-							)
-						)
 					)
 				),
 				'datatable' => array(
@@ -138,6 +128,9 @@
 						'cat_id' => $this->cat_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uicustom.edit'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

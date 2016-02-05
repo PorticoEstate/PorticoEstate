@@ -391,14 +391,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiworkorder.add'
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -438,6 +430,9 @@
 						'export' => true,
 						'allrows' => true
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiworkorder.add'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array()

@@ -187,16 +187,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiproject.index',
-									'lookup' => '1',
-									'from' => 'tenant_claim'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -205,6 +195,11 @@
 						'menuaction' => 'property.uitenant_claim.index',
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiproject.index',
+									'lookup' => '1',
+									'from' => 'tenant_claim'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

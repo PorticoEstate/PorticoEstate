@@ -238,16 +238,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiresponsible.edit',
-									'appname' => $this->appname,
-									'location' => $this->location
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -259,6 +249,11 @@
 						'appname' => $this->appname,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiresponsible.edit',
+									'appname' => $this->appname,
+									'location' => $this->location
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

@@ -369,6 +369,19 @@
 //											return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
 //										}
 //									},
+									<xsl:choose>
+										<xsl:when test="new_item">
+											{
+											text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+											sUrl: '<xsl:value-of select="new_item"/>',
+
+											action: function (e, dt, node, config) {
+													var sUrl = config.sUrl;
+													window.open(sUrl, '_self');
+												}
+											},
+										</xsl:when>
+									</xsl:choose>
 									{
 											text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 											action: function () {

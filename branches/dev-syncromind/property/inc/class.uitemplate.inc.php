@@ -223,15 +223,9 @@
 			}
 			else
 			{
-				$params1 = array(
-					'type' => 'link',
-					'value' => lang('new'),
-					'href' => self::link(array(
-						'menuaction' => 'property.uitemplate.edit_template'
-					)),
-					'class' => 'new_item'
-				);
-				array_push($data['form']['toolbar']['item'], $params1);
+				$data['datatable']['new_item']	= self::link(array(
+						'menuaction' => 'property.uitemplate.edit_template'	));
+
 			}
 
 			$parameters = array
@@ -486,15 +480,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uitemplate.edit_hour',
-									'template_id' => $template_id,
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('Cancel'),
 								'href' => self::link(array(
 									'menuaction' => 'property.uitemplate.index',
@@ -511,6 +496,10 @@
 						'template_id' => $template_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uitemplate.edit_hour',
+									'template_id' => $template_id,
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

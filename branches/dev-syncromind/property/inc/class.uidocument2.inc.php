@@ -169,12 +169,6 @@
 								'text' => lang('category') . ':',
 								'list' => $categories,
 							),
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array('menuaction' => 'property.uidocument.edit')),
-								'class' => 'new_item'
-							),
 						/* 							array(
 						  'type' => 'link',
 						  'value' => lang('download'),
@@ -189,6 +183,7 @@
 						'phpgw_return_as' => 'json')),
 					'editor_action' => 'property.uidocument2.edit_survey_title',
 					'field' => $columns,
+					'new_item'	=>self::link(array('menuaction' => 'property.uidocument.edit')),
 					'allrows' => true,
 					//	'left_click_action'	=> 'console.log',
 					//	'dbl_click_action'	=> 'alert', // Only one of them (or none..)

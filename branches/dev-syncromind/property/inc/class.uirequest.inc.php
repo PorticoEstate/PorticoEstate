@@ -624,14 +624,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uirequest.add'
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -676,6 +668,9 @@
 						'export' => true,
 						'allrows' => true,
 						'list_descr' => true)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uirequest.add'
+								)),
 					'allrows' => true,
 					'select_all' => !!$project_id,
 					'editor_action' => array(),

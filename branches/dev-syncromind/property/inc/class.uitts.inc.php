@@ -825,12 +825,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array('menuaction' => 'property.uitts.add')),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -863,6 +857,7 @@
 					'download' => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
 					'allrows' => true,
+					'new_item'	=> self::link(array('menuaction' => 'property.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),
 					'group_buttons' => true,

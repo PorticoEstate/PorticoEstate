@@ -1119,17 +1119,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uientity.edit',
-									'entity_id' => $this->entity_id,
-									'cat_id' => $this->cat_id,
-									'type' => $this->type
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -1196,6 +1185,12 @@
 						'export' => true,
 						'allrows' => true
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uientity.edit',
+									'entity_id' => $this->entity_id,
+									'cat_id' => $this->cat_id,
+									'type' => $this->type
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array()

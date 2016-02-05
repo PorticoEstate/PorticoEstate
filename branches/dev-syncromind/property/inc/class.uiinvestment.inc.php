@@ -280,14 +280,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiinvestment.add'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -296,6 +288,9 @@
 						'menuaction' => 'property.uiinvestment.index',
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiinvestment.add'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

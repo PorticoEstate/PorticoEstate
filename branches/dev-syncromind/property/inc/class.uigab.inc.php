@@ -225,15 +225,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uigab.add',
-									'from' => 'index'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -242,6 +233,10 @@
 						'menuaction' => 'property.uigab.index',
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uigab.add',
+									'from' => 'index'
+								)),
 					'download' => self::link(array(
 						'menuaction' => 'property.uigab.download',
 						'export' => true,

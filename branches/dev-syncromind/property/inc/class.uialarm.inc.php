@@ -194,20 +194,6 @@
 
 			$data = array(
 				'datatable_name' => $appname . ': ' . $function_msg,
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uialarm.edit'
-								)),
-								'class' => 'new_item'
-							)
-						)
-					)
-				),
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uialarm.index',
@@ -215,6 +201,9 @@
 						'filter' => $this->filter,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uialarm.edit'
+								)),
 					'allrows' => true,
 					'editor' => '',
 					'field' => array(

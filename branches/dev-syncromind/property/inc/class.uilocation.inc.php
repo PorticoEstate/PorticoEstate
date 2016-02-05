@@ -962,16 +962,6 @@ JS;
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uilocation.add',
-									'type_id' => $type_id,
-									'parent' => $this->location_code
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
@@ -991,6 +981,11 @@ JS;
 						'block_query' => $block_query,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uilocation.add',
+									'type_id' => $type_id,
+									'parent' => $this->location_code
+								)),
 					'download' => self::link(array('menuaction' => 'property.uilocation.download',
 						'type_id' => $type_id,
 						'lookup' => $lookup,

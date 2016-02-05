@@ -528,14 +528,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uipricebook.edit_agreement_group'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -546,6 +538,9 @@
 						'filter' => $this->filter,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uipricebook.edit_agreement_group'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -1220,15 +1215,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uipricebook.edit_activity',
-									'agreement_group' => $this->cat_id
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -1242,6 +1228,10 @@
 //                    'download'  => self::link(array(
 //                        
 //                    )),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uipricebook.edit_activity',
+									'agreement_group' => $this->cat_id
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array()
@@ -1454,14 +1444,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('cancel'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uipricebook.activity'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -1473,6 +1455,9 @@
 						'activity_id' => $activity_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uipricebook.activity'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

@@ -118,16 +118,6 @@
 				'datatable_name' => $appname,
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiasync.edit'
-								)),
-								'class' => 'new_item'
-							)
-						)
 					)
 				),
 				'datatable' => array(
@@ -135,6 +125,9 @@
 						'menuaction' => 'property.uiasync.index',
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiasync.edit'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

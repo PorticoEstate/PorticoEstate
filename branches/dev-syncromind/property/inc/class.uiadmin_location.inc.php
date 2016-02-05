@@ -134,14 +134,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_location.edit'
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array(
 									'menuaction' => 'admin.uimainscreen.mainscreen'
@@ -156,6 +148,9 @@
 						'menuaction' => 'property.uiadmin_location.index',
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_location.edit'
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -611,15 +606,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_location.edit_attrib_group',
-									'type_id' => $type_id
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array(
 									'menuaction' => 'property.uiadmin_location.index'
@@ -635,6 +621,10 @@
 						'type_id' => $type_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_location.edit_attrib_group',
+									'type_id' => $type_id
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -907,15 +897,6 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiadmin_location.edit_attrib',
-									'type_id' => $type_id
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('cancel'),
 								'href' => self::link(array(
 									'menuaction' => 'property.uiadmin_location.index'
@@ -931,6 +912,10 @@
 						'type_id' => $type_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uiadmin_location.edit_attrib',
+									'type_id' => $type_id
+								)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

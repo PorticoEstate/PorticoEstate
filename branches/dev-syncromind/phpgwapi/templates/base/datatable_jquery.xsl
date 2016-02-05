@@ -581,6 +581,19 @@
 				//										}
 				//									},
 				<xsl:choose>
+					<xsl:when test="new_item">
+						{
+						text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+						sUrl: '<xsl:value-of select="new_item"/>',
+
+						action: function (e, dt, node, config) {
+								var sUrl = config.sUrl;
+								window.open(sUrl, '_self');
+							}
+						},
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
 					<xsl:when test="select_all = '1'">
 						{
 						text: "<xsl:value-of select="php:function('lang', 'select all')"/>",

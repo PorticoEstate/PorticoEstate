@@ -180,15 +180,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uijasper.edit',
-									'app' => $this->app
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -204,8 +195,10 @@
 						'skip_origin' => true,
 						'allrows' => true
 					)),
-					// 'download'  => self::link(array(
-					// )),
+					'new_item'	=> self::link(array(
+									'menuaction' => 'property.uijasper.edit',
+									'app' => $this->app
+					)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(

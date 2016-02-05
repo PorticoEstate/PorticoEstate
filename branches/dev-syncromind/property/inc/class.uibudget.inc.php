@@ -515,15 +515,9 @@
 
 			if($acl_add)
 			{
-				$data['form']['toolbar']['item'][] = array
-					(
-					'type' => 'link',
-					'value' => lang('new'),
-					'href' => self::link(array(
-						'menuaction' => 'property.uibudget.add'
-					)),
-					'class' => 'new_item'
-				);
+				$data['datatable']['new_item'] =  self::link(array(
+									'menuaction' => 'property.uiasync.edit'
+								));
 			}
 
 			$uicols = array(
@@ -700,15 +694,9 @@
 
 			if($acl_add)
 			{
-				$data['form']['toolbar']['item'][] = array
-					(
-					'type' => 'link',
-					'value' => lang('new'),
-					'href' => self::link(array(
+				$data['datatable']['new_item'] =  self::link(array(
 						'menuaction' => 'property.uibudget.add_basis'
-					)),
-					'class' => 'new_item'
-				);
+					));
 			}
 
 			$uicols = array(
