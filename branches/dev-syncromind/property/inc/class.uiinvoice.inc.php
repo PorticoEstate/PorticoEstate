@@ -764,14 +764,26 @@
 					'target' => '_blank',
 					'parameters' => json_encode($parameters)
 				);
-				/*
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'list_sub',
+					'text' => lang('details'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'property.uiinvoice.list_sub',
+						'user_lid' => 'all'
+					)),
+					'parameters' => json_encode($parameters)
+				);
+				
 				  $data['datatable']['actions'][] = array
 				  (
-				  'my_name'	=> 'save',
-				  'text' 		=> lang('save'),
-				  'type'		=> 'custom',
-				  'custom_code' => "onSave();"
-				  ); */
+					'my_name'	=> 'save',
+					'text' 		=> lang('save'),
+					'className'	=> 'save',
+					'type'		=> 'custom',
+					'custom_code' => "onSave();"
+				  );
 
 				unset($parameters);
 			}
@@ -1571,6 +1583,7 @@ JS;
 				'my_name' => 'save',
 				'text' => lang('save'),
 				'type' => 'custom',
+				'className'	=> 'save',
 				'custom_code' => "onSave();"
 			);
 
@@ -1636,6 +1649,7 @@ JS;
 				'data' => json_encode(array()),
 				'tabletools' => $tabletools,
 				'config' => array(
+					array('singleSelect' => true),
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)

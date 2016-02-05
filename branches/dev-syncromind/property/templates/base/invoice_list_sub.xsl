@@ -8,6 +8,7 @@
 </xsl:template>
 
 <xsl:template match="list_sub">
+	<div id="message"></div>
 	<xsl:call-template name="top-toolbar" />
 	<div>
 		<xsl:choose>

@@ -217,6 +217,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var disableFilter = options['disableFilter'] || false;
 	var buttons_def = options['TableTools'] || false;
 	var select = false;
+	var singleSelect = options['singleSelect'] || false;
 	var order = options['order'] || [0, 'desc'];
 	var responsive = options['responsive'] || false;
 
@@ -247,8 +248,14 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		var sDom_def = 'B<"clear">lfrtip';
 //		var sDom_def = 'Bfrtlip';
 		var sDom_def = '<lfB<t>ip>'
-		select = true;
-		select = {style:'multi'};
+		if(singleSelect == true)
+		{
+			select = true;
+		}
+		else
+		{
+			select = {style:'multi'};
+		}
 	}
 	else
 	{
@@ -324,7 +331,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			var row = $(this);
 			var checkbox = row.find('input[type="checkbox"]');
 
-			if(checkbox)
+			if(checkbox && checkbox.hasClass('mychecks'))
 			{
 				if($(this).hasClass('selected'))
 				{

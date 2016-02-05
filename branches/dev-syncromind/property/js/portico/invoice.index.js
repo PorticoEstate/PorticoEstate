@@ -17,7 +17,20 @@ addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTable)
 				break;
 		}
 	}
+
+	var newTD = JqueryPortico.CreateRowChecked("signClass");
+	$(api.column(12).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("janitorClass");
+	$(api.column(13).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("supervisorClass");
+	$(api.column(14).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("budget_responsibleClass");
+	$(api.column(15).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("transfer_idClass");
+	$(api.column(16).footer()).html(newTD);
+
 };
+
 
 /********************************************************************************
  * Format column PERIOD

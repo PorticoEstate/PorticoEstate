@@ -144,8 +144,15 @@
 											<xsl:when test="type = 'custom'">
 												{
 													text: "<xsl:value-of select="text"/>",
-													enabled: false,
-													className: 'record',
+													<xsl:choose>
+														<xsl:when test="className">
+															className: "<xsl:value-of select="className"/>",
+														</xsl:when>
+														<xsl:otherwise>
+															enabled: false,
+															className: 'record',
+														</xsl:otherwise>
+													</xsl:choose>
 													action: function (e, dt, node, config) {
 														<xsl:if test="confirm_msg">
 															var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
@@ -162,8 +169,15 @@
 											<xsl:otherwise>
 												{
 													text: "<xsl:value-of select="text"/>",
-													className: 'record',
-													enabled: false,
+													<xsl:choose>
+														<xsl:when test="className">
+															className: "<xsl:value-of select="className"/>",
+														</xsl:when>
+														<xsl:otherwise>
+															enabled: false,
+															className: 'record',
+														</xsl:otherwise>
+													</xsl:choose>
 													action: function (e, dt, node, config) {
 																	var receiptmsg = [];
 																	var selected = JqueryPortico.fnGetSelected(oTable<xsl:number value="($num - 1)"/>);
@@ -315,6 +329,9 @@
 
 		var options<xsl:number value="($num - 1)"/> = {};
 		<xsl:for-each select="$config">
+			<xsl:if test="singleSelect">
+				options<xsl:number value="($num - 1)"/>.singleSelect = true;
+			</xsl:if>
 			<xsl:if test="disableFilter">
 				options<xsl:number value="($num - 1)"/>.disableFilter = true;
 			</xsl:if>
@@ -325,7 +342,7 @@
 				options<xsl:number value="($num - 1)"/>.order = <xsl:value-of select="order" />;
 			</xsl:if>
 			<xsl:if test="responsive">
-				options<xsl:number value="($num - 1)"/>.responsive = <xsl:value-of select="responsive" />;
+				options<xsl:number value="($num - 1)"/>.responsive = true;
 			</xsl:if>
 		</xsl:for-each>
 		if (JqueryPortico.buttons<xsl:number value="($num - 1)"/>)

@@ -569,6 +569,7 @@
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
+		var select_all = '<xsl:value-of select="select_all"/>';
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -679,8 +680,15 @@
 								<xsl:when test="type = 'custom'">
 									,{
 									text: "<xsl:value-of select="text"/>",
-									enabled: false,
-									className: 'record',
+									<xsl:choose>
+										<xsl:when test="className">
+											className: "<xsl:value-of select="className"/>",
+										</xsl:when>
+										<xsl:otherwise>
+											enabled: false,
+											className: 'record',
+										</xsl:otherwise>
+									</xsl:choose>
 									action: function (e, dt, node, config) {
 									<xsl:if test="confirm_msg">
 										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
@@ -698,8 +706,15 @@
 								<xsl:otherwise>
 									,{
 									text: "<xsl:value-of select="text"/>",
-									enabled: false,
-									className: 'record',
+									<xsl:choose>
+										<xsl:when test="className">
+											className: "<xsl:value-of select="className"/>",
+										</xsl:when>
+										<xsl:otherwise>
+											enabled: false,
+											className: 'record',
+										</xsl:otherwise>
+									</xsl:choose>
 									action: function (e, dt, node, config) {
 									var receiptmsg = [];
 									var selected = fnGetSelected();
@@ -856,7 +871,7 @@
 						processing: true,
 						serverSide: true,
 						responsive: true,
-						select: { style: 'multi' },
+						select: select_all ? { style: 'multi' } : true,
 						deferRender: true,
 						ajax: {
 							url: ajax_url,
@@ -936,7 +951,8 @@
 							var row = $(this);
 							var checkbox = row.find('input[type="checkbox"]');
 
-							if(checkbox)
+							if(checkbox && checkbox.hasClass('mychecks'))
+//							if(select_all && checkbox)
 							{
 								if($(this).hasClass('selected'))
 								{

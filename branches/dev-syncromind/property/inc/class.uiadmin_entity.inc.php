@@ -977,8 +977,6 @@
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
-				'td_count' => 3,
-				'base_java_url' => "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
 				'lang_entity' => lang('entity'),
 				'entity_name' => $id ? $entity['name'] . ' :: ' . implode(' >> ', $this->bo->get_path($entity_id, $id)) : $entity['name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1031,8 +1029,7 @@
 				'category_list' => $category_list,
 				'parent_list' => $parent_list,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+				'validator' => phpgwapi_jquery::formvalidator_generate()
 			);
 
 			$appname = lang('entity');
@@ -1042,19 +1039,10 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
+			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
 
 			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
 				'edit' => $data));
-
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
-			//---datatable settings--------------------
-//
-//			$GLOBALS['phpgw']->css->validate_file('datatable');
-//			$GLOBALS['phpgw']->css->validate_file('property');
-//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-//
-//			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
 		}
 
 		function get_template_attributes()
