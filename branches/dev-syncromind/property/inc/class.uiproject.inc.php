@@ -876,6 +876,15 @@ JS;
 				}
 			}
 
+			if(!$id && $bypass)
+			{
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
+				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+			}
+
 			return $values;
 		}
 
@@ -931,7 +940,6 @@ JS;
 			}
 
 			$id = phpgw::get_var('id', 'int');
-			$add_request				= phpgw::get_var('add_request');
 			$values_attribute = phpgw::get_var('values_attribute');
 			$config = CreateObject('phpgwapi.config', 'property');
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
@@ -1135,7 +1143,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 
-			$id = (int)phpgw::get_var('id', 'int');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : (int)phpgw::get_var('id', 'int');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
@@ -1180,10 +1188,85 @@ JS;
 				$receipt = $this->bo->add_request($add_request, $id);
 			}
 
+			$bolocation = CreateObject('property.bolocation');
+
+			// origin
+
+			if(!$id && $bypass)
+			{
+				$location_code 		= phpgw::get_var('location_code');
+				$tenant_id 			= phpgw::get_var('tenant_id', 'int');
+				$values['descr']	= phpgw::get_var('descr');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
+				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+
+				$origin				= phpgw::get_var('origin');
+				$origin_id			= phpgw::get_var('origin_id', 'int');
+
+				if($origin == '.ticket' && $origin_id && !$values['descr'])
+				{
+					$boticket= CreateObject('property.botts');
+					$ticket = $boticket->read_single($origin_id);
+					$values['descr'] = $ticket['details'];
+					$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+					$ticket_notes = $boticket->read_additional_notes($origin_id);
+					$i = count($ticket_notes)-1;
+					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+					{
+						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+					}
+					$values['contact_id'] = $ticket['contact_id'];
+					$tts_status_create_project 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
+					if($tts_status_create_project)
+					{
+						$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
+					}
+
+					if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
+					{
+						$auto_create = true;
+					}
+				}
+
+				if($p_entity_id && $p_cat_id)
+				{
+					if(!is_object($boadmin_entity))
+					{
+						$boadmin_entity	= CreateObject('property.boadmin_entity');
+					}
+
+					$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
+					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
+				}
+
+				if($location_code)
+				{
+					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
+				}
+
+				if(isset($origin) && $origin)
+				{
+					$interlink 	= CreateObject('property.interlink');
+					unset($values['origin']);
+					unset($values['origin_id']);
+					$values['origin'][0]['location']= $origin;
+					$values['origin'][0]['descr']= $interlink->get_location_name($origin);
+					$values['origin'][0]['data'][]= array(
+						'id'	=> $origin_id,
+						'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					);
+				}
+			}
+
+			// end origin
+
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$bolocation = CreateObject('property.bolocation');
 
 			$record_history = array();
 			if($this->bypass_error || ((!$this->receipt['error'] || $add_request) && !$bypass) && $id)

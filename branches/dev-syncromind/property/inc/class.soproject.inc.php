@@ -1223,14 +1223,14 @@
 				}
 			}
 
-			if(is_array($project['origin']))
+			if(isset($project['origin']))
 			{
-				if($project['origin'][0]['data'][0]['id'])
+				if($project['origin_id'])
 				{
 					$interlink_data = array
 						(
-						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
-						'location1_item_id' => $project['origin'][0]['data'][0]['id'],
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $project['origin']),
+						'location1_item_id' => $project['origin_id'],
 						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project'),
 						'location2_item_id' => $id,
 						'account_id' => $this->account

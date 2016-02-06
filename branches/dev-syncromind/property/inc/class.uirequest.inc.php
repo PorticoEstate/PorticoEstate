@@ -464,6 +464,15 @@
 				}
 			}
 
+			if(!$id && $bypass)
+			{
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
+				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+			}
+
 			return $values;
 		}
 
@@ -1070,7 +1079,7 @@ JS;
 
 		function edit($values = array(), $mode = 'edit')
 		{
-			$id = phpgw::get_var('id', 'int');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{

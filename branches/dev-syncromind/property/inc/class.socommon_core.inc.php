@@ -236,21 +236,12 @@
 
 			$interlink_data = array();
 
-			if(isset($data['origin']) && is_array($data['origin']))
-			{
-				if($data['origin'][0]['data'][0]['id'])
-				{
-					$data['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', $data['origin'][0]['location']);
-					$data['origin_item_id'] = $data['origin'][0]['data'][0]['id'];
-				}
-			}
-
-			if(isset($data['origin_id']) && $data['origin_id'] && isset($data['origin_item_id']) && $data['origin_item_id'])
+			if(isset($data['origin']) && $data['origin'] && isset($data['origin_id']) && $data['origin_id'])
 			{
 				$interlink_data = array
 					(
-					'location1_id' => $data['origin_id'],
-					'location1_item_id' => $data['origin_item_id'],
+					'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $data['origin']),
+					'location1_item_id' => $data['origin_id'],
 					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', $location2),
 					'location2_item_id' => $id,
 					'account_id' => $this->account
