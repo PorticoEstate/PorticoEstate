@@ -2129,12 +2129,49 @@
 				}
 			}
 
+			$values['extra'] = isset($values['extra']) && $values['extra'] ? $values['extra'] : array();
 			$values['street_name'] = phpgw::get_var('street_name');
 			$values['street_number'] = phpgw::get_var('street_number');
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				$values['location_name'] = phpgw::get_var('loc' . (count($values['location'])) . '_name', 'string', 'POST'); // if not address - get the parent name as address
 				$values['location_code'] = implode('-', $values['location']);
+			}
+			if($values['location_code'])
+			{
+				$bolocation = CreateObject('property.bolocation');
+				$values['location_data'] = $bolocation->read_single($values['location_code'], array_merge($values['extra'],array('view' => true)));
+			}
+
+			$origin		= isset($values['origin']) && $values['origin'] ? $values['origin'] : false;
+			$origin_id		= isset($values['origin_id']) && $values['origin_id'] ? $values['origin_id'] : false;
+
+			if($origin == '.ticket' && $origin_id && !$values['descr'])
+			{
+				$boticket= CreateObject('property.botts');
+				$ticket = $boticket->read_single($origin_id);
+				$values['descr'] = $ticket['details'];
+				$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+				$ticket_notes = $boticket->read_additional_notes($origin_id);
+				$i = count($ticket_notes)-1;
+				if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+				{
+					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+				}
+				$values['contact_id'] = $ticket['contact_id'];
+			}
+
+			if(isset($origin) && $origin)
+			{
+				$interlink 	= CreateObject('property.interlink');
+				$values['origin_data'] = array(
+					'location'	=> $origin,
+					'descr'		=> $interlink->get_location_name($origin),
+					'data'		=> array(
+							'id'	=> $origin_id,
+							'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id)
+						)
+				);
 			}
 
 			return $values;

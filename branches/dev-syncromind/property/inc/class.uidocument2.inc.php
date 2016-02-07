@@ -337,7 +337,7 @@
 		 */
 		public function edit($values = array(), $mode = 'edit')
 		{
-			$id = (int)phpgw::get_var('id');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{

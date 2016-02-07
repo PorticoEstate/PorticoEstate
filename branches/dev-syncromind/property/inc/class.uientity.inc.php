@@ -179,11 +179,9 @@
 
 			if(isset($origin) && $origin)
 			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location'] = $origin;
-				$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][] = array(
+				$values['origin_data'][0]['location'] = $origin;
+				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['data'][] = array(
 					'id' => $origin_id,
 					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
 				);
@@ -1449,7 +1447,7 @@
 
 		function edit($values = array(), $mode = 'edit')
 		{
-			$id = phpgw::get_var('id', 'int');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 			$_lean = phpgw::get_var('lean', 'bool');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
@@ -2108,6 +2106,7 @@
 							'my_name' => 'add',
 							'text' => lang('add'),
 							'type' => 'custom',
+							'className' => 'add',
 							'custom_code' => "
 										add_control();"
 						),
@@ -2245,7 +2244,7 @@ JS;
 				. "_entity_id:'{$this->entity_id}',"
 				. "_cat_id:'{$this->cat_id}',"
 				. "_type:'{$this->type}'}",
-				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
+				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
 				'value_origin_id' => isset($origin_id) ? $origin_id : '',
 				'lang_no_cat' => lang('no category'),

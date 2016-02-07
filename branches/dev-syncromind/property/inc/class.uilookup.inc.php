@@ -1103,6 +1103,7 @@
 					)),
 					'allrows' => true,
 					'editor_action' => '',
+					'query'			=> $this->location_code,
 					'field' => array()
 				)
 			);

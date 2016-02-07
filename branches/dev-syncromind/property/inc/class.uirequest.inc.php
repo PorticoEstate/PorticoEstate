@@ -1060,8 +1060,8 @@ JS;
 						'p_entity_id' => $values['p_entity_id'],
 						'p_cat_id' => $values['p_cat_id'],
 						'p_num' => $values['p_num'],
-						'origin' => isset($values['origin'][0]) ? $values['origin'][0]['location'] : '',
-						'origin_id' => isset($values['origin'][0]) ? $values['origin'][0]['data'][0]['id'] : ''
+						'origin' => isset($values['origin_data'][0]) ? $values['origin_data'][0]['location'] : '',
+						'origin_id' => isset($values['origin_data'][0]) ? $values['origin_data'][0]['data'][0]['id'] : ''
 					)
 					);
 				}
@@ -1163,11 +1163,9 @@ JS;
 
 			if(isset($origin) && $origin)
 			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location'] = $origin;
-				$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][] = array(
+				$values['origin_data'][0]['location'] = $origin;
+				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['data'][] = array(
 					'id' => $origin_id,
 					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
 				);
@@ -1478,7 +1476,7 @@ JS;
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_acl_location' => $this->acl_location,
 				'value_target' => $values['target'],
-				'value_origin' => $values['origin'],
+				'value_origin' => $values['origin_data'],
 				'value_origin_type' => $origin,
 				'value_origin_id' => $origin_id,
 				'lang_origin_statustext' => lang('Link to the origin for this request'),

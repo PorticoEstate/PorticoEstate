@@ -1097,11 +1097,9 @@
 
 			if(isset($origin) && $origin)
 			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location'] = $origin;
-				$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][] = array
+				$values['origin_data'][0]['location'] = $origin;
+				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['data'][] = array
 					(
 					'id' => $origin_id,
 					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
@@ -1370,7 +1368,7 @@
 				'contact_data' => $contact_data,
 				'simple' => $this->simple,
 				'show_finnish_date' => $this->show_finnish_date,
-				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
+				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => (isset($origin) ? $origin : ''),
 				'value_origin_id' => (isset($origin_id) ? $origin_id : ''),
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),

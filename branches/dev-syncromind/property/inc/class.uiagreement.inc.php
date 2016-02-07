@@ -995,7 +995,7 @@
 					'perm' => $mode, 'acl_location' => $this->acl_location));
 			}
 
-			$id = phpgw::get_var('id', 'int');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 			$values = phpgw::get_var('values');
 
 			$delete_item = phpgw::get_var('delete_item', 'bool');

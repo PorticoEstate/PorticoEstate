@@ -896,6 +896,11 @@
 				$function_msg = $lookup_list[$lookup_name];
 				// for POP-UPs
 				$input_name = phpgwapi_cache::session_get('property', 'lookup_fields');
+				$input_name_entity = phpgwapi_cache::session_get('property', 'lookup_fields_entity');
+				$input_name = $input_name ? $input_name : array();
+				$input_name_entity = $input_name_entity ? $input_name_entity : array();
+
+				$input_name = array_merge($input_name, $input_name_entity);
 				//$input_name = array();
 				$function_exchange_values = <<<JS
 
@@ -1620,7 +1625,7 @@ JS;
 
 			//$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$lookup_tenant = phpgw::get_var('lookup_tenant', 'bool');
-			$location_code = phpgw::get_var('location_code');
+			$location_code = isset($values['location_code']) && $values['location_code'] ? $values['location_code'] : phpgw::get_var('location_code');
 			$sibling = phpgw::get_var('sibling');
 			$parent = phpgw::get_var('parent');
 			$values_attribute = phpgw::get_var('values_attribute');

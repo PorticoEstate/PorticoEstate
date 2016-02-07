@@ -635,7 +635,7 @@
 				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			$values['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
+			$values['origin_data'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
 			$values['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
 			//_debug_array($values);

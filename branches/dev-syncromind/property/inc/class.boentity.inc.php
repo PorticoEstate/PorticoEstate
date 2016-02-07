@@ -711,7 +711,7 @@ JS;
 			}
 
 			$interlink = CreateObject('property.interlink');
-			$values['origin'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
+			$values['origin_data'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
 			$values['target'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'target');
 			return $values;
 		}

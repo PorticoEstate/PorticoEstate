@@ -350,17 +350,18 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="mode = 'edit'">
+				<xsl:if test="cat_list=''">
+					<xsl:if test="mode = 'edit'">
 						<tr>
 							<td colspan="2" align="center">
 								<xsl:call-template name="table_apply">
 									<xsl:with-param	name="lean" select="lean"/>
+									<xsl:with-param	name="cat_list" select="cat_list"/>
 								</xsl:call-template>
 							</td>
 						</tr>
-					</xsl:when>
-				</xsl:choose>
+					</xsl:if>
+				</xsl:if>
 			</table>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:for-each select="origin_list">
@@ -826,6 +827,7 @@
 				<xsl:when test="mode = 'edit'">
 					<xsl:call-template name="table_apply">
 						<xsl:with-param	name="lean" select="lean"/>
+						<xsl:with-param	name="cat_list" select="cat_list"/>				
 					</xsl:call-template>
 				</xsl:when>
 			</xsl:choose>
@@ -900,51 +902,50 @@
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="table_apply">
 	<xsl:param name="lean" />
-		
-	<div class="proplist-col">
-		<table>
-			<tr>
-				<xsl:choose>
-					<xsl:when test="$lean!=1">
-						<td valign="bottom">
-							<xsl:variable name="lang_save">
-								<xsl:value-of select="php:function('lang', 'save')"/>
-							</xsl:variable>
-							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'save values and exit')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</xsl:when>
-				</xsl:choose>
-				<td valign="bottom">
-					<xsl:variable name="lang_apply">
-						<xsl:value-of select="php:function('lang', 'apply')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'save and stay in form')"/>
-						</xsl:attribute>
-					</input>
-				</td>
-				<xsl:choose>
-					<xsl:when test="$lean!=1">
-						<td align="right" valign="bottom">
-							<xsl:variable name="lang_cancel">
-								<xsl:value-of select="php:function('lang', 'cancel')"/>
-							</xsl:variable>
-							<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'Back to the list')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</xsl:when>
-				</xsl:choose>
-			</tr>
-		</table>
-	</div>
+	<xsl:param name="cat_list" />
+		<div class="proplist-col">
+			<table>
+				<tr>
+					<xsl:if test="$cat_list =''">
+						<xsl:if test="$lean!=1">
+							<td valign="bottom">
+								<xsl:variable name="lang_save">
+									<xsl:value-of select="php:function('lang', 'save')"/>
+								</xsl:variable>
+								<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'save values and exit')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</xsl:if>
+					</xsl:if>
+					<td valign="bottom">
+						<xsl:variable name="lang_apply">
+							<xsl:value-of select="php:function('lang', 'apply')"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'save and stay in form')"/>
+							</xsl:attribute>
+						</input>
+					</td>
+					<xsl:if test="$lean!=1">
+							<td align="right" valign="bottom">
+								<xsl:variable name="lang_cancel">
+									<xsl:value-of select="php:function('lang', 'cancel')"/>
+								</xsl:variable>
+								<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+					</xsl:if>
+				</tr>
+			</table>
+		</div>
+
 </xsl:template>
 
 <!-- emtpy -->

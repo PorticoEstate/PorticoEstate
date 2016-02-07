@@ -570,6 +570,8 @@
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
 		var select_all = '<xsl:value-of select="select_all"/>';
+		var initial_search = {"search": "<xsl:value-of select="query"/>" };
+
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -941,6 +943,7 @@
 						stateSave: true,
 						stateDuration: -1, //sessionstorage
 						tabIndex: 1,
+						"search": initial_search,
 						buttons: JqueryPortico.buttons
 					});
 

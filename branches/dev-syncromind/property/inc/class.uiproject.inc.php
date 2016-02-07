@@ -946,7 +946,6 @@ JS;
 			$config->read();
 
 			$values = $this->_populate();
-
 			if($id)
 			{
 				$action = 'edit';
@@ -1251,11 +1250,9 @@ JS;
 				if(isset($origin) && $origin)
 				{
 					$interlink 	= CreateObject('property.interlink');
-					unset($values['origin']);
-					unset($values['origin_id']);
-					$values['origin'][0]['location']= $origin;
-					$values['origin'][0]['descr']= $interlink->get_location_name($origin);
-					$values['origin'][0]['data'][]= array(
+					$values['origin_data'][0]['location']= $origin;
+					$values['origin_data'][0]['descr']= $interlink->get_location_name($origin);
+					$values['origin_data'][0]['data'][]= array(
 						'id'	=> $origin_id,
 						'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
@@ -1866,9 +1863,9 @@ JS;
 
 			$lang_delete_request_statustext = lang('Check to delete this request from this project');
 			$_origin = array();
-			if(isset($values['origin']) && $values['origin'])
+			if(isset($values['origin_data']) && $values['origin_data'])
 			{
-				foreach($values['origin'] as $__origin)
+				foreach($values['origin_data'] as $__origin)
 				{
 					foreach($__origin['data'] as $_origin_data)
 					{
@@ -1980,7 +1977,7 @@ JS;
 				'tabs' => self::_generate_tabs($tabs, $active_tab, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
+				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
 				'value_origin_id' => isset($origin_id) ? $origin_id : '',
 				'year_list' => array('options' => $year_list),
@@ -2012,7 +2009,7 @@ JS;
 				'lang_power_meter' => lang('Power meter'),
 				'lang_power_meter_statustext' => lang('Enter the power meter'),
 				'value_power_meter' => isset($values['power_meter']) ? $values['power_meter'] : '',
-				'value_budget' => isset($values['budget']) ? $values['budget'] : '',
+				'value_budget' => isset($values['budget']) && $this->receipt['error'] ? $values['budget'] : '',
 				'lang_reserve' => lang('reserve'),
 				'value_reserve' => isset($values['reserve']) ? $values['reserve'] : '',
 				'lang_reserve_statustext' => lang('Enter the reserve'),

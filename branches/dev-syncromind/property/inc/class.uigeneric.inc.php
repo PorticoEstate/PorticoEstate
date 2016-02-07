@@ -534,7 +534,7 @@
 				return;
 			}
 
-			$id = phpgw::get_var($this->location_info['id']['name']);
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var($this->location_info['id']['name']);
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;

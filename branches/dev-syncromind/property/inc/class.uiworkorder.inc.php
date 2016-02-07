@@ -686,11 +686,9 @@
 			$interlink = & $this->bo->interlink;
 			if(isset($origin) && $origin)
 			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location'] = $origin;
-				$values['origin'][0]['descr'] = $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][] = array
+				$values['origin_data'][0]['location'] = $origin;
+				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['data'][] = array
 					(
 					'id' => $origin_id,
 					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
@@ -1120,7 +1118,8 @@
 
 			$_lean = phpgw::get_var('lean', 'bool');
 
-			$id = phpgw::get_var('id'); // in case of bigint
+			 // in case of bigint
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
@@ -1973,7 +1972,7 @@
 				'tabs' => self::_generate_tabs(array(), $active_tab, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'value_origin' => isset($values['origin']) ? $values['origin'] : '',
+				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
 				'value_origin_id' => isset($origin_id) ? $origin_id : '',
 				'lang_calculate' => lang('Calculate Workorder'),

@@ -220,6 +220,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var singleSelect = options['singleSelect'] || false;
 	var order = options['order'] || [0, 'desc'];
 	var responsive = options['responsive'] || false;
+	var initial_search = options['initial_search'] || false;
 
 	var lengthMenu = null;
 	try
@@ -321,7 +322,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 		},
 		sDom: sDom_def,
-		buttons: buttons_def
+		buttons: buttons_def,
+		search: initial_search
 	});
 	$("#" + container + ' tbody').on( 'click', 'tr', function () {
 			var api = oTable.api();

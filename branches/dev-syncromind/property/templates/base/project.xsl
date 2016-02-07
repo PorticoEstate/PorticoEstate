@@ -325,7 +325,8 @@
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
-							<xsl:text>!please select an end date!</xsl:text>
+							<xsl:value-of select="php:function('lang', 'Please select an end date!')"/>
+
 						</xsl:attribute>
 					</input>
 				</div>
@@ -347,30 +348,28 @@
 						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="value_project_id!='' and mode='edit' and project_type_id !=3">
-						<div class="pure-control-group">
-							<label for="name">
-								<xsl:value-of select="php:function('lang', 'move')"/>
-							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-optional">
-									<xsl:text>true</xsl:text>
-								</xsl:attribute>
-							</input>
-						</div>
-					</xsl:when>
-				</xsl:choose>
+				<xsl:if test="value_project_id &gt; 0 and mode='edit'">
+					<div class="pure-control-group">
+						<label for="name">
+							<xsl:value-of select="php:function('lang', 'move')"/>
+						</label>
+						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label for="name">
 						<xsl:value-of select="php:function('lang', 'budget')"/>
 					</label>
 					<div class="pure-custom">
 						<div>
-							<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="">
+							<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="{value_budget}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 								</xsl:attribute>

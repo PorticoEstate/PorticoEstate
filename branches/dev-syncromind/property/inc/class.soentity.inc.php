@@ -2192,14 +2192,12 @@
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 			}
 
-			if(isset($values['origin']) && is_array($values['origin']))
+			if(isset($values['origin_id']) &&$values['origin_id'])
 			{
-				if($values['origin'][0]['data'][0]['id'])
-				{
 					$interlink_data = array
 						(
-						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
-						'location1_item_id' => $values['origin'][0]['data'][0]['id'],
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $values['origin']),
+						'location1_item_id' => $values['origin_id'],
 						'location2_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}"),
 						'location2_item_id' => $values['id'],
 						'account_id' => $this->account
@@ -2207,7 +2205,7 @@
 
 					$interlink = CreateObject('property.interlink');
 					$interlink->add($interlink_data, $this->db);
-				}
+
 			}
 
 			if(isset($history_set) AND is_array($history_set))

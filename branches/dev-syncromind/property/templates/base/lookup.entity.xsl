@@ -358,6 +358,7 @@
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
+		var initial_search = {"search": "<xsl:value-of select="query"/>" };
 
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
@@ -608,6 +609,7 @@
 		
 			var options ={};
 			options.TableTools = JqueryPortico.buttons;
+			options.initial_search = initial_search;
 			temp_buttons = JqueryPortico.buttons;
 			oTable = JqueryPortico.inlineTableHelper("datatable-container", ajax_url, JqueryPortico.columns, options);
 ]]>
@@ -675,7 +677,6 @@
 						buttons_def.push(buttons_def_temp[i]);
 					}
 
-
 					api = oTable.api();
 					api.destroy();
 
@@ -695,9 +696,11 @@
 							}
 						}
 					}
-console.log( buttons_def);
+
 					options ={};
 					options.TableTools = buttons_def;
+					options.initial_search = initial_search;
+
 					var render;
 					var columns = [];
 					var PreColumns = result.datatable_def.ColumnDefs;

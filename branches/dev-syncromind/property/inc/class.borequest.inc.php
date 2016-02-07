@@ -663,7 +663,7 @@
 			}
 
 			$interlink = CreateObject('property.interlink');
-			$values['origin'] = $interlink->get_relation('property', '.project.request', $request_id, 'origin');
+			$values['origin_data'] = $interlink->get_relation('property', '.project.request', $request_id, 'origin');
 			$values['target'] = $interlink->get_relation('property', '.project.request', $request_id, 'target');
 
 			return $values;
