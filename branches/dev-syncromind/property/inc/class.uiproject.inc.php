@@ -1339,7 +1339,7 @@ JS;
 
 			$lookup_type = $mode == 'edit' ? 'form' : 'view';
 
-			//_debug_array($values);
+//			_debug_array($values);
 			$location_data = $bolocation->initiate_ui_location(array
 				(
 				'values' => (isset($values['location_data']) ? $values['location_data'] : ''),

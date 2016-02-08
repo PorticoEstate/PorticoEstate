@@ -174,7 +174,6 @@
 	</fieldset>
 </xsl:template>
 
-
 <!-- add inventory -->
 <xsl:template xmlns:php="http://php.net/xsl" match="add_inventory">
 	<fieldset>
@@ -193,7 +192,7 @@
 				</xsl:choose>
 			</dl>
 			<fieldset>
-				<xsl:call-template name="location_form2"/>
+				<xsl:call-template name="location_form"/>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'id')" />
@@ -340,7 +339,7 @@
 		</xsl:variable>
 		<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data" class= "pure-form pure-form-aligned">
 			<input type="hidden" name="active_tab" value="{active_tab}"/>
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<table cellpadding="2" cellspacing="2" width="80%" align="left">
 				<xsl:choose>
 					<xsl:when test="value_id !=''">
 						<tr>
@@ -353,7 +352,7 @@
 				<xsl:if test="cat_list=''">
 					<xsl:if test="mode = 'edit'">
 						<tr>
-							<td colspan="2" align="center">
+							<td colspan="2" align="left">
 								<xsl:call-template name="table_apply">
 									<xsl:with-param	name="lean" select="lean"/>
 									<xsl:with-param	name="cat_list" select="cat_list"/>
@@ -363,7 +362,7 @@
 					</xsl:if>
 				</xsl:if>
 			</table>
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<table class="pure-table pure-table-bordered"  width="100%" cellpadding="2" cellspacing="2" align="center">
 				<xsl:for-each select="origin_list">
 					<tr>
 						<td class="th_text">

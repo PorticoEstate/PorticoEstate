@@ -146,13 +146,6 @@
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
 			$values['date'] = phpgw::get_var('date');
 
-			if(!$this->cat_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Please select entity type !'));
-
-				return $values;
-			}
-
 			if(!$bypass)
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
@@ -174,6 +167,11 @@
 				$origin = $values['origin'];
 				$origin_id = $values['origin_id'];
 			}
+			else
+			{
+				$origin				= phpgw::get_var('origin');
+				$origin_id			= phpgw::get_var('origin_id', 'int');
+			}
 
 			$interlink = CreateObject('property.interlink');
 
@@ -187,55 +185,64 @@
 				);
 			}
 
-			$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
-
-			if($category['org_unit'])
+			if(isset($values['save']) && $values['save'])
 			{
-				$values['extra']['org_unit_id'] = phpgw::get_var('org_unit_id', 'int');
-				$values['org_unit_id'] = $values['extra']['org_unit_id'];
-				$values['org_unit_name'] = phpgw::get_var('org_unit_name', 'string');
-			}
-			if($GLOBALS['phpgw']->session->is_repost())
-			{
-				$this->receipt['error'][] = array('msg' => lang('Hmm... looks like a repost!'));
-			}
-
-			if((!$values['location'] && !$values['p']) && isset($category['location_level']) && $category['location_level'])
-			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
-			}
-
-			if(isset($values_attribute) && is_array($values_attribute))
-			{
-				foreach($values_attribute as $attribute)
+				if(!$this->cat_id)
 				{
-					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-					{
-						$this->receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
-					}
+					$this->receipt['error'][] = array('msg' => lang('Please select entity type !'));
 
-					if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && !ctype_digit($attribute['value']))
+					return $values;
+				}
+				$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
+
+				if($category['org_unit'])
+				{
+					$values['extra']['org_unit_id'] = phpgw::get_var('org_unit_id', 'int');
+					$values['org_unit_id'] = $values['extra']['org_unit_id'];
+					$values['org_unit_name'] = phpgw::get_var('org_unit_name', 'string');
+				}
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$this->receipt['error'][] = array('msg' => lang('Hmm... looks like a repost!'));
+				}
+
+				if((!$values['location'] && !$values['p']) && isset($category['location_level']) && $category['location_level'])
+				{
+					$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
+				}
+
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach($values_attribute as $attribute)
 					{
-						$this->receipt['error'][] = array('msg' => lang('Please enter integer for attribute %1', $attribute['input_text']));
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$this->receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && !ctype_digit($attribute['value']))
+						{
+							$this->receipt['error'][] = array('msg' => lang('Please enter integer for attribute %1', $attribute['input_text']));
+						}
 					}
 				}
-			}
 
-			if($this->receipt['error'])
-			{
-				if($values['location'])
+				if($this->receipt['error'])
 				{
-					$bolocation = CreateObject('property.bolocation');
-					$location_code = implode("-", $values['location']);
-					$values['extra']['view'] = true;
-					$values['location_data'] = $bolocation->read_single($location_code, $values['extra']);
-				}
-				if($values['extra']['p_num'])
-				{
-					$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
-					$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
-					$values['p'][$values['extra']['p_entity_id']]['p_cat_id'] = $values['extra']['p_cat_id'];
-					$values['p'][$values['extra']['p_entity_id']]['p_cat_name'] = phpgw::get_var('entity_cat_name_' . $values['extra']['p_entity_id']);
+					if($values['location'])
+					{
+						$bolocation = CreateObject('property.bolocation');
+						$location_code = implode("-", $values['location']);
+						$values['extra']['view'] = true;
+						$values['location_data'] = $bolocation->read_single($location_code, $values['extra']);
+					}
+					if($values['extra']['p_num'])
+					{
+						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
+						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
+						$values['p'][$values['extra']['p_entity_id']]['p_cat_id'] = $values['extra']['p_cat_id'];
+						$values['p'][$values['extra']['p_entity_id']]['p_cat_name'] = phpgw::get_var('entity_cat_name_' . $values['extra']['p_entity_id']);
+					}
 				}
 			}
 
@@ -1543,6 +1550,7 @@
 				{
 					$values = $this->bo->read_single(array('entity_id' => $this->entity_id, 'cat_id' => $this->cat_id), $values);
 				}
+				$values = $this->_populate($values);
 			}
 
 			/* Preserve attribute values from post */
@@ -1770,7 +1778,7 @@
 					{
 						if($group['level'] == 0)
 						{
-							$_tab_name = str_replace(' ', '_', $group['name']);
+							$_tab_name = str_replace(array(' ', '/', '?', '.', '*' ,'(', ')', '[',']' ), '_', $group['name']);
 							$active_tab = $active_tab ? $active_tab : $_tab_name;
 							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}",
 								'disable' => 0);
@@ -3140,7 +3148,7 @@ HTML;
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			self::render_template_xsl(array('entity', 'attributes_form', 'files'), array(
+			self::render_template_xsl(array('entity', 'attributes_form', 'files', 'conditional_function'), array(
 				'add_inventory' => $data));
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

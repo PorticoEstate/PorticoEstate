@@ -1467,8 +1467,8 @@
 				array
 				(
 					'id'	=> 0,
-					'name'	=> lang('attributes'),
-					'descr' => lang('attributes')
+					'name'	=> lang('features'),
+					'descr' => lang('features')
 				)
 			);
 			$groups = $this->find_group($appname, $location, 0, '', 'ASC', 'group_sort', true);
