@@ -449,7 +449,8 @@
 					)),
 					'allrows'		 => true,
 					'editor_action'	 => '',
-					'field'			 => array()
+					'field'			 => array(),
+					'query'			=> phpgw::get_var('search_for')
 				)
 			);
 

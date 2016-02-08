@@ -1082,6 +1082,7 @@
 					)),
 					'allrows'		 => true,
 					'editor_action'	 => '',
+					'query'			=> phpgw::get_var('search_for'),
 					'field'			 => array(
 						array(
 							'key'		 => 'old_contract_id',

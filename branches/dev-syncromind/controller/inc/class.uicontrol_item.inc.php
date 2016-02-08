@@ -128,18 +128,13 @@
 								'name'	 => 'control_areas',
 								'text'	 => lang('Control_area'),
 								'list'	 => $control_areas_array2,
-							),
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('New control item'),
-								'href'	 => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
-								'class'	 => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable'		 => array(
 					'source'	 => self::link($query_array),
+					'new_item'	=> self::link(array('menuaction' => 'controller.uicontrol_item.add')),
 					'allrows'	 => true,
 					'field'		 => array(
 						array(
@@ -174,6 +169,28 @@
 						)
 					)
 				),
+			);
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'statustext' => lang('view'),
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'controller.uicontrol_item.view'
+				)),
+				'parameters' => json_encode($parameters)
 			);
 
 			self::render_template_xsl(array('datatable_jquery'), $data);

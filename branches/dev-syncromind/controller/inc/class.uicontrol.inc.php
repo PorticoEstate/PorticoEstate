@@ -203,18 +203,13 @@
 								'text'	 => lang('district'),
 								'list'	 => $district_list,
 							),
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('New control'),
-								'href'	 => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
-								'class'	 => 'new_item'
-							),
 						),
 					),
 				),
 				'datatable'		 => array(
 					'source'	 => self::link(array('menuaction'		 => 'controller.uicontrol.control_list',
 						'phpgw_return_as'	 => 'json')),
+					'new_item'	=> self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
 					'allrows'	 => true,
 					'field'		 => array(
 						array(
@@ -261,6 +256,28 @@
 					'formatter'	 => 'JqueryPortico.formatLinkGeneric'
 				);
 			}
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'statustext' => lang('view'),
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'controller.uicontrol.view_control_details'
+				)),
+				'parameters' => json_encode($parameters)
+			);
 
 			self::render_template_xsl(array('datatable_jquery'), $data);
 		}

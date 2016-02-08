@@ -116,19 +116,14 @@
 								'name'	 => 'control_areas',
 								'text'	 => lang('Control_area'),
 								'list'	 => $control_areas_array2,
-							),
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('New control group'),
-								'href'	 => self::link(array('menuaction' => 'controller.uicontrol_group.add')),
-								'class'	 => 'new_item'
-							),
+							)
 						),
 					),
 				),
 				'datatable'		 => array(
 					'source'	 => self::link(array('menuaction'		 => 'controller.uicontrol_group.index',
 						'phpgw_return_as'	 => 'json')),
+					'new_item'	=> self::link(array('menuaction' => 'controller.uicontrol_group.add')),
 					'allrows'	 => true,
 					'field'		 => array(
 						array(
@@ -164,7 +159,29 @@
 					)
 				),
 			);
-//_debug_array($data);
+
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'statustext' => lang('view'),
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'controller.uicontrol_group.view'
+				)),
+				'parameters' => json_encode($parameters)
+			);
 
 			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
