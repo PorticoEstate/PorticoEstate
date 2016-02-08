@@ -9,7 +9,7 @@
 					{
 						sessionStorage.cached_menu_tree_data = '';
 					}
-
+					$('#navbar').jstree('close_all');
 					var sUrl = phpGWLink('logout.php');
 					window.open(sUrl,'_self');
 				}

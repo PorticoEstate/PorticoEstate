@@ -1,6 +1,8 @@
 $(function () {
+  var original_selected_node = '';
+
 	$("#navbar")
-			.on("select_node.jstree", function (e, data) {
+			.on("changed.jstree", function (e, data) {
 				if (typeof (data.event) == 'undefined')
 				{
 					return false;
@@ -8,21 +10,22 @@ $(function () {
 
 				if (data.event.type == 'contextmenu')
 				{
+					original_selected_node = data.changed.deselected;
 					return false;
 				}
+				original_selected_node = data.changed.selected;
 
-				/*
+/*
 				 console.log(data.changed.selected); // newly selected
 				 console.log(data.changed.deselected); // newly deselected
-				 */
-//				console.log(data);
+*/
 				setTimeout(function () {
 					window.location.href = data.node.original.url;
 				}, 200);
 
 			})
 			.jstree({
-				"plugins": ["state", "search", "contextmenu"], //"changed"
+				"plugins": ["state", "search", "contextmenu","changed"],
 				'core': {
 //					"check_callback": true,
 					'data': {
@@ -32,7 +35,8 @@ $(function () {
 							if (node.id === '#')
 							{
 								oArgs = {menuaction: 'phpgwapi.menu.get_local_menu_ajax', node: 'top_level'};
-							} else
+							}
+							else
 							{
 
 								var app = node.original.app;
@@ -59,11 +63,23 @@ $(function () {
 							"Open": {
 								"label": "Åpne i ny fane",
 								"action": function (obj) {
-									var win = window.open(node.original.url, '_blank');
+									if(node.id != original_selected_node)
+									{
+										$('#navbar').jstree(true).deselect_node(original_selected_node);
+									}
+									var win = window.open(node.original.url + "&selected_node= " + node.id, '_blank');
 									if (win) {
+										setTimeout(function () {
+											if(node.id != original_selected_node)
+											{
+												$('#navbar').jstree(true).deselect_node(node.id);
+												$('#navbar').jstree(true).select_node(original_selected_node);
+											}
+										}, 1000);
 										//Browser has allowed it to be opened
 										win.focus();
-									} else {
+									}else
+									{
 										//Broswer has blocked it
 										alert('Please allow popups for this site');
 									}
@@ -104,3 +120,4 @@ $(function () {
 	});
 
 });
+
