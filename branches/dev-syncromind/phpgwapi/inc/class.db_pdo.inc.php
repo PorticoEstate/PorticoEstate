@@ -521,7 +521,7 @@
 				{
 					$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
 				}
-				$this->Record = &$this->resultSet;
+				$this->Record = $this->resultSet;
 				return !!$this->Record;
 			}
 			if($this->resultSet && current($this->resultSet))
