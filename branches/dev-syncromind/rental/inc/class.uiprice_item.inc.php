@@ -386,22 +386,33 @@ JS;
 				return;
 			}
 
-			$field	 = phpgw::get_var('field');
+			$field_name	 = phpgw::get_var('field_name');
 			$value	 = phpgw::get_var('value');
 			$id		 = phpgw::get_var('id');
 
+			switch($field_name)
+			{
+				case 'date_start':
+				case 'date_end':
+					$value =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('value'));
+					break;
+				default:
+					$value	 = phpgw::get_var('value');
+					break;
+			}
+
 			$price_item	 = rental_socontract_price_item::get_instance()->get_single($id);
-			$price_item->set_field($field, phpgwapi_datetime::date_to_timestamp($value));
+			$price_item->set_field($field_name, $value);
 			$result		 = rental_socontract_price_item::get_instance()->store($price_item);
 
 			$message = array();
 			if($result)
 			{
-				$message['message'][] = array('msg' => lang('date has been saved'));
+				$message['message'][] = array('msg' => lang('data has been saved'));
 			}
 			else
 			{
-				$message['error'][] = array('msg' => lang('date has not been saved'));
+				$message['error'][] = array('msg' => lang('data has not been saved'));
 			}
 
 			return $message;

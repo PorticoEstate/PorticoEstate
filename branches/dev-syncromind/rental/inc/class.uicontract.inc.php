@@ -443,26 +443,17 @@
 		private function _get_tableDef_price($mode, $contract_id)
 		{
 			$columns_def = array(
-				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',
-					'sortable' => true, 'hidden' => false),
-				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,
-					'hidden' => false),
-				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,
-					'hidden' => false),
-				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,
-					'formatter' => 'formatterPrice', 'className' => 'right'),
-				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
-					'className' => 'right'),
-				array("key" => "count", "label" => lang('count')),
-				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',
-					'className' => 'right'),
-				array("key" => "date_start", "label" => lang('date_start'), 'formatter' => 'formatterDateStart_price_item',
-					'className' => 'center'),
-				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => 'formatterDateEnd_price_item',
-					'className' => 'center'),
-				array("key" => "is_one_time", "label" => lang('is_one_time'), 'className' => 'center'),
-				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,
-					'className' => 'center')
+				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',	'sortable' => true, 'hidden' => false),
+				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,	'hidden' => false, 'editor'=> true),
+				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,	'hidden' => false),
+				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,'formatter' => 'formatterPrice', 'className' => 'right', 'editor'=> true),
+				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",	'className' => 'right'),
+				array("key" => "count", "label" => lang('count'), 'editor'=> true),
+				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',	'className' => 'right'),
+				array("key" => "date_start", "label" => lang('date_start'), 'formatter' => 'formatterDateStart_price_item',	'className' => 'center'),
+				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => 'formatterDateEnd_price_item','className' => 'center'),
+				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => 'formatterIs_one_time', 'className' => 'center'),
+				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,'className' => 'center')
 			);
 
 			if($mode == 'edit')
@@ -509,7 +500,8 @@
 					'ColumnDefs' => $columns_def,
 					'tabletools' => $tabletools_price1,
 					'config' => array(
-						array('disableFilter' => true)
+						array('disableFilter' => true),
+						array('editor_action' => self::link(array('menuaction' => 'rental.uiprice_item.set_value')))
 					)
 				);
 

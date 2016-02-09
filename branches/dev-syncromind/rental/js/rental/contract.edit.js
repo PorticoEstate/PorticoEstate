@@ -33,7 +33,7 @@ function changeDate_price_item(param, value)
 
 	var data = {};
 	data['id'] = arr[1];
-	data['field'] = arr[0];
+	data['field_name'] = arr[0];
 	data['value'] = value;
 
 	var requestUrl = phpGWLink('index.php', oArgs_request, true);
@@ -46,6 +46,37 @@ function changeDate_price_item(param, value)
 
 	}, data, 'POST', 'JSON');
 }
+function changeOne_time_price_item(param, value)
+{
+	var oArgs_request = {menuaction: 'rental.uiprice_item.set_value'};
+	var arr = param.split('__');
+
+	var data = {};
+	data['id'] = arr[1];
+	data['field_name'] = arr[0];
+	if(value == "false")
+	{
+		data['value'] = true;
+	}
+	else
+	{
+		data['value'] = false;
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs_request, true);
+
+	JqueryPortico.execute_ajax(requestUrl, function (result) {
+
+		var message = result.message[0]['msg'];
+		alert(message);
+		JqueryPortico.show_message(5, result);
+
+		oTable5.fnDraw();
+
+	}, data, 'POST', 'JSON');
+}
+
+
 
 setDatePicker_price_item = function ()
 {
@@ -106,6 +137,20 @@ setDatePicker_price_item = function ()
 	});
 };
 
+setOne_price_item = function ()
+{
+	var one_time = $('.one_time');
+
+	one_time.each(function (i, obj)
+	{
+		$("#" + obj.id).on('change', function ()
+		{
+			changeOne_time_price_item(obj.id, $(this).val());
+		});
+	});
+
+};
+
 function formatterDateStart_price_item(key, oData)
 {
 	var name = 'date_start__' + oData['id'];
@@ -116,6 +161,17 @@ function formatterDateEnd_price_item(key, oData)
 {
 	var name = 'date_end__' + oData['id'];
 	return '<input id="' + name + '" class="date_end" name="' + name + '" size="10" value="' + oData[key] + '" type="text" readonly="readonly"></input>';
+}
+
+function formatterIs_one_time(key, oData)
+{
+	var name = 'is_one_time__' + oData['id'];
+	var checked = '';
+	if (oData[key] == true)
+	{
+		checked = 'checked="checked"';
+	}
+	return '<input id="' + name + '" class="one_time" name="' + name + '" size="10" value="' + oData[key] + '" type="checkbox" ' + checked + '></input>';
 }
 
 $(document).ready(function ()
@@ -270,6 +326,7 @@ $(document).ready(function ()
 
 			var api = oTable5.api();
 			api.on('draw', setDatePicker_price_item);
+			api.on('draw', setOne_price_item);
 
 			oTable6.dataTableSettings[6]['oFeatures']['bServerSide'] = true;
 			oTable6.dataTableSettings[6]['ajax'] = {url: link_not_included_price_items, data: {}, type: 'GET'};
