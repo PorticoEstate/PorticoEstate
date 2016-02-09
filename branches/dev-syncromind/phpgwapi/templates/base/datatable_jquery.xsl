@@ -90,6 +90,9 @@
 	</label>
 
 	<div id="toolbar">
+		<script type="text/javascript">
+			var number_of_toolbar_items = 0;
+		</script>
 		<!--xsl:if test="item/text and normalize-space(item/text)"-->
 		<xsl:if test="item">
 			<table id="toolbar_table" class="pure-table">
@@ -105,6 +108,10 @@
 				</thead>
 				<tbody>
 					<xsl:for-each select="item">
+						<script type="text/javascript">
+							number_of_toolbar_items += 1;
+						</script>
+
 						<tr>
 							<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 							<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
@@ -219,6 +226,11 @@
 													<xsl:otherwise>
 														<xsl:choose>
 															<xsl:when test="selected = 'selected'">
+																<option value="{$id}" selected="selected">
+																	<xsl:value-of select="name"/>
+																</option>
+															</xsl:when>
+															<xsl:when test="selected = '1'">
 																<option value="{$id}" selected="selected">
 																	<xsl:value-of select="name"/>
 																</option>
@@ -878,7 +890,7 @@
 						ajax: {
 							url: ajax_url,
 							data: {},
-							type: 'GET'
+							type: 'POST'
 						},
 						fnServerParams: function ( aoData ) {
 							if(typeof(aoData.order) != 'undefined')
@@ -967,6 +979,11 @@
 								}
 							}
 					   } );
+
+					  if(number_of_toolbar_items < 4)
+					  {
+						$('#header1').prop("checked", true);
+					  }
 				});
 			]]>
 

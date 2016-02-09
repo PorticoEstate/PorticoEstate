@@ -378,20 +378,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uiinvoice.add'
-								)),
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('Save'),
-								'onclick' => 'onSave()',
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -421,7 +407,12 @@
 					'field' => array()
 				)
 			);
-
+			if($this->acl_add)
+			{
+				$data['datatable']['new_item']	= self::link(array(
+									'menuaction' => 'property.uiinvoice.add'
+								));
+			}
 			if($paid)
 			{
 				$data['form']['toolbar']['item'][] = array

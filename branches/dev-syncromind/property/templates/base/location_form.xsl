@@ -20,7 +20,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</label>
-			<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+			<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 				<xsl:attribute name="title">
 					<xsl:value-of select="statustext"/>
 				</xsl:attribute>
@@ -41,14 +41,14 @@
 			<xsl:for-each select="extra">
 				<xsl:choose>
 					<xsl:when test="readonly=1">
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
+						<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
 							</xsl:attribute>
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+						<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
 							</xsl:attribute>

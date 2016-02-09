@@ -23,7 +23,7 @@
 			
 			<xsl:choose>
 				<xsl:when test="readonly=1">
-					<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
+					<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
 						<xsl:if test="input_type != 'hidden' and required = 1">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
@@ -38,7 +38,7 @@
 					</input>
 				</xsl:when>
 				<xsl:otherwise>
-					<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+					<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 						<xsl:if test="input_type != 'hidden'">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
@@ -50,14 +50,14 @@
 			<xsl:for-each select="extra">
 				<xsl:choose>
 					<xsl:when test="readonly=1">
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
+						<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
 							</xsl:attribute>
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+						<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="statustext"/>
 							</xsl:attribute>

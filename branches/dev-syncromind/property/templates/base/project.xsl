@@ -581,25 +581,25 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<!--/div-->
-				<div class="pure-control-group">
-					<label for="name">
-						<xsl:value-of select="php:function('lang', 'invoice')"/>
-					</label>
-					<div class="pure-custom">
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_2'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl' />
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-									<xsl:with-param name="tabletools" select ='tabletools' />
-									<xsl:with-param name="data" select ='data' />
-									<xsl:with-param name="config" select ='config' />
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
-					</div>
-				</div>
+				<!--div class="pure-control-group"-->
+				<label for="name">
+					<xsl:value-of select="php:function('lang', 'invoice')"/>
+				</label>
+				<!--div class="pure-custom"-->
+				<xsl:for-each select="datatable_def">
+					<xsl:if test="container = 'datatable-container_2'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl' />
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+							<xsl:with-param name="tabletools" select ='tabletools' />
+							<xsl:with-param name="data" select ='data' />
+							<xsl:with-param name="config" select ='config' />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
+				<!--/div-->
+				<!--/div-->
 				<!--/fieldset-->
 			</div>
 
@@ -617,25 +617,21 @@
 						<input type="hidden" id="notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}"></input>
 						<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly" title="{$lang_contact_statustext}"/>
 					</div>
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:value-of select="php:function('lang', 'notify')"/>
-						</label>
-						<div class="pure-custom">
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_3'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl' />
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-										<xsl:with-param name="tabletools" select ='tabletools' />
-										<xsl:with-param name="data" select ='data' />
-										<xsl:with-param name="config" select ='config' />
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
-						</div>
-					</div>
+					<label for="name">
+						<xsl:value-of select="php:function('lang', 'notify')"/>
+					</label>
+					<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_3'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl' />
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="data" select ='data' />
+								<xsl:with-param name="config" select ='config' />
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:for-each>
 					<xsl:choose>
 						<xsl:when test="suppresscoordination =''">
 							<div class="pure-control-group">
@@ -710,31 +706,29 @@
 				<xsl:when test="value_project_id &gt; 0">
 					<div id="documents">
 						<fieldset>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'files')"/>
-								</label>
-								<div class="pure-custom">
-									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_5'">
-											<xsl:call-template name="table_setup">
-												<xsl:with-param name="container" select ='container'/>
-												<xsl:with-param name="requestUrl" select ='requestUrl' />
-												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-												<xsl:with-param name="tabletools" select ='tabletools' />
-												<xsl:with-param name="data" select ='data' />
-												<xsl:with-param name="config" select ='config' />
-											</xsl:call-template>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'files')"/>
+							</label>
+							<div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_5'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
 							</div>
 							<xsl:call-template name="file_upload"/>
 						</fieldset>
 					</div>
 					<div id="history">
 						<fieldset>
-							<div class="pure-custom">
+							<div>
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_4'">
 										<xsl:call-template name="table_setup">

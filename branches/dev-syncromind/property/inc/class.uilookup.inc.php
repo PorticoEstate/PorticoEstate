@@ -545,9 +545,17 @@
 		function b_account()
 		{
 			$role = phpgw::get_var('role');
-			$parent = phpgw::get_var('parent');
 
-			$parent = $this->cat_id ? $this->cat_id : $parent;
+			$cat_id = phpgw::get_var('cat_id', 'int', 'POST');
+
+			if(isset($_POST['cat_id']))
+			{
+				$parent = $cat_id;
+			}
+			else
+			{
+				$parent = phpgw::get_var('parent');
+			}
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
