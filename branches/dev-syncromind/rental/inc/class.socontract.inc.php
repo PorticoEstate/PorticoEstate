@@ -1011,7 +1011,7 @@
 			$results = array();
 			while($this->db->next_record())
 			{
-				$results[$this->db->f('id')] = $this->db->f('label');
+				$results[$this->db->f('id')] = $this->db->f('label',true);
 			}
 
 			return $results;
