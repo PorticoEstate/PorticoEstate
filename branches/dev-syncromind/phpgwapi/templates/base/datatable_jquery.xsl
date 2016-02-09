@@ -668,7 +668,8 @@
 								var iframe = document.createElement('iframe');
 								iframe.style.height = "0px";
 								iframe.style.width = "0px";
-								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1";
+								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1" + "&query=" + $('div.dataTables_filter input').val();
+
 								if(confirm("This will take some time..."))
 								{
 									document.body.appendChild( iframe );

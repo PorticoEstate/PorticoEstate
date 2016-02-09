@@ -1052,6 +1052,9 @@
 			$appname = lang('contracts');
 			$type = 'all_contracts';
 
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date_report');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date_report');
+
 			$function_msg = lang('list %1', $appname);
 
 			$data = array(
@@ -1063,6 +1066,34 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'onclick' => 'onNew_contract()',
+								'class' => 'new_item'
+							),
+							array
+								(
+								'type' => 'date-picker',
+								'id' => 'start_date_report',
+								'name' => 'start_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('from')
+							),
+							array
+								(
+								'type' => 'date-picker',
+								'id' => 'end_date_report',
+								'name' => 'end_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('to')
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('export_contracts'),
+								'onclick' => 'contract_export("all_contracts")',
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('export_contract_price_items'),
+								'onclick' => 'contract_export_price_items("all_contracts")',
 								'class' => 'new_item'
 							)
 						)
