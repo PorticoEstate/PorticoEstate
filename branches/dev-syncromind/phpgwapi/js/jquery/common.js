@@ -221,6 +221,20 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var order = options['order'] || [0, 'desc'];
 	var responsive = options['responsive'] || false;
 	var initial_search = options['initial_search'] || false;
+	var editor_action = options['editor_action'] || false;
+	var editor_cols = [];
+
+	for(i=0;i < columns.length;i++)
+	{
+		if (columns[i]['editor'] === true)
+		{
+			editor_cols.push({sUpdateURL:editor_action + '&field_name=' + columns[i]['data']});
+		}
+		else
+		{
+			editor_cols.push(null);
+		}
+	}
 
 	var lengthMenu = null;
 	try
@@ -312,6 +326,33 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		//	stateDuration: -1, //sessionstorage
 		//	tabIndex:		1,
 		fnDrawCallback: function () {
+			if(typeof(oTable) != 'undefined')
+			{
+				oTable.makeEditable({
+					sUpdateURL: editor_action,
+					fnOnEditing: function(input){
+						var iPos = input.closest("tr").prevAll().length;
+						var aData = oTable.fnGetData( iPos );
+						id = aData['id'];
+						cell = input.parents("td");
+						return true;
+					},
+					fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
+					{
+						//document.getElementById("message").innerHTML += '<br/>' + status;
+					},
+					oUpdateParameters: {
+						"id": function(){ return id; }
+					},
+					aoColumns: editor_cols,
+					sSuccessResponse: "IGNORE",
+					fnShowError: function(){ return; }
+				});
+			}
+			if(typeof(addFooterDatatable) == 'function')
+			{
+				addFooterDatatable(oTable);
+			}
 			try
 			{
 				window['local_DrawCallback' + JqueryPortico.inlineTablesRendered](oTable);

@@ -309,6 +309,19 @@
 						 },
 
 					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="editor">
+							<xsl:if test="editor =0">
+								editor: false,
+							</xsl:if>
+							<xsl:if test="editor =1">
+								editor: true,
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							editor: false,
+						</xsl:otherwise>
+					</xsl:choose>
 					defaultContent:	"<xsl:value-of select="defaultContent"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
@@ -344,6 +357,9 @@
 			<xsl:if test="responsive">
 				options<xsl:number value="($num - 1)"/>.responsive = true;
 			</xsl:if>
+			<xsl:if test="editor_action">
+				options<xsl:number value="($num - 1)"/>.editor_action = "<xsl:value-of select="editor_action" />";
+			</xsl:if>
 		</xsl:for-each>
 		if (JqueryPortico.buttons<xsl:number value="($num - 1)"/>)
 		{
@@ -360,7 +376,8 @@
 			 </xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
+		$(document).ready(function() {
+			oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
+	});
 	</script>
 </xsl:template>
