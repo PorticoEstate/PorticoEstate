@@ -1,26 +1,23 @@
-<div id="debug-navbar">
-{debug}
-</div>
+	<body>
+		<div id="debug-navbar">
+		{debug}
+		</div>
 	<script type="text/javascript">
 		function logout()
 		{
 			if(typeof(Storage)!=="undefined")
 			{
 				sessionStorage.cached_menu_tree_data = '';
-				sessionStorage.cached_mapping = '';
 		 	}
-
+					$('#navbar').jstree('close_all');
 			var sUrl = phpGWLink('logout.php');
 			window.open(sUrl,'_self');
 		}
 	</script>
-
-		<div id="theme-gray">
-			<div class="border-layout" id="border-layout">
-				<div class="layout-north">
-					<div class="body">
-						<h2 class="icon">{site_title}</h2>
-						<div class="button-bar">
+			<div class="ui-layout-north">
+				<div id="logo">{site_title}</div>
+					<div id="navigation">
+					{template_selector}
 								<a href="{print_url}" class="icon icon-print" target="_blank">
 								{print_text}
 							</a>
@@ -47,22 +44,30 @@
 							</a>
 						</div>
 					</div>
+
+
+			<div class="ui-layout-west" style="display: none;">
+				<div class="layouheader">{user_fullname}</div>
+				<input type="text" id="navbar_search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" />
+				<div id="navtreecontrol">
+					<a id="collapseNavbar" title="Collapse the entire tree below" href="#">
+						{lang_collapse_all}
+					</a>
+					|
+					<a id="expandNavbar" title="Expand the entire tree below" href="#">
+						{lang_expand_all}
+					</a>
+					</div>
+
+				<div id="navbar" class="ui-layout-content" style="overflow: auto;">{treemenu}</div>
+				{tree_script}
 				</div>
 
-				<div class="layout-west">
-					<div class="header">
-						<h2>{user_fullname}</h2>
+			<div class="ui-layout-east">
+				<div id = "layouheader_east" class="layouheader"></div>
+				<div id = "layoutcontent_east"></div>
 					</div>
 
-					<div class="body">
-							<div class="treeview">
-{treemenu}
-							</div>
-					</div>
-				</div>
-
-				<div class="layout-center">
-					<div class="header">
-						<h2>{current_app_title}</h2>
-					</div>
-					<div class="body">
+			<div id="center_content" class="ui-layout-center content">
+				<h1 id="top">{current_app_title}</h1>
+					

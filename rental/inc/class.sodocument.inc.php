@@ -1,12 +1,12 @@
 <?php
-phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.socommon');
 
-class rental_sodocument extends rental_socommon
-{
+	class rental_sodocument extends rental_socommon
+	{
+
 	public static $ROOT_FOR_DOCUMENTS = 'rental';
 	public static $PARTY_DOCUMENTS = 'parties';
 	public static $CONTRACT_DOCUMENTS = 'contracts';
-	
 	protected static $so;
 	protected $document_types; // Used for caching the values
 	
@@ -15,9 +15,11 @@ class rental_sodocument extends rental_socommon
 	 * 
 	 * @return the storage object
 	 */
+
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.sodocument');
 		}
 		return self::$so;
@@ -51,10 +53,11 @@ class rental_sodocument extends rental_socommon
 		// Search for based on search type
 		if($search_for)
 		{
-			$search_for = $this->marshal($search_for,'field');
-			$like_pattern = "'%".$search_for."%'";
+				$search_for		 = $this->marshal($search_for, 'field');
+				$like_pattern	 = "'%" . $search_for . "%'";
 			$like_clauses = array();
-			switch($search_type){
+				switch($search_type)
+				{
 				case "title":
 					$like_clauses[] = "rental_document.title $this->like $like_pattern";
 					break;
@@ -75,22 +78,22 @@ class rental_sodocument extends rental_socommon
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "rental_document.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "rental_document.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 		}
 		
 		if(isset($filters['contract_id']))
 		{
-			$filter_clauses[] = "rental_document.contract_id = {$this->marshal($filters['contract_id'],'int')}";
+				$filter_clauses[] = "rental_document.contract_id = {$this->marshal($filters['contract_id'], 'int')}";
 		}
 		
 		if(isset($filters['party_id']))
 		{
-			$filter_clauses[] = "rental_document.party_id = {$this->marshal($filters['party_id'],'int')}";
+				$filter_clauses[] = "rental_document.party_id = {$this->marshal($filters['party_id'], 'int')}";
 		}
 		
 		if(isset($filters['document_type']) && $filters['document_type'] != 'all')
 		{
-			$filter_clauses[] = "rental_document.type_id = {$this->marshal($filters['document_type'],'int')}";
+				$filter_clauses[] = "rental_document.type_id = {$this->marshal($filters['document_type'], 'int')}";
 		}
 		
 		if(count($filter_clauses))
@@ -122,7 +125,7 @@ class rental_sodocument extends rental_socommon
 		{
 			$sort_field = 'rental_document_types.title';
 		}
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 		
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -133,12 +136,12 @@ class rental_sodocument extends rental_socommon
 		if($document == null)
 		{
 			$document = new rental_document($document_id);
-			$document->set_title($this->unmarshal($this->db->f('document_title',true),'string'));
-			$document->set_description($this->unmarshal($this->db->f('description',true),'string'));
-			$document->set_name($this->unmarshal($this->db->f('name',true),'string'));
-			$document->set_type($this->unmarshal($this->db->f('type_title',true),'string'));
-			$document->set_contract_id($this->unmarshal($this->db->f('contract_id',true),'int'));
-			$document->set_party_id($this->unmarshal($this->db->f('party_id',true),'int'));
+				$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
+				$document->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$document->set_name($this->unmarshal($this->db->f('name', true), 'string'));
+				$document->set_type($this->unmarshal($this->db->f('type_title', true), 'string'));
+				$document->set_contract_id($this->unmarshal($this->db->f('contract_id', true), 'int'));
+				$document->set_party_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 		}
 		return $document;
 	}
@@ -154,25 +157,25 @@ class rental_sodocument extends rental_socommon
 			'type_id'
 		);
 		
-		$party_id = $this->marshal($document->get_party_id(),'int');
-		$contract_id = $this->marshal($document->get_contract_id(),'int');
+			$party_id	 = $this->marshal($document->get_party_id(), 'int');
+			$contract_id = $this->marshal($document->get_contract_id(), 'int');
 		$party_id = $party_id > 0 ? $party_id : 'NULL';
 		$contract_id = $contract_id > 0 ? $contract_id : 'NULL';
 		
 		
 		$values = array(
-			$this->marshal($document->get_title(),'string'),
-			$this->marshal($document->get_description(),'string'),
-			$this->marshal($document->get_name(),'string'),
+				$this->marshal($document->get_title(), 'string'),
+				$this->marshal($document->get_description(), 'string'),
+				$this->marshal($document->get_name(), 'string'),
 			$party_id,
 			$contract_id,
-			$this->marshal($document->get_type_id(),'int')
+				$this->marshal($document->get_type_id(), 'int')
 		);
 		
-		$query = "INSERT INTO rental_document (".join(',', $cols).") VALUES (".join(',',$values).")";
+			$query	 = "INSERT INTO rental_document (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($query);
 		
-		$document_id = $this->db->get_last_insert_id('rental_document','id');
+			$document_id = $this->db->get_last_insert_id('rental_document', 'id');
 		$document->set_id($document_id);
 		return $document;
 	}
@@ -181,16 +184,16 @@ class rental_sodocument extends rental_socommon
 	{
 		$id = intval($document->get_id());
 
-		$name_value_pairs = array (
-			"title = {$this->marshal($document->get_title(),'string')}",
-			"description = {$this->marshal($document->get_description(),'string')}",
-			"name = {$this->marshal($document->get_name(),'string')}",
-			"party_id = {$this->marshal($document->get_party_id(),'int')}",
-			"contract_id = {$this->marshal($document->get_contract_id(),'int')}",
-			"type_id = {$this->marshal($document->get_type_id(),'int')}"
+			$name_value_pairs = array(
+				"title = {$this->marshal($document->get_title(), 'string')}",
+				"description = {$this->marshal($document->get_description(), 'string')}",
+				"name = {$this->marshal($document->get_name(), 'string')}",
+				"party_id = {$this->marshal($document->get_party_id(), 'int')}",
+				"contract_id = {$this->marshal($document->get_contract_id(), 'int')}",
+				"type_id = {$this->marshal($document->get_type_id(), 'int')}"
 		);
 		
-		$query = "UPDATE rental_document SET ".join(',',$name_value_pairs)." WHERE id = {$id}";
+			$query	 = "UPDATE rental_document SET " . join(',', $name_value_pairs) . " WHERE id = {$id}";
 		$result = $this->db->query($query);
 		return $result != null;
 	}
@@ -202,14 +205,14 @@ class rental_sodocument extends rental_socommon
 			$sql = "SELECT id, title FROM rental_document_types";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$results = array();
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$location_id = $this->db->f('id', true);
 				$results[$location_id] = $this->db->f('title', true);
 			}
 			$this->document_types = $results;
 		}
 		return $this->document_types;
-		
 	}
 	
 	private function get_document_path(string $document_type, $id)
@@ -234,7 +237,8 @@ class rental_sodocument extends rental_socommon
 		
 		$path = "/{$root_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -243,7 +247,8 @@ class rental_sodocument extends rental_socommon
 		
 		$path .= "/{$type_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -252,7 +257,8 @@ class rental_sodocument extends rental_socommon
 		
 		$path .= "/{$id}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -265,7 +271,7 @@ class rental_sodocument extends rental_socommon
 	public function write_document_to_vfs(string $document_type, $temporary_name, $id, $name)
 	{
 	
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 		
 		if(!$path)
 		{
@@ -290,7 +296,7 @@ class rental_sodocument extends rental_socommon
 	
 	public function read_document_from_vfs(string $document_type, $id, $name)
 	{
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 
 		$path .= "/{$name}";
 		
@@ -309,7 +315,7 @@ class rental_sodocument extends rental_socommon
 	
 	public function delete_document_from_vfs(string $document_type, $id, $name)
 	{
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 
 		$path .= "/{$name}";
 		
@@ -337,4 +343,4 @@ class rental_sodocument extends rental_socommon
 		}
 		return false;		
 	}
-}
+	}

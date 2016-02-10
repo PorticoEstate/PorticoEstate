@@ -21,7 +21,7 @@
 	$passwd = "bkbooking";
 	$_POST['submitit'] = "";
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
-	$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
+	$GLOBALS['phpgw']->session->appsession('tenant_id', 'property', $tenant_id);
 	
 	$GLOBALS['phpgw']->hooks->process('login');
 

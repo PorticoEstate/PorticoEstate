@@ -25,7 +25,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	phpgw::import_class('frontend.uifrontend');
+	phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Helpdesk
@@ -33,7 +33,7 @@
 	 * @package Frontend
 	 */
 
-	class frontend_uihelpdesk extends frontend_uifrontend
+	class frontend_uihelpdesk extends frontend_uicommon
 	{
 
 		public $public_functions = array
@@ -41,12 +41,15 @@
 			'index'     	=> true,
 			'add_ticket'    => true,
 			'view'          => true,
+			'query'			=> true
 		);
 
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'));
+
 			parent::__construct();
+			
 			$this->location_code = $this->header_state['selected_location'];
 			$GLOBALS['phpgw']->translation->add_app('property');
 		}
@@ -55,107 +58,34 @@
 		{
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'helpdesk.index';
 			$this->insert_links_on_header_state();
-			$bo	= CreateObject('property.botts');
 
-			$dry_run = false;
-			$second_display = phpgw::get_var('second_display', 'bool');
+			$filters = array();
 
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'frontend.uihelpdesk.index',"
-					."second_display:1,"
-					."sort: '{$this->sort}',"
-					."order: '{$this->order}',"
-					."cat_id:'{$this->cat_id}',"
-					."status_id: '{$this->status_id}',"
-					."user_id: '{$this->user_id}',"
-					."query: '{$this->query}',"
-					."district_id: '{$this->district_id}',"
-					."start_date: '{$start_date}',"
-					."end_date: '{$end_date}',"
-					."allrows:'{$this->allrows}'";
-
-				$this->bocommon = CreateObject('property.bocommon', true);
-
-				$values_combo_box = array(
-					0 => array(
+			$search_option = array
+			(
+					array(
 						'id'        => 'all',
 						'name'      => lang("All"),
-						'selected'  => 'selected'
+						'selected'  => 1
 					),
-					1 => array(
+					array(
 						'id'        => 'X',
 						'name'      => lang("Closed")
 					),
-					2 => array(
+					array(
 						'id'        => 'O',
 						'name'      => lang("Open"),
 					)
 				);
 
-				$datatable['actions']['form'] = array(
-					array
-					(
-						'action'        => $GLOBALS['phpgw']->link('/index.php', array
+			$filters[] = array
 						(
-						'menuaction' 	=> 'frontend.uihelpdesk.index',
-						'second_display'=> $second_display,
-						'status'		=> $this->status
-						)
-						),
-						'fields' => array(
-							'field' => array(
-								array
-								(
-									'type'      => 'button',
-									'id'        => 'btn_new',
-									'value'     => lang('new_ticket'),
-									'tab_index' => 3
-								),
-								array
-								(
-									'id'        => 'btn_status_id',
+							'type'   => 'filter',
 									'name'      => 'status_id',
-									'value'     => lang('Status'),
-									'type'      => 'button',
-									'style'     => 'filter',
-									'tab_index' => 2
-								),
-							),
-							'hidden_value' => array
-							(
-								array
-								( //status values
-									'id' => 'values_combo_box',
-									'value'	=> $this->bocommon->select2String($values_combo_box)
-								)
-							)
-						)
-					)
+							'text'   => lang('Status'),
+							'list'   => $search_option
 				);
 
-				$dry_run = true;
-			}
-
-			if(isset($this->location_code) && $this->location_code != '')
-			{
-				$bo->location_code = $this->location_code;
-				//to make sure the list select "All" not only the open ones
-				if(phpgw::get_var("status_id")== ""){
-					$bo->status_id = 'all';
-				}
-				$ticket_list = $bo->read('','','',$dry_run);
-			}
-			else
-			{
-				$ticket_list = null;
-			}
-			
-			
 			$uicols = array();
 
 			$uicols['name'][] = 'id';
@@ -171,46 +101,26 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			if(is_array($ticket_list))
+			$uicols_helpdesk = array();
+			for($k = 0; $k < $count_uicols_name; $k++)
 			{
-				$status['X'] = array
-				(
-					'status'			=> lang('closed')
+				$params = array(
+					'key'		 => $uicols['name'][$k],
+					'label'		 => $uicols['descr'][$k],
+					'sortable'	 => ($uicols['sortable'][$k]) ? true : false,
+					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				$status['O'] = array
-				(
-					'status'			=> isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open'),
-				);
-
-				$custom_status	= $bo->get_custom_status();
-
-				foreach($custom_status as $custom)
+				if($uicols['name'][$k]=='id' || $uicols['name'][$k]=='user' || $uicols['name'][$k]=='entry_date')
 				{
-					$status["C{$custom['id']}"] = array
-					(
-						'status'			=> $custom['name'],
-					);
+					$params['sortable']	= true;
+						}
+				if($uicols['name'][$k]=='id')
+						{
+					$params['hidden'] = true;
 				}
 
-				$j = 0;
-				foreach($ticket_list as $ticket)
-				{
-					for ($k = 0 ; $k < $count_uicols_name ; $k++)
-					{
-						if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= $status[$ticket[$uicols['name'][$k]]]['status'];
-						}
-						else
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]];
-						}
-					}
-					$j++;
-				}
+				array_push($uicols_helpdesk, $params);
 			}
 
 			$parameters = array
@@ -221,157 +131,143 @@
 					(
 						'name'		=> 'id',
 						'source'	=> 'id'
-					),
+					)
 				)
 			);
 
-			$datatable['rowactions']['action'][] = array(
+			$tabletools[] = array
+				(
 				'my_name' 			=> 'view',
-				'statustext' 	=> lang('view the ticket'),
 				'text'			=> lang('view'),
 				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 				(
-				'menuaction'	=> 'frontend.uihelpdesk.view'
+						'menuaction'	=> 'frontend.uihelpdesk.view',
+						'location_id'	=> $this->location_id,
 				)),
-				'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
+				);
+			
+			$tabletools[] = array
+				(
+					'my_name'		=> 'new_ticket',
+					'text' 			=> lang('new_ticket'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+								'noframework'	=> 1
+							)).";
+						newTicket(oArgs);
+					"
+				);
+			
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array
+					(
+						'menuaction'			=> 'frontend.uihelpdesk.query',
+						'location_id'			=> $this->location_id,
+						'phpgw_return_as'		=> 'json'))
+				),
+				'ColumnDefs' => $uicols_helpdesk,
+				'tabletools' => $tabletools
 			);
 
-			$link =	$GLOBALS['phpgw']->link(
+			/*$link =	$GLOBALS['phpgw']->link(
 					'/index.php',
 					array('menuaction'	=> 'frontend.uihelpdesk.view'));
-			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";
+			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";*/
 			
-			unset($parameters);
-			for ($i = 0 ; $i < $count_uicols_name ; $i++)
-			{
-				$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= false;
-				if($uicols['name'][$i]=='id' || $uicols['name'][$i]=='user' || $uicols['name'][$i]=='entry_date')
-				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
-				}
-				if($uicols['name'][$i]=='id')
-				{
-					$datatable['headers']['header'][$i]['visible'] 		= false;
-				}
-			}
-
-			//path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			if($dry_run)
-			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$datatable['pagination']['records_returned']= count($ticket_list);
-			}
-			$datatable['pagination']['records_total'] 	= $bo->total_records;
-
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-
-			$appname		= lang('helpdesk');
-			$function_msg	= lang('list ticket');
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'entry_date'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array(
-				'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-				'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-				'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-			);
-
-			// values for datatable
-			if(is_array($datatable['rows']['row']))
-			{
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						$json_row[$column['name']] = $column['value'];
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(is_array($datatable['rowactions']['action']))
-			{
-				$json['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
-
-// Prepare template variables and process XSLT
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
-
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('frontend') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
-			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed' , 'property');
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
-
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
-			
+
 			$data = array(
 				'header' 		=> $this->header_state,
-				'tabs'			=> $this->tabs,
-				'helpdesk' 		=> array('datatable' => $datatable, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
+				'section' 		=> array(
+					'datatable_def' => $datatable_def,
+					'tabs' => $this->tabs,
+					'tabs_content' => $this->tabs_content,
+					'filters' => $filters,
+					'tab_selected' => $this->tab_selected,
+					'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))
+				),
 				'lightbox_name'	=> lang('add ticket')
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
+			self::add_javascript('frontend', 'jquery', 'helpdesk.list.js');
+			self::render_template_xsl(array('helpdesk', 'datatable_inline', 'frontend'), $data);
+			}
+		
+		public function query()
+			{
+			phpgwapi_cache::session_clear('frontend','msgbox');
+
+			$bo	= CreateObject('property.botts');
+
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$status_id = phpgw::get_var('status_id', 'string', 'REQUEST', 'all');
+
+			$params = array(
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => ($columns[$order[0]['column']]['data'] == 'subject') ? 'entry_date' : $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
+				'status_id'	 => $status_id
+			);
+
+			if(isset($this->location_code) && $this->location_code != '')
+			{
+				$params['location_code'] = $this->location_code;
+				$ticket_list = $bo->read($params);
+			}
+			else
+			{
+				$ticket_list = null;
+			}
+
+			if(is_array($ticket_list))
+			{
+				$status['X'] = array
+				(
+					'status'			=> lang('closed')
+			);
+
+				$status['O'] = array
+				(
+					'status'			=> isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open'),
+				);
+
+				$custom_status	= $bo->get_custom_status();
+
+				foreach($custom_status as $custom)
+			{
+					$status["C{$custom['id']}"] = array
+					(
+						'status'		=> $custom['name'],
+					);
+			}
+
+				foreach($ticket_list as &$ticket)
+			{
+					if(array_key_exists($ticket['status'], $status))
+					{
+						$ticket['status'] 	= $status[$ticket['status']]['status'];
+					}
+				}			 
+			}
+
+			$result_data = array('results' => $ticket_list);
+
+			$result_data['total_records']	 = $bo->total_records;
+			$result_data['draw']			 = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		private function cmp($a, $b)
@@ -464,32 +360,6 @@
 				}
 			}
 
-			/*
-			foreach($history as $story)
-			{
-				
-				 // String search for filtering out ticket history. If the status contains e.g. "Budget changed"
-				 // the history bullet will not be incuded in the ticket history shown to frontend users.
-				 
-				if(
-					(	
-						strpos($story['value_action'],'Budget changed') === false && 
-						strpos($story['value_action'],'Priority changed') === false &&
-						strpos($story['value_action'],'actual cost changed') === false &&
-						strpos($story['value_action'],'Billable hours changed') === false
-					)
-				)
-				{
-					$tickethistory[] = array(
-						'date' => $story['value_date'],
-						'user' => $story['value_user'],
-						'action'=> $story['value_action'],
-						'new_value' => $story['value_new_value'],
-						'old_value' => $story['value_old_value']
-					);
-				}
-			}*/
-
 			usort($tickethistory, array($this, "cmp"));
 
 
@@ -505,15 +375,23 @@
 			
 			$data = array(
 				'header' 		=> $this->header_state,
-				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
-				'tabs'			=> $this->tabs,
-				'ticketinfo'	=> array(
+				'section'	=> array(
+					'helpdesklist'	=> $GLOBALS['phpgw']->link('/index.php',
+								array
+								(
+									'menuaction'		=> 'frontend.uihelpdesk.index',
+									'location_id'		=> $this->location_id
+								)),					
 					'ticket'        => $ticket,
-					'tickethistory'	=> $tickethistory2)
+					'tickethistory'	=> $tickethistory2,
+					'tabs'			=> $this->tabs,
+					'tabs_content'	=> $this->tabs_content,
+					'tab_selected'	=> $this->tab_selected,
+					'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
+				)
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'ticketview'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
+			self::render_template_xsl(array('frontend', 'datatable_inline', 'ticketview'), $data);
 		}
 
 
@@ -682,6 +560,10 @@
 				'p_num'			=> $p_num,
 			);
 
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Ny melding'), 'link' => '#details');
+			$active_tab = 'details';
+			
 			$data = array(
 				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
 				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
@@ -691,11 +573,17 @@
 				'description'   	=> $values['description'],
 				'noform'        	=> $noform,
 				'category_list'		=> $category_list,
+				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
-		}
 
+			/*
+			 * Note: not working for when you want a spesific target other than 'data'
+			 * self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
+			 */
+
+		}
 	}

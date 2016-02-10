@@ -1,8 +1,9 @@
 <?php
-phpgw::import_class('booking.sopermission');
+	phpgw::import_class('booking.sopermission');
 
-class booking_sopermission_event extends booking_sopermission
-{
+	class booking_sopermission_event extends booking_sopermission
+	{
+
     /**
      * @see booking_sopermission
      */
@@ -10,4 +11,4 @@ class booking_sopermission_event extends booking_sopermission
     {
         return array();
     }
-}
+	}

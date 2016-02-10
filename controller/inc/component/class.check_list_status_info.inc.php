@@ -47,7 +47,6 @@
 		private $assigned_to;
 		private $billable_hours;
 
-
 		public function __construct()
 		{
 			
@@ -69,7 +68,9 @@
 		}
 
 		public function get_control_id()
-		{ return $this->control_id;}
+		{
+			return $this->control_id;
+		}
 
 		public function set_status($status)
 		{

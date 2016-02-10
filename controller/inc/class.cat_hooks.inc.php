@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package controller
 	* @subpackage entity
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
@@ -33,21 +33,23 @@
 	*/
 	class controller_cat_hooks
 	{
+
 		protected $soresponsible;
 		protected $_db;
 
 		function __construct()
 		{
-			$this->_db 				=& $GLOBALS['phpgw']->db;
+			$this->_db						 = & $GLOBALS['phpgw']->db;
 			$this->soresponsible	= CreateObject('property.soresponsible');
 			$this->soresponsible->appname = 'controller';
 		}		
+
 		/**
 		 * Handle a new category being added, create location to hold ACL-data
 		 */
 		function cat_add($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
@@ -60,7 +62,7 @@
 			}
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'controller');
 			
-/*
+			/*
 			$this->soresponsible->add_type(array
 				(
 					'name'	=> $data['cat_name'],
@@ -70,7 +72,7 @@
 					'active'	=> true
 				)
 			);
-*/
+			 */
 		}
 
 		/**
@@ -78,7 +80,7 @@
 		 */
 		function cat_delete($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
@@ -96,7 +98,7 @@
 		 */
 		function cat_edit($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
@@ -107,13 +109,13 @@
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'controller');
 
-/*
+				/*
 				$value_set['name']		= $this->_db->db_addslashes($data['cat_name']);
 				$value_set['descr']		= $value_set['name'];
 
 				$value_set	= $this->_db->validate_update($value_set);
 				$this->_db->query("UPDATE fm_responsibility SET $value_set WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
-*/
+				 */
 			}
 		}
 	}

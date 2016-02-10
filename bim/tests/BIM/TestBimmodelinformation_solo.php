@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -16,10 +13,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-include('..\..\inc\class.bimmodelinformation.inc.php');
+	include('..\..\inc\class.bimmodelinformation.inc.php');
 
-class TestBimmodelinformation extends PHPUnit_Framework_TestCase
-{
+	class TestBimmodelinformation extends PHPUnit_Framework_TestCase
+	{
+
 	private $modelInformation;
 
 	/**
@@ -31,6 +29,7 @@ class TestBimmodelinformation extends PHPUnit_Framework_TestCase
 	{
 		$this->loadXmlVariables();
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -39,30 +38,31 @@ class TestBimmodelinformation extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		
-		 
 	}
 	
-	private function loadXmlVariables() {
+		private function loadXmlVariables()
+		{
 		$xml = simplexml_load_file('wholeModelOutputExample.xml');
 		$this->modelInformation = $xml->modelInformation;
 		
 		//echo $this->projectXml->();
 	}
-	
-	/*public function testDisplayModelInfo() {
+		/* public function testDisplayModelInfo() {
 		echo "---------\n";
 		var_dump($this->modelInformation);
 		echo "\n---------\n";
-	}*/
+		  } */
 	
-	public function testConvertDate() {
+		public function testConvertDate()
+		{
 		$example8601 = "2001-09-09T01:46:40";
 		$bimModelInformation = new BimModelInformation();
 		$timeStamp = $bimModelInformation->convertToTimestamp($example8601);
 		$this->assertEquals(999992800, $timeStamp);
 	}
 
-	public function testLoadXmlModelInformation() {
+		public function testLoadXmlModelInformation()
+		{
 		$bimModelInformation = new BimModelInformation();
 		$bimModelInformation->loadVariablesFromXml($this->modelInformation);
 		
@@ -76,4 +76,4 @@ class TestBimmodelinformation extends PHPUnit_Framework_TestCase
 		$this->assertEquals(null, $bimModelInformation->getValDate());
 		$this->assertEquals("IFC2X3", $bimModelInformation->getNativeSchema());
 	}
-}
+	}

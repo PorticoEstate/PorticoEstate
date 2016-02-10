@@ -24,17 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Generic parent class for cron-jobs, with and without UI
 	 * @package property
 	 */
-
-
 	abstract class  property_cron_parent
 	{
+
 		protected $function_name;
 		protected $debug = false;
 		protected $receipt = array();
@@ -52,7 +51,7 @@
 
 		function pre_run($data = array())
 		{
-			if(isset($data['enabled']) && $data['enabled']==1)
+			if(isset($data['enabled']) && $data['enabled'] == 1)
 			{
 				$confirm	= true;
 				$cron		= true;
@@ -64,7 +63,7 @@
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 			}
 
-			if( isset($data['debug']) && $data['debug'] )
+			if(isset($data['debug']) && $data['debug'])
 			{
 				$this->debug = true;
 			}
@@ -73,23 +72,23 @@
 				$this->debug	= phpgw::get_var('debug', 'bool');
 			}
 
-			if ($confirm)
+			if($confirm)
 			{
 				$this->execute($data);
 				$this->cron_log($cron);
 				// initiated from ui
 				if(!$cron)
 				{
-					$this->confirm($execute=false);
+					$this->confirm($execute = false);
 				}
 			}
 			else
 			{
-				$this->confirm($execute=false);
+				$this->confirm($execute = false);
 			}
 		}
 
-		function confirm($execute='')
+		function confirm($execute = '')
 		{
 			$link_data = array
 			(
@@ -113,8 +112,8 @@
 			$data = array
 			(
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiasync.index')),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index')),
+				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'message'				=> $this->receipt['message'],
 				'lang_confirm_msg'		=> $lang_confirm_msg,
 				'lang_yes'				=> $lang_yes,
@@ -127,13 +126,11 @@
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $this->sub_location . ': ' . $this->function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-
 		abstract public function execute();
-
 
 		private function cron_log($cron)
 		{
@@ -149,18 +146,18 @@
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
-			$insert_values= array
+			$insert_values = array
 			(
 				$cron,
 				date($this->db->datetime_format()),
 				$this->function_name,
-				$this->db->db_addslashes(implode('::',(array_keys($msgbox_data))))
+				$this->db->db_addslashes(implode('::', (array_keys($msgbox_data))))
 			);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 		}
 	}

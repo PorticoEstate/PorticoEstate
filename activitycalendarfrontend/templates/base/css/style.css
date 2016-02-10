@@ -1,0 +1,57 @@
+#wrapper {max-width: 1000px;width: 95%;}
+
+h1 {font-size: 2em;letter-spacing: 0;}
+a {text-decoration: underline;}
+
+dd {margin-left: 0px;}
+fieldset {border: none;border-top: 1px dashed rgb(167, 127, 0);padding: 0px;margin: 0;margin-top: 2.5em;width: 100%;}
+
+#line {margin: 0 auto;width: 96%;}
+.pageTop {padding: 0 2em;}
+
+#frontend dl.proplist-col {box-sizing: border-box;max-width: 600px;padding: 0 2em;width: 100%;}
+
+/*.pure-g {letter-spacing: normal;}*/
+
+.pure-g [class*="pure-u"] {padding: 0;}
+.pure-g [class*="pure-u"] button,
+.pure-g [class*="pure-u"] input,
+.pure-g [class*="pure-u"] select,
+.pure-g [class*="pure-u"] textarea {max-width: 100%;}
+
+.pure-g [class*="pure-u"] input,
+.pure-g [class*="pure-u"] select,
+.pure-g [class*="pure-u"] textarea {padding: 2px !important;}
+
+/*input[class*="pure-u"],
+textarea[class*="pure-u"],
+select[class*="pure-u"] {padding: 2px !important;}*/
+
+
+.input-80 {max-width: 420px !important;width: 420px !important;}
+.input-50 {max-width: 270px !important;width: 270px !important;}
+.input-40 {max-width: 220px !important;width: 220px !important;}
+.input-20 {max-width: 120px !important;width: 120px !important;}
+.input-5 {max-width: 45px !important;width: 45px !important;}
+
+.input-part-1 {clear:left;margin-right:20px;float:left;}
+.input-part-2 {float: left;}
+
+.helpLink {display: inline-block;margin-left: 5px;vertical-align: middle;}
+.helpLink img {display: block;}
+
+.error,
+.valid {box-shadow: 0 0 0 transparent inset !important;}
+.valid {border: 1px solid #468847;}
+
+select.error,
+select.valid {background-position: right 18px center !important;}
+
+@media only screen and (max-width: 555px) {
+    .input-80 {width: 100% !important;}
+    .input-50 {width: 100% !important;}
+    .input-40 {width: 100% !important;}
+    .input-20 {width: 100% !important;}
+    .input-5 {width: 100% !important;}
+    .input-part-2 {clear: left;}
+}

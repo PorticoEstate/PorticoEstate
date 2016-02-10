@@ -1,7 +1,7 @@
 <?php
 
-class TestBimCommon extends PHPUnit_Framework_TestCase
-{
+	class TestBimCommon extends PHPUnit_Framework_TestCase
+	{
 	
 	protected $db;
 	// variables for bim model
@@ -12,25 +12,30 @@ class TestBimCommon extends PHPUnit_Framework_TestCase
 	protected $vfsSubModule = "ifc";
 	protected $vfsFileId = 10101010;
 	
-	public function __construct() {
+		public function __construct()
+		{
 		//$GLOBALS['phpgw_info']['user']['account_id'] = 7;
 		$currentDirectory = dirname(__FILE__);
-		$this->vfsFileNameWithFullPath = $currentDirectory.DIRECTORY_SEPARATOR.$this->vfsFileName;
-		echo "Var set to:".$this->vfsFileNameWithFullPath;
+			$this->vfsFileNameWithFullPath = $currentDirectory . DIRECTORY_SEPARATOR . $this->vfsFileName;
+			echo "Var set to:" . $this->vfsFileNameWithFullPath;
 	}
 	
-	protected function initDatabase() {
+		protected function initDatabase()
+		{
 		$this->db = & $GLOBALS['phpgw']->db;
 	}
 	
-	protected function createDummyFile() {
+		protected function createDummyFile()
+		{
 		
 		
 		$fileHandle = fopen($this->vfsFileNameWithFullPath, 'w') or die("Can't open file");
 		$result = fwrite($fileHandle, $this->vfsFileContents);
 		fclose($fileHandle);
 	}
-	protected function removeDummyFile() {
+
+		protected function removeDummyFile()
+		{
 		unlink($this->vfsFileNameWithFullPath);
 	}
-}
+	}

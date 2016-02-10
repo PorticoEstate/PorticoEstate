@@ -3,34 +3,35 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
 		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
 		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
 		<title>{site_title}</title>
-
-		<link rel="stylesheet" href="{webserver_url}/phpgwapi/templates/pure/css/pure-min.css">
-		<!--[if lte IE 8]>
-			<link rel="stylesheet" href="{webserver_url}/phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css">
-			<link rel="stylesheet" href="{webserver_url}/phpgwapi/templates/pure/css/side-menu-old-ie.css">
-			<link rel="stylesheet" href="{webserver_url}/phpgwapi/templates/pure/css/baby-blue-old-ie.css">
-		<![endif]-->
-		<!--[if gt IE 8]><!-->
-			<link rel="stylesheet" href="{webserver_url}/phpgwapi/templates/pure/css/grids-responsive-min.css">
-		    <link rel="stylesheet" href="phpgwapi/templates/pure/css/side-menu.css">
-		    <link rel="stylesheet" href="phpgwapi/templates/pure/css/baby-blue.css">
-		<!--<![endif]-->
-
-		<!--[if lt IE 9]>
-			<script src="{webserver_url}/phpgwapi/templates/pure/js/html5shiv.js"></script>
-		<![endif]-->
-
+		{css}
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+		{menu_stylesheet_widescreen}
 
-		{css}
+		
+		<style>
+			.priority1
+			{
+				background-color: #da7a7a !important;
+			}
+
+			.priority2
+			{
+				background-color: #dababa !important;
+			}
+
+			.priority3
+			{
+				background-color: #dadada !important;
+			}
+		</style>
 
 		<script type="text/javascript">
 		<!--

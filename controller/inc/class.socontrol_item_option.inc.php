@@ -25,20 +25,20 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control_item_option', 'inc/model/');
 
 	class controller_socontrol_item_option extends controller_socommon
 	{
+
 		protected static $so;
 
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_option');
 			}
@@ -63,7 +63,7 @@
 				$this->marshal($control_item_option->get_control_item_id(), 'int')
 			);
 
-			$result = $this->db->query('INSERT INTO controller_control_item_option (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			$result = $this->db->query('INSERT INTO controller_control_item_option (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
 			if($result)
 			{
@@ -91,7 +91,7 @@
 				'control_item_id = ' . $this->marshal($control_item->get_control_item_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE controller_control_item_option SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_control_item_option SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 			return $result;
 		}
@@ -123,7 +123,7 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_option');
 			}
@@ -131,7 +131,18 @@
 			return self::$so;
 		}
 		
-		function get_id_field_name(){}
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
-		function populate(int $object_id, &$object){}
+		function get_id_field_name()
+		{
+
+		}
+
+		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		{
+			
+		}
+
+		function populate(int $object_id, &$object)
+		{
+
+		}
 	}

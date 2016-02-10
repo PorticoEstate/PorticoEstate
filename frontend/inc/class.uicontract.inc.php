@@ -1,12 +1,12 @@
 <?php
 
-phpgw::import_class('frontend.uifrontend');
+phpgw::import_class('frontend.uicommon');
 phpgw::import_class('rental.uicontract');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socomposite');
 phpgw::import_class('rental.soparty');
 
-class frontend_uicontract extends frontend_uifrontend
+class frontend_uicontract extends frontend_uicommon
 {
 
 	protected $contract_state_identifier;
@@ -22,10 +22,8 @@ class frontend_uicontract extends frontend_uifrontend
 	public function __construct()
 	{
 		parent::__construct();
-//		$this->get_contracts_per_location();
 	}
 	
-
 	/**
 	 * Show single contract details
 	 */
@@ -179,25 +177,28 @@ class frontend_uicontract extends frontend_uifrontend
 		}
 		
 		$data = array (
-			'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
-			'tabs' 			=> 	$this->tabs,
-			'contract_data' => 	array (
+			'section' => 	array (
 				'select' => $contracts_for_selection, 
 				'selected_contract' =>  $this->contract_state['selected'], 
 				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'party'	=> $party_array,
 				'composite' => $composite_array,
+				'tab_selected'		=> $this->tab_selected,
 				'contract_filter' => $this->contract_filter,
-				'form_url' => $this->form_url
+				'form_url'			=> $this->form_url,
+				'tabs'				=> $this->tabs,
+				'tabs_content'		=> $this->tabs_content
 			)
 		);
 					
-		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
+		self::render_template_xsl(array( 'contract', 'datatable_inline', 'frontend'),  $data);
 	}
 
 
+	public function query() {}
+	
 	private function get_contracts_per_location()
 	{
 		$org_unit = $this->header_state['selected_org_unit'];

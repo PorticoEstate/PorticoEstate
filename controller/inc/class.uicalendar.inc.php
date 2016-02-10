@@ -4,7 +4,8 @@
 	 *
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2011,2012,2013,2014,2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -32,7 +33,7 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('controller.socheck_list');
 
 	include_class('controller', 'check_list', 'inc/model/');
@@ -45,7 +46,7 @@
 	include_class('controller', 'year_calendar_agg', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 
-	class controller_uicalendar extends phpgwapi_uicommon
+	class controller_uicalendar extends phpgwapi_uicommon_jquery
 	{
 
 		private $so;
@@ -97,6 +98,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		public function view_calendar_for_month()
@@ -701,7 +703,6 @@
 				'current_year'					 => $year,
 				'location_code'					 => $location_code,
 				'serie_id'						=> $serie_id,
-
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager',
@@ -747,7 +748,7 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array	 = $this->so_control->get_locations_for_control($control_id);
-				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id,$serie_id);
+				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id, $serie_id);
 				foreach($locations_for_control_array as $location)
 				{
 					$locations_list[] = array

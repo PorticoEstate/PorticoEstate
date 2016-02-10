@@ -3,6 +3,7 @@
 	
 	class booking_boaccount_code_set extends booking_bocommon_global_manager_authorized
 	{
+
 		function __construct()
 		{
 			parent::__construct();
@@ -28,8 +29,7 @@
 							'delete' => true,
 						),
 					)
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		
@@ -45,9 +45,7 @@
 							'delete' => true,
 						),
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
-
 	}

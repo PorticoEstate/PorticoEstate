@@ -25,20 +25,20 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicheck_list_for_component extends phpgwapi_uicommon
+	class controller_uicheck_list_for_component extends phpgwapi_uicommon_jquery
 	{
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -48,11 +48,9 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
-
 		private $so_control_area;
 		private $so_control; 
 		private $so_bim;
-
 		var $public_functions = array(
 										'index' => true,
 										'add_component_to_control' => true,
@@ -63,7 +61,10 @@
 		{
 			parent::__construct();
 
-			$this->bo					= CreateObject('property.bolocation',true);
+			throw new Exception('Is this class used? (controller_uicheck_list_for_component)');
+
+
+			$this->bo			 = CreateObject('property.bolocation', true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control 			= CreateObject('controller.socontrol');
 
@@ -83,23 +84,25 @@
 			$this->location_code		= $this->bo->location_code;
 
 			self::set_active_menu('controller::control::component_for_check_list');
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
 				return $this->query();
 			}
 			$bim_types = $this->so_control->get_bim_types();
 
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+	//		$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 			$controls_array = $this->so_control->get_controls_by_control_area($control_areas_array[0]['id']);
 			$control_id = $control_areas_array[0]['id'];
 
 			if($control_id == null)
 				$control_id = 0;
 
-			$tabs = array( array(
+			$tabs = array(array(
 						'label' => lang('View_component_for_control')
 					), array(
 						'label' => lang('Add_component_for_control'),
@@ -112,7 +115,8 @@
 				'control_area_array' 	=> $control_areas_array,
 				'control_array'			=> $control_array,
 				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.index','phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.index',
+						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -143,10 +147,8 @@
 				)
 			);
 
-			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
 			self::render_template_xsl(array('control_component_tabs', 'common', 'view_component_for_control'), $data);
@@ -159,10 +161,10 @@
 				//add component to control using component item ID
 				$items_checked = array();
 				$items = phpgw::get_var('values_assign');
-				$item_arr = explode('|',$items);
+				$item_arr		 = explode('|', $items);
 				foreach($item_arr as $item)
 				{
-					$items_checked[] = explode(';',$item);
+					$items_checked[] = explode(';', $item);
 				}
 				//var_dump($items_checked);
 
@@ -177,11 +179,11 @@
 					}
 				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.index'));
-
 			}
 			else
 			{
-				if(phpgw::get_var('phpgw_return_as') == 'json') {
+				if(phpgw::get_var('phpgw_return_as') == 'json')
+				{
 					return $this->get_component();
 				}
 
@@ -189,10 +191,9 @@
 
 				$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 
-				$tabs = array( array(
+				$tabs = array(array(
 							'label' => lang('View_component_for_control'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.index'))
-
 						), array(
 							'label' => lang('Add_component_for_control')
 						));
@@ -208,13 +209,14 @@
 						'bim_types' 			=> $bim_types
 					),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.add_component_to_control', 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.add_component_to_control',
+							'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
 								'key' => 'id',
 								'label' => lang('ID'),
 								'sortable'	=> true,
-								'formatter' => 'YAHOO.portico.formatLink'
+								'formatter'	 => 'JqueryPortico.formatLink'
 							),
 							array(
 								'key'	=>	'guid',
@@ -230,7 +232,6 @@
 								'key' => 'checked',
 								'label' => 'Velg',
 								'sortable' => false,
-								'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
 								'className' => 'mychecks'
 							),
 							array(
@@ -250,10 +251,8 @@
 				);
 
 
-				phpgwapi_yui::load_widget('paginator');
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_component_tabs', 'common', 'add_component_to_control'), $data);
@@ -267,7 +266,7 @@
 			foreach($control_list as $control)
 			{
 				$control['bim_name'] = $this->so_control->getBimItemAttributeValue($control['bim_item_guid'], 'description');
-				$results['results'][]= $control;
+				$results['results'][]	 = $control;
 			}
 
 			$results['total_records'] = 10;
@@ -289,7 +288,7 @@
 
 			$sort = "ASC";
 
-			$component_list = $this->so_control->getAllBimItems(10,$type_id);
+			$component_list = $this->so_control->getAllBimItems(10, $type_id);
 			//var_dump($component_list); 
 
 
@@ -297,7 +296,7 @@
 			foreach($component_list as $component)
 			{
 				$component['checked'] = false;
-				$results['results'][]= $component;
+				$results['results'][]	 = $component;
 				$i++;
 			}
 
@@ -320,11 +319,13 @@
 			$value['labels'] = array();
 
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view',
+				'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('show');
 
 			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'location_code' => $value['location_code'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit',
+				'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_location');
 		}
 
@@ -334,14 +335,18 @@
 			if($ifc != null)
 			{
 				if($ifc = 1)
+				{
 					$ifc = true;
+				}
 				else
+				{
 					$ifc = false;
+			}
 			}
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
-			if(count($bim_types)>0)
-				return json_encode( $bim_types );
+			if(count($bim_types) > 0)
+				return json_encode($bim_types);
 			else
 				return null;
 		}

@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
@@ -25,29 +26,38 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	class status_agg_month_info
 	{		
+
 		private $month_nr;
 		private $agg_open_cases;
 			
-		public function __construct(){}
+		public function __construct()
+		{
+			
+		}
 		
 		public function set_month_nr($month_nr)
 		{
 			$this->month_nr = $month_nr;
 		}
 		
-		public function get_month_nr() { return $this->month_nr; }
+		public function get_month_nr()
+		{
+			return $this->month_nr;
+		}
 		
 		public function set_agg_open_cases($agg_open_cases)
 		{
 			$this->agg_open_cases = $agg_open_cases;
 		}
 		
-		public function get_agg_open_cases() { return $this->agg_open_cases; }
+		public function get_agg_open_cases()
+		{
+			return $this->agg_open_cases;
+		}
 				
 		public function serialize()
 		{

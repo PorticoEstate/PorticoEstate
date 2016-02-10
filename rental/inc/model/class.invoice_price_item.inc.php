@@ -9,6 +9,7 @@
 	 */
 	class rental_invoice_price_item extends rental_price_item
 	{
+
 		protected $decimals;
 		protected $invoice_id;
 		protected $is_area;
@@ -18,7 +19,6 @@
 		protected $total_price;
 		protected $timestamp_start; // Start date for the given invoice
 		protected $timestamp_end; // End date for the given invoice
-		
 		public static $so;
 		
 		public function __construct(int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end)
@@ -42,7 +42,8 @@
 			$this->invoice_id = (int)$invoice_id;
 		}
 		
-				public function get_invoice_id(){ return $this->invoice_id; }
+		public function get_invoice_id()
+		{ return $this->invoice_id;}
 			
 		public function set_is_area(boolean $is_area)
 		{
@@ -50,7 +51,8 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 	
-		public function is_area(){ return $this->is_area; }
+		public function is_area()
+		{ return $this->is_area;}
 		
 		public function set_count(int $count)
 		{
@@ -64,7 +66,8 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 	
-		public function get_price(){ return $this->price_per_year; }
+		public function get_price()
+		{ return $this->price_per_year;}
 			
 		public function set_area($area)
 		{
@@ -72,9 +75,11 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 	
-		public function get_area(){ return $this->area; }
+		public function get_area()
+		{ return $this->area;}
 		
-		public function get_count(){ return $this->count; }
+		public function get_count()
+		{ return $this->count;}
 		
 		public function set_total_price(float $total_price)
 		{
@@ -86,7 +91,8 @@
 		 * 
 		 * @return float	the total price of the price item
 		 */
-		public function get_total_price(){ 
+		public function get_total_price()
+		{
 			if($this->total_price == null) // Needs to be calculated
 			{
 				// The calculation of the price for complete months (meaning the item applies for the whole month) ..
@@ -111,11 +117,9 @@
 				for($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--) 
 				{
 					// Within each year: which months do the price item run for
-					
 					// First we set the defaults (whole year)
 					$current_start_month = 1; // January
 					$current_end_month = 12; // December
-					
 					// If we are at the start year, use the start month of this year as start month
 					if($current_year == $date_start['year']) 
 					{
@@ -151,7 +155,8 @@
 						}
 						
 						// Increase counter: complete months or incomplete months (number of days in this year and number of days )
-						if($first_day === 1 && $last_day == $num_of_days_in_current_month){ // This is a whole month
+						if($first_day === 1 && $last_day == $num_of_days_in_current_month)
+						{ // This is a whole month
 							$num_of_complete_months++;
 						}
 						else // Incomplete month
@@ -164,12 +169,11 @@
 					}
 				}
 				// ---- Calculate complemete months
-				
 				// Retrieve the amount: rented area of contract or the number of items (depending on type of price element)
 				$amount = $this->is_area() ? $this->get_area() : $this->get_count();
 				
 				// The total price of this price element for complete months
-				$this->total_price = (($this->get_price() * $num_of_complete_months)/12.0) * $amount;
+				$this->total_price = (($this->get_price() * $num_of_complete_months) / 12.0) * $amount;
 				
 				// ---- Calculate incomplete months 
 				
@@ -194,7 +198,8 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 		
-		public function get_timestamp_start(){ return $this->timestamp_start; }
+		public function get_timestamp_start()
+		{ return $this->timestamp_start;}
 		
 		public function set_timestamp_end(int $timestamp_end)
 		{
@@ -202,7 +207,8 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 	
-		public function get_timestamp_end(){ return $this->timestamp_end; }
+		public function get_timestamp_end()
+		{ return $this->timestamp_end;}
 		
 		public function serialize()
 		{
@@ -220,7 +226,4 @@
 					'timestamp_end'		=> date($date_format, $this->get_timestamp_end()),
 				);
 		}
-		
 	}
-		
-?>

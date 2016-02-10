@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * phpGroupWare - property: a Facilities Management System.
 	 *
@@ -8,9 +9,8 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 * @category core
- 	 * @version $Id$
+	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@
 
 	class property_bofiles
 	{
+
 		/**
 		* @var string $fakebase Fake base directory.
 		*/
@@ -49,8 +50,7 @@
 		 *
 		 * @return
 		 */
-
-		function __construct($fakebase='/property')
+		function __construct($fakebase = '/property')
 		{
 			$this->vfs     = CreateObject('phpgwapi.vfs');
 			$this->rootdir = $this->vfs->basedir;
@@ -83,7 +83,6 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each catalog down the path
 		 */
-
 		function create_document_dir($type)
 		{
 			$receipt = array();
@@ -101,16 +100,16 @@
 					)
 				)))
 				{
-					$receipt['error'][] = array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase);
+					$receipt['error'][] = array('msg' => lang('failed to create directory') . ' :' . $this->fakebase);
 				}
 				else
 				{
-					$receipt['message'][] = array('msg'=>lang('directory created') . ' :'. $this->fakebase);
+					$receipt['message'][] = array('msg' => lang('directory created') . ' :' . $this->fakebase);
 				}
 				$this->vfs->override_acl = 0;
 			}
 
-			$type_part = explode('/',$type);
+			$type_part = explode('/', $type);
 
 			$catalog = '';
 			foreach($type_part as $entry)
@@ -130,11 +129,11 @@
 						)
 					)))
 					{
-						$receipt['error'][] = array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase . $catalog);
+						$receipt['error'][] = array('msg' => lang('failed to create directory') . ' :' . $this->fakebase . $catalog);
 					}
 					else
 					{
-						$receipt['message'][] = array('msg'=>lang('directory created') . ' :'. $this->fakebase . $catalog);
+						$receipt['message'][] = array('msg' => lang('directory created') . ' :' . $this->fakebase . $catalog);
 					}
 					$this->vfs->override_acl = 0;
 				}
@@ -151,12 +150,11 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each file
 		 */
-
 		function delete_file($path, $values)
 		{
 			$receipt = array();
 
-			foreach ($values['file_action'] as $file_name)
+			foreach($values['file_action'] as $file_name)
 			{
 				$file_name = html_entity_decode($file_name);
 				
@@ -176,11 +174,11 @@
 						)
 					)))
 					{
-						$receipt['error'][] = array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase . $path . $file_name);
+						$receipt['error'][] = array('msg' => lang('failed to delete file') . ' :' . $this->fakebase . $path . $file_name);
 					}
 					else
 					{
-						$receipt['message'][] = array('msg'=>lang('file deleted') . ' :'. $this->fakebase . $path . $file_name);
+						$receipt['message'][] = array('msg' => lang('file deleted') . ' :' . $this->fakebase . $path . $file_name);
 					}
 					$this->vfs->override_acl = 0;
 				}
@@ -196,7 +194,6 @@
 		 *
 		 * @return null
 		 */
-
 		function view_file($type = '', $file = '', $jasper = '')
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
@@ -211,7 +208,7 @@
 			}
 
 			// prevent path traversal
-			if ( preg_match('/\.\./', $file) )
+			if(preg_match('/\.\./', $file))
 			{
 				return false;
 			}
@@ -239,7 +236,7 @@
 					$this->vfs->override_acl = 0;
 
 					$browser = CreateObject('phpgwapi.browser');
-					$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
+					$browser->content_header($ls_array[0]['name'], $ls_array[0]['mime_type'], $ls_array[0]['size']);
 					echo $document;
 				}
 				else //Execute the jasper report
@@ -274,7 +271,7 @@
 		{
 			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
-			foreach ($values as $file_name)
+			foreach($values as $file_name)
 			{
 				$file = "{$this->fakebase}{$path}{$file_name}";
 

@@ -7,6 +7,7 @@
 
 	class rental_invoice extends rental_model
 	{
+
 		protected $id;
 		protected $billing_id; // The billing job that created this invoice
 		protected $contract_id; // Contract that this invoice belongs to
@@ -31,7 +32,6 @@
 		protected $billing_title;
 		protected $serial_number;
 		protected $reference;
-		
 		public static $so;
 		
 		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out, string $service_id, string $responsibility_id)
@@ -58,57 +58,64 @@
 			$this->id = $id;
 		}
 	
-		public function get_id(){ return $this->id; }
+		public function get_id()
+		{ return $this->id;}
 		
 		public function set_billing_id($billing_id)
 		{
 			$this->billing_id = $billing_id;
 		}
 	
-		public function get_billing_id(){ return $this->billing_id; }
-			
+		public function get_billing_id()
+		{ return $this->billing_id;}
 		
 		public function set_contract_id($contract_id)
 		{
 			$this->contract_id = $contract_id;
 		}
 	
-		public function get_contract_id(){ return $this->contract_id; }
+		public function get_contract_id()
+		{ return $this->contract_id;}
 
 		public function set_timestamp_created($timestamp_created)
 		{
 			$this->timestamp_created = $timestamp_created;
 		}
 	
-		public function get_timestamp_created(){ return $this->timestamp_created; }
+		public function get_timestamp_created()
+		{ return $this->timestamp_created;}
 
 		public function set_party_id($party_id)
 		{
 			$this->party_id = $party_id;
 		}
 	
-		public function get_party_id(){ return $this->party_id; }
+		public function get_party_id()
+		{ return $this->party_id;}
 
 		public function set_party(rental_party $party)
 		{
 			$this->party = $party;
 		}
 	
-		public function get_party(){ return $this->party; }
+		public function get_party()
+		{ return $this->party;}
 		
 		public function set_timestamp_start($timestamp_start)
 		{
 			$this->timestamp_start = $timestamp_start;
 		}
 	
-		public function get_timestamp_start(){ return $this->timestamp_start; }
+		public function get_timestamp_start()
+		{ return $this->timestamp_start;}
 
 		public function set_timestamp_end($timestamp_end)
 		{
 			$this->timestamp_end = $timestamp_end;
 		}
 	
-		public function get_timestamp_end(){ return $this->timestamp_end; }
+		public function get_timestamp_end()
+		{ return $this->timestamp_end;}
 		
 		/**
 		 * Adds a invoice price item to the invoice.
@@ -131,14 +138,16 @@
 			$this->total_sum = (float)$total_sum;
 		}
 		
-		public function get_total_sum(){ return $this->total_sum; }
+		public function get_total_sum()
+		{ return $this->total_sum;}
 		
 		public function set_total_area(float $total_area)
 		{
 			$this->$total_area = (float)$total_area;
 		}
 		
-		public function get_total_area(){ return $this->total_area; }
+		public function get_total_area()
+		{ return $this->total_area;}
 		
 		public function add_composite_name(string $name)
 		{
@@ -153,54 +162,62 @@
 			$this->header = $header;
 		}
 	
-		public function get_header(){ return $this->header; }
+		public function get_header()
+		{ return $this->header;}
 		
 		public function set_account_in($account_in)
 		{
 			$this->account_in = $account_in;
 		}
 	
-		public function get_account_in(){ return $this->account_in; }
+		public function get_account_in()
+		{ return $this->account_in;}
 			
 		public function set_account_out($account_out)
 		{
 			$this->account_out = $account_out;
 		}
 			
-		public function get_account_out(){ return $this->account_out; }
+		public function get_account_out()
+		{ return $this->account_out;}
 		
 		public function set_service_id($service_id)
 		{
 			$this->service_id = $service_id;
 		}
 	
-		public function get_service_id(){ return $this->service_id; }
+		public function get_service_id()
+		{ return $this->service_id;}
 		
 		public function set_responsibility_id($responsibility_id)
 		{
 			$this->responsibility_id = $responsibility_id;
 		}
 		
-		public function get_responsibility_id(){ return $this->responsibility_id; }
+		public function get_responsibility_id()
+		{ return $this->responsibility_id;}
 		
 		public function set_project_id($project_id)
 		{
 			$this->project_id = $project_id;
 		}
 	
-		public function get_project_id(){ return $this->project_id; }
+		public function get_project_id()
+		{ return $this->project_id;}
 		
 		public function set_old_contract_id($old_contract_id)
 		{
 			$this->old_contract_id = $old_contract_id;
 		}
 	
-		public function get_old_contract_id(){ return $this->old_contract_id; }
+		public function get_old_contract_id()
+		{ return $this->old_contract_id;}
 
 		public function get_composite_names()
 		{
 			$names = '';
-			foreach($this->composite_names as $name) {
+			foreach($this->composite_names as $name)
+			{
 				$names .= "{$name}<br/>";
 			}
 			return $names;
@@ -211,43 +228,48 @@
 			$this->term_id = $term_id;
 		}
 	
-		public function get_term_id(){ return $this->term_id; }
+		public function get_term_id()
+		{ return $this->term_id;}
 		
 		public function set_serial_number($serial_number)
 		{
 			$this->serial_number = $serial_number;
 		}
 	
-		public function get_serial_number(){ return $this->serial_number; }
-		
+		public function get_serial_number()
+		{ return $this->serial_number;}
 		
 		public function set_term_label($term_label)
 		{
 			$this->term_label = $term_label;
 		}
 	
-		public function get_term_label(){ return $this->term_label; }
+		public function get_term_label()
+		{ return $this->term_label;}
 		
 		public function set_month($month)
 		{
 			$this->month = $month;
 		}
 	
-		public function get_month(){ return $this->month; }
+		public function get_month()
+		{ return $this->month;}
 		
 		public function set_billing_title($billing_title)
 		{
 			$this->billing_title = $billing_title;
 		}
 
-		public function get_reference(){ return $this->reference; }
+		public function get_reference()
+		{ return $this->reference;}
 
 		public function set_reference($reference)
 		{
 			$this->reference = $reference;
 		}
 	
-		public function get_billing_title(){ return $this->billing_title; }
+		public function get_billing_title()
+		{ return $this->billing_title;}
 		
 		/**
 		 * Create invoice
@@ -261,7 +283,7 @@
 		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bil one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0)
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			
@@ -329,7 +351,8 @@
 			}
 			else
 			{
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+					'contract_id' => $contract->get_id()));
 			}
 			
 			$total_sum = 0; // Holding the total price of the invoice
@@ -423,7 +446,6 @@
 				}
 				
 				// --- End of period calculation ---
-				
 				// Create a new invoice price item
 				$invoice_price_item = new rental_invoice_price_item(
 					$decimals,									// the number of decimals to use for the total price of the price item
@@ -440,8 +462,10 @@
 				);
 				
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...
-				if($contract_price_item->is_one_time()){
-					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end){
+				if($contract_price_item->is_one_time())
+				{
+					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end)
+					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
 						// ... and set the contract price item as billed
@@ -465,8 +489,6 @@
 				// Add this price item's total sum to the tota sum of the invoice
 				$total_sum += $invoice_price_item->get_total_price();
 			} // end of looping through the contract price items
-			
-			
 			// Set the total sum of the invoice rounded to the specified number of decimals
 			$invoice->set_total_sum(round($total_sum, $decimals));
 			
@@ -499,7 +521,4 @@
 				'serial_number'		=> $this->get_serial_number()
 			);
 		}
-		
 	}
-		
-?>

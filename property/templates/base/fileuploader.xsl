@@ -17,12 +17,12 @@ color: #0000CC;
 background-color: #FFFFFF;
 }
 
-#uploadFilesLink a:hover, #clearFilesLink a:hover {
-color: #FFFFFF;
-background-color: #000000;
-}
-</style>
--->
+	#uploadFilesLink a:hover, #clearFilesLink a:hover {
+	color: #FFFFFF;
+	background-color: #000000;
+	}
+	</style>
+	-->
 		<div id="uiElements" style="display:inline;">
 			<div id="uploaderContainer">
 				<div id="uploaderOverlay" style="position:absolute; z-index:2"/>
@@ -56,4 +56,4 @@ background-color: #000000;
 		<script type="text/javascript">
 			<xsl:value-of select="js_code"/>
 		</script>
-	</xsl:template>
+</xsl:template>

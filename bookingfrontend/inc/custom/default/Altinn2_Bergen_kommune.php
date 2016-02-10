@@ -11,7 +11,6 @@
 	* @category core
  	* @version $Id: Altinn_Bergen_kommune.php 4887 2010-02-23 10:33:44Z sigurd $
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -33,7 +32,6 @@
 	 * @package phpgroupware
 	 * @subpackage bookingfrontend
 	 */
-
 	class bookingfrontend_external_user extends bookingfrontend_bouser
 	{
 
@@ -60,8 +58,7 @@
 				_debug_array($fodsels_nr);
 			}
 
-			$request =
-			"<soapenv:Envelope
+			$request = "<soapenv:Envelope
 				 xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
 				 xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
 				 xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
@@ -89,15 +86,15 @@
 			try
 			{
 				$action = "";
-				$response = $client->__doRequest($request,$location_URL,$action,1);
+				$response	 = $client->__doRequest($request, $location_URL, $action, 1);
 				$reader = new XMLReader();
 				$reader->xml($response);
 
 				$orgs = array();
 				$orgs_validate = array();
-				while ($reader->read())
+				while($reader->read())
 				{
-					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
+					if($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
 					{
 						$xml = new DOMDocument('1.0', 'utf-8');
 						$xml->formatOutput = true;
@@ -114,7 +111,7 @@
 					}
 				}
 			}
-			catch (SoapFault $exception)
+			catch(SoapFault $exception)
 			{
 				echo "Dette gikk ikke så bra.";
 				var_dump(get_class($exception));
@@ -130,7 +127,7 @@
 				{
 					return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($org_id);
 				}
-				catch (sfValidatorError $e)
+				catch(sfValidatorError $e)
 				{
 					if($this->debug)
 					{
@@ -139,13 +136,12 @@
 					}
 					return null;
 				}
-
 			}
 
-			foreach ( $orgs as $org)
+			foreach($orgs as $org)
 			{
 				$selected = '';
-				if ( $org_id == $org['id'])
+				if($org_id == $org['id'])
 				{
 					$selected = 'selected = "selected"';
 				}
@@ -169,7 +165,6 @@ HTML;
 								</select>
 							</p>
 HTML;
-
 			}
 			else
 			{

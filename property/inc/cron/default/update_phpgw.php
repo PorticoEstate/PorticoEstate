@@ -8,19 +8,18 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * usage:
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class update_phpgw extends property_cron_parent
 	{
+
 		function __construct()
 		{
 			parent::__construct();
@@ -50,14 +49,14 @@
 			$clear_cache = '';
 			foreach($setup_info as $app => $appinfo)
 			{
-				if(isset($appinfo['status']) && $appinfo['status']=='U' && isset($appinfo['currentver']) && $appinfo['currentver'])
+				if(isset($appinfo['status']) && $appinfo['status'] == 'U' && isset($appinfo['currentver']) && $appinfo['currentver'])
 				{
 					$terror = array();
 					$terror[] = $setup_info[$appinfo['name']];
-					$GLOBALS['phpgw_setup']->process->upgrade($terror,false);
-					$GLOBALS['phpgw_setup']->process->upgrade_langs($terror,false);
-					$this->receipt['message'][]=array('msg'=> 'Upgraded application: ' . $appinfo['name']);
-					if($appinfo['name']=='property')
+					$GLOBALS['phpgw_setup']->process->upgrade($terror, false);
+					$GLOBALS['phpgw_setup']->process->upgrade_langs($terror, false);
+					$this->receipt['message'][] = array('msg' => 'Upgraded application: ' . $appinfo['name']);
+					if($appinfo['name'] == 'property')
 					{
 						$clear_cache = true;
 					}

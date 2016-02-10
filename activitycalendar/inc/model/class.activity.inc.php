@@ -7,8 +7,8 @@
 
 	class activitycalendar_activity extends activitycalendar_model
 	{
-		public static $so;
 
+		public static $so;
 		protected $id;
 		protected $title;
 		protected $organization_id;
@@ -50,100 +50,141 @@
 			$this->id = $id;
 		}
 
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
 		public function set_title($title)
 		{
 			$this->title = $title;
 		}
 
-		public function get_title() { return $this->title; }
+		public function get_title()
+		{
+			return $this->title;
+		}
 
 		public function set_organization_id($organization_id)
 		{
 			$this->organization_id = $organization_id;
 		}
 
-		public function get_organization_id() { return $this->organization_id; }
+		public function get_organization_id()
+		{
+			return $this->organization_id;
+		}
 
 		public function set_group_id($group_id)
 		{
 			$this->group_id = $group_id;
 		}
 
-		public function get_group_id() { return $this->group_id; }
+		public function get_group_id()
+		{
+			return $this->group_id;
+		}
 
 		public function set_district($district)
 		{
 			$this->district = $district;
 		}
 
-		public function get_district() { return $this->district; }
+		public function get_district()
+		{
+			return $this->district;
+		}
 
 		public function set_office($office)
 		{
 			$this->office = $office;
 		}
 
-		public function get_office() { return $this->office; }
+		public function get_office()
+		{
+			return $this->office;
+		}
 
 		public function set_target($target)
 		{
 			$this->target = $target;
 		}
 
-		public function get_target() { return $this->target; }
+		public function get_target()
+		{
+			return $this->target;
+		}
 
 		public function set_category($category)
 		{
 			$this->category = $category;
 		}
 
-		public function get_category() { return $this->category; }
+		public function get_category()
+		{
+			return $this->category;
+		}
 
 		public function set_description($description)
 		{
 			$this->description = $description;
 		}
 
-		public function get_description() { return $this->description; }
+		public function get_description()
+		{
+			return $this->description;
+		}
 
 		public function set_state($state)
 		{
 			$this->state = $state;
 		}
 
-		public function get_state() { return $this->state; }
+		public function get_state()
+		{
+			return $this->state;
+		}
 
 		public function set_arena($arena)
 		{
 			$this->arena = $arena;
 		}
 
-		public function get_arena() { return $this->arena; }
+		public function get_arena()
+		{
+			return $this->arena;
+		}
 
 		public function set_time($time)
 		{
 			$this->time = $time;
 		}
 
-		public function get_time() { return $this->time; }
-
-/*		public function set_date_end($date_end)
+		public function get_time()
+		{
+			return $this->time;
+		}
+		/* 		public function set_date_end($date_end)
 		{
 			$this->date_end = $date_end;
 		}
 
-		public function get_date_end() { return $this->date_end; }*/
+		  public function get_date_end() { return $this->date_end; } */
 
 		public function set_create_date($create_date)
 		{
 			$this->create_date = $create_date;
 		}
 
-		public function get_create_date() { return $this->create_date; }
+		public function get_create_date()
+		{
+			return $this->create_date;
+		}
 
-		public function get_last_change_date() { return $this->last_change_date; }
+		public function get_last_change_date()
+		{
+			return $this->last_change_date;
+		}
 
 		public function set_last_change_date($last_change_date)
 		{
@@ -152,7 +193,7 @@
 
 		public function set_contact_persons($persons)
 		{
-			$count=0;
+			$count = 0;
 			foreach($persons as $person)
 			{
 				if($count == 0)
@@ -172,71 +213,100 @@
 			$this->contact_person_1 = $contact_person_1;
 		}
 
-		public function get_contact_person_1() { return $this->contact_person_1; }
+		public function get_contact_person_1()
+		{
+			return $this->contact_person_1;
+		}
 
 		public function set_contact_person_2($contact_person_2)
 		{
 			$this->contact_person_2 = $contact_person_2;
 		}
 
-		public function get_contact_person_2() { return $this->contact_person_2; }
+		public function get_contact_person_2()
+		{
+			return $this->contact_person_2;
+		}
 
 		public function set_contact_person_2_address($contact_person_2_address)
 		{
 			$this->contact_person_2_address = $contact_person_2_address;
 		}
 
-		public function get_contact_person_2_address() { return $this->contact_person_2_address; }
+		public function get_contact_person_2_address()
+		{
+			return $this->contact_person_2_address;
+		}
 
 		public function set_contact_person_2_zip($contact_person_2_zip)
 		{
 			$this->contact_person_2_zip = $contact_person_2_zip;
 		}
 
-		public function get_contact_person_2_zip() { return $this->contact_person_2_zip; }
+		public function get_contact_person_2_zip()
+		{
+			return $this->contact_person_2_zip;
+		}
 
 		public function set_special_adaptation($special_adaptation)
 		{
 			$this->special_adaptation = $special_adaptation;
 		}
 
-		public function get_special_adaptation() { return $this->special_adaptation; }
+		public function get_special_adaptation()
+		{
+			return $this->special_adaptation;
+		}
 
 		public function set_secret($secret)
 		{
 			$this->secret = $secret;
 		}
 
-		public function get_secret() { return $this->secret; }
+		public function get_secret()
+		{
+			return $this->secret;
+		}
 
 		public function set_internal_arena($internal_arena)
 		{
 			$this->internal_arena = $internal_arena;
 		}
 
-		public function get_internal_arena() { return $this->internal_arena; }
+		public function get_internal_arena()
+		{
+			return $this->internal_arena;
+		}
 
 		public function set_frontend(bool $frontend)
 		{
 			$this->frontend = (bool)$frontend;
 		}
 
-		public function get_frontend() { return $this->frontend; }
+		public function get_frontend()
+		{
+			return $this->frontend;
+		}
 
 		public function set_new_org(bool $new_org)
 		{
 			$this->new_org = (bool)$new_org;
 		}
 
-		public function get_new_org() { return $this->new_org; }
+		public function get_new_org()
+		{
+			return $this->new_org;
+		}
 
 		public function set_new_group(bool $new_group)
 		{
 			$this->new_group = (bool)$new_group;
 		}
 
-		public function get_new_group() { return $this->new_group; }
-
+		public function get_new_group()
+		{
+			return $this->new_group;
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -245,7 +315,8 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if(self::$so == null)
+			{
 				self::$so = CreateObject('activitycalendar.soactivity');
 			}
 
@@ -297,7 +368,6 @@
 				{
 				    $org_name = $so_org->get_organization_name($o_id);
 				}
-
 			}
 			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
@@ -357,14 +427,14 @@
 				'district' => $activity_district,
 				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
-				'state' => lang('state_'.$this->get_state()),
+				'state'				 => lang('state_' . $this->get_state()),
 				'description' => $desc,
 				'arena' => $arena_name,
 				'time' => $this->get_time(),
 				'contact_person_1' => $contact_1,
 				'contact_person_2' => $contact_2,
 				'special_adaptation' => $this->get_special_adaptation(),
-				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
+				'last_change_date'	 => $this->get_last_change_date() != NULL ? date($date_format, $this->get_last_change_date()) : '',
 				'frontend' => $this->get_frontend()
 			);
 		}
@@ -416,7 +486,6 @@
 				    $org_name = $so_org->get_organization_name($o_id);
 						$org_homepage = $so_org->get_organization_homepage($o_id);
 				}
-
 			}
 			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
@@ -470,12 +539,12 @@
 
 			$activity_district = $this->get_so()->get_district_name($this->get_district());
 
-			$contact_person_1_name = $this->get_contact_person_1()?$this->get_contact_person_1()->get_name():'';
-            $contact_person_1_phone = $this->get_contact_person_1()?$this->get_contact_person_1()->get_phone():'';
-            $contact_person_1_mail = $this->get_contact_person_1()?$this->get_contact_person_1()->get_email():'';
-            $contact_person_2_name = $this->get_contact_person_2()?$this->get_contact_person_2()->get_name():'';
-            $contact_person_2_phone = $this->get_contact_person_2()?$this->get_contact_person_2()->get_phone():'';
-            $contact_person_2_mail = $this->get_contact_person_2()?$this->get_contact_person_2()->get_email():'';
+			$contact_person_1_name	 = $this->get_contact_person_1() ? $this->get_contact_person_1()->get_name() : '';
+			$contact_person_1_phone	 = $this->get_contact_person_1() ? $this->get_contact_person_1()->get_phone() : '';
+			$contact_person_1_mail	 = $this->get_contact_person_1() ? $this->get_contact_person_1()->get_email() : '';
+			$contact_person_2_name	 = $this->get_contact_person_2() ? $this->get_contact_person_2()->get_name() : '';
+			$contact_person_2_phone	 = $this->get_contact_person_2() ? $this->get_contact_person_2()->get_phone() : '';
+			$contact_person_2_mail	 = $this->get_contact_person_2() ? $this->get_contact_person_2()->get_email() : '';
 
 			return array(
 				'id' => $this->get_id(),
@@ -486,7 +555,7 @@
 				'district' => $activity_district,
 				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
-				'state' => lang('state_'.$this->get_state()),
+				'state'					 => lang('state_' . $this->get_state()),
 				'description' => $desc,
 				'arena' => $arena_name,
 				'time' => $this->get_time(),
@@ -497,9 +566,8 @@
                 'contact_person_2_phone' => $contact_person_2_phone,
                 'contact_person_2_mail' => $contact_person_2_mail,
 				'special_adaptation' => $this->get_special_adaptation(),
-				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
+				'last_change_date'		 => $this->get_last_change_date() != NULL ? date($date_format, $this->get_last_change_date()) : '',
 				'frontend' => $this->get_frontend()
 			);
 		}
 	}
-?>

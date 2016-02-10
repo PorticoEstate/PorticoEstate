@@ -25,16 +25,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	include_class('controller', 'model', 'inc/model/');
 	include_class('controller', 'document', 'inc/model/');
 	
 	class controller_procedure extends controller_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $title;
 		protected $purpose;
@@ -68,98 +67,140 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 		
 		public function set_title($title)
 		{
 			$this->title = $title;
 		}
 		
-		public function get_title() { return $this->title; }
+		public function get_title()
+		{
+			return $this->title;
+		}
 		
 		public function set_purpose($purpose)
 		{
 			$this->purpose = $purpose;
 		}
 		
-		public function get_purpose() { return $this->purpose; }
+		public function get_purpose()
+		{
+			return $this->purpose;
+		}
 		
 		public function set_responsibility($responsibility)
 		{
 			$this->responsibility = $responsibility;
 		}
 		
-		public function get_responsibility() { return $this->responsibility; }
+		public function get_responsibility()
+		{
+			return $this->responsibility;
+		}
 		
 		public function set_description($description)
 		{
 			$this->description = $description;
 		}
 		
-		public function get_description() { return $this->description; }
+		public function get_description()
+		{
+			return $this->description;
+		}
 		
 		public function set_reference($reference)
 		{
 			$this->reference = $reference;
 		}
 		
-		public function get_reference() { return $this->reference; }
+		public function get_reference()
+		{
+			return $this->reference;
+		}
 		
 		public function set_attachment($attachment)
 		{
 			$this->attachment = $attachment;
 		}
 		
-		public function get_attachment() { return $this->attachment; }
+		public function get_attachment()
+		{
+			return $this->attachment;
+		}
 		
 		public function set_start_date($start_date)
 		{
 			$this->start_date = $start_date;
 		}
 		
-		public function get_start_date() { return $this->start_date; }
+		public function get_start_date()
+		{
+			return $this->start_date;
+		}
 		
 		public function set_end_date($end_date)
 		{
 			$this->end_date = $end_date;
 		}
 		
-		public function get_end_date() { return $this->end_date; }
+		public function get_end_date()
+		{
+			return $this->end_date;
+		}
 		
 		public function set_procedure_id($procedure_id)
 		{
 			$this->procedure_id = $procedure_id;
 		}
 		
-		public function get_procedure_id() { return $this->procedure_id; }
+		public function get_procedure_id()
+		{
+			return $this->procedure_id;
+		}
 		
 		public function set_revision_no($revision_no)
 		{
 			$this->revision_no = $revision_no;
 		}
 		
-		public function get_revision_no() { return $this->revision_no; }
+		public function get_revision_no()
+		{
+			return $this->revision_no;
+		}
 		
 		public function set_revision_date($revision_date)
 		{
 			$this->revision_date = $revision_date;
 		}
 		
-		public function get_revision_date() { return $this->revision_date; }
+		public function get_revision_date()
+		{
+			return $this->revision_date;
+		}
 		
 		public function set_control_area_id($control_area_id)
 		{
 			$this->control_area_id = $control_area_id;
 		}
 		
-		public function get_control_area_id() { return $this->control_area_id; }
+		public function get_control_area_id()
+		{
+			return $this->control_area_id;
+		}
 		
 		public function set_control_area_name($control_area_name)
 		{
 			$this->control_area_name = $control_area_name;
 		}
 		
-		public function get_control_area_name() { return $this->control_area_name; }
+		public function get_control_area_name()
+		{
+			return $this->control_area_name;
+		}
 		
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -168,7 +209,7 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.soprocedure');
 			}
@@ -190,7 +231,7 @@
 					'end_date' => $this->get_end_date(),
 					'procedure_id' => $this->get_procedure_id(),
 					'revision_no' => $this->get_revision_no(),
-					'revision_date' => ($this->get_revision_date())?date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()):'',
+				'revision_date'	 => ($this->get_revision_date()) ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()) : '',
 					'control_area'	=> $this->get_control_area_name()
 			);
 		}
@@ -219,7 +260,7 @@
 		public function add_document(controller_document $new_document)
 		{
 			$new_document_id = $new_document->get_id();
-			if(!in_array($new_document_id,$this->documents))
+			if(!in_array($new_document_id, $this->documents))
 			{
 				$this->documents[$new_document_id] = $new_document;
 			}

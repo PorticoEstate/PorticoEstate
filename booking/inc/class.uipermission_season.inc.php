@@ -3,10 +3,11 @@
 
 	class booking_uipermission_season extends booking_uipermission
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('booking::seasons::permissions');
+			self::set_active_menu('booking::buildings::seasons::permissions');
 		}
 		
 		protected function get_parent_pathway(array $forDocumentData)

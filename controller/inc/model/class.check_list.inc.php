@@ -25,13 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	include_class('controller', 'model', 'inc/model/');
 	
 	class controller_check_list extends controller_model
 	{
+
 		public static $so;
 				
 		const STATUS_NOT_DONE = 0;
@@ -58,16 +58,13 @@
 		protected $billable_hours;
 		protected $delta_billable_hours;
 		protected $control_area_id;		
-
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
 		protected $num_pending_cases;
-		
 		// Objects
 		protected $check_item_array = array();
 		// Array that contains error messages. Is populted in function validate
 		protected $error_msg_array = array();
-		
 		protected $control;
 		
 		/**
@@ -88,7 +85,10 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
 		public function set_title($title)
 		{
@@ -135,70 +135,100 @@
 			$this->control_id = $control_id;
 		}
 		
-		public function get_control_id() { return $this->control_id; }
+		public function get_control_id()
+		{
+			return $this->control_id;
+		}
 		
 		public function set_status($status)
 		{
 			$this->status = $status;
 		}
 		
-		public function get_status() { return $this->status; }
+		public function get_status()
+		{
+			return $this->status;
+		}
 		
 		public function set_comment($comment)
 		{
 			$this->comment = $comment;
 		}
 		
-		public function get_comment() { return $this->comment; }
+		public function get_comment()
+		{
+			return $this->comment;
+		}
 		
 		public function set_deadline($deadline)
 		{
 			$this->deadline = $deadline;
 		}
 		
-		public function get_deadline() { return $this->deadline; }
+		public function get_deadline()
+		{
+			return $this->deadline;
+		}
 		
 		public function set_check_item_array($check_item_array)
 		{
 			$this->check_item_array = $check_item_array;
 		}
 		
-		public function get_check_item_array() { return $this->check_item_array; }
+		public function get_check_item_array()
+		{
+			return $this->check_item_array;
+		}
 		
 		public function set_planned_date($planned_date)
 		{
 			$this->planned_date = $planned_date;
 		}
 		
-		public function get_planned_date() { return $this->planned_date; }
+		public function get_planned_date()
+		{
+			return $this->planned_date;
+		}
 		
 		public function set_completed_date($completed_date)
 		{
 			$this->completed_date = $completed_date;
 		}
 		
-		public function get_completed_date() { return $this->completed_date; }
+		public function get_completed_date()
+		{
+			return $this->completed_date;
+		}
 		
 		public function set_location_code($location_code)
 		{
 			$this->location_code = $location_code;
 		}
 		
-		public function get_location_code() { return $this->location_code; }
+		public function get_location_code()
+		{
+			return $this->location_code;
+		}
 		
 		public function set_component_id($component_id)
 		{
 			$this->component_id = $component_id;
 		}
 		
-		public function get_component_id() { return $this->component_id; }
+		public function get_component_id()
+		{
+			return $this->component_id;
+		}
 		
 		public function set_location_id($location_id)
 		{
 			$this->location_id = $location_id;
 		}
 
-		public function get_location_id() { return $this->location_id; }
+		public function get_location_id()
+		{
+			return $this->location_id;
+		}
 
 		public function set_serie_id($serie_id)
 		{
@@ -209,6 +239,7 @@
 		{
 			return $this->serie_id;
 		}
+
 		public function set_repeat_type($repeat_type)
 		{
 			$this->repeat_type = $repeat_type;
@@ -219,14 +250,20 @@
 			return $this->repeat_type;
 		}
 
-		public function get_num_open_cases() { return $this->num_open_cases; }
+		public function get_num_open_cases()
+		{
+			return $this->num_open_cases;
+		}
 		
 		public function set_num_open_cases($num_open_cases)
 		{
 			$this->num_open_cases = $num_open_cases;
 		}
 
-		public function get_num_pending_cases() { return $this->num_pending_cases; }
+		public function get_num_pending_cases()
+		{
+			return $this->num_pending_cases;
+		}
 		
 		public function set_num_pending_cases($num_pending_cases)
 		{
@@ -238,11 +275,17 @@
 			$this->control = $control;
 		}
 		
-		public function get_control() { return $this->control; }
+		public function get_control()
+		{
+			return $this->control;
+		}
 		
-		public function get_error_msg_array() { return $this->error_msg_array; }
+		public function get_error_msg_array()
+		{
+			return $this->error_msg_array;
+		}
 		
-		public function set_error_msg_array( $error_msg_array )
+		public function set_error_msg_array($error_msg_array)
 		{
 			$this->error_msg_array = $error_msg_array;
 		}
@@ -276,6 +319,7 @@
 		{
 			return $this->billable_hours;
 		}
+
 		public function set_delta_billable_hours($delta_billable_hours)
 		{
 			$this->delta_billable_hours = $delta_billable_hours;
@@ -316,35 +360,35 @@
 			$status = true;
 	
 			// Validate CONTROL ID
-			if( empty( $this->control_id ) )
+			if(empty($this->control_id))
 			{
 				$status = false;
 				$this->error_msg_array['control_id'] = "error_msg_4";
 			}
 		 
 			// Validate STATUS		  		  
-			if( ($this->status != controller_check_list::STATUS_NOT_DONE) && ($this->status != controller_check_list::STATUS_DONE) && ($this->status != controller_check_list::STATUS_CANCELED))
+			if(($this->status != controller_check_list::STATUS_NOT_DONE) && ($this->status != controller_check_list::STATUS_DONE) && ($this->status != controller_check_list::STATUS_CANCELED))
 			{ 
 				$status = false;
 				$this->error_msg_array['status'] = "error_msg_2";
 			}
 		    
 			// Validate COMPLETED DATE when STATUS:DONE		  		  
-			if( ($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date) )
+			if(($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date))
 			{
 				$status = false;
 				$this->error_msg_array['completed_date'] = "error_msg_5";
 			}
 	
 			// Validate DEADLINE	  		  
-			if( empty( $this->deadline ) )
+			if(empty($this->deadline))
 			{
 				$status = false;
 				$this->error_msg_array['deadline'] = "error_msg_1";
 			}
 	
 			// Validate connection to COMPONENT/LOCATION
-			if( empty( $this->location_code ) && empty( $this->component_id ) )
+			if(empty($this->location_code) && empty($this->component_id))
 			{
 				echo "FAILED: " . $this->location_code; 
 				$status = false;

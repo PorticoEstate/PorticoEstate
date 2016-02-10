@@ -7,11 +7,32 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-	phpgw::import_class('phpgwapi.yui');
-//	phpgwapi_yui::load_widget('button');
-//	phpgwapi_yui::load_widget('container');
+	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
+	{
+		$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
+		$javascripts[] = "/phpgwapi/js/jquery/mmenu/core/js/jquery.mmenu.min.all.js";
+		$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
 
-	$javascripts[] = "/phpgwapi/js/SlickNav/jquery.slicknav.js";
+		$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
+
+		$menu_stylesheet_widescreen = '';
+
+/*
+		$menu_stylesheet_widescreen = <<<HTML
+
+		<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/jquery/mmenu/extensions/css/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+HTML;
+*/
+	}
+	else
+	{
+		$menu_stylesheet_widescreen = '';
+	}
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -26,52 +47,29 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
 
-	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
-	{
-		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
-		{
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
-			phpgwapi_yui::load_widget('treeview');
-			phpgwapi_yui::load_widget('datasource');
-			$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
-		}
-		else if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
-		{
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/SlickNav/slicknav.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/slicknav_menu.css');
-
-		}
-	}
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
 
 
-	if( !isset($GLOBALS['phpgw_info']['flags']['no_reset_fonts']) )
-	{
-//		$stylesheets[] = '/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css';
-	}
-
-	//$stylesheets[] = "/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
-//	$stylesheets[] = "/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
-//	$stylesheets[] = "/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
-	//$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-	//$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
-//	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
-		$stylesheets[] = "/phpgwapi/templates/pure/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "/phpgwapi/templates/pure/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 	//$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	//$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
-		$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "/{$app}/templates/pure/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-/*
-	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
-	{
-		$stylesheets[] = "/phpgwapi/templates/base/css/yui_table_nowrap.css";
-	}
-*/
+
 	foreach ( $stylesheets as $stylesheet )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
@@ -90,6 +88,26 @@
 		}
 	}
 
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'portico':
+			$selecte_portico = ' selected = "selected"';
+			$selecte_pure = '';
+			break;
+		case 'pure':
+			$selecte_portico = '';
+			$selecte_pure = ' selected = "selected"';
+			break;
+	}
+
+	$template_selector = <<<HTML
+
+   <select id = "template_selector">
+	<option value="pure"{$selecte_pure}>Mobil</option>
+	<option value="portico"{$selecte_portico}>Desktop</option>
+   </select>
+HTML;
+
 	$tpl_vars = array
 	(
 		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
@@ -101,6 +119,8 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+		'menu_stylesheet_widescreen'=> $menu_stylesheet_widescreen,
+		'template_selector'			=> $template_selector
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
@@ -110,23 +130,20 @@
 
 	flush();
 
-	echo '<body class="yui-skin-sam">';
+	echo "\t<body>";
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		echo '<div align = "left">';
+//		echo '<div align = "left">';
 		register_shutdown_function('parse_footer_end_noframe');
 	}
 	
 	function parse_footer_end_noframe()
 	{
-		if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-		{
-			echo '</div>';
-		}
-
+		$javascript_end = $GLOBALS['phpgw']->common->get_javascript_end();
 		$footer = <<<HTML
 		</body>
+		{$javascript_end}
 	</html>
 HTML;
 		echo $footer;

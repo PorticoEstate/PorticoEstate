@@ -24,18 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class oppdater_antall_leieobjekt extends property_cron_parent
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -54,32 +53,30 @@
 					WHERE fm_location4.category IN (1,2,3,4,6,10,14,15,17,22,23,24,25)
 					GROUP BY kunde_nr_lev, fm_entity_1_3.loc1, fm_entity_1_3.loc2, fm_entity_1_3.location_code";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				if($this->db->f('kunde_nr_lev'))
 				{
-					$update[]= array(
-					'kunde_nr_lev'	=>$this->db->f('kunde_nr_lev'),
-					'antall_leieobjekt'	=>$this->db->f('antall_leieobjekt'),
+					$update[] = array(
+						'kunde_nr_lev' => $this->db->f('kunde_nr_lev'),
+						'antall_leieobjekt' => $this->db->f('antall_leieobjekt'),
 					);
 				}
 			}
 
 //_debug_array($update);
 
-			for ($i=0; $i<count($update); $i++)
+			for($i = 0; $i < count($update); $i++)
 			{
-				$this->db->query("UPDATE fm_entity_1_3 set ant_leil_pt =" . $update[$i]['antall_leieobjekt'] . " WHERE kunde_nr_lev= '" . $update[$i]['kunde_nr_lev'] . "'" ,__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_entity_1_3 set ant_leil_pt =" . $update[$i]['antall_leieobjekt'] . " WHERE kunde_nr_lev= '" . $update[$i]['kunde_nr_lev'] . "'", __LINE__, __FILE__);
 			}
 
-			$this->receipt['message'][]=array('msg'=>'antall leieobjekter er oppdatert for tv-anlegg');
+			$this->receipt['message'][] = array('msg' => 'antall leieobjekter er oppdatert for tv-anlegg');
 
 			unset($update);
 
 			$this->db->transaction_commit();
-
 		}
 	}
-

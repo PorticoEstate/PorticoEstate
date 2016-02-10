@@ -8,5 +8,6 @@
 	</ul>
 	<br clear="both">
 </ul>
+{javascript_end}
 <!-- END footer -->
 

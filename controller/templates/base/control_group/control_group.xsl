@@ -2,13 +2,14 @@
 <!-- item  -->
 <xsl:template name="control_group" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_phpgw_i18n"/>
+	<!--xsl:call-template name="jquery_phpgw_i18n"/-->
 
-<div id="details">
+	<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
-				<dl class="proplist-col">
+			<fieldset>
+
 					<dt>
 						<label for="title">Tittel</label>
 					</dt>
@@ -70,7 +71,9 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Entity')" />
+							</label>
 							</dt>
 							<dd>
 								<select name="entity_id" id="entity_id">
@@ -78,7 +81,9 @@
 								</select>
 							</dd>
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Category')" />
+							</label>
 							</dt>
 							<dd>
 								<select name="category_id" id="category_id">
@@ -86,7 +91,9 @@
 								</select>
 							</dd>
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Attributes')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Attributes')" />
+							</label>
 							</dt>
 							<dd>
 								<div id="attributes">
@@ -134,19 +141,25 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Entity')" />
+							</label>
 							</dt>
 							<dd>
 								<xsl:value-of select="entity/name" />
 							</dd>
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Category')" />
+							</label>
 							</dt>
 							<dd>
 								<xsl:value-of select="category/name" />
 							</dd>
 							<dt>
-								<label><xsl:value-of select="php:function('lang', 'Chosen attributes')" /></label>
+							<label>
+								<xsl:value-of select="php:function('lang', 'Chosen attributes')" />
+							</label>
 							</dt>
 							<dd>
 								<table>
@@ -192,18 +205,23 @@
 							</dd>
 						</xsl:otherwise>
 					</xsl:choose>
-				</dl>
-
+			</fieldset>
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">
-							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</xsl:variable>
+						<xsl:variable name="lang_cancel">
+							<xsl:value-of select="php:function('lang', 'cancel')" />
+						</xsl:variable>
 							<input type="submit" name="save_control_group" value="{$lang_save}" title = "{$lang_save}" />
 							<input type="submit" name="cancel_control_group" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
+						<xsl:variable name="lang_edit">
+							<xsl:value-of select="php:function('lang', 'edit')" />
+						</xsl:variable>
 							<input type="submit" name="edit_control_group" value="{$lang_edit}" title = "{$lang_edit}" />
 						</xsl:otherwise>
 					</xsl:choose>

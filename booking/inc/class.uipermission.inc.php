@@ -2,14 +2,19 @@
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_ui_utils');
 
+//    phpgw::import_class('booking.uidocument_building');
+//	phpgw::import_class('booking.uipermission_building');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	abstract class booking_uipermission extends booking_uicommon
 	{
+
 		protected
 			$object_type = null;
-		
 		public 
 			$public_functions = array(
 				'index'				=> true,
+			'query'			 => true,
 				'index_accounts'	=> true,
 				'show'				=> true,
 				'add'				=> true,
@@ -19,13 +24,16 @@
 		
 		public function __construct()
 		{
+//			_debug_array('hei');
+
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();
 			
 			$this->set_business_object();
 			
-			$this->fields = array('subject_id', 'subject_name', 'object_id', 'object_name', 'role');
+			$this->fields = array('subject_id', 'subject_name', 'object_id', 'object_name',
+				'role');
 		}
 		
 		protected function set_business_object(booking_bopermission $bo = null)
@@ -40,7 +48,8 @@
 		
 		protected function get_object_type()
 		{
-			if (!$this->object_type) { $this->set_object_type(); }
+			if(!$this->object_type)
+			{ $this->set_object_type();}
 			return $this->object_type;
 		}
 		
@@ -53,12 +62,13 @@
 		public function get_parent_url_link_params()
 		{
 			$inlineParams = $this->get_inline_params();
-			return array('menuaction' => sprintf('booking.ui%s.show', $this->get_object_type()), 'id' => $inlineParams['filter_object_id']);
+			return array('menuaction' => sprintf('booking.ui%s.show', $this->get_object_type()),
+				'id' => $inlineParams['filter_object_id']);
 		}
 		
 		public function redirect_to_parent_if_inline()
 		{
-			if ($this->is_inline())
+			if($this->is_inline())
 			{
 				$this->redirect($this->get_parent_url_link_params());
 			}
@@ -79,8 +89,9 @@
 		
 		public function apply_inline_params(&$params)
 		{
-			if($this->is_inline()) {
-				$params['filter_object_id'] = intval(phpgw::get_var('filter_object_id'));
+			if($this->is_inline())
+			{
+				$params['filter_object_id'] = phpgw::get_var('filter_object_id', 'int');
 			}
 			return $params;
 		}
@@ -98,57 +109,33 @@
 		
 		public function get_inline_params()
 		{
-			return array('filter_object_id' => intval(phpgw::get_var('filter_object_id', 'any', false)));
+			return array('filter_object_id' => phpgw::get_var('filter_object_id', 'int', 'REQUEST'));
 		}
 		
 		public function is_inline()
 		{
-			return false != phpgw::get_var('filter_object_id', 'any', false);
+			return false != phpgw::get_var('filter_object_id', 'int', 'REQUEST');
 		}
 		
 		public static function generate_inline_link($object_type, $permissionObjectId, $action)
 		{
-			return self::link(array('menuaction' => sprintf('booking.uipermission_%s.%s', $object_type, $action), 'filter_object_id' => $permissionObjectId));
+			return self::link(array('menuaction' => sprintf('booking.uipermission_%s.%s', $object_type, $action),
+				'filter_object_id' => $permissionObjectId));
 		}
 		
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
 			
 			$this->redirect_to_parent_if_inline();
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			
-			// if($_SESSION['showall'])
-			// {
-			// 	$active_botton = lang('Show only active');
-			// }else{
-			// 	$active_botton = lang('Show all');
-			// }
-			
-						
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							// array(
-							// 	'type' => 'link',
-							// 	'value' => $active_botton,
-							// 	'href' => self::link(array('menuaction' => $this->get_object_typed_link('active')))
-							// ),
 						)
 					),
 				),
@@ -168,9 +155,16 @@
 							'label' => lang('Role'),
 						),
 						array(
-							'key' => 'actions',
-							'label' => lang('Actions'),
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\', \'%s\')', lang('edit'), lang('delete')),
+							'key'		 => 'opcion_edit',
+							'label'		 => lang('Edit'),
+							'formatter'	 => 'JqueryPortico.formatLinkGeneric',
+							'sortable'	 => false
+						),
+						array(
+							'key'		 => 'opcion_delete',
+							'label'		 => lang('Delete'),
+							'formatter'	 => 'JqueryPortico.formatLinkGeneric',
+							'sortable'	 => false
 						),
 						// array(
 						// 	'key' => 'link',
@@ -180,18 +174,23 @@
 				)
 			);
 			
-			if ($this->bo->allow_create()) {
+			$data['datatable']['actions'][] = array();
+
+			if($this->bo->allow_create())
+			{
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type' => 'link',
 					'value' => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
 					'href' => $this->get_object_typed_link('add')
 				));
+				$data['datatable']['new_item']	= $this->get_object_typed_link('add');
 			}
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
 			
@@ -203,18 +202,22 @@
 				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
 				
 				$permission_actions = array();
-				if ($this->bo->allow_write($permission))  $permission_actions[] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
-				if ($this->bo->allow_delete($permission)) $permission_actions[] = $this->get_object_typed_link('delete', array('id' => $permission['id']));
+				if($this->bo->allow_write($permission))
+					$permission['opcion_edit']	 = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+				if($this->bo->allow_delete($permission))
+					$permission['opcion_delete'] = $this->get_object_typed_link('delete', array(
+						'id' => $permission['id']));
 
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$permission['subject_name']."'";
+				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $permission['subject_name'] . "'";
 				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet)) {
-					$permission['subject_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				while($record	 = array_shift($this->db->resultSet))
+				{
+					$permission['subject_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
 				}
 
 				$permission['actions'] = $permission_actions;
 			}
-			return $this->yui_results($permissions);
+			return $this->jquery_results($permissions);
 		}
 		
 		public function index_accounts()
@@ -225,7 +228,8 @@
 		protected function get_available_roles()
 		{
 			$roles = array();
-			foreach($this->bo->get_roles() as $role) { $roles[$role] = self::humanize($role); }
+			foreach($this->bo->get_roles() as $role)
+			{ $roles[$role] = self::humanize($role);}
 			return $roles;
 		}
 		
@@ -243,7 +247,7 @@
 		public function show()
 		{
 			#$this->check_active('booking.uipermission_building.show');
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id			 = phpgw::get_var('id', 'int');
 			$permission = $this->bo->read_single($id);
 			$this->add_default_display_data($permission);
 			self::render_template('permission', array('permission' => $permission));
@@ -260,21 +264,25 @@
 				$errors = $this->bo->validate($permission);
 				if(!$errors)
 				{
-					try {
+					try
+					{
 						$receipt = $this->bo->add($permission);
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_object_typed_link_params('index'));
-					} catch (booking_unauthorized_exception $e) {
+					}
+					catch(booking_unauthorized_exception $e)
+					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
 			}
 			
 			self::add_javascript('booking', 'booking', 'permission.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($permission);
 			
-			if (is_array($parentData = $this->get_parent_if_inline()))
+			if(is_array($parentData = $this->get_parent_if_inline()))
 			{
 				$permission['object_id'] = $parentData['id'];
 				$permission['object_name'] = $parentData['name'];
@@ -282,12 +290,20 @@
 			
 			$this->flash_form_errors($errors);
 
-			self::render_template('permission_form', array('permission' => $permission));
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$active_tab		 = 'generic';
+
+			$permission['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}
 		
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id			 = phpgw::get_var('id', 'int');
 			$permission = $this->bo->read_single($id);
 			
 			$errors = array();
@@ -297,34 +313,45 @@
 				$errors = $this->bo->validate($permission);
 				if(!$errors)
 				{
-					try {
+					try
+					{
 						$receipt = $this->bo->update($permission);
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_object_typed_link_params('index'));
-					} catch (booking_unauthorized_exception $e) {
+					}
+					catch(booking_unauthorized_exception $e)
+					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
 				}
 			}
 			
 			self::add_javascript('booking', 'booking', 'permission.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($permission);
 			
 			$this->flash_form_errors($errors);
 			
-			self::render_template('permission_form', array('permission' => $permission));
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$active_tab		 = 'generic';
+
+			$permission['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			
 			$this->redirect_to_parent_if_inline();
 			$this->redirect($this->get_object_typed_link_params('index'));
 		}
-		
 		
 		/**
 		 * Implement to return the full hierarchical pathway to this permission's object(s).
@@ -333,5 +360,6 @@
 		 *
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
-		protected function get_parent_pathway(array $forPermissionData) { return array(); }
+		protected function get_parent_pathway(array $forPermissionData)
+		{ return array();}
 	}

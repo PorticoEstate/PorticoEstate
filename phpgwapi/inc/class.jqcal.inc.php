@@ -7,14 +7,12 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
-
 
 	/**
 	* jQuery datepicker wrapper-class
@@ -34,11 +32,10 @@
 			phpgwapi_jquery::load_widget('datepicker');
 
 			$theme = 'ui-lightness';
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.8.19.custom.css");
-			$this->img_cal = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
-			$this->dateformat = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+			$this->img_cal			 = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+			$this->dateformat		 = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$this->lang_select_date      = lang('select date');
-
 		}
 
 		function add_listener($name, $type = 'date', $value = '')
@@ -49,6 +46,11 @@
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");	
 					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
 					$_type = 'datetime';
+					break;
+				case 'time':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$_type	 = 'time';
 					break;
 				default:
 					$_type = 'date';

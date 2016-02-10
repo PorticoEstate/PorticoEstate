@@ -1,23 +1,21 @@
-<xsl:template match="ticketinfo" xmlns:php="http://php.net/xsl">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
 	
-    <table cellpadding="2" cellspacing="2" width="95%" align="center">
         <xsl:choose>
             <xsl:when test="msgbox_data != ''">
-                <tr>
-                    <td align="left" colspan="3">
                         <xsl:call-template name="msgbox"/>
-                    </td>
-                </tr>
             </xsl:when>
         </xsl:choose>
-    </table>
 
-    <div class="yui-navset" id="ticket_tabview">
-        <div class="yui-content">
-        	<div id="ticketinfo">
+	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	
+	<div class="frontend_body">
+		<div class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<div id="{$tab_selected}">
         		<ul style="margin: 2em;">
         			<li style="margin-bottom: 1em;">
-        				<a href="?menuaction=frontend.uihelpdesk.index"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show_all_tickets')"/></a>
+							<a href="{helpdesklist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show_all_tickets')"/></a>
         			</li>
         			<li>
         				<ul>
@@ -77,6 +75,8 @@
         			</li>
         		</ul>
         	</div>
+				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
+			</div>
         </div>
     </div>
 </xsl:template>

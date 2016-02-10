@@ -17,12 +17,9 @@
 </func:function>
 
 <xsl:template name="add_component_to_control_group" xmlns:php="http://php.net/xsl">
-	<!-- IMPORTANT!!! Loads YUI javascript -->
-	<xsl:call-template name="common"/>
 
 	<div class="yui-content">
 		<div id="control_group_details">
-			<xsl:call-template name="yui_phpgw_i18n"/>
 			<xsl:apply-templates select="control_group_filters" />
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="paging"/>

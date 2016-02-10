@@ -1,18 +1,19 @@
 <?php
-phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.socontract');
-phpgw::import_class('rental.socontract_price_item');
-phpgw::import_class('rental.soprice_item');
-phpgw::import_class('rental.soworkbench_notification');
+	phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.socontract_price_item');
+	phpgw::import_class('rental.soprice_item');
+	phpgw::import_class('rental.soworkbench_notification');
 //phpgw::import_class('rental.uicommon');
 
-include_class('rental', 'adjustment', 'inc/model/');
-include_class('rental', 'contract_price_item', 'inc/model/');
-include_class('rental', 'notification', 'inc/model/');
-include_class('rental', 'price_item', 'inc/model/');
+	include_class('rental', 'adjustment', 'inc/model/');
+	include_class('rental', 'contract_price_item', 'inc/model/');
+	include_class('rental', 'notification', 'inc/model/');
+	include_class('rental', 'price_item', 'inc/model/');
 
-class rental_soadjustment extends rental_socommon
-{
+	class rental_soadjustment extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -22,7 +23,8 @@ class rental_soadjustment extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soadjustment');
 		}
 		return self::$so;
@@ -34,8 +36,9 @@ class rental_soadjustment extends rental_socommon
 		
 		$filter_clauses = array();
 		
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			if(isset($filters[$this->get_id_field_name()]))
+			{
+				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
 		}
 		else
@@ -68,7 +71,7 @@ class rental_soadjustment extends rental_socommon
 		else
 		{
 			$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_interval, adjustment_date, adjustment_type, extra_adjustment, is_executed, year';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ' ORDER BY adjustment_date DESC';
+				$order	 = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ' ORDER BY adjustment_date DESC';
 		}
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -76,7 +79,7 @@ class rental_soadjustment extends rental_socommon
 	
 	function populate(int $adjustment_id, &$adjustment)
 	{ 
-		if($adjustment == null ) // new object
+			if($adjustment == null) // new object
 		{
 			$adjustment = new rental_adjustment($adjustment_id);
 			$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
@@ -86,16 +89,17 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_interval($this->unmarshal($this->db->f('adjustment_interval', true), 'int'));
 			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
-			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
-                        $adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'),'bool'));
-			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
+				$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'), 'bool'));
+				$adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'), 'bool'));
+				$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'), 'bool'));
 			$adjustment->set_year($this->unmarshal($this->db->f('year'), 'int'));
 		}
 		
 		return $adjustment;
 	}
 	
-	public function get_id_field_name(){
+		public function get_id_field_name()
+		{
 		return 'id';
 	}
 
@@ -110,11 +114,11 @@ class rental_soadjustment extends rental_socommon
 		$id = intval($adjustment->get_id());
 
 		$values = array(
-			'price_item_id = ' . $adjustment->get_price_item_id() ,
+				'price_item_id = ' . $adjustment->get_price_item_id(),
 			'responsibility_id = ' . $adjustment->get_responsibility_id(),
 			'new_price= ' . $adjustment->get_new_price(),
-            'percent = '.$adjustment->get_percent(),
-			'adjustment_interval = '.$adjustment->get_interval(),
+				'percent = ' . $adjustment->get_percent(),
+				'adjustment_interval = ' . $adjustment->get_interval(),
             'adjustment_date = ' . $adjustment->get_adjustment_date(),
 			'adjustment_type = \'' . $adjustment->get_adjustment_type() . '\'',
 			'is_manual = ' . ($adjustment->is_manual() ? "true" : "false"),
@@ -123,7 +127,7 @@ class rental_soadjustment extends rental_socommon
 			'year = ' . $adjustment->get_year()
 		);
 
-		$result = $this->db->query('UPDATE rental_adjustment SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE rental_adjustment SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 		return $result != null;
 	}
@@ -137,7 +141,9 @@ class rental_soadjustment extends rental_socommon
 	public function add(&$adjustment)
 	{
 		// Build a db-friendly array of the adjustment object
-		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval', 'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed', 'extra_adjustment', 'year');
+			$cols	 = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval',
+				'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed', 'extra_adjustment',
+				'year');
 		$values = array(
 			$adjustment->get_price_item_id(),
 			$adjustment->get_responsibility_id(),
@@ -153,7 +159,7 @@ class rental_soadjustment extends rental_socommon
 		);
 
 		$values_insert = $this->db->validate_insert($values);
-		$query ="INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES ({$values_insert})";
+			$query			 = "INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES ({$values_insert})";
 		$result = $this->db->query($query);
 
 		$adjustment_id = $this->db->get_last_insert_id('rental_adjustment', 'id');
@@ -205,8 +211,8 @@ class rental_soadjustment extends rental_socommon
 		 * update price book elements according to type if interval=1
 		 */
 		
-		$prev_day = mktime(0,0,0,date('m'),date('d'),date('Y'));
-		$next_day = mktime(0,0,0,date('m'),date('d')+1,date('Y'));
+			$prev_day	 = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+			$next_day	 = mktime(0, 0, 0, date('m'), date('d') + 1, date('Y'));
 
 		//get incomplete adjustments for today
 		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date >= {$prev_day})";
@@ -226,9 +232,9 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_interval($this->unmarshal($this->db->f('adjustment_interval', true), 'int'));
 			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
-			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
-			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
-                        $adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'),'bool'));
+				$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'), 'bool'));
+				$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'), 'bool'));
+				$adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'), 'bool'));
 			$adjustment->set_year($this->unmarshal($this->db->f('year'), 'int'));
 			$adjustments[] = $adjustment;
 		}
@@ -265,7 +271,7 @@ class rental_soadjustment extends rental_socommon
 		$current_year = (int)date('Y');
 		
 		//var_dump("innicontr");
-		foreach ($adjustments as $adjustment)
+			foreach($adjustments as $adjustment)
 		{
 			//gather all adjustable contracts
 			$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
@@ -294,18 +300,19 @@ class rental_soadjustment extends rental_socommon
 
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 
-				$firstJanAdjYear = mktime(0,0,0,1,1,$adjustment->get_year());
+					$firstJanAdjYear = mktime(0, 0, 0, 1, 1, $adjustment->get_year());
 				if($contract->is_active($firstJanAdjYear) && (($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() <= $adjustment->get_year()))))
 				{
 					//update adjustment_year on contract
 					rental_socontract::get_instance()->update_adjustment_year($contract_id, $adjustment->get_year());
 					//gather price items to be adjusted
-					$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_id));
+						$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+							'contract_id' => $contract_id));
 					foreach($contract_price_items as $cpi)
 					{
 						//update price according to adjustment info
 						$cpi_old_price = $cpi->get_price();
-						$cpi_adjustment = ($cpi_old_price*($adjustment->get_percent()/100))*($adjustment_share/100);
+							$cpi_adjustment	 = ($cpi_old_price * ($adjustment->get_percent() / 100)) * ($adjustment_share / 100);
 						$cpi_new_price = $cpi_old_price + $cpi_adjustment;
 						$cpi->set_price($cpi_new_price);
 						rental_socontract_price_item::get_instance()->store($cpi);
@@ -314,19 +321,20 @@ class rental_soadjustment extends rental_socommon
 			}
 			
 			//TODO: update price book
-			if($adjustment->get_interval() == 1){
+				if($adjustment->get_interval() == 1)
+				{
 				$adjustable_price_items = "SELECT * FROM rental_price_item WHERE responsibility_id = {$adjustment->get_responsibility_id()} AND is_adjustable";
 				$result = $this->db->query($adjustable_price_items);
 				$price_items = array();
 				while($this->db->next_record())
 				{
-					$price_item = new rental_price_item($this->unmarshal($this->db->f('id'),'int'));
-					$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
-					$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
-					$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
-					$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
-					$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable'),'bool'));
-					$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
+						$price_item = new rental_price_item($this->unmarshal($this->db->f('id'), 'int'));
+						$price_item->set_title($this->unmarshal($this->db->f('title'), 'string'));
+						$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'), 'string'));
+						$price_item->set_is_area($this->unmarshal($this->db->f('is_area'), 'bool'));
+						$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'), 'bool'));
+						$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable'), 'bool'));
+						$price_item->set_price($this->unmarshal($this->db->f('price'), 'float'));
 					$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 					$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
                                         $price_item->set_price_type_id($this->unmarshal($this->db->f('type'), true), 'int');
@@ -337,7 +345,7 @@ class rental_soadjustment extends rental_socommon
 				foreach($price_items as $pi)
 				{
 					$pi_old_price = $pi->get_price();
-					$pi_adjustment = $pi_old_price*($adjustment->get_percent()/100);
+						$pi_adjustment	 = $pi_old_price * ($adjustment->get_percent() / 100);
 					$pi_new_price = $pi_old_price + $pi_adjustment;
 					$pi->set_price($pi_new_price);
 					rental_soprice_item::get_instance()->store($pi);
@@ -354,36 +362,30 @@ class rental_soadjustment extends rental_socommon
 				$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
 				if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT,$location_names['location']);
+						$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $location_names['location']);
 					foreach($responsible_accounts as $ra)
 					{
 						$account_ids[] = $ra['account_id'];
 					}
 				}
-				
 			}
 
 			$location_label = rental_socontract::get_instance()->get_responsibility_title($location_id);
 			$adj_interval = $adjustment->get_interval();
-			$day = date("Y-m-d",strtotime('now'));
+				$day			 = date("Y-m-d", strtotime('now'));
 			$ts_today = strtotime($day);
 			//notify each unique account
-			foreach($account_ids as $account_id) {
+				foreach($account_ids as $account_id)
+				{
 				if($account_id && $account_id > 0)
 				{
 					
 					$notification = new rental_notification
 					(
 						0,					// No notification identifier
-						$account_id,
-						0,					// No location identifier
+	  $account_id, 0, // No location identifier
 						null,				// No contract id
-						$ts_today,
-						$location_label.'_'.$adj_interval,
-						null,
-						null,
-						null,
-						null
+	  $ts_today, $location_label . '_' . $adj_interval, null, null, null, null
 					);
 					rental_soworkbench_notification::get_instance()->store($notification);
 				}		
@@ -392,21 +394,22 @@ class rental_soadjustment extends rental_socommon
 		return true;
 	}
 	
-	public function newer_executed_regulation_exists($adjustment){
+		public function newer_executed_regulation_exists($adjustment)
+		{
 		$columns = "id";
 		$table = "rental_adjustment";
-		$conditions = "is_executed='true'".
-					"AND adjustment_date > {$adjustment->get_adjustment_date()}".
-					"AND adjustment_interval={$adjustment->get_interval()}".
+			$conditions	 = "is_executed='true'" .
+			"AND adjustment_date > {$adjustment->get_adjustment_date()}" .
+			"AND adjustment_interval={$adjustment->get_interval()}" .
 					"AND responsibility_id={$adjustment->get_responsibility_id()}";
 		$sql = "Select $columns from $table where $conditions"; 
 		
 		$result = $this->db->query($sql);
 		
-		if($this->db->num_rows() > 0){
+			if($this->db->num_rows() > 0)
+			{
 			return true;
 		}
 		return false;
 	}
-}
-?>
+	}

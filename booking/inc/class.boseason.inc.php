@@ -5,6 +5,7 @@
 	
 	class booking_boseason extends booking_bocommon_authorized
 	{
+
 		function __construct()
 		{
 			parent::__construct();
@@ -24,9 +25,9 @@
 			$parent_roles = null;
 			$parent_building = null;
 			
-			if (is_array($for_object))
+			if(is_array($for_object))
 			{
-				if (!isset($for_object['building_id']))
+				if(!isset($for_object['building_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless building_id is provided');
 				}
@@ -75,8 +76,7 @@
 							'delete' => true,
 						),
 					)
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		
@@ -99,12 +99,11 @@
 							'create' => true,
 						),
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 
-		function generate_allocation($season_id, $date, $to, $interval, $write=false)
+		function generate_allocation($season_id, $date, $to, $interval, $write = false)
 		{
 			$season = $this->so->read_single($season_id);
 			$this->authorize_write($season_id);
@@ -113,32 +112,34 @@
 			do
 			{
 				$wday = $date->format('N');
-				$tallocations = $this->so_wtemplate_alloc->read(array('filters'=>array('season_id'=>$season_id, 'wday'=>$wday), 'sort'=>'from_'));
+				$tallocations	 = $this->so_wtemplate_alloc->read(array('filters' => array('season_id' => $season_id,
+						'wday' => $wday), 'sort' => 'from_'));
 				foreach($tallocations['results'] as $talloc)
 				{
 				
-					$allocation = extract_values($talloc, array('season_id', 'organization_id', 'cost', 'resources', 'organization_name'));
+					$allocation					 = extract_values($talloc, array('season_id', 'organization_id',
+						'cost', 'resources', 'organization_name'));
 					$allocation['active'] = '1';
-					$allocation['from_'] = $date->format("Y-m-d").' '.$talloc['from_'];
-					$allocation['to_'] = $date->format("Y-m-d").' '.$talloc['to_'];
+					$allocation['from_']		 = $date->format("Y-m-d") . ' ' . $talloc['from_'];
+					$allocation['to_']			 = $date->format("Y-m-d") . ' ' . $talloc['to_'];
 					$allocation['building_name'] = $season['building_name'];
 					$allocation['completed'] = 1;
 					$errors = $this->bo_allocation->validate($allocation);
 
 					if(!$errors)
 						$valid[] = $allocation;
-					elseif (count($this->bo_allocation->filter_conflict_errors($errors)) === 0)
+					elseif(count($this->bo_allocation->filter_conflict_errors($errors)) === 0)
 						$invalid[] = $allocation;
 					else
 						throw new UnexpectedValueException('Encountered an unexpected validation error');
 				}
-				if ($date->format('N') == 7) // sunday
+				if($date->format('N') == 7) // sunday
 				{
-					if ($interval == 2)
+					if($interval == 2)
 						$date->modify('+7 days');
-					elseif ($interval == 3)
+					elseif($interval == 3)
 						$date->modify('+14 days');
-					elseif ($interval == 4)
+					elseif($interval == 4)
 						$date->modify('+21 days');
 				}
 
@@ -155,11 +156,10 @@
 						}
 						$this->so->db->transaction_commit();
 					}
-					return array('valid' => $valid, 'invalid'=>$invalid);
+					return array('valid' => $valid, 'invalid' => $invalid);
 				}
 			}
 			while(true);
-
 		}
 
 		function read_boundary($boundary_id)
@@ -186,7 +186,8 @@
 		
 		function get_boundaries($season_id)
 		{
-			return $this->so_boundary->read(array('filters'=>array('season_id'=>$season_id), 'sort'=>'wday,from_', 'dir' => 'asc'));
+			return $this->so_boundary->read(array('filters' => array('season_id' => $season_id),
+				'sort' => 'wday,from_', 'dir' => 'asc'));
 		}
 
 		function add_wtemplate_alloc($alloc)
@@ -223,7 +224,8 @@
 		function wtemplate_schedule($season_id)
 		{
 			$season = $this->read_single($season_id);
-			$allocations = $this->so_wtemplate_alloc->read(array('filters'=>array('season_id'=>$season_id), 'sort'=>'wday,from_'));
+			$allocations = $this->so_wtemplate_alloc->read(array('filters' => array('season_id' => $season_id),
+				'sort' => 'wday,from_'));
 			$allocations = $allocations['results'];
 			foreach($allocations as &$alloc)
 			{
@@ -235,7 +237,7 @@
 			$resources = $resources['results'];
 			//$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($allocations, $resources);
-			return array('total_records'=>count($results), 'results'=>$results);
+			return array('total_records' => count($results), 'results' => $results);
 		}
 
 		function wtemplate_alloc_read_single($alloc_id)

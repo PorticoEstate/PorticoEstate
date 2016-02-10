@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="search_field_grouped">
+
+<!-- $Id$ -->
+<xsl:template name="search_field_grouped">
 		<xsl:variable name="query">
 			<xsl:value-of select="query"/>
 		</xsl:variable>
@@ -62,4 +63,4 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

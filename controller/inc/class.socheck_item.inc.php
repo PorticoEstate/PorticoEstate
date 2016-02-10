@@ -25,9 +25,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'check_item', 'inc/model/');
@@ -35,6 +34,7 @@
 
 	class controller_socheck_item extends controller_socommon
 	{
+
 		protected static $so;
 
 		/**
@@ -44,7 +44,7 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socheck_item');
 			}
@@ -69,7 +69,7 @@
 				$this->marshal($check_item->get_check_list_id(), 'int')
 			);
 
-			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
 			return $result ? $this->db->get_last_insert_id('controller_check_item', 'id') : 0;
 		}
@@ -89,9 +89,9 @@
 				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if( $result )
+			if($result)
 			{
 				return $id;
 			}
@@ -109,7 +109,7 @@
 		*/
 		public function get_single($check_item_id)
 		{
-			$check_item_id = (int) $check_item_id;
+			$check_item_id = (int)$check_item_id;
 
 			$sql = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci, controller_control_item coi "; 
@@ -140,7 +140,6 @@
 				return null;
 			}
 		}
-		
 		/**
 		 * Get single check item object from database including related cases and control item 
 		 * 
@@ -226,8 +225,8 @@
 		*/
 		public function get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id)
 		{
-			$check_list_id = (int) $check_list_id;
-			$control_item_id = (int) $control_item_id;
+			$check_list_id	 = (int)$check_list_id;
+			$control_item_id = (int)$control_item_id;
 
 			$sql  = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci, controller_control_item coi "; 
@@ -271,7 +270,7 @@
 		*/
 		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $location_code = null)
 		{
-			$check_list_id = (int) $check_list_id;
+			$check_list_id	 = (int)$check_list_id;
 			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, cic.component_location_id,";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
@@ -326,11 +325,11 @@
 			
 			$check_item_id = 0;
 			$check_item = null;
-			$check_items_array=array();
+			$check_items_array	 = array();
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				if( $this->db->f('ci_id') != $check_item_id )
+				if($this->db->f('ci_id') != $check_item_id)
 				{	
 					if($check_item_id)
 					{
@@ -356,7 +355,7 @@
 					$cases_array = array();
 				}
 				
-				if( $this->db->f('cic_id') )
+				if($this->db->f('cic_id'))
 				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -372,7 +371,6 @@
 					$case->set_component_location_id($this->db->f('component_location_id'), 'int');
 					$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));								
 					$cases_array[] = $case;
-					
 				}
 				
 				$check_item_id = $check_item->get_id();
@@ -396,7 +394,7 @@
 		*/
 		public function get_check_items_with_cases_by_message($message_ticket_id)
 		{
-			$message_ticket_id = (int) $message_ticket_id;
+			$message_ticket_id = (int)$message_ticket_id;
 
 			$sql  = "SELECT ci.id as ci_id, control_item_id, cic.component_location_id,"; 
 			$sql .= "check_list_id, cic.id as cic_id, cic.status as cic_status, cic.*, ";
@@ -411,9 +409,9 @@
 			
 			$check_item_id = 0;
 			$check_item = null;
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				if( $this->db->f('ci_id') != $check_item_id )
+				if($this->db->f('ci_id') != $check_item_id)
 				{
 					if($check_item_id)
 					{
@@ -498,9 +496,18 @@
 		}
 		*/
 		
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
+		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		{
 
-		function populate(int $object_id, &$object){}
+		}
 
-		function get_id_field_name(){}
+		function populate(int $object_id, &$object)
+		{
+
+		}
+
+		function get_id_field_name()
+		{
+
+		}
 	}

@@ -1,7 +1,18 @@
+
+<xsl:template match="data">
+	<xsl:apply-templates select="header"/>
+	<xsl:apply-templates select="section"/>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
+
+
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<xsl:variable name="messages_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uimessages.index')" /></xsl:variable>
-	<div id="wrapper">
-    	<div id="header">
+	<div class="frontend_header">
+    	<div class="frontend_content">
+			<div id="logo_holder">
+				<img src="{logo_path}"/>
+			</div>
     		<div id="login-bar">
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/> | <a href="http://portico/pe/preferences/changepassword.php">Bytt passord</a></li>
@@ -22,7 +33,7 @@
 			</div>
 			<div id="area_and_price">
 				<ul>
-					<li ><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
+					<li><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
     				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="total_area"/></li>
     				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="total_price"/></li>
     			</ul>
@@ -72,16 +83,12 @@
 					</div>
 				</xsl:when>
 			</xsl:choose>
-			<div id="logo_holder">
-				<img src="{logo_path}"/>
-			</div>
-		</div>
     </div>
-	<table id="header">
+		
+		<div class="frontend_content">
 		<xsl:choose>
 			<xsl:when test="number_of_locations = 0">
-				<tr valign="top">
-					<td>
+					<div>
 						<label>
 							<xsl:choose>
 								<xsl:when test="use_fellesdata != 1">
@@ -93,12 +100,10 @@
 							<img src="frontend/templates/base/images/32x32/house.png" class="list_image"/>
 							<em class="select_header"><xsl:value-of select="php:function('lang', 'no_buildings')"/></em>
 						</label>
-					</td>
-				</tr>
+					</div>
 			</xsl:when>
+
 			<xsl:otherwise>
-				<tr valign="top">
-					<td>
 						<div id="unit_selector">
 							<form action="{form_action}" method="post">
 								<label>
@@ -147,18 +152,15 @@
 								</select>
 							</form>
 						</div>
-					</td>
-					<td>
-						<div id="area_and_price" style="margin-top: 2em;">
+
+					<div id="area_and_price2">
 						<ul>
 							<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
 		    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="selected_total_area"/></li>
 		    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="selected_total_price"/></li>
 		    			</ul>
 						</div>
-					</td>
-					<td>
-						<br/>
+
 						<div id="unit_image">
 							<img alt="">
 								<xsl:attribute name="src">
@@ -168,13 +170,13 @@
 								</xsl:attribute>
 							</img>
 						</div>
-					</td>
-				</tr>
 			</xsl:otherwise>
 		</xsl:choose>
-	</table>
+		</div>
+    </div>
 </xsl:template>
 
+<!--
 <xsl:template match="menu">
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>
@@ -182,5 +184,4 @@
 <xsl:template match="tabs">
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>
-
-
+-->

@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_delete">
-		<xsl:apply-templates select="delete"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="delete">
+<!-- $Id$ -->
+<xsl:template name="app_delete">
+		<xsl:apply-templates select="delete"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="delete">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="center" colspan="2">
@@ -44,4 +45,4 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

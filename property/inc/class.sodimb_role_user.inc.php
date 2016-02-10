@@ -23,9 +23,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package registration
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('phpgwapi.datetime');
 
 	class property_sodimb_role_user
@@ -35,13 +34,12 @@
 
 		function __construct()
 		{
-			$this->account_id 	= (int) $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account_id = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->db2			= clone($this->db);
 			$this->join			= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
-
 		}
 
 		function read($data)
@@ -51,17 +49,17 @@
 			$get_netto_list = isset($data['get_netto_list']) && $data['get_netto_list'] ? true : false;
 
 
-			$dimb_id = (int) $data['dimb_id'];			
+			$dimb_id = (int)$data['dimb_id'];
 			if(isset($data['user_id']) && $data['user_id'])
 			{
-				$user_id = (int) $data['user_id'];
+				$user_id = (int)$data['user_id'];
 			}
 			else if(!$dimb_id)
 			{
 				$user_id = $this->account_id;
 			}
 
-			$role_id = (int) $data['role_id'];
+			$role_id = (int)$data['role_id'];
 			$query = $this->db->db_addslashes($data['query']);
 
 			$filtermethod = '';
@@ -102,18 +100,18 @@
 			. " ORDER BY ecodimb ASC ";
 			
 //_debug_array($sql);
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$user_data = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				$user_data[$this->db->f('ecodimb')][ $this->db->f('role_id')][$this->db->f('user_id')] = array
+				$user_data[$this->db->f('ecodimb')][$this->db->f('role_id')][$this->db->f('user_id')] = array
 				(
 					'id' 			=> $this->db->f('id'),
 					'ecodimb' 		=> $this->db->f('ecodimb'),
 					'user_id'		=> $this->db->f('user_id'),
 					'role_id'		=> $this->db->f('role_id'),
-					'role'			=> $this->db->f('role',true),
+					'role' => $this->db->f('role', true),
 					'default_user' 	=> $this->db->f('default_user'),
 					'active_from' 	=> $this->db->f('active_from'),
 					'active_to' 	=> $this->db->f('active_to'),
@@ -127,10 +125,10 @@
 			}
 
 			$sql = "SELECT id, name FROM fm_ecodimb_role {$filterrole} ORDER BY id ASC ";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$roles = array();
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$roles[] = array
 				(
@@ -142,18 +140,18 @@
 
 
 			$sql = "SELECT fm_ecodimb.id FROM fm_ecodimb {$filterdimb} ORDER BY id ASC ";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$dimbs = array();
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$dimbs[] = $this->db->f('id');
 			}
 
 
-			if($dimb_id && ! $user_id)
+			if($dimb_id && !$user_id)
 			{
-				$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, '.invoice','property');
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, '.invoice', 'property');
 			}
 			else
 			{
@@ -166,7 +164,7 @@
 			{
 				foreach($roles as $role)
 				{
-					foreach ($users as $dummy => $user)
+					foreach($users as $dummy => $user)
 					{
 						if(isset($user_data[$dimb][$role['id']][$user['account_id']]))
 						{
@@ -204,9 +202,9 @@
 			$c_default_user = 0;
 			foreach($default_user as $id)
 			{
-				if( !in_array($id, $delete) )
+				if(!in_array($id, $delete))
 				{
-					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 1 WHERE id = '{$id}'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 1 WHERE id = '{$id}'", __LINE__, __FILE__);
 					$c_default_user ++;
 				}
 			}
@@ -216,7 +214,7 @@
 			$c_alter_date = 0;
 			foreach($alter_date as $id)
 			{
-				if( !in_array($id, $delete) )
+				if(!in_array($id, $delete))
 				{
 					$value_set = array();
 					if($active_from)
@@ -231,7 +229,7 @@
 					if($value_set)
 					{
 						$value_set	= $this->db->validate_update($value_set);
-						$this->db->query("UPDATE fm_ecodimb_role_user SET {$value_set} WHERE id = '{$id}'",__LINE__,__FILE__);
+						$this->db->query("UPDATE fm_ecodimb_role_user SET {$value_set} WHERE id = '{$id}'", __LINE__, __FILE__);
 						unset($value_set);
 					}
 					$c_alter_date ++;
@@ -255,7 +253,7 @@
 				);
 				
 				$sql = 'INSERT INTO fm_ecodimb_role_user (' . implode(',', array_keys($value_set)) . ') VALUES (' . $this->db->validate_insert(array_values($value_set)) . ')';
-				$this->db->query($sql,__LINE__,__FILE__);				
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			$ok = false;
@@ -264,7 +262,7 @@
 				$ok = true;
 				foreach($delete as $id)
 				{
-					$this->db->query('UPDATE fm_ecodimb_role_user SET expired_on =' . time() . " , expired_by = {$this->account_id} WHERE id = '{$id}'",__LINE__,__FILE__);
+					$this->db->query('UPDATE fm_ecodimb_role_user SET expired_on =' . time() . " , expired_by = {$this->account_id} WHERE id = '{$id}'", __LINE__, __FILE__);
 				}
 
 				if($delete)

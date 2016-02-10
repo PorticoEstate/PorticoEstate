@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="chapter_select">
+
+<!-- $Id$ -->
+<xsl:template name="chapter_select">
 		<xsl:variable name="lang_chapter_statustext">
 			<xsl:value-of select="lang_chapter_statustext"/>
 		</xsl:variable>
@@ -12,10 +13,10 @@
 			</option>
 			<xsl:apply-templates select="chapter_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="chapter_list">
+<!-- New template-->
+<xsl:template match="chapter_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -31,4 +32,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

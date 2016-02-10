@@ -1,7 +1,7 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
-	$("#global_category_id").change(function(){
-		var oArgs = {menuaction:'property.boworkorder.get_category', cat_id:$(this).val()};
+	$("#global_category_id").change(function () {
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var htmlString = "";
@@ -10,10 +10,10 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data) {
+				if (data != null)
 				{
-					if(data.active !=1)
+					if (data.active != 1)
 					{
 						alert('Denne kan ikke velges');
 					}
@@ -23,9 +23,9 @@ $(document).ready(function(){
 	});
 
 
-	$("#workorder_edit").on("submit", function(e){
+	$("#workorder_edit").on("submit", function (e) {
 
-		if($("#lean").val() == 0)
+		if ($("#lean").val() == 0)
 		{
 			return;
 		}
@@ -37,10 +37,10 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			success: function(data) {
-				if(data)
+			success: function (data) {
+				if (data)
 				{
-					if(data.sessionExpired)
+					if (data.sessionExpired)
 					{
 						alert('Sesjonen er utløpt - du må logge inn på nytt');
 						return;
@@ -49,29 +49,28 @@ $(document).ready(function(){
 	    			var obj = data;
 		    	
 	    			var submitBnt = $(thisForm).find("input[type='submit']");
-	    			if(obj.status == "updated")
+					if (obj.status == "updated")
 	    			{
 		    			$(submitBnt).val("Lagret");
-					}
-					else
+					} else
 					{
 		    			$(submitBnt).val("Feil ved lagring");					
 					}
 		    				 
 		    		// Changes text on save button back to original
-		    		window.setTimeout(function() {
+					window.setTimeout(function () {
 						$(submitBnt).val('Lagre');
 						$(submitBnt).addClass("not_active");
 		    		}, 1000);
 
 					var ok = true;
 					var htmlString = "";
-	   				if(data['receipt'] != null)
+					if (data['receipt'] != null)
 	   				{
-		   				if(data['receipt']['error'] != null)
+						if (data['receipt']['error'] != null)
 		   				{
 							ok = false;
-							for ( var i = 0; i < data['receipt']['error'].length; ++i )
+							for (var i = 0; i < data['receipt']['error'].length; ++i)
 							{
 								htmlString += "<div class=\"error\">";
 								htmlString += data['receipt']['error'][i]['msg'];
@@ -79,9 +78,9 @@ $(document).ready(function(){
 							}
 	   				
 		   				}
-		   				if(typeof(data['receipt']['message']) != 'undefined')
+						if (typeof (data['receipt']['message']) != 'undefined')
 		   				{
-							for ( var i = 0; i < data['receipt']['message'].length; ++i )
+							for (var i = 0; i < data['receipt']['message'].length; ++i)
 							{
 								htmlString += "<div class=\"msg_good\">";
 								htmlString += data['receipt']['message'][i]['msg'];
@@ -92,7 +91,7 @@ $(document).ready(function(){
 		   				$("#receipt").html(htmlString);
 		   			}
 	   				
-					if(ok)
+					if (ok)
 					{
 						parent.closeJS_remote();
 					//	parent.hide_popupBox();
@@ -102,8 +101,8 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#workorder_cancel").on("submit", function(e){
-		if($("#lean").val() == 0)
+	$("#workorder_cancel").on("submit", function (e) {
+		if ($("#lean").val() == 0)
 		{
 			return;
 		}

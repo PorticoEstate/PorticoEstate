@@ -140,7 +140,7 @@ fieldset {
 legend {
   padding: 0.2em 0.5em;
   border:1px solid #1E90FF;
-/*  color:#cccccc;*/
+	/*  color:#cccccc;*/
   font-size:90%;
   text-align:right;
   font-weight: bolder;
@@ -380,7 +380,6 @@ div.nowrap {
   float: right;
   border: none;
   text-decoration: none;
-  background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
   width: 25px;
   height: 15px;
   cursor: pointer;
@@ -611,9 +610,6 @@ a#innertoolbar-button {
   margin-left: 1em !important;
 }
 
-th.yui-dt-sortable div{
-  background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
-}
 
 dd ol li {
   list-style: decimal;

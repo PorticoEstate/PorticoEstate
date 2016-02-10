@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="abook_view">
-		<xsl:apply-templates select="abook_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="abook_data">
+<!-- $Id$ -->
+<xsl:template name="abook_view">
+		<xsl:apply-templates select="abook_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="abook_data">
 		<tr>
 			<td valign="top">
 				<xsl:value-of select="lang_contact"/>
@@ -15,4 +16,4 @@
 				<xsl:value-of select="value_contact_name"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

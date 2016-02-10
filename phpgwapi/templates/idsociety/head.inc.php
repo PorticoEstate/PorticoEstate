@@ -21,17 +21,21 @@
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'idsociety';
 	}
+	$stylesheets = array();
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	
-	$theme_styles = array
-	(
-		'/phpgwapi/templates/idsociety/css/base.css',
-		"/phpgwapi/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css",
-		"/{$app}/templates/base/css/base.css",
-		"/{$app}/templates/idsociety/css/base.css",
-		"/{$app}/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"
-	);
+	$stylesheets[] = '/phpgwapi/templates/idsociety/css/base.css';
+	$stylesheets[] = "/phpgwapi/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/idsociety/css/base.css";
+	$stylesheets[] = "/{$app}/templates/idsociety/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	
 
-	foreach ( $theme_styles as $style )
+	foreach ( $stylesheets as $style )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $style ) )
 		{

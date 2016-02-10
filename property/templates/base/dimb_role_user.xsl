@@ -1,22 +1,5 @@
 <!-- $Id$ -->
 
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
-
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-				<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
-
 <!-- separate tabs and  inline tables-->
 
 
@@ -52,7 +35,9 @@
 	<div class="yui-content">
 		<div id="invoice-layout">
 				<div class="header">
-					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
+				<h2>
+					<xsl:value-of select="php:function('lang', 'invoice')"/>
+				</h2>
 				</div>
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -61,7 +46,6 @@
 			</xsl:choose>
 				<div class="body">
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>
@@ -70,11 +54,30 @@
 								<xsl:call-template name="role_fields" />
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
-										<xsl:apply-templates select="datatable"/>
+									<!--xsl:apply-templates select="paging"/>
+									<xsl:apply-templates select="datatable"/-->
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+
 									</td>
 								</tr>
 							</table>
+						<div id="receipt"></div>
+						<xsl:variable name="label_submit">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</xsl:variable>
+						<div class="row_on">
+							<input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/>
+						</div>
 						</form>
 					</div>
 				</div>
@@ -129,7 +132,9 @@
 			<input type="text" name="query_end" id="query_end" size = "10"/>
 		</td>
 		<td>
-			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
+						<xsl:variable name="lang_search">
+							<xsl:value-of select="php:function('lang', 'Search')" />
+						</xsl:variable>
 			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
 		</td>	  		
 	  </tr>
@@ -169,8 +174,12 @@
 	
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
-  	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="row_on"><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
+	<xsl:variable name="label_submit">
+		<xsl:value-of select="php:function('lang', 'save')" />
+	</xsl:variable>
+	<div class="row_on">
+		<input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/>
+	</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">

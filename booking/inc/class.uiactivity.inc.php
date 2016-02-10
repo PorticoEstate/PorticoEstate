@@ -3,9 +3,11 @@
 
 	class booking_uiactivity extends booking_uicommon
 	{
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
+			'query'	 => true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true
@@ -34,13 +36,15 @@
 						continue;
 					}
 					$node = array(
-						"type"=>"text", 
+						"type"		 => "text",
 						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 
 						                           'id' => $activity['id'])), 'target' => '_self', 
 						                           'label' => $activity['name'], 
+						'text'		 => $activity['name'],
 						                           'children' => $this->treeitem($children, $activity['id'], $show_all)
 					);
-					if (!$this->bo->allow_write($activity)) {
+					if(!$this->bo->allow_write($activity))
+					{
 						unset($node['href']);
 					}
 					
@@ -50,10 +54,15 @@
 			return $nodes;
 		}
 		
+		public function query()
+		{
+			
+		}
+
 		public function index()
 		{
 			$show_all = phpgw::get_var('show_all') || false;
-			$activities = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
+			$activities	 = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC'));
 			$children = array();
 			foreach($activities['results'] as $activity)
 			{
@@ -68,16 +77,25 @@
 				$children[$activity['parent_id']][] = $activity;
 			}
 			$treedata = json_encode($this->treeitem($children, null, $show_all));
-			phpgwapi_yui::load_widget('treeview');
+			phpgwapi_jquery::load_widget('treeview');
 			$links = array(
-				'show_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => 'true')),
-				'hide_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => ''))
+				'show_inactive'	 => self::link(array('menuaction' => 'booking.uiactivity.index',
+					'show_all' => 'true')),
+				'hide_inactive'	 => self::link(array('menuaction' => 'booking.uiactivity.index',
+					'show_all' => ''))
 			);
-			if ($this->bo->allow_create())
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Booking'), 'link' => '#activities');
+			$active_tab		 = 'generic';
+			$tabs			 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+			if($this->bo->allow_create())
 			{
 				$links['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
 			}
-			self::render_template('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all));
+			self::render_template_xsl('activities', array('treedata' => $treedata, 'links' => $links,
+				'show_all' => $show_all, 'tabs' => $tabs));
 		}
 
 		public function add()
@@ -85,7 +103,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if ( $_POST['parent_id'] == '0' )
+				if($_POST['parent_id'] == '0')
 				{
 					$_POST['parent_id'] = null;
 				}
@@ -95,6 +113,9 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($activity);
+					//Add locations for application and resources
+					$GLOBALS['phpgw']->hooks->single(array('id' => $receipt['id'], 'name' => $activity['name'],
+						'location' => 'activity_add'), 'booking');
 					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}
@@ -102,12 +123,21 @@
 			$activities = $this->bo->fetch_activities();
 			$activities = $activities['results'];
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-			self::render_template('activity_new', array('activity' => $activity, 'activities' => $activities));
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Activity New'), 'link' => '#activity_add');
+			$active_tab		 = 'generic';
+
+			$activity['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$activity['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('activity_new', array('activity' => $activity, 'activities' => $activities));
 		}
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id							 = phpgw::get_var('id', 'int');
 			$activity = $this->bo->read_single($id);
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
 			$activities = $this->bo->fetch_activities();
@@ -118,20 +148,34 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if ( $_POST['parent_id'] == '0' )
+				if($_POST['parent_id'] == '0')
 				{
 					$_POST['parent_id'] = null;
 				}
-				$activity = array_merge($activity, extract_values($_POST, array('name', 'active', 'description', 'parent_id')));
+				$activity	 = array_merge($activity, extract_values($_POST, array('name', 'active',
+					'description', 'parent_id')));
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($activity);
+					//Edit locations for application and resources
+					$GLOBALS['phpgw']->hooks->single(array('id' => $id, 'name' => $activity['name'],
+						'location' => 'activity_edit'), 'booking');
 					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}
 			$this->flash_form_errors($errors);
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-			self::render_template('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'activities' => $activities));
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Activity Edit'), 'link' => '#activity_edit');
+			$active_tab		 = 'generic';
+
+			$activity['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$activity['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('activity_edit', array('activity' => $activity, 'parent' => $parent_activity,
+				'activities' => $activities));
 		}
 	}

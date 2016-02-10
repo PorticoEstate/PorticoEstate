@@ -16,23 +16,17 @@
  *  - placeholders
  *
  * @website http://formvalidator.net/
- * @license Dual licensed under the MIT or GPL Version 2 licenses
- * @version 2.2.beta.58
+ * @license MIT
+ * @version 2.2.83
  */
 (function($, window) {
 
-    "use strict";
+  'use strict';
 
     var SUPPORTS_PLACEHOLDER = 'placeholder' in document.createElement('INPUT'),
-        SUPPORTS_DATALIST = 'options' in document.createElement('DATALIST');
-
-    $(window).bind('validatorsLoaded formValidationSetup', function(evt, $form) {
-
-        if( !$form ) {
-            $form = $('form');
-        }
-
-        var hasLoadedDateModule = false;
+        SUPPORTS_DATALIST = 'options' in document.createElement('DATALIST'),
+        hasLoadedDateModule = false,
+        setupValidationUsingHTML5Attr = function($form) {
 
         $form.each(function() {
             var $f = $(this),
@@ -67,10 +61,12 @@
                         var max = $input.attr('max'),
                             min = $input.attr('min');
                         if( min || max ) {
-                            if( !min )
-                                min = 0;
-                            if( !max )
-                                max = 9007199254740992; // js max int
+                    if ( !min ) {
+                      min = '0';
+                    }
+                    if ( !max ) {
+                      max = '9007199254740992'; // js max int
+                    }
 
                             attrs['data-validation-allowing'] = 'range['+min+';'+max+']';
                             if( min.indexOf('-') === 0 || max.indexOf('-') === 0 ) {
@@ -93,13 +89,29 @@
                 }
 
                 if( !SUPPORTS_DATALIST && $input.attr('list') ) {
-                    var suggestions = [];
-                    $('#'+$input.attr('list')+' option').each(function() {
-                        var $opt = $(this);
-                        suggestions.push($opt.attr('value') || $opt.text());
+                var suggestions = [],
+                  $list = $('#'+$input.attr('list'));
+
+                $list.find('option').each(function() {
+                  suggestions.push($(this).text());
+                });
+
+                if( suggestions.length === 0 ) {
+                  // IE fix
+                  var opts = $.trim($('#'+$input.attr('list')).text()).split('\n');
+                  $.each(opts, function(i, option) {
+                    suggestions.push($.trim(option));
                     });
+                }
+
+                $list.remove();
+
                     $.formUtils.suggest( $input, suggestions );
                 }
+
+              if ( isRequired && validation.length === 0 ) {
+                validation.push('required');
+              }
 
                 if( validation.length ) {
                     if( !isRequired ) {
@@ -124,13 +136,13 @@
                     this.defaultValue = this.getAttribute('placeholder');
                     $(this)
                         .bind('focus', function() {
-                            if(this.value == this.defaultValue) {
+                    if(this.value === this.defaultValue) {
                                 this.value = '';
                                 $(this).removeClass('showing-placeholder');
                             }
                         })
                         .bind('blur', function() {
-                            if($.trim(this.value) == '') {
+                    if($.trim(this.value) === '') {
                                 this.value = this.defaultValue;
                                 $(this).addClass('showing-placeholder');
                             }
@@ -139,6 +151,16 @@
             }
 
         });
+        };
+
+    $(window).bind('validatorsLoaded formValidationSetup', function(evt, $form) {
+        if( !$form ) {
+            $form = $('form');
+        }
+        setupValidationUsingHTML5Attr($form);
     });
+
+    // Make this method available outside the module
+    $.formUtils.setupValidationUsingHTML5Attr = setupValidationUsingHTML5Attr;
 
 })(jQuery, window);

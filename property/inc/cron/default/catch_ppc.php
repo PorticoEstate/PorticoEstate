@@ -24,19 +24,18 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage catch
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default catch_ppc
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class catch_ppc extends property_cron_parent
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -48,7 +47,6 @@
 			set_time_limit(1000);
 		}
 
-
 		function execute()
 		{
 			try
@@ -57,7 +55,7 @@
 			}
 			catch(Exception $e)
 			{
-				$this->receipt['error'][]=array('msg'=>$e->getMessage());
+				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
 		}
 
@@ -96,7 +94,7 @@
 				$file_list = $this->get_files();
 
  				$i = 0;
-				foreach ($file_list as $file)
+				foreach($file_list as $file)
 				{
 					$xml = new DOMDocument('1.0', 'utf-8');
 					$xml->load($file);
@@ -111,10 +109,8 @@
 					}
 					$var_result['unitid'] = $xml->getElementsByTagName('UnitID')->item(0)->nodeValue;
 //					_debug_array($var_result);die();
-
 //					$var_result = $xmlparse->parseFile($file);
 //					$var_result = array_change_key_case($var_result, CASE_LOWER);
-
 					//data
 					$insert_values	= array();
 					$cols		= array();
@@ -129,16 +125,16 @@
 						}
 
 						$insert_value = trim($var_result[$field]);
-						switch ( $field_info->type )
+						switch($field_info->type)
 						{
 							case 'string':
 							case 'varchar':
 								$max_length = intval($field_info->max_length);
-								$input_length = strlen( $insert_value );
+								$input_length = strlen($insert_value);
 
-								if( $input_length > $max_length ) {
-									$val_errors[] = lang('Input for field "%1" is %2 characters, max for field is %3 (%4)', 
-										$field_info->name, $input_length, $max_length, $file);
+								if($input_length > $max_length)
+								{
+									$val_errors[] = lang('Input for field "%1" is %2 characters, max for field is %3 (%4)', $field_info->name, $input_length, $max_length, $file);
 								}
 								break;
 							case 'int2':
@@ -152,14 +148,14 @@
 										$field_info->name, $insert_value, $file);
 								}
 								*/
-								$insert_value = $insert_value ? (int) $insert_value : '';
+								$insert_value = $insert_value ? (int)$insert_value : '';
 								break;
 							case 'numeric':
-								$insert_value = str_replace( ',', '.', $insert_value);
+								$insert_value = str_replace(',', '.', $insert_value);
 								$insert_value = floatval($insert_value);
 								break;
 							case 'timestamp':
-								$insert_value = date( $this->db->date_format(), strtotime( $insert_value ) );
+								$insert_value = date($this->db->date_format(), strtotime($insert_value));
 								break;
 						}
 						$insert_values[] = $insert_value;
@@ -167,9 +163,9 @@
 					}
 
 					// Raise exception if we have validation errors
-					if( count( $val_errors ) > 0 )
+					if(count($val_errors) > 0)
 					{
-						throw new Exception( implode("<br>", $val_errors) );						
+						throw new Exception(implode("<br>", $val_errors));
 					}
 
 					if($cols) // something to import
@@ -180,9 +176,9 @@
 
 						$cols[]	= 'entry_date';
 						$insert_values[] = time();
-						$id = $entity->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
+						$id = $entity->generate_id(array('entity_id' => $entity_id, 'cat_id' => $cat_id));
 						$num = $entity->generate_num($entity_id, $cat_id, $id);
-						$this->db->query("SELECT * FROM fm_catch_1_1 WHERE unitid ='{$var_result['unitid']}'",__LINE__,__FILE__);
+						$this->db->query("SELECT * FROM fm_catch_1_1 WHERE unitid ='{$var_result['unitid']}'", __LINE__, __FILE__);
 						$this->db->next_record();
 						$user_id = $this->db->f('user_');
 						if(!$user_id)
@@ -196,7 +192,7 @@
 
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
-						. "VALUES ($id, '$num', $user_id, $insert_values)",__LINE__,__FILE__);
+						. "VALUES ($id, '$num', $user_id, $insert_values)", __LINE__, __FILE__);
 
 						//attachment
 						foreach($var_result as $field => $data)
@@ -208,12 +204,12 @@
 
 								$bofiles->vfs->override_acl = 1;
 
-								if(!$bofiles->vfs->cp (array (
+								if(!$bofiles->vfs->cp(array(
 									'from'	=> "{$this->pickup_path}/{$data}",
 									'to'	=> $to_file,
-									'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 								{
-									$this->receipt['error'][]=array('msg'=>lang('Failed to upload file %1 on id %2', $data, $num));
+									$this->receipt['error'][] = array('msg' => lang('Failed to upload file %1 on id %2', $data, $num));
 								}
 								$bofiles->vfs->override_acl = 0;
 								// move attachment
@@ -230,7 +226,7 @@
 						$ok = false;
 						if($this->db->transaction_commit())
 						{
-							foreach ($movefiles as $movefrom => $moveto)
+							foreach($movefiles as $movefrom => $moveto)
 							{
 								$ok = @rename($movefrom, $moveto);
 							}
@@ -238,9 +234,9 @@
 
 						if(!$ok)
 						{
-							$this->db->query("DELETE FROM $target_table WHERE id =" . (int)$id,__LINE__,__FILE__);
+							$this->db->query("DELETE FROM $target_table WHERE id =" . (int)$id, __LINE__, __FILE__);
 							$i--;
-							$this->receipt['error'][]=array('msg'=>lang('There was a problem moving the file(s), imported records are reverted'));
+							$this->receipt['error'][] = array('msg' => lang('There was a problem moving the file(s), imported records are reverted'));
 						}
 						else
 						{
@@ -249,22 +245,22 @@
 							$criteria = array
 							(
 								'appname'	=> 'catch',
-								'location'	=> '.catch.' . str_replace('_','.',$target),
+								'location' => '.catch.' . str_replace('_', '.', $target),
 								'allrows'	=> true
 							);
 
 							$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-							foreach ( $custom_functions as $entry )
+							foreach($custom_functions as $entry)
 							{
 								// prevent path traversal
-								if ( preg_match('/\.\./', $entry['file_name']) )
+								if(preg_match('/\.\./', $entry['file_name']))
 								{
 									continue;
 								}
 
 								$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-								if ( $entry['active'] && is_file($file) )
+								if($entry['active'] && is_file($file))
 								{
 									require $file;
 								}
@@ -272,7 +268,7 @@
 						}
 					}
 				}
-				$this->receipt['message'][]=array('msg'=>lang('%1 records imported to %2', $i, $schema_text));
+				$this->receipt['message'][] = array('msg' => lang('%1 records imported to %2', $i, $schema_text));
 			}
 		}
 
@@ -280,29 +276,26 @@
 		{
 			$dirname = $this->pickup_path;
 			// prevent path traversal
-			if ( preg_match('/\./', $dirname) 
-			 || !is_dir($dirname) )
+			if(preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname); 
-			if ( is_object($dir) )
+			if(is_object($dir))
 			{
-				foreach ( $dir as $file )
+				foreach($dir as $file)
 				{
-					if ( $file->isDot()
-						|| !$file->isFile()
-						|| !$file->isReadable()
+					if($file->isDot() || !$file->isFile() || !$file->isReadable()
 						//|| mime_content_type($file->getPathname()) != 'text/xml')
 						//|| finfo_file( finfo_open(FILEINFO_MIME, '/usr/share/file/magic'), $file->getPathname() ) != 'text/xml')
-						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+					|| strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
  					{
 						continue;
 					}
 
-					$file_list[] = (string) "{$dirname}/{$file}";
+					$file_list[] = (string)"{$dirname}/{$file}";
 				}
 			}
 

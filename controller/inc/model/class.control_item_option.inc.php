@@ -25,15 +25,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	include_class('controller', 'model', 'inc/model/');
 	
 	class controller_control_item_option extends controller_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $option_value;
 		protected $control_item_id;
@@ -49,19 +48,28 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
 		public function set_option_value($option_value)
 		{
 			$this->option_value = $option_value;
 		}
 		
-		public function get_option_value() { return $this->option_value; }
+		public function get_option_value()
+		{
+			return $this->option_value;
+		}
 		
 		public function set_control_item_id($control_item_id)
 		{
 			$this->control_item_id = $control_item_id;
 		}
 		
-		public function get_control_item_id() { return $this->control_item_id; }
-}
+		public function get_control_item_id()
+		{
+			return $this->control_item_id;
+		}
+	}

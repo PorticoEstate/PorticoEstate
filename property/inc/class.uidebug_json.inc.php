@@ -24,18 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-	//phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_uidebug_json
 	{
+
 		var $public_functions = array
 			(
 				'index' 		=> true
@@ -60,15 +58,15 @@
 			$app = phpgw::get_var('app', 'string', 'GET');
 
 			//get session's values
-			$data = phpgwapi_cache::session_get($app,'id_debug');
+			$data = phpgwapi_cache::session_get($app, 'id_debug');
 			if(isset($data))
 			{
 				//clear session
 				phpgwapi_cache::session_clear($app, 'id_debug');
 				//replace '<' and '>'
-				if (is_array($data))
+				if(is_array($data))
 				{
-					self::_my_print_rec($data,0);
+					self::_my_print_rec($data, 0);
 				}
 				else
 				{
@@ -83,13 +81,13 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
-		static protected function _my_print_rec(&$val,$nivel=0)
+		static protected function _my_print_rec(&$val, $nivel = 0)
 		{
 			foreach($val as $key => &$value)
 			{
 				if(is_array($value))
 				{
-					self::_my_print_rec($value,$nivel+1);
+					self::_my_print_rec($value, $nivel + 1);
 				}
 				else
 				{
@@ -99,4 +97,3 @@
 			}
 		}
 	}
-

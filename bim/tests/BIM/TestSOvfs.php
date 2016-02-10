@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -17,21 +14,22 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once './TestBimCommon.php';
-class TestSOvfs extends TestBimCommon
-{
+	include_once './TestBimCommon.php';
 
-	/*private $modelName = "unitTestModel";
+	class TestSOvfs extends TestBimCommon
+	{
+		/* private $modelName = "unitTestModel";
 	private $vfsFileName = "dummyFile.txt";
 	private $vfsFileNameWithFullPath;
 	private $vfsFileContents = "This is a file made for unit testing, please ignore or delete";
 	private $vfsSubModule = "ifc";
-	private $vfsFileId = 10101010;*/
+		  private $vfsFileId = 10101010; */
 	
 	/**
 	 * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
 	 */
 	protected $backupGlobals = false;
+
 	/**
 	 * Setup the environment for the tests
 	 *
@@ -43,7 +41,8 @@ class TestSOvfs extends TestBimCommon
 		$this->vfsFileName = "soVfsTestDummyFile.txt"; // so that these tests will not interfere with the sobimmodel tests
 	}
 	
-	public function testAddFile() {
+		public function testAddFile()
+		{
 		$this->createDummyFile();
 		$sovfs = new sovfs_impl();
 		//$sovfs->debug = true;
@@ -51,10 +50,13 @@ class TestSOvfs extends TestBimCommon
 		$sovfs->setFileNameWithFullPath($this->vfsFileNameWithFullPath);
 		$sovfs->setSubModule($this->vfsSubModule);
 		$sovfs->debug = true;
-		try {
+			try
+			{
 			$sovfs->addFileToVfs();
 			echo "Success!";
-		} catch (FileExistsException $e) {
+			}
+			catch(FileExistsException $e)
+			{
 			echo "File already exists\n";
 		}
 		$this->removeDummyFile();
@@ -112,7 +114,7 @@ class TestSOvfs extends TestBimCommon
 	
 	*/
 	
-	/*private function createDummyFile() {
+		/* private function createDummyFile() {
 		$currentDirectory = dirname(__FILE__);
 		$this->vfsFileNameWithFullPath = $currentDirectory.DIRECTORY_SEPARATOR.$this->vfsFileName;
 		
@@ -122,20 +124,14 @@ class TestSOvfs extends TestBimCommon
 	}
 	private function removeDummyFile() {
 		unlink($this->vfsFileNameWithFullPath);
-	}*/
+		  } */
 	
-	
-	private function removeDummyVfsFile() {
+		private function removeDummyVfsFile()
+		{
 		$sovfs = new sovfs_impl();
 		$sovfs->setFilename($this->vfsFileName);
 		$sovfs->setSubModule($this->vfsSubModule);
 		
 		$sovfs->removeFileFromVfs();
-		
 	}
-	
-	
-	
-	
-	
-}
+	}

@@ -23,19 +23,19 @@
 	
 	$bookingfrontend_host = '';
 	$external_logout = '';
-	if ($verified)
+	if($verified)
 	{
-		$config		= CreateObject('phpgwapi.config','bookingfrontend');
+		$config = CreateObject('phpgwapi.config', 'bookingfrontend');
 		$config->read();
 
 		$bookingfrontend_host = isset($config->config_data['bookingfrontend_host']) && $config->config_data['bookingfrontend_host'] ? $config->config_data['bookingfrontend_host'] : '';
-		$bookingfrontend_host = rtrim($bookingfrontend_host,'/');
+		$bookingfrontend_host	 = rtrim($bookingfrontend_host, '/');
 		$external_logout = isset($config->config_data['external_logout']) && $config->config_data['external_logout'] ? $config->config_data['external_logout'] : '';
 //		$external_logout = "https://login-vip.bergen.kommune.no/SSO/logout?p_done_url=";//https://www.bergen.kommune.no"
 
 		$frontend_user = CreateObject('bookingfrontend.bouser');
 		$frontend_user->log_off();
-/*
+		/*
 		// testing external logout
 		
 
@@ -59,7 +59,7 @@
 
 		$cxContext = stream_context_create($aContext);
 		$response = file_get_contents($request, False, $cxContext);
-*/
+		 */
 
 		execMethod('phpgwapi.menu.clear');
 		$GLOBALS['phpgw']->hooks->process('logout');
@@ -73,7 +73,7 @@
 		$extra_vars['phpgw_forward'] =  $forward;
 		foreach($_GET as $name => $value)
 		{
-			if (preg_match('/phpgw_/',$name))
+			if(preg_match('/phpgw_/', $name))
 			{
 				$extra_vars[$name] = phpgw::clean_value($value);
 			}
@@ -88,14 +88,14 @@
 		$extra_vars['menuaction']  = $redirect;
 		foreach($_GET as $name => $value)
 		{
-			if (preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction')
+			if(preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction')
 			{
 				$extra_vars[$matches[1]] = phpgw::clean_value($value);
 			}
 		}
 	}
 	
-	if (!isset($extra_vars['menuaction']))
+	if(!isset($extra_vars['menuaction']))
 	{
 		$extra_vars['menuaction'] = 'bookingfrontend.uisearch.index';
 	}
@@ -107,7 +107,7 @@
 	else
 	{
 		$result_redirect = '';
-		if(substr($external_logout,-1) == '=')
+		if(substr($external_logout, -1) == '=')
 		{
 			$result_redirect = $GLOBALS['phpgw']->link('/bookingfrontend/', $extra_vars, true);
 		}

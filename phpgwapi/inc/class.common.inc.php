@@ -75,10 +75,10 @@
 		* @param boolean $debug Debug flag
 		* @return integer 1 when str2 is newest (bigger version number) than str1
 		*/
-		public function cmp_version_long($str1,$str2,$debug=False)
+		public function cmp_version_long($str1, $str2, $debug = false)
 		{
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str1, $regs);
-			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)\.([0-9]*)/i", $str2, $regs2);
+			$regs = explode('.', $str1);
+			$regs2 = explode('.', $str2);
 			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
 
 			for($i=1;$i<6;++$i)
@@ -500,7 +500,7 @@ HTML;
 		*/
 		public function create_tabs($tabs, $selection, $lang = false)
 		{
-			phpgw::import_class('phpgwapi.yui');
+			phpgw::import_class('phpgwapi.jquery');
 			if ( $lang )
 			{
 				foreach ( $tabs as &$tab )
@@ -509,11 +509,10 @@ HTML;
 				}
 			}
 
-			$html = phpgwapi_yui::tabview_generate($tabs, $selection);
+			$html = phpgwapi_jquery::tabview_generate($tabs, $selection);
 			$output = <<<HTML
-			<div class="yui-navset">
+
 				{$html}
-			</div>
 
 HTML;
 			return $output;
@@ -597,7 +596,7 @@ HTML;
 		{
 			$tpl_dir = self::get_tpl_dir('phpgwapi');
 
-			$css_dir = "$tpl_dir/css";
+			$css_dir = "$tpl_dir/themes";
 
 			$list = array();
 			if ( !is_dir($css_dir) )
@@ -1100,6 +1099,27 @@ HTML;
 			if (isset($GLOBALS['phpgw_info']['flags']['java_script']))
 			{
 				$js .= $GLOBALS['phpgw_info']['flags']['java_script'] . "\n";
+			}
+			return $js;
+		}
+
+		/**
+		* Include JavaScript after </body>
+		*
+		* The method is included here to make it easier to change the js support
+		* in phpgw. One change then all templates will support it (as long as they
+		* include a call to this method).
+		*
+		* @author Sigurd Nes
+		* @return string The JavaScript code to include
+		*/
+		public function get_javascript_end()
+		{
+			$js = '';
+
+			if (isset($GLOBALS['phpgw_info']['flags']['java_script_end']))
+			{
+				$js .= $GLOBALS['phpgw_info']['flags']['java_script_end'] . "\n";
 			}
 			return $js;
 		}

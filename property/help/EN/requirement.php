@@ -8,13 +8,11 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * This is the manual entry for requirements
 	 */
-
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual',
 		'admin_header'	=> True,
@@ -23,13 +21,13 @@
 	include('../../../header.inc.php');
 	$appname = 'property';
 ?>
-<img src="<?php echo $phpgw->common->image($appname,'navbar.gif'); ?>" border=0>
-<font face="<?php echo $phpgw_info['theme']['font']; ?>" size="2"><p/>
+<img src="<?php echo $phpgw->common->image($appname, 'navbar.gif');?>" border=0>
+<font face="<?php echo $phpgw_info['theme']['font'];?>" size="2"><p/>
 
 <ul>
-<li><b>Deviation / requirement</b><p/>
-Maintenance need that can wait is recorded in the deviation submodule - and categorized within six themes by scores within severity, probability and consequence.<p/>
+	<li><b>Deviation / requirement</b><p/>
+		Maintenance need that can wait is recorded in the deviation submodule - and categorized within six themes by scores within severity, probability and consequence.<p/>
 
-These themes (safety, aesthetics, etc) is subject to weighting to produce a overall score to help prioritizing among requirements<p/>
+		These themes (safety, aesthetics, etc) is subject to weighting to produce a overall score to help prioritizing among requirements<p/>
 </ul></font>
-<?php $phpgw->common->phpgw_footer(); ?>
+<?php $phpgw->common->phpgw_footer();?>

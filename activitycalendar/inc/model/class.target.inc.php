@@ -3,8 +3,8 @@
 
 	class activitycalendar_target extends activitycalendar_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $name;
 		protected $description;
@@ -25,25 +25,33 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 		
 		public function set_description($description)
 		{
 			$this->description = $description;
 		}
 		
-		public function get_description() { return $this->description; }
+		public function get_description()
+		{
+			return $this->description;
+		}
 
 		public function set_name($name)
 		{
 			$this->name = $name;
 		}
 		
-		public function get_name() { return $this->name; }
+		public function get_name()
+		{
+			return $this->name;
+		}
 		
 		public function serialize()
 		{
 			return;
 		}
 	}
-?>

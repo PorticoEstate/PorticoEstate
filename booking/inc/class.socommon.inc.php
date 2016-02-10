@@ -3,8 +3,8 @@
 
 	abstract class booking_socommon
 	{
-		protected $db_null='NULL';
 		
+		protected $db_null = 'NULL';
 		protected $valid_field_types = array(
 			'date' => true,
 			'time' => true,
@@ -13,10 +13,12 @@
 			'int' => true,
 			'decimal' => true,
 			'intarray' => true,
+			'json'		=> true
 		);
-		
-		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true, 'add_callback' => '_set_created_on'));
-		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int', 'auto' => true, 'add_callback' => '_set_created_by'));
+		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp',
+				'auto' => true, 'add_callback' => '_set_created_on'));
+		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int',
+				'auto' => true, 'add_callback' => '_set_created_by'));
 		public static $REL_CREATED_BY_NAME = array(
 			'type' => 'string',
 			'query' => true,
@@ -27,11 +29,9 @@
 				'column' => 'account_lid'
 			)
 		);
-		
 		protected
 			$cols,
 			$auto_fields;
-			
 		protected static $AUTO_FIELD_ACTIONS = array('add' => true, 'update' => true);
 		
 		public function __construct($table_name, $fields)
@@ -43,11 +43,13 @@
 			$this->like			= & $this->db->like;
 		}
 		
-		public function get_db() {
+		public function get_db()
+		{
 			return $this->db;
 		}
 		
-		public function get_table_name() {
+		public function get_table_name()
+		{
 			return $this->table_name;
 		}
 		
@@ -61,27 +63,31 @@
 			return array('table_name', 'fields');
 		}
 		
-		protected function db_query($sql, $line, $file) {
+		protected function db_query($sql, $line, $file)
+		{
 			return $this->db->query($sql, $line, $file);
 		}
 		
-		public function get_field_defs() {
+		public function get_field_defs()
+		{
 			return $this->fields;
 		}
 		
-		protected function _set_created_on($field, &$entity) {
+		protected function _set_created_on($field, &$entity)
+		{
 			$params = current(self::$AUTO_CREATED_ON);
 			$entity[$field] = 'now';
 		}
 		
-		protected function _set_created_by($field, &$entity) {
+		protected function _set_created_by($field, &$entity)
+		{
 			$params = current(self::$AUTO_CREATED_BY);
 			$entity[$field] = $this->_marshal(booking_account_helper::current_account_id(), $params['type']);
 		}
 		
 		public function get_columns()
 		{
-			if (!isset($this->cols))
+			if(!isset($this->cols))
 			{
 				$this->cols = array();
 				
@@ -98,7 +104,8 @@
 			return $this->cols;
 		}
 		
-		public function get_table_values(&$entry, $action) {
+		public function get_table_values(&$entry, $action)
+		{
 			//First, set automatic fields registered for this action
 			$this->process_auto_fields($entry, $action);
 			
@@ -107,24 +114,26 @@
 			
 			//Here we return only those fields in entry that exist in the table
 			return array_intersect_key(
-				$entry, 
-				array_filter($this->fields, array($this, 'is_table_field_def'))+$this->get_auto_field_defs($action)
+			$entry, array_filter($this->fields, array($this, 'is_table_field_def')) + $this->get_auto_field_defs($action)
 			);
 		}
 		
-		public function get_table_field_defs() {
+		public function get_table_field_defs()
+		{
 			return array_filter($this->fields, array($this, 'is_table_field_def'));
 		}
 		
-		protected function is_table_field_def(&$field_def) {
+		protected function is_table_field_def(&$field_def)
+		{
 			return !($field_def['join'] || $field_def['manytomany']);
 		}
 		
-		protected function build_join_table_alias($field, array $params) {
+		protected function build_join_table_alias($field, array $params)
+		{
 			return "{$params['join']['table']}_{$params['join']['column']}_{$field}";
 		}
 		
-		public function _get_cols_and_joins()
+		public function _get_cols_and_joins($filters=array())
 		{
 			$cols = array();
 			$joins = array();
@@ -137,6 +146,11 @@
 				}
 				else if(isset($params['join']) && $params['join'])
 				{
+					if($params['join_type'] == 'manytomany' && !isset($filters[$field]) && !$filters[$field])
+					{
+						continue;
+					}
+
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
 					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
@@ -144,32 +158,36 @@
 				else 
 				{
 					$value_expression = isset($params['expression']) ? 
-						'('.strtr($params['expression'], array('%%table%%' => $this->table_name)).')' : "{$this->table_name}.{$field}";
+					'(' . strtr($params['expression'], array('%%table%%' => $this->table_name)) . ')' : "{$this->table_name}.{$field}";
 					$cols[] = "{$value_expression} AS {$field}";
 				}
 			}
 			return array($cols, $joins);
 		}
 		
-		public function marshal_field_value($field, $value) {
-			if (!is_array($field_def = $this->fields[$field])) 
+		public function marshal_field_value($field, $value)
+		{
+			if(!is_array($field_def = $this->fields[$field]))
 				throw new InvalidArgumentException(sprintf('Field "%s" does not exists in "%s"', $field, get_class($this)));
-			if (!isset($field_def['type']))
+			if(!isset($field_def['type']))
 				throw new InvalidArgumentException(sprintf('Field "%s" in "%s" is missing a type definition', $field, get_class($this)));
 				
 			return $this->_marshal($value, $field_def['type']);
 		}
 		
-		private function _marshal_field_value_by_ref(&$value, $field) {
+		private function _marshal_field_value_by_ref(&$value, $field)
+		{
 			$value = $this->_marshal($value, $this->fields[$field]['type']);
 		}
 		
-		function marshal_field_values(&$entry) {
+		function marshal_field_values(&$entry)
+		{
 			array_walk($entry, array($this, '_marshal_field_value_by_ref'));
 			return $entry;
 		}
 
-		public function valid_field_type($type) {
+		public function valid_field_type($type)
+		{
 			return isset($this->valid_field_types[$type]);
 		}
 		
@@ -182,11 +200,16 @@
 			}
 			else if($type == 'int' || $type == 'decimal')
 			{
-				if (is_string($value) && strlen(trim($value)) === 0) {
+				if(is_string($value) && strlen(trim($value)) === 0)
+				{
 					return $this->db_null;
-				} else if ($type == 'int') {
+				}
+				else if($type == 'int')
+				{
 					return intval($value);
-				} else if ($type == 'decimal') {
+				}
+				else if($type == 'decimal')
+				{
 					return floatval($value);
 				}
 				//Don't know what could have gone wrong above for us to get here but returning NULL here as a safety
@@ -198,11 +221,16 @@
 				{
 					$values[] = $this->_marshal($v, 'int');
 				}
-				return '('.join(',', $values).')';
+				return '(' . join(',', $values) . ')';
+			}
+			else if($type == 'json')
+			{
+				return "'" .json_encode($value). "'";;
 			}
 					
 			//Sanity check
-			if (!$this->valid_field_type($type)) {
+			if(!$this->valid_field_type($type))
+			{
 				throw new LogicException(sprintf('Invalid type "%s"', $type));
 			}
 			
@@ -212,10 +240,8 @@
 		function _unmarshal($value, $type)
 		{
 			$type = strtolower($type);
-			if( 
-				 ($value === null)
-				 || ($type != 'string' && (strlen(trim($value)) === 0)) /* phpgw always returns empty strings (i.e '') for null values */
-			  ) 
+			/* phpgw always returns empty strings (i.e '') for null values */
+			if(	($value === null) || ($type != 'string' && (strlen(trim($value)) === 0)))
 			{				
 				return null;
 			}
@@ -223,30 +249,41 @@
 			{
 				return intval($value);
 			}
-			else if ($type == 'decimal') {
+			else if($type == 'decimal')
+			{
 				return floatval($value);
+			}
+			else if($type == 'json')
+			{
+				return json_decode($value, true);
 			}
 			
 			//Sanity check
-			if (!$this->valid_field_type($type)) {
+			if(!$this->valid_field_type($type))
+			{
 				throw new LogicException(sprintf('Invalid type "%s"', $type));
 			}
 			
 			return $value;
 		}
 		
-		protected function primary_key_conditions($id_params) {
-			if (is_array($id_params)) {
+		protected function primary_key_conditions($id_params)
+		{
+			if(is_array($id_params))
+			{
 				return $this->_get_conditions(null, $id_params);
 			}
 			
-			if (isset($this->fields['id']) && isset($this->fields['id']['type'])) {
+			if(isset($this->fields['id']) && isset($this->fields['id']['type']))
+			{
 				$id_value = $this->_marshal($id_params, $this->fields['id']['type']);
-			} else {
+			}
+			else
+			{
 				$id_value = intval($id_params);
 			}
 			
-			return $this->table_name.'.id='.$id_value;
+			return $this->table_name . '.id=' . $id_value;
 		}
 
 		function read_single($id)
@@ -256,7 +293,7 @@
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__);
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				foreach($this->fields as $field => $params)
 				{
@@ -268,7 +305,8 @@
 						if(is_array($params['manytomany']['column']))
 						{	
 							$column = array();
-							foreach($params['manytomany']['column'] as $fieldOrInt => $paramsOrFieldName) {
+							foreach($params['manytomany']['column'] as $fieldOrInt => $paramsOrFieldName)
+							{
 								$column[] = is_array($paramsOrFieldName) ? $fieldOrInt : $paramsOrFieldName;
 							}
 							$column = join(',', $column);
@@ -281,15 +319,18 @@
 							
 							$this->db->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while($this->db->next_record())
 							{
 								$data = array();
 								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
-									if (is_array($paramsOrCol)) {
+									if(is_array($paramsOrCol))
+									{
 										$col = $intOrCol;
 										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
-									} else {
+									}
+									else
+									{
 										$col = $paramsOrCol;
 										$type = $params['type'];
 									}
@@ -304,7 +345,7 @@
 							$column = $params['manytomany']['column'];
 							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while($this->db->next_record())
 							{
 								$row[$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
 							}
@@ -334,7 +375,11 @@
 						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
-							$like_clauses[] = "{$table}.{$column} = ". $this->db->db_addslashes($query);
+							if(!(int)$query)
+							{
+								continue;
+							}
+							$like_clauses[] = "{$table}.{$column} = " . (int)$query;//$this->db->db_addslashes($query);
 						}
 						else
 						{
@@ -351,7 +396,9 @@
 			{
 				if($this->fields[$key])
 				{
-					$table = isset($this->fields[$key]['join']) && $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+//					$table = isset($this->fields[$key]['join']) && $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+					$table = $this->fields[$key]['join'] ? $this->build_join_table_alias($key, $this->fields[$key]) : $this->table_name;
+
 					if(is_array($val) && count($val) == 0)
 					{
 						$clauses[] = '1=0';
@@ -359,14 +406,15 @@
 					else if(is_array($val))
 					{
 						$vals = array();
-						foreach($val as $v) {
+						foreach($val as $v)
+						{
 							$vals[] = $this->_marshal($v, $this->fields[$key]['type']);
 						}
 						$clauses[] = "({$table}.{$key} IN (" . join(',', $vals) . '))';
 					}
 					else if($val == null)
 					{
-						$clauses[] = "{$table}.{$key} IS ".$this->db_null;
+						$clauses[] = "{$table}.{$key} IS " . $this->db_null;
 					}
 					else
 					{
@@ -378,7 +426,10 @@
 					//Includes a custom where-clause as a filter. Also replaces %%table%% 
 					//tokens with actual table_name in the clause.
 					$where_clauses = (array)$val;
-					if (count($where_clauses) == 0) { continue; }
+					if(count($where_clauses) == 0)
+					{
+						continue;
+					}
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
@@ -404,7 +455,7 @@
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-			$cols_joins = $this->_get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins($filters);
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
@@ -434,16 +485,18 @@
 			}
 			
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-			if ($results) 
+			if($results)
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
-			} else {
+			}
+			else
+			{
 				$offset = ($start > 0) ?  'OFFSET ' . $start . ' ' : ' ';
-				$this->db->query($base_sql.$offset, __LINE__, __FILE__);
+				$this->db->query($base_sql . $offset, __LINE__, __FILE__);
 			}
 			
 			$results = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$row = array();
 				foreach($this->fields as $field => $params)
@@ -468,23 +521,27 @@
 						if(is_array($params['manytomany']['column']))
 						{
 							$colnames = array();
-							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+							{
 								$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
 							}
 							$colnames = join(',', $colnames);
 							
 	    					$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
 	    					$row[$field] = array();
-	    					while ($this->db->next_record())
+							while($this->db->next_record())
 	    					{
 	    					    $id = $this->_unmarshal($this->db->f($key, false), 'int');
 								$data = array();
 								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{	
-									if (is_array($paramsOrCol)) {
+									if(is_array($paramsOrCol))
+									{
 										$col = $intOrCol;
 										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
-									} else {
+									}
+									else
+									{
 										$col = $paramsOrCol;
 										$type = $params['type'];
 									}
@@ -500,7 +557,7 @@
 	    					$column = $params['manytomany']['column'];
 	    					$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
 	    					$row[$field] = array();
-	    					while ($this->db->next_record())
+							while($this->db->next_record())
 	    					{
 	    					    $id = $this->_unmarshal($this->db->f($key, false), 'int');
 	    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
@@ -518,30 +575,40 @@
 			);
 		}
 		
-		protected function is_auto_field_def(array &$field_def, $action) {
+		protected function is_auto_field_def(array &$field_def, $action)
+		{
 			return isset($field_def['auto']) && $field_def['auto'] != false && $this->get_auto_field_def_callback($field_def, $action);
 		}
 		
-		protected function get_auto_field_def_callback(array &$field_def, $action) {
-			return isset($field_def[$action.'_callback']) ? $field_def[$action.'_callback'] : null;
+		protected function get_auto_field_def_callback(array &$field_def, $action)
+		{
+			return isset($field_def[$action . '_callback']) ? $field_def[$action . '_callback'] : null;
 		}
 		
-		protected function get_auto_field_def($name, $action) {
+		protected function get_auto_field_def($name, $action)
+		{
 			$auto_field_defs = $this->get_auto_field_defs($action);
 			return (isset($auto_field_defs[$name]) ? $auto_field_defs[$name] : null);
 		}
 		
-		protected function get_auto_field_defs($action = null) {
-			if (is_string($action) && !array_key_exists($action, self::$AUTO_FIELD_ACTIONS)) { 
+		protected function get_auto_field_defs($action = null)
+		{
+			if(is_string($action) && !array_key_exists($action, self::$AUTO_FIELD_ACTIONS))
+			{
 				throw new InvalidArgumentException("Unsupported mode \"$action\"");
 			}
 			
-			if (!isset($this->auto_fields)) {
-				foreach(array_keys(self::$AUTO_FIELD_ACTIONS) as $supported_action) {
-					if (!is_array($this->auto_fields[$supported_action])) {
+			if(!isset($this->auto_fields))
+			{
+				foreach(array_keys(self::$AUTO_FIELD_ACTIONS) as $supported_action)
+				{
+					if(!is_array($this->auto_fields[$supported_action]))
+					{
 						$action_auto_fields = array();
-						foreach($this->fields as $field => $params) {
-							if (!$this->is_auto_field_def($params, $supported_action)) continue;
+						foreach($this->fields as $field => $params)
+						{
+							if(!$this->is_auto_field_def($params, $supported_action))
+								continue;
 							$params['action_callback'] = $this->get_auto_field_def_callback($params, $supported_action);
 							$params['action'] = $supported_action;
 							$action_auto_fields[$field] = $params;
@@ -554,8 +621,10 @@
 			return is_string($action) ? $this->auto_fields[$action] : $this->auto_fields;
 		}
 		
-		protected function process_auto_fields(&$entity, $action) {
-			foreach($this->get_auto_field_defs($action) as $field => $params) { 
+		protected function process_auto_fields(&$entity, $action)
+		{
+			foreach($this->get_auto_field_defs($action) as $field => $params)
+			{
 				$callback = $params['action_callback'];
 				$this->$callback($field, $entity);
 			}
@@ -566,7 +635,7 @@
 		{			
 			$values = $this->marshal_field_values($this->get_table_values($entry, __FUNCTION__));
 			
-			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__,__FILE__);
+			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			foreach($this->fields as $field => $params)
 			{
@@ -578,7 +647,8 @@
 					if(is_array($params['manytomany']['column']))
 					{	
 						$colnames = array();
-						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+						{
 							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
 						}
 						unset($colnames['id']);
@@ -590,15 +660,21 @@
 							$data = array();
 							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 							{
-								if (is_array($paramsOrCol)) {
+								if(is_array($paramsOrCol))
+								{
 									$col = $intOrCol;
 									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
-								} else {
+								}
+								else
+								{
 									$col = $paramsOrCol;
 									$type = $params['type'];
 								}
 								
-								if ($col == 'id') { continue; }
+								if($col == 'id')
+								{
+									continue;
+								}
 								
 								$data[] = $this->_marshal($v[$col], $type);
 							}
@@ -618,28 +694,28 @@
 				}
 			}
 			$receipt['id'] = $id;
-			$receipt['message'][] = array('msg'=>lang('Entity %1 has been saved', $receipt['id']));
+			$receipt['message'][] = array('msg' => lang('Entity %1 has been saved', $receipt['id']));
 			return $receipt;
 		}
 		
-		function column_update_expression(&$value, $field) { 
-			$value = sprintf($field.'=%s', $this->marshal_field_value($field, $value));
+		function column_update_expression(&$value, $field)
+		{
+			$value = sprintf($field . '=%s', $this->marshal_field_value($field, $value));
 			return $value;
 		}
 		
-		protected function entity_update_sql($entity_id, array $values) {
+		protected function entity_update_sql($entity_id, array $values)
+		{
 			array_walk($values, array($this, 'column_update_expression'));
 			return sprintf(
-				"UPDATE %s SET %s WHERE %s",
-				$this->table_name,
-				join(',', $values),
-				$this->primary_key_conditions($entity_id)
+			"UPDATE %s SET %s WHERE %s", $this->table_name, join(',', $values), $this->primary_key_conditions($entity_id)
 			);
 		}
 		
 		function update($entry)
 		{
-			if (!isset($entry['id'])) {
+			if(!isset($entry['id']))
+			{
 				throw new InvalidArgumentException(sprintf('Missing id in %s->%s', get_class($this), __FUNCTION__));
 			}
 			
@@ -648,8 +724,15 @@
 			$values = $this->get_table_values($entry, __FUNCTION__);
 			foreach($values as $key => $val)
 			{
+				if(is_array($val))
+				{
+					$values[$key] = $val;
+				}
+				else
+				{
 				$val = str_replace('&nbsp;', ' ', $val);
 				$values[$key] = trim($val);
+			}
 			}
 			
 			array_walk($values, array($this, 'column_update_expression'));
@@ -669,7 +752,8 @@
 					if(is_array($params['manytomany']['column']))
 					{
 						$colnames = array();
-						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+						{
 							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
 						}
 						unset($colnames['id']);
@@ -681,15 +765,21 @@
 							$data = array();
 							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 							{
-								if (is_array($paramsOrCol)) {
+								if(is_array($paramsOrCol))
+								{
 									$col = $intOrCol;
 									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
-								} else {
+								}
+								else
+								{
 									$col = $paramsOrCol;
 									$type = $params['type'];
 								}
 								
-								if ($col == 'id') { continue; }
+								if($col == 'id')
+								{
+									continue;
+								}
 								
 								$data[] = $this->_marshal($v[$col], $type);
 							}
@@ -713,7 +803,7 @@
 				$this->db->query($update_query, __LINE__, __FILE__);
 			}
 			$receipt['id'] = $id;
-			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+			$receipt['message'][] = array('msg' => lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;
 		}
 		
@@ -729,17 +819,21 @@
 			$args = func_get_args();
 			$entity = array_shift($args);
 			$filters = array();
-			foreach($args as $unique_field) {
-				if (isset($entity[$unique_field])) $filters[$unique_field] = $entity[$unique_field];
+			foreach($args as $unique_field)
+			{
+				if(isset($entity[$unique_field]))
+					$filters[$unique_field] = $entity[$unique_field];
 			}
 			
 			$duplicates = $this->read(array('filters' => $filters, 'results' => 1));
 			
-			if (!array_key_exists('results', $duplicates) || (is_array($duplicates['results']) && count($duplicates['results']) <= 0)) {
+			if(!array_key_exists('results', $duplicates) || (is_array($duplicates['results']) && count($duplicates['results']) <= 0))
+			{
 				return true; //Values are unique: found no other entity matching the values, so values must be valid
 			}
 			
-			if (isset($entity['id']) && (is_array($duplicates['results']) && count($duplicates['results']) > 0) && $duplicates['results'][0]['id'] == $entity['id']) {
+			if(isset($entity['id']) && (is_array($duplicates['results']) && count($duplicates['results']) > 0) && $duplicates['results'][0]['id'] == $entity['id'])
+			{
 				return true; //Values are unique since the values uniquely identified this entity and no other entity
 			}
 			
@@ -755,7 +849,10 @@
 		{	
 			foreach($fields as $field => $params)
 			{
-				if (!is_array($params)) { continue; }
+				if(!is_array($params))
+				{
+					continue;
+				}
 				
 				$v = trim($entity[$field]);
 				$empty = false;
@@ -764,14 +861,12 @@
 				{
 					$sub_entity_count = 0;
 					
-					if (isset($entity[$field]) && is_array($entity[$field]))	{
+					if(isset($entity[$field]) && is_array($entity[$field]))
+					{
 						foreach($entity[$field] as $key => $sub_entity)
 						{
 							$this->_validate(
-								(array)$sub_entity, 
-								(array)$params['manytomany']['column'], 
-								$errors, 
-								sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
+							(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
 							);
 							$sub_entity_count++;
 						}
@@ -793,17 +888,21 @@
 				if($params['type'] == 'date' && !empty($entity[$field]))
 				{
 					$date = date_parse($entity[$field]);
-					if(!$date || count($date['errors']) > 0) {
+					if(!$date || count($date['errors']) > 0)
+					{
 						$errors[$error_key] = lang("Field %1: Invalid format", lang($error_key));
 					}
 				}
 				
-				if (!$empty && $params['sf_validator'])
+				if(!$empty && $params['sf_validator'])
 				{
-					try {
+					try
+				{
 						$params['sf_validator']->setOption('required', false);
 						$params['sf_validator']->clean($entity[$field]);
-					} catch (sfValidatorError $e) {
+					}
+					catch(sfValidatorError $e)
+					{
 						$errors[$error_key] = lang(strtr($e->getMessage(), array('%field%' => $error_key)));
 					}
 				}
@@ -822,7 +921,7 @@
 			foreach($errors->getArrayCopy() as $key => $value)
 			{
 				// key starts with agegroups
-				if (strncmp($key, 'agegroups', strlen('agegroups')) == 0)
+				if(strncmp($key, 'agegroups', strlen('agegroups')) == 0)
 				{
 					unset($errors[$key]);
 					$errors['agegroups'] = lang("Field %1 is required", lang('number of participants'));
@@ -836,6 +935,7 @@
 		 */
 		protected function preValidate(&$entity)
 		{
+			
 		}
 		
 		/**
@@ -843,6 +943,7 @@
 		 */
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
+
 		}
 
 		function delete($id)
@@ -852,11 +953,11 @@
 		
 		function set_active($id, $active)
 		{
-			$this->db->query("UPDATE {$this->table_name} SET active=".$active." WHERE id=".$id, __LINE__, __FILE__);
+			$this->db->query("UPDATE {$this->table_name} SET active=" . $active . " WHERE id=" . $id, __LINE__, __FILE__);
 		}
 		
-		
-		public static function select_id(&$entity) {
+		public static function select_id(&$entity)
+		{
 			return $entity['id'];
 		}
 	}

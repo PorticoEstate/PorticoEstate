@@ -1,8 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div id="resource-allocation" class="yui-navset yui-navset-top">
+<div id="resource-allocation">
 	<h1 style="margin-bottom:10px;">
 		<xsl:value-of select="php:function('lang', 'Booking of resources')"/> for <xsl:value-of select="activity/name"/>
 	</h1>
@@ -159,4 +158,5 @@
 			</form>
 	</div>
 </div>
+<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>

@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_sotemplate
 	{
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -45,20 +45,31 @@
 
 		function read($data)
 		{
+			//echo '<pre>'; print_r($data); echo '</pre>';
 			if(is_array($data))
 			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$filter			= isset($data['filter']) ? $data['filter']:'';
-				$query 			= isset($data['query']) ? $data['query']:'';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order 			= isset($data['order']) ? $data['order']:'';
-				$chapter_id 	= isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id']:0;
-				$allrows 		= isset($data['allrows']) ? $data['allrows']:'';
+				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter = isset($data['filter']) ? $data['filter'] : '';
+				$query = isset($data['query']) ? $data['query'] : '';
+				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order = isset($data['order']) ? $data['order'] : '';
+				$chapter_id = isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id'] : 0;
+				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
-
+			/*
+			  [filter] => 1020
+			  [start] => 0
+			  [results] => 10
+			  [query] =>
+			  [order] =>
+			  [sort] =>
+			  [chapter_id] =>
+			  [allrows] =>
+			 */
 			$filtermethod = '';
 
-			if ($order)
+			if($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -67,18 +78,18 @@
 				$ordermethod = ' order by fm_template.id desc';
 			}
 
-			$where= 'WHERE';
+			$where = 'WHERE';
 
-			if ($chapter_id > 0)
+			if($chapter_id > 0)
 			{
 				$filtermethod .= " $where chapter_id='$chapter_id' ";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($filter)
+			if($filter)
 			{
 				$filtermethod .= " $where fm_template.owner='$filter' ";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 			$querymethod = '';
@@ -94,19 +105,21 @@
 				. " fm_chapter.descr as chapter FROM fm_template $this->left_join fm_chapter  on fm_template.chapter_id=fm_chapter.id"
 				. " $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
+			//echo '<pre>'; print_r($sql); echo '</pre>';
+			//echo '<pre>'; print_r($this->total_records); echo '</pre>';
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
-
-			while ($this->db->next_record())
+			$template_list = array();
+			while($this->db->next_record())
 			{
 				$template_list[] = array
 					(
@@ -126,23 +139,23 @@
 
 			if(is_array($data))
 			{
-				if ($data['start'])
+				if($data['start'])
 				{
-					$start=$data['start'];
+					$start = $data['start'];
 				}
 				else
 				{
-					$start=0;
+					$start = 0;
 				}
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order 			= (isset($data['order'])?$data['order']:'');
-				$chapter_id 	= (isset($data['chapter_id'])?$data['chapter_id']:0);
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
-				$template_id 	= (isset($data['template_id'])?$data['template_id']:0);
+				$query = (isset($data['query']) ? $data['query'] : '');
+				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order = (isset($data['order']) ? $data['order'] : '');
+				$chapter_id = (isset($data['chapter_id']) ? $data['chapter_id'] : 0);
+				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
+				$template_id = (isset($data['template_id']) ? $data['template_id'] : 0);
 			}
 
-			if ($order)
+			if($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -168,19 +181,21 @@
 			. " {$this->join} fm_standard_unit ON fm_template_hours.unit = fm_standard_unit.id"
 			. " {$filtermethod} {$querymethod}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+//            echo '<pre>'; print_r($sql); echo '</pre>';die('hour12'); 
+
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$hour_list[] = array
 					(
@@ -210,9 +225,9 @@
 		{
 			$sql = "SELECT * FROM fm_template where id='$template_id'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$template['template_id']		= $this->db->f('id');
 				$template['name']				= stripslashes($this->db->f('name'));
@@ -226,9 +241,9 @@
 		{
 			$sql = "SELECT * from fm_template_hours where id='$hour_id'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$hour['hour_id']				= $this->db->f('id');
 				$hour['record']					= $this->db->f('record');
@@ -253,48 +268,47 @@
 		function next_record($template_id)
 		{
 
-			$this->db->query("SELECT  max(record) as record FROM fm_template_hours where template_id='$template_id'",__LINE__,__FILE__);
+			$this->db->query("SELECT  max(record) as record FROM fm_template_hours where template_id='$template_id'", __LINE__, __FILE__);
 			$this->db->next_record();
-			$record	= $this->db->f('record')+1;
+			$record = $this->db->f('record') + 1;
 			return $record;
-
 		}
 
-		function add_custom_hour($hour,$template_id)
+		function add_custom_hour($hour, $template_id)
 		{
 			$this->db->transaction_begin();
 
 			$hour['record']	= $this->next_record($template_id);
 
 			$this->db->query("UPDATE fm_template set
-				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$template_id'",__LINE__,__FILE__);
+				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$template_id'", __LINE__, __FILE__);
 
 			if($hour['grouping_id'])
 			{
-				$this->db->query("SELECT grouping_descr , max(record) as record FROM fm_template_hours where grouping_id='" .$hour['grouping_id'] . "' and template_id= '$template_id' GROUP by grouping_descr",__LINE__,__FILE__);
+				$this->db->query("SELECT grouping_descr , max(record) as record FROM fm_template_hours where grouping_id='" . $hour['grouping_id'] . "' and template_id= '$template_id' GROUP by grouping_descr", __LINE__, __FILE__);
 				$this->db->next_record();
 				$hour['grouping_descr']	= $this->db->f('grouping_descr');
 			}
 
 			if($hour['new_grouping'])
 			{
-				$this->db->query("SELECT grouping_id FROM fm_template_hours where grouping_descr ='" .$hour['new_grouping'] . "' and template_id= '$template_id'",__LINE__,__FILE__);
+				$this->db->query("SELECT grouping_id FROM fm_template_hours where grouping_descr ='" . $hour['new_grouping'] . "' and template_id= '$template_id'", __LINE__, __FILE__);
 				$this->db->next_record();
-				if ( $this->db->f('grouping_id'))
+				if($this->db->f('grouping_id'))
 				{
 					$hour['grouping_id']	= $this->db->f('grouping_id');
 				}
 				else
 				{
-					$this->db->query("SELECT max(grouping_id) as grouping_id FROM fm_template_hours where template_id= '$template_id'",__LINE__,__FILE__);
+					$this->db->query("SELECT max(grouping_id) as grouping_id FROM fm_template_hours where template_id= '$template_id'", __LINE__, __FILE__);
 					$this->db->next_record();
-					$hour['grouping_id']	= $this->db->f('grouping_id')+1;
+					$hour['grouping_id'] = $this->db->f('grouping_id') + 1;
 				}
 
 				$hour['grouping_descr']	= $hour['new_grouping'];
 			}
 
-			$values= array(
+			$values = array(
 				$this->account,
 				$this->db->db_addslashes($hour['descr']),
 				$hour['unit'],
@@ -318,19 +332,18 @@
 
 			$this->db->query("INSERT INTO fm_template_hours (owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
 				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,template_id) "
-				. " VALUES ($values)",__LINE__,__FILE__);
+			. " VALUES ($values)", __LINE__, __FILE__);
 
-			$receipt['hour_id'] = $this->db->get_last_insert_id('fm_template_hours','id');
+			$receipt['hour_id'] = $this->db->get_last_insert_id('fm_template_hours', 'id');
 
 			$this->db->transaction_commit();
 
-			$receipt['message'][] = array('msg'=>lang('hour %1 is added!',$hour['record']));
+			$receipt['message'][] = array('msg' => lang('hour %1 is added!', $hour['record']));
 
 			return $receipt;
 		}
 
-
-		function edit_hour($hour,$template_id)
+		function edit_hour($hour, $template_id)
 		{
 
 			$this->db->transaction_begin();
@@ -339,49 +352,49 @@
 			$hour['remark'] = $this->db->db_addslashes($hour['remark']);
 
 			$this->db->query("UPDATE fm_template set
-				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$template_id'",__LINE__,__FILE__);
+				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$template_id'", __LINE__, __FILE__);
 
 			if($hour['new_grouping'])
 			{
-				$this->db->query("SELECT grouping_id FROM fm_template_hours where grouping_descr ='" .$hour['new_grouping'] . "' and template_id= '$template_id'",__LINE__,__FILE__);
+				$this->db->query("SELECT grouping_id FROM fm_template_hours where grouping_descr ='" . $hour['new_grouping'] . "' and template_id= '$template_id'", __LINE__, __FILE__);
 				$this->db->next_record();
-				if ( $this->db->f('grouping_id'))
+				if($this->db->f('grouping_id'))
 				{
 					$hour['grouping_id']	= $this->db->f('grouping_id');
 				}
 				else
 				{
 
-					$this->db->query("UPDATE fm_template_hours set grouping_id = NULL WHERE id ='" .$hour['hour_id'] . "'",__LINE__,__FILE__);
-					$this->db->query("SELECT count(grouping_id) as num_grouping FROM fm_template_hours where template_id= '$template_id' and grouping_id >0 ",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_template_hours set grouping_id = NULL WHERE id ='" . $hour['hour_id'] . "'", __LINE__, __FILE__);
+					$this->db->query("SELECT count(grouping_id) as num_grouping FROM fm_template_hours where template_id= '$template_id' and grouping_id >0 ", __LINE__, __FILE__);
 					$this->db->next_record();
-					if ($this->db->f('num_grouping')==1)
+					if($this->db->f('num_grouping') == 1)
 					{
-						$hour['grouping_id']=1;
+						$hour['grouping_id'] = 1;
 					}
 					else
 					{
-						$this->db->query("SELECT max(grouping_id) as grouping_id FROM fm_template_hours where template_id= '$template_id'",__LINE__,__FILE__);
+						$this->db->query("SELECT max(grouping_id) as grouping_id FROM fm_template_hours where template_id= '$template_id'", __LINE__, __FILE__);
 						$this->db->next_record();
-						$hour['grouping_id']	= $this->db->f('grouping_id')+1;
+						$hour['grouping_id'] = $this->db->f('grouping_id') + 1;
 					}
 				}
 				$hour['grouping_descr']	= $hour['new_grouping'];
 			}
 			else
 			{
-				$this->db->query("SELECT grouping_id,grouping_descr FROM fm_template_hours where id ='" .$hour['hour_id'] . "'",__LINE__,__FILE__);
+				$this->db->query("SELECT grouping_id,grouping_descr FROM fm_template_hours where id ='" . $hour['hour_id'] . "'", __LINE__, __FILE__);
 				$this->db->next_record();
 				$old_grouping_id	= $this->db->f('grouping_id');
 
-				if ( $old_grouping_id == $hour['grouping_id'])
+				if($old_grouping_id == $hour['grouping_id'])
 				{
 
 					$hour['grouping_descr']	= $this->db->f('grouping_descr');
 				}
 				else
 				{
-					$this->db->query("SELECT grouping_descr , max(record) as record FROM fm_template_hours where grouping_id='" .$hour['grouping_id'] . "' and template_id= '$template_id' GROUP by grouping_descr",__LINE__,__FILE__);
+					$this->db->query("SELECT grouping_descr , max(record) as record FROM fm_template_hours where grouping_id='" . $hour['grouping_id'] . "' and template_id= '$template_id' GROUP by grouping_descr", __LINE__, __FILE__);
 					$this->db->next_record();
 					if($this->db->f('grouping_descr'))
 					{
@@ -389,19 +402,18 @@
 					}
 					else
 					{
-						$hour['grouping_id']='';
-						$hour['grouping_descr']='';
+						$hour['grouping_id'] = '';
+						$hour['grouping_descr'] = '';
 					}
-
 				}
 			}
 
-			$this->db->query("SELECT record FROM fm_template_hours where id ='" .$hour['hour_id'] . "'",__LINE__,__FILE__);
+			$this->db->query("SELECT record FROM fm_template_hours where id ='" . $hour['hour_id'] . "'", __LINE__, __FILE__);
 			$this->db->next_record();
 			$hour['record']	= $this->db->f('record');
 
 
-			$value_set=array(
+			$value_set = array(
 				'hours_descr'		=> $hour['descr'],
 				'remark'			=> $hour['remark'],
 				'billperae'			=> $hour['billperae'],
@@ -418,26 +430,26 @@
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_template_hours set $value_set WHERE id= '" . $hour['hour_id'] ."'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_template_hours set $value_set WHERE id= '" . $hour['hour_id'] . "'", __LINE__, __FILE__);
 
 			$receipt['hour_id'] = $hour['hour_id'];
 
 			$this->db->transaction_commit();
 
-			$receipt['message'][] = array('msg'=>lang('hour %1 has been edited',$hour['record']));
+			$receipt['message'][] = array('msg' => lang('hour %1 has been edited', $hour['record']));
 			return $receipt;
 		}
 
-		function get_grouping_list($template_id='')
+		function get_grouping_list($template_id = '')
 		{
 			$this->db->query('SELECT grouping_id, grouping_descr FROM fm_template_hours where template_id=' . (int)$template_id . ' AND grouping_id > 0 group by grouping_id, grouping_descr');
 			$grouping_entries = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$grouping_entries[] = array
 					(
 						'id'	=> $this->db->f('grouping_id'),
-						'name'	=> $this->db->f('grouping_descr',true)
+					'name' => $this->db->f('grouping_descr', true)
 					);
 			}
 			return $grouping_entries;
@@ -448,7 +460,7 @@
 			$this->db->transaction_begin();
 			$values['name'] = $this->db->db_addslashes($values['name']);
 
-			$values= array(
+			$values = array(
 				$this->account,
 				$values['name'],
 				$values['descr'],
@@ -459,14 +471,14 @@
 			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_template (owner,name,descr,chapter_id,entry_date) "
-				. " VALUES ($values)",__LINE__,__FILE__);
+			. " VALUES ($values)", __LINE__, __FILE__);
 
-			$template_id = $this->db->get_last_insert_id('fm_template','id');
+			$template_id = $this->db->get_last_insert_id('fm_template', 'id');
 
 			$this->db->transaction_commit();
 
 			$receipt['template_id'] = $template_id;
-			$receipt['message'][] = array('msg'=>lang('template %1 is added',$values['name']));
+			$receipt['message'][] = array('msg' => lang('template %1 is added', $values['name']));
 			return $receipt;
 		}
 
@@ -477,7 +489,7 @@
 
 			$this->db->transaction_begin();
 
-			$value_set=array(
+			$value_set = array(
 				'name' 			=> $values['name'],
 				'descr'			=> $values['descr'],
 				'chapter_id'	=> $values['chapter_id']
@@ -485,36 +497,36 @@
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_template set $value_set WHERE id='" . $values['template_id'] . "'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_template set $value_set WHERE id='" . $values['template_id'] . "'", __LINE__, __FILE__);
 
 			$this->db->transaction_commit();
-			$receipt['message'][]=array('msg'=>lang('template has been edited'));
+			$receipt['message'][] = array('msg' => lang('template has been edited'), 'OK' => 'Is save Successfully');
 			return $receipt;
 		}
 
 		function delete($id)
 		{
 			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM fm_template WHERE id='$id'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_template_hours  WHERE template_id='$id'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_template WHERE id='$id'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_template_hours  WHERE template_id='$id'", __LINE__, __FILE__);
 			$this->db->transaction_commit();
 		}
 
-		function delete_hour($hour_id,$template_id )
+		function delete_hour($hour_id, $template_id)
 		{
 			$this->db->transaction_begin();
-			$this->db->query("SELECT record FROM fm_template_hours where id ='$hour_id'",__LINE__,__FILE__);
+			$this->db->query("SELECT record FROM fm_template_hours where id ='$hour_id'", __LINE__, __FILE__);
 			$this->db->next_record();
 			$old_record	= $this->db->f('record');
 
-			$this->db->query("DELETE FROM fm_template_hours WHERE id='" . $hour_id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_template_hours WHERE id='" . $hour_id . "'", __LINE__, __FILE__);
 			if($old_record)
 			{
-				$this->db->query("UPDATE fm_template_hours set record	= record - 1 where  template_id= '$template_id' and record > $old_record ",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_template_hours set record	= record - 1 where  template_id= '$template_id' and record > $old_record ", __LINE__, __FILE__);
 			}
 
 			$this->db->transaction_commit();
-			$receipt['message'][] = array('msg'=>lang('hour %1 has been deleted',$hour_id));
+			$receipt['message'][] = array('msg' => lang('hour %1 has been deleted', $hour_id));
 			return $receipt;
 		}
 	}

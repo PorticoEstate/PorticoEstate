@@ -3,11 +3,12 @@
 
 	class booking_uidocument_view extends booking_uicommon
 	{
+
 		protected
 			$module;
-		
 		public 
 			$public_functions = array(
+			'query'			 => true,
 				'regulations'			=> true,
 				'download'				=> true,
 			);
@@ -33,19 +34,24 @@
 		
 		public function link_to_params($action, $params = array())
 		{
-			if (isset($params['ui'])) {
+			if(isset($params['ui']))
+			{
 				$ui = $params['ui'];
 				unset($params['ui']);
-			} else {
+			}
+			else
+			{
 				$ui = 'document_view';
 			}
 			
-			$action = sprintf($this->module.'.ui%s.%s', $ui, $action);
+			$action = sprintf($this->module . '.ui%s.%s', $ui, $action);
 			return array_merge(array('menuaction' => $action), $params);
 		}
 		
-		public function download() {
-			if ($id = phpgw::get_var('id', 'string', 'GET')) {
+		public function download()
+		{
+			if($id = phpgw::get_var('id', 'string'))
+			{
 				$document = $this->bo->read_single(urldecode($id));
 				self::send_file($document['filename'], array('filename' => $document['name']));
 			}
@@ -53,13 +59,12 @@
 		
 		public function regulations()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->regulations_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
 			
 			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 						
 			$data = array(
 				'form' => array(
@@ -83,7 +88,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
-							'formatter' => 'YAHOO.booking.formatLink',
+							'formatter'	 => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'link',
@@ -93,12 +98,14 @@
 				)
 			);
 			
-			self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public static function sort_by_params($a, $b) {
+		public static function sort_by_params($a, $b)
+		{
 			static $dir, $key;
-			if (!isset($dir)) {
+			if(!isset($dir))
+			{
 				!($dir = phpgw::get_var('dir', 'string', null)) AND $dir = 'asc';
 				!($sort = phpgw::get_var('sort', 'string', null)) AND $sort = 'name';
 			}
@@ -107,11 +114,12 @@
 			return ($dir == 'desc' ? -$retVal : $retVal);
 		}
 
-		public function regulations_json()
+		public function query()
 		{
 			$documents = $this->bo->read_regulations();
 			
-			foreach($documents['results'] as &$document) {
+			foreach($documents['results'] as &$document)
+			{
 				$document['link'] = $this->link_to('download', array('id' => $document['id']));
 				$document['name'] = isset($document['description']) && strlen(trim($document['description'])) > 0 ? 
 					$document['description'] : $document['name'];
@@ -121,7 +129,6 @@
 			//when choosing between name and description of document
 			usort($documents['results'], array(self, 'sort_by_params'));
 			
-			return $this->yui_results($documents);
+			return $this->jquery_results($documents);
 		}
-		
 	}

@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="tenant_form">
-		<xsl:apply-templates select="tenant_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="tenant_data">
+<!-- $Id$ -->
+<xsl:template name="tenant_form">
+		<xsl:apply-templates select="tenant_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="tenant_data">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function tenant_lookup()
@@ -36,4 +37,4 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

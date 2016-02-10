@@ -1,14 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="no_access">
 				<xsl:apply-templates select="no_access"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="no_access">
+<!-- New template-->
+<xsl:template match="no_access">
 		<xsl:choose>
 			<xsl:when test="menu !=''">
 				<xsl:apply-templates select="menu"/>
@@ -25,4 +26,4 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-	</xsl:template>
+</xsl:template>

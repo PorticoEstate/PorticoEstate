@@ -24,44 +24,38 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage test
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
-
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
-
 	class property_test
 	{
+
 		var $public_functions = array
 		(
 			'date' => true
 		);
-
 
 		function __construct()
 		{
 		  	$GLOBALS['phpgw']->css->add_external_file('rental/templates/base/css/base.css');
 		}
 
-
 		function date()
 		{
 			$date1 = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
-			$start_field = $GLOBALS['phpgw']->yuical->add_listener('start_date', $date1);
-			$end_field = $GLOBALS['phpgw']->yuical->add_listener('end_date');
+			$start_field = $GLOBALS['phpgw']->jqcal->add_listener('start_date', $date1);
+			$end_field = $GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
 			//Only if not xslt_app
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			$html = <<<HTML
-			<div class="yui-content">
+			<div>
 				<div class="details">
 					<form action="#" method="post">
 						<dl class="proplist-col">

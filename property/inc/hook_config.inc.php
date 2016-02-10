@@ -8,9 +8,8 @@
 	* @package phpgroupware
 	* @subpackage property
 	* @category hooks
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,7 +25,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-
 	/**
 	* Get HTML checkbox with groups that are candidates for simplified tts interface
 	*
@@ -38,10 +36,10 @@
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_assign_group_candidates']) ? $config['fmtts_assign_group_candidates'] : array();
 		$out = '';
-		foreach ( $groups as $group => $label)
+		foreach($groups as $group => $label)
 		{
 			$checked = '';
-			if ( in_array($group, $groups_assigned))
+			if(in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -64,10 +62,10 @@ HTML;
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
 		$out = '';
-		foreach ( $groups as $group => $label)
+		foreach($groups as $group => $label)
 		{
 			$checked = '';
-			if ( in_array($group, $groups_assigned))
+			if(in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -90,10 +88,10 @@ HTML;
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_group_finnish_date']) ? $config['fmtts_group_finnish_date'] : array();
 		$out = '';
-		foreach ( $groups as $group => $label)
+		foreach($groups as $group => $label)
 		{
 			$checked = '';
-			if ( in_array($group, $groups_assigned))
+			if(in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -152,10 +150,10 @@ HTML;
 		$status_assigned = isset($config['project_approval_status']) ? $config['project_approval_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -168,7 +166,6 @@ HTML;
 		return $out;
 	}
 
-
 	/**
 	* Get HTML listbox with project status that are to be set when asking for approval
 	*
@@ -179,10 +176,11 @@ HTML;
 	{
 		$status_assigned = isset($config['project_status_on_last_order_closed']) ? $config['project_status_on_last_order_closed'] : array();
 
-		$status_entries = execMethod('property.bogeneric.get_list',array('type' => 'project_status', 'selected' => $status_assigned));
+		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'project_status',
+			'selected' => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected =  $status['selected'] ? ' selected = "selected"' : '';
 
@@ -192,7 +190,6 @@ HTML;
 		}
 		return $out;
 	}
-
 
 	/**
 	* Get HTML listbox with workorder status that are to be set when asking for approval
@@ -207,10 +204,10 @@ HTML;
 		$status_assigned = isset($config['workorder_approval_status']) ? $config['workorder_approval_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -222,6 +219,7 @@ HTML;
 
 		return $out;
 	}
+
 	/**
 	* Get HTML listbox with workorder status that are to be set when asking for approval
 	*
@@ -235,10 +233,10 @@ HTML;
 		$status_assigned = isset($config['workorder_ordered_status']) ? $config['workorder_ordered_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -251,7 +249,6 @@ HTML;
 		return $out;
 	}
 
-
 	/**
 	* Get HTML listbox with request status that are to be set when request is added to a project
 	*
@@ -261,10 +258,11 @@ HTML;
 	function request_project_hookup_status($config)
 	{
 		$status_assigned = isset($config['request_project_hookup_status']) ? $config['request_project_hookup_status'] : '';
-		$status_entries = execMethod('property.bogeneric.get_list',array('type' => 'request_status', 'selected' => $status_assigned));
+		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
+			'selected' => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected =  $status['selected'] ? ' selected = "selected"' : '';
 
@@ -289,10 +287,10 @@ HTML;
 		$status_assigned = isset($config['workorder_closed_status']) ? $config['workorder_closed_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -318,10 +316,10 @@ HTML;
 		$status_assigned = isset($config['workorder_reopen_status']) ? $config['workorder_reopen_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -333,7 +331,6 @@ HTML;
 
 		return $out;
 	}
-
 
 	/**
 	* Get HTML checkbox with location levels that should be listed in lists
@@ -347,10 +344,10 @@ HTML;
 
 		$level_assigned = isset($config['list_location_level']) ? $config['list_location_level'] : array();
 		$out = '';
-		foreach ( $location_types as $dummy => $level)
+		foreach($location_types as $dummy => $level)
 		{
 			$checked = '';
-			if ( in_array($level['id'], $level_assigned))
+			if(in_array($level['id'], $level_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -362,24 +359,22 @@ HTML;
 		return $out;
 	}
 
-
 	/**
 	* Get HTML options with location levels that should be listed in a listbox
 	*
 	* @param $config
 	* @return string HTML options to be placed in a select
 	*/
-
 	function list_location_level_otions($config)
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
 		$level_assigned = isset($config['request_location_level']) ? $config['request_location_level'] : 0;
 		$out = '';
-		foreach ( $location_types as $dummy => $level)
+		foreach($location_types as $dummy => $level)
 		{
 			$selected = '';
-			if ( ($level['id'] == $level_assigned))
+			if(($level['id'] == $level_assigned))
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -416,16 +411,16 @@ HTML;
 		$filter_assigned = isset($config['filter_buildingpart']) ? $config['filter_buildingpart'] : array();
 
 		$out = '';
-		foreach ( $filters as $filter_key => $filter_name)
+		foreach($filters as $filter_key => $filter_name)
 		{
 			$out .=  <<<HTML
 			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[filter_buildingpart][{$filter_key}]">
 HTML;
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			foreach ( $locations as $key => $name)
+			foreach($locations as $key => $name)
 			{
 				$selected = '';
-				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
+				if(isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
 				{
 					$selected = ' selected = "selected"';
 				}
@@ -440,8 +435,8 @@ HTML;
 HTML;
 		}
 		return $out;
-
 	}
+
 	/**
 	* Get HTML listboks with categories that are candidates for condition survey import categories
 	*
@@ -464,21 +459,21 @@ HTML;
 		$filter_assigned = isset($config['condition_survey_import_cat']) ? $config['condition_survey_import_cat'] : array();
 
 		$out = '';
-		foreach ( $filters as $filter_key => $filter_name)
+		foreach($filters as $filter_key => $filter_name)
 		{
 			$out .=  <<<HTML
 			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[condition_survey_import_cat][{$filter_key}]">
 HTML;
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			foreach ( $values as $key => $category)
+			foreach($values as $key => $category)
 			{
-				if(! $category['active'])
+				if(!$category['active'])
 				{
 					continue;
 				}
 
 				$selected = '';
-				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
+				if(isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
 				{
 					$selected = ' selected = "selected"';
 				}
@@ -508,10 +503,10 @@ HTML;
 		$status_assigned = isset($config['condition_survey_initial_status']) ? $config['condition_survey_initial_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -537,10 +532,10 @@ HTML;
 		$status_assigned = isset($config['condition_survey_hidden_status']) ? $config['condition_survey_hidden_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -566,10 +561,10 @@ HTML;
 		$status_assigned = isset($config['condition_survey_obsolete_status']) ? $config['condition_survey_obsolete_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $status_entries as $status)
+		foreach($status_entries as $status)
 		{
 			$selected = '';
-			if ( $status_assigned == $status['id'])
+			if($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -590,14 +585,14 @@ HTML;
 	*/
 	function bypass_acl_at_entity($config)
 	{
-		$entity_list = execMethod('property.soadmin_entity.read',array('allrows' => true));
+		$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
 		$acl_bypass = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
 		$out = '';
-		foreach ( $entity_list as $dummy => $entity)
+		foreach($entity_list as $dummy => $entity)
 		{
 			$checked = '';
-			if ( in_array($entity['id'], $acl_bypass))
+			if(in_array($entity['id'], $acl_bypass))
 			{
 				$checked = ' checked';
 			}
@@ -608,4 +603,3 @@ HTML;
 		}
 		return $out;
 	}
-

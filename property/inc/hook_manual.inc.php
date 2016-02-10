@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	// Only Modify the $file variable.....
 	$file = array
 	(
@@ -40,5 +39,5 @@
 		'Helpdesk'							=>	'helpdesk.php'
 	);
 	//Do not modify below this line
-	display_manual_section($appname,$file);
+	display_manual_section($appname, $file);
 

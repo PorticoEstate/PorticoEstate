@@ -1,12 +1,12 @@
 <?php
 
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
-		
 		// out: 'deliver'
 		// in: 'pickup'
 
 	class catch_ticket_export extends property_botts
 	{
+
 		protected $db;
 		protected $config = array();
 		protected $status_text = array();
@@ -17,7 +17,7 @@
 		{
 			parent::__construct();
 			$this->db 		= & $GLOBALS['phpgw']->db;
-			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$this->config = $custom_config->config_data;
 			$this->status_text = parent::get_status_text();
 			if($this->acl_location != '.ticket')
@@ -92,7 +92,8 @@
 					'new_choice' 	=> 'ssh'
 				)
 			);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')) );
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib',
+				'section_id' => $receipt_section['section_id'], 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')));
 		}
 
 		function export_ticket($ticket)
@@ -102,11 +103,11 @@
 //_debug_array($receipt);
 
 			$export_values = array();
-			$sql = 'SELECT unitid FROM fm_catch_1_1 WHERE user_ = ' . (int) $ticket['assignedto'] . ' ORDER BY id ASC';
-			$this->db->query($sql,__LINE__,__FILE__);
+			$sql = 'SELECT unitid FROM fm_catch_1_1 WHERE user_ = ' . (int)$ticket['assignedto'] . ' ORDER BY id ASC';
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$export_values['unitid'] = $this->db->f('unitid',true);
+			$export_values['unitid'] = $this->db->f('unitid', true);
 			$solocation = CreateObject('property.solocation');
 			$location = $solocation->read_single($ticket['location_code']);
 
@@ -138,14 +139,14 @@
 			$export_values['egne_timer'] = $ticket['billable_hours'];
 
 			$additional_notes = $this->read_additional_notes($ticket['id']);
-			foreach ($additional_notes as $additional_note)
+			foreach($additional_notes as $additional_note)
 			{
 				$export_values['detaljer_melding'] .= "\n{$additional_note['value_user']}::{$additional_note['value_note']}";
 			}
 
 //_debug_array($additional_notes); die();
 		
-			if (function_exists('com_create_guid') === true)
+			if(function_exists('com_create_guid') === true)
 			{
 				$guid = trim(com_create_guid(), '{}');
 			}
@@ -158,7 +159,7 @@
 			$xmldata = phpgwapi_xmlhelper::toXML($export_values, 'PPCC');
 			$doc = new DOMDocument;
 			$doc->preserveWhiteSpace = true;
-			$doc->loadXML( $xmldata );
+			$doc->loadXML($xmldata);
 			$domElement = $doc->getElementsByTagName('PPCC')->item(0);
 			$domAttribute = $doc->createAttribute('UUID');
 			$domAttribute->value = $guid;
@@ -178,7 +179,7 @@
 			$filename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$guid}.xml";
 
 			$fp = fopen($filename, "wb");
-			fwrite($fp,$xml);
+			fwrite($fp, $xml);
 				
 			if(fclose($fp))
 			{
@@ -188,9 +189,9 @@
 			die();
 		}
 
-		protected function transfer($xml,$filename)
+		protected function transfer($xml, $filename)
 		{			
-			if($this->config['catch_export']['export_method']=='ftp' || $this->config['catch_export']['export_method']=='ssh')
+			if($this->config['catch_export']['export_method'] == 'ftp' || $this->config['catch_export']['export_method'] == 'ssh')
 			{
 				if(!$connection = $this->connection)
 				{
@@ -207,10 +208,10 @@
 					$remote_file = basename($filename);
 				}
 
-				switch ($this->config['catch_export']['export_method'])
+				switch($this->config['catch_export']['export_method'])
 				{
 					case 'ftp';
-						$transfer_ok = ftp_put($connection,$remote_file, $filename, FTP_BINARY);
+						$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
 						break;
 					case 'ssh';
 						$sftp = ssh2_sftp($connection);
@@ -222,7 +223,7 @@
 					default:
 						$transfer_ok = false;
 				}
-				if ($send_ok)
+				if($send_ok)
 				{
 					// log ok
 				}
@@ -245,16 +246,16 @@
 			$password			= $this->config['catch_export']['password'];
 			$port				= 22;
 			
-			switch ($this->config['catch_export']['export_method'])
+			switch($this->config['catch_export']['export_method'])
 			{
 				case 'ftp';
 					if($connection = ftp_connect($server))
 					{
-						ftp_login($connection,$user,$password);
+						ftp_login($connection, $user, $password);
 					}
 					break;
 				case 'ssh';
-					if (!function_exists("ssh2_connect"))
+					if(!function_exists("ssh2_connect"))
 					{
 						die("function ssh2_connect doesn't exist");
 					}
@@ -280,7 +281,6 @@
 			return $connection;
 		}
 	}
-
 	$export = new catch_ticket_export();
 	$export->export_ticket($data);
 

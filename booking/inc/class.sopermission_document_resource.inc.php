@@ -3,4 +3,5 @@
 	
 	class booking_sopermission_document_resource extends booking_sopermission
 	{
+		
 	}

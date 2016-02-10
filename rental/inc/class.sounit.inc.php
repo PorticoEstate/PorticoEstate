@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -24,14 +23,15 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.uicommon');
+	phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.uicommon');
 
-include_class('rental', 'composite', 'inc/model/');
-include_class('rental', 'property_location', 'inc/model/');
+	include_class('rental', 'composite', 'inc/model/');
+	include_class('rental', 'property_location', 'inc/model/');
 
-class rental_sounit extends rental_socommon
-{
+	class rental_sounit extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -41,7 +41,8 @@ class rental_sounit extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.sounit');
 		}
 		return self::$so;
@@ -71,7 +72,7 @@ class rental_sounit extends rental_socommon
 			$cols = 'id, composite_id, location_code';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order	 = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -80,31 +81,34 @@ class rental_sounit extends rental_socommon
 	{
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 		// We get the data from the property module
-		$data = execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
+			$data			 = execMethod('property.bolocation.read_single', array('location_code'	 => $location_code,
+				'extra'			 => array('view' => true)));
 		$level = -1;
 		$names = array();
 		$levelFound = false;
 		for($i = 1; !$levelFound; $i++)
 		{
-			$loc_name = 'loc'.$i.'_name';
+				$loc_name = 'loc' . $i . '_name';
 			if(array_key_exists($loc_name, $data))
 			{
 				$level = $i;
 				$names[$level] = $data[$loc_name];
 			}
-			else{
+				else
+				{
 				$levelFound = true;
 			}
 		}
 		$gab_id = '';
-		$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
+			$gabinfos	 = execMethod('property.sogab.read', array('location_code'	 => $location_code,
+				'allrows'		 => true));
 		if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 		{
 			$gabinfo = array_shift($gabinfos);
 			$gab_id = $gabinfo['gab_id'];
 		}
 		$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
-		$location->set_address_1($data['street_name'].' '.$data['street_number']);
+			$location->set_address_1($data['street_name'] . ' ' . $data['street_number']);
 		foreach($data['attributes'] as $attributes)
 		{
 			switch($attributes['column_name'])
@@ -151,10 +155,8 @@ class rental_sounit extends rental_socommon
 
 	public function delete(int $unit_id)
 	{
-		$sql ="DELETE FROM rental_unit WHERE id = {$this->marshal($unit_id, 'int')}";
+			$sql	 = "DELETE FROM rental_unit WHERE id = {$this->marshal($unit_id, 'int')}";
 		$result = $this->db->query($sql);
 		return $result ? true : false;
 	}
-	
-}
-?>
+	}

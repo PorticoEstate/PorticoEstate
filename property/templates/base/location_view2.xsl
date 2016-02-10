@@ -1,17 +1,18 @@
-  <!-- $Id$ -->
-	<xsl:template name="location_view2">
-		<xsl:apply-templates select="location_data2"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="location_data2">
+<!-- $Id$ -->
+<xsl:template name="location_view2">
+		<xsl:apply-templates select="location_data2"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="location_data2">
 		<xsl:for-each select="location">
 			<xsl:choose>
 				<xsl:when test="value !=''">
-					<dt>
-						<label><xsl:value-of select="name"/></label>
-					</dt>
-					<dd align="left">
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="name"/>
+					</label>
 						<xsl:choose>
 							<xsl:when test="input_type !='hidden'">
 								<xsl:choose>
@@ -35,8 +36,8 @@
 								</xsl:when>
 							</xsl:choose>
 						</xsl:for-each>
-					</dd>
+				</div>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
-	</xsl:template>
+</xsl:template>

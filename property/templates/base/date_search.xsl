@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
-		<xsl:apply-templates select="date_search"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="date_search">
+<!-- $Id$ -->
+<xsl:template name="app_data">
+		<xsl:apply-templates select="date_search"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="date_search">
 		<script type="text/javascript">
 			function ExchangeDate(thisform)
 			{
@@ -69,4 +70,4 @@
 				</tr>
 			</table>
 		</form>
-	</xsl:template>
+</xsl:template>

@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="receipt">
+
+<!-- $Id$ -->
+<xsl:template name="receipt">
 		<xsl:for-each select="message">
 			<tr>
 				<td class="th_text" colspan="2" align="left">
@@ -14,4 +15,4 @@
 				</td>
 			</tr>
 		</xsl:for-each>
-	</xsl:template>
+</xsl:template>

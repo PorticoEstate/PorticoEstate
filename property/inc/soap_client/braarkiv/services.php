@@ -1,6 +1,5 @@
 <?php
-
-	if ( !class_exists( "Login" ) )
+	if(!class_exists("Login"))
 	{
 
 		/**
@@ -20,11 +19,11 @@
 			 * @var sstring
 			 */
 			public $password;
-		}
 
 	}
+	}
 
-	if ( !class_exists( "LoginResponse" ) )
+	if(!class_exists("LoginResponse"))
 	{
 
 		/**
@@ -40,10 +39,9 @@
 			public $LoginResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "Logout" ) )
+	if(!class_exists("Logout"))
 	{
 
 		/**
@@ -59,10 +57,9 @@
 			public $secKey;
 
 		}
-
 	}
 
-	if ( !class_exists( "LogoutResponse" ) )
+	if(!class_exists("LogoutResponse"))
 	{
 
 		/**
@@ -72,10 +69,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "getProductionLines" ) )
+	if(!class_exists("getProductionLines"))
 	{
 
 		/**
@@ -91,10 +87,9 @@
 			public $seckey;
 
 		}
-
 	}
 
-	if ( !class_exists( "getProductionLinesResponse" ) )
+	if(!class_exists("getProductionLinesResponse"))
 	{
 
 		/**
@@ -110,10 +105,9 @@
 			public $getProductionLinesResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "ProductionLine" ) )
+	if(!class_exists("ProductionLine"))
 	{
 
 		/**
@@ -147,10 +141,9 @@
 			public $Default;
 
 		}
-
 	}
 
-	if ( !class_exists( "getDocumentSplitTypes" ) )
+	if(!class_exists("getDocumentSplitTypes"))
 	{
 
 		/**
@@ -172,10 +165,9 @@
 			public $docClassID;
 
 		}
-
 	}
 
-	if ( !class_exists( "getDocumentSplitTypesResponse" ) )
+	if(!class_exists("getDocumentSplitTypesResponse"))
 	{
 
 		/**
@@ -191,10 +183,9 @@
 			public $getDocumentSplitTypesResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "DocumentSplitType" ) )
+	if(!class_exists("DocumentSplitType"))
 	{
 
 		/**
@@ -252,10 +243,9 @@
 			public $Default;
 
 		}
-
 	}
 
-	if ( !class_exists( "GetClasses" ) )
+	if(!class_exists("GetClasses"))
 	{
 
 		/**
@@ -277,10 +267,9 @@
 			public $userName;
 
 		}
-
 	}
 
-	if ( !class_exists( "GetClassesResponse" ) )
+	if(!class_exists("GetClassesResponse"))
 	{
 
 		/**
@@ -302,10 +291,9 @@
 			public $schema;
 
 		}
-
 	}
 
-	if ( !class_exists( "GetClassesResult" ) )
+	if(!class_exists("GetClassesResult"))
 	{
 
 		/**
@@ -321,10 +309,9 @@
 			public $schema;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAvailableFileVariants" ) )
+	if(!class_exists("getAvailableFileVariants"))
 	{
 
 		/**
@@ -346,10 +333,9 @@
 			public $documentId;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAvailableFileVariantsResponse" ) )
+	if(!class_exists("getAvailableFileVariantsResponse"))
 	{
 
 		/**
@@ -365,10 +351,9 @@
 			public $getAvailableFileVariantsResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "getVariantVaultID" ) )
+	if(!class_exists("getVariantVaultID"))
 	{
 
 		/**
@@ -396,10 +381,9 @@
 			public $variantName;
 
 		}
-
 	}
 
-	if ( !class_exists( "getVariantVaultIDResponse" ) )
+	if(!class_exists("getVariantVaultIDResponse"))
 	{
 
 		/**
@@ -415,10 +399,9 @@
 			public $getVariantVaultIDResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "getRelativeFileURL" ) )
+	if(!class_exists("getRelativeFileURL"))
 	{
 
 		/**
@@ -446,10 +429,9 @@
 			public $variantName;
 
 		}
-
 	}
 
-	if ( !class_exists( "getRelativeFileURLResponse" ) )
+	if(!class_exists("getRelativeFileURLResponse"))
 	{
 
 		/**
@@ -465,10 +447,9 @@
 			public $getRelativeFileURLResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAvailableAttributes" ) )
+	if(!class_exists("getAvailableAttributes"))
 	{
 
 		/**
@@ -496,10 +477,9 @@
 			public $classname;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAvailableAttributesResponse" ) )
+	if(!class_exists("getAvailableAttributesResponse"))
 	{
 
 		/**
@@ -515,10 +495,9 @@
 			public $getAvailableAttributesResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "Attribute" ) )
+	if(!class_exists("Attribute"))
 	{
 
 		/**
@@ -552,10 +531,9 @@
 			public $Value;
 
 		}
-
 	}
 
-	if ( !class_exists( "braArkivAttributeType" ) )
+	if(!class_exists("braArkivAttributeType"))
 	{
 
 		/**
@@ -565,10 +543,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "LookupValue" ) )
+	if(!class_exists("LookupValue"))
 	{
 
 		/**
@@ -590,10 +567,9 @@
 			public $Description;
 
 		}
-
 	}
 
-	if ( !class_exists( "Pair" ) )
+	if(!class_exists("Pair"))
 	{
 
 		/**
@@ -615,10 +591,9 @@
 			public $Beskrivelse;
 
 		}
-
 	}
 
-	if ( !class_exists( "Address" ) )
+	if(!class_exists("Address"))
 	{
 
 		/**
@@ -646,10 +621,9 @@
 			public $Bokstav;
 
 		}
-
 	}
 
-	if ( !class_exists( "Matrikkel" ) )
+	if(!class_exists("Matrikkel"))
 	{
 
 		/**
@@ -683,10 +657,9 @@
 			public $SNr;
 
 		}
-
 	}
 
-	if ( !class_exists( "getLookupValues" ) )
+	if(!class_exists("getLookupValues"))
 	{
 
 		/**
@@ -720,10 +693,9 @@
 			public $attribname;
 
 		}
-
 	}
 
-	if ( !class_exists( "getLookupValuesResponse" ) )
+	if(!class_exists("getLookupValuesResponse"))
 	{
 
 		/**
@@ -739,10 +711,9 @@
 			public $getLookupValuesResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchDocument" ) )
+	if(!class_exists("searchDocument"))
 	{
 
 		/**
@@ -782,10 +753,9 @@
 			public $maxhits;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchDocumentResponse" ) )
+	if(!class_exists("searchDocumentResponse"))
 	{
 
 		/**
@@ -801,10 +771,9 @@
 			public $searchDocumentResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "createDocument" ) )
+	if(!class_exists("createDocument"))
 	{
 
 		/**
@@ -832,10 +801,9 @@
 			public $doc;
 
 		}
-
 	}
 
-	if ( !class_exists( "Document" ) )
+	if(!class_exists("Document"))
 	{
 
 		/**
@@ -929,10 +897,9 @@
 			public $BaseClassName;
 
 		}
-
 	}
 
-	if ( !class_exists( "createDocumentResponse" ) )
+	if(!class_exists("createDocumentResponse"))
 	{
 
 		/**
@@ -948,10 +915,9 @@
 			public $createDocumentResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "getDocument" ) )
+	if(!class_exists("getDocument"))
 	{
 
 		/**
@@ -973,10 +939,9 @@
 			public $documentId;
 
 		}
-
 	}
 
-	if ( !class_exists( "getDocumentResponse" ) )
+	if(!class_exists("getDocumentResponse"))
 	{
 
 		/**
@@ -992,10 +957,9 @@
 			public $getDocumentResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAttribute" ) )
+	if(!class_exists("getAttribute"))
 	{
 
 		/**
@@ -1023,10 +987,9 @@
 			public $attributeName;
 
 		}
-
 	}
 
-	if ( !class_exists( "getAttributeResponse" ) )
+	if(!class_exists("getAttributeResponse"))
 	{
 
 		/**
@@ -1042,10 +1005,9 @@
 			public $getAttributeResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "updateDocument" ) )
+	if(!class_exists("updateDocument"))
 	{
 
 		/**
@@ -1067,10 +1029,9 @@
 			public $document;
 
 		}
-
 	}
 
-	if ( !class_exists( "updateDocumentResponse" ) )
+	if(!class_exists("updateDocumentResponse"))
 	{
 
 		/**
@@ -1086,10 +1047,9 @@
 			public $updateDocumentResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "updateAttribute" ) )
+	if(!class_exists("updateAttribute"))
 	{
 
 		/**
@@ -1129,10 +1089,9 @@
 			public $value;
 
 		}
-
 	}
 
-	if ( !class_exists( "updateAttributeResponse" ) )
+	if(!class_exists("updateAttributeResponse"))
 	{
 
 		/**
@@ -1142,10 +1101,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "deleteDocument" ) )
+	if(!class_exists("deleteDocument"))
 	{
 
 		/**
@@ -1167,10 +1125,9 @@
 			public $documentId;
 
 		}
-
 	}
 
-	if ( !class_exists( "deleteDocumentResponse" ) )
+	if(!class_exists("deleteDocumentResponse"))
 	{
 
 		/**
@@ -1180,10 +1137,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "getFileName" ) )
+	if(!class_exists("getFileName"))
 	{
 
 		/**
@@ -1217,10 +1173,9 @@
 			public $versjon;
 
 		}
-
 	}
 
-	if ( !class_exists( "getFileNameResponse" ) )
+	if(!class_exists("getFileNameResponse"))
 	{
 
 		/**
@@ -1236,10 +1191,9 @@
 			public $getFileNameResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchAndGetDocuments" ) )
+	if(!class_exists("searchAndGetDocuments"))
 	{
 
 		/**
@@ -1279,10 +1233,9 @@
 			public $maxhits;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchAndGetDocumentsResponse" ) )
+	if(!class_exists("searchAndGetDocumentsResponse"))
 	{
 
 		/**
@@ -1298,10 +1251,9 @@
 			public $searchAndGetDocumentsResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchAndGetDocumentsWithVariants" ) )
+	if(!class_exists("searchAndGetDocumentsWithVariants"))
 	{
 
 		/**
@@ -1341,10 +1293,9 @@
 			public $maxhits;
 
 		}
-
 	}
 
-	if ( !class_exists( "Variant" ) )
+	if(!class_exists("Variant"))
 	{
 
 		/**
@@ -1372,10 +1323,9 @@
 			public $VaultName;
 
 		}
-
 	}
 
-	if ( !class_exists( "ExtendedDocument" ) )
+	if(!class_exists("ExtendedDocument"))
 	{
 
 		/**
@@ -1391,10 +1341,9 @@
 			public $Variants;
 
 		}
-
 	}
 
-	if ( !class_exists( "searchAndGetDocumentsWithVariantsResponse" ) )
+	if(!class_exists("searchAndGetDocumentsWithVariantsResponse"))
 	{
 
 		/**
@@ -1410,10 +1359,9 @@
 			public $searchAndGetDocumentsWithVariantsResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "putFileAsByteArray" ) )
+	if(!class_exists("putFileAsByteArray"))
 	{
 
 		/**
@@ -1447,10 +1395,9 @@
 			public $file;
 
 		}
-
 	}
 
-	if ( !class_exists( "putFileAsByteArrayResponse" ) )
+	if(!class_exists("putFileAsByteArrayResponse"))
 	{
 
 		/**
@@ -1460,10 +1407,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "getFileAsByteArray" ) )
+	if(!class_exists("getFileAsByteArray"))
 	{
 
 		/**
@@ -1497,10 +1443,9 @@
 			public $versjon;
 
 		}
-
 	}
 
-	if ( !class_exists( "getFileAsByteArrayResponse" ) )
+	if(!class_exists("getFileAsByteArrayResponse"))
 	{
 
 		/**
@@ -1516,10 +1461,9 @@
 			public $getFileAsByteArrayResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunk" ) )
+	if(!class_exists("fileTransferSendChunk"))
 	{
 
 		/**
@@ -1547,10 +1491,9 @@
 			public $chunk;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunkResponse" ) )
+	if(!class_exists("fileTransferSendChunkResponse"))
 	{
 
 		/**
@@ -1560,10 +1503,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunkedInit" ) )
+	if(!class_exists("fileTransferSendChunkedInit"))
 	{
 
 		/**
@@ -1591,10 +1533,9 @@
 			public $filename;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunkedInitResponse" ) )
+	if(!class_exists("fileTransferSendChunkedInitResponse"))
 	{
 
 		/**
@@ -1610,10 +1551,9 @@
 			public $fileTransferSendChunkedInitResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunkedEnd" ) )
+	if(!class_exists("fileTransferSendChunkedEnd"))
 	{
 
 		/**
@@ -1635,10 +1575,9 @@
 			public $fileid;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferSendChunkedEndResponse" ) )
+	if(!class_exists("fileTransferSendChunkedEndResponse"))
 	{
 
 		/**
@@ -1648,10 +1587,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunkedInit" ) )
+	if(!class_exists("fileTransferRequestChunkedInit"))
 	{
 
 		/**
@@ -1685,10 +1623,9 @@
 			public $versjon;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunkedInitResponse" ) )
+	if(!class_exists("fileTransferRequestChunkedInitResponse"))
 	{
 
 		/**
@@ -1704,10 +1641,9 @@
 			public $fileTransferRequestChunkedInitResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunk" ) )
+	if(!class_exists("fileTransferRequestChunk"))
 	{
 
 		/**
@@ -1735,10 +1671,9 @@
 			public $offset;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunkResponse" ) )
+	if(!class_exists("fileTransferRequestChunkResponse"))
 	{
 
 		/**
@@ -1754,10 +1689,9 @@
 			public $fileTransferRequestChunkResult;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunkedEnd" ) )
+	if(!class_exists("fileTransferRequestChunkedEnd"))
 	{
 
 		/**
@@ -1779,10 +1713,9 @@
 			public $fileid;
 
 		}
-
 	}
 
-	if ( !class_exists( "fileTransferRequestChunkedEndResponse" ) )
+	if(!class_exists("fileTransferRequestChunkedEndResponse"))
 	{
 
 		/**
@@ -1792,10 +1725,9 @@
 		{
 
 		}
-
 	}
 
-	if ( !class_exists( "Services" ) )
+	if(!class_exists("Services"))
 	{
 
 		/**
@@ -1886,17 +1818,16 @@
 			 * @param string $wsdl WSDL location for this service
 			 * @param array $options Options for the SoapClient
 			 */
-			public function __construct( $wsdl = "/home/sn5607/BRA_Arkiv/services.braarkiv.xml",
-								$options = array() )
+			public function __construct($wsdl = "/home/sn5607/BRA_Arkiv/services.braarkiv.xml", $options = array())
 			{
-				foreach ( self::$classmap as $wsdlClassName => $phpClassName )
+				foreach(self::$classmap as $wsdlClassName => $phpClassName)
 				{
-					if ( !isset( $options['classmap'][$wsdlClassName] ) )
+					if(!isset($options['classmap'][$wsdlClassName]))
 					{
 						$options['classmap'][$wsdlClassName] = $phpClassName;
 					}
 				}
-				parent::__construct( $wsdl, $options );
+				parent::__construct($wsdl, $options);
 			}
 
 			/**
@@ -1906,22 +1837,21 @@
 			 * @return boolean true if arguments match against validParameters
 			 * @throws Exception invalid function signature message
 			 */
-			public function _checkArguments( $arguments, $validParameters )
+			public function _checkArguments($arguments, $validParameters)
 			{
 				$variables = "";
-				foreach ( $arguments as $arg )
+				foreach($arguments as $arg)
 				{
-					$type = gettype( $arg );
-					if ( $type == "object" )
+					$type = gettype($arg);
+					if($type == "object")
 					{
-						$type = get_class( $arg );
+						$type = get_class($arg);
 					}
 					$variables .= "(" . $type . ")";
 				}
-				if ( !in_array( $variables, $validParameters ) )
+				if(!in_array($variables, $validParameters))
 				{
-					throw new Exception( "Invalid parameter types: " . str_replace( ")(", ", ",
-																	 $variables ) );
+					throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 				}
 				return true;
 			}
@@ -1935,15 +1865,15 @@
 			 * @return LoginResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function Login( $mixed = null )
+			public function Login($mixed = null)
 			{
 				$validParameters = array(
 					"(Login)",
 					"(Login)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "Login", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("Login", $args);
 			}
 
 			/**
@@ -1955,15 +1885,15 @@
 			 * @return LogoutResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function Logout( $mixed = null )
+			public function Logout($mixed = null)
 			{
 				$validParameters = array(
 					"(Logout)",
 					"(Logout)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "Logout", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("Logout", $args);
 			}
 
 			/**
@@ -1975,15 +1905,15 @@
 			 * @return getProductionLinesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getProductionLines( $mixed = null )
+			public function getProductionLines($mixed = null)
 			{
 				$validParameters = array(
 					"(getProductionLines)",
 					"(getProductionLines)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getProductionLines", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getProductionLines", $args);
 			}
 
 			/**
@@ -1995,15 +1925,15 @@
 			 * @return getDocumentSplitTypesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getDocumentSplitTypes( $mixed = null )
+			public function getDocumentSplitTypes($mixed = null)
 			{
 				$validParameters = array(
 					"(getDocumentSplitTypes)",
 					"(getDocumentSplitTypes)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getDocumentSplitTypes", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getDocumentSplitTypes", $args);
 			}
 
 			/**
@@ -2015,15 +1945,15 @@
 			 * @return GetClassesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function GetClasses( $mixed = null )
+			public function GetClasses($mixed = null)
 			{
 				$validParameters = array(
 					"(GetClasses)",
 					"(GetClasses)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "GetClasses", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("GetClasses", $args);
 			}
 
 			/**
@@ -2035,15 +1965,15 @@
 			 * @return getAvailableFileVariantsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAvailableFileVariants( $mixed = null )
+			public function getAvailableFileVariants($mixed = null)
 			{
 				$validParameters = array(
 					"(getAvailableFileVariants)",
 					"(getAvailableFileVariants)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getAvailableFileVariants", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getAvailableFileVariants", $args);
 			}
 
 			/**
@@ -2055,15 +1985,15 @@
 			 * @return getVariantVaultIDResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getVariantVaultID( $mixed = null )
+			public function getVariantVaultID($mixed = null)
 			{
 				$validParameters = array(
 					"(getVariantVaultID)",
 					"(getVariantVaultID)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getVariantVaultID", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getVariantVaultID", $args);
 			}
 
 			/**
@@ -2075,15 +2005,15 @@
 			 * @return getRelativeFileURLResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getRelativeFileURL( $mixed = null )
+			public function getRelativeFileURL($mixed = null)
 			{
 				$validParameters = array(
 					"(getRelativeFileURL)",
 					"(getRelativeFileURL)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getRelativeFileURL", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getRelativeFileURL", $args);
 			}
 
 			/**
@@ -2095,15 +2025,15 @@
 			 * @return getAvailableAttributesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAvailableAttributes( $mixed = null )
+			public function getAvailableAttributes($mixed = null)
 			{
 				$validParameters = array(
 					"(getAvailableAttributes)",
 					"(getAvailableAttributes)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getAvailableAttributes", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getAvailableAttributes", $args);
 			}
 
 			/**
@@ -2115,15 +2045,15 @@
 			 * @return getLookupValuesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getLookupValues( $mixed = null )
+			public function getLookupValues($mixed = null)
 			{
 				$validParameters = array(
 					"(getLookupValues)",
 					"(getLookupValues)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getLookupValues", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getLookupValues", $args);
 			}
 
 			/**
@@ -2135,15 +2065,15 @@
 			 * @return searchDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchDocument( $mixed = null )
+			public function searchDocument($mixed = null)
 			{
 				$validParameters = array(
 					"(searchDocument)",
 					"(searchDocument)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "searchDocument", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("searchDocument", $args);
 			}
 
 			/**
@@ -2155,15 +2085,15 @@
 			 * @return createDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function createDocument( $mixed = null )
+			public function createDocument($mixed = null)
 			{
 				$validParameters = array(
 					"(createDocument)",
 					"(createDocument)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "createDocument", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("createDocument", $args);
 			}
 
 			/**
@@ -2175,15 +2105,15 @@
 			 * @return getDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getDocument( $mixed = null )
+			public function getDocument($mixed = null)
 			{
 				$validParameters = array(
 					"(getDocument)",
 					"(getDocument)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getDocument", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getDocument", $args);
 			}
 
 			/**
@@ -2195,15 +2125,15 @@
 			 * @return getAttributeResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAttribute( $mixed = null )
+			public function getAttribute($mixed = null)
 			{
 				$validParameters = array(
 					"(getAttribute)",
 					"(getAttribute)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getAttribute", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getAttribute", $args);
 			}
 
 			/**
@@ -2215,15 +2145,15 @@
 			 * @return updateDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function updateDocument( $mixed = null )
+			public function updateDocument($mixed = null)
 			{
 				$validParameters = array(
 					"(updateDocument)",
 					"(updateDocument)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "updateDocument", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("updateDocument", $args);
 			}
 
 			/**
@@ -2235,15 +2165,15 @@
 			 * @return updateAttributeResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function updateAttribute( $mixed = null )
+			public function updateAttribute($mixed = null)
 			{
 				$validParameters = array(
 					"(updateAttribute)",
 					"(updateAttribute)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "updateAttribute", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("updateAttribute", $args);
 			}
 
 			/**
@@ -2255,15 +2185,15 @@
 			 * @return deleteDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function deleteDocument( $mixed = null )
+			public function deleteDocument($mixed = null)
 			{
 				$validParameters = array(
 					"(deleteDocument)",
 					"(deleteDocument)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "deleteDocument", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("deleteDocument", $args);
 			}
 
 			/**
@@ -2275,15 +2205,15 @@
 			 * @return getFileNameResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getFileName( $mixed = null )
+			public function getFileName($mixed = null)
 			{
 				$validParameters = array(
 					"(getFileName)",
 					"(getFileName)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getFileName", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getFileName", $args);
 			}
 
 			/**
@@ -2295,15 +2225,15 @@
 			 * @return searchAndGetDocumentsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchAndGetDocuments( $mixed = null )
+			public function searchAndGetDocuments($mixed = null)
 			{
 				$validParameters = array(
 					"(searchAndGetDocuments)",
 					"(searchAndGetDocuments)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "searchAndGetDocuments", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("searchAndGetDocuments", $args);
 			}
 
 			/**
@@ -2315,15 +2245,15 @@
 			 * @return searchAndGetDocumentsWithVariantsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchAndGetDocumentsWithVariants( $mixed = null )
+			public function searchAndGetDocumentsWithVariants($mixed = null)
 			{
 				$validParameters = array(
 					"(searchAndGetDocumentsWithVariants)",
 					"(searchAndGetDocumentsWithVariants)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "searchAndGetDocumentsWithVariants", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("searchAndGetDocumentsWithVariants", $args);
 			}
 
 			/**
@@ -2335,15 +2265,15 @@
 			 * @return putFileAsByteArrayResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function putFileAsByteArray( $mixed = null )
+			public function putFileAsByteArray($mixed = null)
 			{
 				$validParameters = array(
 					"(putFileAsByteArray)",
 					"(putFileAsByteArray)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "putFileAsByteArray", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("putFileAsByteArray", $args);
 			}
 
 			/**
@@ -2355,15 +2285,15 @@
 			 * @return getFileAsByteArrayResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getFileAsByteArray( $mixed = null )
+			public function getFileAsByteArray($mixed = null)
 			{
 				$validParameters = array(
 					"(getFileAsByteArray)",
 					"(getFileAsByteArray)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "getFileAsByteArray", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("getFileAsByteArray", $args);
 			}
 
 			/**
@@ -2375,15 +2305,15 @@
 			 * @return fileTransferSendChunkResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunk( $mixed = null )
+			public function fileTransferSendChunk($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferSendChunk)",
 					"(fileTransferSendChunk)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferSendChunk", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferSendChunk", $args);
 			}
 
 			/**
@@ -2395,15 +2325,15 @@
 			 * @return fileTransferSendChunkedInitResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunkedInit( $mixed = null )
+			public function fileTransferSendChunkedInit($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferSendChunkedInit)",
 					"(fileTransferSendChunkedInit)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferSendChunkedInit", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferSendChunkedInit", $args);
 			}
 
 			/**
@@ -2415,15 +2345,15 @@
 			 * @return fileTransferSendChunkedEndResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunkedEnd( $mixed = null )
+			public function fileTransferSendChunkedEnd($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferSendChunkedEnd)",
 					"(fileTransferSendChunkedEnd)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferSendChunkedEnd", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferSendChunkedEnd", $args);
 			}
 
 			/**
@@ -2435,15 +2365,15 @@
 			 * @return fileTransferRequestChunkedInitResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunkedInit( $mixed = null )
+			public function fileTransferRequestChunkedInit($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunkedInit)",
 					"(fileTransferRequestChunkedInit)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferRequestChunkedInit", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferRequestChunkedInit", $args);
 			}
 
 			/**
@@ -2455,15 +2385,15 @@
 			 * @return fileTransferRequestChunkResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunk( $mixed = null )
+			public function fileTransferRequestChunk($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunk)",
 					"(fileTransferRequestChunk)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferRequestChunk", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferRequestChunk", $args);
 			}
 
 			/**
@@ -2475,18 +2405,16 @@
 			 * @return fileTransferRequestChunkedEndResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunkedEnd( $mixed = null )
+			public function fileTransferRequestChunkedEnd($mixed = null)
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunkedEnd)",
 					"(fileTransferRequestChunkedEnd)",
 				);
 				$args = func_get_args();
-				$this->_checkArguments( $args, $validParameters );
-				return $this->__soapCall( "fileTransferRequestChunkedEnd", $args );
+				$this->_checkArguments($args, $validParameters);
+				return $this->__soapCall("fileTransferRequestChunkedEnd", $args);
 			}
-
 		}
-
 	}
 ?>

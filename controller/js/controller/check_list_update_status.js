@@ -1,7 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
 	// UPDATE CHECKLIST STATUS
-	$("#update-check-list-status").on("submit", function(e) {
+	$("#update-check-list-status").on("submit", function (e) {
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -15,7 +15,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&" + $(thisForm).serialize(),
-			success: function(data) {
+			success: function (data) {
 				if (data) {
 					var jsonObj = jQuery.parseJSON(data);
 

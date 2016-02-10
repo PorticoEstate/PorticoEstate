@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Drawings
@@ -32,12 +32,13 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uidrawings extends frontend_uifrontend
+    class frontend_uidrawings extends frontend_uicommon
     {
 
         public $public_functions = array
         (
             'index'     	=> true,
+			'query'			=> true
         );
 
 		public function __construct()
@@ -45,7 +46,6 @@
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.drawings'));
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
-//			$this->location_code = '1102-01';
 		}
 
 		public function index()
@@ -73,8 +73,6 @@
 				}
 			}
 			
-			//----------------------------------------------datatable settings--------
-
 			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace ( ',' , '|' , $config->config_data['document_valid_types'] ) : '';
 
 			$content = array();
@@ -89,65 +87,48 @@
 
 					$content[] = array
 					(
-						'document_id'			=> $entry['document_id'],
+						
 						'document_name'			=> $entry['document_name'],
-						'link'					=> $entry['link'],
+						'document_id'			=> $entry['document_id'],
+						'link'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uidocument.view_file', 'id'=>$entry['document_id'])),
 							'title'					=> $entry['title'],
 						'doc_type'				=> $entry['doc_type'],
 					'document_date'			=> $GLOBALS['phpgw']->common->show_date($entry['document_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 					);	
 				}
 			}
-			$datavalues[0] = array
+
+			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+
+			$datatable_def[] = array
 			(
-				'name'					=> "0",
-				'values' 				=> json_encode($content),
-				'total_records'			=> count($content),
-				'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uidocument.view_file'))),
-				'is_paginator'			=> 1,
-				'footer'				=> 0
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(array('key'=>'document_name', 'label'=>lang('filename'), 'sortable'=>true, 'formatter'=>'JqueryPortico.formatLink'),
+										array('key'=>'document_id', 'label'=>lang('filename'), 'sortable'=>false, 'hidden'=>true),
+										array('key'=>'title', 'label'=>lang('name'), 'sortable'=>true ),
+										array('key'=>'doc_type', 'label'=>'Type', 'sortable'=>true ),
+										array('key'=>'document_date', 'label'=>lang('date'), 'sortable'=>true )
+										),
+				'data'		 => json_encode($content)				
 			);
 
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('filename'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-													array('key' => 'document_id','label'=>lang('filename'),'sortable'=>false,'hidden' => true),
-													array('key' => 'title','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'doc_type','label'=>'Type','sortable'=>true,'resizeable'=>true),
-													array('key' => 'document_date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true)
-													))
-			);
-
-			//----------------------------------------------datatable settings--------
-
-
-			$datatable = array
-			(
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'				=> $datavalues,
-				'myColumnDefs'			=> $myColumnDefs
-			);
 
 			$data = array
 			(
 				'header'				=> $this->header_state,
-				'tabs'					=> $this->tabs,
-				'drawings' 				=> array('datatable' => $datatable),
+				'section' 			=> array(
+					'datatable_def'=>$datatable_def,
+					'tabs'=>$this->tabs,
+					'tabs_content'=>$this->tabs_content,
+					'tab_selected'=>$this->tab_selected,
+					'msgbox_data'=>$GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))
+				)
 			);
 			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','drawings'));
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'drawing.list', 'frontend' );
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			self::render_template_xsl(array('drawings', 'datatable_inline', 'frontend'), $data);
 		}
+		
+		public function query() {}
     }

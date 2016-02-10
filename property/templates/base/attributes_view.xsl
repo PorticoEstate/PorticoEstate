@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template match="attributes_view">
+
+<!-- $Id$ -->
+<xsl:template match="attributes_view">
 		<xsl:variable name="lang_attribute_statustext">
 			<xsl:value-of select="lang_attribute_statustext"/>
 		</xsl:variable>
@@ -107,10 +108,10 @@
 				</xsl:choose>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="choice_view">
+<!-- New template-->
+<xsl:template name="choice_view">
 		<xsl:variable name="counter">
 			<xsl:value-of select="counter"/>
 		</xsl:variable>
@@ -150,4 +151,4 @@
 				</tr>
 			</xsl:for-each>
 		</table>
-	</xsl:template>
+</xsl:template>

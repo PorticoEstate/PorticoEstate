@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="table_header">
+
+<!-- $Id$ -->
+<xsl:template name="table_header">
 		<tr class="th">
 			<xsl:for-each select="table_header">
 				<td class="th_text" width="{with}" align="{align}">
@@ -16,4 +17,4 @@
 				</td>
 			</xsl:for-each>
 		</tr>
-	</xsl:template>
+</xsl:template>

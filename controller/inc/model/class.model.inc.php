@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
@@ -25,16 +26,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	abstract class controller_model
 	{
+
 		protected $validation_errors = array();
 		protected $validation_warnings = array();
-
 		protected $consistency_warnings = array();
-
 		protected $field_of_responsibility_id;
 		protected $field_of_responsibility_name;
 		protected $permission_array;
@@ -96,19 +95,18 @@
 
 	// Alternative 1
 	//			return get_object_vars($this);
-
 	// Alternative 2
 				$exclude = array
 				(
 					'get_field', // feiler (foreldreklassen)
-					'get_so',//unødvendig 
+				'get_so', //unødvendig
 				);
 
 				$class_methods = get_class_methods($this);
 				$control_item_arr = array();
-				foreach ($class_methods as $class_method)
+			foreach($class_methods as $class_method)
 				{
-					if( stripos($class_method , 'get_' ) === 0  && !in_array($class_method, $exclude))
+				if(stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
 					{
 						$_class_method_part = explode('get_', $class_method);
 						$control_item_arr[$_class_method_part[1]] = $this->$class_method();
@@ -118,5 +116,4 @@
 	//			_debug_array($control_item_arr);
 				return $control_item_arr;
 			}
-
 	}

@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -17,14 +14,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+	class TestSObimmodel extends PHPUnit_Framework_TestCase
+	{
 
-
-
-
-
-
-class TestSObimmodel extends PHPUnit_Framework_TestCase
-{
 	private $modelName = "unitTestModel";
 	private $vfsFileName = "dummyFile.txt";
 	private $vfsFileContents = "This is a file made for unit testing, please ignore or delete";
@@ -34,7 +26,7 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 	private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_item';
 	private $projectGuid;
-	private $projectType= 'ifcprojecttest';
+		private $projectType = 'ifcprojecttest';
 	private $newProjectName = 'New_project name';
 	private $projectXml;
 	private $buildingStorey1Guid;
@@ -54,8 +46,7 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 	 * @var integer $fieldID The attribute ID used for all the tests
 	 */
 	protected $fieldID;
-
-	protected static $addedNoteId=0;
+		protected static $addedNoteId = 0;
 	protected $noteContent = "My dummy note content";
 	protected $editedNoteContent = "My edited dummy note content";
 
@@ -69,9 +60,8 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$GLOBALS['phpgw_info']['user']['account_id'] = 7;
 		//$GLOBALS['phpgw']->acl->set_account_id(7); // not sure why this is needed...
 		$this->db = & $GLOBALS['phpgw']->db;
-		
-		
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -80,33 +70,33 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		
-		 
 	}
 	
-	
-
-	public function testDb(){
+		public function testDb()
+		{
 		$this->assertNotNull($this->db);
 	}
 	
-	public function testSetGetModelName() {
+		public function testSetGetModelName()
+		{
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$sobimmodel->setModelName($this->modelName);
 		$this->assertEquals($this->modelName, $sobimmodel->getModelName());
 	}
 	
-	public function testSetGetVfsId() {
+		public function testSetGetVfsId()
+		{
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$sobimmodel->setVfsdatabaseid($this->vfsFileId);
 		$this->assertEquals($this->vfsFileId, $sobimmodel->getVfsdatabaseid());
 	}
-	
-	
 	/*
 	 * Not the best unit test since it does so many things, but that's what you get with databases...
 	 * @depends testDb
 	 */
-	public function testAddRemoveCheckBimModel() {
+
+		public function testAddRemoveCheckBimModel()
+		{
 		$this->createDummyVfsFile();
 		
 		
@@ -119,15 +109,18 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$this->removeDummyVfsFile();
 	}
 	
-	public function testRetrieveBimModelList() {
+		public function testRetrieveBimModelList()
+		{
 		$this->createDummyVfsFile();
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$this->addBimModel($sobimmodel);
 		$bimModelArray = $sobimmodel->retrieveBimModelList();
 		$modelFound = false;
 		/* @var $bimModel BimModel */
-		foreach($bimModelArray as $bimModel ) {
-			if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId) {
+			foreach($bimModelArray as $bimModel)
+			{
+				if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId)
+				{
 				$modelFound = true;
 				break;
 			}
@@ -139,25 +132,29 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$sobimmodel->removeBimModelFromDatabase();
 		$this->removeDummyVfsFile();
 	}
-	
 	/*
 	 * WARNING, if the assertEquals statement fails, then the test suite will fail without warning!!!
 	 * 
 	 */
-	public function testRetrieveBimModelInformationById() {
+
+		public function testRetrieveBimModelInformationById()
+		{
 		$this->createDummyVfsFile();
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$this->addBimModel($sobimmodel);
 		$bimModelArray = $sobimmodel->retrieveBimModelList();
 		$modelFound = false;
 		/* @var $bimModel BimModel */
-		foreach($bimModelArray as $bimModel ) {
-			if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId) {
+			foreach($bimModelArray as $bimModel)
+			{
+				if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId)
+				{
 				$modelFound = true;
 				break;
 			}
 		}
-		if($modelFound) {
+			if($modelFound)
+			{
 			$modelId = $bimModel->getDatabaseId();
 			$sobimmodel->setModelId($modelId);
 			/* @var $retrievedBimModel BimModel */
@@ -172,8 +169,9 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 			$expectedBimModel->setFileName($this->vfsFileName);
 			
 			$this->assertEquals($expectedBimModel, $retrievedBimModel);
-			
-		} else {
+			}
+			else
+			{
 			$sobimmodel->removeBimModelFromDatabase();
 			$this->removeDummyVfsFile();
 			
@@ -185,7 +183,8 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$this->removeDummyVfsFile();
 	}
 	
-	public function testRemoveBimModelByIdFromDatabase() {
+		public function testRemoveBimModelByIdFromDatabase()
+		{
 		$this->createDummyVfsFile();
 		
 		$sobimmodel = new sobimmodel_impl($this->db);
@@ -193,13 +192,16 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$bimModelArray = $sobimmodel->retrieveBimModelList();
 		$modelFound = false;
 		/* @var $bimModel BimModel */
-		foreach($bimModelArray as $bimModel ) {
-			if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId) {
+			foreach($bimModelArray as $bimModel)
+			{
+				if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId)
+				{
 				$modelFound = true;
 				break;
 			}
 		}
-		if($modelFound) {
+			if($modelFound)
+			{
 			
 			$modelId = $bimModel->getDatabaseId();
 			$sobimmodel->setModelId($modelId);
@@ -225,8 +227,9 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 			$sobimmodel->setVfsdatabaseid($this->vfsFileId);
 			
 			$this->assertTrue(!$sobimmodel->checkIfModelExists());
-			
-		} else {
+			}
+			else
+			{
 			$sobimmodel->removeBimModelFromDatabase();
 			$this->removeDummyVfsFile();
 			
@@ -235,28 +238,28 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		
 		
 		$this->removeDummyVfsFile();
-		
 	}
 	
-	
-	
-	private function addBimModel(& $sobimmodel) {
+		private function addBimModel(& $sobimmodel)
+		{
 		$sobimmodel->setModelName($this->modelName);
 		
 		
 		$sobimmodel->setVfsdatabaseid($this->vfsFileId);
-		try {
+			try
+			{
 			$sobimmodel->addBimModel();
-		} catch (ModelExistsException $e) {
+			}
+			catch(ModelExistsException $e)
+			{
 			echo "Warning, model already exists\n";
 		}
 	}
 	
-	
-	
-	private function createDummyVfsFile() {
+		private function createDummyVfsFile()
+		{
 		$currentDirectory = dirname(__FILE__);
-		$fileNameWithPath = $currentDirectory.DIRECTORY_SEPARATOR.$this->vfsFileName;
+			$fileNameWithPath = $currentDirectory . DIRECTORY_SEPARATOR . $this->vfsFileName;
 		
 		$fileHandle = fopen($fileNameWithPath, 'w') or die("Can't open file");
 		$result = fwrite($fileHandle, $this->vfsFileContents);
@@ -267,22 +270,24 @@ class TestSObimmodel extends PHPUnit_Framework_TestCase
 		$sovfs->setFilename($this->vfsFileName);
 		$sovfs->setFileNameWithFullPath($fileNameWithPath);
 		$sovfs->setSubModule($this->vfsSubModule);
-		try {
+			try
+			{
 			$sovfs->addFileToVfs();
-		} catch (FileExistsException $e) {
+			}
+			catch(FileExistsException $e)
+			{
 			echo "File already exists\n";
-			
 		}
 		$this->vfsFileId = $sovfs->retrieveVfsFileId();
 		unlink($fileNameWithPath);
 	}
 	
-	private function removeDummyVfsFile() {
+		private function removeDummyVfsFile()
+		{
 		$sovfs = new sovfs_impl();
 		$sovfs->setFilename($this->vfsFileName);
 		$sovfs->setSubModule($this->vfsSubModule);
 		
 		$sovfs->removeFileFromVfs();
-		
 	}
-}
+	}

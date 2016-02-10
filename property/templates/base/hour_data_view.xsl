@@ -1,12 +1,13 @@
-  <!-- $Id$ -->
-	<xsl:template name="hour_data_view">
+
+<!-- $Id$ -->
+<xsl:template name="hour_data_view">
 		<xsl:apply-templates select="table_header_hour"/>
 		<xsl:apply-templates select="values_hour"/>
 		<xsl:apply-templates select="table_sum"/>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header_hour">
+<!-- New template-->
+<xsl:template match="table_header_hour">
 		<tr class="th">
 			<td class="th_text" width="5%" align="right">
 				<xsl:value-of select="lang_post"/>
@@ -36,10 +37,10 @@
 				<xsl:value-of select="lang_result"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values_hour">
+<!-- New template-->
+<xsl:template match="values_hour">
 		<xsl:choose>
 			<xsl:when test="new_grouping=1">
 				<tr>
@@ -100,10 +101,10 @@
 				<xsl:value-of select="result"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_sum">
+<!-- New template-->
+<xsl:template match="table_sum">
 		<tr>
 			<td>
 			</td>
@@ -160,4 +161,4 @@
 				<xsl:value-of select="value_total_sum"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

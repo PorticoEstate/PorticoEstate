@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<!-- BEGIN login_form -->
-<head>
+	<!-- BEGIN login_form -->
+	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset={charset}" />
 	<meta name="author" content="phpGroupWare http://www.phpgroupware.org" />
 	<meta name="description" content="{website_title} login screen, working environment powered by phpGroupWare" />
@@ -20,11 +20,11 @@
 		{
 			document.getElementById('testjs').style.display = 'none';
 		}
-	-->
+			-- >
 	</script>
-</head>
+	</head>
 
-<body onLoad="testjs();">
+	<body onLoad="testjs();">
 	<div id="horizon">
 		
 		<div id="loginmsg">{lang_message}</div>
@@ -71,6 +71,6 @@
 			{lang_testjs}<br />
 		</div>
 	</div>
-</body>
-<!-- END login_form -->
+	</body>
+	<!-- END login_form -->
 </html>

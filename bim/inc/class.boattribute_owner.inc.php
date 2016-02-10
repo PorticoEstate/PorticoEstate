@@ -1,4 +1,5 @@
 <?php
+
     /**
      * Description of classboattrobjectinc
      *
@@ -7,6 +8,7 @@
      */
     abstract class bim_boattribute_owner
     {
+
         protected $attributes;
 
         /**
@@ -25,7 +27,6 @@
          */
         public abstract function set_attribute($attr_def, bim_boattribute $attr);
 
-
         /**
          * Get the value of a given attribute.
          *
@@ -37,7 +38,6 @@
             return ($this->attributes[$attr_def] instanceof bim_boattribute ? $this->attributes[$attr_def] : null);
         }
 
-
         /**
          * Fetches a list of attributes (without values) on this object.
          *
@@ -47,7 +47,6 @@
         {
             return $this->attributes;
         }
-
 
         /**
          * Removes an attribute and its value from the object.
@@ -63,4 +62,3 @@
          */
         public abstract function remove_attribute($attr_def);
     }
-

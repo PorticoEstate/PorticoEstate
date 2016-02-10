@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	 * Import the datetime class for date processing
 	 */
@@ -36,9 +35,9 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_bogallery
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -47,13 +46,13 @@
 		var $cat_id;
 		var $location_info = array();
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 			= CreateObject('property.sogallery');
 			$this->mime_magic 	= createObject('phpgwapi.mime_magic');
 			$this->interlink	= CreateObject('property.interlink');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -88,20 +87,19 @@
 
 			$this->start_date	= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
 			$this->end_date		= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
-
 		}
 
 		public function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','gallery',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'gallery', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','gallery');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'gallery');
 
 			//		_debug_array($data);
 
@@ -116,17 +114,21 @@
 			$this->user_id		= $data['user_id'];
 		}
 
-		public function read($dry_run='')
+		public function read($data = array())
 		{
-			$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
-			$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
+			//$dry_run=''
+			//$data = array()
+			//$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
+			//$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
+//			$valid_locations = $this->get_gallery_location();
+//            //echo '<pre>'; print_r($valid_locations);echo '</pre>';
+//            array_unshift($data['valid_locations'],$valid_locations);
+//			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//			'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
+//			'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
+//			'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
 
-			$valid_locations = $this->get_gallery_location();
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
-				'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
-				'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
-
+			$values = $this->so->read($data);
 
 			$img_types = array
 				(
@@ -152,7 +154,7 @@
 					$i++;
 				}
 
-				$entry['date']	= $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']),$dateformat);
+				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 
 				$directory = explode('/', $entry['directory']);
 
@@ -163,7 +165,7 @@
 				$entry['url']				= $this->interlink->get_relation_link($entry['location'], $entry['location_item_id']);
 
 				$entry['location_name']		= $this->interlink->get_location_name($entry['location']);
-				$entry['document_url']		= $GLOBALS['phpgw']->link('/index.php',array
+				$entry['document_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'	=> 'property.uigallery.view_file',
 						'file'		=> urlencode("{$entry['directory']}/{$entry['name']}")
@@ -179,7 +181,7 @@
 		public function get_location($directory = array())
 		{
 			$values = array();
-			switch ($directory[2])
+			switch($directory[2])
 			{
 			case 'agreement':
 				$values['location'] = '.agreement';

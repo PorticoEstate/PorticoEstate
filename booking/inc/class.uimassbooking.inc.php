@@ -3,11 +3,15 @@
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 
+//    phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	class booking_uimassbooking extends booking_uicommon
 	{	
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
+			'query'					 => true,
 			'active'		=>	true,
 			'add'			=>	true,
 			'show'			=>	true,
@@ -24,45 +28,36 @@
 			
 			
 			$this->bo = CreateObject('booking.bomassbooking');
-			self::set_active_menu('booking::applications::massboooking');
+			self::set_active_menu('booking::applications::massbookings');
 		}
 				
 		public function index()
 		{	
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
 							),
 						)
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uimassbooking.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'booking.uimassbooking.index',
+						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'name',
 							'label' => lang('Building'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'street',
@@ -88,31 +83,34 @@
 				)
 			);
 
-			self::render_template('datatable', $data);
+			$data['datatable']['actions'][] = array();
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			
 			$buildings = $this->bo->read();
 			foreach($buildings['results'] as &$building)
 			{
-				$building['link'] = $this->link(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building['id']));
-				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
+				$building['link'] = $this->link(array('menuaction' => 'booking.uimassbooking.schedule',
+					'id' => $building['id']));
+//				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
-			return $this->yui_results($buildings);
+			return $this->jquery_results($buildings);
 		}
 
 		private function item_link(&$item, $key)
 		{
 			if(in_array($item['type'], array('allocation', 'booking', 'event')))
-				$item['info_url'] = $this->link(array('menuaction' => 'booking.ui'.$item['type'].'.info', 'id' => $item['id']));
+				$item['info_url'] = $this->link(array('menuaction' => 'booking.ui' . $item['type'] . '.info',
+					'id' => $item['id']));
 		}
 
 		public function schedule()
 		{
-			$backend = phpgw::get_var('backend', 'GET');
-			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uimassbooking");
+			$backend						 = phpgw::get_var('backend', 'bool');
+			$building						 = $this->bo->get_schedule(phpgw::get_var('id', 'int'), "booking.uimassbooking");
 			$building['application_link'] = self::link(array(
 				'menuaction' => 'booking.uiallocation.add', 
 				'building_id' => $building['id'], 
@@ -123,13 +121,21 @@
 				'building_id' => $building['id'], 
 				'phpgw_return_as' => 'json',
 			));
-			if ($backend == 'true')
+			if($backend)
 			{
-				$building['date'] = phpgw::get_var('date', 'GET');
-			}
-			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('massbooking_schedule', array('building' => $building, 'backend' => $backend));
+				$building['date'] = phpgw::get_var('date', 'string');
 		}
 
+			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Massbooking Schedule'), 'link' => '#massbooking_schedule');
+			$active_tab		 = 'generic';
+
+			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+			self::add_javascript('booking', 'booking', 'schedule.js');
+			phpgwapi_jquery::load_widget("datepicker");
+			self::render_template_xsl('massbooking_schedule', array('building' => $building, 'backend' => $backend));
+		}
 	}

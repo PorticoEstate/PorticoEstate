@@ -1,6 +1,8 @@
 <?php
-interface rental_exportable
-{
+
+	interface rental_exportable
+	{
+
 	/**
 	 * The exportable must identify itself with some string.
 	 * 
@@ -22,6 +24,4 @@ interface rental_exportable
 	 * @return array with missing billing info
 	 */
 	public function get_missing_billing_info($contract);
-	
-}
-?>
+	}

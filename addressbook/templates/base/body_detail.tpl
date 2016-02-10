@@ -1,6 +1,6 @@
 <!-- BEGIN detail_body -->
 <tr>
-<table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
+<table width="100%" class="pure-table">
   <tbody>
     <tr align="right">
       <td>
@@ -9,7 +9,7 @@
     </tr>
     <tr>
       <td>
-		<table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
+		<table width="100%" class="pure-table pure-table-bordered">
 		<tbody>
 			<caption>{caption_detail}</caption>
 			{detail_body_set}

@@ -1,8 +1,7 @@
 <!-- $Id: condition_survey.xsl 10560 2012-11-30 13:52:18Z sigurdne $ -->
 
-	<!-- import -->
+<!-- import -->
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="yui_phpgw_i18n"/>
 
 		<div class="yui-navset yui-navset-top" id="survey_edit_tabview">
 	
@@ -18,7 +17,9 @@
 			<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
 		        <dl>
 					<dt>
-						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+					<label>
+						<xsl:value-of select="php:function('lang', 'id')" />
+					</label>
 					</dt>
 					<dd>
 						<xsl:value-of select="survey/id"/>
@@ -35,14 +36,18 @@
 					</xsl:choose>
 
 					<dt>
-						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
+					<label for="name">
+						<xsl:value-of select="php:function('lang', 'name')" />
+					</label>
 					</dt>
 					<dd>
 						<xsl:value-of select="survey/title" />
 					</dd>
 
 					<dt>
-						<label><xsl:value-of select="php:function('lang', 'date')" /></label>
+					<label>
+						<xsl:value-of select="php:function('lang', 'date')" />
+					</label>
 					</dt>
 					<dd>
 						<xsl:value-of select="survey/report_date"/>
@@ -66,7 +71,9 @@
 						<xsl:otherwise>
 							<dl class="proplist-col">
 								<dt>
-									<label><xsl:value-of select="php:function('lang', 'finished')" /></label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'finished')" />
+								</label>
 								</dt>
 							</dl>
 						</xsl:otherwise>
@@ -75,8 +82,12 @@
 
 				<dl class="proplist-col">
 					<div class="form-buttons">
-						<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
-						<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+					<xsl:variable name="lang_submit">
+						<xsl:value-of select="lang_submit"/>
+					</xsl:variable>
+					<xsl:variable name="lang_cancel">
+						<xsl:value-of select="php:function('lang', 'cancel')" />
+					</xsl:variable>
 						<xsl:choose>
 							<xsl:when test="$lang_submit != ''">
 								<input type="submit" name="submit_step" value="{$lang_submit}" title = "{$lang_submit}" />
@@ -115,13 +126,15 @@
 		<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
 		</form>
 
-	</xsl:template>
+</xsl:template>
 
 
 <xsl:template name="import_step_1" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 	<dl class="proplist-col">
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+			<label>
+				<xsl:value-of select="php:function('lang', 'upload file')"/>
+			</label>
 		</dt>
 		<dd>
 			<input type="file" name="import_file" size="40">
@@ -137,7 +150,9 @@
 <xsl:template name="import_step_2" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 	<dl class="proplist-col">
 		<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'sheet')" /></label>
+			<label for="status">
+				<xsl:value-of select="php:function('lang', 'sheet')" />
+			</label>
 		</dt>
 		<dd>
  			<select id="sheet_id" name="sheet_id">
@@ -151,7 +166,9 @@
 	<dl class="proplist-col">
 
 		<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'sheet')" /></label>
+			<label for="status">
+				<xsl:value-of select="php:function('lang', 'sheet')" />
+			</label>
 		</dt>
 		<dd>
 			<xsl:for-each select="sheets/options">
@@ -162,7 +179,9 @@
 		</dd>
 
  		<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'table')" /></label>
+			<label for="status">
+				<xsl:value-of select="php:function('lang', 'table')" />
+			</label>
 		</dt>
 		<dd>
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
@@ -173,7 +192,9 @@
 <xsl:template name="import_step_4" xmlns:php="http://php.net/xsl">
 	<dl class="proplist-col">
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'sheet')" /></label>
+			<label>
+				<xsl:value-of select="php:function('lang', 'sheet')" />
+			</label>
 		</dt>
 		<dd>
 			<xsl:for-each select="sheets/options">
@@ -183,13 +204,17 @@
 			</xsl:for-each>
 		</dd>
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'line')" /></label>
+			<label>
+				<xsl:value-of select="php:function('lang', 'line')" />
+			</label>
 		</dt>
 		<dd>
 			<xsl:value-of select="start_line"/>
 		</dd>
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'columns')" /></label>
+			<label>
+				<xsl:value-of select="php:function('lang', 'columns')" />
+			</label>
 		</dt>
 		<dd>
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
@@ -208,9 +233,11 @@
 	</option>
 </xsl:template>
 
-	<xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
+<xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+		<label>
+			<xsl:value-of select="php:function('lang', 'upload file')"/>
+		</label>
 		</dt>
 		<dd>
 			<input type="file" name="file" size="40">
@@ -222,14 +249,16 @@
 		<xsl:choose>
 			<xsl:when test="multiple_uploader!=''">
 				<dt>
-					<label><a href="javascript:fileuploader()">
+				<label>
+					<a href="javascript:fileuploader()">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-					</a></label>
+					</a>
+				</label>
 				</dt>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 

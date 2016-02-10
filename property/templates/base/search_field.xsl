@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="search_field">
+
+<!-- $Id$ -->
+<xsl:template name="search_field">
 		<xsl:variable name="select_url">
 			<xsl:value-of select="select_action"/>
 		</xsl:variable>
@@ -67,4 +68,4 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

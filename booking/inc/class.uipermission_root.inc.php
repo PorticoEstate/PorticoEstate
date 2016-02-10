@@ -2,12 +2,18 @@
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_ui_utils');
 
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	class booking_uipermission_root extends booking_uicommon
 	{
 				
 		public 
 			$public_functions = array(
 				'index'				=> true,
+			'query'			 => true,
 				'index_accounts'	=> true,
 				'add'				=> true,
 				'delete'			=> true,
@@ -17,7 +23,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analiza esta linea de permisos self::process_booking_unauthorized_exceptions();
 			
 			$this->set_business_object();
 			
@@ -49,46 +55,14 @@
 		
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
 
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			
-			// if($_SESSION['showall'])
-			// {
-			// 	$active_botton = lang('Show only active');
-			// }else{
-			// 	$active_botton = lang('Show all');
-			// }
-			
-						
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New Root Permission'),
-								'href' => $this->generate_link('add')
-							),
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							// array(
-							// 	'type' => 'link',
-							// 	'value' => $active_botton,
-							// 	'href' => self::link(array('menuaction' => $this->generate_link('active')))
-							// ),
-						)
 					),
 				),
 				'datatable' => array(
@@ -108,28 +82,27 @@
 							'key' => 'actions',
 							'label' => lang('Actions'),
 							'sortable' => false,
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\')', lang('delete')),
+							'formatter'	 => 'JqueryPortico.formatLinkGeneric',
 						),
-						// array(
-						// 	'key' => 'link',
-						// 	'hidden' => true
-						// )
 					)
 				)
 			);
 			
-			if (!$this->bo->allow_delete()) {
+			if(!$this->bo->allow_delete())
+			{
 				unset($data['datatable']['field'][2]); //Delete action
 			}
 			
-			if (!$this->bo->allow_create()) {
-				unset($data['form']['toolbar']['item'][0]); //New button
+			if($this->bo->allow_create())
+			{
+				$data['datatable']['new_item']	= $this->generate_link('add');
 			}
 			
-			self::render_template('datatable', $data);
+			$data['datatable']['actions'][] = array();
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
 
@@ -142,15 +115,17 @@
 					$this->generate_link('delete', array('id' => $permission['id'])),
 				);
 
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$permission['subject_name']."'";
+				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $permission['subject_name'] . "'";
 				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet)) {
-					$permission['subject_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				while($record	 = array_shift($this->db->resultSet))
+				{
+					$permission['subject_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
 				}
 			}
-			return $this->yui_results($permissions);
+			return $this->jquery_results($permissions);
 		}
 		
+
 		public function index_accounts()
 		{
 			return booking_account_ui_utils::yui_accounts();
@@ -159,7 +134,8 @@
 		protected function get_available_roles()
 		{
 			$roles = array();
-			foreach($this->bo->get_roles() as $role) { $roles[$role] = self::humanize($role); }
+			foreach($this->bo->get_roles() as $role)
+			{ $roles[$role] = self::humanize($role);}
 			return $roles;
 		}
 		
@@ -172,7 +148,7 @@
 		
 		// public function show()
 		// {
-		// 	$id = intval(phpgw::get_var('id', 'GET'));
+		// 	$id = (phpgw::get_var('id', 'int');
 		// 	$permission = $this->bo->read_single($id);
 		// 	$this->add_default_display_data($permission);
 		// 	self::render_template('permission_root', array('permission' => $permission));
@@ -195,17 +171,27 @@
 			}
 			
 			self::add_javascript('booking', 'booking', 'permission_root.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($permission);
 			
 			$this->flash_form_errors($errors);
 
-			self::render_template('permission_root_form', array('permission' => $permission));
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Permission Add'), 'link' => '#permission_add');
+			$active_tab		 = 'generic';
+
+			//            $data = array();
+			$permission['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$permission['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('permission_root_form', array('permission' => $permission));
 		}
 		
 		// public function edit()
 		// {
-		// 	$id = intval(phpgw::get_var('id', 'GET'));
+		// 	$id = phpgw::get_var('id', 'int');
 		// 	$permission = $this->bo->read_single($id);
 		// 	
 		// 	$errors = array();
@@ -231,7 +217,7 @@
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			$this->redirect($this->generate_link_params('index'));
 		}

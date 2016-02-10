@@ -142,6 +142,16 @@
 			}
 		}
 
+		public function delete_attrib_group($appname = '', $location = '', $group_id = 0)
+		{
+			if ( !$appname || !$location || !$group_id  )
+			{
+				return;
+			}
+
+			return $this->so->delete_group($appname, $location, $group_id);
+		}
+
 		function get_attribs($appname = '',$location = '', $allrows = null)
 		{
 			if ( !is_null($allrows) )
@@ -170,6 +180,11 @@
 		function resort_attrib($id,$resort)
 		{
 			$this->so->resort($id, $resort, $this->appname, $this->location);
+		}
+
+		function resort_attrib_group($id, $resort)
+		{
+			$this->so->resort_group($id, $resort, $this->appname, $this->location);
 		}
 
 		function save_attrib($attrib)
@@ -406,9 +421,9 @@
 			return $entry_list;
 		}
 
-		function get_attrib_group_list($app,$location, $selected)
+		function get_attrib_group_list($appname,$location, $selected)
 		{
-			$group_list = $this->read_attrib_group($app, $location, true);
+			$group_list = $this->read_attrib_group(array('appname' => $appname, 'location' => $location, 'allrows' => true));
 
 			foreach($group_list as &$group)
 			{
@@ -421,19 +436,71 @@
 			return $group_list;
 		}
 
-		function read_attrib_group($app, $location, $allrows = false)
+		function read_attrib_group($data = array())
 		{
-			if($allrows)
+			if($data['allrows'])
 			{
-				$this->allrows = $allrows;
+				$this->allrows = $data['allrows'];
 			}
 
-			$attrib = $this->so->find_group($app, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+			$attrib = $this->so->find_group($data['appname'], $data['location'], $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
 
 			$this->total_records = $this->so->total_records;
 
 			return $attrib;
 		}
 
+
+		function read_single_attrib_group($appname, $location, $id)
+		{
+			return $this->so->get_group($appname, $location, $id, true);
+		}
+
+		public function save_attrib_group($group, $action = '')
+		{
+			$receipt			 = array();
+
+			if(!isset($group['appname']) || !$group['appname'])
+			{
+				throw new Exception("admin_bocustom::save_attrib_group() - Missing appname in input");
+			}
+
+			if(!isset($group['location']) || !$group['location'])
+			{
+				throw new Exception("admin_bocustom::save_attrib_group() - Missing location in input");
+			}
+
+			if($action == 'edit' && $group['id'])
+			{
+				if($this->so->edit_group($group))
+				{
+					$receipt['message'][] = array('msg' => lang('group has been updated'));
+					return $receipt;
+				}
+
+				$receipt['error'][] = array('msg' => lang('unable to update group'));
+				return $receipt;
+			}
+			else
+			{
+				$id = $this->so->add_group($group);
+				if($id <= 0)
+				{
+					$receipt['error'][] = array('msg' => lang('unable to add group'));
+					return $receipt;
+				}
+				else if($id == -1)
+				{
+					$receipt['id']		 = 0;
+					$receipt['error'][]	 = array('msg' => lang('group already exists, please choose another name'));
+					$receipt['error'][]	 = array('msg' => lang('Attribute group has NOT been saved'));
+					return $receipt;
+				}
+
+				$receipt['id']			 = $id;
+				$receipt['message'][]	 = array('msg' => lang('group has been created'));
+				return $receipt;
+			}
+		}
 
 	}

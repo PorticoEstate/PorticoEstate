@@ -26,9 +26,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-	
 	phpgw::import_class('phpgwapi.yui');
 
 	/**
@@ -36,10 +35,11 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 		
-	class controller_uicontrol_register_to_location extends phpgwapi_uicommon
+	class controller_uicontrol_register_to_location extends phpgwapi_uicommon_jquery
 	{
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -48,11 +48,9 @@
 		var $filter;
 		var $type_id;
 		var $location_code;
-		
 		private $bo;
 		private $bocommon;
 		private $so_control;
-	
 		var $public_functions = array
 		(
 			'index'												=> true,
@@ -70,7 +68,7 @@
 		{
 			parent::__construct();
 			
-			$this->bo					= CreateObject('property.bolocation',true);
+			$this->bo			 = CreateObject('property.bolocation', true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control 			= CreateObject('controller.socontrol');
 			
@@ -90,10 +88,9 @@
 			$this->location_code		= $this->bo->location_code;
 			
 			self::set_active_menu('controller::control::location_for_check_list');
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}	
 	
-
-
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -105,49 +102,30 @@
 			}
 
 			$msgbox_data = array();
-			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if(phpgw::get_var('phpgw_return_as') != 'json' && $receipt	 = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array())
-			);	
-
 			$GLOBALS['phpgw']->translation->add_app('property');
 
-			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$district_list = $this->bocommon->select_district_list('filter', $this->district_id);
 
-			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
+			$part_of_town_list	 = execMethod('property.bogeneric.get_list', array('type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id));
 			$location_type_list = execMethod('property.soadmin_location.select_location_type');
 
-			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($location_type_list ,array ('id'=>'','name'=>lang('select')));
+			array_unshift($district_list, array('id' => '', 'name' => lang('select')));
+			array_unshift($part_of_town_list, array('id' => '', 'name' => lang('select')));
+			array_unshift($location_type_list, array('id' => '', 'name' => lang('select')));
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 
-			$control_area = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
 
 								
 			$control_area_list = array();
@@ -160,17 +138,12 @@
 				);		
 			}
 
-			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
+			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
 			
 					
 			$data = array
 			(
-				'td_count'						=> '""',
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
 				'msgbox_data'					=> $msgbox_data,
 				'control_area_list'		=> array('options' => $control_area_list),
 				'filter_form' 					=> array
@@ -183,62 +156,55 @@
 				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_register_to_location.edit_location'))
 			);
 
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
-
 			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
-			self::add_javascript('controller', 'yahoo', 'register_control.js');
 
-			self::render_template_xsl(array('control_location/register_control_to_location' ), $data);
+			self::render_template_xsl(array('control_location/register_control_to_location'), $data);
 		}
-
-		
 		/*
 		 * Return categories based on chosen location
 		 */
+
 		public function get_location_category()
 		{
 			$type_id = phpgw::get_var('type_id');
 		 	$category_types = $this->bocommon->select_category_list(array(
-																		'format'=>'filter',
+				'format'	 => 'filter',
 																		'selected' => 0,
-																		'type' =>'location',
-																		'type_id' =>$type_id,
-																		'order'=>'descr'
+				'type'		 => 'location',
+				'type_id'	 => $type_id,
+				'order'		 => 'descr'
 																	));
-			$default_value = array ('id'=>'','name'=>lang('no category selected'));
-			array_unshift($category_types,$default_value);
-			return json_encode( $category_types );
+			$default_value	 = array('id' => '', 'name' => lang('no category selected'));
+			array_unshift($category_types, $default_value);
+			return json_encode($category_types);
 		}
-		
 		/*
 		 * Return parts of town based on chosen district
 		 */
+
 		public function get_district_part_of_town()
 		{
 			$district_id = phpgw::get_var('district_id');
-			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',null,$district_id);
-			$default_value = array ('id'=>'','name'=>lang('no part of town'));
-			array_unshift($part_of_town_list,$default_value);
+			$part_of_town_list	 = $this->bocommon->select_part_of_town('filter', null, $district_id);
+			$default_value		 = array('id' => '', 'name' => lang('no part of town'));
+			array_unshift($part_of_town_list, $default_value);
 
-			return json_encode( $part_of_town_list );
+			return json_encode($part_of_town_list);
 		}
-
-
 		/*
 
 		 * Return parts of town based on chosen district
 		 */
+
 		public function get_category_by_entity()
 		{
 			$entity_id		= phpgw::get_var('entity_id');
 			$entity			= CreateObject('property.soadmin_entity');
 
-			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
+			$category_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entity_id));
 
 			return $category_list;
 		}
-
 
 		public function get_location_type_category()
 		{
@@ -246,62 +212,50 @@
 
 			$values  = $this->bocommon->select_category_list(array
 					(
-						'format'=>'filter',
+				'format'	 => 'filter',
 					//	'selected' => $this->cat_id,
-						'type' =>'location',
-						'type_id' =>$location_type,
-						'order'=>'descr'
+				'type'		 => 'location',
+				'type_id'	 => $location_type,
+				'order'		 => 'descr'
 					)
 				);
 
 			return $values;
 		}
 
-
 		public function get_entity_table_def()
 		{
 
 			$location_level		= phpgw::get_var('location_level', 'int', 'REQUEST', 1);
 			$solocation	= CreateObject('property.solocation');
-			$solocation->read(array('dry_run' => true, 'type_id' =>$location_level));
+			$solocation->read(array('dry_run' => true, 'type_id' => $location_level));
 			$uicols = $solocation->uicols;
 
 			$columndef = array();
 
-			/*This one has to defined - chokes otherwise*/
 			$columndef[] = array
 			(
-				'key'		=> 'id',
-				'label'		=> '',
-				'sortable'	=> false,
+				'data'		 => 'select',
+				'title'		 => lang('select'),
+				'orderable'	 => false,
 				'formatter'	=> false,
-				'hidden'	=> true,
-				'className' => false
+				'visible'	 => true,
+				'class'		 => ''
 			);
 
 			$columndef[] = array
 			(
-				'key'		=> 'select',
-				'label'		=> lang('select'),
-				'sortable'	=> false,
+				'data'		 => 'delete',
+				'title'		 => lang('delete'),
+				'orderable'	 => false,
 				'formatter'	=> false,
-				'hidden'	=> false,
-				'className' => ''
-			);
-
-			$columndef[] = array
-			(
-				'key'		=> 'delete',
-				'label'		=> lang('delete'),
-				'sortable'	=> false,
-				'formatter'	=> false,
-				'hidden'	=> false,
-				'className' => ''
+				'visible'	 => true,
+				'class'		 => ''
 			);
 
 			$count_fields = count($uicols['name']);
 
-			for ($i=0;$i<$count_fields;$i++)
+			for($i = 0; $i < $count_fields; $i++)
 			{
 				switch($uicols['datatype'][$i])
 				{
@@ -312,25 +266,45 @@
 						$formatter = $uicols['formatter'][$i];
 				}
 				
-				if( $uicols['name'][$i])
+				if($uicols['name'][$i])
 				{
+					if($uicols['input_type'][$i] == 'hidden')
+					{
+						continue;
+					}
 					$columndef[] = array
 					(
-						'key'		=> $uicols['name'][$i],
-						'label'		=> $uicols['descr'][$i],
-						'sortable'	=> !!$uicols['sortable'][$i],
+						'data'		 => $uicols['name'][$i],
+						'title'		 => $uicols['descr'][$i],
+						'orderable'	 => !!$uicols['sortable'][$i],
 						'formatter'	=> $formatter,
-						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-						'className'	=> $uicols['classname'][$i],
+						'visible'	 => $uicols['input_type'][$i] == 'hidden' ? false : true,
+						'class'		 => $uicols['classname'][$i],
 					);
 				}
 			}
 
-
-//_debug_array($columndef);
+			foreach($columndef as &$entry)
+			{
+				if($entry['formatter'])
+				{
+					$render			 = <<<JS
+					function (dummy1, dummy2, oData) {
+							try {
+								var ret = {$entry['formatter']}("{$entry['data']}", oData);
+							}
+							catch(err) {
+								return err.message;
+							}
+							return ret;
+                         }
+JS;
+					$entry['render'] = $render;
+				}
+				unset($entry['formatter']);
+			}
 			return $columndef;
 		}
-
 
 		public function get_locations()
 		{
@@ -346,42 +320,46 @@
 				'part_of_town_id'	=> $part_of_town_id
 			);
 	
-			$locations = execMethod('property.solocation.get_children',$criteria);
+			$locations = execMethod('property.solocation.get_children', $criteria);
 			return $locations;
 		}
 
-
 		public function query()
 		{
-			$type_id = phpgw::get_var('location_level', 'int', 'REQUEST', 1);
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
-			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
-			$results = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : $results;
+			$search		 = phpgw::get_var('search');
+			$order		 = phpgw::get_var('order');
+			$draw		 = phpgw::get_var('draw', 'int');
+			$columns	 = phpgw::get_var('columns');
+			$control_id	 = phpgw::get_var('control_id', 'int');
 
-			$this->bo->results = $results;			
-            $this->bo->sort =  'ASC';
-            $this->bo->order =  'location_code';
-            $this->bo->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
-
-			$values = $this->bo->read(array('control_registered' => $control_registered,
-					 'control_id' => $control_id,
-					 'type_id'=>$type_id,
-					 'allrows'=>$this->allrows,
-					 'results' => $results
-					)
+			$params = array(
+				'start'				 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'			 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'				 => $search['value'],
+				'order'				 => $columns[$order[0]['column']]['data'],
+				'sort'				 => $order[0]['dir'],
+				'allrows'			 => phpgw::get_var('length', 'int') == -1,
+				'control_registered' => phpgw::get_var('control_registered', 'bool'),
+				'district_id'		 => phpgw::get_var('district_id', 'int'),
+				'cat_id'			 => phpgw::get_var('cat_id', 'int'),
+				'status'			 => phpgw::get_var('status'),
+				'part_of_town_id'	 => phpgw::get_var('part_of_town_id', 'int'),
+				'location_code'		 => phpgw::get_var('location_code'),
+				'type_id'			 => phpgw::get_var('location_level', 'int', 'REQUEST', 1),
+				'control_id'		 => $control_id
 				);
 
+			$values = $this->bo->read($params);
 
-			if($control_id)
-			{
 				foreach($values as &$entry)
 				{
+				$entry['select'] = '';
+				$entry['delete'] = '';
+				if($control_id)
+				{
 					$checked = '';
-					if( $this->so_control->get_control_location($control_id, $entry['location_code']) )
+					if($this->so_control->get_control_location($control_id, $entry['location_code']))
 					{
 						$checked =  'checked = "checked" disabled = "disabled"';
 						$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$entry['location_code']}\">";
@@ -390,19 +368,14 @@
 				}
 			}
 			
-			$data = array(
-				 'ResultSet' => array(
-					'totalResultsAvailable' => $this->bo->total_records,
-					'startIndex' => $this->bo->start, 
-					'sortKey' => 'location_code', 
-					'sortDir' => "ASC", 
-					'Result' => $values,
-					'pageSize' => $results,
-					'activePage' => floor($this->bo->start / $results) + 1
-				)
+			$result_data = array
+				(
+				'results'		 => $values,
+				'total_records'	 => $this->bo->total_records,
+				'draw'			 => phpgw::get_var('draw', 'int')
 			);
 
-			return $data;
+			return $this->jquery_results($result_data);
 		}
 
 		public function edit_location()
@@ -411,7 +384,7 @@
 			{
 				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
 				{
-					$receipt['error'][]=true;
+					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
 				}
 				if(!$receipt['error'])
@@ -436,7 +409,7 @@
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;

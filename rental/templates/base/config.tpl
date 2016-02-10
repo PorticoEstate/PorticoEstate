@@ -1,6 +1,6 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table border="0" align="center" width="85%">
+	<table class="pure-table pure-table-bordered">
 		<tr class="th">
 			<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
 		</tr>
@@ -48,14 +48,14 @@
 			<td>{lang_create_user_based_on_email_group}:</td>
 			<td>
 			 <select name="newsettings[create_user_based_on_email_group]">
-{hook_create_user_based_on_email_group}
+					{hook_create_user_based_on_email_group}
 			 </select>
 			</td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_entity_config_move_in}:</td>
 			<td>
-{hook_entity_config_move_in}
+				{hook_entity_config_move_in}
 			</td>
 		</tr>
 
@@ -63,21 +63,21 @@
 			<td>{lang_category_config_move_in}:</td>
 			<td>
 			 <select name="newsettings[category_config_move_in]">
-{hook_category_config_move_in}
+					{hook_category_config_move_in}
 			 </select>
 			</td>
 		</tr>
 				<tr class="row_off">
 			<td>{lang_entity_config_move_out}:</td>
 			<td>
-{hook_entity_config_move_out}
+				{hook_entity_config_move_out}
 			</td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_category_config_move_out}:</td>
 			<td>
 			 <select name="newsettings[category_config_move_out]">
-{hook_category_config_move_out}
+					{hook_category_config_move_out}
 			 </select>
 			</td>
 		</tr>

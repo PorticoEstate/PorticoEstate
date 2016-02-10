@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bogeneric
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -48,7 +48,7 @@
 				'get_autocomplete'			=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 			= CreateObject('property.sogeneric');
 			$this->custom 		= & $this->so->custom;
@@ -74,7 +74,7 @@
 			$this->type 		= $type;
 			$this->type_id 		= $type_id;
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata($type);
 				$this->use_session = true;
@@ -89,20 +89,19 @@
 			$this->allrows		= isset($allrows) ? $allrows : false;
 
 //			$this->location_info = $this->so->get_location_info($type, $type_id);
-
 		}
 
 		public function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data',"generic_{$data['type']}",$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', "generic_{$data['type']}", $data);
 			}
 		}
 
 		function read_sessiondata($type)
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data',"generic_{$type}");
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', "generic_{$type}");
 
 			//		_debug_array($data);
 
@@ -119,10 +118,10 @@
 		{
 			$type = $type ? $type : $this->type;
 			$type_id = $type_id ? $type_id : $this->type_id;
-			return $this->location_info = $this->so->get_location_info($type,$type_id);
+			return $this->location_info = $this->so->get_location_info($type, $type_id);
 		}
 
-		function column_list($selected='',$allrows='')
+		function column_list($selected = '', $allrows = '')
 		{
 			if(!$selected)
 			{
@@ -130,32 +129,23 @@
 			}
 
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find($this->location_info['acl_app'],$this->location_info['acl_location'], 0, '','','',true, false, $filter);
-			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			$columns = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', '', '', true, false, $filter);
+			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
 			return $column_list;
 		}
 
-		public function read($filter = array())
-		{
-			if (! $filter )
-			{
-				foreach ( $this->location_info['fields'] as $field )
+		public function read($data = array())
 				{
-					if (isset($field['filter']) && $field['filter'])
-					{
-						$filter[$field['name']] = phpgw::get_var($field['name']);
-					}
-				}
-			}
 
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows),$filter);
+			/* $values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			  'allrows'=>$this->allrows),$filter); */
 
+			$values = $this->so->read($data);
 
-			foreach ( $this->location_info['fields'] as $field )
+			foreach($this->location_info['fields'] as $field)
 			{
-				if (isset($field['role']) && $field['role'] == 'parent')
+				if(isset($field['role']) && $field['role'] == 'parent')
 				{
 					foreach($values as &$entry)
 					{
@@ -166,11 +156,11 @@
 						}
 					}
 				}
-				if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
+				if(isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
 				{
 					foreach($values as &$entry)
 					{
-						$entry[$field['name']] = execMethod($field['values_def']['get_single_value'],$entry[$field['name']]);
+						$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], $entry[$field['name']]);
 					}
 				}
 			}
@@ -181,11 +171,11 @@
 			return $values;
 		}
 
-		public function read_single($data=array())
+		public function read_single($data = array())
 		{
 			if(isset($data['location_info']) && $data['location_info']['type'])
 			{
-				$this->get_location_info($data['location_info']['type'],(int)$data['location_info']['type']);
+				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type']);
 				unset($data['location_info']);
 			}
 			$custom_fields = false;
@@ -202,29 +192,29 @@
 			}
 			if($custom_fields)
 			{
-				$values = $this->custom->prepare($values, $this->location_info['acl_app'],$this->location_info['acl_location'], $data['view']);
+				$values = $this->custom->prepare($values, $this->location_info['acl_app'], $this->location_info['acl_location'], $data['view']);
 			}
 			return $values;
 		}
 
-		public function save($data,$action='',$values_attribute = array())
+		public function save($data, $action = '', $values_attribute = array())
 		{
 			if(is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			if ($action=='edit')
+			if($action == 'edit')
 			{
-				if ($data['id'] != '')
+				if($data['id'] != '')
 				{
 
-					$receipt = $this->so->edit($data,$values_attribute);
+					$receipt = $this->so->edit($data, $values_attribute);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add($data,$values_attribute);
+				$receipt = $this->so->add($data, $values_attribute);
 			}
 
 			return $receipt;
@@ -237,7 +227,6 @@
 		 *
 		 * @return array with information to include in forms
 		 */
-
 		public function get_list($data)
 		{
 
@@ -252,19 +241,19 @@
 
 			if(isset($data['add_empty']) && $data['add_empty'])
 			{
-				array_unshift($values,array('id'=> '', 'name'=> lang('select')));
+				array_unshift($values, array('id' => '', 'name' => lang('select')));
 			}
 
 			if(isset($data['selected']) && is_array($data['selected']))
 			{
-				foreach ($values as &$entry)
+				foreach($values as &$entry)
 				{
-					$entry['selected'] = in_array($entry['id'],$data['selected']);
+					$entry['selected'] = in_array($entry['id'], $data['selected']);
 				}
 			}
 			else
 			{
-				foreach ($values as &$entry)
+				foreach($values as &$entry)
 				{
 					$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
 				}
@@ -284,18 +273,17 @@
 
 		public function read_attrib_history($data)
 		{
-			$attrib_data = $this->custom->get($data['app'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
-			$history_type = $this->get_history_type_for_location($data['acl_location']);
-			$historylog = CreateObject('property.historylog',$history_type);
-			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','DESC',$data['id'],$data['attrib_id'], $data['detail_id']);
+			$attrib_data = $this->custom->get($data['appname'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
+			$historylog = CreateObject('property.historylog', $data['appname'], $data['acl_location']);
+			$history_values = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $data['id'], $data['attrib_id']);
 
 			if($attrib_data['column_info']['type'] == 'LB')
 			{
 				foreach($history_values as &$value_set)
 				{
-					foreach ($attrib_data['choice'] as $choice)
+					foreach($attrib_data['choice'] as $choice)
 					{
-						if ($choice['id'] == $value_set['new_value'])
+						if($choice['id'] == $value_set['new_value'])
 						{
 							 $value_set['new_value'] = $choice['value'];
 						}
@@ -308,7 +296,7 @@
 			{
 				foreach($history_values as &$value_set)
 				{
-					 $value_set['new_value'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime( $value_set['new_value']));
+					$value_set['new_value'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($value_set['new_value']));
 				}
 			}
 
@@ -317,15 +305,21 @@
 			return $history_values;
 		}
 
+		public function delete_history_item($data)
+		{
+			$historylog = CreateObject('property.historylog', $data['appname'], $data['acl_location']);
+			$historylog->delete_single_record((int)$data['history_id']);
+		}
+
 		function get_history_type_for_location($acl_location)
 		{
 			switch($acl_location)
 			{
 			case '.vendor':
-				$history_type ='vendor';
+					$history_type = 'vendor';
 				break;
 			default:
-				$history_type = str_replace('.','_',substr($acl_location,-strlen($acl_location)+1));
+					$history_type = str_replace('.', '_', substr($acl_location, -strlen($acl_location) + 1));
 			}
 			if(!$history_type)
 			{
@@ -350,6 +344,11 @@
 					$entry['name'] .= "::{$entry['parent_id']}";
 				}
 			}
-			return array('ResultSet'=> array('Result'=>$values));
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function edit_field($data = array())
+		{
+			return $this->so->edit_field($data);
 		}
 	}

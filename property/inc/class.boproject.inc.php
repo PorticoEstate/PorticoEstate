@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
@@ -35,6 +34,7 @@
 
 	class property_boproject
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -45,7 +45,6 @@
 		var $allrows;
 		var $project_type_id;
 		var $acl_location = '.project';
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -55,7 +54,7 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 					= CreateObject('property.soproject');
 			$this->bocommon 			= & $this->so->bocommon;
@@ -64,7 +63,7 @@
 			$this->interlink 			= & $this->so->interlink;
 			$this->custom 				= & $this->so->custom;
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -72,11 +71,11 @@
 
 
 
-			$default_filter_year=  'all';
+			$default_filter_year = 'all';
 
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']))
 			{
-				$_last_year = date('Y') -1;
+				$_last_year = date('Y') - 1;
 				switch($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'])
 				{
 					case 'current_year':
@@ -158,28 +157,28 @@
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','project',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'project', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','project');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'project');
 
-			$this->start			= isset($data['start'])?$data['start']:'';
-			$this->query			= isset($data['query'])?$data['query']:'';
-			$this->filter			= isset($data['filter'])?$data['filter']:'';
-			$this->sort				= isset($data['sort'])?$data['sort']:'';
-			$this->order			= isset($data['order'])?$data['order']:'';
-			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
-			$this->status_id		= isset($data['status_id'])?$data['status_id']:'';
-			$this->user_id			= isset($data['user_id'])?$data['user_id']:'';
-			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
-			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
-			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
-			$this->project_type_id	= isset($data['project_type_id'])?$data['project_type_id']:'';
+			$this->start = isset($data['start']) ? $data['start'] : '';
+			$this->query = isset($data['query']) ? $data['query'] : '';
+			$this->filter = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort = isset($data['sort']) ? $data['sort'] : '';
+			$this->order = isset($data['order']) ? $data['order'] : '';
+			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->status_id = isset($data['status_id']) ? $data['status_id'] : '';
+			$this->user_id = isset($data['user_id']) ? $data['user_id'] : '';
+			$this->wo_hour_cat_id = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
+			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
+			$this->criteria_id = isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$this->project_type_id = isset($data['project_type_id']) ? $data['project_type_id'] : '';
 		}
 
 		function column_list($selected = array())
@@ -189,15 +188,15 @@
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : '';
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find('property','.project', 0, '','','',true, false, $filter);
-			$columns = array_merge( $columns, $this->get_column_list() );
-			return $this->bocommon->select_multi_list($selected,$columns);
+			$columns = $this->custom->find('property', '.project', 0, '', '', '', true, false, $filter);
+			$columns = array_merge($columns, $this->get_column_list());
+			return $this->bocommon->select_multi_list($selected, $columns);
 		}
 
 		function get_column_list()
 		{
 			$columns = array();
-/*
+			/*
 			$columns['planned_cost'] = array
 				(
 					'id'		=> 'planned_cost',
@@ -206,7 +205,7 @@
 					'formatter'	=> 'myFormatCount2',
 					'classname'	=> 'rightClasss'
 				);
-*/
+			 */
 			$columns['ecodimb'] = array
 				(
 					'id'		=> 'ecodimb',
@@ -271,12 +270,11 @@
 					'id'	=> 3,
 					'name'	=> lang('buffer')
 				),
-
 			);
 			return $this->bocommon->select_list($selected, $values);
 		}
 
-		function select_status_list($format='',$selected='')
+		function select_status_list($format = '', $selected = '')
 		{
 			switch($format)
 			{
@@ -288,30 +286,30 @@
 				break;
 			}
 
-			$status_entries= $this->so->select_status_list();
+			$status_entries = $this->so->select_status_list();
 
-			return $this->bocommon->select_list($selected,$status_entries);
+			return $this->bocommon->select_list($selected, $status_entries);
 		}
 
-		function select_branch_list($selected='')
+		function select_branch_list($selected = '')
 		{
-			$branch_entries= $this->so->select_branch_list();
-			return $this->bocommon->select_list($selected,$branch_entries);
+			$branch_entries = $this->so->select_branch_list();
+			return $this->bocommon->select_list($selected, $branch_entries);
 		}
 
-		function select_branch_p_list($project_id='')
+		function select_branch_p_list($project_id = '')
 		{
 
 			$selected		= $this->so->branch_p_list($project_id);
 			$branch_entries	= $this->so->select_branch_list();
 
-			$j=0;
-			while (is_array($branch_entries) && list(,$branch) = each($branch_entries))
+			$j = 0;
+			while(is_array($branch_entries) && list(, $branch) = each($branch_entries))
 			{
 				$branch_list[$j]['id'] = $branch['id'];
 				$branch_list[$j]['name'] = $branch['name'];
 
-				for ($i=0;$i<count($selected);$i++)
+				for($i = 0; $i < count($selected); $i++)
 				{
 					if($selected[$i]['branch_id'] == $branch['id'])
 					{
@@ -333,7 +331,7 @@
 			return $branch_list;
 		}
 
-		function get_criteria_list($selected='')
+		function get_criteria_list($selected = '')
 		{
 			$criteria = array
 				(
@@ -379,11 +377,10 @@
 					)
 				);
 
-			return $this->bocommon->select_list($selected,$criteria);
+			return $this->bocommon->select_list($selected, $criteria);
 		}
 
-
-		function get_criteria($id='')
+		function get_criteria($id = '')
 		{
 			$criteria = array();
 			$criteria[1] = array
@@ -461,12 +458,12 @@
 			}
 		}
 
-		function select_key_location_list($selected='')
+		function select_key_location_list($selected = '')
 		{
 
-			$key_location_entries= $this->so->select_key_location_list();
+			$key_location_entries = $this->so->select_key_location_list();
 
-			return $this->bocommon->select_list($selected,$key_location_entries);
+			return $this->bocommon->select_list($selected, $key_location_entries);
 		}
 
 		function read($data = array())
@@ -476,14 +473,30 @@
 				$data['allrows'] = true;
 			}
 
-			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
-			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
+//			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
+//				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
+//				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
+//				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
 
-			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
-				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
-				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
+			$project = $this->so->read(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'dry_run' => $data['dry_run'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'start_date' => $this->bocommon->date_to_timestamp($data['start_date']),
+				'end_date' => $this->bocommon->date_to_timestamp($data['end_date']),
+				'district_id' => $this->district_id,
+				'criteria' => $this->get_criteria($this->criteria_id),
+				'project_type_id' => $this->project_type_id,
+				'filter_year' => $this->filter_year
+			));
 
 			$this->total_records = $this->so->total_records;
 
@@ -495,7 +508,7 @@
 			$column_list = $this->get_column_list();
 			$get_vendor_names = false;
 
-			foreach ($custom_cols as $col_id)
+			foreach($custom_cols as $col_id)
 			{
 				if(!ctype_digit($col_id))
 				{
@@ -532,11 +545,11 @@
 
 			$cols_extra		= $this->so->cols_extra;
 
-			foreach ($project as & $entry)
+			foreach($project as & $entry)
 			{
-				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
-				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
-				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'], $dateformat);
 				if($get_vendor_names && isset($entry['vendor_list']) && $entry['vendor_list'])
 				{
 					$vendor_names = array();
@@ -587,19 +600,19 @@
 			}
 
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values['start_date']	= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
-			$values['end_date']		= isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat) : '';
+			$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+			$values['end_date'] = isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat) : '';
 
 			if($values['location_code'])
 			{
 				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
 			}
 
-			if($values['tenant_id']>0)
+			if($values['tenant_id'] > 0)
 			{
-				$tenant_data=$this->bocommon->read_single_tenant($values['tenant_id']);
-				$values['location_data']['tenant_id']= $values['tenant_id'];
-				$values['location_data']['contact_phone']= $tenant_data['contact_phone'];
+				$tenant_data = $this->bocommon->read_single_tenant($values['tenant_id']);
+				$values['location_data']['tenant_id'] = $values['tenant_id'];
+				$values['location_data']['contact_phone'] = $tenant_data['contact_phone'];
 				$values['location_data']['last_name']	= $tenant_data['last_name'];
 				$values['location_data']['first_name']	= $tenant_data['first_name'];
 			}
@@ -614,15 +627,15 @@
 			if($values['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'], $values['p_cat_id']);
 
-				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
-				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_num'] = $values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id'] = $values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id'] = $values['p_cat_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			$values['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
+			$values['origin_data'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
 			$values['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
 			//_debug_array($values);
@@ -644,16 +657,17 @@
 				if(!$contacts)
 				{
 					$contacts = CreateObject('property.sogeneric');
-					$contacts->get_location_info('vendor',false);
+					$contacts->get_location_info('vendor', false);
 				}
 				if(!$attributes)
 				{
-					$attributes = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+					$attributes = $this->custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 				}
-				$vendor	= $contacts->read_single(array('id' => $vendor_id), array('id' => $vendor_id, 'attributes' => $attributes));
+				$vendor = $contacts->read_single(array('id' => $vendor_id), array('id' => $vendor_id,
+					'attributes' => $attributes));
 				foreach($vendor['attributes'] as $attribute)
 				{
-					if($attribute['name']=='org_name')
+					if($attribute['name'] == 'org_name')
 					{
 						$vendor_name[$vendor_id] = $attribute['value'];
 						return $attribute['value'];
@@ -667,7 +681,7 @@
 			$values	= $this->so->project_workorder_data($data);
 
 			$sum_deviation = 0;
-			foreach ($values as &$entry)
+			foreach($values as &$entry)
 			{
 				$sum_deviation+= $entry['deviation'];
 
@@ -686,8 +700,8 @@
 			if($project	= $this->so->read_single($project_id))
 			{
 				$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$project['start_date']			= $GLOBALS['phpgw']->common->show_date($project['start_date'],$dateformat);
-				$project['end_date']			= isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'],$dateformat) : '';
+				$project['start_date'] = $GLOBALS['phpgw']->common->show_date($project['start_date'], $dateformat);
+				$project['end_date'] = isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'], $dateformat) : '';
 			}
 
 			if($project['location_code'])
@@ -695,11 +709,11 @@
 				$project['location_data'] = execMethod('property.solocation.read_single', $project['location_code']);
 			}
 
-			if($project['tenant_id']>0)
+			if($project['tenant_id'] > 0)
 			{
-				$tenant_data=$this->bocommon->read_single_tenant($project['tenant_id']);
-				$project['location_data']['tenant_id']= $project['tenant_id'];
-				$project['location_data']['contact_phone']= $tenant_data['contact_phone'];
+				$tenant_data = $this->bocommon->read_single_tenant($project['tenant_id']);
+				$project['location_data']['tenant_id'] = $project['tenant_id'];
+				$project['location_data']['contact_phone'] = $tenant_data['contact_phone'];
 				$project['location_data']['last_name']	= $tenant_data['last_name'];
 				$project['location_data']['first_name']	= $tenant_data['first_name'];
 			}
@@ -715,19 +729,18 @@
 			return $project;
 		}
 
-
 		function read_record_history($id)
 		{
-			$historylog	= CreateObject('property.historylog','project');
-			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
-			$i=0;
-			foreach ($history_array as $value)
+			$historylog = CreateObject('property.historylog', 'project');
+			$history_array = $historylog->return_array(array('O'), array(), '', '', $id);
+			$i = 0;
+			foreach($history_array as $value)
 			{
 
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user']	= $value['owner'];
 
-				switch ($value['status'])
+				switch($value['status'])
 				{
 				case 'B':
 					$type = lang('Budget');
@@ -787,21 +800,21 @@
 					break;
 				}
 
-				if($value['new_value']=='O')
+				if($value['new_value'] == 'O')
 				{
-					$value['new_value']=lang('Opened');
+					$value['new_value'] = lang('Opened');
 				}
-				if($value['new_value']=='X')
+				if($value['new_value'] == 'X')
 				{
-					$value['new_value']=lang('Closed');
+					$value['new_value'] = lang('Closed');
 				}
 
-				$record_history[$i]['value_action']	= $type?$type:'';
+				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
-				if ($value['status'] == 'A')
+				if($value['status'] == 'A')
 				{
-					if (! $value['new_value'])
+					if(!$value['new_value'])
 					{
 						$record_history[$i]['value_new_value']	= lang('None');
 					}
@@ -809,7 +822,7 @@
 					{
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
-					if (! $value['old_value'])
+					if(!$value['old_value'])
 					{
 						$record_history[$i]['value_old_value']	= '';
 					}
@@ -818,10 +831,10 @@
 						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
 					}
 				}
-				else if ($value['status'] == 'C' || $value['status'] == 'CO')
+				else if($value['status'] == 'C' || $value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
-					if (! $value['old_value'])
+					if(!$value['old_value'])
 					{
 						$record_history[$i]['value_old_value']	= '';
 					}
@@ -830,7 +843,7 @@
 						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
 					}
 				}
-				else if ($value['status'] == 'T' || $value['status'] == 'TO')
+				else if($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category 								= $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value']	= $category[0]['name'];
@@ -840,12 +853,12 @@
 						$record_history[$i]['value_old_value']	= $category[0]['name'];
 					}
 				}
-				else if ($value['status'] == 'B' || $value['status'] == 'BR')
+				else if($value['status'] == 'B' || $value['status'] == 'BR')
 				{
-					$record_history[$i]['value_new_value']	=number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	=number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value'] = number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value'] = number_format($value['old_value'], 0, ',', ' ');
 				}
-				else if ($value['status'] != 'O' && $value['new_value'])
+				else if($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
 					$record_history[$i]['value_old_value']	= $value['old_value'];
@@ -874,23 +887,22 @@
 			$vfs->override_acl = 0;
 
 			$j	= count($files);
-			for ($i=0;$i<$j;$i++)
+			for($i = 0; $i < $j; $i++)
 			{
-				$files[$i]['file_name']=urlencode($files[$i]['name']);
+				$files[$i]['file_name'] = urlencode($files[$i]['name']);
 			}
 			return $files;
 		}
-
 
 		function next_project_id()
 		{
 			return $this->so->next_project_id();
 		}
 
-		function save($project,$action='',$values_attribute = array())
+		function save($project, $action = '', $values_attribute = array())
 		{
 			//_debug_array($project);
-			while (is_array($project['location']) && list(,$value) = each($project['location']))
+			while(is_array($project['location']) && list(, $value) = each($project['location']))
 			{
 				if($value)
 				{
@@ -898,7 +910,7 @@
 				}
 			}
 
-			$project['location_code']=implode("-", $location);
+			$project['location_code'] = implode("-", $location);
 
 			$project['start_date']	=  phpgwapi_datetime::date_to_timestamp($project['start_date']);
 			$project['end_date']	=  phpgwapi_datetime::date_to_timestamp($project['end_date']);
@@ -918,17 +930,17 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach ( $custom_functions as $entry )
+			foreach($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if ( preg_match('/\.\./', $entry['file_name']) )
+				if(preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
-				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && $entry['pre_commit'])
+				if($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
 				{
 					require_once $file;
 				}
@@ -936,7 +948,7 @@
 			unset($entry);
 			reset($custom_functions);
 
-			if ($action=='edit')
+			if($action == 'edit')
 			{
 				try
 				{
@@ -944,7 +956,7 @@
 				}
 				catch(Exception $e)
 				{
-					if ( $e )
+					if($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$receipt['id'] = $project['id'];
@@ -962,7 +974,7 @@
 						}
 						catch(Exception $e)
 						{
-							if ( $e )
+							if($e)
 							{
 								phpgwapi_cache::message_set($e->getMessage(), 'error');
 							}
@@ -975,17 +987,17 @@
 				$receipt = $this->so->add($project, $values_attribute);
 			}
 
-			foreach ( $custom_functions as $entry )
+			foreach($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if ( preg_match('/\.\./', $entry['file_name']) )
+				if(preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
-				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && !$entry['pre_commit'])
+				if($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require_once $file;
 				}
@@ -993,10 +1005,10 @@
 			return $receipt;
 		}
 
-		function add_request($add_request,$id)
+		function add_request($add_request, $id)
 		{
 
-			return $this->so->add_request($add_request,$id);
+			return $this->so->add_request($add_request, $id);
 		}
 
 		function delete($project_id)
@@ -1004,9 +1016,9 @@
 			$this->so->delete($project_id);
 		}
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $coordinator, $new_coordinator, $ids, $paid, $closed_orders, $ecodimb, $transfer_budget, $new_budget, $b_account_id)
 		{
-			return $this->so->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id);
+			return $this->so->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $coordinator, $new_coordinator, $ids, $paid, $closed_orders, $ecodimb, $transfer_budget, $new_budget, $b_account_id);
 		}
 
 		public function get_user_list($selected = 0)
@@ -1033,6 +1045,7 @@
 		{
 			return $this->so->get_periodizations_with_outline();
 		}
+
 		public function get_filter_year_list($selected)
 		{
 			$values = $this->so->get_filter_year_list();
@@ -1049,5 +1062,4 @@
 		{
 			return $this->so->get_missing_project_budget();
 		}
-		
 	}

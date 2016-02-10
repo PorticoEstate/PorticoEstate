@@ -1,12 +1,13 @@
 <?php
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
 
-	class frontend_uidelegates extends frontend_uifrontend
+	class frontend_uidelegates extends frontend_uicommon
 	{	
 		public $public_functions = array
 		(
 			'index'				=> true,
-			'remove_delegate'	=> true
+			'remove_delegate'	=> true,
+			'query'				=> true
 		);
 
 		public function __construct()
@@ -15,8 +16,6 @@
 			parent::__construct();	
 		}
 		
-		
-
 		public function index()
 		{	
 			$config	= CreateObject('phpgwapi.config','rental');
@@ -25,7 +24,7 @@
 			if(isset($_POST['search']))
 			{
 				$username = phpgw::get_var('username');
-				if(!isset($username))
+				if(empty($username))
 				{
 					$msglog['error'][] = array('msg' => lang('lacking_username'));
 				}
@@ -63,9 +62,8 @@
 			{
 				$account_id = phpgw::get_var('account_id');
 				$success = false;
-				if($use_fellesdata){
+				if($use_fellesdata && !empty($account_id)){
 					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-					
 					//Parameter to delegate access to only a single organisational unit
 					$org_unit_id = $this->header_state['selected_org_unit'];
 					$success = true;
@@ -169,7 +167,7 @@
 				}
 			}
 
-			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index', 'location_id' => $this->location_id));
 			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header_state['selected_org_unit']);
 			$delegates_per_user = frontend_bofrontend::get_delegates(null, true);
 			
@@ -178,15 +176,19 @@
 			
 			$config	= CreateObject('phpgwapi.config','frontend');
 			$config->read();
+			
 			$delegateLimit = $config->config_data['delegate_limit'];
 			if(!is_numeric($delegateLimit)) $delegateLimit = 3;
 			$error_message = lang('max_x_delegates',$delegateLimit);
 						
+			//$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$data = array (
 				'header' 		=>	$this->header_state,
-				'tabs' 			=> 	$this->tabs,
-				'delegate_data' => 	array (
+				'section'						=> 	array(
 					'form_action' => $form_action,
+					'tab_selected'				=> $this->tab_selected,
 					'delegate' 	=> $delegates_per_org_unit,
 					'user_delegate' => $delegates_per_user,
 					'number_of_delegates' => isset($number_of_delegates) ? $number_of_delegates : 0 ,
@@ -195,14 +197,15 @@
 					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 					'delegate_limit' => $delegateLimit,
 					'error_message' => $error_message,
-				),
-				
+					'tabs'						=> $this->tabs,
+					'tabs_content'				=> $this->tabs_content
+				)
 			);
 			
-			
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
+			self::render_template_xsl(array( 'delegate', 'datatable_inline', 'frontend'),$data);
 		}
+		
+		public function query() {}
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{

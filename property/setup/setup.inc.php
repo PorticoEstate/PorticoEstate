@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$setup_info['property']['name']			= 'property';
 	$setup_info['property']['version']		= '0.9.17.695';
 	$setup_info['property']['app_order']	= 8;
@@ -30,8 +29,7 @@
 	);
 
 	$setup_info['property']['license']  = 'GPL';
-	$setup_info['property']['description'] =
-	'<div align="left">
+	$setup_info['property']['description'] = '<div align="left">
 
 	<b>FM</b> (Facilities-management) providing:
 	<ol>
@@ -66,8 +64,7 @@
 	<b>Workorder</b> can be used as a general tool for producing tender for bidding - the document is presented as a pdf-document.
 	</div>';
 
-	$setup_info['property']['note'] =
-		'I am also planning to add maintenance planning as events in the calendar app.';
+	$setup_info['property']['note'] = 'I am also planning to add maintenance planning as events in the calendar app.';
 
 
 	$setup_info['property']['tables'] = array(

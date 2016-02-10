@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -17,19 +14,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+	class TestSObimitem extends PHPUnit_Framework_TestCase
+	{
 
-
-
-
-
-
-class TestSObimitem extends PHPUnit_Framework_TestCase
-{
 	private $modelId;
 	private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_item';
 	private $projectGuid;
-	private $projectType= 'ifcprojecttest';
+		private $projectType = 'ifcprojecttest';
 	private $newProjectName = 'New_project name';
 	private $projectXml;
 	private $buildingStorey1Guid;
@@ -49,8 +41,7 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	 * @var integer $fieldID The attribute ID used for all the tests
 	 */
 	protected $fieldID;
-
-	protected static $addedNoteId=0;
+		protected static $addedNoteId = 0;
 	protected $noteContent = "My dummy note content";
 	protected $editedNoteContent = "My edited dummy note content";
 
@@ -66,8 +57,8 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 		$this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
 		$this->modelId = $this->getModelId(bimBimSuite::$modelName);
-		
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -76,50 +67,54 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		
-		 
 	}
 	
-	private function loadXmlVariables() {
+		private function loadXmlVariables()
+		{
 		$xml = simplexml_load_file('testData.xml');
 		$this->projectXml = $xml->project;
-		$this->projectGuid = $this->projectXml->attributes->guid."++"; //add ++ just in case the test data is in use
-		$this->projectType = $this->projectXml['ifcObjectType']."_test"; //add _test in case object type already exists
+			$this->projectGuid = $this->projectXml->attributes->guid . "++"; //add ++ just in case the test data is in use
+			$this->projectType = $this->projectXml['ifcObjectType'] . "_test"; //add _test in case object type already exists
 		
 		$this->buildingStorey1xml = $xml->buildingStoreys->buildingStorey[0];
-		$this->buildingStorey1Guid = $this->buildingStorey1xml->attributes->guid."++";
-		$this->buildingStorey1Type =$this->buildingStorey1xml['ifcObjectType']."_test";
+			$this->buildingStorey1Guid = $this->buildingStorey1xml->attributes->guid . "++";
+			$this->buildingStorey1Type = $this->buildingStorey1xml['ifcObjectType'] . "_test";
 		
 		$this->buildingStorey2xml = $xml->buildingStoreys->buildingStorey[1];
-		$this->buildingStorey2Guid = $this->buildingStorey2xml->attributes->guid."++";
-		$this->buildingStorey2Type =$this->buildingStorey2xml['ifcObjectType']."_test";
+			$this->buildingStorey2Guid = $this->buildingStorey2xml->attributes->guid . "++";
+			$this->buildingStorey2Type = $this->buildingStorey2xml['ifcObjectType'] . "_test";
 		
 		//echo $this->projectXml->();
 	}
 
-
-	public function testDb(){
+		public function testDb()
+		{
 		$this->assertNotNull($this->db);
 	}
 	/*
 	 * @depends testDb
 	 */
-	public function testGetAll() {
+
+		public function testGetAll()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		$bimItems = $sobim->getAll();
 		$this->assertGreaterThanOrEqual(3, count($bimItems));
-		foreach($bimItems as $bimItem) {
+			foreach($bimItems as $bimItem)
+			{
 			/* @var $bimItem BimItem */
 			$this->assertTrue(strlen($bimItem->getType()) > 0);
 			$this->assertTrue(strlen($bimItem->getDatabaseId()) > 0);
 			$this->assertTrue(strlen($bimItem->getGuid()) > 0);
 			$this->assertTrue(strlen($bimItem->getXml()) > 0);
-			
 		}
 	}
 	/*
 	 * @depends testGetAll
 	 */
-	public function testGetBimItem() {
+
+		public function testGetBimItem()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		/* @var $bimItem BimItem */  
 		$bimItem = $sobim->getBimItem($this->projectGuid);
@@ -133,21 +128,27 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	/*
 	 * @depends testGetBimItem
 	 */
-	public function testIfBimItemExists() {
+
+		public function testIfBimItemExists()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		$this->assertTrue($sobim->checkIfBimItemExists($this->projectGuid));
 	}
 	/*
 	 * @depends testIfBimItemExists
 	 */
-	public function testDeleteBimItem() {
+
+		public function testDeleteBimItem()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		$this->assertEquals(1, $sobim->deleteBimItem($this->projectGuid)); // used to be 3
 	}
 	/*
 	 * @depends testDeleteBimItem
 	 */
-	public function testAddBimItem() {
+
+		public function testAddBimItem()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML(), $this->modelId);
 		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
@@ -155,7 +156,9 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	/*
 	 * @depends testAddBimItem
 	 */
-	public function testUpdateBimItem() {
+
+		public function testUpdateBimItem()
+		{
 		$sobim = new sobimitem_impl($this->db);
 		$bimItem = $sobim->getBimItem($this->projectGuid);
 		$xml = new SimpleXMLElement($bimItem->getXml());
@@ -165,34 +168,48 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 		
 		$this->assertTrue($sobim->updateBimItem($bimItem));
 	}
-	public function testExistingAttributeValue() {
+
+		public function testExistingAttributeValue()
+		{
 		$sobim = new sobimitem_impl($this->db);
-		try {
+			try
+			{
 			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "name");
 			$this->assertTrue(in_array($this->newProjectName, $result));
-		} catch (Exception $e) {
+			}
+			catch(Exception $e)
+			{
 			$this->fail($e);
 		}
 	}
-	public function testNonExistingAttributeValue() {
+
+		public function testNonExistingAttributeValue()
+		{
 		$sobim = new sobimitem_impl($this->db);
-		try {
+			try
+			{
 			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "nonExisting");
 			
 			$this->assertFalse(count($result) > 0);
-		} catch (Exception $e) {
+			}
+			catch(Exception $e)
+			{
 			$this->assertTrue(true);
 		}
 	}
 	
-	private function getModelId($modelName) {
+		private function getModelId($modelName)
+		{
 		$resultAlias = "id";
-		$sql = "select id as $resultAlias from ".sobim::bimModelTable." where name = '$modelName'";
-		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+			$sql = "select id as $resultAlias from " . sobim::bimModelTable . " where name = '$modelName'";
+			if(is_null($this->db->query($sql, __LINE__, __FILE__)))
+			{
 			throw new Exception('Error getting model Id');
-		} else {
+			}
+			else
+			{
 			$this->db->next_record();
 			return  $this->db->f($resultAlias);
 		}	
 	}
-}
+	}

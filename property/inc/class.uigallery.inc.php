@@ -24,17 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
-	class property_uigallery
+	class property_uigallery extends phpgwapi_uicommon_jquery
 	{
+
 		var $grants;
 		var $start;
 		var $query;
@@ -43,18 +43,20 @@
 		var $sub;
 		var $currentapp;
 		var $location_info;
-
 		var $public_functions = array
 			(
+			'query' => true,
 				'index'		=> true,
 				'view_file'	=> true
 			);
 
 		function __construct()
 		{
+			parent::__construct();
+
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bogallery',true);
+			$this->bo = CreateObject('property.bogallery', true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -93,7 +95,7 @@
 
 		private function get_external_source($file, $thumb)
 		{
-			$file = ltrim($file,'external_source/');
+			$file = ltrim($file, 'external_source/');
 			
 			$url = "bkbilde.bergen.kommune.no/fotoweb/cmdrequest/rest/PreviewAgent.fwx?ar=5008&rs=0&pg=0&username=FDV&password=FDV123&sr={$file}*";
 			
@@ -106,20 +108,19 @@
 				header('Content-Type: image/jpeg');			
 			}
 
-/*
+			/*
 			$file = 'http://somehosted.com/file.pdf'; // URL to the file
 
 			$contents = file_get_contents($file); // read the remote file
-*/
+			 */
 
-			$ch = curl_init ($url);
+			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-			$raw=curl_exec($ch);
-			curl_close ($ch);
+			curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+			$raw = curl_exec($ch);
+			curl_close($ch);
 			echo $raw;
-
 		}
 		
 		function view_file()
@@ -130,7 +131,8 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
 			$file	= urldecode(phpgw::get_var('file'));
@@ -157,15 +159,15 @@
 			$thumbfile = "$source.thumb";
 
 			// prevent path traversal
-			if ( preg_match('/\.\./', $source) )
+			if(preg_match('/\.\./', $source))
 			{
 				return false;
 			}
 
-			$re_create= false;
+			$re_create = false;
 			if($this->is_image($source) && $thumb && $re_create)
 			{
-				$this->create_thumb($source,$thumbfile,$thumb_size = 100);
+				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
 			}
 			else if($thumb && is_file($thumbfile))
@@ -174,7 +176,7 @@
 			}
 			else if($this->is_image($source) && $thumb)
 			{
-				$this->create_thumb($source,$thumbfile,$thumb_size = 100);
+				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
 			}
 			else
@@ -183,17 +185,17 @@
 			}
 		}
 
-		function create_thumb($source,$dest,$target_height = 100)
+		function create_thumb($source, $dest, $target_height = 100)
 		{
 			$size = getimagesize($source);
 			$width = $size[0];
 			$height = $size[1];
 
-			$target_width = round($width*($target_height/$height));
+			$target_width = round($width * ($target_height / $height));
 
-			if ($width > $height)
+			if($width > $height)
 			{
-				$x = ceil(($width - $height) / 2 );
+				$x = ceil(($width - $height) / 2);
 				$width = $height;
 			}
 			else if($height > $width)
@@ -202,34 +204,34 @@
 				$height = $width;
 			}
 
-			$new_im = ImageCreatetruecolor($target_width,$target_height);
+			$new_im = ImageCreatetruecolor($target_width, $target_height);
 
 			@$imgInfo = getimagesize($source);
 
-			if ($imgInfo[2] == IMAGETYPE_JPEG)
+			if($imgInfo[2] == IMAGETYPE_JPEG)
 			{
 				$im = imagecreatefromjpeg($source);
-				imagecopyresampled($new_im,$im,0,0,$x,$y,$target_width,$target_height,$width,$height);
-				imagejpeg($new_im,$dest,75); // Thumbnail quality (Value from 1 to 100)
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagejpeg($new_im, $dest, 75); // Thumbnail quality (Value from 1 to 100)
 			}
-			else if ($imgInfo[2] == IMAGETYPE_GIF)
+			else if($imgInfo[2] == IMAGETYPE_GIF)
 			{
 				$im = imagecreatefromgif($source);
-				imagecopyresampled($new_im,$im,0,0,$x,$y,$target_width,$target_height,$width,$height);
-				imagegif($new_im,$dest);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagegif($new_im, $dest);
 			}
-			else if ($imgInfo[2] == IMAGETYPE_PNG)
+			else if($imgInfo[2] == IMAGETYPE_PNG)
 			{
 				$im = imagecreatefrompng($source);
-				imagecopyresampled($new_im,$im,0,0,$x,$y,$target_width,$target_height,$width,$height);
-				imagepng($new_im,$dest);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagepng($new_im, $dest);
 			}
 		}
 
 		function is_image($fileName)
 		{
 			// Verifies that a file is an image
-			if ($fileName !== '.' && $fileName !== '..')
+			if($fileName !== '.' && $fileName !== '..')
 			{
 				@$imgInfo = getimagesize($fileName);
 
@@ -240,7 +242,7 @@
 						IMAGETYPE_PNG,
 					);
 
-				if (in_array($imgInfo[2],$imgType))
+				if(in_array($imgInfo[2], $imgType))
 				{
 					return true;
 				}
@@ -248,13 +250,56 @@
 			}
 		}
 
+		private function _get_Filters()
+		{
+			$values_combo_box = array();
+			$combos = array();
+
+			$values_combo_box[0] = $this->bo->get_filetypes();
+			$default_value = array('id' => '', 'name' => lang('no filetype'));
+			array_unshift($values_combo_box[0], $default_value);
+			$combos[] = array
+				(
+				'type' => 'filter',
+				'name' => 'mime_type',
+				'text' => lang('Filetype'),
+				'list' => $values_combo_box[0]
+			);
+
+			$values_combo_box[1] = $this->bo->get_gallery_location();
+			$default_value = array('id' => '', 'name' => lang('no category'));
+			array_unshift($values_combo_box[1], $default_value);
+			$combos[] = array
+				(
+				'type' => 'filter',
+				'name' => 'cat_id',
+				'text' => lang('Category'),
+				'list' => $values_combo_box[1]
+			);
+
+			$values_combo_box[2] = $this->bocommon->get_user_list_right2('filter', 2, $this->user_id, $this->acl_location);
+			array_unshift($values_combo_box[2], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'name' => lang('mine documents')));
+			$default_value = array('id' => '', 'name' => lang('no user'));
+			array_unshift($values_combo_box[2], $default_value);
+			$combos[] = array
+				(
+				'type' => 'filter',
+				'name' => 'user_id',
+				'text' => lang('User'),
+				'list' => $values_combo_box[2]
+			);
+
+			return $combos;
+		}
+
 		function index()
 		{
-			//_debug_array($_REQUEST);
 			$this->acl_location = '.document';
-			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
+			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -265,518 +310,179 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::gallery";
 
-			$this->save_sessiondata();
-
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uigallery.index',
-						'mime_type'		=> $this->mime_type,
-						'cat_id'		=> $this->cat_id,
-						'query'			=> $this->query,
-						'allrows'		=> $this->allrows,
-						'user_id'		=> $this->user_id
-					));
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uigallery.index',"
-					."mime_type:'{$this->mime_type}',"
-					."cat_id:'{$this->cat_id}',"
-					."query:'{$this->query}',"
-					."allrows:'{$this->allrows}',"
-					."user_id:'{$this->user_id}'";
-
-				$values_combo_box = array();
-
-				$values_combo_box[0]  = $this->bo->get_filetypes();
-				$default_value = array ('id'=> '', 'name'=>lang('no filetype'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bo->get_gallery_location();
-				$default_value = array ('id'=> '', 'name'=>lang('no category'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-				array_unshift ($values_combo_box[2],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine documents')));
-				$default_value = array('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction'	=> 'property.uigallery.index',
-								'type'			=> $type,
-								'type_id'		=> $type_id
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //boton 	filetype
-									'id' => 'btn_mime_type',
-									'name' => 'mime_type',
-									'value'	=> lang('filetype'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 3
-								),
-/*
-								array
-								( // boton SAVE
-									'id'	=> 'btn_save',
-									//'name' => 'save',
-									'value'	=> lang('save'),
-									'tab_index' => 7,
-									'type'	=> 'button'
-									),
- */
-								array
-								( //hidden start_date
-									'type' => 'hidden',
-									'id' => 'start_date',
-									'value' => $start_date
-								),
-								array
-								( //hidden end_date
-									'type' => 'hidden',
-									'id' => 'end_date',
-									'value' => $end_date
-								),
-								array
-								(//for link "None",
-									'type'=> 'label_date'
-								),
-								array
-								(//for link "Date search",
-									'type'=> 'link',
-									'id'  => 'btn_data_search',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									array(
-										'menuaction' => 'property.uiproject.date_search'))."','','left=50,top=100,width=350,height=250')",
-										'value' => lang('Date search'),
-										'tab_index' => 6
-									),
-									array
-									( //button     SEARCH
-										'id' => 'btn_search',
-										'name' => 'search',
-										'value'    => lang('search'),
-										'type' => 'button',
-										'tab_index' => 5
-									),
-									array
-									( // TEXT INPUT
-										'name'     => 'query',
-										'id'     => 'txt_query',
-										'value'    => $this->query,
-										'type' => 'text',
-										'onkeypress' => 'return pulsar(event)',
-										'size'    => 28,
-										'tab_index' => 4
-									),
-									array
-									( //place holder for selected events
-										'type'	=> 'hidden',
-										'id'	=> 'event',
-										'value'	=> ''
-									)
-								),
-								'hidden_value' => array
-								(
-									array
-									( //div values  combo_box_0
-										'id' => 'values_combo_box_0',
-										'value'	=> $this->bocommon->select2String($values_combo_box[0])
-									),
-									array
-									( //div values  combo_box_1
-										'id' => 'values_combo_box_1',
-										'value'	=> $this->bocommon->select2String($values_combo_box[1])
-									),
-									array
-									( //div values  combo_box_2
-										'id' => 'values_combo_box_2',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2])
-									)
-								)
-							)
-						)
-					);				
-				$dry_run = true;
+				return $this->query();
 			}
 
-			$values = $this->bo->read($dry_run);
-			$uicols = array();$this->bo->uicols;
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$uicols['name'][]		= 'img_id';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
 
-			$uicols['name'][]		= 'directory';
-			$uicols['descr'][]		= 'directory';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';//'hidden';
-
-			$uicols['name'][]		= 'id';
-			$uicols['descr'][]		= lang('id');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'id';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'date';
-			$uicols['descr'][]		= lang('date');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'date';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'name';
-			$uicols['descr'][]		= lang('name');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'size';
-			$uicols['descr'][]		= lang('size');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'size';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'location_name';
-			$uicols['descr'][]		= lang('location name');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'url';
-			$uicols['descr'][]		= lang('url');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= 'link';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'document_url';
-			$uicols['descr'][]		= lang('document');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= 'link';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'user';
-			$uicols['descr'][]		= lang('user');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'picture';
-			$uicols['descr'][]		= lang('picture');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'show_picture';
-			$uicols['input_type'][]	= '';
-
-/*
-			$uicols['name'][]		= 'select';
-			$uicols['descr'][]		= lang('select');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'myFormatterCheck';
-			$uicols['input_type'][]	= '';
- */
-			$j = 0;
-			$count_uicols_name = count($uicols['name']);
-
-			foreach($values as $entry)
-			{
-				for ($k=0;$k<$count_uicols_name;$k++)
-				{
-					$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-					$datatable['rows']['row'][$j]['column'][$k]['value']			= $entry[$uicols['name'][$k]];
-					if($uicols['format'][$k]=='link' &&  $entry[$uicols['name'][$k]])
-					{
-						$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
-						$datatable['rows']['row'][$j]['column'][$k]['value']		= lang('link');
-						$datatable['rows']['row'][$j]['column'][$k]['link']			= $entry[$uicols['name'][$k]];
-						$datatable['rows']['row'][$j]['column'][$k]['target']	   = '_blank';
-					}
-				}
-				$j++;
-			}
-
-			$datatable['rowactions']['action'] = array();
-/*
-			$parameters = array
-			(
-				'parameter' => array
-				(
-					array
-					(
-						'name'		=> 'location',
-						'source'	=> 'location'
-					),
-					array
-					(
-						'name'		=> 'attrib_id',
-						'source'	=> 'attrib_id'
-					),
-					array
-					(
-						'name'		=> 'item_id',
-						'source'	=> 'location_item_id'
-					),
-					array
-					(
-						'name'		=> 'id',
-						'source'	=> 'id'
-					)
-				)
-			);
-
-			if($this->acl_edit)
-			{
-				$datatable['rowactions']['action'][] = array
-				(
-					'my_name'		=> 'edit',
-					'text' 			=> lang('edit serie'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'		=> 'property.uigallery.edit',
-											'type'				=> $type,
-											'type_id'			=> $type_id,
-											'target'			=> '_blank'
-										)),
-					'parameters'	=> $parameters
-				);
-			}
-
-
-			if($this->acl_delete)
-			{
-				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'delete',
-					'statustext' 	=> lang('delete the actor'),
-					'text'			=> lang('delete'),
-					'confirm_msg'	=> lang('do you really want to delete this entry'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uigallery.delete',
-											'type'			=> $type,
-											'type_id'		=> $type_id
-										)),
-					'parameters'	=> $parameters
-				);
-			}
- */
-			unset($parameters);
-
-			if($this->acl_add)
-			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uigallery.edit',
-							'type'			=> $type,
-							'type_id'		=> $type_id
-						))
-					);
-			}
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= $uicols['input_type'][$i]!='hidden';
-				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
-				$datatable['headers']['header'][$i]['sort_field']   	= $uicols['sort_field'][$i];
-				$datatable['headers']['header'][$i]['format'] 			= $uicols['format'][$i];
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
-			if($dry_run)
-			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
-			}
-			else
-			{
-				$datatable['pagination']['records_returned']= count($values);
-			}
-
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname			= lang('gallery');
-			$function_msg		= lang('list pictures');
-
-			if ( ($this->start == 0) && (!$this->order))
-			{
-				$datatable['sorting']['order'] 			= 'date'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= $this->order; // name of column of Database
-				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			//			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-			{
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-							//			$json_row[$column['name']] = "<a href='{$column['value']}' title='test' id='img-0' rel='colorbox' target='_blank'><img src='{$column['value']}&thumb=1'  alt='name' /></a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if(isset($receipt) && is_array($receipt) && count($receipt))
-			{
-				$json['message'][] = $receipt;
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$appname = lang('gallery');
+			$function_msg = lang('list pictures');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
+			$data = array(
+				'datatable_name' => $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array
+							(
+								'type' => 'date-picker',
+									'id' => 'start_date',
+								'name' => 'start_date',
+								'value' => '',
+								'text' => lang('from')
+								),
+								array
+								(
+								'type' => 'date-picker',
+									'id' => 'end_date',
+								'name' => 'end_date',
+								'value' => '',
+								'text' => lang('to')
+							)
+						)
+					)
+								),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uigallery.index',
+						'mime_type' => $this->mime_type,
+						'cat_id' => $this->cat_id,
+						'user_id' => $this->user_id,
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array(
+						array(
+							'key' => 'img_id',
+							'label' => lang('dummy'),
+							'sortable' => true,
+							'hidden' => true
+								),
+						array(
+							'key' => 'directory',
+							'label' => lang('directory'),
+							'sortable' => false
+									),
+						array(
+							'key' => 'id',
+							'label' => lang('id'),
+							'sortable' => true
+									),
+						array(
+							'key' => 'date',
+							'label' => lang('date'),
+							'sortable' => true
+									),
+						array(
+							'key' => 'name',
+							'label' => lang('name'),
+							'sortable' => false
+								),
+						array(
+							'key' => 'size',
+							'label' => lang('size'),
+							'sortable' => true
+									),
+						array(
+							'key' => 'location_name',
+							'label' => lang('location name'),
+							'sortable' => false
+									),
+						array(
+							'key' => 'url',
+							'label' => lang('url'),
+							'sortable' => false,
+							'formatter' => 'JqueryPortico.formatLinkGallery'
+					),
+						array(
+							'key' => 'document_url',
+							'label' => lang('document'),
+							'sortable' => false,
+							'formatter' => 'JqueryPortico.formatLinkGallery'
+					),
+						array(
+							'key' => 'user',
+							'label' => lang('user'),
+							'sortable' => false
+					),
+						array(
+							'key' => 'picture',
+							'label' => lang('picture'),
+							'sortable' => false,
+							'formatter' => 'JqueryPortico.showPicture'
+						)
+					)
+				)
+			);
+			$filters = $this->_get_Filters();
+			foreach($filters as $filter)
+			{
+				array_unshift($data['form']['toolbar']['item'], $filter);
+			}
 
-			//FIXME: have a look at this one: http://thecodecentral.com/2008/01/01/yui-based-lightbox-final
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
+			$values = $this->bo->read(array('dry_run' => true));
+
+			unset($parameters);
+			$data['datatable']['actions'][] = array();
+
+			self::render_template_xsl('datatable_jquery', $data);
+			}
+
+		public function query()
+			{
+			$start_date = urldecode(phpgw::get_var('start_date'));
+			$end_date = urldecode(phpgw::get_var('end_date'));
+
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			if($start_date && empty($end_date))
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
+			}
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'location_id' => $this->location_id,
+				'user_id' => $this->user_id,
+				'mime_type' => $this->mime_type,
+				'cat_id' => $this->cat_id,
+				'start_date' => $start_date,
+				'end_date' => $end_date
+				);
+
+			$result_objects = array();
+			$result_count = 0;
+
+			$values = $this->bo->read($params);
+
+			if(phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 	}

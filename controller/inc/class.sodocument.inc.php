@@ -25,16 +25,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
+	phpgw::import_class('controller.socommon');
 
-phpgw::import_class('controller.socommon');
+	class controller_sodocument extends controller_socommon
+	{
 
-class controller_sodocument extends controller_socommon
-{
 	public static $ROOT_FOR_DOCUMENTS = 'controller';
 	public static $PROCEDURE_DOCUMENTS = 'procedures';
-	
 	protected static $so;
 	protected $document_types; // Used for caching the values
 	
@@ -43,9 +42,10 @@ class controller_sodocument extends controller_socommon
 	 * 
 	 * @return the storage object
 	 */
+
 	public static function get_instance()
 	{
-		if (self::$so == null)
+			if(self::$so == null)
 		{
 			self::$so = CreateObject('controller.sodocument');
 		}
@@ -80,8 +80,8 @@ class controller_sodocument extends controller_socommon
 		// Search for based on search type
 		if($search_for)
 		{
-			$search_for = $this->marshal($search_for,'field');
-			$like_pattern = "'%".$search_for."%'";
+				$search_for		 = $this->marshal($search_for, 'field');
+				$like_pattern	 = "'%" . $search_for . "%'";
 			$like_clauses = array();
 			switch($search_type)
 			{
@@ -105,17 +105,17 @@ class controller_sodocument extends controller_socommon
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "controller_document.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "controller_document.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 		}
 		
 		if(isset($filters['procedure_id']))
 		{
-			$filter_clauses[] = "controller_document.procedure_id = {$this->marshal($filters['procedure_id'],'int')}";
+				$filter_clauses[] = "controller_document.procedure_id = {$this->marshal($filters['procedure_id'], 'int')}";
 		}
 		
 		if(isset($filters['document_type']) && $filters['document_type'] != 'all')
 		{
-			$filter_clauses[] = "controller_document.type_id = {$this->marshal($filters['document_type'],'int')}";
+				$filter_clauses[] = "controller_document.type_id = {$this->marshal($filters['document_type'], 'int')}";
 		}
 		
 		if(count($filter_clauses))
@@ -147,7 +147,7 @@ class controller_sodocument extends controller_socommon
 		{
 			$sort_field = 'controller_document_types.title';
 		}
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 		
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -155,16 +155,16 @@ class controller_sodocument extends controller_socommon
 
 	function populate(int $document_id, &$document)
 	{
-		$document_id = (int) $document_id;
+			$document_id = (int)$document_id;
 
 		if($document == null)
 		{
 			$document = new controller_document($document_id);
-			$document->set_title($this->unmarshal($this->db->f('document_title',true),'string'));
-			$document->set_description($this->unmarshal($this->db->f('description',true),'string'));
-			$document->set_name($this->unmarshal($this->db->f('name',true),'string'));
-			$document->set_type($this->unmarshal($this->db->f('type_title',true),'string'));
-			$document->set_procedure_id($this->unmarshal($this->db->f('procedure_id'),'int'));
+				$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
+				$document->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$document->set_name($this->unmarshal($this->db->f('name', true), 'string'));
+				$document->set_type($this->unmarshal($this->db->f('type_title', true), 'string'));
+				$document->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 		}
 		return $document;
 	}
@@ -179,22 +179,22 @@ class controller_sodocument extends controller_socommon
 			'type_id'
 		);
 		
-		$procedure_id = $this->marshal($document->get_procedure_id(),'int');
+			$procedure_id	 = $this->marshal($document->get_procedure_id(), 'int');
 		$procedure_id = $procedure_id > 0 ? $procedure_id : 'NULL';
 		
 		
 		$values = array(
-			$this->marshal($document->get_title(),'string'),
-			$this->marshal($document->get_description(),'string'),
-			$this->marshal($document->get_name(),'string'),
+				$this->marshal($document->get_title(), 'string'),
+				$this->marshal($document->get_description(), 'string'),
+				$this->marshal($document->get_name(), 'string'),
 			$procedure_id,
-			$this->marshal($document->get_type_id(),'int')
+				$this->marshal($document->get_type_id(), 'int')
 		);
 		
-		$query = "INSERT INTO controller_document (".join(',', $cols).") VALUES (".join(',',$values).")";
+			$query	 = "INSERT INTO controller_document (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($query);
 		
-		$document_id = $this->db->get_last_insert_id('controller_document','id');
+			$document_id = $this->db->get_last_insert_id('controller_document', 'id');
 		$document->set_id($document_id);
 		return $document;
 	}
@@ -203,15 +203,15 @@ class controller_sodocument extends controller_socommon
 	{
 		$id = intval($document->get_id());
 
-		$name_value_pairs = array (
-			"title = {$this->marshal($document->get_title(),'string')}",
-			"description = {$this->marshal($document->get_description(),'string')}",
-			"name = {$this->marshal($document->get_name(),'string')}",
-			"procedure_id = {$this->marshal($document->get_procedure_id(),'int')}",
-			"type_id = {$this->marshal($document->get_type_id(),'int')}"
+			$name_value_pairs = array(
+				"title = {$this->marshal($document->get_title(), 'string')}",
+				"description = {$this->marshal($document->get_description(), 'string')}",
+				"name = {$this->marshal($document->get_name(), 'string')}",
+				"procedure_id = {$this->marshal($document->get_procedure_id(), 'int')}",
+				"type_id = {$this->marshal($document->get_type_id(), 'int')}"
 		);
 		
-		$query = "UPDATE controller_document SET ".join(',',$name_value_pairs)." WHERE id = {$id}";
+			$query	 = "UPDATE controller_document SET " . join(',', $name_value_pairs) . " WHERE id = {$id}";
 		$result = $this->db->query($query);
 		return $result != null;
 	}
@@ -231,7 +231,6 @@ class controller_sodocument extends controller_socommon
 			$this->document_types = $results;
 		}
 		return $this->document_types;
-		
 	}
 	
 	public function list_document_types()
@@ -241,13 +240,13 @@ class controller_sodocument extends controller_socommon
 		$results = array();
 		while($this->db->next_record())
 		{
-			$result[] = $this->db->f('id');
-			$result[] = $this->db->f('title', true);
-			$results[] = $result;
+				$results[] = array
+					(
+					'id'	 => $this->db->f('id'),
+					'title'	 => $this->db->f('title', true)
+				);
 		}
-		//$document_type_list = $results;
 		return $results;
-		
 	}
 	
 	private function get_document_path(string $document_type, $id)
@@ -268,7 +267,8 @@ class controller_sodocument extends controller_socommon
 		
 		$path = "/{$root_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -277,7 +277,8 @@ class controller_sodocument extends controller_socommon
 		
 		$path .= "/{$type_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -286,7 +287,8 @@ class controller_sodocument extends controller_socommon
 		
 		$path .= "/{$id}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
+			if(!$vfs->file_exists($dir))
+			{
 			if(!$vfs->mkdir($dir))
 			{
 				return false;
@@ -299,7 +301,7 @@ class controller_sodocument extends controller_socommon
 	public function write_document_to_vfs(string $document_type, $temporary_name, $id, $name)
 	{
 	
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 		
 		if(!$path)
 		{
@@ -324,7 +326,7 @@ class controller_sodocument extends controller_socommon
 	
 	public function read_document_from_vfs(string $document_type, $id, $name)
 	{
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 
 		$path .= "/{$name}";
 		
@@ -343,7 +345,7 @@ class controller_sodocument extends controller_socommon
 	
 	public function delete_document_from_vfs(string $document_type, $id, $name)
 	{
-		$path = $this->get_document_path($document_type,$id);
+			$path = $this->get_document_path($document_type, $id);
 
 		$path .= "/{$name}";
 		
@@ -371,4 +373,4 @@ class controller_sodocument extends controller_socommon
 		}
 		return false;		
 	}
-}
+	}

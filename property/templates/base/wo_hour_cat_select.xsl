@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="wo_hour_cat_select">
+
+<!-- $Id$ -->
+<xsl:template name="wo_hour_cat_select">
 		<select name="wo_hour_cat_id" onMouseout="window.status='';return true;">
 			<xsl:attribute name="onMouseover">
 				<xsl:text>window.status='</xsl:text>
@@ -11,10 +12,10 @@
 			</option>
 			<xsl:apply-templates select="wo_hour_cat_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="wo_hour_cat_list">
+<!-- New template-->
+<xsl:template match="wo_hour_cat_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -30,4 +31,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

@@ -25,7 +25,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-	phpgw::import_class('frontend.uifrontend');
+	phpgw::import_class('frontend.uicommon');
 
 	/**
 	 * Controller
@@ -33,7 +33,7 @@
 	 * @package Frontend
 	 */
 
-	class frontend_uicontroller extends frontend_uifrontend
+	class frontend_uicontroller extends frontend_uicommon
 	{
 
 		public $public_functions = array
@@ -112,12 +112,14 @@
 			$data = array
 			(
 				'header'		=>$this->header_state,
+				'section'		=>array(
 				'tabs'			=> $this->tabs,
 				'menu'			=> $this->menu,
 				'controller'	=> array('location_code'=> $this->location_code)
+					)
 			);
-			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','controller'));
+			self::render_template_xsl(array( 'controller', 'datatable_inline', 'frontend'),  $data);
 		}
+		
+		public function query() {}
 	}

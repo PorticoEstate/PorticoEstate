@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="abook_form">
-		<xsl:apply-templates select="abook_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="abook_data">
+<!-- $Id$ -->
+<xsl:template name="abook_form">
+		<xsl:apply-templates select="abook_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="abook_data">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function abook_lookup()
@@ -31,4 +32,4 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

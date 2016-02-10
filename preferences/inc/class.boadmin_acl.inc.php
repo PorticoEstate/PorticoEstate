@@ -144,10 +144,10 @@
 			$location_list = array();
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $this->acl_app, $allow_c_attrib, $allow_c_functions);
-
 			$i = 0;
 			foreach ( $locations as $loc_id => $loc_descr )
 			{
+				$name = "{$loc_id} [{$loc_descr}]";
 				$sel_loc = '';
 				if ($loc_id == $selected)
 				{
@@ -157,7 +157,8 @@
 				$location_list[$i] = array
 				(
 					'id'		=> $loc_id,
-					'descr'		=> "{$loc_id} [{$loc_descr}]",
+					'name'		=> $name,
+					'descr'		=> $name,
 					'selected'	=> $sel_loc
 				);
 

@@ -7,7 +7,7 @@
 	<script>
 	  
 		$(document).ready(function() {
-			var requestUrl = $("#view_control_details").attr("href");
+			var requestUrl = $("#view_control_details").attr("value");
 			load_tab(requestUrl);
 		});
 	
@@ -33,22 +33,25 @@
 				return false;
 			});
 			
-			$("#view_control_details").click(function(){
-				var requestUrl = $(this).attr("href");
+			$("#view_control_details").on("click", function(e){
+				e.preventDefault();
+				var requestUrl = $(this).attr("value");
 				load_tab(requestUrl);
 			
 				return false;
 			});
 			
-			$("#view_control_items").click(function(){
-				var requestUrl = $(this).attr("href");
+			$("#view_control_items").on("click", function(e){
+				e.preventDefault();
+				var requestUrl = $(this).attr("value");
 				load_tab(requestUrl);
 			
 				return false;
 			});
 			
-			$("#view_procedures").click(function(){
-				var requestUrl = $(this).attr("href");
+			$("#view_procedures").on("click", function(e){
+				e.preventDefault();
+				var requestUrl = $(this).attr("value");
 				load_tab(requestUrl);
 			
 				return false;
@@ -56,6 +59,7 @@
 		});
 		
 		function load_tab(requestUrl){
+			requestUrl += '&amp;phpgw_return_as=stripped_html';
 			$.ajax({
 				  type: 'POST',
 				  url: requestUrl,
@@ -73,35 +77,35 @@
 				
 	<div class="tab_menu">
 		<a id="view_control_details" class="active">
-			<xsl:attribute name="href">
+			<xsl:attribute name="value">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
-				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<!--xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text-->
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			Kontrolldetaljer
 		</a>
 		<a id="view_control_items">
-			<xsl:attribute name="href">
+			<xsl:attribute name="value">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
-				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<!--xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text-->
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			Kontrollpunkter
 		</a>
 		<a id="view_procedures">
-			<xsl:attribute name="href">
+			<xsl:attribute name="value">
 				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
 				<xsl:text>&amp;location_code=</xsl:text>
 				<xsl:value-of select="location_array/location_code"/>
-				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<!--xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text-->
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			Prosedyrer

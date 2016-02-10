@@ -24,14 +24,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_solocation
 	{
 
@@ -69,19 +68,19 @@
 
 			$type_app = execMethod('property.soentity.get_type_app');
 
-			foreach ($type_app as $type => $app)
+			foreach($type_app as $type => $app)
 			{
-				if( !$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
+				if(!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
 				{
 					continue;
 				}
 
 				$sql = "SELECT * FROM fm_{$type}_category where loc_link=1";
 
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 
 				$category = array();
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
 					$category[] = array
 						(
@@ -98,7 +97,7 @@
 					if($entry['is_eav'])
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id($app, ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");	
-						$this->db->query("SELECT id as bim_type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+						$this->db->query("SELECT id as bim_type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 						$this->db->next_record();
 						$bim_type = (int)$this->db->f('bim_type');
 						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_code {$condition} AND type = {$bim_type}";					
@@ -108,13 +107,13 @@
 						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$condition}";
 					}
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 					if($this->db->f('hits'))
 					{
 						$entity['related'][] = array
 							(
-								'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+							'entity_link' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 									'menuaction'	=> 'property.uientity.index',
 									'entity_id'		=> $entry['entity_id'],
@@ -131,56 +130,60 @@
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code {$condition}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code, 'status_id' => 'all')),
+					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index',
+						'query' => $location_code, 'status_id' => 'all')),
 						'name'		=> lang('Helpdesk') . " [{$hits}]",
 						'descr'		=> lang('Helpdesk')
 					);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code {$condition}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index','query'=> $location_code)),
+					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.index',
+						'query' => $location_code)),
 						'name'		=> lang('request') . " [{$hits}]",
 						'descr'		=> lang('request')
 					);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_project WHERE location_code {$condition}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index','query'=> $location_code, 'criteria_id' => 4)), //criteria 4 is for location_code
+					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index',
+						'query' => $location_code, 'criteria_id' => 4)), //criteria 4 is for location_code
 						'name'		=> lang('project') . " [{$hits}]",
 						'descr'		=> lang('project')
 					);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_gab_location WHERE location_code {$condition}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
 				$hits = $this->db->f('hits');
 				$entity['gab'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigab.index','location_code'=> $location_code)),
+					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigab.index',
+						'location_code' => $location_code)),
 						'name'		=> lang('gabnr') . " [{$hits}]",
 						'descr'		=> lang('gab info')
 					);
@@ -191,15 +194,15 @@
 			. " {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id"
 			. " WHERE location_code {$condition}"
 			. " GROUP BY fm_s_agreement.id";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$hits = $this->db->num_rows();
 
-			if( $hits )
+			if($hits)
 			{
 				$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.index',
-																'location_code'=> $location_code)),
+					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.index',
+						'location_code' => $location_code)),
 						'name'			=> lang('service agreement') . " [{$hits}]",
 						'descr'			=> lang('service agreement')
 					);
@@ -216,17 +219,17 @@
 			}
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 
-			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
+			$sql = "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
 				. " $this->join phpgw_cust_choice ON"
 				. " phpgw_cust_attribute.location_id= phpgw_cust_choice.location_id AND"
 				. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id"
 				. " WHERE phpgw_cust_attribute.column_name='status'"
 				. " AND phpgw_cust_choice.location_id={$location_id} ORDER BY phpgw_cust_choice.id";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$status = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$status[] = array
 					(
@@ -243,7 +246,7 @@
 			$this->db->query("SELECT id,descr FROM fm_owner_category  ORDER BY descr ");
 
 			$i = 0;
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$owner_type[$i]['id']			= $this->db->f('id');
 				$owner_type[$i]['name']		= stripslashes($this->db->f('descr'));
@@ -257,7 +260,7 @@
 //			$this->db->query("SELECT fm_owner.* ,fm_owner_category.descr as category FROM fm_owner $this->join fm_owner_category on fm_owner.category=fm_owner_category.id  ORDER BY descr ");
 			$this->db->query("SELECT *  FROM fm_owner ORDER BY org_name ");
 			$i = 0;
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$owners[$i]['id']			= $this->db->f('id');
 				$owners[$i]['name']		= stripslashes($this->db->f('org_name')); // . ' ['. $this->db->f('category') . ']';
@@ -270,7 +273,7 @@
 		{
 			if(!$type_id)
 			{
-				$type_id = count(explode('-',$location_code));
+				$type_id = count(explode('-', $location_code));
 			}
 			$this->db->query("SELECT location_code FROM fm_location{$type_id} WHERE location_code='{$location_code}'");
 
@@ -284,7 +287,7 @@
 			$query					= isset($data['query']) ? $data['query'] : '';
 			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 			$order					= isset($data['order']) ? $data['order'] : '';
-			$cat_id					= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
 			$type_id				= isset($data['type_id']) ? $data['type_id'] : '';
 			$lookup_tenant			= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
 			$district_id			= isset($data['district_id']) ? $data['district_id'] : '';
@@ -300,7 +303,7 @@
 			$control_registered		= isset($data['control_registered']) ? $data['control_registered'] : '';
 			$control_id				= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 
-			if (!$type_id)
+			if(!$type_id)
 			{
 				return;
 			}
@@ -310,7 +313,7 @@
 				$order = '';
 			}
 
-			switch ($order)
+			switch($order)
 			{
 				case 'undefined':
 					$order = '';
@@ -322,7 +325,7 @@
 			}
 
 
-			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact);
+			$sql = $this->socommon->fm_cache('sql_' . $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 
 //			$choice_table = 'phpgw_cust_choice';
@@ -347,7 +350,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 
-				for ($i=0; $i<($type_id); $i++)
+				for($i = 0; $i < ($type_id); $i++)
 				{
 					$uicols['input_type'][]		= 'text';
 					$uicols['name'][]			= "loc{$location_types[$i]['id']}";
@@ -363,9 +366,9 @@
 
 				$uicols['datatype'][$type_id] = 'I'; // correct the last one
 
-				$list_info = $location_types[($type_id-1)]['list_info'];
+				$list_info = $location_types[($type_id - 1)]['list_info'];
 
-				for ($i=1; $i<($type_id+1); $i++)
+				for($i = 1; $i < ($type_id + 1); $i++)
 				{
 					if(isset($list_info[$i]) && $list_info[$i])
 					{
@@ -373,8 +376,8 @@
 						$cols_return[] 				= "loc{$i}_name";
 						$uicols['input_type'][]		= 'text';
 						$uicols['name'][]			= "loc{$i}_name";
-						$uicols['descr'][]			= $location_types[($i-1)]['name'] . ' ' . lang('name');
-						$uicols['statustext'][]		= $location_types[($i-1)]['name'] . ' ' . lang('name');
+						$uicols['descr'][] = $location_types[($i - 1)]['name'] . ' ' . lang('name');
+						$uicols['statustext'][] = $location_types[($i - 1)]['name'] . ' ' . lang('name');
 						$uicols['exchange'][]		= true;
 						$uicols['align'][] 			= 'left';
 						$uicols['datatype'][]		= 'V';
@@ -382,20 +385,20 @@
 					}
 				}
 
-				$joinmethod ='';
+				$joinmethod = '';
 				$paranthesis = '';
-				for ($j=($type_id-1); $j>0; $j--)
+				for($j = ($type_id - 1); $j > 0; $j--)
 				{
 					$joinmethod .= " {$this->join} fm_location{$j}";
 
 					$paranthesis .='(';
 
 					$on = 'ON';
-					for ($i=($j); $i>0; $i--)
+					for($i = ($j); $i > 0; $i--)
 					{
-						$joinmethod .= " $on (fm_location" . ($j+1) .".loc{$i} = fm_location{$j}.loc{$i})";
+						$joinmethod .= " $on (fm_location" . ($j + 1) . ".loc{$i} = fm_location{$j}.loc{$i})";
 						$on = 'AND';
-						if($i==1)
+						if($i == 1)
 						{
 							$joinmethod .= ")";
 						}
@@ -458,17 +461,18 @@
 					$uicols['datatype'][]		= 'V';
 					$uicols['formatter'][]		= '';
 
-					$sub_query_tenant=1;
-					$this->socommon->fm_cache('sub_query_tenant_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$sub_query_tenant);
+					$sub_query_tenant = 1;
+					$this->socommon->fm_cache('sub_query_tenant_' . $type_id . '_' . $lookup_tenant . '_' . $lookup, $sub_query_tenant);
 				}
 
 				$config_count	= count($config);
-				for ($i=0;$i<$config_count;$i++)
+				for($i = 0; $i < $config_count; $i++)
 				{
-					if (($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] ==1))
+					if(($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] == 1))
 					{
-						if(!$lookup_tenant && $config[$i]['column_name']=='tenant_id')
+						if(!$lookup_tenant && $config[$i]['column_name'] == 'tenant_id')
 						{
+
 						}
 						else
 						{
@@ -477,17 +481,17 @@
 						}
 					}
 
-					if (($config[$i]['location_type'] <= $type_id)  && ($config[$i]['query_value'] ==1))
+					if(($config[$i]['location_type'] <= $type_id) && ($config[$i]['query_value'] == 1))
 					{
 
-						if($config[$i]['column_name']=='street_id')
+						if($config[$i]['column_name'] == 'street_id')
 						{
 
-							$sub_query_street=1;
-							$this->socommon->fm_cache('sub_query_street_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$sub_query_street);
+							$sub_query_street = 1;
+							$this->socommon->fm_cache('sub_query_street_' . $type_id . '_' . $lookup_tenant . '_' . $lookup, $sub_query_street);
 
 							//list address at sublevels beneath address-level
-							if($location_types[($type_id-1)]['list_address'])
+							if($location_types[($type_id - 1)]['list_address'])
 							{
 								$cols.= ',fm_streetaddress.descr as street_name';
 								$cols_return[] 				= 'street_name';
@@ -540,7 +544,7 @@
 				}
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter");
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
 					$cols .= ",fm_location{$type_id}." . $this->db->f('column_name');
 				}
@@ -567,29 +571,27 @@
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
 					$uicols['formatter'][]		= '';
-
 				}
 
 				$from = " FROM {$paranthesis} fm_location{$type_id} ";
 
 				$sql = "SELECT $cols $from $joinmethod";
 
-				$this->socommon->fm_cache('sql_'. $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact ,$sql);
-				$this->socommon->fm_cache('uicols_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact,$uicols);
-				$this->socommon->fm_cache('cols_return_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact,$cols_return);
-
+				$this->socommon->fm_cache('sql_' . $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact, $sql);
+				$this->socommon->fm_cache('uicols_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact, $uicols);
+				$this->socommon->fm_cache('cols_return_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact, $cols_return);
 			}
 			else
 			{
-				$uicols = $this->socommon->fm_cache('uicols_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
-				$cols_return = $this->socommon->fm_cache('cols_return_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
+				$uicols = $this->socommon->fm_cache('uicols_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
+				$cols_return = $this->socommon->fm_cache('cols_return_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
 
-				$sub_query_tenant	= $this->socommon->fm_cache('sub_query_tenant_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup);
-				$sub_query_street	= $this->socommon->fm_cache('sub_query_street_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup);
+				$sub_query_tenant = $this->socommon->fm_cache('sub_query_tenant_' . $type_id . '_' . $lookup_tenant . '_' . $lookup);
+				$sub_query_street = $this->socommon->fm_cache('sub_query_street_' . $type_id . '_' . $lookup_tenant . '_' . $lookup);
 			}
 
 			$filtermethod = '';
-			$where= 'WHERE';
+			$where = 'WHERE';
 			if($control_registered)
 			{
 				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
@@ -600,16 +602,16 @@
 
 			//---------------------start custom user cols
 
-			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup] : '';
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup] : '';
 			$user_column_filter = '';
-			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+			if(isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 			{
-				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
+				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $user_columns) . '))';
 			}
 
 			$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 			$i	= count($uicols['name']);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$input_type = 'text';
 				if($this->db->f('lookup_form') == 1 && $this->db->f('list') != 1)
@@ -642,7 +644,7 @@
 					);
 
 				//TODO: move alignment to ui
-				switch ($this->db->f('datatype'))
+				switch($this->db->f('datatype'))
 				{
 				case 'V':
 				case 'C':
@@ -679,7 +681,7 @@
 			$this->uicols = $uicols;
 
 
-			if ($order && !$order =='fm_location1.loc1')
+			if($order && !$order == 'fm_location1.loc1')
 			{
 				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
@@ -687,9 +689,9 @@
 			{
 				$ordermethod = " ORDER BY fm_location{$type_id}.loc1 {$sort}";
 
-				if ($type_id > 1)
+				if($type_id > 1)
 				{
-					for ($i=2;$i<($type_id+1);$i++)
+					for($i = 2; $i < ($type_id + 1); $i++)
 					{
 						$ordermethod .= ",fm_location{$type_id}.loc{$i} ASC";
 					}
@@ -702,22 +704,22 @@
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE fm_location{$type_id}.loc1 in ('" . implode("','", $access_location) . "')";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($cat_id)
+			if($cat_id)
 			{
 				$cat_id = $this->db->db_addslashes($cat_id);
 				$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
-				$where= 'AND';
+				$where = 'AND';
 			}
 			else
 			{
 				$filtermethod .= " $where  (fm_location{$type_id}.category !='99' OR fm_location{$type_id}.category IS NULL)";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($filter > 0)
+			if($filter > 0)
 			{
 				//cramirez.r@ccfirst.com 16/09/08 	validacion is added to avoid notice
 				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
@@ -729,14 +731,14 @@
 				{
 					$filtermethod .= " $where fm_owner.category='$filter' ";
 				}
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 
-			if ($status > 0)
+			if($status > 0)
 			{
 				$filtermethod .= " $where fm_location{$type_id}.status = {$status} ";
-				$where= 'AND';
+				$where = 'AND';
 			}
 			else
 			{
@@ -745,37 +747,37 @@
 				//				$where= 'AND';
 			}
 
-			if ($district_id > 0)
+			if($district_id > 0)
 			{
 				$filtermethod .= " $where fm_part_of_town.district_id='$district_id' ";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($part_of_town_id > 0)
+			if($part_of_town_id > 0)
 			{
 				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($location_code)
+			if($location_code)
 			{
 				$filtermethod .= " {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
-				$where= 'AND';			
+				$where = 'AND';
 			}
 
 			if($filter_role_on_contact && $role_id)
 			{
-				$time = time() +1;
+				$time = time() + 1;
 				$filtermethod .= " {$where} active_from < {$time} AND (active_to > {$time} OR active_to = 0)"
-					." AND expired_on IS NULL AND fm_responsibility_role.id ={$role_id} AND contact_id = {$filter_role_on_contact}";
-				$where= 'AND';
+				. " AND expired_on IS NULL AND fm_responsibility_role.id ={$role_id} AND contact_id = {$filter_role_on_contact}";
+				$where = 'AND';
 			}
-			else if ($filter_role_on_contact)
+			else if($filter_role_on_contact)
 			{
-				$time = time() +1;
+				$time = time() + 1;
 				$filtermethod .= " {$where} active_from < {$time} AND (active_to > {$time} OR active_to = 0)"
-					." AND expired_on IS NULL AND contact_id = {$filter_role_on_contact}";
-				$where= 'AND';	
+				. " AND expired_on IS NULL AND contact_id = {$filter_role_on_contact}";
+				$where = 'AND';
 			}
 
 			$_querymethod = array();
@@ -785,10 +787,10 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$query = str_replace(",",'.',$query);
+				$query = str_replace(",", '.', $query);
 				if(stristr($query, '.'))
 				{
-					$query_part = explode(".",$query);
+					$query_part = explode(".", $query);
 					$_querymethod[] = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
 				}
 				//		else
@@ -806,7 +808,7 @@
 					}
 
 					$query_name = '';
-					for ($i=1;$i<($type_id+1);$i++)
+					for($i = 1; $i < ($type_id + 1); $i++)
 					{
 						$query_name .= "OR loc{$i}_name {$this->like} '%{$query}%'";
 					}
@@ -822,16 +824,16 @@
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
-					while ($this->db->next_record())
+					while($this->db->next_record())
 					{
-						switch ($this->db->f('datatype'))
+						switch($this->db->f('datatype'))
 						{
 						case 'V':
 						case 'email':
 						case 'CH':
 							if(!$criteria_id)
 							{
-								$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$_querymethod[] = "fm_location{$type_id}." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
 								$__querymethod = array(); // remove block
 							}
 							break;
@@ -840,12 +842,12 @@
 							if(!$criteria_id)
 							{
 								$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON (fm_location{$type_id}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
-									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
-									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+									. " AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									. " AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') . ')';
 
-								$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
-									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
-									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+									$_querymethod[] = "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									. " AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+									. " AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
 
 								$__querymethod = array(); // remove block
 							}
@@ -853,7 +855,7 @@
 						case 'I':
 							if(ctype_digit($query) && !$criteria_id)
 							{
-								$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = " . (int)$query;
+									$_querymethod[] = "fm_location{$type_id}." . $this->db->f('column_name') . " = " . (int)$query;
 								$__querymethod = array(); // remove block
 							}
 							break;
@@ -881,13 +883,13 @@
 						default:
 							if(!$criteria_id)
 							{
-								$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = '{$query}'";
+									$_querymethod[] = "fm_location{$type_id}." . $this->db->f('column_name') . " = '{$query}'";
 								$__querymethod = array(); // remove block
 							}
 						}
 					}
 				}
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 			foreach($_joinmethod_datatype as $_joinmethod)
@@ -898,9 +900,9 @@
 			$querymethod = '';
 
 			$_querymethod = array_merge($__querymethod, $_querymethod);
-			if ($_querymethod)
+			if($_querymethod)
 			{
-				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				$querymethod = " $where (" . implode(' OR ', $_querymethod) . ')';
 				unset($_querymethod);
 			}
 
@@ -911,16 +913,16 @@
 //			$this->db->next_record();
 //			$this->total_records = $this->db->f('cnt');
 
-			$cache_info = phpgwapi_cache::session_get('property',"location{$type_id}_listing_metadata");
+			$cache_info = phpgwapi_cache::session_get('property', "location{$type_id}_listing_metadata");
 
-			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
+			if(!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
 			{
 				$cache_info = array();
 			}
 			
 			if(!$cache_info)
 			{
-				$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
+				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' from')), __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$cache_info = array
@@ -928,7 +930,7 @@
 					'total_records'		=> $this->db->f('cnt'),
 					'sql_hash'			=> md5($sql)
 				);
-				phpgwapi_cache::session_set('property',"location{$type_id}_listing_metadata",$cache_info);
+				phpgwapi_cache::session_set('property', "location{$type_id}_listing_metadata", $cache_info);
 			}
 
 			$this->total_records	= $cache_info['total_records'];
@@ -941,13 +943,13 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
 
 				$_fetch_single = false;
-/*
+				/*
 				if($this->total_records > 200)
 				{
 					$_fetch_single = true;
@@ -956,18 +958,18 @@
 				{
 					$_fetch_single = false;
 				}
-*/
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				 */
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__, false, $_fetch_single);
 				unset($_fetch_single);
 			}
 
-			$j=0;
+			$j = 0;
 
-			$location_count 	= $type_id-1;
+			$location_count = $type_id - 1;
 
 			$cols_return = $uicols['name'];
 			$dataset = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				foreach($cols_return as $key => $field)
 				{
@@ -975,7 +977,7 @@
 						(
 							'value'		=> $this->db->f($field),
 							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id']:''
+						'attrib_id' => isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id'] : ''
 						);
 				}
 				$j++;				
@@ -987,7 +989,7 @@
 			return $values;
 		}
 
-		function generate_sql($type_id,$cols='',$cols_return='',$uicols='',$read_single='')
+		function generate_sql($type_id, $cols = '', $cols_return = '', $uicols = '', $read_single = '')
 		{
 			$joinmethod = " fm_location{$type_id}";
 
@@ -995,7 +997,7 @@
 
 	//		$cols .= "fm_location" . ($type_id) .".location_code";
 			$cols_return[] = 'location_code';
-			for ($i=0; $i<($type_id); $i++)
+			for($i = 0; $i < ($type_id); $i++)
 			{
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
@@ -1006,7 +1008,7 @@
 			}
 
 
-			if($type_id !=1)
+			if($type_id != 1)
 			{
 //				$cols.= ',fm_location1.loc1_name as loc1_name';
 //				$cols_return[] 				= 'loc1_name';
@@ -1017,18 +1019,18 @@
 			}
 
 			$paranthesis = '';
-			for ($j=($type_id-1); $j>0; $j--)
+			for($j = ($type_id - 1); $j > 0; $j--)
 			{
-				$joinmethod .= " $this->join fm_location". ($j);
+				$joinmethod .= " $this->join fm_location" . ($j);
 
 				$paranthesis .='(';
 
 				$on = 'ON';
-				for ($i=($j); $i>0; $i--)
+				for($i = ($j); $i > 0; $i--)
 				{
-					$joinmethod .= " {$on} (fm_location" . ($j+1) . ".loc{$i}  = fm_location{$j}.loc{$i})";
+					$joinmethod .= " {$on} (fm_location" . ($j + 1) . ".loc{$i}  = fm_location{$j}.loc{$i})";
 					$on = 'AND';
-					if($i==1)
+					if($i == 1)
 					{
 						$joinmethod .= ")";
 					}
@@ -1038,28 +1040,28 @@
 			$config = $this->soadmin_location->read_config('');
 
 			$config_count	= count($config);
-			for ($i=0;$i<$config_count;$i++)
+			for($i = 0; $i < $config_count; $i++)
 			{
-				if (($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] ==1))
+				if(($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] == 1))
 				{
-					if($config[$i]['column_name']=='tenant_id' || $config[$i]['column_name']=='street_id')
+					if($config[$i]['column_name'] == 'tenant_id' || $config[$i]['column_name'] == 'street_id')
 					{
-						$join=$this->left_join;
+						$join = $this->left_join;
 					}
 					else
 					{
-						$join =$this->join;
+						$join = $this->join;
 					}
 
-					$joinmethod .= " $join  " . $config[$i]['reference_table'] . " ON ( fm_location" . $config[$i]['location_type'] . "." . $config[$i]['column_name'] . "=" . $config[$i]['reference_table'] . ".".$config[$i]['reference_id']."))";
+					$joinmethod .= " $join  " . $config[$i]['reference_table'] . " ON ( fm_location" . $config[$i]['location_type'] . "." . $config[$i]['column_name'] . "=" . $config[$i]['reference_table'] . "." . $config[$i]['reference_id'] . "))";
 
 					$paranthesis .='(';
 				}
 
-				if ($config[$i]['location_type'] <= $type_id)
+				if($config[$i]['location_type'] <= $type_id)
 				{
 
-					if($config[$i]['column_name']=='street_id')
+					if($config[$i]['column_name'] == 'street_id')
 					{
 						$cols.= ',fm_streetaddress.descr as street_name';
 						$cols_return[] 				= 'street_name';
@@ -1081,9 +1083,8 @@
 						$uicols['name'][]			= $config[$i]['column_name'];
 						$uicols['descr'][]			= lang($config[$i]['input_text']);
 						$uicols['statustext'][]		= lang($config[$i]['input_text']);
-
 					}
-					else if($config[$i]['column_name']=='tenant_id')
+					else if($config[$i]['column_name'] == 'tenant_id')
 					{
 						$cols.= ',fm_tenant.id as tenant_id';
 						$cols_return[] 				= 'tenant_id';
@@ -1112,7 +1113,6 @@
 						$uicols['name'][]			= 'contact_phone';
 						$uicols['descr'][]			= lang('contact phone');
 						$uicols['statustext'][]		= lang('contact phone');
-
 					}
 					else
 					{
@@ -1134,7 +1134,7 @@
 			if($read_single)
 			{
 				$cols .= ",fm_location{$type_id}.*";
-				foreach ($fm_location_cols as $location_col)
+				foreach($fm_location_cols as $location_col)
 				{
 					if($location_col['lookup_form'] == 1)
 					{
@@ -1144,11 +1144,11 @@
 			}
 			else
 			{
-				foreach ($fm_location_cols as $location_col)
+				foreach($fm_location_cols as $location_col)
 				{
 					if($location_col['list'] == 1)
 					{
-						$cols .= ",fm_location" . ($type_id) .".".$location_col['column_name'];
+						$cols .= ",fm_location" . ($type_id) . "." . $location_col['column_name'];
 						$cols_return[] 			= $location_col['column_name'];
 						$uicols['input_type'][]		= 'text';
 						$uicols['name'][]		= $location_col['column_name'];
@@ -1169,22 +1169,22 @@
 
 			$sql = "SELECT $cols $from $joinmethod";
 
-			$this->socommon->fm_cache('sql_single_'. $type_id,$sql);
-			$this->socommon->fm_cache('uicols_single_'. $type_id,$uicols);
-			$this->socommon->fm_cache('cols_return_single_'. $type_id,$cols_return);
+			$this->socommon->fm_cache('sql_single_' . $type_id, $sql);
+			$this->socommon->fm_cache('uicols_single_' . $type_id, $uicols);
+			$this->socommon->fm_cache('cols_return_single_' . $type_id, $cols_return);
 
 			return $sql;
 		}
 
-		function read_single($location_code='',$values = array(), $skip_attribs = false)
+		function read_single($location_code = '', $values = array(), $skip_attribs = false)
 		{
 			//cache result
 			static $location = array();
 
-			$location_array = explode('-',$location_code);
-			$type_id= count($location_array);
+			$location_array = explode('-', $location_code);
+			$type_id = count($location_array);
 
-			if (!$type_id)
+			if(!$type_id)
 			{
 				return;
 			}
@@ -1194,9 +1194,9 @@
 				return $location[$location_code];
 			}
 
-			if(!$skip_attribs && (!isset($values['attributes']) || ! $values['attributes']))
+			if(!$skip_attribs && (!isset($values['attributes']) || !$values['attributes']))
 			{
-				$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['attributes'] = $this->custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			$cols = "fm_location{$type_id}.category as cat_id";
@@ -1204,17 +1204,17 @@
 			$cols_return[] 	= 'cat_id';
 			$cols_return[] 	= 'category_name';
 
-			for ($i=1;$i<($type_id);$i++)
+			for($i = 1; $i < ($type_id); $i++)
 			{
-				$cols.= ',fm_location' . $i .'.loc' . $i .'_name';
-				$cols_return[] 				= 'loc' . $i .'_name';
+				$cols.= ',fm_location' . $i . '.loc' . $i . '_name';
+				$cols_return[] = 'loc' . $i . '_name';
 			}
-			$cols_return[] 				= 'loc' . $type_id .'_name';
+			$cols_return[] = 'loc' . $type_id . '_name';
 
 			//	$cols.= 'fm_location' . $type_id . '.change_type,';
 			$cols_return[] 				= 'change_type';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'loc' . $type_id .'_name';
+			$uicols['name'][] = 'loc' . $type_id . '_name';
 			$uicols['descr'][]			= lang('name');
 			$uicols['statustext'][]		= lang('name');
 
@@ -1225,17 +1225,17 @@
 			$uicols['descr'][]			= lang('remark');
 			$uicols['statustext'][]		= lang('remark');
 
-			$sql = $this->socommon->fm_cache('sql_single_'. $type_id);
+			$sql = $this->socommon->fm_cache('sql_single_' . $type_id);
 
 			if(!$sql)
 			{
-				$sql	= $this->generate_sql($type_id,$cols,$cols_return,$uicols,true);
+				$sql = $this->generate_sql($type_id, $cols, $cols_return, $uicols, true);
 			}
 			else
 			{
 
-				$this->uicols	= 	$this->socommon->fm_cache('uicols_single_'. $type_id);
-				$this->cols_return	= 	$this->socommon->fm_cache('cols_return_single_'. $type_id);
+				$this->uicols = $this->socommon->fm_cache('uicols_single_' . $type_id);
+				$this->cols_return = $this->socommon->fm_cache('cols_return_single_' . $type_id);
 			}
 
 			//FIXME: Make sure all locations are linked to a valid category
@@ -1243,21 +1243,21 @@
 
 			$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 //			_debug_array($sql);
 			$cols_return	= $this->cols_return;
 
 			if($this->db->next_record())
 			{
-				foreach ($cols_return as $col)
+				foreach($cols_return as $col)
 				{
-					$values[$col] = $this->db->f($col,true);
+					$values[$col] = $this->db->f($col, true);
 				}
 
-				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				if(isset($values['attributes']) && is_array($values['attributes']))
 				{
-					foreach ( $values['attributes'] as &$attr )
+					foreach($values['attributes'] as &$attr)
 					{
 						$attr['value'] 	= $this->db->f($attr['column_name']);
 						if($attr['lookup_form'])
@@ -1275,23 +1275,23 @@
 			return $values;
 		}
 
-		function add($location,$values_attribute = array(),$type_id='')
+		function add($location, $values_attribute = array(), $type_id = '')
 		{
 			$receipt = array();
-			foreach ($location as $input_name => $value)
+			foreach($location as $input_name => $value)
 			{
 				if($value)
 				{
-					if($input_name=='cat_id')
+					if($input_name == 'cat_id')
 					{
-						$input_name='category';
+						$input_name = 'category';
 					}
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
 			}
 
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if(isset($values_attribute) AND is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -1315,7 +1315,7 @@
 			$vals[] = $this->account;
 			$vals[] = time();
 			$vals[] = $this->account;
-			$vals[] = date($this->db->datetime_format(),time());
+			$vals[] = date($this->db->datetime_format(), time());
 
 			$cols	= implode(",", $cols);
 			$vals	= "'" . implode("','", $vals)  . "'";
@@ -1324,20 +1324,20 @@
 			$sql	= "INSERT INTO fm_location{$type_id} ($cols) VALUES ($vals)";
 
 			//echo $sql;
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$sql	= "INSERT INTO fm_locations (level, location_code, loc1) VALUES ({$type_id}, '{$location['location_code']}', '{$location['loc1']}')";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->update_location_name($location['location_code']);
 
 			$this->db->transaction_commit();
-			$receipt['message'][] = array('msg'=>lang('Location %1 has been saved',$location['location_code']));
+			$receipt['message'][] = array('msg' => lang('Location %1 has been saved', $location['location_code']));
 
 			$GLOBALS['phpgw']->config->read();
 			// Keep it at level 1 for the moment
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'] && $type_id == 1)
 			{
-				$acl_location = ".location.{$type_id}." . str_replace("-",'.',$location['location_code']);
+				$acl_location = ".location.{$type_id}." . str_replace("-", '.', $location['location_code']);
 				if(!$GLOBALS['phpgw']->locations->get_id('property', $acl_location))
 				{
 					$GLOBALS['phpgw']->locations->add($acl_location, $location["loc{$type_id}_name"], 'property');
@@ -1348,22 +1348,22 @@
 			return $receipt;
 		}
 
-		function edit($location,$values_attribute=array(),$type_id='')
+		function edit($location, $values_attribute = array(), $type_id = '')
 		{
 			$receipt = array();
-			while (is_array($location) && list($input_name,$value) = each($location))
+			while(is_array($location) && list($input_name, $value) = each($location))
 			{
 				if($value)
 				{
-					if($input_name=='cat_id')
+					if($input_name == 'cat_id')
 					{
-						$input_name='category';
+						$input_name = 'category';
 					}
 					$value_set[$input_name]	= $this->db->db_addslashes($value);
 				}
 			}
 
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if(isset($values_attribute) AND is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -1376,15 +1376,15 @@
 			}
 
 			$value_set['modified_by'] = $this->account;
-			$value_set['modified_on'] = date($this->db->datetime_format(),time());
+			$value_set['modified_on'] = date($this->db->datetime_format(), time());
 
 			$value_set	= $this->db->validate_update($value_set);
 
 			$sql = "SELECT * FROM fm_location{$type_id} WHERE location_code ='{$location['location_code']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$metadata = $this->db->metadata('fm_location'.$type_id);
+			$metadata = $this->db->metadata('fm_location' . $type_id);
 			if(isset($this->db->adodb))
 			{
 				$i = 0;
@@ -1394,51 +1394,51 @@
 					$i++;
 				}
 				$metadata = $metadata_temp;
-				unset ($metadata_temp);
+				unset($metadata_temp);
 			}
 
-			for ($i=0; $i<count($metadata); $i++)
+			for($i = 0; $i < count($metadata); $i++)
 			{
 				$cols[] = $metadata[$i]['name'];
 
-				if (ctype_digit($this->db->f($metadata[$i]['name'])))
+				if(ctype_digit($this->db->f($metadata[$i]['name'])))
 				{
 					$vals[] = $this->db->f($metadata[$i]['name']);
 				}
 				else
 				{
-					$vals[] = $this->db->db_addslashes($this->db->f($metadata[$i]['name'],true));
+					$vals[] = $this->db->db_addslashes($this->db->f($metadata[$i]['name'], true));
 				}
 			}
 
 			$cols[] = 'exp_date';
-			$vals[] = date($this->db->datetime_format(),time());
+			$vals[] = date($this->db->datetime_format(), time());
 
-			$cols	=implode(",", $cols);
+			$cols = implode(",", $cols);
 			$vals = $this->db->validate_insert($vals);
 
 			$this->db->transaction_begin();
 			$sql = "INSERT INTO fm_location{$type_id}_history ($cols) VALUES ($vals)";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$sql = "UPDATE fm_location{$type_id} SET {$value_set} WHERE location_code='{$location['location_code']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->update_location_name($location['location_code']);
 
 			$this->db->transaction_commit();
-			$receipt['message'][] = array('msg'=>lang('Location %1 has been edited',$location['location_code']));
+			$receipt['message'][] = array('msg' => lang('Location %1 has been edited', $location['location_code']));
 			$receipt['location_code'] = $location['location_code'];
 			return $receipt;
 		}
 
-		function delete($location_code )
+		function delete($location_code)
 		{
-			$location_array = explode('-',$location_code);
-			$type_id= count($location_array);
+			$location_array = explode('-', $location_code);
+			$type_id = count($location_array);
 			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM fm_location$type_id WHERE location_code='{$location_code}'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_locations WHERE location_code='{$location_code}'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_location$type_id WHERE location_code='{$location_code}'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_locations WHERE location_code='{$location_code}'", __LINE__, __FILE__);
 			$this->db->transaction_commit();
 		}
 
@@ -1446,66 +1446,66 @@
 		{
 			$location_types	= $this->soadmin_location->select_location_type();
 
-			$m= count($location_types);
+			$m = count($location_types);
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category='99'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_location" . $m . " set	status= 2  WHERE category='99'", __LINE__, __FILE__);
 
-			for ($type_id=$m; $type_id>1; $type_id--)
+			for($type_id = $m; $type_id > 1; $type_id--)
 			{
-				$parent_table = 'fm_location' . ($type_id-1);
+				$parent_table = 'fm_location' . ($type_id - 1);
 
 				$joinmethod .= " $this->join $parent_table";
 
 				$paranthesis .='(';
 
 				$on = 'ON';
-				for ($i=($type_id-1); $i>0; $i--)
+				for($i = ($type_id - 1); $i > 0; $i--)
 				{
-					$joinmethod .= " $on (fm_location" . ($type_id) .".loc" . ($i). ' = '.$parent_table . ".loc" . ($i) . ")";
+					$joinmethod .= " $on (fm_location" . ($type_id) . ".loc" . ($i) . ' = ' . $parent_table . ".loc" . ($i) . ")";
 					$on = 'AND';
-					if($i==1)
+					if($i == 1)
 					{
 						$joinmethod .= ")";
 					}
 				}
 
 				$sql = "SELECT $parent_table.location_code ,count(*) as count_99  FROM $paranthesis fm_location$type_id $joinmethod where fm_location$type_id.status=2 group by $parent_table.location_code ";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
-					$outdated[$this->db->f('location_code')]['count_99']=$this->db->f('count_99');
+					$outdated[$this->db->f('location_code')]['count_99'] = $this->db->f('count_99');
 				}
 
 				$sql = "SELECT $parent_table.location_code ,count(*) as count_all  FROM $paranthesis fm_location$type_id $joinmethod group by $parent_table.location_code ";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
+				$this->db->query($sql, __LINE__, __FILE__);
+				while($this->db->next_record())
 				{
-					if( $outdated[$this->db->f('location_code')]['count_99']==$this->db->f('count_all'))
+					if($outdated[$this->db->f('location_code')]['count_99'] == $this->db->f('count_all'))
 					{
-						$update[]=array('location_code'	=> $this->db->f('location_code'));
+						$update[] = array('location_code' => $this->db->f('location_code'));
 					}
 				}
 
-				$j=0;
-				for ($i=0; $i<count($update); $i++)
+				$j = 0;
+				for($i = 0; $i < count($update); $i++)
 				{
 
-					$sql = "SELECT status  FROM $parent_table WHERE location_code= '" . $update[$i]['location_code'] ."'";
+					$sql = "SELECT status  FROM $parent_table WHERE location_code= '" . $update[$i]['location_code'] . "'";
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 
-					if($this->db->f('status')!=2)
+					if($this->db->f('status') != 2)
 					{
 						$j++;
-						$this->db->query("UPDATE fm_location" . ($type_id-1). " set	status= 2  WHERE location_code= '" . $update[$i]['location_code'] ."'",__LINE__,__FILE__);
+						$this->db->query("UPDATE fm_location" . ($type_id - 1) . " set	status= 2  WHERE location_code= '" . $update[$i]['location_code'] . "'", __LINE__, __FILE__);
 					}
 				}
 
-				$receipt['message'][]=array('msg'=>lang('%1 location %2 has been updated to not active of %3 already not active',$j,$location_types[($type_id-2)]['descr'],count($update)));
+				$receipt['message'][] = array('msg' => lang('%1 location %2 has been updated to not active of %3 already not active', $j, $location_types[($type_id - 2)]['descr'], count($update)));
 
 				unset($outdated);
 				unset($update);
@@ -1518,10 +1518,9 @@
 			return $receipt;
 		}
 
-
 		function update_location()
 		{
-			if ( $this->db->get_transaction() )
+			if($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -1537,17 +1536,17 @@
 
 			//perform an update on all location_codes on all levels to make sure they are consistent and unique
 			$locations = array();
-			for ($level=1;$level<($levels+1);$level++)
+			for($level = 1; $level < ($levels + 1); $level++)
 			{
 				$sql = "SELECT * from fm_location{$level}";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$i = 0;
 				while($this->db->next_record())
 				{
 					$location_code = array();
 					$where = 'WHERE';
 					$locations[$level][$i]['condition'] = '';
-					for ($j=1;$j<($level+1);$j++)
+					for($j = 1; $j < ($level + 1); $j++)
 					{
 						$loc = $this->db->f("loc{$j}");
 						$location_code[] = $loc;
@@ -1557,20 +1556,19 @@
 					$locations[$level][$i]['new_values']['location_code'] = implode('-', $location_code);
 					$i++;
 				}
-
 			}
 
 			foreach($locations as $level => $location_at_leve)
 			{
-				foreach($location_at_leve as $location )
+				foreach($location_at_leve as $location)
 				{
 					$sql = "UPDATE fm_location{$level} SET location_code = '{$location['new_values']['location_code']}' {$location['condition']}";
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
 
 			$locations = array();
-			for ($i=1;$i<($levels+1);$i++)
+			for($i = 1; $i < ($levels + 1); $i++)
 			{
 				$this->db->query("SELECT fm_location{$i}.location_code, fm_location{$i}.loc1 FROM fm_location{$i} {$this->left_join} fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
 				while($this->db->next_record())
@@ -1585,11 +1583,11 @@
 			}
 
 			$receipt = array();
-			foreach ($locations as $location)
+			foreach($locations as $location)
 			{
 				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES ({$location['level']}, '{$location['location_code']}', '{$location['loc1']}')");
 
-				$receipt['message'][]=array('msg'=>lang('location %1 added at level %2', $location['location_code'], $location['level']));
+				$receipt['message'][] = array('msg' => lang('location %1 added at level %2', $location['location_code'], $location['level']));
 			}
 
 			// Check ACL-location - currently only level 1
@@ -1603,7 +1601,7 @@
 				{
 					$acl_locations[] = array
 						(
-							'id'	=> ".location.{$level}." . str_replace("-",'.',$this->db->f('location_code')),
+						'id' => ".location.{$level}." . str_replace("-", '.', $this->db->f('location_code')),
 							'name'	=> $this->db->f("loc{$level}_name", true)
 						);
 				}
@@ -1613,7 +1611,7 @@
 					if(!$GLOBALS['phpgw']->locations->get_id('property', $acl_location['id']))
 					{
 						$GLOBALS['phpgw']->locations->add($acl_location['id'], $acl_location['name'], 'property');
-						$receipt['message'][]=array('msg'=>lang('%1 added as ACL-location %2', $acl_location['name'], $acl_location['id']));
+						$receipt['message'][] = array('msg' => lang('%1 added as ACL-location %2', $acl_location['name'], $acl_location['id']));
 					}
 				}
 			}
@@ -1622,7 +1620,7 @@
 
 			$locations = array();
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$locations[] = $this->db->f('location_code');
 			}
@@ -1632,15 +1630,15 @@
 				$this->update_location_name($location_code);
 			}
 
-			if ( !$this->global_lock )
+			if(!$this->global_lock)
 			{
-				if( $this->db->transaction_commit() )
+				if($this->db->transaction_commit())
 				{
 					return $receipt;
 				}
 				else
 				{
-					return $receipt['error'][]=array('msg'=>lang('update failed'));
+					return $receipt['error'][] = array('msg' => lang('update failed'));
 				}
 			}
 		}
@@ -1652,7 +1650,7 @@
 			$location_arr = explode('-', $location_code);
 			$loc_name_arr = array();
 			$i = 1;
-			foreach ($location_arr as $_part)
+			foreach($location_arr as $_part)
 			{
 				$loc_name_arr[] = $location_array["loc{$i}_name"];
 				$i++;
@@ -1661,28 +1659,28 @@
 			$this->db->query("UPDATE fm_locations SET name = '{$name}' WHERE location_code = '{$location_code}'");
 		}
 
-		function read_summary($data='')
+		function read_summary($data = '')
 		{
 			if(is_array($data))
 			{
 				$filter	=  isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
-				$type_id =  isset($data['type_id']) && $data['type_id'] ?(int)$data['type_id'] : 0;
-				$district_id =  isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id']:0;
-				$part_of_town_id =  isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id']:0;
+				$type_id = isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
+				$district_id = isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
+				$part_of_town_id = isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id'] : 0;
 			}
 
 			if(!$type_id)
 			{
-				$type_id=4;
+				$type_id = 4;
 			}
 
 			$entity_table = "fm_location{$type_id}";
 			$cols_return = array();
 			$paranthesis = '';
 
-			$cols= "count(*) as number, $entity_table.category, $entity_table"."_category.descr as type";
+			$cols = "count(*) as number, $entity_table.category, $entity_table" . "_category.descr as type";
 
-			$groupmethod = " GROUP by $entity_table.category , $entity_table"."_category.descr";
+			$groupmethod = " GROUP by $entity_table.category , $entity_table" . "_category.descr";
 
 			$uicols['name'][]	= 'type';
 			$uicols['descr'][]	= lang('type');
@@ -1690,7 +1688,7 @@
 
 			$filtermethod = '';
 			$where = 'WHERE';
-			if($district_id>0)
+			if($district_id > 0)
 			{
 				$uicols['name'][]	= 'district_id';
 				$uicols['descr'][]	= lang('district_id');
@@ -1701,7 +1699,7 @@
 				$where = 'AND';
 			}
 
-			if($part_of_town_id>0)
+			if($part_of_town_id > 0)
 			{
 				$uicols['name'][]	= 'part_of_town';
 				$uicols['descr'][]	= lang('part of town');
@@ -1712,7 +1710,7 @@
 				$where = 'AND';
 			}
 
-			if($filter>0)
+			if($filter > 0)
 			{
 				if($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
 				{
@@ -1722,7 +1720,7 @@
 				{
 					$filtermethod .= " $where fm_owner.category='$filter' ";
 				}
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 			$uicols['name'][]	= 'number';
@@ -1737,16 +1735,16 @@
 			$paranthesis .='(';
 
 			$_level = 2;
-			for ($i=1; $i<$type_id; $i++)
+			for($i = 1; $i < $type_id; $i++)
 			{
 				$joinmethod .= " {$this->join} fm_location{$_level}";
 				$paranthesis .='(';
 				$on = 'ON';
-				for ($k=($_level-1); $k>0; $k--)
+				for($k = ($_level - 1); $k > 0; $k--)
 				{
-					$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+					$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level - 1) . ".loc{$k})";
 					$on = 'AND';
-					if($k==1)
+					if($k == 1)
 					{
 						$joinmethod .= ")";
 					}
@@ -1759,15 +1757,15 @@
 
 			$sql = "SELECT $cols FROM $paranthesis fm_location1 $joinmethod";
 
-			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
+			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category", __LINE__, __FILE__);
 
 			$summary = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				$summary[]=array
+				$summary[] = array
 				(
 					'number'		=> $this->db->f('number'),
-					'type'			=> '[' . $this->db->f('category') . '] ' .$this->db->f('type'),
+					'type' => '[' . $this->db->f('category') . '] ' . $this->db->f('type'),
 					'part_of_town'	=> $this->db->f('part_of_town'),
 					'district_id'	=> $this->db->f('district_id')
 				);
@@ -1776,12 +1774,12 @@
 			return $summary;
 		}
 
-		function check_history($location_code='')
+		function check_history($location_code = '')
 		{
-			$location_array = explode('-',$location_code);
-			$type_id= count($location_array);
+			$location_array = explode('-', $location_code);
+			$type_id = count($location_array);
 
-			if (!$type_id)
+			if(!$type_id)
 			{
 				return false;
 			}
@@ -1790,11 +1788,11 @@
 
 			$sql = "SELECT count(*) AS cnt FROM $table WHERE location_code='$location_code'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->db->next_record();
 
-			if($this->db->f('cnt')>0)
+			if($this->db->f('cnt') > 0)
 			{
 				return true;
 			}
@@ -1804,14 +1802,20 @@
 			}
 		}
 
-		function get_history($location_code='')
+		/**
+		 * Get complete copies of older versions of the record
+		 * @param string $location_code
+		 * @param bool $dry_run
+		 * @return array $values
+		 */
+		function get_history($location_code, $dry_run = false)
 		{
 			$this->uicols = array();
-			$location_array = explode('-',$location_code);
-			$type_id= count($location_array);
+			$location_array = explode('-', $location_code);
+			$type_id = count($location_array);
 			$contacts			= CreateObject('phpgwapi.contacts');
 
-			if (!$type_id)
+			if(!$type_id)
 			{
 				return;
 			}
@@ -1826,8 +1830,8 @@
 
 			$sql = "SELECT column_name,datatype,input_text,id AS attrib_id FROM {$attribute_table} WHERE {$attribute_filter}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
-			while ($this->db->next_record())
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$attrib[] = array(
 					'column_name' => $this->db->f('column_name'),
@@ -1845,6 +1849,10 @@
 			$this->uicols['name'][] = 'exp_date';
 			$this->uicols['descr'][] = lang('exp date');
 
+			if($dry_run)
+			{
+				return;
+			}
 
 			$attrib[] = array
 			(
@@ -1857,12 +1865,12 @@
 			$sql = "SELECT {$table}.*, {$table_category}.descr as category"
 			. " FROM {$table} {$this->left_join} {$table_category} ON {$table}.category = {$table_category}.id"
 			. " WHERE location_code='{$location_code}' ORDER BY exp_date DESC";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			$j=0;
+			$j = 0;
 			$cols_return = $uicols['name'];
 			$dataset = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				foreach($attrib as $key => $field)
 				{
@@ -1881,18 +1889,18 @@
 			return $values;
 		}
 
-		function get_tenant_location($tenant_id='')
+		function get_tenant_location($tenant_id = '')
 		{
 			$location_code = '';
 
 			$location_level = $this->soadmin_location->read_config_single('tenant_id');
 
-			$this->db->query("SELECT location_code FROM fm_location{$location_level} WHERE tenant_id='" . $tenant_id ."'",__LINE__,__FILE__);
-			while ($this->db->next_record())
+			$this->db->query("SELECT location_code FROM fm_location{$location_level} WHERE tenant_id='" . $tenant_id . "'", __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$location_code[] = $this->db->f('location_code');
 			}
-			if (count($location_code) ==1)
+			if(count($location_code) == 1)
 			{
 				return $location_code[0];
 			}
@@ -1902,18 +1910,17 @@
 			}
 		}
 
-		function get_item_id($location_code )
+		function get_item_id($location_code)
 		{
-			$this->db->query("SELECT id FROM fm_locations WHERE location_code='{$location_code}'",__LINE__,__FILE__);
+			$this->db->query("SELECT id FROM fm_locations WHERE location_code='{$location_code}'", __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('id');
 		}
 
-
 		public function get_location_code($id)
 		{
 			$sql = "SELECT location_code FROM fm_locations WHERE id = '{$id}'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('location_code');
 		}
@@ -1933,7 +1940,7 @@
 				if($part_of_town_id)
 				{
 					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.part_of_town_id = fm_location1.part_of_town_id";
-					$filtermethod = 'AND fm_part_of_town.part_of_town_id =' . (int) $part_of_town_id;
+					$filtermethod = 'AND fm_part_of_town.part_of_town_id =' . (int)$part_of_town_id;
 				}
 			}
 			else
@@ -1957,13 +1964,13 @@
 
 			$values = array();
 			
-			if( $child_level > count($location_types))
+			if($child_level > count($location_types))
 			{
 				return $values;
 			}
 			
-			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} {$join_method} WHERE location_code {$this->like} '{$location_code}%' {$filtermethod} ORDER BY {$field_name} ASC",__LINE__,__FILE__);
-			while ($this->db->next_record())
+			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} {$join_method} WHERE location_code {$this->like} '{$location_code}%' {$filtermethod} ORDER BY {$field_name} ASC", __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$id = $this->db->f('id');
 				$values[] = array
@@ -1990,12 +1997,12 @@
 			$values = array();
 			if($location_name)
 			{
-				$this->db->query("SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE loc{$level}_name {$this->like} '{$location_name}%'",__LINE__,__FILE__);
-				while ($this->db->next_record())
+				$this->db->query("SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE loc{$level}_name {$this->like} '{$location_name}%'", __LINE__, __FILE__);
+				while($this->db->next_record())
 				{
 					$values[] = array
 					(
-						'name'			=> $this->db->f('name',true),
+						'name' => $this->db->f('name', true),
 						'location_code'	=> $this->db->f('location_code'),
 					);
 				}

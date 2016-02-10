@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	 * Import the datetime class for date processing
 	 */
@@ -36,7 +35,6 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_sogallery
 	{
 
@@ -51,20 +49,23 @@
 
 		function read($data)
 		{
+			$valid_locations_data = $this->get_gallery_location();
+
 			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query				= isset($data['query']) ? $data['query'] : '';
-			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'ASC';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 			$order				= isset($data['order']) ? $data['order'] : '';
 			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$mime_type			= isset($data['mime_type']) ? $data['mime_type'] : '';
-			$start_date			= isset($data['start_date'])?$data['start_date']:0;
-			$end_date			= isset($data['end_date'])?$data['end_date']:0;
-			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
-			$valid_locations	= isset($data['valid_locations']) && $data['valid_locations'] ? $data['valid_locations'] : array();
+			$start_date = isset($data['start_date']) ? $data['start_date'] : 0;
+			$end_date = isset($data['end_date']) ? $data['end_date'] : 0;
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
+			$valid_locations = isset($valid_locations_data) && $valid_locations_data ? $valid_locations_data : array();
+			$results = (isset($data['results']) ? $data['results'] : 0);
 
-			if ($order)
+			if($order)
 			{
 				switch($order)
 				{
@@ -91,7 +92,7 @@
 
 			$filtermethod .= " AND (phpgw_vfs.directory = 'This_one_is_to_block'";
 
-			foreach ($valid_locations as $location)
+			foreach($valid_locations as $location)
 			{
 				$filtermethod .= " OR phpgw_vfs.directory {$this->_like} '%{$location['id']}%'";
 			}
@@ -108,7 +109,7 @@
 				$filtermethod .= " AND mime_type = '{$mime_type}'";
 			}
 
-			if ($start_date)
+			if($start_date)
 			{
 				$date_format = $this->_db->date_format();
 				$start_date = date($date_format, $start_date);
@@ -131,10 +132,10 @@
 			}
 
 			$sql = "SELECT * FROM  phpgw_vfs"
-				." {$filtermethod} {$querymethod}";
-
+			. " {$filtermethod} {$querymethod}";
+//                echo '<pre>'; print_r($sql); echo '</pre>';
 			//_debug_array($sql . $ordermethod);
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->_db->num_rows();
 
 			$values = array();
@@ -142,14 +143,14 @@
 			{
 				if(!$allrows)
 				{
-					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 				}
 				else
 				{
-					$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
+					$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 				}
 
-				while ($this->_db->next_record())
+				while($this->_db->next_record())
 				{
 					$values[] = array
 						(
@@ -160,12 +161,12 @@
 							'created'				=> $this->_db->f('created'),
 							'modified'				=> $this->_db->f('modified'),
 							'size'					=> $this->_db->f('size'),
-							'mime_type'				=> $this->_db->f('mime_type',true),
+						'mime_type' => $this->_db->f('mime_type', true),
 							'app'					=> $this->_db->f('app'),
-							'directory'				=> $this->_db->f('directory',true),
+						'directory' => $this->_db->f('directory', true),
 							'name'					=> $this->_db->f('name'),
-							'link_directory'		=> $this->_db->f('link_directory',true),
-							'link_name'				=> $this->_db->f('link_name',true),
+						'link_directory' => $this->_db->f('link_directory', true),
+						'link_name' => $this->_db->f('link_name', true),
 							'version'				=> $this->_db->f('version')
 						);
 				}
@@ -177,25 +178,26 @@
 		public function get_filetypes()
 		{
 			$sql = "SELECT DISTINCT mime_type FROM  phpgw_vfs WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while ($this->_db->next_record())
+			while($this->_db->next_record())
 			{
-				$values[] = $this->_db->f('mime_type',true);
+				$values[] = $this->_db->f('mime_type', true);
 			}
 
 			return $values;
 		}
+
 		public function get_gallery_location()
 		{
 			$sql = "SELECT DISTINCT directory FROM  phpgw_vfs WHERE mime_type = 'Directory'";
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while ($this->_db->next_record())
+			while($this->_db->next_record())
 			{
-				$values[] = $this->_db->f('directory',true);
+				$values[] = $this->_db->f('directory', true);
 			}
 
 			return $values;

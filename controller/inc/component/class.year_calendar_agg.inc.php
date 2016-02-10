@@ -1,17 +1,17 @@
 <?php
-phpgw::import_class('controller.socheck_list');
-include_class('controller', 'date_generator', 'inc/component/');
-include_class('controller', 'check_list_status_info', 'inc/component/');
-include_class('controller', 'check_list_status_manager', 'inc/component/');
-include_class('controller', 'check_list', 'inc/model/');
+	phpgw::import_class('controller.socheck_list');
+	include_class('controller', 'date_generator', 'inc/component/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
+	include_class('controller', 'check_list_status_manager', 'inc/component/');
+	include_class('controller', 'check_list', 'inc/model/');
 	
+	class year_calendar_agg
+	{
 
-class year_calendar_agg {
 	private $year;
 	private $control;
 	private $location_code;
 	private $view;
-	
 	private $calendar_array = array();
 	
   public function __construct($control, $year, $location_code, $view)
@@ -26,29 +26,31 @@ class year_calendar_agg {
    	   	 
 	function init_calendar()
 	{
-		$start_month_nr = $this->get_start_month_for_control( $this->control, $this->year );
-		$end_month_nr = $this->get_end_month_for_control( $this->control, $this->year ); 
+			$start_month_nr	 = $this->get_start_month_for_control($this->control, $this->year);
+			$end_month_nr	 = $this->get_end_month_for_control($this->control, $this->year);
 		
-    for($month_nr = 1;$month_nr <= 12;$month_nr++)
+			for($month_nr = 1; $month_nr <= 12; $month_nr++)
     {
-    	if( ($month_nr < $start_month_nr) || ($month_nr > $end_month_nr) )
+				if(($month_nr < $start_month_nr) || ($month_nr > $end_month_nr))
     	{
-    		$this->calendar_array[ $month_nr ] = null;
+					$this->calendar_array[$month_nr] = null;
     	}
-     	else if( ($month_nr < date("m"))  && (date("Y", $this->control->get_start_date()) == $this->year) )
+				else if(($month_nr < date("m")) && (date("Y", $this->control->get_start_date()) == $this->year))
     	{
-    		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_NOT_DONE";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "location_code" =>  $this->location_code, "year" => $this->year, "month" => $month_nr);
+					$this->calendar_array[$month_nr]["status"] = "CONTROLS_NOT_DONE";
+					$this->calendar_array[$month_nr]["info"]	 = array("view" => $this->view, "control_id" => $this->control->get_id(),
+						"location_code" => $this->location_code, "year" => $this->year, "month" => $month_nr);
     	}
     	else
     	{
-    		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_REGISTERED";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "location_code" =>  $this->location_code, "year" => $this->year, "month" => $month_nr);
+					$this->calendar_array[$month_nr]["status"] = "CONTROLS_REGISTERED";
+					$this->calendar_array[$month_nr]["info"]	 = array("view" => $this->view, "control_id" => $this->control->get_id(),
+						"location_code" => $this->location_code, "year" => $this->year, "month" => $month_nr);
     	}
     }
 	}
 	
-	public function build_calendar( $agg_open_cases_pr_month_array )
+		public function build_calendar($agg_open_cases_pr_month_array)
 	{
 		foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
 		{
@@ -61,11 +63,13 @@ class year_calendar_agg {
 		return $this->calendar_array;
 	}
 	
-	public static function get_heading_array(){
+		public static function get_heading_array()
+		{
 			
 		$heading_array = array();
 		
-		for($i=1;$i<=12;$i++){
+			for($i = 1; $i <= 12; $i++)
+			{
 			$heading_array[$i] = "$i";	
 		}
 		
@@ -75,7 +79,7 @@ class year_calendar_agg {
 	function get_start_month_for_control($control, $year)
 	{
 		  // Checks if control starts in the year that is displayed 
-			if( date("Y", $control->get_start_date()) == $year )
+			if(date("Y", $control->get_start_date()) == $year)
 			{
 				$from_month = date("n", $control->get_start_date());	
 			}
@@ -90,7 +94,7 @@ class year_calendar_agg {
 		function get_end_month_for_control($control, $year)
 		{	
 			// Checks if control ends in the year that is displayed
-			if( date("Y", $control->get_end_date()) == $year )
+			if(date("Y", $control->get_end_date()) == $year)
 			{
 				$to_month = date("n", $control->get_end_date());
 			}
@@ -102,9 +106,10 @@ class year_calendar_agg {
 			return $to_month;
 	  }
 	
-	public static function get_start_date_year_ts($year){
+		public static function get_start_date_year_ts($year)
+		{
 	  $start_date_year_ts = strtotime("01/01/$year");
 			
 		return $start_date_year_ts;
 	}
-}
+	}

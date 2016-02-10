@@ -128,6 +128,7 @@
 		public function get_script_links()
 		{
 			$combine = true;
+			$combine = false; // Temporary
 			
 			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
@@ -178,7 +179,7 @@
 
 			if ( !empty($this->external_files) && is_array($this->external_files) )
 			{
-				foreach($this->external_files as $file)
+				foreach($this->external_files as $file => $dummy)
 				{					
 					if($combine)
 					{
@@ -322,7 +323,7 @@ HTML;
 		{
 			if ( is_file(PHPGW_SERVER_ROOT . "/$file") )
 			{
-				$this->external_files[] = $file;
+				$this->external_files[$file] = true;
 			}
 		}
 	}

@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -30,9 +29,9 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_bomigrate
 	{
+
 		private $use_session;
 		public $start;
 
@@ -40,21 +39,20 @@
 		{
 			$this->acl_location 	= '.admin';
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
 			}
 
 			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
-
 		}
 
 		public function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','migrate', $data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'migrate', $data);
 			}
 		}
 
@@ -78,11 +76,11 @@
 			return $domain_info;
 		}
 
-		public function migrate($values,$download_script=false)
+		public function migrate($values, $download_script = false)
 		{
 			//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
-			$oProc							= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
+			$oProc = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
 			$oProc->m_odb					= $GLOBALS['phpgw']->db;
 			$oProc->m_odb->Halt_On_Error	= 'yes';
 			$GLOBALS['phpgw_setup']->oProc	= $oProc;
@@ -99,7 +97,7 @@
 				$tableinfo = $setup->sql_to_array($table);
 				//_debug_array($tableinfo);
 
-				$fd_temp = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
+				$fd_temp = '$fd = array(' . str_replace("\t", '', $tableinfo[0]) . ');';
 				@eval($fd_temp);
 				$table_def[$table]['fd'] = $fd;
 				$table_def[$table]['pk'] = $tableinfo[1];
@@ -112,9 +110,9 @@
 				 */
 				if($tableinfo[2])
 				{
-					foreach ($tableinfo[2] as $ref_set => $ref_fields)
+					foreach($tableinfo[2] as $ref_set => $ref_fields)
 					{
-						$fk_temp = '$fk = array(' . $ref_fields .');';
+						$fk_temp = '$fk = array(' . $ref_fields . ');';
 						@eval($fk_temp);
 						$fk_table = array_keys($fk);
 						$ForeignKeys[$table][] = $fk_table[0];
@@ -123,9 +121,9 @@
 			}
 
 			set_time_limit(0);
-			foreach ($values as $domain)
+			foreach($values as $domain)
 			{
-				$this->oProc = createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_domain'][$domain]['db_type']);
+				$this->oProc = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_domain'][$domain]['db_type']);
 				if(!$download_script)
 				{
 					$this->oProc->m_odb           = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
@@ -152,18 +150,17 @@
 			}
 		}
 
-
 		function copy_data($table_def = array())
 		{
 			$db = $GLOBALS['phpgw']->db;
 
-			foreach ($table_def as $table => $fd)
+			foreach($table_def as $table => $fd)
 			{
-				if($table=='fm_ecobilagoverf' || $table== 'phpgw_lang')
+				if($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
 				{
 					continue;
 				}
-				switch ($table)
+				switch($table)
 				{
 				case 'fm_document_history':
 				case 'fm_entity_history':
@@ -173,38 +170,38 @@
 				case 'fm_s_agreement_history':
 				case 'fm_workorder_history':
 				case 'phpgw_history_log':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__, __FILE__, true);
 					break;
 				case 'fm_project':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__ , __FILE__, true);
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__ , __FILE__, true);
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET status = 'closed' WHERE status = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET status = 'closed' WHERE status = ''", __LINE__, __FILE__, true);
 					break;
 				case 'fm_workorder':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__, __FILE__, true);
 					break;
 				case 'fm_ecodimd':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET descr = 'NIL' WHERE descr = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET descr = 'NIL' WHERE descr = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_categories':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_contact_others':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET other_value = 'NIL' WHERE other_value = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET other_value = 'NIL' WHERE other_value = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_contact_person':
-					$GLOBALS['phpgw']->db->query("DELETE FROM {$table} WHERE first_name = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("DELETE FROM {$table} WHERE first_name = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_log_msg':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_parms = 'NIL' WHERE log_msg_parms = ''", __LINE__ , __FILE__, true);
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_file = 'NIL' WHERE log_msg_file = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_parms = 'NIL' WHERE log_msg_parms = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_file = 'NIL' WHERE log_msg_file = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_sms_tbluserphonebook':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_email = 'NIL' WHERE p_email = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_email = 'NIL' WHERE p_email = ''", __LINE__, __FILE__, true);
 					break;
 				case 'phpgw_sms_tblsmsoutgoing':
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__ , __FILE__, true);
-					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__ , __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__, __FILE__, true);
 					break;
 				default:
 				}
@@ -226,11 +223,10 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$browser = CreateObject('phpgwapi.browser');
-			$size=strlen($script);
-			$browser->content_header($filename,'',$size);
+			$size = strlen($script);
+			$browser->content_header($filename, '', $size);
 			echo $script;
 		}
-
 
 		/**
 		 * Generate Script for db-schema
@@ -241,17 +237,16 @@
 		 *
 		 * @return string sql-script for generate database for chosen db-platform.
 		 */
-
-		function GenerateScripts($aTables, $bOutputHTML=false, $return_script=false)
+		function GenerateScripts($aTables, $bOutputHTML = false, $return_script = false)
 		{
-			if (!is_array($aTables))
+			if(!is_array($aTables))
 			{
 				return false;
 			}
 			$this->oProc->m_aTables = $aTables;
 
 			$sAllTableSQL = '';
-			foreach ($this->oProc->m_aTables as $sTableName => $aTableDef)
+			foreach($this->oProc->m_aTables as $sTableName => $aTableDef)
 			{
 				$sSequenceSQL = '';
 				$sTriggerSQL = '';
@@ -273,12 +268,13 @@
 					$sAllTableSQL .= $sTableSQL . "\n\n";
 
 					// postgres and mssql
-					if(isset($this->oProc->m_oTranslator->indexes_sql) && is_array($this->oProc->m_oTranslator->indexes_sql) && count($this->oProc->m_oTranslator->indexes_sql)>0)
+					if(isset($this->oProc->m_oTranslator->indexes_sql) && is_array($this->oProc->m_oTranslator->indexes_sql) && count($this->oProc->m_oTranslator->indexes_sql) > 0)
 					{
 						foreach($this->oProc->m_oTranslator->indexes_sql as $key => $sIndexSQL)
 						{
-							$ix_name = $key.'_'.$sTableName.'_idx';
-							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$ix_name = $key . '_' . $sTableName . '_idx';
+							$IndexSQL = str_replace(array('__index_name__', '__table_name__'), array(
+								$ix_name, $sTableName), $sIndexSQL);
 							$sAllTableSQL .= $IndexSQL . "\n\n";
 						}
 					}
@@ -288,7 +284,9 @@
 					if($bOutputHTML)
 					{
 						print('<br>Failed generating script for <b>' . $sTableName . '</b><br>');
-						echo '<pre style="text-align: left;">'.$sTableName.' = '; print_r($aTableDef); echo "</pre>\n";
+						echo '<pre style="text-align: left;">' . $sTableName . ' = ';
+						print_r($aTableDef);
+						echo "</pre>\n";
 					}
 
 					return false;

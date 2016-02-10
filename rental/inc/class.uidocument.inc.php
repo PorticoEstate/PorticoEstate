@@ -7,6 +7,7 @@
 
 	class rental_uidocument extends rental_uicommon
 	{	
+
 		public $public_functions = array
 		(
 				'query'		=> true,
@@ -22,14 +23,44 @@
 		
 		public function query()
 		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$user_rows_per_page = 10;
+			}
+
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$start_index	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	 = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		 = 'id';
+			switch($columns[$order[0]['column']]['data'])
+			{
+				case 'type':
+					$sort_field	 = 'rental_document.type_id';
+					Break;
+				default :
+					$sort_field	 = 'rental_document.' . $columns[$order[0]['column']]['data'];
+			}
+			$sort_ascending	 = ($order[0]['dir'] == 'desc') ? false : true;
+			// Form variables
+			$search_for		 = $search['value'];
+			$search_type	 = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+
 			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
+			/* $start_index	= phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables
 			$search_for 	= phpgw::get_var('query');
-			$search_type	= phpgw::get_var('search_option');
+			  $search_type	= phpgw::get_var('search_option'); */
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -57,22 +88,20 @@
 			
 			//Serialize the documents found
 			$rows = array();
-			foreach ($result_objects as $result) {
+			foreach($result_objects as $result)
+			{
 				if(isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
 			}
 			
-			$editable = phpgw::get_var('editable') == '1' ? true : false;
-			
-			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
 				
+			$result_data					 = array('results' => $rows);
+			$result_data['total_records']	 = $result_count;
+			$result_data['draw']			 = $draw;
 			
-			//Build a YUI result from the data
-			$result_data = array('results' => $rows, 'total_records' => $result_count);	
-			return $this->yui_results($result_data, 'total_records', 'results');
+			return $this->jquery_results($result_data);
 		}
 		
 		/**
@@ -91,7 +120,8 @@
 
 			//view/download
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.view', 'id' => $value['id'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.view',
+				'id'		 => $value['id'])));
 			$value['labels'][] = lang('view');
 			
 			$type = $params[0];
@@ -102,16 +132,20 @@
 			switch($type)
 			{
 				case 'documents_for_contract':
-					if($edit_permission && $editable) {
+					if($edit_permission && $editable)
+					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
+						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete',
+							'id'		 => $value['id'])));
 						$value['labels'][] = lang('delete');
 					}
 					break;
 				case 'documents_for_party':
-					if($user_is[EXECUTIVE_OFFICER] && $editable) {
+					if($user_is[EXECUTIVE_OFFICER] && $editable)
+					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
+						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete',
+							'id'		 => $value['id'])));
 						$value['labels'][] = lang('delete');
 					}
 					break;
@@ -131,7 +165,8 @@
 			$contract_id = intval(phpgw::get_var('contract_id'));
 			$party_id = intval(phpgw::get_var('party_id'));
 			
-			$data = array();
+			$message = array();
+
 			// Check permissions if contract id is set
 			if(isset($contract_id) && $contract_id > 0)
 			{
@@ -139,12 +174,10 @@
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 				if(!$contract->has_permission(PHPGW_ACL_EDIT))
 				{
-					$data['error'] = lang('permission_denied_add_document');
-					$this->render('permission_denied.php', $data);
-					return;
+					$message['error'][] = array('msg' => lang('permission_denied_add_document'));
+					return $message;
 				}
 			}
-			
 			
 			// Check permissions if party id is set
 			if(isset($party_id) && $party_id > 0)
@@ -153,20 +186,17 @@
 				$party = rental_soparty::get_instance()->get_single($party_id);
 				if(!($this->isAdministrator() || $this->isExecutiveOfficer()))
 				{
-					$data['error'] = lang('permission_denied_add_document');
-					$this->render('permission_denied.php', $data);
-					return;
+					$message['error'][] = array('msg' => lang('permission_denied_add_document'));
+					return $message;
 				}
 			}
 			
 			// If no contract or party is loaded
 			if(!(isset($party) || isset($contract)))
 			{
-				$data['error'] = lang('error_no_contract_or_party');
-				$this->render('permission_denied.php', $data);
-				return;
+				$message['error'][] = array('msg' => lang('permission_denied_add_document'));
+				return $message;
 			}
-			
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -184,36 +214,27 @@
 				// Move file from temporary storage to vfs
 				$result = rental_sodocument::get_instance()->write_document_to_vfs
 				(
-					$document_properties['document_type'], 
-					$_FILES["file_path"]["tmp_name"],
-					$document_properties['id'],
-					$_FILES["file_path"]["name"]
+				$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
 				);
 				
 				if($result)
 				{
 					if(rental_sodocument::get_instance()->store($document))
 					{
-						if(isset($party))
-						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'tab' => 'documents'));		
-						}
-						else if(isset($contract))
-						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'tab' => 'documents'));
-						}
+						$message['message'][] = array('msg' => lang('document has been added'));
 					}
 					else
 					{
-						// Handle failure on storing document
-						$this->redirect($document, $document_propeties,'','');
+
+						$message['error'][] = array('msg' => lang('document not added'));
 					}
 				}
 				else
 				{
-					//Handle vfs failure to store document
-					$this->redirect($document, $document_propeties,'','');
+					$message['error'][] = array('msg' => lang('failed to upload file') . ': ' . $_FILES["file_path"]["name"]);
 				}
+
+				return $message;
 			}
 		}
 		
@@ -237,9 +258,7 @@
 				
 				echo rental_sodocument::get_instance()->read_document_from_vfs
 				(
-					$document_properties['document_type'],	
-					$document_properties['id'],
-					$document->get_name()
+				$document_properties['document_type'], $document_properties['id'], $document->get_name()
 				);
 			}
 			else
@@ -257,7 +276,7 @@
 		 * @return true if successful, false if error, permission denied message on
 		 * 			not enough privileges
 		 */
-		public function delete()
+		/* public function delete()
 		{	
 			$document_id = intval(phpgw::get_var('id'));
 			$document = rental_sodocument::get_instance()->get_single($document_id);
@@ -265,8 +284,7 @@
 
 			if(!$this->check_permissions($document,$document_properties))
 			{
-				$this->render('permission_denied.php');
-				return;
+		  phpgw::no_access();
 			}
 			
 			$result = rental_sodocument::get_instance()->delete_document_from_vfs
@@ -282,6 +300,47 @@
 			} 
 			// TODO: communicate error/message to user
 			return false;
+		  } */
+
+		public function delete()
+		{
+			$list_document_id	 = phpgw::get_var('id');
+			$message			 = array();
+
+			foreach($list_document_id as $document_id)
+			{
+				$document			 = rental_sodocument::get_instance()->get_single($document_id);
+				$document_properties = $this->get_type_and_id($document);
+
+				if(!$this->check_permissions($document, $document_properties))
+				{
+					$message['error'][] = array('msg' => lang('permission_denied') . ' to remove ' . $document->get_name());
+					continue;
+				}
+
+				$result = rental_sodocument::get_instance()->delete_document_from_vfs
+				(
+				$document_properties['document_type'], $document_properties['id'], $document->get_name()
+				);
+
+				if($result)
+				{
+					if(rental_sodocument::get_instance()->delete_document($document_id))
+					{
+						$message['message'][] = array('msg' => lang('document %1 has been removed', $document->get_name()));
+					}
+					else
+					{
+						$message['error'][] = array('msg' => lang('document %1 not removed', $document->get_name()));
+					}
+				}
+				else
+				{
+					$message['error'][] = array('msg' => lang('failed to delete file') . ': ' . $document->get_name());
+				}
+			}
+			// TODO: communicate error/message to user
+			return $message;
 		}
 		
 		/**
@@ -296,11 +355,13 @@
 		{
 			if($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $document_properties['id'], 'error' => $error, 'message' => $message));		
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
+					'id'		 => $document_properties['id'], 'error'		 => $error, 'message'	 => $message));
 			}
 			else if($document_properties['document_type'] == rental_sodocument::$PARTY_DOCUMENTS)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $document_properties['id'], 'error' => $error, 'message' => $message));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
+					'id'		 => $document_properties['id'], 'error'		 => $error, 'message'	 => $message));
 			}
 		}
 		

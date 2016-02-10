@@ -24,23 +24,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bowo_hour
 	{
+
 		var $start;
 		var $query;
 		var $filter;
 		var $sort;
 		var $order;
 		var $cat_id;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -50,12 +49,12 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 			= CreateObject('property.sowo_hour');
 			$this->bocommon 	= CreateObject('property.bocommon');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -70,13 +69,13 @@
 			$chapter_id	= phpgw::get_var('chapter_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
+			if($start)
 			{
-				$this->start=$start;
+				$this->start = $start;
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
@@ -111,15 +110,15 @@
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','wo_hour',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'wo_hour', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','wo_hour');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'wo_hour');
 
 			$this->start		= $data['start'];
 			$this->query		= $data['query'];
@@ -131,7 +130,7 @@
 			$this->chapter_id	= $data['chapter_id'];
 		}
 
-		function get_chapter_list($format='',$selected='')
+		function get_chapter_list($format = '', $selected = '')
 		{
 			switch($format)
 			{
@@ -143,23 +142,23 @@
 				break;
 			}
 
-			$chapters= $this->so->get_chapter_list();
+			$chapters = $this->so->get_chapter_list();
 
-			return $this->bocommon->select_list($selected,$chapters);
+			return $this->bocommon->select_list($selected, $chapters);
 		}
 
-		function get_tolerance_list($selected='')
+		function get_tolerance_list($selected = '')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tolerance_select'));
 
-			$tolerances[0]['id']= 1;
-			$tolerances[1]['id']= 2;
-			$tolerances[2]['id']= 3;
+			$tolerances[0]['id'] = 1;
+			$tolerances[1]['id'] = 2;
+			$tolerances[2]['id'] = 3;
 
-			while (is_array($tolerances) && list(,$tolerance_entry) = each($tolerances))
+			while(is_array($tolerances) && list(, $tolerance_entry) = each($tolerances))
 			{
 				$sel_tolerance_entry = '';
-				if ($tolerance_entry['id']==$selected)
+				if($tolerance_entry['id'] == $selected)
 				{
 					$sel_tolerance_entry = 'selected';
 				}
@@ -172,9 +171,9 @@
 					);
 			}
 
-			for ($i=0;$i<count($tolerance_list);$i++)
+			for($i = 0; $i < count($tolerance_list); $i++)
 			{
-				if ($tolerance_list[$i]['selected'] != 'selected')
+				if($tolerance_list[$i]['selected'] != 'selected')
 				{
 					unset($tolerance_list[$i]['selected']);
 				}
@@ -183,23 +182,23 @@
 			return $tolerance_list;
 		}
 
-		function get_grouping_list($selected='',$workorder_id)
+		function get_grouping_list($selected = '', $workorder_id)
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('grouping_select'));
-			$groupings= $this->so->get_grouping_list($workorder_id);
-			return $this->bocommon->select_list($selected,$groupings);
+			$groupings = $this->so->get_grouping_list($workorder_id);
+			return $this->bocommon->select_list($selected, $groupings);
 		}
 
-		function get_building_part_list($selected='')
+		function get_building_part_list($selected = '')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('building_part_select'));
 
-			$building_parts= $this->so->get_building_part_list();
+			$building_parts = $this->so->get_building_part_list();
 
-			while (is_array($building_parts) && list(,$building_part_entry) = each($building_parts))
+			while(is_array($building_parts) && list(, $building_part_entry) = each($building_parts))
 			{
 				$sel_building_part_entry = '';
-				if ($building_part_entry['id']==$selected)
+				if($building_part_entry['id'] == $selected)
 				{
 					$sel_building_part_entry = 'selected';
 				}
@@ -212,9 +211,9 @@
 					);
 			}
 
-			for ($i=0;$i<count($building_part_list);$i++)
+			for($i = 0; $i < count($building_part_list); $i++)
 			{
-				if ($building_part_list[$i]['selected'] != 'selected')
+				if($building_part_list[$i]['selected'] != 'selected')
 				{
 					unset($building_part_list[$i]['selected']);
 				}
@@ -223,7 +222,7 @@
 			return $building_part_list;
 		}
 
-		function read($workorder_id='')
+		function read($workorder_id = '')
 		{
 			$hour = $this->so->read(array('workorder_id' => $workorder_id));
 			$this->total_records = $this->so->total_records;
@@ -232,7 +231,8 @@
 
 		function read_deviation($data)
 		{
-			$deviation = $this->so->read_deviation(array('workorder_id' => $data['workorder_id'],'hour_id' => $data['hour_id']));
+			$deviation = $this->so->read_deviation(array('workorder_id' => $data['workorder_id'],
+				'hour_id' => $data['hour_id']));
 			$this->total_records = $this->so->total_records;
 			return $deviation;
 		}
@@ -252,11 +252,11 @@
 			$this->so->update_calculation($data);
 		}
 
-		function save_deviation($values,$action='')
+		function save_deviation($values, $action = '')
 		{
-			if ($action=='edit')
+			if($action == 'edit')
 			{
-				if ($values['id'] != '')
+				if($values['id'] != '')
 				{
 					$receipt = $this->so->edit_deviation($values);
 				}
@@ -268,12 +268,12 @@
 			return $receipt;
 		}
 
-		function add_template($values,$workorder_id)
+		function add_template($values, $workorder_id)
 		{
-			return $this->so->add_template($values,$workorder_id);
+			return $this->so->add_template($values, $workorder_id);
 		}
 
-		function add_hour($values,$workorder_id)
+		function add_hour($values, $workorder_id)
 		{
 			foreach($values['quantity'] as $n => $quantity)
 			{
@@ -282,13 +282,13 @@
 					continue;
 				}
 
-				if ($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
+				if($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
 				{
 					$values['cat_per_cent'][$n] = 100;
 				}
-				$quantity		= str_replace(",",".",$quantity);
+				$quantity = str_replace(",", ".", $quantity);
 
-				$cost=($values['total_cost'][$n]*$quantity);
+				$cost = ($values['total_cost'][$n] * $quantity);
 
 				$hour[] = array
 					(
@@ -313,14 +313,13 @@
 			}
 			else
 			{
-				$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['message'][] = array('msg' => lang('Nothing to do!'));
 			}
 
 			return $receipt;
-
 		}
 
-		function add_hour_from_template($values,$workorder_id)
+		function add_hour_from_template($values, $workorder_id)
 		{
 
 			//_debug_array($values);
@@ -332,15 +331,15 @@
 					continue;
 				}
 
-				if ($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
+				if($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
 				{
 					$values['cat_per_cent'][$n] = 100;
 				}
 
-				$quantity		= str_replace(",",".",$quantity);
-				$cost=($values['billperae'][$n]*$quantity);
+				$quantity = str_replace(",", ".", $quantity);
+				$cost = ($values['billperae'][$n] * $quantity);
 
-				$hour[]= array
+				$hour[] = array
 					(
 						'chapter_id'		=> $values['chapter_id'][$n],
 						'activity_id'		=> $values['activity_id'][$n],
@@ -360,21 +359,19 @@
 						'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
 						'cat_per_cent'		=> $values['cat_per_cent'][$n]
 					);
-
 			}
 			//_debug_array($hour);
 
 			if($hour)
 			{
-				$receipt = 	$this->so->add_hour_from_template($hour,$workorder_id);
+				$receipt = $this->so->add_hour_from_template($hour, $workorder_id);
 			}
 			else
 			{
-				$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['message'][] = array('msg' => lang('Nothing to do!'));
 			}
 
 			return $receipt;
-
 		}
 
 		function read_single_hour($hour_id)
@@ -383,27 +380,27 @@
 			return $hour;
 		}
 
-		function save_hour($values,$workorder_id)
+		function save_hour($values, $workorder_id)
 		{
-			$values['billperae']	= str_replace(",",".",$values['billperae']);
-			$values['quantity']		= str_replace(",",".",$values['quantity']);
-			$values['cost']			= $values['billperae']*$values['quantity'];
+			$values['billperae'] = str_replace(",", ".", $values['billperae']);
+			$values['quantity'] = str_replace(",", ".", $values['quantity']);
+			$values['cost'] = $values['billperae'] * $values['quantity'];
 			if($values['ns3420_descr'])
 			{
-				$values['descr']=$values['ns3420_descr'];
+				$values['descr'] = $values['ns3420_descr'];
 			}
 
-			if ($values['hour_id'])
+			if($values['hour_id'])
 			{
-				if ($values['hour_id'] != 0)
+				if($values['hour_id'] != 0)
 				{
-					$receipt = $this->so->edit($values,$workorder_id);
+					$receipt = $this->so->edit($values, $workorder_id);
 				}
 			}
 			else
 			{
 				//_debug_array($values);
-				$receipt = $this->so->add_custom_hour($values,$workorder_id);
+				$receipt = $this->so->add_custom_hour($values, $workorder_id);
 			}
 			return $receipt;
 		}
@@ -446,7 +443,7 @@
 						);
 						try
 						{
-							$this->so->add_custom_hour($values,$workorder_id);
+							$this->so->add_custom_hour($values, $workorder_id);
 						}
 						catch(Exception $exc)
 						{
@@ -454,7 +451,6 @@
 						}
 					}
 				}
-
 			}
 			$GLOBALS['phpgw']->db->transaction_commit();
 		}
@@ -463,7 +459,7 @@
 		{
 			$email_list = $this->so->get_email($vendor_id);
 
-			foreach( $email_list as &$email_entry )
+			foreach($email_list as &$email_entry)
 			{
 				$email_entry['selected'] = trim($email_entry['email']) == trim($selected) ? 1 : 0;
 			}
@@ -471,19 +467,18 @@
 			return  $email_list;
 		}
 
-		function update_email($to_email,$workorder_id)
+		function update_email($to_email, $workorder_id)
 		{
-			$this->so->update_email($to_email,$workorder_id);
+			$this->so->update_email($to_email, $workorder_id);
 		}
 
-
-		function delete($hour_id,$workorder_id)
+		function delete($hour_id, $workorder_id)
 		{
-			return $this->so->delete($hour_id,$workorder_id);
+			return $this->so->delete($hour_id, $workorder_id);
 		}
 
-		function delete_deviation($workorder_id,$hour_id,$id)
+		function delete_deviation($workorder_id, $hour_id, $id)
 		{
-			return $this->so->delete_deviation($workorder_id,$hour_id,$id);
+			return $this->so->delete_deviation($workorder_id, $hour_id, $id);
 		}
 	}

@@ -24,17 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_borequest
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -47,7 +47,6 @@
 		public $sum_consume = 0;
 		public $acl_location = '.project.request';
 		public $responsible_unit;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -57,17 +56,17 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 					= CreateObject('property.sorequest');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->solocation 			= CreateObject('property.solocation');
-			$this->historylog			= CreateObject('property.historylog','request');
+			$this->historylog = CreateObject('property.historylog', 'request');
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project.request');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
 //			$this->acl_location			= '.project.request';
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -160,28 +159,27 @@
 				$this->allrows = $allrows;
 			}
 
-			if(array_key_exists('start_date',$_POST) || array_key_exists('start_date',$_GET))
+			if(array_key_exists('start_date', $_POST) || array_key_exists('start_date', $_GET))
 			{
 				$this->start_date = $start_date;
 			}
-			if(array_key_exists('end_date',$_POST) || array_key_exists('end_date',$_GET))
+			if(array_key_exists('end_date', $_POST) || array_key_exists('end_date', $_GET))
 			{
 				$this->end_date = $end_date;
 			}
-
 		}
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				phpgwapi_cache::session_set('property.request','session_data', $data);
+				phpgwapi_cache::session_set('property.request', 'session_data', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data =	phpgwapi_cache::session_get('property.request','session_data', $data);
+			$data = phpgwapi_cache::session_get('property.request', 'session_data', $data);
 
 			$this->start			= $data['start'];
 			$this->query			= $data['query'];
@@ -196,10 +194,9 @@
 			$this->building_part	= $data['building_part'];
 			$this->responsible_unit	= $data['responsible_unit'];
 			$this->recommended_year	= $data['recommended_year'];
-			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
-			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
+			$this->start_date = isset($data['start_date']) ? $data['start_date'] : '';
+			$this->end_date = isset($data['end_date']) ? $data['end_date'] : '';
 		}
-
 
 		function column_list($selected = array())
 		{
@@ -209,7 +206,7 @@
 			}
 
 			$columns	= $this->get_column_list();
-			return $this->bocommon->select_multi_list($selected,$columns);
+			return $this->bocommon->select_multi_list($selected, $columns);
 		}
 
 		function get_column_list()
@@ -218,7 +215,7 @@
 			$columns['entry_date'] = array
 				(
 					'id' => 'entry_date',
-					'name'=> lang('entry date'),
+				'name' => lang('entry date'),
 					'sortable'	=> true
 				);
 
@@ -244,50 +241,48 @@
 			return $columns;
 		}
 
-
-		function select_degree_list($degree_value='',$degreedefault_type='')
+		function select_degree_list($degree_value = '', $degreedefault_type = '')
 		{
-			if ($degree_value)
+			if($degree_value)
 			{
-				$selected=$degree_value;
+				$selected = $degree_value;
 			}
 			else
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property'][$degreedefault_type];
+				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property'][$degreedefault_type];
 			}
 
-			$degree_comment[0]=' - '.lang('no symptoms');
-			$degree_comment[1]=' - '.lang('minor symptoms');
-			$degree_comment[2]=' - '.lang('medium symptoms');
-			$degree_comment[3]=' - '.lang('serious symptoms');
-			$degree_comment[4]=' - '.lang('condition not assessed');
-			for ($i=0; $i<=4; $i++)
+			$degree_comment[0] = ' - ' . lang('no symptoms');
+			$degree_comment[1] = ' - ' . lang('minor symptoms');
+			$degree_comment[2] = ' - ' . lang('medium symptoms');
+			$degree_comment[3] = ' - ' . lang('serious symptoms');
+			$degree_comment[4] = ' - ' . lang('condition not assessed');
+			for($i = 0; $i <= 4; $i++)
 			{
 				$degree_list[$i]['id'] = $i;
 				$degree_list[$i]['name'] = $i . $degree_comment[$i];
-				$degree_list[$i]['selected'] = $i==$selected ? 1 : 0;
+				$degree_list[$i]['selected'] = $i == $selected ? 1 : 0;
 			}
 
 			return $degree_list;
 		}
 
-		function select_probability_list($probability_value='')
+		function select_probability_list($probability_value = '')
 		{
-			$selected=$probability_value;
+			$selected = $probability_value;
 
-			$probability_comment[1]=' - '.lang('low probability');
-			$probability_comment[2]=' - '.lang('medium probability');
-			$probability_comment[3]=' - '.lang('high probability');
-			for ($i=1; $i<=3; $i++)
+			$probability_comment[1] = ' - ' . lang('low probability');
+			$probability_comment[2] = ' - ' . lang('medium probability');
+			$probability_comment[3] = ' - ' . lang('high probability');
+			for($i = 1; $i <= 3; $i++)
 			{
 				$probability_list[$i]['id'] = $i;
 				$probability_list[$i]['name'] = $i . $probability_comment[$i];
-				$probability_list[$i]['selected'] = $i==$selected ? 1 : 0;
+				$probability_list[$i]['selected'] = $i == $selected ? 1 : 0;
 			}
 
 			return $probability_list;
 		}
-
 
 		function select_reference_list($reference_value = 0)
 		{
@@ -295,35 +290,35 @@
 
 			$reference_list = array();
 			$reference_comment = array();
-			$reference_comment[0]=' - '.lang('none');
-			$reference_comment[1]=' - '.lang('minor');
-			$reference_comment[2]=' - '.lang('medium');
-			$reference_comment[3]=' - '.lang('serious');
-			for ($i=0; $i<=3; $i++)
+			$reference_comment[0] = ' - ' . lang('none');
+			$reference_comment[1] = ' - ' . lang('minor');
+			$reference_comment[2] = ' - ' . lang('medium');
+			$reference_comment[3] = ' - ' . lang('serious');
+			for($i = 0; $i <= 3; $i++)
 			{
 				$reference_list[$i]['id'] = $i;
 				$reference_list[$i]['name'] = "{$i}{$reference_comment[$i]}";
-				$reference_list[$i]['selected'] = $i==$selected ? 1 : 0;
+				$reference_list[$i]['selected'] = $i == $selected ? 1 : 0;
 			}
 
 			return $reference_list;
 		}
 
-		function select_conditions($request_id='')
+		function select_conditions($request_id = '')
 		{
 			$values = array();
 			$condition_type_list = $this->so->select_condition_type_list();
 
 			if($request_id)
 			{
-				$conditions = $this->so->select_conditions($request_id,$condition_type_list);
+				$conditions = $this->so->select_conditions($request_id, $condition_type_list);
 			}
 
-			$config	= CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$disallow_multiple_condition_types = isset( $config->config_data['disallow_multiple_condition_types']) &&  $config->config_data['disallow_multiple_condition_types'] ? (int)$config->config_data['disallow_multiple_condition_types'] : 0;
+			$disallow_multiple_condition_types = isset($config->config_data['disallow_multiple_condition_types']) && $config->config_data['disallow_multiple_condition_types'] ? (int)$config->config_data['disallow_multiple_condition_types'] : 0;
 
-			if( !$disallow_multiple_condition_types )
+			if(!$disallow_multiple_condition_types)
 			{
 				foreach($condition_type_list as $condition_type)
 				{
@@ -372,39 +367,39 @@
 					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 				);
 
-				array_unshift($values[0]['condition_type_list']['options'], array ('id'=>'','name'=> lang('consequence type')));
+				array_unshift($values[0]['condition_type_list']['options'], array('id' => '',
+					'name' => lang('consequence type')));
 			}
 //_debug_array($values);die();
 			return $values;
 		}
 
-		function select_consequence_list($consequence_value='',$consequencedefault_type='')
+		function select_consequence_list($consequence_value = '', $consequencedefault_type = '')
 		{
-			if ($consequence_value)
+			if($consequence_value)
 			{
-				$selected=$consequence_value;
+				$selected = $consequence_value;
 			}
 			else
 			{
-				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property'][$consequencedefault_type];
+				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property'][$consequencedefault_type];
 			}
 
-			$consequence_comment[0]=' - '.lang('None Consequences');
-			$consequence_comment[1]=' - '.lang('Minor Consequences');
-			$consequence_comment[2]=' - '.lang('Medium Consequences');
-			$consequence_comment[3]=' - '.lang('Serious Consequences');
-			for ($i=0; $i<=3; $i++)
+			$consequence_comment[0] = ' - ' . lang('None Consequences');
+			$consequence_comment[1] = ' - ' . lang('Minor Consequences');
+			$consequence_comment[2] = ' - ' . lang('Medium Consequences');
+			$consequence_comment[3] = ' - ' . lang('Serious Consequences');
+			for($i = 0; $i <= 3; $i++)
 			{
 				$consequence_list[$i][id] = $i;
 				$consequence_list[$i]['name'] = $i . $consequence_comment[$i];
-				$consequence_list[$i]['selected'] = $i==$selected ? 1 : 0;
+				$consequence_list[$i]['selected'] = $i == $selected ? 1 : 0;
 			}
 
 			return $consequence_list;
 		}
 
-
-		function select_status_list($format='',$selected='')
+		function select_status_list($format = '', $selected = '')
 		{
 			switch($format)
 			{
@@ -416,11 +411,10 @@
 				break;
 			}
 
-			$status_entries= $this->so->select_status_list();
+			$status_entries = $this->so->select_status_list();
 
-			return $this->bocommon->select_list($selected,$status_entries);
+			return $this->bocommon->select_list($selected, $status_entries);
 		}
-
 
 		function read_priority_key()
 		{
@@ -448,12 +442,12 @@
 				{
 					foreach($target as $_target_section)
 					{
-						foreach ($_target_section['data'] as $_target_entry)
+						foreach($_target_section['data'] as $_target_entry)
 						{
 							$related[] = "<a href=\"{$_target_entry['link']}\" title=\"{$_target_entry['title']}\">{$_target_section['descr']}::{$_target_entry['id']}::{$_target_entry['statustext']}</a>";
 						}
 					}
-					$entry['related'] = implode(' /</br>',$related);
+					$entry['related'] = implode(' /</br>', $related);
 				}
 
 				$category 			= $this->cats->return_single($entry['cat_id']);
@@ -464,15 +458,15 @@
 			return $values;
 		}
 
-		function read($data)
+		function read($data = array())
 		{
 			$custom	= createObject('phpgwapi.custom_fields');
-			$attrib_data = $custom->find('property', $this->acl_location, 0, '','','',true, true);
+			$attrib_data = $custom->find('property', $this->acl_location, 0, '', '', '', true, true);
 
 			$attrib_filter = array();
 			if($attrib_data)
 			{
-				foreach ( $attrib_data as $attrib )
+				foreach($attrib_data as $attrib)
 				{
 					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
 					{
@@ -491,13 +485,40 @@
 				}
 			}
 
-			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/* $request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
 				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id,
-				'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year));
+			  'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year)); */
+			$values = $this->so->read(array
+				(
+				'start' => $data['start'],
+				'results' => $data['results'],
+				'query' => $data['query'],
+				'order' => $data['order'],
+				'sort' => $data['sort'],
+				'allrows' => $data['allrows'],
+				'list_descr' => $data['list_descr'],
+				'project_id' => $data['project_id'],
+				'dry_run' => $data['dry_run'],
+				'filter' => $this->filter,
+				'district_id' => $this->district_id,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'p_num' => $this->p_num,
+				'start_date' => $this->bocommon->date_to_timestamp($data['start_date']),
+				'end_date' => $this->bocommon->date_to_timestamp($data['end_date']),
+				'property_cat_id' => $this->property_cat_id,
+				'building_part' => $this->building_part,
+				'degree_id' => $this->degree_id,
+				'attrib_filter' => $attrib_filter,
+				'condition_survey_id' => $this->condition_survey_id,
+				'responsible_unit' => $this->responsible_unit,
+				'recommended_year' => $this->recommended_year
+			)
+			);
 
 			$this->total_records			= $this->so->total_records;
 			$this->sum_investment			= $this->so->sum_investment;
@@ -509,29 +530,29 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			for ($i=0; $i<count($request); $i++)
+			for($i = 0; $i < count($values); $i++)
 			{
-				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
-				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
-				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
-				$request[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y',$request[$i]['planned_year']) : '';
-				$request[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['closed_date'],$dateformat);
-				$request[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['in_progress_date'],$dateformat);
-				$request[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['delivered_date'],$dateformat);
+				$values[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($values[$i]['coordinator']);
+				$values[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['start_date'], $dateformat);
+				$values[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'], $dateformat);
+				$values[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y', $values[$i]['planned_year']) : '';
+				$values[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['closed_date'], $dateformat);
+				$values[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['in_progress_date'], $dateformat);
+				$values[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['delivered_date'], $dateformat);
 
 				if($cols_extra)
 				{
-					$location_data=$this->solocation->read_single($request[$i]['location_code']);
-					for ($j=0;$j<count($cols_extra);$j++)
+					$location_data = $this->solocation->read_single($values[$i]['location_code']);
+					for($j = 0; $j < count($cols_extra); $j++)
 					{
-						$request[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+						$values[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 				}
 			}
 
 			$column_list = $this->get_column_list();
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
-			foreach ($custom_cols as $col_id)
+			foreach($custom_cols as $col_id)
 			{
 				$this->uicols['input_type'][]	= 'text';
 				$this->uicols['name'][]			= $col_id;
@@ -545,10 +566,10 @@
 				$this->uicols['classname'][] 	= '';
 			}
 
-			return $request;
+			return $values;
 		}
 
-		function read_single($request_id = 0, $values = array(),$view = false)
+		function read_single($request_id = 0, $values = array(), $view = false)
 		{
 			$values['attributes'] = $this->custom->find('property', '.project.request', 0, '', 'ASC', 'attrib_sort', true, true);
 
@@ -565,23 +586,23 @@
 			}
 
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
-			$values['end_date']			= $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat);
-			$values['entry_date']		= $GLOBALS['phpgw']->common->show_date($values['entry_date'],$dateformat);
-			$values['closed_date']		= $GLOBALS['phpgw']->common->show_date($values['closed_date'],$dateformat);
-			$values['in_progress_date']	= $GLOBALS['phpgw']->common->show_date($values['in_progress_date'],$dateformat);
-			$values['delivered_date']	= $GLOBALS['phpgw']->common->show_date($values['delivered_date'],$dateformat);
+			$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+			$values['end_date'] = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
+			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['entry_date'], $dateformat);
+			$values['closed_date'] = $GLOBALS['phpgw']->common->show_date($values['closed_date'], $dateformat);
+			$values['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($values['in_progress_date'], $dateformat);
+			$values['delivered_date'] = $GLOBALS['phpgw']->common->show_date($values['delivered_date'], $dateformat);
 
 			if($values['location_code'])
 			{
-				$values['location_data'] =$this->solocation->read_single($values['location_code']);
+				$values['location_data'] = $this->solocation->read_single($values['location_code']);
 			}
 
 			if(isset($values['planning']) && $values['planning'])
 			{
-				foreach ($values['planning'] as &$planning)
+				foreach($values['planning'] as &$planning)
 				{
-					$planning['date'] = $GLOBALS['phpgw']->common->show_date($planning['date'],'Y');
+					$planning['date'] = $GLOBALS['phpgw']->common->show_date($planning['date'], 'Y');
 				}
 			}
 			else
@@ -590,9 +611,9 @@
 			}
 			if(isset($values['consume']) && $values['consume'])
 			{
-				foreach ($values['consume'] as &$consume)
+				foreach($values['consume'] as &$consume)
 				{
-					$consume['date'] = $GLOBALS['phpgw']->common->show_date($consume['date'],'Y');
+					$consume['date'] = $GLOBALS['phpgw']->common->show_date($consume['date'], 'Y');
 				}
 			}
 			else
@@ -600,11 +621,11 @@
 				$values['consume'] = array();
 			}
 
-			if($values['tenant_id']>0)
+			if($values['tenant_id'] > 0)
 			{
-				$tenant_data=$this->bocommon->read_single_tenant($values['tenant_id']);
-				$values['location_data']['tenant_id']= $values['tenant_id'];
-				$values['location_data']['contact_phone']= $tenant_data['contact_phone'];
+				$tenant_data = $this->bocommon->read_single_tenant($values['tenant_id']);
+				$values['location_data']['tenant_id'] = $values['tenant_id'];
+				$values['location_data']['contact_phone'] = $tenant_data['contact_phone'];
 				$values['location_data']['last_name']	= $tenant_data['last_name'];
 				$values['location_data']['first_name']	= $tenant_data['first_name'];
 			}
@@ -619,18 +640,18 @@
 			if($values['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'], $values['p_cat_id']);
 
-				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
-				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_num'] = $values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id'] = $values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id'] = $values['p_cat_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			$values['files'] = $vfs->ls (array(
+			$values['files'] = $vfs->ls(array(
 				'string' => "/property/request/$request_id",
 				'relatives' => array(RELATIVE_NONE)));
 
@@ -642,49 +663,66 @@
 			}
 
 			$interlink 	= CreateObject('property.interlink');
-			$values['origin'] = $interlink->get_relation('property', '.project.request', $request_id, 'origin');
+			$values['origin_data'] = $interlink->get_relation('property', '.project.request', $request_id, 'origin');
 			$values['target'] = $interlink->get_relation('property', '.project.request', $request_id, 'target');
 
 			return $values;
 		}
 
-
 		function read_record_history($id)
 		{
-			$history_array = $this->historylog->return_array(array('O'),array(),'','',$id);
-			$i=0;
-			while (is_array($history_array) && list(,$value) = each($history_array))
+			$history_array = $this->historylog->return_array(array('O'), array(), '', '', $id);
+			$i = 0;
+			while(is_array($history_array) && list(, $value) = each($history_array))
 			{
 
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user']	= $value['owner'];
 
-				switch ($value['status'])
+				switch($value['status'])
 				{
-					case 'B': $type = lang('Budget changed'); break;
-					case 'R': $type = lang('Re-opened'); break;
-					case 'X': $type = lang('Closed');    break;
-					case 'O': $type = lang('Opened');    break;
-					case 'A': $type = lang('Re-assigned'); break;
-					case 'P': $type = lang('Priority changed'); break;
-					case 'CO': $type = lang('Initial Coordinator'); break;
-					case 'C': $type = lang('Coordinator changed'); break;
-					case 'TO': $type = lang('Initial Category'); break;
-					case 'T': $type = lang('Category changed'); break;
-					case 'SO': $type = lang('Initial Status'); break;
-					case 'S': $type = lang('Status changed'); break;
+					case 'B': $type = lang('Budget changed');
+						break;
+					case 'R': $type = lang('Re-opened');
+						break;
+					case 'X': $type = lang('Closed');
+						break;
+					case 'O': $type = lang('Opened');
+						break;
+					case 'A': $type = lang('Re-assigned');
+						break;
+					case 'P': $type = lang('Priority changed');
+						break;
+					case 'CO': $type = lang('Initial Coordinator');
+						break;
+					case 'C': $type = lang('Coordinator changed');
+						break;
+					case 'TO': $type = lang('Initial Category');
+						break;
+					case 'T': $type = lang('Category changed');
+						break;
+					case 'SO': $type = lang('Initial Status');
+						break;
+					case 'S': $type = lang('Status changed');
+						break;
 					default: break;
 				}
 
-				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+				if($value['new_value'] == 'O')
+				{
+					$value['new_value'] = lang('Opened');
+				}
+				if($value['new_value'] == 'X')
+				{
+					$value['new_value'] = lang('Closed');
+				}
 
-				$record_history[$i]['value_action']	= $type?$type:'';
+				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
-				if ($value['status'] == 'A')
+				if($value['status'] == 'A')
 				{
-					if (! $value['new_value'])
+					if(!$value['new_value'])
 					{
 						$record_history[$i]['value_new_value']	= lang('None');
 					}
@@ -693,26 +731,26 @@
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
 				}
-				else if ($value['status'] == 'C')
+				else if($value['status'] == 'C')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
 				}
-				else if ($value['status'] == 'CO')
+				else if($value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 				}
-				else if ($value['status'] == 'T' || $value['status'] == 'TO')
+				else if($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category 								= $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value']	= $category[0]['name'];
 				}
-				else if ($value['status'] == 'B' && $value['new_value'])
+				else if($value['status'] == 'B' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	=number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	=number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value'] = number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value'] = number_format($value['old_value'], 0, ',', ' ');
 				}
-				else if ($value['status'] != 'O' && $value['new_value'])
+				else if($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
 					$record_history[$i]['value_old_value']	= $value['old_value'];
@@ -728,15 +766,14 @@
 			return $record_history;
 		}
 
-
 		function next_id()
 		{
 			return $this->so->next_id();
 		}
 
-		function save($request,$action='',$values_attribute = array())
+		function save($request, $action = '', $values_attribute = array())
 		{
-			while (is_array($request['location']) && list(,$value) = each($request['location']))
+			while(is_array($request['location']) && list(, $value) = each($request['location']))
 			{
 				if($value)
 				{
@@ -755,13 +792,13 @@
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			if ($action=='edit')
+			if($action == 'edit')
 			{
-				$receipt = $this->so->edit($request,$values_attribute);
+				$receipt = $this->so->edit($request, $values_attribute);
 			}
 			else
 			{
-				$receipt = $this->so->add($request,$values_attribute);
+				$receipt = $this->so->add($request, $values_attribute);
 			}
 			return $receipt;
 		}
@@ -775,9 +812,10 @@
 		{
 			return $this->so->get_user_list();
 		}
+
 		public function get_recommended_year_list($selected = 0)
 		{
 			$recommended_year_list = $this->so->get_recommended_year_list();
-			return $this->bocommon->select_list($selected,$recommended_year_list);
+			return $this->bocommon->select_list($selected, $recommended_year_list);
 		}
 	}

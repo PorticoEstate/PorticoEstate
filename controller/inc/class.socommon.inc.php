@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
@@ -25,11 +26,11 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	abstract class controller_socommon
 	{
+
 		protected $db;
 		protected $like;
 		protected $join;
@@ -78,7 +79,6 @@
 
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
-
 		/*
 
 		/**
@@ -87,6 +87,7 @@
 		 * @param $type	a string dictating value type
 		 * @return the php value
 		 */
+
 		protected function unmarshal($value, $type)
 		{
 			if($type == 'bool')
@@ -95,19 +96,19 @@
 			}
 			else if($type == 'boolean')
 			{
-				return (boolean) $value;
+				return (boolean)$value;
 			}
 			else if($type == 'int')
 			{
-				return (int) $value;
+				return (int)$value;
 			}
 			else if($type == 'float')
 			{
-				return (float) $value;
+				return (float)$value;
 			}
 			else if($type == 'string')
 			{
-				return (string) str_replace('</ol></li>', '</ol>' ,$value);
+				return (string)str_replace('</ol></li>', '</ol>', $value);
 			//	return (string) $value;
 			}
 			else if($value === null || $value == 'NULL')
@@ -187,7 +188,6 @@
 			$check_map = array();		// Array to hold the actual number of record read per target object
 			$object_ids = array(); 		// All of the object ids encountered
 			$added_object_ids = array();// All of the added objects ids
-
 			// Retrieve information about the table name and the name and alias of id column
 			// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
 			// 						for all the result objects are traversed
@@ -227,10 +227,10 @@
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
 
-			$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
-			$this->db->query($sql,__LINE__, __FILE__, false, true);
+			$sql_parts = explode('1=1', $sql); // Split the query to insert extra condition on test for break
+			$this->db->query($sql, __LINE__, __FILE__, false, true);
 
-			while ($this->db->next_record()) // Runs through all of the results
+			while($this->db->next_record()) // Runs through all of the results
 			{
 				$should_populate_object = false; // Default value - we won't populate object
 				$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
@@ -258,9 +258,9 @@
 				if($should_populate_object)
 				{
 					$result = &$results[$result_id];
-					$results[$result_id] = $this->populate($result_id,$result);
+					$results[$result_id] = $this->populate($result_id, $result);
 					$last_result_id = $result_id;
-					$map[$result_id] = (int)$map[$result_id] +1;
+					$map[$result_id]	 = (int)$map[$result_id] + 1;
 				}
 
 				//Stop looping when array not sorted on other then id and wanted number of results is reached
@@ -272,17 +272,17 @@
 				else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
 				{
 					$id_ok = 0;
-					foreach ($map as $_result_id => $_count)
+					foreach($map as $_result_id => $_count)
 					{
 						if(!isset($check_map[$_result_id]))
 						{
 							// Query the number of records for the specific object in question
 							$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
-							$db2->query($sql2,__LINE__, __FILE__);
+							$db2->query($sql2, __LINE__, __FILE__);
 							$db2->next_record();
 							$check_map[$_result_id] = $db2->num_rows();
 						}
-						if(	$check_map[$_result_id] == $_count )
+						if($check_map[$_result_id] == $_count)
 						{
 							$id_ok++;
 						}
@@ -335,7 +335,6 @@
 		 * matching objects, or the objects themself.
 		 * @return string with SQL.
 		 */
-
 		protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
 
 		protected abstract function populate(int $object_id, &$object);
@@ -348,12 +347,11 @@
 		* Store the object in the database.  If the object has no ID it is assumed to be new and
 		* inserted for the first time.  The object is then updated with the new insert id.
 		*/
-
 		public function store(&$object)
 		{
-			if ($object->validates())
+			if($object->validates())
 			{
-				if ($object->get_id() > 0)
+				if($object->get_id() > 0)
 				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $this->update($object);

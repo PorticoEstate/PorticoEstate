@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_boasync
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -41,7 +41,6 @@
 		var $order;
 		var $cat_id;
 		var $allrows;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -51,12 +50,12 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 		= CreateObject('property.soasync');
 			$this->socommon = CreateObject('property.socommon');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -75,20 +74,19 @@
 			$this->order		= isset($order) && $order ? $order : '';
 			$this->cat_id		= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->allrows		= isset($allrows) && $allrows ? $allrows : '';
-
 		}
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','async',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'async', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','async');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'async');
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -98,11 +96,11 @@
 			$this->cat_id	= $data['cat_id'];
 		}
 
-
-		function read()
+		function read($data = array())
 		{
-			$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows' => $this->allrows));
+			/* $method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			  'allrows' => $this->allrows)); */
+			$method = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;
 
@@ -114,11 +112,11 @@
 			return $this->so->read_single($id);
 		}
 
-		function save($method,$action='')
+		function save($method, $action = '')
 		{
-			if ($action=='edit')
+			if($action == 'edit')
 			{
-				if ($method['id'] != '')
+				if($method['id'] != '')
 				{
 
 					$receipt = $this->so->edit($method);
@@ -129,7 +127,6 @@
 				$receipt = $this->so->add($method);
 			}
 			return $receipt;
-
 		}
 
 		function delete($id)
@@ -137,4 +134,3 @@
 			$this->so->delete($id);
 		}
 	}
-

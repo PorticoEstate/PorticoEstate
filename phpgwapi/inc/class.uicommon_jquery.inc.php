@@ -29,8 +29,6 @@
  	* @version $Id: class.uicommon.inc.php 11988 2014-05-23 13:26:30Z sigurdne $
 	*/
 
-	//phpgw::import_class('phpgwapi.yui');
-
 	phpgw::import_class('phpgwapi.jquery');
 
 	abstract class phpgwapi_uicommon_jquery
@@ -51,24 +49,13 @@
 
 		public function __construct($currentapp ='', $yui = '')
 		{
-			$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
-			// start: to be removed
-			phpgw::import_class('phpgwapi.yui');
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('history');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('animation');
-			//end: to be removed
 
 			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
 			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 
 			$this->tmpl_search_path = array();
+            array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
@@ -77,11 +64,9 @@
 			if($yui == 'yui3')
 			{
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
 
-			self::add_javascript('phpgwapi', $yui, 'common.js');
-
-			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
@@ -93,19 +78,28 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($currentapp);
 			
+			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
+//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
+//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
+
+			//Buttons
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/dataTables.buttons.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.colVis.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.flash.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Select/js/dataTables.select.min.js');
+
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Buttons/css/buttons.dataTables.css');
 
 			//pop up script
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
@@ -195,6 +189,11 @@
 
 		public function link($data)
 		{
+            if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+            elseif ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'activitycalendarfrontend')
+                return $GLOBALS['phpgw']->link('/activitycalendarfrontend/', $data);
+			else
 			return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
@@ -289,61 +288,6 @@
 			return $keys;
 		}
 
-		public function add_yui_translation(&$data)
-		{
-			$this->add_template_file('yui_phpgw_i18n');
-			$previous = lang('prev');
-			$next = lang('next');
-			$first = lang('first');
-			$last = lang('last');
-			$showing_items = lang('showing items');
-			$of = lang('of');
-			$to = lang('to');
-			$shows_from = lang('shows from');
-			$of_total = lang('of total');
-
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$rows_per_page = 10;
-			}
-
-			$data['yui_phpgw_i18n'] = array(
-				'Calendar' => array(
-					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
-					'WEEKDAYS_FULL' => json_encode($this->lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
-					'MONTHS_LONG' => json_encode($this->lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
-				),
-				'DataTable' => array(
-					'MSG_EMPTY' => json_encode(lang('No records found.')),
-					'MSG_LOADING' => json_encode(lang("Loading...")),
-					'MSG_SORTASC' => json_encode(lang('Click to sort ascending')),
-					'MSG_SORTDESC' => json_encode(lang('Click to sort descending')),
-				),
-				'setupDatePickerHelper' => array(
-					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
-				),
-				'setupPaginator' => array(
-					'pageReportTemplate' => json_encode("{$showing_items} {startRecord} - {endRecord} {$of} {totalRecords}"),
-					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
-					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
-					'firstPageLinkLabel' => json_encode("&lt;&lt; {$first}"),
-					'lastPageLinkLabel' => json_encode("{$last} &gt;&gt;"),
-					'template' => json_encode("{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"),
-					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}."),
-					'rowsPerPage'	=> $rows_per_page
-				),
-				'common' => array(
-					'LBL_NAME' => json_encode(lang('Name')),
-					'LBL_TIME' => json_encode(lang('Time')),
-					'LBL_WEEK' => json_encode(lang('Week')),
-					'LBL_RESOURCE' => json_encode(lang('Resource')),
-				),
-			);
-		}
 		public function add_jquery_translation(&$data)
 		{
 			$this->add_template_file('jquery_phpgw_i18n');
@@ -428,7 +372,6 @@
 
 			$this->reset_flash_msgs();
 
-//			$this->add_yui_translation($data);
 			$this->add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
@@ -806,14 +749,8 @@
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
 		}
-/*
-		public function use_yui_editor()
-		{
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
-		}
 
-*/		static protected function fix_php_files_array($data)
+		static protected function fix_php_files_array($data)
 		{
 			$fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
 			$keys = array_keys($data);

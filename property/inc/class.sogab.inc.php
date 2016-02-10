@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_sogab
 	{
+
 		var $gab_insert_level;
 		var $payment_date = array();
 
@@ -47,7 +47,7 @@
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 
-			$this->config		= CreateObject('phpgwapi.config','property');
+			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 			$this->gab_insert_level = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
 		}
@@ -62,43 +62,56 @@
 				$order			= isset($data['order']) ? $data['order'] : '';
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 				$location_code 	= isset($data['location_code']) ? $data['location_code'] : '';
-				$gaards_nr		= isset($data['gaards_nr'])? (int)$data['gaards_nr'] : '';
+				$gaards_nr = isset($data['gaards_nr']) ? (int)$data['gaards_nr'] : '';
 				$bruksnr		= isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
 				$feste_nr		= isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
-				$seksjons_nr	= isset($data['seksjons_nr'])? (int)$data['seksjons_nr'] : '';
+				$seksjons_nr = isset($data['seksjons_nr']) ? (int)$data['seksjons_nr'] : '';
 				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 				$address		= isset($data['address']) ? $this->db->db_addslashes($data['address']) : '';
 				$check_payments	= isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
-
-
-			if ($order)
+			switch($order)
 			{
-				$ordermethod = " order by fm_gab_location.{$order} {$sort}";
-			}
-			else
-			{
-				$ordermethod = ' order by gab_id ASC';
+				case 'gaards_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,5,5) {$sort}";
+					break;
+				case 'bruksnr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,10,4) {$sort}";
+					break;
+				case 'feste_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,14,4) {$sort}";
+					break;
+				case 'seksjons_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,18,3) {$sort}";
+					break;
+				case 'location_code':
+					$ordermethod = " ORDER BY fm_gab_location.location_code {$sort}";
+					break;
+				case 'address':
+					$ordermethod = " ORDER BY fm_gab_location.address {$sort}";
+					break;
+				default:
+					$ordermethod = ' ORDER BY gab_id ASC';
 			}
 
 			$where = 'WHERE';
 			$filtermethod = '';
 
-			if ($cat_id > 0)
+			if($cat_id > 0)
 			{
 				$filtermethod .= " {$where} fm_gab_location.category='{$cat_id}' ";
 				$where = 'AND';
 			}
 
-			if ($address)
+			if($address)
 			{
 				$filtermethod .= " {$where} fm_gab_location.address {$this->like} '%{$address}%' ";
 				$where = 'AND';
 			}
-			if ($location_code)
+			if($location_code)
 			{
-				$location_code = explode('-',$location_code);
+				$location_code = explode('-', $location_code);
 				$i = 1;		
 				foreach($location_code as $_loc)
 				{
@@ -115,24 +128,24 @@
 				$where = 'AND';
 			}
 
-			if ($gaards_nr)
+			if($gaards_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,5,5) {$this->like} '%$gaards_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,5,5) {$this->like} '%$gaards_nr%' ";
 				$where = 'AND';
 			}
-			if ($bruksnr)
+			if($bruksnr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,10,4) {$this->like} '%$bruksnr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,10,4) {$this->like} '%$bruksnr%' ";
 				$where = 'AND';
 			}
-			if ($feste_nr)
+			if($feste_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,14,4) {$this->like} '%$feste_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,14,4) {$this->like} '%$feste_nr%' ";
 				$where = 'AND';
 			}
-			if ($seksjons_nr)
+			if($seksjons_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,18,3) {{$this->like}} '%$seksjons_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,18,3) {$this->like} '%$seksjons_nr%' ";
 				$where = 'AND';
 			}
 
@@ -146,11 +159,11 @@
 				$j = $this->gab_insert_level;
 			}
 
-			$joinmethod = "$this->join fm_location". ($j);
+			$joinmethod = "$this->join fm_location" . ($j);
 			$on = 'ON';
-			for ($i=($j); $i>0; $i--)
+			for($i = ($j); $i > 0; $i--)
 			{
-				$joinmethod .= " $on (fm_gab_location.loc" . ($i). " = fm_location" . ($j) . ".loc" . ($i) . ")";
+				$joinmethod .= " $on (fm_gab_location.loc" . ($i) . " = fm_location" . ($j) . ".loc" . ($i) . ")";
 				$on = 'AND';
 			}
 
@@ -176,35 +189,34 @@
 					. " FROM fm_ecobilagoverf {$this->left_join} fm_gab_location ON fm_ecobilagoverf.loc1 = fm_gab_location.loc1"
 					. " WHERE spvend_code = '{$spvend_code}' AND spbudact_code = '{$spbudact_code}'"
 					. " GROUP BY owner, forfallsdato,spbudact_code, fm_ecobilagoverf.loc1 ORDER BY forfallsdato ASC";
-
 			}
 			else
 			{
 				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,address,owner ";
 			}
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$gab_list = array();
 			if(!$check_payments)
 			{
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
 					$gab_list[] = array
 						(
 							'gab_id'		=> $this->db->f('gab_id'),
 							'location_code'	=> $this->db->f('location_code'),
-							'address'		=> $this->db->f('address',true),
+						'address' => $this->db->f('address', true),
 							'hits'			=> $this->db->f('hits'),
 							'owner'			=> $this->db->f('owner')
 						);
@@ -223,13 +235,13 @@
 
 				$gross_list = array();
 				$dates = array();
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
 					$gross_list[] = array
 						(
-							'gab_id'		=> '00000000000000000000',//$this->db->f('gab_id'),
+						'gab_id' => '00000000000000000000', //$this->db->f('gab_id'),
 							'location_code'	=> $this->db->f('loc1'),
-							'address'		=> $this->db->f('address',true),
+						'address' => $this->db->f('address', true),
 							'hits'			=> $this->db->f('hits'),
 							'owner'			=> $this->db->f('owner'),
 							'paid'			=> $this->db->f('paid'),
@@ -241,8 +253,8 @@
 				$dates = array_keys($dates);
 				$payment_date = array();
 				$location_buffer = array();
-				$i=0;
-				foreach ($gross_list as $entry)
+				$i = 0;
+				foreach($gross_list as $entry)
 				{
 					if(!isset($location_buffer[$entry['location_code']]))
 					{
@@ -258,19 +270,19 @@
 						$j = $i;
 						$i++;
 					}
-					foreach ( $dates as $date )
+					foreach($dates as $date)
 					{
 						$gab_list[$i]['payment'][$date] = $entry['paid'];
 					}
 				}
 
 				reset($dates);
-				foreach ( $dates as $date )
+				foreach($dates as $date)
 				{
 					$payment_date[$date] = $date;
 				}
 
-/*				foreach ($gab_list as &$entry)
+				/* 				foreach ($gab_list as &$entry)
 				{
 					$sql = "SELECT forfallsdato, belop FROM fm_ecobilagoverf WHERE item_id = '{$entry['gab_id']}' ORDER BY forfallsdato ASC";
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -290,7 +302,7 @@
 
 				}
  */
-				$this->payment_date=$payment_date;
+				$this->payment_date = $payment_date;
 			}
 
 			return $gab_list;
@@ -300,19 +312,19 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
+				if($data['start'])
 				{
-					$start=$data['start'];
+					$start = $data['start'];
 				}
 				else
 				{
-					$start=0;
+					$start = 0;
 				}
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$gab_id = (isset($data['gab_id'])?$data['gab_id']:'0');
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
+				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order = (isset($data['order']) ? $data['order'] : '');
+				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$gab_id = (isset($data['gab_id']) ? $data['gab_id'] : '0');
+				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 			}
 
 
@@ -325,11 +337,13 @@
 			$cols_return[] = 'owner';
 			$cols_return[] = 'address';
 
-			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query));
+			$sql = $this->bocommon->generate_sql(array('entity_table' => $entity_table, 'cols' => $cols,
+				'cols_return' => $cols_return,
+				'uicols' => $uicols, 'joinmethod' => $joinmethod, 'paranthesis' => $paranthesis,
+				'query' => $query));
 
 
-			if ($order)
+			if($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -340,7 +354,7 @@
 
 			$filtermethod = " WHERE fm_gab_location.gab_id='$gab_id'";
 
-			if ($cat_id > 0)
+			if($cat_id > 0)
 			{
 				$filtermethod .= " AND fm_gab_location.category='$cat_id' ";
 			}
@@ -367,32 +381,32 @@
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$j=0;
-			while ($this->db->next_record())
+			$j = 0;
+			while($this->db->next_record())
 			{
-				for ($i=0;$i<count($cols_return);$i++)
+				for($i = 0; $i < count($cols_return); $i++)
 				{
 					$gab_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
 
-				$location_code=	$this->db->f('location_code');
-				$location = explode('-',$location_code);
-				for ($m=0;$m<count($location);$m++)
+				$location_code = $this->db->f('location_code');
+				$location = explode('-', $location_code);
+				for($m = 0; $m < count($location); $m++)
 				{
-					$gab_list[$j]['loc' . ($m+1)] = $location[$m];
-					$gab_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					$gab_list[$j]['loc' . ($m + 1)] = $location[$m];
+					$gab_list[$j]['query_location']['loc' . ($m + 1)] = implode("-", array_slice($location, 0, ($m + 1)));
 				}
 
 				$j++;
@@ -400,13 +414,13 @@
 			return $gab_list;
 		}
 
-		function read_single($gab_id='',$location_code='')
+		function read_single($gab_id = '', $location_code = '')
 		{
 			$sql = "SELECT * from fm_gab_location where gab_id='$gab_id' and location_code='$location_code' ";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$gab['location_code']		= $location_code;
 				$gab['remark']			= $this->db->f('remark');
@@ -417,53 +431,52 @@
 			return $gab;
 		}
 
-		function exist_gab_location($gab_id='',$location_code='')
+		function exist_gab_location($gab_id = '', $location_code = '')
 		{
 			$this->db2->query("SELECT count(*) as cnt FROM fm_gab_location where gab_id='$gab_id' and location_code='$location_code'");
 
 			$this->db2->next_record();
 
-			if ( $this->db2->f('cnt'))
+			if($this->db2->f('cnt'))
 			{
 				return true;
 			}
 		}
 
-
 		function add($gab)
 		{
 			$location = explode('-', $gab['location_code']);
-			$next_type	= count($location)+1;
+			$next_type = count($location) + 1;
 
 			//_debug_array($gab);
 
-			$where= 'WHERE';
-			for ($i=0;$i<count($location);$i++)
+			$where = 'WHERE';
+			for($i = 0; $i < count($location); $i++)
 			{
-				$where_condition .= " $where loc" . ($i+1) . "='" . $location[$i] . "'";
-				$where= 'AND';
+				$where_condition .= " $where loc" . ($i + 1) . "='" . $location[$i] . "'";
+				$where = 'AND';
 			}
 
 			$gab['remark'] = $this->db->db_addslashes($gab['remark']);
 
 			if(!$gab['owner'])
 			{
-				$gab['owner']='no';
+				$gab['owner'] = 'no';
 			}
 
 
-			$gab_id= $gab['kommune_nr'] . sprintf("%05s",$gab['gaards_nr']) . sprintf("%04s",$gab['bruks_nr']) . sprintf("%04s",$gab['feste_nr']) . sprintf("%03s",$gab['seksjons_nr']);
+			$gab_id = $gab['kommune_nr'] . sprintf("%05s", $gab['gaards_nr']) . sprintf("%04s", $gab['bruks_nr']) . sprintf("%04s", $gab['feste_nr']) . sprintf("%03s", $gab['seksjons_nr']);
 
-			if($gab['propagate'] && ($next_type < ($this->gab_insert_level+1)))
+			if($gab['propagate'] && ($next_type < ($this->gab_insert_level + 1)))
 			{
 
 				$sql = 'SELECT location_code,loc' . $this->gab_insert_level . '_name as location_name FROM fm_location' . $this->gab_insert_level . " $where_condition ";
 
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
-					if(!$this->exist_gab_location($gab_id,$this->db->f('location_code')))
+					if(!$this->exist_gab_location($gab_id, $this->db->f('location_code')))
 					{
 						$gab_insert[] = array('location_code'	=> $this->db->f('location_code'),
 							'gab_id'		=> $gab_id,
@@ -483,9 +496,9 @@
 			}
 			else
 			{
-				if(count($location)==$this->gab_insert_level)
+				if(count($location) == $this->gab_insert_level)
 				{
-					$gab_insert[] = array('location_code'=> $gab['location_code'],
+					$gab_insert[] = array('location_code' => $gab['location_code'],
 						'gab_id'	=> $gab_id,
 						'street_name'	=> $gab['street_name'],
 						'street_number'	=> $gab['street_number'],
@@ -501,12 +514,12 @@
 			}
 			else
 			{
-				$receipt['error'][] = array('msg'=>lang('Could not find any location to save to!'));
+				$receipt['error'][] = array('msg' => lang('Could not find any location to save to!'));
 			}
 
 			if($gab_update)
 			{
-				$receipt = $this->update($gab_update,$receipt);
+				$receipt = $this->update($gab_update, $receipt);
 			}
 
 			$receipt['gab_id'] = $gab_id;
@@ -514,20 +527,19 @@
 			return $receipt;
 		}
 
-
 		function insert($gab_insert)
 		{
-			$receipt['message'][] = array('msg'=>lang('gab %1 has been added',$gab_insert[0]['gab_id']));
+			$receipt['message'][] = array('msg' => lang('gab %1 has been added', $gab_insert[0]['gab_id']));
 
-			for ($i=0;$i<count($gab_insert);$i++)
+			for($i = 0; $i < count($gab_insert); $i++)
 			{
 				$location = explode('-', $gab_insert[$i]['location_code']);
 
-				while (is_array($location) && list($input_name,$value) = each($location))
+				while(is_array($location) && list($input_name, $value) = each($location))
 				{
 					if($value)
 					{
-						$col[] = 'loc' . ($input_name+1);
+						$col[] = 'loc' . ($input_name + 1);
 						$val[] = $value;
 					}
 				}
@@ -540,8 +552,8 @@
 
 				if($gab_insert[$i]['street_name'])
 				{
-					$address[]= $gab_insert[$i]['street_name'];
-					$address[]= $gab_insert[$i]['street_number'];
+					$address[] = $gab_insert[$i]['street_name'];
+					$address[] = $gab_insert[$i]['street_number'];
 					$address	= $this->db->db_addslashes(implode(" ", $address));
 				}
 
@@ -552,15 +564,15 @@
 
 				$this->db->query("INSERT INTO fm_gab_location (location_code,gab_id,remark,owner,entry_date,user_id,address $cols) "
 					. "VALUES ('"
-					. $gab_insert[$i]['location_code']. "','"
-					. $gab_insert[$i]['gab_id']. "','"
-					. $gab_insert[$i]['remark']. "','"
-					. $gab_insert[$i]['owner']. "','"
+				. $gab_insert[$i]['location_code'] . "','"
+				. $gab_insert[$i]['gab_id'] . "','"
+				. $gab_insert[$i]['remark'] . "','"
+				. $gab_insert[$i]['owner'] . "','"
 					. time() . "','"
-					. $this->account. "','"
-					. $address . "' $vals )",__LINE__,__FILE__);
+				. $this->account . "','"
+				. $address . "' $vals )", __LINE__, __FILE__);
 
-				$receipt['message'][] = array('msg'=>lang('at location %1',$gab_insert[$i]['location_code']));
+				$receipt['message'][] = array('msg' => lang('at location %1', $gab_insert[$i]['location_code']));
 
 				unset($location);
 				unset($col);
@@ -568,27 +580,26 @@
 				unset($cols);
 				unset($vals);
 				unset($address);
-
 			}
 
 
 			return $receipt;
 		}
 
-		function update($gab_update,$receipt)
+		function update($gab_update, $receipt)
 		{
-			$receipt['message'][] = array('msg'=>lang('gab %1 has been updated',$gab_update[0]['gab_id']));
+			$receipt['message'][] = array('msg' => lang('gab %1 has been updated', $gab_update[0]['gab_id']));
 
-			for ($i=0;$i<count($gab_update);$i++)
+			for($i = 0; $i < count($gab_update); $i++)
 			{
 				$this->db->query("UPDATE fm_gab_location set
 					remark			='" . $gab_update[$i]['remark'] . "',
 					owner			='" . $gab_update[$i]['owner'] . "',
 					entry_date		='"	. time() . "',
 					user_id			='" . $this->account
-					. "' WHERE location_code = '" . $gab_update[$i]['location_code'] ."' AND gab_id= '" . $gab_update[$i]['gab_id'] . "'",__LINE__,__FILE__);
+				. "' WHERE location_code = '" . $gab_update[$i]['location_code'] . "' AND gab_id= '" . $gab_update[$i]['gab_id'] . "'", __LINE__, __FILE__);
 
-				$receipt['message'][] = array('msg'=>lang('at location %1',$gab_update[$i]['location_code']));
+				$receipt['message'][] = array('msg' => lang('at location %1', $gab_update[$i]['location_code']));
 			}
 
 			return $receipt;
@@ -602,10 +613,10 @@
 
 			if(!$gab['owner'])
 			{
-				$gab['owner']='no';
+				$gab['owner'] = 'no';
 			}
 
-			if(count($location)==$this->gab_insert_level)
+			if(count($location) == $this->gab_insert_level)
 			{
 
 				$this->db->query("UPDATE fm_gab_location set
@@ -613,23 +624,21 @@
 					owner			='" . $gab['owner'] . "',
 					entry_date		='"	. time() . "',
 					user_id			='" . $this->account
-					. "' WHERE location_code= '" . $gab['location_code'] ."' and gab_id= '" . $gab['gab_id'] ."'",__LINE__,__FILE__);
+				. "' WHERE location_code= '" . $gab['location_code'] . "' and gab_id= '" . $gab['gab_id'] . "'", __LINE__, __FILE__);
 
-				$receipt['message'][] = array('msg'=>lang('gab %1 has been edited',"'".$gab['gab_id']."'"));
-				$receipt['message'][] = array('msg'=>lang('at location %1',$gab['location_code']));
+				$receipt['message'][] = array('msg' => lang('gab %1 has been edited', "'" . $gab['gab_id'] . "'"));
+				$receipt['message'][] = array('msg' => lang('at location %1', $gab['location_code']));
 			}
 			else
 			{
-				$receipt['error'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['error'][] = array('msg' => lang('Nothing to do!'));
 			}
 			$receipt['gab_id'] = $gab['gab_id'];
 			return $receipt;
-
 		}
 
-		function delete($gab_id='',$location_code='')
+		function delete($gab_id = '', $location_code = '')
 		{
-			$this->db->query("DELETE FROM fm_gab_location WHERE gab_id='$gab_id' and location_code='$location_code'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_gab_location WHERE gab_id='$gab_id' and location_code='$location_code'", __LINE__, __FILE__);
 		}
 	}
-

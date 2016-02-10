@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table border="0" align="center" width="85%">
+	<table class="pure-table pure-table-bordered">
 		<tr class="th">
 			<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
 		</tr>
@@ -28,15 +28,6 @@
 				<select name="newsettings[required_actual_hours]">
 					<option value="" {selected_required_actual_hours_}>{lang_no}</option>
 					<option value="1" {selected_required_actual_hours_1}>{lang_yes}</option>
-				</select>
-			</td>
-		</tr>
-		<tr class="row_off">
-			<td>{lang_request_ical_event}.</td>
-			<td>
-				<select name="newsettings[request_ical_event]">
-					<option value="" {selected_request_ical_event_}>{lang_no}</option>
-					<option value="1" {selected_request_ical_event_1}>{lang_yes}</option>
 				</select>
 			</td>
 		</tr>
@@ -70,14 +61,13 @@
 				</select>
 			</td>
 		</tr>
-
 		<tr class="row_on">
 			<td>{lang_document_category}:</td>
 			<td>
 	    	<!--to be able to blank the setting - need an empty value-->
 	    	<input type = 'hidden' name="newsettings[document_cat][]" value="">
 		     <table>
-{hook_document_cat}
+					{hook_document_cat}
 			 </table>
 			</td>
 		</tr>

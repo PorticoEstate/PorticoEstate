@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* phpGroupWare
 	*
@@ -25,9 +24,8 @@
 	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	// FIXME this should be changed significantly - it duplicates a lot of login code, most of which has been improved
 
 	$phpgw_info = array();
@@ -62,17 +60,15 @@
 	$tmpl = CreateObject('phpgwapi.Template', PHPGW_SERVER_ROOT . '/property/templates/base');
 
 	// This is used for system downtime, to prevent new logins.
-	if( isset($GLOBALS['phpgw_info']['server']['deny_all_logins'])
-		&& $GLOBALS['phpgw_info']['server']['deny_all_logins'] )
+	if(isset($GLOBALS['phpgw_info']['server']['deny_all_logins']) && $GLOBALS['phpgw_info']['server']['deny_all_logins'])
 	{
 		$tmpl->set_root($GLOBALS['phpgw_info']['server']['template_dir']);
 		$tmpl->set_file(
-			array
-			(
+		array(
 				'login_form'  => 'login_denylogin.tpl'
 			)
 		);
-		$tmpl->pfp('loginout','login_form');
+		$tmpl->pfp('loginout', 'login_form');
 		exit;
 	}
 
@@ -120,19 +116,17 @@
 		}
 	}
 
-
 	/**
 	* Check languages
 	*/
 	function check_langs()
 	{
 		// echo "<h1>check_langs()</h1>\n";
-		if ( isset($GLOBALS['phpgw_info']['server']['lang_ctimes'])
-			&& !is_array($GLOBALS['phpgw_info']['server']['lang_ctimes']))
+		if(isset($GLOBALS['phpgw_info']['server']['lang_ctimes']) && !is_array($GLOBALS['phpgw_info']['server']['lang_ctimes']))
 		{
 			$GLOBALS['phpgw_info']['server']['lang_ctimes'] = unserialize($GLOBALS['phpgw_info']['server']['lang_ctimes']);
 		}
-		else if ( !isset($GLOBALS['phpgw_info']['server']['lang_ctimes']) )
+		else if(!isset($GLOBALS['phpgw_info']['server']['lang_ctimes']))
 		{
 			$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 		}
@@ -141,18 +135,17 @@
 		$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 		$apps = $GLOBALS['phpgw_info']['user']['apps'];
 		$apps['phpgwapi'] = true;	// check the api too
-		while (list($app,$data) = each($apps))
+		while(list($app, $data) = each($apps))
 		{
 			$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
 
-			if (file_exists($fname))
+			if(file_exists($fname))
 			{
 				$ctime = filectime($fname);
-				$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app])
-						? intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
+				$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? intval($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) : 0;
 				//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
 
-				if ($ctime != $ltime)
+				if($ctime != $ltime)
 				{
 					update_langs();		// update all langs
 					break;
@@ -160,7 +153,6 @@
 			}
 		}
 	}
-
 
 	/**
 	* Update languages
@@ -172,7 +164,7 @@
 
 		$GLOBALS['phpgw_setup']->detection->check_lang(false);	// get installed langs
 		$langs = $GLOBALS['phpgw_info']['setup']['installed_langs'];
-		while (list($lang) = @each($langs))
+		while(list($lang) = @each($langs))
 		{
 			$langs[$lang] = $lang;
 		}
@@ -186,57 +178,57 @@
 		*/
 		include(PHPGW_SERVER_ROOT . '/setup/lang.php');
 	}
-
 	/* Program starts here */
 	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionphpgwsessid');
 //	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
 	$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
 	$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 
-	$login = phpgw::get_var('login', 'string' , 'POST');
-	$passwd = phpgw::get_var('passwd', 'string' , 'POST');
+	$login = phpgw::get_var('login', 'string', 'POST');
+	$passwd = phpgw::get_var('passwd', 'string', 'POST');
 
-	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
+	if($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 	{
 		$submit = true;
-		$login = phpgw::get_var('PHP_AUTH_USER', 'string' , 'SERVER');
-		$passwd = phpgw::get_var('PHP_AUTH_PW', 'string' , 'SERVER');
+		$login = phpgw::get_var('PHP_AUTH_USER', 'string', 'SERVER');
+		$passwd = phpgw::get_var('PHP_AUTH_PW', 'string', 'SERVER');
 	}
 
-	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
+	if($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
 	{
 		$submit = true;
-		$login = phpgw::get_var('REMOTE_USER', 'string' , 'SERVER');
+		$login = phpgw::get_var('REMOTE_USER', 'string', 'SERVER');
 
 		$passwd = '';
 	}
 
 	# Apache + mod_ssl style SSL certificate authentication
 	# Certificate (chain) verification occurs inside mod_ssl
-	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'sqlssl' && isset($_SERVER['SSL_CLIENT_S_DN']) && !isset($_GET['cd']))
+	if($GLOBALS['phpgw_info']['server']['auth_type'] == 'sqlssl' && isset($_SERVER['SSL_CLIENT_S_DN']) && !isset($_GET['cd']))
 	{
 		# an X.509 subject looks like:
 		# /CN=john.doe/OU=Department/O=Company/C=xx/Email=john@comapy.tld/L=City/
 		# the username is deliberately lowercase, to ease LDAP integration
-		$sslattribs = phpgw::get_var('SSL_CLIENT_S_DN', 'string' , 'SERVER');
-		$sslattribs = explode('/',$sslattribs);
+		$sslattribs = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
+		$sslattribs = explode('/', $sslattribs);
 		# skip the part in front of the first '/' (nothing)
-		while ($sslattrib = next($sslattribs))
+		while($sslattrib = next($sslattribs))
 		{
-			list($key,$val) = explode('=',$sslattrib);
+			list($key, $val) = explode('=', $sslattrib);
 			$sslattributes[$key] = $val;
 		}
 
-		if (isset($sslattributes['Email']))
+		if(isset($sslattributes['Email']))
 		{
 			$submit = true;
 
 			# login will be set here if the user logged out and uses a different username with
 			# the same SSL-certificate.
-			if (!isset($_POST['login'])&&isset($sslattributes['Email'])) {
+			if(!isset($_POST['login']) && isset($sslattributes['Email']))
+			{
 				$login = $sslattributes['Email'];
 				# not checked against the database, but delivered to authentication module
-				$passwd = phpgw::get_var('SSL_CLIENT_S_DN', 'string' , 'SERVER');
+				$passwd = phpgw::get_var('SSL_CLIENT_S_DN', 'string', 'SERVER');
 			}
 		}
 		unset($key);
@@ -244,12 +236,9 @@
 		unset($sslattributes);
 	}
 
-	if ( (isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y']) ) )
+	if((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 	{
-		if ( $_SERVER['REQUEST_METHOD'] != 'POST' &&
-		   !isset($_SERVER['PHP_AUTH_USER']) &&
-		   !isset($_SERVER['REMOTE_USER']) &&
-		   !isset($_SERVER['SSL_CLIENT_S_DN'])
+		if($_SERVER['REQUEST_METHOD'] != 'POST' && !isset($_SERVER['PHP_AUTH_USER']) && !isset($_SERVER['REMOTE_USER']) && !isset($_SERVER['SSL_CLIENT_S_DN'])
 		  )
 		{
 			$GLOBALS['phpgw']->redirect('login.php', array('cd' => '5'));
@@ -268,10 +257,10 @@
 				. " WHERE phpgw_accounts.account_status = 'A' AND"
 				. " fm_tenant.account_lid = '{$login}' AND"
 				. " fm_tenant.account_pwd='{$_passwd}' AND"
-				. " fm_tenant.account_status =1",__LINE__,__FILE__);
+			. " fm_tenant.account_status =1", __LINE__, __FILE__);
 			$db->next_record();
 
-			if (!$db->f('account_lid'))
+			if(!$db->f('account_lid'))
 			{
 				$GLOBALS['phpgw']->redirect('login.php?cd=5');
 				exit;
@@ -281,24 +270,24 @@
 			$login = $db->f('account_lid');
 			$passwd = $db->f('account_pwd');
 //_debug_array($passwd);die();
-			if ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
+			if(isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'])
 			{
-				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', phpgw::get_var('loginusertype') ,time()+1209600); /* For 2 weeks */
+				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', phpgw::get_var('loginusertype'), time() + 1209600); /* For 2 weeks */
 			}
 		}
 // end mapping
 
-		if (strstr($login,'@') === false && isset($_POST['logindomain']))
+		if(strstr($login, '@') === false && isset($_POST['logindomain']))
 		{
 			$login .= '@' . phpgw::get_var('logindomain', 'string', 'POST');
 		}
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '', true);
 
-		$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
+		$GLOBALS['phpgw']->session->appsession('tenant_id', 'property', $tenant_id);
 
 
-		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
+		if(!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
 		{
 			$GLOBALS['phpgw']->redirect('login.php?cd=' . $GLOBALS['phpgw']->session->cd_reason);
 			exit;
@@ -310,13 +299,13 @@
 			$extra_vars['phpgw_forward'] =  $forward;
 			foreach($_GET as $name => $value)
 			{
-				if (preg_match('/phpgw_/',$name))
+				if(preg_match('/phpgw_/', $name))
 				{
 					$extra_vars[$name] = phpgw::clean_value($value);
 				}
 			}
 		}
-		if ( !isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'] )
+		if(!isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'])
 		{
 			check_langs();
 		}
@@ -336,24 +325,23 @@
 	$tmpl->set_block('login_form', 'usertype_option', 'usertype_options');
 	$tmpl->set_block('login_form', 'usertype_select', 'usertype_selects');
 
-	if( $GLOBALS['phpgw_info']['server']['domain_from_host']
-		&& !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
+	if($GLOBALS['phpgw_info']['server']['domain_from_host'] && !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 	{
 		$tmpl->set_var(
 				array(
 					'domain_selects'	=> '',
-					'logindomain'		=> phpgw::get_var('SERVER_NAME', 'string' , 'SERVER')
+			'logindomain' => phpgw::get_var('SERVER_NAME', 'string', 'SERVER')
 				)
 			);
 		$tmpl->parse('domain_from_hosts', 'domain_from_host');
 	}
-	elseif( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
+	elseif($GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 	{
 		foreach($GLOBALS['phpgw_domain'] as $domain_name => $domain_vars)
 		{
 			$tmpl->set_var('domain_name', $domain_name);
 
-			if (isset($_COOKIE['last_domain']) && $_COOKIE['last_domain'] == $domain_name)
+			if(isset($_COOKIE['last_domain']) && $_COOKIE['last_domain'] == $domain_name)
 			{
 				$tmpl->set_var('domain_selected', 'selected="selected"');
 			}
@@ -379,16 +367,15 @@
 					'domain_from_hosts'	=> ''
 				)
 			);
-
 	}
 
-	$usertypes = array('tenant'=>lang('tenant'),'internal'=>lang('internal'));
+	$usertypes = array('tenant' => lang('tenant'), 'internal' => lang('internal'));
 	foreach($usertypes as $usertype_id => $usertype_name)
 	{
 		$tmpl->set_var('usertype_id', $usertype_id);
 		$tmpl->set_var('usertype_name', $usertype_name);
 
-		if (isset($_COOKIE['last_usertype']) && $_COOKIE['last_usertype']==$usertype_id)
+		if(isset($_COOKIE['last_usertype']) && $_COOKIE['last_usertype'] == $usertype_id)
 		{
 			$tmpl->set_var('usertype_selected', 'selected="selected"');
 		}
@@ -406,12 +393,12 @@
 			)
 		);
 
-	if (isset($_COOKIE['last_loginid']))
+	if(isset($_COOKIE['last_loginid']))
 	{
 		$accounts = CreateObject('phpgwapi.accounts');
 		$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id(phpgw::get_var('last_loginid', 'string', 'COOKIE')));
 
-		if (! $prefs->account_id)
+		if(!$prefs->account_id)
 		{
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] = 'en';
 		}
@@ -429,32 +416,30 @@
 	}
 	$GLOBALS['phpgw']->translation->add_app('login');
 	$GLOBALS['phpgw']->translation->add_app('loginscreen');
-	if ( ($login_msg = lang('loginscreen_message') ) != 'loginscreen_message*')
+	if(($login_msg = lang('loginscreen_message') ) != 'loginscreen_message*')
 	{
-		$tmpl->set_var('lang_message', stripslashes($login_msg) );
+		$tmpl->set_var('lang_message', stripslashes($login_msg));
 	}
 	else
 	{
 		$tmpl->set_var('lang_message', '&nbsp;');
 	}
 
-	if( ( !isset($GLOBALS['phpgw_info']['server']['usecookies']) || !$GLOBALS['phpgw_info']['server']['usecookies'] )
-		&& (isset($_COOKIE) && is_array($_COOKIE) ) )
+	if((!isset($GLOBALS['phpgw_info']['server']['usecookies']) || !$GLOBALS['phpgw_info']['server']['usecookies'] ) && (isset($_COOKIE) && is_array($_COOKIE) ))
 	{
-		if ( isset($_COOKIE['last_loginid']) )
+		if(isset($_COOKIE['last_loginid']))
 		{
 			unset($_COOKIE['last_loginid']);
 		}
 
-		if ( isset($_COOKIE['last_domain']) )
+		if(isset($_COOKIE['last_domain']))
 		{
 			unset($_COOKIE['last_domain']);
 		}
-		if ( isset($_COOKIE['last_usertype']) )
+		if(isset($_COOKIE['last_usertype']))
 		{
 			unset($_COOKIE['last_usertype']);
 		}
-
 	}
 
 	$last_loginid = phpgw::get_var('last_loginid', 'string', 'COOKIE');
@@ -463,7 +448,7 @@
 		reset($GLOBALS['phpgw_domain']);
 		list($default_domain) = each($GLOBALS['phpgw_domain']);
 
-		if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']))
+		if($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']))
 		{
 			$last_loginid .= '@' . phpgw::get_var('last_domain', 'string', 'COOKIE');
 		}
@@ -473,39 +458,37 @@
 	$extra_vars = array();
 	foreach($_GET as $name => $value)
 	{
-		if (preg_match('/phpgw_/',$name))
+		if(preg_match('/phpgw_/', $name))
 		{
 			$extra_vars[$name] = urlencode(phpgw::clean_value($value));
 		}
 	}
 
 	$cd = 0;
-	if ( isset($_GET['cd']) )
+	if(isset($_GET['cd']))
 	{
-		$cd = (int) $_GET['cd'];
+		$cd = (int)$_GET['cd'];
 	}
 
-	$tmpl->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/property/login.php?' . http_build_query($extra_vars) );
-	$tmpl->set_var('registration_url',$GLOBALS['phpgw_info']['server']['webserver_url'] . '/registration/');
+	$tmpl->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/property/login.php?' . http_build_query($extra_vars));
+	$tmpl->set_var('registration_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/registration/');
 	$tmpl->set_var('version', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
-	$tmpl->set_var('cd', check_logoutcode($cd) );
+	$tmpl->set_var('cd', check_logoutcode($cd));
 	$tmpl->set_var('last_loginid', $last_loginid);
 
 	$tmpl->set_var('lang_username', lang('username'));
 	$tmpl->set_var('lang_password', lang('password'));
 	$tmpl->set_var('lang_login', lang('login'));
 
-	$tmpl->set_var('lang_testjs', lang('Your browser does not support javascript and/or css, please use a modern standards compliant browser.  If you have disabled either of these features please enable them for this site.') );
+	$tmpl->set_var('lang_testjs', lang('Your browser does not support javascript and/or css, please use a modern standards compliant browser.  If you have disabled either of these features please enable them for this site.'));
 
-	$tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
-						? $GLOBALS['phpgw_info']['server']['site_title']
-						: 'phpGroupWare'
+	$tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : 'phpGroupWare'
 						);
 
 	$tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
 
 	// This really should just use the API CSS, which would fix any conflicts
-	if( is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css") )
+	if(is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css"))
 	{
 		$base_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/base.css";
 	}
@@ -515,7 +498,7 @@
 	}
 
 	// ditto
-	if( is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/login.css") )
+	if(is_file(PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/login.css"))
 	{
 		$login_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/property/templates/{$GLOBALS['phpgw_info']['login_template_set']}/css/login.css";
 	}
@@ -528,13 +511,12 @@
 	$tmpl->set_var('login_css', $login_css);
 
 	$autocomplete = '';
-	if ( isset($GLOBALS['phpgw_info']['server']['autocomplete_login'])
-		&& $GLOBALS['phpgw_info']['server']['autocomplete_login'] )
+	if(isset($GLOBALS['phpgw_info']['server']['autocomplete_login']) && $GLOBALS['phpgw_info']['server']['autocomplete_login'])
 	{
 		$autocomplete = 'autocomplete="off"';
 	}
 	$tmpl->set_var('autocomplete', $autocomplete);
 	unset($autocomplete);
 
-	$tmpl->pfp('loginout','login_form');
+	$tmpl->pfp('loginout', 'login_form');
 

@@ -3,6 +3,7 @@
 	
 	class booking_sodocumentation extends booking_socommon
 	{
+
 		const CATEGORY_BACKEND = 'backend';
 		const CATEGORY_FRONTEND = 'frontend';
 		
@@ -16,8 +17,7 @@
 			
 		function __construct()
 		{
-			parent::__construct('bb_documentation',
-				array(
+			parent::__construct('bb_documentation', array(
 					'id'			=> array('type' => 'int'),
 					'name'			=> array('type' => 'string', 'query' => true),
 					'category'		=> array('type' => 'string', 'required' => true),
@@ -28,21 +28,23 @@
 			
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
 			
-			if (!file_exists($server_files_dir) || !is_dir($server_files_dir)) {
-				throw new LogicException('The upload directory is not properly configured: '.$server_files_dir);
+			if(!file_exists($server_files_dir) || !is_dir($server_files_dir))
+			{
+				throw new LogicException('The upload directory is not properly configured: ' . $server_files_dir);
 			}
 			
-			if (!is_writable($server_files_dir)) {
+			if(!is_writable($server_files_dir))
+			{
 				throw new LogicException('The upload directory is not writable');
 			}
 			
-			$this->uploadRootDir = $server_files_dir.DIRECTORY_SEPARATOR.'booking';
+			$this->uploadRootDir = $server_files_dir . DIRECTORY_SEPARATOR . 'booking';
 		}
-		
 #		public static function get_document_owners() {
 #			return self::$document_owners;
 #		}
 #		
+
 		public function get_categories()
 		{
 			return $this->defaultCategories;
@@ -53,6 +55,7 @@
 #			return $this->ownerType;
 #		}
 #		
+
 		public function get_files_root()
 		{	
 			return $this->uploadRootDir;
@@ -60,24 +63,25 @@
 		
 		public function get_files_path()
 		{
-			return self::get_files_root().DIRECTORY_SEPARATOR.'manual';
+			return self::get_files_root() . DIRECTORY_SEPARATOR . 'manual';
 		}
 		
 		private function _chomp_dir_sep($string)
 		{
 			$sep = DIRECTORY_SEPARATOR == '/' ? '\\/' : preg_quote(DIRECTORY_SEPARATOR);
-			return preg_replace('/('.$sep.')+$/', '', trim($string));
+			return preg_replace('/(' . $sep . ')+$/', '', trim($string));
 		}
 
 		public function generate_filename($document_id, $document_name)
 		{
-			return $this->get_files_path().DIRECTORY_SEPARATOR.$document_id.'_'.$document_name;
+			return $this->get_files_path() . DIRECTORY_SEPARATOR . $document_id . '_' . $document_name;
 		}
 		
 		function read_single($id)
 		{
 			$document = parent::read_single($id);
-			if (is_array($document)) { 
+			if(is_array($document))
+			{
 				$document['filename'] = $this->generate_filename($document['id'], $document['name']); 
 			}
 			return $document;
@@ -93,17 +97,22 @@
 		{	
 			$this->newFile = null;
 			
-			if (!$document['id'])
+			if(!$document['id'])
 			{
 				$fileValidator = createObject('booking.sfValidatorFile');
 				$files = $document['files'];
 				unset($document['files']);
-				try {
-					if ($this->newFile = $fileValidator->clean($files['name'])) {
+				try
+				{
+					if($this->newFile = $fileValidator->clean($files['name']))
+					{
 						$document['name'] = $this->newFile->getOriginalName();
 					}
-				} catch (sfValidatorError $e) {
-					if ($e->getCode() == 'required') {
+				}
+				catch(sfValidatorError $e)
+				{
+					if($e->getCode() == 'required')
+					{
 						$errors['name'] = lang('Missing file for document');
 						return;
 					}
@@ -111,14 +120,16 @@
 				}
 			}
 			
-			if (!in_array($document['category'], $this->defaultCategories)) {
+			if(!in_array($document['category'], $this->defaultCategories))
+			{
 				$errors['category'] = lang('Invalid category');
 			}
 		}
 		
 		function add($document)
 		{
-			if (!$this->newFile) { throw new LogicException('Missing file'); }
+			if(!$this->newFile)
+			{ throw new LogicException('Missing file');}
 			
 			$this->db->transaction_begin();
 
@@ -131,7 +142,8 @@
 			// make sure that uploaded images are "web friendly"
 			// automatically resize pictures that are too big
 			
-			if ($this->db->transaction_commit()) { 
+			if($this->db->transaction_commit())
+			{
 				return $receipt;
 			}
 			
@@ -140,7 +152,8 @@
 		
 		function delete($id)
 		{
-			if (!is_array($document = $this->read_single($id))) {
+			if(!is_array($document = $this->read_single($id)))
+			{
 				return false;
 			}
 			
@@ -148,8 +161,10 @@
 			
 			parent::delete($id);
 			
-			if ($this->db->transaction_commit()) { 
-				if (file_exists($document['filename'])) {
+			if($this->db->transaction_commit())
+			{
+				if(file_exists($document['filename']))
+				{
 					unlink($document['filename']);
 				}
 				return true;
@@ -172,13 +187,14 @@
 		
 		public function get_file_extension(array &$entity)
 		{
-			return (false === $pos = strrpos($entity['name'], '.')) ? false : substr($entity['name'], $pos+1);
+			return (false === $pos = strrpos($entity['name'], '.')) ? false : substr($entity['name'], $pos + 1);
 		}
 
-		public function getMyRole($id) {
+		public function getMyRole($id)
+		{
 
 			$db = $this->db;
-			$db->limit_query("SELECT role FROM bb_permission_root WHERE id=".intval($GLOBALS['phpgw_info']['user']['account_id']), 0, __LINE__, __FILE__, 1);
+			$db->limit_query("SELECT role FROM bb_permission_root WHERE id=" . intval($GLOBALS['phpgw_info']['user']['account_id']), 0, __LINE__, __FILE__, 1);
 			if($db->next_record())
 			{
 				return $db->f('role', false);
@@ -192,7 +208,7 @@
 				if($this->db->next_record())
 				{
 					$id = $this->db->f('id', false);
-					return sprintf('index.php?menuaction=bookingfrontend.uidocumentation.download&id=%s',$id);
+				return sprintf('index.php?menuaction=bookingfrontend.uidocumentation.download&id=%s', $id);
 				}
 			return null;
 		}
@@ -203,7 +219,7 @@
 				if($this->db->next_record())
 				{
 					$id = $this->db->f('id', false);
-					return sprintf('index.php?menuaction=booking.uidocumentation.download&id=%s',$id);
+				return sprintf('index.php?menuaction=booking.uidocumentation.download&id=%s', $id);
 				}
 			return null;
 		}

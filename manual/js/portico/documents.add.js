@@ -1,44 +1,6 @@
 var cat_id = 0;
 var fileuploader_action;
 
-var arURLParts = strBaseURL.split('?');
-var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
-
-YUI_config = {
-    //Don't combine the files
-    combine: true,
-    //Ignore things that are already loaded (in this process)
-    ignoreRegistered: false,
-    //Set the base path
-	comboBase: comboBase,
-    base: '',
-    //And the root
-    root: '',
-    //Require your deps
-    require: [ ]
-};
-
-
-YUI({
-}).use(
-	'gallery-formvalidator', 
-		function(Y) {	
-                Y.on("domready", function () {
-                   var form = new Y.Validator(
-                        {
-                            form:'form',
-							checkOnSubmit:false,
-                            defaultIncorrectIndicatorCss:'validator',
-                            defaultCorrectIndicatorCss:'indicator',
-                            createCorrectIndicator:true,
-                            createIncorrectIndicator:true
-                        }
-                    );
-
-                });
-
-});
-
 	this.update_fileuploader_action = function()
 	{
 	   cat_id = document.getElementById("cat_id").value;
@@ -77,7 +39,7 @@ YUI({
 	{
 		var oArgs = {menuaction:'manual.uidocuments.get_files', cat_id:cat_id};
 		var strURL = phpGWLink('index.php', oArgs, true);
-		YAHOO.portico.updateinlineTableHelper('datatable-container_0', strURL);
+		JqueryPortico.updateinlineTableHelper('datatable-container_0', strURL);
 	}
 	
 	function lightbox_hide()

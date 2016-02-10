@@ -19,6 +19,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'deactivate_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
@@ -49,9 +50,10 @@
 		'bb_targetaudience' => array(
 			'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => False),
+					'activity_id' => array('type' => 'int','precision' => '4','nullable' => false),
 					'name' => array('type' => 'text', 'nullable' => False),
 					'sort' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default'=> 0),
-					'description' => array('type' => 'text', 'nullable' => False),
+					'description' => array('type' => 'text', 'nullable' => true),
 					'active' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default' => 1),
 				),
 			'pk' => array('id'),
@@ -107,18 +109,30 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
-				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '150','nullable' => False),
 				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'sort' => array('type' => 'int','precision' => '4','nullable' => False,'default' => 0),
 				'organizations_ids' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_building' => array('building_id' => 'id'),
 				'bb_activity' => array('activity_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_building_resource' => array(
+			'fd' => array(
+				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+			),
+			'pk' => array('building_id', 'resource_id'),
+			'fk' => array(
+				'bb_building' => array('building_id' => 'id'),
+				'bb_resource' => array('resource_id' => 'id')
+			),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -230,6 +244,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_allocation_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'allocation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_allocation' => array('allocation_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_booking' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
@@ -255,6 +284,21 @@
 				'bb_allocation' => array('allocation_id' => 'id'),
 				'bb_application' => array('application_id' => 'id'),
 				'bb_activity' => array('activity_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_booking_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'booking_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -384,9 +428,10 @@
 		'bb_agegroup' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => false),
 				'name' => array('type' => 'text', 'nullable' => False),
 				'sort' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default'=> 0),
-				'description' => array('type' => 'text', 'nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => true),
 				'active' => array('type' => 'int','precision' => '4', 'nullable' => False, 'default' => 1),
 			),
 			'pk' => array('id'),
@@ -426,6 +471,8 @@
 				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
+				'female_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('booking_id', 'agegroup_id'),
 			'fk' => array(
@@ -460,6 +507,21 @@
 			'pk' => array('id'),
 			'fk' => array(
 				"bb_resource" => array('owner_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_document_application' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+				'description' => array('type' => 'text', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				"bb_application" => array('owner_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -590,6 +652,8 @@
 				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
 				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
+				'female_actual' => array('type' => 'int','precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('event_id', 'agegroup_id'),
 			'fk' => array(
@@ -625,6 +689,21 @@
 			'bb_event' => array('event_id' => 'id')),
 			'ix' => array(),
 			'uc' => array('event_id', 'from_', 'to_')
+		),
+		'bb_event_cost' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'bb_event' => array('event_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
 		),
 		'bb_completed_reservation_export' => array(
 			'fd' => array(

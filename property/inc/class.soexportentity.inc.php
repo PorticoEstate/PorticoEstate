@@ -24,18 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage helpdesk
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_soexportentity
 	{
+
 		var $uicols_related = array();
 		var $acl_location = '.entity.1.11';
 		var $entity_id = 1;
@@ -44,7 +43,6 @@
 		public $sum_budget		= 0;
 		public $sum_actual_cost	= 0;
 		protected $type = 'entity';
-
 		public $soap_functions = array
 			(
 				'read' => array(
@@ -52,8 +50,6 @@
 					'out' => array('array')
 				)
 			);
-
-
 		public $xmlrpc_methods = array
 			(
 				array
@@ -62,7 +58,6 @@
 					'decription' => 'Get list of meter'
 				)
 			);
-
 		public $public_functions = array
 		(
 			'read'			=> true
@@ -71,7 +66,7 @@
 		function __construct()
 		{
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->historylog	= CreateObject('property.historylog','tts');
+			$this->historylog = CreateObject('property.historylog', 'tts');
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
@@ -82,15 +77,14 @@
 			$this->type			= 'entity';
 		}
 
-
-		function list_methods($_type='xmlrpc')
+		function list_methods($_type = 'xmlrpc')
 		{
 			/*
 			  This handles introspection or discovery by the logged in client,
 			  in which case the input might be an array.  The server always calls
 			  this function to fill the server dispatch map using a string.
 			 */
-			if (is_array($_type))
+			if(is_array($_type))
 			{
 				$_type = $_type['type'] ? $_type['type'] : $_type[0];
 			}
@@ -100,7 +94,7 @@
 				$xml_functions = array(
 					'read' => array(
 						'function'  => 'read',
-						'signature' => array(array(xmlrpcArray,xmlrpcArray)),
+							'signature' => array(array(xmlrpcArray, xmlrpcArray)),
 						'docstring' => 'Get list of meters'
 					),
 				);
@@ -115,7 +109,6 @@
 			}
 		}
 
-
 		function read($data = array())
 		{
 			$this->entity_id	= isset($data['entity_id']) && $data['entity_id'] ? $data['entity_id'] : $this->entity_id;
@@ -127,7 +120,7 @@
 				return array('error' => 'sorry: no access to this function');
 			}
 			
-			$soentity 			= CreateObject('property.soentity',$this->entity_id,$this->cat_id);
+			$soentity = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
 			$soentity->type		= $this->type;
 			
 
@@ -137,12 +130,12 @@
 			}
 
 			$custom	= createObject('phpgwapi.custom_fields');
-			$attrib_data = $custom->find('property',$this->acl_location, 0, '','','',true, true);
+			$attrib_data = $custom->find('property', $this->acl_location, 0, '', '', '', true, true);
 
 			$attrib_filter = array();
 			if($attrib_data)
 			{
-				foreach ( $attrib_data as $attrib )
+				foreach($attrib_data as $attrib)
 				{
 					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
 					{
@@ -170,8 +163,8 @@
 				'filter'			=> isset($data['filter']) ? $data['filter'] : '',
 				'cat_id'			=> $this->cat_id,
 				'district_id'		=> isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0,
-				'lookup'			=> isset($data['lookup'])?$data['lookup']:'',
-				'allrows'			=> isset($data['allrows'])?$data['allrows']:'',
+				'lookup' => isset($data['lookup']) ? $data['lookup'] : '',
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
 				'entity_id'			=> (int)$this->entity_id,
 				'cat_id'			=> (int)$this->cat_id,
 				'status'			=> isset($data['status']) ? $data['status'] : '',
@@ -191,17 +184,17 @@
 			$solocation 	= CreateObject('property.solocation');
 			$custom 		= createObject('property.custom_fields');
 
-			$_values['attributes'] = $custom->find('property','.location.1', 0, '', 'ASC', 'attrib_sort', true, true);
+			$_values['attributes'] = $custom->find('property', '.location.1', 0, '', 'ASC', 'attrib_sort', true, true);
 
-			if( isset($data['get_location_info']) && $data['get_location_info'])
+			if(isset($data['get_location_info']) && $data['get_location_info'])
 			{
 				foreach($values as &$entry)
 				{
 	//				$entry['address'] = utf8_decode($entry['address']);
 	//				$entry['user'] = utf8_decode($entry['user_id']);
-					$__values = $solocation->read_single($entry['loc1'],$_values);
+					$__values = $solocation->read_single($entry['loc1'], $_values);
 	//				$entry['location_data'] = $solocation->read_single($entry['loc1'],$_values);
-					$entry['location_data'] = $custom->prepare($__values, 'property',".location.1", true);
+					$entry['location_data'] = $custom->prepare($__values, 'property', ".location.1", true);
 				}
 			}
 

@@ -9,8 +9,8 @@
  *  - Birth date
  *
  * @website http://formvalidator.net/#location-validators
- * @license Dual licensed under the MIT or GPL Version 2 licenses
- * @version 2.2.beta.58
+ * @license MIT
+ * @version 2.2.83
  */
 (function($) {
 
@@ -45,7 +45,7 @@
             if($el.valAttr('format')) {
                 dateFormat = $el.valAttr('format');
             }
-            else if(typeof conf.dateFormat != 'undefined') {
+            else if(typeof conf.dateFormat !== 'undefined') {
                 dateFormat = conf.dateFormat;
             }
 

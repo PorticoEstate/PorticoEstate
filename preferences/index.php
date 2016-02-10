@@ -11,6 +11,7 @@
 
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'preferences';
+	$GLOBALS['phpgw_info']['flags']['noheader'] = true; //Wait for it
 	
 	/**
 	 * Include phpgroupware header
@@ -59,32 +60,25 @@
 	}
 
 	$tabs = array();
-	$tabs[] = array(
+	$tabs['user'] = array(
 		'label' => lang('Your preferences'),
-		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'user'))
+		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'user')),
+		'disable'=> 0
 	);
-	$tabs[] = array(
+	$tabs['default'] = array(
 		'label' => lang('Default preferences'),
-		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default'))
+		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default')),
+		'disable'=> 0
 	);
-	$tabs[] = array(
+	$tabs['forced'] = array(
 		'label' => lang('Forced preferences'),
-		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced'))
+		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced')),
+		'disable'=> 0
 	);
+	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $type));
+	$GLOBALS['phpgw']->template->set_var('tab_id', $type);
 
-	switch($type)
-	{
-		case 'default':
-			$selected = 1;
-			break;
-		case 'forced':
-			$selected = 2;
-			break;
-		case 'user':
-		default:
-			$selected = 0;
-	}
-	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $selected));
+	$GLOBALS['phpgw']->common->phpgw_header(true);
 
 	/**
 	 * Dump a row header
@@ -94,7 +88,7 @@
 	 */ 
 	function section_start($appname='', $icon='')
 	{
-		$GLOBALS['phpgw']->template->set_var('a_name', $appname);
+		$GLOBALS['phpgw']->template->set_var('a_name', str_replace(" ", "_", $appname));
 		$GLOBALS['phpgw']->template->set_var('app_name', $appname);
 		$GLOBALS['phpgw']->template->set_var('app_icon', $icon);
 		if ( $icon )

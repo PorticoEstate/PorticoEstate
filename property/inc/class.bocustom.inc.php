@@ -24,23 +24,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bocustom
 	{
+
 		var $start;
 		var $query;
 		var $filter;
 		var $sort;
 		var $order;
 		var $cat_id;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -50,11 +49,11 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so = CreateObject('property.socustom');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -68,13 +67,13 @@
 			$cat_id		= phpgw::get_var('cat_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
+			if($start)
 			{
-				$this->start=$start;
+				$this->start = $start;
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
@@ -107,18 +106,17 @@
 			}
 		}
 
-
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','custom',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'custom', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','custom');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'custom');
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -133,16 +131,18 @@
 			return (!!($has & $needed) == true);
 		}
 
-
-		function read()
+		function read($data = array())
 		{
-			$custom = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/* $custom = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+			  $this->total_records = $this->so->total_records; */
+
+			$custom = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
-			for ($i=0; $i<count($custom); $i++)
+			for($i = 0; $i < count($custom); $i++)
 			{
-				$custom[$i]['entry_date']  = $GLOBALS['phpgw']->common->show_date($custom[$i]['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$custom[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($custom[$i]['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 			return $custom;
 		}
@@ -160,12 +160,12 @@
 		function save($custom)
 		{
 
-			if ($custom['custom_id'])
+			if($custom['custom_id'])
 			{
-				if ($custom['custom_id'] != 0)
+				if($custom['custom_id'] != 0)
 				{
 					$custom_id = $custom['custom_id'];
-					$receipt=$this->so->edit($custom);
+					$receipt = $this->so->edit($custom);
 				}
 			}
 			else
@@ -177,7 +177,7 @@
 
 		function delete($params)
 		{
-			if (is_array($params))
+			if(is_array($params))
 			{
 				$this->so->delete($params[0]);
 			}
@@ -192,18 +192,18 @@
 			$this->so->resort($data);
 		}
 
-
-		function read_custom($custom_id,$allrows='')
+		function read_custom($data = array())
 		{
-			if($allrows)
+//            ,$custom_id,$allrows=''
+			if($data['allrows'])
 			{
-				$this->allrows=$allrows;
+				$data['allrows'] = $data['allrows'];
 			}
-			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
+//			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
+			$custom = $this->so->read_custom($data);
 			$this->uicols = $this->so->uicols;
 			$this->total_records = $this->so->total_records;
 			return $custom;
 		}
-
 	}

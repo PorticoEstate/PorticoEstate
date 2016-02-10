@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bolookup
 	{
+
 		public $start;
 		public $query;
 		public $filter;
@@ -42,12 +42,12 @@
 		public $cat_id;
 		public $total_records = 0;
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 			= CreateObject('property.solookup');
 			$this->solocation	= CreateObject('property.solocation');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -74,15 +74,15 @@
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','lookup',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'lookup', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','lookup');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'lookup');
 
 			//_debug_array($data);
 
@@ -95,17 +95,14 @@
 			$this->district_id	= $data['district_id'];
 		}
 
-
 		/**
 		 * Read list of contacts from the addressbook
 		 *
 		 * @return array of contacts
 		 */
-
-		function read_addressbook()
+		function read_addressbook($data = array())
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
-				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -114,7 +111,7 @@
 				$limit = 15;
 			}
 
-			$limit		= $this->allrows ? 0 : $limit;
+			$limit = $data['allrows'] ? 0 : $limit;
 
 			$fields = array
 				(
@@ -135,10 +132,10 @@
 
 			$addressbook	= CreateObject('addressbook.boaddressbook');
 
-			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
+			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $data['query'], $fields_search);
 			$this->total_records = $addressbook->get_count_persons($criteria);
 
-			$contacts = $addressbook->get_persons($fields, $this->start, $limit, $this->order, $this->sort, '', $criteria);
+			$contacts = $addressbook->get_persons($fields, $data['start'], $limit, $data['order'], $data['dir'], '', $criteria);
 
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			$user_contacts = array();
@@ -151,26 +148,27 @@
 				{
 					$user_contacts[] = $account->person_id;
 
-					$prefs[$account->person_id] = $socommon->create_preferences('property',$account->id);
+					$prefs[$account->person_id] = $socommon->create_preferences('property', $account->id);
 				}
 			}
 
 //_debug_array($prefs);die();
 			foreach($contacts as &$contact)
 			{
-				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms = '', $simple = false);
+				$contact['contact_name'] = "{$contact['per_last_name']}, {$contact['per_first_name']}";
 
-				if ( is_array($comms) && count($comms) )
+				if(is_array($comms) && count($comms))
 				{
-					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) && $comms[$contact['contact_id']]['work email'] ? $comms[$contact['contact_id']]['work email'] :$prefs[$contact['contact_id']]['email'];
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) && $comms[$contact['contact_id']]['work email'] ? $comms[$contact['contact_id']]['work email'] : $prefs[$contact['contact_id']]['email'];
 					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) && $comms[$contact['contact_id']]['work phone'] ?  $comms[$contact['contact_id']]['work phone'] : '';
 					$contact['mobile'] = isset($comms[$contact['contact_id']]['mobile (cell) phone']) &&  $comms[$contact['contact_id']]['mobile (cell) phone'] ?  $comms[$contact['contact_id']]['mobile (cell) phone'] : $prefs[$contact['contact_id']]['cellphone'];
 				}
-				if (in_array($contact['contact_id'], $user_contacts) )
+				if(in_array($contact['contact_id'], $user_contacts))
 				{
 					$contact['is_user'] = 'X';
 
-					$contact['email'] = isset($contact['email']) && $contact['email'] ? $contact['email'] :$prefs[$contact['contact_id']]['email'];
+					$contact['email'] = isset($contact['email']) && $contact['email'] ? $contact['email'] : $prefs[$contact['contact_id']]['email'];
 					$contact['wphone'] = isset($contact['wphone']) && $contact['wphone'] ?  $contact['wphone'] : '';
 					$contact['mobile'] = isset($contact['mobile']) && $contact['mobile'] ?  $contact['mobile'] : $prefs[$contact['contact_id']]['cellphone'];
 				}
@@ -184,11 +182,9 @@
 		 *
 		 * @return array of contacts
 		 */
-
-		function read_organisation()
+		function read_organisation($data = array())
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
-				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -197,7 +193,7 @@
 				$limit = 15;
 			}
 
-			$limit		= $this->allrows ? 0 : $limit;
+			$limit = $data['allrows'] ? 0 : $limit;
 
 			$fields = array
 				(
@@ -218,17 +214,17 @@
 
 			$qfield = 'org';
 
-			$criteria		= $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields);
-			$token_criteria	= $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $this->query, $fields);
+			$criteria = $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL, PHPGW_CONTACTS_CATEGORIES_ALL, array(), '', $fields);
+			$token_criteria = $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $data['query'], $fields);
 
-			$orgs = $addressbook->get_orgs($fields, $this->start, $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
+			$orgs = $addressbook->get_orgs($fields, $data['start'], $limit, $orderby = 'org_name', $sort = 'ASC', $criteria = '', $token_criteria);
 
-			$this->total = $addressbook->total;
+			$this->total_records = $addressbook->total;
 
 			foreach($orgs as &$contact)
 			{
-				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
-				if ( is_array($comms) && count($comms) )
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms = '', $simple = false);
+				if(is_array($comms) && count($comms))
 				{
 					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
 					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
@@ -238,50 +234,21 @@
 			return $orgs;
 		}
 
-		/**
-		 * Get the the person data what you want
-		 *
-		 * @param array $fields The fields that you can see from person
-		 * @param integer $limit Limit of records that you want
-		 * @param integer $ofset Ofset of record that you want start
-		 * @param string $orderby The field which you want order
-		 * @param string $sort ASC | DESC depending what you want
-		 * @param mixed $criteria All criterias what you want
-		 * @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
-		 * @return array with records
-		 */
-		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
-		{
-			$entries =  $this->so->get_persons($fields, $start, $limit, $orderby, $sort, $criteria, $token_criteria);
-			if(is_array($entries))
-			{
-				foreach($entries as $data)
-				{
-					$persons[$data['contact_id']] = $data;
-				}
-			}
-			else
-			{
-				$persons = array();
-			}
-			$this->total = $this->so->contacts->total_records;
-			return $persons;
-		}
-
-		function read_vendor($filter = array())
+		function read_vendor($data = array())
 		{
 			$sogeneric 	= CreateObject('property.sogeneric');
 
 			$location_info = $sogeneric->get_location_info('vendor');
 			
-			$this->order = $this->order ? $this->order : 'org_name';
-			$this->sort = $this->sort ? $this->sort : 'ASC';
+			$data['order'] = $data['order'] ? $data['order'] : 'org_name';
+			$data['sort'] = $data['sort'] ? $data['sort'] : 'ASC';
 
-			if (! $filter )
+			$filter = $data['filter'];
+			if(!$filter)
 			{
-				foreach ( $location_info['fields'] as $field )
+				foreach($location_info['fields'] as $field)
 				{
-					if (isset($field['filter']) && $field['filter'])
+					if(isset($field['filter']) && $field['filter'])
 					{
 						if($field['name'] == 'member_of')
 						{
@@ -294,9 +261,9 @@
 					}
 				}
 			}
+			$data['filter'] = $filter;
 
-			$values = $sogeneric->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows),$filter);
+			$values = $sogeneric->read($data);
 
 			$this->total_records = $sogeneric->total_records;
 
@@ -305,46 +272,20 @@
 
 		function read_b_account($data)
 		{
-			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+			$b_account = $this->so->read_b_account(array('start' => $data['start'], 'query' => $data['query'],
+				'sort' => $data['sort'], 'order' => $data['order'],
+				'filter' => $data['filter'], 'cat_id' => $this->cat_id, 'allrows' => $data['allrows'],
 				'role' => $data['role'], 'parent' => $data['parent']));
 			$this->total_records = $this->so->total_records;
 
 			return $b_account;
 		}
 
-		function read_street()
+		function read_phpgw_user($data = array())
 		{
-			$street = $this->so->read_street(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
-			$this->total_records = $this->so->total_records;
-
-			return $street;
-		}
-
-		function read_tenant()
+			if($data['acl_app'] && $data['acl_location'] && $data['acl_required'])
 		{
-			$tenant = $this->so->read_tenant(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
-			$this->total_records = $this->so->total_records;
-
-			return $tenant;
-		}
-
-		function read_ns3420()
-		{
-			$ns3420 = $this->so->read_ns3420(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id));
-			$this->total_records = $this->so->total_records;
-
-			return $ns3420;
-		}
-
-		function read_phpgw_user($acl_app = '',	$acl_location = '', $acl_required ='')
-		{
-			if($acl_app && $acl_location && $acl_required)
-			{
-				$users = $GLOBALS['phpgw']->acl->get_user_list_right($acl_required, $acl_location, $acl_app);
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right($data['acl_required'], $data['acl_location'], $data['acl_app']);
 				$user_list = array();
 				foreach($users as $user)
 				{
@@ -359,27 +300,15 @@
 				return $user_list;
 			}
 
-			$phpgw_user = $this->so->read_phpgw_user(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id));
+			$phpgw_user = $this->so->read_phpgw_user($data);
 			$this->total_records = $this->so->total_records;
 
 			return $phpgw_user;
 		}
 
-		function read_project_group()
+		function read_ecodimb($data = array())
 		{
-			$project_group	= CreateObject('property.sogeneric');
-			$project_group->get_location_info('project_group',false);
-			$values = $project_group->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'type' => 'project_group','allrows'=>$this->allrows));
-
-			$this->total_records = $project_group->total_records;
-
-			return $values;
-		}
-		function read_ecodimb()
-		{
-			$config				= CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 
 			$custom_criteria = array();
@@ -389,9 +318,10 @@
 			}
 
 			$ecodimb	= CreateObject('property.sogeneric');
-			$ecodimb->get_location_info('dimb',false);
-			$values = $ecodimb->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'custom_criteria' => $custom_criteria));
+			$ecodimb->get_location_info('dimb', false);
+			$values = $ecodimb->read(array('start' => $data['start'], 'query' => $data['query'],
+				'sort' => $data['sort'], 'order' => $data['order'],
+				'allrows' => $data['allrows'], 'custom_criteria' => $custom_criteria));
 
 			$this->total_records = $ecodimb->total_records;
 

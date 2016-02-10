@@ -1,9 +1,9 @@
 <?php
+	include_class('rental', 'model', 'inc/model/');
 
-include_class('rental', 'model', 'inc/model/');
+	class rental_billing_info extends rental_model
+	{
 
-class rental_billing_info extends rental_model
-{
 	protected $id;
 	protected $billing_id;
 	protected $term_id;
@@ -12,7 +12,6 @@ class rental_billing_info extends rental_model
 	protected $year;
 	protected $deleted;
 	protected $term_label;
-	
 	public static $so;
 	
 	public function __construct(int $id = null, int $billing_id = null, $location_id = null, int $billing_term = null, int $year = null, int $month = null)
@@ -115,5 +114,4 @@ class rental_billing_info extends rental_model
 	{
 		$this->term_label = $term_label;
 	}
-}
-?>
+	}

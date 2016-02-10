@@ -1,11 +1,12 @@
 <?php
-phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.uicommon');
+	phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.uicommon');
 
-include_class('rental', 'billing_info', 'inc/model/');
+	include_class('rental', 'billing_info', 'inc/model/');
 
-class rental_sobilling_info extends rental_socommon
-{
+	class rental_sobilling_info extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -15,7 +16,8 @@ class rental_sobilling_info extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.sobilling_info');
 		}
 		return self::$so;
@@ -34,15 +36,17 @@ class rental_sobilling_info extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+			$order	 = $sort_field ? "ORDER BY $sort_field $dir" : '';
 		
 		$filter_clauses = array();
 		
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			if(isset($filters[$this->get_id_field_name()]))
+			{
+				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
 		}
-		if(isset($filters['billing_id'])){
+			if(isset($filters['billing_id']))
+			{
 			$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'], 'int')}";
 		}
 		
@@ -72,35 +76,43 @@ class rental_sobilling_info extends rental_socommon
 	{
 		if($billing_info == null)
 		{
-			$billing_info = new rental_billing_info($this->unmarshal($this->db->f('id'),'int'));
-			$billing_info->set_billing_id($this->unmarshal($this->db->f('billing_id'),'int'));
-			$billing_info->set_location_id($this->unmarshal($this->db->f('location_id'),'int'));
-			$billing_info->set_term_id($this->unmarshal($this->db->f('term_id'),'int'));
-			$billing_info->set_year($this->unmarshal($this->db->f('year'),'int'));
-			$billing_info->set_month($this->unmarshal($this->db->f('month'),'int'));
-			if($billing_info->get_term_id() == 2){ // yearly
+				$billing_info = new rental_billing_info($this->unmarshal($this->db->f('id'), 'int'));
+				$billing_info->set_billing_id($this->unmarshal($this->db->f('billing_id'), 'int'));
+				$billing_info->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$billing_info->set_term_id($this->unmarshal($this->db->f('term_id'), 'int'));
+				$billing_info->set_year($this->unmarshal($this->db->f('year'), 'int'));
+				$billing_info->set_month($this->unmarshal($this->db->f('month'), 'int'));
+				if($billing_info->get_term_id() == 2)
+				{ // yearly
 				$billing_info->set_term_label(lang('annually'));
 			}
-			else if($billing_info->get_term_id() == 3){ // half year
-				if($billing_info->get_month() == 6){
+				else if($billing_info->get_term_id() == 3)
+				{ // half year
+					if($billing_info->get_month() == 6)
+					{
 					$billing_info->set_term_label(lang('first_half'));
 				}
-				else{
+					else
+					{
 					$billing_info->set_term_label(lang('second_half'));
 				}
-				
 			}
-			else if($billing_info->get_term_id() == 4){ // quarterly
-				if($billing_info->get_month() == 3){
+				else if($billing_info->get_term_id() == 4)
+				{ // quarterly
+					if($billing_info->get_month() == 3)
+					{
 					$billing_info->set_term_label(lang('first_quarter'));
 				}
-				else if($billing_info->get_month() == 6){
+					else if($billing_info->get_month() == 6)
+					{
 					$billing_info->set_term_label(lang('second_quarter'));
 				}
-				else if($billing_info->get_month() == 9){
+					else if($billing_info->get_month() == 9)
+					{
 					$billing_info->set_term_label(lang('third_quarter'));
 				}
-				else{
+					else
+					{
 					$billing_info->set_term_label(lang('fourth_quarter'));
 				}
 			}
@@ -128,7 +140,7 @@ class rental_sobilling_info extends rental_socommon
 		
 		$cols = array('billing_id', 'term_id', 'location_id', 'month', 'year', 'deleted');
 		
-		$q ="INSERT INTO rental_billing_info (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+			$q = "INSERT INTO rental_billing_info (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_billing_info", 'id');
@@ -158,12 +170,10 @@ class rental_sobilling_info extends rental_socommon
 			"deleted = " . ($billing_info->is_deleted() ? "true" : "false")
 		);
 
-		$this->db->query('UPDATE rental_billing_info SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$this->db->query('UPDATE rental_billing_info SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 		
 		$receipt['id'] = $id;
-		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+			$receipt['message'][]	 = array('msg' => lang('Entity %1 has been updated', $entry['id']));
 		return $receipt;
 	}
-}
-
-?>
+	}

@@ -4,9 +4,11 @@
 
 	class booking_uisend_email extends booking_uicommon
 	{
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
+			'query'		 => true,
 			'receipt'		=>	true,
 		);
 
@@ -17,6 +19,11 @@
 			self::set_active_menu('booking::mailing');
 		}
 		
+		public function query()
+		{
+			
+		}
+
 		public function index()
 		{
 			$errors = array();
@@ -24,62 +31,74 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$step = phpgw::get_var('step', 'POST');
+				$step			 = phpgw::get_var('step', 'int');
 				$step++;
-				$building =  phpgw::get_var('building_id', 'POST');
-				if (is_array(phpgw::get_var('seasons', 'POST')))
+				$building_id	 = phpgw::get_var('building_id', 'int');
+				$building_name	 = phpgw::get_var('building_name', 'string');
+				if(is_array(phpgw::get_var('seasons')))
 				{
-					$season =  implode(',', phpgw::get_var('seasons', 'POST'));
+					$season = implode(',', phpgw::get_var('seasons'));
 				}
 				else
 				{
-					$season =  phpgw::get_var('seasons', 'POST');
+					$season = phpgw::get_var('seasons');
 				}
-				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
-				$mailbody =  phpgw::get_var('mailbody', 'POST');
+				$mailsubject = phpgw::get_var('mailsubject', 'string');
+				$mailbody	 = phpgw::get_var('mailbody', 'string');
 				$contacts = null;
 
-				if ($step == 1)
+				if($step == 1)
 				{
-					if ($building == '' || $season == '' || $mailsubject == '' || $mailbody == '')
+					if($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
 					{
 						$errors['incomplete form'] = lang('All fields are required');
 					}
 					else
 					{
-						$contacts = $this->get_email_addresses($building, $season);
+						$contacts = $this->get_email_addresses($building_id, $season);
 						$step++;
 					}
 				}
-				elseif ($step == 2)
+				elseif($step == 2)
 				{
-					$contacts = $this->get_email_addresses($building, $season);
+					$contacts = $this->get_email_addresses($building_id, $season);
 					$step++;
 				}
-				elseif ($step == 3)
+				elseif($step == 3)
 				{
-					$contacts = $this->get_email_addresses($building, $season);
+					$contacts	 = $this->get_email_addresses($building_id, $season);
 					$result = $this->send_emails($contacts, $mailsubject, $mailbody);
 					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt', 
 						'ok' => count($result['ok']),
 						'failed' => count($result['failed'])
 					));
 				}
+				$building['id']		 = $building_id;
+				$building['name']	 = $building_name;
 			}
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'email_send.js');
-			if ($step == 1)
-				self::render_template('email_index', 
-					array('building' => $building,
+			phpgwapi_jquery::load_widget('autocomplete');
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Send e-mail'), 'link' => '#building');
+			$active_tab		 = 'generic';
+
+			$building['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			if($step == 1)
+				self::render_template_xsl('email_index', array('building'		 => $building,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
 					'mailbody' => $mailbody,
 					'step' => $step));
 
-			if ($step == 2)
-				self::render_template('email_preview', 
-					array('building' => $building,
+			if($step == 2)
+				self::render_template_xsl('email_preview', array('building'		 => $building,
+					'building_id'	 => $building_id,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
 					'mailbody' => $mailbody,
@@ -89,15 +108,14 @@
 
 		public function receipt()
 		{
-			$ok_count =  phpgw::get_var('ok', 'GET');
-			$fail_count =  phpgw::get_var('failed', 'GET');
-			self::render_template('email_receipt',
-				array('ok_count' => $ok_count, 'fail_count' => $fail_count));
+			$ok_count	 = phpgw::get_var('ok');
+			$fail_count	 = phpgw::get_var('failed');
+			self::render_template('email_receipt', array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}
 
 		private function send_emails($contacts, $subject, $body)
 		{
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config	 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
@@ -111,7 +129,7 @@
 					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
 					$result['ok'][] = $contact; 
 				}
-				catch (phpmailerException $e)
+				catch(phpmailerException $e)
 				{
 					$result['failed'][] = $contact; 
 				}

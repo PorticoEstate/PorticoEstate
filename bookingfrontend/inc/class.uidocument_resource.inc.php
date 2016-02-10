@@ -3,13 +3,13 @@
 
 	class bookingfrontend_uidocument_resource extends booking_uidocument_resource
 	{
+
 		public $public_functions = array
 		(
 			'download'	=>	true,
 			'index'		=>  true,
 			'index_images' => true,
 		);
-		
 		protected $module;
 
 		public function __construct()

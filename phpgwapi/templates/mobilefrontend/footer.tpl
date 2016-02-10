@@ -7,4 +7,5 @@
 </div>
 
 	</body>
+	{javascript_end}
 </html>

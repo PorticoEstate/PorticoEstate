@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="nextmatchs">
+
+<!-- $Id$ -->
+<xsl:template name="nextmatchs">
 		<xsl:variable name="allow_allrows">
 			<xsl:value-of select="allow_allrows"/>
 		</xsl:variable>
@@ -28,7 +29,8 @@
 			<tr>
 				<xsl:choose>
 					<xsl:when test="number($cur_record) &gt; number(1)">
-						<xsl:variable name="first"><xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
+					<xsl:variable name="first">
+						<xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
 						<td width="25">
 							<a href="{$first}">
 								<img src="{$img_path}/first.png" border="1" width="12" height="12"/>
@@ -53,7 +55,9 @@
 										<xsl:variable name="prev_number">
 											<xsl:value-of select="number($cur_record) - number($record_limit)"/>
 										</xsl:variable>
-										<xsl:variable name="prev"><xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($prev_number) - number(1)"/></xsl:variable>
+									<xsl:variable name="prev">
+										<xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($prev_number) - number(1)"/>
+									</xsl:variable>
 										<td width="25">
 											<a href="{$prev}">
 												<img src="{$img_path}/left.png" border="1" width="12" height="12"/>
@@ -61,7 +65,8 @@
 										</td>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:variable name="prev"><xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
+									<xsl:variable name="prev">
+										<xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
 										<td width="25">
 											<a href="{$prev}">
 												<img src="{$img_path}/left-grey.png" border="1" width="12" height="12"/>
@@ -93,14 +98,16 @@
 								<xsl:variable name="of_num">
 									<xsl:value-of select="number($cur_record)+number($num_records) - number(1)"/>
 								</xsl:variable>
-								<td nowrap="nowrap" align="center"><xsl:value-of select="$cur_record"/> - <xsl:value-of select="$of_num"/> of <xsl:value-of select="$all_records"/> 
+							<td nowrap="nowrap" align="center">
+								<xsl:value-of select="$cur_record"/> - <xsl:value-of select="$of_num"/> of <xsl:value-of select="$all_records"/> 
 								</td>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="of_num">
 									<xsl:value-of select="number($cur_record) + number($record_limit) - number(1)"/>
 								</xsl:variable>
-								<td nowrap="nowrap" align="center"><xsl:value-of select="$cur_record"/> - <xsl:value-of select="$of_num"/> of <xsl:value-of select="$all_records"/> 
+							<td nowrap="nowrap" align="center">
+								<xsl:value-of select="$cur_record"/> - <xsl:value-of select="$of_num"/> of <xsl:value-of select="$all_records"/> 
 								</td>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -113,7 +120,9 @@
 						</xsl:variable>
 						<xsl:choose>
 							<xsl:when test="number($all_records) &gt; number($next_num)-number(1)">
-								<xsl:variable name="next"><xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($next_num) - number(1)"/></xsl:variable>
+							<xsl:variable name="next">
+								<xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($next_num) - number(1)"/>
+							</xsl:variable>
 								<td width="25" align="right">
 									<a href="{$next}">
 										<img src="{$img_path}/right.png" border="1" width="12" height="12"/>
@@ -140,7 +149,9 @@
 						</xsl:variable>
 						<xsl:choose>
 							<xsl:when test="number($last_num) &gt; number($cur_record)">
-								<xsl:variable name="last"><xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($last_num)-number(1)"/></xsl:variable>
+							<xsl:variable name="last">
+								<xsl:value-of select="link_url"/>&amp;start=<xsl:value-of select="number($last_num)-number(1)"/>
+							</xsl:variable>
 								<td width="25" align="right">
 									<a href="{$last}">
 										<img src="{$img_path}/last.png" border="1" width="12" height="12"/>
@@ -164,7 +175,8 @@
 					<xsl:when test="$allow_allrows=1">
 						<xsl:choose>
 							<xsl:when test="allrows =1">
-								<xsl:variable name="all"><xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
+							<xsl:variable name="all">
+								<xsl:value-of select="link_url"/>&amp;start=0</xsl:variable>
 								<td width="25" align="right">
 									<a href="{$all}">
 										<img src="{$img_path}/down.png" border="1" width="12" height="12"/>
@@ -172,7 +184,8 @@
 								</td>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:variable name="all"><xsl:value-of select="link_url"/>&amp;allrows=1</xsl:variable>
+							<xsl:variable name="all">
+								<xsl:value-of select="link_url"/>&amp;allrows=1</xsl:variable>
 								<td width="25" align="right">
 									<a href="{$all}">
 										<img src="{$img_path}/down.png" border="1" width="12" height="12"/>
@@ -184,4 +197,4 @@
 				</xsl:choose>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

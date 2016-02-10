@@ -1,9 +1,10 @@
 <?php
+	include_class('rental', 'city_counsil_dep', 'inc/locations/');
+	include_class('rental', 'result_unit', 'inc/locations/');
 
-include_class('rental', 'city_counsil_dep', 'inc/locations/');
-include_class('rental', 'result_unit', 'inc/locations/');
-class location_hierarchy
-{
+	class location_hierarchy
+	{
+
 	public static function get_hierarchy()
 	{
 		$city_counsil_departments = array();
@@ -11,7 +12,7 @@ class location_hierarchy
     	foreach($city_counsil_dep as $department)
     	{
     		$name = $department['name'];
-    		$dep = new city_counsil_dep($department['location_id'],$name,$department['descr']);
+				$dep																					 = new city_counsil_dep($department['location_id'], $name, $department['descr']);
     		$city_counsil_departments[city_counsil_dep::get_identifier_from_name($dep->get_name())] = $dep;
     	}
 
@@ -19,7 +20,7 @@ class location_hierarchy
     	
     	foreach($result_units as $result_unit)
     	{
-    		$unit = new result_unit($result_unit['location_id'],$result_unit['name'],$result_unit['descr']);
+				$unit						 = new result_unit($result_unit['location_id'], $result_unit['name'], $result_unit['descr']);
     		$city_counsil_dep_identifier = city_counsil_dep::get_identifier_from_name($unit->get_name());
     		$dep = $city_counsil_departments[$city_counsil_dep_identifier];
     		$dep->add_result_unit($unit);
@@ -33,5 +34,4 @@ class location_hierarchy
 		$result_unit_number = result_unit::get_identifier_from_name($location_name['location']);
 		return  $result_unit_number . " - " . $location_name['descr'];
 	}
-}
-?>
+	}

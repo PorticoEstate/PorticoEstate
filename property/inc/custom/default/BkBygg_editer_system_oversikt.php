@@ -1,5 +1,4 @@
 <?php
-
 	/*
 	* This class will update classification records baed on input.
 	*/
@@ -16,7 +15,7 @@
 			}
 		}
 
-		function set_classification($values,$values_attribute,$entity_id,$cat_id,$receipt)
+		function set_classification($values, $values_attribute, $entity_id, $cat_id, $receipt)
 		{
 			$value_set = array();
 			$value_set['konf_rangering']			= 0;
@@ -116,10 +115,9 @@
 
 			$_values = $values;
 			$_values['id'] = (int)$receipt['id'];
-			$this->so->edit($_values,$values_attribute,$entity_id,$cat_id);
+			$this->so->edit($_values, $values_attribute, $entity_id, $cat_id);
 		}
 	}
-
 	$systemoversikt = new ikt_systemoversikt();
-	$systemoversikt->set_classification($values,$values_attribute,$entity_id,$cat_id,$receipt);
+	$systemoversikt->set_classification($values, $values_attribute, $entity_id, $cat_id, $receipt);
 

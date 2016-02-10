@@ -1,17 +1,17 @@
 <?php
-include_class('rental', 'organisational_location', 'inc/locations/');
+	include_class('rental', 'organisational_location', 'inc/locations/');
 
-class city_counsil_dep extends organisational_location
-{
+	class city_counsil_dep extends organisational_location
+	{
+
 	public static $pattern = '.ORG.BK.__';
 	protected static $start_index = 8;
 	protected static $length_of_identifier = 2;
-	
 	protected $result_units = array();
 	
 	public function __construct(int $location_id, string $name, string $description)
 	{
-		parent::__construct($location_id,$name,$description);
+			parent::__construct($location_id, $name, $description);
 	} 
 	
 	public function add_result_unit(result_unit $result_unit)
@@ -31,6 +31,6 @@ class city_counsil_dep extends organisational_location
 	
 	public static function get_identifier_from_name(string $name)
 	{
-		return substr($name,self::$start_index,self::$length_of_identifier);
+			return substr($name, self::$start_index, self::$length_of_identifier);
+		}
 	}
-}

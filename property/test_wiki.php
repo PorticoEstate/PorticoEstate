@@ -1,5 +1,4 @@
 <?php
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'		=> true,

@@ -1,11 +1,14 @@
 <?php
-abstract class rental_socommon
-{
+
+	abstract class rental_socommon
+	{
+
 	protected $db;
 	protected $like;
 	protected $join;
 	protected $left_join;
 	protected $sort_field;
+		protected $skip_limit_query;
 	
 	public function __construct()
 	{
@@ -14,6 +17,7 @@ abstract class rental_socommon
 		$this->join			= & $this->db->join;
 		$this->left_join	= & $this->db->left_join;
 		$this->sort_field	= null;
+			$this->skip_limit_query	 = null;
 	}
 	
 		/**
@@ -45,7 +49,6 @@ abstract class rental_socommon
 		{
 			return $this->db->transaction_abort();
 		}
-
 
 	/**
 	 * Marshal values according to type
@@ -149,7 +152,8 @@ abstract class rental_socommon
 	/**
 	 * Method for retrieving the db-object (security "forgotten")
 	 */
-	public function get_db(){
+		public function get_db()
+		{
 		return $this->db;
 	}
 
@@ -174,7 +178,6 @@ abstract class rental_socommon
 		$check_map = array();		// Array to hold the actual number of record read per target object
 		$object_ids = array(); 		// All of the object ids encountered
 		$added_object_ids = array();// All of the added objects ids
-		
 		// Retrieve information about the table name and the name and alias of id column
 		// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
 		// 						for all the result objects are traversed
@@ -214,16 +217,16 @@ abstract class rental_socommon
 		$db2 = clone($this->db);
 
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
+			$sql_parts	 = explode('1=1', $sql); // Split the query to insert extra condition on test for break
 
 		/**
 		 * Sigurd: try to limit the candidates to a minimum
 		 */
 		$bypass_offset_check = false;
-		if($num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
+			if(!$this->skip_limit_query && $num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
 		{
 			$bypass_offset_check = true;
-			$sql_parts_filter = explode('FROM',$sql, 2);
+				$sql_parts_filter	 = explode('FROM', $sql, 2);
 
 			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
 
@@ -252,7 +255,7 @@ abstract class rental_socommon
 
 			$this->db->limit_query($sql_filter, $start_index, __LINE__, __FILE__, (int)$num_of_objects);
 			$ids = array();
-			while ($this->db->next_record())
+				while($this->db->next_record())
 			{
 				$ids[] = $this->db->f($id_field_name_info['translated']);
 			}
@@ -264,9 +267,9 @@ abstract class rental_socommon
 			}
 		}
 
-		$this->db->query($sql,__LINE__, __FILE__, false, true);
+			$this->db->query($sql, __LINE__, __FILE__, false, true);
 
-		while ($this->db->next_record()) // Runs through all of the results
+			while($this->db->next_record()) // Runs through all of the results
 		{
 			$should_populate_object = false; // Default value - we won't populate object	
 			$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
@@ -281,7 +284,7 @@ abstract class rental_socommon
 					$object_ids[] = $result_id; // We have to add the new id
 				}
 				// We have to check if we should populate this object
-				if($bypass_offset_check || ( count($object_ids) > $start_index) ) // We're at index above start index
+					if($bypass_offset_check || ( count($object_ids) > $start_index)) // We're at index above start index
 				{
 					if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
 					{
@@ -293,9 +296,9 @@ abstract class rental_socommon
 			if($should_populate_object)
 			{	
 				$result = &$results[$result_id];
-				$results[$result_id] = $this->populate($result_id,$result);
+					$results[$result_id] = $this->populate($result_id, $result);
 				$last_result_id = $result_id;
-				$map[$result_id] = (int)$map[$result_id] +1;
+					$map[$result_id]	 = (int)$map[$result_id] + 1;
 			}
 			
 			//Stop looping when array not sorted on other then id and wanted number of results is reached
@@ -307,17 +310,17 @@ abstract class rental_socommon
 			else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
 			{
 				$id_ok = 0;
-				foreach ($map as $_result_id => $_count)
+					foreach($map as $_result_id => $_count)
 				{
 					if(!isset($check_map[$_result_id]))
 					{
 						// Query the number of records for the specific object in question
 						$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
-						$db2->query($sql2,__LINE__, __FILE__);
+							$db2->query($sql2, __LINE__, __FILE__);
 						$db2->next_record();
 						$check_map[$_result_id] = $db2->num_rows();
 					}
-					if(	$check_map[$_result_id] == $_count )
+						if($check_map[$_result_id] == $_count)
 					{
 						$id_ok++;
 					}
@@ -384,8 +387,10 @@ abstract class rental_socommon
 	*/
 	public function store(&$object)
 	{
-		if ($object->validates()) {
-			if ($object->get_id() > 0) {
+			if($object->validates())
+			{
+				if($object->get_id() > 0)
+				{
 				// We can assume this composite came from the database since it has an ID. Update the existing row
 				return $this->update($object);
 			}
@@ -399,4 +404,4 @@ abstract class rental_socommon
 		// The object did not validate
 		return false;
 	}
-}
+	}

@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="user_lid_select">
+
+<!-- $Id$ -->
+<xsl:template name="user_lid_select">
 		<xsl:variable name="lang_user_statustext">
 			<xsl:value-of select="lang_user_statustext"/>
 		</xsl:variable>
@@ -10,10 +11,10 @@
 			<!--<option value=""><xsl:value-of select="lang_no_user"/></option> -->
 			<xsl:apply-templates select="user_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="user_list">
+<!-- New template-->
+<xsl:template match="user_list">
 		<xsl:variable name="lid">
 			<xsl:value-of select="lid"/>
 		</xsl:variable>
@@ -33,4 +34,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

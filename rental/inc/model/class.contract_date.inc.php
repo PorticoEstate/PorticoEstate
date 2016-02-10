@@ -1,10 +1,12 @@
 <?php
-/**
+
+	/**
  * A date range in a contract.
  *
  */
-class rental_contract_date
-{
+	class rental_contract_date
+	{
+
 	protected $start_date;
 	protected $end_date;
 	
@@ -58,6 +60,4 @@ class rental_contract_date
 	{
 		
 	} 
-	
-}
-?>
+	}

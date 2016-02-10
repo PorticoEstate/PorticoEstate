@@ -3,7 +3,6 @@
 
 <xsl:template name="view_procedure" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_phpgw_i18n"/>
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div class="yui-content">

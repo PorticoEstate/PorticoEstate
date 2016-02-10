@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bocondition_survey
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -44,13 +44,12 @@
 		var $appname;
 		var $allrows;
 		public $acl_location = '.project.condition_survey';
-
 		var $public_functions = array
 		(
 			'addfiles'		=> true
 		);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 			= CreateObject('property.socondition_survey');
 			$this->custom 		= & $this->so->custom;
@@ -80,7 +79,7 @@
 			$this->type 		= $type;
 			$this->type_id 		= $type_id;
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata($type);
 				$this->use_session = true;
@@ -93,21 +92,19 @@
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
-
-
 		}
 
 		public function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data',$this->acl_location,$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', $this->acl_location, $data);
 			}
 		}
 
 		function read_sessiondata($type)
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data',$this->acl_location);
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', $this->acl_location);
 
 			//		_debug_array($data);
 
@@ -120,7 +117,7 @@
 			$this->allrows	= $data['allrows'];
 		}
 
-		function column_list($selected='',$allrows='')
+		function column_list($selected = '', $allrows = '')
 		{
 			if(!$selected)
 			{
@@ -128,8 +125,8 @@
 			}
 
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find('property',$this->acl_location, 0, '','','',true, false, $filter);
-			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			$columns = $this->custom->find('property', $this->acl_location, 0, '', '', '', true, false, $filter);
+			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
 			return $column_list;
 		}
@@ -159,15 +156,15 @@
 
 			$test = false;
 
-			if ($test)
+			if($test)
 			{
-				if (!empty($_FILES))
+				if(!empty($_FILES))
 				{
 					$tempFile = $_FILES['Filedata']['tmp_name'];
 					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
-					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
-					move_uploaded_file($tempFile,$targetFile);
-					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
+					$targetFile = str_replace('//', '/', $targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile, $targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'], '', $targetFile);
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -194,7 +191,7 @@
 			return $values;
 		}
 
-		public function read_single($data=array())
+		public function read_single($data = array())
 		{
 			$custom_fields = false;
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
@@ -213,24 +210,24 @@
 				$values = $this->custom->prepare($values, 'property', $this->acl_location, $data['view']);
 			}
 
-			$values['report_date']	= $GLOBALS['phpgw']->common->show_date($values['report_date'],$this->dateformat);
+			$values['report_date'] = $GLOBALS['phpgw']->common->show_date($values['report_date'], $this->dateformat);
 
 			if(isset($values['vendor_id']) && $values['vendor_id'] && !$values['vendor_name'])
 			{
 				$contacts	= CreateObject('property.sogeneric');
-				$contacts->get_location_info('vendor',false);
+				$contacts->get_location_info('vendor', false);
 
 				$custom 		= createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-				$vendor_data	= $contacts->read_single(array('id' => $values['vendor_id']),$vendor_data);
+				$vendor_data = $contacts->read_single(array('id' => $values['vendor_id']), $vendor_data);
 				if(is_array($vendor_data))
 				{
 					foreach($vendor_data['attributes'] as $attribute)
 					{
-						if($attribute['name']=='org_name')
+						if($attribute['name'] == 'org_name')
 						{
-							$values['vendor_name']=$attribute['value'];
+							$values['vendor_name'] = $attribute['value'];
 							break;
 						}
 					}
@@ -254,7 +251,7 @@
 
 			try
 			{
-				if (isset($data['id']) && $data['id'])
+				if(isset($data['id']) && $data['id'])
 				{
 					$id = $this->so->edit($data);
 				}
@@ -263,10 +260,9 @@
 					$id = $this->so->add($data);
 				}
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;				
 				}
@@ -275,41 +271,37 @@
 			return $id;
 		}
 
-
 		public function edit_title($data)
 		{
 			try
 			{
 				$this->so->edit_title($data);
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;				
 				}
 			}
 		}
 		
-
 		public function import($survey, $import_data)
 		{
 			try
 			{
 				$this->so->import($survey, $import_data);
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;				
 				}
 			}
 		}
 
-		public function get_summation($id,$year = 0)
+		public function get_summation($id, $year = 0)
 		{
 			$year = $year ? (int)$year : date('Y');
 
@@ -317,8 +309,8 @@
 			
 			if($id == -1)
 			{
-				$values = $this->so->read(array('allrows' => true ));
-				foreach ($values as $survey)
+				$values = $this->so->read(array('allrows' => true));
+				foreach($values as $survey)
 				{
 					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
 				}
@@ -332,9 +324,9 @@
 
 //_debug_array($surveys);
 //_debug_array($data);
-			$values	=array();
-			$i=0;
-			foreach ($data as $entry)
+			$values = array();
+			$i = 0;
+			foreach($data as $entry)
 			{
 				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
 				$i = "{$entry['building_part']}_{$entry['category']}";
@@ -349,11 +341,11 @@
 				}
 				else
 				{
-					$period = ceil($diff/5) +1;
+					$period = ceil($diff / 5) + 1;
 					$period  = $period < 6 ? $period : 6;
 				}
 	
-				for ($j = 1; $j < 7 ; $j++ )
+				for($j = 1; $j < 7; $j++)
 				{
 					$values[$entry['condition_survey_id']][$i]["period_{$j}"] += 0;
 					$values[$entry['condition_survey_id']][$i]['sum'] += 0;
@@ -369,7 +361,7 @@
 			$ret = array();
 
 			$_values = array();
-			foreach ($values as $condition_survey_id => $entry)
+			foreach($values as $condition_survey_id => $entry)
 			{
 				foreach($entry as $type => $_entry)
 				{
@@ -392,7 +384,7 @@
 				$ret[] = $entry;
 			}
 
-			foreach ($ret as $key => $row) 
+			foreach($ret as $key => $row)
 			{
 				$building_part[$key]  = $row['building_part'];
 				$category[$key] = $row['category'];
@@ -426,10 +418,9 @@
 			{
 				$this->so->delete($id);
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;				
 				}
@@ -442,10 +433,9 @@
 			{
 				$this->so->delete_imported_records($id);
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;				
 				}

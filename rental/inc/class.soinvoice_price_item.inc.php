@@ -1,8 +1,9 @@
 <?php
-phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.socommon');
 
-class rental_soinvoice_price_item extends rental_socommon
-{
+	class rental_soinvoice_price_item extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -12,7 +13,8 @@ class rental_soinvoice_price_item extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soinvoice_price_item');
 		}
 		return self::$so;
@@ -28,15 +30,15 @@ class rental_soinvoice_price_item extends rental_socommon
 		$clauses = array('1=1');
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "{$this->marshal($this->get_id_field_name(), 'field')} = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 		}
 		if(isset($filters['invoice_id']))
 		{
-			$filter_clauses[] = "invoice_id = {$this->marshal($filters['invoice_id'],'int')}";
+				$filter_clauses[] = "invoice_id = {$this->marshal($filters['invoice_id'], 'int')}";
 		}
 		if(isset($filters['billing_id']))
 		{
-			$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'],'int')}";
+				$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'], 'int')}";
 		}
 		if(count($filter_clauses))
 		{
@@ -55,7 +57,7 @@ class rental_soinvoice_price_item extends rental_socommon
 			$cols = 'rental_invoice_price_item.id, invoice_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ($return_count ? '' : 'ORDER BY rental_invoice_price_item.id ASC');
+			$order	 = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ($return_count ? '' : 'ORDER BY rental_invoice_price_item.id ASC');
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -84,7 +86,7 @@ class rental_soinvoice_price_item extends rental_socommon
 			$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_start()), 'date'),
 			$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_end()), 'date')
 		);
-		$query ="INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (" . join(',', $values) . ")";
+			$query	 = "INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -99,6 +101,4 @@ class rental_soinvoice_price_item extends rental_socommon
 	{
 		throw new Exception("Not implemented");
 	}
-	
-}
-?>
+	}

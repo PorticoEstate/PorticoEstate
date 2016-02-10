@@ -23,18 +23,18 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package registration
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-	phpgw::import_class('phpgwapi.yui');
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class property_uiinvoice2
+	class property_uiinvoice2 extends phpgwapi_uicommon_jquery
 	{
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -44,9 +44,7 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
-	
 		private $config;
-
 		var $public_functions = array
 		(
 			'index'								=> true,
@@ -63,11 +61,11 @@
 
 		function __construct()
 		{
-//			parent::__construct();
+			parent::__construct();
 		
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account_id 			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.boinvoice',true);
+			$this->bo = CreateObject('property.boinvoice', true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -77,52 +75,9 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->allrows				= $this->bo->allrows;
 		
-//			self::set_active_menu('property::invoice::invoice2');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
-			$this->config				= CreateObject('phpgwapi.config','property');
+			self::set_active_menu('property::economy::invoice');
+			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-
-		}
-
-		public function add_javascript($app, $pkg, $name)
-		{
-  			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
-		}
-		/**
-		* A more flexible version of xslttemplate.add_file
-		*/
-		public function add_template_file($tmpl)
-		{
-			if(is_array($tmpl))
-			{
-				foreach($tmpl as $t)
-				{
-					$this->add_template_file($t);
-				}
-				return;
-			}
-			foreach(array_reverse($this->tmpl_search_path) as $path)
-			{
-				$filename = $path . '/' . $tmpl . '.xsl';
-				if (file_exists($filename))
-				{
-					$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
-					return;
-				}
-			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
-		}
-
-		public function link($data)
-		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
-		}
-
-		public function redirect($link_data)
-		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
 		/**
@@ -135,7 +90,7 @@
 		{
 			$voucher_info	= $this->get_single_line($line_id);
 
-			if( $this->bo->reassign_order($line_id, $order_id))
+			if($this->bo->reassign_order($line_id, $order_id))
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 				phpgwapi_cache::system_clear('property', "budget_order_{$voucher_info['voucher'][0]['order_id']}"); // target is cleared in the so-class
@@ -154,7 +109,7 @@
 			}
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;
@@ -163,7 +118,8 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
+					'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
 		}
 
@@ -176,7 +132,7 @@
 			if($voucher_id)
 			{
 				$filename = "{$voucher_id}_split";
-				$voucher = $this->bo->read_invoice_sub($voucher_id);
+				$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 				foreach($voucher as $line)
 				{
 					$data[] = array
@@ -201,9 +157,8 @@
 				'Beløp'
 			);
 			$bocommon = CreateObject('property.bocommon');
-			$bocommon->download($data, $cols, $names,array(),$_identificator,$filename);
+			$bocommon->download($data, $cols, $names, array(), $_identificator, $filename);
 			$GLOBALS['phpgw']->common->phpgw_exit();
-			
 		}
 
 		function split_voucher()
@@ -215,16 +170,18 @@
 				$this->_split_voucher($voucher_id);
 			}
 
-			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 			}
 
 			$data = array
 			(
-					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
+				'redirect' => $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub',
+					'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
 					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice2.split_voucher', 'voucher_id' => $voucher_id)),
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.split_voucher',
+					'voucher_id' => $voucher_id)),
 					'voucher_id'			=> $voucher_id
 			);
 
@@ -234,7 +191,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('split_voucher' => $data));
 		}
-
 
 		private function _split_voucher($voucher_id)
 		{
@@ -255,7 +211,7 @@
 				return;
 			}
 
-			switch ($file['type'])
+			switch($file['type'])
 			{
 				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 				case 'application/vnd.oasis.opendocument.spreadsheet':
@@ -283,9 +239,8 @@
 					try
 					{
 						$line_id = $this->bo->perform_bulk_split($data, $voucher_id);
-
 					}
-					catch (Exception $e)
+					catch(Exception $e)
 					{
 						if($e)
 						{
@@ -300,7 +255,7 @@
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 			}
-/*
+			/*
 			$result =  array
 			(
 				'status'	=> $error ? 'error' : 'updated',
@@ -322,7 +277,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
  */
-
 		}
 
 		function update_voucher()
@@ -343,21 +297,21 @@
 				$category	= $cats->return_single((int)$values['dim_e']);
 				if(!isset($category[0]) || $category[0]['active'] != 1)
 				{
-					$receipt['error'][]=true;				
+					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('not a valid category'), 'error');
 				}
 				if(!$this->bo->check_valid_b_account($values['b_account_id']))
 				{
-					$receipt['error'][]=true;				
+					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('not a valid budget account'), 'error');
 				}
 				
-				$order = execMethod('property.soworkorder.read_single',$values['order_id']);
+				$order = execMethod('property.soworkorder.read_single', $values['order_id']);
 				$project = execMethod('property.soproject.read_single', $order['project_id']);
 				
 				if($project['closed'])
 				{
-					$receipt['error'][]=true;				
+					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('Project is closed'), 'error');
 				}
 				
@@ -365,7 +319,7 @@
 
 				if(!$approve)
 				{
-					$receipt['error'][]=true;
+					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
 				}
 
@@ -392,7 +346,7 @@
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;
@@ -401,10 +355,10 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
+					'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
 		}
-
 
 		function index()
 		{
@@ -419,25 +373,26 @@
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$janitor_list				= $this->bo->get_dimb_role_user(1,'', $janitor);
-				$supervisor_list			= $this->bo->get_dimb_role_user(2,'', $supervisor);
-				$budget_responsible_list	= $this->bo->get_dimb_role_user(3,'', $budget_responsible);
+				$janitor_list = $this->bo->get_dimb_role_user(1, '', $janitor);
+				$supervisor_list = $this->bo->get_dimb_role_user(2, '', $supervisor);
+				$budget_responsible_list = $this->bo->get_dimb_role_user(3, '', $budget_responsible);
 			}
 			else
 			{
-				$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
-				$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
-				$budget_responsible_list	= $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice');
+				$janitor_list = $this->bocommon->get_user_list_right(32, $janitor, '.invoice');
+				$supervisor_list = $this->bocommon->get_user_list_right(64, $supervisor, '.invoice');
+				$budget_responsible_list = $this->bocommon->get_user_list_right(128, $budget_responsible, '.invoice');
 			}
 
 			$userlist_default = array();
-			$userlist_default[] = array('id'=> '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid, 'name'=>lang('mine vouchers'));
-			$userlist_default[] = array('id'=>'','name'=>lang('no user'));
+			$userlist_default[] = array('id' => '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid,
+				'name' => lang('mine vouchers'));
+			$userlist_default[] = array('id' => '', 'name' => lang('no user'));
 
 			$voucher_list = array();
 			if($voucher_id)
 			{
-				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id ));
+				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id));
 			}
 			
 			if(!$voucher_list)
@@ -453,29 +408,14 @@
 			}
 
 			$msgbox_data = array();
-			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if(phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
-
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> $this->query(),//json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
+			$user = $GLOBALS['phpgw']->accounts->get($GLOBALS['phpgw_info']['user']['id']);
 
 			$datatable = array
 			(
@@ -489,20 +429,20 @@
 					'key' => 'approve_line',
 					'label' => lang('select'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'status_line',
 					'label' => lang('status'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key'	=>	'amount',
 					'label'	=>	lang('amount'),
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 					'sortable'	=>	true
 				),
 				array
@@ -510,63 +450,63 @@
 					'key' => 'approved_amount',
 					'label' => lang('approved amount'),
 					'sortable'	=> true,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'split',
 					'label' => lang('split line'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'budget_account',
 					'label' => lang('budget account'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'dima',
 					'label' => lang('dim a'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'dimb',
 					'label' => lang('dim b'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'order_id',
 					'label' => lang('order'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'dime',
 					'label' => lang('dime'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'project_group',
 					'label' => lang('project group'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'line_text',
 					'label' => lang('invoice line text'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
@@ -575,10 +515,17 @@
 				)
 			);
 
-			$myColumnDefs[0] = array
+
+			$datatable_def = array();
+			$datatable_def[] = array
 			(
-				'name'		=> "0",
-				'values'	=>	json_encode($datatable)
+				'container' => 'datatable-container_1',
+				'requestUrl' => "''",
+				'ColumnDefs' => $datatable,
+				'config' => array(
+					array('disableFilter' => true),
+				//				array('disablePagination' => false)
+				)
 			);	
 
 			$criteria_list = array
@@ -614,17 +561,22 @@
 					'name'	=> lang('dimb'),
 				),
 			);
+			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
+
+			if(isset($GLOBALS['phpgw_info']['server']['system_name']))
+			{
+				$powered_by = $GLOBALS['phpgw_info']['server']['system_name'] . ' ' . lang('version') . ' ' . $version;
+			}
+			else
+			{
+				$powered_by = lang('Powered by phpGroupWare version %1', $version);
+			}
 			
 			$data = array
 			(
-				'td_count'						=> '""',
-				'base_java_url'					=> "{menuaction:'property.uiinvoice2.query'}",
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'email_base_url'				=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice2.index'),true,true)),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
+				'datatable_def' => $datatable_def,
+				'email_base_url' => json_encode($GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uiinvoice2.index'), true, true)),
 				'msgbox_data'					=> $msgbox_data,
 				'invoice_layout_config'			=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
 				'preferences_url'				=> $GLOBALS['phpgw']->link('/preferences/index.php'),
@@ -632,7 +584,7 @@
 				'home_url'						=> $GLOBALS['phpgw']->link('/home.php'),
 				'home_text'						=> lang('home'),
 				'home_icon'						=> 'icon icon-home',
-				'about_url'						=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
+				'about_url' => $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp'])),
 				'about_text'					=> lang('about'),
 				'logout_url'					=> $GLOBALS['phpgw']->link('/logout.php'),
 				'logout_text'					=> lang('logout'),
@@ -650,47 +602,37 @@
 														'voucher_list' 			=> array('options' => $voucher_list),
 													),
 				'voucher_info'					=> $this->get_single_line($line_id),
-				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher'))
+				'update_action' => self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
+				'powered_by' => $powered_by
 			);
-//_debug_array($data);die();			
-			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			phpgwapi_yui::load_widget('layout');
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('layout');
+			phpgwapi_jquery::load_widget('numberformat');
 
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
-			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
+			self::add_javascript('property', 'portico', 'invoice2.index.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('invoice');
+
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2', 'datatable_inline'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));
 		}
 	
-
 		public function query()
 		{
 			$line_id =	phpgw::get_var('line_id', 'int');
-			if ( ! $voucher_id = phpgw::get_var('voucher_id_filter') )
+			$draw = phpgw::get_var('draw', 'int' . 'REQUEST', 0);
+
+			if(!$voucher_id = phpgw::get_var('voucher_id_filter'))
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
 			$this->bo->allrows = true;
-			$values = $this->bo->read_invoice_sub($voucher_id);
+			$values = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 
 			foreach($values as &$entry)
 			{
@@ -706,14 +648,17 @@
 				$entry['approved_amount'] = "<input id=\"approved_amount_{$entry['id']}\" type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				if($entry['dime'])
 				{
-					$catetory = execMethod('phpgwapi.categories.return_single',$entry['dime']);
+					$catetory = execMethod('phpgwapi.categories.return_single', $entry['dime']);
 					$entry['dime'] = $catetory[0]['name'];
 				}
 
-				$results['results'][]= $entry;
+				$results['results'][] = $entry;
 			}
+			$results['total_records'] = count($values);
 
-			return json_encode($values);
+			$results['draw'] = $draw;
+
+			return $this->jquery_results($results);
 		}
 
 		public function get_vouchers()
@@ -724,24 +669,26 @@
 			$criteria				= phpgw::get_var('criteria', 'string');
 			$query					= phpgw::get_var('query', 'string');
 
-			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid, 'budget_responsible_lid' =>$budget_responsible_lid, 'criteria' => $criteria, 'query' => $query ));
+			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid,
+				'budget_responsible_lid' => $budget_responsible_lid, 'criteria' => $criteria,
+				'query' => $query));
 
 			return $vouchers;
 		}
+		/* not used */
 
-		/*not used*/
 		public function get_single_voucher($voucher_id = 0)
 		{
 			$voucher = $this->bo->read_single_voucher($voucher_id);		
 		}
-
 		/*
 		* Find and select the first line
 		*/
+
 		public function get_first_line()
 		{
 			$voucher_id =  phpgw::get_var('voucher_id', 'int');
-			$voucher = $this->bo->read_invoice_sub($voucher_id);
+			$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 			$ret = array('line_id' => 0);
 			if($voucher)
 			{
@@ -758,7 +705,7 @@
 			$voucher = $this->bo->read_single_line($line_id);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
 
 //			$_last_period_last_year = (string)(date('Y') -1) . '12';
@@ -769,8 +716,8 @@
 			$period_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $period_list);
 			$periodization_start_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $periodization_start_list);
 
-			array_unshift($period_list,array ('id'=> '','name'=> lang('select')));
-			array_unshift($periodization_start_list,array ('id'=> '','name'=> lang('select')));
+			array_unshift($period_list, array('id' => '', 'name' => lang('select')));
+			array_unshift($periodization_start_list, array('id' => '', 'name' => lang('select')));
 
 			$voucher_info['generic']['period_list']['options'] = $period_list;
 			$voucher_info['generic']['periodization_start_list']['options'] = $periodization_start_list;
@@ -794,15 +741,15 @@
 
 				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
-					$janitor_list				= $this->bo->get_dimb_role_user(1,$voucher[0]['dim_b'], isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'');
-					$supervisor_list			= $this->bo->get_dimb_role_user(2,$voucher[0]['dim_b'], isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'');
-					$budget_responsible_list	= $this->bo->get_dimb_role_user(3,$voucher[0]['dim_b'], isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'');
+					$janitor_list = $this->bo->get_dimb_role_user(1, $voucher[0]['dim_b'], isset($voucher[0]['janitor']) ? $voucher[0]['janitor'] : '');
+					$supervisor_list = $this->bo->get_dimb_role_user(2, $voucher[0]['dim_b'], isset($voucher[0]['supervisor']) ? $voucher[0]['supervisor'] : '');
+					$budget_responsible_list = $this->bo->get_dimb_role_user(3, $voucher[0]['dim_b'], isset($voucher[0]['budget_responsible']) ? $voucher[0]['budget_responsible'] : '');
 				}
 				else
 				{
-					$janitor_list				= $this->bocommon->get_user_list_right(32,isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'','.invoice');
-					$supervisor_list			= $this->bocommon->get_user_list_right(64,isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'','.invoice');
-					$budget_responsible_list	= $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice');
+					$janitor_list = $this->bocommon->get_user_list_right(32, isset($voucher[0]['janitor']) ? $voucher[0]['janitor'] : '', '.invoice');
+					$supervisor_list = $this->bocommon->get_user_list_right(64, isset($voucher[0]['supervisor']) ? $voucher[0]['supervisor'] : '', '.invoice');
+					$budget_responsible_list = $this->bocommon->get_user_list_right(128, isset($voucher[0]['budget_responsible']) ? $voucher[0]['budget_responsible'] : '', '.invoice');
 				}
 
 				$approve = execMethod('property.boinvoice.get_approve_role', $voucher[0]['dim_b']);
@@ -812,7 +759,7 @@
 					'role'		=> $role_check['is_janitor'],
 					'role_sign'	=> 'oppsynsmannid',
 					'initials'	=> $voucher[0]['janitor'] ? $voucher[0]['janitor'] : '',
-					'date'		=> $voucher[0]['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['oppsynsigndato'] ) ) :'',
+					'date' => $voucher[0]['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['oppsynsigndato'])) : '',
 					'user_list'	=> !$voucher[0]['oppsynsigndato'] ? array('options' => $janitor_list) : ''
 				);
 				$approved_list[] = array
@@ -820,15 +767,15 @@
 					'role'		=> $role_check['is_supervisor'],
 					'role_sign'	=> 'saksbehandlerid',
 					'initials'	=> $voucher[0]['supervisor'] ? $voucher[0]['supervisor'] : '',
-					'date'		=> $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['saksigndato'] ) ) :'',
-					'user_list'	=> !$voucher[0]['saksigndato'] ?array('options' => $supervisor_list) : ''
+					'date' => $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['saksigndato'])) : '',
+					'user_list' => !$voucher[0]['saksigndato'] ? array('options' => $supervisor_list) : ''
 				);
 				$approved_list[] = array
 				(
 					'role'		=> $role_check['is_budget_responsible'],
 					'role_sign'	=> 'budsjettansvarligid',
 					'initials'	=> $voucher[0]['budget_responsible'] ? $voucher[0]['budget_responsible'] : '',
-					'date'		=> $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['budsjettsigndato'] ) ) :'',
+					'date' => $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['budsjettsigndato'])) : '',
 					'user_list'	=> !$voucher[0]['budsjettsigndato'] ? array('options' => $budget_responsible_list) : ''
 				);
 
@@ -836,7 +783,7 @@
 				{
 					if(isset($_approved_list['user_list']['options']))
 					{
-						array_unshift ($_approved_list['user_list']['options'], array('id' => '', 'name' => lang('forward')));
+						array_unshift($_approved_list['user_list']['options'], array('id' => '', 'name' => lang('forward')));
 					}
 				}
 
@@ -888,12 +835,13 @@
 				}
 
 				$voucher_info['generic']['approve_list'] = array('options' => $approve_list);
-				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('reset approval')));
+				array_unshift($voucher_info['generic']['approve_list']['options'], array('id' => '',
+					'name' => lang('reset approval')));
 //---------end forward
 
 				$voucher_info['generic']['approved_amount'] = 0;
 				$voucher_info['generic']['amount'] = 0;
-				foreach ($voucher as $line)
+				foreach($voucher as $line)
 				{
 					$voucher_info['generic']['approved_amount'] += $line['approved_amount'];
 					$voucher_info['generic']['amount']  += $line['amount'];
@@ -903,26 +851,27 @@
 				$voucher_info['generic']['amount'] = number_format($voucher_info['generic']['amount'], 2, ',', ' ');
 				$voucher_info['generic']['dimb_list']['options']		= $this->bo->select_dimb_list($voucher[0]['dim_b']);
 				$voucher_info['generic']['tax_code_list']['options']	= $this->bo->tax_code_list($voucher[0]['tax_code']);
-				$voucher_info['generic']['periodization_list']['options'] = execMethod('property.bogeneric.get_list', array('type'=>'periodization', 'selected' => $voucher[0]['periodization'] ));
+				$voucher_info['generic']['periodization_list']['options'] = execMethod('property.bogeneric.get_list', array(
+					'type' => 'periodization', 'selected' => $voucher[0]['periodization']));
 
 
-				$voucher[0]['invoice_date'] = $voucher[0]['invoice_date'] ?  $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['invoice_date'] ), $dateformat ) : '';
-				$voucher[0]['payment_date'] = $voucher[0]['payment_date'] ?  $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['payment_date'] ), $dateformat ) : '';
-				$voucher[0]['oppsynsigndato'] = $voucher[0]['oppsynsigndato'] ?  $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['oppsynsigndato'] ), $dateformat ) : '';
-				$voucher[0]['saksigndato'] = $voucher[0]['saksigndato'] ?  $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['saksigndato'] ), $dateformat) : '';
-				$voucher[0]['budsjettsigndato'] = $voucher[0]['budsjettsigndato'] ?  $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['budsjettsigndato'] ),$dateformat ) : '';
+				$voucher[0]['invoice_date'] = $voucher[0]['invoice_date'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['invoice_date']), $dateformat) : '';
+				$voucher[0]['payment_date'] = $voucher[0]['payment_date'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['payment_date']), $dateformat) : '';
+				$voucher[0]['oppsynsigndato'] = $voucher[0]['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['oppsynsigndato']), $dateformat) : '';
+				$voucher[0]['saksigndato'] = $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['saksigndato']), $dateformat) : '';
+				$voucher[0]['budsjettsigndato'] = $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['budsjettsigndato']), $dateformat) : '';
 
 				if($voucher[0]['remark'])
 				{
-					$voucher[0]['remark_link']= " <a href=\"javascript:openwindow('".$GLOBALS['phpgw']->link('/index.php', array
+					$voucher[0]['remark_link'] = " <a href=\"javascript:openwindow('" . $GLOBALS['phpgw']->link('/index.php', array
 						(
-							'menuaction'=> 'property.uiinvoice.remark',
+						'menuaction' => 'property.uiinvoice.remark',
 							'id'		=> $voucher[0]['id'],
-						)). "','550','400')\" >".lang('Remark')."</a>";
+					)) . "','550','400')\" >" . lang('Remark') . "</a>";
 				}
 				if($voucher[0]['order_id'])
 				{
-					$voucher[0]['order_link']= $GLOBALS['phpgw']->link('/index.php', array
+					$voucher[0]['order_link'] = $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'property.uiinvoice.view_order',
 							'order_id'		=> $voucher[0]['order_id']
@@ -937,13 +886,13 @@
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
 //				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
-
 			}
 			else
 			{
 				$voucher_info['generic']['dimb_list']['options']		= $this->bo->select_dimb_list();
 				$voucher_info['generic']['tax_code_list']['options']	= $this->bo->tax_code_list();
-				$voucher_info['generic']['periodization_list']['options'] = execMethod('property.bogeneric.get_list', array('type'=>'periodization'));
+				$voucher_info['generic']['periodization_list']['options'] = execMethod('property.bogeneric.get_list', array(
+					'type' => 'periodization'));
 
 				$approved_list[] = array
 				(
@@ -978,10 +927,14 @@
 				'type'		=> 'voucher_process_code',
 				'selected'	=> isset($voucher[0]['process_code']) ? $voucher[0]['process_code'] : '')));
 
-			array_unshift ($voucher_info['generic']['process_code_list']['options'],array ('id'=>'','name'=>lang('select')));
-			array_unshift ($voucher_info['generic']['dimb_list']['options'],array ('id'=>'','name'=>lang('select')));
-			array_unshift ($voucher_info['generic']['dime_list']['options'],array ('id'=>'','name'=>lang('select')));
-			array_unshift ($voucher_info['generic']['periodization_list']['options'],array('id' => '', 'name' => lang('none')));
+			array_unshift($voucher_info['generic']['process_code_list']['options'], array(
+				'id' => '', 'name' => lang('select')));
+			array_unshift($voucher_info['generic']['dimb_list']['options'], array('id' => '',
+				'name' => lang('select')));
+			array_unshift($voucher_info['generic']['dime_list']['options'], array('id' => '',
+				'name' => lang('select')));
+			array_unshift($voucher_info['generic']['periodization_list']['options'], array(
+				'id' => '', 'name' => lang('none')));
 
 			$voucher_info['voucher'] = $voucher;
 			$voucher_info['generic']['sign_orig'] = $sign_orig;
@@ -1012,7 +965,6 @@
 			return $result;
 		}
 
-
 		protected function getexceldata($path)
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
@@ -1030,19 +982,19 @@
 
 			$start = 2; // Read the first line to get the headers out of the way
 
-			for ($j=0; $j < $highestColumnIndex; $j++ )
+			for($j = 0; $j < $highestColumnIndex; $j++)
 			{
-				$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,1)->getCalculatedValue();
+				$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 			}
 
-			$rows = $rows ? $rows +1 : 0;
-			for ($row=$start; $row < $rows; $row++ )
+			$rows = $rows ? $rows + 1 : 0;
+			for($row = $start; $row < $rows; $row++)
 			{
 				$_result = array();
 
-				for ($j=0; $j < $highestColumnIndex; $j++ )
+				for($j = 0; $j < $highestColumnIndex; $j++)
 				{
-					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
+					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 				}
 
 				$result[] = $_result;
@@ -1050,7 +1002,6 @@
 
 			return $result;
 		}
-
 
 		/**
 		 * Read the next line from the given file handle and parse it to CSV according to the rules set up
@@ -1063,5 +1014,4 @@
 		{
 			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
 		}
-
 	}

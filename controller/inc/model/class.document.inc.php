@@ -1,6 +1,5 @@
 <?php
-
-/**
+	/**
  * phpGroupWare - controller: a part of a Facilities Management System.
  *
  * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
@@ -26,11 +25,12 @@
  * @internal Development of this application was funded by http://www.bergen.kommune.no/
  * @package property
  * @subpackage controller
- * @version $Id$
+	 * @version $Id$
  */
-include_class('controller', 'model', 'inc/model/');
+	include_class('controller', 'model', 'inc/model/');
 
-class controller_document extends controller_model {
+	class controller_document extends controller_model
+	{
 
   protected $title;
   protected $description;
@@ -39,60 +39,74 @@ class controller_document extends controller_model {
   protected $type_id;
   protected $procedure_id;
 
-  public function __construct(int $id = null) {
+		public function __construct(int $id = null)
+		{
     $doc_id = intval($id);
     parent::__construct($doc_id);
   }
 
-  public function set_title($title) {
+		public function set_title($title)
+		{
     $this->title = $title;
   }
 
-  public function get_title() {
+		public function get_title()
+		{
     return $this->title;
   }
 
-  public function set_description($description) {
+		public function set_description($description)
+		{
     $this->description = $description;
   }
 
-  public function get_description() {
+		public function get_description()
+		{
     return $this->description;
   }
 
-  public function set_name($name) {
+		public function set_name($name)
+		{
     $this->name = $name;
   }
 
-  public function get_name() {
+		public function get_name()
+		{
     return $this->name;
   }
 
-  public function set_type($type) {
+		public function set_type($type)
+		{
     $this->type = $type;
   }
 
-  public function get_type() {
+		public function get_type()
+		{
     return $this->type;
   }
 
-  public function set_type_id($type_id) {
+		public function set_type_id($type_id)
+		{
     $this->type_id = $type_id;
   }
 
-  public function get_type_id() {
+		public function get_type_id()
+		{
     return $this->type_id;
   }
 
-  public function set_procedure_id($procedure_id) {
+		public function set_procedure_id($procedure_id)
+		{
     $this->procedure_id = $procedure_id;
   }
 
-  public function get_procedure_id() {
+		public function get_procedure_id()
+		{
     return $this->procedure_id;
   }
 
-  public function serialize() {
+		public function serialize()
+		{
     return array(
         'id' => $this->get_id(),
         'title' => $this->get_title(),
@@ -101,7 +115,4 @@ class controller_document extends controller_model {
         'type' => lang($this->get_type())
     );
   }
-
-}
-
-?>
+	}

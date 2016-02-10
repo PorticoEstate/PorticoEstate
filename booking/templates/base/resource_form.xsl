@@ -1,29 +1,35 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
-
-		<dl class="form">
-			<dt class="heading">
-				<xsl:choose>
-					<xsl:when test="new_form">
-						<xsl:value-of select="php:function('lang', 'Add Resource')" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="php:function('lang', 'Edit Resource')" />
-					</xsl:otherwise>
-				</xsl:choose>
-			</dt>
-		</dl>
-
 		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
-
-		<form action="" method="POST" id="form">
-			<dl class="form-col">
-				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
-				<dd><input name="name" id="field_name" type="text" value="{resource/name}"/></dd>
+	<script type="text/javascript">
+		var resource_id = "<xsl:value-of select="resource/id"/>";
+		var default_schema = "<xsl:value-of select="resource/activity_name"/>";
+		var schema_type = "form";
+	</script>
 				
-				<dt><label for="field_activity_id"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
-				<dd>
+	<form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
+		<input type="hidden" name="tab" value=""/>
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
+			<div id="resource" class="booking-container">
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Name')" />
+					</label>
+					<input name="name" id="field_name" type="text" value="{resource/name}">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Please enter a name')" />
+						</xsl:attribute>
+					</input>
+				</div>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Activity')" />
+						</label>
+						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
 					<select id="field_activity_id" name="activity_id">
 						<xsl:for-each select="activitydata/results">
 							<option value="{id}">
@@ -34,44 +40,102 @@
 							</option>
 						</xsl:for-each>
 					</select>
-				</dd>
-				<dt><label for="field_sort"><xsl:value-of select="php:function('lang', 'Sort order')" /></label></dt>
-				<dd><input name="sort" id="field_sort" type="text" value="{resource/sort}"/></dd>
-			</dl>
-			<dl class="form-col">
-				<dt><label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
-				<dd>
-					<div class="autocomplete">
-						<xsl:if test="new_form or resource/permission/write/building_id">
-							<input id="field_building_id" name="building_id" type="hidden" value="{resource/building_id}"/>
-						</xsl:if>
-						<input id="field_building_name" name="building_name" type="text" value="{resource/building_name}">
-							<xsl:if test="not(new_form) and not(resource/permission/write/building_id)">
-								<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</div>
+				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Sort order')" />
+					</label>
+					<input name="sort" id="field_sort" type="text" value="{resource/sort}"/>
+				</div>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Building')"/>
+						</label>
+						<div class = 'pure-u-md-1-2'>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Building')" />
+					</label>
+					<input id="field_building_id" name="building_id" type="hidden" value=""/>
+					<input id="field_building_name" name="building_name" type="text" value="">
+						<xsl:if test="new_form">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+							</xsl:attribute>
 							</xsl:if>
 						</input>
-						<div id="building_container"/>
+					<div id="building_container" class="custom-container"></div>
+					<xsl:if test="resource/permission/write">
+						<a class='button'>
+							<xsl:attribute name="onClick">
+								<xsl:text>addBuilding()</xsl:text>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Add')" />
+						</a>
+						<xsl:text> | </xsl:text>
+						<a class='button'>
+							<xsl:attribute name="onClick">
+								<xsl:text>removeBuilding()</xsl:text>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Delete')" />
+						</a>
+					</xsl:if>
+
 					</div>
-				</dd>
-				<dt style="margin-top: 45px;"><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
-				<dd>
+				<div class="pure-control-group">
+					<label>
+						<div id="schema_name"></div>
+					</label>
+				</div>
+				<div id="custom_fields"></div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Resource Type')" />
+					</label>
 					<select name='type' id='field_type'>
-						<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Please select a resource type')" />
+						</xsl:attribute>
+						<option value=''>
+							<xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
 						<xsl:for-each select="resource/types/*">
 							<option value="{local-name()}">
 								<xsl:if test="../../type = local-name()">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 								</xsl:if>
-
 								<xsl:value-of select="php:function('lang', string(node()))"/>
 							</option>
 						</xsl:for-each>
 					</select>
-				</dd>
-				
+				</div>
 				<xsl:if test="not(new_form)">
-					<dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
-					<dd>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Active')"/>
+						</label>
 						<select id="field_active" name="active">
 							<option value="1">
 								<xsl:if test="resource/active=1">
@@ -86,30 +150,33 @@
 								<xsl:value-of select="php:function('lang', 'Inactive')"/>
 							</option>
 						</select>
-					</dd>
+					</div>
 				</xsl:if>
-			</dl>
-			
-			<div class="clr"/>
-
-			<dl class="form-col">
-				<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
-				<dd class="yui-skin-sam">
-					<textarea id="field_description" name="description" type="text"><xsl:value-of select="resource/description"/></textarea>
-				</dd>
-			</dl>
-			<div class="clr"/>
-			<dl class="form-col">
-
-				<dt><label for="field_organizations_ids"><xsl:value-of select="php:function('lang', 'organzations_ids')" /></label></dt>
-				<dt><p><xsl:value-of select="php:function('lang', 'organzations_ids_description')" /></p></dt>
-				<dd><input name="organizations_ids" id="field_organizations_ids" type="text" value="{resource/organizations_ids}"/></dd>
-
-			</dl>
-			<div class="clr"/>
-
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Description')" />
+					</label>
+					<div class="custom-container">
+						<textarea id="field_description" name="description" type="text">
+							<xsl:value-of select="resource/description"/>
+						</textarea>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'organzations_ids')" />
+					</label>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'organzations_ids_description')" />
+					</label>
+					<input name="organizations_ids" id="field_organizations_ids" type="text" value="{resource/organizations_ids}"/>
+				</div>
+			</div>
+		</div>
 			<div class="form-buttons">
-				<input type="submit" id="button">
+			<input type="submit" id="button" class="pure-button pure-button-primary">
 					<xsl:attribute name="value">
 						<xsl:choose>
 							<xsl:when test="new_form">
@@ -121,18 +188,12 @@
 						</xsl:choose>
 					</xsl:attribute>
 				</input>
-				<a class="cancel" href="{resource/cancel_link}">
+			<input type="button" class="pure-button pure-button-primary" name="cancel">
+				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
+				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
-				</a>			
+				</xsl:attribute>
+			</input>
 			</div>
 		</form>
-	</div>
-	
-	<script type="text/javascript">
-		<![CDATA[
-		YAHOO.util.Event.addListener(window, "load", function() {
-		YAHOO.booking.rtfEditorHelper('field_description');
-		});
-		]]>
-	</script>
 </xsl:template>

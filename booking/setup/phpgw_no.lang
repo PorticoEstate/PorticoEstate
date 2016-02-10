@@ -1,3 +1,5 @@
+attachments	common	no	Vedlegg
+add attachment	common	no	Legg til vedlegg
 booking	common	no	Booking
 bookingfrontend	common	no	Bookingfrontend
 global configuration	common	no	Global konfigurasjon
@@ -43,6 +45,7 @@ Never	common	no	Aldri
 quota	common	no	Kvote
 are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache
 current activities	booking	no	Aktiviteter
+select	booking	no	Velg
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
 -- select a season --	booking	no	Velg en sesong
@@ -141,6 +144,9 @@ generate allocations from week template	booking	no	Lag tildelinger fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe/Lag
 history and comments (%1)	booking	no	Historikk (%1)
+History of Cost (%1)	booking	no	Prishistorikk (%1)
+cost is set	booking	no	Ny pris er angitt
+cost comment	booking	no	Kommentar til ny pris
 hms document	booking	no	HMS dokument
 homepage	booking	no	Hjemmeside
 id	booking	no	ID

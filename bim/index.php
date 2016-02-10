@@ -25,14 +25,12 @@
 	* @package bim
  	* @version $Id: index.php 6445 2010-10-05 21:52:58Z sigurdne $
 	*/
-
 	/**
 	 * Start page
 	 *
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'		=> true,

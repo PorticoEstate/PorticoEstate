@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('phpgwapi.datetime');
 	phpgw::import_class('property.socommon_core');
 
@@ -34,7 +33,6 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_socondition_survey extends property_socommon_core
 	{
 
@@ -45,16 +43,17 @@
 
 		function read($data = array())
 		{
-			$start		= isset($data['start'])  ? (int) $data['start'] : 0;
+			$start = isset($data['start']) ? (int)$data['start'] : 0;
 			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
 			$query		= isset($data['query']) ? $data['query'] : '';
 			$sort		= isset($data['sort']) ? $data['sort'] : '';
 			$dir		= isset($data['dir']) ? $data['dir'] :  'DESC';
 			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$table = 'fm_condition_survey';
-			if ($sort)
+			if($sort)
 			{
 				switch($sort)
 				{
@@ -77,7 +76,7 @@
 			}
 
 			$where = 'WHERE';
-			if ($cat_id)
+			if($cat_id)
 			{
 				$filtermethod .= " {$where} {$table}.category = {$cat_id}";
 				$where = 'AND';
@@ -96,28 +95,28 @@
 			. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
 	
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_total_records = $this->_db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$values = array();
-			while ($this->_db->next_record())
+			while($this->_db->next_record())
 			{
 				$values[] = array
 				(
 					'id'			=> $this->_db->f('id'),
-					'title'			=> $this->_db->f('title',true),
-					'descr'			=> $this->_db->f('descr',true),
-					'address'		=> $this->_db->f('address',true),
-					'vendor'		=> $this->_db->f('vendor',true),
+					'title' => $this->_db->f('title', true),
+					'descr' => $this->_db->f('descr', true),
+					'address' => $this->_db->f('address', true),
+					'vendor' => $this->_db->f('vendor', true),
 					'entry_date'	=> $this->_db->f('entry_date'),
 					'user'			=> $this->_db->f('user_id'),
 					'multiplier'	=> $this->_db->f('multiplier'),
@@ -133,15 +132,15 @@
 			$table = 'fm_condition_survey';
 
 			$id		= (int)$data['id'];
-			$this->_db->query("SELECT * FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+			$this->_db->query("SELECT * FROM {$table} WHERE id={$id}", __LINE__, __FILE__);
 
 			$values = array();
-			if ($this->_db->next_record())
+			if($this->_db->next_record())
 			{
 				$values = array
 				(
 					'id'				=> $id,
-					'title'				=> $this->_db->f('title',true),
+					'title' => $this->_db->f('title', true),
 					'descr'				=> $this->_db->f('descr', true),
 					'location_code'		=> $this->_db->f('location_code', true),
 					'status_id'			=> (int)$this->_db->f('status_id'),
@@ -155,10 +154,10 @@
 					'multiplier'		=> (float)$this->_db->f('multiplier'),
 				);
 
-				if ( isset($data['attributes']) && is_array($data['attributes']) )
+				if(isset($data['attributes']) && is_array($data['attributes']))
 				{
 					$values['attributes'] = $data['attributes'];
-					foreach ( $values['attributes'] as &$attr )
+					foreach($values['attributes'] as &$attr)
 					{
 						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
@@ -168,14 +167,13 @@
 			return $values;
 		}
 
-
 		function add($data)
 		{
 			$table = 'fm_condition_survey';
 
 			$this->_db->transaction_begin();
 
-			$value_set	= $this->_get_value_set( $data );
+			$value_set = $this->_get_value_set($data);
 
 			$id = $this->_db->next_id($table);
 
@@ -199,13 +197,12 @@
 			try
 			{
 				$this->_db->Exception_On_Error = true;
-				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->Exception_On_Error = false;
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;
 				}
@@ -227,7 +224,7 @@
 			$table = 'fm_condition_survey';
 			$id = (int)$data['id'];
 
-			$value_set	= $this->_get_value_set( $data );
+			$value_set = $this->_get_value_set($data);
 
 			$value_set['title']				= $this->_db->db_addslashes($data['title']);
 			$value_set['descr']				= $this->_db->db_addslashes($data['descr']);
@@ -241,7 +238,7 @@
 			$value_set['multiplier']		= (float)$data['multiplier'];
 
 
-			$this->_db->query("SELECT coordinator_id FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
+			$this->_db->query("SELECT coordinator_id FROM fm_condition_survey WHERE id = {$id}", __LINE__, __FILE__);
 			$this->_db->next_record();
 			$old_coordinator_id		= (int)$this->_db->f('coordinator_id');
 
@@ -253,17 +250,16 @@
 
 				if($old_coordinator_id != $value_set['coordinator_id'])
 				{
-					$this->_db->query("UPDATE fm_request SET coordinator = {$value_set['coordinator_id']} WHERE condition_survey_id = {$id}",__LINE__,__FILE__);
+					$this->_db->query("UPDATE fm_request SET coordinator = {$value_set['coordinator_id']} WHERE condition_survey_id = {$id}", __LINE__, __FILE__);
 				}
 
 				$this->_edit($id, $value_set, 'fm_condition_survey');
-				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}",__LINE__,__FILE__);				
+				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}", __LINE__, __FILE__);
 				$this->_db->Exception_On_Error = false;
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					$this->_db->transaction_abort();
 					throw $e;
@@ -273,7 +269,6 @@
 			$this->_db->transaction_commit();
 			return $id;
 		}
-
 
 		public function edit_title($data)
 		{
@@ -288,10 +283,9 @@
 			{
 				$this->_edit($id, $value_set, 'fm_condition_survey');
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					throw $e;
 				}
@@ -310,8 +304,8 @@
 			$location_data = execMethod('property.solocation.read_single', $survey['location_code']);
 			
 			$_locations = explode('-', $survey['location_code']);
-			$i=1;
-			foreach ($_locations as $_location)
+			$i = 1;
+			foreach($_locations as $_location)
 			{
 				$location["loc{$i}"] = $_location;
 				$i++;
@@ -321,7 +315,7 @@
 
 			$this->_db->transaction_begin();
 
-			$config	= CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 
 			if(!$survey['location_code'])
@@ -351,7 +345,7 @@
 			if(isset($config->config_data['condition_survey_obsolete_status'])  && $config->config_data['condition_survey_obsolete_status'])
 			{
 				$this->_db->query("UPDATE fm_request SET status = '{$config->config_data['condition_survey_obsolete_status']}'"
-				 . " WHERE location_code {$this->_db->like} '{$survey['location_code']}%'",__LINE__,__FILE__);
+				. " WHERE location_code {$this->_db->like} '{$survey['location_code']}%'", __LINE__, __FILE__);
 			}
 			else
 			{
@@ -363,14 +357,14 @@
 			$categories = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 
 
-/*
+			/*
 		$import_types = array
 		(
 			1 => 'Hidden',
 			2 => 'Normal import',
 			3 => 'Users/Customers responsibility',
 		);
-*/
+			 */
 
 
 		$import_type_responsibility = array();
@@ -384,7 +378,7 @@
 		$import_type_responsibility[7] = 6; //'Customers' => responsible_unit 3
 		$import_type_responsibility[8] = 7; //'Customers' => responsible_unit 3
 
-/*
+			/*
 		$cats_candidates = array
 		(
 			1 => 'Investment',
@@ -392,7 +386,7 @@
 			3 => 'Combined::Investment/Operation',
 		);
 
-*/
+			 */
 			$_update_buildingpart = array();
 			$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
 			
@@ -401,13 +395,15 @@
 				$_update_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
-			foreach ($import_data as &$entry)
+			foreach($import_data as &$entry)
 			{
-				$entry['amount_investment']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
-				$entry['amount_operation']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
-				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
-				$entry['import_type']				= (int) $entry['import_type'];
-				$entry['condition_degree']			= (int) $entry['condition_degree'];
+				$entry['amount_investment'] = (int)str_replace(array(' ', ','), array('',
+					'.'), $entry['amount_investment']);
+				$entry['amount_operation'] = (int)str_replace(array(' ', ','), array('', '.'), $entry['amount_operation']);
+				$entry['amount_potential_grants'] = (int)str_replace(array(' ', ','), array(
+					'', '.'), $entry['amount_potential_grants']);
+				$entry['import_type'] = (int)$entry['import_type'];
+				$entry['condition_degree'] = (int)$entry['condition_degree'];
 				$entry['amount']					= $entry['amount_investment'] + $entry['amount_operation'] + $entry['amount_potential_grants'];
 			}
 
@@ -415,25 +411,25 @@
 			unset($entry);
 
 			$custom	= createObject('phpgwapi.custom_fields');
-			$attributes = $custom->find('property','.project.request', 0, '','','',true, true);
+			$attributes = $custom->find('property', '.project.request', 0, '', '', '', true, true);
 
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
-			foreach ($import_data as $entry)
+			foreach($import_data as $entry)
 			{
 				//if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
-				if( $entry['amount'] && $entry['building_part'] && $entry['import_type'] > 0)
+				if($entry['amount'] && $entry['building_part'] && $entry['import_type'] > 0)
 				{
 
 					$request = array();
 
-					if( $entry['amount_investment'] && !$entry['amount_operation'] )
+					if($entry['amount_investment'] && !$entry['amount_operation'])
 					{
 						if(isset($config->config_data['condition_survey_import_cat'][1]))
 						{
 							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][1];
 						}
 					}
-					if( !$entry['amount_investment'] && $entry['amount_operation'] )
+					if(!$entry['amount_investment'] && $entry['amount_operation'])
 					{
 						if(isset($config->config_data['condition_survey_import_cat'][2]))
 						{
@@ -453,7 +449,7 @@
 						$request['cat_id'] = (int)$categories[0]['id'];
 					}
 
-					$this->_check_building_part($entry['building_part'],$_update_buildingpart);
+					$this->_check_building_part($entry['building_part'], $_update_buildingpart);
 
 
 					$request['condition_survey_id'] 	= $survey['id'];
@@ -483,7 +479,7 @@
 					$request['amount_potential_grants']	= $entry['amount_potential_grants'];
 
 					$request['planning_value']			= $entry['amount'];
-					$request['planning_date']			= mktime( 13,0,0,7,1, $entry['due_year'] ? (int) $entry['due_year'] : date('Y') );
+					$request['planning_date'] = mktime(13, 0, 0, 7, 1, $entry['due_year'] ? (int)$entry['due_year'] : date('Y') );
 					$request['recommended_year']		= $entry['due_year'] ? (int)$entry['due_year'] : date('Y');
 
 					$request['responsible_unit']		= (int)$import_type_responsibility[$entry['import_type']];
@@ -525,17 +521,17 @@
 		private function _check_building_part($id, $_update_buildingpart)
 		{
 			$sql = "SELECT id FROM fm_building_part WHERE id = '{$id}'";
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 			if(!$this->_db->next_record())
 			{
 				$sql = "INSERT INTO fm_building_part (id, descr) VALUES ('{$id}', '{$id}::__')";
-				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
 			if($_update_buildingpart)
 			{
 				$value_set	= $this->_db->validate_update($_update_buildingpart);
-				$this->_db->query("UPDATE fm_building_part SET {$value_set} WHERE id = '{$id}'",__LINE__,__FILE__);
+				$this->_db->query("UPDATE fm_building_part SET {$value_set} WHERE id = '{$id}'", __LINE__, __FILE__);
 			}
 		}
 
@@ -557,14 +553,14 @@
 			$sql = "SELECT condition_survey_id, substr(building_part, 1,1) as building_part_,"
 			. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 			. " recommended_year as year"
-			." FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
-			." WHERE {$id_filter} AND fm_request_status.closed IS NULL"
-			." GROUP BY condition_survey_id, building_part_ , year ORDER BY building_part_";
+			. " FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
+			. " WHERE {$id_filter} AND fm_request_status.closed IS NULL"
+			. " GROUP BY condition_survey_id, building_part_ , year ORDER BY building_part_";
 
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while ($this->_db->next_record())
+			while($this->_db->next_record())
 			{
 				$amount = $this->_db->f('investment') + $this->_db->f('operation');
 				
@@ -582,9 +578,9 @@
 			$lang_investment = lang('investment');
 
 			$return = array();
-			foreach ($values as $entry)
+			foreach($values as $entry)
 			{
-				if ($entry['amount_investment'])
+				if($entry['amount_investment'])
 				{
 					$return[] = array
 					(
@@ -595,7 +591,7 @@
 						'category'				=> $lang_investment,
 					);
 				}
-				if ($entry['amount_operation'])
+				if($entry['amount_operation'])
 				{
 					$return[] = array
 					(
@@ -611,7 +607,6 @@
 			return $return;
 		}
 
-
 		public function delete($id)
 		{
 
@@ -621,13 +616,12 @@
 			{
 				$this->_db->Exception_On_Error = true;
 				$this->delete_imported_records($id);
-				$this->_db->query("DELETE FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_condition_survey WHERE id = {$id}", __LINE__, __FILE__);
 				$this->_db->Exception_On_Error = false;
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
 					$this->_db->transaction_abort();
 					throw $e;
@@ -639,10 +633,10 @@
 
 		public function delete_imported_records($id)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$interlink 	= CreateObject('property.interlink');
 
-			if ( $this->_db->get_transaction() )
+			if($this->_db->get_transaction())
 			{
 				$this->_global_lock = true;
 			}
@@ -652,8 +646,8 @@
 			}
 			
 			$requests = array();
-			$this->_db->query("SELECT id AS request_id FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
-			while ($this->_db->next_record())
+			$this->_db->query("SELECT id AS request_id FROM fm_request WHERE condition_survey_id={$id}", __LINE__, __FILE__);
+			while($this->_db->next_record())
 			{
 				$requests[] = $this->_db->f('request_id');
 			}
@@ -663,26 +657,25 @@
 				$this->_db->Exception_On_Error = true;
 				if($requests)
 				{
-					$this->_db->query('DELETE FROM fm_request_planning WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
-					$this->_db->query('DELETE FROM fm_request_consume WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
-					$this->_db->query('DELETE FROM fm_request_condition WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
-					$this->_db->query('DELETE FROM fm_request_history  WHERE  history_record_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
+					$this->_db->query('DELETE FROM fm_request_planning WHERE request_id IN (' . implode(',', $requests) . ')', __LINE__, __FILE__);
+					$this->_db->query('DELETE FROM fm_request_consume WHERE request_id IN (' . implode(',', $requests) . ')', __LINE__, __FILE__);
+					$this->_db->query('DELETE FROM fm_request_condition WHERE request_id IN (' . implode(',', $requests) . ')', __LINE__, __FILE__);
+					$this->_db->query('DELETE FROM fm_request_history  WHERE  history_record_id IN (' . implode(',', $requests) . ')', __LINE__, __FILE__);
 				}
-				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id = {$id}", __LINE__, __FILE__);
 			
-				foreach ($requests as $request_id)
+				foreach($requests as $request_id)
 				{
 					$interlink->delete_at_target('property', '.project.request', $request_id, $this->_db);
 				}
 
 				$this->_db->Exception_On_Error = false;
 			}
-
 			catch(Exception $e)
 			{
-				if ( $e )
+				if($e)
 				{
-					if ( !$this->_global_lock )
+					if(!$this->_global_lock)
 					{
 						$this->_db->transaction_abort();
 					}
@@ -691,7 +684,7 @@
 				}
 			}
 
-			if ( !$this->_global_lock )
+			if(!$this->_global_lock)
 			{
 				$this->_db->transaction_commit();
 			}

@@ -80,6 +80,8 @@
 		
 		protected $attribute_group_tree = array();
 
+		protected $node_id = 0;
+
 		/**
 		 * Constructor
 		 *
@@ -96,6 +98,7 @@
 			}
 			
 			$this->_db           	=& $GLOBALS['phpgw']->db;
+			$this->_db2				= clone($this->_db);
 			$this->_join			=& $this->_db->join;
 			$this->_like			=& $this->_db->like;
 			$this->_dateformat 		= phpgwapi_db::date_format();
@@ -1054,6 +1057,7 @@
 		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
 		{
+                        
 			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
@@ -1123,7 +1127,6 @@
 			$this->_total_records = $this->_db->f('cnt_rec');
 
 			$sql = "SELECT * {$sql} {$ordermethod}";
-
 			if ( $allrows )
 			{
 				$this->_db->query($sql, __LINE__, __FILE__);
@@ -1187,7 +1190,6 @@
 					}
 				}
 			}
-
 			return $attribs;
 		}
 
@@ -1229,7 +1231,7 @@
 			$querymethod = '';
 			if ( $query )
 			{
-				$querymethod = "AND (phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
+				$querymethod = "AND phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
 			}
 
 			$sql = "SELECT * FROM phpgw_cust_attribute_group "
@@ -1260,6 +1262,7 @@
 				$this->attribute_group_tree[] = array
 				(
 					'id'				=> $group['id'],
+					'text'				=> $group['name'],
 					'name'				=> $group['name'],
 					'parent_id'			=> 0,
 					'level'				=> 0,
@@ -1457,19 +1460,22 @@
 		* @return array the grouped attributes
 		*/
 
-		public function get_attribute_groups($appname, $location, $attributes = array())
+		public function get_attribute_groups($appname, $location, $attributes = array(), $skip_no_group = false)
 		{
 			$no_group = array
 			(
 				array
 				(
 					'id'	=> 0,
-					'name'	=> lang('attributes'),
-					'descr' => lang('attributes')
+					'name'	=> lang('features'),
+					'descr' => lang('features')
 				)
 			);
 			$groups = $this->find_group($appname, $location, 0, '', 'ASC', 'group_sort', true);
+			if(!$skip_no_group)
+			{
 			$groups = array_merge($no_group, $groups);
+			}
 		
 			foreach ($groups as &$group)
 			{
@@ -1483,6 +1489,192 @@
 			}
 			return $groups;
 		}
+
+		/**
+		 * 
+		 * @param type $appname
+		 * @param type $location
+		 * @param type $parent_id
+		 * @return type
+		 */
+		public function get_attribute_tree($appname, $location, $parent_id = 0, $cat_id = 0)
+		{
+			$this->node_id++;
+
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$tree		 = array();
+
+			$table = 'phpgw_cust_attribute_group';
+
+			$filtermthod = "WHERE location_id = {$location_id}";
+			if($parent_id)
+			{
+				$filtermthod .= " AND parent_id = {$parent_id}";
+			}
+			else
+			{
+				$filtermthod .= ' AND (parent_id = 0 OR parent_id IS NULL)';
+			}
+
+			$sql = "SELECT * FROM {$table} {$filtermthod} ORDER BY group_sort";
+
+			$this->_db2->query($sql, __LINE__, __FILE__);
+			$this->total_records = $this->_db2->num_rows();
+
+			while($this->_db2->next_record())
+			{
+				$id = $this->_db2->f('id');
+				$tree[] = array(
+					'id'		=> "ajson{$this->node_id}",
+					'db_id'		=> $id,
+					'parent'	=> $this->_db2->f('parent_id'),
+					'text'		=> $this->_db2->f('name',true),
+					'cat_id'	=> $cat_id
+				);
+				$this->node_id++;
+			}
+
+			if($tree)
+			{
+				foreach($tree as &$node)
+				{
+					$children = $this->get_group_children($location_id, $node['db_id'], $node['db_id'], $cat_id);
+					$attribute_children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
+					if($children)
+					{
+						$node['children'] = $children;
+					}
+
+					if($attribute_children)
+					{
+						if($children)
+						{
+							$node['children'] = array_merge($children, $attribute_children);
+						}
+						else
+						{
+							$node['children'] = $attribute_children;
+						}
+					}
+				}
+			}
+			else
+			{
+				$tree = $this->get_attribute_children($location_id, "ajson{$this->node_id}", 0, $cat_id);
+				$this->node_id++;
+				foreach($tree as &$node)
+				{
+					$children = $this->get_attribute_children($location_id, $node['id'], $node['db_id'], $cat_id);
+					if($children)
+					{
+						$node['children'] = $children;
+					}
+				}
+			}
+			return $tree;
+		}
+
+		/**
+		 * 
+		 * @param type $location_id
+		 * @param type $parent_id
+		 * @param type $parent
+		 * @return type
+		 */
+		public function get_group_children($location_id, $parent_id, $parent, $cat_id = 0)
+		{
+
+			$parent = (int)$parent;
+			$children = array();
+
+			$table = 'phpgw_cust_attribute_group';
+
+			$filtermthod = " WHERE location_id = {$location_id} AND parent_id = {$parent_id}";
+
+			$sql = "SELECT * FROM {$table} {$filtermthod}";
+			$this->_db2->query($sql, __LINE__, __FILE__);
+
+			while($this->_db2->next_record())
+			{
+				$children[] = array(
+					'id'		=> "ajson{$this->node_id}",
+					'db_id'		=> $id,
+					'parent'	=> $parent,
+					'parent_id'	=> $this->_db2->f('parent_id'),
+					'text'	=> $this->_db2->f('name',true),
+					'cat_id' => $cat_id
+				);
+				$this->node_id++;
+			}
+
+			foreach($children as &$child)
+			{
+				$_children = $this->get_group_children($location_id, $child['db_id'], $child['id'], $cat_id);
+				if($_children)
+				{
+					$child['children'] = $_children;
+				}
+			}
+			return $children;
+
+		}
+
+		/**
+		 * 
+		 * @param type $location_id
+		 * @param type $parent
+		 * @param type $group_id
+		 * @return type
+		 */
+		public function get_attribute_children($location_id, $parent, $group_id, $cat_id = 0)
+		{
+			$children = array();
+
+			$table = 'phpgw_cust_attribute';
+
+			$filtermthod = "WHERE location_id = {$location_id} AND group_id = {$group_id}";
+
+			$sql = "SELECT * FROM {$table} {$filtermthod}";
+			$this->_db2->query($sql, __LINE__, __FILE__);
+
+			while($this->_db2->next_record())
+			{
+				$id = $this->_db2->f('id');
+				$children[] = array(
+					'id'			=> "ajson{$this->node_id}",
+					'db_id'			=> $id,
+					'location_id'	=> $location_id,
+					'attribute_id'	=> $id,
+					'parent'		=> $parent,
+					'text'			=> $this->_db2->f('input_text',true),
+					'cat_id'		=> $cat_id
+				);
+				$this->node_id++;
+			}
+
+			foreach($children as &$child)
+			{
+				$_choices = $this->_get_choices($location_id, $child['db_id']);
+				if($_choices)
+				{
+					foreach ($_choices as &$_choice)
+					{
+						$_choice['parent']		= $child['id'];
+						$_choice['db_id']		= $_choice['id'];
+						$_choice['location_id']	= $location_id;
+						$_choice['attribute_id']= $child['db_id'];
+						$_choice['choice_id']	= $_choice['id'];
+						$_choice['id']			= "ajson{$this->node_id}";
+						$_choice['cat_id']		= $cat_id;
+						$this->node_id++;
+					}
+					$child['children'] = $_choices;
+				}
+			}
+			return $children;
+		}
+
 
 		/**
 		 * Get the definition of a table
@@ -1779,12 +1971,12 @@
 			$choices = array();
 			while ( $this->_db->next_record() )
 			{
-			//	$id = $this->_db->f('id');
-			//	$choices[$id] = array
+				$value = $this->_db->f('value', true);
 				$choices[] = array
 				(
 					'id'	=> $this->_db->f('id'),
-					'value'	=> $this->_db->f('value', true),
+					'text'	=> $value,
+					'value'	=> $value,
 					'title'	=> $this->_db->f('title', true),
 					'order'	=> $this->_db->f('choice_sort')
 				);

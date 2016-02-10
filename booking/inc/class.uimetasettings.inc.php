@@ -3,6 +3,7 @@
 
 	class booking_uimetasettings extends booking_uicommon
 	{
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -12,20 +13,27 @@
 		{
 			parent::__construct();
 			self::set_active_menu('admin::bookingfrontend::metasettings');
+			$this->fields		 = array(
+				'metatag_author'	 => 'string',
+				'metatag_robots'	 => 'string',
+				'frontpagetext'		 => 'html',
+			);
 		}
 		
 		public function index()
 		{
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				foreach($_POST as $dim => $value)
+				$metasettings = extract_values($_POST, $this->fields);
+
+				foreach($metasettings as $dim => $value)
 				{
-					if (strlen(trim($value)) > 0)
+					if(strlen(trim($value)) > 0)
 					{
-						$config->value($dim, phpgw::clean_value($value));
+						$config->value($dim, $value);
 					}
 					else
 					{
@@ -34,7 +42,20 @@
 				}
 				$config->save_repository();
 			}
-			$this->use_yui_editor();
-			self::render_template('metasettings', array('config_data' =>$config->config_data));
+
+			$tabs			 = array();
+			$tabs['meta']	 = array('label' => lang('metadata settings'), 'link' => '#meta');
+			$active_tab		 = 'meta';
+
+			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			phpgwapi_jquery::init_ckeditor('field_frontpagetext');
+
+			self::render_template('metasettings', array('config_data' => $config->config_data,
+				'meta' => $meta));
+		}
+
+		function query()
+		{
+
 		}
 	}

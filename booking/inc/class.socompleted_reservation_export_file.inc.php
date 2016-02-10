@@ -3,11 +3,11 @@
 
 	class booking_socompleted_reservation_export_file extends booking_socommon
 	{	
+
 		protected 
 			$file_storage,
 			$so_completed_reservation,
 			$so_completed_reservation_export;
-		
 		protected static $export_type_to_file_type_map = array(
    			'internal' => 'csv',
 			'external' => 'txt',
@@ -19,8 +19,7 @@
 			$this->so_completed_reservation = CreateObject('booking.socompleted_reservation');
 			$this->so_completed_reservation_export = CreateObject('booking.socompleted_reservation_export');
 			
-			parent::__construct('bb_completed_reservation_export_file', 
-				array(
+			parent::__construct('bb_completed_reservation_export_file', array(
 					'id'				=> array('type' => 'int'),
 					'type' 			=> array('type' => 'string', 'required' => true, 'query' => true),
 					'filename' 		=> array('type' => 'string'),
@@ -34,37 +33,43 @@
 			);
 		}
 		
-		protected function file_type_for_export_type($export_type) {
-            $config	= CreateObject('phpgwapi.config','booking');
+		protected function file_type_for_export_type($export_type)
+		{
+			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-            if ($export_type === 'internal') {
-                if ($config->config_data['internal_format'] == 'CSV')
+			if($export_type === 'internal')
+			{
+				if($config->config_data['internal_format'] == 'CSV')
                 {
                     return 'csv';
                 }
-                elseif ($config->config_data['internal_format'] == 'AGRESSO')
+				elseif($config->config_data['internal_format'] == 'AGRESSO')
                 {
     			    return 'txt';
                 }
-                elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+				elseif($config->config_data['internal_format'] == 'KOMMFAKT')
                 {
     			    return 'txt';
                 }
-            } elseif ($export_type === 'external'){
-                if ($config->config_data['external_format'] == 'CSV')
+			}
+			elseif($export_type === 'external')
+			{
+				if($config->config_data['external_format'] == 'CSV')
                 {
                     return 'csv';
                 }
-                elseif ($config->config_data['external_format'] == 'AGRESSO')
+				elseif($config->config_data['external_format'] == 'AGRESSO')
                 {
     			    return 'txt';
                 }
-                elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+				elseif($config->config_data['external_format'] == 'KOMMFAKT')
                 {
     			    return 'txt';
                 }
-            } else {
+			}
+			else
+			{
                 return 'txt';    
             }
 #			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
@@ -72,47 +77,58 @@
 #				'txt';
 		}
 		
-		protected function get_available_export_types() {
+		protected function get_available_export_types()
+		{
 			return $this->so_completed_reservation_export->get_available_export_types();
 		}
 		
-		protected function get_export_file_data($from_entity, $of_type) {
+		protected function get_export_file_data($from_entity, $of_type)
+		{
 			return $this->so_completed_reservation_export->get_export_file_data($from_entity, $of_type);
 		}
 		
-		public function get_file($entity_file) {
-			if (isset($entity_file['filename']) && !empty($entity_file['filename'])) {
+		public function get_file($entity_file)
+		{
+			if(isset($entity_file['filename']) && !empty($entity_file['filename']))
+			{
 				return $this->file_storage->get($entity_file['filename']);
 			}
 			
 			return null;
 		}
 
-		public function get_logfile($entity_file) {
-			if (isset($entity_file['log_filename']) && !empty($entity_file['log_filename'])) {
+		public function get_logfile($entity_file)
+		{
+			if(isset($entity_file['log_filename']) && !empty($entity_file['log_filename']))
+			{
 				return $this->file_storage->get($entity_file['log_filename']);
 			}
 			
 			return null;
 		}
 		
-		public function associate_reservation_with_export_file($reservation_id, $export_file_id, $invoice_order_id) {
+		public function associate_reservation_with_export_file($reservation_id, $export_file_id, $invoice_order_id)
+		{
 			$this->so_completed_reservation->associate_with_export_file($reservation_id, $export_file_id, $invoice_order_id);
 		}
 		
-		public function count_associated_reservations($for_export_file_id) {
+		public function count_associated_reservations($for_export_file_id)
+		{
 			return $this->so_completed_reservation->count_reservations_for_export_file($for_export_file_id);
 		}
 		
-		public function combine_export_result_data(array &$export_results) {
+		public function combine_export_result_data(array &$export_results)
+		{
 			return $this->so_completed_reservation_export->combine_export_data($export_results);
 		}
 		
-		public function export_has_generated_file(&$export, $of_type) {
+		public function export_has_generated_file(&$export, $of_type)
+		{
 			return $this->so_completed_reservation_export->has_generated_file($export, $of_type);
 		}
 		
-		public function generate_for(array $completed_reservation_exports) {
+		public function generate_for(array $completed_reservation_exports)
+		{
 			$export_types = $this->get_available_export_types();
 			
 			$export_results 			= array_fill_keys($export_types, array());
@@ -126,14 +142,18 @@
 			$export_files = array();
 			$export_conf_updates = array();
             
-			try {				
+			try
+			{
 				$this->db->transaction_begin();
 				
 				$do_generate_files = false;
 			
-				foreach($export_types as $export_type) {
-					foreach ($completed_reservation_exports as $export) {
-						if ($this->export_has_generated_file($export, $export_type)) {
+				foreach($export_types as $export_type)
+				{
+					foreach($completed_reservation_exports as $export)
+					{
+						if($this->export_has_generated_file($export, $export_type))
+						{
 							continue; //Don't include data for exports that already have a generated file
 						}
 						
@@ -142,16 +162,21 @@
 						list($conf, $export_result) = $this->get_export_file_data($export, $export_type);
 						$export_results[$export_type][] = $export_result;
 						
-						if (!is_null($export_result['export'])) {
+						if(!is_null($export_result['export']))
+						{
 							$export_infos[$export_type][] = $export_result['export']['info'];	
 						}
 
-                        if ($export_type == 'external') {
+						if($export_type == 'external')
+						{
 							$export_result['total_items'] = $export_result['export']['header_count'];	
 
-						    if (!is_null($export_result['export']['data_log'])) {
+							if(!is_null($export_result['export']['data_log']))
+							{
 								$export_log .= $export_result['export']['data_log'];	
-							} else {
+							}
+							else
+							{
 								$export_log .= "";
 							}
                         }
@@ -167,11 +192,13 @@
 				$log .= $export_log;
 				$export_log = $log;			
 				
-				if ($do_generate_files === false) {
+				if($do_generate_files === false)
+				{
 					return false;
 				}
 			
-				foreach($export_types as $export_type) {
+				foreach($export_types as $export_type)
+				{
                 	$entity_export_file = array();
 					$entity_export_file['type'] = $export_type;
 					$entity_export_file['total_cost'] = $total_cost[$export_type];
@@ -180,7 +207,7 @@
 					$receipt = $this->add($entity_export_file);
 					$entity_export_file['id'] = $receipt['id'];
 				
-					$entity_export_file['filename'] = 'export_'.$export_type.'_'.$entity_export_file['id'].'.'.$this->file_type_for_export_type($export_type);
+					$entity_export_file['filename']	 = 'export_' . $export_type . '_' . $entity_export_file['id'] . '.' . $this->file_type_for_export_type($export_type);
 					$export_file = new booking_storage_object($entity_export_file['filename']);
 					$export_files[] = $export_file;
 				
@@ -188,8 +215,9 @@
 			
 					$this->file_storage->attach($export_file)->persist();
                                             
-                    if ($export_type == 'external'){
-    					$entity_export_file['log_filename'] = 'log_'.$export_type.'_'.$entity_export_file['id'].'.csv';
+					if($export_type == 'external')
+					{
+						$entity_export_file['log_filename']	 = 'log_' . $export_type . '_' . $entity_export_file['id'] . '.csv';
     					$log_export_file = new booking_storage_object($entity_export_file['log_filename']);
     					$log_export_files[] = $log_export_file;
     					$log_export_file->set_data($export_log);
@@ -198,18 +226,20 @@
 					$this->update($entity_export_file); //Save the generated file name
 					$entity_export_files[$entity_export_file['id']] = $entity_export_file;
 				
-					foreach($export_configurations[$export_type] as $export_id => $conf) {
+					foreach($export_configurations[$export_type] as $export_id => $conf)
+					{
                			$export_conf_updates[] = sprintf(
-		    				"UPDATE bb_completed_reservation_export_configuration SET export_file_id=%s WHERE id=%s",
-		    				$entity_export_file['id'],
-		    				$conf['id']
+						"UPDATE bb_completed_reservation_export_configuration SET export_file_id=%s WHERE id=%s", $entity_export_file['id'], $conf['id']
 		    			);
 					}
 					
 					$associated_reservation_count = 0;
-					foreach($export_infos[$export_type] as $key => &$export_info_collection) {
-						if (!is_array($export_info_collection)) continue;
-	 					foreach($export_info_collection as $item_key => &$export_item_info) {
+					foreach($export_infos[$export_type] as $key => &$export_info_collection)
+					{
+						if(!is_array($export_info_collection))
+							continue;
+						foreach($export_info_collection as $item_key => &$export_item_info)
+						{
 							$this->associate_reservation_with_export_file($export_item_info['id'], $entity_export_file['id'], $export_item_info['invoice_file_order_id']);
 							$associated_reservation_count++;
 						}
@@ -230,7 +260,7 @@
 				 */
 				foreach($export_conf_updates as $sql)
 				{
-					$this->db_query($sql,__LINE__, __FILE__);
+					$this->db_query($sql, __LINE__, __FILE__);
 				}
 
 //				$this->db_query(
@@ -238,13 +268,15 @@
 //					__LINE__, __FILE__
 //				);
 			
-				if ($this->db->transaction_commit()) { 
+				if($this->db->transaction_commit())
+				{
 					return $entity_export_files;
 				}
 			
 				throw new UnexpectedValueException('Transaction failed.');
-			
-			} catch (Exception $e) {
+			}
+			catch(Exception $e)
+			{
 				$this->delete_export_system_files($export_files);
 				throw $e;
 			}
@@ -252,13 +284,21 @@
 			return false;
 		}
 		
-		public function delete_export_system_files(&$export_files) {
-			try {
-				foreach($export_files as $export_file) {
-					if ($export_file->exists()) {
+		public function delete_export_system_files(&$export_files)
+		{
+			try
+			{
+				foreach($export_files as $export_file)
+				{
+					if($export_file->exists())
+					{
 						$export_file->delete();
 					}
 				}
-			} catch (booking_unattached_storage_object $e) { }
+			}
+			catch(booking_unattached_storage_object $e)
+			{
+
+			}
 		}
 	}

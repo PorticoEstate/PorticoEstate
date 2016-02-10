@@ -667,7 +667,6 @@
 				$Status			 = 'N';// verdi: N, type: c1, plass: 380 - 380
 //				$Resk_type		 = 'P';// verdi: Blank, type: c1, plass: 381 - 381
 				$Resk_type		 = ' ';// verdi: Blank, type: c1, plass: 381 - 381
-
 //				$Resk_nr		 = sprintf("%-9s", $invoice['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
 				$Resk_nr		 = sprintf("%-9s", '');// verdi: Blank., type: i4, plass: 382 - 390
 

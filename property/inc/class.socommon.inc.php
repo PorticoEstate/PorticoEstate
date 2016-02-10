@@ -24,18 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	phpgw::import_class('phpgwapi.datetime');
 
 	class property_socommon
 	{
+
 		/**
 		 * @var string $join the sql syntax to use for JOIN
 		 */
@@ -45,7 +44,6 @@
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
 		var $like = 'LIKE';
-
 
 		function __construct()
 		{
@@ -57,7 +55,7 @@
 			else // for setup
 			{
 				$this->db = CreateObject('phpgwapi.db');
-				$this->db->fetchmode= 'ASSOC';
+				$this->db->fetchmode = 'ASSOC';
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
@@ -68,10 +66,10 @@
 				}
 				else
 				{
-					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'COOKIE');
+					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'COOKIE');
 					if(!$ConfigDomain)
 					{
-						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'POST');
+						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
 					$phpgw_domain = $GLOBALS['phpgw_domain'];
@@ -84,7 +82,7 @@
 
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
+			switch($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'pgsql':
 					$this->join = " JOIN ";
@@ -101,7 +99,7 @@
 			$this->left_join = " LEFT JOIN ";
 		}
 
-		function fm_cache($name='',$value='')
+		function fm_cache($name = '', $value = '')
 		{
 			if($name && $value)
 			{
@@ -120,20 +118,19 @@
 
 				if($this->db->next_record())
 				{
-					$this->db->query("UPDATE fm_cache SET value = '{$value}' WHERE name='{$name}'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_cache SET value = '{$value}' WHERE name='{$name}'", __LINE__, __FILE__);
 				}
 				else
 				{
-					$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')",__LINE__,__FILE__);
+					$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')", __LINE__, __FILE__);
 				}
-
 			}
 			else
 			{
 				$this->db->query("SELECT value FROM fm_cache where name='$name'");
 				if($this->db->next_record())
 				{
-					$ret= $this->db->f('value');
+					$ret = $this->db->f('value');
 
 					if(function_exists('gzcompress'))
 					{
@@ -153,10 +150,9 @@
 		 * Clear all content from cache
 		 *
 		 */
-
 		function reset_fm_cache()
 		{
-			$this->db->query("DELETE FROM fm_cache ",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_cache ", __LINE__, __FILE__);
 		}
 
 		/**
@@ -164,24 +160,23 @@
 		 *
 		 * @return integer number of values was found and cleared
 		 */
-
 		function reset_fm_cache_userlist()
 		{
-			$this->db->query("DELETE FROM fm_cache WHERE name {$this->like} 'acl_userlist_%'",__LINE__,__FILE__, true);
+			$this->db->query("DELETE FROM fm_cache WHERE name {$this->like} 'acl_userlist_%'", __LINE__, __FILE__, true);
 			return $this->db->affected_rows();
 		}
 
-		function create_preferences($app='',$user_id='')
+		function create_preferences($app = '', $user_id = '')
 		{
-			$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
+			$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=" . (int)$user_id);
 			$this->db->next_record();
-			$value= unserialize($this->db->f('preference_value'));
+			$value = unserialize($this->db->f('preference_value'));
 			return $value;
 		}
 
 		function read_single_tenant($id)
 		{
-			$this->db->query("SELECT * FROM fm_tenant WHERE id =$id",__LINE__,__FILE__);
+			$this->db->query("SELECT * FROM fm_tenant WHERE id =$id", __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$tenant_data = array
@@ -196,18 +191,18 @@
 			return	$tenant_data;
 		}
 
-		function check_location($location_code='',$type_id='')
+		function check_location($location_code = '', $type_id = '')
 		{
 			$this->db->query("SELECT count(*) as cnt FROM fm_location$type_id where location_code='$location_code'");
 			$this->db->next_record();
 
-			if ( $this->db->f('cnt'))
+			if($this->db->f('cnt'))
 			{
 				return true;
 			}
 		}
 
-		function select_part_of_town($district_id='')
+		function select_part_of_town($district_id = '')
 		{
 			$filter = '';
 			$part_of_town = array();
@@ -215,14 +210,14 @@
 			{
 				$filter = "WHERE district_id = '$district_id'";
 			}
-			$this->db->query("SELECT name, part_of_town_id, district_id FROM fm_part_of_town $filter ORDER BY name ",__LINE__,__FILE__);
+			$this->db->query("SELECT name, part_of_town_id, district_id FROM fm_part_of_town $filter ORDER BY name ", __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$part_of_town[] = array
 					(
 						'id'			=> $this->db->f('part_of_town_id'),
-						'name'			=> $this->db->f('name',true),
+					'name' => $this->db->f('name', true),
 						'district_id'	=> $this->db->f('district_id')
 					);
 			}
@@ -235,7 +230,7 @@
 			$this->db->query("SELECT id, descr FROM fm_district where id >'0' ORDER BY id ");
 
 			$i = 0;
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$district[$i]['id']				= $this->db->f('id');
 				$district[$i]['name']				= stripslashes($this->db->f('descr'));
@@ -252,14 +247,13 @@
 		 * @param array $key conditions
 		 * @return int the next id
 		 */
-
-		function next_id($table='',$key='')
+		function next_id($table = '', $key = '')
 		{
 			$where = '';
 			if(is_array($key))
 			{
 				//	while (is_array($key) && list($column,$value) = each($key))
-				foreach ($key as $column => $value)
+				foreach($key as $column => $value)
 				{
 					if($value)
 					{
@@ -267,24 +261,25 @@
 					}
 				}
 
-				$where='WHERE ' . implode("' AND ", $condition) . "'";
+				$where = 'WHERE ' . implode("' AND ", $condition) . "'";
 			}
 
-			$this->db->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
+			$this->db->query("SELECT max(id) as maximum FROM $table $where", __LINE__, __FILE__);
 			$this->db->next_record();
-			$next_id = $this->db->f('maximum')+1;
+			$next_id = $this->db->f('maximum') + 1;
 			return $next_id;
 		}
+
 		function get_lookup_entity($location)
 		{
 			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='lookup' AND location='{$location}'  ");
 			$entity = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$entity[] = array
 				(
 					'id'	=> $this->db->f('entity_id'),
-					'name'	=> $this->db->f('name',true)
+					'name' => $this->db->f('name', true)
 				);
 			}
 			return $entity;
@@ -295,17 +290,16 @@
 			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='start' AND location='{$location}'  ");
 
 			$entity = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$entity[] = array
 				(
 					'id'	=> $this->db->f('entity_id'),
-					'name'	=> $this->db->f('name',true)
+					'name' => $this->db->f('name', true)
 				);
 			}
 			return $entity;
 		}
-
 
 		function increment_id($name)
 		{
@@ -333,20 +327,19 @@
 			$now = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$next_id = $this->db->f('value') +1;
+			$next_id = $this->db->f('value') + 1;
 			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 			return $next_id;
 		}
 
-
-		function new_db($db ='' )
+		function new_db($db = '')
 		{
 			if(is_object($db))
 			{
 				$db = clone($db);
 			}
-			else if( is_object($GLOBALS['phpgw']->db) )
+			else if(is_object($GLOBALS['phpgw']->db))
 			{
 				$db = & $GLOBALS['phpgw']->db;
 			}
@@ -363,10 +356,10 @@
 				}
 				else
 				{
-					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'COOKIE');
+					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'COOKIE');
 					if(!$ConfigDomain)
 					{
-						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string' , 'POST');
+						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
 					$phpgw_domain = $GLOBALS['phpgw_domain'];
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
@@ -387,7 +380,6 @@
 			return $this->db->f('level');
 		}
 
-
 		/**
 		 * Get list of accessible physical locations for current user
 		 *
@@ -395,23 +387,21 @@
 		 *
 		 * @return array $access_location list of accessible physical locations
 		 */
-
 		public function get_location_list($required)
 		{
-			$access_list	= $GLOBALS['phpgw']->acl->get_location_list('property',$required);
+			$access_list = $GLOBALS['phpgw']->acl->get_location_list('property', $required);
 
 			$needle = ".location.1.";
 			$needle_len = strlen($needle);
 			$access_location = array();
 			foreach($access_list as $location)
 			{
-				if(strrpos($location,$needle ) === 0)
+				if(strrpos($location, $needle) === 0)
 				{
-					$target_len = strlen($location)- $needle_len;
-					$access_location[] = substr($location,-$target_len);
+					$target_len = strlen($location) - $needle_len;
+					$access_location[] = substr($location, -$target_len);
 				}
 			}
 			return $access_location;
 		}
-
 	}

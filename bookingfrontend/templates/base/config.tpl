@@ -1,11 +1,11 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table border="0" align="center" width="85%">
+	<table class="pure-table pure-table-bordered">
 		<tr class="th">
 			<td colspan="2">&nbsp;<b>{title}</b></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -16,10 +16,18 @@
 	    <td>{lang_remote_authentication}:</td>
 	    <td>
 	     <select name="newsettings[authentication_method]">
-{hook_authentication}
+					{hook_authentication}
 	     </select>
 	    </td>
 	   </tr>
+		<tr class="row_on">
+			<td>{lang_Anonymous_user}:</td>
+			<td><input name="newsettings[anonymous_user]" value="{value_anonymous_user}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_Anonymous_password}:</td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
+		</tr>
 		<tr class="row_on">
 			<td>{lang_custom_login_url}:</td>
 			<td><input name="newsettings[custom_login_url]" value="{value_custom_login_url}"></td>
@@ -100,11 +108,11 @@
 			<td><input name="newsettings[customtemplate]" value="{value_customtemplate}"/></td>
 		</tr>
 
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="th">
 			<td colspan="2">
-&nbsp;
+				&nbsp;
 			</td>
 		</tr>
 		<tr>

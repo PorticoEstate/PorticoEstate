@@ -12,9 +12,12 @@
 			{help_msg}
 		</td>
 	</tr>
+	<tr>
+		<td align = 'left'>
+			<b><a href="javascript:parent.TINY.box.hide();">{lang_close}</a></b>
+		</td>
+	</tr>
 </table>
-</br>
-<p align="left"><a href="javascript:this.window.close()">{lang_close}</a></p>
 
 </body>
 </html>

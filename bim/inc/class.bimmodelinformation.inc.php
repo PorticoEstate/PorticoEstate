@@ -1,7 +1,9 @@
 <?php
-phpgw::import_class('bim.bimobject');
+	phpgw::import_class('bim.bimobject');
 
-class BimModelInformation extends BimObject{
+	class BimModelInformation extends BimObject
+	{
+
 	private $authorization;
 	private $author;
 	private $changeDate;
@@ -12,116 +14,146 @@ class BimModelInformation extends BimObject{
 	private $valDate;
 	private $nativeSchema;
 
-	public function loadVariablesFromXml(SimpleXMLElement $modelInformation) {
-		if(!empty($modelInformation->authorization)){
+		public function loadVariablesFromXml(SimpleXMLElement $modelInformation)
+		{
+			if(!empty($modelInformation->authorization))
+			{
 			$this->setAuthorization((string)$modelInformation->authorization);
 		}
-		if(!empty($modelInformation->author)) {
+			if(!empty($modelInformation->author))
+			{
 			$this->setAuthor((string)$modelInformation->author);
 		}
-		if(!empty($modelInformation->changeDate)) {
+			if(!empty($modelInformation->changeDate))
+			{
 			$this->setChangeDate($modelInformation->changeDate);
 		}
-		if(!empty($modelInformation->valDate)) {
+			if(!empty($modelInformation->valDate))
+			{
 			$this->setValDate($modelInformation->valDate);
 		}
-		if(!empty($modelInformation->description)) {
+			if(!empty($modelInformation->description))
+			{
 			$this->setDescription((string)$modelInformation->description);
 		}
-		if(!empty($modelInformation->organization)) {
+			if(!empty($modelInformation->organization))
+			{
 			$this->setOrganization((string)$modelInformation->organization);
 		}
-		if(!empty($modelInformation->originatingSystem)) {
+			if(!empty($modelInformation->originatingSystem))
+			{
 			$this->setOriginatingSystem((string)$modelInformation->originatingSystem);
 		}
-		if(!empty($modelInformation->originatingSystem)) {
+			if(!empty($modelInformation->originatingSystem))
+			{
 			$this->setOriginatingSystem((string)$modelInformation->originatingSystem);
 		}
-		if(!empty($modelInformation->preProcessor)) {
+			if(!empty($modelInformation->preProcessor))
+			{
 			$this->setPreProcessor((string)$modelInformation->preProcessor);
 		}
-		if(!empty($modelInformation->nativeSchema)) {
+			if(!empty($modelInformation->nativeSchema))
+			{
 			$this->setNativeSchema((string)$modelInformation->nativeSchema);
 		}
 	}
-
 	/* 
-	 *Converts ISO8601 string to timestamp
+		 * Converts ISO8601 string to timestamp
 	 * Not needed, postgres accepts iso8601 as input
 	 */
-	public function convertToTimestamp($iso8601date) {
+
+		public function convertToTimestamp($iso8601date)
+		{
 		return strtotime($iso8601date);
 	}
 
-	public function getOrganization() {
+		public function getOrganization()
+		{
 		return $this->organization;
 	}
 
-	public function setOrganization($organization) {
+		public function setOrganization($organization)
+		{
 		$this->organization = $organization;
 	}
 
-	public function getOriginatingSystem() {
+		public function getOriginatingSystem()
+		{
 		return $this->originatingSystem;
 	}
 
-	public function setOriginatingSystem($originatingSystem) {
+		public function setOriginatingSystem($originatingSystem)
+		{
 		$this->originatingSystem = $originatingSystem;
 	}
 
-	public function getPreProcessor() {
+		public function getPreProcessor()
+		{
 		return $this->preProcessor;
 	}
 
-	public function setPreProcessor($preProcessor) {
+		public function setPreProcessor($preProcessor)
+		{
 		$this->preProcessor = $preProcessor;
 	}
 
-	public function getAuthorization() {
+		public function getAuthorization()
+		{
 		return $this->authorization;
 	}
 
-	public function setAuthorization($authorization) {
+		public function setAuthorization($authorization)
+		{
 		$this->authorization =  $authorization;
 	}
 
-	public function getAuthor() {
+		public function getAuthor()
+		{
 		return $this->author;
 	}
 
-	public function setAuthor($author) {
+		public function setAuthor($author)
+		{
 		$this->author = $author;
 	}
 
-	public function getChangeDate() {
+		public function getChangeDate()
+		{
 		return $this->changeDate;
 	}
 
-	public function setChangeDate($changeDate) {
+		public function setChangeDate($changeDate)
+		{
 		$this->changeDate = $changeDate;
 	}
 
-	public function getDescription() {
+		public function getDescription()
+		{
 		return $this->description;
 	}
 
-	public function setDescription($description) {
+		public function setDescription($description)
+		{
 		$this->description = $description;
 	}
 
-	public function getValDate() {
+		public function getValDate()
+		{
 		return $this->valDate;
 	}
 
-	public function setValDate($valDate) {
+		public function setValDate($valDate)
+		{
 		$this->valDate = $valDate;
 	}
 
-	public function setNativeSchema($nativeSchema) {
+		public function setNativeSchema($nativeSchema)
+		{
 		$this->nativeSchema = $nativeSchema;
 	}
 
-	public function getNativeSchema() {
+		public function getNativeSchema()
+		{
 		return $this->nativeSchema;
 	}
-}
+	}

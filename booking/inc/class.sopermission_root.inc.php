@@ -4,6 +4,7 @@
 	
 	class booking_sopermission_root extends booking_socommon
 	{
+
 		protected 
 			$default_roles = array(
 			   booking_sopermission::ROLE_MANAGER,
@@ -12,8 +13,7 @@
 		
 		function __construct()
 		{
-			parent::__construct('bb_permission_root', 
-				array(
+			parent::__construct('bb_permission_root', array(
 					'id'			=> array('type' => 'int'),
 					'subject_id'	=> array('type' => 'int', 'required' => true),
 					'role'			=> array('type' => 'string', 'required' => true, 'query' => true),
@@ -40,7 +40,7 @@
 		
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
-			if (!$this->validate_uniqueness($entity, 'subject_id', 'role'))
+			if(!$this->validate_uniqueness($entity, 'subject_id', 'role'))
 			{
 				$errors['global'] = lang('Permission already exists');
 			}

@@ -1,14 +1,12 @@
 <?php
+	include_class('rental', 'validator', 'inc/model/');
 
-include_class('rental', 'validator', 'inc/model/');
+	abstract class rental_model
+	{
 
-abstract class rental_model
-{
 	protected $validation_errors = array();
 	protected $validation_warnings = array();
-	
 	protected $consistency_warnings = array();
-	
 	protected $field_of_responsibility_id;
 	protected $field_of_responsibility_name;
 	protected $permission_array;
@@ -41,7 +39,8 @@ abstract class rental_model
 			if(isset($this->field_of_responsibility_id))
 			{
 				$array = $GLOBALS['phpgw']->locations->get_name($this->field_of_responsibility_id);
-				if($array['appname'] = $GLOBALS['phpgw_info']['flags']['currentapp']){
+					if($array['appname']	 = $GLOBALS['phpgw_info']['flags']['currentapp'])
+					{
 					$this->field_of_responsibility_name = $array['location'];
 				}
 			}
@@ -65,7 +64,7 @@ abstract class rental_model
 	 */
 	public function has_permission($permission = PHPGW_ACL_PRIVATE)
 	{
-		return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(),$permission,'rental');
+			return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(), $permission, 'rental');
 	}
 	
 	/**
@@ -83,19 +82,18 @@ abstract class rental_model
 	 * 
 	 * @return an array with permissions [PERMISSION_BITMASK => true/false]
 	 */
-	public function get_permission_array(){
+		public function get_permission_array()
+		{
 		$location_name = $this->get_field_of_responsibility_name();
-		return array (
-			PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_READ,'rental'),
-			PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_ADD,'rental'),
-			PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_EDIT,'rental'),
-			PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_DELETE,'rental'),
-			PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_PRIVATE,'rental')
+			return array(
+				PHPGW_ACL_READ		 => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_READ, 'rental'),
+				PHPGW_ACL_ADD		 => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_ADD, 'rental'),
+				PHPGW_ACL_EDIT		 => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_EDIT, 'rental'),
+				PHPGW_ACL_DELETE	 => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_DELETE, 'rental'),
+				PHPGW_ACL_PRIVATE	 => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_PRIVATE, 'rental')
 		);	
 	}
 	
-
-
 	/**
 	 * Validate the object according to the database setup and custom rules.  This function
 	 * can be overridden in subclasses.  It is then up to the subclasses to call this parent method
@@ -114,7 +112,8 @@ abstract class rental_model
 		return true;
 	}	
 	
-	public function validate_numeric(){
+		public function validate_numeric()
+		{
 		return true;
 	}
 
@@ -173,6 +172,4 @@ abstract class rental_model
 	}
 
 	public abstract function serialize();
-	
-}
-?>
+	}

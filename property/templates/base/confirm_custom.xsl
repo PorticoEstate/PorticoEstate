@@ -1,14 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="confirm">
 				<xsl:apply-templates select="confirm"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- update_cat -->
-	<xsl:template match="confirm" xmlns:php="http://php.net/xsl">
+<!-- update_cat -->
+<xsl:template match="confirm" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -82,4 +83,4 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
-	</xsl:template>
+</xsl:template>

@@ -1,15 +1,18 @@
-  <!-- $Id$ -->
-	<xsl:template name="contact_form">
-		<xsl:apply-templates select="contact_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="contact_data">
-		<tr>
-			<td valign="top">
+<!-- $Id$ -->
+<xsl:template name="contact_form">
+		<xsl:apply-templates select="contact_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="contact_data">
+	<div class="pure-control-group">
+
+		<div class="pure-u-1 pure-u-md-1-3">
+			<label>
 				<xsl:value-of select="lang_contact"/>
-			</td>
-			<td>
+			</label>
+			<div class="pure-u-md-1-3">
 				<table>
 					<tr>
 						<td>
@@ -37,6 +40,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</table>
-			</td>
-		</tr>
-	</xsl:template>
+			</div>
+		</div>
+	</div>
+</xsl:template>

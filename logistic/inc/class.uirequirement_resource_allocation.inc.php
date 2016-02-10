@@ -4,7 +4,8 @@
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2011,2012,2013,2014,2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -27,7 +28,7 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.soactivity');
 	include_class('logistic', 'activity', '/inc/model/');
 	include_class('logistic', 'requirement', '/inc/model/');
@@ -35,7 +36,7 @@
 	include_class('logistic', 'requirement_resource_allocation', '/inc/model/');
 
 
-	class logistic_uirequirement_resource_allocation extends phpgwapi_uicommon
+	class logistic_uirequirement_resource_allocation extends phpgwapi_uicommon_jquery
 	{
 
 		var $cat_id;
@@ -101,6 +102,8 @@
 			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
 			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
+
 		}
 
 		public function index()
@@ -109,9 +112,6 @@
 			{
 				return $this->query();
 			}
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$user_array = $this->get_user_array();
 
@@ -124,18 +124,9 @@
 								'name' => 'user',
 								'text' => lang('Responsible user') . ':',
 								'list' => $user_array,
-							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'phpgw_return_as' => 'json')),
@@ -174,21 +165,17 @@
 				),
 			);
 
-			self::render_template_xsl(array('datatable_common'), $data);
+			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
 		public function query()
 		{
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -197,14 +184,22 @@
 				$user_rows_per_page = 10;
 			}
 
-			// YUI variables for paging and sorting
-			$start_index = phpgw::get_var('startIndex', 'int');
-			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field = phpgw::get_var('sort');
-			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
 
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] < 0 ? null : $params['results'];
+			$sort_field		 = $params['order'];
+			$sort_ascending	 = $params['sort'] == 'desc' ? false : true;
 			// Form variables
-			$search_for = phpgw::get_var('query');
+			$search_for		 = $params['query'];
+
 			$search_type = phpgw::get_var('search_option');
 
 			// Create an empty result set
@@ -227,11 +222,11 @@
 				case 'requirement_id':
 					$requirement_id = phpgw::get_var('requirement_id');
 					$filters = array('requirement_id' => $requirement_id);
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 				default: // ... all composites, filters (active and vacant)
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
@@ -289,7 +284,7 @@
 																	'phpgw_return_as' => 'json')
 																);
 
-					$delete_href = "javascript:load_delete_allocation({$allocation['id']});";
+					$delete_href = "javascript:load_delete_allocation({$allocation['requirement_id']},{$allocation['id']});";
 
 					$allocation['delete_link'] = "<a class=\"btn-sm \" href=\"{$delete_href}\">{$lang_delete}</a>";
 
@@ -324,16 +319,16 @@
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uirequirement_resource_allocation.view");
+				array_walk(	$result_data['results'], array($this, '_add_links'), "logistic.uirequirement_resource_allocation.view");
 			}
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 		public function add()
@@ -612,11 +607,11 @@
 
 			if($status)
 			{
-				return json_encode( array( "status" => "deleted" ) );
+				return array( "status" => "deleted" );
 			}
 			else
 			{
-				return json_encode( array( "status" => "not_deleted" ) );
+				return array( "status" => "not_deleted" );
 			}
 		} 
 

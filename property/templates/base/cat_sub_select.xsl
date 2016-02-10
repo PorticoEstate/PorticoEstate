@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="cat_sub_select">
+
+<!-- $Id$ -->
+<xsl:template name="cat_sub_select">
 		<xsl:variable name="lang_cat_sub_statustext">
 			<xsl:value-of select="lang_cat_sub_statustext"/>
 		</xsl:variable>
@@ -9,10 +10,10 @@
 		<select id = "global_category_id" name="{$cat_sub_name}" class="forms" title="{$lang_cat_sub_statustext}">
 			<xsl:apply-templates select="cat_sub_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="cat_sub_list">
+<!-- New template-->
+<xsl:template match="cat_sub_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -28,4 +29,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

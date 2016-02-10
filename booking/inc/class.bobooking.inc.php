@@ -3,8 +3,8 @@
 	
 	require_once "schedule.php";
 
-function array_minus($a, $b)
-{
+	function array_minus($a, $b)
+	{
 	$b = array_flip($b);
 	$c = array();
 	foreach($a as $x)
@@ -13,11 +13,11 @@ function array_minus($a, $b)
 		$c[] = $x;
 	}
 	return $c;
-}
-
+	}
 	
 	class booking_bobooking extends booking_bocommon_authorized
 	{
+
 		const ROLE_ADMIN = 'organization_admin';
 
 		function __construct()
@@ -33,13 +33,13 @@ function array_minus($a, $b)
 		/**
 		 * @ Send message about cancelation to users of building. 
 		 */
-		function send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates=null)
+		function send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates = null)
 		{
-			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
@@ -51,116 +51,127 @@ function array_minus($a, $b)
                 ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' && 
                  $maildata['allocation'] == 0))
             {
-			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                $link .= urlencode($booking['from_']).'&to_[]='.urlencode($booking['to_']).'&resource='.$booking['resources'][0];
+				$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+				$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+				$link .= urlencode($booking['from_']) . '&to_[]=' . urlencode($booking['to_']) . '&resource=' . $booking['resources'][0];
 
     			$subject = $config->config_data['booking_canceled_mail_subject'];
 
-                $body = "<p>".$config->config_data['booking_canceled_mail'];
-                $body .= '</p><p>'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'].':<br />';
-                $body .= $this->so->get_resource($booking['resources'][0]).' den '.pretty_timestamp($booking['from_']);
-                $body .=' til '.pretty_timestamp($booking['to_']); 
-    			$body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
-
-            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on') {
+				$body = "<p>" . $config->config_data['booking_canceled_mail'];
+				$body .= '</p><p>' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'] . ':<br />';
+				$body .= $this->so->get_resource($booking['resources'][0]) . ' den ' . pretty_timestamp($booking['from_']);
+				$body .=' til ' . pretty_timestamp($booking['to_']);
+				$body .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a></p>';
+			}
+			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
+			{
                 $res_names = '';
-				foreach ($booking['resources'] as $res) {
-					$res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach ($valid_dates as $valid_date) {
-    				$info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($valid_dates as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($valid_date['to_']);
-    			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
-                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']);
+					$link .= '&from_[]=' . urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
 				}
 
     			$subject = $config->config_data['booking_canceled_mail_subject'];
 
-                $body = "<p>".$config->config_data['booking_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-                $body .= $info_deleted.'</p>';
-
-            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on') {
+				$body = "<p>" . $config->config_data['booking_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
+			}
+			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
+			{
                 $res_names = '';
-				foreach ($booking['resources'] as $res) {
-					$res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach ($valid_dates as $valid_date) {
-                    if (!in_array($valid_date,$maildata['delete'])) {
-        				$info_deleted = $info_deleted."".$res_names." - ";
-                        $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($valid_dates as $valid_date)
+				{
+					if(!in_array($valid_date, $maildata['delete']))
+					{
+						$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+						$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                         $info_deleted .= pretty_timestamp($valid_date['to_']);
-        			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                        $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                        $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                        $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+						$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+						$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+						$link .= urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+						$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
                     }
 				}
-				foreach ($maildata['delete'] as $valid_date) {
-       				$info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($maildata['delete'] as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($valid_date['to_']);
-      			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];                    
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+					$link .= urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
 				}
                 
 
     			$subject = $config->config_data['allocation_canceled_mail_subject'];
-                $body = "<p>".$config->config_data['allocation_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-    			$body .= $info_deleted.'</p>';
-
-            } else {
+				$body	 = "<p>" . $config->config_data['allocation_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
+			}
+			else
+			{
                 $res_names = '';
-				foreach ($booking['resources'] as $res) {
-					$res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-                foreach ($maildata['delete'] as $valid_date) {
-       				$info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
+				foreach($maildata['delete'] as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($allocation['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($allocation['to_']);
-   			        $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+					$link .= urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
                 }
     			$subject = $config->config_data['allocation_canceled_mail_subject'];
-                $body = "<p>".$config->config_data['allocation_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-    			$body .= $info_deleted.'</p>';
+				$body	 = "<p>" . $config->config_data['allocation_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
             }
 
-			$body .= "<p>".$config->config_data['application_mail_signature']."</p>";
+			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
             
-            foreach ($mailadresses as $adr)
+			foreach($mailadresses as $adr)
             {
     			try
     			{
 				    $send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
     			}
-    			catch (phpmailerException $e)
+				catch(phpmailerException $e)
     			{
     				// TODO: Inform user if something goes wrong
     			}
             }
 		}
 
-        function send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates=null)
+		function send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates = null)
         {
-            if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
                 return;
             $send = CreateObject('phpgwapi.send');
 
-            $config	= CreateObject('phpgwapi.config','booking');
+			$config = CreateObject('phpgwapi.config', 'booking');
             $config->read();
 
             $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
@@ -168,110 +179,120 @@ function array_minus($a, $b)
             $external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
             $subject = $system_message['title'];
-            $body = '<b>Beskjed fra '.$system_message['name'].'</b><br />'.$system_message['message'].'<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
+			$body			 = '<b>Beskjed fra ' . $system_message['name'] . '</b><br />' . $system_message['message'] . '<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
             $mailadresses = $config->config_data['emails'];
-            $mailadresses = explode("\n",$mailadresses);
+			$mailadresses	 = explode("\n", $mailadresses);
 
             if(($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
                 ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' &&
                     $maildata['allocation'] == 0))
             {
-                $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                $link .= urlencode($booking['from_']).'&to_[]='.urlencode($booking['to_']).'&resource='.$booking['resources'][0];
+				$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+				$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+				$link .= urlencode($booking['from_']) . '&to_[]=' . urlencode($booking['to_']) . '&resource=' . $booking['resources'][0];
 
-                $body .= "<p>".$config->config_data['booking_canceled_mail'];
-                $body .= '</p><p>'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'].':<br />';
-                $body .= $this->so->get_resource($booking['resources'][0]).' den '.pretty_timestamp($booking['from_']);
-                $body .=' til '.pretty_timestamp($booking['to_']);
-                $body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
-
-            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on') {
+				$body .= "<p>" . $config->config_data['booking_canceled_mail'];
+				$body .= '</p><p>' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'] . ':<br />';
+				$body .= $this->so->get_resource($booking['resources'][0]) . ' den ' . pretty_timestamp($booking['from_']);
+				$body .=' til ' . pretty_timestamp($booking['to_']);
+				$body .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a></p>';
+			}
+			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
+			{
                 $res_names = '';
-                foreach ($booking['resources'] as $res) {
-                    $res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
                 }
                 $info_deleted = ':<p>';
-                foreach ($valid_dates as $valid_date) {
-                    $info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($valid_dates as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($valid_date['to_']);
-                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
-                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']);
+					$link .= '&from_[]=' . urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
                 }
 
-                $body .= "<p>".$config->config_data['booking_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-                $body .= $info_deleted.'</p>';
-
-            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on') {
+				$body .= "<p>" . $config->config_data['booking_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
+			}
+			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
+			{
                 $res_names = '';
-                foreach ($booking['resources'] as $res) {
-                    $res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
                 }
                 $info_deleted = ':<p>';
-                foreach ($valid_dates as $valid_date) {
-                    if (!in_array($valid_date,$maildata['delete'])) {
-                        $info_deleted = $info_deleted."".$res_names." - ";
-                        $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($valid_dates as $valid_date)
+				{
+					if(!in_array($valid_date, $maildata['delete']))
+					{
+						$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+						$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                         $info_deleted .= pretty_timestamp($valid_date['to_']);
-                        $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                        $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                        $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                        $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+						$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+						$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+						$link .= urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+						$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
                     }
                 }
-                foreach ($maildata['delete'] as $valid_date) {
-                    $info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+				foreach($maildata['delete'] as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($valid_date['to_']);
-                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']) . '&from_[]=';
+					$link .= urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
                 }
 
 
-                $body .= "<p>".$config->config_data['allocation_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-                $body .= $info_deleted.'</p>';
-
-            } else {
+				$body .= "<p>" . $config->config_data['allocation_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
+			}
+			else
+			{
                 $res_names = '';
-                foreach ($booking['resources'] as $res) {
-                    $res_names = $res_names.$this->so->get_resource($res)." ";
+				foreach($booking['resources'] as $res)
+				{
+					$res_names = $res_names . $this->so->get_resource($res) . " ";
                 }
                 $info_deleted = ':<p>';
-                foreach ($maildata['delete'] as $valid_date) {
-                    $info_deleted = $info_deleted."".$res_names." - ";
-                    $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
+				foreach($maildata['delete'] as $valid_date)
+				{
+					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
+					$info_deleted .= pretty_timestamp($allocation['from_']) . " - ";
                     $info_deleted .= pretty_timestamp($allocation['to_']);
-                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
-                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
-                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
-                }
-                $body .= "<p>".$config->config_data['allocation_canceled_mail'];
-                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
-                $body .= $info_deleted.'</p>';
+					$link			 = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+					$link .= $booking['building_id'] . '&building_name=' . urlencode($booking['building_name']);
+					$link .= '&from_[]=' . urlencode($valid_date['from_']) . '&to_[]=' . urlencode($valid_date['to_']) . '&resource=' . $booking['resources'][0];
+					$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
+				}
+				$body .= "<p>" . $config->config_data['allocation_canceled_mail'];
+				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
+				$body .= $info_deleted . '</p>';
             }
 
-            $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
-            foreach ($mailadresses as $adr)
+			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
+			foreach($mailadresses as $adr)
             {
                 try
                 {
                     $send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
                 }
-                catch (phpmailerException $e)
+				catch(phpmailerException $e)
                 {
                     // TODO: Inform user if something goes wrong
                 }
             }
         }
-
 
 		/**
 		 * @see bocommon_authorized
@@ -281,8 +302,10 @@ function array_minus($a, $b)
 			$parent_roles = null;
 			$parent_season = null;
 
-			if (is_array($for_object)) {
-				if (!isset($for_object['season_id'])) {
+			if(is_array($for_object))
+			{
+				if(!isset($for_object['season_id']))
+				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless season_id is provided');
 				}
 				$parent_season = $this->season_bo->read_single($for_object['season_id']);
@@ -294,19 +317,19 @@ function array_minus($a, $b)
 			return $parent_roles;
 		}
 		
-
-
 		/**
 		 * @see booking_bocommon_authorized
 		 */
-		protected function get_subject_roles($for_object = null, $initial_roles=array())
+		protected function get_subject_roles($for_object = null, $initial_roles = array())
 		{
-			if ($this->current_app() == 'bookingfrontend') {
+			if($this->current_app() == 'bookingfrontend')
+		{
 				$bouser = CreateObject('bookingfrontend.bouser');
 				
 				$group_id = is_array($for_object) ? $for_object['group_id'] : (!is_null($for_object) ? $for_object : null);
 				
-				if ($bouser->is_group_admin($group_id)) {
+				if($bouser->is_group_admin($group_id))
+				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
 			}
@@ -319,7 +342,8 @@ function array_minus($a, $b)
 		 */
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
-			if ($this->current_app() == 'bookingfrontend') {	             
+			if($this->current_app() == 'bookingfrontend')
+			{
 				$defaultPermissions[self::ROLE_ADMIN] = array
 				(
 					'create' => true,
@@ -360,8 +384,7 @@ function array_minus($a, $b)
 							'create' => true
 						),
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		
@@ -370,7 +393,7 @@ function array_minus($a, $b)
 		 */
 		protected function get_collection_role_permissions($defaultPermissions)
 		{
-			if ($this->current_app() == 'bookingfrontend')
+			if($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write'] = true;
@@ -405,8 +428,7 @@ function array_minus($a, $b)
 							'create' => true
 						)
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 
@@ -419,7 +441,6 @@ function array_minus($a, $b)
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
-
 //        todo: remove debug kode
         function building_schedule($building_id, $date)
         {
@@ -434,7 +455,7 @@ function array_minus($a, $b)
             $to = clone $from;
             $to->modify('+7 days');
             $allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
-            $allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
             $allocations = $allocations['results'];
             foreach($allocations as &$allocation)
             {
@@ -444,7 +465,7 @@ function array_minus($a, $b)
             }
 
             $booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-            $bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids)));
             $bookings = $bookings['results'];
             foreach($bookings as &$booking)
             {
@@ -458,7 +479,7 @@ function array_minus($a, $b)
             $allocations = $this->split_allocations($allocations, $bookings);
 
             $event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-            $events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids)));
             $events = $events['results'];
             foreach($events as &$event)
             {
@@ -469,7 +490,6 @@ function array_minus($a, $b)
                 unset($event['audience']);
                 unset($event['agegroups']);
                 unset($event['dates']);
-
             }
 
             $bookings = array_merge($allocations, $bookings);
@@ -482,10 +502,12 @@ function array_minus($a, $b)
             $resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
             $resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
             $resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
-            $resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
+			$resources		 = $this->resource_so->read(array('filters' => array('id' => $resource_ids,
+					'active' => 1)));
             $resources = $resources['results'];
 
-            foreach ($resources as $key => $row) {
+			foreach($resources as $key => $row)
+			{
                 $sort[$key] = $row['sort'];
             }
 
@@ -495,7 +517,7 @@ function array_minus($a, $b)
             $bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
             $results = build_schedule_table($bookings, $resources);
 //            exit;
-            return array('total_records'=>count($results), 'results'=>$results);
+			return array('total_records' => count($results), 'results' => $results);
         }
 
 		function building_infoscreen_schedule($building_id, $date, $res = False)
@@ -511,10 +533,11 @@ function array_minus($a, $b)
             $to->modify('+7 days');
             $to->modify('-1 minute');
 
-            if ($res != False){
+			if($res != False)
+			{
                 $resources = $this->so->get_screen_resources($building_id, $res);
-                if (count($resources) > 0)
-                    $resources = "AND bb_resource.id IN (".implode(",", $resources).")";
+				if(count($resources) > 0)
+					$resources	 = "AND bb_resource.id IN (" . implode(",", $resources) . ")";
                 else
                     $resources = '';
             }
@@ -531,7 +554,7 @@ function array_minus($a, $b)
                 $allocation['type'] = 'allocation';
 
                 $datef = strtotime($allocation['from_']);
-                $allocation['weekday'] = date('D',$datef);
+				$allocation['weekday']	 = date('D', $datef);
 			}
 
 			foreach($bookings as &$booking)
@@ -541,7 +564,7 @@ function array_minus($a, $b)
 				$booking['type'] = 'booking';
 
                 $datef = strtotime($booking['from_']);
-                $booking['weekday'] = date('D',$datef);
+				$booking['weekday']	 = date('D', $datef);
             }
 
             foreach($events as &$event)
@@ -550,7 +573,7 @@ function array_minus($a, $b)
                 $event['shortname'] = substr($event['description'], 0, 12);
                 $event['type'] = 'event';
                 $datef = strtotime($event['from_']);
-                $event['weekday'] = date('D',$datef);
+				$event['weekday']	 = date('D', $datef);
             }
 
             $allocations = $this->split_allocations2($allocations, $bookings);
@@ -563,36 +586,44 @@ function array_minus($a, $b)
             {
                 $datef = strtotime($allocation['from_']);
                 $datet = strtotime($allocation['to_']);
-                $timef = date('H:i:s',$datef);
-                $timet = date('H:i:s',$datet);
+				$timef	 = date('H:i:s', $datef);
+				$timet	 = date('H:i:s', $datet);
                 $weekday = $allocation['weekday'];
                 $resname = $allocation['resource_name'];
                 $ft = $timef;
-                $from = explode(':',$timef);
-                $to = explode(':',$timet);
-                $from  = $from[0]*60+$from[1];
-                $to  = $to[0]*60+$to[1];
-                if ($to == 0)
-                    $to = 24*60;
-                $colspan = ($to-$from)/30;
+				$from	 = explode(':', $timef);
+				$to		 = explode(':', $timet);
+				$from	 = $from[0] * 60 + $from[1];
+				$to		 = $to[0] * 60 + $to[1];
+				if($to == 0)
+					$to		 = 24 * 60;
+				$colspan = ($to - $from) / 30;
 
                 $allocation['colspan'] = $colspan;
                 $results[$weekday][$resname][$ft] = $allocation;
             }
 
-            foreach ($results as &$day) {
-                foreach ($day as &$res) {
+			foreach($results as &$day)
+			{
+				foreach($day as &$res)
+				{
                     ksort($res);
                 }
             }
 
-			return array('total_records'=>count($results), 'results'=>$results);
+			return array('total_records' => count($results), 'results' => $results);
 		}
 
         function split_allocations2($allocations, $all_bookings)
         {
-            function get_from2($a) {return $a['from_'];};
-            function get_to2($a) {return $a['to_'];};
+
+			function get_from2($a)
+			{ return $a['from_'];}
+;
+
+			function get_to2($a)
+			{ return $a['to_'];}
+;
             $new_allocations = array();
             foreach($allocations as $allocation)
             {
@@ -724,7 +755,7 @@ function array_minus($a, $b)
 
 		function building_extraschedule($building_id, $date)
 		{
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
 			$from = clone $date;
@@ -740,7 +771,8 @@ function array_minus($a, $b)
             
             $orgids = explode(",", $config->config_data['extra_schedule_ids']);
             
-			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids, 'organization_id' => $orgids), 'sort'=>'from_'));
+			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids,
+					'organization_id' => $orgids), 'sort' => 'from_'));
 			$allocations = $allocations['results'];
 			foreach($allocations as &$allocation)
 			{
@@ -750,7 +782,7 @@ function array_minus($a, $b)
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
+			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids), 'sort' => 'from_'));
 			$bookings = $bookings['results'];
 			foreach($bookings as &$booking)
 			{
@@ -764,7 +796,8 @@ function array_minus($a, $b)
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
+			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids),
+				'sort' => 'from_'));
 			$events = $events['results'];
 			foreach($events as &$event)
 			{
@@ -782,10 +815,12 @@ function array_minus($a, $b)
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
-			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
+			$resources		 = $this->resource_so->read(array('filters' => array('id' => $resource_ids,
+					'active' => 1)));
 			$resources = $resources['results'];
 
-			foreach ($resources as $key => $row) {
+			foreach($resources as $key => $row)
+			{
     			$sort[$key] = $row['sort'];
 			}
 
@@ -794,7 +829,7 @@ function array_minus($a, $b)
 			array_multisort($sort, SORT_ASC, $resources);
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, $resources);
-			return array('total_records'=>count($results), 'results'=>$results);
+			return array('total_records' => count($results), 'results' => $results);
 		}
 
 		/**
@@ -819,7 +854,7 @@ function array_minus($a, $b)
             $to->modify('+7 days');
             $resource = $this->resource_so->read_single($resource_id);
             $allocation_ids = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
-            $allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
             $allocations = $allocations['results'];
             foreach($allocations as &$allocation)
             {
@@ -828,7 +863,7 @@ function array_minus($a, $b)
                 $allocation['type'] = 'allocation';
             }
             $booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
-            $bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids)));
             $bookings = $bookings['results'];
             foreach($bookings as &$booking)
             {
@@ -839,7 +874,7 @@ function array_minus($a, $b)
             $allocations = $this->split_allocations($allocations, $bookings);
 
             $event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
-            $events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids)));
             $events = $events['results'];
             foreach($events as &$event)
             {
@@ -852,7 +887,7 @@ function array_minus($a, $b)
 
             $bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
             $results = build_schedule_table($bookings, array($resource));
-            return array('total_records'=>count($results), 'results'=>$results);
+			return array('total_records' => count($results), 'results' => $results);
         }
 
         /**
@@ -861,8 +896,14 @@ function array_minus($a, $b)
          */
         function split_allocations($allocations, $all_bookings)
         {
-            function get_from2($a) {return $a['from_'];};
-            function get_to2($a) {return $a['to_'];};
+
+			function get_from2($a)
+			{ return $a['from_'];}
+;
+
+			function get_to2($a)
+			{ return $a['to_'];}
+;
             $new_allocations = array();
             foreach($allocations as $allocation)
             {
@@ -905,7 +946,7 @@ function array_minus($a, $b)
 
         /**
          * Split Multi-day bookings into separate single-day bookings
-         **/
+		 * */
         function _split_multi_day_bookings($bookings, $t0, $t1)
         {
             if($t1->format('H:i') == '00:00')
@@ -980,8 +1021,10 @@ function array_minus($a, $b)
             $last = array();
             foreach($bookings as $b)
             {
-                if ($last) {
-                    foreach ($last as $l) {
+				if($last)
+				{
+					foreach($last as $l)
+					{
 //                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
                         $new_bookings[] = $l;
                     }
@@ -1009,28 +1052,37 @@ function array_minus($a, $b)
                         $et = $e['to_'];
                         $tmp = $b;
 
-                        if ($last) {
+						if($last)
+						{
                             $ilast = $last;
                             $last = array();
-                            foreach ($ilast as $l) {
+							foreach($ilast as $l)
+							{
                                 $lf = $l['from_'];
                                 $lt = $l['to_'];
                                 $tmp = $l;
-                                if ($ef <= $lf && $et >= $lt) {
+								if($ef <= $lf && $et >= $lt)
+								{
 //                                    echo "B0: break ef <= bf && et >= bt\n\n";
                                     $last[] = $l;
                                     break;
-                                } elseif (($ef >= $lf) && ($et > $lt)) {
+								}
+								elseif(($ef >= $lf) && ($et > $lt))
+								{
 //                                    echo "B1: (ef >= lf) && (et > lt)\n";
                                     $tmp['from_'] = $lf;
                                     $tmp['to_'] = $ef;
                                     $last[] = $tmp;
-                                } elseif (($ef <= $lf) && ($et < $lt)) {
+								}
+								elseif(($ef <= $lf) && ($et < $lt))
+								{
 //                                    echo "B2: (ef <= lf) && (et < lt)\n";
                                     $tmp['from_'] = $et;
                                     $tmp['to_'] = $lt;
                                     $last[] = $tmp;
-                                } elseif (($ef > $lf) && ($et < $lt)) {
+								}
+								elseif(($ef > $lf) && ($et < $lt))
+								{
 //                                    echo "B3: (ef > lf) && (et < lt)\n";
                                     $tmp['from_'] = $lf;
                                     $tmp['to_'] = $ef;
@@ -1038,27 +1090,38 @@ function array_minus($a, $b)
                                     $tmp['from_'] = $et;
                                     $tmp['to_'] = $lt;
                                     $last[] = $tmp;
-                                } else {
+								}
+								else
+								{
 //                                    echo "B4: else break\n\n";
                                     $last[] = $l;
                                     break;
                                 }
                             }
-                        } else {
-                            if ($ef <= $bf && $et >= $bt) {
+						}
+						else
+						{
+							if($ef <= $bf && $et >= $bt)
+							{
 //                                echo "A0: break ef <= bf && et >= bt\n\n";
                                 break;
-                            } elseif (($ef >= $bf) && ($et > $bt)) {
+							}
+							elseif(($ef >= $bf) && ($et > $bt))
+							{
 //                                echo "A1: (ef >= bf) && (et > bt)\n";
                                 $tmp['from_'] = $bf;
                                 $tmp['to_'] = $ef;
                                 $last[] = $tmp;
-                            } elseif (($ef <= $bf) && ($et < $bt)) {
+							}
+							elseif(($ef <= $bf) && ($et < $bt))
+							{
 //                                echo "A2: (ef <= bf) && (et < bt)\n";
                                 $tmp['from_'] = $et;
                                 $tmp['to_'] = $bt;
                                 $last[] = $tmp;
-                            } elseif (($ef > $bf) && ($et < $bt)) {
+							}
+							elseif(($ef > $bf) && ($et < $bt))
+							{
 //                                echo "A3: (ef > bf) && (et < bt)\n";
                                 $tmp['from_'] = $bf;
                                 $tmp['to_'] = $ef;
@@ -1066,7 +1129,9 @@ function array_minus($a, $b)
                                 $tmp['from_'] = $et;
                                 $tmp['to_'] = $bt;
                                 $last[] = $tmp;
-                            } else {
+							}
+							else
+							{
 //                                echo "A4: else break\n\n";
                                 break;
                             }
@@ -1078,7 +1143,8 @@ function array_minus($a, $b)
 
                 if($last)
                 {
-                    foreach ($last as $l) {
+					foreach($last as $l)
+					{
 //                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
                         $new_bookings[] = $l;
                     }
@@ -1124,11 +1190,13 @@ function array_minus($a, $b)
           return $new_bookings;
       }
 
-		public function complete_expired(&$bookings) {
+		public function complete_expired(&$bookings)
+		{
 			$this->so->complete_expired($bookings);
 		}
 		
-		public function find_expired() {
+		public function find_expired()
+		{
 			return $this->so->find_expired();
 		}
 
@@ -1137,5 +1205,4 @@ function array_minus($a, $b)
 			$entry['allocation_id'] = $this->so->calculate_allocation_id($entry);
 			return parent::validate($entry);
 		}
-		
 	}

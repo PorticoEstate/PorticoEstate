@@ -615,7 +615,7 @@
 
 		function __construct($session=True)
 		{
-			$this->db = &$GLOBALS['phpgw']->db;
+			$this->db = clone($GLOBALS['phpgw']->db);
 			if(!is_object($GLOBALS['phpgw']->session))
 			{
 				$GLOBALS['phpgw']->session = createObject('phpgwapi.sessions');

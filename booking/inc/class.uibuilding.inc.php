@@ -3,11 +3,15 @@
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	class booking_uibuilding extends booking_uicommon
 	{	
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
+			'query'					 => true,
 			'active'		=>	true,
 			'add'			=>	true,
 			'show'			=>	true,
@@ -17,15 +21,17 @@
 			'toggle_show_inactive'	=>	true,
 			'find_buildings_used_by' => true,
 		);
+		protected $module;
 
 		public function __construct()
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+			//self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.bobuilding');
             $this->bo_booking = CreateObject('booking.bobooking');
+			$this->activity_bo	 = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array
 			(
@@ -51,32 +57,38 @@
 				'deactivate_sendmessage'	=> 'int',
 				'extra_kalendar'			=> 'string',
 				'calendar_text'				=> 'string',
+				'activity_id'		 => 'int',
 			);
+			$this->module		 = "booking";
 		}
 		
 		public function properties()
 		{
-			$q = phpgw::get_var('query', 'str', 'REQUEST', null);
+			$q		 = phpgw::get_var('query', 'string', 'REQUEST', null);
 			$type_id = count(explode('-', $q));
 			$so = CreateObject('property.solocation');
-			$ret = $so->read(array('type_id' => $type_id, 'location_code'=>$q));
+			$ret	 = $so->read(array('type_id' => $type_id, 'location_code' => $q));
 			foreach($ret as &$r)
 			{
 				$name = array();
-				for($i=1; $i<=$type_id; $i++)
-					$name[] = $r['loc'.$i.'_name'];
-				$r['name'] = $r['location_code']. ' ('. join(', ', $name).')';
+				for($i = 1; $i <= $type_id; $i++)
+					$name[]		 = $r['loc' . $i . '_name'];
+				$r['name']	 = $r['location_code'] . ' (' . join(', ', $name) . ')';
 				$r['id'] = $r['location_code'];
 			}
-			$locations = array('results'=>$ret, 'total_results'=>count($ret));
+			$locations = array('results' => $ret, 'total_results' => count($ret));
 			return $this->yui_results($locations);
 		}
 		
 		public function find_buildings_used_by()
 		{
-			if(!phpgw::get_var('phpgw_return_as') == 'json') { return; }
+			if(!phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return;
+			}
 			
-			if (($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null))) {
+			if(($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null)))
+			{
 				$buildings = $this->bo->find_buildings_used_by($organization_id);
 				array_walk($buildings["results"], array($this, "_add_links"), "bookingfrontend.uibuilding.show");
 				return $this->yui_results($buildings);
@@ -87,40 +99,37 @@
 				
 		public function index()
 		{	
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
+				'datatable_name' => lang('building'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
+								'label'	 => lang('toggle show inactive'),
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
 							),
 						)
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uibuilding.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => $this->module . '.uibuilding.index',
+						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'name',
 							'label' => lang('Building'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter'	 => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key'	 => 'activity_name',
+							'label'	 => lang('Activity')
 						),
 						array(
 							'key' => 'street',
@@ -150,27 +159,31 @@
 				)
 			);
 			
-			if ($this->bo->allow_create()) {
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type' => 'link',
-					'value' => lang('New building'),
-					'href' => self::link(array('menuaction' => 'booking.uibuilding.add'))
-				));
+			$data['datatable']['actions'][] = array();
+			if($this->bo->allow_create())
+			{
+				$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
 
-			self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			
+			$filter_part_of_town_id = phpgw::get_var(filter_part_of_town_id);
+			if(preg_match("/,/", $filter_part_of_town_id))
+			{
+				$_REQUEST['filter_part_of_town_id'] = explode(',', $filter_part_of_town_id);
+			}
 			$buildings = $this->bo->read();
 			foreach($buildings['results'] as &$building)
 			{
-				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
+				$building['link'] = $this->link(array('menuaction' => $this->module . '.uibuilding.show',
+					'id' => $building['id']));
 #				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
-			return $this->yui_results($buildings);
+			return $this->jquery_results($buildings);
 		}
 
 		public function add()
@@ -190,24 +203,40 @@
 			$this->flash_form_errors($errors);
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$this->use_yui_editor();
-			self::render_template('building_form', array('building' => $building, 'new_form' => true));
+			$activity_data			 = $this->activity_bo->get_top_level();
+
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::init_ckeditor('field_description');
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
+			$active_tab		 = 'generic';
+
+			$building['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data, 'new_form' => true));
 		}
 
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id									 = phpgw::get_var('id', 'int');
 			$building = $this->bo->read_single($id);
 			$building['id'] = $id;
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
+			$building['cancel_link']			 = self::link(array('menuaction' => 'booking.uibuilding.show',
+				'id' => $building['id']));
 			$building['top-nav-bar-buildings'] = lang('Buildings');
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config								 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
             
-            if ($config->config_data['extra_schedule'] == 'yes') {
+			if($config->config_data['extra_schedule'] == 'yes')
+			{
                 $building['extra'] = 1;
-            } else {
+			}
+			else
+			{
                 $building['extra'] = 0;
             }
 
@@ -223,37 +252,78 @@
 					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
+			$activity_data			 = $this->activity_bo->get_top_level();
+			foreach($activity_data as $acKey => $acValue)
+			{
+				$activity_data[$acKey]['activity_id'] = $building['activity_id'];
+			}
+
 			$this->flash_form_errors($errors);
-			$this->use_yui_editor();
-			self::render_template('building_form', array('building' => $building));
+
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::init_ckeditor('field_description');
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
+			$active_tab		 = 'generic';
+
+			$building['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data));
 		}
 		
 		public function show()
 		{
-			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$building						 = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
-			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
-			$building['message_link'] = self::link(array('menuaction' => 'booking.uisystem_message.edit', 'building_id' => $building['id']));
+			$building['edit_link']			 = self::link(array('menuaction' => 'booking.uibuilding.edit',
+				'id' => $building['id']));
+			$building['schedule_link']		 = self::link(array('menuaction' => 'booking.uibuilding.schedule',
+				'id' => $building['id']));
+			$building['cancel_link']		 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$building['message_link']		 = self::link(array('menuaction' => 'booking.uisystem_message.edit',
+				'building_id' => $building['id']));
 			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
-			$building['location_link'] = self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $building['location_code']));
-			if ( trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])) )
+			$building['location_link']		 = self::link(array('menuaction' => 'property.uilocation.view',
+				'location_code' => $building['location_code']));
+			if(trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])))
 			{
-				$building['homepage'] = 'http://'.$building['homepage'];
+				$building['homepage'] = 'http://' . $building['homepage'];
 			}
-			self::render_template('building', array('building' => $building));
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Building Show'), 'link' => '#building_show');
+			$active_tab		 = 'generic';
+
+			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+			self::render_template_xsl('building', array('building' => $building));
 		}
 
 		public function schedule()
 		{
-			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uibuilding");
+			$building					 = $this->bo->get_schedule(phpgw::get_var('id', 'int'), "booking.uibuilding");
+			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.show',
+				'id' => $building['id']));
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'booking.uibooking.building_schedule', 
 				'building_id' => $building['id'], 
 				'phpgw_return_as' => 'json',
 			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('building_schedule', array('building' => $building));
+			phpgwapi_jquery::load_widget("datepicker");
+
+			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+
+			$tabs			 = array();
+			$tabs['generic'] = array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
+			$active_tab		 = 'generic';
+
+			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+			self::render_template_xsl('building_schedule', array('building' => $building));
 		}
 	}

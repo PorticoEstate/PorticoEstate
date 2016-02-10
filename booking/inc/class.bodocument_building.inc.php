@@ -3,4 +3,5 @@
 	
 	class booking_bodocument_building extends booking_bodocument
 	{
+		
 	}

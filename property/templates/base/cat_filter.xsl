@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="cat_filter">
+
+<!-- $Id$ -->
+<xsl:template name="cat_filter">
 		<xsl:variable name="select_action">
 			<xsl:value-of select="select_action"/>
 		</xsl:variable>
@@ -24,10 +25,10 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="cat_list">
+<!-- New template-->
+<xsl:template match="cat_list">
 		<xsl:choose>
 			<xsl:when test="selected='selected'">
 				<option value="{id}{cat_id}" selected="selected">
@@ -40,4 +41,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

@@ -8,9 +8,8 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 * @category utilities
- 	 * @version $Id$
+	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,10 +31,9 @@
 	* @package property
 	* @subpackage utilities
 	*/
-	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir'])  
-			|| !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) )
+	if(!isset($GLOBALS['phpgw_info']['server']['temp_dir']) || !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']))
 	{
-		if ( substr(PHP_OS, 3) == 'WIN' )
+		if(substr(PHP_OS, 3) == 'WIN')
 		{
 			$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
 		}
@@ -52,9 +50,9 @@
 	*/
 	require_once PHPGW_INCLUDE_ROOT . '/property/inc/ods/ods.php';
 
-
 	class property_ods extends ods
 	{
+
 		/**
 		* Constructor
 		*/
@@ -66,37 +64,37 @@
 		function parseOds($file) 
 		{
 			$tmp = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			copy($file,$tmp.'/'.basename($file));
-			$path = $tmp.'/'.basename($file);
+			copy($file, $tmp . '/' . basename($file));
+			$path = $tmp . '/' . basename($file);
 			$uid = uniqid();
-			mkdir($tmp.'/'.$uid);
-			shell_exec('unzip '.escapeshellarg($path).' -d '.escapeshellarg($tmp.'/'.$uid));
-			$this->parse(file_get_contents($tmp.'/'.$uid.'/content.xml'));
+			mkdir($tmp . '/' . $uid);
+			shell_exec('unzip ' . escapeshellarg($path) . ' -d ' . escapeshellarg($tmp . '/' . $uid));
+			$this->parse(file_get_contents($tmp . '/' . $uid . '/content.xml'));
 			return $this;
 		}
 
-		function saveOds($obj,$file)
+		function saveOds($obj, $file)
 		{
 			$tmp = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			$uid = uniqid();
-			mkdir($tmp.'/'.$uid);
-			file_put_contents($tmp.'/'.$uid.'/content.xml',$obj->array2ods());
-			file_put_contents($tmp.'/'.$uid.'/mimetype','application/vnd.oasis.opendocument.spreadsheet');
-			file_put_contents($tmp.'/'.$uid.'/meta.xml',$obj->getMeta('es-ES'));
-			file_put_contents($tmp.'/'.$uid.'/styles.xml',$obj->getStyle());
-			file_put_contents($tmp.'/'.$uid.'/settings.xml',$obj->getSettings());
-			mkdir($tmp.'/'.$uid.'/META-INF/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/acceleator/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/images/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/popupmenu/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/statusbar/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/floater/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/menubar/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/progressbar/');
-			mkdir($tmp.'/'.$uid.'/Configurations2/toolbar/');
-			file_put_contents($tmp.'/'.$uid.'/META-INF/manifest.xml',$obj->getManifest());
-			shell_exec('cd '.$tmp.'/'.$uid.';zip -r '.escapeshellarg($file).' ./');
+			mkdir($tmp . '/' . $uid);
+			file_put_contents($tmp . '/' . $uid . '/content.xml', $obj->array2ods());
+			file_put_contents($tmp . '/' . $uid . '/mimetype', 'application/vnd.oasis.opendocument.spreadsheet');
+			file_put_contents($tmp . '/' . $uid . '/meta.xml', $obj->getMeta('es-ES'));
+			file_put_contents($tmp . '/' . $uid . '/styles.xml', $obj->getStyle());
+			file_put_contents($tmp . '/' . $uid . '/settings.xml', $obj->getSettings());
+			mkdir($tmp . '/' . $uid . '/META-INF/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/acceleator/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/images/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/popupmenu/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/statusbar/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/floater/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/menubar/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/progressbar/');
+			mkdir($tmp . '/' . $uid . '/Configurations2/toolbar/');
+			file_put_contents($tmp . '/' . $uid . '/META-INF/manifest.xml', $obj->getManifest());
+			shell_exec('cd ' . $tmp . '/' . $uid . ';zip -r ' . escapeshellarg($file) . ' ./');
 			$this->advancedrmdir("{$tmp}/{$uid}");
 		}
 
@@ -117,41 +115,40 @@
 		 *
 		 * @return bool true on success
 		 */
-
 		function advancedrmdir($path)
 		{
 			$origipath = $path;
 			$handler = opendir($path);
-			while (true)
+			while(true)
 			{
 				$item = readdir($handler);
-				if ($item == "." or $item == "..")
+				if($item == "." or $item == "..")
 				{
 					continue;
 				}
-				else if (gettype($item) == "boolean")
+				else if(gettype($item) == "boolean")
 				{
 					closedir($handler);
-					if (!@rmdir($path))
+					if(!@rmdir($path))
 					{
 						return false;
 					}
-					if ($path == $origipath)
+					if($path == $origipath)
 					{
 						break;
 					}
 					$path = substr($path, 0, strrpos($path, "/"));
 					$handler = opendir($path);
 				}
-				else if (is_dir($path."/".$item))
+				else if(is_dir($path . "/" . $item))
 				{
 					closedir($handler);
-					$path = $path."/".$item;
+					$path = $path . "/" . $item;
 					$handler = opendir($path);
 				}
 				else
 				{
-					unlink($path."/".$item);
+					unlink($path . "/" . $item);
 				}
 			}
 			return true;

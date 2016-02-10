@@ -106,6 +106,12 @@
 				case 'xml':
 					$sTranslated = 'xml';
 					break;
+				case 'json':
+					$sTranslated = 'json';
+					break;
+				case 'jsonb':
+					$sTranslated = 'jsonb';
+					break;
 			}
 			return $sTranslated;
 		}

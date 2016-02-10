@@ -11,7 +11,6 @@
 	 * @subpackage phpgwapi
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -65,12 +64,12 @@
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
-		public function prepare($values, $appname, $location, $view_only='')
+		public function prepare($values, $appname, $location, $view_only = '')
 		{
 			$cache_custom_lookup = array();
 
 			$vendor			= CreateObject('property.sogeneric');
-			$vendor->get_location_info('vendor',false);
+			$vendor->get_location_info('vendor', false);
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
@@ -88,10 +87,12 @@
 
 			$m = 0;
 			$i = 0;
-			foreach ($values['attributes'] as &$attributes)
+			foreach($values['attributes'] as &$attributes)
 			{
 				$attributes['datatype_text']	= $this->translate_datatype($attributes['datatype']);
-				$attributes['help_url']			= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
+				$attributes['help_url'] = $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'manual.uimanual.attrib_help', 'appname' => $appname, 'location' => $location,
+					'id' => $attributes['id'])) : '';
 
 				if(!$view_only && $attributes['history'])
 				{
@@ -142,17 +143,16 @@ JS;
 					{
 						if($attributes['datatype'] == 'DT')
 						{
-							$timestamp= strtotime($attributes['value']);
+							$timestamp = strtotime($attributes['value']);
 							$attributes['value'] = array();
-							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
+							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp, $dateformat);
 							$attributes['value']['hour'] = date('H', $timestamp + phpgwapi_datetime::user_timezone());
 							$attributes['value']['min'] = date('i', $timestamp + phpgwapi_datetime::user_timezone());
-
 						}
 						else
 						{
-							$timestamp_date= mktime(0,0,0,date('m',strtotime($attributes['value'])),date('d',strtotime($attributes['value'])),date('y',strtotime($attributes['value'])));
-							$attributes['value']		= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+							$timestamp_date = mktime(0, 0, 0, date('m', strtotime($attributes['value'])), date('d', strtotime($attributes['value'])), date('y', strtotime($attributes['value'])));
+							$attributes['value'] = $GLOBALS['phpgw']->common->show_date($timestamp_date, $dateformat);
 						}
 					}
 				}
@@ -160,25 +160,27 @@ JS;
 				{
 					if($attributes['value'])
 					{
-						$contact_data					= $this->contacts->read_single_entry($attributes['value'],array('fn','tel_work','email'));
+						$contact_data = $this->contacts->read_single_entry($attributes['value'], array(
+							'fn', 'tel_work', 'email'));
 						$attributes['contact_name']		= $contact_data[0]['fn'];
 						$attributes['contact_email']	= $contact_data[0]['email'];
 						$attributes['contact_tel']		= $contact_data[0]['tel_work'];
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $attributes['name']));
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.addressbook',
+						'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 
 					$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
 					$confirm_msg = lang('delete') . '?';
 					$clear_functions[$m]['action']	= <<<JS
 					if(confirm("{$confirm_msg}"))
 					{
-						document.getElementsByName('{$attributes['name']}')[0].value = '';
-						document.getElementsByName('{$attributes['name']}_name')[0].value = '';
+						parent.getElementsByName('{$attributes['name']}')[0].value = '';
+						parent.getElementsByName('{$attributes['name']}_name')[0].value = '';
 					}
 JS;
 					$m++;
@@ -190,7 +192,7 @@ JS;
 						$contact_data				= $this->contacts->get_principal_organizations_data($attributes['value']);
 						$attributes['org_name']		= $contact_data[0]['org_name'];
 
-						$comms = $this->contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
+						$comms = $this->contacts->get_comm_contact_data($attributes['value'], $fields_comms = '', $simple = false);
 
 						$comm_data = array();
 						if(is_array($comms))
@@ -201,7 +203,7 @@ JS;
 							}
 						}
 
-						if ( count($comm_data) )
+						if(count($comm_data))
 						{
 							$attributes['org_email'] = isset($comm_data[$attributes['value']]['work email']) ? $comm_data[$attributes['value']]['work email'] : '';
 							$attributes['org_tel'] = isset($comm_data[$attributes['value']]['work phone']) ?  $comm_data[$attributes['value']]['work phone'] : '';
@@ -209,33 +211,36 @@ JS;
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.organisation', 'column'=> $attributes['name']));
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.organisation',
+						'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'VENDOR')
 				{
 					if($attributes['value'])
 					{
-						$vendor_data	= $vendor->read_single(array('id' => $attributes['value']),array('attributes' => array(0 => array('column_name' => 'org_name'))));
+						$vendor_data = $vendor->read_single(array('id' => $attributes['value']), array(
+							'attributes' => array(0 => array('column_name' => 'org_name'))));
 
-						for ($n=0;$n<count($vendor_data['attributes']);$n++)
+						for($n = 0; $n < count($vendor_data['attributes']); $n++)
 						{
 							if($vendor_data['attributes'][$n]['column_name'] == 'org_name')
 							{
-								$attributes['vendor_name']= $vendor_data['attributes'][$n]['value'];
+								$attributes['vendor_name'] = $vendor_data['attributes'][$n]['value'];
 								$n = count($vendor_data['attributes']);
 							}
 						}
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $attributes['name']));
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.vendor',
+						'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'custom1') // select
@@ -256,7 +261,7 @@ JS;
 						}
 					}
 
-					foreach ($attributes['choice'] as &$_choice)
+					foreach($attributes['choice'] as &$_choice)
 					{
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
 					}
@@ -273,15 +278,15 @@ JS;
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction'			=> 'property.uilookup.custom',
 						'column'				=> $attributes['name'],
 						'get_list_function'		=> $attributes['get_list_function'],
 						'get_list_function_input'	=> urlencode(serialize($attributes['get_list_function_input']))
 					));
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'custom3') //autocomplete
@@ -305,54 +310,51 @@ JS;
 
 					$_autocomplete = <<<JS
 
-					YAHOO.util.Event.addListener(window, "load", function()
-					{
 						var oArgs = {menuaction:'{$attributes['get_list_function']}'};
 						var strURL = phpGWLink('index.php', oArgs, true);
 						strURL += '{$_append_url}';
 
-					    YAHOO.portico.autocompleteHelper(strURL, 
-                               '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
+					JqueryPortico.autocompleteHelper(strURL, '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
 
-					});
 JS;
 					if(!$view_only)
 					{
 						$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
 					}
-
 				}
 				else if($attributes['datatype'] == 'user')
 				{
 					if($attributes['value'])
 					{
-						$attributes['user_name']= $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
+						$attributes['user_name'] = $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uilookup.phpgw_user', 'column'=> $attributes['name']));
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $this->_appname . '.uilookup.phpgw_user',
+						'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+					//$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
 				{
-					$input_type=$input_type_array[$attributes['datatype']];
+					$input_type = $input_type_array[$attributes['datatype']];
 
 					if($attributes['datatype'] == 'CH')
 					{
 //						$attributes['value'] = unserialize($attributes['value']);
 						$attributes['value'] = explode(',', trim($attributes['value'], ','));
 
-						if (isset($attributes['choice']) AND is_array($attributes['choice']))
+						if(isset($attributes['choice']) AND is_array($attributes['choice']))
 						{
 							foreach($attributes['choice'] as &$choice)
 							{
 								$choice['input_type'] = $input_type;
 								if(isset($attributes['value']) && is_array($attributes['value']))
 								{
-									foreach ($attributes['value'] as &$selected)
+									foreach($attributes['value'] as &$selected)
 									{
 										if($selected == $choice['id'])
 										{
@@ -365,7 +367,7 @@ JS;
 					}
 					else
 					{
-						for ($j=0;$j<count($attributes['choice']);$j++)
+						for($j = 0; $j < count($attributes['choice']); $j++)
 						{
 							$attributes['choice'][$j]['input_type'] = $input_type;
 							if($attributes['choice'][$j]['id'] == $attributes['value'])
@@ -401,7 +403,7 @@ JS;
 						$id = "property{$location}::{$attributes['item_id']}::{$attributes['value']}";
 						$job = execMethod('phpgwapi.asyncservice.read', $id);
 
-						$attributes['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
+						$attributes['next'] = $GLOBALS['phpgw']->common->show_date($job[$id]['next'], $dateformat);
 						$attributes['lang_next_run']	= lang('next run');
 						unset($event);
 						unset($id);
@@ -410,11 +412,11 @@ JS;
 
 					$insert_record_values[]			= $attributes['name'];
 
-					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
 
-					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
-						."location:'{$location}',"
-						."attrib_id:'{$attributes['id']}'";
+					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',lookup:1,"
+					. "location:'{$location}',"
+					. "attrib_id:'{$attributes['id']}'";
 					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';
 					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';
 					$lookup_functions[$m]['action'] .= "};\n";
@@ -423,10 +425,10 @@ JS;
 					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
 					$lookup_functions[$m]['action'] .= "}\n";
 					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
-					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action'] .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
+				else if(isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype'] != 'I' && $entity['attributes'][$i]['value'])
 				{
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
@@ -438,34 +440,33 @@ JS;
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{ 
-				foreach ( $lookup_functions as $lookup_function)
+				foreach($lookup_functions as $lookup_function)
 				{
-					$values['lookup_functions'] .= 'function ' . $lookup_function['name'] ."\r\n";
-					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $lookup_function['action'] ."\r\n";
-					$values['lookup_functions'] .= '}'."\r\n";
+					$values['lookup_functions'] .= 'function ' . $lookup_function['name'] . "\r\n";
+					$values['lookup_functions'] .= '{' . "\r\n";
+					$values['lookup_functions'] .= $lookup_function['action'] . "\r\n";
+					$values['lookup_functions'] .= '}' . "\r\n";
 				}
 			}
 
 			if(isset($clear_functions) && $clear_functions)
 			{ 
-				foreach ($clear_functions as $clear_function)
+				foreach($clear_functions as $clear_function)
 				{
-					$values['lookup_functions'] .= 'function ' . $clear_function['name'] ."\r\n";
-					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $clear_function['action'] ."\r\n";
-					$values['lookup_functions'] .= '}'."\r\n";
+					$values['lookup_functions'] .= 'function ' . $clear_function['name'] . "\r\n";
+					$values['lookup_functions'] .= '{' . "\r\n";
+					$values['lookup_functions'] .= $clear_function['action'] . "\r\n";
+					$values['lookup_functions'] .= '}' . "\r\n";
 				}
 			}
 //_debug_array($values);die();
 			if(isset($lookup_functions) && $lookup_functions)
 			{
-				$GLOBALS['phpgw']->session->appsession('insert_record_values' . $location,$appname,$insert_record_values);
+				$GLOBALS['phpgw']->session->appsession('insert_record_values' . $location, $appname, $insert_record_values);
 			}
 
 			return $values;
 		}
-
 
 		protected function _get_compare_key($get_list_function, $get_list_function_input)
 		{
@@ -473,7 +474,7 @@ JS;
 			$_compare_key .= $get_list_function;
 			if($get_list_function_input)
 			{
-				if (is_array($get_list_function_input))
+				if(is_array($get_list_function_input))
 				{
 					foreach($get_list_function_input as $_key => $_value)
 					{
@@ -489,12 +490,11 @@ JS;
 			return md5($_compare_key);
 		}
 
-
 		function prepare_for_db($table, $values_attribute, $id = 0)
 		{
 			$id = (int)$id;
 			$data = array();
-			if (isset($values_attribute) && is_array($values_attribute))
+			if(isset($values_attribute) && is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -503,7 +503,7 @@ JS;
 						continue;
 					}
 
-					switch ($entry['datatype'])
+					switch($entry['datatype'])
 					{
 						case 'C':
 						case 'T':
@@ -558,7 +558,7 @@ JS;
 							}
 							else
 							{
-								$data['value_set'][$entry['name']]	= isset($entry['value'])?$entry['value']:'';
+								$data['value_set'][$entry['name']] = isset($entry['value']) ? $entry['value'] : '';
 							}
 
 							break;
@@ -572,14 +572,15 @@ JS;
 					{
 						if($id)
 						{
-							$this->_db2->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}",__LINE__,__FILE__);
+							$this->_db2->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}", __LINE__, __FILE__);
 							$this->_db2->next_record();
 							$old_value = $this->_db2->f($entry['name']);
 							if($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
-								('
-									value'	=> $entry['value'],
+									(
+									'value' => $entry['value'],
+									'old_value' => $old_value,
 									'date'	=> phpgwapi_datetime::date_to_timestamp($entry['date'])
 								);
 							}
@@ -620,9 +621,9 @@ JS;
 				case 'LB':
 					if($data['attrib_id'])
 					{
-						if(!isset($cache_lb[$location_id][$data['attrib_id']][$data['value']]) || $ret !=$cache_lb[$location_id][$data['attrib_id']][$data['value']])
+						if(!isset($cache_lb[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_lb[$location_id][$data['attrib_id']][$data['value']])
 						{
-							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .(int)$data['attrib_id']. "  AND id=" . (int)$data['value'];
+							$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . (int)$data['attrib_id'] . "  AND id=" . (int)$data['value'];
 							$this->_db2->query($sql);
 							$this->_db2->next_record();
 							$ret =  $this->_db2->f('value');
@@ -631,15 +632,16 @@ JS;
 					}
 					break;
 				case 'AB':
-					if(!isset($cache_contact[$data['value']]) || $ret!= $cache_contact[$data['value']])
+					if(!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
 					{
-						$contact_data	= $this->contacts->read_single_entry($data['value'],array('fn'));
+						$contact_data = $this->contacts->read_single_entry($data['value'], array(
+							'fn'));
 						$ret =  $contact_data[0]['fn'];
 						$cache_contact[$data['value']] = $ret;
 					}
 					break;
 				case 'ABO':
-					if(!isset($cache_contact[$data['value']]) || $ret!= $cache_contact[$data['value']])
+					if(!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
 					{
 						$contact_data	= $this->contacts->get_principal_organizations_data($data['value']);
 						$ret = $contact_data[0]['org_name'];
@@ -647,12 +649,12 @@ JS;
 					}
 					break;
 				case 'VENDOR':
-					if(!isset($cache_vendor[$data['value']]) || $ret!= $cache_vendor[$data['value']])
+					if(!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
 					{
-						$sql="SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
+						$sql = "SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
 						$this->_db2->query($sql);
 						$this->_db2->next_record();
-						$ret =  $this->_db2->f('org_name',true);
+						$ret = $this->_db2->f('org_name', true);
 						$cache_vendor[$data['value']] = $ret;
 					}
 					break;
@@ -660,18 +662,18 @@ JS;
 					if($data['attrib_id'])
 					{
 						$ret = '';
-						if(!isset($cache_ch[$location_id][$data['attrib_id']][$data['value']]) || $ret !=$cache_ch[$location_id][$data['attrib_id']][$data['value']])
+						if(!isset($cache_ch[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_ch[$location_id][$data['attrib_id']][$data['value']])
 						{
 							$ch = explode(',', trim($data['value'], ','));
-							if (isset($ch) AND is_array($ch))
+							if(isset($ch) AND is_array($ch))
 							{
-								for ($k=0;$k<count($ch);$k++)
+								for($k = 0; $k < count($ch); $k++)
 								{
-									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
+									$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
 									$this->_db2->query($sql);
-									while ($this->_db2->next_record())
+									while($this->_db2->next_record())
 									{
-									$ch_value[]=$this->_db2->f('value');
+										$ch_value[] = $this->_db2->f('value');
 									}
 								}
 								$ret =  @implode(",", $ch_value);
@@ -695,7 +697,7 @@ JS;
 					$ret =  phpgw::safe_redirect($data['value']);
 					break;
 				case 'user':
-					if(!isset($cache_vendor[$data['value']]) || $ret!= $cache_vendor[$data['value']])
+					if(!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
 					{
 						$ret =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
 						$cache_vendor[$data['value']] = $ret;
@@ -731,9 +733,9 @@ JS;
 
 						if(isset($_list) && is_array($_list))
 						{
-							foreach ($_list as $_key => $_entry)
+							foreach($_list as $_key => $_entry)
 							{
-								if ($_entry['id'] == $data['value'])
+								if($_entry['id'] == $data['value'])
 								{
 									$ret = $_entry['name'];
 									break;
@@ -778,14 +780,14 @@ JS;
 //			_debug_array($values);die();
 			$location = array();
 			$ret = array();
-			$j=0;
-			foreach ($values as $row)
+			$j = 0;
+			foreach($values as $row)
 			{
-				foreach ($row as $field => $data)
+				foreach($row as $field => $data)
 				{
 					if($field == 'location_code')
 					{
-						$location = explode('-',$data['value']);
+						$location = explode('-', $data['value']);
 					}
 
 					$ret[$j][$field] = $this->get_translated_value($data, $location_id);
@@ -797,10 +799,10 @@ JS;
 						{
 							$_location_count = count($location);
 						}
-						for ($m=0;$m < $_location_count ; $m++)
+						for($m = 0; $m < $_location_count; $m++)
 						{
-							$ret[$j]['loc' . ($m+1)] = $location[$m];
-							$ret[$j]['query_location']['loc' . ($m+1)]=implode('-', array_slice($location, 0, ($m + 1)));
+							$ret[$j]['loc' . ($m + 1)] = $location[$m];
+							$ret[$j]['query_location']['loc' . ($m + 1)] = implode('-', array_slice($location, 0, ($m + 1)));
 						}
 						$_location_count = 0;
 					}
@@ -818,7 +820,7 @@ JS;
 		 * @param string $query
 		 * @return array
 		 */
-		function get_custom_filter($location_id,$entity_table, $criteria_id = '', $query = '')
+		function get_custom_filter($location_id, $entity_table, $criteria_id = '', $query = '')
 		{
 			$choice_table			= 'phpgw_cust_choice';
 			$_querymethod			= array();
@@ -832,16 +834,16 @@ JS;
 
 			$this->_db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND search='1'");
 
-			while ($this->_db->next_record())
+			while($this->_db->next_record())
 			{
-				switch ($this->_db->f('datatype'))
+				switch($this->_db->f('datatype'))
 				{
 					case 'V':
 					case 'email':
 					case 'T':
 						if(!$criteria_id)
 						{
-							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
+							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
 							$__querymethod = array(); // remove block
 						}
 						break;
@@ -849,18 +851,17 @@ JS;
 						if(!$criteria_id)
 						{
 							// from filter
-							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,{$query},%'";
+							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,{$query},%'";
 							$__querymethod = array(); // remove block
-
 							// from text-search
 							$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->_db->f('location_id')
-								." AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
-								." AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
+							. " AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
+							. " AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
 
-							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
-							while ($this->_db2->next_record())
+							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
+							while($this->_db2->next_record())
 							{
-								$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,". $this->_db2->f('id') . ",%'";
+								$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%," . $this->_db2->f('id') . ",%'";
 							}
 						}
 						break;
@@ -869,19 +870,19 @@ JS;
 						if(!$criteria_id)
 						{
 							$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->_db->f('location_id')
-								." AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
-								." AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
+							. " AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
+							. " AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
 
-							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
 							$__filter_choise = array();
-							while ($this->_db2->next_record())
+							while($this->_db2->next_record())
 							{
 								$__filter_choise[] = $this->_db2->f('id');
 							}
 
 							if($__filter_choise)
 							{
-								$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
+								$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
 							}
 
 							$__querymethod = array(); // remove block
@@ -890,7 +891,7 @@ JS;
 					case 'I':
 						if(ctype_digit($query) && !$criteria_id)
 						{
-							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " = " . (int)$query;
+							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " = " . (int)$query;
 							$__querymethod = array(); // remove block
 						}
 						break;
@@ -918,7 +919,7 @@ JS;
 					default:
 						if(!$criteria_id)
 						{
-							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " = '{$query}'";
+							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " = '{$query}'";
 							$__querymethod = array(); // remove block
 						}
 					}

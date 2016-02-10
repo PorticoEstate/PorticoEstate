@@ -29,22 +29,32 @@
 		    	
 			    	<dl>
 			    		
-			    		<dt><xsl:value-of select="name()"/></dt>
-			    		<dd><xsl:value-of select="."/></dd>
+					<dt>
+						<xsl:value-of select="name()"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="."/>
+					</dd>
 			    		
 			    	</dl>
 		    	
 		    </xsl:when>
 		    <xsl:otherwise>
-		        <h1><xsl:value-of select="name()"/></h1>
+				<h1>
+					<xsl:value-of select="name()"/>
+				</h1>
 		    </xsl:otherwise>
 		</xsl:choose>
     	<xsl:if test="@*">
     		<h2>Xml attributes</h2>
     		<dl>
     		<xsl:for-each select="@*">
-    			<dt><xsl:value-of select="name()"/></dt>
-				<dd><xsl:value-of select="."/></dd>
+					<dt>
+						<xsl:value-of select="name()"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="."/>
+					</dd>
             </xsl:for-each>
             </dl>
     	</xsl:if>
@@ -68,9 +78,13 @@
 			
 		</xsl:apply-templates>
 	</div>
-	</xsl:template>
-	<xsl:template name="childElements" >
-		<dt><xsl:value-of select="name()"/></dt>
-		<dd><xsl:value-of select="."/></dd>
+</xsl:template>
+<xsl:template name="childElements" >
+	<dt>
+		<xsl:value-of select="name()"/>
+	</dt>
+	<dd>
+		<xsl:value-of select="."/>
+	</dd>
 		
-	</xsl:template>
+</xsl:template>

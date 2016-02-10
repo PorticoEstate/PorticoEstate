@@ -25,15 +25,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/ 
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control_group', 'inc/model/');
 
 	class controller_socontrol_group extends controller_socommon
 	{
+
 		protected static $so;
 
 		/**
@@ -43,7 +43,7 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_group');
 			}
@@ -76,7 +76,7 @@
 				$this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
-			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
 			if($result)
 			{
@@ -87,7 +87,6 @@
 			{
 				return 0;
 			}
-
 		}
 
 		/**
@@ -102,14 +101,14 @@
 
 			$values = array(
 				'group_name = ' . $this->marshal($control_group->get_group_name(), 'string'),
-				'procedure_id = '. $this->marshal($control_group->get_procedure_id(), 'int'),
+				'procedure_id = ' . $this->marshal($control_group->get_procedure_id(), 'int'),
 				'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int'),
 				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string'),
-				'component_location_id = '. $this->marshal($control_group->get_component_location_id(), 'int'),
+				'component_location_id = ' . $this->marshal($control_group->get_component_location_id(), 'int'),
 				'component_criteria = ' . $this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
-			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 			return $result ? $id : 0;
 		}
@@ -143,7 +142,7 @@
 			$control_group->set_control_area_name($category[0]['name']);
 
 			$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
-			$component_criteria = $this->db->f('component_criteria') ? unserialize($this->db->f('component_criteria',true)) : array();
+			$component_criteria = $this->db->f('component_criteria') ? unserialize($this->db->f('component_criteria', true)) : array();
 			$control_group->set_component_criteria($component_criteria);
 
 			return $control_group;
@@ -163,12 +162,12 @@
 		{
 			$results = array();
 
-			$order = $sort ? "ORDER BY $sort $dir ": '';
+			$order = $sort ? "ORDER BY $sort $dir " : '';
 
 			$sql = "SELECT * FROM controller_control_group $order";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
@@ -182,9 +181,9 @@
 		function get_control_group_select_array()
 		{
 				$results = array();
-				$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 				$this->db->query("SELECT id, group_name as name FROM controller_control_group ORDER BY name ASC", __LINE__, __FILE__);
-				while ($this->db->next_record())
+			while($this->db->next_record())
 				{
 					$results[] = array('id' => $this->db->f('id', false),
 									   'name' => $this->db->f('name', false));
@@ -195,9 +194,9 @@
 		function get_building_part_select_array($selected_building_part_id)
 		{
 				$results = array();
-				$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 				$this->db->query("SELECT id, descr as name FROM fm_building_part ORDER BY id ASC", __LINE__, __FILE__);
-				while ($this->db->next_record())
+			while($this->db->next_record())
 				{
 					$curr_id = $this->db->f('id', false);
 					if($selected_building_part_id && $selected_building_part_id > 0 && $selected_building_part_id == $curr_id)
@@ -223,13 +222,13 @@
 		 */
 		function get_control_groups_as_array($control_area_id)
 		{
-			$control_area_id = (int) $control_area_id;
+			$control_area_id = (int)$control_area_id;
 			$results = array();
 
 			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
 			$this->db->query($sql);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
@@ -286,23 +285,23 @@
 
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "controller_control_group.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "controller_control_group.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
 			if(isset($filters['control_areas']))
 			{
 //				$filter_clauses[] = "controller_control_group.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 
-				$cat_id = (int) $filters['control_areas'];
+				$cat_id				 = (int)$filters['control_areas'];
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
 				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter = array($cat_id);
-				foreach ($cat_list as $_category)
+				foreach($cat_list as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
 
-				$filter_clauses[] = "controller_control_group.control_area_id IN (" .  implode(',', $cat_filter) .')';
+				$filter_clauses[] = "controller_control_group.control_area_id IN (" . implode(',', $cat_filter) . ')';
 			}
 
 			if(count($filter_clauses))
@@ -326,15 +325,16 @@
 				$cols .= "building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title "; 
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order	 = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
 		function populate(int $control_group_id, &$control_group)
 		{
-			if($control_group == null) {
-				$control_group = new controller_control_group((int) $control_group_id);
+			if($control_group == null)
+			{
+				$control_group = new controller_control_group((int)$control_group_id);
 
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -347,7 +347,6 @@
 				$control_group->set_control_area_name($category[0]['name']);
 
 				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
-
 			}
 
 			return $control_group;
@@ -362,15 +361,15 @@
 		function get_control_groups_by_control_area($control_area_id)
 		{
 
-			$cat_id = (int) $control_area_id;
+			$cat_id		 = (int)$control_area_id;
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cat_path = $cats->get_path($cat_id);
-			foreach ($cat_path as $_category)
+			foreach($cat_path as $_category)
 			{
 				$cat_filter[] = $_category['id'];
 			}
 
-			$filter_control_area = "control_area_id IN (" .  implode(',', $cat_filter) .')';
+			$filter_control_area = "control_area_id IN (" . implode(',', $cat_filter) . ')';
 
 			$sql = "SELECT * FROM controller_control_group WHERE {$filter_control_area}";
 
@@ -379,7 +378,7 @@
 
 			while($this->db->next_record())
 			{
-				$control_group = new controller_control_group((int) $this->db->f('id'));
+				$control_group = new controller_control_group((int)$this->db->f('id'));
 
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -393,7 +392,7 @@
 				$control_groups_array[] = $control_group->toArray();
 			}
 
-			if( count( $control_groups_array ) > 0 )
+			if(count($control_groups_array) > 0)
 			{
 				return $control_groups_array; 
 			}
@@ -411,7 +410,7 @@
 		*/
 		function get_control_areas_by_control_group($control_group_id)
 		{
-			$control_group_id = (int) $control_group_id;
+			$control_group_id	 = (int)$control_group_id;
 			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id={$control_group_id}";
 			$this->db->query($sql);
 
@@ -423,7 +422,7 @@
 				$control_area_array[] = array($control_area => $category[0]['name']);
 			}
 
-			if( count( $control_area_array ) > 0 )
+			if(count($control_area_array) > 0)
 			{
 				return $control_area_array; 
 			}
@@ -454,7 +453,7 @@
 			$controlGroupArray = array();
 			
 			$this->db->query($sql, __LINE__, __FILE__);
-			$i=1;
+			$i = 1;
 			while($this->db->next_record())
 			{
 				$controlGroupArray[$i]['id'] = $this->db->f('control_group_id');
@@ -475,7 +474,6 @@
 		 * @param $component id component id
 		 * @return void
 		 */
-
 		//FIXME: Sigurd : Not used
 		function add_component_to_control_group($control_group_id, $location_id)
 		{
@@ -506,7 +504,7 @@
 			$sql = "select distinct(cg.id) from controller_control_group cg, controller_control_item ci, controller_control_item_list cil where cil.control_id = {$control_id} and ci.id = cil.control_item_id and cg.id = ci.control_group_id";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = $this->db->f('id');
 			}
@@ -522,13 +520,13 @@
 		*/
 		function get_components_for_control_group($control_group_id)
 		{
-			$control_group_id = (int) $control_group_id;
+			$control_group_id	 = (int)$control_group_id;
 			$results = array();
 			
 			$sql = "select * from controller_control_group_component_list where control_group_id={$control_group_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = $this->db->f('location_id');
 			}
@@ -540,7 +538,7 @@
 		{
 				$results = array();
 				$this->db->query("SELECT id, group_name FROM controller_control_group ORDER BY group_name ASC", __LINE__, __FILE__);
-				while ($this->db->next_record())
+			while($this->db->next_record())
 				{
 					$results[] = array('id' => $this->db->f('id'),
 									   'group_name' => $this->db->f('group_name', true));

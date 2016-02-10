@@ -239,4 +239,3 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.11';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
-?>

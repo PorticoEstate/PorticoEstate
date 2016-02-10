@@ -3,35 +3,43 @@
 	
 	class booking_soevent extends booking_socommon
 	{
+
 		function __construct()
 		{
-			parent::__construct('bb_event', 
-				array(
+			parent::__construct('bb_event', array(
 					'id'		=> array('type' => 'int'),
-                    'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
+				'id_string'						 => array('type' => 'string', 'required' => false, 'default' => '0',
+					'query' => true),
 					'active'	=> array('type' => 'int', 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'application_id'	=> array('type' => 'int', 'required' => false),
-					'description' => array('type' => 'string', 'required'=> true, 'query' => true),
+				'description'					 => array('type' => 'string', 'required' => true, 'query' => true),
                     'building_id'	=> array('type' => 'int', 'required' => true),
-    				'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
-					'from_'		=> array('type' => 'string', 'required'=> true),
-					'to_'		=> array('type' => 'string', 'required'=> true),
+				'building_name'					 => array('type' => 'string', 'required' => true, 'query' => true),
+				'from_'							 => array('type' => 'string', 'required' => true),
+				'to_'							 => array('type' => 'string', 'required' => true),
 					'cost'		=> array('type' => 'decimal', 'required' => true),
-					'contact_name' => array('type' => 'string', 'required'=> true, 'query' => true),
-					'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
+				'contact_name'					 => array('type' => 'string', 'required' => true, 'query' => true),
+				'contact_email'					 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
+						'invalid' => '%field% is invalid'))),
 					'contact_phone' => array('type' => 'string'),
-					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
-					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
-					'is_public'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
+				'completed'						 => array('type' => 'int', 'required' => true, 'nullable' => false,
+					'default' => '0'),
+				'reminder'						 => array('type' => 'int', 'required' => true, 'nullable' => false,
+					'default' => '1'),
+				'is_public'						 => array('type' => 'int', 'required' => true, 'nullable' => false,
+					'default' => '1'),
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'sms_total'		=> array('type' => 'int', 'required' => false),
-					'customer_organization_name' 	=> array('type' => 'string', 'required' => False, 'query' => true),
+				'customer_organization_name'	 => array('type' => 'string', 'required' => False,
+					'query' => true),
 					'customer_organization_id' 		=> array('type' => 'int', 'required' => False),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
-					'customer_ssn' 					=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
-					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
-					'customer_internal'					=> array('type' => 'int', 'required'=>true),
+				'customer_ssn'					 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
+					'required' => false),
+				'customer_organization_number'	 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
+						'invalid' => '%field% is invalid'))),
+				'customer_internal'				 => array('type' => 'int', 'required' => true),
 					'activity_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' 		=> array(
@@ -50,14 +58,23 @@
 						  'manytomany' => array(
 							'table' => 'bb_event_agegroup',
 							'key' => 'event_id',
-							'column' => array('agegroup_id' => array('type' => 'int', 'required' => true), 'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int', 'required' => true)),
+						'column' => array('agegroup_id' => array('type' => 'int', 'required' => true),
+							'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int',
+								'required' => true)),
 					)),
 					'comments' => array('type' => 'string',
 						  'manytomany' => array(
 							'table' => 'bb_event_comment',
 							'key' => 'event_id',
 							'column' => array('time', 'author', 'comment', 'type'),
-							'order'=> array('sort' =>'time', 'dir' => 'ASC' )
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
+					)),
+				'costs'						 => array('type'		 => 'string',
+					'manytomany' => array(
+						'table'	 => 'bb_event_cost',
+						'key'	 => 'event_id',
+						'column' => array('time', 'author', 'comment', 'cost'),
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
@@ -77,7 +94,15 @@
 
 		function get_building_info($id)
 		{
-			$this->db->limit_query("SELECT bb_building.id, bb_building.name, bb_building.email, bb_building.tilsyn_email, bb_building.tilsyn_email2 FROM bb_building, bb_resource, bb_event_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_event_resource.resource_id AND bb_event_resource.event_id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$sql = "SELECT bb_building.id, bb_building.name, bb_building.email,"
+			. " bb_building.tilsyn_email, bb_building.tilsyn_email2"
+			. " FROM bb_building, bb_resource, bb_event_resource, bb_building_resource"
+			. " WHERE bb_resource.id=bb_building_resource.resource_id"
+			. " AND bb_building.id=bb_building_resource.building_id"
+			. " AND bb_resource.id=bb_event_resource.resource_id"
+			. " AND bb_event_resource.event_id=" . intval($id);
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
@@ -93,12 +118,28 @@
 		{
 			$results = array();
 			$this->db->query("select time,author,comment,type from bb_event_comment where event_id=($id) order by time desc", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('time' => $this->db->f('time', false),
                                  'author' => $this->db->f('author', false),
                                  'comment' => $this->db->f('comment', false),
 						         'type' => $this->db->f('type', false));
+			}
+			return $results;
+		}
+
+		function get_ordered_costs($id)
+		{
+			$results = array();
+			$this->db->query("SELECT * FROM bb_event_cost WHERE event_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$results[] = array(
+					'time'		 => $this->db->f('time'),
+					'author'	 => $this->db->f('author',true),
+					'comment'	 => $this->db->f('comment', true),
+					'cost'		 => $this->db->f('cost')
+				);
 			}
 			return $results;
 		}
@@ -114,17 +155,17 @@
 						 'name' => $this->db->f('name', false));
 		}
 
-		function get_overlap_time_info($resource_id,$overlap_id,$type)
+		function get_overlap_time_info($resource_id, $overlap_id, $type)
 		{
-			if ($type == 'allocation')
+			if($type == 'allocation')
 			{
 				$this->db->limit_query("SELECT bb_allocation.from_,bb_allocation.to_ FROM bb_allocation,bb_allocation_resource WHERE bb_allocation.id = $overlap_id
- AND  bb_allocation_resource.allocation_id  = $overlap_id AND bb_allocation_resource.resource_id =". intval($resource_id), 0, __LINE__, __FILE__, 1);
+ AND  bb_allocation_resource.allocation_id  = $overlap_id AND bb_allocation_resource.resource_id =" . intval($resource_id), 0, __LINE__, __FILE__, 1);
 			}
 			else
 			{
 				$this->db->limit_query("SELECT bb_booking.from_,bb_booking.to_ FROM bb_booking,bb_booking_resource WHERE bb_booking.id = $overlap_id
- AND  bb_booking_resource.booking_id  = $overlap_id AND bb_booking_resource.resource_id =". intval($resource_id), 0, __LINE__, __FILE__, 1);
+ AND  bb_booking_resource.booking_id  = $overlap_id AND bb_booking_resource.resource_id =" . intval($resource_id), 0, __LINE__, __FILE__, 1);
 			}			
 			if(!$this->db->next_record())
 			{
@@ -132,13 +173,12 @@
 			}
 			return array('from' => $this->db->f('from_', false),
 						 'to' => $this->db->f('to_', false));
-			
 		}
 
-		function get_contact_mail($id,$type)
+		function get_contact_mail($id, $type)
 		{
             $mail = array();
-			if ($type == 'allocation')
+			if($type == 'allocation')
 			{			
     			$sql = "SELECT bb_organization_contact.email FROM bb_organization_contact WHERE organization_id IN (SELECT bb_allocation.organization_id FROM bb_allocation WHERE id=$id)";
 			}
@@ -149,7 +189,7 @@
             $this->db->query($sql, __LINE__, __FILE__);
             if($result = $this->db->resultSet)
             {
-                foreach ($result as $res)
+				foreach($result as $res)
                 {
                     $mail[] = $res['email'];
                 }
@@ -161,25 +201,24 @@
 		public function update_comment($allids)
 		{
 			$db = $this->db;
-			$config	= CreateObject('phpgwapi.config','booking');
+			$config					 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			$comment = lang('Multiple Events was created').',<br />'.lang('Event').' ';
-			foreach ($allids as $id)
+			$comment = lang('Multiple Events was created') . ',<br />' . lang('Event') . ' ';
+			foreach($allids as $id)
 			{
-				$comment .= '<a href="'.$external_site_address.'/?menuaction=booking.uievent.edit&id='.$id[0].'">#'.$id[0].'</a>, ';
+				$comment .= '<a href="' . $external_site_address . '/?menuaction=booking.uievent.edit&id=' . $id[0] . '">#' . $id[0] . '</a>, ';
 			}
 			$comment = substr($comment, 0, -2); 
 			$comment .= '.';
-			foreach ($allids as $id)
+			foreach($allids as $id)
 			{
 				$myid = $id[0];
-				$sql = "UPDATE bb_event_comment SET comment='".$comment."' WHERE event_id=".intval($myid).";";
+				$sql	 = "UPDATE bb_event_comment SET comment='" . $comment . "' WHERE event_id=" . intval($myid) . ";";
 				$db->query($sql, __LINE__, __FILE__);
 			}
 		}
-
 
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
@@ -243,24 +282,26 @@
 					}					
 					$errors['booking'] = $booking;
 				}
-	
 			}
 		}
 		
-		public function find_expired() {
+		public function find_expired()
+		{
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
 			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
 		}
 		
-		protected function find_expired_sql_conditions() {
+		protected function find_expired_sql_conditions()
+		{
 			$table_name = $this->table_name;
 			$now = date('Y-m-d');
 			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
 		}
 		
-		public function complete_expired(&$events) {
+		public function complete_expired(&$events)
+		{
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $events));
@@ -271,19 +312,19 @@
 		public function delete_event($id)
         {
 			$db = $this->db;
-			$table_name = $this->table_name.'_comment';
+			$table_name	 = $this->table_name . '_comment';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			$table_name = $this->table_name.'_agegroup';
+			$table_name	 = $this->table_name . '_agegroup';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			$table_name = $this->table_name.'_targetaudience';
+			$table_name	 = $this->table_name . '_targetaudience';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			$table_name = $this->table_name.'_date';
+			$table_name	 = $this->table_name . '_date';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			$table_name = $this->table_name.'_resource';
+			$table_name	 = $this->table_name . '_resource';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 			$table_name = $this->table_name;
@@ -292,7 +333,8 @@
 			return True;
 		}
 
-		public function update_id_string() {
+		public function update_id_string()
+		{
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
@@ -311,14 +353,16 @@
 
 		function get_org($orgnumber)
 		{
-			$sql = "SELECT id,name FROM bb_organization WHERE (organization_number='".$orgnumber."' OR customer_organization_number='".$orgnumber."') AND active != 0";
+			$sql = "SELECT id,name FROM bb_organization WHERE (organization_number='" . $orgnumber . "' OR customer_organization_number='" . $orgnumber . "') AND active != 0";
 
-			$this->db->limit_query($sql,0, __LINE__, __FILE__, 1);
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if($this->db->next_record())
 			{
 				$results = array('id' => $this->db->f('id', false),
 						         'name' => $this->db->f('name', false));
-			} else {
+			}
+			else
+			{
 				return array();
 			}
 
@@ -328,9 +372,9 @@
 		function get_buildings()
 		{
             $results = array();
-			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
 						           'name' => $this->db->f('name', false));
@@ -341,36 +385,35 @@
         function get_activities_main_level()
         {
 		    $results = array();
-			$results[]  = array('id' =>0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
 			}
 			return $results;
-
         }
+
         function get_activities($id)
         {
 			$results = array();
 			$this->db->query("select id from bb_activity where id = ($id) or  parent_id = ($id) or parent_id in (select id from bb_activity where parent_id = ($id))", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
-
         }
+
         function get_resources($ids)
         {
 
             $results = array();
             $this->db->query("select name from bb_resource where id in ($ids)", __LINE__, __FILE__);
-            while ($this->db->next_record())
+			while($this->db->next_record())
             {
                 $results[] = $this->db->f('name', false);
             }
             return $results;
         }
-
 	}

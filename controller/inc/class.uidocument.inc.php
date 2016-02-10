@@ -25,25 +25,22 @@
     * @internal Development of this application was funded by http://www.bergen.kommune.no/
     * @package property
     * @subpackage controller
-    * @version $Id$
+	 * @version $Id$
     */	
-
-    phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
     phpgw::import_class('controller.sodocument');
     phpgw::import_class('controller.soprocedure');
     include_class('controller', 'document', 'inc/model/');
 
-    class controller_uidocument extends phpgwapi_uicommon
+	class controller_uidocument extends phpgwapi_uicommon_jquery
     {
+
         private $so;
         private $so_procedure;
-
 	    private $read;
 	    private $add;
 	    private $edit;
 	    private $delete;
-
-
         public $public_functions = array
         (
 				'query'						=> true,
@@ -63,17 +60,40 @@
 			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
 			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
         }
 
         public function query()
         {
-            // YUI variables for paging and sorting
-            $start_index	= phpgw::get_var('startIndex', 'int');
-            $num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
-            $sort_field		= phpgw::get_var('sort');
-            $sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-            // Form variables
-            $search_for 	= phpgw::get_var('query');
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
+			);
+
+
+			$search_for = $params['query'];
+
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] > 0 ? $params['results'] : null;
+			$sort_field		 = $params['order'];
+
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area;
+			}
+			$sort_ascending = $params['sort'] == 'desc' ? false : true;
+
+
             $search_type	= phpgw::get_var('search_option');
             // Create an empty result set
             $result_objects = array();
@@ -95,18 +115,12 @@
                     break;
             }
 
-            $result_objects = $this->so->get($start_index, 
-                                            $num_of_objects, 
-                                            $sort_field, 
-                                            $sort_ascending, 
-                                            $search_for, 
-                                            $search_type, 
-                                            $filters);
+			$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
             $result_count = $this->so->get_count($search_for, $search_type, $filters);
             
             //Serialize the documents found
             $rows = array();
-            foreach ($result_objects as $result)
+			foreach($result_objects as $result)
             {
                 if(isset($result))
                 {
@@ -122,9 +136,17 @@
                                                                 $this->type_of_user, 
                                                                 $editable));
 				
-            //Build a YUI result from the data
-            $result_data = array('results' => $rows, 'total_records' => $result_count);	
-            return $this->yui_results($result_data, 'total_records', 'results');
+			$results = array('results' => $rows);
+
+			$results['total_records']	 = $object_count;
+			$results['start']			 = $params['start'];
+			$results['sort']			 = $params['order'];
+			$results['dir']				 = $params['sort'];
+			$results['draw']			 = $draw;
+
+			//FIXME not used?
+
+			return $this->jquery_results($results);
         }
 		
         public function get_document_types()
@@ -132,17 +154,17 @@
             $result_objects = $this->so->list_document_types();
             
             $editable = phpgw::get_var('editable') == '1' ? true : false;
-            $result_data = array('results' => $result_objects);
+			$results					 = array('results' => $result_objects);
+			$results['total_records']	 = count($result_objects);
+			$results['draw']			 = phpgw::get_var('draw', 'int');
             
             //Add context menu columns (actions and labels)
             array_walk(
-            		$result_data['results'],
-            		array($this, '_add_links'),
-            		"controller.uidocument.edit_document_type");
+			$results['results'], array($this, '_add_links'), "controller.uidocument.edit_document_type");
             	
             
             //Build a YUI result from the data	
-            return $this->yui_results($result_data, 'total_records', 'results');
+			return $this->jquery_results($results);
 		}
 		
         /**
@@ -172,7 +194,8 @@
             switch($type)
             {
                 case 'documents_for_procedure':
-                    if($edit_permission && $editable) {
+					if($edit_permission && $editable)
+					{
                         $value['ajax'][] = true;
                         $value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uidocument.delete', 
                         														'id' => $value['id'])));
@@ -223,14 +246,13 @@
                             $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 
                             												'procedure_id' => $procedure->get_id(), 
                             												'tab' => 'documents'));
- 
 				}
                 //Create a document object
                 $document = new controller_document();
                 $document->set_title(phpgw::get_var('document_title'));
                 $document->set_name($_FILES["file_path"]["name"]);
                 $document->set_type_id(phpgw::get_var('document_type'));
-                $desc = phpgw::get_var('document_description','html');
+				$desc		 = phpgw::get_var('document_description', 'html');
                 $desc = str_replace("&nbsp;", " ", $desc);
                 $document->set_description($desc);
                 $document->set_procedure_id($procedure_id);
@@ -241,10 +263,7 @@
                 // Move file from temporary storage to vfs
                 $result = $this->so->write_document_to_vfs
                 (
-                	$document_properties['document_type'], 
-                	$_FILES["file_path"]["tmp_name"],
-                	$document_properties['id'],
-                	$_FILES["file_path"]["name"]
+				$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
                 );
                 
                 if($result)
@@ -261,13 +280,13 @@
                     else
                     {
                         // Handle failure on storing document
-                        $this->redirect($document, $document_propeties,'','');
+						$this->redirect($document, $document_propeties, '', '');
                     }
                 }
                 else
                 {
                     //Handle vfs failure to store document
-                    $this->redirect($document, $document_propeties,'','');
+					$this->redirect($document, $document_propeties, '', '');
                 }
             }
         }
@@ -290,9 +309,7 @@
             
             echo $this->so->read_document_from_vfs
             (
-                $document_properties['document_type'],	
-                $document_properties['id'],
-                $document->get_name()
+			$document_properties['document_type'], $document_properties['id'], $document->get_name()
             );
         }
 
@@ -323,17 +340,15 @@
 
             $document_properties = $this->get_type_and_id($document);
             
-            /*if(!$this->check_permissions($document,$document_properties))
+			/* if(!$this->check_permissions($document,$document_properties))
             {
                 $this->render('permission_denied.php');
                 return;
-            }*/
+			  } */
             
             $result = $this->so->delete_document_from_vfs
             (
-                $document_properties['document_type'],	
-                $document_properties['id'],
-                $document->get_name()
+			$document_properties['document_type'], $document_properties['id'], $document->get_name()
             );
             
             if($result)
@@ -422,7 +437,7 @@
 		
         public function show()
         {
-            $GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
             $procedure_id = (int)phpgw::get_var('procedure_id');
             $document_type = phpgw::get_var('type');
             if(isset($_POST['edit_procedure']))
@@ -439,7 +454,7 @@
                 }
                 else
                 {
-                    $this->render('permission_denied.php',array('error' => lang('invalid_request')));
+					$this->render('permission_denied.php', array('error' => lang('invalid_request')));
                     return;
                 }
                 
@@ -449,7 +464,7 @@
                     $msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
                 }
                 
-                $documents = $this->so->get(null,null,null,null,null,null,array(
+				$documents = $this->so->get(null, null, null, null, null, null, array(
                 							'procedure_id' => $procedure_id, 
                 							'type' => $document_type));
                 	
@@ -460,7 +475,7 @@
                 foreach($documents as $document)
                 {
                 	/* hack to fix display of &nbsp; char */
-                    $document->set_description(str_replace("&nbsp;", " ",$document->get_description()));
+					$document->set_description(str_replace("&nbsp;", " ", $document->get_description()));
                     $doc_array = $document->toArray();
                     $doc_array['link'] = self::link(array('menuaction' => 'controller.uidocument.view', 
                     									'id' => $doc_array['id']));
@@ -471,19 +486,19 @@
                 
                 $procedure_array = $procedure->toArray();
                 
-                $tabs = array( array(
+				$tabs = array(
+					'procedure'	 => array(
                 			'label' => lang('Procedure'),
                 			'link'  => $GLOBALS['phpgw']->link('/index.php', array(
                 								'menuaction' => 'controller.uiprocedure.view', 
                 								'id' => $procedure->get_id()))
-                
-                		), array(
-                			'label' => lang('View_documents_for_procedure')
-                		));
+					),
+					'documents'	 => array('label' => lang('View_documents_for_procedure'), 'link' => '#documents')
+				);
                 
                 $data = array
                 (
-                	'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+					'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, 'documents', 'procedure_tabview'),
                 	'view'					=> "view_documents_for_procedure",
                 	'procedure_id'			=> !empty($procedure) ? $procedure->get_id() : 0,
                 	'procedure'				=> $procedure_array,
@@ -505,14 +520,7 @@
             if(phpgw::get_var('phpgw_return_as') == 'json')
             {
                 return $this->get_document_types();
-                self::render_template_xsl(array('procedure/procedure_tabs', 
-                								'common', 
-                								'procedure/procedure_documents'), 
-                                        $data);
-    	    }
-        	self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-        	phpgwapi_yui::load_widget('datatable');
-        	phpgwapi_yui::load_widget('paginator');
+			}
         
         	$data = array(
         		'datatable_name'	=> 'Dokument typer',
@@ -526,7 +534,7 @@
         					'key' => 'id',
         					'label' => lang('ID'),
         					'sortable'	=> true,
-        					'formatter' => 'YAHOO.portico.formatLink'
+							'formatter'	 => 'JqueryPortico.formatLink'
         				),
         				array(
         					'key' => 'title',
@@ -541,6 +549,6 @@
         		),
         	);
     
-            self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
         }
     }

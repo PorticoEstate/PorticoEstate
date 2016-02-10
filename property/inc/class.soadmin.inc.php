@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 	phpgw::import_class('phpgwapi.datetime');
 
@@ -32,9 +32,9 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_soadmin
 	{
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -52,29 +52,28 @@
 
 		function set_initials($initials)
 		{
-			while (is_array($initials) && list($account_id,$value) = each($initials))
+			while(is_array($initials) && list($account_id, $value) = each($initials))
 			{
-				$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
 				if($value)
 				{
 					if(!$this->get_initials($account_id))
 					{
 						$account_lid	= $GLOBALS['phpgw']->accounts->id2lid($account_id);
-						$this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )",__LINE__,__FILE__);
+						$this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )", __LINE__, __FILE__);
 					}
 				}
 			}
 		}
 
-
 		function read_fm_id()
 		{
 			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr DESC,start_date DESC";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$name = '';
 			$fm_ids = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$old = false;
 				if($name == $this->db->f('name'))
@@ -96,7 +95,7 @@
 			return array_reverse($fm_ids);
 		}
 
-		function edit_id($values=array())
+		function edit_id($values = array())
 		{
 			if(!isset($values['select']) || !is_array($values['select']))
 			{
@@ -115,8 +114,8 @@
 				}
 
 				$sql = "SELECT value,descr, max(start_date) as start_date FROM fm_idgenerator WHERE name='{$field}' GROUP BY value, descr ORDER BY start_date ASC";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
+				$this->db->query($sql, __LINE__, __FILE__);
+				while($this->db->next_record())
 				{
 					$value			= $this->db->f('value');
 					$descr			= $this->db->f('descr');
@@ -126,19 +125,19 @@
 				if($start_date > $old_start_date)
 				{
 					$sql = "INSERT INTO fm_idgenerator (name, descr, value, start_date ) VALUES ('{$field}','{$descr}', '{$values[$field]}','{$start_date}')";
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 				}
-				else if ($start_date < $old_start_date)
+				else if($start_date < $old_start_date)
 				{
 					$sql = "DELETE FROM fm_idgenerator WHERE name = name AND start_date > {$start_date}";
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					$sql = "INSERT INTO fm_idgenerator (name, descr, value, start_date ) VALUES ('{$field}','{$descr}', '{$values[$field]}','{$start_date}')";
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 				}
 				else
 				{
 					$sql = "UPDATE fm_idgenerator SET value = '{$values[$field]}' WHERE name='{$field}' AND start_date  = {$start_date}";
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
 
@@ -147,4 +146,3 @@
 			return $receipt;
 		}
 	}
-

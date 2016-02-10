@@ -3,4 +3,5 @@
 	
 	class booking_sopermission_organization extends booking_sopermission
 	{
+		
 	}

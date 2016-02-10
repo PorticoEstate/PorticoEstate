@@ -25,13 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
 	phpgw::import_class('property.solocation');
 
 	class location_finder
 	{
+
 		private $so;
 		
 		public function __construct()
@@ -54,14 +54,14 @@
 
 			$children =  execMethod('property.solocation.get_children', $parent_location_code);
 			
-			foreach ($children as &$entry)
+			foreach($children as &$entry)
 			{
 				$entry['id'] = "{$parent_location_code}-{$entry['id']}";
 			}
 
 			return $children;
 
-/*
+			/*
 			// Property level
 			if ($level == 1)
 			{
@@ -90,17 +90,17 @@
 
 			return $buildings_on_property;
 
-*/
+			 */
 		}
     
 		function get_building_location_code($location_code)
 		{
-			if( strlen( $location_code ) == 6 )
+			if(strlen($location_code) == 6)
 			{
 				$location_code_arr = explode('-', $location_code, 2);
 				$building_location_code = $location_code_arr[0];
 			}
-			else if( strlen( $location_code ) > 6 )
+			else if(strlen($location_code) > 6)
 			{
 				$location_code_arr = explode('-', $location_code, 3);
 				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
