@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a Facilities Management System.
 	 *
@@ -53,9 +52,10 @@
 			'Tjeneste'	 => 'kostra_id',
 			'Belop [kr]' => 'belop'
 		);
-		var $header = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA', 'Belop [kr]');
+		var $header = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA',
+			'Belop [kr]');
 
-		function import_conv()
+		function __construct()
 		{
 			$this->db = clone($GLOBALS['phpgw']->db);
 			$this->soXport = CreateObject('property.soXport');
@@ -146,17 +146,17 @@
 
 				if($name == 'pmwrkord_code')
 				{
-					if(!$workorder = $workorders[(int) $value]['order'])
+					if(!$workorder = $workorders[(int)$value]['order'])
 					{
-						if($this->soXport->check_order((int) $value))
+						if($this->soXport->check_order((int)$value))
 						{
-							$workorder = execMethod('property.soworkorder.read_single', (int) $value);
-							$workorders[(int) $value]['order'] = $workorder;
-							$workorders[(int) $value]['project_id'] = $this->soXport->get_project((int) $value);//Agresso prosjekt
+							$workorder = execMethod('property.soworkorder.read_single', (int)$value);
+							$workorders[(int)$value]['order'] = $workorder;
+							$workorders[(int)$value]['project_id'] = $this->soXport->get_project((int)$value);//Agresso prosjekt
 						}
 					}
-					$buffer[$this->id]['project_id'] = $workorders[(int) $value]['project_id'];//Agresso prosjekt
-					$buffer[$this->id]['dimb'] = $workorders[(int) $value]['order']['ecodimb']; // Ansvarssted
+					$buffer[$this->id]['project_id'] = $workorders[(int)$value]['project_id'];//Agresso prosjekt
+					$buffer[$this->id]['dimb'] = $workorders[(int)$value]['order']['ecodimb']; // Ansvarssted
 				}
 
 				if($name == 'spbudact_code')
@@ -174,11 +174,11 @@
 				{
 					if($invoice_common['auto_tax'])
 					{
-						$value = (int) $this->soXport->auto_tax($buffer[$this->id]['loc1']);
+						$value = (int)$this->soXport->auto_tax($buffer[$this->id]['loc1']);
 					}
 					else
 					{
-						$value = (int) $value;
+						$value = (int)$value;
 					}
 				}
 
@@ -249,12 +249,12 @@
 							break;
 					}
 
-					$buffer[$this->id]['dime'] = (int) substr($workorder['b_account_id'], -4); // Dim 6
+					$buffer[$this->id]['dime'] = (int)substr($workorder['b_account_id'], -4); // Dim 6
 				}
 				else
 				{
 					$buffer[$this->id]['dime'] = strlen($workorder['cat_id']) == 4 ? $workorder['cat_id'] : ''; // Dim 6
-					if ( strlen($workorder['b_account_id']) == 6 && $this->check_spbudact_code($workorder['b_account_id']))
+					if(strlen($workorder['b_account_id']) == 6 && $this->check_spbudact_code($workorder['b_account_id']))
 					{
 						$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
 					}
@@ -262,7 +262,6 @@
 					{
 						$buffer[$this->id]['spbudact_code'] = '';
 					}
-					
 				}
 			}
 			else
@@ -302,7 +301,7 @@
 							break;
 					}
 
-					$buffer[$this->id]['dime'] = (int) substr($_spbudact_code, -4); // Dim 6
+					$buffer[$this->id]['dime'] = (int)substr($_spbudact_code, -4); // Dim 6
 				}
 				else
 				{
@@ -409,5 +408,4 @@
 			$receipt['message'][] = array('msg' => lang('Successfully imported %1 records into your invoice register.', $num) . ' ' . lang('ID') . ': ' . $bilagsnr);
 			return $receipt;
 		}
-
 	}	

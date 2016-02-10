@@ -4,7 +4,9 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$link_data/href">
-				<a href="{$link_data/href}"><xsl:value-of select="$link_data/label"/></a>
+				<a href="{$link_data/href}">
+					<xsl:value-of select="$link_data/label"/>
+				</a>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$link_data/label" />

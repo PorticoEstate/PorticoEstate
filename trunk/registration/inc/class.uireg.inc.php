@@ -65,6 +65,9 @@
 				$sub = lang('Account registration');
 			}
 			$this->set_header_footer_blocks();
+			$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+			$this->template->set_var('css', $GLOBALS['phpgw']->common->get_css());
+			$this->template->set_var('javascript', $GLOBALS['phpgw']->common->get_javascript());
 			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' :: ' . $sub);
 			$this->template->pfp('out','header');
 		}
@@ -80,6 +83,7 @@
 			{
 				$this->simple_screen ('error_general.tpl', $GLOBALS['phpgw']->common->error_list ($errors));
 			}
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
 
 			$show_username_prompt = True;
 			/* Note that check_select_username() may not return */

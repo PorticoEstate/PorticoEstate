@@ -2,13 +2,12 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
+	<div class="identifier-header">
+		<h1>
 		<xsl:value-of select="php:function('lang', 'edit user')" />
-</h1>
-</div>
-	<div class="yui-navset yui-navset-top" id="edit_user_tabview">
+		</h1>
+	</div>
+	<div id="edit_user_tabview">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 
 			<form action="#" method="post" name="form">
@@ -61,13 +60,17 @@
 				</table>
 		</div>
 						<div id="groups">
-							<h2><xsl:value-of select="php:function('lang', 'groups')" /></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'groups')" />
+					</h2>
 							<ul class="group_list">
 								<xsl:apply-templates select="group_list" />
 							</ul>
 						</div>
 						<div id="apps">
-							<h2><xsl:value-of select="php:function('lang', 'applications')" /></h2>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'applications')" />
+					</h2>
 							<table class="app_list">
 								<thead>
 									<tr>
@@ -90,9 +93,15 @@
 
 			</div>
 				<div class="form-buttons">
-					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-					<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-					<xsl:variable name="lang_delete"><xsl:value-of select="php:function('lang', 'delete')" /></xsl:variable>
+				<xsl:variable name="lang_save">
+					<xsl:value-of select="php:function('lang', 'save')" />
+				</xsl:variable>
+				<xsl:variable name="lang_cancel">
+					<xsl:value-of select="php:function('lang', 'cancel')" />
+				</xsl:variable>
+				<xsl:variable name="lang_delete">
+					<xsl:value-of select="php:function('lang', 'delete')" />
+				</xsl:variable>
 					<input type="submit" name="save" value="{$lang_save}" title = "{$lang_save}" />
 					<input type="submit" name="delete" value="{$lang_delete}" title = "{$lang_delete}" />
 					<input type="submit" name="cancel" value="{$lang_cancel}" title = "{$lang_cancel}" />
@@ -103,7 +112,7 @@
 </xsl:template>
 	
 <!-- BEGIN group_list -->
-	<xsl:template match="group_list">
+<xsl:template match="group_list">
 		<li>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -141,11 +150,11 @@
 
 			<xsl:value-of select="account_lid"/>
 		</li>
-	</xsl:template>
+</xsl:template>
 
 <!-- BEGIN app_list -->
 
-	<xsl:template match="app_list">
+<xsl:template match="app_list">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -210,7 +219,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
 <xsl:template match="options">
 	<option value="{id}">

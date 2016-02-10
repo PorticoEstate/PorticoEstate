@@ -21,8 +21,7 @@
 							'create' => true,
 						),
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		
@@ -43,8 +42,7 @@
 							'write' => true,
 						)
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 	}

@@ -1,23 +1,22 @@
 <?php
-include_class('rental', 'model', 'inc/model/');
+	include_class('rental', 'model', 'inc/model/');
 
-/**
+	/**
  * Class representing notifications, e.g. reminders for ending contracts, time for dismissals and coming
  * regulations. The class is designed so that it can be used to represent general notification data, such
  * as notification audience, notification date data, and a user message. It can also represent specific users
  * workbench notification, holding data such as date of dismissal.
  */
-class rental_notification extends rental_model
-{
+	class rental_notification extends rental_model
+	{
+
 	// Contants for recurrence
 	const RECURRENCE_NEVER = 0;
 	const RECURRENCE_ANNUALLY = 1;
 	const RECURRENCE_MONTHLY = 2;
 	const RECURRENCE_WEEKLY = 3;
 
-
 	public static $so;		// Storage object
-
 	protected $id;				// Notification id
 	protected $contract_id; 	// Contract identifier
 	protected $location_id;		// Location identifier (audience)
@@ -27,7 +26,6 @@ class rental_notification extends rental_model
 	protected $message;			// User message
 	protected $field_of_responsibility;	//The title of the field of responsibility (location)
 	protected $originated_from;
-
 
 	/**
 	 * Constructor for creating a notification data object
@@ -41,20 +39,13 @@ class rental_notification extends rental_model
 	 * @param $dismissed date	The date for dismissal (workbench notification), optional
 	 */
 	public function __construct(
-		int $id = null,
-		int $account_id = null,
-		int $location_id = null,
-		int $contract_id = null,
-		int $date = null,
-		string $message = null,
-		$recurrence = RECURRENCE_NEVER,
-		int $last_notified = null,
-		string $title = null,
-		int $originated_from = null)
+		int $id = null, int $account_id = null, int $location_id = null, int $contract_id = null, int $date = null, string $message = null, $recurrence = RECURRENCE_NEVER, int $last_notified = null, string $title = null, int $originated_from = null)
 	{
 		$this->id = (int)$id;
-		if($account_id > 0) {$this->account_id = (int)$account_id;}
-		if($location_id > 0) {$this->location_id = (int)$location_id;}
+			if($account_id > 0)
+			{ $this->account_id = (int)$account_id;}
+			if($location_id > 0)
+			{ $this->location_id = (int)$location_id;}
 		$this->contract_id = (int)$contract_id;
 		$this->date = $date;
 		$this->last_notified = $last_notified;
@@ -77,7 +68,7 @@ class rental_notification extends rental_model
 
 	public function get_account_id()
 	{
-		if($this->account_id && $this->account_id > 0 )
+			if($this->account_id && $this->account_id > 0)
 			return $this->account_id;
 		return null;
 	}
@@ -132,7 +123,7 @@ class rental_notification extends rental_model
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		$recurrence = lang('never'); // Default
-		switch ($this->get_recurrence())
+			switch($this->get_recurrence())
 		{
 			case rental_notification::RECURRENCE_ANNUALLY:
 				$recurrence = lang('annually');
@@ -152,7 +143,8 @@ class rental_notification extends rental_model
 		}
 		
 		
-		if($this->get_field_of_responsibility()){
+			if($this->get_field_of_responsibility())
+			{
 			$responsibility = lang($this->get_field_of_responsibility());
 		}
 		
@@ -178,7 +170,8 @@ class rental_notification extends rental_model
 	 */
 	public static function get_so()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.sonotification');
 		}
 
@@ -193,33 +186,36 @@ class rental_notification extends rental_model
 	}
 
 	// Get workbench notifications
-	public static function get_workbench_notifications($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array()){
+		public static function get_workbench_notifications($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		{
 		$so = self::get_so();
 		return $so->get_workbench_notifications($start, $results, $sort, $dir, $query, $search_option, $filters);
 	}
 
 	// Delete a notification
-	public static function delete_notification($id){
+		public static function delete_notification($id)
+		{
 		$so = self::get_so();
 		return $so->delete_notification($id);
 	}
 
 	// Dismiss a workbench notification
-	public static function dismiss_notification($id,$ts_dismissed){
+		public static function dismiss_notification($id, $ts_dismissed)
+		{
 		$so = self::get_so();
-		return $so->dismiss_notification($id,$ts_dismissed);
+			return $so->dismiss_notification($id, $ts_dismissed);
 	}
 	
-	public static function dismiss_notification_for_all($notification_id){
+		public static function dismiss_notification_for_all($notification_id)
+		{
 		$so = self::get_so();
 		return $so->dismiss_notification_for_all($notification_id);
 	}
 
 	// Populates the workbench on a given day
-	public static function populate_workbench_notifications($day = null){
+		public static function populate_workbench_notifications($day = null)
+		{
 		$so = self::get_so();
 		return $so->populate_workbench_notifications();
 	}
-
-}
-?>
+	}

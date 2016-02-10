@@ -1,6 +1,8 @@
 <?php
+
 	class import_conversion
 	{
+
 		protected $bofiles;
 		protected $db;
 		public $messages = array();
@@ -18,7 +20,7 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->bofiles		= CreateObject('property.bofiles');
 			$this->category_dir = "entity_{$this->entity_id}_{$this->cat_id}";
-			$this->soentity		= CreateObject('property.soentity',$this->entity_id,$this->cat_id);
+			$this->soentity = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
 		}
 
 		public function add($data)
@@ -26,40 +28,40 @@
 			$error = false;
 //_debug_array($data);
 
-			$values = $this->soentity->read_single(array('id' => $data[0] ));
+			$values = $this->soentity->read_single(array('id' => $data[0]));
 
 			if(isset($values['location_code']))
 			{
-				$filename = sprintf('%05s',$data[1]);
+				$filename = sprintf('%05s', $data[1]);
 				$from_file	= "{$this->dir}/{$filename}.jpg";
 				if(!is_file($from_file))
 				{
-					$this->errors[] ="'Missing file: {$from_file}";				
+					$this->errors[] = "'Missing file: {$from_file}";
 				}				
 				
 				$location = explode('-', $values['location_code']);
 
 				$to_file	= "{$this->bofiles->fakebase}/{$this->category_dir}/{$location[0]}/{$data[0]}/{$filename}.jpg";
 
-				if ($this->bofiles->vfs->file_exists(array
+				if($this->bofiles->vfs->file_exists(array
 					(
 						'string' => $to_file,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
 				{
-					$this->errors[] ="This file already exists: {$to_file}";
+					$this->errors[] = "This file already exists: {$to_file}";
 				}
-				else if (!$this->debug)
+				else if(!$this->debug)
 				{
 					$this->bofiles->create_document_dir("{$this->category_dir}/{$location[0]}/{$data[0]}");
 					$this->bofiles->vfs->override_acl = 1;
 
-					if(!$this->bofiles->vfs->cp (array (
+					if(!$this->bofiles->vfs->cp(array(
 						'from'	=> $from_file,
 						'to'	=> $to_file,
-						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
-						$this->errors[] ="'Failed to upload file: {$to_file}";
+						$this->errors[] = "'Failed to upload file: {$to_file}";
 					}
 					else
 					{

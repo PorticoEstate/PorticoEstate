@@ -8,7 +8,6 @@
 	* @version $Id$
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -22,15 +21,14 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-	$theme_styles = array();
+	$stylesheets = array();
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		phpgwapi_yui::load_widget('dragdrop');
-		phpgwapi_yui::load_widget('element');
-		phpgwapi_yui::load_widget('container');
-		phpgwapi_yui::load_widget('connection');
-		phpgwapi_yui::load_widget('resize');
-		phpgwapi_yui::load_widget('layout');
 
 		$javascripts = array
 		(
@@ -39,45 +37,35 @@
 
 		);
 
-		$theme_styles = array
-		(
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/base.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/button/assets/skins/sam/button.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-			"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css"
-		);
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/base.css";
 	}
-	phpgwapi_yui::load_widget('button');
 
 	if(file_exists(PHPGW_SERVER_ROOT . '/phpgwapi/templates/simple/css/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] . '.css'))
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 	else
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/simple.css";
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/simple.css";
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'simple';
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/base/css/base.css"))
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/simple/css/base.css"))
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/base.css";
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/base.css";
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"))
 	{
-		$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 
-	foreach ( $theme_styles as $style )
+	foreach ( $stylesheets as $style )
 	{
 		$tpl->set_var('theme_style', $style);
 		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);

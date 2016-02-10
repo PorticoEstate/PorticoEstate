@@ -21,7 +21,7 @@ dl.form-col {
 }
 
 #frontend dl.proplist-col {
-    width: 600px; !important
+    width: 600px !important;
 }
 
 table#header {
@@ -263,3 +263,5 @@ div.error {
 	border:1px solid #9F6000;
 	color: white;
 }
+
+h1 {font-size: 2em}

@@ -8,13 +8,11 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * This is the manual entry for the overview
 	 */
-
 	$GLOBALS['phpgw']->help->set_params(array('app_name'	=> 'property',
 												'title'		=> lang('property') . ' - ' . lang('overview'),
 												'controls'	=> array('down' => 'property.php'

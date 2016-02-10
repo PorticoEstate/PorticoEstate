@@ -24,5 +24,4 @@
 		{
 			return $this->so->get_categories();
 		}
-		
 	}

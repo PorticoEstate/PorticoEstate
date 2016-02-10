@@ -1,18 +1,27 @@
 <?php
-phpgw::import_class('phpgwapi.yui');
-phpgw::import_class('bim.bobimitem');
-phpgw::import_class('bim.sobimitem');
-/*
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('bim.bobimitem');
+	phpgw::import_class('bim.sobimitem');
+	/*
  * This class serves as the 'Controller' or 'Container' in a dependancy injection context
  */
-interface uibimitem {
+
+	interface uibimitem
+	{
+
 	public function showItems();
+
 	public function showBimItem();
-}
-class bim_uibimitem implements uibimitem {
+	}
+
+	class bim_uibimitem extends phpgwapi_uicommon_jquery implements uibimitem
+	{
+
 	private $db;
 
-	public function __construct() {
+		public function __construct()
+		{
+			parent::__construct();
 		$this->bocommon = CreateObject('property.bocommon');
 
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -25,19 +34,33 @@ class bim_uibimitem implements uibimitem {
 		'showBimItem' => true
 	);
 	
-	public function showItems()
+		function query()
 	{
-		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
-		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array
+				(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'filter' => $this->filter,
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'status_id' => phpgw::get_var('status_id')
+			);
+
+
 		$modelId = phpgw::get_var("modelId");
-		//$modelId = 3;
 		if(empty($modelId))
 		{
-			echo "No modelId!";
+				$bimItems = array();
 		}
 		else
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showitems'));
 			$sobimitem = new sobimitem_impl($this->db);
 			$sobimitem->setModelId($modelId);
 			$bobimitem = new bobimitem_impl();
@@ -45,13 +68,12 @@ class bim_uibimitem implements uibimitem {
 			$items = $bobimitem->fetchItemsByModelId();
 			$bimItems = array();
 			$count = count(($items));
-			foreach( $items as $bimItem)
+				foreach($items as $bimItem)
 			{
-				/* @var $bimItem BimItem*/
-				array_push($bimItems, $bimItem->transformObjectToArray());//$bimItem->);
+					/* @var $bimItem BimItem */
+					array_push($bimItems, $bimItem->transformObjectToArray());
 			}
-			//$bimItems = print_r($items, true);
-			
+				/*
 			$data = array
 			(
 				'someData' => "data",
@@ -59,23 +81,98 @@ class bim_uibimitem implements uibimitem {
 				'count' => $count,
 				'bimItems' => array("item" => $bimItems)
 			);
+				 */
+			}
+			$results['results'] = $bimItems;
+			$results['total_records'] = count(($items));
+			$results['start'] = $params['start'];
+			$results['sort'] = 'databaseId';
+			$results['dir'] = $params['sort'] ? $params['sort'] : 'ASC';
+			$results['draw'] = $draw;
 			
-			$this->setupBimCss();
-			$GLOBALS['phpgw']->xslttpl->set_var('bimitems',$data);
+			return $this->jquery_results($results);
+		}
+
+		public function showItems()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 		}
 		
+			$data = array(
+				'datatable_name' => lang('Objects'),
+				'js_lang' => js_lang('edit', 'add'),
+				'form' => array(
+				/* 		'toolbar' => array(
+				  'item' => array(
+				  array(
+				  'type'	 => 'link',
+				  'value'	 => lang('new'),
+				  'href'	 => self::link(array('menuaction' => 'bim.uibim.upload')),
+				  'class'	 => 'new_item'
+				  ),
+				  )
+				  ), */
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'bim.uibimitem.showItems', 'modelId' => phpgw::get_var("modelId"),
+						'phpgw_return_as' => 'json')),
+					'ungroup_buttons' => true,
+					'allrows' => true,
+					'field' => array(
+						array(
+							'key' => 'databaseId',
+							'label' => lang('Database id'),
+							'sortable' => true,
+						//	'formatter' => 'formatLinkPending'
+						),
+						array(
+							'key' => 'guid',
+							'label' => lang('guid'),
+							'sortable' => true,
+						//	'formatter' => 'formatLinkPending'
+						),
+						array(
+							'key' => 'type',
+							'label' => lang('type'),
+							'sortable' => true
+						)
+					)
+				)
+			);
+
+
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'modelGuid',
+						'source' => 'guid'
+					),
+				)
+			);
+
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'bim.uibimitem.showBimItem'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+
+			self::render_template_xsl(array('datatable_jquery'), $data);
 	}
+
 	public function showBimItem()
 	{
-		/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw']->common->phpgw_header(true);*/
-			
-		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
-		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelGuid = phpgw::get_var("modelGuid");
-		//$modelId = 3;
 		if(empty($modelGuid))
 		{
 			echo "No guid!";
@@ -91,7 +188,8 @@ class bim_uibimitem implements uibimitem {
 		}
 	}
 	
-	private function testTemplate() {
+		private function testTemplate()
+		{
 		phpgw::import_class('phpgwapi.template_portico');
 		$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
@@ -107,12 +205,13 @@ class bim_uibimitem implements uibimitem {
 		$GLOBALS['phpgw']->template->pfp('out', 'test');
 		unset($tpl_vars);
 	}
-	private function setupBimCss() {
-    if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
+
+		private function setupBimCss()
+		{
+			if(!isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css))
+			{
             $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
         }
         $GLOBALS['phpgw']->css->add_external_file('bim/templates/base/css/bim.css');
     }
-	
-
-}
+	}

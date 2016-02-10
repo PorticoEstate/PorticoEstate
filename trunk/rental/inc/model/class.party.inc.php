@@ -1,16 +1,16 @@
 <?php
-/**
+	/**
  * Class that represents a contract party
  *
  */
-include_class('rental', 'contract', 'inc/model/');
-include_class('rental', 'result_unit', 'inc/locations/');
-include_class('rental', 'organisational_location', 'inc/locations/');
+	include_class('rental', 'contract', 'inc/model/');
+	include_class('rental', 'result_unit', 'inc/locations/');
+	include_class('rental', 'organisational_location', 'inc/locations/');
 
-class rental_party extends rental_model
-{
-	public static $so;
+	class rental_party extends rental_model
+	{
 
+		public static $so;
     protected $id;
     protected $identifier;
     protected $first_name;
@@ -18,28 +18,22 @@ class rental_party extends rental_model
     protected $location_id;
     protected $is_inactive;
     protected $comment;
-
     protected $title;
     protected $company_name;
     protected $department;
-
     protected $address_1;
     protected $address_2;
     protected $postal_code;
     protected $place;
     protected $postal_country_code;
-
     protected $phone;
     protected $mobile_phone;
     protected $fax;
     protected $email;
     protected $url;
-
     protected $account_number;
     protected $reskontro;
-
 	protected $contracts;
-	
 	protected $sync_data;
 	protected $sync_problems = array();
 	protected $org_enhet_id;
@@ -58,7 +52,8 @@ class rental_party extends rental_model
 	 */
 	public static function get_so()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soparty');
 		}
 
@@ -95,7 +90,8 @@ class rental_party extends rental_model
 	{
 		$so = self::get_so();
 
-		if (!$this->contracts) {
+			if(!$this->contracts)
+			{
 			$this->contracts = rental_contract::get_contracts_for_tentant($this->get_id);
 		}
 
@@ -107,168 +103,192 @@ class rental_party extends rental_model
 		$this->id = $id;
 	}
 
-	public function get_id() { return $this->id; }
+		public function get_id()
+		{ return $this->id;}
 
 	public function set_identifier($identifier)
 	{
 		$this->identifier = $identifier;
 	}
 	
-	public function get_org_enhet_id() { return $this->org_enhet_id; }
+		public function get_org_enhet_id()
+		{ return $this->org_enhet_id;}
 
 	public function set_org_enhet_id($org_enhet_id)
 	{
 		$this->org_enhet_id = $org_enhet_id;
 	}
 	
-	public function get_unit_leader() { return $this->unit_leader; }
+		public function get_unit_leader()
+		{ return $this->unit_leader;}
 
 	public function set_unit_leader($unit_leader)
 	{
 		$this->unit_leader = $unit_leader;
 	}
 
-	public function get_sync_data() { return $this->sync_data; }
+		public function get_sync_data()
+		{ return $this->sync_data;}
 	
 	public function set_sync_data($sync_data)
 	{
 		$this->sync_data = $sync_data;
 	}
 	
-	public function get_sync_problems() { return $this->sync_problems; }
+		public function get_sync_problems()
+		{ return $this->sync_problems;}
 
 	public function add_sync_problem($sync_problem)
 	{
 		$this->sync_problems[] = $sync_problem;	
 	}
 
-	public function get_identifier() { return $this->identifier; }
+		public function get_identifier()
+		{ return $this->identifier;}
 
 	public function set_first_name($first_name)
 	{
 		$this->first_name = $first_name;
 	}
 
-	public function get_first_name() { return $this->first_name; }
+		public function get_first_name()
+		{ return $this->first_name;}
 
 	public function set_last_name($last_name)
 	{
 		$this->last_name = $last_name;
 	}
 
-	public function get_last_name() { return $this->last_name; }
+		public function get_last_name()
+		{ return $this->last_name;}
 
 	public function set_location_id(int $location_id)
 	{
 		$this->location_id = (int)$location_id;
 	}
 
-	public function get_location_id() { return $this->location_id; }
+		public function get_location_id()
+		{ return $this->location_id;}
 
 	public function set_is_inactive(bool $is_inactive)
 	{
 		$this->is_inactive = (bool)$is_inactive;
 	}
 
-	public function is_inactive() { return $this->is_inactive; }
+		public function is_inactive()
+		{ return $this->is_inactive;}
 
 	public function set_title($title)
 	{
 		$this->title = $title;
 	}
 
-	public function get_title() { return $this->title; }
+		public function get_title()
+		{ return $this->title;}
 
 	public function set_company_name($company_name)
 	{
 		$this->company_name = $company_name;
 	}
 
-	public function get_company_name() { return $this->company_name; }
+		public function get_company_name()
+		{ return $this->company_name;}
 
 	public function set_department($department)
 	{
 		$this->department = $department;
 	}
 
-	public function get_department() { return $this->department; }
+		public function get_department()
+		{ return $this->department;}
 
 	public function set_address_1($address_1)
 	{
 		$this->address_1 = $address_1;
 	}
 
-	public function get_address_1() { return $this->address_1; }
+		public function get_address_1()
+		{ return $this->address_1;}
 
 	public function set_address_2($address_2)
 	{
 		$this->address_2 = $address_2;
 	}
 
-	public function get_address_2() { return $this->address_2; }
+		public function get_address_2()
+		{ return $this->address_2;}
 
 	public function set_postal_code($postal_code)
 	{
 		$this->postal_code = $postal_code;
 	}
 
-	public function get_postal_code() { return $this->postal_code; }
+		public function get_postal_code()
+		{ return $this->postal_code;}
 
 	public function set_place($place)
 	{
 		$this->place = $place;
 	}
 
-	public function get_place() { return $this->place; }
+		public function get_place()
+		{ return $this->place;}
 	
 	public function set_postal_country_code($postal_country_code)
 	{
 		$this->postal_country_code = $postal_country_code;
 	}
 
-	public function get_postal_country_code(){ return $this->postal_country_code; }
+		public function get_postal_country_code()
+		{ return $this->postal_country_code;}
 
 	public function set_phone($phone)
 	{
 		$this->phone = $phone;
 	}
 
-	public function get_phone() { return $this->phone; }
+		public function get_phone()
+		{ return $this->phone;}
 	
 	public function set_mobile_phone($mobile_phone)
 	{
 		$this->mobile_phone = $mobile_phone;
 	}
 
-	public function get_mobile_phone() { return $this->mobile_phone; }
+		public function get_mobile_phone()
+		{ return $this->mobile_phone;}
 
 	public function set_fax($fax)
 	{
 		$this->fax = $fax;
 	}
 
-	public function get_fax() { return $this->fax; }
+		public function get_fax()
+		{ return $this->fax;}
 
 	public function set_email($email)
 	{
 		$this->email = $email;
 	}
 
-	public function get_email() { return $this->email; }
+		public function get_email()
+		{ return $this->email;}
 
 	public function set_url($url)
 	{
 		$this->url = $url;
 	}
 
-	public function get_url() { return $this->url; }
+		public function get_url()
+		{ return $this->url;}
 
 	public function set_account_number($account_number)
 	{
 		$this->account_number = $account_number;
 	}
 
-	public function get_account_number() { return $this->account_number; }
+		public function get_account_number()
+		{ return $this->account_number;}
 
 	public function set_reskontro($reskontro)
 	{
@@ -310,7 +330,8 @@ class rental_party extends rental_model
 		return $name;
 	}
 
-	public function get_reskontro() { return $this->reskontro; }
+		public function get_reskontro()
+		{ return $this->reskontro;}
 
 	/**
 	 * Creates a new party.
@@ -348,7 +369,8 @@ class rental_party extends rental_model
 	public function serialize(rental_contract $contract = null)
 	{
 		$is_payer = '';
-		if(isset($contract) && $contract->get_payer_id() == $this->id){
+			if(isset($contract) && $contract->get_payer_id() == $this->id)
+			{
 			$is_payer = lang('is_payer');
 		}
 		$address_elements = array($this->address_1, $this->address_2, "{$this->postal_code} {$this->place}");
@@ -397,11 +419,7 @@ class rental_party extends rental_model
 			'responsibility_id' => $this->sync_data['responsibility_id'],
 			'org_enhet_id' => $this->get_org_enhet_id(),
 			'unit_leader' => $this->get_unit_leader(),
-			'sync_message' => implode('<br/>',$this->get_sync_problems())
+				'sync_message'		 => implode('<br/>', $this->get_sync_problems())
 		);
-		
-		
 	}
-
-}
-?>
+	}

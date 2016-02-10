@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -14,61 +15,61 @@
 				<xsl:apply-templates select="list_type"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- add / edit responsibility type-->
+<!-- add / edit responsibility type-->
 
-	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<script type="text/javascript">
+		self.name="first_Window";
+		<xsl:value-of select="lookup_functions"/>
+	</script>
+	<div id="tab-content">
+		<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+		<div id="general">
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-				<td>
-					<table cellpadding="2" cellspacing="2" align="left">
+			<div class="pure-control-group">
+				<dl>
 						<xsl:choose>
 							<xsl:when test="msgbox_data != ''">
-								<tr>
-									<td align="left" colspan="3">
+							<dt>
 										<xsl:call-template name="msgbox"/>
-									</td>
-								</tr>
+							</dt>
 							</xsl:when>
 						</xsl:choose>
+				</dl>
+                                                       
+				<form name="form_app" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
 						<xsl:choose>
 							<xsl:when test="value_id != ''">
-								<tr>
-									<td valign="top">
+							<div class="pure-control-group">
+								<label>
 										<xsl:value-of select="php:function('lang', 'id')"/>
-									</td>
-									<td>
+								</label>
 										<xsl:value-of select="value_id"/>
-									</td>
-								</tr>
+							</div>
 							</xsl:when>
 						</xsl:choose>
-						<form name="form_app" method="post" action="{$form_action}">
-							<tr>
-								<td>
+					<div class="pure-control-group">
+						<label>
 									<xsl:value-of select="php:function('lang', 'application')"/>
-								</td>
-								<td align="left">
+						</label>
 									<select name="appname" onChange="this.form.submit();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'application')"/>
 										</xsl:attribute>
 										<xsl:apply-templates select="apps_list/options"/>
 									</select>
-								</td>
-							</tr>
+					</div>
 						</form>
-						<form name="form_location" method="post" action="{$form_action}">
-							<tr>
-								<td>
+				<form name="form_location" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
+					<div class="pure-control-group">
+						<label>
 									<input type="hidden" name="appname" value="{value_appname}"/>
 									<xsl:value-of select="php:function('lang', 'location')"/>
-								</td>
-								<td align="left">
+						</label>
 									<select name="location" onChange="this.form.submit();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Select submodule')"/>
@@ -78,66 +79,58 @@
 										</option>
 										<xsl:apply-templates select="location_list/options"/>
 									</select>
-								</td>
-							</tr>
+					</div>
 						</form>
-					</table>
-					<tr>
-						<td>
-							<form name="form" method="post" action="{$form_action}">
-								<table cellpadding="2" cellspacing="2" align="left">
-									<tr>
-										<td>
+				<div class="pure-control-group">
+					<form name="form" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
+						<div class="pure-control-group">
+							<label>
 											<input type="hidden" name="values[appname]" value="{value_appname}"/>
 											<input type="hidden" name="values[location]" value="{value_location}"/>
 											<xsl:value-of select="php:function('lang', 'category')"/>
-										</td>
-										<td>
+							</label>
 											<xsl:call-template name="categories"/>
-										</td>
-									</tr>
-									<tr>
-										<td>
+						</div>
+						<div class="pure-control-group">
+							<label>
 											<xsl:value-of select="php:function('lang', 'name')"/>
-										</td>
-										<td>
+							</label>
 											<input type="text" name="values[name]" value="{value_name}" size="60">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'name')"/>
 												</xsl:attribute>
 											</input>
-										</td>
-									</tr>
-									<tr>
-										<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 											<xsl:value-of select="php:function('lang', 'descr')"/>
-										</td>
-										<td>
+							</label>
 											<textarea cols="60" rows="10" name="values[descr]">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'descr')"/>
 												</xsl:attribute>
 												<xsl:value-of select="value_descr"/>
 											</textarea>
-										</td>
-									</tr>
-									<tr>
-										<td class="th_text" valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 											<xsl:value-of select="php:function('lang', 'details')"/>
-										</td>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<!--  DATATABLE 0-->
-												<td>
-													<div id="paging_0"/>
-													<div id="datatable-container_0"/>
-												</td>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<table cellpadding="2" cellspacing="2" width="50%" align="center">
+							</label>
+							<div class = 'pure-u-md-1-2'>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+						<div class="pure-control-group">
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="php:function('lang', 'save')"/>
 												</xsl:variable>
@@ -147,73 +140,40 @@
 												<xsl:variable name="lang_cancel">
 													<xsl:value-of select="php:function('lang', 'cancel')"/>
 												</xsl:variable>
-												<tr height="50">
-													<td>
-														<input type="submit" name="values[save]" value="{$lang_save}">
+							<div class="pure-control-group">
+								<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'save')"/>
 															</xsl:attribute>
 														</input>
-													</td>
-													<td>
-														<input type="submit" name="values[apply]" value="{$lang_apply}">
+								<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}">
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'apply')"/>
 															</xsl:attribute>
 														</input>
-													</td>
-													<td>
-														<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+								<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}">
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'cancel')"/>
 															</xsl:attribute>
 														</input>
-													</td>
-												</tr>
-											</table>
-										</td>
-									</tr>
-								</table>
+							</div>
+						</div>
 							</form>
-						</td>
-					</tr>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
 		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-			var td_count = <xsl:value-of select="td_count"/>;
+		</div>
+	</div>
+</xsl:template>
 
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-					<!--permission:<xsl:value-of select="permission"/>, -->
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			<xsl:for-each select="myButtons">
-				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>
-	</xsl:template>
-
-	<!-- add / edit  -->
-	<xsl:template xmlns:php="http://php.net/xsl" match="edit_role">
+<!-- add / edit  -->
+<xsl:template xmlns:php="http://php.net/xsl" match="edit_role">
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
+	<div id="tab-content">
+		<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+		<div id="general">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
@@ -342,10 +302,12 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+		</div>
+	</div>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list_contact">
+<!-- New template-->
+<xsl:template match="list_contact">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -389,10 +351,10 @@
 			</xsl:choose>
 			<xsl:apply-templates select="table_add"/>
 		</table>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header_contact">
+<!-- New template-->
+<xsl:template match="table_header_contact">
 		<xsl:variable name="sort_location">
 			<xsl:value-of select="sort_location"/>
 		</xsl:variable>
@@ -437,15 +399,15 @@
 				<xsl:value-of select="lang_edit"/>
 			</td>
 			<!--
-<td class="th_text" width="5%" align="center">
-<xsl:value-of select="lang_delete"/>
-</td>
--->
+		<td class="th_text" width="5%" align="center">
+		<xsl:value-of select="lang_delete"/>
+		</td>
+		-->
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values_contact">
+<!-- New template-->
+<xsl:template match="values_contact">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -506,10 +468,10 @@
 				</xsl:when>
 			</xsl:choose>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_add">
+<!-- New template-->
+<xsl:template match="table_add">
 		<xsl:variable name="add_action">
 			<xsl:value-of select="add_action"/>
 		</xsl:variable>
@@ -540,10 +502,10 @@
 				</xsl:when>
 			</xsl:choose>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- add / edit contact-->
-	<xsl:template match="edit_contact">
+<!-- add / edit contact-->
+<xsl:template match="edit_contact">
 		<div align="left">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
@@ -697,20 +659,20 @@
 				</table>
 			</form>
 		</div>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="options">
+<!-- New template-->
+<xsl:template match="options">
 		<option value="{id}">
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected"/>
 			</xsl:if>
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</option>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="checkbox">
+<!-- New template-->
+<xsl:template match="checkbox">
 		<tr>
 			<td value="{id}">
 				<input type="checkbox" name="values[location_level][]" value="{id}">
@@ -724,4 +686,4 @@
 				<xsl:value-of select="name"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

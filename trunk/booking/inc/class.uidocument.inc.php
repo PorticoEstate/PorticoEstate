@@ -1,15 +1,20 @@
 <?php
 	phpgw::import_class('booking.uicommon');
 
+//        phpgw::import_class('booking.uidocument_building');
+//	phpgw::import_class('booking.uipermission_building');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	abstract class booking_uidocument extends booking_uicommon
 	{
+
 		protected
 			$documentOwnerType = null,
 			$module;
-		
 		public 
 			$public_functions = array(
 				'index'			=> true,
+			'query' => true,
 				'show'			=> true,
 				'add'			=> true,
 				'edit'			=> true,
@@ -21,7 +26,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();
 			
 			$this->set_business_object();
 			
@@ -43,16 +48,21 @@
 		
 		protected function get_document_owner_type()
 		{
-			if (!$this->documentOwnerType) { $this->set_document_owner_type(); }
+			if(!$this->documentOwnerType)
+			{
+				$this->set_document_owner_type();
+			}
 			return $this->documentOwnerType;
 		}
 		
 		protected function set_document_owner_type($type = null)
 		{
-			if (is_null($type)) {
+			if(is_null($type))
+			{
 				$class = get_class($this);
 				$r = new ReflectionObject($this);
-				while(__CLASS__ != ($current_class = $r->getParentClass()->getName())) {
+				while(__CLASS__ != ($current_class = $r->getParentClass()->getName()))
+				{
 					$class =  $current_class;
 					$r = $r->getParentClass();
 				}
@@ -65,12 +75,13 @@
 		public function get_parent_url_link_params()
 		{
 			$inlineParams = $this->get_inline_params();
-			return array('menuaction' => sprintf($this->module.'.ui%s.show', $this->get_document_owner_type()), 'id' => $inlineParams['filter_owner_id']);
+			return array('menuaction' => sprintf($this->module . '.ui%s.show', $this->get_document_owner_type()),
+				'id' => $inlineParams['filter_owner_id']);
 		}
 		
 		public function redirect_to_parent_if_inline()
 		{
-			if ($this->is_inline())
+			if($this->is_inline())
 			{
 				$this->redirect($this->get_parent_url_link_params());
 			}
@@ -80,7 +91,7 @@
 		
 		public function get_owner_typed_link_params($action, $params = array())
 		{
-			$action = sprintf($this->module.'.uidocument_%s.%s', $this->get_document_owner_type(), $action);
+			$action = sprintf($this->module . '.uidocument_%s.%s', $this->get_document_owner_type(), $action);
 			return array_merge(array('menuaction' => $action), $this->apply_inline_params($params));
 		}
 		
@@ -91,7 +102,8 @@
 		
 		public function apply_inline_params(&$params)
 		{
-			if($this->is_inline()) {
+			if($this->is_inline())
+			{
 				$params['filter_owner_id'] = intval(phpgw::get_var('filter_owner_id'));
 			}
 			return $params;
@@ -110,58 +122,32 @@
 		
 		public function get_inline_params()
 		{
-			return array('filter_owner_id' => intval(phpgw::get_var('filter_owner_id', 'any', false)));
+			return array('filter_owner_id' => phpgw::get_var('filter_owner_id', 'int'));
 		}
 		
 		public function is_inline()
 		{
-			return false != phpgw::get_var('filter_owner_id', 'any', false);
+			return false != phpgw::get_var('filter_owner_id', 'int', 'REQUEST', false);
 		}
 		
 		public static function generate_inline_link($documentOwnerType, $documentOwnerId, $action)
 		{
-			return self::link(array('menuaction' => sprintf('booking.uidocument_%s.%s', $documentOwnerType, $action), 'filter_owner_id' => $documentOwnerId));
+			return self::link(array('menuaction' => sprintf('booking.uidocument_%s.%s', $documentOwnerType, $action),
+				'filter_owner_id' => $documentOwnerId));
 		}
 		
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
 			}
 
 			$this->redirect_to_parent_if_inline();
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			
-			// if($_SESSION['showall'])
-			// {
-			// 	$active_botton = lang('Show only active');
-			// }else{
-			// 	$active_botton = lang('Show all');
-			// }
-			
-						
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							// array(
-							// 	'type' => 'link',
-							// 	'value' => $active_botton,
-							// 	'href' => self::link(array('menuaction' => $this->get_owner_typed_link('active')))
-							// ),
-						)
 					),
 				),
 				'datatable' => array(
@@ -170,7 +156,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Document Name'),
-							'formatter' => 'YAHOO.booking.formatLink',
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'owner_name',
@@ -185,9 +171,16 @@
 							'label' => lang('Category'),
 						),
 						array(
-							'key' => 'actions',
-							'label' => lang('Actions'),
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\', \'%s\')', lang('edit'), lang('delete')),
+							'key' => 'opcion_edit',
+							'label' => lang('Edit'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+							'sortable' => false
+						),
+						array(
+							'key' => 'opcion_delete',
+							'label' => lang('Delete'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+							'sortable' => false
 						),
 						array(
 							'key' => 'link',
@@ -197,19 +190,16 @@
 				)
 			);
 			
-			
-			if ($this->bo->allow_create()) {
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type' => 'link',
-					'value' => lang('New document'),
-					'href' => $this->get_owner_typed_link('add')
-			 	));
+			$data['datatable']['actions'][] = array();
+			if($this->bo->allow_create())
+			{
+				$data['datatable']['new_item']	= $this->get_owner_typed_link('add');
 			}	
 			
-			self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			$documents = $this->bo->read();
 			foreach($documents['results'] as &$document)
@@ -217,17 +207,20 @@
 				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
 				$document['category'] = lang(self::humanize($document['category']));
 				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
-				
-				$document_actions = array();
-				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
-				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
-				
-				$document['actions'] = $document_actions;
+//				$document_actions = array();
+//				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+//				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+//				
+//				$document['actions'] = $document_actions;
+
+				if($this->bo->allow_write($document))
+					$document['opcion_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+				if($this->bo->allow_delete($document))
+					$document['opcion_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
 			}
-			if (phpgw::get_var('no_images'))
+			if(phpgw::get_var('no_images'))
 			{
 				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
-
 				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
 				// reindexing the results array solves the problem
 				$doc_backup = $documents;
@@ -238,7 +231,7 @@
 				}
 				$documents['total_records'] = count($documents['results']);
 			}
-			return $this->yui_results($documents);
+			return $this->jquery_results($documents);
 		}
 
  		private function is_image($document)
@@ -250,7 +243,8 @@
 		{
 			$images = $this->bo->read_images();
 			
-			foreach($images['results'] as &$image) {
+			foreach($images['results'] as &$image)
+			{
 				$image['src'] = $this->get_owner_typed_link('download', array('id' => $image['id']));
 			}
 			
@@ -260,7 +254,10 @@
 		protected function get_document_categories()
 		{
 			$types = array();
-			foreach($this->bo->get_categories() as $type) { $types[$type] = self::humanize($type); }
+			foreach($this->bo->get_categories() as $type)
+			{
+				$types[$type] = self::humanize($type);
+			}
 			return $types;
 		}
 		
@@ -277,7 +274,7 @@
 		
 		public function show()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
 			self::render_template('document', array('document' => $document));
@@ -295,23 +292,26 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
-					try {
+					try
+					{
 
 						$receipt = $this->bo->add($document);
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));
-					} catch (booking_unauthorized_exception $e) {
+					}
+					catch(booking_unauthorized_exception $e)
+					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
-
 				}
 			}
 			
 			self::add_javascript('booking', 'booking', 'document.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($document);
 			
-			if (is_array($parentData = $this->get_parent_if_inline()))
+			if(is_array($parentData = $this->get_parent_if_inline()))
 			{
 				$document['owner_id'] = $parentData['id'];
 				$document['owner_name'] = $parentData['name'];
@@ -319,12 +319,20 @@
 			
 			$this->flash_form_errors($errors);
 
-			self::render_template('document_form', array('document' => $document));
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Document New'), 'link' => '#document');
+			$active_tab = 'generic';
+
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$document['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('document_form', array('document' => $document));
 		}
 		
 		public function edit()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$document = $this->bo->read_single($id);
 			
 			$errors = array();
@@ -334,28 +342,40 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
-					try {
+					try
+					{
 						$receipt = $this->bo->update($document);	
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));
-					} catch (booking_unauthorized_exception $e) {
+					}
+					catch(booking_unauthorized_exception $e)
+					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
 				}
 			}
 			
 			self::add_javascript('booking', 'booking', 'document.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($document);
 			
 			$this->flash_form_errors($errors);
 			
-			self::render_template('document_form', array('document' => $document));
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('Document Edit'), 'link' => '#document');
+			$active_tab = 'generic';
+
+			$document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$document['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+				'date', 'security', 'file'));
+
+			self::render_template_xsl('document_form', array('document' => $document));
 		}
 		
 		public function download()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			
 			$document = $this->bo->read_single($id);
 			
@@ -364,13 +384,12 @@
 		
 		public function delete()
 		{
-			$id = intval(phpgw::get_var('id', 'GET'));
+			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 			
 			$this->redirect_to_parent_if_inline();
 			$this->redirect($this->get_owner_typed_link_params('index'));
 		}
-		
 		
 		/**
 		 * Implement to return the full hierarchical pathway to this documents owner(s).
@@ -379,5 +398,8 @@
 		 *
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
-		protected function get_owner_pathway(array $forDocumentData) { return array(); }
+		protected function get_owner_pathway(array $forDocumentData)
+		{
+			return array();
+		}
 	}

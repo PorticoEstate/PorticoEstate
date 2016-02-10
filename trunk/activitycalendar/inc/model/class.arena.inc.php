@@ -4,8 +4,8 @@
 
 	class activitycalendar_arena extends activitycalendar_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $arena_name;
 		protected $internal_arena_id;
@@ -32,13 +32,18 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
-		public function set_internal_arena_id($id){
+		public function set_internal_arena_id($id)
+		{
 			$this->internal_arena_id = $id;
 		}
 		
-		public function get_internal_arena_id(){
+		public function get_internal_arena_id()
+		{
 			return $this->internal_arena_id;
 		}
 		
@@ -109,7 +114,8 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if(self::$so == null)
+			{
 				self::$so = CreateObject('rental.socontract');
 			}
 			
@@ -125,9 +131,7 @@
 			    'addressnumber' => $this->get_addressnumber(),
 			    'zip_code' => $this->get_zip_code(),
 			    'city' => $this->get_city(),
-				'active' => ($this->is_active())?'Aktiv':'Inaktiv'
+				'active'		 => ($this->is_active()) ? 'Aktiv' : 'Inaktiv'
 			);
 		}
 	}
-
-?>

@@ -1,22 +1,5 @@
 <!-- $Id$ -->
 
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
-
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-				<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
-
 <!-- separate tabs and  inline tables-->
 
 
@@ -45,62 +28,31 @@
 	{
 		background-color: #DDF0FF;
 	}
-
 	</style>
 
 	<xsl:call-template name="invoice" />
-	<div id="popupBox"></div>	
-	<div id="curtain"></div>
 </xsl:template>
 
 <xsl:template name="invoice" xmlns:php="http://php.net/xsl">
-	<!-- loads translations into array for use with javascripts -->
-	<!--
+
 	<script type="text/javascript">
+		$(document).ready(function(){
+		pageLayout.open("east");		
+		pageLayout.sizePane("east", 400);
+		//		pageLayout.hide("west");
+		//		localStorage['pageLayout_west_closed'] = 1;
+		});
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>
-	-->
 		<script type="text/javascript">
-			var invoice_layout_config = <xsl:value-of select="invoice_layout_config"/>;
+		var email_base_url = <xsl:value-of select="//email_base_url"/>;
 		</script>
-
-	<!-- IMPORTANT!!! Loads YUI javascript -->
-<!--	<xsl:call-template name="common"/> -->
-
-	<div class="yui-content">
-		<div id="invoice-layout">
-				<div class="layout-north">
-					<div class="body">
-						<h2 class="icon"><xsl:value-of select="site_title"/></h2>
-						<div class="button-bar">
-							<a href="{home_url}" class="icon icon-home">
-								<xsl:value-of select="home_text"/>
-							</a>
-							<a href="{about_url}" class="icon icon-about">
-								<xsl:value-of select="about_text"/>
-							</a>
-							<a href="{preferences_url}" class="icon icon-preferences">
-								<xsl:value-of select="preferences_text"/>
-							</a>
-							<a href="{logout_url}" class="icon icon-logout">
-								<xsl:value-of select="logout_text"/>
-							</a>
-						</div>
-					</div>
-				</div>
-
-			<div class="layout-center">
-				<div class="header">
-					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
-				</div>
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<xsl:call-template name="msgbox"/>
 				</xsl:when>
 			</xsl:choose>
-				<div class="body">
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%" border="0">
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
@@ -109,8 +61,18 @@
 						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
-										<xsl:apply-templates select="datatable"/>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_1'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+						<div id="receipt"></div>
 									</td>
 								</tr>
 								<tr>
@@ -121,8 +83,12 @@
 								</tr>
 								<tr>
 									<td colspan = '6'>
-										<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-										<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
+						<xsl:variable name="label_submit">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</xsl:variable>
+						<div class="row_on">
+							<input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/>
+						</div>
 									</td>
 								</tr>
  								<xsl:call-template name="voucher_fields" />
@@ -130,36 +96,6 @@
 							</table>
 						</form>
 					</div>
-				</div>
-			</div>
-			<div class="layout-east">
-				<div class="header">
-					<h2>Bilde</h2>
-				</div>
-				<div class="body">
-				  	<div id="image">
-						<xsl:choose>
-							<xsl:when test="voucher_info/voucher/image_url  != ''">
-								<iframe id="image_content" width="100%" height="1000" src = "{voucher_info/voucher/image_url}" ><p>Your browser does not support iframes.</p></iframe>
-							</xsl:when>
-							<xsl:otherwise>
-								<iframe id="image_content" width="100%" height="1000" ><p>Your browser does not support iframes.</p></iframe>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<table>
-			<tr>
-				<td>
-				</td>
-				<td>
-				</td>
-			</tr>
-		</table>
-	</div>
 </xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
@@ -172,19 +108,29 @@
 			<table border="0">
 				<tr>
 					<td>
-						<label><xsl:value-of select="php:function('lang', 'janitor')" /></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'janitor')" />
+						</label>
 					</td>
 					<td>
-						<label><xsl:value-of select="php:function('lang', 'supervisor')" /></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'supervisor')" />
+						</label>
 					</td>
 					<td>
-						<label><xsl:value-of select="php:function('lang', 'budget responsible')" /></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'budget responsible')" />
+						</label>
 					</td>
 					<td>
-						<label><xsl:value-of select="php:function('lang', 'search criteria')" /></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'search criteria')" />
+						</label>
 					</td>
 					<td >
-						<label><xsl:value-of select="php:function('lang', 'search')" /></label>
+						<label>
+							<xsl:value-of select="php:function('lang', 'search')" />
+						</label>
 					</td>
 				</tr>
 			  	<!--<tr id="filters">-->
@@ -213,7 +159,9 @@
 						<input type="text" name="query" id="query"/>
 					</td>
 					<td>
-						<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
+						<xsl:variable name="lang_search">
+							<xsl:value-of select="php:function('lang', 'Search')" />
+						</xsl:variable>
 						<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
 					</td>	  		
 				</tr>
@@ -495,13 +443,13 @@
 </xsl:template>
 
 
-	<!-- approve voucher  -->
-	<xsl:template xmlns:php="http://php.net/xsl" name="approve">
+<!-- approve voucher  -->
+<xsl:template xmlns:php="http://php.net/xsl" name="approve">
 		<xsl:apply-templates select="voucher_info/generic/approved_list"/>
 		<tr class ='row_off'>
+		<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
 			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
-			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
 			<td class="th_text" valign="top" align="left">
@@ -539,11 +487,11 @@
 			</td>
 		</tr>
 
-	</xsl:template>
+</xsl:template>
 
 
-	<!-- New template-->
-	<xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
+<!-- New template-->
+<xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
 		<tr class ='row_off'>
 			<td align="left" style="white-space: nowrap;">
 				<xsl:value-of select="role"/>
@@ -568,52 +516,6 @@
 				</div>
 			</td>
 		</tr>
-	</xsl:template>
-
-
-<xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<div id="paging_0"/>
-	<div id="datatable-container_0"/>
-
-	<div id="data_paginator"/>
-	<div id="datatable-container"/>
-	
-  	<xsl:call-template name="datasource-definition" />
-	<div id="receipt"></div>
-</xsl:template>
-
-<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
-
-		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var email_base_url = <xsl:value-of select="//email_base_url"/>;
-			var property_js = <xsl:value-of select="//property_js"/>;
-			var base_java_url = <xsl:value-of select="//base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-			var td_count = <xsl:value-of select="//td_count"/>;
-
-			<xsl:for-each select="//datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-			<xsl:for-each select="//myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			<xsl:for-each select="//myButtons">
-				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>
-
-
 </xsl:template>
 
 <!-- options for use with select-->

@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bojasper
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -43,11 +43,11 @@
 		var $grants;
 		var $app;
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 		= CreateObject('property.sojasper');
 			$this->grants	= & $this->so->grants;
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -67,23 +67,23 @@
 			$this->sort			= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
 			$this->order		= isset($_REQUEST['order']) 		? $order			: $this->order;
 			$this->cat_id		= isset($_REQUEST['cat_id']) 		? $cat_id			: $this->cat_id;
-			$this->user_id		= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
+			$this->user_id = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
+			;
 			$this->allrows		= isset($allrows) && $allrows 		? $allrows			: '';
 			$this->app			= isset($_REQUEST['app'])	 		? $app				: $this->app;
 		}
 
-
 		public function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','jasper',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'jasper', $data);
 			}
 		}
 
 		public function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','jasper');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'jasper');
 
 			//_debug_array($data);
 			$this->start		= isset($data['start']) ? $data['start'] : '';
@@ -96,16 +96,18 @@
 			$this->app			= isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
-		public function read()
+		public function read($data = array())
 		{
-			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'app' => $this->app,'allrows' => $this->allrows));
+			/* $jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			  'app' => $this->app,'allrows' => $this->allrows)); */
+			$jasper = $this->so->read($data);
+
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			foreach ($jasper as &$entry)
+			foreach($jasper as &$entry)
 			{
-				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['user']			= $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
 				$location_info			= $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				$entry['location']		= $location_info['descr'];
@@ -118,7 +120,7 @@
 					$entry['formats'] = '';
 				}
 
-				if($files = $vfs->ls (array(
+				if($files = $vfs->ls(array(
 					'string' => "/property/jasper/{$entry['id']}",
 					'relatives' => array(RELATIVE_NONE))))
 				{
@@ -137,7 +139,7 @@
 			$jasper = $this->so->read_single($id);
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
-			if($files = $vfs->ls (array(
+			if($files = $vfs->ls(array(
 				'string' => "/property/jasper/{$jasper['id']}",
 				'relatives' => array(RELATIVE_NONE))))
 			{
@@ -149,7 +151,7 @@
 
 		public function save($jasper)
 		{
-			if (isset($jasper['access']) && $jasper['access'])
+			if(isset($jasper['access']) && $jasper['access'])
 			{
 				$jasper['access'] = 'private';
 			}
@@ -158,7 +160,7 @@
 				$jasper['access'] = 'public';
 			}
 
-			if (isset($jasper['id']) && (int)$jasper['id'])
+			if(isset($jasper['id']) && (int)$jasper['id'])
 			{
 				$receipt = $this->so->edit($jasper);
 			}
@@ -195,7 +197,7 @@
 			return $format_types;
 		}
 
-		public function get_apps($selected ='')
+		public function get_apps($selected = '')
 		{
 			if(!$selected)
 			{
@@ -203,7 +205,7 @@
 			}
 
 			$apps = array();
-			foreach ($GLOBALS['phpgw_info']['apps'] as $app => $app_info)
+			foreach($GLOBALS['phpgw_info']['apps'] as $app => $app_info)
 			{
 				if($app_info['enabled'] == 1 && $app_info['status'] == 1)
 				{

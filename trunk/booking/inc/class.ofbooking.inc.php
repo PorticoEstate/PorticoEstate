@@ -1,4 +1,5 @@
 <?php
+
    /**
 	* Custom object factory
 	*
@@ -7,12 +8,12 @@
 	*/
 	class booking_ofbooking extends phpgwapi_object_factory
 	{	
+
 		/**
 		 * Instantiate a class
 		 *
 		 * @return object the instantiated class
 		 */
-		
 		public static function createObject()
 		{
 			static $cache = array();
@@ -21,14 +22,18 @@
 			$class_identifier = array_shift($object_args);
 			
 			list($appname, $class) = explode('.', $class_identifier, 2);
-			if (preg_match('/^sfValidator/', $class) > 0) {
-				require_once(dirname(__FILE__).'/vendor/symfony/validator/bootstrap.php');
-				if (!isset($cache[$class])) {
+			if(preg_match('/^sfValidator/', $class) > 0)
+			{
+				require_once(dirname(__FILE__) . '/vendor/symfony/validator/bootstrap.php');
+				if(!isset($cache[$class]))
+				{
 					$cache[$class] = new ReflectionClass($class);
 				}
-				while($arg = array_pop($object_args)) {
-					if ($arg !== '_UNDEF_') {
-						$object_args[] = $arg; break;
+				while($arg = array_pop($object_args))
+				{
+					if($arg !== '_UNDEF_')
+					{
+						$object_args[] = $arg;break;
 					}
 				}
 				return count($object_args) > 0 ? $cache[$class]->newInstanceArgs($object_args) : $cache[$class]->newInstance();

@@ -15,4 +15,5 @@
 		<li>{powered_by}</li>
 	</ul>
 </div>
+{javascript_end}
 <!-- END footer -->

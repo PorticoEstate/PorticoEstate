@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bogab
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -41,7 +41,6 @@
 		var $order;
 		var $cat_id;
 		var $gab_insert_level;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -51,12 +50,12 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->solocation 			= CreateObject('property.solocation');
 			$this->so 					= CreateObject('property.sogab');
 			$this->gab_insert_level		= $this->so->gab_insert_level;
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -70,13 +69,13 @@
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
+			if($start)
 			{
-				$this->start=$start;
+				$this->start = $start;
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
@@ -105,18 +104,17 @@
 			}
 		}
 
-
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','gab',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'gab', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','gab');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'gab');
 
 			//_debug_array($data);
 
@@ -129,19 +127,35 @@
 			$this->allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
-
-		function read($location_code='',$gaards_nr='',$bruksnr='',$feste_nr='',$seksjons_nr='',$address='',$check_payments = '',$allrows='')
+		function read($data)
 		{
 			if($allrows)
 			{
 				$this->allrows = true;
 			}
 
-			$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
+			/* $gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
 				'cat_id' => $this->cat_id,'location_code' => $location_code,
 				'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
-				'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
-/*
+			  'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments)); */
+
+			$gab = $this->so->read(array
+				(
+				'start' => $data['start'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'cat_id' => $this->cat_id,
+				'location_code' => $data['location_code'],
+				'gaards_nr' => $data['gaards_nr'],
+				'bruksnr' => $data['bruksnr'],
+				'feste_nr' => $data['feste_nr'],
+				'seksjons_nr' => $data['seksjons_nr'],
+				'address' => $data['address'],
+				'check_payments' => $data['check_payments'])
+			);
+
+			/*
 			foreach ($gab as &$_gab)
 			{
 				$location_data	= $this->solocation->read_single($_gab['location_code']);
@@ -166,21 +180,28 @@
 		}
 
 		//nguerra@ccfirst.com $allrows - variable to display all records
-		function read_detail($gab_id='', $allrows=0)
+		function read_detail($data = '', $allrows = 0)
 		{
-			$gab = $this->so->read_detail(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,
-				'cat_id' => $this->cat_id,'gab_id' => $gab_id,'allrows'=>$allrows));
+			$gab = $this->so->read_detail(array(
+				'start' => $data['start'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'cat_id' => $this->cat_id,
+				'gab_id' => $data['gab_id'],
+				'allrows' => $allrows)
+			);
+
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
 			$cols_extra		= $this->so->cols_extra;
 
 
-			for ($i=0; $i<count($gab); $i++)
+			for($i = 0; $i < count($gab); $i++)
 			{
-				$location_data=$this->solocation->read_single($gab[$i]['location_code']);
+				$location_data = $this->solocation->read_single($gab[$i]['location_code']);
 
-				for ($j=0;$j<count($cols_extra);$j++)
+				for($j = 0; $j < count($cols_extra); $j++)
 				{
 					$gab[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 				}
@@ -189,24 +210,23 @@
 			return $gab;
 		}
 
-		function read_single($gab_id='',$location_code='')
+		function read_single($gab_id = '', $location_code = '')
 		{
-			$gab = $this->so->read_single($gab_id,$location_code);
+			$gab = $this->so->read_single($gab_id, $location_code);
 
 			if($gab['location_code'])
 			{
-				$gab['location_data'] =$this->solocation->read_single($gab['location_code']);
+				$gab['location_data'] = $this->solocation->read_single($gab['location_code']);
 			}
 
 			return $gab;
 		}
 
-
 		function save($values)
 		{
 			if(!$values['location_code'])
 			{
-				while (is_array($values['location']) && list(,$value) = each($values['location']))
+				while(is_array($values['location']) && list(, $value) = each($values['location']))
 				{
 					if($value)
 					{
@@ -214,10 +234,10 @@
 					}
 				}
 
-				$values['location_code']=implode("-", $location);
+				$values['location_code'] = implode("-", $location);
 			}
 
-			if ($values['action']=='edit')
+			if($values['action'] == 'edit')
 			{
 				$receipt = $this->so->edit($values);
 			}
@@ -226,12 +246,12 @@
 				$receipt = $this->so->add($values);
 			}
 
-			$receipt['location_code']=$values['location_code'];
+			$receipt['location_code'] = $values['location_code'];
 			return $receipt;
 		}
 
-		function delete($gab_id='',$location_code='')
+		function delete($gab_id = '', $location_code = '')
 		{
-			$this->so->delete($gab_id,$location_code);
+			$this->so->delete($gab_id, $location_code);
 		}
 	}

@@ -3,4 +3,5 @@
 	
 	class booking_bopermission_building extends booking_bopermission
 	{
+		
 	}

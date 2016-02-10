@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_soasync
 	{
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -51,9 +51,10 @@
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order		= isset($data['order']) ? $data['order'] : '';
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
-			if ($order)
+			if($order)
 			{
 				$ordermethod = " ORDER BY $order $sort";
 			}
@@ -62,7 +63,7 @@
 				$ordermethod = ' ORDER BY id asc';
 			}
 
-			$table='fm_async_method';
+			$table = 'fm_async_method';
 
 			$querymethod = '';
 			if($query)
@@ -73,45 +74,44 @@
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$method = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$method[] = array
 					(
 						'id'	=> $this->db->f('id'),
-						'name'	=> $this->db->f('name',true),
-						'data'	=> $this->db->f('data',true),
-						'descr'	=> $this->db->f('descr',true)
+					'name' => $this->db->f('name', true),
+					'data' => $this->db->f('data', true),
+					'descr' => $this->db->f('descr', true)
 					);
 			}
 			return $method;
 		}
 
-
 		function read_single($id)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 
-			$table='fm_async_method';
+			$table = 'fm_async_method';
 
 			$sql = "SELECT * FROM {$table} WHERE id={$id}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$method = array();
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$method['id']		= $this->db->f('id');
 				$method['name']		= $this->db->f('name', true);
@@ -124,7 +124,7 @@
 		function add($method)
 		{
 			$receipt = array();
-			$table='fm_async_method';
+			$table = 'fm_async_method';
 
 			$this->db->transaction_begin();
 			$method['id'] = $this->db->next_id($table);
@@ -132,9 +132,9 @@
 			$method['descr'] = $this->db->db_addslashes($method['descr']);
 
 			$this->db->query("INSERT INTO $table (id, name,data, descr) "
-				. "VALUES ('" . $method['id'] . "','" . $method['name'] . "','" . $method['data'] . "','" . $method['descr']. "')",__LINE__,__FILE__);
+			. "VALUES ('" . $method['id'] . "','" . $method['name'] . "','" . $method['data'] . "','" . $method['descr'] . "')", __LINE__, __FILE__);
 
-			if( $this->db->transaction_commit() )
+			if($this->db->transaction_commit())
 			{
 				$receipt['id'] = $method['id'];
 				$receipt['message'][] = array('msg' => lang('async method has been saved'));
@@ -145,23 +145,23 @@
 
 		function edit($method)
 		{
-			$table='fm_async_method';
+			$table = 'fm_async_method';
 
 			$method['name'] = $this->db->db_addslashes($method['name']);
 			$method['descr'] = $this->db->db_addslashes($method['descr']);
 
-			$this->db->query("UPDATE $table set descr='" . $method['descr'] . "', name='". $method['name'] . "', data='". $method['data']
-				. "' WHERE id='" . $method['id']. "'",__LINE__,__FILE__);
+			$this->db->query("UPDATE $table set descr='" . $method['descr'] . "', name='" . $method['name'] . "', data='" . $method['data']
+			. "' WHERE id='" . $method['id'] . "'", __LINE__, __FILE__);
 
 			$receipt['id'] = $method['id'];
-			$receipt['message'][] = array('msg' =>lang('method has been edited'));
+			$receipt['message'][] = array('msg' => lang('method has been edited'));
 			return $receipt;
 		}
 
 		function delete($id)
 		{
-			$table='fm_async_method';
+			$table = 'fm_async_method';
 
-			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'", __LINE__, __FILE__);
 		}
 	}

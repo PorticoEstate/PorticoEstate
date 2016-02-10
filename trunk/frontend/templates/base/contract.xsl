@@ -1,12 +1,21 @@
-<xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
-	<!-- <xsl:copy-of select="."/> -->
-    <div class="yui-navset" id="ticket_tabview">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
+	
+	<xsl:choose>
+	    <xsl:when test="msgbox_data != ''">
+			<xsl:call-template name="msgbox"/>
+	    </xsl:when>
+    </xsl:choose>
+	
+	<div class="frontend_body">
+		<div class="pure-form pure-form-aligned">
+			<div id="tab-content">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
-        <div class="yui-content">
-        	<div class="toolbar" style="display: block; padding-bottom: 1em;">
-            	<div id="contract_selector">
+				<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+				<div id="{$tab_selected}">
+					<div class="pure-g">
+						<div class="pure-u-1">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
-			           <form action="{form_url}" method="post" style="float:left;">
+							<form action="{form_url}" method="post">
 		           			<select name="contract_filter" onchange="this.form.submit()">
 		           				<xsl:choose>
 		           					<xsl:when test="//contract_filter = 'active'">
@@ -34,12 +43,16 @@
 		           				</xsl:choose>
 		           			</select>
 		           		</form>
+						</div>
 			            <xsl:choose>
 			           		<xsl:when test="not(normalize-space(select)) and (count(select) &lt;= 1)">
-			           			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_contracts')"/></em>
+								<div class="pure-u-1">
+									<xsl:value-of select="php:function('lang', 'no_contracts')"/>
+								</div>
 			           		</xsl:when>
 			           		<xsl:otherwise>
-					             <form action="{form_url}" method="post" style="float: left;">
+								<div class="pure-u-1">
+									<form action="{form_url}" method="post">
 						           	<xsl:for-each select="select">
 						           		<xsl:choose>
 							           		<xsl:when test="id = //selected_contract">
@@ -52,19 +65,19 @@
 						           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
 						           	</xsl:for-each>
 					           	  </form>
+								</div>
 					         </xsl:otherwise>
 					      </xsl:choose>
 	 			</div>
-	 		</div>
-	 		<div>
-	 			<div id="contract_details">
+
+					<div class="pure-g">
 	 				 <xsl:choose>
 			           		<xsl:when test="not(normalize-space(contract))">
 			           			 <!-- <xsl:value-of select="php:function('lang', 'no_contract_details')"/>:  -->
 			           		</xsl:when>
 			           		<xsl:otherwise>
 				     	 		<xsl:for-each select="contract">
-				     	 			<div id="contract_essentials">
+									<div class="pure-u-1 pure-u-md-1-2">
 										<ul>
 											<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'old_contract_id')"/>: <xsl:value-of select="old_contract_id"/></li>
 						    				<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'contract_type')"/>: <xsl:value-of select="type"/></li>
@@ -80,10 +93,6 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</li>
-					    				<!-- </ul>
-						    		</div>
-									<div id="contract_price_and_area" style="block:right;">
-										<ul> -->
 											<li><em><img src="frontend/templates/base/images/16x16/shading.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'rented_area')"/>: <xsl:value-of select="rented_area"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'service_id')"/>: <xsl:value-of select="service_id"/></li>	
@@ -91,7 +100,7 @@
 										</ul>
 									</div>
 									
-									<div id="contract_parts">
+									<div class="pure-u-1 pure-u-md-1-2">
 										<ul>
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/group.png" class="list_image" />
@@ -117,10 +126,7 @@
 													</ul>
 												</li>
 										</xsl:for-each>
-										<!-- </ul>
-									</div>
-									<div id="composites">
-										<ul> -->
+
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; margin-top: 2em; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/layers.png" class="list_image" />
 											<em>Leieobjekt</em>
@@ -140,7 +146,8 @@
 										</xsl:for-each>
 										</ul>
 									</div>
-									<div id="comment">
+
+									<div class="pure-u-1 pure-u-md-1-2">
 										<ul>
 											<xsl:choose>
 												<xsl:when test="publish_comment = 1">
@@ -159,12 +166,12 @@
 											</li>
 											<li>
 												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
-												<form action="{form_url}" method="post" style="float:left;">
+												<form action="{form_url}" method="post">
 							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 							           				<br/>
 							           				<textarea name="contract_message" cols="80" rows="5">
 							           				</textarea><br/>
-							           				<input type="submit" name="send" value="{$btn_send}"/>
+													<input type="submit" class="pure-button pure-button-active" name="send" value="{$btn_send}"/>
 							           			</form>
 											</li>
 										</ul>
@@ -174,6 +181,8 @@
 						</xsl:choose>
 				</div>
         	</div>
+				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
+			</div>
     	</div>
     </div>
 </xsl:template>

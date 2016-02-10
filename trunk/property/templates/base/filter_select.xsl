@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="filter_select">
+
+<!-- $Id$ -->
+<xsl:template name="filter_select">
 		<xsl:variable name="lang_filter_statustext">
 			<xsl:value-of select="lang_filter_statustext"/>
 		</xsl:variable>
@@ -12,10 +13,10 @@
 			</option>
 			<xsl:apply-templates select="filter_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="filter_list">
+<!-- New template-->
+<xsl:template match="filter_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -31,4 +32,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

@@ -5,21 +5,23 @@
      *
      * @author Espen
      */
-    class bim_soitem_group {
+	class bim_soitem_group
+	{
+
         private $db;
         private static $instance;
 
-        private function __construct() {
+		private function __construct()
+		{
             $this->db = & $GLOBALS['phpgw']->db;
         }
-
 
         /**
          * @return bim_sogroup
          */
         public static function singleton()
         {
-            if (!isset(self::$instance))
+			if(!isset(self::$instance))
             {
                 $c = __CLASS__;
                 self::$instance = new $c;
@@ -45,24 +47,25 @@
             $ret = array();
 
             $entity_table   = 'fm_item_group';
-            $cols           = array($entity_table.'.*');
+			$cols = array($entity_table . '.*');
             $where_clauses  = array(' WHERE 1=1');
             $joins          = array();
 
             $sql  = 'SELECT ' . implode($cols, ', ') .
-                    " FROM $entity_table ".
+			" FROM $entity_table " .
                     implode($joins, ' ') .
                     implode($where_clauses, ' AND ');
 
             $this->db->query($sql);
             $i = 0;
-            while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
                 $items[$i]['id']        = $this->db->f('id');
                 $items[$i]['name']      = $this->db->f('name');
                 $items[$i]['ngno']      = $this->db->f('nat_group_no');
                 $items[$i]['bpn']       = $this->db->f('bpn');
                 $items[$i]['parent']    = $this->db->f('parent_group');
-                $items[$i]['catalog_id']= $this->db->f('catalog_id');
+				$items[$i]['catalog_id'] = $this->db->f('catalog_id');
 
                 $i++;
             }
@@ -76,23 +79,24 @@
             
         }
         
-
-
         /**
          * Creates fully populated objects out of an item array.
          *
          * @param array $items Array of items in the same format as that returned from get_items().
          * @return mixed Array of item objects og null if failed.
          */
-        public function populate(array $groups) {
-            if(!is_array($groups)) {
+		public function populate(array $groups)
+		{
+			if(!is_array($groups))
+			{
                 return null;
             }
 
             $return_objects = array();
             $socatalog = bim_socatalog::get_instance();
 
-            foreach($groups as $group) {
+			foreach($groups as $group)
+			{
                 $group_obj = new bim_bogroup();
                 $group_obj->set_bpn($group['bpn']);
                 $group_obj->set_name($group['name']);
@@ -104,6 +108,4 @@
 
             return $return_objects;
         }
-
-        
     }

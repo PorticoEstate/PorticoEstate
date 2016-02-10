@@ -1,6 +1,10 @@
 <?php
-	class booking_account_helper {
+
+	class booking_account_helper
+	{
+
 		const ADMIN_GROUP = 'Admins';
+
 		protected static $account_is_admin;
 		protected static $current_account_lid;
 		
@@ -15,14 +19,16 @@
 		/**
 		 * Returns the current user's login name
 		 */
-		public function current_account_lid() {
+		public function current_account_lid()
+		{
 			return $GLOBALS['phpgw_info']['user']['account_lid'];
 		}
 		
 		/**
 		 * Returns the current user's full name
 		 */
-		public function current_account_fullname() {
+		public function current_account_fullname()
+		{
 			return $GLOBALS['phpgw_info']['user']['fullname'];
 		}
 		
@@ -30,8 +36,7 @@
 		{
 			return $GLOBALS['phpgw']->accounts->membership();
 		}
-		
-/*		public static function current_account_member_of_admins()
+		/* 		public static function current_account_member_of_admins()
 		{
 			if (!isset(self::$account_is_admin))
 			{
@@ -49,19 +54,17 @@
 			}
 			
 			return self::$account_is_admin;
-		}*/
+		  } */
 
 		public static function current_account_member_of_admins()
 		{
-			if (!isset(self::$account_is_admin))
+			if(!isset(self::$account_is_admin))
 			{
 				self::$account_is_admin = false;
-				if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
-				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+				if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
 				{
 						self::$account_is_admin = true;
 				}
-
 			}
 			
 			return self::$account_is_admin;

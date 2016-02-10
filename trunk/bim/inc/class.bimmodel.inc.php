@@ -1,6 +1,9 @@
 <?php
-phpgw::import_class('bim.bimobject');
-class BimModel extends BimObject{
+	phpgw::import_class('bim.bimobject');
+
+	class BimModel extends BimObject
+	{
+
 	private $databaseId;
 	private $name;
 	private $creationDate;
@@ -10,68 +13,103 @@ class BimModel extends BimObject{
 	private $vfsFileId;
 	private $used;
 	 
-	function __construct($databaseId = null, $name = null, $creationDate = null, $fileSize = null,$fileName= null,$usedItemCount= null, $vfsFileId = null) {
+		function __construct($databaseId = null, $name = null, $creationDate = null, $fileSize = null, $fileName = null, $usedItemCount = null, $vfsFileId = null)
+		{
 		$this->databaseId = (int)$databaseId;
 		$this->name = $name;
 		$this->creationDate =  $creationDate;
 		$this->fileSize  = $fileSize;
 		$this->fileName = $fileName;
 		$this->usedItemCount = $usedItemCount;
-		if($usedItemCount && $usedItemCount > 0) {
+			if($usedItemCount && $usedItemCount > 0)
+			{
 			$this->used =  true;
-		} else {
+			}
+			else
+			{
 			$this->used =  false;
 		}
-		
 	}
-	function getDatabaseId() {
+
+		function getDatabaseId()
+		{
 		return $this->databaseId;
 	}
-	function setDatabaseId($databaseId) {
+
+		function setDatabaseId($databaseId)
+		{
 		$this->databaseId = $databaseId;
 	}
-	function getName() {
+
+		function getName()
+		{
 		return $this->name;
 	}
-	function setName($item) {
+
+		function setName($item)
+		{
 		$this->name = $item;
 	}
-	function getCreationDate() {
+
+		function getCreationDate()
+		{
 		return $this->creationDate;
 	}
-	function setCreationDate($item) {
+
+		function setCreationDate($item)
+		{
 		$this->creationDate = $item;
 	}
-	function getFileSize() {
+
+		function getFileSize()
+		{
 		return $this->fileSize;
 	}
-	function setFileSize($item) {
+
+		function setFileSize($item)
+		{
 		$this->fileSize = $item;
 	}
-	function getFileName() {
+
+		function getFileName()
+		{
 		return $this->fileName;
 	}
-	function setFileName($item) {
+
+		function setFileName($item)
+		{
 		$this->fileName = $item;
 	}
-	function getUsedItemCount() {
+
+		function getUsedItemCount()
+		{
 		return $this->usedItemCount;
 	}
-	function setUsedItemCount($item) {
+
+		function setUsedItemCount($item)
+		{
 		$this->usedItemCount = $item;
 	}
-	function getVfsFileId() {
+
+		function getVfsFileId()
+		{
 		return $this->vfsFileId;
 	}
-	function setVfsFileId($item) {
+
+		function setVfsFileId($item)
+		{
 		$this->vfsFileId = $item;
 	}
 	
-	function getUsed() {
-		if($this->used) {
+		function getUsed()
+		{
+			if($this->used)
+			{
 			return $this->used;
-		} else {
+			}
+			else
+			{
 			return (bool)($this->usedItemCount > 0);
 		}
 	}
-}
+	}

@@ -61,8 +61,7 @@
 
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
-			if(preg_match('/\./', $dirname)
-			|| !is_dir($dirname))
+			if(preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
@@ -73,10 +72,7 @@
 			{
 				foreach($dir as $file)
 				{
-					if($file->isDot()
-					|| !$file->isFile()
-					|| !$file->isReadable()
-					|| strcasecmp(end(explode(".", $file->getPathname())), 'csv') != 0)
+					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'csv') != 0)
 					{
 						continue;
 					}

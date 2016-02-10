@@ -1,14 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="columns">
 				<xsl:apply-templates select="columns"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="columns">
+<!-- New template-->
+<xsl:template match="columns">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -47,10 +48,10 @@
 				</form>
 			</table>
 		</div>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="column_list">
+<!-- New template-->
+<xsl:template match="column_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -67,4 +68,4 @@
 				<xsl:value-of select="name"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

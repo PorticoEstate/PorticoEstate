@@ -3,6 +3,7 @@
 	
 	abstract class booking_sopermission extends booking_socommon
 	{
+
 		const ROLE_DEFAULT = 'default';
 		const ROLE_ADMIN = 'admin';
 		const ROLE_MANAGER = 'manager';
@@ -13,7 +14,6 @@
 			   self::ROLE_MANAGER,
 			   self::ROLE_CASE_OFFICER,
 			);
-		
 		protected $object_type = null;
 		
 		function __construct()
@@ -38,7 +38,8 @@
 				)
 			);
 			
-			if (is_array($object_relations = $this->build_object_relations())) {
+			if(is_array($object_relations = $this->build_object_relations()))
+			{
 				$table_def = array_merge($table_def, $object_relations);
 			}
 			
@@ -104,7 +105,7 @@
 		
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
-			if (!$this->validate_uniqueness($entity, 'subject_id', 'role', 'object_type', 'object_id'))
+			if(!$this->validate_uniqueness($entity, 'subject_id', 'role', 'object_type', 'object_id'))
 			{
 				$errors['global'] = lang('Permission already exists');
 			}

@@ -25,15 +25,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	include_class('controller', 'model', 'inc/model/');
 	
 	class controller_control_group_list extends controller_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $control_id;
 		protected $control_group_id;
@@ -55,28 +54,40 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
 		public function set_control_id($control_id)
 		{
 			$this->control_id = $control_id;
 		}
 		
-		public function get_control_id() { return $this->control_id; }
+		public function get_control_id()
+		{
+			return $this->control_id;
+		}
 		
 		public function set_control_group_id($control_group_id)
 		{
 			$this->control_group_id = $control_group_id;
 		}
 		
-		public function get_control_group_id() { return $this->control_group_id; }
+		public function get_control_group_id()
+		{
+			return $this->control_group_id;
+		}
 		
 		public function set_order_nr($order_nr)
 		{
 			$this->order_nr = $order_nr;
 		}
 		
-		public function get_order_nr() { return $this->order_nr; }
+		public function get_order_nr()
+		{
+			return $this->order_nr;
+		}
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -85,7 +96,7 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_group_list');
 			}

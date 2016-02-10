@@ -1,13 +1,14 @@
 <?php
+	phpgw::import_class('rental.socomposite');
+	include_class('rental', 'exportable', 'inc/model/');
 
-phpgw::import_class('rental.socomposite');
-include_class('rental', 'exportable', 'inc/model/');
-
-class rental_default_export implements rental_exportable {
+	class rental_default_export implements rental_exportable
+	{
 
 	protected $billing_job;
 	protected $date_str;
 	protected $lines;
+
 	//protected $exports;
 
 	public function __construct($billing_job)
@@ -15,7 +16,7 @@ class rental_default_export implements rental_exportable {
 		$this->billing_job = $billing_job;
 		$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
 		$this->lines = null;
-/*
+			/*
 		$dh = @opendir(PHPGW_SERVER_ROOT . "/rental/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}");
 		$myfilearray = array();
 
@@ -55,7 +56,7 @@ class rental_default_export implements rental_exportable {
 			}
 		}
 
-		$this->exports = $conv_list;*/
+			  $this->exports = $conv_list; */
 	}
 
 	/**
@@ -115,5 +116,4 @@ class rental_default_export implements rental_exportable {
 	{
 
 	}
-
-}
+	}

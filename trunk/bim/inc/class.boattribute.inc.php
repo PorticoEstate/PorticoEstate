@@ -1,4 +1,5 @@
 <?php
+
     /**
      * FIXME: Description
      *
@@ -6,8 +7,8 @@
      */
     class bim_boattribute
     {
-        private $id, $name, $display_name, $value, $data_type, $unit, $desc;
 
+		private $id, $name, $display_name, $value, $data_type, $unit, $desc;
 
         /**
          * Constructor. Takes an optional array of values where the keys should
@@ -36,15 +37,14 @@
          * @param array $properties
          * @return boolean
          */
-        private function valid_properties(array $properties) {
+		private function valid_properties(array $properties)
+		{
             if(!is_array($properties) || empty($properties['name']) || empty($properties['display_name']) || empty($properties['value']) || empty($properties['data_type']) || empty($properties['unit']))
             {
                 return false;
             }
             return true;
         }
-
-
 
         public function get_id()
         {
@@ -115,8 +115,6 @@
         {
             $this->unit = $unit;
         }
-
-
 
         public function __toString()
         {

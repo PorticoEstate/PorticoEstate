@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage entity
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
@@ -39,7 +39,7 @@
 		 */
 		function cat_add($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
@@ -51,7 +51,6 @@
 				$location = $location_info['location'];
 			}
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'property');
-
 		}
 
 		/**
@@ -59,7 +58,7 @@
 		 */
 		function cat_delete($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
@@ -76,7 +75,7 @@
 		 */
 		function cat_edit($data)
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}

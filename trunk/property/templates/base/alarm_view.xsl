@@ -1,18 +1,19 @@
-  <!-- $Id$ -->
-	<xsl:template name="alarm_view">
-		<xsl:apply-templates select="alarm_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="alarm_data">
+<!-- $Id$ -->
+<xsl:template name="alarm_view">
+		<xsl:apply-templates select="alarm_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template name="alarm_data">
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:apply-templates select="header"/>
 			<xsl:apply-templates select="values"/>
 		</table>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="header">
+<!-- New template-->
+<xsl:template match="header">
 		<tr class="th">
 			<td class="th_text" width="20%" align="left">
 				<xsl:value-of select="lang_time"/>
@@ -27,10 +28,10 @@
 				<xsl:value-of select="lang_enabled"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values">
+<!-- New template-->
+<xsl:template match="values">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -60,4 +61,4 @@
 				<xsl:value-of select="enabled"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

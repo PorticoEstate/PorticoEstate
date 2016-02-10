@@ -3,6 +3,7 @@
 	
 	class booking_boaudience extends booking_bocommon_global_manager_authorized
 	{	
+
 		function __construct()
 		{
 			parent::__construct();
@@ -19,8 +20,14 @@
 			unset($_SESSION['ActiveSession']);
 		}
 
-		function fetch_target_audience()
+		function fetch_target_audience($top_level_activity = 0)
 		{
-			return $this->so->read(array('filters'=>array('active'=>'1'), 'sort'=>'sort'));
+			$filters = array('active' => '1');
+			if($top_level_activity)
+		{
+				$filters['activity_id'] = $top_level_activity;
+			}
+
+			return $this->so->read(array('filters' => $filters, 'sort' => 'sort'));
 		}
 	}

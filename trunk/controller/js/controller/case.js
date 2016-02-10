@@ -1,7 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
 	// REGISTER CASE
-	$(".frm_register_case").on("submit", function(e) {
+	$(".frm_register_case").on("submit", function (e) {
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -30,7 +30,7 @@ $(document).ready(function() {
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
-				success: function(data) {
+				success: function (data) {
 					if (data) {
 						var jsonObj = jQuery.parseJSON(data);
 
@@ -41,7 +41,7 @@ $(document).ready(function() {
 							clear_form(thisForm);
 
 							// Changes text on save button back to original
-							window.setTimeout(function() {
+							window.setTimeout(function () {
 								if (type == "control_item_type_2")
 								{
 									$(submitBnt).val('Lagre måling');
@@ -75,13 +75,13 @@ $(document).ready(function() {
 				type: 'POST',
 				dataType: 'json',
 				url: requestUrl,
-				success: function(data) {
+				success: function (data) {
 					if (data != null) {
 						var obj = jQuery.parseJSON(data);
 
-						$.each(obj, function(i, control_group) {
+						$.each(obj, function (i, control_group) {
 
-							$.each(control_group, function(j, control_item)
+							$.each(control_group, function (j, control_item)
 							{
 								if (typeof (control_item.components_at_location) != 'undefined')
 								{
@@ -93,9 +93,9 @@ $(document).ready(function() {
 									htmlString = "";
 
 									var component_options = control_item.components_at_location;
-									$.each(component_options, function(k, options) {
+									$.each(component_options, function (k, options) {
 
-										$.each(options, function(k, option) {
+										$.each(options, function (k, option) {
 
 											var selected = '';
 
@@ -120,7 +120,7 @@ $(document).ready(function() {
 	});
 
 	// UPDATE CASE
-	$(".frm_update_case").on("submit", function(e) {
+	$(".frm_update_case").on("submit", function (e) {
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -131,7 +131,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&" + $(thisForm).serialize(),
-			success: function(data) {
+			success: function (data) {
 				if (data) {
 					var jsonObj = jQuery.parseJSON(data);
 
@@ -181,7 +181,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$("a.quick_edit_case").on("click", function(e) {
+	$("a.quick_edit_case").on("click", function (e) {
 		e.preventDefault();
 		//   console.log("sdfsdfsd");
 		var clickRow = $(this).closest("li");
@@ -192,7 +192,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$(".frm_update_case .cancel").on("click", function(e) {
+	$(".frm_update_case .cancel").on("click", function (e) {
 		var clickRow = $(this).closest("li");
 
 
@@ -203,7 +203,7 @@ $(document).ready(function() {
 	});
 
 	// DELETE CASE
-	$(".delete_case").on("click", function() {
+	$(".delete_case").on("click", function () {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -215,12 +215,12 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function(data) {
+			success: function (data) {
 				var obj = jQuery.parseJSON(data);
 
 				if (obj.status == "deleted") {
 					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function() {
+						$(clickRow).fadeOut(300, function () {
 							$(clickRow).remove();
 						});
 
@@ -232,7 +232,7 @@ $(document).ready(function() {
 							next_row = $(next_row).next();
 						}
 					} else {
-						$(checkItemRow).fadeOut(300, function() {
+						$(checkItemRow).fadeOut(300, function () {
 							$(checkItemRow).remove();
 						});
 					}
@@ -244,7 +244,7 @@ $(document).ready(function() {
 	});
 
 	// CLOSE CASE
-	$(".close_case").on("click", function() {
+	$(".close_case").on("click", function () {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -256,12 +256,12 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function(data) {
+			success: function (data) {
 				var obj = jQuery.parseJSON(data);
 
 				if (obj.status == "true") {
 					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function() {
+						$(clickRow).fadeOut(300, function () {
 							$(clickRow).remove();
 						});
 
@@ -273,7 +273,7 @@ $(document).ready(function() {
 							next_row = $(next_row).next();
 						}
 					} else {
-						$(checkItemRow).fadeOut(300, function() {
+						$(checkItemRow).fadeOut(300, function () {
 							$(checkItemRow).remove();
 						});
 					}
@@ -285,7 +285,7 @@ $(document).ready(function() {
 	});
 
 	// OPEN CASE
-	$(".open_case").on("click", function() {
+	$(".open_case").on("click", function () {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -297,12 +297,12 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function(data) {
+			success: function (data) {
 				var obj = jQuery.parseJSON(data);
 
 				if (obj.status == "true") {
 					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function() {
+						$(clickRow).fadeOut(300, function () {
 							$(clickRow).remove();
 						});
 
@@ -314,7 +314,7 @@ $(document).ready(function() {
 							next_row = $(next_row).next();
 						}
 					} else {
-						$(checkItemRow).fadeOut(300, function() {
+						$(checkItemRow).fadeOut(300, function () {
 							$(checkItemRow).remove();
 						});
 					}
@@ -325,11 +325,11 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$("#choose-building-on-property").change(function() {
+	$("#choose-building-on-property").change(function () {
 		var location_code = $(this).val();
 		var search = location.search.substring(1);
 		var oArgs = search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-			function(key, value) {
+				function (key, value) {
 				return key === "" ? value : decodeURIComponent(value)
 			}) : {}
 
@@ -358,7 +358,7 @@ function validate_form(formObj)
 
 	$(formObj).find(".input_error_msg").remove();
 
-	$(formObj).find(":input.required").each(function() {
+	$(formObj).find(":input.required").each(function () {
 		var thisInput = $(this);
 
 		if ($(thisInput).val() == '')

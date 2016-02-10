@@ -1,6 +1,8 @@
 <?php
+
 	class import_conversion
 	{
+
 		protected $db;
 		public $messages = array();
 		public $warnings = array();
@@ -16,13 +18,13 @@
 
 		public function __construct($location_id, $debug = false)
 		{
-			$location_id = (int) $location_id;
+			$location_id = (int)$location_id;
 			set_time_limit(10000); //Set the time limit for this request
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= $this->db->join;
 
-			if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id ))
+			if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
 			{
 				throw new Exception("Not a valid location for {$location_id}");
 			}
@@ -39,11 +41,11 @@
 			$this->cat_id = $category['id'];
 
 
-			if ($this->is_eav)
+			if($this->is_eav)
 			{
 				$this->table = 'fm_bim_item';
 				$sql = "SELECT fm_bim_type.id FROM fm_bim_type WHERE location_id = {$location_id}";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 				$this->bim_type_id = $this->db->f('id');
 				$custom 		= createObject('property.custom_fields');
@@ -63,21 +65,19 @@
 				{
 					$this->metadata[$attribute['column_name']] = array();
 				}
-
 			}
 			else
 			{
 				$this->table = "fm_entity_{$category['entity_id']}_{$category['id']}";
 				$this->metadata = $this->db->metadata($this->table);
 			}
-
-
 		}
 
 		public function set_table($table)
 		{
 			$this->table = $table;
 		}
+
 		public function set_metadata($metadata)
 		{
 			$this->metadata = $metadata;
@@ -85,7 +85,7 @@
 
 		public function add($data)
 		{
-			if ($this->is_eav)
+			if($this->is_eav)
 			{
 				$ok = $this->_add_eav($data);
 			}
@@ -156,7 +156,7 @@
 			unset($_value);
 
 			$value_set = array();
-			foreach ($fields as $key => $field)
+			foreach($fields as $key => $field)
 			{
 				if(isset($this->metadata[$field]))
 				{
@@ -164,14 +164,14 @@
 				}
 			}
 
-			$id = (int) $value_set['id'];
+			$id = (int)$value_set['id'];
 			$filtermethod = "location_id = {$this->location_id} AND id = {$id}";
 
 //---------produce data_set
 
 			$location_id = $this->location_id;
 			$sql = "SELECT fm_bim_item.id FROM fm_bim_item WHERE {$filtermethod}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$type = (int)$this->bim_type_id;
 
@@ -181,7 +181,7 @@
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 
-				foreach ($remove_keys as $remove_key)
+				foreach($remove_keys as $remove_key)
 				{
 					unset($value_set[$remove_key]);
 				}
@@ -191,7 +191,7 @@
 				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
 				$doc = new DOMDocument;
 				$doc->preserveWhiteSpace = true;
-				$doc->loadXML( $xmldata );
+				$doc->loadXML($xmldata);
 				$domElement = $doc->getElementsByTagName($location_name)->item(0);
 				$domAttribute = $doc->createAttribute('appname');
 				$domAttribute->value = 'property';
@@ -227,7 +227,7 @@
 				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
 				$doc = new DOMDocument;
 				$doc->preserveWhiteSpace = true;
-				$doc->loadXML( $xmldata );
+				$doc->loadXML($xmldata);
 				$domElement = $doc->getElementsByTagName($location_name)->item(0);
 				$domAttribute = $doc->createAttribute('appname');
 				$domAttribute->value = 'property';
@@ -241,7 +241,7 @@
 
 				$xml = $doc->saveXML();
 
-				if (function_exists('com_create_guid') === true)
+				if(function_exists('com_create_guid') === true)
 				{
 					$guid = trim(com_create_guid(), '{}');
 				}
@@ -267,7 +267,7 @@
 					'user_id'				=> $this->account
 				);
 
-				$sql = "INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+				$sql = "INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 				 . $this->db->validate_insert(array_values($values_insert)) . ')';
 			}
 
@@ -278,7 +278,7 @@
 			}
 			else
 			{
-				$ok = $this->db->query($sql,__LINE__,__FILE__);
+				$ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			if($ok)
@@ -330,7 +330,7 @@
 			$filtermethod = implode(' AND ', $primary_key);
 
 			$value_set = array();
-			foreach ($fields as $key => $field)
+			foreach($fields as $key => $field)
 			{
 				if(isset($this->metadata[$field]))
 				{
@@ -338,11 +338,11 @@
 				}
 			}
 
-			$this->db->query("SELECT count(*) as cnt FROM {$table} WHERE {$filtermethod}",__LINE__,__FILE__);
+			$this->db->query("SELECT count(*) as cnt FROM {$table} WHERE {$filtermethod}", __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('cnt'))
 			{
-				foreach ($remove_keys as $remove_key)
+				foreach($remove_keys as $remove_key)
 				{
 					unset($value_set[$remove_key]);
 				}
@@ -369,7 +369,7 @@
 			}
 			else
 			{
-				$ok = $this->db->query($sql,__LINE__,__FILE__);
+				$ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			if($ok)
@@ -383,7 +383,7 @@
 			return $ok;
 		}
 
-		protected function validate_value($value,$field)
+		protected function validate_value($value, $field)
 		{
 			$value = trim($value);
 
@@ -400,7 +400,7 @@
 			{
 				$datatype = $this->metadata[$field]['type'];
 			}
-			switch ($datatype)
+			switch($datatype)
 			{
 				case 'char':
 				case 'varchar':
@@ -416,5 +416,4 @@
 
 			return $ret;
 		}
-
 	}

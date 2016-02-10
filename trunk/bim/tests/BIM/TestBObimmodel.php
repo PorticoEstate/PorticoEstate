@@ -1,5 +1,5 @@
 <?php
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -13,9 +13,10 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-include_once './TestBimCommon.php';
-class TestBObimmodel extends TestBimCommon
-{
+	include_once './TestBimCommon.php';
+
+	class TestBObimmodel extends TestBimCommon
+	{
 	
 	/**
 	 * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
@@ -26,7 +27,6 @@ class TestBObimmodel extends TestBimCommon
 	 * @var integer $fieldID The attribute ID used for all the tests
 	 */
 	protected $fieldID;
-
 	private $sovfs;
 	private $sobimmodel;
 	private $bobimmodel;
@@ -39,8 +39,8 @@ class TestBObimmodel extends TestBimCommon
 	protected function setUp()
 	{
 		$this->initDatabase();	
-		
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -49,22 +49,25 @@ class TestBObimmodel extends TestBimCommon
 	protected function tearDown()
 	{
 		
-		 
 	}
 
-	public function testDb(){
+		public function testDb()
+		{
 		$this->assertNotNull($this->db);
 	}
 	/*
 	 * @depends testDB
 	 * @test
 	 */
-	public function testAddUploadedIfcModel() {
+
+		public function testAddUploadedIfcModel()
+		{
 		$this->addIfcModel();
 		$this->assertTrue(true);
 	}
 	
-	private function addIfcModel() {
+		private function addIfcModel()
+		{
 		$this->createDummyFile();
      	
      	$filename = $this->vfsFileName;
@@ -77,23 +80,31 @@ class TestBObimmodel extends TestBimCommon
      	$this->bobimmodel->setSobimmodel($this->sobimmodel);
      	$this->bobimmodel->setModelName($this->modelName);
      	$error = "";
-     	try {
+			try
+			{
      		$this->bobimmodel->addUploadedIfcModel();
      		//var_dump($this->sovfs->getFileInformation());
-     	} catch (FileExistsException $e) {
+			}
+			catch(FileExistsException $e)
+			{
      		$error =  $e;
-     	} catch (Exception $e) {
+			}
+			catch(Exception $e)
+			{
      		$error =  $e;
      	}
-     	if($error) {
-     		echo "error in testAddUploadedIfcModel:".$error;
+			if($error)
+			{
+				echo "error in testAddUploadedIfcModel:" . $error;
      	}
      	$this->removeDummyFile();
 	}
 	/*
 	 * @depends testAddUploadedIfcModel
 	 */
-	public function testCheckUploadedIfcModel() {
+
+		public function testCheckUploadedIfcModel()
+		{
 		$bobimmodel = new bobimmodel_impl();
 		//init dependancies
 		$sovfs = new sovfs_impl($this->vfsFileName, null, $this->vfsSubModule);
@@ -110,7 +121,9 @@ class TestBObimmodel extends TestBimCommon
 	/*
 	 * @depends testCheckUploadedIfcModel
 	 */
-	public function testCreateBimModelList() {
+
+		public function testCreateBimModelList()
+		{
 		$bobimmodel = new bobimmodel_impl();
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$bobimmodel->setSobimmodel($sobimmodel);
@@ -119,20 +132,22 @@ class TestBObimmodel extends TestBimCommon
 		
 		$modelFound = false;
 		/* @var $bimModel BimModel */
-		foreach($output as $bimModelArray ) {
-			if($bimModelArray['fileName'] == $this->vfsFileName && $bimModelArray['name'] == $this->modelName) {
+			foreach($output as $bimModelArray)
+			{
+				if($bimModelArray['fileName'] == $this->vfsFileName && $bimModelArray['name'] == $this->modelName)
+				{
 				$modelFound = true;
 				break;
 			}
 		}
 		$this->assertTrue($modelFound);
-		
-		
 	}
 	/*
 	 * @depends testCreateBimModelList
 	 */
-	public function testRemoveUploadedIfcModel() {
+
+		public function testRemoveUploadedIfcModel()
+		{
 		$bobimmodel = new bobimmodel_impl();
 		//init dependancies
 		$sovfs = new sovfs_impl($this->vfsFileName, null, $this->vfsSubModule);
@@ -149,25 +164,27 @@ class TestBObimmodel extends TestBimCommon
 	/*
 	 * @covers removeIfcModelByModelId
 	 */
-	public function testRemoveIfcModelByModelId() {
+
+		public function testRemoveIfcModelByModelId()
+		{
 		$this->addIfcModel();
 		$bimModelArray = $this->sobimmodel->retrieveBimModelList();
 		$modelFound = false;
 		/* @var $bimModel BimModel */
-		foreach($bimModelArray as $bimModel ) {
-			if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId) {
+			foreach($bimModelArray as $bimModel)
+			{
+				if($bimModel->getFileName() == $this->vfsFileName && $bimModel->getVfsFileId() == $this->vfsFileId)
+				{
 				$modelFound = true;
 				break;
 			}
 		}
-		if($modelFound) {
+			if($modelFound)
+			{
 			$this->sobimmodel->setModelId($bimModel->getDatabaseId());
 			$this->sovfs->setSubModule($this->vfsSubModule);
 			$this->bobimmodel->removeIfcModelByModelId();
 			$this->assertThat($this->bobimmodel->checkBimModelExistsByModelId());
 		}
-		
 	}
-	
-	
-}
+	}

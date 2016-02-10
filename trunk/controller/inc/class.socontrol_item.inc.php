@@ -25,15 +25,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control_item', 'inc/model/');
 
 	class controller_socontrol_item extends controller_socommon
 	{
+
 		protected static $so;
 
 		/**
@@ -43,7 +43,7 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item');
 			}
@@ -78,7 +78,7 @@
 				$this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
-			$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
 			if($result)
 			{
@@ -97,7 +97,6 @@
 		 * @param $control item object to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-
 		function update($control_item)
 		{
 			$id = intval($control_item->get_id());
@@ -112,7 +111,7 @@
 				'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 			if($result)
 			{
@@ -173,9 +172,9 @@
 			$this->db->query($sql);
 			$counter = 0;
 			$control_item = null;
-			while ($this->db->next_record()) 
+			while($this->db->next_record())
 			{
-				if( !$counter )
+				if(!$counter)
 				{
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -203,7 +202,7 @@
 				$counter++;
 			}
 			
-			$control_item->set_options_array( $options_array );
+			$control_item->set_options_array($options_array);
 			
 			return $control_item;
 		}
@@ -227,14 +226,14 @@
 			$results = array();
 
 			//$condition = $this->get_conditions($query, $filters,$search_option);
-			$order = $sort ? "ORDER BY $sort $dir ": '';
+			$order = $sort ? "ORDER BY $sort $dir " : '';
 
 			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 			$sql = "SELECT * FROM controller_control_item $order";
 			//var_dump($sql);
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -280,8 +279,8 @@
 			// Search for based on search type
 			if($search_for)
 			{
-				$search_for = $this->marshal($search_for,'field');
-				$like_pattern = "'%".$search_for."%'";
+				$search_for		 = $this->marshal($search_for, 'field');
+				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses = array();
 				switch($search_type)
 				{
@@ -300,7 +299,7 @@
 
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "controller_control_item.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "controller_control_item.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
 			if(isset($filters['available']))
 			{
@@ -308,23 +307,23 @@
 			}
 			if(isset($filters['control_groups']))
 			{
-				$filter_clauses[] = "controller_control_item.control_group_id = {$this->marshal($filters['control_groups'],'int')}";
+				$filter_clauses[] = "controller_control_item.control_group_id = {$this->marshal($filters['control_groups'], 'int')}";
 			}
 			if(isset($filters['control_areas']))
 			{
 //				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 
-				$cat_id = (int) $filters['control_areas'];
+				$cat_id				 = (int)$filters['control_areas'];
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
 				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter = array($cat_id);
-				foreach ($cat_list as $_category)
+				foreach($cat_list as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
 
-				$filter_clauses[] = "controller_control_item.control_area_id IN (" .  implode(',', $cat_filter) .')';
+				$filter_clauses[] = "controller_control_item.control_area_id IN (" . implode(',', $cat_filter) . ')';
 			}
 			
 
@@ -353,7 +352,7 @@
 			{
 				$sort_field = 'controller_control_item.title';
 			}
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 			//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -361,13 +360,11 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		
-
 		function populate(int $control_item_id, &$control_item)
 		{
 			if($control_item == null)
 			{
-				$control_item = new controller_control_item((int) $control_item_id);
+				$control_item = new controller_control_item((int)$control_item_id);
 
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
@@ -392,7 +389,7 @@
 			//var_dump($sql1);
 			$this->db->query($sql1, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('control_group' => $this->db->f('id'));
 			}
@@ -414,8 +411,8 @@
 		*/
 		function get_items_for_control_group($control_id, $control_group_id)
 		{
-			$control_id = (int) $control_id;
-			$control_group_id = (int) $control_group_id;
+			$control_id			 = (int)$control_id;
+			$control_group_id	 = (int)$control_group_id;
 
 			$results = array();
 			

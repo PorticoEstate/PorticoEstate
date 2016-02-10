@@ -270,11 +270,7 @@
 			$ordermethod = ' ORDER BY custom_sort ASC';
 			if ( isset($data['order']) && $data['order'] )
 			{
-				$data['sort'] = 'ASC';
-				if ( isset($data['sort']) && $data['sort'] == 'DESC' )
-				{
-					$data['sort'] = 'DESC';
-				}
+				$data['sort'] = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 
 				$data['order'] = $this->_db->db_addslashes($data['order']);
 				$ordermethod = " ORDER BY {$data['order']} {$data['sort']}";

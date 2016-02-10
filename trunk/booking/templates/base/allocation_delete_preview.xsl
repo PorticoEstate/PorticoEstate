@@ -1,15 +1,20 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
-
-	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete Allocations')"/></dt>
-	</dl>
     <xsl:call-template name="msgbox"/>
-	<xsl:call-template name="yui_booking_i18n"/>
-
-	<!-- <xsl:call-template name="xmlsource"/> -->
-
-	    <form action="" method="POST">
+		<form action="" method="POST" class="pure-form pure-form-aligned" name="form">
+			<input type="hidden" name="tab" value=""/>
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="allocation/tabs"/>
+				<div id="allocation_delete" class="booking-container">
+					<fieldset>
+						<div class="heading">
+							<legend>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Delete Allocations')"/>
+								</h3>
+							</legend>
+						</div>
+					</fieldset>
 			<input type="hidden" name="organization_name" value="{allocation/organization_name}"/>
 			<input type="hidden" name="organization_id" value="{allocation/organization_id}"/>
 			<input type="hidden" name="building_name" value="{allocation/building_name}"/>
@@ -29,7 +34,10 @@
 				<input type="hidden" name="resources[]" value="{.}" />
 			</xsl:for-each>
 
-			<h4><xsl:value-of select="php:function('lang', 'Allocations that will be deleted')" /></h4>
+					<div class="pure-control-group">
+						<h4>
+							<xsl:value-of select="php:function('lang', 'Allocations that will be deleted')" />
+						</h4>
 			<div class="allocation-list">
 				<xsl:for-each select="valid_dates">
 					<li>
@@ -37,8 +45,11 @@
 					</li>
 				</xsl:for-each>
 			</div>
-
-			<h4><xsl:value-of select="php:function('lang', 'Allocations  with existing bookings (%1)', count(result/invalid[from_]))" /></h4>
+					</div>
+					<div class="pure-control-group">
+						<h4>
+							<xsl:value-of select="php:function('lang', 'Allocations  with existing bookings (%1)', count(result/invalid[from_]))" />
+						</h4>
 			<div class="allocation-list">
 				<xsl:for-each select="invalid_dates">
 					<li>
@@ -46,26 +57,36 @@
 					</li>
 				</xsl:for-each>
 			</div>
+					</div>
+				</div>
+			</div>
 	        <div class="form-buttons">
-	            <input type="submit" name="create">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')" /></xsl:attribute>
+				<input type="submit" name="create" class="pure-button pure-button-primary">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Delete')" />
+					</xsl:attribute>
 				</input>
-	            <a class="cancel">
-	                <xsl:attribute name="href"><xsl:value-of select="allocation/cancel_link"/></xsl:attribute>
+				<a class="cancel pure-button pure-button-primary">
+					<xsl:attribute name="href">
+						<xsl:value-of select="allocation/cancel_link"/>
+					</xsl:attribute>
 	                <xsl:value-of select="php:function('lang', 'Cancel')" />
 	            </a>
 	        </div>
 		</form>
-
     </div>
     <script type="text/javascript">
-        YAHOO.booking.initialSelection = <xsl:value-of select="allocation/resources_json"/>;
+		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
     </script>
 </xsl:template>
 <xsl:template name="xmlsource">
   NODE <xsl:value-of select="name()"/>
-  ATTR { <xsl:for-each select="attribute::*"><xsl:value-of select="name()"/>=<xsl:value-of select="."/> </xsl:for-each> }
-  CHILDREN: { <xsl:for-each select="*"><xsl:call-template name="xmlsource"/></xsl:for-each> }
+	ATTR { <xsl:for-each select="attribute::*">
+		<xsl:value-of select="name()"/>=<xsl:value-of select="."/>
+	</xsl:for-each> }
+	CHILDREN: { <xsl:for-each select="*">
+		<xsl:call-template name="xmlsource"/>
+	</xsl:for-each> }
   TEXT <xsl:value-of select="text()"/>
   <br/>
 </xsl:template>

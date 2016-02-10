@@ -3,6 +3,7 @@
 
 	class booking_uipermission_resource extends booking_uipermission
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

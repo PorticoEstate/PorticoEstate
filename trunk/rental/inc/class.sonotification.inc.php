@@ -1,11 +1,12 @@
 <?php
-phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.soworkbench_notification');
+	phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.soworkbench_notification');
 
-include_class('rental', 'notification', 'inc/model/');
+	include_class('rental', 'notification', 'inc/model/');
 
-class rental_sonotification extends rental_socommon
-{
+	class rental_sonotification extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -15,7 +16,8 @@ class rental_sonotification extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.sonotification');
 		}
 		return self::$so;
@@ -31,13 +33,13 @@ class rental_sonotification extends rental_socommon
 		$clauses = array('1=1');
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+			$order	 = $sort_field ? "ORDER BY $sort_field $dir" : '';
 		
 		if(isset($filters))
 		{
 			foreach($filters as $column => $value)
 			{
-				$clauses[] = $this->db->db_addslashes($column)."=".$this->db->db_addslashes($value);
+					$clauses[] = $this->db->db_addslashes($column) . "=" . $this->db->db_addslashes($value);
 			}
 		}
 		
@@ -64,22 +66,14 @@ class rental_sonotification extends rental_socommon
 	
 	protected function populate(int $notification_id, &$notification)
 	{
-		if(!isset($notification_id) || $notification_id < 1){
+			if(!isset($notification_id) || $notification_id < 1)
+			{
 			$notification_id = $this->unmarshal($this->db->f('notification_id', true), 'int');
 		}
 		$notification =  new rental_notification(
-			$notification_id, 
-			$this->unmarshal($this->db->f('account_id', true), 'int'),
-			$this->unmarshal($this->db->f('location_id', true), 'int'),
-			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
-			$this->unmarshal($this->db->f('date', true), 'int'),
-			$this->unmarshal($this->db->f('message', true), 'text'),
-			$this->unmarshal($this->db->f('recurrence', true), 'int'),
-			$this->unmarshal($this->db->f('last_notified', true), 'int'),
-			$this->unmarshal($this->db->f('title', true), 'string'),
-			$this->unmarshal($this->db->f('originated_from', true), 'int')
+			$notification_id, $this->unmarshal($this->db->f('account_id', true), 'int'), $this->unmarshal($this->db->f('location_id', true), 'int'), $this->unmarshal($this->db->f('contract_id', true), 'int'), $this->unmarshal($this->db->f('date', true), 'int'), $this->unmarshal($this->db->f('message', true), 'text'), $this->unmarshal($this->db->f('recurrence', true), 'int'), $this->unmarshal($this->db->f('last_notified', true), 'int'), $this->unmarshal($this->db->f('title', true), 'string'), $this->unmarshal($this->db->f('originated_from', true), 'int')
 		);	
-		$notification->set_field_of_responsibility_id($this->db->f('location_id',true),'int');
+			$notification->set_field_of_responsibility_id($this->db->f('location_id', true), 'int');
 		return $notification;
 	}
 	
@@ -105,7 +99,7 @@ class rental_sonotification extends rental_socommon
 			$values[] = $notification->get_location_id();
 		}
 		
-		$q ="INSERT INTO rental_notification (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+			$q		 = "INSERT INTO rental_notification (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		if($result)
 		{
@@ -151,18 +145,18 @@ class rental_sonotification extends rental_socommon
 		$result = $this->db->query($sql);
 		
 		//Iterate through all notifications
-		while ($this->db->next_record()) 
+			while($this->db->next_record())
 		{
 			$result_id = $this->unmarshal($this->db->f('id', true), 'int'); // The id of object
 			// Create notification object
 			$notification = $this->populate($result_id, $notification);
 
 			// Calculate timestamps the notification date, target date (default: today) and last notified
-			$notification_date = date("Y-m-d",$notification->get_date());
+				$notification_date = date("Y-m-d", $notification->get_date());
 			
 			if(!$day)
 			{
-				$day = date("Y-m-d",strtotime('now'));
+					$day = date("Y-m-d", strtotime('now'));
 			}
 			
 			$ts_notification_date = strtotime($notification_date);
@@ -172,7 +166,7 @@ class rental_sonotification extends rental_socommon
 			
 			// Check whether today is a notification date
 			$is_today_notification_date = false;
-			if( $ts_today == $ts_notification_date ) // today equals notification date
+				if($ts_today == $ts_notification_date) // today equals notification date
 			{
 				$is_today_notification_date = true;
 				
@@ -181,8 +175,9 @@ class rental_sonotification extends rental_socommon
 				{
 					$this->delete_notification($notification->get_id());
 				}
-			} else { // the original notification date is in the past
-				
+				}
+				else
+				{ // the original notification date is in the past
 				// Find out if today is notification date based on recurrence
 				$recurrence_interval = '';
 				switch($notification->get_recurrence())
@@ -199,14 +194,14 @@ class rental_sonotification extends rental_socommon
 				}
 				
 				$ts_next_recurrence;
-				for($i=1;;$i++) //loop intervals into the future
+					for($i = 1;; $i++) //loop intervals into the future
 				{
 					// next interval
-					$ts_next_recurrence = strtotime('+'.$i.' '.$recurrence_interval,$ts_notification_date);
+						$ts_next_recurrence = strtotime('+' . $i . ' ' . $recurrence_interval, $ts_notification_date);
 					
 					if($ts_next_recurrence > $ts_last_notified || $ts_last_notified == null) // the date for next recurrence is after last notification
 					{
-						if($ts_next_recurrence == $ts_today ) // today equals notification date
+							if($ts_next_recurrence == $ts_today) // today equals notification date
 						{
 							$is_today_notification_date = true;
 							break;
@@ -246,47 +241,39 @@ class rental_sonotification extends rental_socommon
 					$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
 					if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 					{
-						$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT,$location_names['location']);
+							$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $location_names['location']);
 						foreach($responsible_accounts as $ra)
 						{
 							$account_ids[] = $ra['account_id'];
 						}
 					}
-					
 				}
 			
 				//merge the two account arrays and retrieve only unique account ids
 				$unique_account_ids = array_unique($account_ids);
 				
 				//notify each unique account
-				foreach($unique_account_ids as $unique_account) {
+					foreach($unique_account_ids as $unique_account)
+					{
 					if($unique_account && $unique_account > 0)
 					{
 						
 						$notification = new rental_notification
 						(
 							0,					// No notification identifier
-							$unique_account,
-							0,					// No location identifier
-							$this->unmarshal($this->db->f('contract_id', true), 'int'),
-							$ts_today,
-							null,
-							null,
-							null,
-							null,
-							$notification_id
+	   $unique_account, 0, // No location identifier
+	   $this->unmarshal($this->db->f('contract_id', true), 'int'), $ts_today, null, null, null, null, $notification_id
 						);
 						rental_soworkbench_notification::get_instance()->store($notification);
 					}		
 				}
 				
 				// set today as last notification date for this notification
-				$this->set_notification_date($notification_id,$ts_today);
+					$this->set_notification_date($notification_id, $ts_today);
 			}
 		}	
 	}
 
-	
 	/**
 	 * This method sets the last notification date on a given notification
 	 * @param $notification_id	the notification to update
@@ -298,8 +285,10 @@ class rental_sonotification extends rental_socommon
 		$sql = "UPDATE rental_notification SET last_notified = $notification_date WHERE id = $notification_id";
 		$result = $this->db->query($sql);
 		
-		if($result) { return true; }
-		else { return false; }
+			if($result)
+			{ return true;}
+			else
+			{ return false;}
 	}
 	
 	/**
@@ -312,7 +301,9 @@ class rental_sonotification extends rental_socommon
 		$sql = "UPDATE rental_notification SET deleted = true WHERE id = $id";
 		$result = $this->db->query($sql);
 		
-		if($result) { return true; }
-		else { return false; }
+			if($result)
+			{ return true;}
+			else
+			{ return false;}
+		}
 	}
-}

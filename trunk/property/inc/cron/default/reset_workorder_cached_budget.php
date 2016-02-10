@@ -24,13 +24,11 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class  reset_workorder_cached_budget extends property_cron_parent
@@ -54,17 +52,17 @@
 			. " WHERE continuous = 1"// AND fm_workorder_budget.year > " . (date('Y') -1)
 			. " ORDER BY fm_workorder.id";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$_order_budget = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$orders[] = $this->db->f('order_id');
 			}
 			
-			foreach ($orders as $order_id)
+			foreach($orders as $order_id)
 			{
 				phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
-				execMethod('property.soworkorder.get_budget',$order_id);
+				execMethod('property.soworkorder.get_budget', $order_id);
 			}
 
 			$count_orders = count($orders);

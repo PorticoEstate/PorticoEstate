@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template match="menu">
+
+<!-- $Id$ -->
+<xsl:template match="menu">
 		<table width="100%" align="center" id="legacy-menu">
 			<tr>
 				<xsl:attribute name="class">
@@ -92,4 +93,4 @@
 				</xsl:choose>
 			</xsl:for-each>
 		</table>
-	</xsl:template>
+</xsl:template>

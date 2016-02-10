@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="user_lid_filter">
+
+<!-- $Id$ -->
+<xsl:template name="user_lid_filter">
 		<xsl:variable name="select_action">
 			<xsl:value-of select="select_action"/>
 		</xsl:variable>
@@ -24,10 +25,10 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="user_list">
+<!-- New template-->
+<xsl:template match="user_list">
 		<xsl:variable name="lid">
 			<xsl:value-of select="lid"/>
 		</xsl:variable>
@@ -47,4 +48,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

@@ -158,6 +158,7 @@ HTML;
 		$var = array
 		(
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

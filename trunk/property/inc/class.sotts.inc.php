@@ -24,18 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage helpdesk
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_sotts
 	{
+
 		var $fields_updated			= false;
 		var $uicols_related			= array();
 		var $acl_location 			= '.ticket';
@@ -44,7 +43,6 @@
 		public $sum_actual_cost		= 0;
 		public $sum_difference		= 0;
 		protected $global_lock = false;
-
 		public $soap_functions = array
 			(
 				'read' => array(
@@ -52,8 +50,6 @@
 					'out' => array('array')
 				)
 			);
-
-
 		public $xmlrpc_methods = array
 			(
 				array
@@ -63,11 +59,10 @@
 				)
 			);
 
-
 		function __construct()
 		{
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->historylog	= CreateObject('property.historylog','tts');
+			$this->historylog = CreateObject('property.historylog', 'tts');
 			$this->custom 		= createObject('property.custom_fields');
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
@@ -76,15 +71,14 @@
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
-
-		function list_methods($_type='xmlrpc')
+		function list_methods($_type = 'xmlrpc')
 		{
 			/*
 			  This handles introspection or discovery by the logged in client,
 			  in which case the input might be an array.  The server always calls
 			  this function to fill the server dispatch map using a string.
 			 */
-			if (is_array($_type))
+			if(is_array($_type))
 			{
 				$_type = $_type['type'] ? $_type['type'] : $_type[0];
 			}
@@ -94,7 +88,7 @@
 				$xml_functions = array(
 					'read' => array(
 						'function'  => 'read',
-						'signature' => array(array(xmlrpcArray,xmlrpcArray)),
+							'signature' => array(array(xmlrpcArray, xmlrpcArray)),
 						'docstring' => 'Get list of tickets'
 					),
 				);
@@ -109,53 +103,53 @@
 			}
 		}
 
-
 		function get_category_name($cat_id)
 		{
 			$this->db->query("SELECT descr FROM fm_tts_category  WHERE id='$cat_id' ");
 			$this->db->next_record();
-			return $this->db->f('descr',true);
+			return $this->db->f('descr', true);
 		}
 
 		function read($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
-			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
-			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id']: 0;
-			$reported_by	= isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by']: 0;
-			$query			= isset($data['query'])?$data['query']:'';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-			$order			= isset($data['order'])?$data['order']:'';
-			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']:0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id']:0;
-			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id']:0;
-			$allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'O'; //O='Open'
+			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$reported_by = isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
+			$district_id = isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
+			$part_of_town_id = isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id'] : 0;
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$allrows = $results == -1 ? true : false;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
-			$external		= isset($data['external'])?$data['external']:'';
+			$external = isset($data['external']) ? $data['external'] : '';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new			= isset($data['new']) ? $data['new'] : '';
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$vendor_id		= isset($data['vendor_id']) && $data['vendor_id'] ? (int)$data['vendor_id']:0;
-			$ecodimb		= isset($data['ecodimb']) && $data['ecodimb'] ? (int)$data['ecodimb']:0;
-			$b_account		= isset($data['b_account']) && $data['b_account'] ? $data['b_account']:'';
-			$building_part	= isset($data['building_part']) && $data['building_part'] ? $data['building_part']:'';
-			$branch_id		= isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id']:0;
-			$order_dim1		= isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1']:0;
-			$custom_filtermethod= isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod']:array();
+			$vendor_id = isset($data['vendor_id']) && $data['vendor_id'] ? (int)$data['vendor_id'] : 0;
+			$ecodimb = isset($data['ecodimb']) && $data['ecodimb'] ? (int)$data['ecodimb'] : 0;
+			$b_account = isset($data['b_account']) && $data['b_account'] ? $data['b_account'] : '';
+			$building_part = isset($data['building_part']) && $data['building_part'] ? $data['building_part'] : '';
+			$branch_id = isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id'] : 0;
+			$order_dim1 = isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1'] : 0;
+			$custom_filtermethod = isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod'] : array();
 
 
 			$result_order_field = array();
-			if ($order)
+			if($order)
 			{
-				if( $order == 'assignedto' )
+				if($order == 'assignedto')
 				{
 					$result_order_field = array('account_lastname' => 'account_lastname');
 					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
 					$order = 'account_lastname';
 				}
-				else if( $order == 'user' )
+				else if($order == 'user')
 				{
 					$result_order_field = array('account_lastname' => 'account_lastname');
 					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
@@ -176,19 +170,19 @@
 			$union_select = false;
 			$filtermethod = '';
 
-			$where= 'WHERE';
+			$where = 'WHERE';
 
 			$GLOBALS['phpgw']->config->read();
 
 			if(!isset($GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets']) || !$GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets'])
 			{
-				$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
+				$this->grants = $GLOBALS['phpgw']->session->appsession('grants_ticket', 'property');
 
 				if(!$this->grants)
 				{
 					$GLOBALS['phpgw']->acl->set_account_id($this->account);
-					$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
-					$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
+					$this->grants = $GLOBALS['phpgw']->acl->get_grants('property', '.ticket');
+					$GLOBALS['phpgw']->session->appsession('grants_ticket', 'property', $this->grants);
 				}
 
 				$public_user_list = array();
@@ -197,9 +191,9 @@
 					$categories = $GLOBALS['phpgw']->locations->get_subs('property', '.ticket.category');
 
 					$category_grants = array();
-					foreach ($categories as $location)
+					foreach($categories as $location)
 					{
-						$category_grants	= array_merge($category_grants, $GLOBALS['phpgw']->acl->get_grants('property',$location));
+						$category_grants = array_merge($category_grants, $GLOBALS['phpgw']->acl->get_grants('property', $location));
 					}
 
 					foreach($category_grants as $user => $right)
@@ -214,11 +208,11 @@
 					if($access_location)
 					{
 						$filtermethod .= " $where fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
-						$where= 'AND';
+						$where = 'AND';
 					}
 				}
 
-				if (is_array($this->grants))
+				if(is_array($this->grants))
 				{
 					$grants = & $this->grants;
 					foreach($grants as $user => $right)
@@ -231,25 +225,25 @@
 				{
 					$public_user_list = array_unique($public_user_list);
 					reset($public_user_list);
-					$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
-					$where= 'AND';
+					$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',', $public_user_list) . "))";
+					$where = 'AND';
 				}
 			}
 
-			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
+			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id', 'property'))
 			{
 				$filtermethod .= $where . ' fm_tts_tickets.tenant_id=' . $tenant_id;
 				$where = 'AND';
 			}
 
-			if ($status_id == 'X')
+			if($status_id == 'X')
 			{
 				$closed = '';
-				$this->db->query('SELECT * from fm_tts_status',__LINE__,__FILE__);
+				$this->db->query('SELECT * from fm_tts_status', __LINE__, __FILE__);
 
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
-					if( $this->db->f('closed'))
+					if($this->db->f('closed'))
 					{
 						$closed .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
 					}
@@ -261,7 +255,7 @@
 //				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
 //				$where = 'AND';
 			}
-			else if ($status_id == 'O2') // explicite 'open'
+			else if($status_id == 'O2') // explicite 'open'
 			{
 				$filtermethod .= " $where ( fm_tts_tickets.status='O'";
 				$where = 'AND';
@@ -269,11 +263,11 @@
 			else if($status_id == 'O')
 			{
 				$open = '';
-				$this->db->query('SELECT * from fm_tts_status',__LINE__,__FILE__);
+				$this->db->query('SELECT * from fm_tts_status', __LINE__, __FILE__);
 
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
-					if( ! $this->db->f('closed'))
+					if(!$this->db->f('closed'))
 					{
 						$open .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
 					}
@@ -292,7 +286,7 @@
 				$or = '';
 				$filtermethod .= "{$where} ((";
 
-				foreach ($status_id as $value)
+				foreach($status_id as $value)
 				{
 					if($value)
 					{
@@ -320,44 +314,44 @@
 				$filtermethod .= ')';
 			}
 
-			if ($cat_id > 0)
+			if($cat_id > 0)
 			{
 				$filtermethod .= " $where cat_id=" . (int)$cat_id;
 				$where = 'AND';
 			}
 
-			if ($vendor_id > 0)
+			if($vendor_id > 0)
 			{
 				$filtermethod .= " $where vendor_id=" . (int)$vendor_id;
 				$where = 'AND';
 			}
-			if ($ecodimb > 0)
+			if($ecodimb > 0)
 			{
 				$filtermethod .= " $where ecodimb=" . (int)$ecodimb;
 				$where = 'AND';
 			}
-			if ($b_account > 0)
+			if($b_account > 0)
 			{
 				$filtermethod .= " $where b_account_id='{$b_account}'";
 				$where = 'AND';
 			}
-			if ($building_part)
+			if($building_part)
 			{
 				$filtermethod .= " $where building_part='{$building_part}'";
 				$where = 'AND';
 			}
-			if ($branch_id > 0)
+			if($branch_id > 0)
 			{
 				$filtermethod .= " $where branch_id=" . (int)$branch_id;
 				$where = 'AND';
 			}
-			if ($order_dim1 > 0)
+			if($order_dim1 > 0)
 			{
 				$filtermethod .= " $where order_dim1=" . (int)$order_dim1;
 				$where = 'AND';
 			}
 
-			if ($user_id > 0)
+			if($user_id > 0)
 			{
 				$filtermethod .= " {$where} (assignedto={$user_id}";
 				$where = 'AND';
@@ -366,48 +360,48 @@
 				{
 					$membership = array(-1 => 0);
 				}
-				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',',array_keys($membership)) . ')))'; 
+				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',', array_keys($membership)) . ')))';
 			}
 
-			if ($user_id < 0)
+			if($user_id < 0)
 			{
 				$filtermethod .= " {$where} fm_tts_tickets.user_id=" . (int)abs($user_id);
 				$where = 'AND';
 			}
 
-			if ($reported_by > 0)
+			if($reported_by > 0)
 			{
 				$filtermethod .= " $where fm_tts_tickets.user_id=" . (int)$reported_by;
 				$where = 'AND';
 			}
 
-			if ($district_id > 0)
+			if($district_id > 0)
 			{
-				$filtermethod .= " $where  district_id=" .(int)$district_id;
+				$filtermethod .= " $where  district_id=" . (int)$district_id;
 				$where = 'AND';
 			}
 
-			if ($part_of_town_id > 0)
+			if($part_of_town_id > 0)
 			{
 				$filtermethod .= " $where fm_part_of_town.part_of_town_id= " . (int)$part_of_town_id;
 				$where = 'AND';
 			}
 
-			$actual_cost_field = array('actual_cost' =>'fm_tts_tickets.actual_cost');
-			$budget_field = array('budget' =>'fm_tts_tickets.budget');
+			$actual_cost_field = array('actual_cost' => 'fm_tts_tickets.actual_cost');
+			$budget_field = array('budget' => 'fm_tts_tickets.budget');
 
 			$actual_cost_group_field = ',fm_tts_tickets.actual_cost';
 			$budget_group_field = ',fm_tts_tickets.budget';
 			$date_cost_join = '';
 			$date_budget_join = '';
 
-			if ($start_date)
+			if($start_date)
 			{
 				$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 				$_end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$_start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-				$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
+//				$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
 
 				if($order_add || $order_edit)
 				{
@@ -417,17 +411,16 @@
 //					$filtermethod .= " OR (fm_tts_payments.period >= {$start_period} AND fm_tts_payments.period <= {$end_period})";
 					$date_cost_join = "LEFT OUTER JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
 //					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
-					$actual_cost_field = array('SUM(actual_cost) AS actual_cost' =>'fm_tts_payments.amount as actual_cost');
+					$actual_cost_field = array('SUM(actual_cost) AS actual_cost' => 'fm_tts_payments.amount as actual_cost');
 
 					$actual_cost_group_field = '';
-
 
 					$start_budget_period = date('Y', $end_date) . '00';
 					$end_budget_period = date('Y', $start_date) . '13';
 //					$filtermethod .= " OR (fm_tts_budget.period >= {$start_budget_period} AND fm_tts_budget.period <= {$end_budget_period}))";
 					$date_budget_join = "LEFT OUTER JOIN fm_tts_budget ON ( fm_tts_tickets.id=fm_tts_budget.ticket_id AND fm_tts_budget.period >= $start_budget_period AND fm_tts_budget.period <= $end_budget_period )";
 //					$budget_field = 'SUM(fm_tts_budget.amount) AS budget';
-					$budget_field = array('SUM(budget) AS budget' =>'fm_tts_budget.amount as budget');
+					$budget_field = array('SUM(budget) AS budget' => 'fm_tts_budget.amount as budget');
 					$budget_group_field = '';
 				}
 				else
@@ -435,19 +428,19 @@
 //					$filtermethod .= ')';
 				}
 
-				$where= 'AND';
+				$where = 'AND';
 			}
 
-			if ($location_code)
+			if($location_code)
 			{
 				$filtermethod .= " $where fm_tts_tickets.location_code {$this->like} '{$location_code}%'";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 			foreach($custom_filtermethod as $custom_filter_key => $custom_filter_value)
 			{
 				$filtermethod .= " $where fm_tts_tickets.{$custom_filter_key} = '{$custom_filter_value}'";
-				$where= 'AND';
+				$where = 'AND';
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
@@ -471,27 +464,27 @@
 					$querymethod .= ')';
 				}
 
-				$query = str_replace(",",'.',$query);
+				$query = str_replace(",", '.', $query);
 				if(stristr($query, '.'))
 				{
 					if(!$p_num)
 					{
-						$query=explode(".",$query);
+						$query = explode(".", $query);
 						$querymethod .= " OR (fm_tts_tickets.loc1='{$query[0]}' AND fm_tts_tickets.loc4='{$query[1]}')";
 					}
 					else
 					{
-						$query=explode(".",$query);
+						$query = explode(".", $query);
 						$querymethod = " {$where} (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='{$query[3]}')";
 					}
 				}
 
-				$custom_filter = $this->custom->get_custom_filter($location_id,'fm_tts_tickets', $criteria_id = '', $query);
+				$custom_filter = $this->custom->get_custom_filter($location_id, 'fm_tts_tickets', $criteria_id = '', $query);
 
-				if ($custom_filter['querymethod'])
+				if($custom_filter['querymethod'])
 				{
 					$_where = $where == 'AND' ? 'OR' : 'WHERE';
-					$querymethod .= " $_where (" . implode (' OR ',$custom_filter['querymethod']) . ')';
+					$querymethod .= " $_where (" . implode(' OR ', $custom_filter['querymethod']) . ')';
 				}
 				else if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
 				{
@@ -530,12 +523,12 @@
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
 
-			foreach ($custom_cols as $custom_col)
+			foreach($custom_cols as $custom_col)
 			{
 				$_return_field_array[$custom_col['column_name']] = "fm_tts_tickets.{$custom_col['column_name']}";
 			}
 
-			if ($result_order_field)
+			if($result_order_field)
 			{
 				$_return_field_array = array_merge($_return_field_array, $result_order_field);
 			}
@@ -592,14 +585,15 @@
 				$limit_and_offset = $this->db->get_offset('', $start);
 			}
 
-			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array('fm_district.descr','fm_tts_views.id'), $return_fields_plain);
-			$group_fields_union = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array('fm_district.descr','fm_tts_views.id'), $return_fields_union);
+			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array(
+				'fm_district.descr', 'fm_tts_views.id'), $return_fields_plain);
+			$group_fields_union = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array(
+				'fm_district.descr', 'fm_tts_views.id'), $return_fields_union);
 			$sub_select = "({$union_budget} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset}) UNION ({$union_cost} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset})";
 
 			if($union_select)
 			{
 				$main_sql = "SELECT {$return_fields} FROM ({$sub_select} ) as t GROUP BY " . implode(',', array_keys($_return_field_array)) . " {$ordermethod}";
-			
 			}
 			else
 			{
@@ -625,7 +619,7 @@
 
 //			$cache_info = phpgwapi_cache::session_get('property','tts_listing_metadata');
 
-			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql_cnt))
+			if(!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql_cnt))
 			{
 				$cache_info = array();
 			}
@@ -641,13 +635,13 @@
 				{
 					$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget) as t";
 				}
-				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query($sql2, __LINE__, __FILE__);
 				$this->db->next_record();
 				unset($sql2);
 
 				$cache_info = array
 				(
-					'total_records'		=> $union_select ? ((int)$this->db->f('cnt')/2) : $this->db->f('cnt'),
+					'total_records' => $union_select ? ((int)$this->db->f('cnt') / 2) : $this->db->f('cnt'),
 					'sum_budget'		=> $this->db->f('sum_budget'),
 					'sum_actual_cost'	=> $this->db->f('sum_actual_cost'),
 					'sql_hash'			=> md5($sql_cnt)
@@ -674,7 +668,7 @@
 					$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id) as t";
 				}
 
-				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query($sql2, __LINE__, __FILE__);
 				$this->db->next_record();
 				unset($sql2);
 
@@ -693,27 +687,27 @@
 			{
 				if(!$allrows)
 				{
-					$this->db->limit_query($main_sql,$start,__LINE__,__FILE__);
+					$this->db->limit_query($main_sql, $start, __LINE__, __FILE__, $results);
 				}
 				else
 				{
 					$_fetch_single = false;
-					$this->db->query($main_sql,__LINE__,__FILE__, false, $_fetch_single );
+					$this->db->query($main_sql, __LINE__, __FILE__, false, $_fetch_single);
 					unset($_fetch_single);
 				}
 
 				$i = 0;
-				while ($this->db->next_record())
+				while($this->db->next_record())
 				{
-					$tickets[]= array
+					$tickets[] = array
 					(
-							'id'				=> (int) $this->db->f('id'),
-							'subject'			=> $this->db->f('subject',true),
-							'loc1_name'			=> $this->db->f('loc1_name',true),
+						'id' => (int)$this->db->f('id'),
+						'subject' => $this->db->f('subject', true),
+						'loc1_name' => $this->db->f('loc1_name', true),
 							'location_code'		=> $this->db->f('location_code'),
-							'district'			=> $this->db->f('district',true),
+						'district' => $this->db->f('district', true),
 							'user_id'			=> $this->db->f('user_id'),
-							'address'			=> $this->db->f('address',true),
+						'address' => $this->db->f('address', true),
 							'assignedto'		=> $this->db->f('assignedto'),
 							'status'			=> $this->db->f('status'),
 							'priority'			=> $this->db->f('priority'),
@@ -733,11 +727,12 @@
 							'order_dim1'		=> $this->db->f('order_dim1'),
 					);
 
-					foreach ($custom_cols as $custom_col)
+					foreach($custom_cols as $custom_col)
 					{
-						if($custom_value = $this->db->f($custom_col['column_name'],true))
+						if($custom_value = $this->db->f($custom_col['column_name'], true))
 						{
-							$custom_value = $this->custom->get_translated_value(array('value' =>$custom_value, 'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype'] ), $location_id);
+							$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+								'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
 						}
 						$tickets[$i][$custom_col['column_name']] = $custom_value;
 					}
@@ -756,25 +751,30 @@
 				. " FROM fm_entity_category "
 				. " WHERE tracking=1 ORDER by entity_id,cat_id";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$entity = array();
 			$uicols = array();
-			$i=0;
-			while ($this->db->next_record())
+			$i = 0;
+			while($this->db->next_record())
 			{
-				$entity[$i]['entity_id']=$this->db->f('entity_id');
-				$entity[$i]['cat_id']=$this->db->f('cat_id');
-				$entity[$i]['type']=".entity.{$this->db->f('entity_id')}.{$this->db->f('cat_id')}";
-				$uicols[]	=  str_replace(' ', '_', $this->db->f('name',true));
+				$entity[$i]['entity_id'] = $this->db->f('entity_id');
+				$entity[$i]['cat_id'] = $this->db->f('cat_id');
+				$entity[$i]['type'] = ".entity.{$this->db->f('entity_id')}.{$this->db->f('cat_id')}";
+
+				$name = str_replace(' ', '_', $this->db->f('name', true));
+				$entity[$i]['name'] = $name;
+				$uicols[] = $name;
 				$i++;
 			}
 
-			$entity[$i]['type']='.project';
+			$entity[$i]['type'] = '.project';
+			$entity[$i]['name'] = 'project';
 			$uicols[]	= 'project';
 			$i++;
 
-			$entity[$i]['type']='.project.workorder';
+			$entity[$i]['type'] = '.project.workorder';
+			$entity[$i]['name'] = 'workorder';
 			$uicols[]	= 'workorder';
 
 
@@ -784,12 +784,12 @@
 
 		function read_single($id, $values = array())
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$sql = "SELECT * FROM fm_tts_tickets WHERE id = {$id}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$ticket['id']				= $id;
 				$ticket['assignedto']		= $this->db->f('assignedto');
@@ -802,7 +802,7 @@
 				$ticket['details']			= $this->db->f('details', true);
 				$ticket['location_code']	= $this->db->f('location_code');
 				$ticket['contact_phone']	= $this->db->f('contact_phone');
-				$ticket['contact_email']	= $this->db->f('contact_email',true);
+				$ticket['contact_email'] = $this->db->f('contact_email', true);
 				$ticket['address']			= $this->db->f('address', true);
 				$ticket['tenant_id']		= $this->db->f('tenant_id');
 				$ticket['p_num']			= $this->db->f('p_num');
@@ -819,7 +819,7 @@
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
-				$ticket['building_part']	= $this->db->f('building_part',true);
+				$ticket['building_part'] = $this->db->f('building_part', true);
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
@@ -827,18 +827,18 @@
 				$ticket['entry_date']		= $this->db->f('entry_date');
 				$ticket['modified_date']	= $this->db->f('modified_date');
 
-				$user_id=(int)$this->db->f('user_id');
+				$user_id = (int)$this->db->f('user_id');
 
 				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
-				if ($ticket['assignedto'] > 0)
+				if($ticket['assignedto'] > 0)
 				{
 					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 				}
 
-				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				if(isset($values['attributes']) && is_array($values['attributes']))
 				{
 					$ticket['attributes'] = $values['attributes'];
-					foreach ( $ticket['attributes'] as &$attr )
+					foreach($ticket['attributes'] as &$attr)
 					{
 						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
@@ -848,28 +848,28 @@
 			return $ticket;
 		}
 
-		function update_view($id='')
+		function update_view($id = '')
 		{
 			// Have they viewed this ticket before ?
-			$id = (int) $id;
+			$id = (int)$id;
 			$this->db->query("SELECT count(*) as cnt FROM fm_tts_views where id={$id}"
-				. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
+			. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			if (! $this->db->f('cnt'))
+			if(!$this->db->f('cnt'))
 			{
 				$this->db->query("INSERT INTO fm_tts_views (id,account_id,time) values ({$id},'"
-					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . time() . "')",__LINE__,__FILE__);
+				. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . time() . "')", __LINE__, __FILE__);
 			}
 		}
 
-		function add(&$ticket , $values_attribute = array())
+		function add(&$ticket, $values_attribute = array())
 		{
 			$table = 'fm_tts_tickets';
 
 			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
-				foreach ($ticket['location'] as $input_name => $value)
+				foreach($ticket['location'] as $input_name => $value)
 				{
 					if(isset($value) && $value)
 					{
@@ -892,7 +892,7 @@
 
 			if(isset($ticket['extra']) && is_array($ticket['extra']))
 			{
-				foreach ($ticket['extra'] as $input_name => $value)
+				foreach($ticket['extra'] as $input_name => $value)
 				{
 					if(isset($value) && $value)
 					{
@@ -903,7 +903,7 @@
 				if($ticket['extra']['p_num'] && $ticket['extra']['p_entity_id'] && $ticket['extra']['p_cat_id'])
 				{
 					$entity	= CreateObject('property.soadmin_entity');
-					$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'],$ticket['extra']['p_cat_id']);
+					$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'], $ticket['extra']['p_cat_id']);
 				}
 			}
 
@@ -938,7 +938,7 @@
 
 			unset($_address);
 
-			$value_set['priority']		= isset($ticket['priority'])?$ticket['priority']:0;
+			$value_set['priority'] = isset($ticket['priority']) ? $ticket['priority'] : 0;
 			$value_set['user_id']		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$value_set['assignedto']	= $ticket['assignedto'];
 			$value_set['group_id']		= $ticket['group_id'];
@@ -959,12 +959,12 @@
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
-			$id = $this->db->get_last_insert_id($table,'id');
+			$id = $this->db->get_last_insert_id($table, 'id');
 			if(isset($ticket['extra']['contact_phone']) && $ticket['extra']['contact_phone'] && isset($ticket['extra']['tenant_id']) && $ticket['extra']['tenant_id'])
 			{
-				$this->db->query("UPDATE fm_tenant SET contact_phone='{$ticket['extra']['contact_phone']}' WHERE id='{$ticket['extra']['tenant_id']}'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tenant SET contact_phone='{$ticket['extra']['contact_phone']}' WHERE id='{$ticket['extra']['tenant_id']}'", __LINE__, __FILE__);
 			}
 
 			if(isset($ticket['origin']) && is_array($ticket['origin']))
@@ -991,10 +991,10 @@
 			{
 				$ticket['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$ticket['extra']['p_entity_id']}.{$ticket['extra']['p_cat_id']}");
  
- 				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = '. (int)$ticket['extra']['p_entity_id'] . ' AND id = ' . (int)$ticket['extra']['p_cat_id']);
+				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = ' . (int)$ticket['extra']['p_entity_id'] . ' AND id = ' . (int)$ticket['extra']['p_cat_id']);
 				$this->db->next_record();
 				$prefix = $this->db->f('prefix');
-				$ticket['origin_item_id']		= (int) ltrim($ticket['extra']['p_num'], $prefix);
+				$ticket['origin_item_id'] = (int)ltrim($ticket['extra']['p_num'], $prefix);
 			
 				$interlink_data = array
 				(
@@ -1009,19 +1009,19 @@
 			if($interlink_data)
 			{
 				$interlink 	= CreateObject('property.interlink');
-				$interlink->add($interlink_data,$this->db);
+				$interlink->add($interlink_data, $this->db);
 			}
 
 			if($this->db->transaction_commit())
 			{
-				$this->historylog->add('O',$id, time(),'');
+				$this->historylog->add('O', $id, time(), '');
 				if($ticket['finnish_date'])
 				{
-					$this->historylog->add('IF',$id,$ticket['finnish_date'],'');
+					$this->historylog->add('IF', $id, $ticket['finnish_date'], '');
 				}
 			}
 
-			$receipt['message'][]=array('msg'=>lang('Ticket %1 has been saved',$id));
+			$receipt['message'][] = array('msg' => lang('Ticket %1 has been saved', $id));
 			$receipt['id']	= $id;
 			$ticket['id'] = $id; //returned by reference
 			return $receipt;
@@ -1032,14 +1032,13 @@
 		 *
 		 * @return array with list of custom status
 		 */
-
 		public function get_custom_status()
 		{
 			$sql = "SELECT * FROM fm_tts_status ORDER BY sorting ASC";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			$status= array();
-			while ($this->db->next_record())
+			$status = array();
+			while($this->db->next_record())
 			{
 				$status[] = array
 				(
@@ -1052,15 +1051,15 @@
 			return $status;
 		}
 
-		function update_status($ticket,$id = 0)
+		function update_status($ticket, $id = 0)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			// DB Content is fresher than http posted value.
-			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
+			$this->db->query("select * from fm_tts_tickets where id='$id'", __LINE__, __FILE__);
 			$this->db->next_record();
 			$old_status  		= $this->db->f('status');
 
-			if ( $this->db->get_transaction() )
+			if($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -1071,54 +1070,54 @@
 
 
 			/*
-			 ** phpgw_fm_tts_append.append_type - Defs
-			 ** R - Reopen ticket
-			 ** X - Ticket closed
-			 ** O - Ticket opened
-			 ** C - Comment appended
-			 ** A - Ticket assignment
-			 ** G - Ticket group assignment
-			 ** P - Priority change
-			 ** T - Category change
-			 ** S - Subject change
-			 ** B - Budget
-			 **	AC - actual cost changed
-			 ** H - Billing hours
-			 ** F - finnish date
-			 ** C% - Status changed
-			 ** L - Location changed
-			 ** M - Mail sent to vendor
+			 * * phpgw_fm_tts_append.append_type - Defs
+			 * * R - Reopen ticket
+			 * * X - Ticket closed
+			 * * O - Ticket opened
+			 * * C - Comment appended
+			 * * A - Ticket assignment
+			 * * G - Ticket group assignment
+			 * * P - Priority change
+			 * * T - Category change
+			 * * S - Subject change
+			 * * B - Budget
+			 * *	AC - actual cost changed
+			 * * H - Billing hours
+			 * * F - finnish date
+			 * * C% - Status changed
+			 * * L - Location changed
+			 * * M - Mail sent to vendor
 			 */
 
 			$this->fields_updated = false;
 
-			if ($old_status != $ticket['status'])
+			if($old_status != $ticket['status'])
 			{
-				$check_old_custom = (int) trim($old_status,'C');
-				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
+				$check_old_custom = (int)trim($old_status, 'C');
+				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$old_closed = $this->db->f('closed');
 				$this->fields_updated = true;
-				if($old_status=='X' || $old_closed)
+				if($old_status == 'X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
-					$this->historylog->add('R',$id,$ticket['status'],$old_status);
+					$this->historylog->add('R', $id, $ticket['status'], $old_status);
 
-					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
 				}
 				else
 				{
-					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
-					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
+					$this->historylog->add($ticket['status'], $id, $ticket['status'], $old_status);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}", __LINE__, __FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
 
 				//Close cases
-				$check_new_custom = (int) trim($ticket['status'],'C');
-				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+				$check_new_custom = (int)trim($ticket['status'], 'C');
+				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
 
-				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status != 'X' && !$old_closed))
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 					// at controller
@@ -1134,47 +1133,45 @@
 						'status'		=> 'closed')
 					);
 				}
-
 			}
 
-			if ($this->fields_updated)
+			if($this->fields_updated)
 			{
-				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}",__LINE__,__FILE__);
+				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
 			}
 
-			if ( !$this->global_lock )
+			if(!$this->global_lock)
 			{
 				$this->db->transaction_commit();
 			}
 
 			return $this->fields_updated;
-
 		}
 
-		function update_priority($ticket,$id = 0)
+		function update_priority($ticket, $id = 0)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$receipt = array();
 			$this->fields_updated = false;
 
-			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$oldpriority  = $this->db->f('priority');
 
 			$this->db->transaction_begin();
 
-			if ($oldpriority != $ticket['priority'])
+			if($oldpriority != $ticket['priority'])
 			{
 				$this->fields_updated = true;
 				$this->db->query("UPDATE fm_tts_tickets set priority='" . $ticket['priority']
-					. "' WHERE id={$id}",__LINE__,__FILE__);
-				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
+				. "' WHERE id={$id}", __LINE__, __FILE__);
+				$this->historylog->add('P', $id, $ticket['priority'], $oldpriority);
 			}
 
-			if ($this->fields_updated)
+			if($this->fields_updated)
 			{
-				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}",__LINE__,__FILE__);
-				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
+				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
 			}
 
 			$this->db->transaction_commit();
@@ -1182,14 +1179,13 @@
 			return $receipt;
 		}
 
-
-		function update_ticket(&$ticket,$id = 0, $receipt = array(), $values_attribute = array(), $simple = false)
+		function update_ticket(&$ticket, $id = 0, $receipt = array(), $values_attribute = array(), $simple = false)
 		{
 			$this->fields_updated = array();
-			$id = (int) $id;
+			$id = (int)$id;
 			$ticket['id'] = $id;
 			// DB Content is fresher than http posted value.
-			$this->db->query("SELECT * FROM fm_tts_tickets WHERE id='$id'",__LINE__,__FILE__);
+			$this->db->query("SELECT * FROM fm_tts_tickets WHERE id='$id'", __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$location_code 			= $this->db->f('location_code');
@@ -1208,18 +1204,30 @@
 			$old_subject			= $this->db->f('subject');
 			$old_contact_id			= $this->db->f('contact_id');
 			$old_order_cat_id		= $this->db->f('order_cat_id');
-			$old_building_part		= $this->db->f('building_part',true);
+			$old_building_part = $this->db->f('building_part', true);
 			$old_order_dim1			= (int)$this->db->f('order_dim1');
 
 
-			if($oldcat_id ==0){$oldcat_id ='';}
-			if($old_order_cat_id ==0){$old_order_cat_id ='';}
-			if($oldassigned ==0){$oldassigned ='';}
-			if($oldgroup_id ==0){$oldgroup_id ='';}
+			if($oldcat_id == 0)
+			{
+				$oldcat_id = '';
+			}
+			if($old_order_cat_id == 0)
+			{
+				$old_order_cat_id = '';
+			}
+			if($oldassigned == 0)
+			{
+				$oldassigned = '';
+			}
+			if($oldgroup_id == 0)
+			{
+				$oldgroup_id = '';
+			}
 
 			// Figure out and last note
 
-			$history_values = $this->historylog->return_array(array(),array('C'),'history_timestamp','DESC',$id);
+			$history_values = $this->historylog->return_array(array(), array('C'), 'history_timestamp', 'DESC', $id);
 			$old_note = $history_values[0]['new_value'];
 
 			if(!$old_note)
@@ -1230,115 +1238,115 @@
 			$this->db->transaction_begin();
 
 			/*
-			 ** phpgw_fm_tts_append.append_type - Defs
-			 ** R - Reopen ticket
-			 ** X - Ticket closed
-			 ** O - Ticket opened
-			 ** C - Comment appended
-			 ** A - Ticket assignment
-			 ** G - Ticket group assignment
-			 ** P - Priority change
-			 ** T - Category change
-			 ** S - Subject change
-			 ** B - Budget change
-			 **	AC - actual cost changed
-			 ** H - Billing hours
-			 ** F - finnish date
-			 ** C% - Status change
-			 ** L - Location changed
-			 ** M - Mail sent to vendor
+			 * * phpgw_fm_tts_append.append_type - Defs
+			 * * R - Reopen ticket
+			 * * X - Ticket closed
+			 * * O - Ticket opened
+			 * * C - Comment appended
+			 * * A - Ticket assignment
+			 * * G - Ticket group assignment
+			 * * P - Priority change
+			 * * T - Category change
+			 * * S - Subject change
+			 * * B - Budget change
+			 * *	AC - actual cost changed
+			 * * H - Billing hours
+			 * * F - finnish date
+			 * * C% - Status change
+			 * * L - Location changed
+			 * * M - Mail sent to vendor
 			 */
 
 			if(!$simple)
 			{
-				$this->db->query("UPDATE fm_tts_tickets SET publish_note = NULL WHERE id = {$id}",__LINE__,__FILE__);
-				$this->db->query("UPDATE fm_tts_history SET publish = NULL WHERE history_record_id = {$id}",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tts_tickets SET publish_note = NULL WHERE id = {$id}", __LINE__, __FILE__);
+				$this->db->query("UPDATE fm_tts_history SET publish = NULL WHERE history_record_id = {$id}", __LINE__, __FILE__);
 				if(isset($ticket['publish_note']))
 				{
-					foreach ($ticket['publish_note'] as $publish_info)
+					foreach($ticket['publish_note'] as $publish_info)
 					{
 						$note = explode('_', $publish_info);
 						if(!$note[1])
 						{
-							$this->db->query("UPDATE fm_tts_tickets SET publish_note = 1 WHERE id = {$note[0]}",__LINE__,__FILE__);
+							$this->db->query("UPDATE fm_tts_tickets SET publish_note = 1 WHERE id = {$note[0]}", __LINE__, __FILE__);
 						}
 						else
 						{
-							$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = {$note[1]}",__LINE__,__FILE__);
+							$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = {$note[1]}", __LINE__, __FILE__);
 						}
 					}
 				}
 			}
 
-			if (($old_note != $ticket['note']) && $ticket['note'])
+			if(($old_note != $ticket['note']) && $ticket['note'])
 			{
 				$this->fields_updated[] = 'note';
-				$this->historylog->add('C',$id,$ticket['note'],$old_note);
-				$_history_id = $this->db->get_last_insert_id('fm_tts_history','history_id');
-				$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);
+				$this->historylog->add('C', $id, $ticket['note'], $old_note);
+				$_history_id = $this->db->get_last_insert_id('fm_tts_history', 'history_id');
+				$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
 				unset($_history_id);
 			}
 
-			if (isset($this->fields_updated) && $this->fields_updated && $simple)
+			if(isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
-				$receipt['message'][]= array('msg' => lang('Ticket1 has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket1 has been updated'));
 				$this->db->transaction_commit();
 				return $receipt;
 			}
 
-			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
+			$finnish_date = (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']) : '');
 
-			if ($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
+			if($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date2='" . $finnish_date
-					. "' where id='$id'",__LINE__,__FILE__);
+				. "' where id='$id'", __LINE__, __FILE__);
 			}
 			else if(!$oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date='" . $finnish_date
-					. "' where id='$id'",__LINE__,__FILE__);
+				. "' where id='$id'", __LINE__, __FILE__);
 			}
 
-			if($oldfinnish_date2>0)
+			if($oldfinnish_date2 > 0)
 			{
 				$oldfinnish_date = $oldfinnish_date2;
 			}
 			if(isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
-				if ($oldfinnish_date != $finnish_date)
+				if($oldfinnish_date != $finnish_date)
 				{
 					$this->fields_updated[] = 'finnish_date';
-					$this->historylog->add('F',$id,$finnish_date,$oldfinnish_date);
+					$this->historylog->add('F', $id, $finnish_date, $oldfinnish_date);
 				}
 			}
 
-			if (isset($ticket['status']) && ($old_status != $ticket['status']))
+			if(isset($ticket['status']) && ($old_status != $ticket['status']))
 			{
-				$check_old_custom = (int) trim($old_status,'C');
-				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
+				$check_old_custom = (int)trim($old_status, 'C');
+				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$old_closed = $this->db->f('closed');
 				$this->fields_updated[] = 'status';
-				if($old_status=='X' || $old_closed)
+				if($old_status == 'X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
-					$this->historylog->add('R',$id,$ticket['status'],$old_status);
+					$this->historylog->add('R', $id, $ticket['status'], $old_status);
 
-					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
 				}
 				else
 				{
-					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
-					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
+					$this->historylog->add($ticket['status'], $id, $ticket['status'], $old_status);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}", __LINE__, __FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
 
 				//Close cases at related
-				$check_new_custom = (int) trim($ticket['status'],'C');
-				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+				$check_new_custom = (int)trim($ticket['status'], 'C');
+				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
 
-				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status != 'X' && !$old_closed))
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 					// at controller
@@ -1356,49 +1364,49 @@
 				}
 			}
 
-			if ($ticket['assignedto'] && ( ($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore') )
+			if($ticket['assignedto'] && ( ($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore'))
 			{
 				$this->fields_updated[] = 'assignedto';
 
-				$value_set=array('assignedto'	=> $ticket['assignedto']);
+				$value_set = array('assignedto' => $ticket['assignedto']);
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('A',$id,$ticket['assignedto'],$oldassigned);
+				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
 			}
 
-			if ( ($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore' )
+			if(($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
 			{
 				$this->fields_updated[] = 'group_id';
 
-				$value_set=array('group_id'	=> $ticket['group_id']);
+				$value_set = array('group_id' => $ticket['group_id']);
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('G',$id,$ticket['group_id'],$oldgroup_id);
+				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('G', $id, $ticket['group_id'], $oldgroup_id);
 			}
 
-			if ($oldpriority != $ticket['priority'])
+			if($oldpriority != $ticket['priority'])
 			{
 				$this->fields_updated[] = 'priority';
 				$this->db->query("update fm_tts_tickets set priority='" . $ticket['priority']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
+				. "' where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('P', $id, $ticket['priority'], $oldpriority);
 			}
 
-			if ($old_contact_id != $ticket['contact_id'])
+			if($old_contact_id != $ticket['contact_id'])
 			{
-				$contact_id  = (int) $ticket['contact_id'];
+				$contact_id = (int)$ticket['contact_id'];
 				$this->fields_updated[] = 'contact_id';
-				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id",__LINE__,__FILE__);
+				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id", __LINE__, __FILE__);
 			}
 
-			if ($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore') )
+			if($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore'))
 			{
 				$this->fields_updated[] = 'cat_id';
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
+				. "' where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('T', $id, $ticket['cat_id'], $oldcat_id);
 			}
 
 	/*
@@ -1410,25 +1418,25 @@
 				$this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
 			}
 	 */
-			if ($old_subject != $ticket['subject'])
+			if($old_subject != $ticket['subject'])
 			{
 				$this->db->query("UPDATE fm_tts_tickets SET subject='" . $ticket['subject']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('S',$id,$ticket['subject'],$old_subject);
-				$receipt['message'][]= array('msg' => lang('Subject has been updated'));
+				. "' where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('S', $id, $ticket['subject'], $old_subject);
+				$receipt['message'][] = array('msg' => lang('Subject has been updated'));
 			}
 
 			if($ticket['billable_hours'])
 			{
-				$ticket['billable_hours'] = (float)str_replace(',','.', $ticket['billable_hours']);
+				$ticket['billable_hours'] = (float)str_replace(',', '.', $ticket['billable_hours']);
 				$ticket['billable_hours'] += (float)$old_billable_hours;
 //			}
 //			if ((float)$old_billable_hours != $ticket['billable_hours'])
 //			{
 				$this->db->query("UPDATE fm_tts_tickets SET billable_hours='{$ticket['billable_hours']}'"
-					. " WHERE id='{$id}'",__LINE__,__FILE__);
-				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
-				$receipt['message'][]= array('msg' => lang('billable hours has been updated'));
+				. " WHERE id='{$id}'", __LINE__, __FILE__);
+				$this->historylog->add('H', $id, $ticket['billable_hours'], $old_billable_hours);
+				$receipt['message'][] = array('msg' => lang('billable hours has been updated'));
 			}
 
 			if(isset($ticket['location']) && $ticket['location'])
@@ -1436,12 +1444,12 @@
 				$ticket['location_code'] = implode('-', $ticket['location']);
 			}
 
-			if (isset($ticket['location_code']) && $ticket['location_code'] && ($oldlocation_code != $ticket['location_code']))
+			if(isset($ticket['location_code']) && $ticket['location_code'] && ($oldlocation_code != $ticket['location_code']))
 			{
 				$interlink 	= CreateObject('property.interlink');
-				if( $interlink->get_relation('property', '.ticket', $id, 'origin') || $interlink->get_relation('property', '.ticket', $id, 'target'))
+				if($interlink->get_relation('property', '.ticket', $id, 'origin') || $interlink->get_relation('property', '.ticket', $id, 'target'))
 				{
-					$receipt['message'][]= array('msg' => lang('location could not be changed'));
+					$receipt['message'][] = array('msg' => lang('location could not be changed'));
 				}
 				else
 				{
@@ -1473,7 +1481,7 @@
 					if(isset($ticket['extra']['p_num']) && $ticket['extra']['p_num'] && $ticket['extra']['p_entity_id'] && $ticket['extra']['p_cat_id'])
 					{
 						$entity	= CreateObject('property.soadmin_entity');
-						$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'],$ticket['extra']['p_cat_id']);
+						$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'], $ticket['extra']['p_cat_id']);
 					}
 
 					if(isset($entity_category) && $entity_category)
@@ -1487,7 +1495,7 @@
 
 					$value_set['address'] = $address;
 
-					if (isset($ticket['location_code']) && $ticket['location_code'])
+					if(isset($ticket['location_code']) && $ticket['location_code'])
 					{
 						$value_set['location_code'] = $ticket['location_code'];
 					}
@@ -1497,7 +1505,7 @@
 
 					// Delete old values for location - in case of moving up in the hierarchy
 					$metadata = $this->db->metadata('fm_tts_tickets');
-					for ($i = 1;$i < $admin_location->total_records + 1; $i++)
+					for($i = 1; $i < $admin_location->total_records + 1; $i++)
 					{
 						if(isset($metadata["loc{$i}"]))
 						{
@@ -1507,7 +1515,7 @@
 
 					if(isset($ticket['location']) && is_array($ticket['location']))
 					{
-						foreach ($ticket['location'] as $column => $value)
+						foreach($ticket['location'] as $column => $value)
 						{
 							$value_set[$column]	= $value;
 						}
@@ -1516,10 +1524,10 @@
 
 					$value_set	= $this->db->validate_update($value_set);
 
-					$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 
-					$this->historylog->add('L',$id,$ticket['location_code'],$oldlocation_code);
-					$receipt['message'][]= array('msg' => lang('Location has been updated'));
+					$this->historylog->add('L', $id, $ticket['location_code'], $oldlocation_code);
+					$receipt['message'][] = array('msg' => lang('Location has been updated'));
 				}
 				unset($interlink);
 			}
@@ -1530,7 +1538,7 @@
 				$order_id = execMethod('property.socommon.increment_id', 'order');
 				if($order_id)
 				{
-					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id} WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id} WHERE id={$id}", __LINE__, __FILE__);
 				}
 			}
 
@@ -1555,91 +1563,91 @@
 
 			if($order_add || $order_edit)
 			{
-				if ((int)$ticket['budget'])
+				if((int)$ticket['budget'])
 				{
 
-					$this->db->query("SELECT sum(amount) AS budget FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__,__FILE__);
+					$this->db->query("SELECT sum(amount) AS budget FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
 					$old_budget = $this->db->f('budget');
-					$new_budget =str_replace(',', '.', ($old_budget + $ticket['budget']));
+					$new_budget = str_replace(',', '.', ($old_budget + $ticket['budget']));
 
-					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id='$id'", __LINE__, __FILE__);
 
 					$value_set_cost = array
 					(
 						'ticket_id'	=> $id,
 						'amount'	=> str_replace(',', '.', $ticket['budget']),
 						'period'	=> $ticket['budget_period'] . '01',
-						'created_on'=> time(),
-						'created_by'=> $this->account
+						'created_on' => time(),
+						'created_by' => $this->account
 					);
 
 					$cols_cost = implode(',', array_keys($value_set_cost));
 					$values_cost	= $this->db->validate_insert(array_values($value_set_cost));
 					$this->db->query("INSERT INTO fm_tts_budget ({$cols_cost}) VALUES ({$values_cost})");
 
-					$this->historylog->add('B',$id,(float)$new_budget , $old_budget);
-					$receipt['message'][]= array('msg' => lang('budget changed'));
+					$this->historylog->add('B', $id, (float)$new_budget, $old_budget);
+					$receipt['message'][] = array('msg' => lang('budget changed'));
 				}
-				if ((int)$ticket['actual_cost'])
+				if((int)$ticket['actual_cost'])
 				{
 
-					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__,__FILE__);
+					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
 					$old_actual_cost = $this->db->f('actual_cost');
-					$new_actual_cost =str_replace(',', '.', ($old_actual_cost + $ticket['actual_cost']));
+					$new_actual_cost = str_replace(',', '.', ($old_actual_cost + $ticket['actual_cost']));
 
-					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='{$new_actual_cost}' WHERE id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='{$new_actual_cost}' WHERE id='$id'", __LINE__, __FILE__);
 
 					$value_set_cost = array
 					(
 						'ticket_id'	=> $id,
 						'amount'	=> str_replace(',', '.', $ticket['actual_cost']),
 						'period'	=> $ticket['actual_cost_period'],
-						'created_on'=> time(),
-						'created_by'=> $this->account
+						'created_on' => time(),
+						'created_by' => $this->account
 					);
 
 					$cols_cost = implode(',', array_keys($value_set_cost));
 					$values_cost	= $this->db->validate_insert(array_values($value_set_cost));
 					$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
 
-					$this->historylog->add('AC',$id,(float)$new_actual_cost , $old_actual_cost);
-					$receipt['message'][]= array('msg' => lang('actual cost has been updated'));
+					$this->historylog->add('AC', $id, (float)$new_actual_cost, $old_actual_cost);
+					$receipt['message'][] = array('msg' => lang('actual cost has been updated'));
 				}
 
-				if ((int)$old_order_cat_id != (int)$ticket['order_cat_id'])
+				if((int)$old_order_cat_id != (int)$ticket['order_cat_id'])
 				{
 					$this->db->query("UPDATE fm_tts_tickets SET order_cat_id='" . (int)$ticket['order_cat_id']
-						. "' WHERE id='$id'",__LINE__,__FILE__);
-					$receipt['message'][]= array('msg' => lang('order category has been updated'));
+					. "' WHERE id='$id'", __LINE__, __FILE__);
+					$receipt['message'][] = array('msg' => lang('order category has been updated'));
 					$this->fields_updated[] = 'order_cat_id';
 				}
 
-				if ((int)$old_order_dim1 != (int)$ticket['order_dim1'])
+				if((int)$old_order_dim1 != (int)$ticket['order_dim1'])
 				{
 					$this->db->query("UPDATE fm_tts_tickets SET order_dim1='" . (int)$ticket['order_dim1']
-						. "' WHERE id='$id'",__LINE__,__FILE__);
-					$receipt['message'][]= array('msg' => lang('order_dim1 has been updated'));
+					. "' WHERE id='$id'", __LINE__, __FILE__);
+					$receipt['message'][] = array('msg' => lang('order_dim1 has been updated'));
 					$this->fields_updated[] = 'order_dim1';
 				}
 
-				if ($old_building_part != $ticket['building_part'])
+				if($old_building_part != $ticket['building_part'])
 				{
 					$this->db->query("UPDATE fm_tts_tickets SET building_part='" . $ticket['building_part']
-						. "' WHERE id='$id'",__LINE__,__FILE__);
-					$receipt['message'][]= array('msg' => lang('building part has been updated'));
+					. "' WHERE id='$id'", __LINE__, __FILE__);
+					$receipt['message'][] = array('msg' => lang('building part has been updated'));
 					$this->fields_updated[] = 'building_part';
 				}
-/*
-				if ($old_budget != $ticket['budget'])
+				/*
+				  if($old_budget != $ticket['budget'])
 				{
 					$this->fields_updated[] = 'budget';
 					$this->db->query("UPDATE fm_tts_tickets set budget='" . (int)$ticket['budget']
-						. "' where id='$id'",__LINE__,__FILE__);
-					$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
+				  . "' where id='$id'", __LINE__, __FILE__);
+				  $this->historylog->add('B', $id, $ticket['budget'], $old_budget);
 				}
-*/
+				 */
 				$value_set['vendor_id']			= $ticket['vendor_id'];
 				$value_set['b_account_id']		= $ticket['b_account_id'];
 				$value_set['order_descr']		= $this->db->db_addslashes($ticket['order_descr']);
@@ -1648,39 +1656,39 @@
 			}
 
 			$value_set	= $this->db->validate_update($value_set);
-			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 
 			$value_set	= array();
 
 			if(isset($ticket['extra']) && is_array($ticket['extra']))
 			{
-				foreach ($ticket['extra'] as $column => $value)
+				foreach($ticket['extra'] as $column => $value)
 				{
 					$value_set[$column]	= $value;
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 			}
 
 			$this->db->transaction_commit();
 
-			if (isset($this->fields_updated) && $this->fields_updated)
+			if(isset($this->fields_updated) && $this->fields_updated)
 			{
-				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
 			}
 			return $receipt;
 		}
 
-		function check_pending_action($ticket,$id)
+		function check_pending_action($ticket, $id)
 		{
 			$status = (int)trim($ticket['status'], 'C');
 			$this->db->query("SELECT * FROM fm_tts_status WHERE id = '{$status}'");
 
 			$this->db->next_record();
 
-			if ($this->db->f('approved') )
+			if($this->db->f('approved'))
 			{
 				$action_params = array
 					(
@@ -1720,7 +1728,7 @@
 			}
 		*/
 
-			if ($this->db->f('delivered') )
+			if($this->db->f('delivered'))
 			{
 				//close
 			}
@@ -1732,19 +1740,19 @@
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
-			if ( !$location_id )
+			if(!$location_id)
 			{
 				throw new Exception("phpgwapi_locations::get_id ('property', '.ticket') returned 0");
 			}
 
 			$this->db->transaction_begin();
 
-			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_tts_history WHERE history_record_id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_tts_views WHERE id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_tts_history WHERE history_record_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_tts_views WHERE id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_tts_tickets WHERE id = {$id}", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
 			{
@@ -1761,9 +1769,9 @@
 			$values = array();
 			$sql = "SELECT DISTINCT fm_vendor.id, fm_vendor.org_name FROM fm_tts_tickets {$this->join} fm_vendor ON fm_tts_tickets.vendor_id = fm_vendor.id ORDER BY org_name ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1774,14 +1782,15 @@
 
 			return $values;
 		}
+
 		public function get_ecodimb()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_ecodimb.id, fm_ecodimb.descr as name FROM fm_tts_tickets {$this->join} fm_ecodimb ON fm_tts_tickets.ecodimb = fm_ecodimb.id ORDER BY name ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1792,14 +1801,15 @@
 
 			return $values;
 		}
+
 		public function get_b_account()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_b_account.id, fm_b_account.descr as name FROM fm_tts_tickets {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id ORDER BY id ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1810,14 +1820,15 @@
 
 			return $values;
 		}
+
 		public function get_building_part()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_building_part.id, fm_building_part.descr as name FROM fm_tts_tickets {$this->join} fm_building_part ON fm_tts_tickets.building_part = fm_building_part.id ORDER BY id ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$id	= $this->db->f('id');
 				$values[] = array
@@ -1829,14 +1840,15 @@
 
 			return $values;
 		}
+
 		public function get_branch()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_branch.id, fm_branch.descr as name FROM fm_tts_tickets {$this->join} fm_branch ON fm_tts_tickets.branch_id = fm_branch.id ORDER BY name ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1847,14 +1859,15 @@
 
 			return $values;
 		}
+
 		public function get_order_dim1()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_order_dim1.id, fm_order_dim1.descr as name FROM fm_tts_tickets {$this->join} fm_order_dim1 ON fm_tts_tickets.order_dim1 = fm_order_dim1.id ORDER BY name ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1868,13 +1881,13 @@
 
 		public function get_budgets($id)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$values = array();
 			$sql = "SELECT * FROM fm_tts_budget WHERE ticket_id = {$id}  ORDER BY period ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1882,8 +1895,8 @@
 					'ticket_id'	=> $this->db->f('ticket_id'),
 					'amount'	=> $this->db->f('amount'),
 					'period'	=> $this->db->f('period'),
-					'created_on'=> $this->db->f('created_on'),
-					'created_by'=> $this->db->f('created_by'),
+					'created_on' => $this->db->f('created_on'),
+					'created_by' => $this->db->f('created_by'),
 					'remark'	=> $this->db->f('remark', true)
 				);
 			}
@@ -1892,13 +1905,13 @@
 
 		public function get_payments($id)
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$values = array();
 			$sql = "SELECT * FROM fm_tts_payments WHERE ticket_id = {$id}  ORDER BY period ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -1906,8 +1919,8 @@
 					'ticket_id'	=> $this->db->f('ticket_id'),
 					'amount'	=> $this->db->f('amount'),
 					'period'	=> $this->db->f('period'),
-					'created_on'=> $this->db->f('created_on'),
-					'created_by'=> $this->db->f('created_by'),
+					'created_on' => $this->db->f('created_on'),
+					'created_by' => $this->db->f('created_by'),
 					'remark'	=> $this->db->f('remark', true)
 				);
 			}
@@ -1919,9 +1932,9 @@
 			$values = array();
 			$sql = "SELECT DISTINCT user_id as id , account_lastname, account_firstname FROM fm_tts_tickets $this->join phpgw_accounts ON fm_tts_tickets.user_id = phpgw_accounts.account_id ORDER BY account_lastname ASC";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(

@@ -9,6 +9,7 @@
 	 */
 	class rental_composite extends rental_model
 	{
+
 		protected $name;
 		protected $description;
 		protected $is_active;
@@ -24,7 +25,6 @@
         protected $status;
         protected $furnish_type_id;
         protected $standard_id;
-		
 		protected $units;
 		protected $contracts;
 		protected static $furnish_types_arr;
@@ -40,7 +40,6 @@
 			parent::__construct($id);
 			$this->units = array();
 			$this->contracts = array();
-			
 		}
 		
 		/**
@@ -72,26 +71,31 @@
 					$temp_contracts[] = $new_contract;
 					$temp_contracts[] = $contract;
 					$added = true;
-				}else if($added == false & $new_contract->get_contract_date()->get_end_date() == 0)
+				}
+				else if($added == false & $new_contract->get_contract_date()->get_end_date() == 0)
 				{
 					$temp_contracts[] = $contract;
 					$temp_contracts[] = $new_contract;
 					$added = true;
-				}else if($added == false & $contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
+				}
+				else if($added == false & $contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
 				{
 					$temp_contracts[] = $contract;
-				}else if($added == false & !$contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date()) 
+				}
+				else if($added == false & !$contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
 				{
 					$temp_contracts[] = $new_contract;
 					$temp_contracts[] = $contract;
 					$added = true;
-				}else if($added == true)
+				}
+				else if($added == true)
 				{
 					$temp_contracts[] = $contract;
 				}
 			}	
 			
-			if($added == false){
+			if($added == false)
+			{
 				$temp_contracts[] = $new_contract;
 			}
 			
@@ -144,8 +148,10 @@
 		{
 			$units = $this->get_units();
 			
-			foreach ($this->get_units() as $index => $unit) {
-				if ($unit->get_location_id() == $unit_to_remove->get_location_id()) {
+			foreach($this->get_units() as $index => $unit)
+			{
+				if($unit->get_location_id() == $unit_to_remove->get_location_id())
+				{
 					unset($this->rental_units[$index]);
 				}
 			}
@@ -170,28 +176,32 @@
 			$this->description = $description;
 		}
 		
-		public function get_description() { return $this->description; }
+		public function get_description()
+		{ return $this->description;}
 		
 		public function set_is_active($is_active)
 		{
 			$this->is_active = (boolean)$is_active;
 		}
 		
-		public function is_active() { return $this->is_active;	}
+		public function is_active()
+		{ return $this->is_active;}
 		
 		public function set_name($name)
 		{
 			$this->name = $name;
 		}
 		
-		public function get_name() { return $this->name; }
+		public function get_name()
+		{ return $this->name;}
 		
 		public function set_has_custom_address($has_custom_address)
 		{
 			$this->has_custom_address = $has_custom_address;
 		}
 		
-		public function has_custom_address() { return $this->has_custom_address; }
+		public function has_custom_address()
+		{ return $this->has_custom_address;}
 		
 		public function set_custom_postcode($custom_postcode)
 		{
@@ -203,16 +213,19 @@
 			$this->custom_address_1 = $custom_address_1;
 		}
 	
-		public function get_custom_address_1(){ return $this->custom_address_1; }
+		public function get_custom_address_1()
+		{ return $this->custom_address_1;}
 			
 		public function set_custom_address_2($custom_address_2)
 		{
 			$this->custom_address_2 = $custom_address_2;
 		}
 	
-		public function get_custom_address_2(){ return $this->custom_address_2; }
+		public function get_custom_address_2()
+		{ return $this->custom_address_2;}
 			
-		public function get_custom_postcode() { return $this->custom_postcode; }
+		public function get_custom_postcode()
+		{ return $this->custom_postcode;}
 		
 		public function set_custom_place($custom_place)
 		{
@@ -224,61 +237,70 @@
 			$this->custom_house_number = $custom_house_number;
 		}
 	
-		public function get_custom_house_number(){ return $this->custom_house_number; }
+		public function get_custom_house_number()
+		{ return $this->custom_house_number;}
 		
-		public function get_custom_place() { return $this->custom_place; }
+		public function get_custom_place()
+		{ return $this->custom_place;}
 		
-		public function get_area_gros() {
+		public function get_area_gros()
+		{
 			$area = 0;
 			foreach($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
 				if($location != null) // There is an underlying property location
 				{
-					$area += $location->get_area_gros() ;
+					$area += $location->get_area_gros();
 				}
 			}
 			return $area;
 		}
 		
-		public function get_area_net() {
+		public function get_area_net()
+		{
 			$area = 0;
 			foreach($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
 				if($location != null) // There is an underlying property location
 				{
-					$area += $location->get_area_net() ;
+					$area += $location->get_area_net();
 				}
 			}
 			return $area;
-
 		}
 
-        public function set_object_type_id(int $obj_type) {
+		public function set_object_type_id(int $obj_type)
+		{
             $this->object_type_id = $obj_type;
         }
 
-		public function get_object_type_id() {
-            return (int) $this->object_type_id;
+		public function get_object_type_id()
+		{
+			return (int)$this->object_type_id;
         }
         
-		public function set_furnish_type_id(int $furnish_type) {
+		public function set_furnish_type_id(int $furnish_type)
+		{
             $this->furnish_type_id = $furnish_type;
         }
         
-		public function get_furnish_type_id() {
-            return (int) $this->furnish_type_id;
+		public function get_furnish_type_id()
+		{
+			return (int)$this->furnish_type_id;
         }
       
-		public function get_furnish_type() {
+		public function get_furnish_type()
+		{
 			
 			$furnish_types = $this->get_furnish_types();
 			
 			return $furnish_types[$this->get_furnish_type_id()];
         }
         
-		public static function get_furnish_types() {
+		public static function get_furnish_types()
+		{
 			
 			self::$furnish_types_arr = array( 
 												0 => lang('furnish_type_not_specified'), 
@@ -298,7 +320,7 @@
 
 		public function get_standard_id()
 		{
-            return (int) $this->standard_id;
+			return (int)$this->standard_id;
         }
 
 		/**
@@ -307,34 +329,41 @@
 		 */
 		public function get_standards($selected)
 		{
-			if( $composite_standards = execMethod('property.bogeneric.get_list',array('type' => 'composite_standard', 'selected' => $selected)))
+			if($composite_standards = execMethod('property.bogeneric.get_list', array('type'		 => 'composite_standard',
+				'selected'	 => $selected)))
 			{
-				array_unshift ($composite_standards,array('id' => '', 'name' => lang('none')));
+				array_unshift($composite_standards, array('id' => '', 'name' => lang('none')));
 			}
 			return $composite_standards;
         }
 
-        public function set_area($area) {
+		public function set_area($area)
+		{
             $this->area = $area;
         }
 
-        public function get_area() {
+		public function get_area()
+		{
             return $this->area;
         }
         
-		public function set_status($status) {
+		public function set_status($status)
+		{
             $this->status = $status;
         }
 
-        public function get_status() {
+		public function get_status()
+		{
             return $this->status;
         }
         
-		public function set_contracts($contracts) {
+		public function set_contracts($contracts)
+		{
             $this->contracts = $contracts;
         }
         
-        public function get_contracts() {
+		public function get_contracts()
+		{
             return $this->contracts;
         }
 		
@@ -392,7 +421,8 @@
 				$contract_dates .= " (" . $contract->get_old_contract_id() . ")" . "<br/>\n";
 			}
 			
-			if( count( $this->get_contracts() ) == 0 ){
+			if(count($this->get_contracts()) == 0)
+			{
 				$contract_dates .= "Ingen<br/>\n";	
 			}
 			
@@ -415,6 +445,4 @@
 				'furnished_status' => $this->get_furnish_type()
 			);
 		}
-		
 	}
-?>

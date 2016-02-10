@@ -1,5 +1,5 @@
 <?php
-  /**************************************************************************\
+	/*	 * ************************************************************************\
   * phpGroupWare API - MS SQL Server support                                 *
   * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)               *
   *  Modified by Guarneri carmelo (carmelo@melting-soft.com)                 *
@@ -9,21 +9,20 @@
   * under the terms of the GNU Lesser General Public License as published    *
   * by the Free Software Foundation; either version 2.1 of the License, or   *
   * any later version.                                                       *
-  \**************************************************************************/
+	  \************************************************************************* */
 
 	class db_mssql
 	{
+
 		var $Host				= '';
 		var $Database			= '';
 		var $User				= '';
 		var $Password			= '';
-
 		var $Link_ID			= 0;
 		var $Query_ID			= 0;
 		var $Record				= array();
 		var $Row				= 0;
 		var $VEOF				= -1;
-
 		var $Errno				= 0;
 		var $Error				= '';
 		var $Auto_Free			= 0;     ## set this to 1 to automatically free results
@@ -38,15 +37,15 @@
 			{
 				if($GLOBALS['phpgw_info']['server']['db_persistent'])
 				{
-					$this->Link_ID=mssql_pconnect($this->Host, $this->User, $this->Password);
+					$this->Link_ID = mssql_pconnect($this->Host, $this->User, $this->Password);
 				}
 				else
 				{
-					$this->Link_ID=mssql_connect($this->Host, $this->User, $this->Password);
+					$this->Link_ID = mssql_connect($this->Host, $this->User, $this->Password);
 				}
 				if(!$this->Link_ID)
 				{
-					$this->halt('Link-ID == false, mssql_'.($GLOBALS['phpgw_info']['server']['db_persistent']?'p':'').'connect failed');
+					$this->halt('Link-ID == false, mssql_' . ($GLOBALS['phpgw_info']['server']['db_persistent'] ? 'p' : '') . 'connect failed');
 				}
 				else
 				{
@@ -57,6 +56,7 @@
 
 		function disconnect()
 		{
+
 		}
 
 		function db_addslashes($str)
@@ -70,7 +70,7 @@
 
 		function free_result()
 		{
-			if ($this->Query_ID)
+			if($this->Query_ID)
 			{
 				mssql_free_result($this->Query_ID);
 			}
@@ -213,7 +213,7 @@
 
 		function seek($pos)
 		{
-			mssql_data_seek($this->Query_ID,$pos);
+			mssql_data_seek($this->Query_ID, $pos);
 			$this->Row = $pos;
 		}
 
@@ -232,17 +232,17 @@
 
 			$count = mssql_num_fields($id);
 
-			for($i=0; $i<$count; $i++)
+			for($i = 0; $i < $count; $i++)
 			{
 				$info = mssql_fetch_field($id, $i);
 				$res[$info->name]  = $info;
-/*
+				/*
 				$res[$i]['table'] = $table;
 				$res[$i]['name']  = $info->name;
 				$res[$i]['len']   = $info->max_length;
 				$res[$i]['flags'] = $info->numeric;
 				$res[$i]['type'] = $info->type;
-*/
+				 */
  			}
 
  			$this->free_result();
@@ -284,9 +284,9 @@
 
 		public function f($name, $strip_slashes = False)
 		{
-			if( isset($this->Record[$name]) )
+			if(isset($this->Record[$name]))
 			{
-				if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
+				if($strip_slashes || ($this->auto_stripslashes && !$strip_slashes))
 				{
 					return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 				}
@@ -302,8 +302,8 @@
 		{
 			print $this->f($Field_Name);
 		}
-
 		/* public: table locking */
+
 		function get_last_insert_id($table, $field)
 		{
 			/* This will get the last insert ID created on the current connection.  Should only be called
@@ -324,7 +324,7 @@
 			return mssql_result($result, 0, 0);
 		}
 
-		function lock($table, $mode="write")
+		function lock($table, $mode = "write")
 		{
 			/* /me really, really, really hates locks - transactions serve just fine */
 			return $this->transaction_begin();
@@ -334,8 +334,8 @@
 		{
 			return $this->transaction_commit();
 		}
-
 		/* private: error handling */
+
 		function halt($msg, $line = '', $file = '')
 		{
 			$this->transaction_abort();
@@ -356,12 +356,12 @@
 
 			if($file)
 			{
-				printf("<br><b>File:</b> %s",$file);
+				printf("<br><b>File:</b> %s", $file);
 			}
 
 			if($line)
 			{
-				printf("<br><b>Line:</b> %s",$line);
+				printf("<br><b>Line:</b> %s", $line);
 			}
 
 			if($this->Halt_On_Error != "report")
@@ -393,8 +393,8 @@
 			}
 			return $return;
 		}
-
 		/* Surely we can do this, eh */
+
 		function index_names()
 		{
 			$return = array();
@@ -415,7 +415,7 @@
 		public static function date_format()
 		{
 			static $date_format = null;
-			if ( is_null($date_format) )
+			if(is_null($date_format))
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
@@ -441,7 +441,7 @@
 		public static function datetime_format()
 		{
 			static $datetime_format = null;
-			if ( is_null($datetime_format) )
+			if(is_null($datetime_format))
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
@@ -465,7 +465,7 @@
 		*/
 		public static function money_format($amount)
 		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mssql')
 			{
 				return "CONVERT(MONEY,'{$amount}',0)";
 			}
@@ -474,7 +474,6 @@
 				return "'{$amount}'";
 			}
 		}
-
 
 		/**
 		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
@@ -487,17 +486,17 @@
 		 */
 		public function validate_insert($values)
 		{
-			if ( !is_array($values) || !count($values) )
+			if(!is_array($values) || !count($values))
 			{
 				return '';
 			}
 			
 			$insert_value = array();
-			foreach ( $values as $value )
+			foreach($values as $value)
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value || (is_numeric($value) && $value == 0))
 				{
-					if ( is_numeric($value) )
+					if(is_numeric($value))
 					{
 						$insert_value[]	= "'$value'";
 					}
@@ -522,38 +521,37 @@
 		 */
 		public function validate_update($value_set)
 		{
-			if ( !is_array($value_set) || !count($value_set) )
+			if(!is_array($value_set) || !count($value_set))
 			{
 				return '';
 			}
 			
 			$value_entry = array();
-			foreach ( $value_set as $field => $value )
+			foreach($value_set as $field => $value)
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value || (is_numeric($value) && $value == 0))
 				{
-					if ( is_numeric($value) )
+					if(is_numeric($value))
 					{
-						if((strlen($value) > 1 && strpos($value,'0') === 0))
+						if((strlen($value) > 1 && strpos($value, '0') === 0))
 						{
-							$value_entry[]= "{$field}='{$value}'";
+							$value_entry[] = "{$field}='{$value}'";
 						}
 						else
 						{
-							$value_entry[]= "{$field}={$value}";
+							$value_entry[] = "{$field}={$value}";
 						}
 					}
 					else
 					{
-						$value_entry[]= "{$field}='{$value}'";
+						$value_entry[] = "{$field}='{$value}'";
 					}
 				}
 				else
 				{
-					$value_entry[]= "{$field}=NULL";
+					$value_entry[] = "{$field}=NULL";
 				}
 			}
 			return implode(',', $value_entry);
 		}
-
 	}

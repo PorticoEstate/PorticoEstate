@@ -25,16 +25,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-	
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('controller.socase');
 	phpgw::import_class('controller.socheck_list');
 	phpgw::import_class('controller.socheck_item');
@@ -46,10 +44,10 @@
 	include_class('controller', 'component', 'inc/model/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 			
-	class controller_uicase extends phpgwapi_uicommon
+	class controller_uicase extends phpgwapi_uicommon_jquery
 	{
-		private $so;
 		
+		private $so;
 		private $so_control;
 		private $so_control_item;
 		private $so_check_item;
@@ -58,14 +56,11 @@
 		private $so_control_group;
 		private $so_control_item_list;
 		private $so_check_list;
-
 		private $location_finder;
-
  		private $read;
 		private $add;
 		private $edit;
 		private $delete;
-   
 		var $public_functions = array
 			(
 				'add_case' 				=> true,
@@ -106,12 +101,13 @@
 			if(phpgw::get_var('noframework', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-				phpgwapi_cache::session_set('controller','noframework',true);
+				phpgwapi_cache::session_set('controller', 'noframework', true);
 			}
-			else if (phpgwapi_cache::session_get('controller','noframework'))
+			else if(phpgwapi_cache::session_get('controller', 'noframework'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
  		}	
 		
 		private function _get_case_data()
@@ -132,15 +128,17 @@
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 				
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+					'id' => $component_id));
 
 				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+					'location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
-				$component->set_location_code( $component_arr['location_code'] );
-				$component->set_xml_short_desc( $short_desc );
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -155,7 +153,7 @@
 				$type = 'location';
 				// Fetches buildings on property
 				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
-				foreach ( $buildings_on_property as &$building)
+				foreach($buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
@@ -177,14 +175,12 @@
 					{
 						$cases_at_component_group[$check_item->get_control_item()->get_control_group_id()][$_component_location_id][$_component_id] ++;
 					}
-					unset ($_component_location_id );
-					unset ($_ocation_id );
+					unset($_component_location_id);
+					unset($_ocation_id);
 				}
 			}
 
 			//------------- END find already registered cases -------------//
-
-
 			//Populating array with saved control items for each group
 			//Cache result
 			$components_at_location = array();
@@ -192,7 +188,7 @@
 			$sogeneric 	= CreateObject('property.sogeneric');
 			$sogeneric->get_location_info('org_unit');
 			
-			foreach ($saved_control_groups as $control_group)
+			foreach($saved_control_groups as $control_group)
 			{	
 				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
 
@@ -211,7 +207,7 @@
 
 						$component_criteria = $control_group->get_component_criteria();
 						$conditions = array();
-						foreach ($component_criteria as $attribute_id => $condition)
+						foreach($component_criteria as $attribute_id => $condition)
 						{
 							if($condition['value'])
 							{
@@ -227,7 +223,7 @@
 
 						$criterias_array['conditions'] = $conditions;
 						
-						if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
+						if(!isset($components_at_location[$component_location_id][$location_code_search_components]) || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
 						{
 							$_components_at_location = execMethod('property.soentity.get_eav_list', $criterias_array);
 
@@ -261,7 +257,7 @@
 								}
 							}
 							
-							array_unshift ($_components_at_location, array('id'=>'', 'short_description' => lang('select')));
+							array_unshift($_components_at_location, array('id' => '', 'short_description' => lang('select')));
 							
 							$control_groups_with_items_array[] = array
 							(
@@ -280,7 +276,6 @@
 						);
 					}
 				}
-
 			}
 
 			$data = array
@@ -300,7 +295,7 @@
 
 		function add_case()
 		{
-                        $config	= CreateObject('phpgwapi.config','controller');
+			$config				 = CreateObject('phpgwapi.config', 'controller');
                         $config->read();
                         $mandatory_location = $config->config_data['control_mandatory_location'];
                         if($mandatory_location && $mandatory_location == 1)
@@ -357,14 +352,14 @@
 			$case_data = $this->_get_case_data();
 			
 			$control_groups_with_items_array;
-			return json_encode( array( "control_groups_with_items_array" => $case_data['control_groups_with_items_array'] ) );
-			
+			return json_encode(array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']));
 		}
+
 		function save_case_ajax()
 		{
 			if(!$this->add && !$this->edit)
 			{
-				return json_encode( array( "status" => "not_saved" ) );
+				return json_encode(array("status" => "not_saved"));
 			}
 
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -381,7 +376,7 @@
 			$control_id = $check_list->get_control_id();
 			
 			$location_code = $location_code ? $location_code : $check_list->get_location_code();
-			$control = $this->so_control->get_single( $control_id );
+			$control		 = $this->so_control->get_single($control_id);
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
 							
@@ -389,19 +384,19 @@
 			if($check_item == null)
 			{
 				$new_check_item = new controller_check_item();
-				$new_check_item->set_check_list_id( $check_list_id );
-				$new_check_item->set_control_item_id( $control_item_id );
+				$new_check_item->set_check_list_id($check_list_id);
+				$new_check_item->set_control_item_id($control_item_id);
 
-				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
+				$saved_check_item_id = $this->so_check_item->store($new_check_item);
 				$check_item = $this->so_check_item->get_single($saved_check_item_id);
 			}
 			
-			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 						
 			$case = new controller_check_item_case();
-			$case->set_check_item_id( $check_item->get_id() );
+			$case->set_check_item_id($check_item->get_id());
 			$case->set_descr($case_descr);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date_ts);
@@ -409,7 +404,7 @@
 			$case->set_modified_by($user_id);
 			$case->set_modified_by($user_id);
 			$case->set_status($status);
-			$case->set_location_code( $location_code );
+			$case->set_location_code($location_code);
 			$case->set_component_location_id($component_location_id);
 			$case->set_component_id($component_id);
 
@@ -417,28 +412,28 @@
 			if($type == 'control_item_type_2')
 			{
 				$measurement = phpgw::get_var('measurement');
-				$case->set_measurement( $measurement );
+				$case->set_measurement($measurement);
 			}
 			else if($type == 'control_item_type_3')
 			{
 				$option_value = phpgw::get_var('option_value');
-				$case->set_measurement( $option_value );
+				$case->set_measurement($option_value);
 			}
 			else if($type == 'control_item_type_4')
 			{
 				$option_value = phpgw::get_var('option_value');
-				$case->set_measurement( $option_value );
+				$case->set_measurement($option_value);
 			}
 			
 			$case_id = $this->so->store($case);
 			
 			if($case_id > 0)
 			{
-				return json_encode( array( "status" => "saved" ) );
+				return json_encode(array("status" => "saved"));
 			}
 			else
 			{
-				return json_encode( array( "status" => "not_saved" ) );
+				return json_encode(array("status" => "not_saved"));
 			}
 		}
 
@@ -446,7 +441,7 @@
 		{
 			if(!$this->add && !$this->edit)
 			{
-				return json_encode( array( "status" => "not_saved" ) );
+				return json_encode(array("status" => "not_saved"));
 			}
 
 			$case_id = phpgw::get_var('case_id');
@@ -455,7 +450,7 @@
 			$measurement = phpgw::get_var('measurement');
 			$check_list_id = phpgw::get_var('check_list_id');
 			
-			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 			
 			$case = $this->so->get_single($case_id);
 			$case->set_descr($case_descr);
@@ -475,16 +470,16 @@
 
 					$type = $control_item->get_type();
 
-					return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
+					return json_encode(array("status" => "saved", "type" => $type, "caseObj" => $case->toArray()));
 				}
 				else
 				{
-					return json_encode( array( "status" => "not_saved" ) );
+					return json_encode(array("status" => "not_saved"));
 				}
 			}
 			else
 			{
-				return json_encode( array( "status" => "error" ) );
+				return json_encode(array("status" => "error"));
 			}
 		}
 		
@@ -495,7 +490,7 @@
 						
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
 
-			foreach ($check_items_and_cases as $check_item)
+			foreach($check_items_and_cases as $check_item)
 			{
 				$control_group = $this->so_control_group->get_single($check_item->get_control_item()->get_control_group_id());
 				$check_item->get_control_item()->set_control_group_name($control_group->get_group_name());
@@ -508,19 +503,21 @@
 					$component_id			= $case->get_component_id();
 					if($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$short_desc = execMethod('property.soentity.get_short_description', array(
+							'location_id' => $component_location_id, 'id' => $component_id));
 						$case->set_component_descr($short_desc);
 					}
 				}
 			}
 
 			$control_id = $check_list->get_control_id();
-			$control = $this->so_control->get_single( $control_id );
+			$control	 = $this->so_control->get_single($control_id);
 
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
-			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+			$categories = $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
 			$component_id = $check_list->get_component_id();
 			
@@ -529,19 +526,21 @@
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 						
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+					'id' => $component_id));
 
 				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+					'location_id' => $location_id, 'id' => $component_id));
 
 		//		$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
-				$component->set_location_code( $component_arr['location_code'] );
-				$component->set_xml_short_desc( $short_desc );
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
 							
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
@@ -574,7 +573,7 @@
 				'location_level' 			=> $level,
 			);
 						
-			if(count( $buildings_array ) > 0)
+			if(count($buildings_array) > 0)
 			{
 				$data['buildings_array']  = $buildings_array;
 			}
@@ -602,13 +601,14 @@
 			if(!$this->add && !$this->edit)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
-				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+					'check_list_id' => $check_list_id));
 			}
 
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
-			$control = $this->so_control->get_single( $control_id );
+			$control	 = $this->so_control->get_single($control_id);
 			
 			$message_details = "Kontroll: " .  $control->get_title() . "\n";
 			
@@ -616,7 +616,8 @@
 			$cats->supress_info	= true;
 
 			//liste alle
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $_category_acl));
+			$control_areas = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $control_area_id,
+				'globals' => true, 'use_acl' => $_category_acl));
 
 			$control_area_id = $control->get_control_area_id();
 			$control_area = $cats->return_single($control_area_id);
@@ -641,7 +642,8 @@
 
 				if($component_id = $case->get_component_id())
 				{
-					$short_desc =  execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));				
+					$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id,
+						'id' => $component_id));
 					$message_details .= "Hvor: {$short_desc}\n";
 				}
 
@@ -664,7 +666,7 @@
 				'file_input_name'	=> 'file' // navn på felt som inneholder fil
 			);
 			
-			$botts = CreateObject('property.botts',true);
+			$botts				 = CreateObject('property.botts', true);
 			$message_ticket_id = $botts->add_ticket($ticket);
 			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
@@ -691,10 +693,8 @@
 			}
 
 //---End register component to ticket
-
 			//Not used
 			//$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
-						
 			// Registers message and updates check items with message ticket id
 
 			foreach($case_ids as $case_id)
@@ -705,7 +705,8 @@
 				$this->so->store($case);
 			}			
 			
-			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
+			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
+				'message_ticket_id' => $message_ticket_id));
 		}
 		
 		function view_case_message()
@@ -716,11 +717,11 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
-			$control = $this->so_control->get_single( $control_id );
+			$control	 = $this->so_control->get_single($control_id);
 		
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id);
 						
-			$botts = CreateObject('property.botts',true);
+			$botts					 = CreateObject('property.botts', true);
 			$message_ticket = $botts->read_single($message_ticket_id);
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
@@ -734,19 +735,21 @@
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 						
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+					'id' => $component_id));
 
 				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+					'location_id' => $location_id, 'id' => $component_id));
 
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
-				$component->set_location_code( $component_arr['location_code'] );
-				$component->set_xml_short_desc( $short_desc );
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
 							
 				$type = 'component';
@@ -796,14 +799,15 @@
 				return;
 			}
 
-			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
+			$cases_array = $this->so->get_cases_by_message($location_id, $location_item_id);
 
-			if(!empty ( $cases_array ) )
+			if(!empty($cases_array))
 			{
 				// Updates status for cases related to message  
-				foreach($cases_array as $case){
-					$case->set_status( $updateStatus );
-					$this->so->update( $case );
+				foreach($cases_array as $case)
+				{
+					$case->set_status($updateStatus);
+					$this->so->update($case);
 				}
 				
 				// Gets first case of cases related to the message
@@ -813,7 +817,7 @@
 				$check_item_id = $case->get_check_item_id();
 
 				// Gets check_list from check_item
-				$check_item = $this->so_check_item->get_single( $check_item_id );
+				$check_item		 = $this->so_check_item->get_single($check_item_id);
 				$check_list_id = $check_item->get_check_list_id(); 
 			}
 		}
@@ -822,7 +826,7 @@
 		{
 			if(!$this->delete)
 			{
-				return json_encode( array( "status" => "not_deleted" ) );
+				return json_encode(array("status" => "not_deleted"));
 			}
 
 			$case_id = phpgw::get_var('case_id');
@@ -838,11 +842,11 @@
 		
 			if($status)
 			{
-				return json_encode( array( "status" => "deleted" ) );
+				return json_encode(array("status" => "deleted"));
 			}
 			else
 			{
-				return json_encode( array( "status" => "not_deleted" ) );
+				return json_encode(array("status" => "not_deleted"));
 			}
 		}
 		
@@ -850,7 +854,7 @@
 		{
 			if(!$this->add && !$this->edit)
 			{
-				return json_encode( array( "status" => "false" ) );
+				return json_encode(array("status" => "false"));
 			}
 
 			$case_id = phpgw::get_var('case_id');
@@ -862,11 +866,11 @@
 					
 			if($case_id > 0)
 			{
-				return json_encode( array( "status" => "true" ) );
+				return json_encode(array("status" => "true"));
 			}
 			else
 			{
-				return json_encode( array( "status" => "false" ) );
+				return json_encode(array("status" => "false"));
 			}
 		}
 		
@@ -874,7 +878,7 @@
 		{
 			if(!$this->add && !$this->edit)
 			{
-				return json_encode( array( "status" => "false" ) );
+				return json_encode(array("status" => "false"));
 			}
 
 			$case_id = phpgw::get_var('case_id');
@@ -887,11 +891,11 @@
 					
 			if($case_id > 0)
 			{
-				return json_encode( array( "status" => "true" ) );
+				return json_encode(array("status" => "true"));
 			}
 			else
 			{
-				return json_encode( array( "status" => "false" ) );
+				return json_encode(array("status" => "false"));
 			}
 		}
 
@@ -912,19 +916,21 @@
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 				
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+					'id' => $component_id));
 
 				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+					'location_id' => $location_id, 'id' => $component_id));
 
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
-				$component->set_location_code( $component_arr['location_code'] );
-				$component->set_xml_short_desc( $short_desc );
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -950,9 +956,9 @@
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
 
 
-			if( $buildings_on_property )
+			if($buildings_on_property)
 			{
-				foreach ( $buildings_on_property as &$building)
+				foreach($buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
@@ -960,7 +966,7 @@
 
 			foreach($open_check_items_and_cases as $key => $check_item)
 			{
-				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item->get_control_item_id());
 				
 				foreach($check_item->get_cases_array() as $case)
 				{
@@ -968,12 +974,13 @@
 					$component_id			= $case->get_component_id();
 					if($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$short_desc = execMethod('property.soentity.get_short_description', array(
+							'location_id' => $component_location_id, 'id' => $component_id));
 						$case->set_component_descr($short_desc);
 					}
 				}
 
-				$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
+				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
 
@@ -997,9 +1004,10 @@
 			self::add_javascript('controller', 'controller', 'case.js');
 			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
 
-			self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_open_cases', 'case/case_row', 
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
+				'case/view_open_cases', 'case/case_row',
 									   'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 
-									   'check_list/fragments/select_buildings_on_property'), $data );			
+				'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		function view_closed_cases()
@@ -1020,18 +1028,20 @@
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 				
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$component_arr	 = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+					'id' => $component_id));
 				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+					'location_id' => $location_id, 'id' => $component_id));
 
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
-				$component->set_location_code( $component_arr['location_code'] );
-				$component->set_xml_short_desc( $short_desc );
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -1056,9 +1066,9 @@
 
 			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code);
 
-			if( $buildings_on_property )
+			if($buildings_on_property)
 			{
-				foreach ( $buildings_on_property as &$building)
+				foreach($buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
@@ -1075,7 +1085,8 @@
 					$component_id			= $case->get_component_id();
 					if($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$short_desc = execMethod('property.soentity.get_short_description', array(
+							'location_id' => $component_location_id, 'id' => $component_id));
 						$case->set_component_descr($short_desc);
 					}
 				}
@@ -1108,10 +1119,14 @@
 			self::add_javascript('controller', 'controller', 'case.js');
 			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
 
-			self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_closed_cases', 'case/case_row', 
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
+				'case/view_closed_cases', 'case/case_row',
 											 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section',
-											 'check_list/fragments/select_buildings_on_property'), $data );
+				'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
-		public function query(){}
+		public function query()
+		{
+
+		}
 	}

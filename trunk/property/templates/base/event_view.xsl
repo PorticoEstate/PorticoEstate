@@ -1,15 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="event_view">
-		<xsl:apply-templates select="event_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
-		<tr>
-			<td valign="top">
+<!-- $Id$ -->
+<xsl:template name="event_view">
+		<xsl:apply-templates select="event_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
+	<div class="pure-control-group">
+		<label for="name">
 				<xsl:value-of select="event_name"/>
-			</td>
-			<td>
+		</label>
 				<xsl:choose>
 					<xsl:when test="warning!=''">
 						<xsl:value-of select="warning"/>
@@ -19,6 +19,7 @@
 							<xsl:value-of select="name"/>
 							<xsl:text>_descr</xsl:text>
 						</xsl:variable>
+				<div class="pure-custom">
 						<table>
 							<tr>
 								<td>
@@ -67,8 +68,8 @@
 								</xsl:when>
 							</xsl:choose>
 						</table>
+				</div>
 					</xsl:otherwise>
 				</xsl:choose>
-			</td>
-		</tr>
-	</xsl:template>
+	</div>
+</xsl:template>

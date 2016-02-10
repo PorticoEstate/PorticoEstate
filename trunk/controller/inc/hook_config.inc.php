@@ -10,7 +10,6 @@
 	* @category hooks
 	* @version $Id: hook_config.inc.php 11377 2013-10-18 08:25:54Z sigurdne $
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -26,7 +25,6 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	* Get HTML checkbox with categories that are candidates for frontend documents cat
 	*
@@ -40,10 +38,10 @@
 		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 		$tts_frontend_cat_selected = isset($config['document_cat']) ? $config['document_cat'] : array();
 		$out = '';
-		foreach ( $values as $entry)
+		foreach($values as $entry)
 		{
 			$checked = '';
-			if ( in_array($entry['id'], $tts_frontend_cat_selected))
+			if(in_array($entry['id'], $tts_frontend_cat_selected))
 			{
 				$checked = ' checked';
 			}

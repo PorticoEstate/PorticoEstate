@@ -60,17 +60,16 @@
 
 			$ordermethod = " ORDER BY {$order} {$sort}";
 
-
 			$filtermethod = 'WHERE reg_info IS NOT NULL';
 			$where= 'AND';
 			switch ($status_id)
 			{
 				case '1':
-					$filtermethod .= "$where reg_approved = 1";
+					$filtermethod .= " $where reg_approved = 1";
 					$where= 'AND';
 					break;
 				case '2':
-					$filtermethod .= "$where reg_approved IS NULL";
+					$filtermethod .= " $where reg_approved IS NULL";
 					$where= 'AND';
 					break;
 				default:
@@ -84,6 +83,7 @@
 			}
 
 			$sql = "SELECT * FROM phpgw_reg_accounts {$filtermethod} {$querymethod}";
+			_debug_array($sql);
 
 			$values = array();
 			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' FROM')),__LINE__,__FILE__);

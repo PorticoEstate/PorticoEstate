@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="event_form">
-		<xsl:apply-templates select="event_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
+<!-- $Id$ -->
+<xsl:template name="event_form">
+		<xsl:apply-templates select="event_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function event_lookup_<xsl:value-of select="name"/>()
@@ -16,15 +17,13 @@
 				}
 
 				var strURL = phpGWLink('index.php', oArgs);
-				Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 			}
 		</script>
-		<tr>
-			<td valign="top">
+	<div class="pure-control-group">
+		<label for="name">
 				<xsl:value-of select="event_name"/>
-				<!--<a href="javascript:event_lookup_{name}()" title="{lang_select_event_help}"><xsl:value-of select="event_name"/></a> -->
-			</td>
-			<td>
+		</label>
 				<xsl:choose>
 					<xsl:when test="warning!=''">
 						<xsl:value-of select="warning"/>
@@ -39,6 +38,7 @@
 							<xsl:value-of select="name"/>
 							<xsl:text>();</xsl:text>
 						</xsl:variable>
+				<div class="pure-custom">
 						<table>
 							<tr>
 								<td>
@@ -87,8 +87,8 @@
 								</xsl:when>
 							</xsl:choose>
 						</table>
+				</div>
 					</xsl:otherwise>
 				</xsl:choose>
-			</td>
-		</tr>
-	</xsl:template>
+	</div>
+</xsl:template>

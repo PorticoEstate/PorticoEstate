@@ -1,7 +1,8 @@
 <?php
 
-abstract class organisational_location
-{
+	abstract class organisational_location
+	{
+
 	public static $pattern = '.ORG.BK';
 
 	public function __construct(int $location_id, string $name, string $description)
@@ -11,11 +12,14 @@ abstract class organisational_location
 		$this->description = $description;
 	} 
 	
-	public function get_location_id(){ return $this->location_id; }
+		public function get_location_id()
+		{ return $this->location_id;}
 
-	public function get_name(){ return $this->name; }
+		public function get_name()
+		{ return $this->name;}
 
-	public function get_description(){ return $this->description; }
+		public function get_description()
+		{ return $this->description;}
 	
 	public abstract  static function get_identifier_from_name(string $name);
 	
@@ -23,5 +27,4 @@ abstract class organisational_location
 	{
 		return $this->get_identifier_from_name($this->name);
 	}
-	
-}
+	}

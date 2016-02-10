@@ -1,5 +1,5 @@
 <?php
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -13,9 +13,10 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-include_once './TestBimCommon.php';
-class TestBObimitem extends TestBimCommon
-{
+	include_once './TestBimCommon.php';
+
+	class TestBObimitem extends TestBimCommon
+	{
 	
 	/**
 	 * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
@@ -26,19 +27,17 @@ class TestBObimitem extends TestBimCommon
 	 * @var integer $fieldID The attribute ID used for all the tests
 	 */
 	protected $fieldID;
-
 	private $sobimitem;
 	private $bobimmodel;
-	
 	private $validIfcFileName = "valid_ifc_example.ifc";
 	private $validIfcFileWithPath;
-	
 	private $testingFileName = "restTestFile.txt";
 	private $testingFileWithPath;
 	
-	public function __construct() {
-		$this->testingFileWithPath = getcwd().DIRECTORY_SEPARATOR.$this->testingFileName;
-		$this->validIfcFileWithPath = getcwd().DIRECTORY_SEPARATOR.$this->validIfcFileName;
+		public function __construct()
+		{
+			$this->testingFileWithPath = getcwd() . DIRECTORY_SEPARATOR . $this->testingFileName;
+			$this->validIfcFileWithPath = getcwd() . DIRECTORY_SEPARATOR . $this->validIfcFileName;
 	}
 	
 	/**
@@ -49,8 +48,8 @@ class TestBObimitem extends TestBimCommon
 	protected function setUp()
 	{
 		$this->initDatabase();	
-		
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -61,11 +60,13 @@ class TestBObimitem extends TestBimCommon
 			 
 	}
 
-	public function testDb(){
+		public function testDb()
+		{
 		$this->assertNotNull($this->db);
 	}
 	
-	public function testGetStuff() {
+		public function testGetStuff()
+		{
 		$theXml = $this->getFacilityManagementXmlWithValidIfc();
 		
 		$bobimitem = new bobimitem_impl();
@@ -78,17 +79,19 @@ class TestBObimitem extends TestBimCommon
 		$bobimitem->loadIfcItemsIntoDatabase();
 	}
 	
-	private function getFacilityManagementXmlWithValidIfc() {
+		private function getFacilityManagementXmlWithValidIfc()
+		{
 		$sobim_converter = new sobim_converter_impl();
 		$sobim_converter->setFileToSend($this->validIfcFileWithPath);
-		try {
+			try
+			{
 			$returnedXml =  $sobim_converter->getFacilityManagementXml();
 			$sxe = simplexml_load_string($returnedXml);
 			return $sxe;			
-		} catch ( Exception $e) {
+			}
+			catch(Exception $e)
+			{
 			echo $e;
 		}
 	}
-	
-	
-}
+	}

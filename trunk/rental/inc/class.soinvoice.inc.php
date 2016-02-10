@@ -1,8 +1,9 @@
 <?php
-phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.socommon');
 
-class rental_soinvoice extends rental_socommon
-{
+	class rental_soinvoice extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -12,7 +13,8 @@ class rental_soinvoice extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soinvoice');
 		}
 		return self::$so;
@@ -28,16 +30,16 @@ class rental_soinvoice extends rental_socommon
 		$clauses = array('1=1');
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "{$this->marshal($this->get_id_field_name(), 'field')} = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 		}
 		if(isset($filters['contract_id']))
 		{
-			$filter_clauses[] = "rental_invoice.contract_id = {$this->marshal($filters['contract_id'],'int')}";
+				$filter_clauses[]	 = "rental_invoice.contract_id = {$this->marshal($filters['contract_id'], 'int')}";
 			$filter_clauses[] = "rental_billing.deleted IS FALSE";
 		}
 		if(isset($filters['billing_id']))
 		{
-			$filter_clauses[] = "rental_invoice.billing_id = {$this->marshal($filters['billing_id'],'int')}";
+				$filter_clauses[] = "rental_invoice.billing_id = {$this->marshal($filters['billing_id'], 'int')}";
 		}
 		if(count($filter_clauses))
 		{
@@ -85,67 +87,76 @@ class rental_soinvoice extends rental_socommon
 		if($invoice == null)
 		{
 			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true), $this->db->f('total_area', true), $this->db->f('header', true), $this->db->f('account_in', true), $this->db->f('account_out', true), $this->db->f('service_id', true), $this->db->f('responsibility_id', true), $this->db->f('project_id', true));
-			$invoice->set_party_id(		$this->unmarshal($this->db->f('party_id'),'int'));
-			$invoice->set_project_id(	$this->unmarshal($this->db->f('project_id'),'string'));
-			$invoice->set_old_contract_id ($this->unmarshal($this->db->f('old_contract_id'), 'string'));
+				$invoice->set_party_id($this->unmarshal($this->db->f('party_id'), 'int'));
+				$invoice->set_project_id($this->unmarshal($this->db->f('project_id'), 'string'));
+				$invoice->set_old_contract_id($this->unmarshal($this->db->f('old_contract_id'), 'string'));
 			$invoice->set_term_id($this->unmarshal($this->db->f('term_id'), 'int'));
 			$invoice->set_month($this->unmarshal($this->db->f('month'), 'int'));
 			$invoice->set_billing_title($this->unmarshal($this->db->f('billing_title'), 'string'));
 			$invoice->set_serial_number($this->unmarshal($this->db->f('serial_number'), 'int'));
 			$invoice->set_reference($this->unmarshal($this->db->f('reference'), 'string'));
-			$party = new rental_party(	$this->unmarshal($this->db->f('party_id'),'int'));
-			$party->set_account_number( $this->unmarshal($this->db->f('party_account_number'), 'string'));
-            $party->set_address_1(      $this->unmarshal($this->db->f('party_address_1'), 'string'));
-            $party->set_address_2(      $this->unmarshal($this->db->f('party_address_2'), 'string'));
-            $party->set_comment(        $this->unmarshal($this->db->f('party_comment'), 'string'));
-            $party->set_company_name(   $this->unmarshal($this->db->f('party_company_name'), 'string'));
-            $party->set_department(     $this->unmarshal($this->db->f('party_department'), 'string'));
-            $party->set_email(          $this->unmarshal($this->db->f('party_email'), 'string'));
-            $party->set_fax(            $this->unmarshal($this->db->f('party_fax'), 'string'));
-            $party->set_first_name(     $this->unmarshal($this->db->f('party_first_name'), 'string'));
-            $party->set_is_inactive(     $this->unmarshal($this->db->f('party_in_active'), 'bool'));
-            $party->set_last_name(      $this->unmarshal($this->db->f('party_last_name'), 'string'));
-            $party->set_location_id(    $this->unmarshal($this->db->f('party_org_location_id'), 'int'));
-            $party->set_identifier(     $this->unmarshal($this->db->f('party_identifier'), 'string'));
-            $party->set_mobile_phone(	$this->unmarshal($this->db->f('party_mobile_phone'), 'string'));
-            $party->set_place(          $this->unmarshal($this->db->f('party_place'), 'string'));
-            $party->set_postal_code(    $this->unmarshal($this->db->f('party_postal_code'), 'string'));
-            $party->set_reskontro(      $this->unmarshal($this->db->f('party_reskontro'), 'string'));
-            $party->set_title(          $this->unmarshal($this->db->f('party_title'), 'string'));
-            $party->set_url(            $this->unmarshal($this->db->f('party_url'), 'string'));
+				$party	 = new rental_party($this->unmarshal($this->db->f('party_id'), 'int'));
+				$party->set_account_number($this->unmarshal($this->db->f('party_account_number'), 'string'));
+				$party->set_address_1($this->unmarshal($this->db->f('party_address_1'), 'string'));
+				$party->set_address_2($this->unmarshal($this->db->f('party_address_2'), 'string'));
+				$party->set_comment($this->unmarshal($this->db->f('party_comment'), 'string'));
+				$party->set_company_name($this->unmarshal($this->db->f('party_company_name'), 'string'));
+				$party->set_department($this->unmarshal($this->db->f('party_department'), 'string'));
+				$party->set_email($this->unmarshal($this->db->f('party_email'), 'string'));
+				$party->set_fax($this->unmarshal($this->db->f('party_fax'), 'string'));
+				$party->set_first_name($this->unmarshal($this->db->f('party_first_name'), 'string'));
+				$party->set_is_inactive($this->unmarshal($this->db->f('party_in_active'), 'bool'));
+				$party->set_last_name($this->unmarshal($this->db->f('party_last_name'), 'string'));
+				$party->set_location_id($this->unmarshal($this->db->f('party_org_location_id'), 'int'));
+				$party->set_identifier($this->unmarshal($this->db->f('party_identifier'), 'string'));
+				$party->set_mobile_phone($this->unmarshal($this->db->f('party_mobile_phone'), 'string'));
+				$party->set_place($this->unmarshal($this->db->f('party_place'), 'string'));
+				$party->set_postal_code($this->unmarshal($this->db->f('party_postal_code'), 'string'));
+				$party->set_reskontro($this->unmarshal($this->db->f('party_reskontro'), 'string'));
+				$party->set_title($this->unmarshal($this->db->f('party_title'), 'string'));
+				$party->set_url($this->unmarshal($this->db->f('party_url'), 'string'));
 			$invoice->set_party($party);
 			
-			if($invoice->get_term_id() == 2){ // yearly
+				if($invoice->get_term_id() == 2)
+				{ // yearly
 				$invoice->set_term_label(lang('annually'));
 			}
-			else if($invoice->get_term_id() == 3){ // half year
-				if($invoice->get_month() == 6){
+				else if($invoice->get_term_id() == 3)
+				{ // half year
+					if($invoice->get_month() == 6)
+					{
 					$invoice->set_term_label(lang('first_half'));
 				}
-				else{
+					else
+					{
 					$invoice->set_term_label(lang('second_half'));
 				}
-				
 			}
-			else if($invoice->get_term_id() == 4){ // quarterly
-				if($invoice->get_month() == 3){
+				else if($invoice->get_term_id() == 4)
+				{ // quarterly
+					if($invoice->get_month() == 3)
+					{
 					$invoice->set_term_label(lang('first_quarter'));
 				}
-				else if($invoice->get_month() == 6){
+					else if($invoice->get_month() == 6)
+					{
 					$invoice->set_term_label(lang('second_quarter'));
 				}
-				else if($invoice->get_month() == 9){
+					else if($invoice->get_month() == 9)
+					{
 					$invoice->set_term_label(lang('third_quarter'));
 				}
-				else{
+					else
+					{
 					$invoice->set_term_label(lang('fourth_quarter'));
 				}
 			}
-			else{
+				else
+				{
 				$invoice->set_term_label(lang('month ' . $invoice->get_month() . ' capitalized'));
 			}
 		}
-		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
+			$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'), 'string'));
 		
 		return $invoice;
 	}
@@ -169,7 +180,7 @@ class rental_soinvoice extends rental_socommon
 			$this->marshal($invoice->get_responsibility_id(), 'string'),
 			$this->marshal($invoice->get_project_id(), 'string')
 		);
-		$query ="INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id) VALUES (" . join(',', $values) . ")";
+			$query	 = "INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -199,7 +210,7 @@ class rental_soinvoice extends rental_socommon
 			'project_id = '			. $this->marshal($invoice->get_project_id(), 'string'),
 			'serial_number = '		. $this->marshal($invoice->get_serial_number(), 'int')
 		);
-		$result = $this->db->query('UPDATE rental_invoice SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__,__FILE__);
+			$result	 = $this->db->query('UPDATE rental_invoice SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__, __FILE__);
 	}
 	
 	public function get_max_serial_number_used($serial_config_start, $serial_config_stop)
@@ -223,5 +234,4 @@ class rental_soinvoice extends rental_socommon
 		}
 		return false;
 	}
-}
-?>
+	}

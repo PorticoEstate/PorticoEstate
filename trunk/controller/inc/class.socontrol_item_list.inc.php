@@ -25,9 +25,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control_item_list', 'inc/model/');
@@ -35,6 +34,7 @@
 
 	class controller_socontrol_item_list extends controller_socommon
 	{
+
 		protected static $so;
 
 		/**
@@ -44,7 +44,7 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_list');
 			}
@@ -69,7 +69,7 @@
 				$this->marshal($control_item_list->get_control_item_id(), 'int')
 			);
 
-			$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			$result = $this->db->query('INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
 			if($result)
 			{
@@ -94,11 +94,11 @@
 
 			$values = array(
 				'control_id = ' . $this->marshal($control_item_list->get_control_id(), 'int'),
-				'control_item_id = '. $this->marshal($control_item_list->get_control_item_id(), 'int'),
+				'control_item_id = ' . $this->marshal($control_item_list->get_control_item_id(), 'int'),
 				'order_nr = ' . $this->marshal($control_item_list->get_order_nr(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 			return $result;
 		}
@@ -134,14 +134,14 @@
 		 */
 		function get_single_2($control_id, $control_item_id)
 		{
-			$control_id = (int) $control_id;
-			$control_item_id = (int) $control_item_id;
+			$control_id		 = (int)$control_id;
+			$control_item_id = (int)$control_item_id;
 
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
 			$this->db->query($sql, __LINE__, __FILE__);
 			$result = $this->db->next_record();
 
-			if( $result )
+			if($result)
 			{
 				$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -164,7 +164,7 @@
 		*/
 		function get_control_items($control_group_id)
 		{
-			$control_group_id = (int) $control_group_id;
+			$control_group_id = (int)$control_group_id;
 
 			$results = array();
 
@@ -174,7 +174,7 @@
 			
 			$this->db->query($sql);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -198,7 +198,7 @@
 		*/
 		function get_control_items_by_control($control_id, $returnType = "return_object")
 		{
-			$control_id = (int) $control_id;
+			$control_id = (int)$control_id;
 
 			$results = array();
 
@@ -209,7 +209,7 @@
 									
 			$this->db->query($sql);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -242,8 +242,8 @@
 		*/
 		function get_control_items_by_control_and_group($control_id, $control_group_id, $returnType = "return_array")
 		{
-			$control_id = (int) $control_id;
-			$control_group_id = (int) $control_group_id;
+			$control_id			 = (int)$control_id;
+			$control_group_id	 = (int)$control_group_id;
 
 			$results = array();
 
@@ -257,7 +257,7 @@
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -290,8 +290,8 @@
 		*/
 		function get_control_items_and_options_by_control_and_group($control_id, $control_group_id, $return_type = "return_array")
 		{
-			$control_id = (int) $control_id;
-			$control_group_id = (int) $control_group_id;
+			$control_id			 = (int)$control_id;
+			$control_group_id	 = (int)$control_group_id;
 
 			$results = array();
 
@@ -309,9 +309,9 @@
 			$control_item_id = 0;
 			$control_item = null;
 			$control_item_array = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				if( $this->db->f('ci_id') != $control_item_id )
+				if($this->db->f('ci_id') != $control_item_id)
 				{
 					if($control_item_id)
 					{
@@ -383,10 +383,10 @@
 		*/
 		function delete($control_id, $control_item_id)
 		{
-			$control_id = (int) $control_id;
-			$control_item_id = (int) $control_item_id;
+			$control_id		 = (int)$control_id;
+			$control_item_id = (int)$control_item_id;
 
-			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
+			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__, __FILE__);
 
 			return $result;
 		}
@@ -399,7 +399,7 @@
 		*/
 		function delete_control_items($control_id)
 		{
-			$control_id = (int) $control_id;
+			$control_id	 = (int)$control_id;
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 
 			return $result;
@@ -414,8 +414,8 @@
 		*/
 		function delete_control_items_for_group_list($control_id, $control_group_id)
 		{
- 			$control_id = (int) $control_id;
-			$control_group_id = (int) $control_group_id;
+			$control_id			 = (int)$control_id;
+			$control_group_id	 = (int)$control_group_id;
 
   			$sql  = "DELETE FROM controller_control_item_list "; 
   			$sql .= "USING controller_control_item ";
@@ -428,10 +428,18 @@
 			return $result;
 		}
 
-		function get_id_field_name($extended_info = false){}
+		function get_id_field_name($extended_info = false)
+		{
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
+		}
 
-		function populate(int $control_item_id, &$control_item){}
+		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		{
 
+	}
+
+		function populate(int $control_item_id, &$control_item)
+		{
+
+		}
 	}

@@ -24,10 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package soap
 	* @subpackage communication
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
 	/*
 		Example testurl:
 		http://localhost/~sn5607/savannah_trunk/property/inc/soap_client/braarkiv/soap.php?domain=default&location_id=54&section=BraArkiv
@@ -48,7 +46,6 @@
 	/**
 	* Include phpgroupware header
 	*/
-
 	require_once '../../../../header.inc.php';
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
@@ -75,11 +72,11 @@
 		}
 	}
 
-	require_once PHPGW_API_INC.'/functions.inc.php';
+	require_once PHPGW_API_INC . '/functions.inc.php';
 
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
-	$bygningsnr = (int) phpgw::get_var('bygningsnr', 'int');
+	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
 	$fileid = phpgw::get_var('fileid', 'string');
 
 	if(!$fileid && !$bygningsnr)
@@ -87,7 +84,7 @@
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
 	}
 
-	$c	= CreateObject('admin.soconfig',$location_id);
+	$c = CreateObject('admin.soconfig', $location_id);
 
 	$login = $c->config_data[$section]['anonymous_user'];
 	$passwd = $c->config_data[$section]['anonymous_pass'];
@@ -122,10 +119,9 @@
 	/**
 	* @global object $GLOBALS['server']
 	*/
-
 	require_once 'services.php';
 
-	$options=array();
+	$options = array();
 	$options['soap_version']	= SOAP_1_2;
 	$options['location']		= $location_url;
 	$options['uri']				= $location_url;
@@ -195,10 +191,10 @@
 	}
 	else
 	{
-		$_result =array('ExtendedDocument' => $Result->ExtendedDocument);
+		$_result = array('ExtendedDocument' => $Result->ExtendedDocument);
 	}
 
-	$html =<<<HTML
+	$html = <<<HTML
 	<table>
 HTML;
 
@@ -229,12 +225,12 @@ HTML;
 
 	$html .='<th>';
 	$html .='Last ned';
-	$html .'</th>';
+	$html . '</th>';
 
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
 
-	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php',array(
+	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php', array(
 			'domain' => $_GET['domain'],
 			'location_id' => $location_id,
 			'section' => $section
@@ -249,13 +245,12 @@ HTML;
 		}
 		$html .='<th>';
 		$html .=$attribute->Name;
-		$html .'</th>';
-
+		$html . '</th>';
 	}
 
 //_debug_array($_result['ExtendedDocument']);
 	$case_array = array();
-	foreach ($_result['ExtendedDocument'] as $entry)
+	foreach($_result['ExtendedDocument'] as $entry)
 	{
 		$_html = '<tr>';
 		$_html .='<td>';
@@ -269,7 +264,7 @@ HTML;
 				continue;
 			}
 
-			if($attribute->Name =='Saksdato')
+			if($attribute->Name == 'Saksdato')
 			{
 				$_key = strtotime($attribute->Value->anyType);
 			}
@@ -297,7 +292,6 @@ HTML;
 
 					$_html .= '</td>';
 					$_html .= '</tr>';
-
 				}
 				$_html .= '</table>';
 			}
@@ -317,7 +311,7 @@ HTML;
 //_debug_array($case_array);
 	foreach($case_array as $case)
 	{
-		$html .= implode('',$case);	
+		$html .= implode('', $case);
 	}
 
 	$html .=<<<HTML

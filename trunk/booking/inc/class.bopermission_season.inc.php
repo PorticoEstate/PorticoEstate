@@ -3,6 +3,7 @@
 	
 	class booking_bopermission_season extends booking_bopermission
 	{
+
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
 			$role_permissions = parent::get_object_role_permissions($forObject, $defaultPermissions);

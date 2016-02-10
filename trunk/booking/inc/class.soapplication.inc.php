@@ -3,12 +3,13 @@
 	
 	class booking_soapplication extends booking_socommon
 	{
+
 		function __construct()
 		{
-			parent::__construct('bb_application', 
-				array(
+			parent::__construct('bb_application', array(
 					'id'		=> array('type' => 'int'),
-                    'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
+				'id_string'						 => array('type' => 'string', 'required' => false, 'default' => '0',
+					'query' => true),
 					'active'	=> array('type' => 'int'),
 					'display_in_dashboard' => array('type' => 'int'),
 					'type'		=> array('type' => 'string'),
@@ -16,15 +17,18 @@
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),
-					'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
+				'building_name'					 => array('type' => 'string', 'required' => true, 'query' => true),
 					'frontend_modified'	=> array('type' => 'timestamp'),
 					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'case_officer_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => true),
-					'customer_ssn' 						=> array('type' => 'string', 'query' => true, 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required'=>false)), 'required' => false),
-					'customer_organization_number' 	=> array('type' => 'string', 'query' => true, 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
+				'customer_ssn'					 => array('type' => 'string', 'query' => true, 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array(
+						'full_required' => false)), 'required' => false),
+				'customer_organization_number'	 => array('type' => 'string', 'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
+						'invalid' => '%field% is invalid'))),
 					'owner_name'	=> array('type' => 'string', 'query' => true,
 						  'join' 		=> array(
 							'table' 	=> 'phpgw_accounts',
@@ -41,8 +45,9 @@
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
                     'equipment'	=> array('type' => 'string', 'query' => true, 'required' => false),
-					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
-					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
+				'contact_name'					 => array('type' => 'string', 'query' => true, 'required' => true),
+				'contact_email'					 => array('type' => 'string', 'required' => true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
+						'invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
 					'case_officer_name'	=> array('type' => 'string', 'query' => true,
 						'join' => array(
@@ -61,7 +66,9 @@
 						  'manytomany' => array(
 							'table' => 'bb_application_agegroup',
 							'key' => 'application_id',
-							'column' => array('agegroup_id' => array('type' => 'int', 'required' => true), 'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int', 'required' => true)),
+						'column' => array('agegroup_id' => array('type' => 'int', 'required' => true),
+							'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int',
+								'required' => true)),
 					)),
 					'dates' => array('type' => 'timestamp', 'required' => true,
 						  'manytomany' => array(
@@ -74,7 +81,7 @@
 							'table' => 'bb_application_comment',
 							'key' => 'application_id',
 							'column' => array('time', 'author', 'comment', 'type'),
-							'order'=> array('sort' =>'time', 'dir' => 'ASC' )
+						'order'	 => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
@@ -101,14 +108,20 @@
 					$errors['from_'] = lang('Invalid from date');
 				}
 			}
-            if(strlen($entity['contact_name']) > 50) {
+			if(strlen($entity['contact_name']) > 50)
+			{
                 $errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
             }
 		}
 
 		function get_building_info($id)
 		{
-			$this->db->limit_query("SELECT bb_building.id, bb_building.name FROM bb_building, bb_resource, bb_application_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_application_resource.resource_id AND bb_application_resource.application_id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$id = (int) $id;
+			$sql = "SELECT bb_building.id, bb_building.name"
+			. " FROM bb_building, bb_resource, bb_application_resource, bb_building_resource"
+			. " WHERE bb_building.id= bb_building_resource.building_id AND  bb_resource.id = bb_building_resource.resource_id AND bb_resource.id=bb_application_resource.resource_id AND bb_application_resource.application_id=({$id})";
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
@@ -128,8 +141,8 @@
 					AND be.from_=bad.from_
 					AND be.to_=bad.to_";
 			$results = array();		
-			$this->db->query($sql,__LINE__, __FILE__);
-			while ($this->db->next_record())
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$results[] = array('from_' => $this->db->f('from_', false),
 						           'to_' => $this->db->f('to_', false));
@@ -151,8 +164,8 @@
 					AND be.from_=bad.from_
 					AND be.to_=bad.to_)";
 			$results = array();		
-			$this->db->query($sql,__LINE__, __FILE__);
-			while ($this->db->next_record())
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$results[] = array('from_' => $this->db->f('from_', false),
 						           'to_' => $this->db->f('to_', false));
@@ -171,20 +184,18 @@
 			return array('email1' => $this->db->f('tilsyn_email', false),
 						 'email2' => $this->db->f('tilsyn_email2', false),
                          'email3' => $this->db->f('email', false));
-
 		}
 
 		function get_resource_name($id)
 		{
-			$list = implode(",",$id);
+			$list	 = implode(",", $id);
 			$results = array();		
-			$this->db->query("SELECT name FROM bb_resource where id IN ($list)",__LINE__, __FILE__);
-			while ($this->db->next_record())
+			$this->db->query("SELECT name FROM bb_resource where id IN ($list)", __LINE__, __FILE__);
+			while($this->db->next_record())
 			{
 				$results[] = $this->db->f('name', false);
 			}
 			return $results;
-
 		}
 		
 		function get_building($id)
@@ -200,9 +211,9 @@
 		function get_buildings()
 		{
             $results = array();
-			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
 						           'name' => $this->db->f('name', false));
@@ -210,63 +221,75 @@
 			return $results;
 		}
 
-		function set_inactive($id,$type)
+		function set_inactive($id, $type)
 		{
- 			if ($type == 'event') {
+			if($type == 'event')
+		{
 				$sql = "UPDATE bb_event SET active = 0 where id = ($id)";
-     		} elseif ($type == 'allocation') {
+			}
+			elseif($type == 'allocation')
+			{
 				$sql = "UPDATE bb_allocation SET active = 0 where id = ($id)";
-			} elseif ($type == 'booking') {
+			}
+			elseif($type == 'booking')
+			{
 				$sql = "UPDATE bb_booking SET active = 0 where id = ($id)";
-			} else {
+			}
+			else
+			{
 				throw new UnexpectedValueException('Encountered an unexpected error');
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
 			return;
-
 		}
 
-		function set_active($id,$type)
+		function set_active($id, $type)
 		{
- 			if ($type == 'event') {
+			if($type == 'event')
+		{
 				$sql = "UPDATE bb_event SET active = 1 where id = ($id)";
-     		} elseif ($type == 'allocation') {
+			}
+			elseif($type == 'allocation')
+			{
 				$sql = "UPDATE bb_allocation SET active = 1 where id = ($id)";
-			} elseif ($type == 'booking') {
+			}
+			elseif($type == 'booking')
+			{
 				$sql = "UPDATE bb_booking SET active = 1 where id = ($id)";
-			} else {
+			}
+			else
+			{
 				throw new UnexpectedValueException('Encountered an unexpected error');
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
 			return;
-
 		}
 
         function get_activities_main_level()
         {
 		    $results = array();
-			$results[]  = array('id' =>0,'name' => lang('Not selected'));
+			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
 			}
 			return $results;
-
         }
+
         function get_activities($id)
         {
 			$results = array();
 			$this->db->query("select id from bb_activity where id = ($id) or  parent_id = ($id) or parent_id in (select id from bb_activity where parent_id = ($id))", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
-
         }
 
-		public function update_id_string() {
+		public function update_id_string()
+		{
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
@@ -300,7 +323,6 @@
                 return False;
             }
             return True;
-
         }
 
 		/**
@@ -322,10 +344,10 @@
 							               WHERE resource_id IN ($rids,-1) 
 							               GROUP BY season_id 
 							               HAVING count(season_id)=$nrids)", __LINE__, __FILE__);
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$season_id = $this->_unmarshal($this->db->f('id', false), 'int');
-				if (CreateObject('booking.soseason')->timespan_within_season($season_id, new DateTime($from_), new DateTime($to_)))
+				if(CreateObject('booking.soseason')->timespan_within_season($season_id, new DateTime($from_), new DateTime($to_)))
 				{
 					return true;
 				}
@@ -336,14 +358,14 @@
 
 	class booking_soapplication_association extends booking_socommon
 	{
+
 		function __construct()
 		{
-			parent::__construct('bb_application_association', 
-				array(
+			parent::__construct('bb_application_association', array(
 					'id'					=> array('type' => 'int'),
 					'application_id'		=> array('type' => 'int'),
 					'type'	=> array('type' => 'string', 'required' => true),
-					'from_'	=> array('type' => 'timestamp','query' => true),
+				'from_'			 => array('type' => 'timestamp', 'query' => true),
 					'to_'	=> array('type' => 'timestamp'),
 					'active' => array('type' => 'int')));
 		}

@@ -1,5 +1,6 @@
 <?php
-/**
+
+	/**
  * Use this class to transform a html/a url to a pdf
  *
  * @package Snappy
@@ -27,9 +28,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+	class SnappyPdf extends SnappyMedia
+	{
 
-class SnappyPdf extends SnappyMedia
-{
     protected $defaultExtension = 'pdf';
     protected $options = array(
         'ignore-load-errors' => null,                          // old v0.9
@@ -39,4 +40,4 @@ class SnappyPdf extends SnappyMedia
         'minimum-font-size'	=> 12,
     );
     
-}
+	}

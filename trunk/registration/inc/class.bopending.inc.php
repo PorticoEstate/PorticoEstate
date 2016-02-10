@@ -109,9 +109,7 @@
 
 		function read($data = array())
 		{
-			$users = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'allrows'=>$data['allrows'],
-				'status_id'=>$this->status_id,'results' => $data['results']));
+			$users = $this->so->read($data);
 
 			foreach($users as &$user)
 			{

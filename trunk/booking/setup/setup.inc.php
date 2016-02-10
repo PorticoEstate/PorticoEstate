@@ -1,6 +1,6 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.2.20';
+	$setup_info['booking']['version'] = '0.2.27';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
@@ -14,12 +14,15 @@
 		'bb_contact_person',
 		'bb_organization',
 		'bb_resource',
+		'bb_building_resource',
 		'bb_group',
 		'bb_season',
 		'bb_season_boundary',
 		'bb_application',
 		'bb_allocation',
+		'bb_allocation_cost',
 		'bb_booking',
+		'bb_booking_cost',
 		'bb_booking_resource',
 		'bb_season_resource',
 		'bb_wtemplate_alloc',
@@ -35,11 +38,13 @@
 		'bb_booking_agegroup',
 		'bb_document_building',
 		'bb_document_resource',
+		'bb_document_application',
 		'bb_permission',
 		'bb_permission_root',
 		'bb_organization_contact',
 		'bb_group_contact',
 		'bb_event',
+		'bb_event_cost',
 		'bb_event_resource',
 		'bb_event_targetaudience',
 		'bb_event_agegroup',
@@ -80,5 +85,8 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['booking']['hooks'] = array
 	(
-		'menu'	=> 'booking.menu.get_menu'
+		'menu'			=> 'booking.menu.get_menu',
+		'activity_add'		=> 'booking.hook_helper.activity_add',
+		'activity_delete'	=> 'booking.hook_helper.activity_delete',
+		'activity_edit'		=> 'booking.hook_helper.activity_edit'
 	);

@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="choice">
+
+<!-- $Id$ -->
+<xsl:template name="choice">
 		<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<xsl:choose>
 				<xsl:when test="value_choice!=''">
@@ -54,4 +55,4 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

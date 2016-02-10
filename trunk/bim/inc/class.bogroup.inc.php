@@ -7,6 +7,7 @@
      */
     class bim_bogroup extends bim_boattribute_owner
     {
+
         private $id, $name, $bpn, $nat_group_no, $catalog;
 
         public function __construct()
@@ -14,11 +15,13 @@
 
         }
 
-        public function get_id() {
+		public function get_id()
+		{
             return $this->id;
         }
 
-        public function set_id($id) {
+		public function set_id($id)
+		{
             $this->id = $id;
         }
         
@@ -61,6 +64,4 @@
         {
             $this->catalog = $catalot;
         }
-
-
     }

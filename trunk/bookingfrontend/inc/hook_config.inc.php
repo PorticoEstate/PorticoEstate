@@ -10,7 +10,6 @@
 	* @category hooks
 	* @version $Id: hook_config.inc.php 4237 2009-11-27 23:17:21Z sigurd $
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -44,19 +43,19 @@
 
 		$file_list = array();
 		$dir = new DirectoryIterator($dirname); 
-		if ( is_object($dir) )
+		if(is_object($dir))
 		{
-			foreach ( $dir as $file )
+			foreach($dir as $file)
 			{
 
-				if ( $file->isDot() || !$file->isFile() || !$file->isReadable() )
+				if($file->isDot() || !$file->isFile() || !$file->isReadable())
 				{
 					continue;
 				}
 
 				$file_list[] = array
 				(
-					'id'		=> (string) $file,
+					'id'		 => (string)$file,
 					'name'		=> preg_replace($find, $replace, $file),
 					'selected'	=> $file == $selected ? 'selected' : ''
 				);
@@ -68,7 +67,7 @@
 				<option value="">{$lang_select}</option>";
 HTML;
 
-		foreach ( $file_list as $file)
+		foreach($file_list as $file)
 		{
 			$out .=  <<<HTML
 				<option value="{$file['id']}"{$file['selected']}>{$file['name']}</option>";
@@ -76,4 +75,3 @@ HTML;
 		}
 		return $out;
 	}
-

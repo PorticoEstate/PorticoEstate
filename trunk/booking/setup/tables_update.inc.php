@@ -2986,7 +2986,6 @@
 	$test[] = '0.2.19';
 	/**
 	 * Update booking version from 0.2.19 to 0.2.20
-	 * add another tilsynsvakt to buidling
 	 *
 	 */
 	function booking_upgrade0_2_19()
@@ -3008,6 +3007,8 @@
 	function booking_upgrade0_2_20()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+//- vi registrerer en systemlokasjon pr toppnivå av aktivitet som "resource.<activity_id>"
+//- vi registrerer en systemlokasjon pr toppnivå av aktivitet som "application.<activity_id>"
 		$boactivity = CreateObject('booking.boactivity');
 		$activities = $boactivity->fetch_activities();
 		$activities = $boactivity->so->read(array('sort'=>'name', 'dir'=>'ASC'));
@@ -3055,6 +3056,457 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.21';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.21';
+	/**
+	 * Update booking version from 0.2.21 to 0.2.22
+	 *
+	 */
+	function booking_upgrade0_2_21()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_agegroup','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_targetaudience','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => true));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_agegroup','description', array('type' => 'text', 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_targetaudience','description', array('type' => 'text', 'nullable' => true));
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM bb_activity WHERE parent_id IS NULL");
+
+		$activities = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$activities[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM bb_agegroup ORDER BY id");
+
+		$agegroups = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$agegroups[] = array(
+				'old_id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'name'			=> $GLOBALS['phpgw_setup']->oProc->f('name'),
+				'description'	=> $GLOBALS['phpgw_setup']->oProc->f('description'),
+				'active'		=> $GLOBALS['phpgw_setup']->oProc->f('active'),
+				'sort'			=> $GLOBALS['phpgw_setup']->oProc->f('sort')
+			 );
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM bb_targetaudience ORDER BY id");
+
+		$targets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$targets[] = array(
+				'old_id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'name'			=> $GLOBALS['phpgw_setup']->oProc->f('name'),
+				'description'	=> $GLOBALS['phpgw_setup']->oProc->f('description'),
+				'active'		=> $GLOBALS['phpgw_setup']->oProc->f('active'),
+				'sort'			=> $GLOBALS['phpgw_setup']->oProc->f('sort')
+			 );
+		}
+
+		$first_run = true;
+		foreach($activities as $activity_id)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM bb_activity WHERE parent_id = $activity_id");
+
+			$sub_activities = array($activity_id);
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$sub_activities[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+			}
+			
+			if($first_run)
+			{
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE bb_agegroup SET activity_id = {$activity_id}");
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE bb_targetaudience SET activity_id = {$activity_id}");
+				$first_run = false;
+			}
+			else
+			{
+				foreach($agegroups as &$agegroup)
+				{
+					$old_id = $agegroup['old_id'];
+					$insert_values = $agegroup;
+					unset($insert_values['old_id']);
+					$insert_values['activity_id'] = $activity_id;
+					$cols = implode(',', array_keys($insert_values));
+					$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($insert_values));
+					$sql = "INSERT INTO bb_agegroup ({$cols}) VALUES ({$values})";
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$new_id = $GLOBALS['phpgw_setup']->oProc->get_last_insert_id('bb_agegroup');
+//bb_application_agegroup
+					$sql = "SELECT id FROM bb_application WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$applications = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$applications[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+
+					if($applications)
+					{
+						$sql = "UPDATE bb_application_agegroup SET agegroup_id = $new_id WHERE agegroup_id = $old_id AND application_id IN (" . implode(',', $applications) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+//bb_booking_agegroup
+					$sql = "SELECT id FROM bb_booking WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$bookings = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$bookings[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+
+					if($bookings)
+					{
+						$sql = "UPDATE bb_booking_agegroup SET agegroup_id = $new_id WHERE agegroup_id = $old_id AND booking_id IN (" . implode(',', $bookings) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+//bb_event_agegroup
+					$sql = "SELECT id FROM bb_event WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$events = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$events[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+
+					if($events)
+					{
+						$sql = "UPDATE bb_event_agegroup SET agegroup_id = $new_id WHERE agegroup_id = $old_id AND event_id IN (" . implode(',', $events) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+				}
+				foreach($targets as &$target)
+				{
+					$old_id = $target['old_id'];
+					$insert_values = $target;
+					unset($insert_values['old_id']);
+					$insert_values['activity_id'] = $activity_id;
+					$cols = implode(',', array_keys($insert_values));
+					$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($insert_values));
+					$sql = "INSERT INTO bb_targetaudience ({$cols}) VALUES ({$values})";
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$new_id = $GLOBALS['phpgw_setup']->oProc->get_last_insert_id('bb_targetaudience');
+//bb_application_targetaudience
+					$sql = "SELECT id FROM bb_application WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$applications = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$applications[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+
+					if($applications)
+					{
+						$sql = "UPDATE bb_application_targetaudience SET targetaudience_id = $new_id WHERE targetaudience_id = $old_id AND application_id IN (" . implode(',', $applications) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+//bb_booking_targetaudience
+					$sql = "SELECT id FROM bb_booking WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$bookings = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$bookings[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+
+					if($bookings)
+					{
+						$sql = "UPDATE bb_booking_targetaudience SET targetaudience_id = $new_id WHERE targetaudience_id = $old_id AND booking_id IN (" . implode(',', $bookings) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+//bb_event_targetaudience
+					$sql = "SELECT id FROM bb_event WHERE activity_id IN (" . implode(',', $sub_activities) . ')';
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					$events = array();
+					while ($GLOBALS['phpgw_setup']->oProc->next_record())
+					{
+						$events[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+					}
+					if($events)
+					{
+						$sql = "UPDATE bb_event_targetaudience SET targetaudience_id = $new_id WHERE targetaudience_id = $old_id AND event_id IN (" . implode(',', $events) . ')';
+						$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+					}
+				}
+			}
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_booking_agegroup','male_actual', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_booking_agegroup','female_actual', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_event_agegroup','male_actual', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_event_agegroup','female_actual', array('type' => 'int', 'precision' => 4,'nullable' => true));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_agegroup','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_targetaudience','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => false));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.22';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.22';
+	/**
+	 * Update booking version from 0.2.22 to 0.2.23
+	 *
+	 */
+	function booking_upgrade0_2_22()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_allocation_cost',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'allocation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_allocation' => array('allocation_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_cost', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+						'bb_event' => array('event_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_booking_cost', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'booking_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.23';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.23';
+	/**
+	 * Update booking version from 0.2.23 to 0.2.24
+	 *
+	 */
+	function booking_upgrade0_2_23()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource','json_representation',
+			array(
+				'type' => 'jsonb',
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@ (LEFTARG = jsonb, RIGHTARG = text, PROCEDURE = jsonb_exists)',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any)',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all)',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.24';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.24';
+	/**
+	 * Update booking version from 0.2.24 to 0.2.25
+	 *
+	 */
+	function booking_upgrade0_2_24()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_document_application',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					"bb_application" => array('owner_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.25';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.25';
+	/**
+	 * Update booking version from 0.2.25 to 0.2.26
+	 *
+	 */
+	function booking_upgrade0_2_25()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_building','activity_id', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$soactivity = createObject('booking.soactivity');
+
+		$sql = "SELECT id FROM bb_activity WHERE parent_id = 0 OR parent_id IS NULL ORDER BY id";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$top_levels = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$top_levels[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		$activities = array_merge(array($top_levels[0]),$soactivity->get_children($top_levels[0]));
+
+		if($activities)
+		{
+			$sql = "SELECT building_id FROM bb_resource WHERE activity_id IN (" . implode(',', $activities) . ')';
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$buildings = array();
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$buildings[] = $GLOBALS['phpgw_setup']->oProc->f('building_id');
+			}
+
+			if($buildings)
+			{
+				$sql = "UPDATE bb_building SET activity_id = 1 WHERE id IN (" . implode(',', $buildings) . ')';
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				if(isset($top_levels[1]))
+				{
+					$sql = "UPDATE bb_building SET activity_id = {$top_levels[1]} WHERE activity_id IS NULL";
+					$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				}
+
+				$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building','activity_id',array(
+						'type' => 'int',
+						'precision' => 4,
+						'nullable' => false
+					)
+				);
+
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.26';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.26';
+	/**
+	 * Update booking version from 0.2.26 to 0.2.27
+	 *
+	 */
+	function booking_upgrade0_2_26()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_building_resource', array(
+				'fd' => array(
+					'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				),
+				'pk' => array('building_id', 'resource_id'),
+				'fk' => array(
+					'bb_building' => array('building_id' => 'id'),
+					'bb_resource' => array('resource_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT id, building_id FROM bb_resource',__LINE__,__FILE__);
+
+		// using stored prosedures
+		$sql = 'INSERT INTO bb_building_resource (building_id, resource_id)'
+							. ' VALUES(?, ?)';
+		$valueset = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$valueset[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $GLOBALS['phpgw_setup']->oProc->f('building_id'),
+					'type'	=> 1 //PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'type'	=>	1 //PDO::PARAM_INT
+				)
+			);
+		}
+
+		if($valueset)
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'building_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.27';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

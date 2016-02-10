@@ -1,13 +1,18 @@
-<xsl:template match="messages_data" xmlns:php="http://php.net/xsl">
-   	<div class="yui-navset" id="ticket_tabview">
+<xsl:template match="section" xmlns:php="http://php.net/xsl">
+	
+	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	
+	<div class="frontend_body">
+		<div class="pure-form pure-form-aligned">
+			<div id="tab-content">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
-		<div class="yui-content" style="padding: 2em;">
-			<div style="float: left">
+				<div id="{$tab_selected}">
+					<div>
 			 	<table>
 			 		<tr>
-			 			<th>Dato</th>
-			 			<th style="padding-left: 2em;">Tittel</th>
-			 			<th style="padding-left: 2em;">Fra</th>
+								<th><xsl:value-of select="php:function('lang', 'date')"/></th>
+								<th style="padding-left: 2em;"><xsl:value-of select="php:function('lang', 'title')"/></th>
+								<th style="padding-left: 2em;"><xsl:value-of select="php:function('lang', 'from')"/></th>
 			 		</tr>
 			 	<xsl:for-each select="message">
 			 		<tr>
@@ -18,11 +23,10 @@
 			 	</xsl:for-each>
 			 	</table>
 			 </div>
-		 	<div style="float: left; padding-left: 2em;">
+					<div>
 		 		<ul>
 		 			<xsl:choose>
 		 				<xsl:when test="normalize-space(view)">
-		 				
 			 			<li class="ticket_detail">
 			 				<img src="frontend/templates/base/images/16x16/email_open.png" class="list_image"/><xsl:value-of select="view/subject" disable-output-escaping="yes"/>
 			 			</li>
@@ -40,6 +44,9 @@
 			 	</ul>
 		 	</div>
 		</div>	
+				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
+			</div>	
+		</div>
 	</div>
 </xsl:template>
 

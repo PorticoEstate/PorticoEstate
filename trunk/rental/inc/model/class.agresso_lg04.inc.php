@@ -84,7 +84,8 @@
 			$decimal_separator	 = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
-			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array('billing_id' => $this->billing_job->get_id()));
+			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
+				'billing_id' => $this->billing_job->get_id()));
 
 
 			$config				 = CreateObject('phpgwapi.config', 'rental');
@@ -124,10 +125,12 @@
 			foreach($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
-				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
+				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
+					'invoice_id' => $invoice->get_id()));
 				$composite_name	 = '';
 				// We need to get the composites to get a composite name for the Agresso export
-				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id()));
+				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+					'contract_id' => $invoice->get_contract_id()));
 				if($composites != null && count($composites) > 0)
 				{
 					$keys			 = array_keys($composites);
@@ -187,16 +190,19 @@
 			$decimal_separator	 = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
-			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array('billing_id' => $this->billing_job->get_id()));
+			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
+				'billing_id' => $this->billing_job->get_id()));
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			foreach($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
-				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
+				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
+					'invoice_id' => $invoice->get_id()));
 				$composite_name	 = '';
 				// We need to get the composites to get a composite name for the Agresso export
-				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id()));
+				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+					'contract_id' => $invoice->get_contract_id()));
 				if($composites != null && count($composites) > 0)
 				{
 					$keys			 = array_keys($composites);
@@ -205,18 +211,18 @@
 				// HACK to get the needed location code for the building
 				$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
 
-				/**Sigurd:Start contract type**/
+				/*				 * Sigurd:Start contract type* */
 				$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
 				$current_contract_type_id	= $contract->get_contract_type_id();
 				$contract_type_label		= lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
 				$contract_id				= $contract->get_old_contract_id();
 				$party_names				= explode('<br/>', rtrim($contract->get_party_name(), '<br/>'));
-				$start_date					= $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(),$dateformat);
-				$end_date					= $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(),$dateformat);
-				$billing_start_date			= $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(),$dateformat);
-				$billing_end_date			= $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(),$dateformat);
+				$start_date					 = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $dateformat);
+				$end_date					 = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $dateformat);
+				$billing_start_date			 = $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(), $dateformat);
+				$billing_end_date			 = $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(), $dateformat);
 
-				/**End contract type**/
+				/*				 * End contract type* */
 
 				$price_item_data	 = array();
 				$price_item_counter	 = 0;
@@ -255,32 +261,11 @@
 						$_party_names = $party_names;
 					}
 
-					$party_full_name = implode (', ', $_party_names);
+					$party_full_name = implode(', ', $_party_names);
 
 					$this->orders[] = $this->$get_order_excel(
-						$start_date,
-						$end_date,
-						$billing_start_date,
-						$billing_end_date,
-						$invoice->get_header(),
-						$invoice->get_party()->get_identifier(),
-						$party_name,
-						$serialized_party['address'],
-						$party_full_name,
-						$invoice->get_id(),
-						$this->billing_job->get_year(),
-						$this->billing_job->get_month(),
-						$invoice->get_account_out(),
-						$data,
-						$invoice->get_responsibility_id(),
-						$invoice->get_service_id(),
-						$building_location_code,
-						$invoice->get_project_id(),
-						$composite_name,
-						$invoice->get_reference(),
-						$price_item_counter,
-						$invoice->get_account_in(),//ny
-						$invoice->get_responsibility_id(),//ny
+					$start_date, $end_date, $billing_start_date, $billing_end_date, $invoice->get_header(), $invoice->get_party()->get_identifier(), $party_name, $serialized_party['address'], $party_full_name, $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $invoice->get_reference(), $price_item_counter, $invoice->get_account_in(), //ny
+	 $invoice->get_responsibility_id(), //ny
 						$contract_type_label, //ny
 						$contract_id //ny
 					);
@@ -477,31 +462,7 @@
 		 * 
 		 */
 		protected function get_order_excel_bk(
-			$start_date,
-			$end_date,
-			$billing_start_date,
-			$billing_end_date,
-			$header,
-			$party_id,
-			$party_name,
-			$party_address,
-			$party_full_name,
-			$order_id,
-			$bill_year,
-			$bill_month,
-			$account,
-			$product_item,
-			$responsibility,
-			$service,
-			$building,
-			$project,
-			$text,
-			$client_ref,
-			$counter,
-			$account_in,
-			$responsibility_id,
-			$contract_type_label,
-			$contract_id)
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id)
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -542,30 +503,7 @@
 		}
 
 		protected function get_order_excel_nlsh(
-						$start_date,
-						$end_date,
-						$billing_start_date,
-						$billing_end_date,
-						$header,
-						$party_id,
-						$party_name,
-						$party_address,
-						$party_full_name,
-						$order_id, $bill_year,
-						$bill_month,
-						$account_out,
-						$product_item,
-						$responsibility,
-						$service,
-						$building,
-						$project,
-						$text,
-						$client_ref,
-						$counter,
-						$account_in,
-						$responsibility_id,
-						$contract_type_label,
-						$contract_id)
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id)
 		{
 
 //_debug_array(func_get_args());
@@ -577,14 +515,14 @@
 				'date_end'				=> $end_date,
 				'billing_start'			=> $billing_start_date,
 				'billing_end'			=> $billing_end_date,
-				'Kontraktstype'			=> $contract_type_label,//FIXME
+				'Kontraktstype'			 => $contract_type_label, //FIXME
 				'Art/konto inntektsside' => $account_in,
-				'Art/konto utgiftsside'	=> $account_out,//FIXME
+				'Art/konto utgiftsside'	 => $account_out, //FIXME
 				'client_ref'			 => $client_ref,
 				'header'				 => $header,
 				'bill_year'				 => $bill_year,
 				'bill_month'			 => $bill_month,
-				'Ansvar'				 => $responsibility_id,//FIXME
+				'Ansvar'				 => $responsibility_id, //FIXME
 //				'Ansvar2'				 => 'BKBPE',//FIXME
 				'Party'					 => $party_id,
 				'name'					 => $party_name,
@@ -605,7 +543,7 @@
 				'client'				 => 'BY',
 				'item_counter'			 => $item_counter,
 				'text'					 => $text,
-				'Kommentar'				=> 'Kommentar',//FIXME
+				'Kommentar'				 => 'Kommentar', //FIXME
 			);
 
 			return str_replace(array("\n", "\r"), '', $order);
@@ -633,5 +571,4 @@
 			}
 			return sprintf("%017.17s", $belop);
 		}
-
 	}	

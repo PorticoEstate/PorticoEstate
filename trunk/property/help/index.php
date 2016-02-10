@@ -1,5 +1,5 @@
 <?php
-  /**************************************************************************\
+	/*	 * ************************************************************************\
   * phpGroupWare - User manual                                               *
   * http://www.phpgroupware.org                                              *
   * --------------------------------------------                             *
@@ -7,20 +7,20 @@
   *  under the terms of the GNU General Public License as published by the   *
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
-  \**************************************************************************/
+	  \************************************************************************* */
 
 	/* $Id$ */
 
-	$phpgw_flags = Array(
+	$phpgw_flags = array(
 		'currentapp'	=> 'manual'
 	);
 	$phpgw_info['flags'] = $phpgw_flags;
 	include('../../header.inc.php');
 	$appname = 'property';
-	include(PHPGW_SERVER_ROOT.'/'.$appname.'/setup/setup.inc.php');
+	include(PHPGW_SERVER_ROOT . '/' . $appname . '/setup/setup.inc.php');
 ?>
-<img src="<?php echo $phpgw->common->image($appname,'navbar.gif'); ?>" border="0"><p/>
-<font face="<?php echo $phpgw_info['theme']['font']; ?>" size="2">
-Version: <b><?php echo $setup_info[$appname]['version']; ?></b><p/>
+<img src="<?php echo $phpgw->common->image($appname, 'navbar.gif');?>" border="0"><p/>
+<font face="<?php echo $phpgw_info['theme']['font'];?>" size="2">
+Version: <b><?php echo $setup_info[$appname]['version'];?></b><p/>
 </font>
-<?php $phpgw->common->phpgw_footer(); ?>
+<?php $phpgw->common->phpgw_footer();?>

@@ -1,6 +1,5 @@
 <?php
-
-/**
+	/**
  * phpGroupWare jQuery wrapper class
  *
  * @author Sigurd Nes
@@ -8,9 +7,9 @@
  * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
  * @package phpgroupware
  * @subpackage phpgwapi
- * @version $Id$
+	 * @version $Id$
  */
-/*
+	/*
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 2 of the License, or
@@ -25,14 +24,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
+	/**
  * phpGroupWare jQuery wrapper class
  *
  * @package phpgroupware
  * @subpackage phpgwapi
  * @category gui
  */
-class phpgwapi_jquery {
+	class phpgwapi_jquery
+	{
 
 	/**
 	 * @var int $counter the widget id counter
@@ -40,7 +40,7 @@ class phpgwapi_jquery {
 	private static $counter = 0;
 
 	/**
-	 * Load all the dependencies for a YUI widget
+		 * Load all the dependencies for a jQuery widget
 	 *
 	 * @param string $widget the name of the widget to load, such as autocomplete
 	 *
@@ -48,56 +48,75 @@ class phpgwapi_jquery {
 	 *
 	 * @internal this does not render the widget it only includes the header js files
 	 */
-	public static function load_widget($widget) {
+		public static function load_widget($widget)
+		{
+			if(preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			{
+				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
+			}
+			else
+			{
+				$_jquery_core = 'jquery-2.1.4';
+			}
+
+			$_jquery_ui	 = 'jquery-ui-1.11.4';
 		$_type = '.min'; // save some download
 
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$theme = 'humanity';
+			}
+			else
+			{
+				$theme = 'ui-lightness';
+			}
 		$load = array();
-		switch ($widget) {
+			switch($widget)
+			{
 			case 'core':
 				$load = array
 					(
-					//"js/jquery-1.11.1{$_type}",
-					"js/jquery-2.1.1{$_type}",
-//						"js/jquery-migrate-1.2.1"
+						"js/{$_jquery_core}{$_type}",
 				);
 				break;
 
 			case 'datepicker':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
 					"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
-//						"js/jquery-migrate-1.2.1"
 				);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 				break;
 
 			case 'validator':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
 					"validator/jquery.form-validator{$_type}"
+//					"validator/jquery.form-validator"
 				);
-				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/theme-default.css");
 				break;
 			
 			case 'menu':
 			case 'autocomplete':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
-//						"js/jquery-migrate-1.2.1"
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
 				);
 
-				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.10.4.custom{$_type}.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 
 				break;
 
 			case 'tabview':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
 				//	"tabs/jquery.responsiveTabs{$_type}",
 					"tabs/jquery.responsiveTabs",
 					'common'
@@ -110,7 +129,7 @@ class phpgwapi_jquery {
 			case 'mmenu':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
 					"mmenu/src/js/jquery.mmenu.min.all"
 				);
 
@@ -121,7 +140,7 @@ class phpgwapi_jquery {
 			case 'treeview':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
 					"treeview/jstree{$_type}"
 				);
 
@@ -132,7 +151,7 @@ class phpgwapi_jquery {
 			case 'numberformat':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+						"js/{$_jquery_core}{$_type}",
 					"number-format/jquery.number{$_type}"
 				);
 
@@ -140,9 +159,9 @@ class phpgwapi_jquery {
 			case 'layout':
 				$load = array
 				(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
-					'layout'=> array("jquery.layout{$_type}", "plugins/jquery.layout.state")
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
+						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 				);
 				break;
 			
@@ -151,7 +170,7 @@ class phpgwapi_jquery {
 				trigger_error(lang($err, $widget), E_USER_WARNING);
 				return '';
 		}
-		foreach ($load as $key => $scripts)
+			foreach($load as $key => $scripts)
 		{
 
 			$package = 'jquery';
@@ -169,7 +188,7 @@ class phpgwapi_jquery {
 			foreach($scripts as $script)
 			{
 				$test = $GLOBALS['phpgw']->js->validate_file($package, $script);
-				if (!$test)
+					if(!$test)
 				{
 					$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
 					trigger_error(lang($err, $script, $widget), E_USER_WARNING);
@@ -200,7 +219,61 @@ class phpgwapi_jquery {
 		$translation = '';
 		if(!$times_loaded)//first time only
 		{
-			//TODO: add translations
+				//TODO: use translations from the package
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] == 'no')
+				{
+					$translation = <<<JS
+
+				var validateLanguage = {
+					errorTitle: 'innsending av skjema mislyktes!',
+					requiredField: 'Dette er et obligatorisk felt',
+					requiredFields: 'Du har ikke svart på alle obligatoriske felter',
+					badTime: 'Du har ikke angitt en gyldig tid',
+					badEmail: 'Du har ikke angitt en gyldig e-postadresse',
+					badTelephone: 'Du har ikke angitt et gyldig telefonnummer',
+					badSecurityAnswer: 'Du har ikke gitt korrekt svar på sikkerhetsspørsmålet',
+					badDate: 'Du har ikke gitt en gyldig dato',
+					lengthBadStart: 'Inputverdien må være mellom ',
+					lengthBadEnd: ' karakterer',
+					lengthTooLongStart: 'Inputverdien er lengre enn ',
+					lengthTooShortStart: 'Inputverdien er kortere enn ',
+					notConfirmed: 'Inputverdiene kunne ikke bekreftes',
+					badDomain: 'Feilaktig domene verdi',
+					badUrl: 'Inputverdiene er ikke et riktig nettadresse',
+					badCustomVal: 'Inputverdien er feil',
+					andSpaces: ' og mellomrom ',
+					badInt: 'Du har ikke angitt et tall',
+					badSecurityNumber: 'Personnummeret validerer ikke',
+					badUKVatAnswer: 'Feil britisk moms-kode',
+					badStrength: 'Passordet er ikke sterk nok',
+					badNumberOfSelectedOptionsStart: 'Du må velge minst ',
+					badNumberOfSelectedOptionsEnd: ' svar',
+					badAlphaNumeric: 'Inputverdiene kan bare inneholde alfanumeriske tegn ',
+					badAlphaNumericExtra: ' og ',
+					wrongFileSize: 'Filen du prøver å laste opp er for stor (max %s)',
+					wrongFileType: 'Bare filer av type %s er mulig',
+					groupCheckedRangeStart: 'Vennligst velg mellom ',
+					groupCheckedTooFewStart: 'Vennligst velg minst ',
+					groupCheckedTooManyStart: 'Vennligst velg maksimum ',
+					groupCheckedEnd: ' alternativ',
+					badCreditCard: 'Kredittkortnummeret er ikke gyldig',
+					badCVV: 'CVV-nummer ikke var gyldig',
+					wrongFileDim : 'Feil bildedimensjoner,',
+					imageTooTall : 'bildet kan ikke være høyere enn',
+					imageTooWide : 'bildet kan ikke være bredere enn',
+					imageTooSmall : 'bildet var for liten',
+					min : 'minimum',
+					max : 'maximum',
+					imageRatioNotAccepted : 'Bildeforholdet kan ikke aksepteres',
+					badBrazilTelephoneAnswer: 'Telefonnummeret er ugyldig',
+					badBrazilCEPAnswer: 'CEP er ugyldig',
+					badBrazilCPFAnswer: 'CPF er ugyldig'
+				   };
+JS;
+				}
+				else
+				{
+
 			$translation = <<<JS
 
 			var validateLanguage = {
@@ -236,18 +309,21 @@ class phpgwapi_jquery {
 			   };
 JS;
 		}
+			}
 
 		$js = <<<JS
+
 			{$translation}
+
 			$(document).ready(function () 
 			{
 				$.validate({
+					lang: '{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}', // (supported languages are fr, de, se, sv, en, pt, no)
 					modules : {$modules_js},
 					form: '#{$form_id}',
 					validateOnBlur : false,
 					scrollToTopOnError : false,
-					errorMessagePosition : {$errorMessagePosition},
-					language : validateLanguage
+					errorMessagePosition : {$errorMessagePosition}
 				});
 			});
 JS;
@@ -272,18 +348,21 @@ HTML;
 		$disabled = array();
 		$tab_map = array();
 		$i = 0;
-		foreach ($tabs as $id => $tab) {
+			foreach($tabs as $id => $tab)
+			{
 			$tab_map[$id] = $i;
 
 			$label = $tab['label'];
 			$_function = '';
-			if (isset($tab['function'])) {
+				if(isset($tab['function']))
+				{
 				$_function = " onclick=\"javascript: {$tab['function']};\"";
 			}
 
 			//Set disabled tabs
 			//if (empty($tab['link']) && empty($tab['function'])) {
-			if ($tab['disable'] == 1) {
+				if($tab['disable'] == 1)
+				{
 				$disabled[] = $i;
 			}
 
@@ -300,7 +379,8 @@ HTML;
 
 			$i++;
 		}
-		$selected = in_array($selection, $tab_map) ? (int)$tab_map[$selection] : 0;
+
+			$selected = array_key_exists($selection, $tab_map) ? (int)$tab_map[$selection] : 0;
 
 		$disabled_js = '[' . implode(',', $disabled) . ']';
 
@@ -310,10 +390,10 @@ HTML;
 		$js = <<<JS
 		$(document).ready(function ()
 		{
-			if(typeof(JqueryPortico.inlineTablesDefined) == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
-			{
+			/*if(typeof(JqueryPortico.inlineTablesDefined) == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
+			{*/
 				JqueryPortico.render_tabs();
-			}
+			//}
 		});
 
 			JqueryPortico.render_tabs = function ()
@@ -345,8 +425,8 @@ JS;
 		self::load_widget('core');
 		$GLOBALS['phpgw']->js->validate_file('ckeditor', 'ckeditor');
 		$GLOBALS['phpgw']->js->validate_file('ckeditor', 'adapters/jquery');
-		$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
-		if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
+			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang'] ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
 		{
 			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 		}
@@ -364,7 +444,5 @@ JS;
 		} );
 JS;
 		$GLOBALS['phpgw']->js->add_code('', $js);
-
 	}
-
-}
+	}

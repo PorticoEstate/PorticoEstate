@@ -16,10 +16,10 @@
 	</tr>
 </table>
 <form method="POST" action="{action_url}">
-<table border="0" align="center" width="50%">
+	<table border="0" align="center" width="50%">
 	{row}
-</table>
-{common_hidden_vars_form}
-<input type="hidden" name="processed" value="{processed}">
-<center><input type="submit" name="submit" value="{submit_lang}"></center>
+	</table>
+	{common_hidden_vars_form}
+	<input type="hidden" name="processed" value="{processed}">
+	<center><input type="submit" name="submit" value="{submit_lang}"></center>
 </form>

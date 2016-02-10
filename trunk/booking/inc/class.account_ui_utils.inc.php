@@ -1,6 +1,8 @@
 <?php
+
 	class booking_account_ui_utils
 	{
+
 		public static function yui_accounts()
 		{
 			$query = phpgw::get_var('query'); 

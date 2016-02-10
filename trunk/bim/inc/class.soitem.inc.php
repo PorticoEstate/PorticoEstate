@@ -1,7 +1,6 @@
 <?php
-
-phpgw::import_class('bim.soitem_group');
-phpgw::import_class('bim.boitem');
+	phpgw::import_class('bim.soitem_group');
+	phpgw::import_class('bim.boitem');
 
     /**
      * Description of soitem
@@ -10,21 +9,22 @@ phpgw::import_class('bim.boitem');
      */
     class bim_soitem
     {
+
         private $db;
         private static $instance;
         public $uicols;
 
-        private function __construct() {
+		private function __construct()
+		{
             $this->db = & $GLOBALS['phpgw']->db;
         }
-
 
         /**
          * @return bim_soitem
          */
         public static function singleton()
         {
-            if (!isset(self::$instance))
+			if(!isset(self::$instance))
             {
                 $c = __CLASS__;
                 self::$instance = new $c;
@@ -91,11 +91,12 @@ phpgw::import_class('bim.boitem');
             $from_tables = array('fm_item i');
             $joins = array(
                 //$this->db->left_join.' fm_item_group g ON i.group_id = g.id',
-                $this->db->left_join.' fm_vendor v ON i.vendor_id = v.id'
+				$this->db->left_join . ' fm_vendor v ON i.vendor_id = v.id'
             );
             $where_clauses = array(' WHERE 1=1');
 
-            if($specific_item_id) {
+			if($specific_item_id)
+			{
                 // FIXME Sanitize input!!
                 $where_clauses[] = "i.id = $specific_item_id";
             }
@@ -113,14 +114,13 @@ phpgw::import_class('bim.boitem');
                 $items[$i]['group']    = $this->db->f('group_id');
                 $items[$i]['location'] = $this->db->f('location_id');
                 $items[$i]['vendor']   = $this->db->f('vendor_id');
-                $items[$i]['installed']= $this->db->f('installed');
+				$items[$i]['installed'] = $this->db->f('installed');
 
                 $i++;
             }
 
             return $items;
         }
-
 
         /**
          * Creates fully populated objects out of an item array.
@@ -149,7 +149,6 @@ phpgw::import_class('bim.boitem');
             return $return_objects;
         }
 
-
         /**
          * Save changes on an item to database or insert a new one if ID is empty.
          *
@@ -168,7 +167,6 @@ phpgw::import_class('bim.boitem');
                 $obj->get_installed_date());
         }
 
-
         /**
          * Get total number of records (rows) in item table
          *
@@ -182,6 +180,6 @@ phpgw::import_class('bim.boitem');
             // Move pointer to first row
             $this->db->next_record();
             // Get value of 'rows' column
-            return (int) $this->db->f('rows');
+			return (int)$this->db->f('rows');
         }
     }

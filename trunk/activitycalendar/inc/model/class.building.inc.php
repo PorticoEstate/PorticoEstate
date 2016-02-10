@@ -3,8 +3,8 @@
 
 	class activitycalendar_building extends activitycalendar_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $name;
 		
@@ -24,19 +24,23 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 		
 		public function set_name($name)
 		{
 			$this->name = $name;
 		}
 		
-		public function get_name() { return $this->name; }
+		public function get_name()
+		{
+			return $this->name;
+		}
 		
 		public function serialize()
 		{
 			return;
 		}
-		
 	}
-?>

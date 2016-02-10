@@ -3,6 +3,7 @@
 	
 	class booking_sopermission_booking extends booking_sopermission
 	{
+
 		/**
 		 * @see booking_sopermission
 		 */

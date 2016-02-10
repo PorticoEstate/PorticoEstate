@@ -1,4 +1,5 @@
 <!-- $Id$ -->
+<!--
 	<xsl:template name="attributes_view">
 		<xsl:apply-templates select="attributes_values"/>
 	</xsl:template>
@@ -13,11 +14,12 @@
 			</div>
 		</xsl:for-each>
 	</xsl:template>
+-->
 
 	<xsl:template match="attributes">
-			<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
-			<ul>
-				<li align="left" width="19%" valign="top" title="{$statustext}">
+
+			<div class="pure-group">
+				<label>
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
 							<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
@@ -26,7 +28,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<b><xsl:value-of select="input_text"/></b>
+							<xsl:value-of select="input_text"/>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
@@ -44,8 +46,8 @@
 							<xsl:text> ]</xsl:text>
 						</xsl:when>
 					</xsl:choose>
-				</li>
-				<li>
+				</label>
+				<div>
 					<xsl:choose>
 						<xsl:when test="name!=''">
 							<xsl:choose>
@@ -322,8 +324,8 @@
 							</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
-				</li>
-			</ul>
+				</div>
+			</div>
 	</xsl:template>
 
 	<xsl:template name="choice">

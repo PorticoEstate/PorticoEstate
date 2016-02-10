@@ -7,7 +7,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -23,16 +22,17 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.bofellesdata');
+	phpgw::import_class('rental.socommon');
+	phpgw::import_class('rental.bofellesdata');
 
-include_class('rental', 'agresso_cs15', 'inc/model/');
-include_class('rental', 'party', 'inc/model/');
-include_class('rental', 'location_hierarchy', 'inc/locations/');
-include_class('rental', 'result_unit', 'inc/locations/');
+	include_class('rental', 'agresso_cs15', 'inc/model/');
+	include_class('rental', 'party', 'inc/model/');
+	include_class('rental', 'location_hierarchy', 'inc/locations/');
+	include_class('rental', 'result_unit', 'inc/locations/');
 
-class rental_soparty extends rental_socommon
-{
+	class rental_soparty extends rental_socommon
+	{
+
 	const LOCATION_ROOT = '.';
 	const LOCATION_IN = '.RESPONSIBILITY.INTO';
 	const LOCATION_OUT = '.RESPONSIBILITY.OUT';
@@ -47,7 +47,8 @@ class rental_soparty extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soparty');
 		}
 		return self::$so;
@@ -74,7 +75,8 @@ class rental_soparty extends rental_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-		if($sort_field != null) {
+			if($sort_field != null)
+			{
 			$dir = $ascending ? 'ASC' : 'DESC';
 			if($sort_field == 'name')
 			{
@@ -87,17 +89,17 @@ class rental_soparty extends rental_socommon
 				{
 					$sort_field = 'party.address_1';
 					$this->sort_field = array('party.address_1');
-
 				}
-				$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
+					$order = "ORDER BY {$this->marshal($sort_field, 'field')} $dir";
 			}
 		}
 		if($search_for)
 		{
-			$query = $this->marshal($search_for,'string');
-			$like_pattern = "'%".$search_for."%'";
+				$query			 = $this->marshal($search_for, 'string');
+				$like_pattern	 = "'%" . $search_for . "%'";
 			$like_clauses = array();
-			switch($search_type){
+				switch($search_type)
+				{
 				case "name":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
@@ -141,15 +143,16 @@ class rental_soparty extends rental_socommon
 
 		$filter_clauses = array();
 
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			if(isset($filters[$this->get_id_field_name()]))
+			{
+				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 			$filter_clauses[] = "party.id = {$id}";
 		}
 
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
 		{
-			$party_type = $this->marshal($filters['party_type'],'int');
+				$party_type = $this->marshal($filters['party_type'], 'int');
 			if(isset($party_type) && $party_type > 0)
 			{
 				$filter_clauses[] = "contract.location_id = {$party_type}";
@@ -170,7 +173,7 @@ class rental_soparty extends rental_socommon
 
 		if(isset($filters['contract_id']))
 		{
-			$contract_id = $this->marshal($filters['contract_id'],'int');
+				$contract_id = $this->marshal($filters['contract_id'], 'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
 				$filter_clauses[] = "c_p.contract_id = {$contract_id}";
@@ -179,7 +182,7 @@ class rental_soparty extends rental_socommon
 
 		if(isset($filters['not_contract_id']))
 		{
-			$contract_id = $this->marshal($filters['not_contract_id'],'int');
+				$contract_id = $this->marshal($filters['not_contract_id'], 'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
 				$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id} OR contract_id IS NULL) AND NOT party.is_inactive";
@@ -189,7 +192,7 @@ class rental_soparty extends rental_socommon
 		if(isset($filters['org_unit_id']))
 		{
 			$bofelles = rental_bofellesdata::get_instance();
-			$org_unit_id = $this->marshal($filters['org_unit_id'],'string');
+				$org_unit_id = $this->marshal($filters['org_unit_id'], 'string');
 			if(isset($org_unit_id))
 			{
 				//check if org_unit is on top level
@@ -197,7 +200,7 @@ class rental_soparty extends rental_socommon
 				{
 					//get connected units on level 4
 					$org_unit_ids_tmp = $bofelles->get_org_unit_ids_from_top($org_unit_id);
-					$org_unit_ids = implode(',',$org_unit_ids_tmp);
+						$org_unit_ids		 = implode(',', $org_unit_ids_tmp);
 					$filter_clauses[] = "party.org_enhet_id IN ({$org_unit_ids})";
 				}
 				else
@@ -207,8 +210,9 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
-		if(isset($filters['email'])){
-			$email = $this->marshal($filters['email'],'string');
+			if(isset($filters['email']))
+			{
+				$email = $this->marshal($filters['email'], 'string');
 			if(isset($email))
 			{
 				$filter_clauses[] = "party.email = {$email}";
@@ -290,7 +294,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'contract.location_id as resp_location_id';
 			$columns[] = 'contract.service_id';
 			$columns[] = 'contract.responsibility_id';
-			$cols = implode(',',$columns);
+				$cols		 = implode(',', $columns);
 		}
 
 		$tables = "rental_party party";
@@ -303,8 +307,6 @@ class rental_soparty extends rental_socommon
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
-
-
 	/**
 	 * Function for adding a new party to the database. Updates the party object.
 	 *
@@ -314,10 +316,11 @@ class rental_soparty extends rental_socommon
 	function add(&$party)
 	{
 		// Insert a new party
-		$q ="INSERT INTO rental_party (is_inactive) VALUES (false)";
+			$q		 = "INSERT INTO rental_party (is_inactive) VALUES (false)";
 		$result = $this->db->query($q);
 
-		if(isset($result)) {
+			if(isset($result))
+			{
 			// Set the new party ID
 			$party->set_id($this->db->get_last_insert_id('rental_party', 'id'));
 			// Forward this request to the update method
@@ -377,7 +380,7 @@ class rental_soparty extends rental_socommon
 			'result_unit_number = ' . $result_unit_number
 		);
 
-		$result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 		return isset($result);
 	}
@@ -403,30 +406,31 @@ class rental_soparty extends rental_socommon
 	protected function populate(int $party_id, &$party)
 	{
 
-		if($party == null) {
-			$party = new rental_party((int) $party_id);
+			if($party == null)
+			{
+				$party = new rental_party((int)$party_id);
 
-			$party->set_account_number( $this->unmarshal($this->db->f('account_number'), 'string'));
-			$party->set_address_1(      $this->unmarshal($this->db->f('address_1'), 'string'));
-			$party->set_address_2(      $this->unmarshal($this->db->f('address_2'), 'string'));
-			$party->set_comment(        $this->unmarshal($this->db->f('comment'), 'string'));
-			$party->set_company_name(   $this->unmarshal($this->db->f('company_name'), 'string'));
-			$party->set_department(     $this->unmarshal($this->db->f('department'), 'string'));
-			$party->set_email(          $this->unmarshal($this->db->f('email'), 'string'));
-			$party->set_fax(            $this->unmarshal($this->db->f('fax'), 'string'));
-			$party->set_first_name(     $this->unmarshal($this->db->f('first_name'), 'string'));
-			$party->set_is_inactive(    $this->unmarshal($this->db->f('is_inactive'), 'bool'));
-			$party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
-			$party->set_location_id(    $this->unmarshal($this->db->f('org_location_id'), 'int'));
-			$party->set_identifier(		$this->unmarshal($this->db->f('identifier'), 'string'));
-			$party->set_mobile_phone(	$this->unmarshal($this->db->f('mobile_phone'), 'string'));
-			$party->set_place(          $this->unmarshal($this->db->f('place'), 'string'));
-			$party->set_postal_code(    $this->unmarshal($this->db->f('postal_code'), 'string'));
-			$party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));
-			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
-			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
-			$party->set_org_enhet_id(   $this->unmarshal($this->db->f('org_enhet_id'), 'string'));
-			$party->set_unit_leader(   $this->unmarshal($this->db->f('unit_leader'), 'string'));
+				$party->set_account_number($this->unmarshal($this->db->f('account_number'), 'string'));
+				$party->set_address_1($this->unmarshal($this->db->f('address_1'), 'string'));
+				$party->set_address_2($this->unmarshal($this->db->f('address_2'), 'string'));
+				$party->set_comment($this->unmarshal($this->db->f('comment'), 'string'));
+				$party->set_company_name($this->unmarshal($this->db->f('company_name'), 'string'));
+				$party->set_department($this->unmarshal($this->db->f('department'), 'string'));
+				$party->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$party->set_fax($this->unmarshal($this->db->f('fax'), 'string'));
+				$party->set_first_name($this->unmarshal($this->db->f('first_name'), 'string'));
+				$party->set_is_inactive($this->unmarshal($this->db->f('is_inactive'), 'bool'));
+				$party->set_last_name($this->unmarshal($this->db->f('last_name'), 'string'));
+				$party->set_location_id($this->unmarshal($this->db->f('org_location_id'), 'int'));
+				$party->set_identifier($this->unmarshal($this->db->f('identifier'), 'string'));
+				$party->set_mobile_phone($this->unmarshal($this->db->f('mobile_phone'), 'string'));
+				$party->set_place($this->unmarshal($this->db->f('place'), 'string'));
+				$party->set_postal_code($this->unmarshal($this->db->f('postal_code'), 'string'));
+				$party->set_reskontro($this->unmarshal($this->db->f('reskontro'), 'string'));
+				$party->set_title($this->unmarshal($this->db->f('title'), 'string'));
+				$party->set_url($this->unmarshal($this->db->f('url'), 'string'));
+				$party->set_org_enhet_id($this->unmarshal($this->db->f('org_enhet_id'), 'string'));
+				$party->set_unit_leader($this->unmarshal($this->db->f('unit_leader'), 'string'));
 			$sync_message = $party->set_sync_data(
 				array(
 					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
@@ -451,11 +455,11 @@ class rental_soparty extends rental_socommon
 
 	public function get_number_of_parties()
 	{
-		$q ="SELECT COUNT(id) FROM rental_party";
+			$q		 = "SELECT COUNT(id) FROM rental_party";
 		$result = $this->db->query($q);
 		$this->db->query($q, __LINE__, __FILE__);
 		$this->db->next_record();
-		return (int) $this->db->f('count',true);
+			return (int)$this->db->f('count', true);
 	}
 
 	public function has_contract($party_id)
@@ -482,16 +486,14 @@ class rental_soparty extends rental_socommon
 		}
 	}
 
-
  		/**
 		 * Check to see if this user is an administrator
 		 *
 		 * @return true if private permission on root, false otherwise
 		 */
-
 		protected function isAdministrator()
 		{
-			return $GLOBALS['phpgw']->acl->check(self::LOCATION_ROOT,PHPGW_ACL_PRIVATE,'rental');
+			return $GLOBALS['phpgw']->acl->check(self::LOCATION_ROOT, PHPGW_ACL_PRIVATE, 'rental');
 		}
 
 		/**
@@ -502,9 +504,9 @@ class rental_soparty extends rental_socommon
 		protected function isExecutiveOfficer()
 		{
 			return (
-				$GLOBALS['phpgw']->acl->check(self::LOCATION_IN,PHPGW_ACL_ADD,'rental')	||
-				$GLOBALS['phpgw']->acl->check(self::LOCATION_OUT,PHPGW_ACL_ADD,'rental')	||
-				$GLOBALS['phpgw']->acl->check(self::LOCATION_INTERNAL,PHPGW_ACL_ADD,'rental')
+			$GLOBALS['phpgw']->acl->check(self::LOCATION_IN, PHPGW_ACL_ADD, 'rental') ||
+			$GLOBALS['phpgw']->acl->check(self::LOCATION_OUT, PHPGW_ACL_ADD, 'rental') ||
+			$GLOBALS['phpgw']->acl->check(self::LOCATION_INTERNAL, PHPGW_ACL_ADD, 'rental')
 			);
 		}
 
@@ -516,11 +518,12 @@ class rental_soparty extends rental_socommon
  	 */
  	function syncronize_party_name()
  	{
- 		$config	= CreateObject('phpgwapi.config','rental');
+			$config = CreateObject('phpgwapi.config', 'rental');
 		$config->read();
 
 		$use_fellesdata = $config->config_data['use_fellesdata'];
-		if(!$use_fellesdata){
+			if(!$use_fellesdata)
+			{
 			return;
 		}
 		$bofelles = rental_bofellesdata::get_instance();
@@ -538,27 +541,33 @@ class rental_soparty extends rental_socommon
 			$count_identifier = 0;
 			$count_responsibility = 0;
 
-			foreach ($parties as $party) {
+				foreach($parties as $party)
+				{
 				$unit_found = false;
 				$fellesdata = NULL;
 
-				if(isset($party)) {
+					if(isset($party))
+					{
 					$sync_data = $party->get_sync_data();
 
-					$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'],4);
-					if ($fellesdata) {
+						$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'], 4);
+						if($fellesdata)
+						{
 						$updated_parties[] = "Unit id found {$fellesdata['UNIT_ID']} by result unit number check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 						$count_result_unit_number++;
 					}
 
-					if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID'])) {
+						if($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID']))
+						{
 						// We found a match, so store the new connection
 						$party->set_org_enhet_id($fellesdata['UNIT_ID']);
 						$old_party_name = $party->get_company_name();
 						$party->set_company_name($fellesdata['UNIT_NAME']);
 						$updated_parties[] = "Updated company name on party {$party->get_id()} with unit ID {$party->get_org_enhet_id} from {$old_party_name} to {$party->get_company_name()}";
 						$count++;
-					} else {
+						}
+						else
+						{
 						// No match was found. Do nothing
 						//$party->set_org_enhet_id(NULL);
 					}
@@ -575,8 +584,7 @@ class rental_soparty extends rental_socommon
 	private function log_sync_messages($messages)
 	{
 		$msgs = array_merge(
-			array('---------------Messages-------------------'),
-			$messages
+			array('---------------Messages-------------------'), $messages
 		);
 
 		//use PHPGW tmp-catalog to store log-file
@@ -586,6 +594,4 @@ class rental_soparty extends rental_socommon
 		$date_now = date('Y-m-d');
 		file_put_contents("{$path}/FD_name_sync_{$date_now}.log", implode(PHP_EOL, $msgs));
 	}
-
-}
-
+	}

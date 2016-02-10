@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-	<xsl:template name="app_data">
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit_id">
 				<xsl:apply-templates select="edit_id"/>
@@ -12,9 +12,9 @@
 				<xsl:apply-templates select="list_permission"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="list_permission">
+<xsl:template match="list_permission">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -51,7 +51,9 @@
 			</tr>
 		</table>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
 		<form method="post" action="{$form_action}">
 			<tr height="30">
 				<td valign="top" align="left">
@@ -87,9 +89,15 @@
 
 			<tr height="50">
 				<td>
-					<xsl:variable name="location"><xsl:value-of select="location"/></xsl:variable>
-					<xsl:variable name="processed"><xsl:value-of select="processed"/></xsl:variable>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<xsl:variable name="location">
+						<xsl:value-of select="location"/>
+					</xsl:variable>
+					<xsl:variable name="processed">
+						<xsl:value-of select="processed"/>
+					</xsl:variable>
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="lang_save"/>
+					</xsl:variable>
 					<input type="hidden" name="location" value="{$location}" />
 					<input type="hidden" name="processed" value="{$processed}" />
 
@@ -104,8 +112,12 @@
 			</form>
 			<tr>
 				<td>
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+				<xsl:variable name="done_action">
+					<xsl:value-of select="done_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_done">
+					<xsl:value-of select="lang_done"/>
+				</xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
@@ -117,10 +129,10 @@
 			</tr>
 		</table>
 
-	</xsl:template>
+</xsl:template>
 
 
-	<xsl:template match="values_groups">
+<xsl:template match="values_groups">
 		<xsl:choose>
 			<xsl:when test="account_id !=''">
 			<tr>
@@ -143,9 +155,13 @@
 				</td>
 				<td>
 				<table class="pure-table pure-table-bordered" width="100%" cellpadding="2" cellspacing="2" align="center">
+						<thead>
+
 					<tr class="th">
 						<xsl:call-template name="value_header"/>
 					</tr>
+						</thead>
+
 					<tr>
 						<xsl:call-template name="right"/>
 					</tr>
@@ -161,9 +177,9 @@
 			</tr>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="values_users">
+<xsl:template match="values_users">
 		<xsl:choose>
 			<xsl:when test="account_id !=''">
 			<tr>
@@ -186,9 +202,11 @@
 				</td>
 				<td>
 				<table class="pure-table pure-table-bordered" width="100%" cellpadding="2" cellspacing="2" align="center">
-					<tr class="th">
+						<thead>
+							<tr>
 						<xsl:call-template name="value_header"/>
 					</tr>
+						</thead>
 					<tr>
 						<xsl:call-template name="right"/>
 					</tr>
@@ -204,9 +222,9 @@
 			</tr>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template name="value_header">
+<xsl:template name="value_header">
 				<td>
 				</td>
 				<td class="th_text" align="center">
@@ -244,9 +262,9 @@
 						</td>						
 					</xsl:when>
 				</xsl:choose>
-	</xsl:template>
+</xsl:template>
 	
-	<xsl:template name="right">
+<xsl:template name="right">
 		<td align="left">
 			<xsl:value-of select="lang_right"/>
 		</td>
@@ -404,9 +422,9 @@
 				</td>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template name="mask">
+<xsl:template name="mask">
 				<td align="left">
 					<xsl:value-of select="lang_mask"/>
 				</td>
@@ -564,9 +582,9 @@
 				</td>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template name="result">
+<xsl:template name="result">
 		<td align="left">
 			<xsl:value-of select="lang_result"/>
 		</td>
@@ -624,14 +642,20 @@
 				</td>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
 <!-- edit_id -->	
 
-	<xsl:template match="id_values">
-			<xsl:variable name="value"><xsl:value-of select="value"/></xsl:variable>
-			<xsl:variable name="key_id"><xsl:value-of select="key_id"/></xsl:variable>
-			<xsl:variable name="descr"><xsl:value-of select="descr"/></xsl:variable>
+<xsl:template match="id_values">
+	<xsl:variable name="value">
+		<xsl:value-of select="value"/>
+	</xsl:variable>
+	<xsl:variable name="key_id">
+		<xsl:value-of select="key_id"/>
+	</xsl:variable>
+	<xsl:variable name="descr">
+		<xsl:value-of select="descr"/>
+	</xsl:variable>
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
@@ -661,9 +685,9 @@
 					<xsl:value-of select="remark"/>
 				</td>
 			</tr>
-	</xsl:template>
+</xsl:template>
 	
-	<xsl:template match="id_table_header">
+<xsl:template match="id_table_header">
 			<tr class="th">
 				<td class="th_text" width="10%" align="right">
 					<xsl:value-of select="lang_select"/>
@@ -678,9 +702,9 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 			</tr>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="edit_id">
+<xsl:template match="edit_id">
 		
 		<table cellpadding="2" cellspacing="2" width="100%" align="center">
 			<xsl:choose>
@@ -692,13 +716,17 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
 			<form method="post" action="{$form_action}">
 			<xsl:apply-templates select="id_table_header"/> 
 			<xsl:apply-templates select="id_values"/> 
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="lang_save"/>
+					</xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_save}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
@@ -709,8 +737,12 @@
 			</form>
 			<tr>
 				<td>
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+				<xsl:variable name="done_action">
+					<xsl:value-of select="done_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_done">
+					<xsl:value-of select="lang_done"/>
+				</xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
@@ -721,10 +753,10 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>
 
 
-	<xsl:template match="contact_info">
+<xsl:template match="contact_info">
 		<div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -744,7 +776,9 @@
 					<xsl:call-template name="user_id_filter"/>
 				</td>
 			</tr>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
 			<form method="post" name="form" action="{$form_action}">
 			<tr>
 				<td valign="top">
@@ -779,9 +813,13 @@
 				</td>
 				<td align="left">
 					<input type="hidden" name="values[old_approval_from]" value="{value_old_approval_from}" />
-					<xsl:variable name="lang_approval_from_statustext"><xsl:value-of select="lang_approval_from_statustext"/></xsl:variable>
+						<xsl:variable name="lang_approval_from_statustext">
+							<xsl:value-of select="lang_approval_from_statustext"/>
+						</xsl:variable>
 					<select name="values[approval_from]" class="forms" title="{$lang_approval_from_statustext}">
-						<option value=""><xsl:value-of select="lang_no_user"/></option>
+							<option value="">
+								<xsl:value-of select="lang_no_user"/>
+							</option>
 						<xsl:apply-templates select="approval_from"/>
 					</select>
 				</td>
@@ -792,16 +830,22 @@
 				</td>
 				<td align="left">
 					<input type="hidden" name="values[old_default_vendor_category]" value="{value_old_default_vendor_category}" />
-					<xsl:variable name="lang_default_vendor_category_statustext"><xsl:value-of select="lang_default_vendor_category_statustext"/></xsl:variable>
+						<xsl:variable name="lang_default_vendor_category_statustext">
+							<xsl:value-of select="lang_default_vendor_category_statustext"/>
+						</xsl:variable>
 					<select name="values[default_vendor_category]" class="forms" title="{$lang_default_vendor_category_statustext}">
-						<option value=""><xsl:value-of select="lang_no_cat"/></option>
+							<option value="">
+								<xsl:value-of select="lang_no_cat"/>
+							</option>
 						<xsl:apply-templates select="vendor_category"/>
 					</select>
 				</td>
 			</tr>
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="lang_save"/>
+						</xsl:variable>
 					<input type="submit"  name="values[save]" value="{$lang_save}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
@@ -813,8 +857,12 @@
 			</form>
 			<tr>
 				<td>
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<xsl:variable name="done_action">
+						<xsl:value-of select="done_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_done">
+						<xsl:value-of select="lang_done"/>
+					</xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
@@ -826,29 +874,41 @@
 			</tr>
 		</table>
 		</div>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="approval_from">
-	<xsl:variable name="user_id"><xsl:value-of select="user_id"/></xsl:variable>
+<xsl:template match="approval_from">
+	<xsl:variable name="user_id">
+		<xsl:value-of select="user_id"/>
+	</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$user_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			<option value="{$user_id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$user_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			<option value="{$user_id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="vendor_category">
-	<xsl:variable name="cat_id"><xsl:value-of select="cat_id"/></xsl:variable>
+<xsl:template match="vendor_category">
+	<xsl:variable name="cat_id">
+		<xsl:value-of select="cat_id"/>
+	</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected='selected'">
-				<option value="{$cat_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			<option value="{$cat_id}" selected="selected">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$cat_id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			<option value="{$cat_id}">
+				<xsl:value-of disable-output-escaping="yes" select="name"/>
+			</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 

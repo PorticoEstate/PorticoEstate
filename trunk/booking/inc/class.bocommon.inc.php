@@ -1,8 +1,11 @@
 <?php
+
 	class booking_bocommon
 	{
+
 		public function __construct()
 		{
+			
 		}
 		
 		/**
@@ -44,11 +47,13 @@
 		/**
 		 * Returns all rows matching current filters using no limit.
 		 */
-		function read_all() {
+		function read_all()
+		{
 			return $this->so->read($this->build_read_all_params());
 		}
 		
-		protected function build_read_all_params() {
+		protected function build_read_all_params()
+		{
 			$params = $this->build_default_read_params();
 			unset($params['start']);
 			$params['results'] = 'all';
@@ -57,6 +62,14 @@
 		
 		protected function build_default_read_params()
 		{
+			/*
+			 * Sigurd: Temporary est for new datatables
+			 */
+			if($columns = phpgw::get_var('columns'))
+			{
+				return $this->build_default_read_params_new();
+			}
+
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
 			$query = phpgw::get_var('query');
@@ -64,14 +77,18 @@
 			$dir = phpgw::get_var('dir');
 			
 			$filters = array();
-			foreach($this->so->get_field_defs() as $field => $params) {
-				if(phpgw::get_var("filter_$field")) {
+			foreach($this->so->get_field_defs() as $field => $params)
+			{
+				if(phpgw::get_var("filter_$field"))
+				{
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
 			
-			if(!isset($_SESSION['showall'])) {
-				if(!isset($filters['application_id'])) {
+			if(!isset($_SESSION['showall']))
+			{
+				if(!isset($filters['application_id']))
+				{
 					$filters['active'] = "1";
 				}
 			}
@@ -86,10 +103,47 @@
 			);
 		}
 
+		protected function build_default_read_params_new()
+		{
+
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'sort'		 => $columns[$order[0]['column']]['data'],
+				'dir'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
+			);
+
+			foreach($this->so->get_field_defs() as $field => $_params)
+			{
+				if(phpgw::get_var("filter_$field"))
+				{
+					$params['filters'][$field] = phpgw::get_var("filter_$field");
+				}
+			}
+
+			if(!isset($_SESSION['showall']))
+			{
+				if(!isset($params['filters']['application_id']))
+				{
+					$params['filters']['active'] = "1";
+				}
+			}
+
+			return $params;
+		}
+
 		function add($entity)
 		{
 			return $this->so->add($entity);
 		}
+
 		function smart_read($entity)
 		{
 			return $this->so->read($entity);
@@ -112,6 +166,7 @@
 		 */
 		protected function doValidate($entity, booking_errorstack $error_stack)
 		{
+
 		}
 
 		function update($entity)
@@ -141,7 +196,7 @@
 
 			$booking_roles = $permission_root_bo->so->read($filters);
 
-			if (intval($booking_roles['total_records']) == 1)
+			if(intval($booking_roles['total_records']) == 1)
 			{
 				return true;
 			}

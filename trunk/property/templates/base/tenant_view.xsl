@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="tenant_view">
-		<xsl:apply-templates select="tenant_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="tenant_data">
+<!-- $Id$ -->
+<xsl:template name="tenant_view">
+		<xsl:apply-templates select="tenant_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="tenant_data">
 		<tr>
 			<td valign="top">
 				<xsl:value-of select="lang_tenant"/>
@@ -17,4 +18,4 @@
 				<xsl:value-of select="value_first_name"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

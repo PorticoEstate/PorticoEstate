@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -21,28 +18,25 @@
 
 
 
-define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
+	define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
 
+	class TestSObim_converter extends PHPUnit_Framework_TestCase
+	{
 
-
-
-class TestSObim_converter extends PHPUnit_Framework_TestCase
-{
 	protected static $login = 'peturbjorn';
-
     // this is is a bit of a hack, but it should work
     protected static $sessionid = '';
-    
 	private $validIfcFileName = "valid_ifc_example.ifc";
 	private $validIfcFileWithPath;
-	
 	private $testingFileName = "restTestFile.txt";
 	private $testingFileWithPath;
 	
-	public function __construct() {
-		$this->testingFileWithPath = getcwd().DIRECTORY_SEPARATOR.$this->testingFileName;
-		$this->validIfcFileWithPath = getcwd().DIRECTORY_SEPARATOR.$this->validIfcFileName;
+		public function __construct()
+		{
+			$this->testingFileWithPath = getcwd() . DIRECTORY_SEPARATOR . $this->testingFileName;
+			$this->validIfcFileWithPath = getcwd() . DIRECTORY_SEPARATOR . $this->validIfcFileName;
 	}
+
 	/**
 	 * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
 	 */
@@ -52,8 +46,6 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 	 * @var integer $fieldID The attribute ID used for all the tests
 	 */
 	protected $fieldID;
-
-	
 
 	/**
 	 * Setup the environment for the tests
@@ -75,12 +67,11 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
         include_once $header;
 
        /* self::$sessionid = $GLOBALS['phpgw']->session->create(self::$login,
-                                                            '', false);*/
+			  '', false); */
         
        
 		//$GLOBALS['phpgw_info']['user']['account_id'] = 7;
 		//$GLOBALS['phpgw']->acl->set_account_id(7); // not sure why this is needed...
-		
 		//require('..\..\inc\class.sobim.inc.php');
 		//require('..\..\inc\class.sobimtype.inc.php');
 		phpgw::import_class('bim.sobim_converter');
@@ -89,6 +80,7 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 		$this->createTestingFile();
 		echo "---------------------------\n";
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -97,10 +89,10 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		$this->deleteTestingfile();
-		 
 	}
 	
-	public function testGet() {
+		public function testGet()
+		{
 		
 		$rest = new RestRequest();
 		$rest->setUrl("http://localhost:8080/bm/rest/uploadIfc");
@@ -110,12 +102,14 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 		echo "Response Body:$body\n";
 		$this->assertTrue(strlen(strstr($body, "You have accept type")) > 0);
 	}
-	public function testRestRequestPost() {
+
+		public function testRestRequestPost()
+		{
 		
 		$url = "http://localhost:8080/bm/rest/tests/testPut";
 		$verb = "POST";
-		$data = array (
-			'file'=>'@'.$this->testingFileWithPath
+			$data = array(
+				'file' => '@' . $this->testingFileWithPath
 		);
 		//var_dump( $data );
 		
@@ -129,10 +123,8 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 		echo $rest->getResponseBody();
 		echo "\n resp info \n";
 		var_dump($rest->getResponseInfo());
-		
 	}
-	
-	/*public function testRestRequestPut() {
+		/* public function testRestRequestPut() {
 		$rest = new RestRequest();
 		$rest->setUrl("http://localhost:8080/BIM_Facility_Management/rest/tests/testPut/lala");
 		$rest->setUrl("http://145.247.163.52:8080/BIM_Facility_Management/rest/tests/testPut/ttt");
@@ -143,14 +135,15 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 		$rest->execute();
 		echo $rest->getResponseBody();
 		
-	}*/
+		  } */
 	
-	public function testManual() {
+		public function testManual()
+		{
 		$url = "http://localhost:8080/BIM_Facility_Management/rest/tests/testPut";
 		//$url = "http://10.0.0.1:8080/BIM_Facility_Management/rest/tests/testPut";
 		$ch = curl_init(); 
-		$data = array('type' => 'direct', 'file'=>"@$this->testingFileWithPath", 'value1'=>'aaaaa1');
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+			$data = array('type' => 'direct', 'file' => "@$this->testingFileWithPath", 'value1' => 'aaaaa1');
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		//curl_setopt($ch, CURLOPT_POST, 1);
 		//curl_setopt($ch, CURLOPT_POSTFIELDS, array('type' => 'direct', 'file'=>"@$this->testingFileWithPath", 'value1'=>'aaaaa1'));
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -158,53 +151,58 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 		
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 5*60); //seconds
+			curl_setopt($ch, CURLOPT_TIMEOUT, 5 * 60); //seconds
 		
-		$result = curl_exec ($ch);
+			$result = curl_exec($ch);
 		echo "\n Result : $result \n";
-		echo "Error:".curl_error($ch);
+			echo "Error:" . curl_error($ch);
 		
 		$info = curl_getinfo($ch);
 		
 		var_dump($info);
 	}
-	private function createTestingFile() {
+
+		private function createTestingFile()
+		{
 		$fileHandle = fopen($this->testingFileWithPath, 'w');
 		fwrite($fileHandle, "This is a test file for the rest service\n Please delete this file if you come across it!");
 		fclose($fileHandle);
 	}	
-	private function deleteTestingfile() {
+
+		private function deleteTestingfile()
+		{
 		//unset($this->testingFileWithPath);
 	}
 	
-	public function testgetFacilityManagementXmlWithInvalidIfc() {
+		public function testgetFacilityManagementXmlWithInvalidIfc()
+		{
 		$sobim_converter = new sobim_converter_impl();
 		$sobim_converter->setFileToSend($this->testingFileWithPath);
-		try {
+			try
+			{
 			$result =  $sobim_converter->getFacilityManagementXml();
-			echo "Result is:".$result."\n -- result end \n";
-		} catch ( Exception $e) {
-			echo "Exception thrown is:".$e."\n -- result end \n";
-			
+				echo "Result is:" . $result . "\n -- result end \n";
+			}
+			catch(Exception $e)
+			{
+				echo "Exception thrown is:" . $e . "\n -- result end \n";
 		}
 	}
 	
-	public function testgetFacilityManagementXmlWithValidIfc() {
+		public function testgetFacilityManagementXmlWithValidIfc()
+		{
 		$sobim_converter = new sobim_converter_impl();
 		$sobim_converter->setFileToSend($this->validIfcFileWithPath);
 		$sobim_converter->setBaseUrl("http://localhost:8080/bm/rest/");
-		try {
+			try
+			{
 			$returnedXml =  $sobim_converter->getFacilityManagementXml();
 			$sxe = simplexml_load_string($returnedXml);
 			$this->assertTrue(isset($sxe), "Invalid XML!");
-			
-			
-			
-		} catch ( Exception $e) {
+			}
+			catch(Exception $e)
+			{
 			echo $e;
 		}
 	}
-	
-	
-	
-}
+	}

@@ -24,15 +24,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
-	* @version $Id$
+	 * @version $Id$
 	*/
-
-
 	/**
 	* Description
 	*/
-
-	include(PHPGW_SERVER_ROOT.'/'.'property'.'/setup/setup.inc.php');
+	include(PHPGW_SERVER_ROOT . '/' . 'property' . '/setup/setup.inc.php');
 
 	$GLOBALS['phpgw']->help->set_params(array('app_name'		=> 'property',
 	'title'			=> lang('property'),

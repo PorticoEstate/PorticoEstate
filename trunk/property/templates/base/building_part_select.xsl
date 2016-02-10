@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="building_part_select">
+
+<!-- $Id$ -->
+<xsl:template name="building_part_select">
 		<xsl:variable name="lang_building_part_statustext">
 			<xsl:value-of select="lang_building_part_statustext"/>
 		</xsl:variable>
@@ -12,10 +13,10 @@
 			</option>
 			<xsl:apply-templates select="building_part_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="building_part_list">
+<!-- New template-->
+<xsl:template match="building_part_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -31,4 +32,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

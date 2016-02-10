@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_soalarm
 	{
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -47,18 +47,18 @@
 			$this->db->query("SELECT id,name,data FROM fm_async_method ORDER BY name ");
 
 			$i = 0;
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				if($this->db->f('data'))
 				{
-					$method_data=array();
+					$method_data = array();
 					$data_set = unserialize($this->db->f('data'));
-					while (is_array($data_set) && list($key,$value) = each($data_set))
+					while(is_array($data_set) && list($key, $value) = each($data_set))
 					{
 						$method_data[] = $key . '=' . $value;
 					}
 
-					$method_data= @implode (',',$method_data);
+					$method_data = @implode(',', $method_data);
 				}
 
 				$categories[$i]['id']				= $this->db->f('id');
@@ -84,13 +84,14 @@
 			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order		= isset($data['order']) ? $data['order'] : '';
 			$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if($order == 'undefined')
 			{
 				$order = '';
 			}
 
-			if ($order)
+			if($order)
 			{
 				$ordermethod .= " ORDER BY $order $sort";
 			}
@@ -102,20 +103,20 @@
 			$where = 'WHERE';
 
 			$filtermethod = '';
-			if ($filter > 0)
+			if($filter > 0)
 			{
 				$filtermethod .= " $where owner='{$filter}' ";
 				$where = 'AND';
 			}
 
 			$id = $this->db->db_addslashes($id);
-			if (strpos($id,'%') !== false || strpos($id,'_') !== false)
+			if(strpos($id, '%') !== false || strpos($id, '_') !== false)
 			{
 				$filtermethod = "$where id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
-			else if (!$id)
+			else if(!$id)
 			{
-				$filtermethod = $where . ' next<='.time()." AND id!='##last-check-run##'";
+				$filtermethod = $where . ' next<=' . time() . " AND id!='##last-check-run##'";
 			}
 			else
 			{
@@ -131,23 +132,23 @@
 
 			$sql = "SELECT phpgw_async.id,phpgw_async.next,phpgw_async.times,phpgw_async.method,phpgw_async.data,account_lid FROM phpgw_async $this->join phpgw_accounts on phpgw_async.account_id=phpgw_accounts.account_id $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$jobs = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$data   = @unserialize($this->db->f('data',true));
+				$data = @unserialize($this->db->f('data', true));
 
 				$jobs[$id] = array(
 					'id'     	=> $id,
@@ -162,25 +163,25 @@
 			return $jobs;
 		}
 
-		function read_org($id=0)
+		function read_org($id = 0)
 		{
 			$id = $this->db->db_addslashes($id);
-			if (strpos($id,'%') !== false || strpos($id,'_') !== false)
+			if(strpos($id, '%') !== false || strpos($id, '_') !== false)
 			{
 				$where = "id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
-			elseif (!$id)
+			elseif(!$id)
 			{
-				$where = 'next<='.time()." AND id!='##last-check-run##'";
+				$where = 'next<=' . time() . " AND id!='##last-check-run##'";
 			}
 			else
 			{
 				$where = "id='$id'";
 			}
-			$this->db->query($sql="SELECT * FROM $this->db_table WHERE $where",__LINE__,__FILE__);
+			$this->db->query($sql = "SELECT * FROM $this->db_table WHERE $where", __LINE__, __FILE__);
 
 			$jobs = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$id = $this->db->f('id');
 
@@ -194,19 +195,18 @@
 				);
 				//echo "job id='$id'<pre>"; print_r($jobs[$id]); echo "</pre>\n";
 			}
-			if (!count($jobs))
+			if(!count($jobs))
 			{
 				return false;
 			}
 			return $jobs;
 		}
 
-
 		function read_single($owner_id)
 		{
-			$this->db->query("select * from fm_owner where owner_id='$owner_id'",__LINE__,__FILE__);
+			$this->db->query("select * from fm_owner where owner_id='$owner_id'", __LINE__, __FILE__);
 
-			if ($this->db->next_record())
+			if($this->db->next_record())
 			{
 				$owner['id']			= (int)$this->db->f('owner_id');
 				$owner['abid']			= $this->db->f('abid');
@@ -225,10 +225,10 @@
 
 			$this->db->query("INSERT INTO fm_owner (entry_date,remark,abid,contact_name,category) "
 				. "VALUES ('" . time() . "','" . $owner['remark'] . "','" . $owner['abid'] . "','" . $owner['contact_name']
-				. "','" . $owner['cat_id'] . "')",__LINE__,__FILE__);
+			. "','" . $owner['cat_id'] . "')", __LINE__, __FILE__);
 
-			$receipt['owner_id']= $this->db->get_last_insert_id('fm_owner','owner_id');
-			$receipt['message'][] = array('msg'=>lang('owner %1 has been saved',$receipt['owner_id']));
+			$receipt['owner_id'] = $this->db->get_last_insert_id('fm_owner', 'owner_id');
+			$receipt['message'][] = array('msg' => lang('owner %1 has been saved', $receipt['owner_id']));
 			return $receipt;
 		}
 
@@ -237,15 +237,15 @@
 			$owner['name'] = $this->db->db_addslashes($owner['name']);
 
 			$this->db->query("UPDATE fm_owner set remark='" . $owner['remark'] . "', entry_date='" . time() . "', abid='" . $owner['abid'] . "', contact_name='" . $owner['contact_name'] . "', category='"
-				. $owner['cat_id'] . "' WHERE owner_id=" . intval($owner['owner_id']),__LINE__,__FILE__);
+			. $owner['cat_id'] . "' WHERE owner_id=" . intval($owner['owner_id']), __LINE__, __FILE__);
 
-			$receipt['owner_id']= $owner['owner_id'];
-			$receipt['message'][] = array('msg'=>lang('owner %1 has been edited',$owner['owner_id']));
+			$receipt['owner_id'] = $owner['owner_id'];
+			$receipt['message'][] = array('msg' => lang('owner %1 has been edited', $owner['owner_id']));
 			return $receipt;
 		}
 
 		function delete($owner_id)
 		{
-			$this->db->query('DELETE FROM fm_owner WHERE owner_id=' . intval($owner_id),__LINE__,__FILE__);
+			$this->db->query('DELETE FROM fm_owner WHERE owner_id=' . intval($owner_id), __LINE__, __FILE__);
 		}
 	}

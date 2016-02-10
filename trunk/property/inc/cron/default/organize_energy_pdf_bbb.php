@@ -8,15 +8,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
 	 */
-
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'currentapp'	=> 'property'
@@ -25,7 +22,7 @@
 	include_once('../header.inc.php');
 
 
-	if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+	if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 	{
 		$organize = new organize_energy_pdf_bbb();
 		$organize->pre_run();
@@ -58,25 +55,25 @@
 
 		function pre_run()
 		{
-			$confirm	= get_var('confirm',array('POST'));
-			$execute	= get_var('execute',array('GET'));
+			$confirm = get_var('confirm', array('POST'));
+			$execute = get_var('execute', array('GET'));
 
 			if(!$execute)
 			{
-				$dry_run=True;
+				$dry_run = True;
 			}
 
-			if ($confirm)
+			if($confirm)
 			{
-				$this->execute($dry_run,$cron);
+				$this->execute($dry_run, $cron);
 			}
 			else
 			{
-				$this->confirm($execute=False);
+				$this->confirm($execute = False);
 			}
 		}
 
-		function confirm($execute='',$done='')
+		function confirm($execute = '', $done = '')
 		{
 			$link_data = array
 			(
@@ -108,7 +105,7 @@
 			(
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'message'				=> $this->receipt['message'],
 				'lang_confirm_msg'		=> $lang_confirm_msg,
 				'lang_yes'				=> $lang_yes,
@@ -122,19 +119,19 @@
 			$appname		= 'Organisere pdf';
 			$function_msg	= 'Organisere pdf i register og på disk';
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($dry_run='',$cron='')
+		function execute($dry_run = '', $cron = '')
 		{
 			set_time_limit(1000);
 			if(!is_dir("{$this->dir}/archive"))
 			{
 				if(!mkdir("{$this->dir}/archive"))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . " :{$this->dir}/archive");
-					$this->confirm('',true);
+					$this->receipt['error'][] = array('msg' => lang('failed to create directory') . " :{$this->dir}/archive");
+					$this->confirm('', true);
 					return;
 				}
 			}
@@ -143,12 +140,12 @@
 
 			if($dry_run)
 			{
-				$this->confirm($execute=True);
+				$this->confirm($execute = True);
 				_debug_array($file_list);
 			}
 			else
 			{
-				if ($file_list && isset($file_list['valid']))
+				if($file_list && isset($file_list['valid']))
 				{
 					foreach($file_list['valid'] as $file_entry)
 					{
@@ -158,24 +155,24 @@
 				}
 				if(!$cron)
 				{
-					$this->confirm($execute=false,$done=true);
+					$this->confirm($execute = false, $done = true);
 				}
 
 				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-				$insert_values= array
+				$insert_values = array
 				(
 					$cron,
 					date($this->db->datetime_format()),
 					$this->function_name,
-					implode(',',(array_keys($msgbox_data)))
+					implode(',', (array_keys($msgbox_data)))
 				);
 
 				$insert_values	= $this->db->validate_insert($insert_values);
 
 				$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 						. "VALUES ($insert_values)";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 		}
 
@@ -189,14 +186,11 @@
 			}
 			$dir = new DirectoryIterator($this->dir); 
 
-			if ( is_object($dir) )
+			if(is_object($dir))
 			{
-				foreach ( $dir as $file )
+				foreach($dir as $file)
 				{
-					if ( $file->isDot()
-						|| !$file->isFile()
-						|| !$file->isReadable()
-						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), $this->suffix ) != 0 )
+					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), $this->suffix) != 0)
  					{
 						continue;
 					}
@@ -207,13 +201,13 @@
 					{
 						$myfilearray['valid'][] = array
 						(
-							'last_modified'=> $file->getMTime(),
-							'file_name'=> $file_name,
-							'file_path'=> (string) "{$this->dir}/{$file_name}",
-							'loc1'=>$loc1,
-							'location_code' =>$loc1,
+							'last_modified' => $file->getMTime(),
+							'file_name' => $file_name,
+							'file_path' => (string)"{$this->dir}/{$file_name}",
+							'loc1' => $loc1,
+							'location_code' => $loc1,
 							'cat_id'	=> $this->cat_id,
-							'new_file_name'	=>$file_name,
+							'new_file_name' => $file_name,
 						);
 					}
 					else
@@ -235,7 +229,7 @@
 		{
 			$sql = "SELECT count(*) as cnt FROM fm_location1 WHERE loc1= '{$loc1}'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if($this->db->f('cnt'))
 			{
@@ -243,7 +237,7 @@
 			}
 		}
 
-		function create_dir($location_code='')
+		function create_dir($location_code = '')
 		{
 			$this->vfs->override_acl = 1;
 
@@ -254,18 +248,18 @@
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
-				if(!$this->vfs->mkdir (array(
+				if(!$this->vfs->mkdir(array(
 				     'string' => $dir,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . " :{$dir}");
+					$this->receipt['error'][] = array('msg' => lang('failed to create directory') . " :{$dir}");
 				}
 				else
 				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . " :{$dir}");
+					$this->receipt['message'][] = array('msg' => lang('directory created') . " :{$dir}");
 				}
 			}
 
@@ -276,18 +270,18 @@
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
-				if(!$this->vfs->mkdir (array(
+				if(!$this->vfs->mkdir(array(
 				     'string' => $dir,
 				     'relatives' => array(
 				          RELATIVE_NONE
 				     )
 				)))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('failed to create directory') . " :{$dir}");
+					$this->receipt['error'][] = array('msg' => lang('failed to create directory') . " :{$dir}");
 				}
 				else
 				{
-					$this->receipt['message'][]=array('msg'=>lang('directory created') . " :{$dir}");
+					$this->receipt['message'][] = array('msg' => lang('directory created') . " :{$dir}");
 				}
 			}
 
@@ -311,16 +305,16 @@
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
-				$this->receipt['error'][]=array('msg'=>lang('File %1 already exists!',$values['new_file_name']));
+				$this->receipt['error'][] = array('msg' => lang('File %1 already exists!', $values['new_file_name']));
 			}
 			else
 			{
-				if(!$this->vfs->cp (array (
+				if(!$this->vfs->cp(array(
 					'from'	=> $from_file,
 					'to'	=> $to_new_file,
-					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 				{
-					$this->receipt['error'][]=array('msg'=>lang('Failed to copy file !') . $values['new_file_name']);
+					$this->receipt['error'][] = array('msg' => lang('Failed to copy file !') . $values['new_file_name']);
 				}
 				else
 				{
@@ -328,7 +322,7 @@
 
 					$values['title'] = 'Energiattest - pdf';
 					
-					$insert_values= array(
+					$insert_values = array(
 						$values['new_file_name'],
 						$values['title'],
 						'public',
@@ -352,12 +346,12 @@
 						. "location_code,address,branch_id,vendor_id,user_id,loc1) "
 						. "VALUES ($insert_values)";
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					
 					$ok = rename($from_file, "{$this->dir}/archive/{$values['file_name']}");
 
-					$this->receipt['message'][]=array('msg'=>lang('File %1 copied!',$values['new_file_name']));
-					$this->receipt['message'][]=array('msg'=>lang('File %1 moved!',$from_file));
+					$this->receipt['message'][] = array('msg' => lang('File %1 copied!', $values['new_file_name']));
+					$this->receipt['message'][] = array('msg' => lang('File %1 moved!', $from_file));
 				}
 			}
 
@@ -365,11 +359,11 @@
 			$this->vfs->override_acl = 0;
 		}
 
-		function get_address($loc1='')
+		function get_address($loc1 = '')
 		{
 			$sql = "SELECT loc1_name as address FROM fm_location1 WHERE loc1='{$loc1}'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('address');
 		}

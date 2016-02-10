@@ -13,4 +13,5 @@
 		</td>
 	</tr>
 </table>
+{javascript_end}
 <!-- END footer -->

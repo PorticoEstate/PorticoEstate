@@ -4,7 +4,8 @@
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2011,2012,2013,2014,2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -29,16 +30,22 @@
 	 */
 
 	phpgw::import_class('phpgwapi.jquery');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.soproject');
 
 	include_class('logistic', 'project');
 
-	class logistic_uiresource_type_requirement extends phpgwapi_uicommon
+	class logistic_uiresource_type_requirement extends phpgwapi_uicommon_jquery
 	{
 
 		private $so;
 		private $so_project;
+		private $read;
+		private $add;
+		private $edit;
+		private $delete;
+		private $manage;
+
 		public $public_functions = array(
 
 			'query' => true,
@@ -57,28 +64,25 @@
 			$this->so = CreateObject('logistic.soresource_type_requirement');
 			$this->so_project = CreateObject('logistic.soproject');
 
-			$read    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
-			$add     = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'logistic');//2
-			$edit    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_EDIT, 'logistic');//4
-			$delete  = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_DELETE, 'logistic');//8
-
-			$manage  = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
+			$this->read    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
+			$this->add     = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'logistic');//2
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_EDIT, 'logistic');//4
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_DELETE, 'logistic');//8
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::resource_type_requirement";
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
+
 		}
 
 		public function query()
 		{
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -86,13 +90,28 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			// YUI variables for paging and sorting
-			$start_index = phpgw::get_var('startIndex', 'int');
-			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field = phpgw::get_var('sort');
-			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
+
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] < 0 ? null : $params['results'];
+			$sort_field		 = $params['order'];
+			$sort_ascending	 = $params['sort'] == 'desc' ? false : true;
 			// Form variables
-			$search_for = phpgw::get_var('query');
+			$search_for		 = $params['query'];
+
+			$activity_id = phpgw::get_var('activity_id');
+
+			$search_type = phpgw::get_var('search_option');
+
+			// Form variables
 			$search_type = phpgw::get_var('search_option');
 			// Create an empty result set
 			$result_objects = array();
@@ -114,11 +133,11 @@
 				case 'resource_type_requirement_list':
 					$search_type = 'resource_type_requirement_list';
 					$sort_field = 'type_requirement.location_id';
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 				default: // ... all composites, filters (active and vacant)
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
@@ -140,16 +159,16 @@
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uiresource_type_requirement.view");
+				array_walk(	$result_data['results'], array($this, '_add_links'), "logistic.uiresource_type_requirement.view");
 			}
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 		public function index()
@@ -158,10 +177,6 @@
 			{
 				return $this->query();
 			}
-
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 			array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
@@ -174,15 +189,6 @@
 								'name' => 'entity_type',
 								'text' => lang('Entity types') . ':',
 								'list' => $entity_list,
-							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
 							),
 							array(
 								'type' => 'link',
@@ -201,13 +207,13 @@
 							'label' => lang('Id'),
 							'sortable' => false,
 							'hidden' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'location_id',
 							'label' => lang('Id'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'entity_label',
@@ -232,7 +238,7 @@
 				),
 			);
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function add()

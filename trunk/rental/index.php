@@ -14,12 +14,10 @@
 	// Start page is set
 	if(isset($GLOBALS['phpgw_info']['user']['preferences'][APP_NAME]['default_start_page']))
 	{
-		$start_page = array('menuaction'=> APP_NAME.'.ui'.$GLOBALS['phpgw_info']['user']['preferences'][APP_NAME]['default_start_page'].'.index');
+		$start_page = array('menuaction' => APP_NAME . '.ui' . $GLOBALS['phpgw_info']['user']['preferences'][APP_NAME]['default_start_page'] . '.index');
 	}
 	else
 	{
-		$start_page = array('menuaction'=> APP_NAME.'.uifrontpage.index');
+		$start_page = array('menuaction' => APP_NAME . '.uifrontpage.index');
 	}
-	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
-	
-?>
+	$GLOBALS['phpgw']->redirect_link('/index.php', $start_page);

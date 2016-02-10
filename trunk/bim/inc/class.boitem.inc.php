@@ -1,6 +1,5 @@
 <?php
-
-include_class('bim', 'boattribute_owner', 'inc/');
+	include_class('bim', 'boattribute_owner', 'inc/');
 
     /**
      * FIXME: Description
@@ -9,6 +8,7 @@ include_class('bim', 'boattribute_owner', 'inc/');
      */
     class bim_boitem extends bim_boattribute_owner
     {
+
         private $id, $installed_date, $location_id, $vendor_id;
 
         /**
@@ -25,12 +25,13 @@ include_class('bim', 'boattribute_owner', 'inc/');
             $this->set_vendor_id($location_id);
         }
 
-        
-        public function remove_attribute($attr_def) {
+		public function remove_attribute($attr_def)
+		{
             $this->attributes[$attr_def] = null;
         }
 
-        public function set_attribute($attr_def, bim_boattribute $attr) {
+		public function set_attribute($attr_def, bim_boattribute $attr)
+		{
             $group_attrs = $this->group->get_attribute_list();
             if(array_key_exists($attr_def, $group_attrs))
             {
@@ -42,7 +43,6 @@ include_class('bim', 'boattribute_owner', 'inc/');
             return false;
         }
 
-
         public function set_installed_date($installed_date)
         {
             $this->installed_date = $installed_date;
@@ -50,14 +50,16 @@ include_class('bim', 'boattribute_owner', 'inc/');
 
         public function get_installed_date()
         {
-            return (int) $this->installed_date;
+			return (int)$this->installed_date;
         }
 
-        public function get_id() {
+		public function get_id()
+		{
             return $this->id;
         }
 
-        public function set_id($id) {
+		public function set_id($id)
+		{
             $this->id = $id;
         }
 
@@ -71,21 +73,23 @@ include_class('bim', 'boattribute_owner', 'inc/');
             return $this->group;
         }
         
-        public function get_location_id() {
+		public function get_location_id()
+		{
             return $this->location_id;
         }
 
-        public function set_location_id($location_id) {
+		public function set_location_id($location_id)
+		{
             $this->location_id = $location_id;
         }
 
-        public function get_vendor_id() {
+		public function get_vendor_id()
+		{
             return $this->vendor_id;
         }
 
-        public function set_vendor_id($vendor_id) {
+		public function set_vendor_id($vendor_id)
+		{
             $this->vendor_id = $vendor_id;
         }
-
-        
     }

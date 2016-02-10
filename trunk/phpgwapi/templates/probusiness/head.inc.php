@@ -10,43 +10,23 @@
  * @version $Id$
  */
 	
-	phpgw::import_class('phpgwapi.yui');
-
 	// css file handling
-	$theme_styles = array();
+	$stylesheets = array();
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+
 	$css_file = PHPGW_SERVER_ROOT . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	if (file_exists($css_file))
 	{
-		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
+		$stylesheets[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/'.$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'].'.css';
 	}
 	else
 	{
-		$theme_styles[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
+		$stylesheets[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
 	}
-
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
-	$theme_styles[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
-
-	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-	{
-		phpgwapi_yui::load_widget('dragdrop');
-		phpgwapi_yui::load_widget('element');
-		phpgwapi_yui::load_widget('container');
-		phpgwapi_yui::load_widget('connection');
-		phpgwapi_yui::load_widget('resize');
-		phpgwapi_yui::load_widget('layout');
-/*		$javascripts = array
-		(
-			"/phpgwapi/js/json/json.js",
-			"/phpgwapi/templates/portico/js/base.js"
-
-		);
-*/
-	}
-	phpgwapi_yui::load_widget('button');
 
 	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 	$tpl->set_unknowns('remove');
@@ -54,7 +34,7 @@
 	$tpl->set_file(array('head' => 'head.tpl'));
 	$tpl->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
 
-	foreach ( $theme_styles as $style )
+	foreach ( $stylesheets as $style )
 	{
 		$tpl->set_var('theme_style', $style);
 		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);

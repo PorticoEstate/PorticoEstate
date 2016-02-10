@@ -24,23 +24,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_botemplate
 	{
+
 		var $start;
 		var $query;
 		var $filter;
 		var $sort;
 		var $order;
 		var $cat_id;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -50,12 +49,12 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 		= CreateObject('property.sotemplate');
 			$this->bocommon		= CreateObject('property.bocommon');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -70,13 +69,13 @@
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$chapter_id	= phpgw::get_var('chapter_id', 'int');
 
-			if ($start)
+			if($start)
 			{
-				$this->start=$start;
+				$this->start = $start;
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
@@ -109,18 +108,17 @@
 			}
 		}
 
-
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','template',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'template', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','template');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'template');
 
 			$this->start		= $data['start'];
 			$this->query		= $data['query'];
@@ -132,11 +130,12 @@
 			$this->chapter_id	= $data['chapter_id'];
 		}
 
-
-		function read()
+		function read($data = array())
 		{
+			/*
 			$template = $this->so->read(array('filter' => $this->filter,'start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows));
+
 			$this->total_records = $this->so->total_records;
 
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -148,19 +147,31 @@
 			}
 
 			return $template;
+			 */
+			$values = $this->so->read($data);
+			$this->total_records = $this->so->total_records;
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			for($i = 0; $i < count($values); $i++)
+			{
+				$values[$i]['owner'] = $GLOBALS['phpgw']->accounts->id2name($values[$i]['owner']);
+				$values[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'], $dateformat);
+			}
+			return $values;
 		}
 
-		function read_template_hour($template_id)
+		function read_template_hour($data = array())
 		{
-			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
+
+			$template = $this->so->read_template_hour($data);
+//			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			return $template;
 		}
-
 
 		function read_single_template($template_id)
 		{
@@ -172,21 +183,21 @@
 			return  $this->so->read_single_hour($hour_id);
 		}
 
-		function get_grouping_list($selected='',$template_id)
+		function get_grouping_list($selected = '', $template_id)
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('grouping_select'));
-			$groupings= $this->so->get_grouping_list($template_id);
-			return $this->bocommon->select_list($selected,$groupings);
+			$groupings = $this->so->get_grouping_list($template_id);
+			return $this->bocommon->select_list($selected, $groupings);
 		}
 
 		function save_template($values)
 		{
-			if ($values['template_id'])
+			if($values['template_id'])
 			{
-				if ($values['template_id'] != 0)
+				if($values['template_id'] != 0)
 				{
 					$receipt = $this->so->edit_template($values);
-					$receipt['template_id']=$values['template_id'];
+					$receipt['template_id'] = $values['template_id'];
 				}
 			}
 			else
@@ -196,33 +207,33 @@
 			return $receipt;
 		}
 
-		function save_hour($values,$template_id)
+		function save_hour($values, $template_id)
 		{
-			$values['billperae']	= str_replace(",",".",$values['billperae']);
-			$values['quantity']		= str_replace(",",".",$values['quantity']);
-			$values['cost']			= $values['billperae']*$values['quantity'];
+			$values['billperae'] = str_replace(",", ".", $values['billperae']);
+			$values['quantity'] = str_replace(",", ".", $values['quantity']);
+			$values['cost'] = $values['billperae'] * $values['quantity'];
 			if($values['ns3420_descr'])
 			{
-				$values['descr']=$values['ns3420_descr'];
+				$values['descr'] = $values['ns3420_descr'];
 			}
 
-			if ($values['hour_id'])
+			if($values['hour_id'])
 			{
-				if ($values['hour_id'] != 0)
+				if($values['hour_id'] != 0)
 				{
-					$receipt = $this->so->edit_hour($values,$template_id);
+					$receipt = $this->so->edit_hour($values, $template_id);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add_custom_hour($values,$template_id);
+				$receipt = $this->so->add_custom_hour($values, $template_id);
 			}
 			return $receipt;
 		}
 
 		function delete($params)
 		{
-			if (is_array($params))
+			if(is_array($params))
 			{
 				$this->so->delete($params[0]);
 			}
@@ -232,9 +243,8 @@
 			}
 		}
 
-		function delete_hour($hour_id,$template_id)
+		function delete_hour($hour_id, $template_id)
 		{
-			return $this->so->delete_hour($hour_id,$template_id);
+			return $this->so->delete_hour($hour_id, $template_id);
 		}
-
 	}

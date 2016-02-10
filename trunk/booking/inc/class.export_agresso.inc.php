@@ -12,17 +12,17 @@
 	 *				2) configurasjon for pålogging til ftp-server (IP/Login/Passord/envt katalog)
 	 * 
 	 */
-
 	class export_agresso
 	{
+
 		function __construct()
 		{
 			$this->db 			= &$GLOBALS['phpgw']->db;
-			$this->config		= CreateObject('phpgwapi.config','booking');
+			$this->config	 = CreateObject('phpgwapi.config', 'booking');
 			$this->config->read_repository();
 		}
 		
-		public function do_your_magic($buffer,$id)
+		public function do_your_magic($buffer, $id)
 		{
 			// Viktig: må kunne rulle tilbake dersom noe feiler.
 			$this->db->transaction_begin();
@@ -34,14 +34,14 @@
 			$file_written = false;
 
 			$fp = fopen($filnavn, "wb");
-			fwrite($fp,$buffer);
+			fwrite($fp, $buffer);
 				
 			if(fclose($fp))
 			{
-				$file_written=true;
+				$file_written = true;
 			}
 
-			if($file_written && $this->config->config_data['invoice_export_method']!='ftp')
+			if($file_written && $this->config->config_data['invoice_export_method'] != 'ftp')
 			{
 				$transfer_ok = true;
 			}
@@ -65,7 +65,6 @@
 			return $message;
 		}
 		
-		
 		protected function lagfilnavn()
 		{	
 			$fil_katalog = $this->config->config_data['invoice_export_path'];
@@ -73,17 +72,17 @@
 			$i = 1;
 			do
 			{
-				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s",$i) . '.TXT';
+				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s", $i) . '.TXT';
 				
 				//Sjekk om filen eksisterer
-				If (!file_exists($filnavn))
+				If(!file_exists($filnavn))
 				{
 					return $filnavn;
 				}
 				
 				$i++;
 			}
-			while  ($continue);
+			while($continue);
 		
 			//Ingen løpenr er ledige, gi feilmelding
 			return false;
@@ -92,7 +91,7 @@
 		protected function transfer($filnavn)
 		{			
 
-			if($this->config->config_data['invoice_export_method']=='ftp')
+			if($this->config->config_data['invoice_export_method'] == 'ftp')
 			{
 
 				$transfer_ok = false;
@@ -109,7 +108,7 @@
 					$newfile = basename($filnavn);
 				}
 
-				if (ftp_put($ftp, $newfile,$filnavn, FTP_BINARY))
+				if(ftp_put($ftp, $newfile, $filnavn, FTP_BINARY))
 				{
 					//log_transaction_ok
 					$transfer_ok = True;
@@ -134,11 +133,10 @@
 			$ftp = ftp_connect($host);
 			if($ftp) 
 			{
-				if ($lres = ftp_login($ftp,$user,$pass)) 
+				if($lres = ftp_login($ftp, $user, $pass))
 				{
 					return $ftp;
 				}
 			}
 		}
 	}
-

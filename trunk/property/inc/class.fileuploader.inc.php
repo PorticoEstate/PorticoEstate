@@ -24,15 +24,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-
 	class property_fileuploader
 	{
 
@@ -54,31 +52,31 @@
 			$id			 	= phpgw::get_var('id');
 
 			$oArgs = "{'menuaction':'$upload_target',"
-				."'id':'$id',"
-				."'last_loginid':'". phpgw::get_var('last_loginid')."',"
-				."'last_domain':'" . phpgw::get_var('last_domain')."',"
-				."'sessionphpgwsessid':'" . phpgw::get_var('sessionphpgwsessid')."',"
-				."'domain':'" . phpgw::get_var('domain')."'";
+			. "'id':'$id',"
+			. "'last_loginid':'" . phpgw::get_var('last_loginid') . "',"
+			. "'last_domain':'" . phpgw::get_var('last_domain') . "',"
+			. "'sessionphpgwsessid':'" . phpgw::get_var('sessionphpgwsessid') . "',"
+			. "'domain':'" . phpgw::get_var('domain') . "'";
 
-			foreach ($_GET as $varname => $value)
+			foreach($_GET as $varname => $value)
 			{
-				if(strpos($varname, '_')===0)
+				if(strpos($varname, '_') === 0)
 				{
-					$oArgs .= ",'" . substr($varname,1,strlen($varname)-1) . "':'{$value}'";
+					$oArgs .= ",'" . substr($varname, 1, strlen($varname) - 1) . "':'{$value}'";
 				}
 			}
 //			$oArgs .= '}';
 
-/*
+			/*
 			$str_base_url = 'http';
 			$str_base_url .= phpgw::get_var('HTTPS', 'bool', 'SERVER') ? 's' : '' ;
 			$str_base_url .= '://';
 			$str_base_url .= phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
 
 			$str_base_url .= $GLOBALS['phpgw']->link('/', array(), true);
-*/
+			 */
 
-			$config	= CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 			$ntlm_alternative_host = isset($config->config_data['ntlm_alternative_host']) ? $config->config_data['ntlm_alternative_host'] : '';
 			$scriptAccess = $ntlm_alternative_host ? 'always' : 'sameDomain';
@@ -88,13 +86,13 @@
 			
 
 			$filetypes = array();
-			foreach( $uploader_filetypes_arr as $filetype)
+			foreach($uploader_filetypes_arr as $filetype)
 			{
 				$filetypes[] = "*.{$filetype}";
 			}
 
-			$fileExt = implode(';',$filetypes);
-			$fileDesc = strtoupper(implode(', ',$filetypes));
+			$fileExt = implode(';', $filetypes);
+			$fileDesc = strtoupper(implode(', ', $filetypes));
 			
 			$title = lang('fileuploader');
 			$version = 2;			
@@ -258,8 +256,6 @@ HTML;
 			echo $html;
 		}
 
-
-
 		public function check($save_path = '', $fakebase = '/property')
 		{
 			$bofiles	= CreateObject('property.bofiles', $fakebase);
@@ -267,7 +263,7 @@ HTML;
 			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$_POST['filename']}";
 			//Return true if the file exists
 
-			if ($bofiles->vfs->file_exists(array(
+			if($bofiles->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => Array(RELATIVE_NONE))))
 			{
@@ -279,12 +275,11 @@ HTML;
 			}
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
+		/*
+		  This is an upload script for SWFUpload that attempts to properly handle uploaded files
+		  in a secure way.
 
-/*
-This is an upload script for SWFUpload that attempts to properly handle uploaded files
-in a secure way.
-
-Notes:
+		  Notes:
 
 	SWFUpload doesn't send a MIME-TYPE. In my opinion this is ok since MIME-TYPE is no better than
 	 file extension and is probably worse because it can vary from OS to OS and browser to browser (for the same file).
@@ -327,7 +322,7 @@ Notes:
 			$unit = strtoupper(substr($POST_MAX_SIZE, -1));
 			$multiplier = ($unit == 'M' ? 1048576 : ($unit == 'K' ? 1024 : ($unit == 'G' ? 1073741824 : 1)));
 
-			if ((int)$_SERVER['CONTENT_LENGTH'] > $multiplier*(int)$POST_MAX_SIZE && $POST_MAX_SIZE)
+			if((int)$_SERVER['CONTENT_LENGTH'] > $multiplier * (int)$POST_MAX_SIZE && $POST_MAX_SIZE)
 			{
 				header("HTTP/1.1 500 Internal Server Error"); // This will trigger an uploadError event in SWFUpload
 				echo "POST exceeded maximum allowed size.";
@@ -344,7 +339,7 @@ Notes:
 			$upload_name = "Filedata";
 			$max_file_size_in_bytes = 2147483647;				// 2GB in bytes
 
-			$config	= CreateObject('phpgwapi.config','property');
+			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 			$uploader_filetypes = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
 
@@ -352,39 +347,38 @@ Notes:
 			$extension_whitelist = explode(',', $uploader_filetypes); 
 			
 			$valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-';				// Characters allowed in the file name (in a Regular Expression format)
-
 			// Other variables	
 			$MAX_FILENAME_LENGTH = 260;
 			$file_name = "";
 			$file_extension = "";
 			$uploadErrors = array
 				(
-					0=>"There is no error, the file uploaded successfully",
-					1=>"The uploaded file exceeds the upload_max_filesize directive in php.ini",
-					2=>"The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-					3=>"The uploaded file was only partially uploaded",
-					4=>"No file was uploaded",
-					6=>"Missing a temporary folder"
+				0 => "There is no error, the file uploaded successfully",
+				1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+				2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+				3 => "The uploaded file was only partially uploaded",
+				4 => "No file was uploaded",
+				6 => "Missing a temporary folder"
 				);
 
 
 			// Validate the upload
-			if (!isset($_FILES[$upload_name]))
+			if(!isset($_FILES[$upload_name]))
 			{
 				$this->HandleError("No upload found in \$_FILES for " . $upload_name);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-			else if (isset($_FILES[$upload_name]["error"]) && $_FILES[$upload_name]["error"] != 0)
+			else if(isset($_FILES[$upload_name]["error"]) && $_FILES[$upload_name]["error"] != 0)
 			{
 				$this->HandleError($uploadErrors[$_FILES[$upload_name]["error"]]);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-			else if (!isset($_FILES[$upload_name]["tmp_name"]) || !@is_uploaded_file($_FILES[$upload_name]["tmp_name"]))
+			else if(!isset($_FILES[$upload_name]["tmp_name"]) || !@is_uploaded_file($_FILES[$upload_name]["tmp_name"]))
 			{
 				$this->HandleError("Upload failed is_uploaded_file test.");
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-			else if (!isset($_FILES[$upload_name]['name']))
+			else if(!isset($_FILES[$upload_name]['name']))
 			{
 				$this->HandleError("File has no name.");
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -392,21 +386,21 @@ Notes:
 
 			// Validate the file size (Warning: the largest files supported by this code is 2GB)
 			$file_size = @filesize($_FILES[$upload_name]["tmp_name"]);
-			if (!$file_size || $file_size > $max_file_size_in_bytes)
+			if(!$file_size || $file_size > $max_file_size_in_bytes)
 			{
 				$this->HandleError("File exceeds the maximum allowed size");
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if ($file_size <= 0)
+			if($file_size <= 0)
 			{
 				$this->HandleError("File size outside allowed lower bound");
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
 			// Validate file name (for our purposes we'll just remove invalid characters)
-			$file_name = preg_replace('/[^'.$valid_chars_regex.']|\.+$/i', "", basename($_FILES[$upload_name]['name']));
-			if (strlen($file_name) == 0 || strlen($file_name) > $MAX_FILENAME_LENGTH)
+			$file_name = preg_replace('/[^' . $valid_chars_regex . ']|\.+$/i', "", basename($_FILES[$upload_name]['name']));
+			if(strlen($file_name) == 0 || strlen($file_name) > $MAX_FILENAME_LENGTH)
 			{
 				$this->HandleError("Invalid file name");
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -416,19 +410,19 @@ Notes:
 			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$file_name}";
 
 			// Validate that we won't over-write an existing file
-			if ($bofiles->vfs->file_exists(array(
+			if($bofiles->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
-				$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+				$receipt['error'][] = array('msg' => lang('This file already exists !'));
 				$this->HandleError("File with this name already exists");
 				exit(0);
 			}
 
 			$bofiles->create_document_dir($save_path);
 
-/*
+			/*
 		// Validate that we won't over-write an existing file
 			if (file_exists("{$save_path}/{$file_name}"))
 			{
@@ -440,15 +434,15 @@ Notes:
 			$path_info = pathinfo($_FILES[$upload_name]['name']);
 			$file_extension = $path_info["extension"];
 			$is_valid_extension = false;
-			foreach ($extension_whitelist as $extension)
+			foreach($extension_whitelist as $extension)
 			{
-				if (strcasecmp($file_extension, $extension) == 0)
+				if(strcasecmp($file_extension, $extension) == 0)
 				{
 					$is_valid_extension = true;
 					break;
 				}
 			}
-			if (!$is_valid_extension)
+			if(!$is_valid_extension)
 			{
 				$this->HandleError("Invalid file extension");
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -477,23 +471,23 @@ Notes:
 			 */
 
 			$bofiles->vfs->override_acl = 1;
-			if($bofiles->vfs->cp (array (
+			if($bofiles->vfs->cp(array(
 				'from'	=> $_FILES[$upload_name]["tmp_name"],
 				'to'	=> "{$bofiles->fakebase}/{$save_path}/{$file_name}",
-				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+				'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 			{
 				echo $file_name;
 			}
 			else
 			{
-				$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+				$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
 				$this->HandleError("File could not be saved.");
 				exit(0);
 			}
 
 			$bofiles->vfs->override_acl = 0;
 
-/*
+			/*
 			if (!@move_uploaded_file($_FILES[$upload_name]["tmp_name"], "{$bofiles->fakebase}/{$save_path}/{$file_name}"))
 			{
 				$this->HandleError("File could not be saved.");
@@ -502,9 +496,9 @@ Notes:
  */
 			//			exit(0);
 		}
-
 		/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 		will have to check for any error messages and react as needed. */
+
 		function HandleError($message)
 		{
 			header("HTTP/1.1 500 Internal Server Error");

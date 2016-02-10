@@ -1,11 +1,10 @@
 <?php
-
 	include_class('activitycalendar', 'model', 'inc/model/');
 
 	class activitycalendar_contact_person extends activitycalendar_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $name;
 		protected $ssn;
@@ -30,13 +29,18 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
-		public function set_name($name){
+		public function set_name($name)
+		{
 			$this->name = $name;
 		}
 		
-		public function get_name(){
+		public function get_name()
+		{
 			return $this->name;
 		}
 		
@@ -97,7 +101,8 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if(self::$so == null)
+			{
 				self::$so = CreateObject('rental.socontactperson');
 			}
 			
@@ -117,5 +122,3 @@
 			);
 		}
 	}
-
-?>

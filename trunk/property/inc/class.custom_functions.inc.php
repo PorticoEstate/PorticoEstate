@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
@@ -33,9 +33,9 @@
 	 * usage (example): /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default forward_mail_as_sms user=<username> cellphone=<phonenumber>
 	 * @package property
 	 */
-
 	class property_custom_functions
 	{
+
 		var $public_functions = array
 			(
 				'index' => true
@@ -52,10 +52,9 @@
 		 * If $data is an array - then the process is run as cron - and will look for $data['function'] to
 		 * determine which custom class to load
 		 */
-
-		function index($data='')
+		function index($data = '')
 		{
-			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 				return;
 			}
@@ -75,18 +74,18 @@
 				}
 				else
 				{
-					$function =$data['function'];
+					$function = $data['function'];
 				}
 			}
 			// prevent path traversal
-			if ( preg_match('/\.\./', $function) )
+			if(preg_match('/\.\./', $function))
 			{
 				return;
 			}
 
 			$file = PHPGW_SERVER_ROOT . "/property/inc/cron/{$GLOBALS['phpgw_info']['user']['domain']}/{$function}.php";
 
-			if (is_file($file))
+			if(is_file($file))
 			{
 				require_once $file;
 				$custom = new $function;

@@ -3,6 +3,7 @@
 	
 	class booking_bocompleted_reservation_export_file extends booking_bocommon
 	{	
+
 		function __construct()
 		{
 			parent::__construct();

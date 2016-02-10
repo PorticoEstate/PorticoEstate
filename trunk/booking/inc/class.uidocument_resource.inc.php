@@ -3,6 +3,7 @@
 
 	class booking_uidocument_resource extends booking_uidocument
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

@@ -308,6 +308,17 @@
 			return $this->m_odb->query($sQuery, $line, $file);
 		}
 
+		function get_last_insert_id($table, $field = '')
+		{
+			if($this->m_bDeltaOnly)
+			{
+				// Don't run this query, since we are processing deltas only
+				return false;
+			}
+
+			return $this->m_odb->get_last_insert_id($table, $field);
+		}
+
 		function _GetTableSQL($sTableName, $aTableDef, &$sTableSQL, &$sSequenceSQL, &$sTriggerSQL)
 		{
 			global $DEBUG;

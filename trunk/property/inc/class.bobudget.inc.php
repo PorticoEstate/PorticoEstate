@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage budget
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_bobudget
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -52,7 +52,6 @@
 		var	$sum_actual_cost_period		= 0;
 		var $sum_hits				= 0;
 		var	$total_records			= 0;
-
 		var $public_functions = array
 			(
 				'read'				=> true,
@@ -62,13 +61,13 @@
 				'check_perms'		=> true
 			);
 
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 				= CreateObject('property.sobudget');
 			$this->bocommon 		= CreateObject('property.bocommon');
 			$this->cats				= & $this->so->cats;
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -95,7 +94,7 @@
 			$this->start			= $start;
 			$this->query			= $query ? $query : $this->query;
 			$this->direction		= $direction ? $direction : $this->direction;
-			if( !$this->direction )
+			if(!$this->direction)
 			{
 				$this->direction = 'expenses';
 			}
@@ -116,34 +115,34 @@
 			$this->month			= isset($month) && $month ? $month : 0;
 			$this->details			= $details;
 
-			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
+			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction'] == 'property.uibudget.obligations')
 			{
 				$this->grouping = '';
 				$this->revision = '';
 			}
 		}
 
-
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','budget',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'budget', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','budget');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'budget');
 
-			$this->start			= isset($data['start'])?$data['start']:'';
-			$this->filter			= isset($data['filter'])?$data['filter']:'';
-			$this->sort				= isset($data['sort'])?$data['sort']:'';
-			$this->order			= isset($data['order'])?$data['order']:'';;
-			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
-			$this->dimb_id			= isset($data['dimb_id'])?$data['dimb_id']:'';
-			$this->details			= isset($data['details'])?$data['details']:'';
-			$this->direction		= isset($data['direction'])?$data['direction']:'';
+			$this->start = isset($data['start']) ? $data['start'] : '';
+			$this->filter = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort = isset($data['sort']) ? $data['sort'] : '';
+			$this->order = isset($data['order']) ? $data['order'] : '';
+			;
+			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->dimb_id = isset($data['dimb_id']) ? $data['dimb_id'] : '';
+			$this->details = isset($data['details']) ? $data['details'] : '';
+			$this->direction = isset($data['direction']) ? $data['direction'] : '';
 		}
 
 		function check_perms($has, $needed)
@@ -151,51 +150,101 @@
 			return (!!($has & $needed) == true);
 		}
 
-
-		function read()
+		function read($data = array())
 		{
-			$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/* $budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
 				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
-				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id));
+			  'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id)); */
+
+			$budget = $this->so->read(array
+				(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'results' => $data['results'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id' => $this->district_id,
+				'year' => $this->year,
+				'grouping' => $this->grouping,
+				'revision' => $this->revision,
+				'cat_id' => $this->cat_id,
+				'dimb_id' => $this->dimb_id,
+				'org_unit_id' => $this->org_unit_id
+			)
+			);
 
 			$this->total_records		= $this->so->total_records;
 			$this->sum_budget_cost		= $this->so->sum_budget_cost;
-			foreach ($budget as & $entry)
+			foreach($budget as & $entry)
 			{
 //				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$category = $this->cats->return_single($entry['cat_id']);
-				$entry['category']		=$category[0]['name'];
+				$entry['category'] = $category[0]['name'];
 			}
 
 			return $budget;
 		}
 
-		function read_basis()
+		function read_basis($data = array())
 		{
-			$budget = $this->so->read_basis(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/* $budget = $this->so->read_basis(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
-				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));
+			  'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,)); */
+
+			$budget = $this->so->read_basis(array
+				(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'results' => $data['results'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id' => $this->district_id,
+				'year' => $this->year,
+				'grouping' => $this->grouping,
+				'revision' => $this->revision
+			)
+			);
 
 			$this->total_records = $this->so->total_records;
 
-			for ($i=0; $i<count($budget); $i++)
+			for($i = 0; $i < count($budget); $i++)
 			{
-				$budget[$i]['entry_date']  = $GLOBALS['phpgw']->common->show_date($budget[$i]['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$budget[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($budget[$i]['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 			return $budget;
 		}
 
-
-		function read_obligations()
+		function read_obligations($data = array())
 		{
-			//cramirez: add strtoupper function for $this->sort. in YUI use asc/desc (lowercase letters)
-			$obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
-				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
-				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
-				'year' => $this->year,'month' => $this->month, 'grouping' => $this->grouping, 'revision' => $this->revision,
-				'details' => $this->details,'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id,
-				'direction'	=> $this->direction));
+
+			$obligations = $this->so->read_obligations(array
+				(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'results' => $data['results'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id' => $this->district_id,
+				'year' => $this->year,
+				'month' => $this->month,
+				'grouping' => $this->grouping,
+				'revision' => $this->revision,
+				'details' => $this->details,
+				'dimb_id' => $this->dimb_id,
+				'org_unit_id' => $this->org_unit_id,
+				'direction' => $this->direction
+			)
+			);
 
 			$this->total_records			= $this->so->total_records;
 			$this->sum_budget_cost			= $this->so->sum_budget_cost;
@@ -225,12 +274,12 @@
 		function save($budget)
 		{
 
-			if ($budget['budget_id'])
+			if($budget['budget_id'])
 			{
-				if ($budget['budget_id'] != 0)
+				if($budget['budget_id'] != 0)
 				{
 					$budget_id = $budget['budget_id'];
-					$receipt=$this->so->edit($budget);
+					$receipt = $this->so->edit($budget);
 				}
 			}
 			else
@@ -242,12 +291,12 @@
 
 		function save_basis($values)
 		{
-			if ($values['budget_id'])
+			if($values['budget_id'])
 			{
-				if ($values['budget_id'] != 0)
+				if($values['budget_id'] != 0)
 				{
 					$budget_id = $values['budget_id'];
-					$receipt=$this->so->edit_basis($values);
+					$receipt = $this->so->edit_basis($values);
 				}
 			}
 			else
@@ -257,23 +306,23 @@
 
 			if(is_array($values['distribute']) && is_array($values['distribute_year']) && (!isset($receipt['error']) || !$receipt['error']))
 			{
-				if($values['distribute'][0]=='new')
+				if($values['distribute'][0] == 'new')
 				{
-					$values['distribute'][0]= $receipt['budget_id'];
+					$values['distribute'][0] = $receipt['budget_id'];
 				}
-				$this->distribute($values,$receipt);
+				$this->distribute($values, $receipt);
 			}
 			return $receipt;
 		}
 
-		function distribute($values,$receipt='')
+		function distribute($values, $receipt = '')
 		{
-			return $this->so->distribute($values,$receipt);
+			return $this->so->distribute($values, $receipt);
 		}
 
 		function delete($params)
 		{
-			if (is_array($params))
+			if(is_array($params))
 			{
 				$this->so->delete($params[0]);
 			}
@@ -285,7 +334,7 @@
 
 		function delete_basis($params)
 		{
-			if (is_array($params))
+			if(is_array($params))
 			{
 				$this->so->delete_basis($params[0]);
 			}
@@ -295,28 +344,28 @@
 			}
 		}
 
-		function get_distribute_year_list($selected ='')
+		function get_distribute_year_list($selected = '')
 		{
 			$distribute_year_list = $this->so->get_distribute_year_list();
-			return $this->bocommon->select_multi_list($selected,$distribute_year_list);
+			return $this->bocommon->select_multi_list($selected, $distribute_year_list);
 		}
 
-		function get_b_group_list($selected ='')
+		function get_b_group_list($selected = '')
 		{
 			$b_group_list = $this->so->get_b_group_list();
-			return $this->bocommon->select_list($selected,$b_group_list);
+			return $this->bocommon->select_list($selected, $b_group_list);
 		}
 
-		function get_revision_list($selected ='',$year='',$basis = '')
+		function get_revision_list($selected = '', $year = '', $basis = '')
 		{
-			$revision_list = $this->so->get_revision_list($year,$basis);
-			return $this->bocommon->select_list($selected,$revision_list);
+			$revision_list = $this->so->get_revision_list($year, $basis);
+			return $this->bocommon->select_list($selected, $revision_list);
 		}
 
-		function get_year_filter_list($selected ='',$basis = '')
+		function get_year_filter_list($selected = '', $basis = '')
 		{
 			$year_list = $this->so->get_year_filter_list($basis);
-			return $this->bocommon->select_list($selected,$year_list);
+			return $this->bocommon->select_list($selected, $year_list);
 		}
 
 		function get_year_list()
@@ -325,29 +374,29 @@
 
 			if(!$year_list)
 			{
-				$year_list = array(array('id' =>date('Y'), 'name' =>date('Y')));
+				$year_list = array(array('id' => date('Y'), 'name' => date('Y')));
 			}
 			$k = date('Y') - $year_list[0]['id'] + 5;
 			$j = count($year_list);
-			for ($i=0; $i < $k; $i++)
+			for($i = 0; $i < $k; $i++)
 			{
 				// FIXME
 				//	if($year_list[$j-1]['id'] < date('Y') + 3)
 				{
-					$year_list[$j+$i]['id'] = $year_list[$j+$i-1]['id'] + 1;
-					$year_list[$j+$i]['name'] = $year_list[$j+$i-1]['id'] + 1;
+					$year_list[$j + $i]['id'] = $year_list[$j + $i - 1]['id'] + 1;
+					$year_list[$j + $i]['name'] = $year_list[$j + $i - 1]['id'] + 1;
 				}
 			}
 			return $year_list;
 		}
 
-		function get_revision_filter_list($selected ='',$basis = '')
+		function get_revision_filter_list($selected = '', $basis = '')
 		{
 			if(!isset($_GET['year']))
 			{
 				$year = date('Y');
 				$this->year = $year;
-				$selected = $this->so->get_max_revision($year,$basis);
+				$selected = $this->so->get_max_revision($year, $basis);
 				$this->revision = $selected;
 			}
 			else
@@ -355,12 +404,11 @@
 				$year = $this->year;
 			}
 
-			$revision_list = $this->so->get_revision_filter_list($year,$basis);
-			return $this->bocommon->select_list($selected,$revision_list);
-
+			$revision_list = $this->so->get_revision_filter_list($year, $basis);
+			return $this->bocommon->select_list($selected, $revision_list);
 		}
 
-		function get_grouping_filter_list($selected ='',$basis = '')
+		function get_grouping_filter_list($selected = '', $basis = '')
 		{
 			if(!isset($_GET['year']))
 			{
@@ -370,8 +418,7 @@
 			{
 				$year = $this->year;
 			}
-			$grouping_list = $this->so->get_grouping_filter_list($year,$basis);
-			return $this->bocommon->select_list($selected,$grouping_list);
+			$grouping_list = $this->so->get_grouping_filter_list($year, $basis);
+			return $this->bocommon->select_list($selected, $grouping_list);
 		}
-
 	}

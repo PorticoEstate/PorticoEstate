@@ -1,21 +1,17 @@
 <div class="error_message">{messages}</div>
 
 <!-- BEGIN form -->
+<div id="tab-content">
 {tabs}
 {select_user}
-<form method="POST" action="{action_url}">
+<form method="POST" action="{action_url}" class="pure-form pure-form-aligned">
 {account_id}
 	<!-- BEGIN list -->
-	<table id="prefs_list">
-		<thead>
-			<tr>
-				<th colspan="2"><b>{list_header}</b></th>
-			</tr>
-		</thead>
-		<tbody>
+	{pre_div}
+		{list_header}
 			{rows}
-		</tbody>
-	</table>
+	{post_div}
+	
 	<!-- END list -->
 
 	<div class="button_group">
@@ -24,21 +20,22 @@
 		{help_button}
 	</div>
 </form>
+</div>
 <!-- END form -->
 
 <!-- BEGIN row -->
-		<tr class="{tr_class}">
-			<td>{row_name}</td>
-			<td>{row_value}</td>
-		</tr>
+		<div class="pure-control-group">
+			<label>{row_name}</label>
+				{row_value}
+		</div>
 <!-- END row -->
 
 <!-- BEGIN help_row -->
-		<tr class="{tr_class}">
-			<td>{row_name}</td>
-			<td>{row_value}</td>
-		</tr>
-		<tr class="{tr_class}">
-			<td colspan="2">{help_value}</td>
-		</tr>
+		<div class="pure-control-group">
+			<label>{row_name}</label>
+				{row_value}
+		</div>
+		<div class="pure-control-group">
+			<label colspan="2">{help_value}</label>
+		</div>
 <!-- END help_row -->

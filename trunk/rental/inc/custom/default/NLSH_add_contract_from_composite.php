@@ -10,8 +10,10 @@
 	 */
 	class rental_NLSH_add_contract_from_composite
 	{
+
 		function __construct()
 		{
+
 		}
 
 		/**
@@ -47,12 +49,10 @@
 
 			$contract->set_responsibility_id($responsibility_id);
 			return;
-
 		}
 	}
-
 	$process = new rental_NLSH_add_contract_from_composite($data);
 	if($_error = $process->validate($data))
 	{
-		return 	$receipt['error'][]=array('msg'=>$_error);
+		return $receipt['error'][] = array('msg' => $_error);
 	}

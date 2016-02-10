@@ -33,7 +33,7 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	phpgw::import_class('controller.socheck_list');
 
@@ -47,8 +47,7 @@
 	include_class('controller', 'year_calendar_agg', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 
-
-	class controller_uicomponent extends phpgwapi_uicommon
+	class controller_uicomponent extends phpgwapi_uicommon_jquery
 	{
 
 		private $so;
@@ -73,7 +72,6 @@
 			$this->edit		= $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete	= $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8
 			$this->manage	= $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
-
 //			$this->so					 = CreateObject('controller.socontrol');
 
 			$config				 = CreateObject('phpgwapi.config', 'controller');
@@ -105,7 +103,7 @@
 				}
 				catch(Exception $e)
 				{
-					if ( $e )
+					if($e)
 					{
 						$result['message'] = $e->getMessage();
 					}
@@ -133,7 +131,8 @@
 				$location_filter = array();
 				foreach($entity_list as $entry)
 				{
-					$categories = $this->soadmin_entity->read_category(array('entity_id' => $entry['id'],'order' => 'name','sort' => 'asc','enable_controller' => true, 'allrows' => true));
+					$categories = $this->soadmin_entity->read_category(array('entity_id' => $entry['id'],
+						'order' => 'name', 'sort' => 'asc', 'enable_controller' => true, 'allrows' => true));
 					foreach($categories as $category)
 					{
 
@@ -147,19 +146,19 @@
 							$location_filter[] = array
 							(
 								'id' => $category['location_id'],
-								'name'=> "{$entry['name']}::{$category['name']}",
+								'name'		 => "{$entry['name']}::{$category['name']}",
 								'sort_key' => trim($sort_arr[0])
 							);
 						}
 					}
 				}
 				// Obtain a list of columns
-				foreach ($location_filter as $key => $row)
+				foreach($location_filter as $key => $row)
 				{
 					$id[$key]  = $row['sort_key'];
 				}
 
-				array_multisort($id,SORT_ASC, SORT_STRING, $location_filter);
+				array_multisort($id, SORT_ASC, SORT_STRING, $location_filter);
 				phpgwapi_cache::session_set('controller', "location_filter_{$entity_group_id}", $location_filter);
 			}
 			foreach($location_filter as &$location)
@@ -204,14 +203,14 @@
 				'selected' 	=> $_my_negative_self == ($this->account * -1)
 			);
 
-			/*Unselect user if filter on component*/
+			/* Unselect user if filter on component */
 			if(phpgw::get_var('component_id', 'int'))
 			{
 				$default_value['selected'] = 0;
 			}
 
 			unset($_my_negative_self);
-			array_unshift ($user_list,$default_value);
+			array_unshift($user_list, $default_value);
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
 
 			// Sigurd: Start categories
@@ -240,7 +239,7 @@
 			$year_list	= array();
 
 			$year = date('Y');
-			for ( $_year= ($year - 2); $_year < ($year + 5); $_year++ )
+			for($_year = ($year - 2); $_year < ($year + 5); $_year++)
 			{
 				$year_list[] = array
 				(
@@ -270,13 +269,15 @@
 							array('type'	 => 'filter',
 								'name'	 => 'report_type',
 								'text'	 => lang('report type'),
-								'list'	 => array(array('id' => 'components', 'name' => lang('components')), array('id' => 'summary', 'name' => lang('summary'))),
+								'list'		 => array(array('id' => 'components', 'name' => lang('components')),
+									array('id' => 'summary', 'name' => lang('summary'))),
 								'onchange'	=> 'update_table();'
 							),
 							array('type'	 => 'filter',
 								'name'	 => 'entity_group_id',
 								'text'	 => lang('entity group'),
-								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => phpgw::get_var('entity_group_id'), 'add_empty' => true)),
+								'list'		 => execMethod('property.bogeneric.get_list', array('type' => 'entity_group',
+									'selected' => phpgw::get_var('entity_group_id'), 'add_empty' => true)),
 								'onchange'	=> 'update_table();'
 							),
 							array('type'	 => 'hidden',
@@ -292,7 +293,8 @@
 							array('type'	 => 'filter',
 								'name'	 => 'org_unit_id',
 								'text'	 => lang('department'),
-								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'org_unit', 'selected' => phpgw::get_var('org_unit_id'), 'add_empty' => true)),
+								'list'		 => execMethod('property.bogeneric.get_list', array('type' => 'org_unit',
+									'selected' => phpgw::get_var('org_unit_id'), 'add_empty' => true)),
 								'onchange'	=> 'update_table();'
 							),
 							array('type'	 => 'filter',
@@ -350,7 +352,7 @@
 					'field'	 =>  $this->get_fields($filter_component),
 				),
 			);
-			self::render_template_xsl(array('component','calendar/icon_color_map'), $data);
+			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
 		private function get_fields($filter_component = '')
@@ -445,11 +447,11 @@
 		/**
 		* Get the sublevels of the org tree into one arry
 		*/
-		private function _get_children($data = array() )
+		private function _get_children($data = array())
 		{
-			foreach ($data as $entry)
+			foreach($data as $entry)
 			{
-				$this->org_units[]= $entry['id'];
+				$this->org_units[] = $entry['id'];
 				if(isset($entry['children']) && $entry['children'])
 				{
 					$this->_get_children($entry['children']);
@@ -478,11 +480,12 @@
 			}
 			if($org_unit_id = phpgw::get_var('org_unit_id', 'int'))
 			{
-				$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $org_unit_id, 'type' => 'org_unit'));
-				$this->org_units[]= $org_unit_id;
+				$_subs				 = execMethod('property.sogeneric.read_tree', array('node_id' => $org_unit_id,
+					'type' => 'org_unit'));
+				$this->org_units[]	 = $org_unit_id;
 				foreach($_subs as $entry)
 				{
-					$this->org_units[]= $entry['id'];
+					$this->org_units[] = $entry['id'];
 					if(isset($entry['children']) && $entry['children'])
 					{
 						$this->_get_children($entry['children']);
@@ -496,17 +499,17 @@
 			$this->so			= CreateObject('controller.socheck_list');
 
 			// Validates year. If year is not set, current year is chosen
-			$year = execMethod('controller.uicalendar.validate_year',$year);
+			$year = execMethod('controller.uicalendar.validate_year', $year);
 
 			// Gets timestamp of first day in year
-			$from_date_ts = execMethod('controller.uicalendar.get_start_date_year_ts',$year);
+			$from_date_ts = execMethod('controller.uicalendar.get_start_date_year_ts', $year);
 
 			// Gets timestamp of first day in next year
-			$to_date_ts = execMethod('controller.uicalendar.get_end_date_year_ts',$year);
+			$to_date_ts = execMethod('controller.uicalendar.get_end_date_year_ts', $year);
 
 			$location_filter = $this->get_location_filter();
 
-			foreach ($location_filter as $_location)
+			foreach($location_filter as $_location)
 			{
 				$location_type_name[$_location['id']] = $_location['name'];
 			}
@@ -521,23 +524,23 @@
 			{
 				$user_id = $user_id * -1;
 				$all_items = false;
-				$user_only = true;
-//				$keep_only_assigned_to = $user_id;
-//				$assigned_components = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
-//				foreach($assigned_components as $_location_id => $component_list)
-//				{
-//					$_components = execMethod('property.soentity.read',array(
-//						'filter_entity_group'		=> $entity_group_id,
-//						'location_id'				=> $_location_id,
-//						'district_id'				=> $district_id,
-//						'allrows'					=> true,
-//						'filter_item'				=> $component_list
-//						)
-//					);
-//					$components = array_merge($components, $_components);
-//				}
+
+				$keep_only_assigned_to	 = $user_id;
+				$assigned_components	 = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to			 = $user_id);
+				foreach($assigned_components as $_location_id => $component_list)
+				{
+					$_components = execMethod('property.soentity.read', array(
+						'filter_entity_group'	 => $entity_group_id,
+						'location_id'			 => $_location_id,
+						'district_id'			 => $district_id,
+						'allrows'				 => true,
+						'filter_item'			 => $component_list
+					)
+					);
+					$components	 = array_merge($components, $_components);
 			}
-			if(!$location_id)
+			}
+			else if(!$location_id)
 			{
 				//nothing
 			}
@@ -562,7 +565,7 @@
 					$_location_id = (int)$_location_filter['id'];
 					$exclude_locations[] = $_location_id;
 
-					$_components = execMethod('property.soentity.read',array(
+					$_components = execMethod('property.soentity.read', array(
 						'filter_entity_group'		=> $entity_group_id,
 						'location_id'				=> $_location_id,
 						'district_id'				=> $district_id,
@@ -578,7 +581,7 @@
 				
 				if($lookup_stray_items)
 				{
-					$_components = execMethod('property.soentity.read_entity_group',array(
+					$_components = execMethod('property.soentity.read_entity_group', array(
 						'entity_group_id'			=> $entity_group_id,
 						'exclude_locations'			=> $exclude_locations,
 						'location_id'				=> $_location_id,
@@ -603,9 +606,9 @@
 				$all_components["{$location_id}_{$component_id}"] = $_component;
 
 				$short_description = $_component['short_description'];
-				$short_description .= ' [' . $_component['location_name']. ']';
+				$short_description .= ' [' . $_component['location_name'] . ']';
 
-				if ($all_items && !$_component['has_control'])
+				if($all_items && !$_component['has_control'])
 				{
 					continue;
 				}
@@ -651,9 +654,9 @@
 
 						$year_calendar_agg					 = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 						$calendar_array						 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-						$components_with_calendar_array["{$location_id}_{$component_id}"][]	 = array("component" => $component->toArray(),
+						$components_with_calendar_array["{$location_id}_{$component_id}"][]	 = array(
+							"component"		 => $component->toArray(),
 							"calendar_array" => $calendar_array);
-						
 					}
 					// Process values for controls with repeat type month or year
 					else if($repeat_type > controller_control::REPEAT_TYPE_WEEK)
@@ -691,13 +694,11 @@
 
 						if($user_only && $user_id)
 						{
-							$keep_only_assigned_to = $user_id;
-
 							$found_assigned_to = false;
 
 							if($calendar_array)
 							{
-								foreach ($calendar_array as $_month => $_month_info)
+								foreach($calendar_array as $_month => $_month_info)
 								{
 									if(isset($_month_info['info']['assigned_to']) && $_month_info['info']['assigned_to'] == $user_id)
 									{
@@ -713,9 +714,9 @@
 							}
 						}
 
-						$components_with_calendar_array["{$location_id}_{$component_id}"][] = array("component" => $component->toArray(),
+						$components_with_calendar_array["{$location_id}_{$component_id}"][] = array(
+							"component"		 => $component->toArray(),
 							"calendar_array" => $calendar_array);
-
 					}
 				}
 			}
@@ -728,10 +729,10 @@
 //			_debug_array(array_keys($components_with_calendar_array));
 			$repeat_type_array = array
 				(
-					"0"=> lang('day'),
-					"1"=> lang('week'),
-					"2"=> lang('month'),
-					"3"=> lang('year')
+				"0"	 => lang('day'),
+				"1"	 => lang('week'),
+				"2"	 => lang('month'),
+				"3"	 => lang('year')
 				);
 
 			$values = array();
@@ -750,7 +751,7 @@
 					'active_tab'	=> 'controller'
 				);
 			
-				$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				$data['component_url']	 = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $component_link_data) . "\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
 				$data['component_id'] = $component_id;
 				$data['location_id'] = $location_id;
 
@@ -773,10 +774,10 @@
 					switch($repeat_type)
 					{
 						case controller_control::REPEAT_TYPE_DAY:
-							$interval_length = ceil($repeat_interval/30);
+							$interval_length = ceil($repeat_interval / 30);
 							break;
 						case controller_control::REPEAT_TYPE_WEEK:
-							$interval_length = ceil($repeat_interval/4);
+							$interval_length = ceil($repeat_interval / 4);
 							break;
 						case controller_control::REPEAT_TYPE_MONTH:
 							$interval_length = $repeat_interval;
@@ -811,9 +812,9 @@
 					}
 				}
 
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
-					for ( $i = $max_interval_length; $i > -1; $i-- )
+					for($i = $max_interval_length; $i > -1; $i--)
 					{
 						if(isset($_data[$_month][$i]))
 						{
@@ -830,7 +831,7 @@
 				
 				$values[] = $data;
 			}
-			unset( $entry);
+			unset($entry);
 			unset($component_id);
 			unset($component);
 
@@ -864,18 +865,17 @@
 					$short_description = $component['short_description'];
 					$short_description .= "[ {$component['location_name']} ]";
 
-					$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_url']	 = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $component_link_data) . "\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['component_id'] = $component_id;
 					$data['location_id'] = $location_id;
 					$data['missing_control'] = true;
 					$values[] = $data;
-
 				}
 			}
 //_debug_array($values);
 			$data_set = array();
 			$total_time = array();
-			foreach ($values as $entry)
+			foreach($values as $entry)
 			{
 				$row		= array();
 				$row_sum	= array();
@@ -890,23 +890,23 @@
 					{
 						$row['choose'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
 					}
-					else if ($choose_master)
+					else if($choose_master)
 					{
 						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}\" >";
 					}
 					$row['year'] = $year;
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
 				}
-				else if ($choose_master)
+				else if($choose_master)
 				{
 					$row['choose'] = "<input id=\"selected_components\" class=\"mychecks\" type=\"checkbox\" name=\"selected_components[]\" value = \"{$entry['location_id']}_{$entry['component_id']}\">";
 				}
 
 				$found_at_least_one = false;
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
-					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to);
-					if($row[$_month] &&( !$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to);
+					if($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 					{
 						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
 						$row_sum_actual[$_month] =  + $entry[$_month]['info']['billable_hours'];
@@ -927,10 +927,10 @@
 			$fields	= $this->get_fields($filter_component_str);
 			$class = '';
 			$tbody = '';
-			foreach($data_set as $row_data )
+			foreach($data_set as $row_data)
 			{
 				$tbody .= "<tr {$class}>";
-				foreach($fields as $field )
+				foreach($fields as $field)
 				{
 					$tbody .= '<td>';
 					$tbody .= $row_data[$field['key']];
@@ -938,7 +938,6 @@
 				}
 				$tbody .= '</tr>';
 				$class = $class ? '' : 'class="alt"';
-
 			}
 
 			$result = array
@@ -953,16 +952,16 @@
 
 			if(!$total_time)
 			{
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
 					$result['time_sum'][$_month] = 0;
 				}
 			}
 			else
 			{
-				foreach ($total_time as $_row)
+				foreach($total_time as $_row)
 				{
-					for ( $_month=1; $_month < 13; $_month++ )
+					for($_month = 1; $_month < 13; $_month++)
 					{
 						$result['time_sum'][$_month] += $_row[$_month];
 						$sum_year += $_row[$_month];
@@ -974,16 +973,16 @@
 
 			if(!$total_time_actual)
 			{
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
 					$result['time_sum_actual'][$_month] = 0;
 				}
 			}
 			else
 			{
-				foreach ($total_time_actual as $_row)
+				foreach($total_time_actual as $_row)
 				{
-					for ( $_month=1; $_month < 13; $_month++ )
+					for($_month = 1; $_month < 13; $_month++)
 					{
 						$result['time_sum_actual'][$_month] += $_row[$_month];
 						$sum_year_actual += $_row[$_month];
@@ -993,7 +992,7 @@
 			$result['time_sum_actual'][0] = $sum_year_actual;
 			$result['total_records'] = $total_records;
 			$result['location_filter'] = $location_filter;
-			if ($choose_master)
+			if($choose_master)
 			{
 				$lang_save = lang('add');
 				$lang_select = lang('select');
@@ -1119,7 +1118,7 @@
 					'assigned_to'	=> $param['info']['assigned_to']
 				);
 			}
-			$link = "<a href=\"".$GLOBALS['phpgw']->link('/index.php',$control_link_data)."\" target=\"_blank\">{$img}</a>";
+			$link = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"_blank\">{$img}</a>";
 
 			$repeat_type = $param['repeat_type'];
 		//	$responsible = '---';
@@ -1183,7 +1182,7 @@
 			foreach($data as $entry)
 			{
 
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
 					if($user_id && $user_id != $entry[$_month]['info']['assigned_to'])
 					{
@@ -1196,7 +1195,6 @@
 						$grand_total_count +=1;
 						$grand_total_billable_hours += $entry[$_month]['info']['billable_hours'];
 					}
-
 				}
 			}
 
@@ -1219,7 +1217,7 @@ HTML;
 
 			foreach($fields as $field)
 			{
-				if((int) $field['key'])
+				if((int)$field['key'])
 				{
 					$html .= <<<HTML
 
@@ -1251,7 +1249,7 @@ HTML;
 							Antall:</br>Tidsbruk:
 						</td>
 HTML;
-				for ( $_month=1; $_month < 13; $_month++ )
+				for($_month = 1; $_month < 13; $_month++)
 				{
 					$value = '';
 					if(isset($values[$_month]))
@@ -1267,7 +1265,6 @@ HTML;
 					</td>
 HTML;
 				}
-			
 			}
 					$html .= <<<HTML
 
@@ -1288,7 +1285,7 @@ HTML;
 HTML;
  			foreach($fields as $field)
 			{
-				if((int) $field['key'])
+				if((int)$field['key'])
 				{
 					$html .= <<<HTML
 
@@ -1337,5 +1334,4 @@ HTML;
 
 			return $to_month;
 		}
-
 	}

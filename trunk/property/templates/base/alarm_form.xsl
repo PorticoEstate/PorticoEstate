@@ -1,20 +1,21 @@
-  <!-- $Id$ -->
-	<xsl:template name="alarm_form">
-		<xsl:apply-templates select="alarm_data"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="alarm_data">
+<!-- $Id$ -->
+<xsl:template name="alarm_form">
+		<xsl:apply-templates select="alarm_data"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template name="alarm_data">
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:apply-templates select="header"/>
 			<xsl:apply-templates select="values"/>
 			<xsl:apply-templates select="alter_alarm"/>
 			<xsl:call-template name="add_alarm"/>
 		</table>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="header">
+<!-- New template-->
+<xsl:template match="header">
 		<tr class="th">
 			<td class="th_text" width="20%" align="left">
 				<xsl:value-of select="lang_time"/>
@@ -32,10 +33,10 @@
 				<xsl:value-of select="lang_select"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values">
+<!-- New template-->
+<xsl:template match="values">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -74,10 +75,10 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="alter_alarm">
+<!-- New template-->
+<xsl:template match="alter_alarm">
 		<tr height="20">
 			<td align="right" valign="bottom" colspan="5">
 				<xsl:variable name="lang_enable">
@@ -112,10 +113,10 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="add_alarm">
+<!-- New template-->
+<xsl:template match="add_alarm">
 		<tr height="20">
 			<td valign="top" align="right" colspan="5">
 				<xsl:value-of select="lang_add_alarm"/>
@@ -166,10 +167,10 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- day_list -->
-	<xsl:template match="day_list">
+<!-- day_list -->
+<xsl:template match="day_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -185,10 +186,10 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- hour_list -->
-	<xsl:template match="hour_list">
+<!-- hour_list -->
+<xsl:template match="hour_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -204,11 +205,11 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
 
-	<!-- minute_list -->
-	<xsl:template match="minute_list">
+<!-- minute_list -->
+<xsl:template match="minute_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -224,7 +225,7 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
 
-	<!-- user_list is loaded separately -->
+<!-- user_list is loaded separately -->

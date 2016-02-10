@@ -3,6 +3,7 @@
 	
 	class booking_bodocument_resource extends booking_bodocument
 	{
+
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
 			$role_permissions = parent::get_object_role_permissions($forObject, $defaultPermissions);

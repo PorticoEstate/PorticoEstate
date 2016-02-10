@@ -3,6 +3,7 @@
 	
 	abstract class booking_bodocument extends booking_bocommon_authorized
 	{
+
 		protected 
 			$owner_bo;
 			
@@ -22,9 +23,9 @@
 			$parent_roles = null;
 			$owner = null;
 			
-			if (is_array($for_object))
+			if(is_array($for_object))
 			{
-				if (!isset($for_object['owner_id']))
+				if(!isset($for_object['owner_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless owner_id is provided');
 				}
@@ -72,8 +73,7 @@
 							'create' => true
 						),
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		
@@ -103,8 +103,7 @@
 							'delete' => true,
 						)
 					),
-				),
-				$defaultPermissions
+			), $defaultPermissions
 			);
 		}
 		

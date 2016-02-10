@@ -25,13 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	include_class('controller', 'model', 'inc/model/');
 	
 	class controller_check_item_case extends controller_model
 	{
+
 		public static $so;
 
 		const STATUS_OPEN = 0;
@@ -54,7 +54,6 @@
 		protected $component_id;
 		protected $component_descr;
     
-		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -71,79 +70,115 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 
 		public function set_check_item_id($check_item_id)
 		{
 			$this->check_item_id = $check_item_id;
 		}
 		
-		public function get_check_item_id() { return $this->check_item_id; }
+		public function get_check_item_id()
+		{
+			return $this->check_item_id;
+		}
 				
 		public function set_status($status)
 		{
 			$this->status = (int)$status;
 		}
 		
-		public function get_status() { return (int)$this->status; }
+		public function get_status()
+		{
+			return (int)$this->status;
+		}
 		
-		public function get_location_id() { return (int)$this->location_id; }
+		public function get_location_id()
+		{
+			return (int)$this->location_id;
+		}
 		
 		public function set_location_id($location_id)
 		{
 			$this->location_id = $location_id;
 		}
 		
-		public function get_location_item_id() { return (int)$this->location_item_id; }
+		public function get_location_item_id()
+		{
+			return (int)$this->location_item_id;
+		}
 		
 		public function set_location_item_id($location_item_id)
 		{
 			$this->location_item_id = $location_item_id;
 		}
 
-		public function get_descr() { return $this->descr; }
+		public function get_descr()
+		{
+			return $this->descr;
+		}
 		
 		public function set_descr($descr)
 		{
 			$this->descr = $descr;
 		}
 		
-		public function get_user_id() { return (int)$this->user_id; }
+		public function get_user_id()
+		{
+			return (int)$this->user_id;
+		}
 		
 		public function set_user_id($user_id)
 		{
 			$this->user_id = $user_id;
 		}
 		
-		public function get_entry_date() { return (int)$this->entry_date; }
+		public function get_entry_date()
+		{
+			return (int)$this->entry_date;
+		}
 		
 		public function set_entry_date($entry_date)
 		{
 			$this->entry_date = $entry_date;
 		}
 		
-		public function get_modified_date() { return (int)$this->modified_date; }
+		public function get_modified_date()
+		{
+			return (int)$this->modified_date;
+		}
 		
 		public function set_modified_date($modified_date)
 		{
 			$this->modified_date = $modified_date;
 		}
 		
-		public function get_modified_by() { return (int)$this->modified_by; }
+		public function get_modified_by()
+		{
+			return (int)$this->modified_by;
+		}
 		
 		public function set_modified_by($modified_by)
 		{
 			$this->modified_by = $modified_by;
 		}
 		
-		public function get_measurement() { return $this->measurement; }
+		public function get_measurement()
+		{
+			return $this->measurement;
+		}
 		
 		public function set_measurement($measurement)
 		{
 			$this->measurement = $measurement;
 		}
     
-    	public function get_location_code() { return $this->location_code; }
+		public function get_location_code()
+		{
+			return $this->location_code;
+		}
 		
 		public function set_location_code($location_code)
 		{
@@ -170,7 +205,6 @@
 			$this->component_id = $component_id;
 		}
 
-
     	public function get_component_descr()
     	{
     		return $this->component_descr;
@@ -186,28 +220,28 @@
 			$status = true;
 	
 			// Validate DESCRIPTION
-			if( empty( $this->descr ) )
+			if(empty($this->descr))
 			{
 				$status = false;
 				$this->error_msg_array['descr'] = "error_msg_1";
 			}
 		  
 		  // Validate STATUS		  		  
-			if( empty( $this->status ) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)) )
+			if(empty($this->status) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)))
 			{
 		  		$status = false;
 		  		$this->error_msg_array['status'] = "error_msg_1";
 			}
 			
 		  // Validate LOCATION CODE
-			if( empty($this->location_code) )
+			if(empty($this->location_code))
 			{
 				$status = false;
 				$this->error_msg_array['location_code'] = "error_msg_1";
 			}
 		 		  
 		  // Validate CHECK ITEM ID
-			if( empty($this->check_item_id) )
+			if(empty($this->check_item_id))
 			{
 				$status = false;
 				$this->error_msg_array['check_item_id'] = "error_msg_4";

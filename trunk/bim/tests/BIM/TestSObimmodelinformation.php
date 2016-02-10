@@ -1,8 +1,5 @@
 <?php
-
-
-
-/*
+	/*
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 2 of the License, or
@@ -17,17 +14,11 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+	class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
+	{
 
-
-
-
-
-
-class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
-{
 	private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_item';
-	
 	private $modelId;
 	private $modelInformation;
 	private $db;
@@ -42,7 +33,6 @@ class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
 	 */
 	protected $fieldID;
 
-	
 	/**
 	 * Setup the environment for the tests
 	 *
@@ -54,6 +44,7 @@ class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
 		$this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
 	}
+
 	/**
 	 * Clean up the environment after running a test
 	 *
@@ -62,26 +53,28 @@ class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		
-		 
 	}
 	
-	private function loadXmlVariables() {
+		private function loadXmlVariables()
+		{
 		$xml = simplexml_load_file('wholeModelOutputExample.xml');
 		$modelInformationXml = $xml->modelInformation;
 		$this->modelInformation = new BimModelInformation();
 		$this->modelInformation->loadVariablesFromXml($modelInformationXml);
 	}
 	
-	
-	public function testUpdateModelInfo() {
+		public function testUpdateModelInfo()
+		{
 		$this->modelId = 3;
 		
 		$sobimInfo = new sobimmodelinformation_impl($this->db, $this->modelId, $this->modelInformation);
 		$sobimInfo->updateModelInformation();
 		$var = 0;
-		echo "Testing empty".empty($var);
+			echo "Testing empty" . empty($var);
 	}
-	public function testGetModelInfo() {
+
+		public function testGetModelInfo()
+		{
 		$this->modelId = 3;
 		
 		$sobimInfo = new sobimmodelinformation_impl($this->db, $this->modelId);
@@ -96,6 +89,5 @@ class TestSObimmodelinformation extends PHPUnit_Framework_TestCase
 		$this->assertEquals("IFC text editor", $modelInfo->getPreProcessor());
 		$this->assertEquals(null, $modelInfo->getValDate());
 		$this->assertEquals("IFC2X3", $modelInfo->getNativeSchema());
-		
 	}
-}
+	}

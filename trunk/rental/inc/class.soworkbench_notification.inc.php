@@ -1,6 +1,8 @@
 <?php 
-class rental_soworkbench_notification extends rental_socommon
-{
+
+	class rental_soworkbench_notification extends rental_socommon
+	{
+
 	protected static $so;
 	
 	/**
@@ -10,7 +12,8 @@ class rental_soworkbench_notification extends rental_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('rental.soworkbench_notification');
 		}
 		return self::$so;
@@ -30,10 +33,11 @@ class rental_soworkbench_notification extends rental_socommon
 		
 		// Default is sorting on date ascending
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": 'ORDER BY rnw.date ASC';
+			$order	 = $sort_field ? "ORDER BY $sort_field $dir" : 'ORDER BY rnw.date ASC';
 		
-		if(isset($filters['account_id'])){
-			$account_id  =   $this->marshal($filters['account_id'],'int');
+			if(isset($filters['account_id']))
+			{
+				$account_id = $this->marshal($filters['account_id'], 'int');
 		}
 		
 		if($return_count) // We should only return a count
@@ -51,7 +55,7 @@ class rental_soworkbench_notification extends rental_socommon
 			$columns[] = 'rn.id as originated_from, rn.account_id, rn.message, rn.contract_id, rn.recurrence';
 			// The title of the field of responsibility for this notification (through contract)
 			$columns[] = 'rcr.title';
-			$cols = implode(',',$columns);
+				$cols		 = implode(',', $columns);
 		}
 		
 		$sql = "SELECT {$cols}
@@ -76,33 +80,26 @@ class rental_soworkbench_notification extends rental_socommon
 			$message = lang($this->unmarshal($this->db->f('workbench_message', true), 'text'));
 		}
 		$notification =  new rental_notification(
-			$this->unmarshal($this->db->f('id', true), 'int'), 
-			$this->unmarshal($this->db->f('account_id', true), 'int'),
-			$this->unmarshal($this->db->f('location_id', true), 'int'),
-			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
-			$this->unmarshal($this->db->f('date', true), 'int'),
-			$message,
-			$this->unmarshal($this->db->f('recurrence', true), 'int'),
-			$this->unmarshal($this->db->f('last_notified', true), 'int'),
-			$this->unmarshal($this->db->f('title', true), 'string'),
-			$this->unmarshal($this->db->f('originated_from', true), 'int')
+			$this->unmarshal($this->db->f('id', true), 'int'), $this->unmarshal($this->db->f('account_id', true), 'int'), $this->unmarshal($this->db->f('location_id', true), 'int'), $this->unmarshal($this->db->f('contract_id', true), 'int'), $this->unmarshal($this->db->f('date', true), 'int'), $message, $this->unmarshal($this->db->f('recurrence', true), 'int'), $this->unmarshal($this->db->f('last_notified', true), 'int'), $this->unmarshal($this->db->f('title', true), 'string'), $this->unmarshal($this->db->f('originated_from', true), 'int')
 		);	
-		$notification->set_field_of_responsibility_id($this->db->f('location_id',true),'int');
+			$notification->set_field_of_responsibility_id($this->db->f('location_id', true), 'int');
 		return $notification;
 	}
 	
 	function add(&$notification)
 	{
-		$account_id = $this->marshal($notification->get_account_id(),'int');
-		$date = $this->marshal($notification->get_date(),'int');
-		$notification_id = $this->marshal($notification->get_originated_from(),'int');
+			$account_id			 = $this->marshal($notification->get_account_id(), 'int');
+			$date				 = $this->marshal($notification->get_date(), 'int');
+			$notification_id	 = $this->marshal($notification->get_originated_from(), 'int');
 		$workbench_message = $this->marshal($notification->get_message(), 'string');
 		
 		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,workbench_message,dismissed) VALUES ({$account_id},{$date},{$notification_id},{$workbench_message},'FALSE')"; 
 		$result = $this->db->query($sql);
 		
-		if($result) { return true; }
-		else { return false; }
+			if($result)
+			{ return true;}
+			else
+			{ return false;}
 	}
 	
 	function update($notification)
@@ -110,7 +107,7 @@ class rental_soworkbench_notification extends rental_socommon
 		
 	}
 	
-/**
+		/**
 	 * This method dismisses a workbench notification
 	 * @param $id	the workbench notification identifier
 	 * @param $ts_dismissed	the timestamp of dismissal
@@ -121,8 +118,10 @@ class rental_soworkbench_notification extends rental_socommon
 		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = {$id}";
 		$result = $this->db->query($sql);
 		
-		if($result) { return true; }
-		else { return false; }
+			if($result)
+			{ return true;}
+			else
+			{ return false;}
 	}
 	
 	/**
@@ -135,8 +134,9 @@ class rental_soworkbench_notification extends rental_socommon
 		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = {$id}";
 		$result = $this->db->query($sql);
 		
-		if($result) { return true; }
-		else { return false; }
+			if($result)
+			{ return true;}
+			else
+			{ return false;}
+		}
 	}
-}
-?>

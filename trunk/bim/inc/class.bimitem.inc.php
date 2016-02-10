@@ -1,13 +1,17 @@
 <?php
-phpgw::import_class('bim.bimobject');
-class BimItem extends BimObject{
+	phpgw::import_class('bim.bimobject');
+
+	class BimItem extends BimObject
+	{
+
 	private $databaseId;
 	private $guid;
 	private $type;
 	private $xml;
 	private $modelId;
 	 
-	function __construct($databaseId = null, $guid = null, $type = null, $xml = null, $modelId = null) {
+		function __construct($databaseId = null, $guid = null, $type = null, $xml = null, $modelId = null)
+		{
 		//$this->databaseId = (is_null($databaseId)) ? null : (int)$databaseId;
 		$this->databaseId = (int)$databaseId;
 		$this->guid =  $guid;
@@ -15,32 +19,49 @@ class BimItem extends BimObject{
 		$this->xml = $xml;
 		$this->modelId = $modelId;
 	}
-	function getDatabaseId() {
+
+		function getDatabaseId()
+		{
 		return $this->databaseId;
 	}
-	function setDatabaseId($databaseId) {
+
+		function setDatabaseId($databaseId)
+		{
 		$this->databaseId = $databaseId;
 	}
-	function getGuid() {
+
+		function getGuid()
+		{
 		return $this->guid;
 	}
-	function getType() {
+
+		function getType()
+		{
 		return $this->type;
 	}
-	function setType($type) {
+
+		function setType($type)
+		{
 		$this->type = $type;
 	}
-	function getXml() {
+
+		function getXml()
+		{
 		return $this->xml;
 	}
-	function setXml($xml) {
+
+		function setXml($xml)
+		{
 		$this->xml = $xml;
 	}
-	function getModelId() {
+
+		function getModelId()
+		{
 		return $this->modelId;
 	}
-	function setModelId($id) {
+
+		function setModelId($id)
+		{
 		$this->modelId = $id;
 	}
-	 
-}
+	}

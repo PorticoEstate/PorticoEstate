@@ -1,9 +1,9 @@
 
-$(document).ready(function()
+$(document).ready(function ()
 {
 	show_feiltyper();
 
-	$("#global_category_id").change(function()
+	$("#global_category_id").change(function ()
 	{
 		show_feiltyper();
 	});
@@ -17,13 +17,13 @@ function show_feiltyper()
 
 	var category_id = $("#global_category_id").val();
 
-	switch(category_id)
+	switch (category_id)
 	{
 		case '154': //Brann &amp; sikkerhet
 		case '21': //Feilmelding
 		case '74': // Garanti
 		case '176': // title="Periodisk vedlikehold
-			if(my_groups[15] ) // forvalter
+			if (my_groups[15]) // forvalter
 			{
 				document.getElementById('label_feiltyper').style.display = 'block';
 				document.getElementById('id_feiltyper').style.display = 'block';
@@ -41,13 +41,13 @@ function validate_submit()
 //	var group_id = $("#global_category_id").val();
 	var status_id = $("#status_id").val();
 
-	switch(category_id)
+	switch (category_id)
 	{
 		case '154': //Brann &amp; sikkerhet
 		case '21': //Feilmelding
 		case '74': // Garanti
 		case '176': // title="Periodisk vedlikehold
-			if(my_groups[15] ) // forvalter
+			if (my_groups[15]) // forvalter
 			{
 				if (!feiltype_id && status_id == 'X')
 				{
@@ -62,8 +62,7 @@ function validate_submit()
 	if (error)
 	{
 		alert('Feiltype må velges før meldingen kan avsluttes');
-	}
-	else
+	} else
 	{
 		document.form.submit();
 	}

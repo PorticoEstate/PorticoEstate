@@ -280,6 +280,54 @@
 		abstract public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false);
 
 		/**
+		* Get the limit statement for a query with limited result set
+		*
+		* @param string $sql the query to be executed
+		* @param integer $offset row to start from
+		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
+		* @return string offset and limit
+		*/
+		function get_offset($sql = '', $offset, $num_rows = 0)
+		{
+			$offset		= (int)$offset;
+			$num_rows	= (int)$num_rows;
+
+			if ($num_rows == 0)
+			{
+				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;
+			}
+
+			switch ( $this->Type )
+			{
+				case 'mssql':
+					$sql = str_replace('SELECT ', 'SELECT TOP ', $sql);
+					$sql = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $sql);
+					$sql = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $sql);
+					break;
+				case 'oci8':
+				case 'oracle':
+					//http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
+					//http://dibiphp.com
+					if ($offset > 0)
+					{
+						$sql = 'SELECT * FROM (SELECT t.*, ROWNUM AS "__rownum" FROM (' . $sql . ') t ' . ($num_rows >= 0 ? 'WHERE ROWNUM <= '
+						 . ( $offset + $num_rows) : '') . ') WHERE "__rownum" > '.  $offset;
+					}
+					elseif ($num_rows >= 0)
+					{
+						$sql = "SELECT * FROM ({$sql}) WHERE ROWNUM <= {$num_rows}";
+					}
+
+					break;
+				default:
+					$sql .= " LIMIT {$num_rows}";
+					$sql .=  $offset ? " OFFSET {$offset}" : '';
+			}
+			return $sql;
+		}
+
+		/**
 		* Execute a query with limited result set
 		*
 		* @param string $Query_String the query to be executed

@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="calendar_info">
-		<xsl:apply-templates select="cal_info"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="cal_info">
+<!-- $Id$ -->
+<xsl:template name="calendar_info">
+		<xsl:apply-templates select="cal_info"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="cal_info">
 		<!-- calendar stylesheet -->
 		<link rel="stylesheet" type="text/css" media="all" href="{stylesheet}" title="win2k-cold-1"/>
 		<!-- main calendar program -->
@@ -14,4 +15,4 @@
 		<!-- the following script defines the Calendar.setup helper function, which makes
 	 adding a calendar a matter of 1 or 2 lines of code. -->
 		<script type="text/javascript" src="{calendar_setup_source}"/>
-	</xsl:template>
+</xsl:template>

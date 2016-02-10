@@ -154,3 +154,4 @@
 	$GLOBALS['phpgw']->common->phpgw_header(true);
 	$GLOBALS['phpgw']->template->pparse('out','phpgw_about');
 	$GLOBALS['phpgw']->common->phpgw_footer();
+?>

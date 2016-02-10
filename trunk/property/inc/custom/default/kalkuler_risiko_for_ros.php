@@ -1,14 +1,12 @@
 <?php
-
 //_debug_array($values);
 //_debug_array($values_attribute);
 //_debug_array($action);
-
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
 
 		$db = & $GLOBALS['phpgw']->db;
 
-		if (isSet($values_attribute) AND is_array($values_attribute))
+	if(isSet($values_attribute) AND is_array($values_attribute))
 		{
 
 			foreach($values_attribute as $entry)
@@ -77,6 +75,6 @@
 
 			$value_set	= $db->validate_update($value_set);
 			$db->transaction_begin();
-			$db->query("UPDATE fm_entity_2_6 set $value_set WHERE id=" . (int)$receipt['id'],__LINE__,__FILE__);
+		$db->query("UPDATE fm_entity_2_6 set $value_set WHERE id=" . (int)$receipt['id'], __LINE__, __FILE__);
 			$db->transaction_commit();
 		}

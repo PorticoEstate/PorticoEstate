@@ -8,7 +8,6 @@
 	 * @package rental
 	 * @version $Id: class.hook_helper.inc.php 11076 2013-04-25 07:19:14Z sigurdne $
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -23,7 +22,6 @@
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
-
 
 	/**
 	 * Hook helper
@@ -56,16 +54,16 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach ( $custom_functions as $entry )
+			foreach($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if ( preg_match('/\.\./', $entry['file_name']) )
+				if(preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file)  && !$entry['client_side'])
+				if($entry['active'] && is_file($file) && !$entry['client_side'])
 				{
 					require $file;
 				}

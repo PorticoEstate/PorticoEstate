@@ -8,15 +8,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage manual
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
 	/**
 
 	 * This is the manual entry for agreements
 	 */
-
 	$phpgw_flags = Array(
 		'currentapp'	=> 'manual',
 		'admin_header'	=> True,
@@ -25,25 +22,25 @@
 	include('../../../header.inc.php');
 	$appname = 'property';
 ?>
-<img src="<?php echo $phpgw->common->image($appname,'navbar.gif'); ?>" border=0>
-<font face="<?php echo $phpgw_info['theme']['font']; ?>" size="2"><p/>
+<img src="<?php echo $phpgw->common->image($appname, 'navbar.gif');?>" border=0>
+<font face="<?php echo $phpgw_info['theme']['font'];?>" size="2"><p/>
 <ul>
-<li><b>Vendor agreements:</b>
+	<li><b>Vendor agreements:</b>
 
-<p>There is two types of vendor agreements:</p>
+		<p>There is two types of vendor agreements:</p>
 
-<ol>
+		<ol>
  <li class=MsoNormal>Service agreement - which is actions to perform at
      locations or equipment </li>
  <li class=MsoNormal>Pricebook pr type of work or item to deliver. </li>
-</ol>
+		</ol>
 
-<p>All elements in the agreements is subjet to price indexing (with history) over the agreement period. </p>
+		<p>All elements in the agreements is subjet to price indexing (with history) over the agreement period. </p>
 
-<p>The agreements supervisor is alerted by a user-configurable alarm (email
-triggered by async) when it is time to evaluate the agreement for termination
-or renewal.</p>
+		<p>The agreements supervisor is alerted by a user-configurable alarm (email
+			triggered by async) when it is time to evaluate the agreement for termination
+			or renewal.</p>
 
 </ul>
 </font>
-<?php $phpgw->common->phpgw_footer(); ?>
+<?php $phpgw->common->phpgw_footer();?>

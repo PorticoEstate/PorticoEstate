@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="values">
+
+<!-- $Id$ -->
+<xsl:template name="values">
 		<xsl:for-each select="values">
 			<tr>
 				<xsl:attribute name="class">
@@ -69,4 +70,4 @@
 				</xsl:for-each>
 			</tr>
 		</xsl:for-each>
-	</xsl:template>
+</xsl:template>

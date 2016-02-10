@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="group_filter">
+
+<!-- $Id$ -->
+<xsl:template name="group_filter">
 		<xsl:variable name="select_action">
 			<xsl:value-of select="select_action"/>
 		</xsl:variable>
@@ -24,10 +25,10 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="group_list">
+<!-- New template-->
+<xsl:template match="group_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -43,4 +44,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

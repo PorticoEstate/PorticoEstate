@@ -1,10 +1,11 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
-		<xsl:apply-templates select="list"/>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list">
+<!-- $Id$ -->
+<xsl:template name="app_data">
+		<xsl:apply-templates select="list"/>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="list">
 		<xsl:variable name="migrate_action">
 			<xsl:value-of select="migrate_action"/>
 		</xsl:variable>
@@ -35,10 +36,10 @@
 				<xsl:apply-templates select="table_migrate"/>
 			</table>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header">
+<!-- New template-->
+<xsl:template match="table_header">
 		<xsl:variable name="sort_domain">
 			<xsl:value-of select="sort_domain"/>
 		</xsl:variable>
@@ -61,10 +62,10 @@
 				<xsl:value-of select="lang_select"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values">
+<!-- New template-->
+<xsl:template match="values">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -100,10 +101,10 @@
 				</xsl:when>
 			</xsl:choose>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_migrate">
+<!-- New template-->
+<xsl:template match="table_migrate">
 		<xsl:variable name="lang_migrate">
 			<xsl:value-of select="lang_migrate"/>
 		</xsl:variable>
@@ -118,4 +119,4 @@
 				</input>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>

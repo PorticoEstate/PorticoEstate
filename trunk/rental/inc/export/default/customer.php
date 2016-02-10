@@ -1,16 +1,15 @@
 <?php
-
-$parties = array();
-$contract_ids = array();
-$sql_contracts = "SELECT contract_id from rental_invoice, rental_billing where rental_invoice.billing_id = rental_billing.id and rental_billing.id = {$billing_id}";
-$this->db->query($sql_contracts, __LINE__, __FILE__);
-while($this->db->next_record())
-{
+	$parties		 = array();
+	$contract_ids	 = array();
+	$sql_contracts	 = "SELECT contract_id from rental_invoice, rental_billing where rental_invoice.billing_id = rental_billing.id and rental_billing.id = {$billing_id}";
+	$this->db->query($sql_contracts, __LINE__, __FILE__);
+	while($this->db->next_record())
+	{
 	$contract_ids[] = $this->unmarshal($this->db->f('contract_id'), 'int');
-}
+	}
 
-foreach($contract_ids as $contract_id)
-{
+	foreach($contract_ids as $contract_id)
+	{
 	$sql_parties = "select rental_party.* ";
 	$sql_parties .="from rental_party, rental_contract_party, rental_contract ";
 	$sql_parties .="where rental_contract_party.contract_id = rental_contract.id ";
@@ -47,5 +46,5 @@ foreach($contract_ids as $contract_id)
 			$parties[] = $party;
 		}
 	}
-}
-$customer_export = new rental_agresso_cs15($parties);
+	}
+	$customer_export = new rental_agresso_cs15($parties);

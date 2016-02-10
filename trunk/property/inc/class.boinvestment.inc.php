@@ -24,9 +24,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage eco
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
@@ -35,6 +34,7 @@
 
 	class property_boinvestment
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -52,14 +52,13 @@
 				'check_perms'		=> true
 			);
 
-
-		function __construct($session=false)
+		function __construct($session = false)
 		{
 			$this->so 		= CreateObject('property.soinvestment');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->socommon = CreateObject('property.socommon');
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -74,13 +73,13 @@
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
+			if($start)
 			{
-				$this->start=$start;
+				$this->start = $start;
 			}
 			else
 			{
-				$this->start=0;
+				$this->start = 0;
 			}
 
 			if(isset($query))
@@ -111,12 +110,11 @@
 			{
 				$this->allrows = $allrows;
 			}
-
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','investment');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'investment');
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
 			$this->filter	= $data['filter'];
@@ -129,17 +127,18 @@
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','investment',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'investment', $data);
 			}
 		}
 
-		function read()
+		function read($data = array())
 		{
 
-			$investment = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
+			$investment = $this->so->read($data);
+//			$investment = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//            'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 
 	/*		for ($i=0; $i<count($investment); $i++)
@@ -150,8 +149,7 @@
 			return $investment;
 		}
 
-
-		function select_category($format='',$selected='')
+		function select_category($format = '', $selected = '')
 		{
 			switch($format)
 			{
@@ -163,23 +161,23 @@
 				break;
 			}
 
-			$categories= $this->so->get_type_list();
+			$categories = $this->so->get_type_list();
 
-			return $this->bocommon->select_list($selected,$categories);
+			return $this->bocommon->select_list($selected, $categories);
 		}
 
-		function write_off_period_list($selected='')
+		function write_off_period_list($selected = '')
 		{
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
 
 
-			$categories= $this->so->write_off_period_list();
+			$categories = $this->so->write_off_period_list();
 
-			while (is_array($categories) && list(,$category) = each($categories))
+			while(is_array($categories) && list(, $category) = each($categories))
 			{
 				$sel_category = '';
-				if ($category['period']==$selected)
+				if($category['period'] == $selected)
 				{
 					$sel_category = 'selected';
 				}
@@ -192,9 +190,9 @@
 					);
 			}
 
-			for ($i=0;$i<count($category_list);$i++)
+			for($i = 0; $i < count($category_list); $i++)
 			{
-				if ($category_list[$i]['selected'] != 'selected')
+				if($category_list[$i]['selected'] != 'selected')
 				{
 					unset($category_list[$i]['selected']);
 				}
@@ -203,12 +201,9 @@
 			return $category_list;
 		}
 
-
-
-
 		function save_investment($values)
 		{
-			while (is_array($values['location']) && list(,$value) = each($values['location']))
+			while(is_array($values['location']) && list(, $value) = each($values['location']))
 			{
 				if($value)
 				{
@@ -216,16 +211,16 @@
 				}
 			}
 
-			$values['location_code']=implode("-", $location);
+			$values['location_code'] = implode("-", $location);
 
 			//_debug_array($values);
 
 			$values['date']	= $this->bocommon->date_to_timestamp($values['date']);
-			$values['date']= date($GLOBALS['phpgw']->db->date_format(),$values['date']);
+			$values['date'] = date($GLOBALS['phpgw']->db->date_format(), $values['date']);
 
 			$values['initial_value']	= abs($values['initial_value']);
 
-			if($values['type']=='funding')
+			if($values['type'] == 'funding')
 			{
 				$values['initial_value'] = -$values['initial_value'];
 			}
@@ -239,33 +234,31 @@
 			if($values['extra']['p_num'])
 			{
 				$boadmin_entity		= CreateObject('property.boadmin_entity');
-				$category = $boadmin_entity->read_single_category($values['extra']['p_entity_id'],$values['extra']['p_cat_id']);
+				$category = $boadmin_entity->read_single_category($values['extra']['p_entity_id'], $values['extra']['p_cat_id']);
 				$values['entity_id'] 	= $values['extra']['p_num'];
-				$values['entity_type']	=$category['name'];
-
+				$values['entity_type'] = $category['name'];
 			}
 			else
 			{
 				$values['entity_id'] 	= $values['location_code'];
-				$values['entity_type']	='property';
+				$values['entity_type'] = 'property';
 			}
 
 
-			$receipt=$this->so->save_investment($values);
+			$receipt = $this->so->save_investment($values);
 
 			return $receipt;
 		}
-
 
 		function update_investment($values)
 		{
 
 			$date_array = phpgwapi_datetime::date_array($values['date']);
 
-			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-			$date= date($GLOBALS['phpgw']->db->date_format(),$date);
+			$date = mktime(2, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+			$date = date($GLOBALS['phpgw']->db->date_format(), $date);
 
-			$new_index=str_replace(",",".",$values['new_index']);
+			$new_index = str_replace(",", ".", $values['new_index']);
 
 			$update = array();
 			foreach($values['update'] as $entry)
@@ -273,33 +266,32 @@
 				$local_error = false;
 				$n = $entry;
 
-				if ($values['value'][$n])
+				if($values['value'][$n])
 				{
-					if ((abs($values['value'][$n])- abs(($values['initial_value'][$n]*$new_index)))<0)
+					if((abs($values['value'][$n]) - abs(($values['initial_value'][$n] * $new_index))) < 0)
 					{
-						$new_value=0;
-						$new_index=$values['value'][$n]/$values['initial_value'][$n];
+						$new_value = 0;
+						$new_index = $values['value'][$n] / $values['initial_value'][$n];
 					}
 					else
 					{
-						$new_value=$values['value'][$n]-($values['initial_value'][$n]*$new_index);
+						$new_value = $values['value'][$n] - ($values['initial_value'][$n] * $new_index);
 					}
 
-					$update[]=array(
-						'entity_id'		=>$values['entity_id'][$n],
-						'invest_id'		=>$values['investment_id'][$n],
-						'new_index'		=>$new_index,
-						'new_value'		=>$new_value,
-						'initial_value'	=>$values['initial_value'][$n],
-						'date'			=>$date
+					$update[] = array(
+						'entity_id' => $values['entity_id'][$n],
+						'invest_id' => $values['investment_id'][$n],
+						'new_index' => $new_index,
+						'new_value' => $new_value,
+						'initial_value' => $values['initial_value'][$n],
+						'date' => $date
 					);
 				}
 			}
 			return $this->so->update_investment($update);
 		}
 
-
-		function filter($format='',$selected='')
+		function filter($format = '', $selected = '')
 		{
 			switch($format)
 			{
@@ -311,32 +303,30 @@
 				break;
 			}
 
-			$filters[0]['id']	='investment';
-			$filters[0]['name']	=lang('Investment');
-			$filters[1]['id']	='funding';
-			$filters[1]['name']	=lang('Funding');
+			$filters[0]['id'] = 'investment';
+			$filters[0]['name'] = lang('Investment');
+			$filters[1]['id'] = 'funding';
+			$filters[1]['name'] = lang('Funding');
 
-			return $this->bocommon->select_list($selected,$filters);
+			return $this->bocommon->select_list($selected, $filters);
 		}
 
-		function read_single($entity_id,$investment_id)
+		function read_single($entity_id, $investment_id)
 		{
-			$history	= $this->so->read_single($entity_id,$investment_id,$this->start,$this->allrows);
+			$history = $this->so->read_single($entity_id, $investment_id, $this->start, $this->allrows);
 
 			$this->total_records = $this->so->total_records;
 
 			return $history;
 		}
 
-
 		function select_part_of_town($part_of_town_id)
 		{
 			return $this->socommon->select_part_of_town($part_of_town_id);
 		}
 
-
-		function delete($entity_id,$investment_id,$index_count)
+		function delete($entity_id, $investment_id, $index_count)
 		{
-			$this->so->delete($entity_id,$investment_id,$index_count);
+			$this->so->delete($entity_id, $investment_id, $index_count);
 		}
 	}

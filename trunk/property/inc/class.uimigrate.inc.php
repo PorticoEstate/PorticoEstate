@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -30,7 +29,6 @@
 	 * Description
 	 * @package property
 	 */
-
 	class property_uimigrate
 	{
 
@@ -102,7 +100,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::migrate_db';
-			$this->bo				= CreateObject('property.bomigrate',true);
+			$this->bo = CreateObject('property.bomigrate', true);
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= $this->bo->get_acl_location();
@@ -151,9 +149,9 @@
 			$lang_select_migrate_text		= '';
 			$text_select					= '';
 
-			foreach ( $domain_info as $domain => $entry )
+			foreach($domain_info as $domain => $entry)
 			{
-				if ( $this->acl_edit)
+				if($this->acl_edit)
 				{
 					$lang_select_migrate_text		= lang('select domain to migrate to') . ': ' . $domain;
 				}
@@ -185,7 +183,7 @@
 				'lang_db_host'		=> lang('db_host'),
 				'lang_db_name'		=> lang('db_name'),
 				'lang_db_type'		=> lang('db_type'),
-				'lang_select'		=> (isset($this->acl_edit)?lang('select'):''),
+				'lang_select' => (isset($this->acl_edit) ? lang('select') : ''),
 			);
 
 			if(!$this->allrows)
@@ -210,35 +208,34 @@
 				'lang_migrate_statustext'	=> lang('perform selected migrations'),
 			);
 
-			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
+			$msgbox_data = (isset($receipt) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '');
 
 			$data = array
 			(
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
 				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $record_limit,
-				'num_records'							=> ($domain_info?count($domain_info):0),
-				'all_records'							=> ($domain_info?count($domain_info):0),
-				'link_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'								=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'num_records' => ($domain_info ? count($domain_info) : 0),
+				'all_records' => ($domain_info ? count($domain_info) : 0),
+				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
 				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
 //				'query'									=> $this->query,
 				'lang_search'							=> lang('search'),
 				'table_header'							=> $table_header,
 				'table_migrate'							=> $table_migrate,
-				'migrate_action'						=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uimigrate.index')),
-				'values'								=> (isset($content)?$content:'')
+				'migrate_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index')),
+				'values' => (isset($content) ? $content : '')
 			);
 
-			$function_msg= lang('list available domains');
+			$function_msg = lang('list available domains');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('migrate') . ":: {$function_msg}";
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list' => $data));
 			$this->save_sessiondata();
 		}
 
@@ -246,7 +243,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access'));
 
-			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
+			$receipt['error'][] = array('msg' => lang('NO ACCESS'));
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
@@ -258,6 +255,6 @@
 			$function_msg	= lang('No access');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('migrate') . ":: {$function_msg}";
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('no_access' => $data));
 		}
 	}

@@ -24,16 +24,14 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Start page
 	 *
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'		=> true,
@@ -45,10 +43,15 @@
 	include_once('../header.inc.php');
 
 	// Make sure we're always logged in
-	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	if(!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-		$login = "bookingguest";
-		$passwd = "bkbooking";
+//		$login				 = "bookingguest";
+		$c		 = createobject('phpgwapi.config', 'bookingfrontend');
+		$c->read();
+		$config	 = $c->config_data;
+
+		$login				 = $c->config_data['anonymous_user'];
+		$passwd				 = $c->config_data['anonymous_passwd'];
 		$_POST['submitit'] = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
@@ -71,7 +74,7 @@ HTML;
 // BEGIN Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
+	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] != 'en')
 		{
 			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
 		}
@@ -86,26 +89,26 @@ HTML;
 		define('PHPGW_IMAGES', ExecMethod('phpgwapi.phpgw.common.get_image_path'));
 		define('PHPGW_APP_IMAGES_DIR', ExecMethod('phpgwapi.phpgw.common.get_image_dir'));
 
-	/************************************************************************\
+	/*	 * **********************************************************************\
 	* Load the menuaction                                                    *
-	\************************************************************************/
+	  \*********************************************************************** */
 		$GLOBALS['phpgw_info']['menuaction'] = phpgw::get_var('menuaction');
 		if(!$GLOBALS['phpgw_info']['menuaction'])
 		{
 			unset($GLOBALS['phpgw_info']['menuaction']);
 		}
 
-		/********* This sets the user variables *********/
+	/*	 * ******* This sets the user variables ******** */
 		$GLOBALS['phpgw_info']['user']['private_dir'] = $GLOBALS['phpgw_info']['server']['files_dir']
-			. '/users/'.$GLOBALS['phpgw_info']['user']['userid'];
+	. '/users/' . $GLOBALS['phpgw_info']['user']['userid'];
 
 		/* This will make sure that a user has the basic default prefs. If not it will add them */
 		$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
-		/********* Optional classes, which can be disabled for performance increases *********/
-		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
+	/*	 * ******* Optional classes, which can be disabled for performance increases ******** */
+	while($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
 		{
-			if (ereg('enable_', $phpgw_class_name[0]))
+		if(ereg('enable_', $phpgw_class_name[0]))
 			{
 				$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
 				$enable_class = str_replace('_class', '', $enable_class);
@@ -115,25 +118,25 @@ HTML;
 		unset($enable_class);
 		reset($GLOBALS['phpgw_info']['flags']);
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* These lines load up the templates class                                 *
-		\*************************************************************************/
-		if ( !isset($GLOBALS['phpgw_info']['flags']['disable_Template_class'])
-			|| !$GLOBALS['phpgw_info']['flags']['disable_Template_class'] )
+	  \************************************************************************ */
+	if(!isset($GLOBALS['phpgw_info']['flags']['disable_Template_class']) || !$GLOBALS['phpgw_info']['flags']['disable_Template_class'])
 		{
-			$GLOBALS['phpgw']->template = createObject('phpgwapi.Template',PHPGW_APP_TPL);
-			$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates',PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->template	 = createObject('phpgwapi.Template', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->xslttpl	 = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
 		}
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Verify that the users session is still active otherwise kick them out   *
-		\*************************************************************************/
-		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
+	  \************************************************************************ */
+	if($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
 		{
-			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
+		if(!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
 				$GLOBALS['phpgw']->common->phpgw_header(true);
-				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
+			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
+				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 
 				$lang_denied = lang('Access not permitted');
 				echo <<<HTML
@@ -147,25 +150,25 @@ HTML;
 	//  Already called from sessions::verify
 	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Load the header unless the developer turns it off                       *
-		\*************************************************************************/
-		if ( !isset($GLOBALS['phpgw_info']['flags']['noheader']) || !$GLOBALS['phpgw_info']['flags']['noheader'] )
+	  \************************************************************************ */
+	if(!isset($GLOBALS['phpgw_info']['flags']['noheader']) || !$GLOBALS['phpgw_info']['flags']['noheader'])
 		{
 			$inc_navbar = !isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'];
 			$GLOBALS['phpgw']->common->phpgw_header($inc_navbar);
 			unset($inc_navbar);
 		}
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Load the app include files if the exists                                *
-		\*************************************************************************/
+	  \************************************************************************ */
 		/* Then the include file */
-		if (! preg_match ("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
+	if(!preg_match("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
 		{
 			include_once(PHPGW_APP_INC . '/functions.inc.php');
 		}
-		if (!@$GLOBALS['phpgw_info']['flags']['noheader'] &&
+	if(!@$GLOBALS['phpgw_info']['flags']['noheader'] &&
 			!@$GLOBALS['phpgw_info']['flags']['noappheader'] &&
 			file_exists(PHPGW_APP_INC . '/header.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
 		{
@@ -176,9 +179,9 @@ HTML;
 // END Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-	if (isset($_GET['menuaction']))
+	if(isset($_GET['menuaction']))
 	{
-		list($app,$class,$method) = explode('.',$_GET['menuaction']);
+		list($app, $class, $method) = explode('.', $_GET['menuaction']);
 	}
 	else
 	{
@@ -190,17 +193,11 @@ HTML;
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
 	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
-	if ( !$invalid_data 
-		&& is_object($GLOBALS[$class])
-		&& isset($GLOBALS[$class]->public_functions) 
-		&& is_array($GLOBALS[$class]->public_functions) 
-		&& isset($GLOBALS[$class]->public_functions[$method])
-		&& $GLOBALS[$class]->public_functions[$method] )
-
+	if(!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
-		if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+		if(phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
 			 // deprecated
-			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+		|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
 		{
 			// comply with RFC 4627
 			header('Content-Type: application/json'); 

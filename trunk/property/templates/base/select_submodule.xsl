@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="select_submodule">
+
+<!-- $Id$ -->
+<xsl:template name="select_submodule">
 		<xsl:variable name="lang_submodule_statustext">
 			<xsl:value-of select="lang_submodule_statustext"/>
 		</xsl:variable>
@@ -12,10 +13,10 @@
 			</option>
 			<xsl:apply-templates select="submodule_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="submodule_list">
+<!-- New template-->
+<xsl:template match="submodule_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -31,4 +32,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

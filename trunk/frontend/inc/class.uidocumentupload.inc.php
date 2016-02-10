@@ -1,7 +1,7 @@
 <?php
-phpgw::import_class('frontend.uifrontend');
+phpgw::import_class('frontend.uicommon');
 
-class frontend_uidocumentupload extends frontend_uifrontend
+class frontend_uidocumentupload extends frontend_uicommon
 {
 	public static $ROOT_FOR_DOCUMENTS = '/frontend';
 	public static $HELP_DOCUMENTS = '/help';
@@ -17,7 +17,7 @@ class frontend_uidocumentupload extends frontend_uifrontend
 
 	public function __construct()
 	{
-		//parent::__construct();
+		parent::__construct();
 		// This module uses XSLT templates
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::frontend::documents";
@@ -42,18 +42,23 @@ class frontend_uidocumentupload extends frontend_uifrontend
 		
 		$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidocumentupload.index'));
 		$data = array (
-			'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msgbox)),
-			'documentupload_data' => 	array(
+			'header'			=>	$this->header_state,
+			'section'			=>  array(
 					'test' => $test2,
 					'filename' => $filename,
 					'storage' => $stored_in,
 					'success' => $success,
 					'file' => $_FILES["help_filename"],
-					'form_action' => $form_action)
+					'form_action' => $form_action),
+					'tab_selected'	=> $this->tab_selected,
+					'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msgbox)),
+
 		);
-		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','documentupload'));
+
+		self::render_template_xsl(array( 'documentupload', 'datatable_inline', 'frontend'),  $data);
 	}
+	
+	public function query() {}
 	
 	public function store_doc_to_vfs($file)
 	{

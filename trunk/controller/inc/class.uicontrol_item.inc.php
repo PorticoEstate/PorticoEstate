@@ -25,15 +25,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
@@ -42,17 +41,16 @@
 
 	include_class('controller', 'control_item', 'inc/model/');
 
-	class controller_uicontrol_item extends phpgwapi_uicommon
+	class controller_uicontrol_item extends phpgwapi_uicommon_jquery
 	{
+
 		private $so;
 		private $so_control_group;
 		private $so_control_item_option;
-
 	    private $read;
 	    private $add;
 	    private $edit;
 	    private $delete;
-
 		public $public_functions = array
 		(
 			'index'									=>	true,
@@ -79,7 +77,7 @@
 			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
 			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
-
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		public function index()
@@ -87,21 +85,24 @@
 			$dir = phpgw::get_var('dir');
 			if($dir)
 			{
-				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json', 'sort_dir' => 'desc');
+				$query_array = array('menuaction'		 => 'controller.uicontrol_item.index', 'phpgw_return_as'	 => 'json',
+					'sort_dir'			 => 'desc');
 			}
 			else
 			{
 				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json');
 			}
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
 				return $this->query();
 			}
 			// Sigurd: Start categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas			 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => $control_area_id,
+				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
+			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array2 = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
@@ -120,40 +121,27 @@
 						'item' => array(
 							array('type' => 'filter',
 								'name' => 'control_groups',
-								'text' => lang('Control_group').':',
+								'text'	 => lang('Control_group') . ':',
 								'list' => $this->so_control_group->get_control_group_select_array(),
 							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
 								'list' => $control_areas_array2,
-							),
-							array('type' => 'text',
-								'text' => lang('searchfield'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('New control item'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
-								'class' => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link($query_array),
+					'new_item'	=> self::link(array('menuaction' => 'controller.uicontrol_item.add')),
+					'allrows'	 => true,
 					'field' => array(
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable'	=> true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key'	=>	'title',
@@ -182,12 +170,30 @@
 					)
 				),
 			);
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'statustext' => lang('view'),
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'controller.uicontrol_item.view'
+				)),
+				'parameters' => json_encode($parameters)
+			);
 
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('datatable');
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-
-			self::render_template_xsl( array( 'datatable_common' ), $data);
+			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
 		/**
@@ -198,7 +204,8 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.edit'));
 		}
 
-		public function delete_item_list(){
+		public function delete_item_list()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 
@@ -207,7 +214,7 @@
 			return status;
 		}
 
-		public function edit( $control_item = null )
+		public function edit($control_item = null)
 		{
 			// NO REDIRECT
 			if($control_item == null)
@@ -230,17 +237,18 @@
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+			$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
 
 			$control_groups_array = $this->so_control_group->get_control_group_array();
 
 			// Hack to fix display of &nbsp; char
-		 	$what_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_what_to_do() );
-		 	$control_item->set_what_to_do( $what_to_do_fixed );
+			$what_to_do_fixed = str_replace("&nbsp;", " ", $control_item->get_what_to_do());
+			$control_item->set_what_to_do($what_to_do_fixed);
 
-	     	$how_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_how_to_do() );
-			$control_item->set_how_to_do( $how_to_do_fixed );
+			$how_to_do_fixed = str_replace("&nbsp;", " ", $control_item->get_how_to_do());
+			$control_item->set_how_to_do($how_to_do_fixed);
 
 			$data = array
 			(
@@ -250,7 +258,7 @@
 				'control_groups'	=> $control_groups_array,
 			);
 
-			$this->use_yui_editor(array('what_to_do','how_to_do'));
+			$this->use_yui_editor(array('what_to_do', 'how_to_do'));
 
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -262,7 +270,7 @@
 		{
 			if(!$this->add && !$this->edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol_item.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
 			}
 
 			$control_item_id = phpgw::get_var('id');
@@ -271,14 +279,14 @@
 			$type = phpgw::get_var('control_item_type');
 			$control_group_id = phpgw::get_var('control_group');
 			$control_area_id = phpgw::get_var('control_area');
-			$what_to_do_txt = phpgw::get_var('what_to_do','html');
+			$what_to_do_txt		 = phpgw::get_var('what_to_do', 'html');
 			$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
-			$how_to_do_txt = phpgw::get_var('how_to_do','html');
+			$how_to_do_txt		 = phpgw::get_var('how_to_do', 'html');
 			$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
 
 			if($control_item_id > 0)
 			{
-				$control_item = $this->so->get_single( $control_item_id );
+				$control_item = $this->so->get_single($control_item_id);
 			}
 			else
 			{
@@ -293,7 +301,7 @@
 			$control_item->set_what_to_do($what_to_do_txt);
 			$control_item->set_how_to_do($how_to_do_txt);
 
-			if( $control_item->validate() )
+			if($control_item->validate())
 			{
 				$transaction_status = true;
 
@@ -308,14 +316,14 @@
 				}
 
 				// Delete item option values
-				$delete_status = $this->so->delete_option_values( $saved_control_item_id );
+				$delete_status = $this->so->delete_option_values($saved_control_item_id);
 
 				if($delete_status == 0)
 				{
 					$transaction_status = false;
 				}
 
-				if( $transaction_status == true)
+				if($transaction_status == true)
 				{
 					$db_control_item->transaction_commit();
 				}
@@ -337,17 +345,18 @@
 				$control_item->set_options_array($option_values_array);
 
 				// Add new control item option values
-				if( ($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+				if(($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
 				{
 					$control_item_options_array = $control_item->get_options_array();
 
 					foreach($control_item_options_array as $control_item_option)
 					{
-						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
+						$control_item_option_id = $this->so_control_item_option->store($control_item_option);
 					}
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $saved_control_item_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view',
+					'id'		 => $saved_control_item_id));
 			}
 			else
 			{
@@ -370,19 +379,19 @@
 			}
 			else
 			{
-				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+				$this->render('permission_denied.php', array('error' => lang('invalid_request')));
 				return;
 			}
 
 			$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
-			$control_item->set_control_area_name( $category[0]['name'] );
+			$control_item->set_control_area_name($category[0]['name']);
 
 			// Hack to fix display of &nbsp; char
-			$what_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_what_to_do() );
-			$control_item->set_what_to_do( $what_to_do_fixed );
+			$what_to_do_fixed = str_replace("&nbsp;", " ", $control_item->get_what_to_do());
+			$control_item->set_what_to_do($what_to_do_fixed);
 
-			$how_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_how_to_do() );
-			$control_item->set_how_to_do( $how_to_do_fixed );
+			$how_to_do_fixed = str_replace("&nbsp;", " ", $control_item->get_how_to_do());
+			$control_item->set_how_to_do($how_to_do_fixed);
 
 			$data = array
 			(
@@ -395,22 +404,27 @@
 
 		public function query()
 		{
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
 			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'	=> phpgw::get_var('query'),
-				'sort'	=> phpgw::get_var('sort'),
-				'filters' => $filters
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
 			);
 
-			if(phpgw::get_var('sort_dir'))
-			{
-				$params['dir'] = phpgw::get_var('sort_dir');
-			}
-			else
-			{
-				$params['dir'] = phpgw::get_var('dir');
-			}
+
+			$search_for = $params['query'];
+
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] > 0 ? $params['results'] : null;
+			$sort_field		 = $params['order'];
+
 
 			$ctrl_area = phpgw::get_var('control_areas');
 			if(isset($ctrl_area) && $ctrl_area > 0)
@@ -424,37 +438,12 @@
 				$filters['control_groups'] = $ctrl_group;
 			}
 
-
-			$search_for = phpgw::get_var('query');
-
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
-
-			// YUI variables for paging and sorting
-			$start_index	= (int)phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		= phpgw::get_var('sort');
 			if($sort_field == null)
 			{
 				$sort_field = 'id';
 			}
 
-			if(phpgw::get_var('sort_dir') == 'desc')
-			{
-				$sort_ascending = false;
-			}
-			else
-			{
-				$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-			}
-			//Create an empty result set
-			$records = array();
+			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 
 			//Retrieve a contract identifier and load corresponding contract
 			$control_item_id = phpgw::get_var('control_item_id');
@@ -465,7 +454,6 @@
 
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
-			//var_dump($result_objects);
 
 			$results = array();
 
@@ -475,12 +463,13 @@
 			}
 
 			$results['total_records'] = $object_count;
-			$results['start'] = $start_index;
-			$results['sort'] = $sort_field;
-			$results['dir'] = $params['dir'];
+			$results['start']			 = $params['start'];
+			$results['sort']			 = $params['order'];
+			$results['dir']				 = $params['sort'];
+			$results['draw']			 = $draw;
 
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item.view");
 
-			return $this->yui_results($results);
+			return $this->jquery_results($results);
 		}
 	}

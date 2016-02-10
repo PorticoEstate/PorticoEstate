@@ -35,7 +35,8 @@
 	{
 		var $public_functions = array
 		(
-			'get_local_menu_ajax' => true
+			'get_local_menu_ajax'	=> true,
+			'update_bookmark_menu'	=> true
 		);
 		
 		/**
@@ -369,9 +370,37 @@ HTML;
 			return $menu;
 		}
 
+		public function get_top_level_menu_ajax()
+		{
+			$navbar = $this->get('navbar');
+			$exclude = array('logout', 'about', 'preferences');
+			$top_level_menu = array();
+			foreach ( $navbar as $app => $app_data )
+			{
+				if ( in_array($app, $exclude) )
+				{
+					continue;
+				}
+
+				$top_level_menu[] = array
+				(
+					'app'	=> $app,
+					'text' => $app_data['text'],
+					'url'	=> str_replace('&amp;','&', $app_data['url']),
+					'children'	=> true
+				);
+
+			}
+			
+			return $top_level_menu;
+		}
 		public function get_local_menu_ajax()
 		{
 			$node		= phpgw::get_var('node');
+			if($node == 'top_level')
+			{
+				return $this->get_top_level_menu_ajax();
+			}
 
 			$selection = explode('|',$node);
 			$app = $selection[0];
@@ -382,33 +411,39 @@ HTML;
 			}
 			$menu = array();
 
+			$parent_node = array();
+			if(isset($selection[1]))
+			{
+				for ($i=1;$i<count($selection);$i++)
+				{
+					$parent_node[] =  $selection[$i];
+				}
+			}
+
 			$_section = 'navigation';
 			if($app == 'admin')
 			{
 				if(!isset($selection[1]))
 				{
-
-					$navbar		= $this->get('navbar');
 					$navigation = $this->get('admin');
 
 					foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $_app => $app_info )
 					{
-						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navbar[$_app]))
-						{
-							if(isset($navigation[$_app]))
+						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navigation[$_app]))
 							{
 								$menu[] = array
 								(
+								'app'		=> 'admin',
 									'key' 		=> $_app,
 									'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
+								'children'	=> count($navigation[$_app]) > 1 ? true : false,
 									'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
-									'url'		=> $GLOBALS['phpgw']->link('/index.php',
-													array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app))
+								'url'		=> str_replace('&amp;','&', $GLOBALS['phpgw']->link('/index.php',
+												array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app)))
 
 								);
 							}
 						}
-					}
 
 					return $menu;				
 				}
@@ -459,12 +494,17 @@ HTML;
 			{
 				$vals['url'] = str_replace('&amp;','&', $vals['url']);
 				$menu[$i] = $vals;
-				$menu[$i]['key'] = $key;
-				$menu[$i]['is_leaf'] = true;
+				$menu[$i]['app'] = $app;
+				$menu[$i]['key'] = implode('|', array_merge($parent_node,array($key)));
 				if(isset($menu[$i]['children']))
 				{
 					$menu[$i]['is_leaf'] = false;
-					unset($menu[$i]['children']);
+					$menu[$i]['children'] = true;
+				}
+				else
+				{
+					$menu[$i]['is_leaf'] = true;
+					$menu[$i]['children'] = false;
 				}
 				$i++;
 			}
@@ -505,4 +545,35 @@ HTML;
 
 			return $menu;
 		}
+
+		public function update_bookmark_menu()
+		{
+			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $user_id);
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]))
+			{
+				unset($bookmarks[$bookmark_candidate]);
+				$status = lang('bookmark deleted');
+			}
+			else
+			{
+				if(! is_array($bookmarks))
+				{
+					$bookmarks = array();
+				}
+
+				$bookmarks[$bookmark_candidate] = true;
+				$status = lang('bookmark added');
+			}
+
+			phpgwapi_cache::user_set('phpgwapi', "bookmark_menu", $bookmarks, $user_id);
+
+			return array
+			(
+				'status' => $status
+			);
+		}
+
 	}

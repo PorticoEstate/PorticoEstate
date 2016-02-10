@@ -3,10 +3,10 @@
 	
 	class booking_sobuilding extends booking_socommon
 	{
+
 		function __construct()
 		{
-			parent::__construct('bb_building', 
-				array(
+			parent::__construct('bb_building', array(
 					'id' => array('type' => 'int'),
 					'name' => array('type' => 'string', 'query' => true, 'required' => true),
 					'homepage' => array('type' => 'string'),
@@ -24,12 +24,28 @@
 					'deactivate_application' => array('type' => 'int'),
 					'deactivate_sendmessage' => array('type' => 'int'),
 					'extra_kalendar' => array('type' => 'int'),
-					'location_code' =>array('type' => 'string', 'required' => false),
+				'location_code'			 => array('type' => 'string', 'required' => false),
+				'activity_id'			=> array('type' => 'int', 'required' => false),
+				'part_of_town_id'		 => array('type'		 => 'string',
+					'required'	 => false,
+					'join'		 => array(
+						'table'	 => 'fm_location1',
+						'fkey'	 => 'location_code',
+						'key'	 => 'location_code',
+						'column' => 'location_code'
+					)),
 					'street' 		=> array('type' => 'string', 'query' => true),
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string', 'query' => true),
 					'city' 			=> array('type' => 'string', 'query' => true),
-					'active' => array('type' => 'int')
+				'active'				 => array('type' => 'int'),
+				'activity_name'		 => array('type'	 => 'string', 'query'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_activity',
+						'fkey'	 => 'activity_id',
+						'key'	 => 'id',
+						'column' => 'name'
+					))
 				)
 			);
 		}
@@ -66,16 +82,80 @@
 		 *
 		 * @return array (in socommon->read format)
 		 */
-		function find_buildings_used_by($organization_id, $params = array()) {				
-			if (!isset($params['filters'])) { $params['filters'] = array(); }
-			if (!isset($params['filters']['where'])) { $params['filters']['where'] = array(); }
-			
-			$params['filters']['where'][] = '%%table%%.id IN ('.
-				'SELECT r.building_id FROM bb_allocation_resource ar '.
-				'JOIN bb_resource r ON ar.resource_id = r.id '. 
-				'JOIN bb_allocation a ON a.id = ar.allocation_id AND (a.from_ - \'now\'::timestamp < \'300 days\') AND a.organization_id = '.$this->_marshal($organization_id, 'int').' '.
+		function find_buildings_used_by($organization_id, $params = array())
+		{
+			if(!isset($params['filters']))
+			{ $params['filters'] = array();}
+			if(!isset($params['filters']['where']))
+			{ $params['filters']['where'] = array();}
+
+			$params['filters']['where'][] = '%%table%%.id IN (' .
+			'SELECT br.building_id FROM bb_allocation_resource ar ' .
+			'JOIN bb_resource r ON ar.resource_id = r.id ' .
+			'JOIN bb_building_resource br ON (br.resource_id  = r.id)  '.
+			'JOIN bb_allocation a ON a.id = ar.allocation_id AND (a.from_ - \'now\'::timestamp < \'300 days\') AND a.organization_id = ' . $this->_marshal($organization_id, 'int') . ' ' .
 			')';
 			
 			return $this->read($params);
+		}
+
+		/**
+		 * Returns buildins with resources within top level activity
+		 * @param type $activity_id
+		 * @return array building ids
+		 */
+		function get_buildings_from_activity($activities = array())
+		{
+			$soactivity		 = createObject('booking.soactivity');
+
+			$activity_ids = array();
+			foreach($activities as $activity_id)
+			{
+				$children		= array_merge(array($activity_id), $soactivity->get_children($activity_id));
+				$activity_ids	= array_merge($activity_ids, $children);
+			}
+			$buildings		 = array();
+			if(!$activity_ids)
+			{
+				return $buildings;
+			}
+			$sql = 'SELECT id FROM bb_building WHERE activity_id IN (' . implode(',', $activity_ids) . ')';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$buildings[] = $this->db->f('id');
+			}
+			return $buildings;
+		}
+
+		/**
+		 * Returns buildingnames associated with the id
+		 * @param array $ids
+		 * @return array buildingnames
+		 */
+		function get_building_names($ids = array())
+		{
+			$buildings		 = array();
+			if(!$ids)
+			{
+				return $buildings;
+			}
+			$sql = 'SELECT bb_building.id, bb_building.name, bb_building.street, bb_building.zip_code, bb_building.district, bb_activity.name as activity'
+			. ' FROM bb_building JOIN bb_activity ON bb_building.activity_id = bb_activity.id'
+			. ' WHERE bb_building.id IN (' . implode(',', $ids) . ')';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$buildings[$this->db->f('id')] = array
+				(
+					'name'		=> $this->db->f('name',true),
+					'street'	=> $this->db->f('street',true),
+					'zip_code'	=> $this->db->f('zip_code'),
+					'district'	=> $this->db->f('district',true),
+					'activity'	=> $this->db->f('activity',true),
+				);
+
+			}
+			return $buildings;
 		}
 	}

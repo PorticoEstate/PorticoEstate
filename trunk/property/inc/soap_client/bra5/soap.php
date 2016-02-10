@@ -26,8 +26,6 @@
 	* @subpackage communication
  	* @version $Id: soap.php 12727 2015-02-10 13:09:35Z sigurdne $
 	*/
-
-
 	/*
 		Example testurl:
 		http://localhost/~hc483/savannah_trunk/property/inc/soap_client/bra5/soap.php?domain=default&location_id=54&section=BraArkiv
@@ -48,7 +46,6 @@
 	/**
 	* Include phpgroupware header
 	*/
-
 	require_once '../../../../header.inc.php';
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
@@ -75,11 +72,11 @@
 		}
 	}
 
-	require_once PHPGW_API_INC.'/functions.inc.php';
+	require_once PHPGW_API_INC . '/functions.inc.php';
 
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
-	$bygningsnr = (int) phpgw::get_var('bygningsnr', 'int');
+	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
 	$fileid = phpgw::get_var('fileid', 'string');
 
 	if(!$fileid && !$bygningsnr)
@@ -87,7 +84,7 @@
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
 	}
 
-	$c	= CreateObject('admin.soconfig',$location_id);
+	$c = CreateObject('admin.soconfig', $location_id);
 
 	$login = $c->config_data[$section]['anonymous_user'];
 	$passwd = $c->config_data[$section]['anonymous_pass'];
@@ -122,9 +119,8 @@
 	/**
 	* @global object $GLOBALS['server']
 	*/
-
-	ini_set('memory_limit','512M');
-	ini_set('display_errors',true);
+	ini_set('memory_limit', '512M');
+	ini_set('display_errors', true);
 	error_reporting(-1);
 	/**
 	 * Load autoload
@@ -143,7 +139,7 @@
 	 $wsdlObject = new Bra5WsdlClass($options);
 
 	$bra5ServiceLogin = new Bra5ServiceLogin();
-	if($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user,$braarkiv_pass)))
+	if($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
 	{
 		$secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
 	}
@@ -160,10 +156,10 @@
 		{
 			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
 			$file = base64_decode($file_result->getFileAsByteArrayResult);
-/*
+			/*
 			$bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
 			$filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
-*/
+			 */
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header("{$fileid}.pdf", 'application/pdf');
 
@@ -178,23 +174,23 @@
 		}
 	}
 	$bra5ServiceSearch = new Bra5ServiceSearch();
-/*
+	/*
 	if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where = "Byggnr = {$bygningsnr}",$_maxhits = 2)))
 	{
-//		_debug_array($bra5ServiceSearch->getResult());
+	  //		_debug_array($bra5ServiceSearch->getResult());
 	}
 	else
 	{
 		print_r($bra5ServiceSearch->getLastError());
 	}
-*/
-  	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where = "Byggnr = {$bygningsnr}",$_maxhits = -1)))
+	 */
+	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where = "Byggnr = {$bygningsnr}", $_maxhits = -1)))
 	{
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
 	}
 
-	$html =<<<HTML
+	$html = <<<HTML
 	<table>
 HTML;
 	$bra5ServiceLogout = new Bra5ServiceLogout();
@@ -223,12 +219,12 @@ HTML;
 
 	$html .='<th>';
 	$html .='Last ned';
-	$html .'</th>';
+	$html . '</th>';
 
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
 
-	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/bra5/soap.php',array(
+	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/bra5/soap.php', array(
 			'domain' => $_GET['domain'],
 			'location_id' => $location_id,
 			'section' => $section
@@ -242,7 +238,7 @@ HTML;
 		}
 		$html .='<th>';
 		$html .=$attribute->Name;
-		$html .'</th>';
+		$html . '</th>';
 	}
 
 	foreach($_result as $document)
@@ -265,7 +261,7 @@ HTML;
 				continue;
 			}
 
-			if($attribute->Name =='Saksdato')
+			if($attribute->Name == 'Saksdato')
 			{
 				$_key = strtotime($attribute->Value->anyType);
 			}
@@ -293,7 +289,6 @@ HTML;
 
 					$_html .= '</td>';
 					$_html .= '</tr>';
-
 				}
 				$_html .= '</table>';
 			}
@@ -313,7 +308,7 @@ HTML;
 //_debug_array($case_array);
 	foreach($case_array as $case)
 	{
-		$html .= implode('',$case);	
+		$html .= implode('', $case);
 	}
 
 	$html .=<<<HTML

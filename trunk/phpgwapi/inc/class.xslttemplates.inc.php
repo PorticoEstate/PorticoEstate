@@ -261,8 +261,9 @@
 	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 		xmlns:phpgw="http://phpgroupware.org/functions"
 		xmlns:func="http://exslt.org/functions"
+		xmlns:php="http://php.net/xsl"
 		extension-element-prefixes="func" 
-		exclude-result-prefixes="phpgw"
+		exclude-result-prefixes="phpgw php"
 		>
 
 XSLT;

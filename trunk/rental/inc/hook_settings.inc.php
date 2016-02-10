@@ -24,15 +24,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package rental
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
-	create_input_box('Area decimal places','area_decimal_places', '0 - 2');
-	create_input_box('currency decimal places','currency_decimal_places', '0 - 2');
-	create_input_box('Count decimal places','count_decimal_places', '0 - 2');
-	create_input_box('Thousands separator','thousands_separator', 'As in "." or ","');
-	create_input_box('Decimal separator','decimal_separator', 'As in "." or ","');
-	create_input_box('responsibility','responsibility', '6 characters');
-	create_input_box('project_id','project_id', '1-6 characters');
-	
+	create_input_box('Area decimal places', 'area_decimal_places', '0 - 2');
+	create_input_box('currency decimal places', 'currency_decimal_places', '0 - 2');
+	create_input_box('Count decimal places', 'count_decimal_places', '0 - 2');
+	create_input_box('Thousands separator', 'thousands_separator', 'As in "." or ","');
+	create_input_box('Decimal separator', 'decimal_separator', 'As in "." or ","');
+	create_input_box('responsibility', 'responsibility', '6 characters');
+	create_input_box('project_id', 'project_id', '1-6 characters');

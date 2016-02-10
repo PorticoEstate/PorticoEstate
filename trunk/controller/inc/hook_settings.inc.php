@@ -25,11 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
-
-
-	create_input_box('Number of planned controls on home page','no_of_planned_controls', '');
-	create_input_box('Number of assigned controls on home page','no_of_assigned_controls', '');
-	
+	create_input_box('Number of planned controls on home page', 'no_of_planned_controls', '');
+	create_input_box('Number of assigned controls on home page', 'no_of_assigned_controls', '');

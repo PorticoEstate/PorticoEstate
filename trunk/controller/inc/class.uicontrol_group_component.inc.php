@@ -25,20 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	/**
-	* Import the jQuery class
-	*/
-	phpgw::import_class('phpgwapi.jquery');
-
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
-	//phpgw::import_class('bim.sobimitem');
-
-	class controller_uicontrol_group_component extends phpgwapi_uicommon
+	class controller_uicontrol_group_component extends phpgwapi_uicommon_jquery
 	{
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -48,11 +41,9 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
-
 		private $so_control_group;
 		private $so_control;  
 		private $so_bim;
-
 		var $public_functions = array(
 										'index' => true,
 										'get_component_types_by_category' => true
@@ -62,7 +53,7 @@
 		{
 			parent::__construct();
 
-			$this->bo								= CreateObject('property.bolocation',true);
+			$this->bo				 = CreateObject('property.bolocation', true);
 			$this->bocommon					= & $this->bo->bocommon;
 			$this->so_control_group	= CreateObject('controller.socontrol_group');
 			$this->so_control				= CreateObject('controller.socontrol');
@@ -83,6 +74,7 @@
 			$this->location_code		= $this->bo->location_code;
 
 			self::set_active_menu('controller::control_group::component_for_control_group');
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 		
 		function index()
@@ -92,10 +84,10 @@
 				//add component to control using component item ID
 				$items_checked = array();
 				$items = phpgw::get_var('values_assign');
-				$item_arr = explode('|',$items);
+				$item_arr		 = explode('|', $items);
 				foreach($item_arr as $item)
 				{
-					$items_checked[] = explode(';',$item);
+					$items_checked[] = explode(';', $item);
 				}
 				//var_dump($items_checked);
 
@@ -106,7 +98,7 @@
 					//add chosen component to control
 					foreach($items_checked as $it)
 					{
-						if( !$this->so_control_group->exist_component_control_group($control_group_id, $it[0]) )
+						if(!$this->so_control_group->exist_component_control_group($control_group_id, $it[0]))
 						{
 						  $this->so_control_group->add_component_to_control_group($control_group_id, $it[0]);
 						}
@@ -117,7 +109,8 @@
 			}
 			else
 			{
-				if(phpgw::get_var('phpgw_return_as') == 'json') {
+				if(phpgw::get_var('phpgw_return_as') == 'json')
+				{
 					return $this->get_component();
 				}
 
@@ -127,8 +120,9 @@
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
 	
-				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
-				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+				$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => '',
+					'globals'	 => true, 'use_acl'	 => $this->_category_acl));
+				array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 				$control_areas_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
@@ -151,13 +145,14 @@
 						'bim_types' 			=> $bim_types
 					),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'controller.uicontrol_group_component.index', 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction'		 => 'controller.uicontrol_group_component.index',
+							'phpgw_return_as'	 => 'json')),
 						'field' => array(
 							array(
 								'key' => 'location_id',
 								'label' => lang('ID'),
 								'sortable'	=> true,
-								'formatter' => 'YAHOO.portico.formatLink'
+								'formatter'	 => 'JqueryPortico.formatLink'
 							),
 							array(
 								'key'	=>	'name',
@@ -168,20 +163,17 @@
 								'key' => 'checked',
 								'label' => 'Velg',
 								'sortable' => false,
-								'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
 								'className' => 'mychecks'
 							)
 						)
 					)
 				);
 
-				phpgwapi_yui::load_widget('paginator');
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
-				self::render_template_xsl(array('control_group_component_tabs', 'common', 'add_component_to_control_group'), $data);
+				self::render_template_xsl(array('control_group_component_tabs', 'add_component_to_control_group'), $data);
 			}
 		}
 
@@ -192,15 +184,19 @@
 			foreach($control_group_list as $control_group)
 			{
 				$control_group['bim_name'] = $this->so_control->getBimItemAttributeValue($control['bim_item_guid'], 'description');
-				$results['results'][]= $control_group;
+				$results['results'][]		 = $control_group;
 			}
 
-			$results['total_records'] = count( $results );
-			$results['start'] = 1;
 			$results['sort'] = 'id';
 			array_walk($results['results'], array($this, 'add_links'), array($type));
 
-			return $this->yui_results($results);
+			$results['total_records']	 = count($results);
+			$results['start']			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results['draw']			 = phpgw::get_var('draw', 'int');
+
+			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_group.view");
+
+			return $this->jquery_results($results);
 		}
 
 		public function get_component()
@@ -224,11 +220,11 @@
 			foreach($entity_list as $entry)
       {
         //pr hovedregister...
-        $cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
+				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id']));
 
     		$component_arr = array();
     
-        foreach ($cat_list as $category)
+				foreach($cat_list as $category)
 				{
     			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$category['entity_id']}.{$category['id']}");
     		
@@ -243,7 +239,7 @@
 			{
 				$component['checked'] = false;
 				$component['test'] = "test";
-				$results['results'][]= $component;
+				$results['results'][]	 = $component;
 				$i++;
 			}
 
@@ -266,7 +262,8 @@
 			$value['labels'] = array();
 
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
+			$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'property.uilocation.view',
+				'location_code'	 => $value['location_code'])));
 			$value['labels'][] = lang('show');
 		}
 
@@ -276,15 +273,23 @@
 			if($ifc != null)
 			{
 				if($ifc = 1)
+				{
 					$ifc = true;
+				}
 				else
+				{
 					$ifc = false;
+			}
 			}
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
-			if(count($bim_types)>0)
-				return json_encode( $bim_types );
+			if(count($bim_types) > 0)
+			{
+				return json_encode($bim_types);
+			}
 			else
+			{
 				return null;
 		}
+	}
 	}

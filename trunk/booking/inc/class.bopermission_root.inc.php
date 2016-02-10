@@ -3,6 +3,7 @@
 	
 	class booking_bopermission_root extends booking_bocommon_global_manager_authorized
 	{
+
 		function __construct()
 		{
 			parent::__construct();

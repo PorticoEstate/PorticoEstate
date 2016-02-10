@@ -1,12 +1,12 @@
 <!-- BEGIN list -->
-<table>
+<table class="pure-table">
 	<tr>
 		{nextmatchs_left}&nbsp;{nextmatchs_right}
 	</tr>
 </table>
 {showing}
 
-<table id="admin_error_log_list">
+<table id="admin_error_log_list" class="pure-table">
 	<thead>
 		<tr>
 			<th>{lang_date}</th>

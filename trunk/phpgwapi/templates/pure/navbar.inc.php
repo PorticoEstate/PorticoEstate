@@ -22,7 +22,7 @@
 		);
 
 		$user_fullname	= $user->__toString();
-		$print_url		= strpos($_SERVER['REQUEST_URI'], '?') ? "{$_SERVER['REQUEST_URI']}&phpgw_return_as=noframes" : "{$_SERVER['REQUEST_URI']}?phpgw_return_as=noframes";
+		$print_url		= strpos($_SERVER['REQUEST_URI'], '?') ? "{$_SERVER['REQUEST_URI']}&amp;phpgw_return_as=noframes" : "{$_SERVER['REQUEST_URI']}?phpgw_return_as=noframes";
 		$print_text		= lang('print');
 		$home_url		= $GLOBALS['phpgw']->link('/home.php');
 		$home_text		= lang('home');
@@ -31,11 +31,25 @@
 		$about_text	= lang('about');
 		$logout_url	= $GLOBALS['phpgw']->link('/logout.php');
 		$logout_text	= lang('logout');
+		$var['user_fullname'] = $user_fullname;
+		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
+		$preferences_text = lang('preferences');
 
 
 		$var['topmenu'] = <<<HTML
-			<a class="pure-menu-heading" href="#">{$user_fullname}</a>
+
+			<ul id="std-menu-items">
+				<li>
+					<a href="#">{$user_fullname}</a>
 			 <ul>
+				<li>
+							<a href="{$preferences_url}">{$preferences_text}</a>
+						</li>
+						<li>
+							<a href="{$logout_url}">{$logout_text}</a>
+						</li>
+					</ul>
+				</li>
 				<li>
 					<a href="{$print_url}"  target="_blank">{$print_text}</a>
 				</li>
@@ -102,13 +116,6 @@ HTML;
 HTML;
 		}
 
-		$var['topmenu'] .= <<<HTML
-		<li>
-			<a href="{$logout_url}">{$logout_text}</a>
-		</li>
-	 </ul>
-HTML;
-
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
@@ -148,74 +155,29 @@ HTML;
 			}
 		}
 
-		if (!$nonavbar && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
-		{
-			$exclude = array('logout', 'about', 'preferences');
-			$i = 1;
-			foreach ( $navbar as $app => $app_data )
+		if (!$nonavbar)
 			{
-				if ( in_array($app, $exclude) )
-				{
-					continue;
-				}
+			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+			$lang_bookmarks = lang('bookmarks');
 
-				$applications[] = array
-				(
-					'value'=> array
-					(
-						'id'	=> $i,
-						'app'	=> $app,
-						'label' => $app_data['text'],
-						'href'	=> str_replace('&amp;','&', $app_data['url']),
-					),
-					'children'	=> array()
-				);
-
-				$mapping[$i] = array
-				(
-					'id'		=> $i,
-					'name'		=> $app,
-					'expanded'	=> false,
-					'highlight'	=> $app == $currentapp ? true : false,
-					'is_leaf'	=> false
-				);
-
-				$i ++;
-			}
-			$applications = json_encode($applications);
-			$mapping = json_encode($mapping);
-			$_menu_selection = str_replace('::', '|', $GLOBALS['phpgw_info']['flags']['menu_selection']);
-
-			$var['treemenu'] = <<<HTML
-				<div id="MenutreeDiv1"></div>
-				<script type="text/javascript">
-		 			var apps = {$applications};
-					var mapping = {$mapping};
-					var proxy_data = ['first_element_is_dummy'];
-					var menu_selection = '{$_menu_selection}';
-				</script>
-HTML;
-		}
-		else if (!$nonavbar)
-		{
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
 			foreach($navbar as $app => $app_data)
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
+					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks) : '';
+					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
 				}
 			}
 			$var['treemenu'] = <<<HTML
+
 			<ul id="menutree">
 HTML;
 			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 			{
-				$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
-				$preferences_text = lang('preferences');
 				$var['treemenu'] .= <<<HTML
+
 				<li>
 					<a href="{$preferences_url}">{$preferences_text}</a>
 				</li>
@@ -224,21 +186,43 @@ HTML;
 			$var['treemenu'] .= <<<HTML
 			{$treemenu}
 			</ul>
-			<script type="text/javascript">
-			$(document).ready(function(){
-				   $('#menutree').slicknav({
-					allowParentLinks: true,
-					easingOpen: "swing",
-					label: "",
-					prependTo:'#MenutreeDiv1'
-				});
-				var height = $(window).height();
-				$('.slicknav_menu').css({'max-height': height, 'overflow-y':'scroll'});
-			});
+HTML;
 
-			</script>
+		$var['topmenu'] .= <<<HTML
+
+				<li >
+					<a href="#">{$lang_bookmarks}</a>
+					<ul>
+HTML;
+
+				$collected_bm = set_get_bookmarks();
+				foreach($collected_bm as $entry)
+				{
+					$seleced_bm = '';
+					if( isset($entry['selected']) && $entry['selected'])
+					{
+						$seleced_bm = 'class="pure-menu-selected"' ;
+						$entry['text'] = "<b>[ {$entry['text']} ]</b>";
+					}
+
+					$var['topmenu'] .= <<<HTML
+
+					<li {$seleced_bm}>
+						<a href="{$entry['url']}">{$entry['text']}</a>
+					</li>
 
 HTML;
+					
+				}
+		$var['topmenu'] .= <<<HTML
+
+				</ul>
+			</li>
+		</ul>
+HTML;
+
+
+
 		}
 
 
@@ -290,25 +274,40 @@ HTML;
 		return isset( $navbar_state[ $id ]);
 	}
 
-	function render_item($item, $id='', $children='')
+	function render_item($item, $id='', $children='', $bookmarks = array())
 	{
+		static $checkbox_id = 1;
 		$current_class = '';
-/*
+
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
-			$current_class = 'pure-menu-selected';
+			$current_class = 'Selected';
+			$item['selected'] = true;
 		}
-*/
-		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}")) // need it for MySQL and Oracle
+
+		$bookmark = '';
+		if(preg_match("/(^navbar::)/i", $id)) // bookmarks
 		{
-			$current_class = 'pure-menu-selected';
+			$_bookmark_checked = '';
+			if(is_array($bookmarks) && isset($bookmarks[$id]))
+			{
+				$_bookmark_checked = "checked = 'checked'";
+				set_get_bookmarks($item);
+			}
+
+			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
+			$checkbox_id ++;
+		}
+
+		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"))
+		{
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
 
-		$link_class =" class=\"{$current_class}\"";
+		$link_class = $current_class ? "class=\"{$current_class}\"" : '';
 
 		$out = <<<HTML
-				<li>
+				<li {$link_class}>
 HTML;
 		$target = '';
 		if(isset($item['target']))
@@ -322,20 +321,20 @@ HTML;
 
 		return <<<HTML
 $out
-					<a href="{$item['url']}"{$link_class} id="{$id}" {$target}>{$item['text']}</a>
+					<a href="{$item['url']}" id="{$id}" {$target}>{$bookmark} {$item['text']}</a>
 {$children}
 				</li>
 
 HTML;
 	}
 
-	function render_submenu($parent, $menu)
+	function render_submenu($parent, $menu, $bookmarks = array())
 	{
 		$out = '';
 		foreach ( $menu as $key => $item )
 		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : '';
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks) : '';
+			$out .= render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
 			//$debug .= "{$parent}::{$key}<br>";
 		}
 
@@ -375,7 +374,8 @@ HTML;
 		(
 	//		'user_fullname'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString(),
 			'powered_by'	=> $powered_by,
-			'lang_login'	=> lang('login')
+			'lang_login'	=> lang('login'),
+			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);
@@ -417,4 +417,20 @@ HTML;
 			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
 		}
 		uasort($navbar, 'sort_navbar');
+	}
+
+	/**
+	 * Cheat function to collect bookmarks
+	 * @staticvar array $bookmarks
+	 * @param array $item
+	 * @return array bookmarks
+	 */
+	function set_get_bookmarks($item = array())
+	{
+		static $bookmarks = array();
+		if($item)
+		{
+			$bookmarks[] = $item;
+		}
+		return $bookmarks;
 	}

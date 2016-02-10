@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="select_permission">
+
+<!-- $Id$ -->
+<xsl:template name="select_permission">
 		<xsl:variable name="select_action">
 			<xsl:value-of select="select_action"/>
 		</xsl:variable>
@@ -15,10 +16,10 @@
 			</option>
 			<xsl:apply-templates select="permission_list"/>
 		</select>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="permission_list">
+<!-- New template-->
+<xsl:template match="permission_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -34,4 +35,4 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>

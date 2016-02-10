@@ -25,14 +25,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default forward_mail_as_sms user=<username> cellphone=<phonenumber>
 	 */
-
 	$path_to_phpgroupware = dirname(__FILE__) . '/../../..';	// need to be adapted if this script is moved somewhere else
 	$_SERVER['DOCUMENT_ROOT'] = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/usr/local/apache2/htdocs';
 
@@ -50,7 +48,7 @@
 		'currentapp' => 'login',
 		'noapi'      => true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
-	include($path_to_phpgroupware.'/header.inc.php');
+	include($path_to_phpgroupware . '/header.inc.php');
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
 //	$db_type = $GLOBALS['phpgw_domain'][$_GET['domain']]['db_type'];
@@ -69,12 +67,12 @@
 		$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
 	}
 
-	include(PHPGW_API_INC.'/functions.inc.php');
+	include(PHPGW_API_INC . '/functions.inc.php');
 
-	$data = array('function' => $function,'enabled'=>1);
-	while ($argc > 3)
+	$data = array('function' => $function, 'enabled' => 1);
+	while($argc > 3)
 	{
-		list($key,$value) = explode('=',$argv[3]);
+		list($key, $value) = explode('=', $argv[3]);
 		$data[$key] = $value;
 		array_shift($argv);
 		--$argc;
@@ -92,7 +90,7 @@
 	$GLOBALS['phpgw_info']['user']['account_id'] = -1;
 	$GLOBALS['phpgw_info']['user']['account_lid'] = 'cron_job';
 
-	$num = ExecMethod('property.custom_functions.index',$data);
+	$num = ExecMethod('property.custom_functions.index', $data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";
 
 	if($destroy_session)

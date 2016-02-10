@@ -1,5 +1,6 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -14,10 +15,10 @@
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list">
+<!-- New template-->
+<xsl:template match="list">
 		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
@@ -57,10 +58,10 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="doc_type_filter">
+<!-- New template-->
+<xsl:template name="doc_type_filter">
 		<xsl:variable name="select_name">
 			<xsl:value-of select="select_name"/>
 		</xsl:variable>
@@ -84,10 +85,10 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="doc_type">
+<!-- New template-->
+<xsl:template match="doc_type">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -103,10 +104,10 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="cat_filter2">
+<!-- New template-->
+<xsl:template name="cat_filter2">
 		<xsl:variable name="select_name">
 			<xsl:value-of select="select_name"/>
 		</xsl:variable>
@@ -130,10 +131,10 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="cat_list">
+<!-- New template-->
+<xsl:template match="cat_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -149,10 +150,10 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list_document">
+<!-- New template-->
+<xsl:template match="list_document">
 		<xsl:apply-templates select="menu"/>
 		<div align="left">
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
@@ -208,10 +209,10 @@
 				</tr>
 			</table>
 		</div>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header_document">
+<!-- New template-->
+<xsl:template match="table_header_document">
 		<xsl:variable name="sort_document_name">
 			<xsl:value-of select="sort_document_name"/>
 		</xsl:variable>
@@ -240,10 +241,10 @@
 				<xsl:value-of select="lang_delete"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values_document">
+<!-- New template-->
+<xsl:template match="values_document">
 		<xsl:variable name="lang_view_file_statustext">
 			<xsl:value-of select="lang_view_file_statustext"/>
 		</xsl:variable>
@@ -279,7 +280,9 @@
 			<td align="left">
 				<xsl:choose>
 					<xsl:when test="link_to_files!=''">
-						<xsl:variable name="link_to_file"><xsl:value-of select="link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="document_name"/></xsl:variable>
+					<xsl:variable name="link_to_file">
+						<xsl:value-of select="link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="document_name"/>
+					</xsl:variable>
 						<a href="{$link_to_file}" target="_blank" onMouseover="window.status='{lang_view_file_statustext}';return true;" onMouseout="window.status='';return true;">
 							<xsl:value-of select="document_name"/>
 						</a>
@@ -328,10 +331,10 @@
 				</a>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_add">
+<!-- New template-->
+<xsl:template match="table_add">
 		<tr>
 			<td height="50">
 				<xsl:variable name="add_action">
@@ -351,10 +354,10 @@
 				</form>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- add / edit -->
-	<xsl:template match="edit">
+<!-- add / edit -->
+<xsl:template match="edit">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -605,10 +608,10 @@
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="branch_list">
+<!-- New template-->
+<xsl:template match="branch_list">
 		<xsl:variable name="id">
 			<xsl:value-of select="id"/>
 		</xsl:variable>
@@ -624,10 +627,10 @@
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header_history">
+<!-- New template-->
+<xsl:template match="table_header_history">
 		<tr class="th">
 			<td class="th_text" width="20%" align="left">
 				<xsl:value-of select="lang_date"/>
@@ -642,10 +645,10 @@
 				<xsl:value-of select="lang_new_value"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="record_history">
+<!-- New template-->
+<xsl:template match="record_history">
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -673,10 +676,10 @@
 				<xsl:value-of select="value_new_value"/>
 			</td>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- view -->
-	<xsl:template match="view">
+<!-- view -->
+<xsl:template match="view">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<tr>
@@ -837,4 +840,4 @@
 			</table>
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-	</xsl:template>
+</xsl:template>

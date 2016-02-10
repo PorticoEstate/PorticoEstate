@@ -1,14 +1,13 @@
 <?php
+	phpgw::import_class('activitycalendar.socommon');
 
-phpgw::import_class('activitycalendar.socommon');
+	include_class('activitycalendar', 'organization', 'inc/model/');
+	include_class('activitycalendar', 'contact_person', 'inc/model/');
 
-include_class('activitycalendar', 'organization', 'inc/model/');
-include_class('activitycalendar', 'contact_person', 'inc/model/');
+	class activitycalendar_soorganization extends activitycalendar_socommon
+	{
 
-class activitycalendar_soorganization extends activitycalendar_socommon
-{
 	protected static $so;
-
 	var $public_functions = array
 	(
 		'fix_duplicates'  		=> true,
@@ -21,7 +20,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('activitycalendar.soorganization');
 		}
 		return self::$so;
@@ -48,7 +48,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-		if($sort_field != null && !$return_count) {
+			if($sort_field != null && !$return_count)
+			{
 			if($sort_field == 'identifier')
 			{
 				$sort_field = 'org.id';
@@ -63,10 +64,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 		if($search_for)
 		{
-			$query = $this->marshal($search_for,'string');
-			$like_pattern = "'%".$search_for."%'";
+				$query			 = $this->marshal($search_for, 'string');
+				$like_pattern	 = "'%" . $search_for . "%'";
 			$like_clauses = array();
-			switch($search_type){
+				switch($search_type)
+				{
 				case "name":
 					$like_clauses[] = "org.name $this->like $like_pattern";
 					$like_clauses[] = "org.shortname $this->like $like_pattern";
@@ -95,28 +97,33 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		$use_local_org = false;
 
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			if(isset($filters[$this->get_id_field_name()]))
+			{
+				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 			$filter_clauses[] = "org.id = {$id}";
 		}
-		if(isset($filters['changed_orgs'])){
+			if(isset($filters['changed_orgs']))
+			{
 			$use_local_org = true;
 			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			//$filter_clauses[] = "org.id = {$id}";
 			unset($filter_clauses);
-			if(isset($filters[$this->get_id_field_name()])){
-				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+				if(isset($filters[$this->get_id_field_name()]))
+				{
+					$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[] = "org.id = {$id}";
 			}
 		}
-		if(isset($filters['new_orgs'])){
+			if(isset($filters['new_orgs']))
+			{
 			$use_local_org = true;
 			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			//$filter_clauses[] = "org.id = {$id}";
 			unset($filter_clauses);
 			$filter_clauses[] = "org.change_type = 'new' OR org.change_type = 'change' ";
-			if(isset($filters[$this->get_id_field_name()])){
-				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+				if(isset($filters[$this->get_id_field_name()]))
+				{
+					$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[] = "org.id = {$id}";
 			}
 		}
@@ -156,7 +163,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.original_org_id';
 				$columns[] = 'org.orgno AS organization_number';
 
-				$cols = implode(',',$columns);
+					$cols = implode(',', $columns);
 			}
 
 			$tables = "activity_organization org";
@@ -190,7 +197,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.shortname';
 				$columns[] = 'org.show_in_portal';
 
-				$cols = implode(',',$columns);
+					$cols = implode(',', $columns);
 			}
 
 			$tables = "bb_organization org";
@@ -203,11 +210,13 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_organization_name($org_id)
 	{
 		$result = "Ingen";
-    	if(isset($org_id)){
+			if(isset($org_id))
+			{
 	        $org_id = intval($org_id);
-    	    $q1="SELECT name FROM bb_organization WHERE id={$org_id}";
+				$q1		 = "SELECT name FROM bb_organization WHERE id={$org_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$result = $this->db->f('name');
 			}
     	}
@@ -219,18 +228,19 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	{
 		$result = array();
 		//$q1= "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city, cp.* from bb_organization bb, bb_organization_contact cp where cp.organization_id=bb.id and bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
-		$q1= "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city from bb_organization bb where bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
+			$q1		 = "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city from bb_organization bb where bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
 //	    	$q1="SELECT name FROM bb_organization WHERE id={$org_id}";
 		$this->db->query($q1, __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			//if($org->get_name() != $this->db->f('orgname')) //new organization
 			//{
-/*				$org = new activitycalendar_organization();
+				/* 				$org = new activitycalendar_organization();
 				$org->set_id($this->db->f('orgid'));
 				$org->set_name($this->db->f('orgname'));
 				$org->set_address($this->db->f('orgstreet').', '.$this->db->f('zip').' '.$this->db->f('city'));
 				$org->set_organization_number($this->db->f('orgno'));
-*/
+				 */
 				$result[$this->db->f('orgid')] = array(
 					'orgid' => $this->db->f('orgid'),
 					'orgname' => $this->db->f('orgname'),
@@ -299,29 +309,29 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$activities = $so_activity->get_connected_activities($orgmapping);
 				foreach($activities as $activity)
 				{
-					var_dump($activity->get_title().' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+						var_dump($activity->get_title() . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 					$so_activity->update_organization_connection($activity->get_id(), $key);
 				}
-				var_dump("Oppdaterer organisasjon ".$orgmapping.', settes til inaktiv.<br/>');
+					var_dump("Oppdaterer organisasjon " . $orgmapping . ', settes til inaktiv.<br/>');
 				$this->set_organization_inactive($orgmapping);
 				//get affected stuff from booking
 				$alloc = $this->get_affected_allocations($orgmapping);
 				foreach($alloc as $a)
 				{
-					var_dump('Allocation id: '.$a.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+						var_dump('Allocation id: ' . $a . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 					$this->update_affected_allocations($a, $key);
 				}
 
 				$res = $this->get_affected_reservations($orgmapping);
 				foreach($res as $r)
 				{
-					var_dump('Reservation id: '.$r.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+						var_dump('Reservation id: ' . $r . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 					$this->update_affected_reservations($r, $key);
 				}
 				$event = $this->get_affected_events($orgmapping);
 				foreach($event as $e)
 				{
-					var_dump('Event id: '.$e.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+						var_dump('Event id: ' . $e . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 					$this->update_affected_events($e, $key);
 				}
 			}
@@ -332,7 +342,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			//update organization with new information
 			//_debug_array($no);
-			var_dump("Oppdaterer organisasjon ".$no['orgid'].','.$no['orgname'].' med ny adresse.<br/>');
+				var_dump("Oppdaterer organisasjon " . $no['orgid'] . ',' . $no['orgname'] . ' med ny adresse.<br/>');
 			$this->update_organization_with_new_info($no);
 		}
 
@@ -342,10 +352,12 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_organization_name_local($org_id)
 	{
 		$result = "Ingen";
-    	if(isset($org_id)){
-	    	$q1="SELECT name FROM activity_organization WHERE id={$org_id}";
+			if(isset($org_id))
+			{
+				$q1 = "SELECT name FROM activity_organization WHERE id={$org_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$result = $this->db->f('name');
 			}
     	}
@@ -356,10 +368,12 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_contacts($organization_id)
 	{
 		$contacts = array();
-    	if(isset($organization_id)){
-	    	$q1="SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$cont_id = $this->db->f('id');
 				$contacts[] = $cont_id;
 			}
@@ -371,31 +385,34 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_contacts_as_objects($organization_id)
 	{
 		$contacts = array();
-    	if(isset($organization_id)){
-	    	$q1="SELECT * FROM bb_organization_contact WHERE organization_id={$organization_id}";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT * FROM bb_organization_contact WHERE organization_id={$organization_id}";
 	    	//var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
-				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				while($this->db->next_record())
+				{
+					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
 				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
-				$contacts[] = $contact_person;			}
+					$contacts[]		 = $contact_person;}
     	}
 		return $contacts;
 	}
 
-
 	function get_contacts_local($organization_id)
 	{
 		$contacts = array();
-    	if(isset($organization_id)){
-	    	$q1="SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
 	    	//var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$cont_id = $this->db->f('id');
 				$contacts[] = $cont_id;
 			}
@@ -407,12 +424,14 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_contacts_local_as_objects($organization_id)
 	{
 		$contacts = array();
-    	if(isset($organization_id)){
-	    	$q1="SELECT * FROM activity_contact_person WHERE organization_id='{$organization_id}'";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT * FROM activity_contact_person WHERE organization_id='{$organization_id}'";
 	    	//var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
-				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				while($this->db->next_record())
+				{
+					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
@@ -426,10 +445,12 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 	function get_description($organization_id)
 	{
-    	if(isset($organization_id)){
-	    	$q1="SELECT description FROM bb_organization WHERE id={$organization_id}";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT description FROM bb_organization WHERE id={$organization_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$desc = $this->db->f('description');
 			}
     	}
@@ -438,21 +459,23 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 	function get_description_local($organization_id)
 	{
-    	if(isset($organization_id)){
-	    	$q1="SELECT description FROM activity_organization WHERE id={$organization_id}";
+			if(isset($organization_id))
+			{
+				$q1 = "SELECT description FROM activity_organization WHERE id={$organization_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$desc = $this->db->f('description');
 			}
     	}
 		return $desc;
 	}
 
-
 	function get_district_from_name($name)
 	{
 		$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			$result = $this->db->f('part_of_town_id');
 		}
 		return $result;
@@ -463,10 +486,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		if($district_id)
 		{
 			$district_id = (int)$district_id;
-			$q1="SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
+				$q1			 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
 			//var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$office_name = $this->db->f('descr');
 			}
 		}
@@ -504,8 +528,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$city = $organization->get_city();
 		$district = $organization->get_district();
 		$change_type = $organization->get_change_type();
-		$transferred = ($organization->get_transferred() == 1 || $organization->get_transferred() == true)?'true':'false';
-		$original_org_id = ($organization->get_original_org_id() && $organization->get_original_org_id() != '')?$organization->get_original_org_id():0;
+			$transferred	 = ($organization->get_transferred() == 1 || $organization->get_transferred() == true) ? 'true' : 'false';
+			$original_org_id = ($organization->get_original_org_id() && $organization->get_original_org_id() != '') ? $organization->get_original_org_id() : 0;
 
 		$values[] = "NAME='{$name}'";
 		$values[] = "HOMEPAGE='{$homepage}'";
@@ -521,7 +545,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "CHANGE_TYPE='{$change_type}'";
 		$values[] = "TRANSFERRED={$transferred}";
 		$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
-		$vals = implode(',',$values);
+			$vals		 = implode(',', $values);
 
 		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
@@ -556,8 +580,9 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	protected function populate(int $org_id, &$organization)
 	{
 
-		if($organization == null) {
-			$organization = new activitycalendar_organization((int) $org_id);
+			if($organization == null)
+			{
+				$organization = new activitycalendar_organization((int)$org_id);
 
 			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
 			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
@@ -605,7 +630,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "CITY='{$city}'";
 		$values[] = "ORGNO='{$orgnr}'";
 		$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
-		$vals = implode(',',$values);
+			$vals		 = implode(',', $values);
 
 		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
 		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
@@ -648,7 +673,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$columns[] = 'activity_id';
 		$columns[] = 'customer_internal';
 		$columns[] = 'show_in_portal';
-		$cols = implode(',',$columns);
+			$cols		 = implode(',', $columns);
 
 		$values[] = "'{$name}'";
 		$values[] = "'{$homepage}'";
@@ -663,7 +688,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $customer_internal;
 		$values[] = $show_in_portal;
-		$vals = implode(',',$values);
+			$vals		 = implode(',', $values);
 
 		$sql = "INSERT INTO bb_organization ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
@@ -684,7 +709,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record())
 		{
-			$organization = new activitycalendar_organization((int) $this->db->f('id'));
+				$organization = new activitycalendar_organization((int)$this->db->f('id'));
 
 			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
 			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
@@ -759,7 +784,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			'show_in_portal = 1'
 		);
 
-		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__, __FILE__);
 	}
 
 	function update_organization_with_new_info($organization)
@@ -788,7 +813,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			'city = ' . $this->marshal($city, 'string')
 		);
 		//var_dump("UPDATE bb_organization SET " . join(',', $values) . " WHERE id=$orgid");
-		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
+			$result	 = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__, __FILE__);
 	}
 
 	function set_organization_inactive($org_id)
@@ -796,7 +821,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$orgid = (int)$org_id;
 
 		//var_dump("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}");
-		$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}", __LINE__,__FILE__);
+			$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}", __LINE__, __FILE__);
 	}
 
 	function get_affected_allocations($org_id)
@@ -804,7 +829,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$result = array();
 		$sql = "select id from bb_allocation where organization_id={$org_id}";
 		$this->db->query($sql, __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			$result[] = $this->db->f('id');
 		}
 
@@ -821,7 +847,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$result = array();
 		$sql = "select id from bb_completed_reservation where organization_id={$org_id}";
 		$this->db->query($sql, __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			$result[] = $this->db->f('id');
 		}
 
@@ -838,7 +865,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$result = array();
 		$sql = "select id from bb_event where customer_organization_id={$org_id}";
 		$this->db->query($sql, __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			$result[] = $this->db->f('id');
 		}
 
@@ -872,9 +900,10 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_organization_homepage($org_id)
 	{
 		$result = "Ingen";
-		if(isset($org_id)){
+			if(isset($org_id))
+			{
 			$org_id = intval($org_id);
-			$q1="SELECT homepage FROM bb_organization WHERE id={$org_id}";
+				$q1		 = "SELECT homepage FROM bb_organization WHERE id={$org_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
@@ -888,8 +917,9 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function get_organization_homepage_local($org_id)
 	{
 		$result = "Ingen";
-		if(isset($org_id)){
-			$q1="SELECT homepage FROM activity_organization WHERE id={$org_id}";
+			if(isset($org_id))
+			{
+				$q1 = "SELECT homepage FROM activity_organization WHERE id={$org_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
@@ -918,5 +948,4 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 		return false;
 	}
-}
-?>
+	}

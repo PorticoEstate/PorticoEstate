@@ -1,12 +1,12 @@
 <?php
+	phpgw::import_class('activitycalendar.socommon');
 
-phpgw::import_class('activitycalendar.socommon');
+	include_class('activitycalendar', 'arena', 'inc/model/');
+	include_class('activitycalendar', 'building', 'inc/model/');
 
-include_class('activitycalendar', 'arena', 'inc/model/');
-include_class('activitycalendar', 'building', 'inc/model/');
+	class activitycalendar_soarena extends activitycalendar_socommon
+	{
 
-class activitycalendar_soarena extends activitycalendar_socommon
-{
 	protected static $so;
 
 	/**
@@ -16,7 +16,8 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+			if(self::$so == null)
+			{
 			self::$so = CreateObject('activitycalendar.soarena');
 		}
 		return self::$so;
@@ -41,13 +42,14 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-		if($sort_field != null) {
+			if($sort_field != null)
+			{
 			$dir = $ascending ? 'ASC' : 'DESC';
 			if($sort_field == 'arena_id')
 			{
-				$sort_field='id';
+					$sort_field = 'id';
 			}
-			$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
+				$order = "ORDER BY {$this->marshal($sort_field, 'field')} $dir";
 		}
 		else if(!$return_count)
 		{
@@ -57,10 +59,11 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		
 		if($search_for)
 		{
-			$query = $this->marshal($search_for,'string');
-			$like_pattern = "'%".$search_for."%'";
+				$query			 = $this->marshal($search_for, 'string');
+				$like_pattern	 = "'%" . $search_for . "%'";
 			$like_clauses = array();
-			switch($search_type){
+				switch($search_type)
+				{
 				case "all":
 				default:
 					$like_clauses[] = "arena.arena_name $this->like $like_pattern";
@@ -77,8 +80,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 
 		$filter_clauses = array();
 		
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			if(isset($filters[$this->get_id_field_name()]))
+			{
+				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 			$filter_clauses[] = "arena.id = {$id}";
 		}
 		
@@ -133,7 +137,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$columns[] = 'arena.internal_arena_id';
 			$columns[] = 'arena.active';
 			
-			$cols = implode(',',$columns);
+				$cols = implode(',', $columns);
 		}
 
 		$tables = "activity_arena arena";
@@ -156,8 +160,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	protected function populate(int $arena_id, &$arena)
 	{
 
-		if($arena == null) {
-			$arena = new activitycalendar_arena((int) $arena_id);
+			if($arena == null)
+			{
+				$arena = new activitycalendar_arena((int)$arena_id);
 
 			$arena->set_arena_name($this->unmarshal($this->db->f('arena_name'), 'string'));
 			$arena->set_address($this->unmarshal($this->db->f('address'), 'string'));
@@ -179,10 +184,12 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function get_arena_name($arena_id)
 	{
 		$result = "Ingen";
-    	if(isset($arena_id) && $arena_id != ''){
-	    	$q1="SELECT arena_name FROM activity_arena WHERE id={$arena_id}";
+			if(isset($arena_id) && $arena_id != '')
+			{
+				$q1 = "SELECT arena_name FROM activity_arena WHERE id={$arena_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$result = $this->db->f('arena_name');
 			}
     	}
@@ -198,10 +205,11 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function get_buildings()
 	{
 		$buildings = array();
-    	$q_buildings="SELECT id, name FROM bb_building WHERE active=1 ORDER BY name ASC";
+			$q_buildings = "SELECT id, name FROM bb_building WHERE active=1 ORDER BY name ASC";
     	//var_dump($q_buildings);
 		$this->db->query($q_buildings, __LINE__, __FILE__);
-		while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 			$id = $this->db->f('id');
 			$buildings[$id] = $this->db->f('name');
 		}
@@ -214,19 +222,20 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	 * @param int $building_id
 	 * @return string building name
 	 */
-	function get_building_name($building_id){
+		function get_building_name($building_id)
+		{
 		if(isset($building_id))
 		{
 			$building_id = (int)$building_id;
-			$q1="SELECT name FROM bb_building WHERE id={$building_id}";
+				$q1			 = "SELECT name FROM bb_building WHERE id={$building_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$result = $this->db->f('name');
 			}
 		}
 		return $result;
 	}
-	
 	
 	/**
 	 * Function for adding a new arena to the database. Updates the arena object.
@@ -237,10 +246,11 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function add(&$arena)
 	{
 		// Insert a new arena
-		$q ="INSERT INTO activity_arena (arena_name) VALUES ('test')";
+			$q		 = "INSERT INTO activity_arena (arena_name) VALUES ('test')";
 		$result = $this->db->query($q);
 
-		if(isset($result)) {
+			if(isset($result))
+			{
 			// Set the new party ID
 			$arena->set_id($this->db->get_last_insert_id('activity_arena', 'id'));
 			// Forward this request to the update method
@@ -272,7 +282,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			'active = '     . $this->marshal(($arena->is_active() ? 'true' : 'false'), 'bool'),
 		);
 		
-		$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 			
 		return isset($result);
 	}
@@ -298,35 +308,41 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	public function get_address($search)
 	{
 		$result_arr = array();
-	    $curr_index=0;
+			$curr_index	 = 0;
 		if($search)
 		{
 			$sql = "select * from fm_streetaddress where UPPER(descr) like UPPER('{$search}%')";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				//$result_arr = $this->db->f('name');
-				if($curr_index == 0){
+					/* if($curr_index == 0)
+					  {
                                     $result_arr[] = "<option value='0'>Velg gateadresse</option>";
 				}
 				$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-				$curr_index++;
+					  $curr_index++; */
+
+					$result_arr[]['name'] = $this->db->f('descr');
 			}
 		}
-		$result = implode(' ' , $result_arr);
-		return $result;
+			//$result = implode(' ', $result_arr);
+			//return $result;
+			return array('ResultSet' => array('Result' => $result_arr));
 	}
 	
 	public function get_arena_id_by_name($arena_name)
 	{
 		$result = 0;
-		if(isset($arena_name) && $arena_name != ''){
-	    	$q1="SELECT id FROM activity_arena WHERE UPPER(arena_name) = UPPER('{$arena_name}')";
+			if(isset($arena_name) && $arena_name != '')
+			{
+				$q1 = "SELECT id FROM activity_arena WHERE UPPER(arena_name) = UPPER('{$arena_name}')";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record()){
+				while($this->db->next_record())
+				{
 				$result = $this->db->f('id');
 			}
     	}
     	return $result;
 	}
-}
-?>
+	}

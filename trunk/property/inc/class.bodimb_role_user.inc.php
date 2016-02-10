@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	* phpGroupWare - registration
 	*
@@ -23,14 +24,11 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package registration
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
 	class property_bodimb_role_user
 	{
 	
-
 		var $public_functions = array
 		(
 		);
@@ -42,16 +40,15 @@
 			$this->allrows				= $this->bo->allrows;
 		}
 
-
 		public function read($data)
 		{
 			static $users = array();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values =  $this->so->read($data);
 
-			foreach ($values as &$entry)
+			foreach($values as &$entry)
 			{
-				if ($entry['user_id'])
+				if($entry['user_id'])
 				{
 					if(!$entry['user'] = $users[$entry['user_id']])
 					{
@@ -61,7 +58,7 @@
 				}
 
 				$entry['active_from'] 	=  isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_from'], $dateformat) : '';
-				$entry['active_to']		= isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_to'], $dateformat) :'';
+				$entry['active_to'] = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_to'], $dateformat) : '';
 			}
 
 			return $values;

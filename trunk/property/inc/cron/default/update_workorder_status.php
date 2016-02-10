@@ -24,18 +24,17 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class update_workorder_status extends property_cron_parent
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -48,19 +47,17 @@
 			$this->db				= clone($GLOBALS['phpgw']->db);
 			$this->date				=  1220245200;// unix timestamp 1. Sept 2008
 
-die('er denne konfigurert?');
-
+			die('er denne konfigurert?');
 		}
-
 
 		function execute()
 		{
 			set_time_limit(0);
 			$sql = "SELECT id,status from fm_workorder WHERE entry_date < {$this->date} AND status !='closed'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$workorders = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$workorders[] = array
 				(
@@ -69,10 +66,10 @@ die('er denne konfigurert?');
 				);
 			}
 			$sql = "SELECT id,status from fm_project WHERE entry_date < {$this->date} AND status !='closed'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$projects = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$projects[] = array
 				(
@@ -83,18 +80,18 @@ die('er denne konfigurert?');
 
 			$GLOBALS['phpgw']->db->transaction_begin();
 			
-			$historylog	= CreateObject('property.historylog','workorder');
-			foreach ($workorders as $workorder)
+			$historylog = CreateObject('property.historylog', 'workorder');
+			foreach($workorders as $workorder)
 			{
-				$historylog->add('S',$workorder['id'], 'closed');	
+				$historylog->add('S', $workorder['id'], 'closed');
 			}
 
 			unset($historylog);
 
-			$historylog	= CreateObject('property.historylog','project');
-			foreach ($projects as $project)
+			$historylog = CreateObject('property.historylog', 'project');
+			foreach($projects as $project)
 			{
-				$historylog->add('S',$project['id'], 'closed');	
+				$historylog->add('S', $project['id'], 'closed');
 			}
 
 			if($GLOBALS['phpgw']->db->transaction_commit())
@@ -102,10 +99,10 @@ die('er denne konfigurert?');
 				$this->db->transaction_begin();
 
 				$sql = "UPDATE fm_workorder SET status = 'closed' WHERE entry_date < {$this->date} AND status !='closed'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 
 				$sql = "UPDATE fm_project SET status = 'closed' WHERE entry_date < {$this->date} AND status !='closed'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 		
 				$this->db->transaction_commit();			
 			}

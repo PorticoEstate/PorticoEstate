@@ -3,4 +3,5 @@
 	
 	class booking_sodocument_resource extends booking_sodocument
 	{
+		
 	}

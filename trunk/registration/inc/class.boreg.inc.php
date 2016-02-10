@@ -50,7 +50,7 @@
 
 			$so = createobject('registration.soreg');
 
-			if (! $r_reg['loginid'] && !$this->config['username_is'] == 'email')
+			if (! $r_reg['loginid'] && $this->config['username_is'] != 'email')
 			{
 				$errors[] = lang('You must enter a username');
 			}
@@ -67,7 +67,7 @@
 			}
 			else
 			{
-				if(!$this->config['username_is'] == 'email')
+				if($this->config['username_is'] != 'email')
 				{
 					$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
 				}

@@ -3,6 +3,7 @@
 	
 	class booking_sopermission_permission_document_building extends booking_sopermission_permission
 	{
+
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
 			$role_permissions = parent::get_object_role_permissions($forObject, $defaultPermissions);

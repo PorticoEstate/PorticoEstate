@@ -3,8 +3,8 @@
 
 	class activitycalendar_group extends activitycalendar_model
 	{
-		public static $so;
 		
+		public static $so;
 		protected $id;
 		protected $name;
 		protected $description;
@@ -31,63 +31,90 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_id()
+		{
+			return $this->id;
+		}
 		
 		public function set_name($name)
 		{
 			$this->name = $name;
 		}
 		
-		public function get_name() { return $this->name; }
+		public function get_name()
+		{
+			return $this->name;
+		}
 		
 		public function set_change_type($change_type)
 		{
 			$this->change_type = $change_type;
 		}
 		
-		public function get_change_type() { return $this->change_type; }
+		public function get_change_type()
+		{
+			return $this->change_type;
+		}
 		
 		public function set_description($description)
 		{
 			$this->description = $description;
 		}
 		
-		public function get_description() { return $this->description; }
+		public function get_description()
+		{
+			return $this->description;
+		}
 		
 		public function set_organization_id($organization_id)
 		{
 			$this->organization_id = $organization_id;
 		}
 		
-		public function get_organization_id() { return $this->organization_id; }
+		public function get_organization_id()
+		{
+			return $this->organization_id;
+		}
 		
 		public function set_show_in_portal($show_in_portal)
 		{
 			$this->show_in_portal = $show_in_portal;
 		}
 		
-		public function get_show_in_portal() { return $this->show_in_portal; }
+		public function get_show_in_portal()
+		{
+			return $this->show_in_portal;
+		}
 		
 		public function set_shortname($shortname)
 		{
 			$this->shortname = $shortname;
 		}
 		
-		public function get_shortname() { return $this->shortname; }
+		public function get_shortname()
+		{
+			return $this->shortname;
+		}
 		
 		public function set_transferred($transferred)
 		{
 			$this->transferred = $transferred;
 		}
 		
-		public function get_transferred() { return $this->transferred; }
+		public function get_transferred()
+		{
+			return $this->transferred;
+		}
 		
 	    public function set_original_group_id($original_group_id)
 		{
 			$this->original_group_id = $original_group_id;
 		}
 		
-		public function get_original_group_id() { return $this->original_group_id; }
+		public function get_original_group_id()
+		{
+			return $this->original_group_id;
+		}
 		
 		public function serialize()
 		{
@@ -102,6 +129,4 @@
 				'transferred' => $this->get_transferred()
 			);
 		}
-		
 	}
-?>

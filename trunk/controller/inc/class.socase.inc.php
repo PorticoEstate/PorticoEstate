@@ -25,15 +25,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'check_item_case', 'inc/model/');
 
 	class controller_socase extends controller_socommon
 	{
+
 		protected static $so;
 		protected $global_lock = false;
 
@@ -44,16 +44,22 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null)
+			if(self::$so == null)
 			{
 				self::$so = CreateObject('controller.socase');
 			}
 			return self::$so;
 		}
 
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
+		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		{
 
-		function populate(int $object_id, &$object){}
+		}
+
+		function populate(int $object_id, &$object)
+		{
+
+		}
 
 		/**
 		 * Get single case object from database  
@@ -63,7 +69,7 @@
 		*/
 		public function get_single($case_id)
 		{
-			$case_id = (int) $case_id;
+			$case_id = (int)$case_id;
 			
 			$sql = "SELECT * FROM controller_check_item_case "; 
 			$sql .= "WHERE id = {$case_id}";
@@ -105,8 +111,8 @@
 		*/
 		public function get_cases_by_message($location_id, $location_item_id)
 		{
-			$location_id		= (int) $location_id;
-			$location_item_id	= (int) $location_item_id;
+			$location_id		 = (int)$location_id;
+			$location_item_id	 = (int)$location_item_id;
 
 			$sql = "SELECT * FROM controller_check_item_case "; 
 			$sql .= "WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
@@ -115,7 +121,7 @@
 
 			$cases_array = array();
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -138,7 +144,6 @@
 			return $cases_array;
 		}
 
-
 		/**
 		 * Get cases for component  
 		 * 
@@ -148,10 +153,10 @@
 		*/
 		public function get_cases_by_component($component_location_id, $component_id, $control_item_id = 0, $check_list_id = 0)
 		{
-			$component_location_id	= (int) $component_location_id;
-			$component_id			= (int) $component_id;
-			$control_item_id		= (int) $control_item_id;
-			$check_list_id			= (int) $check_list_id;
+			$component_location_id	 = (int)$component_location_id;
+			$component_id			 = (int)$component_id;
+			$control_item_id		 = (int)$control_item_id;
+			$check_list_id			 = (int)$check_list_id;
 
 			$sql = "SELECT controller_check_item_case.*, check_list_id FROM controller_check_item_case " 
 			. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
@@ -170,7 +175,7 @@
 			$this->db->query($sql);
 
 			$values = array();
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
 				$values[] = array
 				(
@@ -187,8 +192,6 @@
 			return $values;
 		}
 
-
-		
 		/**
 		 * Inserts a new case in database  
 		 * 
@@ -232,7 +235,7 @@
 			);
 
 			$sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
-			$this->db->query( $sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$case_id = $this->db->get_last_insert_id('controller_check_item_case', 'id');
 			
 //--------
@@ -252,15 +255,14 @@
 			}
 		}
 
-
 		function update_cases_on_check_list($check_item_id = 0)
 		{
-			$check_item_id = (int) $check_item_id;
+			$check_item_id	 = (int)$check_item_id;
 			$sql = "SELECT check_list_id  FROM controller_check_item WHERE id = {$check_item_id}";
 
-			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$check_list_id = (int) $this->db->f('check_list_id');
+			$check_list_id = (int)$this->db->f('check_list_id');
 		
 			$so_check_item = CreateObject('controller.socheck_item');
 			$check_items = $so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null);
@@ -297,7 +299,7 @@
 //			}
 
 			$value_set	= $this->db->validate_update($values);
-			return $this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'",__LINE__,__FILE__);
+			return $this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'", __LINE__, __FILE__);
 		}
 
 		/**
@@ -308,7 +310,7 @@
 		*/
 		function update($case)
 		{
-			if ( $this->db->get_transaction() )
+			if($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -317,7 +319,7 @@
 				$this->db->transaction_begin();
 			}
 
-			$id = (int) $case->get_id();
+			$id = (int)$case->get_id();
 			
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
@@ -333,11 +335,11 @@
 				'location_code = ' . $this->marshal($case->get_location_code(), 'string')
 			);
 
-			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
 			$ok = $this->update_cases_on_check_list($case->get_check_item_id());
 
-			if ( !$this->global_lock )
+			if(!$this->global_lock)
 			{
 				$this->db->transaction_commit();
 			}
@@ -360,9 +362,12 @@
 		*/
 		function delete($case_id)
 		{
-			$case_id = (int) $case_id;
+			$case_id = (int)$case_id;
 			return $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 		}
 		
-		function get_id_field_name(){}
+		function get_id_field_name()
+		{
+
+		}
 	}

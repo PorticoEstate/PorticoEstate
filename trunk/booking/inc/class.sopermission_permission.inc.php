@@ -6,6 +6,7 @@
 	 */
 	class booking_sopermission_permission extends booking_sopermission
 	{
+
 		/**
 		 * Override to return nothing as a permission itself is not related
 		 * to any object other than itself.

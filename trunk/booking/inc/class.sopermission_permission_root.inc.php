@@ -3,6 +3,7 @@
 	
 	class booking_sopermission_permission_root extends booking_sopermission
 	{
+
 		/**
 		 * Override to return nothing as were not interested in 
 		 * any data from the object

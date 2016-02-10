@@ -3,4 +3,5 @@
 	
 	class booking_bopermission_massbooking extends booking_bopermission
 	{
+		
 	}

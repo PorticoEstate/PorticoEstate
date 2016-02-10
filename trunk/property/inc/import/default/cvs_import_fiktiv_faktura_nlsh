@@ -1,6 +1,8 @@
 <?php
+
 	class import_conversion
 	{
+
 		protected $db;
 		public $messages = array();
 		public $warnings = array();
@@ -10,10 +12,11 @@
 		protected $year;
 		protected $month;
 		protected $date;
-		public $fields = array('Hovedgruppering', 'Art', 'Hjelpetekst', 'Koststed', 'Beløp', 'Best.nr');
+		public $fields = array('Hovedgruppering', 'Art', 'Hjelpetekst', 'Koststed', 'Beløp',
+			'Best.nr');
 		public $filename_template;
 
-		public function __construct($location_id,$debug = false, $get_template = false)
+		public function __construct($location_id, $debug = false, $get_template = false)
 		{
 			/*
 			 * The purpose is to get to the fields definition
@@ -33,7 +36,7 @@
 			$this->boworkorder	= CreateObject('property.boworkorder');
 			$this->soproject	= CreateObject('property.soproject');
 
-			$this->config		= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
 			if($debug)
 			{
@@ -42,31 +45,31 @@
 			}
 			
 			$file_info = pathinfo($_FILES['file']['name']);
-			$this->period = substr($file_info['filename'],-6);
+			$this->period = substr($file_info['filename'], -6);
 			
 			if(!ctype_digit($this->period))
 			{
-				throw new Exception("Ikke en periode: {$this->period}" );
+				throw new Exception("Ikke en periode: {$this->period}");
 			}
 
-			$this->year = substr($this->period,0,4);
-			$this->month = substr($this->period,-2);
+			$this->year = substr($this->period, 0, 4);
+			$this->month = substr($this->period, -2);
 			$_date = mktime(0, 0, 0, $this->month, 15, $this->year);
 
-			$this->date = $GLOBALS['phpgw']->common->show_date($_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$this->date = $GLOBALS['phpgw']->common->show_date($_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 		}
 
 		public function add($data)
 		{
-/*
+			/*
     [0] => Hovedgruppering
     [1] => Art
     [2] => Hjelpetekst
     [3] => Koststed
     [4] => Beløp
     [5] => Best.nr
-*/
-			$amount   = str_replace(array(' ',','),array('','.'),$data[4]);
+			 */
+			$amount = str_replace(array(' ', ','), array('', '.'), $data[4]);
 			$order_id = $data[5];
 			$error = false;
 
@@ -81,9 +84,9 @@
 				return true;
 			}
 
-			if(!execMethod('property.soXport.check_order',$order_id))
+			if(!execMethod('property.soXport.check_order', $order_id))
 			{
-				$this->errors[] ="Ikke gyldig bestillingsnummer: {$order_id}";
+				$this->errors[] = "Ikke gyldig bestillingsnummer: {$order_id}";
 				return false;
 			}
 
@@ -92,7 +95,7 @@
 
 			$workorder = $this->boworkorder->read_single($order_id);
 
-			$project	= execMethod('property.boproject.read_single_mini',$workorder['project_id']);
+			$project = execMethod('property.boproject.read_single_mini', $workorder['project_id']);
 
 			$values = array();
 
@@ -125,7 +128,7 @@
 			$location_arr	= explode('-', $workorder['location_code']);
 
 			$i = 1;
-			foreach ($location_arr as $_loc)
+			foreach($location_arr as $_loc)
 			{
 				$values['location']["loc{$i}"] = $_loc;
 				$i++;
@@ -158,7 +161,6 @@
 //				execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
 
 				$ok	= true;
-
 			}
 			else
 			{
@@ -166,6 +168,5 @@
 			}
 
 			return $ok;
-
 		}
 	}

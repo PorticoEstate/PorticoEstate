@@ -3,4 +3,5 @@
 	
 	class booking_sopermission_season extends booking_sopermission
 	{
+		
 	}

@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage agreement
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_import
 	{
+
 		var $public_functions = array
 			(
 			);
@@ -44,11 +44,11 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 		}
 
-		function list_content($list,$uicols)
+		function list_content($list, $uicols)
 		{
-			$j=0;
+			$j = 0;
 
-			if (isset($list) AND is_array($list))
+			if(isset($list) AND is_array($list))
 			{
 				foreach($list as $entry)
 				{
@@ -56,9 +56,9 @@
 					$content[$j]['item_id'] 	= $entry['item_id'];
 					$content[$j]['index_count']	= $entry['index_count'];
 					$content[$j]['cost'] 		= $entry['cost'];
-					for ($i=0;$i<count($uicols['name']);$i++)
+					for($i = 0; $i < count($uicols['name']); $i++)
 					{
-						if($uicols['input_type'][$i]!='hidden')
+						if($uicols['input_type'][$i] != 'hidden')
 						{
 							$content[$j]['row'][$i]['value'] 			= $entry[$uicols['name'][$i]];
 							$content[$j]['row'][$i]['name'] 			= $uicols['name'][$i];
@@ -68,9 +68,9 @@
 				}
 			}
 
-			for ($i=0;$i<count($uicols['descr']);$i++)
+			for($i = 0; $i < count($uicols['descr']); $i++)
 			{
-				if($uicols['input_type'][$i]!='hidden')
+				if($uicols['input_type'][$i] != 'hidden')
 				{
 					$table_header[$i]['header'] 	= $uicols['descr'][$i];
 					$table_header[$i]['width'] 		= '5%';
@@ -78,7 +78,7 @@
 				}
 			}
 
-			return array('content'=>$content,'table_header'=>$table_header);
+			return array('content' => $content, 'table_header' => $table_header);
 		}
 
 		function importfile()
@@ -93,33 +93,32 @@
 			if($importfile)
 			{
 				$old = $importfile;
-				$importfile = $GLOBALS['phpgw_info']['server']['temp_dir'].'/service_import_'.basename($importfile);
+				$importfile = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/service_import_' . basename($importfile);
 				if(is_file($old))
 				{
-					rename($old,$importfile);
+					rename($old, $importfile);
 				}
 
-				if ( phpgw::get_var('cancel') && is_file($importfile))
+				if(phpgw::get_var('cancel') && is_file($importfile))
 				{
-					unlink ($importfile);
+					unlink($importfile);
 				}
 			}
 
 			return $importfile;
 		}
 
-
-		function prepare_data($importfile = '', $list='',$uicols='')
+		function prepare_data($importfile = '', $list = '', $uicols = '')
 		{
 			$fields = array();
-			for ($i=0; $i<count($uicols['input_type']); $i++ )
+			for($i = 0; $i < count($uicols['input_type']); $i++)
 			{
 				if($uicols['import'][$i])
 				{
 					$fields[] = array
 						(
 							'name' => $uicols['name'][$i],
-							'descr' =>$uicols['descr'][$i]
+						'descr' => $uicols['descr'][$i]
 						);
 					$uicols2['input_type'][]	= 'text';
 					$uicols2['name'][]			= $uicols['name'][$i];
@@ -132,7 +131,7 @@
 			phpgw::import_class('phpgwapi.phpexcel');
 
 			$objPHPExcel = PHPExcel_IOFactory::load($importfile);
-			$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+			$sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
 			foreach($fields as &$entry)
 			{
@@ -141,23 +140,23 @@
 
 			$valueset = array();
 
-			$rows = count($sheetData) +1;
+			$rows = count($sheetData) + 1;
 
-			for ($i=2; $i<$rows; $i++ ) //First data entry on row 2
+			for($i = 2; $i < $rows; $i++) //First data entry on row 2
 			{
-				foreach ($fields as $entry)
+				foreach($fields as $entry)
 				{
-					$valueset[$i-2][$entry['name']] = $sheetData[$i][$entry['id']];
+					$valueset[$i - 2][$entry['name']] = $sheetData[$i][$entry['id']];
 				}
 			}
 			return $valueset;
 		}
 
-		function pre_import($importfile = '', $valueset='',$import_action = '', $header_info = '')
+		function pre_import($importfile = '', $valueset = '', $import_action = '', $header_info = '')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('import'));
 
-			$list			= $this->list_content($valueset,$this->uicols2);
+			$list = $this->list_content($valueset, $this->uicols2);
 			$content		= $list['content'];
 			$table_header	= $list['table_header'];
 
@@ -173,6 +172,6 @@
 				);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  $header_info . ': ' . lang('import');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('import' => $data));
 		}
 	}

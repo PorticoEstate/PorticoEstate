@@ -1,15 +1,20 @@
+features	common	no	Egenskaper
+select none	common	no	Velg ingen
+bookmarks	common	no	Snarveier
+bookmark added	common	no	Snarvei er lagret
+bookmark deleted	common	no	Snarvei er slettet
 access	common	no	Access
 access type	common	no	Access type
-account has been created	common	no	Account har blitt opprettet
-account has been deleted	common	no	Account har blitt slettet
-account has been updated	common	no	Account har blitt oppdatert
+account has been created	common	no	Bruker har blitt opprettet
+account has been deleted	common	no	Bruker har blitt slettet
+account has been updated	common	no	Bruker har blitt oppdatert
 add	common	no	Legg til
 admin	common	no	Admin
 administration	common	no	Administrasjon
 april	common	no	April
-are you sure you want to delete this entry ?	common	no	Er du sikker du vil slette denne entry ?
+are you sure you want to delete this entry ?	common	no	Er du sikker du vil slette denne posten ?
 august	common	no	August
-cancel	common	no	Avslutt
+cancel	common	no	Avbryt
 change	common	no	Endre
 charset	common	no	utf-8
 clear	common	no	Clear
@@ -148,3 +153,13 @@ Password must contain at least 2 lower case characters	common	no	Passord må inn
 Password must contain at least 1 number	common	no	Passord må inneholde minst 1 tall
 Password must contain at least 1 non alphanumeric character	common	no	Passord må inneholde minst 1 spesialtegn
 The passwords don't match	common	no	Passordene er ikke like
+browser not supported	common	no	Nettleseren ser ikke ut til å støtte HTML5
+custom fields	common	no	Egendefinerte felt
+descr	common	no	beskrivelse
+datatype	common	no	Datatype
+sorting	common	no	Sortering
+up	common	no	opp
+down	common	no	ned
+no access	common	no	Ingen Tilgang
+toolbar	common	no	Verktøy
+collection	common	no	Samling..

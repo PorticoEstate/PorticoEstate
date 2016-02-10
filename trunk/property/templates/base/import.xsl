@@ -1,14 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="import">
 				<xsl:apply-templates select="import"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="import">
+<!-- New template-->
+<xsl:template match="import">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -53,10 +54,10 @@
 			<xsl:call-template name="table_header"/>
 			<xsl:call-template name="values"/>
 		</table>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="table_header">
+<!-- New template-->
+<xsl:template name="table_header">
 		<tr class="th">
 			<xsl:for-each select="table_header">
 				<td class="th_text" width="{with}" align="{align}">
@@ -64,10 +65,10 @@
 				</td>
 			</xsl:for-each>
 		</tr>
-	</xsl:template>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template name="values">
+<!-- New template-->
+<xsl:template name="values">
 		<xsl:for-each select="values">
 			<tr>
 				<xsl:attribute name="class">
@@ -90,4 +91,4 @@
 				</xsl:for-each>
 			</tr>
 		</xsl:for-each>
-	</xsl:template>
+</xsl:template>

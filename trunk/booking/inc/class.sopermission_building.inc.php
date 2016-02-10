@@ -3,4 +3,5 @@
 	
 	class booking_sopermission_building extends booking_sopermission
 	{
+		
 	}

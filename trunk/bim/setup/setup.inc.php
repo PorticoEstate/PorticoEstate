@@ -10,7 +10,6 @@
 	* @subpackage setup
  	* @version $Id: setup.inc.php 6982 2011-02-14 20:01:17Z sigurdne $
 	*/
-
 	$setup_info['bim']['name']			= 'bim';
 	$setup_info['bim']['version']		= '0.9.17.510';
 	$setup_info['bim']['app_order']		= 8;

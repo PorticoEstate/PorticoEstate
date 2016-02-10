@@ -1,38 +1,31 @@
-  <!-- $Id$ -->
-	<!-- attrib_history -->
-	<xsl:template match="attrib_history">
-		<div>
-			<br/>
-		</div>
-		<!--  DATATABLE -->
-		<div align="left" id="paging_0"> </div>
-		<div id="datatable-container_0"/>
-		<div id="contextmenu_0"/>
-		<div>
-			<br/>
-		</div>
-		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
 
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						permission  : <xsl:value-of select="permission"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
+<!-- $Id$ -->
+<!-- attrib_history -->
+<xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="attrib_history">
+			<xsl:apply-templates select="attrib_history"/>
+		</xsl:when>
+	</xsl:choose>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
+
+<xsl:template match="attrib_history">
+	<div id="tab-content">
+		<fieldset>
+			<div class="pure-control-group">
+				<xsl:for-each select="datatable_def">
+					<xsl:if test="container = 'datatable-container_0'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl' />
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+							<xsl:with-param name="tabletools" select ='tabletools' />
+							<xsl:with-param name="config" select ='config' />
+						</xsl:call-template>
+					</xsl:if>
 			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-
-		</script>
-	</xsl:template>
+			</div>
+		</fieldset>
+	</div>
+</xsl:template>

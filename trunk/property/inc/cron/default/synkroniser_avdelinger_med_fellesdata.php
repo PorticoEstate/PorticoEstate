@@ -24,19 +24,18 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage cron
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Description
 	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default synkroniser_avdelinger_med_fellesdata
 	 * @package property
 	 */
-
 	include_class('property', 'cron_parent', 'inc/cron/');
 
 	class synkroniser_avdelinger_med_fellesdata extends property_cron_parent
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -71,13 +70,13 @@
 			}
 			catch(Exception $e)
 			{
-				$this->receipt['error'][]=array('msg'=>$e->getMessage());
+				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
 
 			$messages = $fellesdata->messages;
-			foreach ($messages as $message)
+			foreach($messages as $message)
 			{
-				$this->receipt['message'][] = array('msg'=> $message);
+				$this->receipt['message'][] = array('msg' => $message);
 			}
 		}
 
@@ -85,17 +84,17 @@
 		{
 			$sogeneric	= CreateObject('property.sogeneric');
 			$sql = "SELECT DISTINCT org_enhet_id FROM rental_party WHERE org_enhet_id IS NOT NULL";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$parties = array();
 			while($this->db->next_record())
 			{
 				$parties[] = $this->db->f('org_enhet_id');
 			}
 
-			foreach ($parties as $party)
+			foreach($parties as $party)
 			{
 				$sql = "SELECT name, parent_id FROM fm_org_unit WHERE id  = {$party}";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
 					$name			= $this->db->f('name');
@@ -112,7 +111,7 @@
 					$value_set	= $this->db->validate_update($value_set);
 					$sql = "UPDATE rental_party SET {$value_set} WHERE org_enhet_id ={$party}";
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					if($this->debug)
 					{
 						$this->receipt['message'][] = array('msg' => $sql);
@@ -124,6 +123,7 @@
 
 	class property_fellesdata
 	{
+
     	// Instance variable
 		protected static $bo;
 		protected $connected = false;
@@ -136,7 +136,7 @@
 
 		function __construct()
 		{
-			$this->config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
 
 			if(!isset($this->config->config_data['fellesdata']) || !$this->config->config_data['fellesdata'])
 			{
@@ -198,9 +198,9 @@
 					'descr'			=> 'Password'
 				)
 			);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')) );
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib',
+				'section_id' => $receipt_section['section_id'], 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')));
 		}
-
 
 		/**
 		 * Magic get method
@@ -211,7 +211,7 @@
 		 */
 		public function __get($varname)
 		{
-			switch ($varname)
+			switch($varname)
 			{
 				case 'unit_ids':
 					return $this->unit_ids;
@@ -226,9 +226,8 @@
 					return null;
 			}
 		}
-
-
 		/* our simple php ping function */
+
 		function ping($host)
 		{
 	        exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
@@ -242,9 +241,9 @@
 				return $this->db;
 			}
 
-			if(! $this->config->config_data['fellesdata']['host'] || !$this->ping($this->config->config_data['fellesdata']['host']))
+			if(!$this->config->config_data['fellesdata']['host'] || !$this->ping($this->config->config_data['fellesdata']['host']))
 			{
-				$message ="Database server {$this->config->config_data['fellesdata']['host']} is not accessible";
+				$message = "Database server {$this->config->config_data['fellesdata']['host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
 				return false;
 			}
@@ -273,7 +272,6 @@
 			return $db;
 		}
 
-
 		public function insert_values()
 		{
 
@@ -282,7 +280,7 @@
 
 			$units = $this->unit_ids;
 
-			foreach ($units as $unit)
+			foreach($units as $unit)
 			{
 				$value_set = array
 				(
@@ -296,7 +294,7 @@
 				);
 
 				$table = 'fm_org_unit';
-				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'],__LINE__,__FILE__);
+				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'], __LINE__, __FILE__);
 				$db->next_record();
 
 				if($db->f('cnt'))
@@ -321,8 +319,7 @@
 					$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
 				}
 
-				$db->query($sql,__LINE__,__FILE__);
-
+				$db->query($sql, __LINE__, __FILE__);
 			}
 
 			$db->transaction_commit();
@@ -337,7 +334,7 @@
 
 			$sql = "SELECT ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET";
 //			$sql = "SELECT * FROM V_ORG_ENHET";
-			$db->query($sql,__LINE__,__FILE__);
+			$db->query($sql, __LINE__, __FILE__);
 			while($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
@@ -358,7 +355,7 @@
 				(
 					'id'	=> $org_unit_id,
 					'name'	=> $this->names[$org_unit_id],
-					'parent'=>''
+					'parent' => ''
 				);
 
 				$this->get_org_unit_ids_children($org_unit_id);
@@ -366,7 +363,6 @@
 
 			return $this->unit_ids;
 		}
-
 
 		function get_org_unit_ids_children($org_unit_id)
 		{
@@ -385,7 +381,7 @@
 				(
 					'id'	=> $child_org_unit_id,
 					'name'	=> $this->names[$child_org_unit_id],
-					'parent'=>	$org_unit_id,
+					'parent' => $org_unit_id,
 					'level'	=> $db->f('ORG_NIVAA')
 				);
 

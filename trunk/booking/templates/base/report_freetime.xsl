@@ -1,42 +1,57 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
-
+	<style type="text/css">
+		#field_weekday label{margin:0px;text.align:left;width:auto;}
+	</style>
 		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
-
+	<form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
+		<input type="hidden" name="tab" value=""/>
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="data/tabs"/>
+			<div id="report_freetime">
 		<xsl:choose>
 			<xsl:when test="show = 'gui'">
-				<dl class="form">
-					<dt class="heading">
-						<xsl:value-of select="php:function('lang', 'Free time')" />
-					</dt>
-				</dl>
-
-				<form action="" method="POST">
-					<dl class="form-col">
-						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-						<dd>
+						<div class="pure-control-group">
+							<!--label><xsl:value-of select="php:function('lang', 'From')" /></label>
 							<div class="date-picker">
 								<input id="field_from" name="from" type="text">
 									<xsl:attribute name="value"><xsl:value-of select="from"/></xsl:attribute>
 								</input>
+							</div-->
+							<label for="start_date">
+								<h4>
+									<xsl:value-of select="php:function('lang', 'From')" />
+								</h4>
+							</label>
+							<input class="datetime" id="from" name="from" type="text">
+								<xsl:attribute name="value">
+									<xsl:value-of select="from"/>
+								</xsl:attribute>
+							</input>
 							</div>
-						</dd>
-					</dl>
-					<dl class="form-col">
-						<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-						<dd>
+						<div class="pure-control-group">
+							<!--label><xsl:value-of select="php:function('lang', 'To')" /></label>
 							<div class="date-picker">
 								<input id="field_to" name="to" type="text">
 									<xsl:attribute name="value"><xsl:value-of select="to"/></xsl:attribute>
 								</input>
+							</div-->
+							<label for="end_date">
+								<h4>
+									<xsl:value-of select="php:function('lang', 'To')" />
+								</h4>
+							</label>
+							<input class="datetime" id="to" name="to" type="text">
+								<xsl:attribute name="value">
+									<xsl:value-of select="to"/>
+								</xsl:attribute>
+							</input>
 							</div>
-						</dd>
-					</dl>
-					<div class="clr" />
-					<dl class="form-col">
-						<dt><label><xsl:value-of select="php:function('lang', 'buildings')"/></label></dt>
-						<dd>
+						<div class="pure-control-group">
+							<label for="field_building" style="vertical-align:top;">
+								<h4>
+									<xsl:value-of select="php:function('lang', 'buildings')"/>
+								</h4>
+							</label>
 							<select id="field_building" name="building[]" size="10" multiple="multiple" class="full-width">
 								<xsl:for-each select="buildings">
 									<xsl:sort select="name"/>
@@ -44,64 +59,110 @@
 										<xsl:if test="../building = id">
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+										<xsl:attribute name="value">
+											<xsl:value-of select="id"/>
+										</xsl:attribute>
 										<xsl:value-of select="name"/>
 									</option>
 								</xsl:for-each>
 							</select>
-						</dd>
-					</dl>
-					<dl class="form-col">
-						<dt><label for="field_weekday"><xsl:value-of select="php:function('lang', 'Weekdays')" /></label></dt>
-						<dd>
-							<label><input type="checkbox" value="1" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Monday')" /></label><br />
-							<label><input type="checkbox" value="2" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Tuesday')" /></label><br />
-							<label><input type="checkbox" value="3" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Wednesday')" /></label><br />
-							<label><input type="checkbox" value="4" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Thursday')" /></label><br />
-							<label><input type="checkbox" value="5" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Friday')" /></label><br />
-							<label><input type="checkbox" value="6" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Saturday')" /></label><br />
-							<label><input type="checkbox" value="0" name="weekdays[]" /> <xsl:value-of select="php:function('lang', 'Sunday')" /></label><br />
-						</dd>
-					</dl>
-					<div class="form-buttons">
-						<input type="submit">
-							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create report')"/></xsl:attribute>
-						</input>
 					</div>
-				</form>
+						<div class="pure-control-group">
+							<label for="field_weekday" style="vertical-align:top;">
+								<h4>
+									<xsl:value-of select="php:function('lang', 'Weekdays')" />
+								</h4>
+							</label>
+							<ul id="field_weekday" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
+								<li>
+									<label>
+										<input type="checkbox" value="1" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Monday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="2" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Tuesday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="3" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Wednesday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="4" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Thursday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="5" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Friday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="6" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Saturday')" />
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" value="0" name="weekdays[]" />
+										<xsl:value-of select="php:function('lang', 'Sunday')" />
+									</label>
+								</li>
+							</ul>
+						</div>									
 			</xsl:when>
 			<xsl:otherwise>
-				<dl class="form">
-					<dt class="heading">
-						<xsl:value-of select="php:function('lang', 'Free time')" />
-					</dt>
-				</dl>
-
 				<script type="text/javascript">
 					var eventParams = {};
 				</script>
-				<table id="report">
+						<table id="report" class="pure-table pure-table-bordered">
 					<thead>
 						<tr>
-							<th><xsl:value-of select="php:function('lang', 'Building')"/></th>
-							<th><xsl:value-of select="php:function('lang', 'Resource')"/></th>
-							<th><xsl:value-of select="php:function('lang', 'From')"/></th>
-							<th><xsl:value-of select="php:function('lang', 'To')"/></th>
-							<th><xsl:value-of select="php:function('lang', 'actions')"/></th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'Building')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'Resource')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'From')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'To')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'actions')"/>
+									</th>
 						</tr>
 					</thead>
 					<tbody>
 						<xsl:for-each select="allocations">
 							<tr>
-								<td><xsl:value-of select="building_name"/></td>
-								<td><xsl:value-of select="resource_name"/></td>
-								<td><xsl:value-of select="php:function('pretty_timestamp', from_)"/></td>
-								<td><xsl:value-of select="php:function('pretty_timestamp', to_)"/></td>
+										<td>
+											<xsl:value-of select="building_name"/>
+										</td>
+										<td>
+											<xsl:value-of select="resource_name"/>
+										</td>
+										<td>
+											<xsl:value-of select="php:function('pretty_timestamp', from_)"/>
+										</td>
+										<td>
+											<xsl:value-of select="php:function('pretty_timestamp', to_)"/>
+										</td>
 								<td>
 									<script type="text/javascript">
 										eventParams[<xsl:value-of select="counter"/>] = <xsl:value-of select="event_params"/>;
 									</script>
-									<a href="#" onclick="YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{counter}]);">Lag arrangement</a>
+											<a href="#" onclick="JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{counter}]);">Lag arrangement</a>
 								</td>
 							</tr>
 						</xsl:for-each>
@@ -110,4 +171,23 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>
+		</div>
+		<div class="form-buttons">
+			<xsl:if test="show = 'gui'">
+				<input type="submit" class="pure-button pure-button-primary">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Create report')"/>
+					</xsl:attribute>
+				</input>
+			</xsl:if>
+			<xsl:if test="show != 'gui'">
+				<input type="button" class="pure-button pure-button-primary" name="cancel">
+					<xsl:attribute name="onclick">window.location="<xsl:value-of select="allocations/cancel_link"/>"</xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Cancel')" />
+					</xsl:attribute>
+				</input>
+			</xsl:if>
+		</div>
+	</form>
 </xsl:template>

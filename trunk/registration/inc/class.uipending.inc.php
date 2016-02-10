@@ -26,10 +26,9 @@
  	* @version $Id: class.uicheck_list.inc.php 8628 2012-01-21 10:42:05Z vator $
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class registration_uipending extends phpgwapi_uicommon
+	class registration_uipending extends phpgwapi_uicommon_jquery
 	{
 		var $cat_id;
 		var $start;
@@ -52,7 +51,6 @@
 		var $public_functions = array
 		(
 			'index'								=> true,
-			'index2'								=> true,
 			'query'								=> true,
 			'edit'						 		=> true
 		);
@@ -78,12 +76,9 @@
 			self::set_active_menu('registration::pending');
 		}
 
+	
 		function index()
 		{
-
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-
 			if($values = phpgw::get_var('values'))
 			{
 				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
@@ -94,119 +89,13 @@
 				{
 					$this->bo->process_users($values);
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 			}
-			else
-			{
 				if(phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return $this->query();
 				}
 
-				$status_list = array
-				(
-					array
-					(
-						'id'	=> 0,
-						'name'	=> lang('Select status')
-					),
-					array
-					(
-						'id'	=> 1,
-						'name'	=> lang('approved')
-					),
-					array
-					(
-						'id'	=> 2,
-						'name'	=> lang('pending')
-					),
-				);
-		
-				$data = array(
-					'filter_form' 				=> array(
-						'status_list' 			=> array('options' => $status_list)
-					),
-					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'registration.uipending.query', 'phpgw_return_as' => 'json')),
-						'field' => array(
-							array(
-								'key' => 'id',
-								'hidden' => true
-							),
-							array(
-								'key' => 'reg_id',
-								'label' => lang('id'),
-								'sortable'	=> true,
-								'formatter' => 'formatLinkPending'
-							),
-							array(
-								'key'	=>	'reg_lid',
-								'label'	=>	lang('user'),
-								'sortable'	=>	true
-							),
-							array(
-								'key' => 'reg_dla',
-								'label' => lang('time'),
-								'sortable'	=> true
-							),
-							array(
-								'key' => 'reg_approved',
-								'label' => lang('approved'),
-								'sortable'	=> true,
-								'formatter' => 'FormatterCenter'
-							),
-							array(
-								'key' => 'location_code',
-								'label' => lang('location'),
-								'sortable'	=> false
-							),
-
-							array(
-									'key' => 'checked',
-									'label' => lang('approve'),
-									'sortable' => false,
-									'formatter' => 'formatterCheckPending',
-									'className' => 'mychecks'
-							),
-							array(
-								'key' => 'actions',
-								'hidden' => true
-							),
-							array(
-								'key' => 'labels',
-								'hidden' => true
-							),
-							array(
-								'key' => 'ajax',
-								'hidden' => true
-							),array(
-								'key' => 'parameters',
-								'hidden' => true
-							)					
-						)
-					)
-				);
-			
-				phpgwapi_yui::load_widget('paginator');
-
-				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-				self::render_template_xsl(array('pending_users'), $data);
-			}	
-		}
-	
-
-		function index2()
-		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				return $this->query();
-			}
-
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			self::add_javascript('registration', 'yahoo', 'pending.index2.js');
-
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('registration', 'portico', 'pending.index.js');
 
 			$status_list = array
 			(
@@ -234,42 +123,18 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('invert checkboxes'),
-								'href' => "javascript:checkAll('mychecks')"
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('save'),
-								'href' => "javascript:onSave()"
-							),
-							
 							array('type' => 'filter', 
-								'name' => 'reg_dla',
+								'name' => 'status_id',
                                 'text' => lang('status').':',
                                 'list' => $status_list,
-							),
-							array('type' => 'text', 
-                                'text' => lang('searchfield'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_showall'))
-							//	'href' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json', 'all'))
 							),
 						),
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'registration.uipending.index', 'phpgw_return_as' => 'json')),
+					'ungroup_buttons'=> true,
+					'allrows'		 => true,
 					'field' => array(
 						array(
 							'key' => 'reg_id',
@@ -291,13 +156,12 @@
 							'key' => 'reg_approved',
 							'label' => lang('approved'),
 							'sortable'	=> true,
-							'formatter' => "''"
+							'formatter' => 'JqueryPortico.FormatterCenter'
 						),
 						array(
 							'key' => 'location_code',
 							'label' => lang('location'),
 							'sortable'	=> false,
-	//						'editor' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 						),
 						array(
 								'key' => 'checked',
@@ -306,23 +170,6 @@
 								'formatter' => 'formatterCheckPending',
 								'className' => 'mychecks',
 						),
-/*
-						array(
-								'key' => 'actions',
-								'hidden' => true
-							),
-							array(
-								'key' => 'labels',
-								'hidden' => true
-							),
-							array(
-								'key' => 'ajax',
-								'hidden' => true
-							),array(
-								'key' => 'parameters',
-								'hidden' => true
-							)					
-*/
 					),
 				),
 			);
@@ -334,7 +181,7 @@
 						array
 						(
 							'name'		=> 'id',
-							'source'	=> 'id'
+							'source'	=> 'reg_id'
 						),
 					)
 				);
@@ -350,11 +197,56 @@
 						'parameters'	=> json_encode($parameters)
 					);
 					
-	//		$data['datatable']['editor_action'] = 'rental.uiprice_item.set_value';
+//			if($this->acl_edit)
+			{
+				$link = self::link(array(
+					'menuaction'		 => 'registration.uipending.index',
+					'phpgw_return_as'	 => 'json'
+				));
 
-//_debug_array($data);die();
+				$code = '
+					var link = "' . $link . '";
+					var pending_users = [];
+					var pending_users_orig = [];
 
-			self::render_template_xsl(array('datatable_common'), $data);
+					$(".mychecks:checked").each(function () {
+							pending_users.push($(this).val());
+					});
+
+					$(".orig_check").each(function () {
+							pending_users_orig.push($(this).val());
+					});
+
+					var data = {values:{"pending_users": pending_users, "pending_users_orig": pending_users_orig, "process_user":1}};
+					execute_ajax(link, function(result){
+						document.getElementById("message").innerHTML = "";
+						if (typeof(result.message) !== "undefined")
+						{
+							$.each(result.message, function (k, v) {
+								document.getElementById("message").innerHTML = v.msg + "<br/>";
+							});
+						}
+						if (typeof(result.error) !== "undefined")
+						{
+							$.each(result.error, function (k, v) {
+								document.getElementById("message").innerHTML += v.msg + "<br/>";
+							});
+						}
+						oTable.fnDraw();
+					}, data, "POST", "JSON");
+				';
+
+				$data['datatable']['actions'][] = array
+					(
+					'my_name'		 => 'save',
+					'type'			 => 'custom',
+					'custom_code'	 => $code,
+					'text'			 => lang('save')
+				);
+			}
+
+
+			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
 
@@ -552,11 +444,10 @@
 			);
 			$active_tab = 'main';
 
-			phpgwapi_yui::tabview_setup('edit_user_tabview');
 
 			$data = array
 			(
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab, 'edit_user_tabview'),
 				'value_id'				=> $id,
 				'user_data'				=> $user_data,
 				'location_data'			=> $location_data,
@@ -572,12 +463,26 @@
 	
 		public function query()
 		{
-			$status_id = phpgw::get_var('status_id');
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array
+				(
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'filter'	 => $this->filter,
+				'allrows'	 => phpgw::get_var('length', 'int') == -1,
+				'status_id' => phpgw::get_var('status_id')
+			);
 
 			$this->bo->start = phpgw::get_var('startIndex');
 		
-			$user_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
-												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$user_list = $this->bo->read($params);
 			
 			foreach($user_list as &$user)
 			{
@@ -590,24 +495,8 @@
 			$results['sort'] = 'reg_lid';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
-			array_walk($results['results'], array($this, 'add_actions'), array($type));
 //_debug_array($results);						
-			return $this->yui_results($results);
-		}
-
-		public function add_actions(&$value, $key, $params)
-		{
-			//Defining new columns
-			$value['ajax'] = array();
-			$value['actions'] = array();
-			$value['labels'] = array();
-	
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental._uibilling.delete', 'id' => $value['id'])));
-			$value['labels'][] = lang('delete');
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental._uibilling.commit', 'id' => $value['id'])));
-			$value['labels'][] = lang('commit');
+			return $this->jquery_results($results);
 	    }
 
 	}

@@ -23,16 +23,14 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Start page
 	 *
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'		=> true,
@@ -44,8 +42,8 @@
 
 	$start_page = 'location';
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'] )
+	if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'])
+	&& $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'])
 	{
 		$start_page = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'];
 	}

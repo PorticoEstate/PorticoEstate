@@ -3,9 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
-
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div class="yui-navset yui-navset-top">
+<div>
 	<xsl:choose>
 		<xsl:when test="project/id != '' or project/id != 0">
 			<h1>
@@ -156,6 +154,7 @@
 		</div>
 	</div>
 </div>
+<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
 <xsl:template match="options">

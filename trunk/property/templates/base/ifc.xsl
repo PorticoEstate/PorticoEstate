@@ -1,14 +1,15 @@
-  <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+<!-- $Id$ -->
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="import">
 				<xsl:apply-templates select="import"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 
-	<!-- import -->
-	<xsl:template match="import">
+<!-- import -->
+<xsl:template match="import">
 		<xsl:choose>
 			<xsl:when test="links !=''">
 				<xsl:apply-templates select="menu"/>
@@ -118,4 +119,4 @@
 				</tr>
 			</form>
 		</table>
-	</xsl:template>
+</xsl:template>

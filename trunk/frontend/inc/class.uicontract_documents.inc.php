@@ -24,7 +24,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-    phpgw::import_class('frontend.uifrontend');
+    phpgw::import_class('frontend.uicommon');
     phpgw::import_class('rental.uicontract');
     phpgw::import_class('rental.socontract');
     include_class('rental', 'document', 'inc/model/');
@@ -35,7 +35,7 @@
 	 * @package Frontend
 	 */
 
-    class frontend_uicontract_documents extends frontend_uifrontend
+    class frontend_uicontract_documents extends frontend_uicommon
     {
 
         public $public_functions = array
@@ -45,11 +45,13 @@
 
 		public function __construct()
 		{
+			parent::__construct();
+			
 		    $this->contract_state_identifier_doc = "contract_state_in";
 		    $this->contracts_per_location_identifier_doc = "contracts_in_per_location";
-		    $this->form_url_doc = "index.php?menuaction=frontend.uicontract_documents.index";
+		    $this->form_url_doc = $GLOBALS['phpgw']->link('/',array('menuaction' => 'frontend.uicontract_documents.index', 'location_id' => $this->location_id));
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.document.contracts'));
-			parent::__construct();
+			
 			$this->location_code = $this->header_state['selected_location'];
 //			$this->location_code = '1102-01';
 		}
@@ -169,63 +171,37 @@
 					);	
 				}
 			}
-			$datavalues[0] = array
+
+			$datatable_def[] = array
 			(
-				'name'					=> "0",
-				'values' 				=> json_encode($content),
-				'total_records'			=> count($content),
-				'edit_action'			=> isset($entry) && $entry->get_id() ? json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'rental.uidocument.view', 'id' => $entry->get_id()))):'' ,
-				'is_paginator'			=> 1,
-				'footer'				=> 0
-			);
-
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('filename'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-													array('key' => 'document_id','label'=>lang('filename'),'sortable'=>false,'hidden' => true),
-													array('key' => 'title','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'description','label'=>lang('description'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'doc_type','label'=>'Type','sortable'=>true,'resizeable'=>true)
-													))
-			);
-
-			//----------------------------------------------datatable settings--------
-
-
-			$datatable = array
-			(
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'				=> $datavalues,
-				'myColumnDefs'			=> $myColumnDefs
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(array('key'=>'document_name', 'label'=>lang('filename'), 'sortable'=>true, 'formatter'=>'JqueryPortico.formatLink'),
+											array('key'=>'document_id', 'label'=>lang('filename'), 'sortable'=>false, 'hidden'=>true),
+											array('key'=>'title', 'label'=>lang('name'),'sortable'=>true),
+											array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true),
+											array('key'=>'doc_type', 'label'=>'Type', 'sortable'=>true)),
+				'data'		 => json_encode($content)				
 			);
 
 			$data = array
 			(
 				'header'				=> $this->header_state,
+    			'section' => 	array (
+					'datatable_def'			=> $datatable_def, 
 				'tabs'					=> $this->tabs,
-    			'contract_data' => 	array (
+					'tabs_content'			=> $this->tabs_content,
+					'tab_selected'			=> $this->tab_selected,
 	    			'select' => $contracts_for_selection, 
 		    		'selected_contract' =>  $this->contract_state_doc['selected'], 
 			    	'contract'	=> isset($this->contract_state_doc['contract']) ? $this->contract_state_doc['contract']->serialize() : array(),
 	    			'contract_filter' => $this->contract_filter_doc,
 		    		'form_url' => $this->form_url_doc
-			    ),
-				'documents'				=> array('datatable' => $datatable)
+			    )
 			);
 			
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','document'));
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'drawing.list', 'frontend' );
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			self::render_template_xsl(array('document', 'datatable_inline', 'frontend'), $data);
 		}
+		
+		public function query() {}
     }

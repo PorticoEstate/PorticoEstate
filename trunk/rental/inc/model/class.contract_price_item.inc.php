@@ -7,8 +7,8 @@
 	 */
 	class rental_contract_price_item extends rental_price_item
 	{
-		public static $so;
 		
+		public static $so;
 		protected $price_item_id;
 		protected $contract_id;
 		protected $area;
@@ -63,7 +63,7 @@
 		
 		public function get_area()
 		{
-			if (!$this->area)
+			if(!$this->area)
 				$this->area = 0;
 				
 			return $this->area;
@@ -76,7 +76,7 @@
 		
 		public function get_count()
 		{
-			if (!$this->count)
+			if(!$this->count)
 				$this->count = 0;
 				
 			return $this->count;
@@ -89,7 +89,7 @@
 		
 		public function get_total_price()
 		{
-			if (!$this->total_price)
+			if(!$this->total_price)
 				$this->total_price = 0;
 			return $this->total_price;
 		}
@@ -127,8 +127,10 @@
 		 */
 		public function is_active_at($date)
 		{
-			if ($date >= strtotime($this->get_date_start())) {
-				if (!$this->get_date_end() || ($this->get_date_end() && $date <= strtotime($this->get_date_end()))) {
+			if($date >= strtotime($this->get_date_start()))
+			{
+				if(!$this->get_date_end() || ($this->get_date_end() && $date <= strtotime($this->get_date_end())))
+				{
 					return true;
 				}
 			}
@@ -150,19 +152,21 @@
 			
 			$so->update_contract_price_item($this);
 		}
-		
 		/*
 		 * Overridden function.  @see rental_model::store()
 		 * This function saves the contract price item rather than the price item, and
 		 * doesn't handle add since we handle that through a contract object.
 		 * 
 		 */
+
 		public function store()
 		{
-			if ($this->validates()) {
+			if($this->validates())
+			{
 				$so = $this->get_so();
 				
-				if ($this->id) {
+				if($this->id)
+				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $so->update_contract_price_item($this);
 				}
@@ -179,8 +183,8 @@
 		public function serialize()
 		{	
 			$currency_prefix = $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
-			//$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$date_format="Y/m/d";
+			$date_format	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			//$date_format="Y/m/d";
 			return array(
 				'id' => $this->get_id(),
 				'price_item_id' => $this->get_price_item_id(),
@@ -197,11 +201,11 @@
 				'is_one_time' => $this->is_one_time(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not
-				// happy about empty values if a custom parser is set, so we use the YUI built
+				// happy about empty values if a custom parser is set, so we use the
 				// in "date" parser which requires a format like: 2009/07/30 to work. 
 				// EHL: Removed 2009-10-27, due to change to int datatype. 
-				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):null,  
-				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):null,
+				'date_start'		 => $this->get_date_start() != NULL ? date($date_format, $this->get_date_start()) : '',
+				'date_end'			 => $this->get_date_end() != NULL ? date($date_format, $this->get_date_end()) : '',
 				'price_type_title' => lang($this->get_price_type_title()),
 			);
 		}
@@ -230,5 +234,4 @@
 		{
 			return $this->is_one_time;
 		}
-		
 	}

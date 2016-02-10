@@ -1,32 +1,33 @@
 <?php
 
-/**
-* https://github.com/knplabs/snappy
-* The MIT License
-*
-* Copyright (c) 2010 Matthieu Bontemps
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is furnished
-* to do so, subject to the following conditions:
-* 
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-* 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-* 
-*/
-abstract class SnappyMedia
-{
+	/**
+	 * https://github.com/knplabs/snappy
+	 * The MIT License
+	 *
+	 * Copyright (c) 2010 Matthieu Bontemps
+	 *
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is furnished
+	 * to do so, subject to the following conditions:
+	 * 
+	 * The above copyright notice and this permission notice shall be included in all
+	 * copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	abstract class SnappyMedia
+	{
+
     protected $executable;
     protected $options = array();
     protected $defaultExtension;
@@ -57,10 +58,12 @@ abstract class SnappyMedia
     {
         $command = $this->buildCommand($url, $path);
         $basePath = dirname($path);
-        if(!is_dir($basePath)) {
+			if(!is_dir($basePath))
+			{
           mkdir($basePath, 0777, true);
         }
-        if(file_exists($path)) {
+			if(file_exists($path))
+			{
           unlink($path);
         }
         $ok = $this->exec($command);
@@ -82,7 +85,8 @@ abstract class SnappyMedia
      */
     public function setOption($option, $value = null)
     {
-        if(!array_key_exists($option, $this->options)) {
+			if(!array_key_exists($option, $this->options))
+			{
             throw new Exception("Invalid option '$option'");
         }
         $this->options[$option] = $value;
@@ -96,7 +100,8 @@ abstract class SnappyMedia
      */
     public function mergeOptions(array $options)
     {
-        foreach($options as $key => $value) {
+			foreach($options as $key => $value)
+			{
             $this->setOption($key, $value);
         }
     }
@@ -112,15 +117,23 @@ abstract class SnappyMedia
     {
         $command = $this->executable;
 
-        foreach($this->options as $key => $value) {
-            if(null !== $value && false !== $value) {
-                if(true === $value) {
+			foreach($this->options as $key => $value)
+			{
+				if(null !== $value && false !== $value)
+				{
+					if(true === $value)
+					{
                     $command .= " --$key";
-                } elseif(is_array($value)) {
-                    foreach($value as $v) {
+					}
+					elseif(is_array($value))
+					{
+						foreach($value as $v)
+						{
                         $command .= " --$key $v";
                     }
-                } else {
+					}
+					else
+					{
                     $command .= " --$key $value";
                 }
             }
@@ -135,5 +148,4 @@ abstract class SnappyMedia
     {
         return shell_exec($command);
     }
-}
-?>
+	}
