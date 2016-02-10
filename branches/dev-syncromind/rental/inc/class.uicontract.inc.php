@@ -444,15 +444,15 @@
 		{
 			$columns_def = array(
 				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',	'sortable' => true, 'hidden' => false),
-				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,	'hidden' => false, 'editor'=> true),
+				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,	'hidden' => false, 'editor'=> $mode == 'edit' ? true : false),
 				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,	'hidden' => false),
-				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,'formatter' => 'formatterPrice', 'className' => 'right', 'editor'=> true),
+				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,'formatter' => 'formatterPrice', 'className' => 'right', 'editor'=>  $mode == 'edit' ? true : false),
 				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",	'className' => 'right'),
-				array("key" => "count", "label" => lang('count'), 'editor'=> true),
+				array("key" => "count", "label" => lang('count'), 'editor'=>  $mode == 'edit' ? true : false),
 				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',	'className' => 'right'),
-				array("key" => "date_start", "label" => lang('date_start'), 'formatter' => 'formatterDateStart_price_item',	'className' => 'center'),
-				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => 'formatterDateEnd_price_item','className' => 'center'),
-				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => 'formatterIs_one_time', 'className' => 'center'),
+				array("key" => "date_start", "label" => lang('date_start'), 'formatter' =>  $mode == 'edit' ? 'formatterDateStart_price_item' : "",	'className' => 'center'),
+				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",'className' => 'center'),
+				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "", 'className' => 'center'),
 				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,'className' => 'center')
 			);
 

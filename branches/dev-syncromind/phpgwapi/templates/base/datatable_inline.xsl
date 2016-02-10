@@ -297,7 +297,7 @@
 								visible:	true,
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:if test="formatter">
+					<xsl:if test="formatter !=''">
 					 render: function (dummy1, dummy2, oData) {
 							try {
 								var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
