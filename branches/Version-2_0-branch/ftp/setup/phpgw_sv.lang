@@ -1,0 +1,35 @@
+are you sure you want to delete %1 ?	ftp	sv	Är du säker på att du vill radera %1 ?
+attempt to create a directory with empty name	ftp	sv	Försökte skapa en mapp med tomt namn
+cancel	ftp	sv	avbryt
+cd	ftp	sv	cd
+connect	ftp	sv	Anslut
+create new directory	ftp	sv	Skapa ny mapp
+delete	ftp	sv	radera
+failed to connect to %1 with user %2 and password %3	ftp	sv	Kunde inte ansluta till %1 med användarnamn %2 och lösenord %3
+failed to create directory %1	ftp	sv	Kunde inte skapa mappen %1
+failed to delete %1	ftp	sv	Kunde inte radera %1
+failed to rename %1 to %2	ftp	sv	Kunde inte byta namn på %1 till %2
+failed to upload %1	ftp	sv	Kunde inte ladda upp %1
+ftp client	ftp	sv	FTP klient
+ftp hostname	ftp	sv	FTP värdnamn
+ftp server	ftp	sv	FTP server
+home	ftp	sv	Hem
+log into ftp server	ftp	sv	Logga in på FTP-server
+logout/relogin	ftp	sv	logga ut/logga in igen
+password	ftp	sv	Lösenord
+permissions	ftp	sv	Behörigheter
+rename	ftp	sv	byt namn
+rename file	ftp	sv	Byt namn på fil
+rename from	ftp	sv	Byt namn från
+rename to	ftp	sv	till
+renamed %1 to %2	ftp	sv	Bytte namn %1 till %2
+save	ftp	sv	spara
+save to filemanager	ftp	sv	spara till filhanterare
+size	ftp	sv	Storlek
+successfully created directory %1	ftp	sv	Skapade mappen %1
+successfully deleted %1	ftp	sv	Raderade %1
+successfully uploaded %1	ftp	sv	Laddade upp %1
+upload	ftp	sv	ladda upp
+username	ftp	sv	Användarnamn
+view	ftp	sv	visa
+

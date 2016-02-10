@@ -1,0 +1,125 @@
+<?php
+// Dit bestand definieert enkele functies en een associatieve array.
+// De sleutels van de array komen overeen met een hoofding in het te
+// importeren bestand en de waarden van de array zullen gebruikt worden
+// bij het aanmaken van het uitvoerbestand.
+//
+// Een uit Outlook geëxporteerd bestand ziet er uit als volgt:
+//
+// Titel<tab>Voornaam<tab>Middelste naam<tab>Achternaam<tab>...
+// <tab>Jan<tab><tab>Janssens<tab>...
+//
+// Hierin duidt de eerste lijn de betekenis aan van elk (optioneel) veld.
+// Dit is wat opgezocht zal worden voor de sleutel.
+//
+// De array hoeft in geen specifieke volgorde te staan en alle velden die
+// niet gedefiniëerd zijn, zullen ook niet worden omgezet.
+// Als de waarde gelijk is aan '+', zal ze worden toegevoegd aan het vorige
+// veld en alle tekst na de '+' zal worden toegevoegd vóór de waarde.
+// Zo zal bijvoorbeeld het volgende een komma en een spatie toevoegen tussen
+// Achternaam en Voornaam en het resultaat bewaren in Volledige naam:
+//
+//	array('Achternaam' => 'Volledige naam','Voornaam' => '+, ');
+//
+// Begin met een '#' symbool om een komma-gescheiden lijst om te zetten naar
+// een reeks gelijke velden.
+
+	class import_conv
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id;
+		var $type = 'csv';
+
+		var $import = array(
+			'title' => 'Titel', 
+			'n_given' => 'Voornaam',
+			'n_middle' => 'Middelste naam',
+			'n_family' => 'Achternaam',
+			'n_suffix' => 'Achtervoegsel',
+			'org_name' => 'Bedrijf',  //objectclass: organization
+			'org_unit' => 'Afdeling', //objectclass: organizationalPerson
+			'title' => 'Functie', //objectclass: organizationalPerson
+			'adr_one_street' => 'Werkadres, straat',
+			'address2' => 'Werkadres 2, straat',
+			'address3' => 'Werkadres 3, straat',
+			'adr_one_locality' => 'Werkadres, plaats',
+			'adr_one_region' => 'Werkadres, provincie',
+			'adr_one_postalcode' => 'Werkadres, postcode',
+			'adr_one_countryname' => 'Werkadres, land',
+			'adr_two_street' => 'Huisadres, straat',
+			'adr_two_locality' => 'Huisadres, plaats',
+			'adr_two_region' => 'Huisadres, provincie',
+			'adr_two_postalcode' => 'Huisadres, postcode',
+			'adr_two_countryname' => 'Huisadres, land',
+			'tel_msg' => 'Telefoon assistent',
+			'tel_fax' => 'Fax op werk',
+			'tel_work' => 'Telefoon op werk',
+			'ophone' => 'Telefoon op werk 2',
+			'tel_car' => 'Autotelefoon',
+			'tel_home' => 'Telefoon thuis',
+			'tel_isdn' => 'ISDN',
+			'tel_cell' => 'Mobiele telefoon', //newPilotPerson
+			'tel_pager' => 'Pager',
+			'bday' => 'Verjaardag',
+			'email' => 'E-mailadres',
+			'email_home' => 'E-mailadres 2',
+			'note' => 'Notities',
+			'url'  => 'Webpagina'
+		);
+
+		function import_start_file($buffer)
+		{
+			return $buffer;
+		}
+
+		function import_start_record($buffer)
+		{
+			$top=array();
+			++$this->id;
+			$this->currentrecord = $top;
+			return $buffer;
+		}
+
+		function import_new_attrib($buffer,$name,$value)
+		{
+			$value = trim($value);
+			$value = str_replace('\n','<BR>',$value);
+			$value = str_replace('\r','',$value);
+			$this->currentrecord += array($name => $value);
+
+			return $buffer;
+		}
+
+		function import_end_record($buffer)
+		{
+			$buffer[$this->id]='';
+			while ( list($name, $value) = each($this->currentrecord))
+			{
+				$buffer[$this->id][$name] = $value;
+				//echo '<br>'.$name.' => '.$value;
+			}
+			return $buffer;
+		}
+
+		function import_end_file($buffer,$access='private',$cat_id=0)
+		{
+			$contacts = CreateObject('phpgwapi.contacts');
+			//echo '<br>'; 
+			for ($i=1;$i<=count($buffer);$i++)
+			{
+				while ( list($name,$value) = @each($buffer[$i]) )
+				{
+					//echo '<br>'.$i.': '.$name.' => '.$value;
+					$entry[$i][$name] = $value;
+				}
+				$entry[$i]['email_type']      = 'INTERNET';
+				$entry[$i]['email_home_type'] = 'INTERNET';
+				$entry[$i]['adr_one_type']    = 'intl';
+				$entry[$i]['adr_two_type']    = 'intl';
+				//echo '<br>';
+				$contacts->add($GLOBALS['phpgw_info']['user']['account_id'],$entry[$i],$access,$cat_id);
+			}
+			$num = $i - 1;
+			return lang('Successfully imported x records into your addressbook.',$num);
+		}
+	}

@@ -1,0 +1,279 @@
+/**
+* phpGroupWare desktop template
+* @author Dave Hall dave.hall at mbox.com.au
+* @internal parts based on idots css written by Pim Snel and myself
+* @TODO this still needs work - clean up and simplify
+* @copyright Copyright (C) 2004 Free Software Foundation http://www.fsf.org/
+* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+* @version $Id: desktop.css 17430 2006-10-15 11:29:21Z skwashd $
+*/
+
+			a, a:visited
+			{
+				color: #f93;
+				text-decoration: none;
+			}
+
+			a:hover, a:hover
+			{	
+				color: #f90;
+				text-decoration: underline;
+			}
+
+			body, div, p
+			{
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				font-size: 11px;
+			}
+
+			body
+			{
+				padding: 0px;
+				margin: 0px;
+			}
+
+			img
+			{
+				border: 0px;
+			}
+			
+			h1
+			{
+			}
+			
+			h2, h2 a, h2 a:hover, h2 a:active
+			{
+				background-color: #f93;
+				color: #ddd;
+				text-decoration: none;
+			}
+			
+			#header
+			{
+				background-color: #eee;
+				border-bottom: 1px solid #000;
+				height: 23px;
+				left: 0px;
+				position: fixed;
+				right: 0px;
+				top: 0px;
+				z-index: 20;
+			}
+
+			#header ul
+			{
+				display: block;
+				float: left;
+				list-style: none;
+				margin: 0px;
+				padding: 0px;
+			}
+
+			#header ul a, #header ul a:hover, #header ul a:active, #header ul a:visited
+			{
+				color: #000;
+				text-decoration: none;
+			}
+
+			#header ul img
+			{
+				vertical-align: middle;
+			}
+
+			#header ul li
+			{
+				display: block;
+				float: left;
+				font-size: 120%;
+				position: relative;
+				width: 150px;
+			}
+
+			#header ul ul
+			{
+				border: 1px solid #ddd;
+				background-color: #eee;
+				display: none;
+				left: 0;
+				position: absolute; 
+				top: 18px;
+			}
+
+			#header ul ul img
+			{
+				background-color: #ccc;
+				padding: 2px;
+			}
+
+			#header ul li:hover ul, #header ul li.over ul
+			{
+				display: block;
+			}
+
+			#header ul ul li
+			{
+				font-size: 100%;
+				padding: 2px;
+				width: 145px;
+			}
+
+			#header ul ul li:hover, #header ul ul li.over
+			{
+				background-color: #f93;
+				color: #999;
+			}
+
+			#header ul ul li:hover img, #header ul ul li.over img
+			{
+				background-color: #fff;
+			}
+
+			#user
+			{
+				float: right;
+				font-size: smaller;
+				margin: 3px;
+				text-align: right;
+				width: 210px;
+				white-space: nowrap;
+			}
+
+			#about
+			{
+				float: right;
+				text-align: right;
+				width: 10px;
+			}
+
+			#content, #portal
+			{
+				border: 2px ridge #999;
+				margin: 30px auto;
+				width: 95%;
+			}
+
+			#content_title, #portal_title
+			{
+				background: #eee url('../images/title-bg.png') repeat-x;
+				border-bottom: 1px solid #000;
+				height: 18px;
+				padding: 1px;
+			}
+
+			#content_body, #portal_content
+			{
+				margin: 10px;
+			}
+
+			#portal_controls
+			{
+				float: right;
+				text-align: right;
+				width: 100px;
+			}
+
+			#footer
+			{
+				background-color: #eee;
+				border-top: 1px solid #000;
+				bottom: 0px;
+				height: 25px;
+				left: 0px;
+				margin: 0px;
+				padding: 0px;
+				position: fixed;
+				right: 0px;
+			}
+
+			#footer ul
+			{
+				list-style: none;
+			}
+
+			#footer ul li
+			{
+				float: left;
+				text-align: center;
+				width: 33%;
+			}
+
+			#footer ul li.first
+			{
+				text-align: left;
+			}
+
+			#footer ul li.last
+			{
+				text-align: right;
+			}
+
+			
+/* Used by tabs */
+th.activetab
+{
+	background-color: #fff;
+	border-color: #000;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	border-style: solid;
+	border-width: 1px 1px 0px 1px;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap; 
+}
+ 
+th.inactivetab
+{
+	background-color:#CCCCCC;
+	border: 1px solid #000000;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	color:#006699;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap;
+}
+
+th.tablast
+{
+	width: 100%;
+}
+
+/* nextmatch values */
+.row_off
+{
+	background-color: #E8F0F0;
+	color: #000000;
+}
+
+.row_on
+{
+	background-color: #DDDDDD;
+	color: #000000;
+}
+
+.th
+{
+	background-color: #D3DCE3;
+	color: #000000;
+}
+
+ol.source
+{
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	height: 300px;
+	list-style-type: decimal;
+	overflow: auto;
+	padding-left: 4em;
+}
+
+ol.source li
+{
+	background-color: #fff;
+	border-bottom: #eee;
+	display: list-item;
+	font-family: monospace;
+	list-style-type: decimal;
+	white-space: pre;
+}

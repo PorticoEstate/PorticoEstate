@@ -1,0 +1,44 @@
+access changed	todo	pt	Acesso alterado
+add main project	todo	pt	Adicionar projeto
+add sub project	todo	pt	Adicionar sub-projeto
+adds or edits a todo item	todo	pt	Adiciona ou edita um item a fazer
+are you sure you want to delete this entry	todo	pt	Você tem certeza que deseja remover esse registro ?
+assigned to	todo	pt	Designado para
+category changed	todo	pt	Categoria alterada
+completed	todo	pt	Completo
+deletes a todo item	todo	pt	Remover um item a fazer
+description can not exceed 8000 characters in length	todo	pt	Descrição não pode ter mais de 8000 caracteres !
+description changed	todo	pt	Descrição alterada
+do you also want to delete all sub projects ?	todo	pt	Você  gostaria de apagar todos os sub-projetos também ?
+edit main project	todo	pt	Editar corpo do projeto
+edit sub project	todo	pt	Editar sub projeto
+end date changed	todo	pt	Data final alterada
+ending date can not be before start date	todo	pt	Data de término não pode ser depois da data de início !
+entry added	todo	pt	Registro adicionado
+high	todo	pt	Alta
+list todos	todo	pt	Lista de a fazer
+low	todo	pt	Baixa
+nobody	todo	pt	Ninguém
+normal	todo	pt	Normal
+or: days from startdate:	todo	pt	ou: dias a partir da data de início:
+or: select for today:	todo	pt	ou: selecione para hoje:
+parent changed	todo	pt	Pais alterados
+parent project	todo	pt	Projeto pai
+please enter a title	todo	pt	Por favor digite um título !
+returns a the total number of records in the database, must call list_todos first	todo	pt	Retorna o número de registros no banco de dados, precisa chamar lista_afazer primeiro
+show todo items on main screen	todo	pt	Exibir afazeres na tela principal
+start date	todo	pt	Data de início
+start date changed	todo	pt	Data de início alterada
+status changed	todo	pt	Status alterado
+title changed	todo	pt	Título alterado
+to do list	common	pt	Lista de afazeres
+todo	common	pt	Afazer
+todo list	common	pt	Lista de afazeres
+todo preferences	todo	pt	Preferências de Afazeres
+urgency	todo	pt	Urgência
+urgency changed	todo	pt	Urgência alterada
+view matrix of actual month	todo	pt	Ver tabela do mês atual
+view todo item	todo	pt	Exibir Afazer
+you can only enter numbers for days from now	todo	pt	Somente números podem ser digitados no campo Dias a partir de agora !
+you have entered an ending invalid date	todo	pt	A data de término digitada é inválida !
+you have entered an starting invalid date	todo	pt	A data de início digitada é inválida !

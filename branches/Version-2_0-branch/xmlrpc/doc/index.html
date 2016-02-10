@@ -1,0 +1,414 @@
+<HTML
+><HEAD
+><TITLE
+>XML-RPC for PHP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.64
+"><LINK
+REV="MADE"
+HREF="edd@usefulinc.com"><LINK
+REL="NEXT"
+TITLE="Introduction"
+HREF="introduction.html"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>XML-RPC for PHP</A
+></H1
+><H2
+CLASS="SUBTITLE"
+>version 1.0b9</H2
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN7"
+>Edd Dumbill</A
+></H3
+><DIV
+CLASS="AFFILIATION"
+><SPAN
+CLASS="ORGNAME"
+><A
+HREF="http://usefulinc.com/"
+TARGET="_top"
+>Useful 
+	      Information Company</A
+><BR></SPAN
+><DIV
+CLASS="ADDRESS"
+><P
+CLASS="ADDRESS"
+>	&nbsp;&nbsp;&nbsp;&nbsp;edd@usefulinc.com<br>
+	&nbsp;&nbsp;</P
+></DIV
+></DIV
+><P
+CLASS="COPYRIGHT"
+>Copyright &copy; 1999,2000,2001 by Edd Dumbill, Useful Information Company</P
+><DIV
+CLASS="LEGALNOTICE"
+><A
+NAME="AEN18"
+></A
+><P
+></P
+><P
+>License is granted to use or modify this software ("XML-RPC
+	for PHP") for commercial or
+	non-commercial use provided the copyright of the author is
+	preserved in any distributed or derivative work.</P
+><P
+> THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY
+	EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+	PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR
+	BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+	NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+	STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+	OF THE POSSIBILITY OF SUCH DAMAGE.</P
+><P
+></P
+></DIV
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="introduction.html"
+>Introduction</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="introduction.html#AEN33"
+>Acknowledgements</A
+></DT
+></DL
+></DD
+><DT
+>2. <A
+HREF="manifest.html"
+>Files in the distribution</A
+></DT
+><DT
+>3. <A
+HREF="bugs.html"
+>Bugs</A
+></DT
+><DT
+>4. <A
+HREF="support.html"
+>Support</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="support.html#AEN132"
+>Online Support</A
+></DT
+><DT
+>The Jellyfish Book. <A
+HREF="jellyfish.html"
+>The Jellyfish Book</A
+></DT
+></DL
+></DD
+><DT
+>5. <A
+HREF="apidocs.html"
+>Class documentation</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="apidocs.html#XMLRPC-CLIENT"
+>xmlrpc_client</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="apidocs.html#AEN160"
+>Creation</A
+></DT
+><DT
+><A
+HREF="apidocs.html#AEN177"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcmsg.html"
+>xmlrpcmsg</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcmsg.html#AEN238"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcmsg.html#AEN258"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcresp.html"
+>xmlrpcresp</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcresp.html#AEN335"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcresp.html#AEN357"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcval.html"
+>xmlrpcval</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcval.html#AEN401"
+>Notes on types</A
+></DT
+><DT
+><A
+HREF="xmlrpcval.html#XMLRPCVAL-CREATION"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcval.html#XMLRPCVAL-METHODS"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpc-server.html"
+>xmlrpc_server</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpc-server.html#AEN607"
+>The dispatch map</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#SIGNATURES"
+>Method signatures</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#AEN635"
+>Delaying the server response</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#AEN641"
+>Fault reporting</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>6. <A
+HREF="helpers.html"
+>Helper functions</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="helpers.html#AEN688"
+>Date functions</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="helpers.html#ISO8601ENCODE"
+>iso8601_encode</A
+></DT
+><DT
+><A
+HREF="helpers.html#ISO8601DECODE"
+>iso8601_decode</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="arrayuse.html"
+>Easy use with PHP arrays</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="arrayuse.html#XMLRPCDECODE"
+>xmlrpc_decode</A
+></DT
+><DT
+><A
+HREF="arrayuse.html#XMLRPCENCODE"
+>xmlrpc_encode</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="debugging.html"
+>Debugging aids</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="debugging.html#AEN760"
+>xmlrpc_debugmsg</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>7. <A
+HREF="reserved.html"
+>Reserved methods</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="reserved.html#AEN776"
+>system.listMethods</A
+></DT
+><DT
+><A
+HREF="sysmethodsig.html"
+>system.methodSignature</A
+></DT
+><DT
+><A
+HREF="sysmethhelp.html"
+>system.methodHelp</A
+></DT
+></DL
+></DD
+><DT
+>8. <A
+HREF="examples.html"
+>Examples</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="examples.html#STATENAME"
+>XML-RPC client: state name query</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="introduction.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Introduction</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

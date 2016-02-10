@@ -1,0 +1,89 @@
+FAQ
+PhpGroupware
+Email Application
+
+Last Updated:
+9/28/2001
+
+
+Q: I'm composing mail, what do I put in the "To" and/or "CC" boxes
+A: The easiest was is to follow these examples,
+   pay close attention to the spaces, do not add spaces you do not see here:
+johndoe@example.com
+johndoe@example.com,jane@example.com,tarzan@example.com
+"John Doe" <johndoe@example.com>
+"John Doe" <johndoe@example.com>,"Jane" <jane@example.com>
+johndoe@example.com,"Jane" <jane@example.com>,tarzan@example.com
+
+
+Q: I use UWash IMAP, where will phpgroupware email look for MBOX files?
+A1: The mbox folder "INBOX" will always be available by default
+A2: (The following answer is subject to change when this option becomes
+    settable suring the system wide setup)
+-IF your mbox files are in $HOME/mail (a.k.a. ~/mail/*) then you do NOT
+ need to change any settings, email will look there BY DEFAULT.
+-IF your mbox folders (such as the "Sent" and "Trash" foldsers)
+ are in any other location (such as your $HOME directory, a.k.a ~/*)
+ THEN you must _currently_ set the following "custom option"
+ FOR EACH ACCOUNT (this will change when this option becomes a system item).
+--FIRST do this:
+ - goto the "Preferences" page
+ - click on "E-Mail preferences"
+ - check "use custom settings"
+ - enter these next items ONLY if they are different from your account
+   and system defaults:
+   - enter your email account name, password, and your email address
+   - enter the name or IP address of your IMAP server (ex: mail.example.com)
+   - choose IMAP as your "mail server type"
+   - choose "UWash" as your "imap server type"
+ - the last option is presently called "UWash Mail Folder"
+   ( it used to be called "Mail Folder(uw-maildir)"
+     this option will works for regular UWash IMAP and UWash Maildir IMAP)
+ - If your mbox files are in $HOME   then LEAVE THIS OPTION BLANK.
+ - If your mbox files are in $HOME/email  then type in this:
+email
+(notice NO QUOTES, NO TILDES, NO SLASHES)
+ - If your mbox files are in $HOME/mystuff  then type in this:
+mystuff
+(notice NO QUOTES, NO TILDES, NO SLASHES)
+ - If your mbox files are in $HOME/data/email  then type in this:
+data/email
+(notice NO QUOTES, NO TILDES, and you see the slash in the middle)
+ - In the rare event you need to use a slash as seen above, then of course,
+   forward slash is used in Linux type systems, and backslash typically 
+   for M-S installations.
+ - then click "Submit"
+Note: As of this writting, it is a "per user" config option only
+
+
+Q: I can not attach files to an email, I get errors about "unlink".
+A: There are 2 directories to check:
+ - goto /setup  (the phpgroupware initial setup page)
+ - login to "Setup/Config Admin Log"
+ - in "Step 2 - Configuration" click "Edit Current Configuration"
+ - under "Path Information" see the box labeled
+   "Enter full path for temporary files: Examples: /tmp, C:\TEMP"
+ - what you entered in this box will be the first place to look
+   on Linux systems, say you enter this
+/var/phpgw
+   then that directory *could* be (user.group perms) webserver.webserver 0700
+   I say *could* because the exact security configuration is beyond
+   the scope of this FAQ. What is needed is that the directory you 
+   enter in that box should exist and have permissions that allow the 
+   web server to read and write files and create directories.
+ - The other directory to check is the temporary directory
+   that your web server typically uses, but the information listed
+   above is by far the most common config issue with email attachments.
+
+
+Q: My imap server logs show many login attempts with garbage usernames, why?
+A: At this time, we know this happens when, for this option:
+"Enter your POP/IMAP mail server hostname or IP address"
+   if you enter this:
+localhost
+   then this problem seems to occur. For now the solution would be to try
+   the actual IP or the machine name (resolvable via DNS, hosts,
+   or other means) for your IMAP email server.
+
+
+EOF

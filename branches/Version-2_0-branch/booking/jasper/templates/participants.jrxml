@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jasperReport
+
+	xmlns="http://jasperreports.sourceforge.net/jasperreports"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+	name="BKParticipants" pageHeight="595" pageWidth="842" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" isFloatColumnFooter="true">
+	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tag.language" value="EN-US"/>
+	<style name="Sans_Normal" isDefault="true" fontName="DejaVu Sans" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" isDefault="false" fontName="DejaVu Sans" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+
+	<subDataset name="ByBuilding_preview">
+		<parameter name="DATE_FROM" class="java.lang.String"/>
+		<parameter name="DATE_TO" class="java.lang.String"/>
+		<parameter name="BUILDING_ID" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[
+				SELECT to_char(bo.from_, 'YYYY-MM') AS month, ag.name AS aname, ba.male, ba.female, bu.id, bu.name, ag.sort as agegroup_sort
+				FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu 
+				WHERE ba.agegroup_id = ag.id 
+				AND ba.booking_id = bo.id
+				AND bo.allocation_id = al.id
+				AND al.season_id = se.id 
+				AND se.building_id = bu.id 
+				AND ag.active = 1
+				AND date_trunc('day' ,bo.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
+				AND date_trunc('day' ,bo.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND bu.id = $P{BUILDING_ID}
+				UNION
+				SELECT to_char(ev.from_, 'YYYY-MM') AS month, ag.name AS aname, ea.male, ea.female, bu.id, bu.name, ag.sort AS agegroup_sort
+				FROM bb_event ev
+				INNER JOIN bb_event_agegroup ea ON ea.event_id = ev.id
+				INNER JOIN bb_agegroup ag ON ag.id = ea.agegroup_id and ag.active = 1
+				INNER JOIN bb_event_resource er ON er.event_id = ev.id
+				INNER JOIN bb_resource re ON re.id = er.resource_id
+				INNER JOIN bb_building bu ON bu.id = re.building_id
+				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
+				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND bu.id = $P{BUILDING_ID}
+				ORDER BY month desc, agegroup_sort
+			]]>
+		</queryString>
+		<field name="month" class="java.lang.String"/>
+		<field name="aname" class="java.lang.String"/>
+		<field name="male" class="java.lang.Integer"/>
+		<field name="female" class="java.lang.Integer"/>
+	</subDataset>
+
+	<parameter name="BK_DATE_FROM" class="java.lang.String"/>
+	<parameter name="BK_DATE_TO" class="java.lang.String"/>
+	<parameter name="BK_BUILDINGS" class="java.lang.String"/>
+
+	<queryString>
+		<![CDATA[
+			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			FROM bb_booking bo
+			INNER JOIN bb_allocation al ON al.id = bo.allocation_id
+			INNER JOIN bb_season se ON se.id = al.season_id
+			INNER JOIN bb_building bu ON bu.id = se.building_id
+			WHERE date_trunc('day', bo.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', bo.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND bu.id = ANY (string_to_array($P{BK_BUILDINGS}, ',')::int4[])
+			UNION
+			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			from bb_event ev
+			inner join bb_event_resource er on er.event_id = ev.id
+			inner join bb_resource re on re.id = er.resource_id
+			inner join bb_building bu on bu.id = re.building_id
+			WHERE date_trunc('day', ev.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', ev.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND bu.id = ANY (string_to_array($P{BK_BUILDINGS}, ',')::int4[])
+			order by building_name
+		]]>
+	</queryString>
+
+	<field name="building_id" class="java.lang.Integer"/>
+	<field name="building_name" class="java.lang.String"/>
+
+	<title>
+		<band height="80" isSplitAllowed="false">
+			<staticText>
+				<reportElement x="20" y="5" width="750" height="30">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<text>Deltagere per aldersgruppe per måned</text>
+			</staticText>
+			<textField>
+				<reportElement x="20" y="35" width="750" height="40">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression>"(" + $P{BK_DATE_FROM} + " - " + $P{BK_DATE_TO} + ")"</textFieldExpression>
+			</textField>
+		</band>
+	</title>
+
+	<detail>
+		<band height="130" isSplitAllowed="false">
+			<textField>
+				<reportElement x="0" y="20" width="500" height="35" style="Sans_Bold"/>
+				<textElement>
+					<font size="10"/> 
+				</textElement>
+				<textFieldExpression>"Bygg/Anlegg: " + $F{building_name}</textFieldExpression>
+			</textField>
+			<crosstab isRepeatColumnHeaders="false">
+				<reportElement x="0" y="60" width="782" height="70"/>
+				<crosstabParameter name="BUILDING_ID" class="java.lang.Integer">
+					<parameterValueExpression>$F{building_id}</parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="ByBuilding_preview">
+							<datasetParameter name="BUILDING_ID">
+								<datasetParameterExpression><![CDATA[$F{building_id}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DATE_FROM">
+								<datasetParameterExpression><![CDATA[$P{BK_DATE_FROM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DATE_TO">
+								<datasetParameterExpression><![CDATA[$P{BK_DATE_TO}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+
+				<rowGroup name="MonthGroup" width="75" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String">$F{month}</bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement x="5" y="0" width="70" height="10" style="Sans_Bold"/>
+								<textFieldExpression>$V{MonthGroup}</textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#E0FFFF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="5" y="0" width="70" height="10" style="Sans_Bold"/>
+								<text>TOTAL</text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+
+				<columnGroup name="AgeGroup" height="80" totalPosition="End" headerPosition="Stretch">
+					<bucket>
+						<bucketExpression class="java.lang.String">$F{aname}</bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="80" height="70" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+								<textFieldExpression class="java.lang.String">$V{AgeGroup}</textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="0" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>M</text>
+							</staticText>
+							<staticText>
+								<reportElement x="40" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>K</text>
+							</staticText>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#FFFF60" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="70" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>TOTAL</text>
+							</staticText>
+							<staticText>
+								<reportElement x="0" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>M</text>
+							</staticText>
+							<staticText>
+								<reportElement x="40" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>K</text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+
+				<measure name="MaleMesure" class="java.lang.Integer" calculation="Sum">
+					<measureExpression>$F{male}</measureExpression>
+				</measure>
+				<measure name="FemaleMesure" class="java.lang.Integer" calculation="Sum">
+					<measureExpression>$F{female}</measureExpression>
+				</measure>
+
+				<crosstabCell width="80" height="10">
+					<cellContents backcolor="#FFFFFF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{MaleMesure}</textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{FemaleMesure}</textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+
+				<crosstabCell width="80" height="10" columnTotalGroup="AgeGroup">
+					<cellContents backcolor="#FFFF60" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{MaleMesure}</textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{FemaleMesure}</textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+
+				<crosstabCell width="80" height="10" rowTotalGroup="MonthGroup">
+					<cellContents backcolor="#E0FFFF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{MaleMesure}</textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{FemaleMesure}</textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+
+				<crosstabCell width="80" height="10" rowTotalGroup="MonthGroup" columnTotalGroup="AgeGroup">
+					<cellContents backcolor="#C0C0C0" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10" style="Sans_Bold"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{MaleMesure}</textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10" style="Sans_Bold"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Integer">$V{FemaleMesure}</textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+
+				<whenNoDataCell>
+					<cellContents>
+						<staticText>
+							<reportElement x="0" y="0" width="250" height="25"/>
+							<text>No data</text>
+						</staticText>
+					</cellContents>
+				</whenNoDataCell>
+			</crosstab>
+		</band>
+	</detail>
+</jasperReport>

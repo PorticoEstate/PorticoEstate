@@ -1,0 +1,41 @@
+add a note	notes	en	Add a note
+apply	notes	en	apply
+apply the values	notes	en	Apply the values
+arial	notes	en	Arial
+choose a font	notes	en	Choose a font
+choose the font size	notes	en	Choose the font size
+content	notes	en	content
+courier new	notes	en	Courier New
+delete a single entry by passing the id.	notes	en	Delete a single entry by passing the id.
+delete note	common	en	Delete note
+delete the note	notes	en	Delete the note
+display note	notes	en	Display note
+do you really want to delete this note ?	notes	en	do you really want to delete this note ?
+edit note	notes	en	Edit note
+edit the note	notes	en	edit the note
+enter the content of the note	notes	en	Enter the content of the note
+enter the search string. to show all entries, empty this field and press the submit button again	notes	en	Enter the search string. To show all entries, empty this field and press the SUBMIT button again
+georgia	notes	en	Georgia
+helvetica	notes	en	Helvetica
+large	notes	en	Large
+leave the note untouched and return back to the list	notes	en	Leave the note untouched and return back to the list
+list notes	notes	en	List notes
+note id	notes	en	note id
+notes preferences	notes	en	Notes preferences
+read a list of entries.	notes	en	Read a list of entries.
+read a single entry by passing the id and fieldlist.	notes	en	Read a single entry by passing the id and fieldlist.
+save the note and return back to the list	notes	en	Save the note and return back to the list
+select the category the notes belongs to. to do not use a category select no category	notes	en	Select the category the notes belongs to. To do not use a category select NO CATEGORY
+select the filter. to show all entries select show all	notes	en	Select the filter. To show all entries select SHOW ALL
+small	notes	en	Small
+submit the search string	notes	en	Submit the search string
+tahoma	notes	en	Tahoma
+the note is private. if the note should be public, uncheck this box	notes	en	The note is private. If the note should be public, uncheck this box
+the note is public. if the note should be private, check this box	notes	en	The note is public. If the note should be private, check this box
+time created	notes	en	Time created
+times new roman	notes	en	Times New Roman
+update a single entry by passing the fields.	notes	en	Update a single entry by passing the fields.
+verdana	notes	en	Verdana
+very large	notes	en	Very Large
+very small	notes	en	Very Small
+view the note	notes	en	view the note

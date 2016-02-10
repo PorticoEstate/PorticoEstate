@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="384"/>
+	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tag.language" value="EN-US"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CELL_DARK" mode="Opaque" backcolor="#999999">
+		<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="3">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CELL_LIGHT" mode="Opaque" backcolor="#CCCCCC">
+		<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="3">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="headers" forecolor="#808080" fontName="Serif" fontSize="14"/>
+	<style name="Sans_Normal" isDefault="true" fontName="Serif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" fontName="Serif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Italic" fontName="Serif" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold_Italic" fontName="Serif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<subDataset name="resources">
+		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT bb_resource.name AS resource_name, bb_resource.type AS resource_type FROM bb_application,bb_application_resource,bb_resource WHERE bb_application.id = $P!{APPLICATION_ID} AND bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = bb_resource.id]]>
+		</queryString>
+		<field name="resource_name" class="java.lang.String"/>
+		<field name="resource_type" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="targetaudience">
+		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT bb_targetaudience.name AS targetaudience FROM bb_application_targetaudience,bb_targetaudience WHERE bb_application_targetaudience.application_id = $P!{APPLICATION_ID} AND bb_application_targetaudience.targetaudience_id = bb_targetaudience.id]]>
+		</queryString>
+		<field name="targetaudience" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="agegroup">
+		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT bb_agegroup.name AS agegroup , bb_application_agegroup.male, bb_application_agegroup.female FROM bb_agegroup,bb_application_agegroup WHERE bb_application_agegroup.application_id = $P!{APPLICATION_ID} AND bb_application_agegroup.agegroup_id = bb_agegroup.id AND bb_agegroup.active = 1 ORDER BY bb_agegroup.sort]]>
+		</queryString>
+		<field name="agegroup" class="java.lang.String"/>
+		<field name="male" class="java.lang.Integer"/>
+		<field name="female" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="comment">
+		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT
+     to_char(time,'DD/MM/YYYY HH24:MI') AS date, author, comment FROM "bb_application_comment" bb_application_comment WHERE bb_application_comment.application_id = $P!{APPLICATION_ID} AND bb_application_comment.type = 'comment' OFFSET 1]]>
+		</queryString>
+		<field name="date" class="java.lang.String"/>
+		<field name="author" class="java.lang.String"/>
+		<field name="comment" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="BK_APPLICATION_ID" class="java.lang.String"/>
+	<parameter name="BK_BUILDING_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT bb_application.id AS application_id, bb_application.status AS application_status, to_char(bb_application.created, 'DD/MM/YYYY HH24:MI') AS application_created, to_char(bb_application.modified, 'DD/MM/YYYY HH24:MI') AS application_modified,bb_application.contact_name, bb_application.contact_email, bb_application.contact_phone,bb_application.description, to_char(bb_application_date.from_, 'DD/MM/YYYY HH24:MI') AS from, to_char(bb_application_date.to_, 'DD/MM/YYYY HH24:MI') AS to, bb_activity.name AS activity_name, bb_event.cost AS price,bb_application_comment.comment AS comment FROM bb_application, bb_application_date,bb_activity, bb_event, bb_application_comment WHERE bb_application.id = ANY (string_to_array($P{BK_APPLICATION_ID}, ',')::int4[]) AND bb_application.id = bb_application_date.application_id AND bb_application.activity_id = bb_activity.id AND bb_application.id = bb_event.application_id AND bb_application.id = bb_application_comment.application_id LIMIT 1]]>
+	</queryString>
+	<field name="application_id" class="java.lang.Integer"/>
+	<field name="application_status" class="java.lang.String"/>
+	<field name="application_created" class="java.lang.String"/>
+	<field name="application_modified" class="java.lang.String"/>
+	<field name="contact_name" class="java.lang.String"/>
+	<field name="contact_email" class="java.lang.String"/>
+	<field name="contact_phone" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="from" class="java.lang.String"/>
+	<field name="to" class="java.lang.String"/>
+	<field name="activity_name" class="java.lang.String"/>
+	<field name="price" class="java.math.BigDecimal"/>
+	<field name="comment" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="107" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="11" width="102" height="74"/>
+				<imageExpression class="java.lang.String"><![CDATA["../../../../booking/jasper/templates/logo.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="405" y="0" width="150" height="100"/>
+				<imageExpression class="java.lang.String"><![CDATA["../../../../booking/jasper/templates/aktivby.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="619" splitType="Stretch">
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="79" width="156" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Telefon: " + $F{contact_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="66" width="156" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Navn: " + $F{contact_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="40" width="481" height="13"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Søknad #" + $P{BK_APPLICATION_ID}+", sist oppdatert: " +  $F{application_modified}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="58" y="1" width="452" height="25"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leie av kommunale bygg, anlegg og byrom.]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="227" y="131" width="312" height="13"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Horizontal">
+					<datasetRun subDataset="resources">
+						<datasetParameter name="APPLICATION_ID">
+							<datasetParameterExpression><![CDATA[$F{application_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="13" width="312">
+						<textField>
+							<reportElement style="Sans_Bold" x="0" y="0" width="312" height="13"/>
+							<textElement>
+								<font isUnderline="false" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{resource_name}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement style="headers" x="6" y="105" width="546" height="20"/>
+				<textElement/>
+				<text><![CDATA[Sted og betingelser]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="headers" x="6" y="287" width="546" height="20"/>
+				<textElement/>
+				<text><![CDATA[Formål]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="headers" x="6" y="443" width="546" height="20"/>
+				<textElement/>
+				<text><![CDATA[Målgruppe og estimert antall deltakerte]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="612" width="100" height="1"/>
+			</break>
+			<staticText>
+				<reportElement style="Sans_Bold" x="58" y="184" width="286" height="13"/>
+				<textElement>
+					<font isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Søker har lest og akseptert følgende dokument:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="58" y="482" width="195" height="13"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="targetaudience">
+						<datasetParameter name="APPLICATION_ID">
+							<datasetParameterExpression><![CDATA[$F{application_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="13" width="195">
+						<textField>
+							<reportElement x="0" y="0" width="195" height="13"/>
+							<textElement/>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{targetaudience}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="58" y="469" width="100" height="13"/>
+				<textElement>
+					<font isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Målgruppe:]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement x="58" y="261" width="126" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pris: "+ $F{price}+" kr"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="196" width="481" height="65"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{comment}.replaceFirst("Brukeren har akseptert følgende dokument: ","").replaceFirst(", ","\n")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="6" y="122" width="546" height="1" forecolor="#C0C0C0"/>
+			</line>
+			<line>
+				<reportElement x="6" y="304" width="546" height="1" forecolor="#C0C0C0"/>
+			</line>
+			<line>
+				<reportElement x="6" y="461" width="546" height="1" forecolor="#C0C0C0"/>
+			</line>
+			<textField>
+				<reportElement style="Sans_Bold" x="58" y="53" width="156" height="13"/>
+				<textElement>
+					<font pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Status: " + ( $F{application_status} == "ACCEPTED" ? "AKSEPTERT" : $F{application_status} )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="84" y="326" width="455" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{activity_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="58" y="313" width="65" height="13"/>
+				<textElement>
+					<font isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Aktivitet:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="352" width="65" height="13"/>
+				<textElement>
+					<font isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Beskrivelse:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="84" y="365" width="455" height="65"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="58" y="131" width="169" height="13"/>
+				<textElement>
+					<font pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Hvor: " + $P{BK_BUILDING_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="144" width="116" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fra: "+ $F{from}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Normal" x="58" y="157" width="116" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Til: " + $F{to}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" style="table" x="292" y="469" width="191" height="143"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="agegroup">
+						<datasetParameter name="APPLICATION_ID">
+							<datasetParameterExpression><![CDATA[$F{application_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="128">
+						<jr:columnHeader height="19" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CELL_DARK" x="0" y="0" width="128" height="19"/>
+								<textElement>
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Antall deltakere]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_CELL_DARK" x="0" y="0" width="128" height="19"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{agegroup}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="47">
+						<jr:columnHeader height="19" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CELL_DARK" x="0" y="0" width="47" height="19"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Mann]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_CELL_LIGHT" x="0" y="0" width="47" height="19"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{male}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="48">
+						<jr:columnHeader height="19" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CELL_DARK" x="0" y="0" width="47" height="19"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Kvinne]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_CELL_LIGHT" x="0" y="0" width="47" height="19"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{female}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="306">
+			<elementGroup>
+				<componentElement>
+					<reportElement x="6" y="32" width="546" height="52"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="comment">
+							<datasetParameter name="APPLICATION_ID">
+								<datasetParameterExpression><![CDATA[$F{application_id}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:listContents height="52" width="546">
+							<textField>
+								<reportElement x="0" y="0" width="104" height="13"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{date}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="104" y="0" width="117" height="13"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{author}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="0" y="13" width="546" height="39"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{comment}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</elementGroup>
+			<elementGroup/>
+			<staticText>
+				<reportElement style="headers" x="6" y="6" width="546" height="20"/>
+				<textElement/>
+				<text><![CDATA[Merknader]]></text>
+			</staticText>
+			<line>
+				<reportElement x="6" y="21" width="546" height="1" forecolor="#C0C0C0"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28">
+			<textField>
+				<reportElement x="214" y="6" width="67" height="17"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Side "+$V{PAGE_NUMBER}+" av"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="281" y="6" width="40" height="17"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="6" width="48" height="19"/>
+				<textElement/>
+				<text><![CDATA[AktivBy]]></text>
+			</staticText>
+			<textField pattern="dd.MM.yyyy">
+				<reportElement x="58" y="6" width="100" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

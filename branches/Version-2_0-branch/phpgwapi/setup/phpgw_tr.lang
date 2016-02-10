@@ -1,0 +1,539 @@
+about %1	common	tr	%1 hakkında
+access	common	tr	erişim
+access not permitted	common	tr	Erişim engellendi
+account has been created	common	tr	Hesap oluşturuldu
+account has been deleted	common	tr	Hesap silindi
+account has been updated	common	tr	Hesap güncellendi
+acl	common	tr	ACL
+action	common	tr	İşlemi yap
+active	common	tr	Aktif
+add	common	tr	Ekle
+add %1 category for	common	tr	%1 i kategorisine ekle
+add category	common	tr	Kategori ekle
+add sub	common	tr	Rutin ekle
+addressbook	common	tr	Adres defteri
+admin	common	tr	Yönetici
+administration	common	tr	Yönetim
+afghanistan	common	tr	AFGANİSTAN
+albania	common	tr	ALBANIA
+algeria	common	tr	CEZAYİR
+all	common	tr	Hepsi
+american samoa	common	tr	AMERİKAN SAMOA
+andorra	common	tr	ANDORA
+angola	common	tr	ANGOLA
+anguilla	common	tr	ANGUILA
+antarctica	common	tr	ANTARTİKA
+antigua and barbuda	common	tr	ANTIGUA VE BARBUDA
+apply	common	tr	Uygula
+april	common	tr	Nisan
+are you sure you want to delete this entry ?	common	tr	Bu girdiyi silmek istediğinden emin misin ?
+argentina	common	tr	ARJANTİN
+armenia	common	tr	ERMENİTAN
+aruba	common	tr	ARUBA
+august	common	tr	Ağustos
+australia	common	tr	AUSTRALYA
+austria	common	tr	AVUSTURYA
+author	common	tr	Yetkili
+autosave default category	common	tr	Varsayılan kategoriyi otomatik kaydet
+azerbaijan	common	tr	AZERBAYCAN
+back	common	tr	Geri
+bad login or password	common	tr	Geçersiz şifre veya kullanıcı adı
+bahamas	common	tr	BAHAMA ADALARI
+bahrain	common	tr	BAHREYN
+bangladesh	common	tr	BANGLADEŞ
+barbados	common	tr	BARBADOS
+belarus	common	tr	BEYAZ RUSYA
+belgium	common	tr	BELÇİKA
+belize	common	tr	BELIZE
+benin	common	tr	BENIN
+bermuda	common	tr	BERMUDA
+bhutan	common	tr	BUTAN
+blocked, too many attempts	common	tr	Bloklandı çok fazla teşebbüs var
+bolivia	common	tr	BOLİVYA
+bosnia and herzegovina	common	tr	BOSNA - HERSEK
+botswana	common	tr	BOTSWANA
+bouvet island	common	tr	BOUVET ADASI
+brazil	common	tr	BRAZİLYA
+british indian ocean territory	common	tr	İNGİLİZ HİNT KARASAL OKYANUSU
+brunei darussalam	common	tr	BRUNEI DARUSSALAM
+bulgaria	common	tr	BULGARİSTAN
+burkina faso	common	tr	BURKINA FASO
+burundi	common	tr	BURUNDI
+cambodia	common	tr	KAMBOÇYA
+cameroon	common	tr	KAMERUN
+canada	common	tr	KANADA
+cancel	common	tr	İptal
+cape verde	common	tr	CAPE VERDE
+categories	common	tr	Kategoriler
+categories for	common	tr	için kategori
+category	common	tr	Kategori
+category %1 has been added !	common	tr	Kategori %1 eklendi !
+category %1 has been updated !	common	tr	Kategori %1 güncellendi !
+cayman islands	common	tr	CAYMAN ADALARI
+central african republic	common	tr	MERKEZİ AFRİKA CUMHURİYETİ
+chad	common	tr	ÇAD
+change	common	tr	Değiştir
+charset	common	tr	utf-8
+chile	common	tr	ŞİLİ
+china	common	tr	ÇİN
+choose the category	common	tr	Kategori seç
+choose the parent category	common	tr	Parent kategoriyi seç
+christmas island	common	tr	CHRISTMAS ADALARI
+clear	common	tr	Temizle
+clear form	common	tr	Formu temizle
+close	common	tr	Kapat
+cocos (keeling) islands	common	tr	COCOS (KEELING) ADALARI
+colombia	common	tr	KOLOMBİYA
+comoros	common	tr	KOMOROS
+congo	common	tr	KONGO
+congo, the democratic republic of the	common	tr	KONGO, DEMOKRATİK CUMHURİYETİ
+cook islands	common	tr	COOK ADALARI
+copy	common	tr	Kopyala
+costa rica	common	tr	KOSTA RIKA
+cote d ivoire	common	tr	COTE D IVOIRE
+create	common	tr	Oluştur
+created by	common	tr	Oluşturan
+croatia	common	tr	HIRVATİSTAN
+cuba	common	tr	KÜBA
+currency	common	tr	Para
+current	common	tr	Şuanki
+current users	common	tr	Şuanki kullanıcılar
+cyprus	common	tr	KIBRIS
+czech republic	common	tr	ÇEK CUMHURİYETİ
+date	common	tr	Tarih
+date due	common	tr	Direkt tarih
+december	common	tr	Aralık
+default category	common	tr	Varsayılan kategori
+delete	common	tr	Sil
+denmark	common	tr	DANİMARKA
+description	common	tr	Açıklama
+detail	common	tr	Detay
+details	common	tr	Detaylar
+disabled	common	tr	İnaktif
+display monday first	common	tr	Önce pazartesiyi göster
+display sunday first	common	tr	Önce pazarı göster
+djibouti	common	tr	DJIBOUTI
+do you also want to delete all subcategories ?	common	tr	Alt kategorilerin tümünü de silmek istermisin ?
+domain	common	tr	Etki alanı
+domain name for mail-address, eg. "%1"	common	tr	mail adresi için domain adı, örneğin. "%1"
+domestic	common	tr	Domestik
+dominica	common	tr	DOMİNİK
+dominican republic	common	tr	DOMİNİK CUMHURİYETİ
+done	common	tr	Bitir
+drag to move	common	tr	Taşımak için sürükle
+e-mail	common	tr	E-Posta
+east timor	common	tr	DOĞU TIMOR
+ecuador	common	tr	EKVADOR
+edit	common	tr	Düzenle
+edit %1 category for	common	tr	%1 kategorisini düzenle
+edit categories	common	tr	Kategorileri düzenle
+edit category	common	tr	Kategori düzenle
+egypt	common	tr	MISIR
+el salvador	common	tr	EL SALVADOR
+email	common	tr	E-posta
+email-address of the user, eg. "%1"	common	tr	kullanıcıların e-posta adresi, örneğin. "%1"
+enabled	common	tr	Aktif
+end date	common	tr	Başlangıç tarihi
+end time	common	tr	Bitiş tarihi
+entry has been deleted sucessfully	common	tr	Girdi başarıyla silindi
+entry updated sucessfully	common	tr	Girdi başarıyla güncellendi
+equatorial guinea	common	tr	EKVATORAL GİNE
+eritrea	common	tr	ERITREA
+error	common	tr	Hata
+error creating %1 %2 directory	common	tr	%1 %2 Dizini oluşturmada hata
+error deleting %1 %2 directory	common	tr	%1 %2 Dizini silmede hata
+error renaming %1 %2 directory	common	tr	%1 %2 Dizini yeniden isimlendirmede hata
+estonia	common	tr	ESTONYA
+ethiopia	common	tr	ETİYOPYA
+falkland islands (malvinas)	common	tr	FALKLAND ADALARI (MALVINAS)
+faroe islands	common	tr	FAROE ADALARI
+fax number	common	tr	faz numarası
+february	common	tr	Şubat
+fields	common	tr	Alanlar
+fiji	common	tr	FIJI
+files	common	tr	Doysa
+filter	common	tr	Filtre
+finland	common	tr	FİNLANDİYA
+first name	common	tr	İsim
+first name of the user, eg. "%1"	common	tr	kullanıcının ismi, örneğin. "%1"
+first page	common	tr	İlk sayfa
+firstname	common	tr	İl ad
+fixme!	common	tr	ONAR!
+force selectbox	common	tr	Seçim kutusunu seç
+france	common	tr	FRANSA
+french guiana	common	tr	FRENCH GUIANA
+french polynesia	common	tr	FRENCH POLYNESIA
+french southern territories	common	tr	FRENCH SOUTHERN TERRITORIES
+friday	common	tr	Cuma
+ftp	common	tr	FTP
+fullname	common	tr	Ad-soyad
+gabon	common	tr	GABON
+gambia	common	tr	GAMBİYA
+general menu	common	tr	Genel menü
+georgia	common	tr	GEORGIA
+germany	common	tr	ALMANYA
+ghana	common	tr	GANA
+gibraltar	common	tr	GIBRALTAR
+global	common	tr	Evrensel
+global public	common	tr	Evrensel Halk
+go today	common	tr	Bugüne git
+grant access	common	tr	Erişim hakkı var
+greece	common	tr	YUNANİSTAN
+greenland	common	tr	GREENLAND
+grenada	common	tr	GRENADA
+group	common	tr	Grup
+group access	common	tr	Grup erişimi
+group has been added	common	tr	Grup eklendi
+group has been deleted	common	tr	Grup silindi
+group has been updated	common	tr	Grup güncellendi
+group name	common	tr	grup adı
+group public	common	tr	Grup halkı
+groups	common	tr	Gruplar
+groups with permission for %1	common	tr	%1 için grup izni
+groups without permission for %1	common	tr	%1 için izinsiz grup
+guadeloupe	common	tr	GUADELOUPE
+guam	common	tr	GUAM
+guatemala	common	tr	GUATEMALA
+guinea	common	tr	GİNE
+guinea-bissau	common	tr	GUINEA-BISSAU
+guyana	common	tr	GUYANA
+haiti	common	tr	HAİTİ
+heard island and mcdonald islands	common	tr	HEARD ADASI AND MCDONALD ADALARI
+help	common	tr	Yardım
+high	common	tr	Yüksek
+highest	common	tr	En yüksek
+holy see (vatican city state)	common	tr	HOLY SEE (VATICAN CITY STATE)
+home	common	tr	Ev
+honduras	common	tr	HONDURAS
+hong kong	common	tr	HONG KONG
+hungary	common	tr	MACARİSTAN
+iceland	common	tr	ICELAND
+india	common	tr	HİNDİSTAN
+indonesia	common	tr	ENDONEZYA
+international	common	tr	Uluslararası
+invalid ip address	common	tr	Geçersiz IP adresi
+invalid password	common	tr	Geçersiz şifre
+iran, islamic republic of	common	tr	İRAN, İSLAM CUMHURİYETİ
+iraq	common	tr	IRAK
+ireland	common	tr	IRLANDA
+israel	common	tr	ISRAİL
+it has been more then %1 days since you changed your password	common	tr	Şifre değişikliğinden bu zaman kadar %1 gün geçti
+it is recommended that you run setup to upgrade your tables to the current version	common	tr	Tablolarınızı şuanki versiyona güncellemeniz tavsiye edilir.
+italy	common	tr	İTALYA
+jamaica	common	tr	JAMAİKA
+january	common	tr	Ocak
+japan	common	tr	JAPONYA
+jordan	common	tr	JORDAN
+july	common	tr	Temmmuz
+june	common	tr	Haziran
+kazakstan	common	tr	KAZAKİSTAN
+kenya	common	tr	KENYA
+keywords	common	tr	Anahtar kelime
+kiribati	common	tr	KIRIBATI
+korea, democratic peoples republic of	common	tr	KORE DEMOKRATİK CUMHURİYETİ
+korea, republic of	common	tr	KORE CUMHURİYETİ
+kuwait	common	tr	KUVAYT
+kyrgyzstan	common	tr	KIRGIZİSTAN
+language	common	tr	Dil
+lao peoples democratic republic	common	tr	LAO PEOPLES DEMOKRATİK CUMHURİYETİ
+last name	common	tr	İkinci ad
+last name of the user, eg. "%1"	common	tr	kullanıcının ikinci adı, örneğin. "%1"
+last page	common	tr	Son sayfa
+lastname	common	tr	İkinci ad
+latvia	common	tr	LETONYA
+lebanon	common	tr	LÜBNAN
+lesotho	common	tr	LESOTO
+liberia	common	tr	LIBERIA
+libyan arab jamahiriya	common	tr	LIBYA ARAP JAMAHIRIYA
+license	about	tr	Lisans
+liechtenstein	common	tr	LIECHTENSTEIN
+list	common	tr	Liste
+lithuania	common	tr	LİTVANYA
+local	common	tr	yerel
+login	common	tr	giriş
+loginid	common	tr	GirişID
+logout	common	tr	Çıkış
+low	common	tr	Düşük
+lowest	common	tr	Endüşük
+luxembourg	common	tr	LÜKSEMBURG
+macau	common	tr	MACAU
+macedonia, the former yugoslav republic of	common	tr	MAKEDONIA, THE FORMER YUGOSLAV CUMHURİYETİ
+madagascar	common	tr	MADAGASKAR
+mail domain, eg. "%1"	common	tr	mail domaini, örneğin. "%1"
+main category	common	tr	Ana kategori
+main screen	common	tr	Ana ekran
+maintainer	about	tr	Bakımı yapan
+malawi	common	tr	MALAWI
+malaysia	common	tr	MALEZYA
+maldives	common	tr	MALDİVLAR
+mali	common	tr	MALI
+malta	common	tr	MALTA
+manual	common	tr	Manuel
+march	common	tr	Mart
+marshall islands	common	tr	MARSHALL ADALARI
+martinique	common	tr	MARTINIK
+mauritania	common	tr	MAURITANIA
+mauritius	common	tr	MAURITIUS
+may	common	tr	Mayıs
+mayotte	common	tr	MAYOTTE
+medium	common	tr	Orta
+menu	common	tr	Menü
+message	common	tr	Mesaj
+mexico	common	tr	MEKSIKA
+micronesia, federated states of	common	tr	MICRONESIA, FEDERATED STATES OF
+moldova, republic of	common	tr	MOLDOVA, CUMHURİYETİ
+monaco	common	tr	MONAKO
+monday	common	tr	Pazartesi
+mongolia	common	tr	MONGOLYA
+montserrat	common	tr	MONTSERRAT
+morocco	common	tr	FAS
+mozambique	common	tr	MOZAMBİK
+myanmar	common	tr	MYANMAR
+name	common	tr	İsim
+name of the user, eg. "%1"	common	tr	kullanıcı ismi, örneğin. "%1"
+namibia	common	tr	NAMİBYA
+nauru	common	tr	NAURU
+nepal	common	tr	NEPAL
+netherlands	common	tr	HOLLANDA
+netherlands antilles	common	tr	NETHERLANDS ANTILLES
+never	common	tr	Asla
+new caledonia	common	tr	YENİ CALEDONIA
+new entry added sucessfully	common	tr	Yeni girdi başarıyla eklendi
+new main category	common	tr	Yeni ana kategori
+new value	common	tr	Yeni değer
+new zealand	common	tr	YENİ ZELANDA
+next	common	tr	Sonraki
+next month (hold for menu)	common	tr	sonraki ya (menü için saklanır)
+next page	common	tr	Sonraki sayfa
+next year (hold for menu)	common	tr	Sonraki yıl (menü için saklar)
+nicaragua	common	tr	NİKARAGUA
+niger	common	tr	NIGER
+nigeria	common	tr	NIJERYA
+niue	common	tr	NIUE
+no	common	tr	Hayır
+no entries found, try again ...	common	tr	giriş bulunamadı, tekrar deneyin ...
+no history for this record	common	tr	Bu kaydın geçmiş bilgileri yok
+no subject	common	tr	Başlık yok
+none	common	tr	Yok
+norfolk island	common	tr	NORFOLK ADASI
+normal	common	tr	Normal
+northern mariana islands	common	tr	NORTHERN MARIANA ADALARI
+norway	common	tr	NORVEÇ
+not assigned	common	tr	atanmamış
+note	common	tr	Not
+notes	common	tr	Notlar
+notify window	common	tr	Uyarı penceresi
+november	common	tr	Kasım
+october	common	tr	Ekim
+ok	common	tr	Tamam
+old value	common	tr	Eski değer
+oman	common	tr	OMAN
+on *nix systems please type: %1	common	tr	*nix sistemlerde tip: %1
+only private	common	tr	sadece özel
+only yours	common	tr	sadece sizinkiler
+open notify window	common	tr	Açık uyarı penceresi
+open popup window	common	tr	Açık popup penceresi
+original	common	tr	Orjinal
+other	common	tr	Diğer
+overview	common	tr	Genel bakış
+owner	common	tr	Sahip
+pakistan	common	tr	PAKİSTAN
+palau	common	tr	PALAU
+palestinian territory, occupied	common	tr	PALESTINIAN TERRITORY, OCCUPIED
+panama	common	tr	PANAMA
+papua new guinea	common	tr	PAUPA YENİ GİNE
+paraguay	common	tr	PARAGUAY
+parcel	common	tr	Parsel
+parent category	common	tr	Parent Kategori
+password	common	tr	Şifre
+password could not be changed	common	tr	Şifre değiştirilemedi
+password has been updated	common	tr	Şifre değiştirildi
+pattern for search in addressbook	common	tr	Adres defterinde arama yapmak için kriter
+pattern for search in calendar	common	tr	Takvimde arama yapmak için kriter
+pattern for search in projects	common	tr	Projelerde arama yapmak için kriter
+permissions to the files/users directory	common	tr	kullanıcı/dosya izinleri
+personal	common	tr	Kişisel
+peru	common	tr	PERU
+philippines	common	tr	FİLİPİNLER
+phone number	common	tr	tel numarası
+pitcairn	common	tr	PITCAIRN
+please %1 by hand	common	tr	Lütfen %1 elle
+please enter a name	common	tr	Lütfen ad girin !
+please run setup to become current	common	tr	Lütfen güncel olmak için kurulum yapın
+please select	common	tr	Lütfen seçin
+please set your global preferences	common	tr	Lütfen glabol tercihlerinizi düzenleyin !
+please set your preferences for this application	common	tr	Lütfen bu uygulama için tercihlerinizi yapın !
+please wait...	common	tr	Lütfen bekleyin...
+poland	common	tr	POLONYA
+portugal	common	tr	PORTEKİZ
+postal	common	tr	Postakodu
+powered by phpgroupware version %1	common	tr	<a href="http://www.phpgroupware.org">phpGroupWare</a> tarafından geliştirlmiştir,versiyon %1
+preferences	common	tr	Tercihler
+prev. month (hold for menu)	common	tr	Önceki Ay (menü için saklanır)
+prev. year (hold for menu)	common	tr	Önceki Yıl (menü için saklanır)
+previous page	common	tr	Önceki sayfa
+print	common	tr	Yazdır
+priority	common	tr	Öncelik
+private	common	tr	Özel
+project	common	tr	Proje
+public	common	tr	halk
+puerto rico	common	tr	PORTO RİKO
+qatar	common	tr	KATAR
+read	common	tr	Oku
+read this list of methods.	common	tr	Bu yöntem listesini okuyun.
+register_globals = %1	common	tr	register_globals = %1
+register_globals_off	common	tr	Bu uygulama  register_globals = off ile test edildi php.ini dosyasında.  Bu uygulama çoğunlukla PHP 4.1.0+ serverlarda çalışır.  Eğer bir sorun yaşarsanız, lütfen bu adrese gönderin <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	tr	Bu uygulama register_globals = off ile test edilmemiştir php.ini dosyasında.  Bu uygulama register_globals = on  olmasını gerektirir php.ini dosyasında.  Daha fazla bilgi için register_globals = on, bakınız <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+reject	common	tr	Reddet
+rename	common	tr	Yeniden adlandır
+returns a full list of accounts on the system.  warning: this is return can be quite large	common	tr	Sistemdeki hesapların listesini döndürür.  Dikkat: Bu dönüş çok geniş olabilir
+returns an array of todo items	common	tr	Returns an array of todo items
+returns struct of users application access	common	tr	Kullanıcların uygulama erşim yapısını döndürür
+reunion	common	tr	REUNION
+romania	common	tr	ROMANYA
+russian federation	common	tr	RUSYA FEDERASYONU
+rwanda	common	tr	RWANDA
+saint helena	common	tr	SAINT HELENA
+saint kitts and nevis	common	tr	SAINT KITTS AND NEVIS
+saint lucia	common	tr	SAINT LUCIA
+saint pierre and miquelon	common	tr	SAINT PIERRE AND MIQUELON
+saint vincent and the grenadines	common	tr	SAINT VINCENT AND THE GRENADINES
+samoa	common	tr	SAMOA
+san marino	common	tr	SAN MARINO
+sao tome and principe	common	tr	SAO TOME AND PRINCIPE
+saturday	common	tr	Cumartesi
+saudi arabia	common	tr	SUUDİ ARABİSTAN
+save	common	tr	Kaydet
+search	common	tr	Ara
+section	common	tr	Bölüm
+select	common	tr	Seçim
+select category	common	tr	Kategori seçin
+select date	common	tr	Seçim tarihi
+select group	common	tr	Grup seçin
+select one	common	tr	Bir tanesini seçin
+select user	common	tr	Kullanıcı seçin
+send	common	tr	Hönder
+senegal	common	tr	SENEGAL
+september	common	tr	Eylül
+server %1 has been added	common	tr	Server %1 eklendi
+server name	common	tr	Server Adı
+session has been killed	common	tr	Oturum kapatıldı
+setup	common	tr	Kur
+seychelles	common	tr	SEYCHELLES
+show all	common	tr	hepsini göster
+showing %1	common	tr	%1 gösteriliyor
+showing %1 - %2 of %3	common	tr	%1 - %2 / %3 gösteriliyor
+sierra leone	common	tr	SIERRA LEONE
+singapore	common	tr	SINGAPORE
+slovakia	common	tr	SLOVAKYA
+slovenia	common	tr	SLOVENYA
+solomon islands	common	tr	SOLOMON ADALARI
+somalia	common	tr	SOMALİ
+sorry, your login has expired	login	tr	Üzgünüm oturumunuz zaman aşımına uğeadı
+south africa	common	tr	GÜNEY AFRİKA
+south georgia and the south sandwich islands	common	tr	SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+spain	common	tr	İSPANYA
+sri lanka	common	tr	SRI LANKA
+start date	common	tr	Başlangıç tarihi
+start time	common	tr	Başlangıç süresi
+status	common	tr	Durum
+subject	common	tr	Başlık
+submit	common	tr	Gönder
+substitutions and their meanings:	common	tr	Yerine koymalar ve anlamları:
+sudan	common	tr	SUDAN
+sunday	common	tr	Pazar
+suriname	common	tr	SOYAD
+svalbard and jan mayen	common	tr	SVALBARD AND JAN MAYEN
+swaziland	common	tr	SWAZILAND
+sweden	common	tr	İSVEÇ
+switzerland	common	tr	İSVİÇRE
+syrian arab republic	common	tr	SYRIAN ARAB REPUBLIC
+taiwan, province of china	common	tr	TAIWAN, PROVINCE OF CHINA
+tajikistan	common	tr	TACİKİSTAN
+tanzania, united republic of	common	tr	TANZANYA, UNITED REPUBLIC OF
+thailand	common	tr	THAILAND
+the api is current	common	tr	The API is current
+the api requires an upgrade	common	tr	API'nin güncellenmesi gerekiyor
+the following applications require upgrades	common	tr	Aşagıdaki uygulamalar güncellenmeli
+the mail server returned	common	tr	Mail sunucu geri döndürdü
+this application is current	common	tr	Bu uygulama güncel
+this application requires an upgrade	common	tr	Bu uygulamanın güncellenmesi gerekiyor 
+this name has been used already	common	tr	Bu isim tekrar kullanılmış !
+thursday	common	tr	Perşembe
+time	common	tr	Süre
+time zone	common	tr	Zamandilimi
+time zone offset	common	tr	Zaman dilimi baskısı
+title	common	tr	Başlık
+to correct this error for the future you will need to properly set the	common	tr	Gelecekte bu hatayı görmemek için özellikle düzenlemeye ihtiyacınız olduğu şey
+to go back to the msg list, click <a href= %1 >here</a>	common	tr	Mesaj listesine geri dönmek için, <a href="%1">buraya</a> tıklayın
+today	common	tr	Bugün
+todays date, eg. "%1"	common	tr	bugünün tarihi, örneğin. "%1"
+toggle first day of week	common	tr	Haftanın ilk gününü işaretle
+togo	common	tr	TOGO
+tokelau	common	tr	TOKELAU
+tonga	common	tr	TONGA
+total	common	tr	Toplam
+trinidad and tobago	common	tr	TRINIDAD AND TOBAGO
+tuesday	common	tr	Salı
+tunisia	common	tr	TUNUS
+turkey	common	tr	TÜRKİYE
+turkmenistan	common	tr	TÜRKMENİSTAN
+turks and caicos islands	common	tr	TURKS AND CAICOS ISLANDS
+tuvalu	common	tr	TUVALU
+uganda	common	tr	UGANDA
+ukraine	common	tr	UKRAYNA
+united arab emirates	common	tr	BİRLEŞİK ARAP EMİRLİKLERİ
+united kingdom	common	tr	İNGİLTERE
+united states	common	tr	BİRLEŞİK DEVLETLER
+united states minor outlying islands	common	tr	UNITED STATES MINOR OUTLYING ISLANDS
+unknown	common	tr	Bilinmeyen
+update	common	tr	Güncelle
+url	common	tr	URL
+uruguay	common	tr	URUGUAY
+use button to search for	common	tr	Bir şey aram için butonu kullanın
+use button to search for address	common	tr	Adres aramak için butonu kullanın
+use button to search for calendarevent	common	tr	Tarih olayı aramak için butonu kullanın
+use button to search for project	common	tr	Proje arama için butonu kullanın
+user	common	tr	Kullanıcı
+user accounts	common	tr	kullanıcı hesapları
+user groups	common	tr	kullanıcı grupları
+username	common	tr	Kullanıcıadı
+users	common	tr	kullanıcılar
+users choice	common	tr	Kullanıcı seçimi
+uzbekistan	common	tr	ÖZBEKİSTAN
+vanuatu	common	tr	VANUATU
+venezuela	common	tr	VENEZUELA
+version	common	tr	Versiyon
+viet nam	common	tr	VİETNAM
+view	common	tr	Gör
+virgin islands, british	common	tr	VIRGIN ISLANDS, BRITISH
+virgin islands, u.s.	common	tr	VIRGIN ISLANDS, U.S.
+wallis and futuna	common	tr	WALLIS AND FUTUNA
+wednesday	common	tr	Çarşamba
+welcome	common	tr	Hoşgeldiniz
+western sahara	common	tr	WESTERN SAHARA
+which groups	common	tr	Hangi grup
+wk	common	tr	wk
+written by:	common	tr	Yazan:
+year	common	tr	Yıl
+yemen	common	tr	YEMEN
+yes	common	tr	Evet
+you are required to change your password during your first login	common	tr	İlk girşinizde şifrenizi değiştirmeniz gerekiyor
+you are running a newer version of phpgroupware than your database is setup for	common	tr	Veritanınızın kurulumundaki phpGroupWare den daha yeni bir phpGroupWare sürümü kullanıyorsunuz.
+you have been successfully logged out	login	tr	Çıkış işleminiz başarılı
+you have not entered a title	common	tr	Bir başlık girmediniz
+you have not entered a valid date	common	tr	Geçerli bir tarih girmediniz
+you have not entered a valid time of day	common	tr	Geçerli bir saat girmediniz
+you have not entered participants	common	tr	Katılımcı girmediniz
+you have selected an invalid date	common	tr	Geçersiz bir tarih seçtiniz !
+you have selected an invalid main category	common	tr	Geçersiz bir ana kategori seçtiniz !
+you have successfully logged out	common	tr	Çıkış işleminiz başarılı
+your message could <b>not</b> be sent!<br>	common	tr	Mesajınız gönderile<b>medi</b>!<br>
+your message has been sent	common	tr	Mesajınız gönderildi
+your search returned %1 matchs	common	tr	arama sonuçları %1 adet
+your search returned 1 match	common	tr	arama sonucu 1 adet
+your session could not be verified.	login	tr	Oturumunuz doğrulanamadı.
+your settings have been updated	common	tr	Ayarlarınız güncellendi
+yugoslavia	common	tr	YUGOSLAVYA
+zambia	common	tr	ZAMBİYA
+zimbabwe	common	tr	ZİMBABWE

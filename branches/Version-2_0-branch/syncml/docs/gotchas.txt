@@ -1,0 +1,13 @@
+GOTCHAS
+
+* setup: precisions on ints must be 2, 4 or 8 else crash in setup.
+* setup/ui: phpgw_applications.app_enabled ($setup_info[$appname]['enable']) 
+  controlls what apps to display in navbar. it can have different
+  undocumented int values.
+* session: $GLOBALS['phpgw_info']['flags']['currentapp'] has to be "login" or
+  else header.inc.php will HTTP redirect to login screen.
+* session/auth: $GLOBALS['phpgw_info']['server']['block_time'], 
+  $GLOBALS['phpgw_info']['server']['num_unsuccessful_id'] in 
+  class.sessions.inc.php do disable the blocking stuff during development.
+* global: Disable chunking by buffering and setting content-length manually
+  (http://www.thescripts.com/forum/thread10395.html)

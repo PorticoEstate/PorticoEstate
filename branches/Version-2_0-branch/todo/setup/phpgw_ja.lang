@@ -1,0 +1,55 @@
+access changed	todo	ja	アクセス変更
+add sub	todo	ja	サブ追加
+add sub project	todo	ja	サブプロジェクト追加
+add main project	todo	ja	メインプロジェクト追加
+addsub	todo	ja	サブ追加
+are you sure you want to delete this entry	todo	ja	この項目を削除してもよろしいですか。
+back to projectlist	todo	ja	プロジェクトリストへ
+category changed	todo	ja	カテゴリ変更
+clear form	todo	ja	再入力
+completed	todo	ja	完了
+date due	todo	ja	その日
+days datedue	todo	ja	days datedue
+description changed	todo	ja	詳細変更
+displaying subprojects of following project	todo	ja	サブプロジェクト一覧
+do you also want to delete all sub projects ?	todo	ja	すべてのサブプロジェクトも削除
+edit main project	todo	ja	メインプロジェクト訂正
+edit sub project	todo	ja	サブプロジェクト訂正
+end date changed	todo	ja	終了日変更
+grant todo access	common	ja	利用許可設定
+last updated	todo	ja	Last Updated
+month	todo	ja	月
+new value	todo	ja	変更後内容
+no history for this record	todo	ja	変更情報なし
+or: days from startdate:	todo	ja	または、開始日からの日数
+or: select for today:	todo	ja	または、今日を設定
+parent	todo	ja	親プロジェクト
+parent changed	todo	ja	親プロジェクト変更
+parent project	todo	ja	親プロジェクト
+parent project:	todo	ja	親プロジェクト名:
+project description	todo	ja	プロジェクト説明
+project name	todo	ja	プロジェクト名
+projectname	todo	ja	プロジェクト名
+start date changed	todo	ja	開始日変更
+status	todo	ja	状態
+status changed	todo	ja	状態変更
+sub	todo	ja	サブ
+subproject description	todo	ja	サブプロジェクト説明
+title changed	todo	ja	タイトル変更
+todo	common	ja	TODOリスト
+todo list	common	ja	TODOリスト
+to do list	common	ja	TODOリスト
+todo list - add	todo	ja	TODOリスト - 追加
+todo list - add sub-project	todo	ja	TODOリスト - サブプロジェクト追加
+todo list - edit	todo	ja	TODOリスト - 編集
+todo preferences	common	ja	TODOリスト環境設定
+urgency	todo	ja	優先度
+urgency changed	todo	ja	優先度変更
+user	todo	ja	ユーザ
+view matrix of actual month	todo	ja	グラフ表示
+viewsub	todo	ja	サブ表示
+view todo item	todo	ja	TODO アイテム表示
+which groups	todo	ja	グループ選択
+year	todo	ja	年
+you have entered an invailed date	todo	ja	日付が誤っています。
+you must enter a description	todo	ja	説明を入力して下さい。

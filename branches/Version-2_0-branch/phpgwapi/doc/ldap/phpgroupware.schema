@@ -1,0 +1,109 @@
+# $phpgroupware : phpgroupware,v 1.2 pkamps
+
+# REQUIRED
+attributetype ( 1.3.6.1.4.1.9554.201
+	NAME 'phpgwContactID'
+	EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# phpgwContact
+# The phpgwContact represents people who are associated with a
+# phpgw install in some way.  It is a structural class and is derived
+# from the inetOrgPerson schema.
+objectclass	( 1.3.6.1.4.1.9554.200
+	NAME 'phpgwContact'
+	SUP top AUXILIARY
+	DESC 'phpGroupWare Contact Entry'
+	MUST phpgwContactID 
+	)
+
+# OPTIONAL
+#Quota support for Filemanager
+#.107 because it was primary design for accounts
+attributetype ( 1.3.6.1.4.1.9554.107
+       NAME 'phpgwQuota'
+       DESC 'Quota for this user in Filemanager'
+       EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+#REQUIRED
+attributetype (  1.3.6.1.4.1.9554.301
+        NAME 'phpgwGroupID'
+        EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# phpgwGroup
+# The phpgwGroup represents groups who are associated with a
+# phpgw install in some way.
+objectclass     ( 1.3.6.1.4.1.9554.300
+        NAME 'phpgwGroup'
+        DESC 'phpGroupWare Group Entry'
+		SUP top AUXILIARY
+		MAY phpgwQuota
+        MUST phpgwGroupID
+        )
+
+#attributetype ( 1.3.6.1.1.1.1.1 NAME 'gidNumber'
+#	DESC 'An integer uniquely identifying a group in an administrative domain'
+#	EQUALITY integerMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+
+#accountID
+attributetype ( 1.3.6.1.4.1.9554.101
+        NAME 'phpgwAccountID'
+		DESC 'Account identification number'
+		EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# status
+attributetype ( 1.3.6.1.4.1.9554.102
+        NAME 'phpgwAccountStatus'
+        DESC 'Single-char A/L for active/inactive'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+# expires
+attributetype ( 1.3.6.1.4.1.9554.103
+        NAME 'phpgwAccountExpires'
+        DESC 'timestamp for account expiration'
+        EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# lastlogin
+attributetype ( 1.3.6.1.4.1.9554.104
+        NAME 'phpgwLastLogin'
+        DESC 'UNIX time of last login for this account'
+        EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+#lastloginfrom
+attributetype ( 1.3.6.1.4.1.9554.105
+        NAME 'phpgwLastLoginFrom'
+        DESC 'ip form last login'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{128}
+        SINGLE-VALUE )
+
+#lastpasswdchange
+attributetype ( 1.3.6.1.4.1.9554.106
+        NAME 'phpgwLastPasswordChange'
+        DESC 'last time user changed his password'
+		EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# Objectclass definition for phpgwAccount
+objectclass ( 1.3.6.1.4.1.9554.100 
+	NAME 'phpgwAccount' 
+	SUP posixAccount AUXILIARY
+    DESC 'Abstraction of an account with phpgw attributes'
+    MAY ( phpgwAccountStatus $ phpgwAccountExpires $ givenName $ sn $ phpgwLastPasswordChange $ phpgwLastLoginFrom $ phpgwLastLogin $ phpgwQuota ) 
+	MUST phpgwAccountID
+	)

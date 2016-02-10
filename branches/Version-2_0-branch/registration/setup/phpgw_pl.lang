@@ -1,0 +1,17 @@
+account password retrieval	registration	pl	
+account registration	registration	pl	Rejestracja konta
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	pl	
+enter your new password	registration	pl	Podaj nowe hasło
+i have read the terms and conditions and agree by them.	registration	pl	Przeczytałem warunki umowy i zgadzam się z nimi
+phpgroupware - account registration	registration	pl	
+re-enter password	registration	pl	Powtórz hasło
+re-enter your password	registration	pl	Powtórz hasło
+registration	common	pl	Rejestracja
+sorry, that username does not exist.	registration	pl	Podany użytkownik nie istnieje
+sorry, that username is already taken.	registration	pl	
+the two passwords are not the same	registration	pl	Podane hasła nie są identyczne
+wrong session	registration	pl	
+you have entered an invalid email address	registration	pl	
+you must enter a password	registration	pl	Musisz podać hasło
+you must enter a username	registration	pl	Musisz podać nazwę użytkownika
+you must fill in all of the required fields	registration	pl	Musisz wypełnić wszystkie wymagane pola

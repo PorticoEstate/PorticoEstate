@@ -1,0 +1,24 @@
+(optional: set domain for user/client login, required: set this servername for server login)	xmlrpc	en	(optional: set domain for user/client login, required: set this servername for server login)
+addressbook test	xmlrpc	en	Addressbook test
+app registry by id	xmlrpc	en	App Registry by ID
+apps	xmlrpc	en	Apps
+assigned kp3	xmlrpc	en	Assigned kp3
+assigned sessionid	xmlrpc	en	Assigned sessionid
+bogus request	xmlrpc	en	Bogus Request
+calendar test	xmlrpc	en	Calendar test
+configure using admin - peer servers	xmlrpc	en	Configure using admin - Peer servers
+introspection	xmlrpc	en	Introspection
+meerkat browser	xmlrpc	en	Meerkat Browser
+methods	xmlrpc	en	Methods
+note: listapps and listusers are disabled by default in xml_functions.php	xmlrpc	en	NOTE: listapps and listusers are disabled by default in xml_functions.php
+phpgroupware xml-rpc/soap client<->server and server<->server test (soap pending...)	xmlrpc	en	phpGroupWare XML-RPC/SOAP Client<->Server and Server<->Server Test (SOAP pending...)
+phpgw client/server test	xmlrpc	en	phpgw client/server test
+phpgw server test	xmlrpc	en	phpgw server test
+select target server	xmlrpc	en	Select target server
+server<->server	xmlrpc	en	Server<->Server
+servername/domain	xmlrpc	en	Servername/Domain
+simple client	xmlrpc	en	Simple Client
+system	xmlrpc	en	System
+test suite	xmlrpc	en	Test Suite
+xmlrpc test	common	en	XMLRPC Test
+xmlrpc	common	en	XMLRPC Test Suite

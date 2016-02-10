@@ -1,0 +1,48 @@
+Add	hrm	no	Legg til
+address	hrm	no	adresse
+add training	hrm	no	legg til utdanning / erfaring
+apply	hrm	no	bruk
+category	hrm	no	kategori
+cellular phone	hrm	no	mobiltelefon
+credits	hrm	no	Studiepoeng
+descr	hrm	no	beskrivelse
+Descr	hrm	no	Beskrivelse
+edit place	hrm	no	Rette sted
+end date	hrm	no	sluttdato
+Entry date	hrm	no	Registrert dato
+home email	hrm	no	epost hjemme
+home phone	hrm	no	tlf hjemme
+hrm	hrm	no	Kompetansestyring
+job	hrm	no	jobb
+job has been edited	hrm	no	jobb er rettet
+Job type	hrm	no	jobb-type
+list job	hrm	no	liste jobber
+list place	hrm	no	liste sted
+list training	hrm	no	list utdanning / erfaring
+new place	hrm	no	nytt sted
+no category	hrm	no	ingen kategori
+Organisation	hrm	no	Organisasjon
+parent	hrm	no	overordnet
+Place	hrm	no	Sted
+Postition	hrm	no	Stilling
+reference	hrm	no	referanse
+remark	hrm	no	merknad
+select a place	hrm	no	velg et sted
+select a skill	hrm	no	velg et erfaringsnivå
+Skill	hrm	no	Erfaringsnivå
+start date	hrm	no	startdato
+task	hrm	no	oppgave
+tasks	hrm	no	oppgaver
+qualification	hrm	no	kvalifikasjon
+title	hrm	no	tittel
+town	hrm	no	poststed
+training	hrm	no	utdanning / erfaring
+training ID	hrm	no	ID
+Training item has been edited	hrm	no	utdanning / erfaring er rettet
+User	hrm	no	Arbeidstaker
+view job	hrm	no	vis jobb
+view place	hrm	no	vis sted
+view training	hrm	no	vis utdanning / erfaring
+work email	hrm	no	epost arbeid
+work phone	hrm	no	tlf arbeid
+zip	hrm	no	postnr

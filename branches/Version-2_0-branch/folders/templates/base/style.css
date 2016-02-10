@@ -1,0 +1,41 @@
+.treemenudiv	{
+	display: block;
+	white-space: nowrap;
+}
+
+.phplmnormal	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #303030;
+}
+
+a.phplmnormal:hover	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #303030;
+}
+
+a.phplm:link	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #303030;
+	text-decoration: none;
+}
+
+a.phplm:visited	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #303030;
+}
+
+a.phplm:hover	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #008080;
+}
+
+a.phplm:active	{
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+	color: #DACACA;
+}

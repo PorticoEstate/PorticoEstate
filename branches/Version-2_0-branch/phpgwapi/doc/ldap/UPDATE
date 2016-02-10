@@ -1,0 +1,71 @@
+/* $Id: */
+
+These update instructions ONLY are valid if you want to update
+the phpgroupware.schema file (Version 1.0) from 0.9.16-RC2
+to the phpgroupware.schema file (Version 1.1)
+See the phpgroupware.schema file to get your current version.
+
+	1. Make a backup copy of your LDAP database.
+		In most cases you just have to backup the directory
+		"/var/lib/ldap/"
+		
+	2. Export all existing phpgw-accounts to a file:
+	
+		ldapsearch -x -W -h <ldap host> -D <binddn> -b <basedn> objectclass=phpgwAccount > /tmp/export.ldif
+
+		Replace <ldap host> (for example: localhost)
+		Replace <binddn> (for example: cn=admin,dc=probusiness,dc=de)
+		Replace <basedn> (for example: ou=people,dc=probusiness,dc=de)
+		
+		You will find all your phpgw accounts in the file /tmp/export.ldif
+		
+	3. Delete all phpgw-accounts:
+		
+		To get a complete list of all DNs we have to delete, type in
+		following command:
+		
+		cat /tmp/export.ldif | grep dn:
+		
+		Following command will delete ONE LDAP entry:
+		
+		ldapdelete -h <ldap host> -D <binddn> -x -W "<dn>"
+		
+		Replace <dn> with one DN of the list.
+		Repeat the ldapdelete command for all DNs of your list.
+		
+	4. Alter your export.ldif file:
+		Edit the export.ldif file and
+		
+		search for: accountStatus
+		replace it with: phpgwAccountStatus
+		
+		search for: accountExpires
+		replace it with: phpgwAccountExpires
+
+		search for: lastLogin
+		replace it with: phpgwLastLogin
+
+		search for: lastLoginFrom
+		replace it with: phpgwLastLoginFrom
+
+		search for: lastPasswordChange
+		replace it with: phpgwLastPasswordChange
+		
+		Save the export.ldif file.
+		
+	5. Replace schema file:
+		
+		Stop your LDAP server:
+		/etc/init.d/slapd stop (debian)
+		/etc/init.d/ldap stop (suse)
+		
+		Replace the phpgroupware.schema file with the actual version.
+		
+		Start you LDAP server again:
+		/etc/init.d/slapd start
+		/etc/init.d/ldap start
+		
+	6. Import the export.ldif file:
+		
+		ldapadd -h <ldap host> -D <binddn> -x -W -f /tmp/export.ldif
+		

@@ -1,0 +1,56 @@
+access changed	todo	sv	Behörighet ändrades
+access type	todo	sv	Åtkomst typ
+add main project	todo	sv	Lågg till huvudprojekt
+add sub project	todo	sv	Lått till underprojekt
+adds or edits a todo item	todo	sv	Lågg till eller ändra ett jobb
+addsub	todo	sv	Addsub
+are you sure you want to delete this entry	todo	sv	Är du säker på att du vill ta bort detta jobb?
+assigned to	todo	sv	Ansvarig
+category changed	todo	sv	Kategori ändrades
+clear form	todo	sv	Rensa formulär
+completed	todo	sv	färdig
+created by	todo	sv	Skapat av
+date due	todo	sv	Färdig till
+days datedue	todo	sv	dagar till slutdatum
+deletes a todo item	todo	sv	Raderar ett jobb
+description can not exceed 8000 characters in length	todo	sv	Beskrivningen kan inte överstiga 8000 tecken !
+description changed	todo	sv	Beskrivning ändrades
+do you also want to delete all sub projects ?	todo	sv	Vill du även radera alla underprojekt ?
+edit main project	todo	sv	Ändra huvudprojekt
+edit sub project	todo	sv	Ändra underprojekt
+end date changed	todo	sv	Slutdatum ändrades
+ending date can not be before start date	todo	sv	Slutdatum kan inte vara före startdatum !
+entry added	todo	sv	Jobb sparat
+high	todo	sv	Hög
+last updated	todo	sv	Sist uppdaterat
+low	todo	sv	Låg
+nobody	todo	sv	Ingen
+normal	todo	sv	Normal
+or: days from startdate:	todo	sv	eller: dagar från startdatum:
+or: select for today:	todo	sv	eller: markera för idag:
+parent changed	todo	sv	Övre nivå ändrades
+parent project	todo	sv	Övre nivå
+please enter a title	todo	sv	Lågg till en rubrik !
+project description	todo	sv	Projekt beskrivning
+returns a the total number of records in the database, must call list_todos first	todo	sv	Visar det totala antalet poster i databasen, måste anropa list_todos först
+show todo items on main screen	todo	sv	Visa att göra på huvudsidan
+start date changed	todo	sv	Startdatum ändrades
+status	todo	sv	Status
+status changed	todo	sv	Status ändrades
+title changed	todo	sv	Rubrik ändrades
+to do list	common	sv	Att göra lista
+todo	common	sv	Att göra
+todo list	common	sv	Att göra lista
+todo list - add	todo	sv	Att göra lista - lägg till
+todo list - edit	todo	sv	Att göra lista - edit
+todo preferences	todo	sv	Att göra inställningar
+urgency	todo	sv	Prioritet
+urgency changed	todo	sv	Prioritet ändrades
+view matrix of actual month	todo	sv	Visa matrisvy över aktuell månad
+view todo item	todo	sv	Visa jobb
+which groups	todo	sv	Vilken grupp
+you can only enter numbers for days from now	todo	sv	Du kan bara ange antal dagar från nu !
+you have entered an ending invalid date	todo	sv	Du har angett ett felaktigt slutdatum !
+you have entered an invailed date	todo	sv	du har skrivit in ett ogiltigt datum
+you have entered an starting invalid date	todo	sv	Du har angett ett felaktigt startdatum !
+

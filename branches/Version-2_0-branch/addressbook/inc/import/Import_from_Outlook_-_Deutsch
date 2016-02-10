@@ -1,0 +1,202 @@
+<?php
+// This file defines a set of functions and an associative array.
+// The key of the array corresponds to a header in the source
+// import file and the value of the array item will be used in
+// the creation of the output file.
+//
+// An exported Outlook file looks like this:
+//
+// Title<tab>First Name<tab>Middle Name<tab>Last Name<tab>...
+// <tab>Patrick<tab><tab>Walsh<tab>...
+//
+// Where the first line explains each optional field.  This is what
+// will be looked up in the key.
+//
+// The array need not be in any order and any fields not defined will
+// not be transferred.  If the val='+', the value will be appended to
+// the previous field and any text after the '+' will be appended 
+// before the value.  For example, the following would add a comma and
+// a space between LastName and FirstName and store it in FullName:
+//
+//	array('LastName' => 'FullName','FirstName' => '+, ');
+//
+// Also start with a '#' symbol and a comma separated list will be
+// turned into a number of the same entries.
+	include_once(PHPGW_INCLUDE_ROOT.'/addressbook/inc/class.addressbook_importer.inc.php');
+	class import_conv extends addressbook_importer
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id;
+		var $type = 'csv';
+
+		/* Thanks to knecke for the Outlook fields */
+		var $import = array(
+			'Anrede' 		=> array('person', 'title'),
+			'Vorname' 		=> array('person', 'first_name'),
+			'Weitere Vornamen'	=> array('person', 'middle_name'),
+			'Nachname' 		=> array('person', 'last_name'),
+			'Suffix' 		=> array('person', 'suffix'),
+			'Firma' 		=> '', //org_name
+			'Abteilung'		=> array('person', 'department'),
+			'Position' 		=> array('person', 'title'),
+			'Straße geschäftlich'	=> array('location', 'add1', 'work'),
+			'Straße geschäftlich 2' => array('location', 'add2', 'work'),
+			'Straße geschäftlich 3' => array('location', 'add3', 'work'),
+			'Ort geschäftlich'	=> array('location', 'city', 'work'),
+			'Region geschäftlich'	=> array('location', 'state', 'work'),
+			'Postleitzahl geschäftlich'=> array('location', 'postal_code', 'work'),
+			'Land geschäftlich'	=> array('location', 'country', 'work'),
+			'Straße privat'		=> array('location', 'add1', 'home'),
+			'Straße privat 2'	=> array('location', 'add2', 'home'),
+			'Straße privat 3'	=> array('location', 'add3', 'home'),
+			'Ort privat'		=> array('location', 'city', 'home'),
+			'Region privat'		=> array('location', 'state', 'home'),
+			'Postleitzahl privat'	=> array('location', 'postal_code', 'home'),
+			'Land privat'		=> array('location', 'country', 'home'),
+			'Weitere Straße' 	=> '',
+			'Weitere Straße 2' 	=> '',
+			'Weitere Straße 3' 	=> '',
+			'Weiterer Ort' 		=> '',
+			'Weitere Region' 	=> '',
+			'Weitere Postleitzahl' 	=> '',
+			'Weiteres Land' 	=> '',
+			'Telefon Assistent' 	=> array('comms', 'msg phone'),
+			'Fax geschäftlich' 	=> array('comms', 'work fax'),
+			'Telefon geschäftlich' 	=> array('comms', 'work phone'),
+			'Telefon geschäftlich 2'=> array('comms', 'bbs'),
+			'Rückmeldung' 		=> '',
+			'Autotelefon' 		=> array('comms', 'car phone'),
+			'Telefon Firma' 	=> '',
+			'Fax privat' 		=> array('comms', 'home fax'),
+			'Telefon privat' 	=> array('comms', 'home phone'),
+			'Telefon privat 2' 	=> '',
+			'ISDN' 			=> array('comms', 'isdn'),
+			'Mobiltelefon' 		=> array('comms', 'mobile (cell) phone'),
+			'Weiteres Fax' 		=> '',
+			'Weiteres Telefon' 	=> '',
+			'Pager' 		=> array('comms', 'pager'),
+			'Haupttelefon' 		=> '',
+			'Mobiltelefon 2' 	=> '',
+			'Telefon für Hörbehinderte' => '',
+			'Telex' 		=> '',
+			'Abrechnungsinformation'=> '',
+			'Benutzer 1' 		=> '',
+			'Benutzer 2' 		=> '',
+			'Benutzer 3' 		=> '',
+			'Benutzer 4' 		=> '',
+			'Beruf' 		=> '',
+			'Büro' 			=> '',
+			'E-Mail-Adresse' 	=> array('comms', 'work email'),
+			'E-Mail: Angezeigter Name' => '',
+			'E-Mail 2: Adresse' 	=> array('comms', 'home email'),
+			'E-Mail 2: Angezeigter Name' => '',
+			'E-Mail 3: Adresse' 	=> '',
+			'E-Mail 3: Angezeigter Name' => '',
+			'Empfohlen von' 	=> '',
+			'Geburtstag' 		=> array('person', 'birthday'),
+			'Geschlecht' 		=> '',
+			'Hobby' 		=> '',
+			'Initialen' 		=> '',
+			'Internet-Frei/Gebucht' => '',
+			'Jahrestag' 		=> '',
+			'Kategorien' 		=> '',
+			'Kinder' 		=> '',
+			'Konto' 		=> '',
+			'Name Assistent' 	=> '',
+			'Name des/der Vorgesetzten' => '',
+			'Notizen' 		=> array('notes', 'note', 'general'),
+			'Organisations-Nr.' 	=> '',
+			'Ort' 			=> '',
+			'Partner' 		=> '',
+			'Postfach' 		=> '',
+			'Priorität' 		=> '',
+			'Privat' 		=> '',
+			'Regierungs-Nr.' 	=> '',
+			'Reisekilometer' 	=> '',
+			'Sprache' 		=> '',
+			'Stichwörter' 		=> '',
+			'Vertraulichkeit' 	=> '',
+			'Verzeichnisserver' 	=> '',
+			'Webseite' 		=> array('comms', 'website')
+		);
+
+		function import_start_file($buffer)
+		{
+// 			return $buffer;
+		}
+
+		function import_start_record($buffer)
+		{
+// 			$top=array();
+// 			++$this->id;
+// 			$this->currentrecord = $top;
+// 			return $buffer;
+		}
+
+		function import_new_attrib($buffer,$name,$value)
+		{
+			$value = trim($value);
+			$value = str_replace('\n','<br />',$value);
+			$value = str_replace('\r','',$value);
+// 			$this->currentrecord += array($name => $value);
+
+// 			return $buffer;
+
+			$method = $name[0];
+			$element = $name[1];
+			$args = $name[2];
+			
+			$this->$method($element, $value, $args);
+		}
+
+		function import_end_record($buffer)
+		{
+// 			$buffer[$this->id]='';
+// 			while ( list($name, $value) = each($this->currentrecord))
+// 			{
+// 				$buffer[$this->id][$name] = $value;
+// 				//echo '<br />'.$name.' => '.$value;
+// 			}
+// 			return $buffer;
+
+			$this->record_set[] = $this->record;
+			$this->record = array();
+		}
+
+		function import_end_file($buffer,$access='private',$cat_id=0)
+		{
+//  			echo '<pre>';
+// 			print_r($this->record_set);
+// 			echo '</pre>';
+			
+ 			$contacts = CreateObject('phpgwapi.contacts');
+
+			$num = count($this->record_set);
+			foreach($this->record_set as $contact)
+			{
+				$contact['categories'] = array($cat_id);
+				$contact['access'] = $access;
+				$contacts->contact_import($contact);
+			}
+			return lang('Successfully imported %1 records into your addressbook.',$num);
+
+// 			$contacts = CreateObject('phpgwapi.contacts');
+// 			//echo '<br />'; 
+// 			for ($i=1;$i<=count($buffer);$i++)
+// 			{
+// 				while ( list($name,$value) = @each($buffer[$i]) )
+// 				{
+// 					//echo '<br />'.$i.': '.$name.' => '.$value;
+// 					$entry[$i][$name] = $value;
+// 				}
+// 				$entry[$i]['email_type']      = 'INTERNET';
+// 				$entry[$i]['email_home_type'] = 'INTERNET';
+// 				$entry[$i]['adr_one_type']    = 'intl';
+// 				$entry[$i]['adr_two_type']    = 'intl';
+// 				//echo '<br />';
+// 				$contacts->add($GLOBALS['phpgw_info']['user']['account_id'],$entry[$i],$access,$cat_id);
+// 			}
+// 			$num = $i - 1;
+// 			return lang('Successfully imported x records into your addressbook.',$num);
+		}
+	}

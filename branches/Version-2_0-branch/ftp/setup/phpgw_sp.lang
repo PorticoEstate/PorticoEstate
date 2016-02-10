@@ -1,0 +1,29 @@
+are you sure you want to delete %1 ?	ftp	sp	Realmente desea borrar %1 ?
+attempt to create a directory with empty name	ftp	sp	Intento de crear un directorio sin nombre
+cancel	ftp	sp	cancelar
+cd	ftp	sp	cd
+connect	ftp	sp	Conectar
+create new directory	ftp	sp	Crear nuevo directorio
+delete	ftp	sp	borrar
+failed to connect to %1 with user %2 and password %3	ftp	sp	Fallo al conectar a %1 con el usuario %2 y contraseña %3
+failed to create directory %1	ftp	sp	Fallo al crear directorio %1
+failed to delete %1	ftp	sp	Fallo al borrar %1
+failed to rename %1 to %2	ftp	sp	Fallo al renombrar %1 a %2
+failed to upload %1	ftp	sp	Fallo al subir %1
+ftp client	ftp	sp	Cliente Ftp
+ftp server	ftp	sp	Servidor Ftp
+home	ftp	sp	Home
+logout/relogin	ftp	sp	logout/relogin
+password	ftp	sp	Contraseña
+rename	ftp	sp	renombrar
+rename from	ftp	sp	Renombrar desde
+rename to	ftp	sp	a
+renamed %1 to %2	ftp	sp	Renombrar %1 a %2
+save	ftp	sp	grabar
+save to filemanager	ftp	sp	grabar al manejador de archivo
+successfully created directory %1	ftp	sp	Exitosamente creado %1
+successfully deleted %1	ftp	sp	Exitosamente borrado %1
+successfully uploaded %1	ftp	sp	Exitosamente subido %1
+upload	ftp	sp	subir
+username	ftp	sp	Usuario
+view	ftp	sp	ver

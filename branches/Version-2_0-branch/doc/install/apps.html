@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Filemanager group file sharing</h2>
+				<p>
+					These instructions will show you how to setup a shared group area 
+					in Filemanager for a new group called "files".
+				</p>
+				<ul>
+					<li>In administration click "user groups". Then click Add.</li>
+					<li>For the group name enter "files". In the list box, hold the CTRL 
+						key and select all the users that will be allowed to share files 
+						in this group.</li>
+					<li>Check the box for Filemanager and click Submit chnages. This will 
+						transparently grant access to the Filemanager application to 
+						the selected users if they don't already have it.</li>
+					<li>You should be back at the groups lists now, click Edit for the files group.</li>
+					<li>In the ACL (Access Control List) column, click the little box for 
+						Filemanager to pop up a new window to set the permissions.</li>
+					<li>Setting permissions is very flexible, you can even have non-members 
+						of a group have varied levels of access to a group. We simply want 
+						all users in the files group to have full access. Check all 4 boxes 
+						in the "files" row. The "Private" column is not needed here because 
+						group based filemanagers don't have an awareness of "private" records.</li>
+					<li>Save and then close the new window.</li>
+					<li>Save any changes to the group.</li>
+					<li>Go to the Filemanager application. </li>
+					<li>To the far left of the current folder name (the one in red at the top) 
+						there is a folder icon with an up arrow on it. Click this to go up 
+						one level to see the groups and users (user sharing is not yet 
+						implemented) folders that you have access to. When you go here any 
+						group folders you have access to that have not been created yet will 
+						be automaticaly created.</li>
+					<li>You can now go into the group folder and share files.</li>
+					<li>Also, after the group folder has been create by the first user to look 
+						for it, all users in the group will be able to see that folder in 
+						the drown down list in the "Go to: Copy to: Move to:" row from any 
+						of their folders.
+					</li>
+				</ul>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>

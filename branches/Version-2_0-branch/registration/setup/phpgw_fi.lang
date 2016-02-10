@@ -1,0 +1,17 @@
+account password retrieval	registration	fi	Salasanan nouto
+account registration	registration	fi	Tunnuksen luominen
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	fi	Annettuasi käyttäjätunnuksesi ohjeet salasanan vaihtamiseksi lähetetään rekisteröityessäsi antamaasi sähköpostiosoitteeseen.
+enter your new password	registration	fi	Anna uusi salasanasi
+i have read the terms and conditions and agree by them.	registration	fi	Olen lukenut palvelun käyttöehdot ja hyväksyn ne.
+phpgroupware - account registration	registration	fi	phpGroupWare - Tunnuksen luominen
+re-enter password	registration	fi	Salasana uudelleen
+re-enter your password	registration	fi	Anna salasanasi uudelleen
+registration	common	fi	Rekisteröityminen
+sorry, that username does not exist.	registration	fi	Valitan, käyttäjätunnusta ei löydy.
+sorry, that username is already taken.	registration	fi	Valitan, käyttäjätunnus on jo varattu
+the two passwords are not the same	registration	fi	Salasanat eivät vastaa toisiaan
+wrong session	registration	fi	Väärä istunto
+you have entered an invalid email address	registration	fi	Sähköpostiosoite ei kelpaa
+you must enter a password	registration	fi	Anna salasana
+you must enter a username	registration	fi	Anna käyttäjätunnus
+you must fill in all of the required fields	registration	fi	Täytä kaikki pakolliset kentät

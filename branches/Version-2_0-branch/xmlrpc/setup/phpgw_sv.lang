@@ -1,0 +1,24 @@
+(optional: set domain for user/client login, required: set this servername for server login)	xmlrpc	sv	(valfritt: ange domän för användare/klient inloggning, obligatoriskt: ange servernamn för inloggning på server)
+addressbook test	xmlrpc	sv	Adressbok test
+app	xmlrpc	sv	Modul
+apps	xmlrpc	sv	Moduler
+assigned kp3	xmlrpc	sv	Delegerad kp3
+assigned sessionid	xmlrpc	sv	Delegerad sessionsid
+bogus request	xmlrpc	sv	Falsk förfrågan
+calendar test	xmlrpc	sv	Kalendertest
+configure using admin - peer servers	xmlrpc	sv	Konfigurera som admin - Samarbetande servrar
+introspection	xmlrpc	sv	Introspection
+meerkat browser	xmlrpc	sv	Meerkat bläddrare
+methods	xmlrpc	sv	Metoder
+note: listapps and listusers are disabled by default in xml_functions.php	xmlrpc	sv	OBS: listmoduler och listanvändare är avaktiverat som standard i xml_functions.php
+phpgroupware xml-rpc/soap client<->server and server<->server test (soap pending...)	xmlrpc	sv	 phpGroupWare XML-RPC/SOAP Client<->Server and Server<->Server Test (SOAP väntar...)
+phpgw client/server test	xmlrpc	sv	phpgw client/server test
+phpgw server test	xmlrpc	sv	phpgw server test
+select target server	xmlrpc	sv	Välj målserver
+server<->server	xmlrpc	sv	Server<->Server
+servername/domain	xmlrpc	sv	Servernamn/Domän
+simple client	xmlrpc	sv	Enkel klient
+system	xmlrpc	sv	System
+test suite	xmlrpc	sv	Test svit
+xmlrpc test	common	sv	XMLRPC Test
+
