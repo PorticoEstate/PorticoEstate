@@ -174,7 +174,6 @@
 				)
 			);
 			self::render_template_xsl('datatable_jquery', $data);
-//			self::render_template('datatable', $data);
 		}
 
 		public function query()

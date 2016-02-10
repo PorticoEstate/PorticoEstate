@@ -148,8 +148,6 @@
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-						)
 					),
 				),
 				'datatable' => array(
@@ -192,17 +190,12 @@
 				)
 			);
 
-
+			$data['datatable']['actions'][] = array();
 			if($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type' => 'link',
-					'value' => lang('New document'),
-					'href' => $this->get_owner_typed_link('add')
-				));
+				$data['datatable']['new_item']	= $this->get_owner_typed_link('add');
 			}
 
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

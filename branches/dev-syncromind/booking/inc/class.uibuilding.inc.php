@@ -110,6 +110,7 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
+								'label'	 => lang('toggle show inactive'),
 								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
@@ -158,16 +159,12 @@
 				)
 			);
 
+			$data['datatable']['actions'][] = array();
 			if($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type'	 => 'link',
-					'value'	 => lang('New building'),
-					'href'	 => self::link(array('menuaction' => $this->module . '.uibuilding.add'))
-				));
+				$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
 
-			//self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

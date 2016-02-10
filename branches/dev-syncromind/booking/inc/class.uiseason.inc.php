@@ -105,16 +105,12 @@
 				)
 			);
 
+			$data['datatable']['actions'][] = array();
+
 			if($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type'	 => 'link',
-					'value'	 => lang('New season'),
-					'href'	 => self::link(array('menuaction' => 'booking.uiseason.add'))
-				));
+				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiseason.add'));
 			}
-
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

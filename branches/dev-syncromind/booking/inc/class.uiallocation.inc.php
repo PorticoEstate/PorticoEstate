@@ -119,12 +119,10 @@
 
 			if($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type'	 => 'link',
-					'value'	 => lang('New allocation'),
-					'href'	 => self::link(array('menuaction' => 'booking.uiallocation.add'))
-				));
+				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiallocation.add'));
 			}
+			$data['datatable']['actions'][] = array();
+
 			$data['filters'] = $this->export_filters;
 			self::render_template_xsl('datatable_jquery', $data);
 //			self::render_template('datatable', $data);

@@ -52,11 +52,6 @@
 				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('New event'),
-								'href'	 => self::link(array('menuaction' => 'booking.uievent.add'))
-							),
 							array('type'	 => 'filter',
 								'name'	 => 'buildings',
 								'text'	 => lang('Building') . ':',
@@ -122,7 +117,8 @@
 					)
 				)
 			);
-//		self::render_template('datatable', $data);
+			$data['datatable']['actions'][] = array();
+			$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uievent.add'));
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

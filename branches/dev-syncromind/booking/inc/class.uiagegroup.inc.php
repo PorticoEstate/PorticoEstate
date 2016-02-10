@@ -66,11 +66,6 @@
 						'item' => array(
 							array(
 								'type'	 => 'link',
-								'value'	 => lang('New Age Group'),
-								'href'	 => self::link(array('menuaction' => 'booking.uiagegroup.add'))
-							),
-							array(
-								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => 'booking.uiagegroup.active'))
 							),
@@ -105,11 +100,12 @@
 				)
 			);
 
-			if(!$this->bo->allow_create())
+			if($this->bo->allow_create())
 			{
-				//Remove new button
-				unset($data['form']['toolbar']['item'][0]);
+				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiagegroup.add'));
 			}
+
+			$data['datatable']['actions'][] = array();
 
 			if(!$this->bo->allow_write())
 			{

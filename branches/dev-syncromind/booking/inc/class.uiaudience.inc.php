@@ -80,11 +80,6 @@
 						'item' => array(
 							array(
 								'type'	 => 'link',
-								'value'	 => lang('New Audience group'),
-								'href'	 => self::link(array('menuaction' => 'booking.uiaudience.add'))
-							),
-							array(
-								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => 'booking.uiaudience.active'))
 							),
@@ -119,10 +114,10 @@
 				)
 			);
 
-			if(!$this->bo->allow_create())
+			$data['datatable']['actions'][] = array();
+			if($this->bo->allow_create())
 			{
-				//Remove new button
-				unset($data['form']['toolbar']['item'][0]);
+				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiaudience.add'));
 			}
 
 			if(!$this->bo->allow_write())

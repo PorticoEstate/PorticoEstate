@@ -79,11 +79,6 @@
 						'item' => array(
 							array(
 								'type'	 => 'link',
-								'value'	 => lang('New organization'),
-								'href'	 => self::link(array('menuaction' => $this->module . '.uiorganization.add'))
-							),
-							array(
-								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
 							),
@@ -135,6 +130,8 @@
 					)
 				)
 			);
+			$data['datatable']['actions'][] = array();
+			$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uiorganization.add'));
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

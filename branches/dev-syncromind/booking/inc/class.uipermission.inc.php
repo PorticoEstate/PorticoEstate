@@ -174,6 +174,8 @@
 				)
 			);
 
+			$data['datatable']['actions'][] = array();
+
 			if($this->bo->allow_create())
 			{
 				array_unshift($data['form']['toolbar']['item'], array(
@@ -181,6 +183,7 @@
 					'value'	 => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
 					'href'	 => $this->get_object_typed_link('add')
 				));
+				$data['datatable']['new_item']	= $this->get_object_typed_link('add');
 			}
 
 //			self::render_template('datatable', $data);

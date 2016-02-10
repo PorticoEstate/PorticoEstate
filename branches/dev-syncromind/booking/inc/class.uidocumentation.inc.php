@@ -42,8 +42,6 @@
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
-						'item' => array(
-						)
 					),
 				),
 				'datatable'	 => array(
@@ -83,14 +81,9 @@
 				)
 			);
 
+			$data['datatable']['actions'][] = array();
+			$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uidocumentation.add'));
 
-			array_unshift($data['form']['toolbar']['item'], array(
-				'type'	 => 'link',
-				'value'	 => lang('New document'),
-				'href'	 => self::link(array('menuaction' => $this->module . '.uidocumentation.add')),
-			));
-
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

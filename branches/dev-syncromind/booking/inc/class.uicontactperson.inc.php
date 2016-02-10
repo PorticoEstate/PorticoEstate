@@ -40,11 +40,6 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type'	 => 'link',
-								'value'	 => lang('New contact'),
-								'href'	 => self::link(array('menuaction' => 'booking.uicontactperson.edit'))
-							),
-							array(
 								'type'	 => 'text',
 								'name'	 => 'query'
 							),
@@ -84,6 +79,10 @@
 					)
 				)
 			);
+
+			$data['datatable']['actions'][] = array();
+			$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uicontactperson.edit'));
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

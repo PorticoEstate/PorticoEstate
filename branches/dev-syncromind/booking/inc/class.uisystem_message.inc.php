@@ -139,6 +139,7 @@
 					)
 				)
 			);
+			$data['datatable']['actions'][] = array();
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

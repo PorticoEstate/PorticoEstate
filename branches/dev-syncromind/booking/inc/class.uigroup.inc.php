@@ -125,11 +125,6 @@
 						'item' => array(
 							array(
 								'type'	 => 'link',
-								'value'	 => lang('New group'),
-								'href'	 => self::link(array('menuaction' => $this->module . '.uigroup.edit'))
-							),
-							array(
-								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
 							),
@@ -176,7 +171,9 @@
 					)
 				)
 			);
-//			self::render_template('datatable', $data);
+			$data['datatable']['actions'][] = array();
+			$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uigroup.edit'));
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

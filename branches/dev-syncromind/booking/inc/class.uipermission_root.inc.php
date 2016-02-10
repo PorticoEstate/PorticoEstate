@@ -63,13 +63,6 @@
 			$data = array(
 				'form'		 => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('New Root Permission'),
-								'href'	 => $this->generate_link('add')
-							)
-						)
 					),
 				),
 				'datatable'	 => array(
@@ -100,12 +93,12 @@
 				unset($data['datatable']['field'][2]); //Delete action
 			}
 
-			if(!$this->bo->allow_create())
+			if($this->bo->allow_create())
 			{
-				unset($data['form']['toolbar']['item'][0]); //New button
+				$data['datatable']['new_item']	= $this->generate_link('add');
 			}
 
-//			self::render_template('datatable', $data);
+			$data['datatable']['actions'][] = array();
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

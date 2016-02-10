@@ -250,11 +250,6 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type'	 => 'link',
-								'value'	 => lang('New application'),
-								'href'	 => self::link(array('menuaction' => 'booking.uiapplication.add'))
-							),
-							array(
 								'type'	 => 'filter',
 								'name'	 => 'status',
 								'text'	 => lang('Status') . ':',
@@ -350,6 +345,9 @@
 					)
 				),
 			);
+
+			$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiapplication.add'));
+			$data['datatable']['actions'][] = array();
 
 			self::render_template_xsl('datatable_jquery', $data);
 //			self::render_template('datatable', $data);

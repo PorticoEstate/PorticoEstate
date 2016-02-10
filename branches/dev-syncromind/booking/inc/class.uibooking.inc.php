@@ -127,16 +127,13 @@
 				)
 			);
 
+			$data['datatable']['actions'][] = array();
 			if($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type'	 => 'link',
-					'value'	 => lang('New booking'),
-					'href'	 => self::link(array('menuaction' => 'booking.uibooking.add'))
-				));
+				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uibooking.add'));
 			}
 			$data['filters'] = $this->export_filters;
-//			self::render_template('datatable', $data);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
