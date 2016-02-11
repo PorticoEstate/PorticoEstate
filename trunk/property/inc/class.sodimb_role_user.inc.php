@@ -190,22 +190,34 @@
 
 		public function edit($data)
 		{
-			$active_from	= phpgwapi_datetime::date_to_timestamp($data['active_from']);
-			$active_to		= phpgwapi_datetime::date_to_timestamp($data['active_to']);
-			$delete 		= isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
-			$default_user 	= isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
-			$alter_date 	= isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
-			$add 			= isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
+			$active_from		= phpgwapi_datetime::date_to_timestamp($data['active_from']);
+			$active_to			= phpgwapi_datetime::date_to_timestamp($data['active_to']);
+			$delete				= isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
+			$default_user_orig 	= isset($data['default_user_orig']) && is_array($data['default_user_orig']) ? $data['default_user_orig'] : array();
+			$default_user		= isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
+			$alter_date			= isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
+			$add				= isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
 
 			$this->db->transaction_begin();
 
 			$c_default_user = 0;
 			foreach($default_user as $id)
 			{
-				if(!in_array($id, $delete))
+				if(!in_array($id, $delete) && !in_array($id, $default_user_orig))
 				{
 					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 1 WHERE id = '{$id}'", __LINE__, __FILE__);
 					$c_default_user ++;
+				}
+			}
+			unset($id);
+
+			$c_default_user_orig = 0;
+			foreach($default_user_orig as $id)
+			{
+				if($id && !in_array($id, $delete) && !in_array($id, $default_user))
+				{
+					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 0 WHERE id = '{$id}'", __LINE__, __FILE__);
+					$c_default_user_orig ++;
 				}
 			}
 
@@ -280,7 +292,12 @@
 
 				if($c_default_user)
 				{
-					phpgwapi_cache::message_set(lang('%1 roles set at default', $c_default_user), 'message');
+					phpgwapi_cache::message_set(lang('%1 roles set as default', $c_default_user), 'message');
+				}
+
+				if($c_default_user_orig)
+				{
+					phpgwapi_cache::message_set(lang('%1 roles removed as default', $c_default_user_orig), 'message');
 				}
 			}
 
