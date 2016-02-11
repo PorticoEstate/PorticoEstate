@@ -1,5 +1,6 @@
 
-saveTemplateAlloc = function () {
+saveTemplateAlloc = function ()
+{
 
 	var resources_checks = $('.resources_checks');
 
@@ -17,7 +18,8 @@ saveTemplateAlloc = function () {
 	values['resources'] = {};
 
 	var n = 0;
-	resources_checks.each(function (i, obj) {
+	resources_checks.each(function (i, obj)
+	{
 		if (obj.checked)
 		{
 			values['resources'][n] = obj.value;
@@ -29,12 +31,15 @@ saveTemplateAlloc = function () {
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	var data = values;
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		if (typeof (result.error) !== 'undefined')
 		{
 			JqueryPortico.show_message('', result);
-		} else {
+		}
+		else
+		{
 			parent.createTableSchedule('schedule_container', parent.weekUrl, parent.colDefs, parent.r, 'pure-table');
 			parent.TINY.box.hide();
 		}
@@ -42,13 +47,15 @@ saveTemplateAlloc = function () {
 	}, data, "POST", "JSON");
 };
 
-deleteTemplateAlloc = function () {
+deleteTemplateAlloc = function ()
+{
 
 	var oArgs = {menuaction: 'booking.uiseason.delete_wtemplate_alloc'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	var data = {'id': $('#id').val()};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		parent.createTableSchedule('schedule_container', parent.weekUrl, parent.colDefs, parent.r, 'pure-table');
 		parent.TINY.box.hide();

@@ -127,7 +127,7 @@
 		 */
 		public function control_list()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -140,7 +140,7 @@
 				'globals' => true, 'use_acl' => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array = array();
-			foreach($control_areas['cat_list'] as $cat_list)
+			foreach ($control_areas['cat_list'] as $cat_list)
 			{
 				$control_areas_array[] = array
 					(
@@ -247,7 +247,7 @@
 				)
 			);
 
-			if(!$this->home_alternative)
+			if (!$this->home_alternative)
 			{
 				$data['datatable']['field'][] = array(
 					'key' => 'show_locations',
@@ -288,13 +288,13 @@
 		 * @param HTTP:: control id
 		 * @return data array 
 		 */
-		public function view_control_details($control = null)
+		public function view_control_details( $control = null )
 		{
-			if($control == null)
+			if ($control == null)
 			{
 				$control_id = phpgw::get_var('id');
 
-				if(isset($control_id) && $control_id > 0)
+				if (isset($control_id) && $control_id > 0)
 				{
 					$control = $this->so->get_single($control_id);
 				}
@@ -307,7 +307,7 @@
 				'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
 
-			if($control != null)
+			if ($control != null)
 			{
 				$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
 			}
@@ -352,7 +352,7 @@
 		 */
 		public function save_control_details()
 		{
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol.index'));
 			}
@@ -361,7 +361,7 @@
 
 			// Update existing control details
 			$delete_control_groups = false;
-			if(isset($control_id) && $control_id > 0)
+			if (isset($control_id) && $control_id > 0)
 			{
 				$control = $this->so->get_single($control_id);
 				$control_area_id_in_db = $control->get_control_area_id();
@@ -370,7 +370,7 @@
 
 				// DELETE EARLIER SAVED CONTROL GROUPS
 				// If control are is different from a previous registration - delete related groups 			
-				if(($control_area_id_in_db > 0) & ($control_area_id_in_db != $control_area_id_from_req))
+				if (($control_area_id_in_db > 0) & ($control_area_id_in_db != $control_area_id_from_req))
 				{
 					$delete_control_groups = true;
 				}
@@ -383,15 +383,15 @@
 			}
 
 			// SAVE CONTROL DETAILS
-			if($control->validate())
+			if ($control->validate())
 			{
-				if($delete_control_groups)
+				if ($delete_control_groups)
 				{
 					// Deleting earlier saved control groups
 					$this->so_control_group_list->delete_control_groups($control_id);
 					$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id);
 
-					foreach($saved_control_items as $control_item)
+					foreach ($saved_control_items as $control_item)
 					{
 						$this->so_control_item_list->delete($control->get_id(), $control_item->get_id());
 					}
@@ -424,7 +424,7 @@
 
 			$saved_control_group_ids = array();
 
-			foreach($saved_control_groups as $control_group)
+			foreach ($saved_control_groups as $control_group)
 			{
 				$saved_control_group_ids[] = $control_group->get_id();
 			}
@@ -434,11 +434,11 @@
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 
 			$control_groups = array();
-			foreach($control_groups_as_array as $control_group)
+			foreach ($control_groups_as_array as $control_group)
 			{
 				$control_group_id = $control_group['id'];
 
-				if(in_array($control_group_id, $saved_control_group_ids))
+				if (in_array($control_group_id, $saved_control_group_ids))
 				{
 					$control_groups[] = array("checked" => 1, "control_group" => $control_group);
 				}
@@ -473,7 +473,7 @@
 		 */
 		public function save_control_groups()
 		{
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol.index'));
 			}
@@ -486,10 +486,10 @@
 
 			// Deletes groups from control that's not among the chosen groups
 
-			foreach($saved_control_groups as $group)
+			foreach ($saved_control_groups as $group)
 			{
 				// If saved group id not among chosen control ids, delete the group for the control    
-				if(!in_array($group->get_id(), $control_group_ids))
+				if (!in_array($group->get_id(), $control_group_ids))
 				{
 					$this->so_control_group_list->delete($control_id, $group->get_id());
 					// Deletes control items for group
@@ -500,11 +500,11 @@
 			$group_order_nr = 1;
 
 			// Saving control groups 
-			foreach($control_group_ids as $control_group_id)
+			foreach ($control_group_ids as $control_group_id)
 			{
 				$control_group = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $control_group_id);
 
-				if($control_group == null)
+				if ($control_group == null)
 				{
 					$control_group_list = new controller_control_group_list();
 					$control_group_list->set_control_id($control_id);
@@ -538,7 +538,7 @@
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 
 			// Fetches control items for control group and populates groups_with_control_items with groups and chosen control items
-			foreach($saved_control_groups as $control_group)
+			foreach ($saved_control_groups as $control_group)
 			{
 				// Fetches control items for group
 				$control_items_for_group = $this->so_control_item_list->get_control_items($control_group->get_id());
@@ -549,26 +549,26 @@
 				// Array that contains saved and unsaved control items for the group
 				$control_items_for_group_array = array();
 
-				foreach($saved_control_items_for_group as $saved_control_item)
+				foreach ($saved_control_items_for_group as $saved_control_item)
 				{
 					$control_items_for_group_array[] = array("checked" => 1, "control_item" => $saved_control_item->toArray());
 				}
 
 				// Loops through all control items for the group and add those control items that is not saved
-				foreach($control_items_for_group as $control_item)
+				foreach ($control_items_for_group as $control_item)
 				{
 					$status_control_item_saved = false;
 
-					foreach($saved_control_items_for_group as $saved_control_item)
+					foreach ($saved_control_items_for_group as $saved_control_item)
 					{
-						if($control_item->get_id() == $saved_control_item->get_id())
+						if ($control_item->get_id() == $saved_control_item->get_id())
 						{
 							$status_control_item_saved = true;
 						}
 					}
 
 					// Adds control item to saved
-					if(!$status_control_item_saved)
+					if (!$status_control_item_saved)
 					{
 						$control_items_for_group_array[] = array("checked" => 0, "control_item" => $control_item->toArray());
 					}
@@ -612,22 +612,22 @@
 			$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id, "return_object");
 
 			// Deleting formerly saved control items
-			foreach($saved_control_items as $saved_control_item)
+			foreach ($saved_control_items as $saved_control_item)
 			{
 				$exists = false;
 				$saved_control_item_id = $saved_control_item->get_id();
 
-				foreach($control_tag_ids as $control_item_tag)
+				foreach ($control_tag_ids as $control_item_tag)
 				{
 					$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":") + 1, strlen($control_item_tag));
 
-					if($control_item_id == $saved_control_item_id)
+					if ($control_item_id == $saved_control_item_id)
 					{
 						$exists = true;
 					}
 				}
 
-				if($exists == false)
+				if ($exists == false)
 				{
 					$exists = false;
 					$status = $this->so_control_item_list->delete($control_id, $saved_control_item_id);
@@ -636,14 +636,14 @@
 
 			$order_nr = 1;
 			// Saving new control items 
-			foreach($control_tag_ids as $control_item_tag)
+			foreach ($control_tag_ids as $control_item_tag)
 			{
 				// Fetch control_item_id from tag string
 				$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":") + 1, strlen($control_item_tag));
 
 				$saved_control_list_item = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
 
-				if($saved_control_list_item == null)
+				if ($saved_control_list_item == null)
 				{
 					// Saves control item
 					$control_item_list = new controller_control_item_list();
@@ -677,12 +677,12 @@
 			$saved_groups_with_items_array = array();
 
 			// Populating array with saved control items for each group
-			foreach($saved_control_groups as $control_group)
+			foreach ($saved_control_groups as $control_group)
 			{
 				// Fetches saved control items for group
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id());
 
-				if(count($saved_control_items) > 0)
+				if (count($saved_control_items) > 0)
 					$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(),
 						"control_items" => $saved_control_items);
 			}
@@ -718,11 +718,11 @@
 			self::render_template_xsl('control/control_details', $data);
 		}
 
-		function make_tab_menu($control_id)
+		function make_tab_menu( $control_id )
 		{
 			$tabs = array();
 
-			if($control_id > 0)
+			if ($control_id > 0)
 			{
 
 				$control = $this->so->get_single($control_id);
@@ -735,7 +735,7 @@
 
 				$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
 
-				if(count($saved_control_groups) > 0)
+				if (count($saved_control_groups) > 0)
 				{
 					$tabs['control_groups'] = array(
 						'label' => "2: " . lang('Choose_control_groups'),
@@ -745,7 +745,7 @@
 
 					$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control->get_id());
 
-					if(count($saved_control_items) > 0)
+					if (count($saved_control_items) > 0)
 					{
 						$tabs['control_items'] = array(
 							'label' => "3: " . lang('Choose_control_items'),
@@ -773,22 +773,22 @@
 				$tabs = array(
 					'details' => array(
 						'label' => "1: " . lang('Details'),
-						'link'	=> '#details'
+						'link' => '#details'
 					),
 					'control_groups' => array(
 						'label' => "2: " . lang('Choose_control_groups'),
-						'link'	=> '#control_groups',
-						'disable'	=> true
+						'link' => '#control_groups',
+						'disable' => true
 					),
 					'control_items' => array(
 						'label' => "3: " . lang('Choose_control_items'),
-						'link'	=> '#control_items',
-						'disable'	=> true
+						'link' => '#control_items',
+						'disable' => true
 					),
 					'check_list' => array(
 						'label' => "4: " . lang('Sort_check_list'),
-						'link'	=> '#check_list',
-						'disable'	=> true
+						'link' => '#check_list',
+						'disable' => true
 				));
 			}
 
@@ -807,7 +807,7 @@
 
 			$controls_array = $this->so->get_controls_by_control_area($control_area_id);
 
-			if(count($controls_array) > 0)
+			if (count($controls_array) > 0)
 				return json_encode($controls_array);
 			else
 				return null;
@@ -823,11 +823,11 @@
 		{
 			$control_id = phpgw::get_var('control_id');
 
-			if(is_numeric($control_id) & $control_id > 0)
+			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so->get_locations_for_control($control_id);
 
-				foreach($locations_for_control_array as $location)
+				foreach ($locations_for_control_array as $location)
 				{
 					$results['results'][] = $location;
 				}
@@ -855,7 +855,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			unset($value['query_location']);
 
@@ -865,17 +865,17 @@
 
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_control_details',
-				'id' => $value['control_id'])));
+					'id' => $value['control_id'])));
 			$value['labels'][] = lang('View control');
 
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control',
-				'id' => $value['control_id'])));
+					'id' => $value['control_id'])));
 			$value['labels'][] = lang('View locations for control');
 
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list',
-				'location_code' => $value['location_code'])));
+					'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
 		}
 
@@ -905,12 +905,12 @@
 
 
 			$ctrl_area = phpgw::get_var('control_areas');
-			if(isset($ctrl_area) && $ctrl_area > 0)
+			if (isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area;
 			}
 			$responsibility = phpgw::get_var('responsibilities');
-			if(isset($responsibility) && $responsibility > 0)
+			if (isset($responsibility) && $responsibility > 0)
 			{
 				$filters['responsibilities'] = $responsibility;
 			}
@@ -924,7 +924,7 @@
 			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
 			$sort_field = $params['order'];
 
-			if(!$sort_field)
+			if (!$sort_field)
 			{
 				$sort_field = 'controller_control.id';
 			}
@@ -936,7 +936,7 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$control_id = phpgw::get_var('control_id');
-			if(isset($control_id))
+			if (isset($control_id))
 			{
 				$control = $this->so->get_single($control_id);
 			}
@@ -946,7 +946,7 @@
 
 			$results = array();
 
-			foreach($result_objects as $control_obj)
+			foreach ($result_objects as $control_obj)
 			{
 				$results['results'][] = $control_obj->serialize();
 			}
@@ -961,7 +961,7 @@
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view_control_details");
 			$label = lang('show_controls_for_location');
 
-			foreach($results["results"] as &$res)
+			foreach ($results["results"] as &$res)
 			{
 				$res['show_locations'] = array(
 					'href' => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_year_for_locations',

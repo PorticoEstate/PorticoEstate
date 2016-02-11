@@ -6,35 +6,35 @@
 
 		protected
 			$module;
-		public 
+		public
 			$public_functions = array(
-			'query'			 => true,
-				'regulations'			=> true,
-				'download'				=> true,
-			);
-		
+			'query' => true,
+			'regulations' => true,
+			'download' => true,
+		);
+
 		public function __construct()
 		{
 			parent::__construct();
-			
+
 			$this->bo = CreateObject('booking.bodocument_view');
 			$this->url_prefix = 'booking.uidocument_view';
 			$this->module = 'booking';
 		}
-		
-		public function link_to($action, $params = array())
+
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
-		
-		public function redirect_to($action, $params = array())
+
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
-		
-		public function link_to_params($action, $params = array())
+
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -43,35 +43,35 @@
 			{
 				$ui = 'document_view';
 			}
-			
+
 			$action = sprintf($this->module . '.ui%s.%s', $ui, $action);
 			return array_merge(array('menuaction' => $action), $params);
 		}
-		
+
 		public function download()
 		{
-			if($id = phpgw::get_var('id', 'string'))
+			if ($id = phpgw::get_var('id', 'string'))
 			{
 				$document = $this->bo->read_single(urldecode($id));
 				self::send_file($document['filename'], array('filename' => $document['name']));
 			}
 		}
-		
+
 		public function regulations()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
-			
+
 			self::add_javascript('booking', 'booking', 'datatable.js');
-						
+
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'text', 
+								'type' => 'text',
 								'name' => 'query'
 							),
 							array(
@@ -88,7 +88,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
-							'formatter'	 => 'JqueryPortico.formatLink',
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'link',
@@ -97,19 +97,19 @@
 					)
 				)
 			);
-			
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public static function sort_by_params($a, $b)
+		public static function sort_by_params( $a, $b )
 		{
 			static $dir, $key;
-			if(!isset($dir))
+			if (!isset($dir))
 			{
 				!($dir = phpgw::get_var('dir', 'string', null)) AND $dir = 'asc';
 				!($sort = phpgw::get_var('sort', 'string', null)) AND $sort = 'name';
 			}
-			
+
 			$retVal = strcmp($a[$sort], $b[$sort]);
 			return ($dir == 'desc' ? -$retVal : $retVal);
 		}
@@ -117,18 +117,18 @@
 		public function query()
 		{
 			$documents = $this->bo->read_regulations();
-			
-			foreach($documents['results'] as &$document)
+
+			foreach ($documents['results'] as &$document)
 			{
 				$document['link'] = $this->link_to('download', array('id' => $document['id']));
-				$document['name'] = isset($document['description']) && strlen(trim($document['description'])) > 0 ? 
+				$document['name'] = isset($document['description']) && strlen(trim($document['description'])) > 0 ?
 					$document['description'] : $document['name'];
 			}
-			
+
 			//Resort because the sorting order from the database may have been screwed up above
 			//when choosing between name and description of document
 			usort($documents['results'], array(self, 'sort_by_params'));
-			
+
 			return $this->jquery_results($documents);
 		}
 	}

@@ -1,12 +1,12 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 		<input type="hidden" name="tab" value="" />
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
 			<div id="generate_allocations">
-		<xsl:if test="step = 1">
+				<xsl:if test="step = 1">
 					<div class="pure-control-group">
 						<xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (1/2)
 					</div>					
@@ -26,49 +26,49 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Interval')" />
 						</label>
-					<select id="field_interval" name="field_interval">
-						<option value="1">
-							<xsl:if test="interval=1">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', '1 week')" />
-						</option>
-						<option value="2">
-							<xsl:if test="interval=2">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', '2 weeks')" />
-						</option>
-						<option value="3">
-							<xsl:if test="interval=3">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', '3 weeks')" />
-						</option>
-						<option value="4">
-							<xsl:if test="interval=4">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', '4 weeks')" />
-						</option>
-					</select>
-	        </div>
-		</xsl:if>
+						<select id="field_interval" name="field_interval">
+							<option value="1">
+								<xsl:if test="interval=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', '1 week')" />
+							</option>
+							<option value="2">
+								<xsl:if test="interval=2">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', '2 weeks')" />
+							</option>
+							<option value="3">
+								<xsl:if test="interval=3">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', '3 weeks')" />
+							</option>
+							<option value="4">
+								<xsl:if test="interval=4">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', '4 weeks')" />
+							</option>
+						</select>
+					</div>
+				</xsl:if>
 				
-		<xsl:if test="step = 2">
+				<xsl:if test="step = 2">
 					<div class="pure-control-group">
 						<xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (2/2)
 					</div>					
-			<input type="hidden" name="from_">
+					<input type="hidden" name="from_">
 						<xsl:attribute name="value">
 							<xsl:value-of select="from_" />
 						</xsl:attribute>
-			</input>
-			<input type="hidden" name="to_">
+					</input>
+					<input type="hidden" name="to_">
 						<xsl:attribute name="value">
 							<xsl:value-of select="to_" />
 						</xsl:attribute>
-			</input>
+					</input>
 					<div class="pure-control-group">
 						<label></label>
 						<xsl:value-of select="php:function('lang', 'Allocations that can be created (%1)', count(result/valid[from_]))" />
@@ -76,13 +76,13 @@
 					<div class="pure-control-group">
 						<label></label>
 						<div class="pure-custom">
-			<div class="allocation-list">
-				<xsl:for-each select="result/valid[from_]">
-					<li>
-						<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
-					</li>
-				</xsl:for-each>
-			</div>
+							<div class="allocation-list">
+								<xsl:for-each select="result/valid[from_]">
+									<li>
+										<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
+									</li>
+								</xsl:for-each>
+							</div>
 						</div>
 					</div>
 					<div class="pure-control-group">
@@ -92,18 +92,18 @@
 					<div class="pure-control-group">
 						<label></label>
 						<div class="pure-custom">
-			<div class="allocation-list">
-				<xsl:for-each select="result/invalid[from_]">
-					<li>
-						<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
-					</li>
-				</xsl:for-each>
-			</div>
-	        </div>
+							<div class="allocation-list">
+								<xsl:for-each select="result/invalid[from_]">
+									<li>
+										<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
+									</li>
+								</xsl:for-each>
+							</div>
+						</div>
 					</div>							
-		</xsl:if>
+				</xsl:if>
 				
-		<xsl:if test="step = 3">
+				<xsl:if test="step = 3">
 					<div class="pure-control-group">
 						<label></label>
 						<xsl:value-of select="php:function('lang', 'Successfully created %1 allocations:', count(result/valid[from_]))" />
@@ -111,13 +111,13 @@
 					<div class="pure-control-group">
 						<label></label>
 						<div class="pure-custom">
-			<div class="allocation-list">
-				<xsl:for-each select="result/valid[from_]">
-					<li>
-						<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
-					</li>
-				</xsl:for-each>
-			</div>
+							<div class="allocation-list">
+								<xsl:for-each select="result/valid[from_]">
+									<li>
+										<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>: <xsl:value-of select="organization_name"/>
+									</li>
+								</xsl:for-each>
+							</div>
 						</div>
 					</div>
 				</xsl:if>
@@ -130,7 +130,7 @@
 						<xsl:value-of select="php:function('lang', 'Preview')" />
 					</xsl:attribute>
 				</input>
-		</xsl:if>
+			</xsl:if>
 			<xsl:if test="step = 2">
 				<input type="submit" class="pure-button pure-button-primary" name="create">
 					<xsl:attribute name="value">
@@ -144,7 +144,7 @@
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</xsl:attribute>
 			</input>			
-	</div>
+		</div>
 	</form>
 
 </xsl:template>

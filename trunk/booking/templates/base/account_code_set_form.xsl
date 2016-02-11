@@ -14,7 +14,7 @@
 	</func:result>
 </func:function>
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -129,25 +129,25 @@
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'Please select an status')" />
 									</xsl:attribute>
-						<xsl:if test="new_form">
-							<xsl:attribute name="disabled">disabled</xsl:attribute>
-						</xsl:if>
-						<option value="1">
-							<xsl:if test="account_code_set/active=1">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', 'Active')"/>
-						</option>
-						<option value="0">
-							<xsl:if test="account_code_set/active=0">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', 'Inactive')"/>
-						</option>
-					</select>
+									<xsl:if test="new_form">
+										<xsl:attribute name="disabled">disabled</xsl:attribute>
+									</xsl:if>
+									<option value="1">
+										<xsl:if test="account_code_set/active=1">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', 'Active')"/>
+									</option>
+									<option value="0">
+										<xsl:if test="account_code_set/active=0">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', 'Inactive')"/>
+									</option>
+								</select>
 							</div>
 							<div class="pure-control-group">
-				<xsl:if test="config_data/dim_1">
+								<xsl:if test="config_data/dim_1">
 									<label for="field_responsible_code">
 										<xsl:value-of select="config_data/dim_1" />
 									</label>
@@ -159,10 +159,10 @@
 											<xsl:value-of select="php:function('lang', 'Please enter a responsible code')" />
 										</xsl:attribute>
 									</input>
-				</xsl:if>
+								</xsl:if>
 							</div>
 							<div class="pure-control-group">
-				<xsl:if test="config_data/dim_2">
+								<xsl:if test="config_data/dim_2">
 									<label for="field_service">
 										<xsl:value-of select="config_data/dim_2" />
 									</label>
@@ -174,18 +174,18 @@
 											<xsl:value-of select="php:function('lang', 'Please enter a service')" />
 										</xsl:attribute>
 									</input>
-				</xsl:if>
+								</xsl:if>
 							</div>
 							<div class="pure-control-group">
-				<xsl:if test="config_data/dim_4">
+								<xsl:if test="config_data/dim_4">
 									<label for="field_dim_4">
 										<xsl:value-of select="config_data/dim_4" />
 									</label>
 									<input name="dim_4" type="text" id="field_dim_4" value="{account_code_set/dim_4}" maxlength='8' class="pure-u-1" />
-				</xsl:if>
+								</xsl:if>
 							</div>
 							<div class="pure-control-group">
-				<xsl:if test="config_data/dim_5">
+								<xsl:if test="config_data/dim_5">
 									<label for="field_project_number">
 										<xsl:value-of select="config_data/dim_5" />
 									</label>
@@ -197,7 +197,7 @@
 											<xsl:value-of select="php:function('lang', 'Please enter a project number')" />
 										</xsl:attribute>
 									</input>
-			</xsl:if>
+								</xsl:if>
 							</div>
 						</div>
 					</div>
@@ -220,11 +220,11 @@
 				</fieldset>
 			</div>
 		</div>
-			<div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" value="{php:function('lang', phpgw:conditional(new_form, 'Create', 'Save'))}" class="button pure-button pure-button-primary"/>
 			<a class="cancel pure-button pure-button-primary" href="{account_code_set/cancel_link}">
-					<xsl:value-of select="php:function('lang', 'Cancel')" />
-				</a>
-			</div>
-		</form>
+				<xsl:value-of select="php:function('lang', 'Cancel')" />
+			</a>
+		</div>
+	</form>
 </xsl:template>

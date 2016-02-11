@@ -29,7 +29,8 @@ checkOverride = function ()
 		{
 			$(this).prop("checked", true);
 		}
-		else {
+		else
+		{
 			$(this).prop("checked", false);
 		}
 	});
@@ -38,7 +39,8 @@ checkOverride = function ()
 	{
 		overrideAll = 1;
 	}
-	else {
+	else
+	{
 		overrideAll = 0;
 	}
 };
@@ -52,7 +54,8 @@ checkBill2 = function ()
 		{
 			$(this).prop("checked", true);
 		}
-		else {
+		else
+		{
 			$(this).prop("checked", false);
 		}
 	});
@@ -61,7 +64,8 @@ checkBill2 = function ()
 	{
 		bill2All = 1;
 	}
-	else {
+	else
+	{
 		bill2All = 0;
 	}
 };

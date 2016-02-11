@@ -6,8 +6,8 @@
 	$setup_info['booking']['app_group'] = 'office';
 
 
-	$setup_info['booking']['tables'] = array 
-	(
+	$setup_info['booking']['tables'] = array
+		(
 		'bb_activity',
 		'bb_building',
 		'bb_targetaudience',
@@ -66,8 +66,8 @@
 	$setup_info['booking']['description'] = 'Bergen kommune booking';
 
 	$setup_info['booking']['author'][] = array
-	(
-		'name'	=> 'Redpill Linpro',
+		(
+		'name' => 'Redpill Linpro',
 		'email' => 'info@redpill-linpro.com'
 	);
 
@@ -84,9 +84,9 @@
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['booking']['hooks'] = array
-	(
-		'menu'			=> 'booking.menu.get_menu',
-		'activity_add'		=> 'booking.hook_helper.activity_add',
-		'activity_delete'	=> 'booking.hook_helper.activity_delete',
-		'activity_edit'		=> 'booking.hook_helper.activity_edit'
+		(
+		'menu' => 'booking.menu.get_menu',
+		'activity_add' => 'booking.hook_helper.activity_add',
+		'activity_delete' => 'booking.hook_helper.activity_delete',
+		'activity_edit' => 'booking.hook_helper.activity_edit'
 	);

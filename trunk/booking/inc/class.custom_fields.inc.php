@@ -46,7 +46,7 @@
 		 *
 		 * @return void
 		 */
-		public function __construct($appname = null)
+		public function __construct( $appname = null )
 		{
 			parent::__construct($appname);
 		}
@@ -56,12 +56,11 @@
 		 * @param type $location
 		 * @return  array the grouped attributes
 		 */
-		public function get_fields($location)
+		public function get_fields( $location )
 		{
-			$appname	 = 'booking';
-			return	parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			$appname = 'booking';
+			return parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
 		}
-
 
 		/**
 		 *
@@ -69,21 +68,21 @@
 		 * @param array $fields
 		 * @return  array the grouped attributes
 		 */
-		public function organize_fields($location, $fields = array())
+		public function organize_fields( $location, $fields = array() )
 		{
-			$field_groups =  $this->get_field_groups('booking', $location, $fields);
+			$field_groups = $this->get_field_groups('booking', $location, $fields);
 			$i = -1;
 			$attributes = array();
 			$_dummy = array(array());
-			foreach($field_groups as $_key => $group)
+			foreach ($field_groups as $_key => $group)
 			{
-				if(!isset($group['attributes']))
+				if (!isset($group['attributes']))
 				{
 					$group['attributes'] = $_dummy;
 				}
-				if(isset($group['group_sort']))
+				if (isset($group['group_sort']))
 				{
-					if($group['level'] == 0)
+					if ($group['level'] == 0)
 					{
 						$_tab_name = str_replace(' ', '_', $group['name']);
 						$active_tab = $active_tab ? $active_tab : $_tab_name;
@@ -112,17 +111,19 @@
 			}
 			return $attributes;
 		}
+
 		/**
 		 *
 		 * @param type $location
 		 * @return  array the grouped attributes
 		 */
-		public function get_organized_fields($location)
+		public function get_organized_fields( $location )
 		{
 			$appname = 'booking';
-			$fields	 = parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
-			return  $this->get_field_groups($appname, $location, $fields);
+			$fields = parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			return $this->get_field_groups($appname, $location, $fields);
 		}
+
 		/**
 		 * Arrange attributes within groups
 		 *
@@ -131,7 +132,7 @@
 		 *
 		 * @return array the grouped attributes
 		 */
-		private function get_field_groups($appname, $location, $fields = array(), $skip_no_group = false)
+		private function get_field_groups( $appname, $location, $fields = array(), $skip_no_group = false )
 		{
 			return parent::get_attribute_groups($appname, $location, $fields, $skip_no_group);
 		}

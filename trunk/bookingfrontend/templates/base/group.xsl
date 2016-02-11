@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
-    <div id="content">
-        <ul class="pathway">
+	<div id="content">
+		<ul class="pathway">
 			<li>
 				<a href="index.php?menuaction=bookingfrontend.uisearch.index">
 					<xsl:value-of select="php:function('lang', 'Home')" />
@@ -15,18 +15,18 @@
 			<li>
 				<xsl:value-of select="group/name"/>
 			</li>
-        </ul>
+		</ul>
 
-	        <xsl:if test="group/permission/write">
-	            <span class="loggedin">
+		<xsl:if test="group/permission/write">
+			<span class="loggedin">
 				<button onclick="window.location.href='{edit_self_link}'">
 					<xsl:value-of select="php:function('lang', 'edit')" />
 				</button>
-				</span>
-	        </xsl:if>
-        <xsl:call-template name="msgbox"/>
+			</span>
+		</xsl:if>
+		<xsl:call-template name="msgbox"/>
 
-        <dl class="proplist">
+		<dl class="proplist">
 			<dt>
 				<xsl:value-of select="php:function('lang', 'Group')" />
 			</dt>
@@ -85,6 +85,6 @@
 				</xsl:if>
 			</xsl:for-each>
 
-        </dl>
-    </div>
+		</dl>
+	</div>
 </xsl:template>

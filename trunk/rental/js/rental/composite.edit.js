@@ -82,7 +82,8 @@ function formatterPrice(key, oData)
 	return amount;
 }
 
-downloadContracts = function (oArgs) {
+downloadContracts = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{
@@ -99,18 +100,21 @@ downloadContracts = function (oArgs) {
 	window.open(requestUrl, '_self');
 };
 
-getRequestData = function (dataSelected, parameters) {
+getRequestData = function (dataSelected, parameters)
+{
 
 	var data = {};
 
-	$.each(parameters.parameter, function (i, val) {
+	$.each(parameters.parameter, function (i, val)
+	{
 		data[val.name] = {};
 	});
 
 	var n = 0;
 	for (var n = 0; n < dataSelected.length; ++n)
 	{
-		$.each(parameters.parameter, function (i, val) {
+		$.each(parameters.parameter, function (i, val)
+		{
 			data[val.name][n] = dataSelected[n][val.source];
 		});
 	}
@@ -118,13 +122,15 @@ getRequestData = function (dataSelected, parameters) {
 	return data;
 };
 
-addUnit = function (oArgs, parameters) {
+addUnit = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_1' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_1').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 0;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -133,7 +139,8 @@ addUnit = function (oArgs, parameters) {
 	oArgs['level'] = document.getElementById('type_id').value;
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -143,13 +150,15 @@ addUnit = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-removeUnit = function (oArgs, parameters) {
+removeUnit = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_0' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_0').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 0;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -157,7 +166,8 @@ removeUnit = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 

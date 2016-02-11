@@ -6,7 +6,8 @@ function onAdjust_price()
 	var oArgs = {menuaction: 'rental.uiprice_item.adjust_price', price_item_id: price_item_id, new_price: new_price};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(0, result);
 
@@ -28,18 +29,21 @@ function onAdjust_price()
 	}, '', "POST", "JSON");
 }
 
-getRequestData = function (dataSelected, parameters) {
+getRequestData = function (dataSelected, parameters)
+{
 
 	var data = {};
 
-	$.each(parameters.parameter, function (i, val) {
+	$.each(parameters.parameter, function (i, val)
+	{
 		data[val.name] = {};
 	});
 
 	var n = 0;
 	for (var n = 0; n < dataSelected.length; ++n)
 	{
-		$.each(parameters.parameter, function (i, val) {
+		$.each(parameters.parameter, function (i, val)
+		{
 			data[val.name][n] = dataSelected[n][val.source];
 		});
 	}
@@ -49,11 +53,12 @@ getRequestData = function (dataSelected, parameters) {
 
 function removePrice(oArgs, parameters)
 {
-	var api =$( '#datatable-container_0' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_0').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 0;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -61,7 +66,8 @@ function removePrice(oArgs, parameters)
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 

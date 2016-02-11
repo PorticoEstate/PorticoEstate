@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('booking.sopermission');
-	
+
 	class booking_sopermission_agegroup extends booking_sopermission
 	{
 
@@ -13,5 +13,5 @@
 		protected function build_object_relations()
 		{
 			return null;
-		}	
+		}
 	}

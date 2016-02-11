@@ -35,14 +35,14 @@
 		private $check_list;
 		private $type;
 
-		public function __construct($check_list, $type = '')
+		public function __construct( $check_list, $type = '' )
 		{
-			$this->check_list	 = $check_list;
-			if(!$type)
+			$this->check_list = $check_list;
+			if (!$type)
 			{
 				$type = $check_list->get_component_id() ? 'component' : '';
 			}
-			$this->type			 = $type;
+			$this->type = $type;
 		}
 
 		function get_status_for_check_list()
@@ -51,10 +51,10 @@
 
 			$todays_date_ts = $this->get_todays_date_ts();
 
-			if($this->check_list->get_id() == 0)
+			if ($this->check_list->get_id() == 0)
 			{
 
-				if($this->check_list->get_deadline() < $todays_date_ts)
+				if ($this->check_list->get_deadline() < $todays_date_ts)
 				{
 					$status = "CONTROL_NOT_DONE";
 				}
@@ -65,33 +65,33 @@
 			}
 			else
 			{
-				if($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() >= $todays_date_ts)
+				if ($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() >= $todays_date_ts)
 				{
 					$status = "CONTROL_PLANNED";
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() >= $todays_date_ts)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() >= $todays_date_ts)
 				{
 					$status = "CONTROL_REGISTERED";
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts)
 				{
 					$status = "CONTROL_NOT_DONE_WITH_PLANNED_DATE";
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 				{
 					$status = "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS";
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() < $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() < $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 				{
 					$status = "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS";
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_num_open_cases() > 0)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_num_open_cases() > 0)
 				{
 					$status = "CONTROL_DONE_WITH_ERRORS";
 
 					$check_list_status_info->set_num_open_cases($this->check_list->get_num_open_cases());
 				}
-				else if($this->check_list->get_status() == controller_check_list::STATUS_CANCELED)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_CANCELED)
 				{
 					$status = "CONTROL_CANCELED";
 				}
@@ -109,7 +109,7 @@
 			$check_list_status_info->set_billable_hours($this->check_list->get_billable_hours());
 			$check_list_status_info->set_serie_id($this->check_list->get_serie_id());
 
-			if($this->type == "component")
+			if ($this->type == "component")
 			{
 				$check_list_status_info->set_component_id($this->check_list->get_component_id());
 				$check_list_status_info->set_location_id($this->check_list->get_location_id());

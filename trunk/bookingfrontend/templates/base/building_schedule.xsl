@@ -51,8 +51,8 @@
 				</a>
 			</li>
 		</ul>
-        <div id="schedule_container"/>
-    </div>
+		<div id="schedule_container"/>
+	</div>
 	<div id="dialog_schedule"></div>
 
 	<script type="text/javascript">
@@ -63,22 +63,22 @@
 		schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
 		schedule.includeResource = true;
 		schedule.colFormatter = 'frontendScheduleDateColumn';
-    var handleHistoryNavigation = function (state) {
+		var handleHistoryNavigation = function (state) {
 		schedule.date = parseISO8601(state);
 		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-    };
+		};
 
 		var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
 
 		var state = getUrlData("date") || initialRequest;
 		schedule.state = state;
 		if (state){
-			handleHistoryNavigation(state);
+		handleHistoryNavigation(state);
 		schedule.week = $.datepicker.iso8601Week(schedule.date);
 		$('#cal_container #numberWeek').text(schedule.week);
 		$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
 		}
-    });
+		});
 		<xsl:if test="backend = 'true'">
 			$('header').hide();
 		</xsl:if>

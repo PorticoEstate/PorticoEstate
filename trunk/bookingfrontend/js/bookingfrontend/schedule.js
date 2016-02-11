@@ -1,28 +1,37 @@
 var schedule = new Array();
 
-schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable) {
+schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable)
+{
 	classTable = (classTable) ? classTable : "pure-table";
-	while (date.getDay() != 1) {
+	while (date.getDay() != 1)
+	{
 		date.setDate(date.getDate() - 1);
 	}
 	var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	url += '&date=' + datestr;
 
 	var lang = {
-		WEEKDAYS_FULL: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-		MONTHS_LONG: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		WEEKDAYS_FULL: [
+			'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+		],
+		MONTHS_LONG: [
+			'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+		],
 		LBL_TIME: 'Time',
 		LBL_RESOURCE: 'Resource',
 		LBL_WEEK: 'Week'
 	};
 
-	var colDefs = [{key: 'time', label: date.getFullYear() + '<br/>' + lang['LBL_TIME']}];
-	if (includeResource) {
+	var colDefs = [
+		{key: 'time', label: date.getFullYear() + '<br/>' + lang['LBL_TIME']}];
+	if (includeResource)
+	{
 		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: 'scheduleResourceColumn'});
 	}
 	schedule.dates = {};
 	var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	for (var i = 0; i < 7; i++) {
+	for (var i = 0; i < 7; i++)
+	{
 		var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		d.setDate(d.getDate() + i);
 		var x = (i < 6) ? i + 1 : 0;
@@ -35,29 +44,35 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 
 };
 
-schedule.setupWeekPicker = function () {
+schedule.setupWeekPicker = function ()
+{
 }
-$(function () {
+$(function ()
+{
 	$("#cal_container #datepicker").datepicker({
 		showWeek: true,
 		changeMonth: true,
 		changeYear: true,
 		firstDay: 1,
 		dateFormat: 'yy,mm,dd',
-		onSelect: function (a, e) {
-			if (a != schedule.dateSelected) {
+		onSelect: function (a, e)
+		{
+			if (a != schedule.dateSelected)
+			{
 				var date = new Date(a);
 				schedule.dateSelected = a;
 				schedule.updateSchedule(date);
 			}
 		}
 	});
-	$("#cal_container #pickerImg").on('click', function () {
+	$("#cal_container #pickerImg").on('click', function ()
+	{
 		$("#cal_container #datepicker").datepicker("show");
 	});
 });
 
-schedule.updateSchedule = function (date) {
+schedule.updateSchedule = function (date)
+{
 	schedule.week = $.datepicker.iso8601Week(date);
 	$('#cal_container #numberWeek').text(schedule.week);
 	$("#cal_container #datepicker").datepicker("setDate", date);
@@ -71,28 +86,35 @@ schedule.updateSchedule = function (date) {
 	schedule.date = date;
 }
 
-schedule.moveWeek = function (n) {
+schedule.moveWeek = function (n)
+{
 	var date = schedule.date;
-	while (date.getDay() != 1) {
+	while (date.getDay() != 1)
+	{
 		date.setDate(date.getDate() - 1);
 	}
 	date.setDate(date.getDate() + n);
 	schedule.updateSchedule(date);
 }
-schedule.prevWeek = function () {
+schedule.prevWeek = function ()
+{
 	schedule.moveWeek(-7)
 };
-schedule.nextWeek = function () {
+schedule.nextWeek = function ()
+{
 	schedule.moveWeek(7)
 }
 
 
-schedule.newApplicationForm = function (date, _from, _to, resource) {
+schedule.newApplicationForm = function (date, _from, _to, resource)
+{
 	var url = schedule.newApplicationUrl;
-	if (!url) {
+	if (!url)
+	{
 		return;
 	}
-	if (arguments.length == 0) {
+	if (arguments.length == 0)
+	{
 		window.location.href = url;
 		return;
 	}
@@ -111,13 +133,15 @@ schedule.newApplicationForm = function (date, _from, _to, resource) {
 	weekday[5] = "friday";
 	weekday[6] = "saturday";
 	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&weekday=' + weekday[day];
-	if (resource) {
+	if (resource)
+	{
 		url += '&resource=' + resource;
 	}
 	window.location.href = url;
 }
 
-schedule.showInfo2 = function (url, resource) {
+schedule.showInfo2 = function (url, resource)
+{
 	var content_overlay = document.getElementById('content_overlay');
 	var overlay = document.createElement('div');
 	var img = document.createElement('img');
@@ -133,7 +157,8 @@ schedule.showInfo2 = function (url, resource) {
 	url = url.replace(/&amp;/gi, '&') + '&resource=' + resource;
 	overlay.setAttribute('id', 'schedule_overlay');
 	content_overlay.appendChild(overlay);
-	$.get(url, function (data) {
+	$.get(url, function (data)
+	{
 		overlay.innerHTML = data;
 		var hc = $('#content_overlay').height();
 		var ho = $('#schedule_overlay').height();
@@ -141,13 +166,15 @@ schedule.showInfo2 = function (url, resource) {
 		overlay.style.top = top + "px";
 		overlay.style.display = 'block';
 	})
-			.fail(function () {
-				$('#schedule_overlay').hide().remove();
-				alert("Failed to load booking details page");
-			});
+		.fail(function ()
+		{
+			$('#schedule_overlay').hide().remove();
+			alert("Failed to load booking details page");
+		});
 }
 
-schedule.showInfo = function (url, resource) {
+schedule.showInfo = function (url, resource)
+{
 	var dialog = document.getElementById('dialog_schedule');
 	var img = document.createElement('img');
 	img.setAttribute('src', '/portico/phpgwapi/templates/pure/images/loading_overlay.gif');
@@ -163,47 +190,56 @@ schedule.showInfo = function (url, resource) {
 	resource = (resource) ? resource : null;
 	url = url.replace(/&amp;/gi, '&') + '&resource=' + resource;
 
-	$.get(url, function (data) {
+	$.get(url, function (data)
+	{
 		schedule.dialogSchedule.dialog("close");
 		schedule.dialogSchedule.dialog("destroy");
 		dialog.innerHTML = data;
 		schedule.createDialogSchedule(650);
 		schedule.dialogSchedule.dialog("open");
 	})
-			.fail(function () {
-				schedule.dialogSchedule.dialog("close");
-				alert("Failed to load booking details page");
-			});
+		.fail(function ()
+		{
+			schedule.dialogSchedule.dialog("close");
+			alert("Failed to load booking details page");
+		});
 }
 
-schedule.createDialogSchedule = function (w) {
+schedule.createDialogSchedule = function (w)
+{
 	var ww = $(window).width();
 	w = (w > (ww - 40)) ? (ww - 40) : w;
 	schedule.dialogSchedule = $('#dialog_schedule').dialog({
 		autoOpen: false,
 		modal: true,
 		width: w,
-		close: function () {
+		close: function ()
+		{
 			schedule.cleanDialog();
 		}
 	});
 }
 
-schedule.cleanDialog = function () {
+schedule.cleanDialog = function ()
+{
 	$('#dialog_schedule').html("");
 }
 
-schedule.closeOverlay = function () {
+schedule.closeOverlay = function ()
+{
 	$('#schedule_overlay').hide().remove();
 }
 
-schedule.newAllocationForm = function (args) {
+schedule.newAllocationForm = function (args)
+{
 
 	var oArgs = {menuaction: 'booking.uiseason.wtemplate_alloc'};
 	if (typeof (args['id']) !== 'undefined')
 	{
 		oArgs['id'] = args['id'];
-	} else {
+	}
+	else
+	{
 		if (typeof (args['_from']) !== 'undefined')
 		{
 			oArgs['_from'] = args['_from'];
@@ -220,7 +256,8 @@ schedule.newAllocationForm = function (args) {
 
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	for (var i = 0; i < resource_ids.length; i++) {
+	for (var i = 0; i < resource_ids.length; i++)
+	{
 		sUrl += '&filter_id[]=' + resource_ids[i];
 	}
 

@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<input type="hidden" name="step" value="{step}"/>
@@ -15,18 +15,18 @@
 						<h4>
 							<xsl:value-of select="php:function('lang', 'Recipients')"/> - (<xsl:value-of select="count(contacts)" />)</h4>
 					</label>
-				<select id="field_contacts" name="contacts" size="10">
-					<xsl:for-each select="contacts">
-						<xsl:sort select="name"/>
-						<option>
+					<select id="field_contacts" name="contacts" size="10">
+						<xsl:for-each select="contacts">
+							<xsl:sort select="name"/>
+							<option>
 								<xsl:attribute name="value">
 									<xsl:value-of select="email"/>
 								</xsl:attribute>
 								<xsl:value-of select="name"/> &lt;
 								<xsl:value-of select="email"/>&gt;
-						</option>
-					</xsl:for-each>
-				</select>
+							</option>
+						</xsl:for-each>
+					</select>
 				</div>
 			</div>
 		</div>
@@ -37,5 +37,5 @@
 				</xsl:attribute>
 			</input>
 		</div>
-    </form>
+	</form>
 </xsl:template>

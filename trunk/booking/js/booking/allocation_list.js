@@ -1,15 +1,18 @@
 var seasonFilterBuildingId = false;
 
-function updateBuildingFilter(sType, aArgs) {
+function updateBuildingFilter(sType, aArgs)
+{
 	$('#filter_season_name').val('');
 	$('#filter_season_id').val('');
 	seasonFilterBuildingId = aArgs[2].id;
 }
 
-function clearBuildingFilter() {
+function clearBuildingFilter()
+{
 	seasonFilterBuildingId = false;
 }
 
-function requestWithBuildingFilter(sQuery) {
+function requestWithBuildingFilter(sQuery)
+{
 	return 'query=' + sQuery + (seasonFilterBuildingId ? '&filter_building_id=' + seasonFilterBuildingId : '');
 }

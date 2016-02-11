@@ -16,42 +16,42 @@
 
 		<xsl:for-each select="building">	
 			<xsl:if test="deactivate_calendar=0">
-			<div>
+				<div>
 					<button onclick="window.location.href='{schedule_link}'">
 						<xsl:value-of select="php:function('lang', 'Building schedule')" />
 					</button>
 					- Søk ledig tid/informasjon om hva som skjer
-			</div>
+				</div>
 			</xsl:if>
 			<div class="pure-g">
 				<div class="pure-u-1 pure-u-md-1-2">
-			<dl class="proplist-col main">
-				<xsl:if test="normalize-space(description)">
-					<dl class="proplist description">
+					<dl class="proplist-col main">
+						<xsl:if test="normalize-space(description)">
+							<dl class="proplist description">
 								<dt>
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</dt>
 								<dd>
 									<xsl:value-of select="description" disable-output-escaping="yes"/>
 								</dd>
-					</dl>
-				</xsl:if>
+							</dl>
+						</xsl:if>
 				
-				<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
+						<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Contact information')" />
 							</h3>
-			<xsl:if test="deactivate_sendmessage=0">
-			<div>
+							<xsl:if test="deactivate_sendmessage=0">
+								<div>
 									<button onclick="window.location.href='{message_link}'">
 										<xsl:value-of select="php:function('lang', 'Send message')" />
 									</button>
 									- Meldig til saksbehandler for bygg
-			</div>
-			</xsl:if>
+								</div>
+							</xsl:if>
 
-					<dl class="contactinfo">
-						<xsl:if test="homepage and normalize-space(homepage)">
+							<dl class="contactinfo">
+								<xsl:if test="homepage and normalize-space(homepage)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Homepage')" />
 									</dt>
@@ -60,9 +60,9 @@
 											<xsl:value-of select="homepage"/>
 										</a>
 									</dd>
-						</xsl:if>
+								</xsl:if>
 					
-						<xsl:if test="email and normalize-space(email)">
+								<xsl:if test="email and normalize-space(email)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Email')" />
 									</dt>
@@ -71,54 +71,54 @@
 											<xsl:value-of select="email"/>
 										</a>
 									</dd>
-						</xsl:if>
+								</xsl:if>
 					
-						<xsl:if test="phone and normalize-space(phone)">
+								<xsl:if test="phone and normalize-space(phone)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Telephone')" />
 									</dt>
 									<dd>
 										<xsl:value-of select="phone"/>
 									</dd>
-						</xsl:if>
+								</xsl:if>
 					
-						<xsl:if test="street and normalize-space(street)">
+								<xsl:if test="street and normalize-space(street)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Address')" />
 									</dt>
-							<dd>
+									<dd>
 										<xsl:value-of select="street"/>
 										<br/>
 										<xsl:value-of select="zip_code"/>
 										<span>&nbsp; </span>
 										<xsl:value-of select="city"/>
 										<br/>
-								<xsl:value-of select="district"/>
-							</dd>
+										<xsl:value-of select="district"/>
+									</dd>
+								</xsl:if>
+							</dl>
 						</xsl:if>
-					</dl>
-				</xsl:if>
 				
 						<h3>
 							<xsl:value-of select="php:function('lang', 'Bookable resources')" />
 						</h3>
-				<div id="resources_container"/>
+						<div id="resources_container"/>
 
 						<h3>
 							<xsl:value-of select="php:function('lang', 'Building users')" />
 						</h3>
-				<div id="building_users_container"/>
+						<div id="building_users_container"/>
 
 						<h3>
 							<xsl:value-of select="php:function('lang', 'Documents')" />
 						</h3>
-				<div id="documents_container"/>
-			</dl>
+						<div id="documents_container"/>
+					</dl>
 				</div>
 				<div class="pure-u-1 pure-u-lg-1-2">
-			<dl class="proplist-col images">	
-				<div id="images_container"></div>
-			</dl>
+					<dl class="proplist-col images">
+						<div id="images_container"></div>
+					</dl>
 					<dl class="proplist-col images map">
 						<!--div id="images_container"></div-->
 						<xsl:if test="street and normalize-space(street)">

@@ -4,33 +4,33 @@
 .clr { clear: both;}
 
 #inactive {
-				background-color: #ff5555;
-				width: 10em;
-				padding: 1em;
-				border: 0.2em dotted #000000;
-				letter-spacing: 2px;
+	background-color: #ff5555;
+	width: 10em;
+	padding: 1em;
+	border: 0.2em dotted #000000;
+	letter-spacing: 2px;
 }
 #active {
-				background-color: #ffffff;
-				width: 10em;
-				padding: 1em;
-				border: 0em dotted #000000;
-				letter-spacing: 2px;
+	background-color: #ffffff;
+	width: 10em;
+	padding: 1em;
+	border: 0em dotted #000000;
+	letter-spacing: 2px;
 }
 
 #inactivate-button {
-				border: 1px solid #000000;
-				margin-top: 1em;
-				padding: 0.1em;
-				background-color: #ffffff;
-				}
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
 
 #activate-button {
-				border: 1px solid #000000;
-				margin-top: 1em;
-				padding: 0.1em;
-				background-color: #ffffff;
-				}
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
 
 ul.pathway {
     font-weight: bolder;
@@ -169,7 +169,7 @@ dl.form-2col {
 }
 
 #list_actions {
-   margin-top: 0.5em;
+	margin-top: 0.5em;
 }
 
 dl.proplist dd.address,

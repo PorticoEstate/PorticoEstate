@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<div action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form" >
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -56,8 +56,8 @@
 			</button>
 		</div>
 	</div>
-		<!--h4><xsl:value-of select="php:function('lang', 'Invoice Data Exports')" /></h4>
-		<div id="completed_reservation_exports_container"/-->
+	<!--h4><xsl:value-of select="php:function('lang', 'Invoice Data Exports')" /></h4>
+	<div id="completed_reservation_exports_container"/-->
 		
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'ID', 'Building', 'Season', 'From', 'To')"/>;

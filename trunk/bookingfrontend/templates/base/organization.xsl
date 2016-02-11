@@ -13,7 +13,7 @@
 				</a>
 			</li>
 			<li>
-                <xsl:value-of select="organization/name"/>
+				<xsl:value-of select="organization/name"/>
 			</li>
 		</ul>
 
@@ -33,23 +33,23 @@
 				<dd>
 					<xsl:value-of select="organization/description" disable-output-escaping="yes"/>
 				</dd>
-	        </dl>
+			</dl>
 		</xsl:if>
 
 		<h3>
 			<xsl:value-of select="php:function('lang', 'Contact information')" />
 		</h3>
-        <dl class="proplist contactinfo">
+		<dl class="proplist contactinfo">
 	
 			<xsl:if test="organization/homepage and normalize-space(organization/homepage)">		
 				<dt>
 					<xsl:value-of select="php:function('lang', 'Homepage')" />
 				</dt>
-	            <dd>
+				<dd>
 					<a target="blank" href="{organization/homepage}">
 						<xsl:value-of select="organization/homepage" />
 					</a>
-	            </dd>
+				</dd>
 			</xsl:if>
 			
 			<xsl:if test="organization/email and normalize-space(organization/email)">
@@ -76,29 +76,29 @@
 				<dt>
 					<xsl:value-of select="php:function('lang', 'Address')" />
 				</dt>
-						<dd>
+				<dd>
 					<xsl:value-of select="organization/street"/>
 					<br/>
 					<xsl:value-of select="organization/zip_code"/>
 					<span>&nbsp; </span>
 					<xsl:value-of select="organization/city"/>
 					<br/>
-							<xsl:value-of select="organization/district"/>
-						</dd>
+					<xsl:value-of select="organization/district"/>
+				</dd>
 			</xsl:if>
 
-        </dl>
+		</dl>
 
 		<h3>
 			<xsl:value-of select="php:function('lang', 'Groups')" />
 		</h3>
-        <div id="groups_container"/>
+		<div id="groups_container"/>
 
 		<h3>
 			<xsl:value-of select="php:function('lang', 'Used buildings')" />
 		</h3>
-        <div id="buildings_used_by_container"/>
-    </div>
+		<div id="buildings_used_by_container"/>
+	</div>
 
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
@@ -114,10 +114,10 @@
 		var colDefsGroup = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},
 		{key: 'link', attrs: [{name: 'hidden'}]},
-				{key: 'activity_name', label: lang['Activity']},
-				{key: 'primary_contact_name', label: lang['Contact 1']},
-				{key: 'secondary_contact_name', label: lang['Contact 2']}
-			];
+		{key: 'activity_name', label: lang['Activity']},
+		{key: 'primary_contact_name', label: lang['Contact 1']},
+		{key: 'secondary_contact_name', label: lang['Contact 2']}
+		];
 		var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
                 
 		createTable('groups_container', groupURL, colDefsGroup);

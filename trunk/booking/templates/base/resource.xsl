@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-        <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 		<input type="hidden" name="tab" value="" />
 		<div id="tab-content">
@@ -35,9 +35,9 @@
 									<xsl:with-param name="data" select ='data'/>
 									<xsl:with-param name="config" select ='config'/>
 								</xsl:call-template>
-			</xsl:if>
+							</xsl:if>
 						</xsl:for-each>
-    	</div>
+					</div>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -69,15 +69,15 @@
 					<div class="pure-custom">
 						<div id="documents_container" class="custom-container"></div>
 						<div>
-		<a class='button'>
+							<a class='button'>
 								<xsl:attribute name="href">
 									<xsl:value-of select="resource/add_document_link"/>
 								</xsl:attribute>
-			<xsl:if test="resource/permission/write">
-				<xsl:value-of select="php:function('lang', 'Add Document')" />
-			</xsl:if>
-		</a>
-    </div>
+								<xsl:if test="resource/permission/write">
+									<xsl:value-of select="php:function('lang', 'Add Document')" />
+								</xsl:if>
+							</a>
+						</div>
 					</div>
 				</div>
 				<div class="pure-control-group">

@@ -1,40 +1,53 @@
 var building_id_selection = "";
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	oArgs = {menuaction: 'booking.uibuilding.index'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.autocompleteHelper(requestUrl, 'field_building_name', 'field_building_id', 'building_container');
 });
 
-$(window).load(function () {
+$(window).load(function ()
+{
 	var building_id = $('#field_building_id').val();
-	if (building_id > 0) {
+	if (building_id > 0)
+	{
 		populateTableChkResources(building_id, initialSelection);
 		building_id_selection = building_id;
 	}
-	$("#field_building_name").on("autocompleteselect", function (event, ui) {
+	$("#field_building_name").on("autocompleteselect", function (event, ui)
+	{
 		var building_id = ui.item.value;
-		if (building_id != building_id_selection) {
+		if (building_id != building_id_selection)
+		{
 			populateTableChkResources(building_id, []);
 			building_id_selection = building_id;
 		}
 	});
 });
 
-function populateTableChkResources(building_id, selection) {
+function populateTableChkResources(building_id, selection)
+{
 	oArgs = {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, filter_activity_id: $("#field_activity").val()};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var container = 'resources_container';
-	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'checked', value: 'checked'}]}], value: 'id'/*, checked: selection*/}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'checked', value: 'checked'}
+					]}
+			], value: 'id'/*, checked: selection*/}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+	];
 	populateTableChk(requestUrl, container, colDefsResources);
 }
 
-function populateTableChk(url, container, colDefs) {
+function populateTableChk(url, container, colDefs)
+{
 	createTable(container, url, colDefs);
 }
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#check_all_buildings").on("click", function () {
+	$("#check_all_buildings").on("click", function ()
+	{
 		if ($(this).prop("checked"))
 		{
 			$("#building_container").hide();
@@ -47,7 +60,8 @@ $(document).ready(function () {
 		}
 	});
 
-	$("#field_activity").change(function () {
+	$("#field_activity").change(function ()
+	{
 		oArgs = {menuaction: 'booking.uireports.get_custom'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var activity_id = $("#field_activity").val();
@@ -70,7 +84,8 @@ $(document).ready(function () {
 			data: {activity_id: activity_id},
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var message = data.message;

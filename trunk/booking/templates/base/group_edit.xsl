@@ -9,12 +9,12 @@
 					<div class="heading">
 						<legend>
 							<h3>
-			<xsl:if test="not(group/id)">
-				<xsl:value-of select="php:function('lang', 'New Group')" />
-			</xsl:if>
-			<xsl:if test="group/id">
-				<xsl:value-of select="php:function('lang', 'Edit Group')" />
-			</xsl:if>
+								<xsl:if test="not(group/id)">
+									<xsl:value-of select="php:function('lang', 'New Group')" />
+								</xsl:if>
+								<xsl:if test="group/id">
+									<xsl:value-of select="php:function('lang', 'Edit Group')" />
+								</xsl:if>
 							</h3>
 						</legend>
 					</div>
@@ -41,40 +41,40 @@
 						<label for="field_organization_name">
 							<xsl:value-of select="php:function('lang', 'Organization')" />
 						</label>
-			        <input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}"/>
-			        <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
-						<xsl:if test="group/organization_id">
-							<xsl:attribute name='disabled'>disabled</xsl:attribute>
-						</xsl:if>
+						<input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}"/>
+						<input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
+							<xsl:if test="group/organization_id">
+								<xsl:attribute name='disabled'>disabled</xsl:attribute>
+							</xsl:if>
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
 							<xsl:attribute name="data-validation-error-msg">
 								<xsl:value-of select="php:function('lang', 'Please enter an organization name')" />
 							</xsl:attribute>
-					</input>
+						</input>
 						<div id="organization_container"></div>
-			    </div>
+					</div>
 					<div class="pure-control-group">
 						<label for="field_activity">
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
-				<select name="activity_id" id="field_activity">
+						<select name="activity_id" id="field_activity">
 							<option value="">
 								<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 							</option>
-					<xsl:for-each select="activities">
-						<option>
-							<xsl:if test="../group/activity_id = id">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
+							<xsl:for-each select="activities">
+								<option>
+									<xsl:if test="../group/activity_id = id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
 									<xsl:attribute name="value">
 										<xsl:value-of select="id"/>
 									</xsl:attribute>
-							<xsl:value-of select="name"/>
-						</option>
-					</xsl:for-each>
-				</select>
+									<xsl:value-of select="name"/>
+								</option>
+							</xsl:for-each>
+						</select>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_description" style="vertical-align:top;">
@@ -87,46 +87,46 @@
 						</div>
 					</div>
 					<div class="pure-control-group">
-			<xsl:if test="group/id">
+						<xsl:if test="group/id">
 							<label for="field_active">
 								<xsl:value-of select="php:function('lang', 'Active')"/>
 							</label>
-					<select id="field_active" name="active">
-						<option value="1">
-							<xsl:if test="group/active=1">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', 'Active')"/>
-						</option>
-						<option value="0">
-							<xsl:if test="group/active=0">
-								<xsl:attribute name="selected">checked</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="php:function('lang', 'Inactive')"/>
-						</option>
-					</select>
-			</xsl:if>
+							<select id="field_active" name="active">
+								<option value="1">
+									<xsl:if test="group/active=1">
+										<xsl:attribute name="selected">checked</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="php:function('lang', 'Active')"/>
+								</option>
+								<option value="0">
+									<xsl:if test="group/active=0">
+										<xsl:attribute name="selected">checked</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="php:function('lang', 'Inactive')"/>
+								</option>
+							</select>
+						</xsl:if>
 					</div>
 					<div class="pure-control-group">
-			<!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
+						<!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
 						<label for="field_show_in_portal">
 							<xsl:value-of select="php:function('lang', 'Show in portal')"/>
 						</label>
-			   <select id="field_show_in_portal" name="show_in_portal">
-			       <option value="0">
-			       	<xsl:if test="group/show_in_portal=0">
-			       		<xsl:attribute name="selected">checked</xsl:attribute>
-			       	</xsl:if>
-			           <xsl:value-of select="php:function('lang', 'No')"/>
-			       </option>
-			       <option value="1">
-			       	<xsl:if test="group/show_in_portal=1">
-			       		<xsl:attribute name="selected">checked</xsl:attribute>
-			       	</xsl:if>
-			           <xsl:value-of select="php:function('lang', 'Yes')"/>
-			       </option>
-			   </select>
-			<!--</xsl:if>-->
+						<select id="field_show_in_portal" name="show_in_portal">
+							<option value="0">
+								<xsl:if test="group/show_in_portal=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+							<option value="1">
+								<xsl:if test="group/show_in_portal=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+						</select>
+						<!--</xsl:if>-->
 					</div>
 					<div class="heading">
 						<legend>

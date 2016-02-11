@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-        <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -42,20 +42,20 @@
 		</div>
 	</form>
 	<div class="pure-control-group">
-			<xsl:if test="allocation/permission/write">
+		<xsl:if test="allocation/permission/write">
 			<button class="pure-button pure-button-primary">
-		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/edit_link"/>"</xsl:attribute>
-		            <xsl:value-of select="php:function('lang', 'Edit')" />
-		        </button>
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/edit_link"/>"</xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Edit')" />
+			</button>
 			<button class="pure-button pure-button-primary">
-		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/delete_link"/>"</xsl:attribute>
-		            <xsl:value-of select="php:function('lang', 'Delete')" />
-		        </button>
-			</xsl:if>
-		</div>
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/delete_link"/>"</xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Delete')" />
+			</button>
+		</xsl:if>
+	</div>
 	<script type="text/javascript">
-    var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
-	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+		var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     <![CDATA[
         var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
     ]]>
