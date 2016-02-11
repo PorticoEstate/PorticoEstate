@@ -50,7 +50,8 @@ function onSave()
 	//var close_order = $('.close_order');
 
 	var i = 0;
-	api.data().each(function (d) {
+	api.data().each(function (d)
+	{
 
 		values['counter'][i] = i;
 		values['id'][i] = d.id;
@@ -67,15 +68,19 @@ function onSave()
 		i++;
 	});
 
-	close_order_orig.each(function (i, obj) {
+	close_order_orig.each(function (i, obj)
+	{
 		values['close_order_orig'][$(obj).attr('counter')] = obj.value;
 	});
 
-	close_order_tmp.each(function (i, obj) {
+	close_order_tmp.each(function (i, obj)
+	{
 		if (obj.checked)
 		{
 			values['close_order'][$(obj).attr('counter')] = true;
-		} else {
+		}
+		else
+		{
 			values['close_order'][$(obj).attr('counter')] = '';
 		}
 	});
@@ -84,20 +89,23 @@ function onSave()
 	var requestUrl = api.ajax.url();
 
 	var data = {"values": values};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		document.getElementById("message").innerHTML = '';
 
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById("message").innerHTML = v.msg + "<br/>";
 			});
 		}
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 			});
 		}

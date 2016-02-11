@@ -61,18 +61,18 @@
 
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'csv') != 0)
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'csv') != 0)
 					{
 						continue;
 					}
@@ -81,13 +81,13 @@
 				}
 			}
 
-			if(is_writable("{$dirname}/archive"))
+			if (is_writable("{$dirname}/archive"))
 			{
-				foreach($file_list as $file)
+				foreach ($file_list as $file)
 				{
 					$this->db->transaction_begin();
 
-					if($this->debug)
+					if ($this->debug)
 					{
 						_debug_array("Start import file: $file");
 					}
@@ -95,20 +95,20 @@
 					$this->updated_tickects_per_file = array();
 					$ok = $this->import($file);
 
-					if($ok)
+					if ($ok)
 					{
 						// move file
 						$_file = basename($file);
 						$movefrom = "{$dirname}/{$_file}";
 						$moveto = "{$dirname}/archive/{$_file}";
 
-						if(is_file($moveto))
+						if (is_file($moveto))
 						{
 							@unlink($moveto);//in case of duplicates
 						}
 
 						$ok = @rename($movefrom, $moveto);
-						if(!$ok) // Should never happen.
+						if (!$ok) // Should never happen.
 						{
 							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, oppdatering avbrutt");
@@ -126,7 +126,7 @@
 					}
 				}
 
-				if(!$this->debug)
+				if (!$this->debug)
 				{
 					$this->alert_assigned();
 				}
@@ -151,13 +151,13 @@
 			{
 				$connection = ftp_connect($server);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
 
 			// try to authenticate with username root, password secretpassword
-			if(!ftp_login($connection, $user, $password))
+			if (!ftp_login($connection, $user, $password))
 			{
 				echo "fail: unable to authenticate\n";
 			}
@@ -166,7 +166,7 @@
 				// allright, we're in!
 				echo "okay: logged in...<br/>";
 
-				if(!ftp_chdir($connection, $directory_remote))
+				if (!ftp_chdir($connection, $directory_remote))
 				{
 					echo ("Change Dir Failed: $dir<BR>\r\n");
 					return false;
@@ -178,26 +178,26 @@
 
 				$files = ftp_nlist($connection, '.');
 
-				if($this->debug)
+				if ($this->debug)
 				{
 					_debug_array($files);
 				}
 
-				foreach($files as $file_name)
+				foreach ($files as $file_name)
 				{
-					if($this->debug)
+					if ($this->debug)
 					{
 						_debug_array('preg_match("/csv$/i",' . $file_name . ': ' . preg_match('/csv$/i', $file_name));
 					}
 
-					if(preg_match('/csv$/i', $file_name))
+					if (preg_match('/csv$/i', $file_name))
 					{
 						$file_remote = $file_name;
 						$file_local = "{$directory_local}/{$file_name}";
 
-						if(ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
 						{
-							if(ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
+							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
 							{
 								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
 								echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
@@ -205,7 +205,7 @@
 							else
 							{
 								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/arkiv/{$file_name}<br/>";
-								if(unlink($file_local))
+								if (unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
@@ -220,7 +220,7 @@
 			}
 		}
 
-		private function import($file)
+		private function import( $file )
 		{
 			$ok = true;
 
@@ -228,16 +228,16 @@
 
 			$fp = fopen($file, 'rb');
 
-			while(($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
+			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
 			{
-				if(preg_match('/^PENGER/i', $file_name))
+				if (preg_match('/^PENGER/i', $file_name))
 				{
 					$ok = $this->update_amount($data);
 				}
-				else if(preg_match('/^STATUS/i', $file_name))
+				else if (preg_match('/^STATUS/i', $file_name))
 				{
 					$ok = true;
-					if(trim($data[2]))//check for order_id
+					if (trim($data[2]))//check for order_id
 					{
 						$ok = $this->update_status($data);
 					}
@@ -249,9 +249,9 @@
 			return $ok;
 		}
 
-		private function update_amount($data)
+		private function update_amount( $data )
 		{
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array($data);
 			}
@@ -266,7 +266,7 @@
 			$this->db->next_record();
 			$id = $this->db->f('id');
 
-			if(!$id)
+			if (!$id)
 			{
 				$this->receipt['error'][] = array('msg' => "Oppdatere beløp for agresso prosjekt {$agresso_prosjekt}: fant ikke bestillingen, hopper over: {$order_id}");
 				return false;
@@ -305,7 +305,7 @@
 			$value_set = $this->db->validate_update($value_set);
 			$ok = $this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 
-			if($ok)
+			if ($ok)
 			{
 				$this->updated_tickects_per_file[$id] = true;
 				$this->update_status($data);
@@ -314,7 +314,7 @@
 			return $ok;
 		}
 
-		private function update_status($data)
+		private function update_status( $data )
 		{
 			$agresso_prosjekt = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
@@ -322,14 +322,14 @@
 
 			$id = false;
 
-			if($order_id)
+			if ($order_id)
 			{
 				$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
 				$this->db->next_record();
 				$id = $this->db->f('id');
 			}
 
-			if(!$id)
+			if (!$id)
 			{
 				$this->receipt['error'][] = array('msg' => "Oppdatere status: fant ikke bestillingen for agresso prosjekt {$agresso_prosjekt}");
 				return false;
@@ -338,14 +338,14 @@
 			$this->db->query("UPDATE fm_tts_tickets SET agresso_prosjekt = '{$agresso_prosjekt}' WHERE id={$id}", __LINE__, __FILE__);
 
 			$ok = true;
-			if(preg_match('/(^C|^P)/i', $prosjektstatus))
+			if (preg_match('/(^C|^P)/i', $prosjektstatus))
 			{
 				$ticket = array
 					(
 					'status' => 'C8' //Avsluttet og fakturert (C)
 				);
 
-				if($this->sotts->update_status($ticket, $id))
+				if ($this->sotts->update_status($ticket, $id))
 				{
 					$this->updated_tickects_per_file[$id] = true;
 				}
@@ -359,7 +359,7 @@
 
 			$updated_tickects = array_keys($this->updated_tickects);
 
-			foreach($updated_tickects as $id)
+			foreach ($updated_tickects as $id)
 			{
 				$this->db->query("SELECT assignedto FROM fm_tts_tickets WHERE id= '{$id}'", __LINE__, __FILE__);
 				$this->db->next_record();
@@ -368,9 +368,9 @@
 			}
 		}
 
-		private function send_notification($assignedto = 0, $id = 0)
+		private function send_notification( $assignedto = 0, $id = 0 )
 		{
-			if(!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				return;
 			}
@@ -379,15 +379,15 @@
 			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
 			$bocommon = CreateObject('property.bocommon');
 			$prefs = $bocommon->create_preferences('property', $assignedto);
-			if(isset($prefs['email']) && $prefs['email'])
+			if (isset($prefs['email']) && $prefs['email'])
 			{
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
+						'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
 				try
 				{
 					$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					$this->receipt['error'][] = array('msg' => $e->getMessage());
 				}
@@ -396,7 +396,7 @@
 
 		private function send_error_messages_as_email()
 		{
-			if(!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				return;
 			}
@@ -405,10 +405,10 @@
 			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
 			$to = "Lene.Christensen@bergen.kommune.no";
 			$cc = "Sigurd.Nes@bergen.kommune.no";
-			if($this->receipt['error'])
+			if ($this->receipt['error'])
 			{
 				$errors = array();
-				foreach($this->receipt['error'] as $error)
+				foreach ($this->receipt['error'] as $error)
 				{
 					$errors[] = $error['msg'];
 				}
@@ -417,7 +417,7 @@
 				{
 					$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					$this->receipt['error'][] = array('msg' => $e->getMessage());
 				}

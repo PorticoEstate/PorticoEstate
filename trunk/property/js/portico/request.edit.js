@@ -6,9 +6,9 @@ this.local_DrawCallback2 = function ()
 	var intVal = function (i)
 	{
 		return typeof i === 'string' ?
-				i.replace(/[\$,]/g, '') * 1 :
-				typeof i === 'number' ?
-				i : 0;
+			i.replace(/[\$,]/g, '') * 1 :
+			typeof i === 'number' ?
+			i : 0;
 	};
 
 	var columns = ["6"];
@@ -19,9 +19,10 @@ this.local_DrawCallback2 = function ()
 	{
 		data = api.column(col, {page: 'current'}).data();
 		pageTotal = data.length ?
-				data.reduce(function (a, b) {
-					return intVal(a) + intVal(b);
-				}) : 0;
+			data.reduce(function (a, b)
+			{
+				return intVal(a) + intVal(b);
+			}) : 0;
 
 		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
 	});

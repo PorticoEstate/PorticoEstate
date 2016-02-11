@@ -1,6 +1,8 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#global_category_id").change(function () {
+	$("#global_category_id").change(function ()
+	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -10,7 +12,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					if (data.active != 1)
@@ -23,9 +26,11 @@ $(document).ready(function () {
 	});
 });
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#order_time_span").change(function () {
+	$("#order_time_span").change(function ()
+	{
 		var oArgs = {menuaction: 'property.uiproject.get_orders', project_id: project_id, year: $(this).val()};
 //		var requestUrl = phpGWLink('index.php', oArgs, true);
 		execute_async(myDataTable_1, oArgs);
