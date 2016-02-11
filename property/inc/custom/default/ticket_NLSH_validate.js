@@ -62,7 +62,8 @@ function validate_submit()
 	if (error)
 	{
 		alert('Feiltype må velges før meldingen kan avsluttes');
-	} else
+	}
+	else
 	{
 		document.form.submit();
 	}

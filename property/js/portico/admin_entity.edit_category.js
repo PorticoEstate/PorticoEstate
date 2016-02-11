@@ -23,7 +23,8 @@ var myFormatterCheck = function (key, oData)
 
 this.onActionsClick = function ()
 {
-	$(".mychecks:checked").each(function () {
+	$(".mychecks:checked").each(function ()
+	{
 		values_tophp.push($(this).val());
 	});
 

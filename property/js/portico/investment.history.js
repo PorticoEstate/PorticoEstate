@@ -7,21 +7,24 @@
 var intVal = function (i)
 {
 	return typeof i === 'string' ?
-			i.replace(/[\$,]/g, '') * 1 :
-			typeof i === 'number' ? i : 0;
+		i.replace(/[\$,]/g, '') * 1 :
+		typeof i === 'number' ? i : 0;
 };
 
 
-onclikUpdateinvestment = function () {
+onclikUpdateinvestment = function ()
+{
 
 	var oDate = $('#filter_start_date').val();
 	var oIndex = $('#txt_index').val();
 
-	if (oIndex == '') {
+	if (oIndex == '')
+	{
 		alert('None index');
 		return false;
 	}
-	if (oDate == '') {
+	if (oDate == '')
+	{
 		alert('None Date');
 		return false;
 	}
@@ -49,14 +52,16 @@ onclikUpdateinvestment = function () {
 
 	var requestUrl = api.ajax.url();
 	var data = {"values": values};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		$('#filter_start_date').val('');
 		$('#txt_index').val('');
 		document.getElementById("message").innerHTML = '';
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 				document.getElementById("message").style.color = "green";
 			});
@@ -64,7 +69,8 @@ onclikUpdateinvestment = function () {
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 				document.getElementById("message").style.color = "red";
 			});
