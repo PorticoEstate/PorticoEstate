@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage project
 	 * @version $Id$
 	 */
-
-  	phpgw::import_class('property.uicondition_survey');
+	phpgw::import_class('property.uicondition_survey');
 
 	class mobilefrontend_uicondition_survey extends property_uicondition_survey
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

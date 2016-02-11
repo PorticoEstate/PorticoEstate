@@ -2,14 +2,14 @@
 	<style type="text/css">
 		#field_weekday label{margin:0px;text.align:left;width:auto;}
 	</style>
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="data/tabs"/>
 			<div id="report_freetime">
-		<xsl:choose>
-			<xsl:when test="show = 'gui'">
+				<xsl:choose>
+					<xsl:when test="show = 'gui'">
 						<div class="pure-control-group">
 							<!--label><xsl:value-of select="php:function('lang', 'From')" /></label>
 							<div class="date-picker">
@@ -27,7 +27,7 @@
 									<xsl:value-of select="from"/>
 								</xsl:attribute>
 							</input>
-							</div>
+						</div>
 						<div class="pure-control-group">
 							<!--label><xsl:value-of select="php:function('lang', 'To')" /></label>
 							<div class="date-picker">
@@ -45,7 +45,7 @@
 									<xsl:value-of select="to"/>
 								</xsl:attribute>
 							</input>
-							</div>
+						</div>
 						<div class="pure-control-group">
 							<label for="field_building" style="vertical-align:top;">
 								<h4>
@@ -66,7 +66,7 @@
 									</option>
 								</xsl:for-each>
 							</select>
-					</div>
+						</div>
 						<div class="pure-control-group">
 							<label for="field_weekday" style="vertical-align:top;">
 								<h4>
@@ -118,14 +118,14 @@
 								</li>
 							</ul>
 						</div>									
-			</xsl:when>
-			<xsl:otherwise>
-				<script type="text/javascript">
-					var eventParams = {};
-				</script>
+					</xsl:when>
+					<xsl:otherwise>
+						<script type="text/javascript">
+							var eventParams = {};
+						</script>
 						<table id="report" class="pure-table pure-table-bordered">
-					<thead>
-						<tr>
+							<thead>
+								<tr>
 									<th>
 										<xsl:value-of select="php:function('lang', 'Building')"/>
 									</th>
@@ -141,11 +141,11 @@
 									<th>
 										<xsl:value-of select="php:function('lang', 'actions')"/>
 									</th>
-						</tr>
-					</thead>
-					<tbody>
-						<xsl:for-each select="allocations">
-							<tr>
+								</tr>
+							</thead>
+							<tbody>
+								<xsl:for-each select="allocations">
+									<tr>
 										<td>
 											<xsl:value-of select="building_name"/>
 										</td>
@@ -158,19 +158,19 @@
 										<td>
 											<xsl:value-of select="php:function('pretty_timestamp', to_)"/>
 										</td>
-								<td>
-									<script type="text/javascript">
-										eventParams[<xsl:value-of select="counter"/>] = <xsl:value-of select="event_params"/>;
-									</script>
+										<td>
+											<script type="text/javascript">
+												eventParams[<xsl:value-of select="counter"/>] = <xsl:value-of select="event_params"/>;
+											</script>
 											<a href="#" onclick="JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{counter}]);">Lag arrangement</a>
-								</td>
-							</tr>
-						</xsl:for-each>
-					</tbody>
-				</table>
-			</xsl:otherwise>
-		</xsl:choose>
-	</div>
+										</td>
+									</tr>
+								</xsl:for-each>
+							</tbody>
+						</table>
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
 		</div>
 		<div class="form-buttons">
 			<xsl:if test="show = 'gui'">

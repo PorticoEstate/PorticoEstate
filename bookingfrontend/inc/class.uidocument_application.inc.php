@@ -6,9 +6,9 @@
 
 		public $public_functions = array
 			(
-			'download'		 => true,
-			'index'			 => true,
-			'index_images'	 => true,
+			'download' => true,
+			'index' => true,
+			'index_images' => true,
 		);
 		protected $module;
 

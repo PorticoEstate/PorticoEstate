@@ -18,7 +18,8 @@ function formatterPrice(key, oData)
 }
 
 
-function contract_export(ctype) {
+function contract_export(ctype)
+{
 	var typeselect = document.getElementById('contract_type');
 	var typeoption = typeselect.options[typeselect.selectedIndex].value;
 
@@ -34,25 +35,26 @@ function contract_export(ctype) {
 	var endDate = document.getElementById('filter_end_date_report').value;
 
 	var oArgs = {menuaction: 'rental.uicontract.download',
-				type				: ctype,
-				contract_type		: typeoption,
-				contract_status		: statusoption,
-				type				: 'all_contracts',
-				query				: query,
-				search_option		: sOption,
-				start_date_report	: startDate,
-				end_date_report		: endDate,
-				export				:true
+		type: ctype,
+		contract_type: typeoption,
+		contract_status: statusoption,
+		type				: 'all_contracts',
+			query: query,
+		search_option: sOption,
+		start_date_report: startDate,
+		end_date_report: endDate,
+		export: true
 	};
 
 	var sUrl = phpGWLink('index.php', oArgs);
 	alert(sUrl);
-return;
+	return;
 	var dl = window.open(sUrl);
 }
 
 
-function contract_export_price_items(ctype) {
+function contract_export_price_items(ctype)
+{
 	var typeselect = document.getElementById('contract_type');
 	var typeoption = typeselect.options[typeselect.selectedIndex].value;
 
@@ -68,21 +70,21 @@ function contract_export_price_items(ctype) {
 	var endDate = document.getElementById('filter_end_date_report').value;
 
 	var oArgs = {menuaction: 'rental.uicontract.download',
-				type				: ctype,
-				contract_type		: typeoption,
-				contract_status		: statusoption,
-				type				: 'all_contracts',
-				query				: query,
-				search_option		: sOption,
-				start_date_report	: startDate,
-				end_date_report		: endDate,
-				price_items			: true,
-				export				: true
+		type: ctype,
+		contract_type: typeoption,
+		contract_status: statusoption,
+		type				: 'all_contracts',
+			query: query,
+		search_option: sOption,
+		start_date_report: startDate,
+		end_date_report: endDate,
+		price_items: true,
+		export: true
 	};
 
 	var sUrl = phpGWLink('index.php', oArgs);
 	alert(sUrl);
-return;
+	return;
 
 	var dl = window.open(sUrl);
 }

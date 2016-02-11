@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - mobilefrontend.
 	 *
@@ -27,12 +26,14 @@
 	 * @version $Id$
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
+
 //	phpgw::import_class('phpgwapi.jquery');
 
 	class mobilefrontend_uifront extends phpgwapi_uicommon
 	{
+
 		public $public_functions = array
-		(
+			(
 			'index' => true,
 		);
 
@@ -41,7 +42,7 @@
 			parent::__construct();
 		}
 
-		 /**
+		/**
 		 * Entry function for this class
 		 *
 		 * @return void
@@ -49,7 +50,7 @@
 		public function index()
 		{
 			$data = array
-			(
+				(
 				'message' => 'Hello World'
 			);
 			self::render_template_xsl('hello_world', $data);
@@ -57,8 +58,6 @@
 
 		public function query()
 		{
-		
+
 		}
-
 	}
-

@@ -55,7 +55,8 @@ function formatterPrice(key, oData)
 	return amount;
 }
 
-downloadContracts = function (oArgs) {
+downloadContracts = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{

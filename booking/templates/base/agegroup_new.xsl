@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -39,7 +39,7 @@
 					<label for="field_name">
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-                <input id="field_name" name="name" type="text">
+					<input id="field_name" name="name" type="text">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -62,7 +62,7 @@
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please enter a sort order')" />
 						</xsl:attribute>
-                </input>
+					</input>
 				</div>
 				<div class="pure-control-group">
 					<label for="field_description">
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 		</div>
-        <div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Create')" />
@@ -84,8 +84,8 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="agegroup/cancel_link"/>
 				</xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>
-        </div>
-    </form>
+				<xsl:value-of select="php:function('lang', 'Cancel')" />
+			</a>
+		</div>
+	</form>
 </xsl:template>

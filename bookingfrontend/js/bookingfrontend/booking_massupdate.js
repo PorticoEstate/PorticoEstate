@@ -1,7 +1,9 @@
-$(window).load(function () {
+$(window).load(function ()
+{
 	$('header').hide();
 
-	$("#field_activity").change(function () {
+	$("#field_activity").change(function ()
+	{
 		var oArgs = {menuaction: 'bookingfrontend.uiapplication.get_activity_data', activity_id: $(this).val()};
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
@@ -9,7 +11,8 @@ $(window).load(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				var html_agegroups = '';
 				var html_audience = '';
 
@@ -35,7 +38,8 @@ $(window).load(function () {
 					for (var i = 0; i < audience.length; ++i)
 					{
 						checked = '';
-						if (initialAudience) {
+						if (initialAudience)
+						{
 							for (var j = 0; j < initialAudience.length; ++j)
 							{
 								if (audience[i]['id'] == initialAudience[j])
@@ -58,13 +62,17 @@ $(window).load(function () {
 	});
 });
 
-if ($.formUtils) {
+if ($.formUtils)
+{
 	$.formUtils.addValidator({
 		name: 'target_audience',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var n = 0;
-			$('#audience input[name="audience[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('#audience input[name="audience[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -77,10 +85,13 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'number_participants',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var n = 0;
-			$('#agegroup_tbody input').each(function () {
-				if ($(this).val() != "" && $(this).val() > 0) {
+			$('#agegroup_tbody input').each(function ()
+			{
+				if ($(this).val() != "" && $(this).val() > 0)
+				{
 					n++;
 				}
 			});

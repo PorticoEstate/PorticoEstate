@@ -1,5 +1,5 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
-        <div class="yui-content">
+	<div class="yui-content">
 
 		<xsl:variable name="controller_params">
 			<xsl:text>menuaction:controller.uicalendar.view_calendar_for_year, noframework:1, location_code:</xsl:text>
@@ -14,8 +14,8 @@
 		
 			<p>Your browser does not support iframes.</p>
 		</iframe>
-         <xsl:value-of select="php:function('lang', 'controller')"/>
-        </div>
+		<xsl:value-of select="php:function('lang', 'controller')"/>
+	</div>
 
 </xsl:template>
 

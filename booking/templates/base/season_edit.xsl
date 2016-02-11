@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -9,27 +9,27 @@
 					<label for="field_name">
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-                <input id="field_name" name="name" type="text">
+					<input id="field_name" name="name" type="text">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/name"/>
 						</xsl:attribute>
-                    </input>
-                </div>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label for="field_building_name">
 						<xsl:value-of select="php:function('lang', 'Building')" />
 					</label>
-                    <input id="field_building_id" name="building_id" type="hidden">
+					<input id="field_building_id" name="building_id" type="hidden">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/building_id"/>
 						</xsl:attribute>
-                    </input>
-                    <input id="field_building_name" name="building_name" type="text">
+					</input>
+					<input id="field_building_name" name="building_name" type="text">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/building_name"/>
 						</xsl:attribute>
-                    </input>
-                </div>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label for="field_officer_name">
 						<xsl:value-of select="php:function('lang', 'Case officer')" />
@@ -60,25 +60,25 @@
 						<xsl:value-of select="php:function('lang', 'Status')" />
 					</label>
 					<select name="status" id=" ">
-                    <option value="PLANNING">
+						<option value="PLANNING">
 							<xsl:if test="season/status='PLANNING'">
 								<xsl:attribute name="selected">selected</xsl:attribute>
 							</xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Planning')" />
-                    </option>
-                    <option value="PUBLISHED">
+							<xsl:value-of select="php:function('lang', 'Planning')" />
+						</option>
+						<option value="PUBLISHED">
 							<xsl:if test="season/status='PUBLISHED'">
 								<xsl:attribute name="selected">selected</xsl:attribute>
 							</xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Published')" />
-                    </option>
-                    <option value="ARCHIVED">
+							<xsl:value-of select="php:function('lang', 'Published')" />
+						</option>
+						<option value="ARCHIVED">
 							<xsl:if test="season/status='ARCHIVED'">
 								<xsl:attribute name="selected">selected</xsl:attribute>
 							</xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Archived')" />
-                    </option>
-                </select>
+							<xsl:value-of select="php:function('lang', 'Archived')" />
+						</option>
+					</select>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -98,11 +98,11 @@
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/to_"/>
 						</xsl:attribute>
-                </input>
-                </div>
+					</input>
+				</div>
 			</div>
 		</div>
-        <div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Save')" />
@@ -111,11 +111,11 @@
 			<input type="button" class="pure-button pure-button-primary" name="cencel">
 				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
 				<xsl:attribute name="value">
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
+					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</xsl:attribute>
 			</input>
-        </div>
-    </form>
+		</div>
+	</form>
 	<script type="text/javascript">
 		initialSelection = <xsl:value-of select="season/resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;

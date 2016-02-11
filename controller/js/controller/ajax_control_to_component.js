@@ -4,64 +4,71 @@ var oTable = null;
 $(document).ready(function ()
 {
 
-	$("#control_area_id").change(function () {
+	$("#control_area_id").change(function ()
+	{
 		var control_area_id = $(this).val();
 		var oArgs = {menuaction: 'controller.uicontrol.get_controls_by_control_area'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	//  	$("#hidden_control_area_id").val( control_area_id );
-    //     var control_id_init = $("#hidden_control_id").val();
-         var htmlString = "";
+		//  	$("#hidden_control_area_id").val( control_area_id );
+		//     var control_id_init = $("#hidden_control_id").val();
+		var htmlString = "";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl + "&control_area_id=" + control_area_id,
-			success: function (data) {
-				if (data != null) {
-					htmlString  = "<option>Velg kontroll</option>"
+			success: function (data)
+			{
+				if (data != null)
+				{
+					htmlString = "<option>Velg kontroll</option>"
 					var obj = jQuery.parseJSON(data);
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 
 						var selected = '';
 						/*
-						if(obj[i].id == control_id_init)
-						{
-							selected = ' selected';
-						}
+						 if(obj[i].id == control_id_init)
+						 {
+						 selected = ' selected';
+						 }
 						 */
-							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
+					});
+
 					$("#control_id").html(htmlString);
-					}
-					else
-					{
-         				htmlString  += "<option>Ingen kontroller</option>"
+				}
+				else
+				{
+					htmlString += "<option>Ingen kontroller</option>"
 					$("#control_id").html(htmlString);
 //						$("#hidden_control_id").val(-1); //reset
-         			}
+				}
 			}
-			});
+		});
 
-    });
+	});
 
 
 
-	$("#entity_id").change(function () {
+	$("#entity_id").change(function ()
+	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_component.get_category_by_entity', entity_id: $(this).val()};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString = "";
+		var htmlString = "";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
-				if (data != null) {
-					htmlString  = "<option value=''>Velg</option>"
+			success: function (data)
+			{
+				if (data != null)
+				{
+					htmlString = "<option value=''>Velg</option>"
 					var obj = data;
 
 					$.each(obj, function (i)
@@ -69,219 +76,227 @@ $(document).ready(function ()
 
 						var selected = '';
 						/*
-						if(obj[i].id == control_id_init)
-						{
-							selected = ' selected';
-						}
+						 if(obj[i].id == control_id_init)
+						 {
+						 selected = ' selected';
+						 }
 						 */
-							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+					});
+
 					$("#cat_id").html(htmlString);
-					}
-					else
-					{
-         				htmlString  += "<option>Ingen kontroller</option>"
+				}
+				else
+				{
+					htmlString += "<option>Ingen kontroller</option>"
 					$("#cat_id").html(htmlString);
-         			}
+				}
 			}
-			});
+		});
 
-    });
+	});
 
 
-	$("#location_type").change(function () {
+	$("#location_type").change(function ()
+	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString  = "<option value=''>Velg</option>";
+		var htmlString = "<option value=''>Velg</option>";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
 
 					$.each(obj, function (i)
 					{
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+					});
+
 					$("#location_type_category").html(htmlString);
 					$("#loc1").html("<option value=''>Velg</option>");
 					$("#loc2").html("<option value=''>Velg</option>");
 				}
 				else
 				{
-         			htmlString  += "<option value=''>Velg</option>";
+					htmlString += "<option value=''>Velg</option>";
 					$("#part_of_town_id").html(htmlString);
 					$("#loc1").html(htmlString);
 					$("#loc2").html(htmlString);
-         		}
+				}
 			}
-         });
-    });
+		});
+	});
 
-	$("#location_type_category").change(function () {
+	$("#location_type_category").change(function ()
+	{
 		var level = $("#location_type").val();
 		update_loc(level);
-    });
+	});
 
 	var oArgs = {menuaction: 'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, true);
 	var location_type = 1;
 
 	//update part of town category based on district
-	$("#district_id").change(function () {
+	$("#district_id").change(function ()
+	{
 		var district_id = $(this).val();
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_district_part_of_town'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString = "";
+		var htmlString = "";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl + "&district_id=" + district_id,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = jQuery.parseJSON(data);
 
 					$.each(obj, function (i)
 					{
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+					});
+
 					$("#part_of_town_id").html(htmlString);
 					$("#loc1").html("<option value=''>Velg</option>");
 					$("#loc2").html("<option value=''>Velg</option>");
 				}
 				else
 				{
-         			htmlString  += "<option value=''>Velg</option>";
+					htmlString += "<option value=''>Velg</option>";
 					$("#part_of_town_id").html(htmlString);
 					$("#loc1").html(htmlString);
 					$("#loc2").html(htmlString);
-         		}
+				}
 			}
-         });
+		});
 
 		$("#search-location_code").val('');
 		update_component_table();
-    });
+	});
 
 
 	$("#part_of_town_id").change(function ()
 	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_locations', child_level: 1, part_of_town_id: $(this).val()};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString  = "<option value=''>Velg</option>";
+		var htmlString = "<option value=''>Velg</option>";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
 
 					$.each(obj, function (i)
 					{
-						htmlString  += "<option value='" + obj[i].id + "'>" +  obj[i].id + " " + obj[i].name + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].id + " " + obj[i].name + "</option>";
+					});
+
 					$("#loc1").html(htmlString);
 					$("#loc2").html("<option value=''>Velg</option>");
-					}
-					else
-					{
-         				htmlString  = "<option>Ingen</option>";
+				}
+				else
+				{
+					htmlString = "<option>Ingen</option>";
 					$("#loc1").html(htmlString);
-	         			$("#loc2").html(htmlString);
-        			}
+					$("#loc2").html(htmlString);
+				}
 			}
-         });
+		});
 
 		$("#search-location_code").val('');
 		update_component_table();
-    });
+	});
 
 	$("#loc1").change(function ()
 	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_locations', child_level: 2, location_code: $(this).val()};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString  = "<option value=''>Velg</option>";
+		var htmlString = "<option value=''>Velg</option>";
 
-         $.ajax({
+		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
 
 					$.each(obj, function (i)
 					{
-						htmlString  += "<option value='" + obj[i].id + "'>" +  obj[i].id + " " + obj[i].name + "</option>";
-		  			});
-					 
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].id + " " + obj[i].name + "</option>";
+					});
+
 					$("#loc2").html(htmlString);
-					}
-					else
-					{
-         				htmlString  = "<option>Ingen</option>";
+				}
+				else
+				{
+					htmlString = "<option>Ingen</option>";
 					$("#loc2").html(htmlString);
-         			}
+				}
 			}
-         });
+		});
 
 		$("#search-location_code").val('');
 		update_component_table();
 
-    });
+	});
 
 
 	$("#control_registered").change(function ()
 	{
 		init_component_table();
-    });
+	});
 
 	$("#control_id").change(function ()
 	{
 		$("#control_id_hidden").val($(this).val());
 
 		init_component_table();
-    });
+	});
 
 	$("#loc2").change(function ()
 	{
 		$("#search-location_code").val('');
 		update_component_table();
-    });
+	});
 
 
 	$("#cat_id").change(function ()
 	{
 		get_table_def();
-    });
+	});
 
 
 
 	$("#search").click(function (e)
 	{
 		update_component_table();
-    });
+	});
 
 
-	$("#acl_form").on("submit", function (e) {
+	$("#acl_form").on("submit", function (e)
+	{
 		e.preventDefault();
 		var control_id = $("#control_id_hidden").val();
 
@@ -297,7 +312,8 @@ $(document).ready(function ()
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			success: function (data) {
+			success: function (data)
+			{
 				if (data)
 				{
 					if (data.sessionExpired)
@@ -306,47 +322,48 @@ $(document).ready(function ()
 						return;
 					}
 
-	  			var obj = data;
-		  
-	  			var submitBnt = $(thisForm).find("input[type='submit']");
+					var obj = data;
+
+					var submitBnt = $(thisForm).find("input[type='submit']");
 					if (obj.status == "updated")
-	  			{
-		  			$(submitBnt).val("Lagret");
+					{
+						$(submitBnt).val("Lagret");
 						update_component_table
-				}
-				else
-				{
-		  			$(submitBnt).val("Feil ved lagring");
-				}
-		  
-		  		// Changes text on save button back to original
-					window.setTimeout(function () {
+					}
+					else
+					{
+						$(submitBnt).val("Feil ved lagring");
+					}
+
+					// Changes text on save button back to original
+					window.setTimeout(function ()
+					{
 						$(submitBnt).val('Lagre');
 						$(submitBnt).addClass("not_active");
-		  		}, 1000);
+					}, 1000);
 
 					var htmlString = "";
 					if (typeof (data['receipt']['error']) != 'undefined')
-	 				{
+					{
 						for (var i = 0; i < data['receipt']['error'].length; ++i)
 						{
 							htmlString += "<div class=\"error\">";
 							htmlString += data['receipt']['error'][i]['msg'];
 							htmlString += '</div>';
 						}
-	 
-	 				}
+
+					}
 					if (typeof (data['receipt']['message']) != 'undefined')
-	 				{
+					{
 						for (var i = 0; i < data['receipt']['message'].length; ++i)
 						{
 							htmlString += "<div class=\"msg_good\">";
 							htmlString += data['receipt']['message'][i]['msg'];
 							htmlString += '</div>';
 						}
-	 
-	 				}
-	 				$("#receipt").html(htmlString);
+
+					}
+					$("#receipt").html(htmlString);
 				}
 			}
 		});
@@ -365,42 +382,43 @@ function update_loc(level)
 		type_id: level
 	};
 
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
+	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString  = "<option value=''>Velg</option>";
+	var htmlString = "<option value=''>Velg</option>";
 
-         $.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-		success: function (data) {
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
 			if (data != null)
-				{
-					var obj = data;
+			{
+				var obj = data;
 
 				$.each(obj, function (i)
-					{
+				{
 					htmlString += "<option value='" + obj[i].location_code + "'>" + obj[i].location_code + " " + obj[i]["loc" + level + "_name"] + "</option>";
-		  			});
-					 
+				});
+
 				$("#loc" + level).html(htmlString);
 				if (level == 1)
-					{
-					$("#loc2").html("<option value=''>Velg Eiendom først</option>");
-	         		}
-				if (level == 2)
-					{
-					$("#loc1").html("");
-	         		}
-				}
-				else
 				{
-         			htmlString  = "<option>Ingen</option>";
-				$("#loc1").html(htmlString);
-	         		$("#loc2").html(htmlString);
-        		}
+					$("#loc2").html("<option value=''>Velg Eiendom først</option>");
+				}
+				if (level == 2)
+				{
+					$("#loc1").html("");
+				}
 			}
-         });
+			else
+			{
+				htmlString = "<option>Ingen</option>";
+				$("#loc1").html(htmlString);
+				$("#loc2").html(htmlString);
+			}
+		}
+	});
 
 
 
@@ -419,7 +437,8 @@ function get_table_def()
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				myColumnDefs = data;

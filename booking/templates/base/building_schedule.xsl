@@ -13,7 +13,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="building/tabs"/>
 			<div id="building_schedule">
 				<ul id="week-selector">
-            <li>
+					<li>
 						<span class="pure-button pure-button-primary" onclick="schedule.prevWeek(); return false">
 							<xsl:value-of select="php:function('lang', 'Previous week')"/>
 						</span>
@@ -26,15 +26,15 @@
 							<input type="text" id="datepicker" />
 							<img id="pickerImg" src="{building/picker_img}" />
 						</div>
-            </li>
-            <li>
+					</li>
+					<li>
 						<span class="pure-button pure-button-primary" onclick="schedule.nextWeek(); return false">
 							<xsl:value-of select="php:function('lang', 'Next week')"/>
 						</span>
-            </li>
-		</ul>
+					</li>
+				</ul>
 				<div id="schedule_container"></div>
-    </div>
+			</div>
 		</div>
 		<div class="form-buttons">
 			<input type="button" class="pure-button pure-button-primary" name="cancel">
@@ -51,21 +51,21 @@
 		schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
 		schedule.includeResource = true;
 		schedule.colFormatter = 'backendScheduleDateColumn';
-    var handleHistoryNavigation = function (state) {
+		var handleHistoryNavigation = function (state) {
 		schedule.date = parseISO8601(state);
 		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-    };
+		};
 
 		var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
 
 		var state = getUrlData("date") || initialRequest;
 		schedule.state = state;
 		if (state){
-			handleHistoryNavigation(state);
+		handleHistoryNavigation(state);
 		schedule.week = $.datepicker.iso8601Week(schedule.date);
 		$('#cal_container #numberWeek').text(schedule.week);
 		$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
 		}
-    });
+		});
 	</script>
 </xsl:template>

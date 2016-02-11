@@ -34,12 +34,12 @@
 					<xsl:value-of select="php:function('lang', 'Who')"/>
 				</h4>
 			</label>
-		<xsl:if test="event/is_public=1">
+			<xsl:if test="event/is_public=1">
 				<xsl:value-of select="event/contact_name"/>
-		</xsl:if>
-		<xsl:if test="event/is_public=0">
+			</xsl:if>
+			<xsl:if test="event/is_public=0">
 				<xsl:value-of select="php:function('lang', 'Private event')"/>
-		</xsl:if>
+			</xsl:if>
 		</div>
 	</div>
 	<xsl:if test="event/edit_link">

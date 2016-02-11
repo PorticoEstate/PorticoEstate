@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -43,11 +43,11 @@
 					<label for="field_time">
 						<xsl:value-of select="php:function('lang', 'Created')" />
 					</label>
-   			    <input id="inputs" name="created" readonly="true" type="text">
+					<input id="inputs" name="created" readonly="true" type="text">
 						<xsl:attribute name="value">
 							<xsl:value-of select="system_message/created"/>
 						</xsl:attribute>
-		        </input>
+					</input>
 				</div>
 			</div>
 		</div>

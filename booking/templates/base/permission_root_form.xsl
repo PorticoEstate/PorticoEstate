@@ -11,13 +11,13 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="permission_add">
 				<div class="pure-control-group">
-			<xsl:if test="id">
-				<input name='field_id' type='hidden'>
+					<xsl:if test="id">
+						<input name='field_id' type='hidden'>
 							<xsl:attribute name="value">
 								<xsl:value-of select="id"/>
 							</xsl:attribute>
-				</input>
-			</xsl:if>
+						</input>
+					</xsl:if>
 					<label for="field_role" style="vertical-align:top;">
 						<h4>
 							<xsl:value-of select="php:function('lang', 'Role')" />
@@ -25,10 +25,10 @@
 					</label>
 					<div style="display:inline-block;max-width:80%;">
 						<span>
-				<xsl:value-of select="node()"/>
+							<xsl:value-of select="node()"/>
 						</span>
 						<br />
-				<select name='role' id='field_role'>
+						<select name='role' id='field_role'>
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -38,22 +38,22 @@
 							<option value=''>
 								<xsl:value-of select="php:function('lang', 'Select role...')" />
 							</option>
-					<xsl:for-each select="available_roles/*">
-						<option>
-							<xsl:if test="../../role = local-name()">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
+							<xsl:for-each select="available_roles/*">
+								<option>
+									<xsl:if test="../../role = local-name()">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
 									<xsl:attribute name="value">
 										<xsl:value-of select="local-name()"/>
 									</xsl:attribute>
-							<xsl:value-of select="php:function('lang', string(node()))"/>
-						</option>
-					</xsl:for-each>
-				</select>
+									<xsl:value-of select="php:function('lang', string(node()))"/>
+								</option>
+							</xsl:for-each>
+						</select>
 					</div>
 				</div>
 				<div class="pure-control-group">
-			<!-- Subject -->
+					<!-- Subject -->
 					<label for="field_subject_name">
 						<h4>
 							<xsl:value-of select="php:function('lang', 'Account')" />

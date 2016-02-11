@@ -8,16 +8,16 @@
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:manual.uidocuments.save')" />
 		</xsl:variable>
 
-			<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
-		        <dl>
-					<xsl:choose>
-						<xsl:when test="msgbox_data != ''">
-								<dt>
-									<xsl:call-template name="msgbox"/>
-								</dt>
-						</xsl:when>
-					</xsl:choose>
-				</dl>
+		<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
+			<dl>
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<dt>
+							<xsl:call-template name="msgbox"/>
+						</dt>
+					</xsl:when>
+				</xsl:choose>
+			</dl>
 
 			<div id="tab-content">
 
@@ -45,9 +45,9 @@
 								<select id="cat_id" name="cat_id" onChange="refresh_files();"> 
 									<xsl:apply-templates select="categories/options"/>
 								</select>
- 							</xsl:otherwise>
+							</xsl:otherwise>
 						</xsl:choose>
-			</div>
+					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'files')"/>
@@ -63,59 +63,59 @@
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>
-					<xsl:choose>
-						<xsl:when test="editable = 1">
-							<xsl:call-template name="file_upload"/>
-						</xsl:when>
-					</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+								<xsl:call-template name="file_upload"/>
+							</xsl:when>
+						</xsl:choose>
 					</div>
-			</div>
+				</div>
 			</div>
 			<xsl:choose>
 				<xsl:when test="editable = 1">
 					<dl class="proplist-col">
-							<div class="form-buttons">
+						<div class="form-buttons">
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="php:function('lang', 'cancel')" />
 							</xsl:variable>
-								<xsl:choose>
-									<xsl:when test="editable = 1">
+							<xsl:choose>
+								<xsl:when test="editable = 1">
 									<xsl:variable name="lang_save">
 										<xsl:value-of select="php:function('lang', 'save')" />
 									</xsl:variable>
 									<input  class="pure-button pure-button-primary" type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
 									<input  class="pure-button pure-button-primary" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
-									</xsl:when>
-								</xsl:choose>
-							</div>
-						</dl>
-					</xsl:when>
+								</xsl:when>
+							</xsl:choose>
+						</div>
+					</dl>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="lang_add">
 						<xsl:value-of select="php:function('lang', 'add')" />
 					</xsl:variable>
-						<input  class="pure-button pure-button-primary" type="button" name="edit_survey" value="{$lang_add}" title = "{$lang_add}"  onClick="document.load_edit_form.submit();"/>
+					<input  class="pure-button pure-button-primary" type="button" name="edit_survey" value="{$lang_add}" title = "{$lang_add}"  onClick="document.load_edit_form.submit();"/>
 				</xsl:otherwise>
-				</xsl:choose>
-			</form>
-		</div>
-
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:manual.uidocuments.index')" />
-		</xsl:variable>
-
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
+			</xsl:choose>
 		</form>
+	</div>
 
-		<xsl:variable name="edit_params">
+	<xsl:variable name="cancel_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:manual.uidocuments.index')" />
+	</xsl:variable>
+
+	<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
+	</form>
+
+	<xsl:variable name="edit_params">
 		<xsl:text>menuaction:manual.uidocuments.add</xsl:text>
-		</xsl:variable>
-		<xsl:variable name="edit_url">
-				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
-		</xsl:variable>
+	</xsl:variable>
+	<xsl:variable name="edit_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
+	</xsl:variable>
 
-		<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
-		</form>
+	<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
+	</form>
 
 </xsl:template>
 
@@ -131,21 +131,21 @@
 </xsl:template>
 
 <xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
-		<dt>
+	<dt>
 		<label>
 			<xsl:value-of select="php:function('lang', 'upload file')"/>
 		</label>
-		</dt>
-		<dd>
-			<input type="file" name="file" size="40">
-				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-				</xsl:attribute>
-			</input>
-		</dd>
-		<xsl:choose>
-			<xsl:when test="multiple_uploader!=''">
-				<dt>
+	</dt>
+	<dd>
+		<input type="file" name="file" size="40">
+			<xsl:attribute name="title">
+				<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+			</xsl:attribute>
+		</input>
+	</dd>
+	<xsl:choose>
+		<xsl:when test="multiple_uploader!=''">
+			<dt>
 				<label>
 					<a href="javascript:fileuploader()">
 						<xsl:attribute name="title">
@@ -154,8 +154,8 @@
 						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 					</a>
 				</label>
-				</dt>
-			</xsl:when>
-		</xsl:choose>
+			</dt>
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 

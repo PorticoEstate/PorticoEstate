@@ -1,26 +1,26 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
-        <ul class="pathway">
-            <li>
-                <a>
+	<div id="content">
+		<ul class="pathway">
+			<li>
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="person/contactpersons_link"/>
 					</xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Contacts')" />
-                </a>
-            </li>
+					<xsl:value-of select="php:function('lang', 'Contacts')" />
+				</a>
+			</li>
 			<li>
 				<xsl:value-of select="php:function('lang', 'Contact')" />
 			</li>
-            <li>
-                <a href="">
-                    <xsl:value-of select="person/name"/>
-                </a>
-            </li>
-        </ul>
-        <xsl:call-template name="msgbox"/>
+			<li>
+				<a href="">
+					<xsl:value-of select="person/name"/>
+				</a>
+			</li>
+		</ul>
+		<xsl:call-template name="msgbox"/>
 
-        <dl class="proplist">
+		<dl class="proplist">
 			<dt>
 				<xsl:value-of select="php:function('lang', 'Name')" />
 			</dt>
@@ -56,14 +56,14 @@
 				<xsl:value-of select="person/description" disable-output-escaping="yes"/>
 			</dd>
 
-        </dl>
+		</dl>
 
-        <a class="button">
+		<a class="button">
 			<xsl:attribute name="href">
 				<xsl:value-of select="person/edit_link"/>
 			</xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Edit')" />
-        </a>
-    </div>
+			<xsl:value-of select="php:function('lang', 'Edit')" />
+		</a>
+	</div>
 </xsl:template>
 

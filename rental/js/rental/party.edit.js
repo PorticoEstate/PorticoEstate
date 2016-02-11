@@ -63,11 +63,13 @@ $(document).ready(function ()
 	$('#upload_button').on('click', function ()
 	{
 
-		if ($('#ctrl_upoad_path').val() === '') {
+		if ($('#ctrl_upoad_path').val() === '')
+		{
 			alert('no file selected');
 			return false;
 		}
-		if ($.trim($('#document_title').val()) === '') {
+		if ($.trim($('#document_title').val()) === '')
+		{
 			alert('enter document title');
 			return false;
 		}
@@ -87,7 +89,8 @@ $(document).ready(function ()
 			processData: false,
 			data: form_data,
 			type: 'post',
-			success: function (result) {
+			success: function (result)
+			{
 				JqueryPortico.show_message(nTable, result);
 				$('#document_type')[0].selectedIndex = 0;
 				$('#document_title').val('');
@@ -117,11 +120,13 @@ function onGetSync_data(requestUrl)
 	if (org_enhet_id > 0)
 	{
 		var data = {"org_enhet_id": org_enhet_id};
-		JqueryPortico.execute_ajax(requestUrl, function (result) {
+		JqueryPortico.execute_ajax(requestUrl, function (result)
+		{
 			setSyncInfo(result);
 		}, data, "POST", "JSON");
 	}
-	else {
+	else
+	{
 		alert(msg_get_syncData);
 	}
 }
@@ -146,7 +151,8 @@ function formatterArea(key, oData)
 	return amount;
 }
 
-downloadContracts = function (oArgs) {
+downloadContracts = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{

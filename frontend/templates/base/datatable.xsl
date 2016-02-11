@@ -138,87 +138,87 @@
     Template
     match=datatable()
 
-    Entrypoint for this datatable. Renders pagination and datatable.
+	Entrypoint for this datatable. Renders pagination and datatable.
 -->
 <xsl:template name="datatable" match="datatable">
 
-    <xsl:choose>
-        <xsl:when test="//exchange_values!=''">
-            <script type="text/javascript">
-                //function Exchange_values(thisform)
-                function valida(data,param)
-                {
-                <xsl:value-of select="//valida"/>
-                }
+	<xsl:choose>
+		<xsl:when test="//exchange_values!=''">
+			<script type="text/javascript">
+				//function Exchange_values(thisform)
+				function valida(data,param)
+				{
+				<xsl:value-of select="//valida"/>
+				}
 
-                function Exchange_values(data)
-                {
-                <xsl:value-of select="//exchange_values"/>
-                }
+				function Exchange_values(data)
+				{
+				<xsl:value-of select="//exchange_values"/>
+				}
 
-            </script>
-        </xsl:when>
-    </xsl:choose>
-    <div id="paging"> </div>
-    <div class="datatable-container">
-        <table class="datatable">
-        </table>
-    </div>
+			</script>
+		</xsl:when>
+	</xsl:choose>
+	<div id="paging"> </div>
+	<div class="datatable-container">
+		<table class="datatable">
+		</table>
+	</div>
     
-    <div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
-        <div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
-            <xsl:value-of select="//lightbox_name"/>
-        </div>
-        <div class="bd" style="text-align:center;"> </div>
-    </div>
+	<div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
+		<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
+			<xsl:value-of select="//lightbox_name"/>
+		</div>
+		<div class="bd" style="text-align:center;"> </div>
+	</div>
     
-    <div id="footer"> </div>
-    <xsl:call-template name="datatable-yui-definition" />
+	<div id="footer"> </div>
+	<xsl:call-template name="datatable-yui-definition" />
 </xsl:template>
 
 <!--
-    Experimental support for YUI datatable
- -->
+   Experimental support for YUI datatable
+-->
 
 <xsl:template name="datatable-yui-definition">
-    <script>
-        var allow_allrows = "<xsl:value-of select="//datatable/config/allow_allrows"/>";
+	<script>
+		var allow_allrows = "<xsl:value-of select="//datatable/config/allow_allrows"/>";
 
-        var property_js = "<xsl:value-of select="//datatable/property_js"/>";
+		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
 
-        var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";
+		var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";
 
-        <xsl:choose>
-            <xsl:when test="//datatable/json_data != ''">
-                var json_data = <xsl:value-of select="//datatable/json_data" disable-output-escaping="yes" />;
-            </xsl:when>
-        </xsl:choose>
+		<xsl:choose>
+			<xsl:when test="//datatable/json_data != ''">
+				var json_data = <xsl:value-of select="//datatable/json_data" disable-output-escaping="yes" />;
+			</xsl:when>
+		</xsl:choose>
 
-        var myColumnDefs = [
-        <xsl:for-each select="//datatable/headers/header">
-            {
-            key: "<xsl:value-of select="name"/>",
-            label: "<xsl:value-of select="text"/>",
-            resizeable:true,
-            sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-            visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
-            format: "<xsl:value-of select="format"/>",
-            formatter: <xsl:value-of select="formatter"/>,
-            source: "<xsl:value-of select="sort_field"/>",
-            className: "<xsl:value-of select="className"/>"
-            }<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-        </xsl:for-each>
-        ];
+		var myColumnDefs = [
+		<xsl:for-each select="//datatable/headers/header">
+			{
+			key: "<xsl:value-of select="name"/>",
+			label: "<xsl:value-of select="text"/>",
+			resizeable:true,
+			sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+			visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
+			format: "<xsl:value-of select="format"/>",
+			formatter: <xsl:value-of select="formatter"/>,
+			source: "<xsl:value-of select="sort_field"/>",
+			className: "<xsl:value-of select="className"/>"
+			}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+		</xsl:for-each>
+		];
 
-        var values_combo_box = [
-        <xsl:for-each select="//datatable/actions/form/fields/hidden_value">
-            {
-            id: "<xsl:value-of select="id"/>",
-            value: "<xsl:value-of select="value"/>"
-            }<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-        </xsl:for-each>
-        ];
+		var values_combo_box = [
+		<xsl:for-each select="//datatable/actions/form/fields/hidden_value">
+			{
+			id: "<xsl:value-of select="id"/>",
+			value: "<xsl:value-of select="value"/>"
+			}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+		</xsl:for-each>
+		];
 
 
-    </script>
+	</script>
 </xsl:template>

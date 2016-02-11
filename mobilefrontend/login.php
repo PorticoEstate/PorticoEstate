@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare
 	 *
@@ -10,7 +9,6 @@
 	 * @package phpgroupware
 	 * @version $Id$
 	 */
-
 	require_once '../phpgwapi/inc/class.login.inc.php';
 
 	$phpgwlogin = new phpgwapi_login;
