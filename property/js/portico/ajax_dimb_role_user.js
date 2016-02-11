@@ -97,6 +97,17 @@ function update_dimb_role_user_table()
 	$("#receipt").html('');
 }
 
+var addFooterDatatable = function (oTable)
+{
+	var api = oTable.api();
 
 
-
+	var newTD = JqueryPortico.CreateRowChecked("default_user");
+	$(api.column(3).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("add");
+	$(api.column(6).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("delete");
+	$(api.column(7).footer()).html(newTD);
+	var newTD = JqueryPortico.CreateRowChecked("alter_date");
+	$(api.column(8).footer()).html(newTD);
+}
