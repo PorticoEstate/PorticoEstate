@@ -6,9 +6,9 @@
 var intVal = function (i)
 {
 	return typeof i === 'string' ?
-			i.replace(/[\$,]/g, '') * 1 :
-			typeof i === 'number' ?
-			i : 0;
+		i.replace(/[\$,]/g, '') * 1 :
+		typeof i === 'number' ?
+		i : 0;
 };
 
 this.local_DrawCallback1 = function (oTable)

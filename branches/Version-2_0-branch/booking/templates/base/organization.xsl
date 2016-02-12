@@ -9,7 +9,7 @@
 			<div id="organization" class="booking-container">
 				<fieldset>
 					<h1>
-                    <xsl:value-of select="organization/name"/>
+						<xsl:value-of select="organization/name"/>
 					</h1>
 					<div class="pure-control-group">
 						<label>
@@ -47,11 +47,11 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Homepage')" />
 						</label>
-				<xsl:if test="organization/homepage and normalize-space(organization/homepage)">
+						<xsl:if test="organization/homepage and normalize-space(organization/homepage)">
 							<a target="blank" href="{organization/homepage}">
 								<xsl:value-of select="organization/homepage" />
 							</a>
-				</xsl:if>
+						</xsl:if>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -77,27 +77,27 @@
 							<xsl:value-of select="organization/description" disable-output-escaping="yes"/>
 						</div>
 					</div>
-			<xsl:if test="count(organization/contacts/*) &gt; 0">
+					<xsl:if test="count(organization/contacts/*) &gt; 0">
 						<div class="pure-control-group">
 							<label style="vertical-align:top;">
 								<xsl:value-of select="php:function('lang', 'Admins')" />
 							</label>
 							<ul style="list-style:none;display:inline-block;padding:0;margin:0;">
-						<xsl:if test="organization/contacts[1]">
+								<xsl:if test="organization/contacts[1]">
 									<li>
 										<xsl:value-of select="organization/contacts[1]/name"/>
 									</li>
-						</xsl:if>
-	                    <xsl:if test="organization/contacts[2]">
+								</xsl:if>
+								<xsl:if test="organization/contacts[2]">
 									<li>
 										<xsl:value-of select="organization/contacts[2]/name"/>
 									</li>
-						</xsl:if>
-	                </ul>
+								</xsl:if>
+							</ul>
 						</div>
-			</xsl:if>
+					</xsl:if>
 					<div class="pure-control-group">
-			<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
+						<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -135,15 +135,15 @@
 			</div>
 		</div>
 	</form>
-		<div class="form-buttons">
+	<div class="form-buttons">
 		<button class="pure-button pure-button-primary" onclick="window.location.href='{organization/edit_link}'">
-	            <xsl:value-of select="php:function('lang', 'Edit')" />
-	        </button>
+			<xsl:value-of select="php:function('lang', 'Edit')" />
+		</button>
 		<input type="button" class="pure-button pure-button-primary" name="cencel">
 			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="organization/cancel_link"/>"</xsl:attribute>
 			<xsl:attribute name="value">
 				<xsl:value-of select="php:function('lang', 'Cancel')" />
 			</xsl:attribute>
 		</input>		
-    </div>
+	</div>
 </xsl:template>

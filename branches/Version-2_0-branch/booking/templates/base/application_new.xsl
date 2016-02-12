@@ -11,11 +11,11 @@
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="application/tabs"/>
 			<div id="application_add" class="booking-container">
-		<xsl:if test="config/application_new_application">
-		<p style="width: 750px;">
-			<xsl:value-of select="config/application_new_application"/>
-		</p>		
-		</xsl:if>
+				<xsl:if test="config/application_new_application">
+					<p style="width: 750px;">
+						<xsl:value-of select="config/application_new_application"/>
+					</p>
+				</xsl:if>
 				<div class="pure-g">
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
@@ -28,11 +28,11 @@
 								<label for="field_activity">
 									<xsl:value-of select="php:function('lang', 'Activity')" />
 								</label>
-				<xsl:if test="config/application_activities">
-				<p>
-					<xsl:value-of select="config/application_activities"/>
-				</p>		
-				</xsl:if>
+								<xsl:if test="config/application_activities">
+									<p>
+										<xsl:value-of select="config/application_activities"/>
+									</p>
+								</xsl:if>
 								<select name="activity_id" id="field_activity" class="pure-input-1">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -44,28 +44,28 @@
 									<option value="">
 										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 									</option>
-					<xsl:for-each select="activities">
-						<option>
-							<xsl:if test="../application/activity_id = id">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
+									<xsl:for-each select="activities">
+										<option>
+											<xsl:if test="../application/activity_id = id">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
 											<xsl:attribute name="value">
 												<xsl:value-of select="id"/>
 											</xsl:attribute>
-							<xsl:value-of select="name"/>
-						</option>
-					</xsl:for-each>
-				</select>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_description">
 									<xsl:value-of select="php:function('lang', 'Information about the event')" />
 								</label>
-				<xsl:if test="config/application_description">
-				<p>
-					<xsl:value-of select="config/application_description"/>
-				</p>		
-				</xsl:if>
+								<xsl:if test="config/application_description">
+									<p>
+										<xsl:value-of select="config/application_description"/>
+									</p>
+								</xsl:if>
 								<textarea rows="6" id="field_description" class="full-width pure-input-1" name="description">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -85,11 +85,11 @@
 									<h3>2. <xsl:value-of select="php:function('lang', 'How many?')" /></h3>
 								</legend>
 							</div>
-			<xsl:if test="config/application_howmany">
-			<p>
-				<xsl:value-of select="config/application_howmany"/>
-			</p>		
-			</xsl:if>
+							<xsl:if test="config/application_howmany">
+								<p>
+									<xsl:value-of select="config/application_howmany"/>
+								</p>
+							</xsl:if>
 							<label>
 								<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
 							</label>
@@ -111,34 +111,34 @@
 									</tr>
 								</thead>
 								<tbody id = "agegroup_tbody">
-					<xsl:for-each select="agegroups">
+									<xsl:for-each select="agegroups">
 										<xsl:variable name="id">
 											<xsl:value-of select="id"/>
 										</xsl:variable>
-						<tr>
+										<tr>
 											<th>
 												<xsl:value-of select="name"/>
 											</th>
-							<td>
+											<td>
 												<input class="input50" type="text">
-									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+													<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
 													</xsl:attribute>
-								</input>
-							</td>
-							<td>
+												</input>
+											</td>
+											<td>
 												<input class="input50" type="text">
-									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+													<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
 													</xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</xsl:for-each>
+												</input>
+											</td>
+										</tr>
+									</xsl:for-each>
 								</tbody>
-				</table>
+							</table>
 						</fieldset>
 					</div>
 				</div>
@@ -150,16 +150,16 @@
 									<h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
 								</legend>
 							</div>
-			<xsl:if test="config/application_where">
-				<p>
-					<xsl:value-of select="config/application_where"/>
-				</p>		
-			</xsl:if>
+							<xsl:if test="config/application_where">
+								<p>
+									<xsl:value-of select="config/application_where"/>
+								</p>
+							</xsl:if>
 							<div class="pure-control-group">
 								<label for="field_building_id">
 									<xsl:value-of select="php:function('lang', 'Building')" />
 								</label>
-					<input id="field_building_id" name="building_id" type="hidden">
+								<input id="field_building_id" name="building_id" type="hidden">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/building_id"/>
 									</xsl:attribute>
@@ -174,7 +174,7 @@
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'Please enter a building name')"/>
 									</xsl:attribute>
-					</input>
+								</input>
 								<div id="building_container"></div>
 							</div>
 							<div class="pure-control-group">
@@ -200,20 +200,20 @@
 								<legend>
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
 								</legend>
-				</div>
-			<xsl:if test="config/application_when">
-				<p>
-					<xsl:value-of select="config/application_when"/>
-				</p>		
-			</xsl:if>
-			<div id="dates-container">
+							</div>
+							<xsl:if test="config/application_when">
+								<p>
+									<xsl:value-of select="config/application_when"/>
+								</p>
+							</xsl:if>
+							<div id="dates-container">
 								<input type="hidden" data-validation="application_dates">
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'Invalid date')" />
 									</xsl:attribute>
 								</input>
 								<input type="hidden" id="date_format" />
-				<xsl:for-each select="application/dates">
+								<xsl:for-each select="application/dates">
 									<xsl:variable name="index" select="position()-2"/>
 									<xsl:choose>
 										<xsl:when test="position() > 1">
@@ -250,7 +250,7 @@
 											</div>
 										</xsl:when>
 										<xsl:otherwise>
-					<div class="date-container">
+											<div class="date-container">
 												<a href="javascript:void(0);" class="close-btn btnclose">-</a>
 												<div class="pure-control-group">
 													<label for="start_date">
@@ -260,8 +260,8 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
 														</xsl:attribute>
-							</input>
-					</div>
+													</input>
+												</div>
 												<div class="pure-control-group">
 													<label for="end_date">
 														<xsl:value-of select="php:function('lang', 'To')" />
@@ -283,8 +283,8 @@
 											</div>
 										</xsl:otherwise>
 									</xsl:choose>
-				</xsl:for-each>
-			</div>
+								</xsl:for-each>
+							</div>
 							<div class="pure-control-group">
 								<a href="javascript:void(0);" id="add-date-link">
 									<xsl:value-of select="php:function('lang', 'Add another date')" />
@@ -299,11 +299,11 @@
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
 								</legend>
 							</div>
-			<xsl:if test="config/application_who">
-				<p>
-					<xsl:value-of select="config/application_who"/>
-				</p>		
-			</xsl:if>
+							<xsl:if test="config/application_who">
+								<p>
+									<xsl:value-of select="config/application_who"/>
+								</p>
+							</xsl:if>
 							<label>
 								<xsl:value-of select="php:function('lang', 'Target audience')" />
 							</label>
@@ -341,11 +341,11 @@
 								</legend>
 							</div>
 							<div class="pure-control-group">
-			<xsl:if test="config/application_contact_information">
-				<p>
-					<xsl:value-of select="config/application_contact_information"/>
-				</p>		
-			</xsl:if>
+								<xsl:if test="config/application_contact_information">
+									<p>
+										<xsl:value-of select="config/application_contact_information"/>
+									</p>
+								</xsl:if>
 								<label for="field_contact_name">
 									<xsl:value-of select="php:function('lang', 'Name')" />
 								</label>
@@ -423,18 +423,18 @@
 								<p>
 									<xsl:value-of select="php:function('lang', 'In order to send the invoice we need information about either customer organization number or norwegian social security number')" />
 								</p>
-			<xsl:if test="config/application_responsible_applicant">
-				<p>
-					<xsl:value-of select="config/application_responsible_applicant"/>
-				</p>		
-			</xsl:if>
+								<xsl:if test="config/application_responsible_applicant">
+									<p>
+										<xsl:value-of select="config/application_responsible_applicant"/>
+									</p>
+								</xsl:if>
 								<!--xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/-->
-			<br />
-			<xsl:if test="config/application_invoice_information">
-				<p>
-					<xsl:value-of select="config/application_invoice_information"/>
-				</p>		
-			</xsl:if>
+								<br />
+								<xsl:if test="config/application_invoice_information">
+									<p>
+										<xsl:value-of select="config/application_invoice_information"/>
+									</p>
+								</xsl:if>
 							</div>
 						</fieldset>
 					</div>
@@ -452,19 +452,19 @@
 										<xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" />
 									</xsl:attribute>
 								</input>
-			<xsl:if test="config/application_terms">
-				<p>
-					<xsl:value-of select="config/application_terms"/>
-				</p>		
-			</xsl:if>
-			<br />
-			<div id='regulation_documents'>&nbsp;</div>
-			<br />
-			<xsl:if test="config/application_terms2">
-				<p>
-					<xsl:value-of select="config/application_terms2"/>
-				</p>		
-			</xsl:if>
+								<xsl:if test="config/application_terms">
+									<p>
+										<xsl:value-of select="config/application_terms"/>
+									</p>
+								</xsl:if>
+								<br />
+								<div id='regulation_documents'>&nbsp;</div>
+								<br />
+								<xsl:if test="config/application_terms2">
+									<p>
+										<xsl:value-of select="config/application_terms2"/>
+									</p>
+								</xsl:if>
 								<p>
 									<xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" />
 								</p>

@@ -1,9 +1,9 @@
 var intVal = function (i)
 {
 	return typeof i === 'string' ?
-			i.replace(/[\$,]/g, '') * 1 :
-			typeof i === 'number' ?
-			i : 0;
+		i.replace(/[\$,]/g, '') * 1 :
+		typeof i === 'number' ?
+		i : 0;
 };
 
 var addFooterDatatable = function (oTable)
@@ -16,9 +16,10 @@ var addFooterDatatable = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pageTotal = data.length ?
-					data.reduce(function (a, b) {
-						return intVal(a) + intVal(b);
-					}) : 0;
+				data.reduce(function (a, b)
+				{
+					return intVal(a) + intVal(b);
+				}) : 0;
 
 			var amount = $.number(pageTotal, 0, ',', ' ');
 

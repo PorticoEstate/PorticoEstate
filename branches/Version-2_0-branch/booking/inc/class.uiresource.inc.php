@@ -12,15 +12,15 @@
 	{
 
 		public $public_functions = array
-		(
-			'index'			=>	true,
+			(
+			'index' => true,
 			'query' => true,
-			'add'			=>	true,
-			'edit'			=>	true,
+			'add' => true,
+			'edit' => true,
 			'get_custom' => true,
-			'show'			=>	true,
-			'schedule'		=>	true,
-			'toggle_show_inactive'	=>	true,
+			'show' => true,
+			'schedule' => true,
+			'toggle_show_inactive' => true,
 			'get_buildings' => true,
 			'add_building' => true,
 			'remove_building' => true
@@ -30,26 +30,26 @@
 		{
 			parent::__construct();
 			$this->sobuilding = CreateObject('booking.sobuilding');
-			
+
 //			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();
-			
+
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->fields = array(
-					'name'					=> 'string',
-					'description'			=> 'html',
-					'activity_id'			=> 'int',
-					'active'				=> 'int',
-					'type'					=> 'string',
-					'sort'					=> 'string',
-					'organizations_ids'		=> 'string',
-				);
+				'name' => 'string',
+				'description' => 'html',
+				'activity_id' => 'int',
+				'active' => 'int',
+				'type' => 'string',
+				'sort' => 'string',
+				'organizations_ids' => 'string',
+			);
 			self::set_active_menu('booking::buildings::resources');
 		}
-		
+
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -113,14 +113,14 @@
 					)
 				)
 			);
-			
+
 			$data['datatable']['actions'][] = array();
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
-				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiresource.add'));
+				$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiresource.add'));
 			}
-			
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -134,8 +134,8 @@
 			$errors = array();
 			$resource = array();
 			$resource['sort'] = '0';
-			
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = extract_values($_POST, $this->fields);
 				$resource['active'] = '1';
@@ -145,14 +145,14 @@
 				$resource['activity_id'] = $building['activity_id'];
 
 				$errors = $this->bo->validate($resource);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->add($resource);
 						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -176,16 +176,16 @@
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
-				'date', 'security', 'file'));
+					'date', 'security', 'file'));
 
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data,
 				'new_form' => true));
 		}
-		
+
 		protected function resource_types()
 		{
 			$types = array();
-			foreach($this->bo->allowed_types() as $type)
+			foreach ($this->bo->allowed_types() as $type)
 			{
 				$types[$type] = self::humanize($type);
 			}
@@ -198,14 +198,14 @@
 			$resource = $this->bo->read_single($id);
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 			$resource['types'] = $this->resource_types();
-			
+
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($resource);
@@ -215,14 +215,14 @@
 				$fields = ExecMethod('booking.custom_fields.get_fields', $location);
 				$values_attribute = phpgw::get_var('values_attribute');
 				$json_representation = array();
-				foreach($fields as $attrib_id => &$attrib)
+				foreach ($fields as $attrib_id => &$attrib)
 				{
 					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 				}
 
-				$resource['json_representation'][$location_id] =  $json_representation;
+				$resource['json_representation'][$location_id] = $json_representation;
 
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($resource);
 					$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
@@ -234,7 +234,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::init_ckeditor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
-			foreach($activity_data['results'] as $acKey => $acValue)
+			foreach ($activity_data['results'] as $acKey => $acValue)
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
@@ -244,7 +244,7 @@
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
-				'date', 'security', 'file'));
+					'date', 'security', 'file'));
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_building_datatable_def($id),
 				'resource' => $resource, 'activitydata' => $activity_data));
@@ -268,15 +268,15 @@
 			$custom_values = $resource['json_representation'][$location_id];
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
-			foreach($fields as $attrib_id => &$attrib)
+			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;
 
-				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
 				{
-					foreach($attrib['choice'] as &$choice)
+					foreach ($attrib['choice'] as &$choice)
 					{
-						if(is_array($attrib['value']))
+						if (is_array($attrib['value']))
 						{
 							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
 						}
@@ -311,7 +311,7 @@
 			return $columns;
 		}
 
-		private static function get_building_datatable_def($id)
+		private static function get_building_datatable_def( $id )
 		{
 			return array
 				(
@@ -319,7 +319,7 @@
 					(
 					'container' => 'datatable-container_0',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_buildings',
-						'resource_id' => $id, 'phpgw_return_as' => 'json'))),
+							'resource_id' => $id, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => self::get_building_columns(),
 					'data' => json_encode(array()),
 					'config' => array(
@@ -345,7 +345,7 @@
 		public function add_building()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
-			if(!$building_id = phpgw::get_var('building_id', 'int'))
+			if (!$building_id = phpgw::get_var('building_id', 'int'))
 			{
 				return array(
 					'ok' => false,
@@ -359,7 +359,7 @@
 				$receipt = $this->bo->add_building($resource, $resource_id, $building_id);
 				$msg = $receipt ? '' : lang('duplicate');
 			}
-			catch(booking_unauthorized_exception $e)
+			catch (booking_unauthorized_exception $e)
 			{
 				return false;
 				$msg = lang('Could not add object due to insufficient permissions');
@@ -374,7 +374,7 @@
 		public function remove_building()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
-			if(!$building_id = phpgw::get_var('building_id', 'int'))
+			if (!$building_id = phpgw::get_var('building_id', 'int'))
 			{
 				return array(
 					'ok' => false,
@@ -387,7 +387,7 @@
 				$receipt = $this->bo->remove_building($resource, $resource_id, $building_id);
 				$msg = '';
 			}
-			catch(booking_unauthorized_exception $e)
+			catch (booking_unauthorized_exception $e)
 			{
 				return false;
 				$msg = lang('Could not update object due to insufficient permissions');
@@ -398,7 +398,7 @@
 				'msg' => $msg
 			);
 		}
-		
+
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -411,12 +411,12 @@
 
 
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-				'id' => $resource['building_id']));
+					'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
@@ -431,7 +431,7 @@
 
 			$data = array(
 				'datatable_def' => self::get_building_datatable_def($id),
-				'resource'	=>	$resource
+				'resource' => $resource
 			);
 			self::add_javascript('booking', 'booking', 'resource_new.js'); // to render custom fields
 			self::render_template_xsl(array('resource', 'datatable_inline'), $data);
@@ -441,16 +441,16 @@
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'int'), 'booking.uibuilding', 'booking.uiresource');
 			$resource['application_link'] = self::link(array(
-				'menuaction' => 'booking.uiapplication.add',
-				'building_id' => $resource['building_id'],
-				'building_name' => $resource['building_name'],
-				'activity_id' => $resource['activity_id'],
-				'resource' => $resource['id']
+					'menuaction' => 'booking.uiapplication.add',
+					'building_id' => $resource['building_id'],
+					'building_name' => $resource['building_name'],
+					'activity_id' => $resource['activity_id'],
+					'resource' => $resource['id']
 			));
 			$resource['datasource_url'] = self::link(array(
-				'menuaction' => 'booking.uibooking.resource_schedule', 
-				'resource_id' => $resource['id'], 
-				'phpgw_return_as' => 'json',
+					'menuaction' => 'booking.uibooking.resource_schedule',
+					'resource_id' => $resource['id'],
+					'phpgw_return_as' => 'json',
 			));
 
 			$resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
@@ -461,7 +461,7 @@
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 

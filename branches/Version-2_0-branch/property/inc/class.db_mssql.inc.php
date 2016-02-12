@@ -1,41 +1,41 @@
 <?php
 	/*	 * ************************************************************************\
-  * phpGroupWare API - MS SQL Server support                                 *
-  * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)               *
-  *  Modified by Guarneri carmelo (carmelo@melting-soft.com)                 *
-  *  Modified by Cameron Just     (C.Just@its.uq.edu.au)                     *
-  * ------------------------------------------------------------------------ *
-  * This program is free software; you can redistribute it and/or modify it  *
-  * under the terms of the GNU Lesser General Public License as published    *
-  * by the Free Software Foundation; either version 2.1 of the License, or   *
-  * any later version.                                                       *
+	 * phpGroupWare API - MS SQL Server support                                 *
+	 * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)               *
+	 *  Modified by Guarneri carmelo (carmelo@melting-soft.com)                 *
+	 *  Modified by Cameron Just     (C.Just@its.uq.edu.au)                     *
+	 * ------------------------------------------------------------------------ *
+	 * This program is free software; you can redistribute it and/or modify it  *
+	 * under the terms of the GNU Lesser General Public License as published    *
+	 * by the Free Software Foundation; either version 2.1 of the License, or   *
+	 * any later version.                                                       *
 	  \************************************************************************* */
 
 	class db_mssql
 	{
 
-		var $Host				= '';
-		var $Database			= '';
-		var $User				= '';
-		var $Password			= '';
-		var $Link_ID			= 0;
-		var $Query_ID			= 0;
-		var $Record				= array();
-		var $Row				= 0;
-		var $VEOF				= -1;
-		var $Errno				= 0;
-		var $Error				= '';
-		var $Auto_Free			= 0;     ## set this to 1 to automatically free results
-		var $Debug				= false;
-		var $auto_stripslashes	= false;
-		protected $Transaction	= false;
-		var $fetchmode			= 'ASSOC';//'BOTH';
+		var $Host = '';
+		var $Database = '';
+		var $User = '';
+		var $Password = '';
+		var $Link_ID = 0;
+		var $Query_ID = 0;
+		var $Record = array();
+		var $Row = 0;
+		var $VEOF = -1;
+		var $Errno = 0;
+		var $Error = '';
+		var $Auto_Free = 0;  ## set this to 1 to automatically free results
+		var $Debug = false;
+		var $auto_stripslashes = false;
+		protected $Transaction = false;
+		var $fetchmode = 'ASSOC';//'BOTH';
 
 		function connect()
 		{
-			if(0 == $this->Link_ID)
+			if (0 == $this->Link_ID)
 			{
-				if($GLOBALS['phpgw_info']['server']['db_persistent'])
+				if ($GLOBALS['phpgw_info']['server']['db_persistent'])
 				{
 					$this->Link_ID = mssql_pconnect($this->Host, $this->User, $this->Password);
 				}
@@ -43,7 +43,7 @@
 				{
 					$this->Link_ID = mssql_connect($this->Host, $this->User, $this->Password);
 				}
-				if(!$this->Link_ID)
+				if (!$this->Link_ID)
 				{
 					$this->halt('Link-ID == false, mssql_' . ($GLOBALS['phpgw_info']['server']['db_persistent'] ? 'p' : '') . 'connect failed');
 				}
@@ -59,9 +59,9 @@
 
 		}
 
-		function db_addslashes($str)
+		function db_addslashes( $str )
 		{
-			if(!isset($str) || $str == '')
+			if (!isset($str) || $str == '')
 			{
 				return '';
 			}
@@ -70,7 +70,7 @@
 
 		function free_result()
 		{
-			if($this->Query_ID)
+			if ($this->Query_ID)
 			{
 				mssql_free_result($this->Query_ID);
 			}
@@ -78,18 +78,18 @@
 			$this->VEOF = -1;
 		}
 
-		function query($Query_String, $line = '', $file = '')
+		function query( $Query_String, $line = '', $file = '' )
 		{
 			$this->VEOF = -1;
 
-			if(!$this->Link_ID)
+			if (!$this->Link_ID)
 			{
 				$this->connect();
 			}
 
 			$this->Query_ID = mssql_query($Query_String, $this->Link_ID);
 			$this->Row = 0;
-			if(!$this->Query_ID)
+			if (!$this->Query_ID)
 			{
 				$this->halt("Invalid SQL: " . $Query_String, $line, $file);
 			}
@@ -97,20 +97,20 @@
 		}
 
 		// I don't have access to M$-SQL, can someone finish these 2 functions ?  (jengo)
-		function to_timestamp($epoch)
+		function to_timestamp( $epoch )
 		{
 			return date('Y-m-d H:i:s', $epoch);
 		}
 
-		function from_timestamp($timestamp)
+		function from_timestamp( $timestamp )
 		{
 			return strtotime($timestamp);
 		}
 
 		// public: perform a query with limited result set
-		function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = '')
+		function limit_query( $Query_String, $offset, $line = '', $file = '', $num_rows = '' )
 		{
-			if(!$num_rows)
+			if (!$num_rows)
 			{
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -119,17 +119,17 @@
 			$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
 			$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
 
-			if($this->Debug)
+			if ($this->Debug)
 			{
 				printf("Debug: limit_query = %s<br>offset=%d, num_rows=%d<br>\n", $Query_String, $offset, $num_rows);
 			}
 
 			$this->query($Query_String, $line, $file);
-			if($this->Query_ID)
+			if ($this->Query_ID)
 			{
 				$this->Row = $offset;
 				// Push cursor to appropriate row in case next_record() is used
-				if($offset > 0)
+				if ($offset > 0)
 				{
 					@mssql_data_seek($this->Query_ID, $offset);
 				}
@@ -141,22 +141,22 @@
 
 		function next_record()
 		{
-			if(!$this->Query_ID)
+			if (!$this->Query_ID)
 			{
 				$this->halt("next_record called with no query pending.");
 				return 0;
 			}
 
-			if($this->VEOF == -1 || ($this->Row++ <= $this->VEOF))
+			if ($this->VEOF == -1 || ($this->Row++ <= $this->VEOF))
 			{
 				// Work around for buggy mssql_fetch_array
 				$rec = @mssql_fetch_row($this->Query_ID);
-				if($rec)
+				if ($rec)
 				{
 					$this->Record = array();
-					for($i = 0; $i < count($rec); $i++)
+					for ($i = 0; $i < count($rec); $i++)
 					{
-						if($this->fetchmode == 'BOTH')
+						if ($this->fetchmode == 'BOTH')
 						{
 							$this->Record[$i] = $rec[$i];
 						}
@@ -175,7 +175,7 @@
 			}
 
 			$stat = is_array($this->Record);
-			if(!$stat && $this->Auto_Free)
+			if (!$stat && $this->Auto_Free)
 			{
 				$this->free();
 			}
@@ -191,7 +191,7 @@
 
 		function transaction_commit()
 		{
-			if(!$this->Errno && $this->Transaction)
+			if (!$this->Errno && $this->Transaction)
 			{
 				$this->Transaction = false;
 				return !!mssql_query('COMMIT TRAN', $this->Link_ID);
@@ -202,7 +202,7 @@
 
 		function transaction_abort()
 		{
-			if($this->Transaction)
+			if ($this->Transaction)
 			{
 				$this->Transaction = false;
 				return !!mssql_query('ROLLBACK TRAN', $this->Link_ID);
@@ -211,41 +211,41 @@
 			return false;
 		}
 
-		function seek($pos)
+		function seek( $pos )
 		{
 			mssql_data_seek($this->Query_ID, $pos);
 			$this->Row = $pos;
 		}
 
-		function metadata($table)
+		function metadata( $table )
 		{
 			$count = 0;
-			$id    = 0;
-			$res   = array();
+			$id = 0;
+			$res = array();
 
 			$this->connect();
 			$id = mssql_query("select * from $table", $this->Link_ID);
-			if(!$id)
+			if (!$id)
 			{
 				$this->halt('Metadata query failed.');
 			}
 
 			$count = mssql_num_fields($id);
 
-			for($i = 0; $i < $count; $i++)
+			for ($i = 0; $i < $count; $i++)
 			{
 				$info = mssql_fetch_field($id, $i);
-				$res[$info->name]  = $info;
+				$res[$info->name] = $info;
 				/*
-				$res[$i]['table'] = $table;
-				$res[$i]['name']  = $info->name;
-				$res[$i]['len']   = $info->max_length;
-				$res[$i]['flags'] = $info->numeric;
-				$res[$i]['type'] = $info->type;
+				  $res[$i]['table'] = $table;
+				  $res[$i]['name']  = $info->name;
+				  $res[$i]['len']   = $info->max_length;
+				  $res[$i]['flags'] = $info->numeric;
+				  $res[$i]['type'] = $info->type;
 				 */
- 			}
+			}
 
- 			$this->free_result();
+			$this->free_result();
 			return $res;
 		}
 
@@ -257,7 +257,7 @@
 
 		function num_rows()
 		{
-			if($this->Query_ID)
+			if ($this->Query_ID)
 			{
 				return $this->affected_rows();
 			}
@@ -282,11 +282,11 @@
 			print $this->num_rows();
 		}
 
-		public function f($name, $strip_slashes = False)
+		public function f( $name, $strip_slashes = False )
 		{
-			if(isset($this->Record[$name]))
+			if (isset($this->Record[$name]))
 			{
-				if($strip_slashes || ($this->auto_stripslashes && !$strip_slashes))
+				if ($strip_slashes || ($this->auto_stripslashes && !$strip_slashes))
 				{
 					return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 				}
@@ -298,33 +298,33 @@
 			return '';
 		}
 
-		function p($Field_Name)
+		function p( $Field_Name )
 		{
 			print $this->f($Field_Name);
 		}
 		/* public: table locking */
 
-		function get_last_insert_id($table, $field)
+		function get_last_insert_id( $table, $field )
 		{
 			/* This will get the last insert ID created on the current connection.  Should only be called
 			 * after an insert query is run on a table that has an auto incrementing field.  Of note, table
 			 * and field are required for pgsql compatiblity.  MSSQL uses a query to retrieve the last
 			 * identity on the connection, so table and field are ignored here as well.
 			 */
-			if(!isset($table) || $table == '' || !isset($field) || $field == '')
+			if (!isset($table) || $table == '' || !isset($field) || $field == '')
 			{
 				return -1;
 			}
 
 			$result = @mssql_query("select @@identity", $this->Link_ID);
-			if(!$result)
+			if (!$result)
 			{
 				return -1;
 			}
 			return mssql_result($result, 0, 0);
 		}
 
-		function lock($table, $mode = "write")
+		function lock( $table, $mode = "write" )
 		{
 			/* /me really, really, really hates locks - transactions serve just fine */
 			return $this->transaction_begin();
@@ -336,45 +336,45 @@
 		}
 		/* private: error handling */
 
-		function halt($msg, $line = '', $file = '')
+		function halt( $msg, $line = '', $file = '' )
 		{
 			$this->transaction_abort();
 
 			$this->Errno = 1;
 			$this->Error = mssql_get_last_message();
-			if($this->Error == '')
+			if ($this->Error == '')
 			{
 				$this->Error = "General Error (The MS-SQL interface did not return a detailed error message).";
 			}
 
-			if($this->Halt_On_Error == "no")
+			if ($this->Halt_On_Error == "no")
 			{
 				return;
 			}
 
 			$this->haltmsg($msg);
 
-			if($file)
+			if ($file)
 			{
 				printf("<br><b>File:</b> %s", $file);
 			}
 
-			if($line)
+			if ($line)
 			{
 				printf("<br><b>Line:</b> %s", $line);
 			}
 
-			if($this->Halt_On_Error != "report")
+			if ($this->Halt_On_Error != "report")
 			{
 				echo "<p><b>Session halted.</b>";
 				exit;
 			}
 		}
 
-		function haltmsg($msg)
+		function haltmsg( $msg )
 		{
 			printf("<b>Database error:</b> %s<br>\n", $msg);
-			if($this->Errno != "0" && $this->Error != "()")
+			if ($this->Errno != "0" && $this->Error != "()")
 			{
 				printf("<b>MS-SQL Error</b>: %s (%s)<br>\n", $this->Errno, $this->Error);
 			}
@@ -384,7 +384,7 @@
 		{
 			$this->query("select name from sysobjects where type='u' and name != 'dtproperties'");
 			$i = 0;
-			while($info = @mssql_fetch_row($this->Query_ID))
+			while ($info = @mssql_fetch_row($this->Query_ID))
 			{
 				$return[$i]['table_name'] = $info[0];
 				$return[$i]['tablespace_name'] = $this->Database;
@@ -407,65 +407,65 @@
 		}
 
 		/**
-		* Get the correct date format for DATE field for a particular RDBMS
-		*
-		* @internal the string is compatiable with PHP's date()
-		* @return string the date format string
-		*/
+		 * Get the correct date format for DATE field for a particular RDBMS
+		 *
+		 * @internal the string is compatiable with PHP's date()
+		 * @return string the date format string
+		 */
 		public static function date_format()
 		{
 			static $date_format = null;
-			if(is_null($date_format))
+			if (is_null($date_format))
 			{
-				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				switch ($GLOBALS['phpgw_info']['server']['db_type'])
 				{
 					case 'mssql':
-						$date_format 		= 'M d Y';
+						$date_format = 'M d Y';
 						break;
 					case 'mysql':
 					case 'pgsql':
 					case 'postgres':
 					default:
-						$date_format 		= 'Y-m-d';
+						$date_format = 'Y-m-d';
 				}
 			}
 			return $date_format;
-	 	}
-	
+		}
+
 		/**
-		* Get the correct datetime format for DATETIME field for a particular RDBMS
-		*
-		* @internal the string is compatiable with PHP's date()
-		* @return string the date format string
-		*/
+		 * Get the correct datetime format for DATETIME field for a particular RDBMS
+		 *
+		 * @internal the string is compatiable with PHP's date()
+		 * @return string the date format string
+		 */
 		public static function datetime_format()
 		{
 			static $datetime_format = null;
-			if(is_null($datetime_format))
+			if (is_null($datetime_format))
 			{
-				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				switch ($GLOBALS['phpgw_info']['server']['db_type'])
 				{
 					case 'mssql':
-						$datetime_format 		= 'M d Y g:iA';
+						$datetime_format = 'M d Y g:iA';
 						break;
 					case 'mysql':
 					case 'pgsql':
 					case 'postgres':
 					default:
-						$datetime_format 		= 'Y-m-d G:i:s';
+						$datetime_format = 'Y-m-d G:i:s';
 				}
 			}
 			return $datetime_format;
-	 	}
+		}
 
 		/**
-		* Get the correct datetime format for MONEY field for a particular RDBMS
-		*
-		* @return string the formatted string
-		*/
-		public static function money_format($amount)
+		 * Get the correct datetime format for MONEY field for a particular RDBMS
+		 *
+		 * @return string the formatted string
+		 */
+		public static function money_format( $amount )
 		{
-			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mssql')
+			if ($GLOBALS['phpgw_info']['server']['db_type'] == 'mssql')
 			{
 				return "CONVERT(MONEY,'{$amount}',0)";
 			}
@@ -484,30 +484,30 @@
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		public function validate_insert($values)
+		public function validate_insert( $values )
 		{
-			if(!is_array($values) || !count($values))
+			if (!is_array($values) || !count($values))
 			{
 				return '';
 			}
-			
+
 			$insert_value = array();
-			foreach($values as $value)
+			foreach ($values as $value)
 			{
-				if($value || (is_numeric($value) && $value == 0))
+				if ($value || (is_numeric($value) && $value == 0))
 				{
-					if(is_numeric($value))
+					if (is_numeric($value))
 					{
-						$insert_value[]	= "'$value'";
+						$insert_value[] = "'$value'";
 					}
 					else
 					{
-						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
+						$insert_value[] = "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
 				}
 				else
 				{
-					$insert_value[]	= 'NULL';
+					$insert_value[] = 'NULL';
 				}
 			}
 			return implode(",", $insert_value);
@@ -519,21 +519,21 @@
 		 * @param array $value_set associative array of values to update the database with
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		public function validate_update($value_set)
+		public function validate_update( $value_set )
 		{
-			if(!is_array($value_set) || !count($value_set))
+			if (!is_array($value_set) || !count($value_set))
 			{
 				return '';
 			}
-			
+
 			$value_entry = array();
-			foreach($value_set as $field => $value)
+			foreach ($value_set as $field => $value)
 			{
-				if($value || (is_numeric($value) && $value == 0))
+				if ($value || (is_numeric($value) && $value == 0))
 				{
-					if(is_numeric($value))
+					if (is_numeric($value))
 					{
-						if((strlen($value) > 1 && strpos($value, '0') === 0))
+						if ((strlen($value) > 1 && strpos($value, '0') === 0))
 						{
 							$value_entry[] = "{$field}='{$value}'";
 						}

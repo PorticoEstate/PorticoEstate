@@ -5,28 +5,28 @@
 	{
 
 		public $public_functions = array
-		(
-			'index_json'	=>	true,
+			(
+			'index_json' => true,
 			'query' => true,
-			'show'			=>	true,
+			'show' => true,
 			'get_custom' => true,
-			'schedule'		=>	true
+			'schedule' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boresource');
-            $this->building_bo = CreateObject('booking.bobuilding');
+			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->activity_bo = CreateObject('booking.boactivity');
-            $old_top = array_pop($this->tmpl_search_path);
+			$old_top = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
 		}
-		
+
 		public function index_json()
 		{
-			if($sub_activity_id = phpgw::get_var('sub_activity_id'))
+			if ($sub_activity_id = phpgw::get_var('sub_activity_id'))
 			{
 				$activity_path = ExecMethod('booking.boactivity.get_path', $sub_activity_id);
 				$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
@@ -45,7 +45,7 @@
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
 			$pathway = array();
 			$lang_home = lang('home');
-			foreach($resource['buildings'] as $building_id)
+			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$pathway[] = array(
@@ -60,18 +60,18 @@
 
 //			$resource['building']		 = ExecMethod('booking.bobuilding.read_single', $resource['building_id']);
 			$resource['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-				'id' => $resource['building_id']));
+					'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
-				'type' => 'building'));
+					'type' => 'building'));
 			$resource['resources_link'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
-				'type' => 'resource'));
+					'type' => 'resource'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
-				'id' => $resource['id']));
+					'id' => $resource['id']));
 			$data = array(
 				'resource' => $resource,
-				'pathway'	=> $pathway
+				'pathway' => $pathway
 			);
-			
+
 			self::render_template_xsl('resource', $data);
 		}
 
@@ -94,15 +94,15 @@
 
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
-			foreach($fields as $attrib_id => &$attrib)
+			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;
 
-				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
 				{
-					foreach($attrib['choice'] as &$choice)
+					foreach ($attrib['choice'] as &$choice)
 					{
-						if(is_array($attrib['value']))
+						if (is_array($attrib['value']))
 						{
 							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
 						}
@@ -126,12 +126,12 @@
 		public function schedule()
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
-			/*FIXME: Sigurd: handle multiple buildings*/
+			/* FIXME: Sigurd: handle multiple buildings */
 
 			$pathway = array();
 			$lang_home = lang('home');
 			$lang_schedule = lang('schedule');
-			foreach($resource['buildings'] as $building_id)
+			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$pathway[] = array(
@@ -143,37 +143,38 @@
 					'resource_name' => $resource['name'],
 					'resource_link' => self::link(array('menuaction' => 'bookingfrontend.uiresource.show',
 						'id' => $resource['id'])),
-					'lang_schedule'	=> $lang_schedule,
+					'lang_schedule' => $lang_schedule,
 				);
 			}
 
 			//$building = $this->building_bo->read_single($resource['building_id']);
 
 			$building = $this->building_bo->read_single($resource['buildings'][0]);
-            $resource['deactivate_application'] = $building['deactivate_application'];
-			if($building['deactivate_application'] == 0)
+			$resource['deactivate_application'] = $building['deactivate_application'];
+			if ($building['deactivate_application'] == 0)
 			{
-                $resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add',
-		//			'building_id' => $resource['building_id'],
-		//			'building_name' => $resource['building_name'],
-					'building_id' => $building['id'],
-					'building_name' => $building['name'],
-                    'resource' => $resource['id']));
+				$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add',
+						//			'building_id' => $resource['building_id'],
+						//			'building_name' => $resource['building_name'],
+						'building_id' => $building['id'],
+						'building_name' => $building['name'],
+						'resource' => $resource['id']));
 			}
 			else
 			{
-                $resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
-                    'id' => $resource['id']));
-            }
-            $resource['datasource_url'] = self::link(array(
-				'menuaction' => 'bookingfrontend.uibooking.resource_schedule', 
-				'resource_id' => $resource['id'], 
-				'phpgw_return_as' => 'json',
+				$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
+						'id' => $resource['id']));
+			}
+			$resource['datasource_url'] = self::link(array(
+					'menuaction' => 'bookingfrontend.uibooking.resource_schedule',
+					'resource_id' => $resource['id'],
+					'phpgw_return_as' => 'json',
 			));
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 			$resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
-			self::render_template_xsl('resource_schedule', array('resource' => $resource,'pathway'	=> $pathway));
+			self::render_template_xsl('resource_schedule', array('resource' => $resource,
+				'pathway' => $pathway));
 		}
 	}

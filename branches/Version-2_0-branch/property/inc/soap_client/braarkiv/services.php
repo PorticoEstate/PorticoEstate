@@ -1,5 +1,5 @@
 <?php
-	if(!class_exists("Login"))
+	if (!class_exists("Login"))
 	{
 
 		/**
@@ -20,10 +20,10 @@
 			 */
 			public $password;
 
-	}
+		}
 	}
 
-	if(!class_exists("LoginResponse"))
+	if (!class_exists("LoginResponse"))
 	{
 
 		/**
@@ -41,7 +41,7 @@
 		}
 	}
 
-	if(!class_exists("Logout"))
+	if (!class_exists("Logout"))
 	{
 
 		/**
@@ -59,7 +59,7 @@
 		}
 	}
 
-	if(!class_exists("LogoutResponse"))
+	if (!class_exists("LogoutResponse"))
 	{
 
 		/**
@@ -71,7 +71,7 @@
 		}
 	}
 
-	if(!class_exists("getProductionLines"))
+	if (!class_exists("getProductionLines"))
 	{
 
 		/**
@@ -89,7 +89,7 @@
 		}
 	}
 
-	if(!class_exists("getProductionLinesResponse"))
+	if (!class_exists("getProductionLinesResponse"))
 	{
 
 		/**
@@ -107,7 +107,7 @@
 		}
 	}
 
-	if(!class_exists("ProductionLine"))
+	if (!class_exists("ProductionLine"))
 	{
 
 		/**
@@ -143,7 +143,7 @@
 		}
 	}
 
-	if(!class_exists("getDocumentSplitTypes"))
+	if (!class_exists("getDocumentSplitTypes"))
 	{
 
 		/**
@@ -167,7 +167,7 @@
 		}
 	}
 
-	if(!class_exists("getDocumentSplitTypesResponse"))
+	if (!class_exists("getDocumentSplitTypesResponse"))
 	{
 
 		/**
@@ -185,7 +185,7 @@
 		}
 	}
 
-	if(!class_exists("DocumentSplitType"))
+	if (!class_exists("DocumentSplitType"))
 	{
 
 		/**
@@ -245,7 +245,7 @@
 		}
 	}
 
-	if(!class_exists("GetClasses"))
+	if (!class_exists("GetClasses"))
 	{
 
 		/**
@@ -269,7 +269,7 @@
 		}
 	}
 
-	if(!class_exists("GetClassesResponse"))
+	if (!class_exists("GetClassesResponse"))
 	{
 
 		/**
@@ -293,7 +293,7 @@
 		}
 	}
 
-	if(!class_exists("GetClassesResult"))
+	if (!class_exists("GetClassesResult"))
 	{
 
 		/**
@@ -311,7 +311,7 @@
 		}
 	}
 
-	if(!class_exists("getAvailableFileVariants"))
+	if (!class_exists("getAvailableFileVariants"))
 	{
 
 		/**
@@ -335,7 +335,7 @@
 		}
 	}
 
-	if(!class_exists("getAvailableFileVariantsResponse"))
+	if (!class_exists("getAvailableFileVariantsResponse"))
 	{
 
 		/**
@@ -353,7 +353,7 @@
 		}
 	}
 
-	if(!class_exists("getVariantVaultID"))
+	if (!class_exists("getVariantVaultID"))
 	{
 
 		/**
@@ -383,7 +383,7 @@
 		}
 	}
 
-	if(!class_exists("getVariantVaultIDResponse"))
+	if (!class_exists("getVariantVaultIDResponse"))
 	{
 
 		/**
@@ -401,7 +401,7 @@
 		}
 	}
 
-	if(!class_exists("getRelativeFileURL"))
+	if (!class_exists("getRelativeFileURL"))
 	{
 
 		/**
@@ -431,7 +431,7 @@
 		}
 	}
 
-	if(!class_exists("getRelativeFileURLResponse"))
+	if (!class_exists("getRelativeFileURLResponse"))
 	{
 
 		/**
@@ -449,7 +449,7 @@
 		}
 	}
 
-	if(!class_exists("getAvailableAttributes"))
+	if (!class_exists("getAvailableAttributes"))
 	{
 
 		/**
@@ -479,7 +479,7 @@
 		}
 	}
 
-	if(!class_exists("getAvailableAttributesResponse"))
+	if (!class_exists("getAvailableAttributesResponse"))
 	{
 
 		/**
@@ -497,7 +497,7 @@
 		}
 	}
 
-	if(!class_exists("Attribute"))
+	if (!class_exists("Attribute"))
 	{
 
 		/**
@@ -533,7 +533,7 @@
 		}
 	}
 
-	if(!class_exists("braArkivAttributeType"))
+	if (!class_exists("braArkivAttributeType"))
 	{
 
 		/**
@@ -545,7 +545,7 @@
 		}
 	}
 
-	if(!class_exists("LookupValue"))
+	if (!class_exists("LookupValue"))
 	{
 
 		/**
@@ -569,7 +569,7 @@
 		}
 	}
 
-	if(!class_exists("Pair"))
+	if (!class_exists("Pair"))
 	{
 
 		/**
@@ -593,7 +593,7 @@
 		}
 	}
 
-	if(!class_exists("Address"))
+	if (!class_exists("Address"))
 	{
 
 		/**
@@ -623,7 +623,7 @@
 		}
 	}
 
-	if(!class_exists("Matrikkel"))
+	if (!class_exists("Matrikkel"))
 	{
 
 		/**
@@ -659,7 +659,7 @@
 		}
 	}
 
-	if(!class_exists("getLookupValues"))
+	if (!class_exists("getLookupValues"))
 	{
 
 		/**
@@ -695,7 +695,7 @@
 		}
 	}
 
-	if(!class_exists("getLookupValuesResponse"))
+	if (!class_exists("getLookupValuesResponse"))
 	{
 
 		/**
@@ -713,7 +713,7 @@
 		}
 	}
 
-	if(!class_exists("searchDocument"))
+	if (!class_exists("searchDocument"))
 	{
 
 		/**
@@ -755,7 +755,7 @@
 		}
 	}
 
-	if(!class_exists("searchDocumentResponse"))
+	if (!class_exists("searchDocumentResponse"))
 	{
 
 		/**
@@ -773,7 +773,7 @@
 		}
 	}
 
-	if(!class_exists("createDocument"))
+	if (!class_exists("createDocument"))
 	{
 
 		/**
@@ -803,7 +803,7 @@
 		}
 	}
 
-	if(!class_exists("Document"))
+	if (!class_exists("Document"))
 	{
 
 		/**
@@ -899,7 +899,7 @@
 		}
 	}
 
-	if(!class_exists("createDocumentResponse"))
+	if (!class_exists("createDocumentResponse"))
 	{
 
 		/**
@@ -917,7 +917,7 @@
 		}
 	}
 
-	if(!class_exists("getDocument"))
+	if (!class_exists("getDocument"))
 	{
 
 		/**
@@ -941,7 +941,7 @@
 		}
 	}
 
-	if(!class_exists("getDocumentResponse"))
+	if (!class_exists("getDocumentResponse"))
 	{
 
 		/**
@@ -959,7 +959,7 @@
 		}
 	}
 
-	if(!class_exists("getAttribute"))
+	if (!class_exists("getAttribute"))
 	{
 
 		/**
@@ -989,7 +989,7 @@
 		}
 	}
 
-	if(!class_exists("getAttributeResponse"))
+	if (!class_exists("getAttributeResponse"))
 	{
 
 		/**
@@ -1007,7 +1007,7 @@
 		}
 	}
 
-	if(!class_exists("updateDocument"))
+	if (!class_exists("updateDocument"))
 	{
 
 		/**
@@ -1031,7 +1031,7 @@
 		}
 	}
 
-	if(!class_exists("updateDocumentResponse"))
+	if (!class_exists("updateDocumentResponse"))
 	{
 
 		/**
@@ -1049,7 +1049,7 @@
 		}
 	}
 
-	if(!class_exists("updateAttribute"))
+	if (!class_exists("updateAttribute"))
 	{
 
 		/**
@@ -1091,7 +1091,7 @@
 		}
 	}
 
-	if(!class_exists("updateAttributeResponse"))
+	if (!class_exists("updateAttributeResponse"))
 	{
 
 		/**
@@ -1103,7 +1103,7 @@
 		}
 	}
 
-	if(!class_exists("deleteDocument"))
+	if (!class_exists("deleteDocument"))
 	{
 
 		/**
@@ -1127,7 +1127,7 @@
 		}
 	}
 
-	if(!class_exists("deleteDocumentResponse"))
+	if (!class_exists("deleteDocumentResponse"))
 	{
 
 		/**
@@ -1139,7 +1139,7 @@
 		}
 	}
 
-	if(!class_exists("getFileName"))
+	if (!class_exists("getFileName"))
 	{
 
 		/**
@@ -1175,7 +1175,7 @@
 		}
 	}
 
-	if(!class_exists("getFileNameResponse"))
+	if (!class_exists("getFileNameResponse"))
 	{
 
 		/**
@@ -1193,7 +1193,7 @@
 		}
 	}
 
-	if(!class_exists("searchAndGetDocuments"))
+	if (!class_exists("searchAndGetDocuments"))
 	{
 
 		/**
@@ -1235,7 +1235,7 @@
 		}
 	}
 
-	if(!class_exists("searchAndGetDocumentsResponse"))
+	if (!class_exists("searchAndGetDocumentsResponse"))
 	{
 
 		/**
@@ -1253,7 +1253,7 @@
 		}
 	}
 
-	if(!class_exists("searchAndGetDocumentsWithVariants"))
+	if (!class_exists("searchAndGetDocumentsWithVariants"))
 	{
 
 		/**
@@ -1295,7 +1295,7 @@
 		}
 	}
 
-	if(!class_exists("Variant"))
+	if (!class_exists("Variant"))
 	{
 
 		/**
@@ -1325,7 +1325,7 @@
 		}
 	}
 
-	if(!class_exists("ExtendedDocument"))
+	if (!class_exists("ExtendedDocument"))
 	{
 
 		/**
@@ -1343,7 +1343,7 @@
 		}
 	}
 
-	if(!class_exists("searchAndGetDocumentsWithVariantsResponse"))
+	if (!class_exists("searchAndGetDocumentsWithVariantsResponse"))
 	{
 
 		/**
@@ -1361,7 +1361,7 @@
 		}
 	}
 
-	if(!class_exists("putFileAsByteArray"))
+	if (!class_exists("putFileAsByteArray"))
 	{
 
 		/**
@@ -1397,7 +1397,7 @@
 		}
 	}
 
-	if(!class_exists("putFileAsByteArrayResponse"))
+	if (!class_exists("putFileAsByteArrayResponse"))
 	{
 
 		/**
@@ -1409,7 +1409,7 @@
 		}
 	}
 
-	if(!class_exists("getFileAsByteArray"))
+	if (!class_exists("getFileAsByteArray"))
 	{
 
 		/**
@@ -1445,7 +1445,7 @@
 		}
 	}
 
-	if(!class_exists("getFileAsByteArrayResponse"))
+	if (!class_exists("getFileAsByteArrayResponse"))
 	{
 
 		/**
@@ -1463,7 +1463,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunk"))
+	if (!class_exists("fileTransferSendChunk"))
 	{
 
 		/**
@@ -1493,7 +1493,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunkResponse"))
+	if (!class_exists("fileTransferSendChunkResponse"))
 	{
 
 		/**
@@ -1505,7 +1505,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunkedInit"))
+	if (!class_exists("fileTransferSendChunkedInit"))
 	{
 
 		/**
@@ -1535,7 +1535,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunkedInitResponse"))
+	if (!class_exists("fileTransferSendChunkedInitResponse"))
 	{
 
 		/**
@@ -1553,7 +1553,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunkedEnd"))
+	if (!class_exists("fileTransferSendChunkedEnd"))
 	{
 
 		/**
@@ -1577,7 +1577,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferSendChunkedEndResponse"))
+	if (!class_exists("fileTransferSendChunkedEndResponse"))
 	{
 
 		/**
@@ -1589,7 +1589,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunkedInit"))
+	if (!class_exists("fileTransferRequestChunkedInit"))
 	{
 
 		/**
@@ -1625,7 +1625,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunkedInitResponse"))
+	if (!class_exists("fileTransferRequestChunkedInitResponse"))
 	{
 
 		/**
@@ -1643,7 +1643,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunk"))
+	if (!class_exists("fileTransferRequestChunk"))
 	{
 
 		/**
@@ -1673,7 +1673,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunkResponse"))
+	if (!class_exists("fileTransferRequestChunkResponse"))
 	{
 
 		/**
@@ -1691,7 +1691,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunkedEnd"))
+	if (!class_exists("fileTransferRequestChunkedEnd"))
 	{
 
 		/**
@@ -1715,7 +1715,7 @@
 		}
 	}
 
-	if(!class_exists("fileTransferRequestChunkedEndResponse"))
+	if (!class_exists("fileTransferRequestChunkedEndResponse"))
 	{
 
 		/**
@@ -1727,7 +1727,7 @@
 		}
 	}
 
-	if(!class_exists("Services"))
+	if (!class_exists("Services"))
 	{
 
 		/**
@@ -1743,74 +1743,74 @@
 			 * @var array
 			 */
 			private static $classmap = array(
-				"Login"										 => "Login",
-				"LoginResponse"								 => "LoginResponse",
-				"Logout"									 => "Logout",
-				"LogoutResponse"							 => "LogoutResponse",
-				"getProductionLines"						 => "getProductionLines",
-				"getProductionLinesResponse"				 => "getProductionLinesResponse",
-				"ProductionLine"							 => "ProductionLine",
-				"getDocumentSplitTypes"						 => "getDocumentSplitTypes",
-				"getDocumentSplitTypesResponse"				 => "getDocumentSplitTypesResponse",
-				"DocumentSplitType"							 => "DocumentSplitType",
-				"GetClasses"								 => "GetClasses",
-				"GetClassesResponse"						 => "GetClassesResponse",
-				"GetClassesResult"							 => "GetClassesResult",
-				"getAvailableFileVariants"					 => "getAvailableFileVariants",
-				"getAvailableFileVariantsResponse"			 => "getAvailableFileVariantsResponse",
-				"getVariantVaultID"							 => "getVariantVaultID",
-				"getVariantVaultIDResponse"					 => "getVariantVaultIDResponse",
-				"getRelativeFileURL"						 => "getRelativeFileURL",
-				"getRelativeFileURLResponse"				 => "getRelativeFileURLResponse",
-				"getAvailableAttributes"					 => "getAvailableAttributes",
-				"getAvailableAttributesResponse"			 => "getAvailableAttributesResponse",
-				"Attribute"									 => "Attribute",
-				"braArkivAttributeType"						 => "braArkivAttributeType",
-				"LookupValue"								 => "LookupValue",
-				"Pair"										 => "Pair",
-				"Address"									 => "Address",
-				"Matrikkel"									 => "Matrikkel",
-				"getLookupValues"							 => "getLookupValues",
-				"getLookupValuesResponse"					 => "getLookupValuesResponse",
-				"searchDocument"							 => "searchDocument",
-				"searchDocumentResponse"					 => "searchDocumentResponse",
-				"createDocument"							 => "createDocument",
-				"Document"									 => "Document",
-				"createDocumentResponse"					 => "createDocumentResponse",
-				"getDocument"								 => "getDocument",
-				"getDocumentResponse"						 => "getDocumentResponse",
-				"getAttribute"								 => "getAttribute",
-				"getAttributeResponse"						 => "getAttributeResponse",
-				"updateDocument"							 => "updateDocument",
-				"updateDocumentResponse"					 => "updateDocumentResponse",
-				"updateAttribute"							 => "updateAttribute",
-				"updateAttributeResponse"					 => "updateAttributeResponse",
-				"deleteDocument"							 => "deleteDocument",
-				"deleteDocumentResponse"					 => "deleteDocumentResponse",
-				"getFileName"								 => "getFileName",
-				"getFileNameResponse"						 => "getFileNameResponse",
-				"searchAndGetDocuments"						 => "searchAndGetDocuments",
-				"searchAndGetDocumentsResponse"				 => "searchAndGetDocumentsResponse",
-				"searchAndGetDocumentsWithVariants"			 => "searchAndGetDocumentsWithVariants",
-				"Variant"									 => "Variant",
-				"ExtendedDocument"							 => "ExtendedDocument",
-				"searchAndGetDocumentsWithVariantsResponse"	 => "searchAndGetDocumentsWithVariantsResponse",
-				"putFileAsByteArray"						 => "putFileAsByteArray",
-				"putFileAsByteArrayResponse"				 => "putFileAsByteArrayResponse",
-				"getFileAsByteArray"						 => "getFileAsByteArray",
-				"getFileAsByteArrayResponse"				 => "getFileAsByteArrayResponse",
-				"fileTransferSendChunk"						 => "fileTransferSendChunk",
-				"fileTransferSendChunkResponse"				 => "fileTransferSendChunkResponse",
-				"fileTransferSendChunkedInit"				 => "fileTransferSendChunkedInit",
-				"fileTransferSendChunkedInitResponse"		 => "fileTransferSendChunkedInitResponse",
-				"fileTransferSendChunkedEnd"				 => "fileTransferSendChunkedEnd",
-				"fileTransferSendChunkedEndResponse"		 => "fileTransferSendChunkedEndResponse",
-				"fileTransferRequestChunkedInit"			 => "fileTransferRequestChunkedInit",
-				"fileTransferRequestChunkedInitResponse"	 => "fileTransferRequestChunkedInitResponse",
-				"fileTransferRequestChunk"					 => "fileTransferRequestChunk",
-				"fileTransferRequestChunkResponse"			 => "fileTransferRequestChunkResponse",
-				"fileTransferRequestChunkedEnd"				 => "fileTransferRequestChunkedEnd",
-				"fileTransferRequestChunkedEndResponse"		 => "fileTransferRequestChunkedEndResponse",
+				"Login" => "Login",
+				"LoginResponse" => "LoginResponse",
+				"Logout" => "Logout",
+				"LogoutResponse" => "LogoutResponse",
+				"getProductionLines" => "getProductionLines",
+				"getProductionLinesResponse" => "getProductionLinesResponse",
+				"ProductionLine" => "ProductionLine",
+				"getDocumentSplitTypes" => "getDocumentSplitTypes",
+				"getDocumentSplitTypesResponse" => "getDocumentSplitTypesResponse",
+				"DocumentSplitType" => "DocumentSplitType",
+				"GetClasses" => "GetClasses",
+				"GetClassesResponse" => "GetClassesResponse",
+				"GetClassesResult" => "GetClassesResult",
+				"getAvailableFileVariants" => "getAvailableFileVariants",
+				"getAvailableFileVariantsResponse" => "getAvailableFileVariantsResponse",
+				"getVariantVaultID" => "getVariantVaultID",
+				"getVariantVaultIDResponse" => "getVariantVaultIDResponse",
+				"getRelativeFileURL" => "getRelativeFileURL",
+				"getRelativeFileURLResponse" => "getRelativeFileURLResponse",
+				"getAvailableAttributes" => "getAvailableAttributes",
+				"getAvailableAttributesResponse" => "getAvailableAttributesResponse",
+				"Attribute" => "Attribute",
+				"braArkivAttributeType" => "braArkivAttributeType",
+				"LookupValue" => "LookupValue",
+				"Pair" => "Pair",
+				"Address" => "Address",
+				"Matrikkel" => "Matrikkel",
+				"getLookupValues" => "getLookupValues",
+				"getLookupValuesResponse" => "getLookupValuesResponse",
+				"searchDocument" => "searchDocument",
+				"searchDocumentResponse" => "searchDocumentResponse",
+				"createDocument" => "createDocument",
+				"Document" => "Document",
+				"createDocumentResponse" => "createDocumentResponse",
+				"getDocument" => "getDocument",
+				"getDocumentResponse" => "getDocumentResponse",
+				"getAttribute" => "getAttribute",
+				"getAttributeResponse" => "getAttributeResponse",
+				"updateDocument" => "updateDocument",
+				"updateDocumentResponse" => "updateDocumentResponse",
+				"updateAttribute" => "updateAttribute",
+				"updateAttributeResponse" => "updateAttributeResponse",
+				"deleteDocument" => "deleteDocument",
+				"deleteDocumentResponse" => "deleteDocumentResponse",
+				"getFileName" => "getFileName",
+				"getFileNameResponse" => "getFileNameResponse",
+				"searchAndGetDocuments" => "searchAndGetDocuments",
+				"searchAndGetDocumentsResponse" => "searchAndGetDocumentsResponse",
+				"searchAndGetDocumentsWithVariants" => "searchAndGetDocumentsWithVariants",
+				"Variant" => "Variant",
+				"ExtendedDocument" => "ExtendedDocument",
+				"searchAndGetDocumentsWithVariantsResponse" => "searchAndGetDocumentsWithVariantsResponse",
+				"putFileAsByteArray" => "putFileAsByteArray",
+				"putFileAsByteArrayResponse" => "putFileAsByteArrayResponse",
+				"getFileAsByteArray" => "getFileAsByteArray",
+				"getFileAsByteArrayResponse" => "getFileAsByteArrayResponse",
+				"fileTransferSendChunk" => "fileTransferSendChunk",
+				"fileTransferSendChunkResponse" => "fileTransferSendChunkResponse",
+				"fileTransferSendChunkedInit" => "fileTransferSendChunkedInit",
+				"fileTransferSendChunkedInitResponse" => "fileTransferSendChunkedInitResponse",
+				"fileTransferSendChunkedEnd" => "fileTransferSendChunkedEnd",
+				"fileTransferSendChunkedEndResponse" => "fileTransferSendChunkedEndResponse",
+				"fileTransferRequestChunkedInit" => "fileTransferRequestChunkedInit",
+				"fileTransferRequestChunkedInitResponse" => "fileTransferRequestChunkedInitResponse",
+				"fileTransferRequestChunk" => "fileTransferRequestChunk",
+				"fileTransferRequestChunkResponse" => "fileTransferRequestChunkResponse",
+				"fileTransferRequestChunkedEnd" => "fileTransferRequestChunkedEnd",
+				"fileTransferRequestChunkedEndResponse" => "fileTransferRequestChunkedEndResponse",
 			);
 
 			/**
@@ -1818,11 +1818,11 @@
 			 * @param string $wsdl WSDL location for this service
 			 * @param array $options Options for the SoapClient
 			 */
-			public function __construct($wsdl = "/home/sn5607/BRA_Arkiv/services.braarkiv.xml", $options = array())
+			public function __construct( $wsdl = "/home/sn5607/BRA_Arkiv/services.braarkiv.xml", $options = array() )
 			{
-				foreach(self::$classmap as $wsdlClassName => $phpClassName)
+				foreach (self::$classmap as $wsdlClassName => $phpClassName)
 				{
-					if(!isset($options['classmap'][$wsdlClassName]))
+					if (!isset($options['classmap'][$wsdlClassName]))
 					{
 						$options['classmap'][$wsdlClassName] = $phpClassName;
 					}
@@ -1837,19 +1837,19 @@
 			 * @return boolean true if arguments match against validParameters
 			 * @throws Exception invalid function signature message
 			 */
-			public function _checkArguments($arguments, $validParameters)
+			public function _checkArguments( $arguments, $validParameters )
 			{
 				$variables = "";
-				foreach($arguments as $arg)
+				foreach ($arguments as $arg)
 				{
 					$type = gettype($arg);
-					if($type == "object")
+					if ($type == "object")
 					{
 						$type = get_class($arg);
 					}
 					$variables .= "(" . $type . ")";
 				}
-				if(!in_array($variables, $validParameters))
+				if (!in_array($variables, $validParameters))
 				{
 					throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 				}
@@ -1865,7 +1865,7 @@
 			 * @return LoginResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function Login($mixed = null)
+			public function Login( $mixed = null )
 			{
 				$validParameters = array(
 					"(Login)",
@@ -1885,7 +1885,7 @@
 			 * @return LogoutResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function Logout($mixed = null)
+			public function Logout( $mixed = null )
 			{
 				$validParameters = array(
 					"(Logout)",
@@ -1905,7 +1905,7 @@
 			 * @return getProductionLinesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getProductionLines($mixed = null)
+			public function getProductionLines( $mixed = null )
 			{
 				$validParameters = array(
 					"(getProductionLines)",
@@ -1925,7 +1925,7 @@
 			 * @return getDocumentSplitTypesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getDocumentSplitTypes($mixed = null)
+			public function getDocumentSplitTypes( $mixed = null )
 			{
 				$validParameters = array(
 					"(getDocumentSplitTypes)",
@@ -1945,7 +1945,7 @@
 			 * @return GetClassesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function GetClasses($mixed = null)
+			public function GetClasses( $mixed = null )
 			{
 				$validParameters = array(
 					"(GetClasses)",
@@ -1965,7 +1965,7 @@
 			 * @return getAvailableFileVariantsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAvailableFileVariants($mixed = null)
+			public function getAvailableFileVariants( $mixed = null )
 			{
 				$validParameters = array(
 					"(getAvailableFileVariants)",
@@ -1985,7 +1985,7 @@
 			 * @return getVariantVaultIDResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getVariantVaultID($mixed = null)
+			public function getVariantVaultID( $mixed = null )
 			{
 				$validParameters = array(
 					"(getVariantVaultID)",
@@ -2005,7 +2005,7 @@
 			 * @return getRelativeFileURLResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getRelativeFileURL($mixed = null)
+			public function getRelativeFileURL( $mixed = null )
 			{
 				$validParameters = array(
 					"(getRelativeFileURL)",
@@ -2025,7 +2025,7 @@
 			 * @return getAvailableAttributesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAvailableAttributes($mixed = null)
+			public function getAvailableAttributes( $mixed = null )
 			{
 				$validParameters = array(
 					"(getAvailableAttributes)",
@@ -2045,7 +2045,7 @@
 			 * @return getLookupValuesResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getLookupValues($mixed = null)
+			public function getLookupValues( $mixed = null )
 			{
 				$validParameters = array(
 					"(getLookupValues)",
@@ -2065,7 +2065,7 @@
 			 * @return searchDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchDocument($mixed = null)
+			public function searchDocument( $mixed = null )
 			{
 				$validParameters = array(
 					"(searchDocument)",
@@ -2085,7 +2085,7 @@
 			 * @return createDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function createDocument($mixed = null)
+			public function createDocument( $mixed = null )
 			{
 				$validParameters = array(
 					"(createDocument)",
@@ -2105,7 +2105,7 @@
 			 * @return getDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getDocument($mixed = null)
+			public function getDocument( $mixed = null )
 			{
 				$validParameters = array(
 					"(getDocument)",
@@ -2125,7 +2125,7 @@
 			 * @return getAttributeResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getAttribute($mixed = null)
+			public function getAttribute( $mixed = null )
 			{
 				$validParameters = array(
 					"(getAttribute)",
@@ -2145,7 +2145,7 @@
 			 * @return updateDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function updateDocument($mixed = null)
+			public function updateDocument( $mixed = null )
 			{
 				$validParameters = array(
 					"(updateDocument)",
@@ -2165,7 +2165,7 @@
 			 * @return updateAttributeResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function updateAttribute($mixed = null)
+			public function updateAttribute( $mixed = null )
 			{
 				$validParameters = array(
 					"(updateAttribute)",
@@ -2185,7 +2185,7 @@
 			 * @return deleteDocumentResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function deleteDocument($mixed = null)
+			public function deleteDocument( $mixed = null )
 			{
 				$validParameters = array(
 					"(deleteDocument)",
@@ -2205,7 +2205,7 @@
 			 * @return getFileNameResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getFileName($mixed = null)
+			public function getFileName( $mixed = null )
 			{
 				$validParameters = array(
 					"(getFileName)",
@@ -2225,7 +2225,7 @@
 			 * @return searchAndGetDocumentsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchAndGetDocuments($mixed = null)
+			public function searchAndGetDocuments( $mixed = null )
 			{
 				$validParameters = array(
 					"(searchAndGetDocuments)",
@@ -2245,7 +2245,7 @@
 			 * @return searchAndGetDocumentsWithVariantsResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function searchAndGetDocumentsWithVariants($mixed = null)
+			public function searchAndGetDocumentsWithVariants( $mixed = null )
 			{
 				$validParameters = array(
 					"(searchAndGetDocumentsWithVariants)",
@@ -2265,7 +2265,7 @@
 			 * @return putFileAsByteArrayResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function putFileAsByteArray($mixed = null)
+			public function putFileAsByteArray( $mixed = null )
 			{
 				$validParameters = array(
 					"(putFileAsByteArray)",
@@ -2285,7 +2285,7 @@
 			 * @return getFileAsByteArrayResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function getFileAsByteArray($mixed = null)
+			public function getFileAsByteArray( $mixed = null )
 			{
 				$validParameters = array(
 					"(getFileAsByteArray)",
@@ -2305,7 +2305,7 @@
 			 * @return fileTransferSendChunkResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunk($mixed = null)
+			public function fileTransferSendChunk( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferSendChunk)",
@@ -2325,7 +2325,7 @@
 			 * @return fileTransferSendChunkedInitResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunkedInit($mixed = null)
+			public function fileTransferSendChunkedInit( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferSendChunkedInit)",
@@ -2345,7 +2345,7 @@
 			 * @return fileTransferSendChunkedEndResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferSendChunkedEnd($mixed = null)
+			public function fileTransferSendChunkedEnd( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferSendChunkedEnd)",
@@ -2365,7 +2365,7 @@
 			 * @return fileTransferRequestChunkedInitResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunkedInit($mixed = null)
+			public function fileTransferRequestChunkedInit( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunkedInit)",
@@ -2385,7 +2385,7 @@
 			 * @return fileTransferRequestChunkResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunk($mixed = null)
+			public function fileTransferRequestChunk( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunk)",
@@ -2405,7 +2405,7 @@
 			 * @return fileTransferRequestChunkedEndResponse
 			 * @throws Exception invalid function signature message
 			 */
-			public function fileTransferRequestChunkedEnd($mixed = null)
+			public function fileTransferRequestChunkedEnd( $mixed = null )
 			{
 				$validParameters = array(
 					"(fileTransferRequestChunkedEnd)",

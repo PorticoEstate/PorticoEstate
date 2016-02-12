@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -42,22 +42,22 @@
 									<option value=''>
 										<xsl:value-of select="php:function('lang', 'Select...')" />
 									</option>
-						<xsl:for-each select="reservation/customer_types/*">
-							<option>
-								<xsl:if test="../../customer_type = local-name()">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
+									<xsl:for-each select="reservation/customer_types/*">
+										<option>
+											<xsl:if test="../../customer_type = local-name()">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
 											<xsl:attribute name="value">
 												<xsl:value-of select="local-name()"/>
 											</xsl:attribute>
-								<xsl:value-of select="php:function('lang', string(node()))"/>
-							</option>
-						</xsl:for-each>
-					</select>
+											<xsl:value-of select="php:function('lang', string(node()))"/>
+										</option>
+									</xsl:for-each>
+								</select>
 							</div>
 						</div>
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
-				<xsl:copy-of select="phpgw:booking_customer_identifier(reservation, 'Customer ID')"/>
+							<xsl:copy-of select="phpgw:booking_customer_identifier(reservation, 'Customer ID')"/>
 						</div>
 					</div>
 					<div class="pure-g">
@@ -86,11 +86,11 @@
 				</fieldset>
 			</div>
 		</div>
-			<div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" value="{php:function('lang', 'Save')}" class="pure-button pure-button-primary"/>
 			<a class="cancel pure-button pure-button-primary" href="{reservation/cancel_link}">
-					<xsl:value-of select="php:function('lang', 'Cancel')"/>
-				</a>
-			</div>
-		</form>
+				<xsl:value-of select="php:function('lang', 'Cancel')"/>
+			</a>
+		</div>
+	</form>
 </xsl:template>

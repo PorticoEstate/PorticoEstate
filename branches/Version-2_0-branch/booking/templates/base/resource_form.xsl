@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<script type="text/javascript">
 		var resource_id = "<xsl:value-of select="resource/id"/>";
 		var default_schema = "<xsl:value-of select="resource/activity_name"/>";
@@ -30,16 +30,16 @@
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
 						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
-					<select id="field_activity_id" name="activity_id">
-						<xsl:for-each select="activitydata/results">
-							<option value="{id}">
-								<xsl:if test="resource_id=id">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="name" />
-							</option>
-						</xsl:for-each>
-					</select>
+						<select id="field_activity_id" name="activity_id">
+							<xsl:for-each select="activitydata/results">
+								<option value="{id}">
+									<xsl:if test="resource_id=id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="name" />
+								</option>
+							</xsl:for-each>
+						</select>
 					</div>
 				</xsl:if>
 				<div class="pure-control-group">
@@ -81,8 +81,8 @@
 							<xsl:attribute name="data-validation-error-msg">
 								<xsl:value-of select="php:function('lang', 'Please enter a building name')" />
 							</xsl:attribute>
-							</xsl:if>
-						</input>
+						</xsl:if>
+					</input>
 					<div id="building_container" class="custom-container"></div>
 					<xsl:if test="resource/permission/write">
 						<a class='button'>
@@ -100,7 +100,7 @@
 						</a>
 					</xsl:if>
 
-					</div>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<div id="schema_name"></div>
@@ -175,25 +175,25 @@
 				</div>
 			</div>
 		</div>
-			<div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" id="button" class="pure-button pure-button-primary">
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test="new_form">
-								<xsl:value-of select="php:function('lang', 'Create')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="php:function('lang', 'Update')"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-				</input>
+				<xsl:attribute name="value">
+					<xsl:choose>
+						<xsl:when test="new_form">
+							<xsl:value-of select="php:function('lang', 'Create')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="php:function('lang', 'Update')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</input>
 			<input type="button" class="pure-button pure-button-primary" name="cancel">
 				<xsl:attribute name="onclick">window.location="<xsl:value-of select="resource/cancel_link"/>"</xsl:attribute>
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</xsl:attribute>
 			</input>
-			</div>
-		</form>
+		</div>
+	</form>
 </xsl:template>

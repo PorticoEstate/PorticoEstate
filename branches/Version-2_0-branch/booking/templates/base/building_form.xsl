@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -65,9 +65,9 @@
 					<label for="field_location_code_name">
 						<xsl:value-of select="php:function('lang', 'Location Code')" />
 					</label>
-						<input id="field_location_code" name="location_code" type="hidden" value="{building/location_code}"/>
-						<input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}"/>
-					</div>
+					<input id="field_location_code" name="location_code" type="hidden" value="{building/location_code}"/>
+					<input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}"/>
+				</div>
 				<div class="pure-control-group">
 					<label for="field_street">
 						<xsl:value-of select="php:function('lang', 'Street')"/>
@@ -253,27 +253,27 @@
 				</div>
 			</div>
 		</div>
-			<div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" class="button pure-button pure-button-primary">
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test="new_form">
-								<xsl:value-of select="php:function('lang', 'Create')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="php:function('lang', 'Save')"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-				</input>
+				<xsl:attribute name="value">
+					<xsl:choose>
+						<xsl:when test="new_form">
+							<xsl:value-of select="php:function('lang', 'Create')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="php:function('lang', 'Save')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</input>
 			<input type="button" class="pure-button pure-button-primary" name="cancel">
 				<xsl:attribute name="onclick">window.location="<xsl:value-of select="building/cancel_link"/>"</xsl:attribute>
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</xsl:attribute>
 			</input>
-			</div>
-		</form>
+		</div>
+	</form>
 	<script type="text/javascript">
 		<![CDATA[
         JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.properties&phpgw_return_as=json&',

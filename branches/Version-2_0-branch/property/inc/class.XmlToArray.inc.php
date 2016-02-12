@@ -153,25 +153,25 @@
 		 * @param   bool	$includeEmptyValues (optional) Defaults to no/false
 		 * @return  object  XmlToArray instance
 		 */
-		function __construct($encoding = NULL, $stripLinebreaks = NULL, $includeRootElement = NULL, $automaticUtf8Decoding = NULL, $includeEmptyValues = NULL)
+		function __construct( $encoding = NULL, $stripLinebreaks = NULL, $includeRootElement = NULL, $automaticUtf8Decoding = NULL, $includeEmptyValues = NULL )
 		{
-			if(is_string($encoding))
+			if (is_string($encoding))
 			{
 				$this->setEncoding($encoding);
 			}
-			if(is_bool($stripLinebreaks))
+			if (is_bool($stripLinebreaks))
 			{
 				$this->setStripsLinebreaks($stripLinebreaks);
 			}
-			if(is_bool($includeRootElement))
+			if (is_bool($includeRootElement))
 			{
 				$this->setIncludesRoot($includeRootElement);
 			}
-			if(is_bool($automaticUtf8Decoding))
+			if (is_bool($automaticUtf8Decoding))
 			{
 				$this->setDecodesUTF8Automaticly($automaticUtf8Decoding);
 			}
-			if(is_bool($includeEmptyValues))
+			if (is_bool($includeEmptyValues))
 			{
 				$this->setIncludesEmptyValues($includeEmptyValues);
 			}
@@ -187,10 +187,10 @@
 		 *
 		 * @param  string  $enc
 		 */
-		function setEncoding($enc)
+		function setEncoding( $enc )
 		{
 			$enc = strtoupper($enc);
-			if($enc != 'ISO-8859-1' && $enc != 'UTF-8' && $enc != 'US-ASCII')
+			if ($enc != 'ISO-8859-1' && $enc != 'UTF-8' && $enc != 'US-ASCII')
 			{
 				$this->_logError('setEncoding', 'Unsupported encoding specified. Using default/current.');
 				return;
@@ -209,7 +209,7 @@
 		/**
 		 * @param bool $b
 		 */
-		function setStripsLinebreaks($b)
+		function setStripsLinebreaks( $b )
 		{
 			$this->_strip_linebreaks = $b;
 		}
@@ -225,7 +225,7 @@
 		/**
 		 * @param int $i  CASE_LOWER or CASE_UPPER
 		 */
-		function setTagCase($i)
+		function setTagCase( $i )
 		{
 			$this->_lower_case_tags = ($i == CASE_LOWER);
 		}
@@ -236,7 +236,7 @@
 		 *
 		 * @param bool $b
 		 */
-		function setIncludesRoot($b)
+		function setIncludesRoot( $b )
 		{
 			$this->_includesRoot = $b;
 		}
@@ -255,7 +255,7 @@
 		 *
 		 * @param bool $b
 		 */
-		function setDecodesUTF8Automaticly($b)
+		function setDecodesUTF8Automaticly( $b )
 		{
 			$this->_automaticUtf8Decoding = $b;
 		}
@@ -274,7 +274,7 @@
 		 *
 		 * @param bool $b
 		 */
-		function setIncludesEmptyValues($b)
+		function setIncludesEmptyValues( $b )
 		{
 			$this->_include_empty_values = $b;
 		}
@@ -308,11 +308,11 @@
 		 * 									   or array(&$object, 'function')
 		 * @return  bool  Success?
 		 */
-		function setValueModifier($function)
+		function setValueModifier( $function )
 		{
-			if(is_string($function))
+			if (is_string($function))
 			{
-				if(function_exists($function))
+				if (function_exists($function))
 				{
 					$this->_valueModifier = $function;
 					return true;
@@ -323,7 +323,7 @@
 					return false;
 				}
 			}
-			else if(is_array($function))
+			else if (is_array($function))
 			{
 				$this->_valueModifier = $function;
 			}
@@ -349,9 +349,9 @@
 		 * @param string $file
 		 * @return array
 		 */
-		function parseFile($file)
+		function parseFile( $file )
 		{
-			if(!file_exists($file))
+			if (!file_exists($file))
 			{
 				$this->_logError('parseFile', 'The file "' . $file . '" can not be found!');
 				return array();
@@ -362,11 +362,11 @@
 		/**
 		 * @access private
 		 */
-		function _logError($function, $msg)
+		function _logError( $function, $msg )
 		{
 			list($usec, $sec) = explode(" ", microtime());
 			$time = ((float)$usec + (float)$sec) - $this->_error_start_timer;
-			$this->_error_trace[]	 = array($function, $msg, $time);
+			$this->_error_trace[] = array($function, $msg, $time);
 		}
 
 		/**
@@ -376,11 +376,11 @@
 		 */
 		function errors()
 		{
-			if(count($this->_error_trace) == 0)
+			if (count($this->_error_trace) == 0)
 				return NULL;
-			$s	 = '';
+			$s = '';
 			$len = count($this->_error_trace) - 1;
-			for($i = $len; $i > -1; $i--)
+			for ($i = $len; $i > -1; $i--)
 			{
 				$s .= '[' . round($this->_error_trace[$i][2] * 1000, 2) . ' ms] <b>XmlToArray2->' . $this->_error_trace[$i][0] . '()</b> ' . $this->_error_trace[$i][1] . "<br/>";
 			}
@@ -393,17 +393,17 @@
 		 *
 		 * @access private
 		 */
-		function _onValue($value)
+		function _onValue( $value )
 		{
-			if($this->_strip_linebreaks)
+			if ($this->_strip_linebreaks)
 			{
 				$value = preg_replace('/[\r\n]+/', ' ', $value);
 			}
-			if($this->_decodeUtf8)
+			if ($this->_decodeUtf8)
 			{
 				$value = utf8_decode($value);
 			}
-			if($this->_valueModifier != NULL)
+			if ($this->_valueModifier != NULL)
 			{
 				$value = @call_user_func($this->_valueModifier, $value);
 			}
@@ -415,9 +415,9 @@
 		 *
 		 * @access private
 		 */
-		function _onAttributes($attr)
+		function _onAttributes( $attr )
 		{
-			foreach($attr as $k => $v)
+			foreach ($attr as $k => $v)
 			{
 				$attr[$k] = $this->_onValue($v);
 			}
@@ -430,20 +430,20 @@
 		 * @param string $data
 		 * @return array
 		 */
-		function parse($data)
+		function parse( $data )
 		{
 			$data = trim($data);
-			$err	 = false;
+			$err = false;
 
-			if($data == '')
+			if ($data == '')
 			{
 				$this->_logError('parse', 'Empty data');
 				return array();
 			}
 
-			if($this->_automaticUtf8Decoding)
+			if ($this->_automaticUtf8Decoding)
 			{
-				if($this->_seems_utf8($data))
+				if ($this->_seems_utf8($data))
 				{
 					$this->_decodeUtf8 = true;
 				}
@@ -454,10 +454,10 @@
 			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 0);
 			xml_parse_into_struct($parser, $data, $vals, $index) or $err = true;
 
-			if($err)
+			if ($err)
 			{
 				$this->_logError('parse', 'XML parser failed: '
-				. ucfirst(xml_error_string(xml_get_error_code($parser))));
+					. ucfirst(xml_error_string(xml_get_error_code($parser))));
 				xml_parser_free($parser);
 				return;
 			}
@@ -467,11 +467,11 @@
 			$i = 0;
 
 			$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
-			if(isset($vals[$i]['attributes']))
+			if (isset($vals[$i]['attributes']))
 			{
-				if($this->get_attributes)
+				if ($this->get_attributes)
 				{
-					$tree[$tagname][]['@']	 = $vals[$i]['attributes'];
+					$tree[$tagname][]['@'] = $vals[$i]['attributes'];
 					$index = count($tree[$tagname]) - 1;
 					$tree[$tagname][$index] = array_merge($tree[$tagname][$index], $this->_getChildren($vals, $i));
 				}
@@ -485,10 +485,10 @@
 				$tree[$tagname][] = $this->_getChildren($vals, $i);
 			}
 
-			if(!$this->_includesRoot)
+			if (!$this->_includesRoot)
 			{
 				$keys = array_keys($tree);
-				$tree	 = $tree[$keys[0]][0];
+				$tree = $tree[$keys[0]][0];
 			}
 			return $tree;
 		}
@@ -497,30 +497,30 @@
 		 * @access private
 		 * @return mixed
 		 */
-		function _getChildren($vals, &$i)
+		function _getChildren( $vals, &$i )
 		{
 			$children = array(); // Contains node data
-			if(isset($vals[$i]['tag']))
+			if (isset($vals[$i]['tag']))
 			{
-				if(isset($vals[$i]['value']) && trim($vals[$i]['value']) != '')
+				if (isset($vals[$i]['value']) && trim($vals[$i]['value']) != '')
 				{
 					$children = $this->_onValue($vals[$i]['value']);
 				}
-				while(++$i < count($vals))
+				while (++$i < count($vals))
 				{
-					switch($vals[$i]['type'])
+					switch ($vals[$i]['type'])
 					{
 						case 'cdata':
-							if(isset($children['#']))
+							if (isset($children['#']))
 							{
-								if(trim($vals[$i]['value']) != '')
+								if (trim($vals[$i]['value']) != '')
 								{
 									$children['#'] .= $vals[$i]['value'];
 								}
 							}
 							else
 							{
-								if(trim($vals[$i]['value']) != '')
+								if (trim($vals[$i]['value']) != '')
 								{
 									$children['#'] = $vals[$i]['value'];
 								}
@@ -529,17 +529,17 @@
 
 						case 'complete':
 							$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
-							if(isset($vals[$i]['attributes']))
+							if (isset($vals[$i]['attributes']))
 							{
-								if($this->get_attributes)
+								if ($this->get_attributes)
 								{
-									$children[$tagname][]['@']	 = $vals[$i]['attributes'];
+									$children[$tagname][]['@'] = $vals[$i]['attributes'];
 									$index = count($children[$tagname]) - 1;
 								}
 
-								if(isset($vals[$i]['value']))
+								if (isset($vals[$i]['value']))
 								{
-									if($this->get_attributes)
+									if ($this->get_attributes)
 									{
 										$children[$tagname][] = $this->_onValue($vals[$i]['value']);
 									}
@@ -548,18 +548,18 @@
 										$children[$tagname] = $this->_onValue($vals[$i]['value']);
 									}
 								}
-								else if($this->_include_empty_values)
+								else if ($this->_include_empty_values)
 								{
 									$children[$tagname] = '';
 								}
 							}
 							else
 							{
-								if(isset($vals[$i]['value']))
+								if (isset($vals[$i]['value']))
 								{
 									$children[$tagname] = $this->_onValue($vals[$i]['value']);
 								}
-								else if($this->_include_empty_values)
+								else if ($this->_include_empty_values)
 								{
 									$children[$tagname] = '';
 								}
@@ -568,9 +568,9 @@
 
 						case 'open':
 							$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
-							if(isset($vals[$i]['attributes']))
+							if (isset($vals[$i]['attributes']))
 							{
-								if($this->get_attributes)
+								if ($this->get_attributes)
 								{
 									$children[$tagname][]['@'] = $this->_onAttributes($vals[$i]['attributes']);
 									//	$index = count($children[$tagname])-1;
@@ -598,27 +598,27 @@
 		/**
 		 * @access private
 		 */
-		function _seems_utf8($Str)
+		function _seems_utf8( $Str )
 		{
-			for($i = 0; $i < strlen($Str); $i++)
+			for ($i = 0; $i < strlen($Str); $i++)
 			{
-				if(ord($Str[$i]) < 0x80)
+				if (ord($Str[$i]) < 0x80)
 					continue;# 0bbbbbbb
-				elseif((ord($Str[$i]) & 0xE0) == 0xC0)
-					$n	 = 1;# 110bbbbb
-				elseif((ord($Str[$i]) & 0xF0) == 0xE0)
-					$n	 = 2;# 1110bbbb
-				elseif((ord($Str[$i]) & 0xF8) == 0xF0)
-					$n	 = 3;# 11110bbb
-				elseif((ord($Str[$i]) & 0xFC) == 0xF8)
-					$n	 = 4;# 111110bb
-				elseif((ord($Str[$i]) & 0xFE) == 0xFC)
-					$n	 = 5;# 1111110b
+				elseif ((ord($Str[$i]) & 0xE0) == 0xC0)
+					$n = 1;# 110bbbbb
+				elseif ((ord($Str[$i]) & 0xF0) == 0xE0)
+					$n = 2;# 1110bbbb
+				elseif ((ord($Str[$i]) & 0xF8) == 0xF0)
+					$n = 3;# 11110bbb
+				elseif ((ord($Str[$i]) & 0xFC) == 0xF8)
+					$n = 4;# 111110bb
+				elseif ((ord($Str[$i]) & 0xFE) == 0xFC)
+					$n = 5;# 1111110b
 				else
 					return false;# Does not match any model
-				for($j = 0; $j < $n; $j++) # n bytes matching 10bbbbbb follow ?
+				for ($j = 0; $j < $n; $j++) # n bytes matching 10bbbbbb follow ?
 				{
-					if(( ++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80))
+					if (( ++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80))
 					{
 						return false;
 					}

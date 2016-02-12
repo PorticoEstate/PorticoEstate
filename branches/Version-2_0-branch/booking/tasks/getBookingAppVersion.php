@@ -1,7 +1,7 @@
 <?php
 	require_once dirname(__FILE__) . '/entryPoint.php';
-	
-	function getBookingAppVersion(PhpgwContext $c)
+
+	function getBookingAppVersion( PhpgwContext $c )
 	{
 		$sql = "SELECT app_version FROM phpgw_applications WHERE app_name = 'booking' LIMIT 1";
 		echo $sql . "\n";

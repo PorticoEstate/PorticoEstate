@@ -12,18 +12,18 @@
 	 * @version $Id$
 	 */
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
 	/*
@@ -38,8 +38,8 @@
 	{
 
 		/**
-		* @var string $fakebase Fake base directory.
-		*/
+		 * @var string $fakebase Fake base directory.
+		 */
 		var $fakebase = '/property';
 		var $rootdir;
 
@@ -50,11 +50,11 @@
 		 *
 		 * @return
 		 */
-		function __construct($fakebase = '/property')
+		function __construct( $fakebase = '/property' )
 		{
-			$this->vfs     = CreateObject('phpgwapi.vfs');
+			$this->vfs = CreateObject('phpgwapi.vfs');
 			$this->rootdir = $this->vfs->basedir;
-			if($fakebase)
+			if ($fakebase)
 			{
 				$this->fakebase = $fakebase;
 			}
@@ -68,9 +68,9 @@
 		 *
 		 * @return null
 		 */
-		public function set_account_id($account_id = 0)
+		public function set_account_id( $account_id = 0 )
 		{
-			if($account_id)
+			if ($account_id)
 			{
 				$this->vfs->working_id = $account_id;
 			}
@@ -83,22 +83,22 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each catalog down the path
 		 */
-		function create_document_dir($type)
+		function create_document_dir( $type )
 		{
 			$receipt = array();
 
-			if(!$this->vfs->file_exists(array(
-				'string' => $this->fakebase,
-				'relatives' => array(RELATIVE_NONE)
-			)))
+			if (!$this->vfs->file_exists(array(
+					'string' => $this->fakebase,
+					'relatives' => array(RELATIVE_NONE)
+				)))
 			{
 				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir(array(
-					'string' => $this->fakebase,
-					'relatives' => array(
-						RELATIVE_NONE
-					)
-				)))
+				if (!$this->vfs->mkdir(array(
+						'string' => $this->fakebase,
+						'relatives' => array(
+							RELATIVE_NONE
+						)
+					)))
 				{
 					$receipt['error'][] = array('msg' => lang('failed to create directory') . ' :' . $this->fakebase);
 				}
@@ -112,22 +112,22 @@
 			$type_part = explode('/', $type);
 
 			$catalog = '';
-			foreach($type_part as $entry)
+			foreach ($type_part as $entry)
 			{
 				$catalog .= "/{$entry}";
 
-				if(!$this->vfs->file_exists(array(
-					'string' => "{$this->fakebase}{$catalog}",
-					'relatives' => array(RELATIVE_NONE)
-				)))
+				if (!$this->vfs->file_exists(array(
+						'string' => "{$this->fakebase}{$catalog}",
+						'relatives' => array(RELATIVE_NONE)
+					)))
 				{
 					$this->vfs->override_acl = 1;
-					if(!$this->vfs->mkdir(array(
-						'string' => "{$this->fakebase}{$catalog}",
-						'relatives' => array(
-							RELATIVE_NONE
-						)
-					)))
+					if (!$this->vfs->mkdir(array(
+							'string' => "{$this->fakebase}{$catalog}",
+							'relatives' => array(
+								RELATIVE_NONE
+							)
+						)))
 					{
 						$receipt['error'][] = array('msg' => lang('failed to create directory') . ' :' . $this->fakebase . $catalog);
 					}
@@ -150,29 +150,29 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each file
 		 */
-		function delete_file($path, $values)
+		function delete_file( $path, $values )
 		{
 			$receipt = array();
 
-			foreach($values['file_action'] as $file_name)
+			foreach ($values['file_action'] as $file_name)
 			{
 				$file_name = html_entity_decode($file_name);
-				
+
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
-				if($this->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => array(RELATIVE_NONE)
-				)))
+				if ($this->vfs->file_exists(array(
+						'string' => $file,
+						'relatives' => array(RELATIVE_NONE)
+					)))
 				{
 					$this->vfs->override_acl = 1;
 
-					if(!$this->vfs->rm(array(
-						'string' => $file,
-						'relatives' => array(
-							RELATIVE_NONE
-						)
-					)))
+					if (!$this->vfs->rm(array(
+							'string' => $file,
+							'relatives' => array(
+								RELATIVE_NONE
+							)
+						)))
 					{
 						$receipt['error'][] = array('msg' => lang('failed to delete file') . ' :' . $this->fakebase . $path . $file_name);
 					}
@@ -194,43 +194,43 @@
 		 *
 		 * @return null
 		 */
-		function view_file($type = '', $file = '', $jasper = '')
+		function view_file( $type = '', $file = '', $jasper = '' )
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			if(!$file)
+			if (!$file)
 			{
 				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
-				$id        = phpgw::get_var('id');
-				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
+				$id = phpgw::get_var('id');
+				$file = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 
 			// prevent path traversal
-			if(preg_match('/\.\./', $file))
+			if (preg_match('/\.\./', $file))
 			{
 				return false;
 			}
 
-			if($this->vfs->file_exists(array(
-				'string' => $file,
-				'relatives' => array(RELATIVE_NONE)
-			)))
+			if ($this->vfs->file_exists(array(
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE)
+				)))
 			{
 				$ls_array = $this->vfs->ls(array(
-					'string'		=>  $file,
-					'relatives' 	=> array(RELATIVE_NONE),
-					'checksubdirs'	=> false,
-					'nofiles'		=> true
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE),
+					'checksubdirs' => false,
+					'nofiles' => true
 				));
 
-				if(!$jasper)
+				if (!$jasper)
 				{
 					$this->vfs->override_acl = 1;
 
 					$document = $this->vfs->read(array(
-						'string' 	=> $file,
+						'string' => $file,
 						'relatives' => array(RELATIVE_NONE)));
 
 					$this->vfs->override_acl = 0;
@@ -243,13 +243,13 @@
 				{
 					$output_type = 'PDF';
 
-					$report_source		= "{$this->rootdir}{$file}";
-					$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
+					$report_source = "{$this->rootdir}{$file}";
+					$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
 					try
 					{
 						$jasper_wrapper->execute('', $output_type, $report_source);
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
 						$error = $e->getMessage();
 						//FIXME Do something clever with the error
@@ -267,26 +267,26 @@
 		 *
 		 * @return array Array with filecontent
 		 */
-		function get_attachments($path, $values)
+		function get_attachments( $path, $values )
 		{
 			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
-			foreach($values as $file_name)
+			foreach ($values as $file_name)
 			{
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
-				if($this->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => array(RELATIVE_NONE))))
+				if ($this->vfs->file_exists(array(
+						'string' => $file,
+						'relatives' => array(RELATIVE_NONE))))
 				{
-					$mime       = $mime_magic->filename2mime($file_name);
+					$mime = $mime_magic->filename2mime($file_name);
 
 					$attachments[] = array
 						(
-							'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
-							'name' => $file_name,
-							'type' => $mime
-						);
+						'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+						'name' => $file_name,
+						'type' => $mime
+					);
 				}
 			}
 			return $attachments;

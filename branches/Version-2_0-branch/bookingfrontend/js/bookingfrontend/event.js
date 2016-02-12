@@ -1,9 +1,11 @@
 var building_id_selection = "";
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true), 'field_building_name', 'field_building_id', 'building_container');
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.index'}, true), 'field_org_name', 'field_org_id', 'org_container');
 
-	$("#field_activity").change(function () {
+	$("#field_activity").change(function ()
+	{
 		var oArgs = {menuaction: 'bookingfrontend.uiapplication.get_activity_data', activity_id: $(this).val()};
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
@@ -11,7 +13,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				var html_agegroups = '';
 				var html_audience = '';
 
@@ -49,28 +52,36 @@ $(document).ready(function () {
 	});
 });
 
-$(window).load(function () {
+$(window).load(function ()
+{
 	var building_id = $('#field_building_id').val();
-	if (building_id) {
+	if (building_id)
+	{
 		populateTableChkResources(building_id, initialSelection);
 		building_id_selection = building_id;
 	}
-	$("#field_building_name").on("autocompleteselect", function (event, ui) {
+	$("#field_building_name").on("autocompleteselect", function (event, ui)
+	{
 		var building_id = ui.item.value;
-		if (building_id != building_id_selection) {
+		if (building_id != building_id_selection)
+		{
 			populateTableChkResources(building_id, []);
 			building_id_selection = building_id;
 		}
 	});
 });
 
-if ($.formUtils) {
+if ($.formUtils)
+{
 	$.formUtils.addValidator({
 		name: 'target_audience',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var n = 0;
-			$('#audience input[name="audience[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('#audience input[name="audience[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -83,10 +94,13 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'number_participants',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var n = 0;
-			$('#agegroup_tbody input').each(function () {
-				if ($(this).val() != "" && $(this).val() > 0) {
+			$('#agegroup_tbody input').each(function ()
+			{
+				if ($(this).val() != "" && $(this).val() > 0)
+				{
 					n++;
 				}
 			});
@@ -99,10 +113,13 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'application_resources',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			$('#resources_container table input[name="resources[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('#resources_container table input[name="resources[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -115,12 +132,14 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'customer_identifier',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var v = true;
 			var customer_ssn = $('#field_customer_ssn').val();
 			var customer_organization_number = $('#field_customer_organization_number').val();
 			var cost = $('#field_cost').val();
-			if ((customer_ssn == "" && customer_organization_number == "") && (cost > 0)) {
+			if ((customer_ssn == "" && customer_organization_number == "") && (cost > 0))
+			{
 				v = false;
 			}
 			return v;
@@ -131,24 +150,34 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'application_dates',
-		validatorFunction: function (value, $el, config, languaje, $form) {
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
 			var n = 0;
-			if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
+			if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0)
+			{
 				return false;
 			}
-			$('input[name="from_[]"]').each(function () {
-				if ($(this).val() == "") {
+			$('input[name="from_[]"]').each(function ()
+			{
+				if ($(this).val() == "")
+				{
 					$($(this).addClass("error").css("border-color", "red"));
 					n++;
-				} else {
+				}
+				else
+				{
 					$($(this).removeClass("error").css("border-color", ""));
 				}
 			});
-			$('input[name="to_[]"]').each(function () {
-				if ($(this).val() == "") {
+			$('input[name="to_[]"]').each(function ()
+			{
+				if ($(this).val() == "")
+				{
 					$($(this).addClass("error").css("border-color", "red"));
 					n++;
-				} else {
+				}
+				else
+				{
 					$($(this).removeClass("error").css("border-color", ""));
 				}
 			});
@@ -160,13 +189,19 @@ if ($.formUtils) {
 	});
 }
 
-function populateTableChkResources(building_id, selection) {
+function populateTableChkResources(building_id, selection)
+{
 	var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id}, true);
 	var container = 'resources_container';
-	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}
+					]}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+	];
 	populateTableChk(url, container, colDefsResources);
 }
 
-function populateTableChk(url, container, colDefs) {
+function populateTableChk(url, container, colDefs)
+{
 	createTable(container, url, colDefs);
 }

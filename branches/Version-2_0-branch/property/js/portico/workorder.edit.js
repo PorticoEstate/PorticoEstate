@@ -1,8 +1,10 @@
 
 var vendor_id;
 
-$(document).ready(function () {
-	$('form[name=form]').submit(function (e) {
+$(document).ready(function ()
+{
+	$('form[name=form]').submit(function (e)
+	{
 		e.preventDefault();
 
 		if (!validate_form())
@@ -22,14 +24,16 @@ function check_and_submit_valid_session()
 		type: 'POST',
 		dataType: 'json',
 		url: strURL,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				if (data['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
 					JqueryPortico.lightboxlogin();//defined in common.js
-				} else
+				}
+				else
 				{
 					document.form.submit();
 				}
@@ -94,7 +98,7 @@ this.showlightbox_manual_invoide = function (workorder_id)
 
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true
-				//	closejs:function(){closeJS_local()}
+			//	closejs:function(){closeJS_local()}
 	});
 }
 
@@ -132,13 +136,15 @@ window.addEventListener("load", function ()
 		if (d.attachEvent)
 		{
 			d.attachEvent('onpropertychange', onDOMAttrModified, false);
-		} else
+		}
+		else
 		{
 			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
 		}
 	}
 });
 
-JqueryPortico.FormatterActive = function (key, oData) {
+JqueryPortico.FormatterActive = function (key, oData)
+{
 	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
 };

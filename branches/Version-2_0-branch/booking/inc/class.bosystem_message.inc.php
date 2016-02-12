@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('booking.bocommon');
-	
+
 	class booking_bosystem_message extends booking_bocommon
 	{
 

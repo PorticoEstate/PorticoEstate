@@ -1,3 +1,4 @@
-  <!-- $Id$ -->
-	<xsl:template name="dummy">
-	</xsl:template>
+  
+<!-- $Id$ -->
+<xsl:template name="dummy">
+</xsl:template>

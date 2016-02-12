@@ -2,7 +2,7 @@
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'unit', 'inc/model/');
 	include_class('rental', 'contract', 'inc/model/');
-	
+
 	/**
 	 * Class that represents a rental composite
 	 *
@@ -20,143 +20,143 @@
 		protected $custom_house_number;
 		protected $custom_postcode;
 		protected $custom_place;
-        protected $object_type_id;
-        protected $area;
-        protected $status;
-        protected $furnish_type_id;
-        protected $standard_id;
+		protected $object_type_id;
+		protected $area;
+		protected $status;
+		protected $furnish_type_id;
+		protected $standard_id;
 		protected $units;
 		protected $contracts;
 		protected static $furnish_types_arr;
-		
+
 		/**
 		 * Constructor.  Takes an optional ID.  If a composite is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			parent::__construct($id);
 			$this->units = array();
 			$this->contracts = array();
 		}
-		
+
 		/**
 		 * Adds a composite to the composite object. Note that this method is
 		 * meant for populating the object and will not fetch anything from
 		 * the database.
 		 * @param $unit to add to object.
 		 */
-		public function add_unit($new_unit)
+		public function add_unit( $new_unit )
 		{
 			$this->units[] = $new_unit;
 		}
-		
+
 		/**
 		 * Adds a contract to the contracts array sorted by end date. Note that this method is
 		 * meant for populating the object and will not fetch/insert anything from
 		 * the database.
 		 * @param $unit to add to object.
 		 */
-		public function add_contract($new_contract)
+		public function add_contract( $new_contract )
 		{
 			$temp_contracts = array();
-			$added = false; 
-			
-			foreach($this->contracts as $contract)
-			{	
-				if($added == false & $contract->get_contract_date()->get_end_date() == 0)
+			$added = false;
+
+			foreach ($this->contracts as $contract)
+			{
+				if ($added == false & $contract->get_contract_date()->get_end_date() == 0)
 				{
 					$temp_contracts[] = $new_contract;
 					$temp_contracts[] = $contract;
 					$added = true;
 				}
-				else if($added == false & $new_contract->get_contract_date()->get_end_date() == 0)
+				else if ($added == false & $new_contract->get_contract_date()->get_end_date() == 0)
 				{
 					$temp_contracts[] = $contract;
 					$temp_contracts[] = $new_contract;
 					$added = true;
 				}
-				else if($added == false & $contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
+				else if ($added == false & $contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
 				{
 					$temp_contracts[] = $contract;
 				}
-				else if($added == false & !$contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
+				else if ($added == false & !$contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
 				{
 					$temp_contracts[] = $new_contract;
 					$temp_contracts[] = $contract;
 					$added = true;
 				}
-				else if($added == true)
+				else if ($added == true)
 				{
 					$temp_contracts[] = $contract;
 				}
-			}	
-			
-			if($added == false)
+			}
+
+			if ($added == false)
 			{
 				$temp_contracts[] = $new_contract;
 			}
-			
+
 			$this->contracts = &$temp_contracts;
 		}
-		
+
 		/**
 		 * Checks if a unit is already added to the composite.
 		 * 
 		 * @param $location_code string with location code.
 		 * @return boolean true if unit is added, false if not.
 		 */
-		public function contains_unit($location_code)
+		public function contains_unit( $location_code )
 		{
-			foreach($this->units as $unit)
+			foreach ($this->units as $unit)
 			{
-				if($location_code == $unit->get_location_code())
+				if ($location_code == $unit->get_location_code())
 				{
 					return true;
 				}
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Checks if a contract is already added to the composite.
 		 * 
 		 * @param $contract_id int with contract id.
 		 * @return boolean true if contract is added, false if not.
 		 */
-		public function contains_contract($contract_id)
+		public function contains_contract( $contract_id )
 		{
-			foreach($this->contracts as $contract)
+			foreach ($this->contracts as $contract)
 			{
-				if($contract_id == $contract->get_id())
+				if ($contract_id == $contract->get_id())
 				{
 					return true;
 				}
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Remove a given rental unit from this rental_composite. Note that the composite is not updated
 		 * in the database until store() is called.
 		 * 
 		 * @param $unit_to_remove the rental_unit to remove
 		 */
-		public function remove_unit($unit_to_remove)
+		public function remove_unit( $unit_to_remove )
 		{
 			$units = $this->get_units();
-			
-			foreach($this->get_units() as $index => $unit)
+
+			foreach ($this->get_units() as $index => $unit)
 			{
-				if($unit->get_location_id() == $unit_to_remove->get_location_id())
+				if ($unit->get_location_id() == $unit_to_remove->get_location_id())
 				{
 					unset($this->rental_units[$index]);
 				}
 			}
 		}
-		
+
 		/**
 		 * Get the rental_unit objects associated with this composite
 		 * 
@@ -166,104 +166,122 @@
 		 * @param $results how many results to return
 		 * @return rental_unit[]
 		 */
-		public function get_units($sort = null, $dir = 'asc', $start = 0, $results = null)
+		public function get_units( $sort = null, $dir = 'asc', $start = 0, $results = null )
 		{
-			return $this->units; 
+			return $this->units;
 		}
-		
-		public function set_description($description)
+
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
-		
+
 		public function get_description()
-		{ return $this->description;}
-		
-		public function set_is_active($is_active)
+		{
+			return $this->description;
+		}
+
+		public function set_is_active( $is_active )
 		{
 			$this->is_active = (boolean)$is_active;
 		}
-		
+
 		public function is_active()
-		{ return $this->is_active;}
-		
-		public function set_name($name)
+		{
+			return $this->is_active;
+		}
+
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
-		
+
 		public function get_name()
-		{ return $this->name;}
-		
-		public function set_has_custom_address($has_custom_address)
+		{
+			return $this->name;
+		}
+
+		public function set_has_custom_address( $has_custom_address )
 		{
 			$this->has_custom_address = $has_custom_address;
 		}
-		
+
 		public function has_custom_address()
-		{ return $this->has_custom_address;}
-		
-		public function set_custom_postcode($custom_postcode)
+		{
+			return $this->has_custom_address;
+		}
+
+		public function set_custom_postcode( $custom_postcode )
 		{
 			$this->custom_postcode = $custom_postcode;
 		}
-		
-		public function set_custom_address_1($custom_address_1)
+
+		public function set_custom_address_1( $custom_address_1 )
 		{
 			$this->custom_address_1 = $custom_address_1;
 		}
-	
+
 		public function get_custom_address_1()
-		{ return $this->custom_address_1;}
-			
-		public function set_custom_address_2($custom_address_2)
+		{
+			return $this->custom_address_1;
+		}
+
+		public function set_custom_address_2( $custom_address_2 )
 		{
 			$this->custom_address_2 = $custom_address_2;
 		}
-	
+
 		public function get_custom_address_2()
-		{ return $this->custom_address_2;}
-			
+		{
+			return $this->custom_address_2;
+		}
+
 		public function get_custom_postcode()
-		{ return $this->custom_postcode;}
-		
-		public function set_custom_place($custom_place)
+		{
+			return $this->custom_postcode;
+		}
+
+		public function set_custom_place( $custom_place )
 		{
 			$this->custom_place = $custom_place;
 		}
-		
-		public function set_custom_house_number($custom_house_number)
+
+		public function set_custom_house_number( $custom_house_number )
 		{
 			$this->custom_house_number = $custom_house_number;
 		}
-	
+
 		public function get_custom_house_number()
-		{ return $this->custom_house_number;}
-		
+		{
+			return $this->custom_house_number;
+		}
+
 		public function get_custom_place()
-		{ return $this->custom_place;}
-		
+		{
+			return $this->custom_place;
+		}
+
 		public function get_area_gros()
 		{
 			$area = 0;
-			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			foreach ($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
-				if($location != null) // There is an underlying property location
+				if ($location != null) // There is an underlying property location
 				{
 					$area += $location->get_area_gros();
 				}
 			}
 			return $area;
 		}
-		
+
 		public function get_area_net()
 		{
 			$area = 0;
-			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			foreach ($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
-				if($location != null) // There is an underlying property location
+				if ($location != null) // There is an underlying property location
 				{
 					$area += $location->get_area_net();
 				}
@@ -271,102 +289,102 @@
 			return $area;
 		}
 
-		public function set_object_type_id(int $obj_type)
+		public function set_object_type_id( int $obj_type )
 		{
-            $this->object_type_id = $obj_type;
-        }
+			$this->object_type_id = $obj_type;
+		}
 
 		public function get_object_type_id()
 		{
 			return (int)$this->object_type_id;
-        }
-        
-		public function set_furnish_type_id(int $furnish_type)
+		}
+
+		public function set_furnish_type_id( int $furnish_type )
 		{
-            $this->furnish_type_id = $furnish_type;
-        }
-        
+			$this->furnish_type_id = $furnish_type;
+		}
+
 		public function get_furnish_type_id()
 		{
 			return (int)$this->furnish_type_id;
-        }
-      
+		}
+
 		public function get_furnish_type()
 		{
-			
+
 			$furnish_types = $this->get_furnish_types();
-			
+
 			return $furnish_types[$this->get_furnish_type_id()];
-        }
-        
+		}
+
 		public static function get_furnish_types()
 		{
-			
-			self::$furnish_types_arr = array( 
-												0 => lang('furnish_type_not_specified'), 
-												1 => lang('furnish_type_furnished'), 
-												2 => lang('furnish_type_partly_furnished'), 
-												3 => lang('furnish_type_not_furnished') 
-								   			);
-			
-        	return self::$furnish_types_arr;
-    	}
 
-		public function set_standard_id($standard_id)
+			self::$furnish_types_arr = array(
+				0 => lang('furnish_type_not_specified'),
+				1 => lang('furnish_type_furnished'),
+				2 => lang('furnish_type_partly_furnished'),
+				3 => lang('furnish_type_not_furnished')
+			);
+
+			return self::$furnish_types_arr;
+		}
+
+		public function set_standard_id( $standard_id )
 		{
 //			_debug_array($standard_id);die();
 			$this->standard_id = (int)$standard_id;
-        }
+		}
 
 		public function get_standard_id()
 		{
 			return (int)$this->standard_id;
-        }
+		}
 
 		/**
 		 * Fetch composite standards on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
 		 * @return array
 		 */
-		public function get_standards($selected)
+		public function get_standards( $selected )
 		{
-			if($composite_standards = execMethod('property.bogeneric.get_list', array('type'		 => 'composite_standard',
-				'selected'	 => $selected)))
+			if ($composite_standards = execMethod('property.bogeneric.get_list', array('type' => 'composite_standard',
+				'selected' => $selected)))
 			{
 				array_unshift($composite_standards, array('id' => '', 'name' => lang('none')));
 			}
 			return $composite_standards;
-        }
+		}
 
-		public function set_area($area)
+		public function set_area( $area )
 		{
-            $this->area = $area;
-        }
+			$this->area = $area;
+		}
 
 		public function get_area()
 		{
-            return $this->area;
-        }
-        
-		public function set_status($status)
+			return $this->area;
+		}
+
+		public function set_status( $status )
 		{
-            $this->status = $status;
-        }
+			$this->status = $status;
+		}
 
 		public function get_status()
 		{
-            return $this->status;
-        }
-        
-		public function set_contracts($contracts)
+			return $this->status;
+		}
+
+		public function set_contracts( $contracts )
 		{
-            $this->contracts = $contracts;
-        }
-        
+			$this->contracts = $contracts;
+		}
+
 		public function get_contracts()
 		{
-            return $this->contracts;
-        }
-		
+			return $this->contracts;
+		}
+
 		/**
 		 * Return a string representation of the composite.
 		 * 
@@ -374,27 +392,27 @@
 		 */
 		function __toString()
 		{
-			$result  = '{';
+			$result = '{';
 			$result .= '"id":"' . $this->get_id() . '",';
 			$result .= '"name":"' . $this->get_name() . '"';
 			$result .= '}';
 			return $result;
 		}
-		
+
 		public function serialize()
 		{
 			$addresses = '';
 			$location_codes = '';
 			$gab_ids = '';
 			$contract_dates = '';
-			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			foreach ($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
-				
-				if($location != null) // There is an underlying property location
+
+				if ($location != null) // There is an underlying property location
 				{
 					$address = $location->get_address_1();
-					if(isset($address) && $address != '')
+					if (isset($address) && $address != '')
 					{
 						$addresses .= $address . "<br>\n";
 					}
@@ -406,27 +424,27 @@
 					$gab_ids .= $location->get_gab_id() . "<br>\n";
 				}
 			}
-			
-			// Adds info about contracts to a string 
-			foreach($this->get_contracts() as $contract)
+
+			// Adds info about contracts to a string
+			foreach ($this->get_contracts() as $contract)
 			{
 				$start_date = $contract->get_contract_date()->get_start_date();
 				$end_date = $contract->get_contract_date()->get_end_date();
 
-				if($end_date == 0)
-					$contract_dates .= date("d-m-Y", $start_date) . " - løpende";	
+				if ($end_date == 0)
+					$contract_dates .= date("d-m-Y", $start_date) . " - løpende";
 				else
 					$contract_dates .= date("d-m-Y", $start_date) . " - " . date("d-m-Y", $end_date);
-				
+
 				$contract_dates .= " (" . $contract->get_old_contract_id() . ")" . "<br/>\n";
 			}
-			
-			if(count($this->get_contracts()) == 0)
+
+			if (count($this->get_contracts()) == 0)
 			{
-				$contract_dates .= "Ingen<br/>\n";	
+				$contract_dates .= "Ingen<br/>\n";
 			}
-			
-			if($this->has_custom_address())
+
+			if ($this->has_custom_address())
 			{
 				$addresses = $this->get_custom_address_1() . ' ' . $this->get_custom_house_number();
 			}

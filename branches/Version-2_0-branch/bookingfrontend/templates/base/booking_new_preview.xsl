@@ -1,16 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
+	<div id="content">
 
-	<dl class="form">
+		<dl class="form">
 			<dt class="heading">
 				<xsl:value-of select="php:function('lang', 'New Booking')"/>
 			</dt>
-	</dl>
-    <xsl:call-template name="msgbox"/>
+		</dl>
+		<xsl:call-template name="msgbox"/>
 
-	<!-- <xsl:call-template name="xmlsource"/> -->
+		<!-- <xsl:call-template name="xmlsource"/> -->
 
-	    <form action="" method="POST">
+		<form action="" method="POST">
 			<input type="hidden" name="season_id" value="{booking/season_id}"/>
 			<input type="hidden" name="field_building_id" value="{booking/building_id}"/>
 			<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
@@ -69,34 +69,34 @@
 					</li>
 				</xsl:for-each>
 			</div>
-	        <div class="form-buttons">
-	            <input type="submit" name="create">
+			<div class="form-buttons">
+				<input type="submit" name="create">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'Create')" />
 					</xsl:attribute>
 				</input>
-	            <a class="cancel">
+				<a class="cancel">
 					<xsl:attribute name="href">
 						<xsl:value-of select="season/wtemplate_link"/>
 					</xsl:attribute>
-	                <xsl:value-of select="php:function('lang', 'Cancel')" />
-	            </a>
-	        </div>
+					<xsl:value-of select="php:function('lang', 'Cancel')" />
+				</a>
+			</div>
 		</form>
 
-    </div>
-    <script type="text/javascript">
+	</div>
+	<script type="text/javascript">
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;
-    </script>
+	</script>
 </xsl:template>
 <xsl:template name="xmlsource">
-  NODE <xsl:value-of select="name()"/>
+	NODE <xsl:value-of select="name()"/>
 	ATTR { <xsl:for-each select="attribute::*">
 		<xsl:value-of select="name()"/>=<xsl:value-of select="."/>
 	</xsl:for-each> }
 	CHILDREN: { <xsl:for-each select="*">
 		<xsl:call-template name="xmlsource"/>
 	</xsl:for-each> }
-  TEXT <xsl:value-of select="text()"/>
-  <br/>
+	TEXT <xsl:value-of select="text()"/>
+	<br/>
 </xsl:template>

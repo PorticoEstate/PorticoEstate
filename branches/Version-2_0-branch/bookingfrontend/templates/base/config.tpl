@@ -12,14 +12,14 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
-	   <tr class="row_on">
-	    <td>{lang_remote_authentication}:</td>
-	    <td>
-	     <select name="newsettings[authentication_method]">
+		<tr class="row_on">
+			<td>{lang_remote_authentication}:</td>
+			<td>
+				<select name="newsettings[authentication_method]">
 					{hook_authentication}
-	     </select>
-	    </td>
-	   </tr>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_on">
 			<td>{lang_Anonymous_user}:</td>
 			<td><input name="newsettings[anonymous_user]" value="{value_anonymous_user}"></td>
@@ -91,19 +91,19 @@
 		</tr>
 		<tr class="row_off">
 			<td>{lang_url_to_external_logout}:
-			<br/> Redirect is computed if url ends with '='
+				<br/> Redirect is computed if url ends with '='
 			</td>
 			<td><input name="newsettings[external_logout]" value="{value_external_logout}"></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_bookingfrontend_host}:
-			<br/> Needed for the return from the external_logout
+				<br/> Needed for the return from the external_logout
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_customtemplate}:
-			<br/> Custom template for frontend
+				<br/> Custom template for frontend
 			</td>
 			<td><input name="newsettings[customtemplate]" value="{value_customtemplate}"/></td>
 		</tr>

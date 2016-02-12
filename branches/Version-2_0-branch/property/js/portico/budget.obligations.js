@@ -56,7 +56,8 @@ var myformatLinkPGW = function (key, oData)
 	{
 		details = 1;
 		text = oData['grouping'];
-	} else
+	}
+	else
 	{
 		details = 0;
 		text = oData['b_account'];
@@ -91,7 +92,8 @@ function filter_grouping(year, month, district_id, param, details)
 	{
 		oTable.dataTableSettings[0]['ajax']['data']['grouping'] = param;
 		$("#grouping").val(param);
-	} else
+	}
+	else
 	{
 		oTable.dataTableSettings[0]['ajax']['data']['grouping'] = '';
 		$("#grouping").val('');
@@ -107,7 +109,9 @@ function filter_grouping(year, month, district_id, param, details)
 	if (month === 0 || month === '')
 	{
 		$("#month").val('');
-	} else {
+	}
+	else
+	{
 		var int_month = parseInt(month, 10);
 		$("#month").val(int_month);
 	}

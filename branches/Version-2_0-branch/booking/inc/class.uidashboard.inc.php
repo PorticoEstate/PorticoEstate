@@ -11,28 +11,28 @@
 	{
 
 		public $public_functions = array
-		(
-			'index'	=> true,
-			'query'									 => true,
+			(
+			'index' => true,
+			'query' => true,
 			'toggle_show_all_dashboard_applications' => true,
 			'toggle_show_all_dashboard_messages' => true,
 		);
-		
+
 		const SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY = "show_all_dashboard_applications";
 		const SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY = "show_all_dashboard_messages";
 
 		public function __construct()
 		{
-         parent::__construct();
+			parent::__construct();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->resource_bo = CreateObject('booking.boresource');
 			$this->system_message_bo = CreateObject('booking.bosystem_message');
 			self::set_active_menu('booking::dashboard');
 		}
-		
+
 		public function toggle_show_all_dashboard_applications()
 		{
-			if($this->show_all_dashboard_applications())
+			if ($this->show_all_dashboard_applications())
 			{
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY]);
 			}
@@ -43,7 +43,7 @@
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
-		
+
 		public function show_all_dashboard_applications()
 		{
 			return array_key_exists(self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY, $_SESSION);
@@ -51,7 +51,7 @@
 
 		public function toggle_show_all_dashboard_messages()
 		{
-			if($this->show_all_dashboard_messages())
+			if ($this->show_all_dashboard_messages())
 			{
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
 			}
@@ -62,7 +62,7 @@
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
-		
+
 		public function show_all_dashboard_messages()
 		{
 			return array_key_exists(self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY, $_SESSION);
@@ -70,7 +70,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 
 				return $this->query();
@@ -85,41 +85,41 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type'	 => 'filter',
+								'type' => 'filter',
 								'name' => 'status',
-								'text'	 => lang('Status') . ':',
-                                'list' => array(
-                                    array(
-                                        'id' => '',
-                                        'name' => lang('All')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    ),
-                                )
-                            ),
-							array('type' => 'autocomplete', 
+								'text' => lang('Status') . ':',
+								'list' => array(
+									array(
+										'id' => '',
+										'name' => lang('All')
+									),
+									array(
+										'id' => 'NEW',
+										'name' => lang('NEW')
+									),
+									array(
+										'id' => 'PENDING',
+										'name' => lang('PENDING')
+									),
+									array(
+										'id' => 'REJECTED',
+										'name' => lang('REJECTED')
+									),
+									array(
+										'id' => 'ACCEPTED',
+										'name' => lang('ACCEPTED')
+									),
+								)
+							),
+							array('type' => 'autocomplete',
 								'name' => 'building',
 								'ui' => 'building',
-								'text'	 => lang('Building') . ':',
+								'text' => lang('Building') . ':',
 							),
 							array(
 								'type' => 'link',
 								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
-								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_all_dashboard_applications'))
+								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_all_dashboard_applications'))
 							),
 						)
 					),
@@ -130,7 +130,7 @@
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter'	 => 'JqueryPortico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'status',
@@ -146,8 +146,8 @@
 						),
 						array(
 							'key' => 'what',
-							'label'		 => lang('What'),
-							'sortable'	 => false
+							'label' => lang('What'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'activity_name',
@@ -167,7 +167,7 @@
 						)
 						,
 						array(
-							'key'	 => 'building',
+							'key' => 'building',
 							'hidden' => true
 						)
 					)
@@ -180,32 +180,32 @@
 		{
 //            Analizar luego esta variable -> $this->current_account_id()
 			$this->db = $GLOBALS['phpgw']->db;
-			$applications	 = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(
-				null, 7) : array(1, 7));
+			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(
+					null, 7) : array(1, 7));
 //            echo '<pre>'; print_r($applications); echo '</pre>';exit('saul');
-			foreach($applications['results'] as &$application)
+			foreach ($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
 				$application['type'] = lang($application['type']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources']			 = $this->resource_bo->so->read(array('filters' => array(
+				$application['resources'] = $this->resource_bo->so->read(array('filters' => array(
 						'id' => $application['resources'])));
 				$application['resources'] = $application['resources']['results'];
-				if($application['resources'])
+				if ($application['resources'])
 				{
 					$names = array();
-					foreach($application['resources'] as $res)
+					foreach ($application['resources'] as $res)
 					{
 						$names[] = $res['name'];
 					}
 					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
 				}
 
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $application['case_officer_name'] . "'";
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $application['case_officer_name'] . "'";
 				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				while ($record = array_shift($this->db->resultSet))
 				{
 					$application['case_officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
 				}
@@ -214,5 +214,4 @@
 
 			return $this->jquery_results($applications);
 		}
-
 	}

@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('booking.sopermission');
-	
+
 	/**
 	 * This class models the recursive case of permissions for permissions themselves.
 	 */

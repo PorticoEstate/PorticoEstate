@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
+	<div id="content">
 
 		<dl class="form">
 			<dt class="heading">
@@ -166,32 +166,32 @@
 									</tr>
 								</thead>
 								<tbody id="agegroup_tbody">
-								<xsl:for-each select="agegroups">
+									<xsl:for-each select="agegroups">
 										<xsl:variable name="id">
 											<xsl:value-of select="id"/>
 										</xsl:variable>
-									<tr>
+										<tr>
 											<th>
 												<xsl:value-of select="name"/>
 											</th>
-										<td>
-											<input type="text">
-												<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+											<td>
+												<input type="text">
+													<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../booking/agegroups/male[../agegroup_id = $id]"/>
 													</xsl:attribute>
-											</input>
-										</td>
-										<td>
-											<input type="text">
-												<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+												</input>
+											</td>
+											<td>
+												<input type="text">
+													<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../booking/agegroups/female[../agegroup_id = $id]"/>
 													</xsl:attribute>
-											</input>
-										</td>
-									</tr>
-								</xsl:for-each>
+												</input>
+											</td>
+										</tr>
+									</xsl:for-each>
 								</tbody>
 							</table>
 						</dd>
@@ -206,8 +206,8 @@
 				</form>
 			</xsl:otherwise>
 		</xsl:choose>
-    </div>
-    <script type="text/javascript">
+	</div>
+	<script type="text/javascript">
 		var initialAudience = <xsl:value-of select="booking/audience_json"/>;
-    </script>
+	</script>
 </xsl:template>

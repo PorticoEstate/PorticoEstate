@@ -18,15 +18,19 @@ function get_activities()
 	var div_select = $('#activity_select');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_organization_activities', orgid: org_id}, true);
-	var attr = [{name: 'name', value: 'activity_id'}, {name: 'id', value: 'activity_id'}];
+	var attr = [
+		{name: 'name', value: 'activity_id'}, {name: 'id', value: 'activity_id'}
+	];
 
-	if (org_id && org_id != current_org_id_get_activities) {
+	if (org_id && org_id != current_org_id_get_activities)
+	{
 		populateSelect_activityCalendar(url, div_select, attr);
 		current_org_id_get_activities = org_id;
 	}
 
 }
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	get_activities();
 });

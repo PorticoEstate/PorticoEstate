@@ -2,13 +2,13 @@
 <form method="post" action="{action_url}">
 	<table class="pure-table pure-table-bordered">
 		<th>
-			<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
+		<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
 		</th>
 		<tr bgcolor="{th_err}">
 			<td colspan="2">&nbsp;<b>{error}</b></font></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -36,8 +36,8 @@
 				</table>
 			</td>
 		</tr>
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="{th}">
 			<td colspan="2">&nbsp;</td>
 		</tr>

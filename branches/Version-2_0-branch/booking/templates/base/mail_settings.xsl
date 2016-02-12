@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -17,21 +17,21 @@
 						<label for="field_application_mail_systemname">
 							<xsl:value-of select="php:function('lang', 'System name')"/>
 						</label>
-				<input id="field_application_mail_systemname" name="application_mail_systemname" type="text" size="50">
+						<input id="field_application_mail_systemname" name="application_mail_systemname" type="text" size="50">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_systemname"/>
 							</xsl:attribute>
-				</input>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Subject')"/>
 						</label>
-				<input id="field_application_mail_subject" name="application_mail_subject" type="text" size="50">
+						<input id="field_application_mail_subject" name="application_mail_subject" type="text" size="50">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_subject"/>
 							</xsl:attribute>
-				</input>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_mail_created">
@@ -61,17 +61,17 @@
 						<label for="field_application_notify_on_accepted">
 							<xsl:value-of select="php:function('lang', 'notify on accepted')"/>
 						</label>
-				<input  name="application_notify_on_accepted" type="hidden" value = "0"/>
-				<input id="field_application_notify_on_accepted" class="full-width settings" name="application_notify_on_accepted" type="checkbox" value = "1">
-					<xsl:if test="config_data/application_notify_on_accepted = '1'">
-						<xsl:attribute name="checked">
-							<xsl:text>checked</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="checked">
-							<xsl:text>checked</xsl:text>
-						</xsl:attribute>
-					</xsl:if>
-				</input>
+						<input  name="application_notify_on_accepted" type="hidden" value = "0"/>
+						<input id="field_application_notify_on_accepted" class="full-width settings" name="application_notify_on_accepted" type="checkbox" value = "1">
+							<xsl:if test="config_data/application_notify_on_accepted = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_mail_rejected">
@@ -85,11 +85,11 @@
 						<label for="field_application_mail_signature">
 							<xsl:value-of select="php:function('lang', 'Signature')"/>
 						</label>
-				<input id="field_application_mail_signature" name="application_mail_signature" type="text" size="50">
+						<input id="field_application_mail_signature" name="application_mail_signature" type="text" size="50">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_signature"/>
 							</xsl:attribute>
-				</input>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<div class="heading">
@@ -104,21 +104,21 @@
 						<label for="field_application_comment_mail_subject_caseofficer">
 							<xsl:value-of select="php:function('lang', 'Subject caseofficer')"/>
 						</label>
-                <input id="field_application_comment_mail_subject_caseofficer" name="application_comment_mail_subject_caseofficer" type="text" size="50">
+						<input id="field_application_comment_mail_subject_caseofficer" name="application_comment_mail_subject_caseofficer" type="text" size="50">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_comment_mail_subject_caseofficer"/>
 							</xsl:attribute>
-                </input>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_comment_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Subject')"/>
 						</label>
-                <input id="field_application_comment_mail_subject" name="application_comment_mail_subject" type="text" size="50">
+						<input id="field_application_comment_mail_subject" name="application_comment_mail_subject" type="text" size="50">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_comment_mail_subject"/>
 							</xsl:attribute>
-                </input>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_comment_added_mail">
@@ -138,5 +138,5 @@
 				</xsl:attribute>
 			</input>
 		</div>
-    </form>
+	</form>
 </xsl:template>

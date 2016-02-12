@@ -1,31 +1,31 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage eco
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage eco
 	 * @version $Id$
-	*/
+	 */
 	/**
 	 * Description
 	 * @package property
@@ -47,12 +47,12 @@
 		var $public_functions = array
 			(
 			'query' => true,
-				'index'		=> true,
-				'history'	=> true,
+			'index' => true,
+			'history' => true,
 			'get_history' => true,
-				'add'		=> true,
-				'delete'	=> true
-			);
+			'add' => true,
+			'delete' => true
+		);
 
 		function __construct()
 		{
@@ -61,42 +61,42 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::investment';
 
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo = CreateObject('property.boinvestment', true);
-			$this->bocommon			= CreateObject('property.bocommon');
-			$this->bolocation		= CreateObject('property.bolocation');
-			$this->acl 				= & $GLOBALS['phpgw']->acl;
-			$this->acl_location		= '.invoice';
-			$this->acl_read 		= $this->acl->check('.invoice', PHPGW_ACL_READ, 'property');
-			$this->acl_add 			= $this->acl->check('.invoice', PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 		= $this->acl->check('.invoice', PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 		= $this->acl->check('.invoice', PHPGW_ACL_DELETE, 'property');
+			$this->bocommon = CreateObject('property.bocommon');
+			$this->bolocation = CreateObject('property.bolocation');
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = '.invoice';
+			$this->acl_read = $this->acl->check('.invoice', PHPGW_ACL_READ, 'property');
+			$this->acl_add = $this->acl->check('.invoice', PHPGW_ACL_ADD, 'property');
+			$this->acl_edit = $this->acl->check('.invoice', PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete = $this->acl->check('.invoice', PHPGW_ACL_DELETE, 'property');
 
-			$this->start			= $this->bo->start;
-			$this->query			= $this->bo->query;
-			$this->sort				= $this->bo->sort;
-			$this->order			= $this->bo->order;
-			$this->filter			= $this->bo->filter;
-			$this->cat_id			= $this->bo->cat_id;
-			$this->part_of_town_id	= $this->bo->part_of_town_id;
-			$this->allrows			= $this->bo->allrows;
-			$this->admin_invoice	= $this->acl->check('.invoice', 16, 'property');
+			$this->start = $this->bo->start;
+			$this->query = $this->bo->query;
+			$this->sort = $this->bo->sort;
+			$this->order = $this->bo->order;
+			$this->filter = $this->bo->filter;
+			$this->cat_id = $this->bo->cat_id;
+			$this->part_of_town_id = $this->bo->part_of_town_id;
+			$this->allrows = $this->bo->allrows;
+			$this->admin_invoice = $this->acl->check('.invoice', 16, 'property');
 		}
 
 		function save_sessiondata()
 		{
 			$data = array
 				(
-					'start'				=> $this->start,
-					'query'				=> $this->query,
-					'sort'				=> $this->sort,
-					'order'				=> $this->order,
-					'filter'			=> $this->filter,
-					'cat_id'			=> $this->cat_id,
-					'part_of_town_id'	=> $this->part_of_town_id,
-					'this->allrows'		=> $this->allrows
-				);
+				'start' => $this->start,
+				'query' => $this->query,
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'part_of_town_id' => $this->part_of_town_id,
+				'this->allrows' => $this->allrows
+			);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -139,10 +139,10 @@
 			);
 
 			return $combos;
-			}
+		}
 
 		public function query()
-			{
+		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
@@ -151,17 +151,17 @@
 			$order[0]['dir'] = "desc";
 
 			$params = array
-					(
+				(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'filter' => $this->filter,
-						'cat_id'			=> $this->cat_id,
-						'part_of_town_id'	=> $this->part_of_town_id,
+				'cat_id' => $this->cat_id,
+				'part_of_town_id' => $this->part_of_town_id,
 				'allrows' => phpgw::get_var('length', 'int') == -1
-				);
+			);
 
 			$investment_list = $this->bo->read($params);
 
@@ -176,15 +176,15 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$counter = $sum_initial_value = $sum_value = 0;
 
-			while(is_array($investment_list) && list(, $investment) = each($investment_list))
+			while (is_array($investment_list) && list(, $investment) = each($investment_list))
 			{
 				$link_history = $check = "";
-				if($this->admin_invoice)
+				if ($this->admin_invoice)
 				{
 					$link_history = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', array(
-						'menuaction' => 'property.uiinvestment.history', 'entity_id' => $investment['entity_id'],
-						'investment_id' => $investment['investment_id'], 'entity_type' => $this->cat_id)) . "\">" . lang('History') . "</a>";
-					if($investment['value'] != 0)
+							'menuaction' => 'property.uiinvestment.history', 'entity_id' => $investment['entity_id'],
+							'investment_id' => $investment['investment_id'], 'entity_type' => $this->cat_id)) . "\">" . lang('History') . "</a>";
+					if ($investment['value'] != 0)
 					{
 						//$check = "<input counter=\"".$counter."\" type=\"hidden\" name=\"values[update][".$counter."]\" class=\"myValuesForPHP select_hidden\"  />";
 						$check = "<input type=\"checkbox\" name=\"values[update_tmp][" . $counter . "]\" value=\"" . $counter . "\" class=\"mychecks select_check\"  id=\"check\" />";
@@ -193,31 +193,31 @@
 
 				$content[] = array
 					(
-						'order_dummy'		=> $investment['part_of_town'],
+					'order_dummy' => $investment['part_of_town'],
 					'district_id' => $investment['district_id'],
-						'part_of_town'		=> $investment['part_of_town'],			
-						'entity_id'			=> $investment['entity_id'],
-						'investment_id'		=> $investment['investment_id'],
-						'descr'				=> $investment['descr'],
-						'entity_name'		=> $investment['entity_name'],
+					'part_of_town' => $investment['part_of_town'],
+					'entity_id' => $investment['entity_id'],
+					'investment_id' => $investment['investment_id'],
+					'descr' => $investment['descr'],
+					'entity_name' => $investment['entity_name'],
 					'initial_value_ex' => ($investment['initial_value'] == "" ? 0 : $investment['initial_value']),
 					'initial_value' => number_format($investment['initial_value'], 0, ',', ''),
 					'value_ex' => ($investment['value'] == "" ? 0 : $investment['value']),
 					'value' => number_format($investment['value'], 0, ',', ''),
-						'this_index'		=> $investment['this_index'],
-						'this_write_off_ex'	=> $investment['this_write_off'],
-						'this_write_off'	=> number_format($investment['this_write_off'], 0, ',', ''),
+					'this_index' => $investment['this_index'],
+					'this_write_off_ex' => $investment['this_write_off'],
+					'this_write_off' => number_format($investment['this_write_off'], 0, ',', ''),
 					'date' => date($dateformat, strtotime($investment['date'])),
-						'index_count'		=> $investment['index_count'],
-						'link_history'		=> $link_history,
+					'index_count' => $investment['index_count'],
+					'link_history' => $link_history,
 					'check' => $check,
 					'counter' => $counter
-					);
+				);
 				$counter++;
-			}	
+			}
 
-			if(phpgw::get_var('export', 'bool'))
-				{
+			if (phpgw::get_var('export', 'bool'))
+			{
 				return $content;
 			}
 
@@ -228,11 +228,11 @@
 			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
-			}
+		}
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -242,8 +242,8 @@
 			$values = phpgw::get_var('values');
 			$msgbox_data = "";
 
-			if($preserve)
-				{
+			if ($preserve)
+			{
 				$this->bo->read_sessiondata();
 
 				$this->start = $this->bo->start;
@@ -256,12 +256,12 @@
 				$this->allrows = $this->bo->allrows;
 			}
 
-			if($values && phpgw::get_var('phpgw_return_as') == 'json')
-					{
+			if ($values && phpgw::get_var('phpgw_return_as') == 'json')
+			{
 				return $this->update_investment($values);
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -288,9 +288,9 @@
 						'menuaction' => 'property.uiinvestment.index',
 						'phpgw_return_as' => 'json'
 					)),
-					'new_item'	=> self::link(array(
-									'menuaction' => 'property.uiinvestment.add'
-								)),
+					'new_item' => self::link(array(
+						'menuaction' => 'property.uiinvestment.add'
+					)),
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(
@@ -374,7 +374,7 @@
 			);
 
 			$filters = $this->_get_filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -386,25 +386,25 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		function update_investment($values = '')
+		function update_investment( $values = '' )
 		{
 
 			$receipt = array();
 
-			if(!$values['date'])
+			if (!$values['date'])
 			{
 				$receipt['error'][] = array('msg' => lang('Please select a date !'));
 			}
-			if(!$values['new_index'])
+			if (!$values['new_index'])
 			{
 				$receipt['error'][] = array('msg' => lang('Please set a new index !'));
 			}
-			if(!$values['update'])
+			if (!$values['update'])
 			{
 				$receipt['error'][] = array('msg' => lang('Nothing to do!'));
 			}
 
-			if(!$receipt['error'])
+			if (!$receipt['error'])
 			{
 				$receipt = $this->bo->update_investment($values);
 			}
@@ -431,10 +431,10 @@
 		function get_history()
 		{
 			$draw = phpgw::get_var('draw', 'int');
-			$entity_id	= phpgw::get_var('entity_id', 'int');
-			$investment_id	= phpgw::get_var('investment_id', 'int');
+			$entity_id = phpgw::get_var('entity_id', 'int');
+			$investment_id = phpgw::get_var('investment_id', 'int');
 			$values = phpgw::get_var('values');
-			if($values)
+			if ($values)
 			{
 				return $this->update_investment($values);
 			}
@@ -451,24 +451,24 @@
 
 			$uicols = $this->get_history_cols();
 			$values = array();
-			if(isset($investment_list) && is_array($investment_list))
+			if (isset($investment_list) && is_array($investment_list))
 			{
-				foreach($investment_list as $investment)
+				foreach ($investment_list as $investment)
 				{
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
 						$json_row[$uicols['name'][$i]] = '';
-						if($uicols['name'][$i] == 'date')
-						{							
+						if ($uicols['name'][$i] == 'date')
+						{
 							$json_row[$uicols['name'][$i]] = date($dateformat, strtotime($investment[$uicols['name'][$i]]));
 						}
-						else if($uicols['name'][$i] == 'is_admin')
+						else if ($uicols['name'][$i] == 'is_admin')
 						{
 							$json_row[$uicols['name'][$i]] = $this->admin_invoice;
-						} 
+						}
 						else
 						{
-							if($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
+							if ($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
 							{
 								$json_row[$uicols['name'][$i]] = number_format($investment[$uicols['name'][$i]], 0, ',', '');
 							}
@@ -480,17 +480,17 @@
 					}
 					$values[] = $json_row;
 				}
-			}			
+			}
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = count($values);
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
-			}	
+		}
 
 		function history()
-			{
+		{
 			$entity_type = phpgw::get_var('entity_type');
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$investment_id = phpgw::get_var('investment_id', 'int');
@@ -502,7 +502,7 @@
 
 			$column_def = array();
 			$count_uicols = count($uicols['name']);
-			for($k = 0; $k < $count_uicols; $k++)
+			for ($k = 0; $k < $count_uicols; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -519,7 +519,7 @@
 				(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiinvestment.get_history',
-					'entity_id' => $entity_id, 'investment_id' => $investment_id, 'phpgw_return_as' => 'json'))),
+						'entity_id' => $entity_id, 'investment_id' => $investment_id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $column_def,
 				'data' => '',
 				'config' => array(
@@ -615,70 +615,70 @@
 
 		function add()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
 			}
-			$values					= phpgw::get_var('values');
+			$values = phpgw::get_var('values');
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment'));
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
 
-				for($j = 0; $j < count($insert_record_entity); $j++)
+				for ($j = 0; $j < count($insert_record_entity); $j++)
 				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
 				}
 
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-				if(!$values['type'])
+				if (!$values['type'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a type !'));
 				}
 
-				if(!$values['period'] && !$values['new_period'])
+				if (!$values['period'] && !$values['new_period'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a period for write off !'));
 				}
 
-				if(!$values['date'])
+				if (!$values['date'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a date !'));
 				}
 
-				if(!$values['initial_value'])
+				if (!$values['initial_value'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please set an initial value!'));
 				}
 
-				if(!$values['location']['loc1'] && !$values['extra']['p_num'])
+				if (!$values['location']['loc1'] && !$values['extra']['p_num'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a location - or an entity!'));
 				}
 
 				//_debug_array($values['extra']);
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_investment($values);
 					unset($values);
 				}
 				else
 				{
-					if($values['location'])
+					if ($values['location'])
 					{
 						$location_code = implode("-", $values['location']);
 						$values['location_data'] = $this->bolocation->read_single($location_code, $values['extra']);
 					}
 
-					if($values['extra']['p_num'])
+					if ($values['extra']['p_num'])
 					{
 						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
 						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
@@ -690,21 +690,21 @@
 
 			$location_data = $this->bolocation->initiate_ui_location(array
 				(
-					'values'	=> $values['location_data'],
-					'type_id'	=> -1, // calculated from location_types
-					'no_link'	=> false, // disable lookup links for location type less than type_id
+				'values' => $values['location_data'],
+				'type_id' => -1, // calculated from location_types
+				'no_link' => false, // disable lookup links for location type less than type_id
 				'required_level' => 1,
-					'lookup_type'	=> 'form',
-					'lookup_entity'	=> $this->bocommon->get_lookup_entity('investment'),
-					'entity_data'	=> $values['p']
+				'lookup_type' => 'form',
+				'lookup_entity' => $this->bocommon->get_lookup_entity('investment'),
+				'entity_data' => $values['p']
 				)
 			);
 
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiinvestment.add'
-				);
+				'menuaction' => 'property.uiinvestment.add'
+			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -712,48 +712,48 @@
 
 			$data = array
 				(
-					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'location_data'						=> $location_data,
-					'lang_date_statustext'				=> lang('insert the date for the initial value'),
-					'lang_date'							=> lang('Date'),
-					'lang_location'						=> lang('Location'),
-					'lang_select_location_statustext'	=> lang('select either a location or an entity'),
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'location_data' => $location_data,
+				'lang_date_statustext' => lang('insert the date for the initial value'),
+				'lang_date' => lang('Date'),
+				'lang_location' => lang('Location'),
+				'lang_select_location_statustext' => lang('select either a location or an entity'),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvestment.index',
 					'preserve' => 1)),
-					'lang_write_off_period'				=> lang('Write off period'),
-					'lang_new'							=> lang('New'),
-					'lang_select'						=> lang('Select'),
-					'cat_list'							=> $this->bo->write_off_period_list($values['period']),
-					'lang_descr'						=> lang('Description'),
-					'lang_type'							=> lang('Type'),
-					'lang_amount'						=> lang('Amount'),
-					'lang_value_statustext'				=> lang('insert the value at the start-date as a positive amount'),
-					'lang_new_period_statustext'		=> lang('Enter a new writeoff period if it is NOT in the list'),
+				'lang_write_off_period' => lang('Write off period'),
+				'lang_new' => lang('New'),
+				'lang_select' => lang('Select'),
+				'cat_list' => $this->bo->write_off_period_list($values['period']),
+				'lang_descr' => lang('Description'),
+				'lang_type' => lang('Type'),
+				'lang_amount' => lang('Amount'),
+				'lang_value_statustext' => lang('insert the value at the start-date as a positive amount'),
+				'lang_new_period_statustext' => lang('Enter a new writeoff period if it is NOT in the list'),
 				'filter_list' => $this->bo->filter('select', $values['type']),
-					'filter_name'						=> 'values[type]',
-					'lang_filter_statustext'			=> lang('Select the type of value'),
-					'lang_show_all'						=> lang('Select'),
-					'lang_name'							=> lang('name'),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
-					'value_new_period'					=> $values['new_period'],
-					'value_inital_value'				=> $values['initial_value'],
-					'value_date'						=> $values['date'],
-					'value_descr'						=> $values['descr'],
-					'lang_done_statustext'				=> lang('Back to the list'),
-					'lang_save_statustext'				=> lang('Save the investment'),
-					'lang_no_cat'						=> lang('Select'),
-					'lang_cat_statustext'				=> lang('Select the category the investment belongs to. To do not use a category select NO CATEGORY'),
-					'select_name'						=> 'values[period]',
+				'filter_name' => 'values[type]',
+				'lang_filter_statustext' => lang('Select the type of value'),
+				'lang_show_all' => lang('Select'),
+				'lang_name' => lang('name'),
+				'lang_save' => lang('save'),
+				'lang_done' => lang('done'),
+				'value_new_period' => $values['new_period'],
+				'value_inital_value' => $values['initial_value'],
+				'value_date' => $values['date'],
+				'value_descr' => $values['descr'],
+				'lang_done_statustext' => lang('Back to the list'),
+				'lang_save_statustext' => lang('Save the investment'),
+				'lang_no_cat' => lang('Select'),
+				'lang_cat_statustext' => lang('Select the category the investment belongs to. To do not use a category select NO CATEGORY'),
+				'select_name' => 'values[period]',
 				'investment_type_id' => $investment['investment_type_id'],
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
-				);
+			);
 
-			$appname		= lang('investment');
-			$function_msg	= lang('add investment');
+			$appname = lang('investment');
+			$function_msg = lang('add investment');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
@@ -766,18 +766,18 @@
 			$index_count = phpgw::get_var('index_count', 'int');
 			$entity_type = phpgw::get_var('entity_type');
 
-			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiinvestment.history',
-					'entity_id'	=> $entity_id,
-					'investment_id'	=> $investment_id,
-					'index_count'	=> $index_count,
-					'entity_type'	=> $entity_type
-				);
+				'menuaction' => 'property.uiinvestment.history',
+				'entity_id' => $entity_id,
+				'investment_id' => $investment_id,
+				'index_count' => $index_count,
+				'entity_type' => $entity_type
+			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 
 				$this->bo->delete($entity_id, $investment_id, $index_count);
@@ -792,15 +792,15 @@
 				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvestment.delete',
 					'entity_id' => $entity_id, 'investment_id' => $investment_id, 'index_count' => $index_count,
 					'entity_type' => $entity_type)),
-					'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
-					'lang_yes'		=> lang('yes'),
-					'lang_yes_statustext'	=> lang('Delete the entry'),
-					'lang_no_statustext'	=> lang('Back to the list'),
-					'lang_no'		=> lang('no')
-				);
+				'lang_confirm_msg' => lang('do you really want to delete this entry'),
+				'lang_yes' => lang('yes'),
+				'lang_yes_statustext' => lang('Delete the entry'),
+				'lang_no_statustext' => lang('Back to the list'),
+				'lang_no' => lang('no')
+			);
 
-			$appname	= lang('investment');
-			$function_msg	= lang('delete investment history element');
+			$appname = lang('investment');
+			$function_msg = lang('delete investment history element');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));

@@ -18,11 +18,14 @@ function get_address_search()
 	var div_address = $('#div_address');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'address_select'}, {name: 'id', value: 'address_select'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
+	var attr = [
+		{name: 'name', value: 'address_select'}, {name: 'id', value: 'address_select'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_address) {
+	if (address && address != current_address)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address = address;
@@ -34,9 +37,12 @@ function setAddressValue(field)
 {
 	var address = document.getElementById('address');
 	var div_address = document.getElementById('address_container');
-	if (field.value && field.value != 0) {
+	if (field.value && field.value != 0)
+	{
 		address.value = field.value;
-	} else {
+	}
+	else
+	{
 		address.value = "";
 	}
 	div_address.style.display = "none";

@@ -461,28 +461,28 @@
 						<div class="heading">9. <xsl:value-of select="php:function('lang', 'Attachment')" /></div>
 
 						<dt>
-						<label for="field_name">
-							<xsl:value-of select="php:function('lang', 'Document')" />
-						</label>
+							<label for="field_name">
+								<xsl:value-of select="php:function('lang', 'Document')" />
+							</label>
 						</dt>
 						<dd>
-						<input name="name" id='field_name' type='file' >
-							<xsl:attribute name='title'>
-								<xsl:value-of select="document/name"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>mime size</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-allowing">
-								<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-max-size">
-								<xsl:text>2M</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-							</xsl:attribute>
-						</input>
+							<input name="name" id='field_name' type='file' >
+								<xsl:attribute name='title'>
+									<xsl:value-of select="document/name"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>mime size</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-allowing">
+									<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-max-size">
+									<xsl:text>2M</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+								</xsl:attribute>
+							</input>
 						</dd>
 					</dl>
 				</div>

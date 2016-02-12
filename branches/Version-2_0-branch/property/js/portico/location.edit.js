@@ -3,7 +3,8 @@ var documents2 = null;
 var link_history = null;
 var set_history_data = 0;
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	$("#treeDiv1").jstree({
 		"core": {
@@ -15,7 +16,8 @@ $(document).ready(function () {
 	});
 
 	var count1 = 0;
-	$("#treeDiv1").bind("select_node.jstree", function (event, data) {
+	$("#treeDiv1").bind("select_node.jstree", function (event, data)
+	{
 		count1 += 1;
 		var divd = data.instance.get_node(data.selected[0]).original['link'];
 		if (count1 > 1)
@@ -24,12 +26,14 @@ $(document).ready(function () {
 		}
 	});
 
-	$('#collapse1').on('click', function () {
+	$('#collapse1').on('click', function ()
+	{
 		$(this).attr('href', 'javascript:;');
 		$('#treeDiv1').jstree('close_all');
 	})
 
-	$('#expand1').on('click', function () {
+	$('#expand1').on('click', function ()
+	{
 		$(this).attr('href', 'javascript:;');
 		$('#treeDiv1').jstree('open_all');
 	});
@@ -46,7 +50,8 @@ $(document).ready(function () {
 		});
 
 		var count2 = 0;
-		$("#treeDiv2").bind("select_node.jstree", function (event, data) {
+		$("#treeDiv2").bind("select_node.jstree", function (event, data)
+		{
 			count2 += 1;
 			var divd = data.instance.get_node(data.selected[0]).original['link'];
 			if (count2 > 1)
@@ -55,12 +60,14 @@ $(document).ready(function () {
 			}
 		});
 
-		$('#collapse2').on('click', function () {
+		$('#collapse2').on('click', function ()
+		{
 			$(this).attr('href', 'javascript:;');
 			$('#treeDiv2').jstree('close_all');
 		})
 
-		$('#expand2').on('click', function () {
+		$('#expand2').on('click', function ()
+		{
 			$(this).attr('href', 'javascript:;');
 			$('#treeDiv2').jstree('open_all');
 		});

@@ -376,8 +376,8 @@
 			 </xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		$(document).ready(function() {
+//		$(document).ready(function() {
 		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
-	});
+//	});
 	</script>
 </xsl:template>

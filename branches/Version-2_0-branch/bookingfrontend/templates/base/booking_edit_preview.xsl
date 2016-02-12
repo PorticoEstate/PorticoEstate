@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
+	<div id="content">
 
 		<dl class="form">
 			<dt class="heading">
@@ -46,16 +46,16 @@
 				<p>
 					<xsl:value-of select="php:function('lang', '%1 bookings were updated.', update_count)" />
 					<div class="form-buttons">
-					<a class="cancel">
+						<a class="cancel">
 							<xsl:attribute name="href">
 								<xsl:value-of select="booking/cancel_link"/>
 							</xsl:attribute>
-		                <xsl:value-of select="php:function('lang', 'Go back to calendar')" />
-		            </a>
+							<xsl:value-of select="php:function('lang', 'Go back to calendar')" />
+						</a>
 					</div>
 				</p>
 
 			</xsl:when>
 		</xsl:choose>
-    </div>
+	</div>
 </xsl:template>

@@ -1,29 +1,29 @@
 <?php
 	/**
-	* phpGroupWare
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package phpgroupware
-	* @subpackage communication
-	* @category core
+	 * phpGroupWare
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
+	 * @package phpgroupware
+	 * @subpackage communication
+	 * @category core
 	 * @version $Id$
-	*/
+	 */
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
 	/**
@@ -48,20 +48,20 @@
 
 			$headers = getallheaders();
 
-			if(isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
 			{
 				$this->debug = true;
 				echo 'headers:<br>';
 				_debug_array($headers);
 			}
 
-			if(isset($headers[$header_key]) && $headers[$header_key])
+			if (isset($headers[$header_key]) && $headers[$header_key])
 			{
 				$matches = array();
 				preg_match_all($header_regular_expression, $headers[$header_key], $matches);
 				$userid = $matches[1][0];
 
-				if($this->debug)
+				if ($this->debug)
 				{
 					echo 'matches:<br>';
 					_debug_array($matches);
@@ -70,32 +70,32 @@
 
 			$options = array();
 			$options['soap_version'] = SOAP_1_1;
-			$options['location']	= isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
-			$options['uri']			= isset($this->config->config_data['soap_uri']) && $this->config->config_data['soap_uri'] ? $this->config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
-			$options['trace']		= 1;
+			$options['location'] = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
+			$options['uri'] = isset($this->config->config_data['soap_uri']) && $this->config->config_data['soap_uri'] ? $this->config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
+			$options['trace'] = 1;
 
-			if(isset($this->config->config_data['soap_proxy_host']) && $this->config->config_data['soap_proxy_host'])
+			if (isset($this->config->config_data['soap_proxy_host']) && $this->config->config_data['soap_proxy_host'])
 			{
-				$options['proxy_host']	= $this->config->config_data['soap_proxy_host'];
+				$options['proxy_host'] = $this->config->config_data['soap_proxy_host'];
 			}
 
-			if(isset($this->config->config_data['soap_proxy_port']) && $this->config->config_data['soap_proxy_port'])
+			if (isset($this->config->config_data['soap_proxy_port']) && $this->config->config_data['soap_proxy_port'])
 			{
-				$options['proxy_port']	= $this->config->config_data['soap_proxy_port'];
+				$options['proxy_port'] = $this->config->config_data['soap_proxy_port'];
 			}
-			$options['encoding']	= isset($this->config->config_data['soap_encoding']) && $this->config->config_data['soap_encoding'] ? $this->config->config_data['soap_encoding'] : 'UTF-8';
-			$options['login']		= isset($this->config->config_data['soap_login']) && $this->config->config_data['soap_login'] ? $this->config->config_data['soap_login'] : '';
-			$options['password']	= isset($this->config->config_data['soap_password']) && $this->config->config_data['soap_password'] ? $this->config->config_data['soap_password'] : '';
+			$options['encoding'] = isset($this->config->config_data['soap_encoding']) && $this->config->config_data['soap_encoding'] ? $this->config->config_data['soap_encoding'] : 'UTF-8';
+			$options['login'] = isset($this->config->config_data['soap_login']) && $this->config->config_data['soap_login'] ? $this->config->config_data['soap_login'] : '';
+			$options['password'] = isset($this->config->config_data['soap_password']) && $this->config->config_data['soap_password'] ? $this->config->config_data['soap_password'] : '';
 
 			$wsdl = isset($this->config->config_data['soap_wsdl']) && $this->config->config_data['soap_wsdl'] ? $this->config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
 
 			try
 			{
-				$BrukerService	= new BrukerService($wsdl, $options);
+				$BrukerService = new BrukerService($wsdl, $options);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($this->debug)
+				if ($this->debug)
 				{
 					echo $e->getMessage();
 					echo '<br>wsdl: ' . $wsdl;
@@ -104,10 +104,10 @@
 				}
 			}
 
-			$ctx			= new UserContext();
+			$ctx = new UserContext();
 
 			$ctx->appid = 'portico';
-			$ctx->onBehalfOfId	 = $userid;
+			$ctx->onBehalfOfId = $userid;
 			$ctx->userid = $userid;
 			$ctx->transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
 
@@ -122,9 +122,9 @@
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($Bruker->ou);
 			}
-			catch(sfValidatorError $e)
+			catch (sfValidatorError $e)
 			{
-				if($this->debug)
+				if ($this->debug)
 				{
 					echo $e->getMessage();
 					die();
@@ -222,7 +222,7 @@
 		public $transactionid;
 
 	}
-	
+
 	/**
 	 * retrieveBruker
 	 */
@@ -270,26 +270,26 @@
 		 * @var array
 		 */
 		private static $classmap = array
-		(
+			(
 			"Bruker" => "Bruker",
 			"UserContext" => "UserContext",
 			"retrieveBruker" => "retrieveBruker",
 			"retrieveBrukerResponse" => "retrieveBrukerResponse",
 		);
-	
+
 		/**
 		 * Constructor using wsdl location and options array
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl = '', $options = array())
+		public function __construct( $wsdl = '', $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName)
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
 			{
-			    if(!isset($options['classmap'][$wsdlClassName]))
-			    {
-			        $options['classmap'][$wsdlClassName] = $phpClassName;
-			    }
+				if (!isset($options['classmap'][$wsdlClassName]))
+				{
+					$options['classmap'][$wsdlClassName] = $phpClassName;
+				}
 			}
 			parent::__construct($wsdl, $options);
 		}
@@ -301,19 +301,19 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
-			foreach($arguments as $arg)
+			foreach ($arguments as $arg)
 			{
-			    $type = gettype($arg);
-				if($type == "object")
-			    {
-			        $type = get_class($arg);
-			    }
+				$type = gettype($arg);
+				if ($type == "object")
+				{
+					$type = get_class($arg);
+				}
 				$variables .= "(" . $type . ")";
 			}
-			if(!in_array($variables, $validParameters))
+			if (!in_array($variables, $validParameters))
 			{
 				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
@@ -328,7 +328,7 @@
 		 * @return retrieveBrukerResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function retrieveBruker($mixed = null)
+		public function retrieveBruker( $mixed = null )
 		{
 			$validParameters = array(
 				"(retrieveBruker)",
