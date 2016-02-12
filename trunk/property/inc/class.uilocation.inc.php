@@ -1050,6 +1050,7 @@ JS;
 				{
 					$params['formatter'] = 'JqueryPortico.searchLink';
 					$params['sortable'] = true;
+					$params['dir'] = "desc";
 				}
 				else if ($uicols['name'][$k] == 'street_name')
 				{
@@ -2393,13 +2394,13 @@ JS;
 						$values['saved'] = true;
 						$values['error_id'] = false;
 						$values['location_code'] = $receipt['location_code'];
+						$location_code = $receipt['location_code'];
 					}
 					else
 					{
 						$values['error_id'] = true;
 					}
 
-					phpgwapi_cache::message_set($receipt, 'message');
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -2432,10 +2433,12 @@ JS;
 				}
 			}
 			$GLOBALS['phpgw']->session->appsession('insert_record', 'property', '');
-
+			if ($location_code)
+			{
+				self::message_set($this->receipt);
+				self::redirect(array('menuaction' => 'property.uilocation.edit', 'location_code' => $location_code));
+			}
 			$this->edit($values);
-
-			return;
 		}
 
 		function delete()

@@ -940,6 +940,7 @@
 					unset($fields['attributes']);
 
 					$receipt = $this->bo->save($fields, $action, $attributes);
+					$id = $receipt['id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -952,13 +953,23 @@
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply'])
 				{
+					if ($id)
+					{
+						self::message_set($this->receipt);
+						self::redirect(array('menuaction' => 'property.uigeneric.edit',
+							'id' => $id,
+							'appname' => $this->appname,
+							'type' => $this->type,
+							'type_id' => $this->type_id
+							)
+						);
+					}
 					$this->edit();
 					return;
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric.index',
+				self::redirect(array('menuaction' => 'property.uigeneric.index',
 					'appname' => $this->appname,
 					'type' => $this->type,
 					'type_id' => $this->type_id));

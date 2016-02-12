@@ -1001,7 +1001,7 @@ JS;
 				try
 				{
 					$receipt = $this->bo->save($values, $action, $values_attribute);
-					$values['id'] = $receipt['id'];
+					$id = $values['id'] = $receipt['id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -1049,7 +1049,6 @@ JS;
 					$this->receipt['message'][] = array('msg' => lang('%1 is notified', $values['mail_address']));
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message');
 				if ($values['save_new'])
 				{
 					$values = $this->bo->read_single($values['id']);
@@ -1066,9 +1065,12 @@ JS;
 					);
 				}
 
+				if($id)
+				{
+					self::message_set($this->receipt);
+					self::redirect(array('menuaction' => 'property.uirequest.edit', 'id' => $id));
+				}
 				$this->edit($values);
-
-				return;
 			}
 		}
 
@@ -1202,14 +1204,6 @@ JS;
 				$values = $this->bo->read_single($id);
 				$record_history = $this->bo->read_record_history($id);
 			}
-
-			$table_header_history[] = array
-				(
-				'lang_date' => lang('Date'),
-				'lang_user' => lang('User'),
-				'lang_action' => lang('Action'),
-				'lang_new_value' => lang('New value')
-			);
 
 			if ($id)
 			{
@@ -1496,8 +1490,6 @@ JS;
 				'importance_weight' => $importance_weight,
 				'lang_no_workorders' => lang('No workorder budget'),
 				'workorder_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit')),
-				'record_history' => $record_history,
-				'table_header_history' => $table_header_history,
 				'lang_history' => lang('History'),
 				'lang_no_history' => lang('No history'),
 				'value_entry_date' => $values['entry_date'],

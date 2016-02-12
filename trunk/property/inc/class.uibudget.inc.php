@@ -1116,7 +1116,7 @@
 				try
 				{
 					$receipt = $this->bo->save($values);
-					$values['budget_id'] = $receipt['budget_id'];
+					$budget_id = $values['budget_id'] = $receipt['budget_id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -1124,14 +1124,19 @@
 					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
-						$this->edit();
+						$this->edit($values);
 						return;
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply'])
 				{
+					if ($budget_id)
+					{
+						self::message_set($this->receipt);
+						self::redirect(array('menuaction' => 'property.uibudget.edit', 'budget_id' => $budget_id));
+					}
+
 					$this->edit($values);
 					return;
 				}
@@ -1301,7 +1306,7 @@
 				try
 				{
 					$receipt = $this->bo->save_basis($values);
-					$values['budget_id'] = $receipt['budget_id'];
+					$budget_id = $values['budget_id'] = $receipt['budget_id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -1314,13 +1319,17 @@
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply'])
 				{
+					if ($budget_id)
+					{
+						self::message_set($this->receipt);
+						self::redirect(array('menuaction' => 'property.uibudget.edit_basis', 'budget_id' => $budget_id));
+					}
 					$this->edit_basis($values);
 					return;
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uibudget.basis'));
+				self::redirect(array('menuaction' => 'property.uibudget.basis'));
 			}
 		}
 

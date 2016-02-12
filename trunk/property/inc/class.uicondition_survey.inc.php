@@ -607,7 +607,7 @@
 				else
 				{
 					phpgwapi_cache::message_set('ok!', 'message');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.edit',
+					self::redirect(array('menuaction' => 'property.uicondition_survey.edit',
 						'id' => $id));
 				}
 			}

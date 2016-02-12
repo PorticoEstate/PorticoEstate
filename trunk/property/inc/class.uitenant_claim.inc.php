@@ -542,11 +542,15 @@
 						}
 					}
 					//-----------
+					self::message_set($receipt);
 
 					if ($values['save'])
 					{
-						$GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim_receipt', $receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitenant_claim.index'));
+						self::redirect(array('menuaction' => 'property.uitenant_claim.index'));
+					}
+					else
+					{
+						self::redirect(array('menuaction' => 'property.uitenant_claim.edit', 'claim_id' => $claim_id));
 					}
 				}
 			}
