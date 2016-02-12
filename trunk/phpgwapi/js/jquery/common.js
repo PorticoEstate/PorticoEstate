@@ -28,9 +28,9 @@ JqueryPortico.formatLinkEvent = function (key, oData) {
 
 JqueryPortico.formatLinkTenant = function (key, oData) {
         
-	var name = oData[key];
-	var link = oData['link'];
-	return '<a href="/portico/index.php?menuaction=property.uiworkorder.edit&id=' + name + '">' + name + '</a>';
+	var id = oData[key];
+	var strURL = phpGWLink('index.php', {menuaction:"property.uiworkorder.edit", id: id});
+	return '<a href="' + strURL + '">' + id + '</a>';
 };
 
 JqueryPortico.formatProject = function (key, oData) {
