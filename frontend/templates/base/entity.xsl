@@ -2,29 +2,35 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
 	
 	<xsl:choose>
-	    <xsl:when test="msgbox_data != ''">
+		<xsl:when test="msgbox_data != ''">
 			<xsl:call-template name="msgbox"/>
-	    </xsl:when>
-   </xsl:choose>
+		</xsl:when>
+	</xsl:choose>
    
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 
 	<div class="frontend_body">	
 		<div class="pure-form pure-form-aligned">
 			<div id="tab-content">
-        <xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
 				<div id="{$tab_selected}">
-        	<xsl:choose>
-				<xsl:when test="normalize-space(//header/selected_location) != ''">
-					<div class="toolbar-container">
+					<xsl:choose>
+						<xsl:when test="normalize-space(//header/selected_location) != ''">
+							<div class="toolbar-container">
 								<div class="pure-g">
 									<div class="pure-u-1">
 										<xsl:for-each select="filters">
-											<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+											<xsl:variable name="name">
+												<xsl:value-of select="name"/>
+											</xsl:variable>
 											<select id="{$name}" name="{$name}" class="filter_entity">
 												<xsl:for-each select="list">
-													<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-					        <xsl:choose>
+													<xsl:variable name="id">
+														<xsl:value-of select="id"/>
+													</xsl:variable>
+													<xsl:choose>
 														<xsl:when test="id = 'NEW'">
 															<option value="{$id}" selected="selected">
 																<xsl:value-of select="name"/>
@@ -36,7 +42,7 @@
 																	<option value="{$id}" selected="selected">
 																		<xsl:value-of select="name"/>
 																	</option>
-					            </xsl:when>
+																</xsl:when>
 																<xsl:otherwise>
 																	<option value="{$id}">
 																		<xsl:value-of select="name"/>
@@ -44,7 +50,7 @@
 																</xsl:otherwise>
 															</xsl:choose>
 														</xsl:otherwise>
-					        </xsl:choose>
+													</xsl:choose>
 												</xsl:for-each>
 											</select>									
 										</xsl:for-each>
@@ -64,27 +70,27 @@
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>						
-		            </div>
-				</xsl:when>
-				<xsl:otherwise>
-					<div class="entity">
-		            	<xsl:value-of select="php:function('lang', 'no_buildings')"/>
-		            </div>
-				</xsl:otherwise>
-			</xsl:choose>
-        </div>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="entity">
+								<xsl:value-of select="php:function('lang', 'no_buildings')"/>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
 				<xsl:value-of disable-output-escaping="yes" select="tabs_content" />
 			</div>
 		</div>
-    </div>
+	</div>
 	<script type="text/javascript" class="init">
 
 		<xsl:for-each select="filters">
 			<xsl:if test="type = 'filter'">
 				$('select#<xsl:value-of select="name"/>').change( function() 
 				{
-					<xsl:value-of select="extra"/>
-					filterData('<xsl:value-of select="name"/>', $(this).val());
+				<xsl:value-of select="extra"/>
+				filterData('<xsl:value-of select="name"/>', $(this).val());
 				});
 			</xsl:if>
 		</xsl:for-each>

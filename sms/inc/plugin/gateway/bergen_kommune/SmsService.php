@@ -1,30 +1,29 @@
 <?php
 	/**
-	* phpGroupWare
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package phpgroupware
-	* @subpackage communication
-	* @category core
- 	* @version $Id: SmsService.php 4237 2009-11-27 23:17:21Z sigurd $
-	*/
-
+	 * phpGroupWare
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package phpgroupware
+	 * @subpackage communication
+	 * @category core
+	 * @version $Id: SmsService.php 4237 2009-11-27 23:17:21Z sigurd $
+	 */
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
 	/**
@@ -35,17 +34,18 @@
 	 * @subpackage sms
 	 */
 
-
 	/**
 	 * UserContextRest
 	 */
 	class UserContextRest
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 	}
 
 	/**
@@ -53,26 +53,31 @@
 	 */
 	class UserContext
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $userid;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $onBehalfOfId;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $appid;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $transactionid;
+
 	}
 
 	/**
@@ -80,49 +85,57 @@
 	 */
 	class MeldingsStatus
 	{
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $id;
+
 		/**
 		 * @access public
 		 * @var tnsSendingsStatus
 		 */
 		public $status;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $feiltekst;
-	}
 
+	}
 
 	/**
 	 * Melding
 	 */
 	class Melding
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $tlfmottaker;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $tlfavsender;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $tekst;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $orgnr;
+
 	}
 
 	/**
@@ -130,21 +143,25 @@
 	 */
 	class InnkommendeMelding
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $tlfavsender;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $tekst;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $kodeord;
+
 	}
 
 	/**
@@ -152,6 +169,7 @@
 	 */
 	class SendingsStatus
 	{
+
 	}
 
 	/**
@@ -159,29 +177,33 @@
 	 */
 	class hentStatuser
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus[]
 		 */
 		public $statuser;
-	}
 
+	}
 
 	/**
 	 * hentStatuserResponse
 	 */
 	class hentStatuserResponse
 	{
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus[]
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -189,16 +211,19 @@
 	 */
 	class hentStatus
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus
 		 */
 		public $status;
+
 	}
 
 	/**
@@ -206,11 +231,13 @@
 	 */
 	class hentStatusResponse
 	{
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -218,16 +245,19 @@
 	 */
 	class sendMelding
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var Melding
 		 */
 		public $melding;
+
 	}
 
 	/**
@@ -235,11 +265,13 @@
 	 */
 	class sendMeldingResponse
 	{
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -247,16 +279,19 @@
 	 */
 	class sendMeldinger
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var Melding[]
 		 */
 		public $meldinger;
+
 	}
 
 	/**
@@ -264,11 +299,13 @@
 	 */
 	class sendMeldingerResponse
 	{
+
 		/**
 		 * @access public
 		 * @var MeldingsStatus[]
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -276,16 +313,19 @@
 	 */
 	class getNyeInnkommendeMeldinger
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $kodeord;
+
 	}
 
 	/**
@@ -293,11 +333,13 @@
 	 */
 	class getNyeInnkommendeMeldingerResponse
 	{
+
 		/**
 		 * @access public
 		 * @var InnkommendeMelding[]
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -305,26 +347,31 @@
 	 */
 	class getInnkommendeMeldinger
 	{
+
 		/**
 		 * @access public
 		 * @var UserContext
 		 */
 		public $userContext;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $kodeord;
+
 		/**
 		 * @access public
 		 * @var dateTime
 		 */
 		public $fra;
+
 		/**
 		 * @access public
 		 * @var dateTime
 		 */
 		public $til;
+
 	}
 
 	/**
@@ -332,11 +379,13 @@
 	 */
 	class getInnkommendeMeldingerResponse
 	{
+
 		/**
 		 * @access public
 		 * @var InnkommendeMelding[]
 		 */
 		public $return;
+
 	}
 
 	/**
@@ -345,13 +394,14 @@
 	 */
 	class SmsService extends SoapClient
 	{
+
 		/**
 		 * Default class map for wsdl=>php
 		 * @access private
 		 * @var array
 		 */
 		private static $classmap = array
-		(
+			(
 			"UserContextRest" => "UserContextRest",
 			"UserContext" => "UserContext",
 			"MeldingsStatus" => "MeldingsStatus",
@@ -377,14 +427,14 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl="/home/sn5607/Documents/sms_gateway/SmsService-v1.xml", $options=array())
+		public function __construct( $wsdl = "/home/sn5607/Documents/sms_gateway/SmsService-v1.xml", $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName)
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
 			{
-			    if(!isset($options['classmap'][$wsdlClassName]))
-			    {
-			        $options['classmap'][$wsdlClassName] = $phpClassName;
-			    }
+				if (!isset($options['classmap'][$wsdlClassName]))
+				{
+					$options['classmap'][$wsdlClassName] = $phpClassName;
+				}
 			}
 			parent::__construct($wsdl, $options);
 		}
@@ -396,21 +446,21 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
 			foreach ($arguments as $arg)
 			{
-			    $type = gettype($arg);
-			    if ($type == "object")
-			    {
-			        $type = get_class($arg);
-			    }
-			    $variables .= "(".$type.")";
+				$type = gettype($arg);
+				if ($type == "object")
+				{
+					$type = get_class($arg);
+				}
+				$variables .= "(" . $type . ")";
 			}
 			if (!in_array($variables, $validParameters))
 			{
-			    throw new Exception("Invalid parameter types: ".str_replace(")(", ", ", $variables));
+				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
 			return true;
 		}
@@ -423,10 +473,10 @@
 		 * @return hentStatuserResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function hentStatuser($mixed = null)
+		public function hentStatuser( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(hentStatuser)",
 			);
 			$args = func_get_args();
@@ -442,10 +492,10 @@
 		 * @return hentStatusResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function hentStatus($mixed = null)
+		public function hentStatus( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(hentStatus)",
 			);
 			$args = func_get_args();
@@ -461,17 +511,16 @@
 		 * @return sendMeldingResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function sendMelding($mixed = null)
+		public function sendMelding( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(sendMelding)",
 			);
 			$args = func_get_args();
 			$this->_checkArguments($args, $validParameters);
 			return $this->__soapCall("sendMelding", $args);
 		}
-
 
 		/**
 		 * Service Call: sendMeldinger
@@ -481,17 +530,16 @@
 		 * @return sendMeldingerResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function sendMeldinger($mixed = null)
+		public function sendMeldinger( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(sendMeldinger)",
 			);
 			$args = func_get_args();
 			$this->_checkArguments($args, $validParameters);
 			return $this->__soapCall("sendMeldinger", $args);
 		}
-
 
 		/**
 		 * Service Call: getNyeInnkommendeMeldinger
@@ -501,17 +549,16 @@
 		 * @return getNyeInnkommendeMeldingerResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function getNyeInnkommendeMeldinger($mixed = null)
+		public function getNyeInnkommendeMeldinger( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(getNyeInnkommendeMeldinger)",
 			);
 			$args = func_get_args();
 			$this->_checkArguments($args, $validParameters);
 			return $this->__soapCall("getNyeInnkommendeMeldinger", $args);
 		}
-
 
 		/**
 		 * Service Call: getInnkommendeMeldinger
@@ -521,10 +568,10 @@
 		 * @return getInnkommendeMeldingerResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function getInnkommendeMeldinger($mixed = null)
+		public function getInnkommendeMeldinger( $mixed = null )
 		{
 			$validParameters = array
-			(
+				(
 				"(getInnkommendeMeldinger)",
 			);
 			$args = func_get_args();

@@ -19,8 +19,8 @@
 			</xsl:if>
 		</div>
 	</div>
-  <div id="content">
-    <form action="" method="GET" id="search">
+	<div id="content">
+		<form action="" method="GET" id="search">
 			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
 			<!--input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" /-->
 		</form>
@@ -161,9 +161,9 @@
 						</a>
 
 					</div>
-      <div class="hint">
+					<div class="hint">
 						F.eks. "<i>Haukelandshallen</i>", "<i>Nordnes bydelshus</i>".
-      </div>
+					</div>
 	
 				</div>
 				<div class="pure-u-1">
@@ -189,21 +189,21 @@
 		</div>
 		<div class="pure-g">
 			<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
-	<xsl:if test="not(search)">	
-		<div id="cloud">
+				<xsl:if test="not(search)">
+					<div id="cloud">
 						<div class="frontpagetext">
 						</div>
+					</div>
+					<div style="text-align:center;">
+						<img alt="" >
+							<xsl:attribute name="src">
+								<xsl:value-of select="frontimage"/>
+							</xsl:attribute>
+						</img>
+					</div>
+				</xsl:if>
+			</div>
 		</div>
-		<div style="text-align:center;">
-			<img alt="" >
-				<xsl:attribute name="src">
-					<xsl:value-of select="frontimage"/> 
-				</xsl:attribute>
-			</img>
-		</div>	
-	</xsl:if>
-	                </div>
-	              </div>
 
-  </div>
+	</div>
 </xsl:template>

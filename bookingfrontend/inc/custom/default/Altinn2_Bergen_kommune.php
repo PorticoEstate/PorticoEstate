@@ -1,29 +1,29 @@
 <?php
 	/**
-	* phpGroupWare
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package phpgroupware
-	* @subpackage communication
-	* @category core
- 	* @version $Id: Altinn_Bergen_kommune.php 4887 2010-02-23 10:33:44Z sigurd $
-	*/
+	 * phpGroupWare
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
+	 * @package phpgroupware
+	 * @subpackage communication
+	 * @category core
+	 * @version $Id: Altinn_Bergen_kommune.php 4887 2010-02-23 10:33:44Z sigurd $
+	 */
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
 	/**
@@ -43,7 +43,7 @@
 		public function get_user_org_id()
 		{
 			$headers = getallheaders();
-			if(isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
 			{
 				$this->debug = true;
 				echo 'headers:<br>';
@@ -52,7 +52,7 @@
 
 			$fodsels_nr = $headers['uid'];
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				echo 'fødselsnr:<br>';
 				_debug_array($fodsels_nr);
@@ -76,25 +76,25 @@
 			$soap_password = $this->config->config_data['soap_password'];
 
 			$client = new SoapClient(null, array(
-						'location' => $location_URL,
-						'uri'      => "",
-						'trace'    => 1,
-						'login'		=> $soap_login,
-						'password'	=> $soap_password
-						));
+				'location' => $location_URL,
+				'uri' => "",
+				'trace' => 1,
+				'login' => $soap_login,
+				'password' => $soap_password
+			));
 
 			try
 			{
 				$action = "";
-				$response	 = $client->__doRequest($request, $location_URL, $action, 1);
+				$response = $client->__doRequest($request, $location_URL, $action, 1);
 				$reader = new XMLReader();
 				$reader->xml($response);
 
 				$orgs = array();
 				$orgs_validate = array();
-				while($reader->read())
+				while ($reader->read())
 				{
-					if($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
+					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
 					{
 						$xml = new DOMDocument('1.0', 'utf-8');
 						$xml->formatOutput = true;
@@ -103,15 +103,15 @@
 						unset($domnode);
 						$_org_id = $xml->getElementsByTagName('organizationNumber')->item(0)->nodeValue;
 						$orgs[] = array
-						(
-							'id'	=> $_org_id,
-							'name'	=> $xml->getElementsByTagName('name')->item(0)->nodeValue,
+							(
+							'id' => $_org_id,
+							'name' => $xml->getElementsByTagName('name')->item(0)->nodeValue,
 						);
 						$orgs_validate[] = $_org_id;
 					}
 				}
 			}
-			catch(SoapFault $exception)
+			catch (SoapFault $exception)
 			{
 				echo "Dette gikk ikke så bra.";
 				var_dump(get_class($exception));
@@ -121,15 +121,15 @@
 			$stage = phpgw::get_var('stage');
 			$org_id = phpgw::get_var('org_id');
 
-			if($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
+			if ($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
 			{
 				try
 				{
 					return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($org_id);
 				}
-				catch(sfValidatorError $e)
+				catch (sfValidatorError $e)
 				{
-					if($this->debug)
+					if ($this->debug)
 					{
 						echo $e->getMessage();
 						die();
@@ -138,26 +138,26 @@
 				}
 			}
 
-			foreach($orgs as $org)
+			foreach ($orgs as $org)
 			{
 				$selected = '';
-				if($org_id == $org['id'])
+				if ($org_id == $org['id'])
 				{
 					$selected = 'selected = "selected"';
 				}
 
-				$org_option .=  <<<HTML
+				$org_option .= <<<HTML
 				<option value='{$org['id']}'{$selected}>{$org['name']}</option>
 
 HTML;
 			}
 
-			if($orgs)
+			if ($orgs)
 			{
-				$action =  $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
+				$action = $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
 				$message = 'Velg organisasjon';
 
-				$org_select =  <<<HTML
+				$org_select = <<<HTML
 							<p>
 								<label for="org_id">Velg Organisasjon:</label>
 								<select name="org_id" id="org_id">
@@ -168,7 +168,7 @@ HTML;
 			}
 			else
 			{
-				$action =  $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
+				$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
 				$message = 'Ikke representant for noen organisasjon';
 				$org_select = '';
 			}

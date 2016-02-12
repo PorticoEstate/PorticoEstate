@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-        <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form'  class="pure-form pure-form-aligned" name="form">
 		<div id="tab-content">
 			<input type="hidden" name="tab" value=""/>
@@ -49,25 +49,25 @@
 				</div>
 			</div>
 		</div>
-        <div class="form-buttons">
+		<div class="form-buttons">
 			<xsl:if test="season/permission/write">
 				<input type="button" class="pure-button pure-button-primary" name="edit">
 					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link"/>"</xsl:attribute>
 					<xsl:attribute name="value">
-		            <xsl:value-of select="php:function('lang', 'Edit')" />
+						<xsl:value-of select="php:function('lang', 'Edit')" />
 					</xsl:attribute>
 				</input>
 			</xsl:if>
 			<input type="button" class="pure-button pure-button-primary" name="boundaries">
 				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/boundaries_link"/>"</xsl:attribute>
 				<xsl:attribute name="value">
-	            <xsl:value-of select="php:function('lang', 'Boundaries')" />
+					<xsl:value-of select="php:function('lang', 'Boundaries')" />
 				</xsl:attribute>
 			</input>
 			<input type="button" class="pure-button pure-button-primary" name="week_template">
 				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/wtemplate_link"/>"</xsl:attribute>
 				<xsl:attribute name="value">
-	            <xsl:value-of select="php:function('lang', 'Week template')" />
+					<xsl:value-of select="php:function('lang', 'Week template')" />
 				</xsl:attribute>
 			</input>
 			<input type="button" class="pure-button pure-button-primary" name="cencel">
@@ -76,11 +76,11 @@
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</xsl:attribute>
 			</input>
-    </div>
+		</div>
 	</form>
 	<script type="text/javascript">
 		var season_id = <xsl:value-of select="season/id"/>;
-	    var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
+		var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Account', 'Role', 'Actions', 'Edit', 'Delete', 'Resource Type')"/>;
 	    <![CDATA[
             var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;

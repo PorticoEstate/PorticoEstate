@@ -1,42 +1,42 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage core
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage core
 	 * @version $Id$
-	*/
+	 */
 	$select_property_filter = array
-	(
-		''	=> lang('Owner type'),
-		'owner'	=> lang('Owner')
+		(
+		'' => lang('Owner type'),
+		'owner' => lang('Owner')
 	);
 	create_select_box('Choose property filter', 'property_filter', $select_property_filter, 'Filter by owner or owner type');
 
 	$yes_and_no = array
-	(
+		(
 		'yes' => 'Yes',
-		'no'  => 'No'
+		'no' => 'No'
 	);
 
 	create_select_box('Group filters in single query', 'group_filters', $yes_and_no, 'Group filters - means that one has to hit the search button to apply the filter');
@@ -45,25 +45,25 @@
 	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
 	$status_list_project = execMethod('property.soproject.select_status_list');
 
-	if($status_list_tts)
+	if ($status_list_tts)
 	{
-		foreach($status_list_tts as $entry)
+		foreach ($status_list_tts as $entry)
 		{
 			$_status_tts[$entry['id']] = $entry['name'];
 		}
 	}
 
-	if($status_list_workorder)
+	if ($status_list_workorder)
 	{
-		foreach($status_list_workorder as $entry)
+		foreach ($status_list_workorder as $entry)
 		{
 			$_status_workorder[$entry['id']] = $entry['name'];
 		}
 	}
 
-	if($status_list_project)
+	if ($status_list_project)
 	{
-		foreach($status_list_project as $entry)
+		foreach ($status_list_project as $entry)
 		{
 			$_status_project[$entry['id']] = $entry['name'];
 		}
@@ -117,7 +117,7 @@
 
 	$acc = & $GLOBALS['phpgw']->accounts;
 	$group_list = $acc->get_list('groups');
-	foreach($group_list as $entry)
+	foreach ($group_list as $entry)
 	{
 		$_groups[$entry->id] = $entry->lid;
 	}
@@ -125,9 +125,9 @@
 
 	$account_list = $acc->get_list('accounts', -1, 'ASC', 'account_lastname');
 
-	foreach($account_list as $entry)
+	foreach ($account_list as $entry)
 	{
-		if($entry->enabled == true)
+		if ($entry->enabled == true)
 		{
 			$_accounts[$entry->id] = $entry->__toString();
 		}
@@ -136,9 +136,9 @@
 
 	$priority_list_tts = execMethod('property.botts.get_priority_list');
 
-	if($priority_list_tts)
+	if ($priority_list_tts)
 	{
-		foreach($priority_list_tts as $entry)
+		foreach ($priority_list_tts as $entry)
 		{
 			$_priority_tts[$entry['id']] = $entry['name'];
 		}
@@ -146,14 +146,14 @@
 
 	create_select_box('Default Priority TTS', 'prioritydefault', $_priority_tts, 'The default priority for tickets in the Helpdesk-submodule');
 
-	$cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+	$cats = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_tts[$entry['cat_id']] = $entry['name'];
 		}
@@ -163,7 +163,7 @@
 	create_select_box('default ticket categories', 'tts_category', $_categories_tts, 'The default category for TTS');
 
 	$yes_and_no = array
-	(
+		(
 		'1' => 'Yes',
 		'2' => 'No'
 	);
@@ -175,7 +175,7 @@
 	$degree_comment[1] = ' - ' . lang('Minor');
 	$degree_comment[2] = ' - ' . lang('Medium');
 	$degree_comment[3] = ' - ' . lang('Serious');
-	for($i = 0; $i <= 3; $i++)
+	for ($i = 0; $i <= 3; $i++)
 	{
 		$degree[$i] = $i . $degree_comment[$i];
 	}
@@ -200,8 +200,8 @@
 	create_select_box('request an email receipt', 'request_order_email_rcpt', $yes_and_no, 'request a confirmation email when your email is opened by the recipient');
 
 	$default_start_page = array
-	(
-		'location'   => lang('Location'),
+		(
+		'location' => lang('Location'),
 		'project' => lang('Project'),
 		'tts' => lang('Ticket'),
 		'invoice' => lang('Invoice'),
@@ -218,17 +218,17 @@
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_project[$entry['cat_id']] = $entry['name'];
 		}
 	}
 
-	if($district_list)
+	if ($district_list)
 	{
-		foreach($district_list as $entry)
+		foreach ($district_list as $entry)
 		{
 			$_districts[$entry['id']] = $entry['name'];
 		}
@@ -239,8 +239,8 @@
 
 
 	$default_project_type = array
-	(
-		'1'	=> lang('operation'),
+		(
+		'1' => lang('operation'),
 		'2' => lang('investment'),
 		'3' => lang('buffer')
 	);
@@ -248,10 +248,10 @@
 	create_select_box('Default project type', 'default_project_type', $default_project_type, 'Select your default project type');
 
 	$default_project_filter_year = array
-	(
+		(
 		(date('Y') - 1) => (date('Y') - 1),
-		'current_year'	=> lang('current year'),
-		'all' 			=> lang('all'),
+		'current_year' => lang('current year'),
+		'all' => lang('all'),
 	);
 
 	create_select_box('Default project year filter', 'default_project_filter_year', $default_project_filter_year, 'Select your default project year filter');
@@ -263,11 +263,11 @@
 
 	create_input_box('Your Cellphone', 'cellphone');
 	create_input_box('RessursNr', 'ressursnr');
-	$ecodimb	= CreateObject('property.sogeneric');
+	$ecodimb = CreateObject('property.sogeneric');
 	$ecodimb->get_location_info('dimb', false);
 	$values_dimb = $ecodimb->read(array('sort' => 'ASC', 'order' => 'id', 'allrows' => true));
 
-	foreach($values_dimb as $entry)
+	foreach ($values_dimb as $entry)
 	{
 		$_dimb[$entry['id']] = "{$entry['id']} - {$entry['descr']}";
 	}
@@ -293,15 +293,15 @@
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_vendor[$entry['cat_id']] = $entry['name'];
 		}
 	}
 
-	
+
 	create_select_box('branch TTS', 'tts_branch_list', $yes_and_no, 'enable branch in TTS-orders');
 	create_select_box('Default vendor type', 'default_vendor_category', $_categories_vendor, 'which agreement');
 	create_input_box('With of textarea', 'textareacols', 'With of textarea in forms');
@@ -330,7 +330,7 @@
 	$default .= "\n" . '__contact_phone__';
 	$default .= "\n";
 	$default .= "\n" . '[b]Faktura må merkes med ordrenummer: __order_id__ og ressursnr.: __ressursnr__[/b]';
-	$default .= "\n";	
+	$default .= "\n";
 	$default .= "\n" . 'Med hilsen';
 	$default .= "\n" . '__user_name__';
 	$default .= "\n" . '__user_phone__';

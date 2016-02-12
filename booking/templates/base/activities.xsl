@@ -57,7 +57,7 @@
 					<label for="header1">
 						<xsl:value-of select="php:function('lang', 'toolbar')"/>
 					</label>
-	<div id="toolbar">
+					<div id="toolbar">
 						<!--xsl:if test="item/text and normalize-space(item/text)"-->
 						<table id="toolbar_table" class="pure-table">
 							<thead>
@@ -71,11 +71,11 @@
 								</tr>
 							</thead>
 							<tbody>
-			<tr>
+								<tr>
 									<td>
 									</td>
 									<td>
-				<xsl:if test="links/add">
+										<xsl:if test="links/add">
 											<input type="button" class="pure-button pure-button-primary">
 												<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/add"/>', "_self");</xsl:attribute>
 												<xsl:attribute name="value">
@@ -83,14 +83,14 @@
 												</xsl:attribute>
 												<xsl:attribute name="id">new-button</xsl:attribute>
 											</input>
-				</xsl:if>
+										</xsl:if>
 									</td>
 
 								</tr>
 								<tr>
 									<td></td>
 									<td>
-				<xsl:if test="not(show_all='1')">
+										<xsl:if test="not(show_all='1')">
 											<input type="button" class="pure-button pure-button-primary">
 												<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/show_inactive"/>', "_self");</xsl:attribute>
 												<xsl:attribute name="value">
@@ -98,8 +98,8 @@
 												</xsl:attribute>
 												<xsl:attribute name="id">new-button</xsl:attribute>
 											</input>
-				</xsl:if>
-				<xsl:if test="show_all='1'">
+										</xsl:if>
+										<xsl:if test="show_all='1'">
 											<input type="button" class="pure-button pure-button-primary">
 												<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="links/hide_inactive"/>', "_self");</xsl:attribute>
 												<xsl:attribute name="value">
@@ -107,12 +107,12 @@
 												</xsl:attribute>
 												<xsl:attribute name="id">new-button</xsl:attribute>
 											</input>
-				</xsl:if>
+										</xsl:if>
 									</td>
-			</tr>
+								</tr>
 							</tbody>
-		</table>
-	</div>
+						</table>
+					</div>
 				</form>
 				<div id="tree_container">
 					<legend>
@@ -168,6 +168,6 @@
 		$('#expand').on('click',function(){
 		$(this).attr('href','javascript:;');
 		$('#treeDiv').jstree('open_all');
-	});
+		});
 	</script>
 </xsl:template>

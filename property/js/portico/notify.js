@@ -31,7 +31,8 @@ this.notify_contact_lookup = function ()
  }
  */
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	$("#notify_contact").bind('DOMAttrModified propertychange', function (evt)
 	{

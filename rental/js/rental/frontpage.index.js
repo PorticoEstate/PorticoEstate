@@ -85,18 +85,21 @@ $(document).ready(function ()
 	};
 });
 
-getRequestData = function (dataSelected, parameters) {
+getRequestData = function (dataSelected, parameters)
+{
 
 	var data = {};
 
-	$.each(parameters.parameter, function (i, val) {
+	$.each(parameters.parameter, function (i, val)
+	{
 		data[val.name] = {};
 	});
 
 	var n = 0;
 	for (var n = 0; n < dataSelected.length; ++n)
 	{
-		$.each(parameters.parameter, function (i, val) {
+		$.each(parameters.parameter, function (i, val)
+		{
 			data[val.name][n] = dataSelected[n][val.source];
 		});
 	}
@@ -104,13 +107,15 @@ getRequestData = function (dataSelected, parameters) {
 	return data;
 };
 
-dismissNotification = function (oArgs, parameters) {
+dismissNotification = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_5' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_5').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 5;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -118,7 +123,8 @@ dismissNotification = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -127,13 +133,15 @@ dismissNotification = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-dismissNotificationAll = function (oArgs, parameters) {
+dismissNotificationAll = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_5' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_5').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 5;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -141,7 +149,8 @@ dismissNotificationAll = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 

@@ -1,19 +1,23 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	var text = document.getElementById("displayText");
 	//ele.hide();
 	$("#toggleText").hide();
 	text.innerHTML = "Ikke i listen? Registrer nytt lokale";
 });
 
-function toggle() {
+function toggle()
+{
 	var ele = document.getElementById("toggleText");
 	var text = document.getElementById("displayText");
 	var arenahidden = document.getElementById("new_arena_hidden");
-	if (ele.style.display == "block") {
+	if (ele.style.display == "block")
+	{
 		ele.style.display = "none";
 		text.innerHTML = "Registrer nytt lokale";
 	}
-	else {
+	else
+	{
 		ele.style.display = "block";
 		text.innerHTML = "";
 		arenahidden.value = "new_arena";
@@ -42,11 +46,14 @@ function get_address_search()
 	var div_address = $('#addess_container');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'address'}, {name: 'id', value: 'address'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
+	var attr = [
+		{name: 'name', value: 'address'}, {name: 'id', value: 'address'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_address) {
+	if (address && address != current_address)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address = address;
@@ -61,11 +68,14 @@ function get_address_search_arena()
 	var div_address = $('#arena_address_container');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'arena_address_select'}, {name: 'id', value: 'arena_address'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
+	var attr = [
+		{name: 'name', value: 'arena_address_select'}, {name: 'id', value: 'arena_address'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_arena_address) {
+	if (address && address != current_arena_address)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_arena_address = address;
@@ -80,11 +90,14 @@ function get_address_search_cp2()
 	var div_address = $('#address_container');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'contact2_address_select'}, {name: 'id', value: 'address_cp2'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
+	var attr = [
+		{name: 'name', value: 'contact2_address_select'}, {name: 'id', value: 'address_cp2'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_address_search_cp2) {
+	if (address && address != current_address_search_cp2)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address_search_cp2 = address;
@@ -229,13 +242,16 @@ function allOK()
 	}
 }
 
-if ($.formUtils) {
+if ($.formUtils)
+{
 	$.formUtils.addValidator({
 		name: 'description',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var description = $('#description').val();
 			var v = true;
-			if (description == null || description == "") {
+			if (description == null || description == "")
+			{
 				v = false;
 			}
 			return v;
@@ -245,10 +261,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'description_length',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var description = $('#description').val();
 			var v = true;
-			if (description.length > 254) {
+			if (description.length > 254)
+			{
 				v = false;
 			}
 			return v;
@@ -258,10 +276,13 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'target',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var n = 0;
-			$('input[name="target[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('input[name="target[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -273,10 +294,13 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'district',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var n = 0;
-			$('input[name="district"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('input[name="district"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -288,12 +312,15 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'internal_arena_id',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var a_h = $('#new_arena_hidden').val();
 			var a_id = $('#internal_arena_id').val();
 			var v = true;
-			if (a_h == null || a_h == '') {
-				if (a_id == null || a_id == '') {
+			if (a_h == null || a_h == '')
+			{
+				if (a_id == null || a_id == '')
+				{
 					v = false;
 				}
 			}
@@ -304,10 +331,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_phone',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_phone = $('#contact_phone').val();
 			var v = true;
-			if (contact_phone == null || contact_phone == '') {
+			if (contact_phone == null || contact_phone == '')
+			{
 				v = false;
 			}
 			return v;
@@ -317,10 +346,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_phone_length',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_phone = $('#contact_phone').val();
 			var v = true;
-			if ((contact_phone != null || contact_phone != '') && contact_phone.length < 8) {
+			if ((contact_phone != null || contact_phone != '') && contact_phone.length < 8)
+			{
 				v = false;
 			}
 			return v;
@@ -330,10 +361,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail = $('#contact_mail').val();
 			var v = true;
-			if (contact_mail == null || contact_mail == '') {
+			if (contact_mail == null || contact_mail == '')
+			{
 				v = false;
 			}
 			return v;
@@ -343,10 +376,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail2',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail2 = $('#contact_mail2').val();
 			var v = true;
-			if (contact_mail2 == null || contact_mail2 == '') {
+			if (contact_mail2 == null || contact_mail2 == '')
+			{
 				v = false;
 			}
 			return v;
@@ -356,12 +391,15 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail2_confirm',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail1 = $('#contact_mail').val();
 			var contact_mail2 = $('#contact_mail2').val();
 			var v = true;
-			if (contact_mail2 != null || contact_mail2 != '') {
-				if (contact_mail1 != contact_mail2) {
+			if (contact_mail2 != null || contact_mail2 != '')
+			{
+				if (contact_mail1 != contact_mail2)
+				{
 					v = false;
 				}
 			}

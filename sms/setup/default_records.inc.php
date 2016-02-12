@@ -1,46 +1,43 @@
 <?php
 	/**
-	* phpGroupWare - sms: A SMS Gateway
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package sms
-	* @subpackage setup
- 	* @version $Id$
-	*/
-
-
+	 * phpGroupWare - sms: A SMS Gateway
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package sms
+	 * @subpackage setup
+	 * @version $Id$
+	 */
 	/**
 	 * Description
 	 * @package property
 	 */
-
-	$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+	$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 	$db->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'sms'");
 	$db->next_record();
 	$app_id = $db->f('app_id');
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 
-/*
-	$db->query("SELECT id FROM phpgw_config2_section WHERE location_id = '$location_id'");
-	
-	$old_sections = array();
-	while($db->next_record())
-	{
-		$old_sections[] = $db->f('id');
-	}
-	
-	if ($old_sections)
-	{
-		$db->query('DELETE FROM phpgw_config2_section WHERE id IN (' . explode(',',$old_sections ) . ')');
-		$db->query('DELETE FROM phpgw_config2_attrib WHERE section_id IN (' . explode(',',$old_sections ) . ')');
-		$db->query('DELETE FROM phpgw_config2_choice WHERE section_id IN (' . explode(',',$old_sections ) . ')');
-		$db->query('DELETE FROM phpgw_config2_value WHERE section_id IN (' . explode(',',$old_sections ) . ')');
-	}
-*/
+	/*
+	  $db->query("SELECT id FROM phpgw_config2_section WHERE location_id = '$location_id'");
+
+	  $old_sections = array();
+	  while($db->next_record())
+	  {
+	  $old_sections[] = $db->f('id');
+	  }
+
+	  if ($old_sections)
+	  {
+	  $db->query('DELETE FROM phpgw_config2_section WHERE id IN (' . explode(',',$old_sections ) . ')');
+	  $db->query('DELETE FROM phpgw_config2_attrib WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+	  $db->query('DELETE FROM phpgw_config2_choice WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+	  $db->query('DELETE FROM phpgw_config2_value WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+	  }
+	 */
 
 	$db->query("DELETE FROM phpgw_locations where app_id = {$app_id} AND name != 'run'");
 	$db->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
@@ -128,7 +125,7 @@
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 4, 'kannel')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 5, 'carrot')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 6, 'pswin')");
-	
+
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 1, 'gnokii')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 2, 'clickatell')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 3, 'uplink')");

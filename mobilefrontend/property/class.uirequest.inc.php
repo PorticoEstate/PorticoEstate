@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage project
 	 * @version $Id$
 	 */
-
-  	phpgw::import_class('property.uirequest');
+	phpgw::import_class('property.uirequest');
 
 	class mobilefrontend_uirequest extends property_uirequest
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

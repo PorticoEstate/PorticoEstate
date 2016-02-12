@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -31,8 +30,8 @@
 
 	class logistic_resource_type_requirement extends logistic_model
 	{
-		public static $so;
 
+		public static $so;
 		protected $id;
 		protected $location_id;
 		protected $project_type_id;
@@ -44,12 +43,12 @@
 		 *
 		 * @param int $id the id of this project
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
-			$this->id = (int) $id;
+			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -59,7 +58,7 @@
 			return $this->id;
 		}
 
-		public function set_location_id($location_id)
+		public function set_location_id( $location_id )
 		{
 			$this->location_id = $location_id;
 		}
@@ -69,7 +68,7 @@
 			return $this->location_id;
 		}
 
-		public function set_project_type_id($project_type_id)
+		public function set_project_type_id( $project_type_id )
 		{
 			$this->project_type_id = $project_type_id;
 		}
@@ -79,7 +78,7 @@
 			return $this->project_type_id;
 		}
 
-		public function set_cust_attribute_id($cust_attribute_id)
+		public function set_cust_attribute_id( $cust_attribute_id )
 		{
 			$this->cust_attribute_id = $cust_attribute_id;
 		}
@@ -90,13 +89,14 @@
 		}
 
 		/**
-		* Get a static reference to the storage object associated with this model object
-		*
-		* @return the storage object
-		*/
+		 * Get a static reference to the storage object associated with this model object
+		 *
+		 * @return the storage object
+		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('logistic.soresource_type_requirement');
 			}
 
@@ -105,19 +105,19 @@
 
 		public function serialize()
 		{
-			$entity_so	= CreateObject('property.soadmin_entity');
+			$entity_so = CreateObject('property.soadmin_entity');
 			$project_so = CreateObject('logistic.soproject');
 			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
-			$entity_arr = explode('.',$loc_arr['location']);
+			$entity_arr = explode('.', $loc_arr['location']);
 
 			$entity = $entity_so->read_single($entity_arr[2]);
-			$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+			$category = $entity_so->read_single_category($entity_arr[2], $entity_arr[3]);
 			$entity_label = $entity['name'];
 			$category_label = $category['name'];
-			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
+			$project_type_label = $project_so->get_project_type_label($this->get_project_type_id());
 
 			return array(
-				'id' => $this->get_location_id().'-'.$this->get_project_type_id(),
+				'id' => $this->get_location_id() . '-' . $this->get_project_type_id(),
 				'location_id' => $this->get_location_id(),
 				'entity_label' => $entity_label,
 				'category_label' => $category_label,

@@ -1,13 +1,12 @@
 <?php
-
 // Default user
-$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
-$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
+	$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
 
-$modules = array
-    (
-    'activitycalendarfrontend',
+	$modules = array
+		(
+		'activitycalendarfrontend',
 //	'preferences'
-);
+	);
 
-$aclobj = & $GLOBALS['phpgw']->acl;
+	$aclobj = & $GLOBALS['phpgw']->acl;

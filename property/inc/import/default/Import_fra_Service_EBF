@@ -44,12 +44,12 @@
 		var $invoice;
 		var $import = array(
 			'Bestilling' => 'pmwrkord_code',
-			'Fakt. Nr'	 => 'fakturanr',
-			'Konto'		 => 'spbudact_code',
-			'Objekt'	 => 'dima',
-			'DIM 6'		 => 'dimd', //utgår fra import - kopieres fra kategori
-			'MVA'		 => 'mvakode',
-			'Tjeneste'	 => 'kostra_id',
+			'Fakt. Nr' => 'fakturanr',
+			'Konto' => 'spbudact_code',
+			'Objekt' => 'dima',
+			'DIM 6' => 'dimd', //utgår fra import - kopieres fra kategori
+			'MVA' => 'mvakode',
+			'Tjeneste' => 'kostra_id',
 			'Belop [kr]' => 'belop'
 		);
 		var $header = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA',
@@ -64,11 +64,11 @@
 			$this->dateformat = $GLOBALS['phpgw']->db->date_format();
 			$this->datetimeformat = $GLOBALS['phpgw']->db->datetime_format();
 			$this->next_bilagsnr = $this->invoice->next_bilagsnr();
-			$this->cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
-			$this->cats->supress_info	= true;
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$this->cats->supress_info = true;
 		}
 
-		function import($invoice_common, $download)
+		function import( $invoice_common, $download )
 		{
 			$tsvfile = $invoice_common['tsvfile'];
 
@@ -87,16 +87,16 @@
 
 			$rows = count($data) + 1;
 
-			for($row = $this->header_count; $row < $rows; $row++)
+			for ($row = $this->header_count; $row < $rows; $row++)
 			{
 				$this->currentrecord = array();
 
 				$j = 0;
-				foreach($data[$row] as $key => $_dummy)
+				foreach ($data[$row] as $key => $_dummy)
 				{
 					$value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 
-					if($name = $this->import[$this->header[$j]])
+					if ($name = $this->import[$this->header[$j]])
 					{
 
 						$value = str_replace(array('\n', '\r'), array('<BR>', ''), $value);
@@ -105,7 +105,7 @@
 					$j++;
 				}
 
-				if($this->currentrecord['fakturanr'] && $this->currentrecord['belop']) // fakturanr og beløp
+				if ($this->currentrecord['fakturanr'] && $this->currentrecord['belop']) // fakturanr og beløp
 				{
 					++$this->id;
 					$buffer = $this->import_end_record($buffer, $invoice_common);
@@ -114,7 +114,7 @@
 
 //----------
 
-			if(!$download)
+			if (!$download)
 			{
 				$buffer = $this->import_end_file($buffer, $invoice_common['bilagsnr']);
 			}
@@ -122,21 +122,21 @@
 			return $buffer;
 		}
 
-		function import_end_record($buffer, $invoice_common)
+		function import_end_record( $buffer, $invoice_common )
 		{
 			static $workorders = array();
 
 			$buffer[$this->id] = array();
 
-			foreach($this->currentrecord as $name => $value)
+			foreach ($this->currentrecord as $name => $value)
 			{
-				if($name == 'belop')
+				if ($name == 'belop')
 				{
 					$value = str_replace('kr', '', $value);
 					$value = str_replace(' ', '', $value);
 					$value = str_replace(',', '.', $value);
 
-					if($invoice_common['art'] == 2) // kreditnota
+					if ($invoice_common['art'] == 2) // kreditnota
 					{
 						$value = -1 * abs($value);
 					}
@@ -144,11 +144,11 @@
 					$buffer[$this->id]['godkjentbelop'] = $value;
 				}
 
-				if($name == 'pmwrkord_code')
+				if ($name == 'pmwrkord_code')
 				{
-					if(!$workorder = $workorders[(int)$value]['order'])
+					if (!$workorder = $workorders[(int)$value]['order'])
 					{
-						if($this->soXport->check_order((int)$value))
+						if ($this->soXport->check_order((int)$value))
 						{
 							$workorder = execMethod('property.soworkorder.read_single', (int)$value);
 							$workorders[(int)$value]['order'] = $workorder;
@@ -159,20 +159,20 @@
 					$buffer[$this->id]['dimb'] = $workorders[(int)$value]['order']['ecodimb']; // Ansvarssted
 				}
 
-				if($name == 'spbudact_code')
+				if ($name == 'spbudact_code')
 				{
 					continue;
 				}
 
-				if($name == 'dima')
+				if ($name == 'dima')
 				{
 					$value = $this->check_dima($value);
 					$buffer[$this->id]['loc1'] = $loc1 = substr($value, 0, 4);
 				}
 
-				if($name == 'mvakode')
+				if ($name == 'mvakode')
 				{
-					if($invoice_common['auto_tax'])
+					if ($invoice_common['auto_tax'])
 					{
 						$value = (int)$this->soXport->auto_tax($buffer[$this->id]['loc1']);
 					}
@@ -201,7 +201,7 @@
 
 			$invoice_date = date($this->dateformat, mktime(2, 0, 0, $invoice_common['smonth'], $invoice_common['sday'], $invoice_common['syear']));
 
-			if($invoice_common['num_days'])
+			if ($invoice_common['num_days'])
 			{
 				$payment_date = date($this->dateformat, mktime(2, 0, 0, $invoice_common['smonth'], $invoice_common['sday'], $invoice_common['syear']) + (86400 * $invoice_common['num_days']));
 			}
@@ -213,12 +213,12 @@
 			$buffer[$this->id]['fakturadato'] = $invoice_date;
 			$buffer[$this->id]['forfallsdato'] = $payment_date;
 
-			if($workorder)
+			if ($workorder)
 			{
-				if($this->check_old_spbudact_code($workorder['b_account_id']))
+				if ($this->check_old_spbudact_code($workorder['b_account_id']))
 				{
 					$_accout_class = substr(substr($workorder['b_account_id'], -4), 0, 2);
-					switch($_accout_class)
+					switch ($_accout_class)
 					{
 						case '41':
 							$buffer[$this->id]['spbudact_code'] = '123013';
@@ -254,7 +254,7 @@
 				else
 				{
 					$buffer[$this->id]['dime'] = strlen($workorder['cat_id']) == 4 ? $workorder['cat_id'] : ''; // Dim 6
-					if(strlen($workorder['b_account_id']) == 6 && $this->check_spbudact_code($workorder['b_account_id']))
+					if (strlen($workorder['b_account_id']) == 6 && $this->check_spbudact_code($workorder['b_account_id']))
 					{
 						$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
 					}
@@ -267,10 +267,10 @@
 			else
 			{
 				$_spbudact_code = $this->currentrecord['spbudact_code'];
-				if($this->check_old_spbudact_code($_spbudact_code))
+				if ($this->check_old_spbudact_code($_spbudact_code))
 				{
 					$_accout_class = substr(substr($_spbudact_code, -4), 0, 2);
-					switch($_accout_class)
+					switch ($_accout_class)
 					{
 						case '41':
 							$buffer[$this->id]['spbudact_code'] = '123013';
@@ -305,24 +305,24 @@
 				}
 				else
 				{
-					$category	= $this->cats->return_single((int)$this->currentrecord['dimd']);
-					if(isset($category[0]) && $category[0]['active'] == 1)
+					$category = $this->cats->return_single((int)$this->currentrecord['dimd']);
+					if (isset($category[0]) && $category[0]['active'] == 1)
 					{
 						$buffer[$this->id]['dime'] = $this->currentrecord['dimd']; // Dim 6
 					}
-					
+
 					$buffer[$this->id]['spbudact_code'] = $_spbudact_code ? $_spbudact_code : '';
 				}
 			}
 
-			if(!$this->invoice->check_valid_b_account($buffer[$this->id]['spbudact_code']))
+			if (!$this->invoice->check_valid_b_account($buffer[$this->id]['spbudact_code']))
 			{
 				$buffer[$this->id]['spbudact_code'] = '';
 			}
 
 			$buffer[$this->id]['dimd'] = $buffer[$this->id]['dime'];
 
-			if($invoice_common['auto_tax'])
+			if ($invoice_common['auto_tax'])
 			{
 				$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spbudact_code']);
 				$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spvend_code']);
@@ -330,12 +330,12 @@
 
 			$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 
-			if(!isset($buffer[$this->id]['fakturanr']) || !$buffer[$this->id]['fakturanr']) // fakturanr
+			if (!isset($buffer[$this->id]['fakturanr']) || !$buffer[$this->id]['fakturanr']) // fakturanr
 			{
 				$buffer[$this->id]['fakturanr'] = $invoice_common['invoice_num'];
 			}
 
-			if(!isset($buffer[$this->id]['dimb']) || !$buffer[$this->id]['dimb']) // Ansvarssted
+			if (!isset($buffer[$this->id]['dimb']) || !$buffer[$this->id]['dimb']) // Ansvarssted
 			{
 				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
 			}
@@ -343,11 +343,11 @@
 			return $buffer;
 		}
 
-		function check_old_spbudact_code($id)
+		function check_old_spbudact_code( $id )
 		{
 			$this->db->query("SELECT id FROM fm_b_account_convert WHERE id='{$id}'");
 			$this->db->next_record();
-			if($this->db->f('id'))
+			if ($this->db->f('id'))
 			{
 				return true;
 			}
@@ -366,28 +366,28 @@
 		 * @param integer $id
 		 * @return bool true on exist, false on not exist
 		 */
-		function check_spbudact_code($id)
+		function check_spbudact_code( $id )
 		{
 			$this->db->query("SELECT id FROM fm_b_account WHERE id='{$id}'");
 			return !!$this->db->next_record();
 		}
 
-		function check_dima($id)
+		function check_dima( $id )
 		{
 			$loc1 = substr($id, 0, 4);
 			$loc2 = substr($id, 4, 2);
 
 			$this->db->query("select loc1 from fm_location1 where loc1='$loc1' AND ((fm_location1.category <> 99) OR (fm_location1.category IS NULL))");
 			$this->db->next_record();
-			if($this->db->f('loc1'))
+			if ($this->db->f('loc1'))
 			{
 				$dima = $this->db->f('loc1');
 
-				if($loc2)
+				if ($loc2)
 				{
 					$this->db->query("select location_code from fm_location2 where loc1='$loc1' AND loc2='$loc2'  AND ((fm_location2.category <> 99) OR (fm_location2.category IS NULL))");
 					$this->db->next_record();
-					if($this->db->f('location_code'))
+					if ($this->db->f('location_code'))
 					{
 						$dima = str_replace('-', '', $this->db->f('location_code'));
 					}
@@ -401,7 +401,7 @@
 			return $dima;
 		}
 
-		function import_end_file($buffer, $bilagsnr)
+		function import_end_file( $buffer, $bilagsnr )
 		{
 			$receipt = array();
 			$num = $this->soXport->add($buffer);

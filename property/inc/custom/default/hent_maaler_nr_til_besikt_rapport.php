@@ -1,8 +1,8 @@
 <?php
 	/*
-	* this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
-	* 
-	*/
+	 * this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
+	 *
+	 */
 
 	class entity_data_sync extends property_boentity
 	{
@@ -16,25 +16,25 @@
 		function __construct()
 		{
 			parent::__construct();
-			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			if($this->acl_location != '.entity.2.17')
+			if ($this->acl_location != '.entity.2.17')
 			{
 				throw new Exception("'hent maaler til rapport' is intended for location = '.entity.2.17'");
 			}
 		}
 
-		function update_data($values, $values_attribute = array())
+		function update_data( $values, $values_attribute = array() )
 		{
 			$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$maaler_nr = $this->db->f('maaler_nr');
 
-			if($action != 'edit')
+			if ($action != 'edit')
 			{
-				if($maaler_nr)
+				if ($maaler_nr)
 				{
 					$sql = "UPDATE fm_entity_2_17 SET maaler_nr= '{$maaler_nr}' WHERE location_code='{$values['location_code']}'";
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -47,9 +47,9 @@
 			$bod_beskrivelse = $this->db->f('beskrivelse');
 
 
-			if($action != 'edit')
+			if ($action != 'edit')
 			{
-				if($bod_beskrivelse)
+				if ($bod_beskrivelse)
 				{
 					$sql = "UPDATE fm_entity_2_17 SET boder_antall= '{$bod_beskrivelse}' WHERE location_code='{$values['location_code']}'";
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -59,17 +59,17 @@
 
 			$besiktet_dato = time();
 
-			if(isset($values_attribute) && is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
-				foreach($values_attribute as $entry)
+				foreach ($values_attribute as $entry)
 				{
-					switch($entry['name'])
+					switch ($entry['name'])
 					{
 						case 'maaler_nr':
-							if($entry['value'] && ($entry['value'] != $maaler_nr))
+							if ($entry['value'] && ($entry['value'] != $maaler_nr))
 							{
 								$this->soproject = CreateObject('property.soproject');
-								if($values['street_name'])
+								if ($values['street_name'])
 								{
 									$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
 								}
@@ -84,7 +84,7 @@
 
 							break;
 						case 'maalerstand':
-							if($entry['value'])
+							if ($entry['value'])
 							{
 								$new_value = $entry['value'];
 
@@ -92,10 +92,10 @@
 								$this->db->next_record();
 								$old_value = $this->db->f('maaler_stand');
 								$id = $this->db->f('id');
-								if($id)
+								if ($id)
 								{
 									$attrib_id = 8;
-									if($new_value != $old_value)
+									if ($new_value != $old_value)
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_11');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
@@ -106,7 +106,7 @@
 							break;
 
 						case 'boder_antall':
-							if($entry['value'])
+							if ($entry['value'])
 							{
 								$new_value = $entry['value'];
 
@@ -114,10 +114,10 @@
 								$this->db->next_record();
 								$old_value = $this->db->f('beskrivelse');
 								$id = $this->db->f('id');
-								if($id)
+								if ($id)
 								{
 									$attrib_id = 1;
-									if($new_value != $old_value)
+									if ($new_value != $old_value)
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_14');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
@@ -126,7 +126,7 @@
 								}
 								else
 								{
-									if($values['street_name'])
+									if ($values['street_name'])
 									{
 										$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
 									}
@@ -140,17 +140,17 @@
 							}
 							break;
 						case 'br_slokk_app_skiftet':
-							if($entry['value'])
+							if ($entry['value'])
 							{
 								$new_value = $entry['value'];
 								$this->db->query("SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
 								$this->db->next_record();
 								$old_value = $this->db->f('skiftet');
 								$id = $this->db->f('id');
-								if($id)
+								if ($id)
 								{
 									$attrib_id = 2;
-									if(strtotime($new_value) != strtotime($old_value))
+									if (strtotime($new_value) != strtotime($old_value))
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_10');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
@@ -159,7 +159,7 @@
 								}
 								else
 								{
-									if($values['street_name'])
+									if ($values['street_name'])
 									{
 										$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
 									}
@@ -178,16 +178,16 @@
 			}
 		}
 
-		private function add_bod($beskrivelse, $location_code, $address)
+		private function add_bod( $beskrivelse, $location_code, $address )
 		{
 			$table = 'fm_entity_1_14';
 			$location = explode('-', $location_code);
 			$value_set = array();
 
 			$i = 1;
-			if(isset($location) AND is_array($location))
+			if (isset($location) AND is_array($location))
 			{
-				foreach($location as $location_entry)
+				foreach ($location as $location_entry)
 				{
 					$value_set["loc{$i}"] = $location_entry;
 
@@ -204,22 +204,22 @@
 			$value_set['user_id'] = $this->account;
 
 			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$historylog = CreateObject('property.historylog', 'entity_1_14');
 			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id = 1, time());
 		}
 
-		private function br_slokk_app($date, $location_code, $address)
+		private function br_slokk_app( $date, $location_code, $address )
 		{
 			$table = 'fm_entity_1_10';
 			$location = explode('-', $location_code);
 			$value_set = array();
 
 			$i = 1;
-			if(isset($location) AND is_array($location))
+			if (isset($location) AND is_array($location))
 			{
-				foreach($location as $location_entry)
+				foreach ($location as $location_entry)
 				{
 					$value_set["loc{$i}"] = $location_entry;
 
@@ -236,7 +236,7 @@
 			$value_set['user_id'] = $this->account;
 
 			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$historylog = CreateObject('property.historylog', 'entity_1_10');
 			$historylog->add('SO', $value_set['id'], $date, false, $attrib_id = 2, time());

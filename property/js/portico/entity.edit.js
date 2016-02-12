@@ -17,7 +17,8 @@ this.showlightbox_add_inventory = function (location_id, id)
 
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
-		closejs: function () {
+		closejs: function ()
+		{
 			refresh_inventory(location_id, id)
 		}
 	});
@@ -30,7 +31,8 @@ this.showlightbox_edit_inventory = function (location_id, id, inventory_id)
 
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
-		closejs: function () {
+		closejs: function ()
+		{
 			refresh_inventory(location_id, id)
 		}
 	});
@@ -43,7 +45,8 @@ this.showlightbox_show_calendar = function (location_id, id, inventory_id)
 
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
-		closejs: function () {
+		closejs: function ()
+		{
 			refresh_inventory(location_id, id)
 		}
 	});
@@ -77,12 +80,13 @@ this.onActionsClick = function (action)
 		add_control();
 	}
 
-	var api =$( '#datatable-container_4' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_4').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 
 	var numSelected = selected.length;
 
-	if (numSelected == 0) {
+	if (numSelected == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -116,7 +120,8 @@ this.onActionsClick = function (action)
 			dataType: 'json',
 			url: requestUrl,
 			data: data,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					$("#controller_receipt").html(data.status + '::' + data.msg);
@@ -138,13 +143,14 @@ this.onActionsClick = function (action)
 function parseURL(url)
 {
 	var parser = document.createElement('a'),
-			searchObject = {},
-			queries, split, i;
+		searchObject = {},
+		queries, split, i;
 	// Let the browser do the work
 	parser.href = url;
 	// Convert query string to object
 	queries = parser.search.replace(/^\?/, '').split('&');
-	for (i = 0; i < queries.length; i++) {
+	for (i = 0; i < queries.length; i++)
+	{
 		split = queries[i].split('=');
 		searchObject[split[0]] = split[1];
 	}
@@ -189,7 +195,8 @@ add_control = function ()
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				$("#controller_receipt").html(data.status + '::' + data.msg);
@@ -230,7 +237,8 @@ $(document).ready(function ()
 		});
 
 		var count = 0;
-		$("#treeDiv1").bind("select_node.jstree", function (event, data) {
+		$("#treeDiv1").bind("select_node.jstree", function (event, data)
+		{
 			count += 1;
 			var divd = data.instance.get_node(data.selected[0]).original['link'];
 			if (count > 1)
@@ -239,18 +247,21 @@ $(document).ready(function ()
 			}
 		});
 
-		$('#collapse').on('click', function () {
+		$('#collapse').on('click', function ()
+		{
 			$(this).attr('href', 'javascript:;');
 			$('#treeDiv1').jstree('close_all');
 		})
 
-		$('#expand').on('click', function () {
+		$('#expand').on('click', function ()
+		{
 			$(this).attr('href', 'javascript:;');
 			$('#treeDiv1').jstree('open_all');
 		});
 	}
 
-	$("#workorder_cancel").on("submit", function (e) {
+	$("#workorder_cancel").on("submit", function (e)
+	{
 		if ($("#lean").val() == 0)
 		{
 			return;
@@ -263,9 +274,11 @@ $(document).ready(function ()
 });
 
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#cases_time_span").change(function () {
+	$("#cases_time_span").change(function ()
+	{
 		var oArgs = {menuaction: 'property.uientity.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);

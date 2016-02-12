@@ -1,21 +1,21 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
 		<xsl:for-each select="pathway">
-		<ul class="pathway">
-			<li>
+			<ul class="pathway">
+				<li>
 					<a href="index.php?menuaction=bookingfrontend.uisearch.index">
 						<xsl:value-of select="lang_home" />
-				</a>
-			</li>
-			<li>
+					</a>
+				</li>
+				<li>
 					<a href="{building_link}">
 						<xsl:value-of select="building_name"/>
 					</a>
 				</li>
 				<li>
 					<xsl:value-of select="resource_name"/>
-			</li>
-		</ul>
+				</li>
+			</ul>
 		</xsl:for-each>
 
 		<div>
@@ -26,23 +26,23 @@
 		</div>
 		<div class="pure-g">
 			<div class="pure-u-1 pure-u-md-1-2">
-		<dl class="proplist-col main">
-			<xsl:if test="resource/description and normalize-space(resource/description)">
+				<dl class="proplist-col main">
+					<xsl:if test="resource/description and normalize-space(resource/description)">
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Description')" />
 						</dt>
 						<dd>
 							<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
 						</dd>
-			</xsl:if>
-			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
+					</xsl:if>
+					<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="resource/activity_name"/>
 						</dd>
-			</xsl:if>
+					</xsl:if>
 					<dt>
 						<xsl:value-of select="php:function('lang', 'Resource Type')" />
 					</dt>
@@ -52,17 +52,17 @@
 					<h3>
 						<xsl:value-of select="php:function('lang', 'Documents')" />
 					</h3>
-			<div id="documents_container"/>
-		</dl>
+					<div id="documents_container"/>
+				</dl>
 				<div  id="custom_fields"></div>
 			</div>
 			<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
 
 			<div class="pure-u-1 pure-u-lg-1-2">
-		<dl class="proplist-col images">	
-			<div id="images_container">
-			</div>
-		</dl>
+				<dl class="proplist-col images">
+					<div id="images_container">
+					</div>
+				</dl>
 				<dl class="proplist-col images map">
 					<!--div id="images_container"></div-->
 					<xsl:if test="resource/building/street and normalize-space(resource/building/street)">

@@ -23,20 +23,23 @@ this.confirm_session = function (action)
 		type: 'POST',
 		dataType: 'json',
 		url: strURL,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				if (data['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
 					JqueryPortico.lightboxlogin();//defined in common.js
-				} else
+				}
+				else
 				{
 					document.getElementById(action).value = 1;
 					try
 					{
 						validate_submit();
-					} catch (e)
+					}
+					catch (e)
 					{
 						document.form.submit();
 					}

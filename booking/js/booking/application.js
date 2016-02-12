@@ -1,11 +1,13 @@
 var building_id_selection = "";
 var regulations_select_all = "";
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
-			'field_building_name', 'field_building_id', 'building_container');
+		'field_building_name', 'field_building_id', 'building_container');
 
-	$("#field_activity").change(function () {
+	$("#field_activity").change(function ()
+	{
 		var building_id = $('#field_building_id').val();
 		if (building_id)
 		{
@@ -19,7 +21,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				var html_agegroups = '';
 				var html_audience = '';
 
@@ -45,7 +48,8 @@ $(document).ready(function () {
 					for (var i = 0; i < audience.length; ++i)
 					{
 						checked = '';
-						if (initialAudience) {
+						if (initialAudience)
+						{
 							for (var j = 0; j < initialAudience.length; ++j)
 							{
 								if (audience[i]['id'] == initialAudience[j])
@@ -69,51 +73,64 @@ $(document).ready(function () {
 
 });
 
-$(window).load(function () {
+$(window).load(function ()
+{
 	building_id = $('#field_building_id').val();
 	regulations_select_all = initialAcceptAllTerms;
 	resources = initialSelection;
-	if (building_id) {
+	if (building_id)
+	{
 		populateTableChkResources(building_id, initialSelection);
 		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
 		building_id_selection = building_id;
 	}
-	$("#field_building_name").on("autocompleteselect", function (event, ui) {
+	$("#field_building_name").on("autocompleteselect", function (event, ui)
+	{
 		var building_id = ui.item.value;
 		var selection = [];
 		var resources = [];
-		if (building_id != building_id_selection) {
+		if (building_id != building_id_selection)
+		{
 			populateTableChkResources(building_id, initialSelection);
 			populateTableChkRegulations(building_id, selection, resources);
 			building_id_selection = building_id;
 		}
 	});
-	$('#resources_container').on('change', '.chkRegulations', function () {
+	$('#resources_container').on('change', '.chkRegulations', function ()
+	{
 		var resources = new Array();
-		$('#resources_container input[name="resources[]"]:checked').each(function () {
+		$('#resources_container input[name="resources[]"]:checked').each(function ()
+		{
 			resources.push($(this).val());
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
 	});
 
-	if (!$.formUtils) {
-		$('#application_form').submit(function (e) {
-			if (!validate_documents()) {
+	if (!$.formUtils)
+	{
+		$('#application_form').submit(function (e)
+		{
+			if (!validate_documents())
+			{
 				e.preventDefault();
 				alert(lang['You must accept to follow all terms and conditions of lease first.']);
 			}
 		});
 	}
 });
-	
-if ($.formUtils) {
+
+if ($.formUtils)
+{
 	$.formUtils.addValidator({
 		name: 'regulations_documents',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			$('#regulation_documents input[name="accepted_documents[]"]').each(function () {
-				if (!$(this).is(':checked')) {
+			$('#regulation_documents input[name="accepted_documents[]"]').each(function ()
+			{
+				if (!$(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -123,15 +140,18 @@ if ($.formUtils) {
 		errorMessage: 'You must accept to follow all terms and conditions of lease first.',
 		errorMessageKey: 'regulations_documents'
 	});
-		
+
 	$.formUtils.addValidator({
 		name: 'target_audience',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			$('#audience input[name="audience[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('#audience input[name="audience[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
-		}
+				}
 			});
 			var v = (n > 0) ? true : false;
 			return v;
@@ -139,15 +159,18 @@ if ($.formUtils) {
 		errorMessage: 'Please choose at least 1 target audience',
 		errorMessageKey: 'target_audience'
 	});
-		
+
 	$.formUtils.addValidator({
 		name: 'application_resources',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			$('#resources_container table input[name="resources[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('#resources_container table input[name="resources[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
-    }
+				}
 			});
 			var v = (n > 0) ? true : false;
 			return v;
@@ -158,10 +181,13 @@ if ($.formUtils) {
 
 	$.formUtils.addValidator({
 		name: 'number_participants',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			$('#agegroup_tbody input').each(function () {
-				if ($(this).val() != "" && $(this).val() > 0) {
+			$('#agegroup_tbody input').each(function ()
+			{
+				if ($(this).val() != "" && $(this).val() > 0)
+				{
 					n++;
 				}
 			});
@@ -170,15 +196,17 @@ if ($.formUtils) {
 		},
 		errorMessage: 'Number of participants is required',
 		errorMessageKey: 'number_participants'
-	}); 
-	
+	});
+
 	$.formUtils.addValidator({
 		name: 'customer_identifier',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var v = false;
 			var customer_ssn = $('#field_customer_ssn').val();
 			var customer_organization_number = $('#field_customer_organization_number').val();
-			if (customer_ssn != "" || customer_organization_number != "") {
+			if (customer_ssn != "" || customer_organization_number != "")
+			{
 				v = true;
 			}
 			return v;
@@ -186,41 +214,56 @@ if ($.formUtils) {
 		errorMessage: 'Customer identifier type is required',
 		errorMessageKey: 'customer_identifier'
 	});
-	
+
 	$.formUtils.addValidator({
 		name: 'application_dates',
-		validatorFunction: function (value, $el, config, language, $form) {
+		validatorFunction: function (value, $el, config, language, $form)
+		{
 			var n = 0;
-			if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0) {
+			if ($('input[name="from_[]"]').length == 0 || $('input[name="from_[]"]').length == 0)
+			{
 				return false;
 			}
-			$('input[name="from_[]"]').each(function () {
-				if ($(this).val() == "") {
+			$('input[name="from_[]"]').each(function ()
+			{
+				if ($(this).val() == "")
+				{
 					$($(this).addClass("error").css("border-color", "red"));
 					n++;
-				} else {
+				}
+				else
+				{
 					$($(this).removeClass("error").css("border-color", ""));
 				}
 			});
-			$('input[name="to_[]"]').each(function () {
-				if ($(this).val() == "") {
+			$('input[name="to_[]"]').each(function ()
+			{
+				if ($(this).val() == "")
+				{
 					$($(this).addClass("error").css("border-color", "red"));
 					n++;
-				} else {
+				}
+				else
+				{
 					$($(this).removeClass("error").css("border-color", ""));
-		}
-   });
+				}
+			});
 			var v = (n == 0) ? true : false;
 			return v;
 		},
 		errorMessage: 'Invalid date',
 		errorMessageKey: 'application_dates'
 	});
-} else {
-	function validate_documents() {
+}
+else
+{
+	function validate_documents()
+	{
 		var n = 0;
-		$('#regulation_documents input[name="accepted_documents[]"]').each(function () {
-			if (!$(this).is(':checked')) {
+		$('#regulation_documents input[name="accepted_documents[]"]').each(function ()
+		{
+			if (!$(this).is(':checked'))
+			{
 				n++;
 			}
 		});
@@ -229,40 +272,61 @@ if ($.formUtils) {
 	}
 }
 
-function populateTableChkResources(building_id, selection) {
+function populateTableChkResources(building_id, selection)
+{
 	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: building_id, sub_activity_id: $("#field_activity").val()};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 	var container = 'resources_container';
-	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}
+					]}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+	];
 	populateTableResources(url, container, colDefsResources);
 }
 
-function populateTableChkRegulations(building_id, selection, resources) {
+function populateTableChkRegulations(building_id, selection, resources)
+{
 	var url = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;
-	for (var r in resources) {
+	for (var r in resources)
+	{
 		url += '&owner[]=resource::' + resources[r];
 	}
 	var container = 'regulation_documents';
-	var colDefsRegulations = [{label: lang['Accepted'], object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'}, {name: 'name', value: 'accepted_documents[]'}]}], value: 'id', checked: selection}, {key: 'name', label: lang['Document'], formatter: genericLink}];
-	if (regulations_select_all) {
+	var colDefsRegulations = [{label: lang['Accepted'], object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'accepted_documents[]'}
+					]}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Document'], formatter: genericLink}
+	];
+	if (regulations_select_all)
+	{
 		colDefsRegulations[0]['object'][0]['attrs'].push({name: 'checked', value: 'checked'});
 	}
 	regulations_select_all = false;
 	populateTableRegulations(url, container, colDefsRegulations);
 }
 
-function populateTableResources(url, container, colDefs) {
-	if (typeof tableClass !== 'undefined') {
+function populateTableResources(url, container, colDefs)
+{
+	if (typeof tableClass !== 'undefined')
+	{
 		createTable(container, url, colDefs, 'results', tableClass);
-	} else {
+	}
+	else
+	{
 		createTable(container, url, colDefs, 'results');
 	}
 }
 
-function populateTableRegulations(url, container, colDefs) {
-	if (typeof tableClass !== 'undefined') {
+function populateTableRegulations(url, container, colDefs)
+{
+	if (typeof tableClass !== 'undefined')
+	{
 		createTable(container, url, colDefs, '', tableClass);
-	} else {
+	}
+	else
+	{
 		createTable(container, url, colDefs);
 	}
 

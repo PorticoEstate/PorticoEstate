@@ -5,33 +5,33 @@
 	{
 
 		public $public_functions = array
-		(
-			'index'			=>	true,
+			(
+			'index' => true,
 		);
-		
+
 		public function __construct()
 		{
 			parent::__construct();
 			self::set_active_menu('admin::bookingfrontend::metasettings');
-			$this->fields		 = array(
-				'metatag_author'	 => 'string',
-				'metatag_robots'	 => 'string',
-				'frontpagetext'		 => 'html',
+			$this->fields = array(
+				'metatag_author' => 'string',
+				'metatag_robots' => 'string',
+				'frontpagetext' => 'html',
 			);
 		}
-		
+
 		public function index()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$metasettings = extract_values($_POST, $this->fields);
 
-				foreach($metasettings as $dim => $value)
+				foreach ($metasettings as $dim => $value)
 				{
-					if(strlen(trim($value)) > 0)
+					if (strlen(trim($value)) > 0)
 					{
 						$config->value($dim, $value);
 					}
@@ -43,9 +43,9 @@
 				$config->save_repository();
 			}
 
-			$tabs			 = array();
-			$tabs['meta']	 = array('label' => lang('metadata settings'), 'link' => '#meta');
-			$active_tab		 = 'meta';
+			$tabs = array();
+			$tabs['meta'] = array('label' => lang('metadata settings'), 'link' => '#meta');
+			$active_tab = 'meta';
 
 			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			phpgwapi_jquery::init_ckeditor('field_frontpagetext');

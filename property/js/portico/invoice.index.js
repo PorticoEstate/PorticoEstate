@@ -18,7 +18,7 @@ addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTable)
 		}
 	}
 	var columns = api.columns();
-	if(typeof(columns[0][16]) != 'undefined')
+	if (typeof (columns[0][16]) != 'undefined')
 	{
 		var newTD = JqueryPortico.CreateRowChecked("signClass");
 		$(api.column(12).footer()).html(newTD);
@@ -71,7 +71,9 @@ FormatterPeriod = function (key, oData)
 		if (oData[key] == v.value)
 		{
 			combo.append($("<option selected></option>").attr("value", v.value).text(v.text));
-		} else {
+		}
+		else
+		{
 			combo.append($("<option></option>").attr("value", v.value).text(v.text));
 		}
 	});
@@ -85,7 +87,8 @@ function onPeriodItemClick(el, idvoucher)
 	var requestUrl = api.ajax.url();
 
 	var data = {"period": el.options[el.selectedIndex].value, "voucher_id_for_period": idvoucher};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 		document.getElementById("message").innerHTML = result.message[0].msg;
 	}, data, "POST", "JSON");
 }
@@ -126,7 +129,9 @@ FormatterPeriodization_start = function (key, oData)
 		if (oData[key] == v.value)
 		{
 			combo.append($("<option selected></option>").attr("value", v.value).text(v.text));
-		} else {
+		}
+		else
+		{
 			combo.append($("<option></option>").attr("value", v.value).text(v.text));
 		}
 	});
@@ -140,7 +145,8 @@ function onPeriodization_startItemClick(el, idvoucher)
 	var requestUrl = api.ajax.url();
 
 	var data = {"periodization_start": el.options[el.selectedIndex].value, "voucher_id_for_periodization_start": idvoucher};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 		document.getElementById("message").innerHTML = result.message[0].msg;
 	}, data, "POST", "JSON");
 }
@@ -151,7 +157,8 @@ function onPeriodizationItemClick(el, idvoucher)
 	var requestUrl = api.ajax.url();
 
 	var data = {"periodization": el.options[el.selectedIndex].value, "voucher_id_for_periodization": idvoucher};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 		document.getElementById("message").innerHTML = result.message[0].msg;
 	}, data, "POST", "JSON");
 }
@@ -182,7 +189,8 @@ function onSave()
 	var num_days = $('.myValuesForPHP');
 
 	var i = 0;
-	api.data().each(function (d) {
+	api.data().each(function (d)
+	{
 
 		values['counter'][i] = i;
 		values['invoice_count'][i] = d.invoice_count;
@@ -195,27 +203,35 @@ function onSave()
 		if ((sign[i].name != "") && (sign[i].value != d.sign_orig) && (sign[i].checked))
 		{
 			values['sign'][i] = sign[i].value;
-		} else if ((supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked))
+		}
+		else if ((supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked))
 		{
 			values['sign'][i] = supervisor[i].value;
-		} else if ((budget_responsible[i].name != "") && (budget_responsible[i].value != d.sign_orig) && (budget_responsible[i].checked))
+		}
+		else if ((budget_responsible[i].name != "") && (budget_responsible[i].value != d.sign_orig) && (budget_responsible[i].checked))
 		{
 			values['sign'][i] = budget_responsible[i].value;
-		} else {
+		}
+		else
+		{
 			values['sign'][i] = '';
 		}
 
 		if ((kreditnota_tmp[i].checked))
 		{
 			values['kreditnota'][i] = true;
-		} else {
+		}
+		else
+		{
 			values['kreditnota'][i] = '';
 		}
 
 		if ((transfer_id[i].checked))
 		{
 			values['transfer'][i] = true;
-		} else {
+		}
+		else
+		{
 			values['transfer'][i] = '';
 		}
 
@@ -225,19 +241,22 @@ function onSave()
 	var requestUrl = api.ajax.url();
 
 	var data = {"values": values};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		document.getElementById("message").innerHTML = '';
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 			});
 		}
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 			});
 		}

@@ -7,7 +7,7 @@
 		#cal_container #numberWeek {width: 20px;display: inline-block;}
 	</style>
     
-		<ul class="pathway">
+	<ul class="pathway">
 		<li>
 			<a href="{season/buildings_link}">
 				<xsl:value-of select="php:function('lang', 'Buildings')" />
@@ -26,9 +26,9 @@
 				<xsl:value-of select="season/name"/>
 			</a>
 		</li>
-		</ul>
+	</ul>
 
-		<xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 		
 	<div class="pure-form">
 		<input type="hidden" name="tab" value="" />
@@ -62,25 +62,25 @@
 		</div>
 		<xsl:if test="season/permission/write">	
 			<div class="pure-control-group">
-			<div class="form-buttons">
+				<div class="form-buttons">
 					<input type="button" class="pure-button pure-button-primary" name="new" onclick="schedule.newAllocationForm('')">
 						<xsl:attribute name="value">
 							<xsl:value-of select="php:function('lang', 'New allocation')" />
 						</xsl:attribute>
 					</input>
 					<input type="button" class="pure-button pure-button-primary" name="generate_allocations">
-					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
+						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
 						<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'Generate allocations')" />
+							<xsl:value-of select="php:function('lang', 'Generate allocations')" />
 						</xsl:attribute>
-						</input>
+					</input>
 					<input type="button" class="pure-button pure-button-primary" name="cancel">
 						<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/cancel_link"/>"</xsl:attribute>
 						<xsl:attribute name="value">
 							<xsl:value-of select="php:function('lang', 'Cancel')" />
 						</xsl:attribute>
-						</input>
-						</div>
+					</input>
+				</div>
 			</div>
 		</xsl:if>
 
@@ -96,7 +96,7 @@
 		var colDefs = [];
 		$(window).load(function() {
 		colDefs = [
-				{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'}, 
+		{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'},
 		{key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},
 		{key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'seasonDateColumn'},
 		{key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: 'seasonDateColumn'},
@@ -105,7 +105,7 @@
 		{key: '5', label: '<xsl:value-of select="php:function('lang', 'Friday')" />', formatter: 'seasonDateColumn'},
 		{key: '6', label: '<xsl:value-of select="php:function('lang', 'Saturday')" />', formatter: 'seasonDateColumn'},
 		{key: '7', label: '<xsl:value-of select="php:function('lang', 'Sunday')" />', formatter: 'seasonDateColumn'}
-	];
+		];
 		createTableSchedule('schedule_container', weekUrl, colDefs, r, 'pure-table' );
 		});
 	</script>

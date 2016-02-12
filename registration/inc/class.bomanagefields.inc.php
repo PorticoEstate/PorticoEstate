@@ -1,77 +1,76 @@
 <?php
-	/**************************************************************************\
-	* phpGroupWare - Registration                                              *
-	* http://www.phpgroupware.org                                              *
-	* This file written by Jason Wies (Zone) <zone@users.sourceforge.net>    *
-	* Based on calendar/inc/class.boholiday.inc.php by Mark Peters             *
-	* --------------------------------------------                             *
-	*  This program is free software; you can redistribute it and/or modify it *
-	*  under the terms of the GNU General Public License as published by the   *
-	*  Free Software Foundation; either version 2 of the License, or (at your  *
-	*  option) any later version.                                              *
-	\**************************************************************************/
+	/*	 * ************************************************************************\
+	 * phpGroupWare - Registration                                              *
+	 * http://www.phpgroupware.org                                              *
+	 * This file written by Jason Wies (Zone) <zone@users.sourceforge.net>    *
+	 * Based on calendar/inc/class.boholiday.inc.php by Mark Peters             *
+	 * --------------------------------------------                             *
+	 *  This program is free software; you can redistribute it and/or modify it *
+	 *  under the terms of the GNU General Public License as published by the   *
+	 *  Free Software Foundation; either version 2 of the License, or (at your  *
+	 *  option) any later version.                                              *
+	  \************************************************************************* */
 
 	/* $Id$ */
 
 	class bomanagefields
 	{
+
 		var $public_functions = Array(
 			'get_field_list' => True
 		);
-
 		var $debug = False;
 		var $base_url = '/index.php';
-
 		var $so;
 		var $fields;
-		
+
 		function __construct()
 		{
-			$this->so = CreateObject ('registration.somanagefields');
+			$this->so = CreateObject('registration.somanagefields');
 			$this->fields = $this->get_field_list();
 		}
 
-		function save_fields ($fields)
+		function save_fields( $fields )
 		{
 
 			$current_fields = $this->get_field_list();
 
-			$name_transforms = array (
-				'email'      => 'email',
+			$name_transforms = array(
+				'email' => 'email',
 				'first_name' => 'n_given',
-				'last_name'  => 'n_family',
-				'address'    => 'adr_one_street',
-				'city'       => 'adr_one_locality',
-				'state'      => 'adr_one_region',
-				'zip'        => 'adr_one_postalcode',
-				'country'    => 'adr_one_countryname',
-				'gender'     => 'gender',
-				'phone'      => 'tel_work',
-				'birthday'  => 'bday',
-				'location'  => 'loc1'
+				'last_name' => 'n_family',
+				'address' => 'adr_one_street',
+				'city' => 'adr_one_locality',
+				'state' => 'adr_one_region',
+				'zip' => 'adr_one_postalcode',
+				'country' => 'adr_one_countryname',
+				'gender' => 'gender',
+				'phone' => 'tel_work',
+				'birthday' => 'bday',
+				'location' => 'loc1'
 			);
 
-			reset ($fields);
-			while (list (,$field_info) = each ($fields))
+			reset($fields);
+			while (list (, $field_info) = each($fields))
 			{
 				$orig_name = $field_info['field_name'];
-				unset ($changed);
+				unset($changed);
 
 				if (($field_info['field_type'] == 'text' || $field_info['field_type'] == 'textarea' || $field_info['field_type'] == 'dropdown' || $field_info['field_type'] == 'checkbox') && !$field_info['field_name'])
 				{
 					continue;
 				}
 
-				reset ($name_transforms);
+				reset($name_transforms);
 				foreach ($name_transforms as $type => $transform_name)
 				{
 					if ($field_info['field_type'] == $type)
 					{
 						reset($this->fields);
 						$suffix = 0;
-						foreach($this->fields as $current_field)
+						foreach ($this->fields as $current_field)
 						{
-							if($current_field['field_type'] == 'location')
+							if ($current_field['field_type'] == 'location')
 							{
 								$suffix++;
 							}
@@ -79,13 +78,13 @@
 
 						unset($current_field);
 
-						if($suffix && $field_info['field_type'] == 'location' && !is_array ($current_fields[$field_info['field_name']]))
+						if ($suffix && $field_info['field_type'] == 'location' && !is_array($current_fields[$field_info['field_name']]))
 						{
-							$field_info['field_name'] = rtrim($transform_name,'1') . $suffix;
-							$_child_level = $suffix +1;
+							$field_info['field_name'] = rtrim($transform_name, '1') . $suffix;
+							$_child_level = $suffix + 1;
 							$field_info['field_values'] = "{$_child_level}::loc{$_child_level}_name::loc{$suffix}_name";
 						}
-						else if($suffix && $field_info['field_type'] == 'location' && is_array ($current_fields[$field_info['field_name']]))
+						else if ($suffix && $field_info['field_type'] == 'location' && is_array($current_fields[$field_info['field_name']]))
 						{
 							//nothing
 						}
@@ -100,19 +99,19 @@
 
 				if ($changed && ($field_info['field_name'] != $orig_name))
 				{
-					unset ($this->fields[$orig_name]);
+					unset($this->fields[$orig_name]);
 				}
 
-				unset ($update);
+				unset($update);
 
-				if (is_array ($current_fields[$field_info['field_name']]))
+				if (is_array($current_fields[$field_info['field_name']]))
 				{
 					$update = 1;
 				}
 
 				if (!$field_info['field_order'])
 				{
-					$field_info['field_order'] = $this->get_next_field_order ($fields);
+					$field_info['field_order'] = $this->get_next_field_order($fields);
 				}
 
 				if ($update)
@@ -121,7 +120,7 @@
 					{
 						echo "<br>UPDATE - $field_info[field_name]";
 					}
-					$this->so->update_field ($field_info);
+					$this->so->update_field($field_info);
 				}
 				else
 				{
@@ -129,20 +128,20 @@
 					{
 						echo "<br>INSERT - $field_info[field_name]";
 					}
-					$this->so->insert_field ($field_info);
+					$this->so->insert_field($field_info);
 				}
 			}
 
-			reset ($current_fields);
-			while (list (,$field_info) = each ($current_fields))
+			reset($current_fields);
+			while (list (, $field_info) = each($current_fields))
 			{
-				if (!is_array ($fields[$field_info['field_name']]))
+				if (!is_array($fields[$field_info['field_name']]))
 				{
 					if ($this->debug)
 					{
 						echo "<br>REMOVE - $field_info[field_name]";
 					}
-					$this->so->remove_field ($field_info);
+					$this->so->remove_field($field_info);
 				}
 			}
 		}
@@ -156,7 +155,7 @@
 			{
 				/* Convert the stored database values into comma delimited form */
 
-				$field_values = unserialize (base64_decode ($field_info['field_values']));
+				$field_values = unserialize(base64_decode($field_info['field_values']));
 				$fields[$num]['field_values'] = $field_values;
 
 				$rarray[$field_info['field_name']] = $fields[$num];
@@ -165,9 +164,9 @@
 			return $rarray;
 		}
 
-		function submit ($post_vars)
+		function submit( $post_vars )
 		{
-			if (!is_array ($post_vars))
+			if (!is_array($post_vars))
 			{
 				return -1;
 			}
@@ -175,49 +174,49 @@
 			/* This is all we have to do to add a new entry.  Neat, hun? */
 			if ($post_vars['reg_new_name'] != 'reg_new' && !$post_vars['reg_new_remove'])
 			{
-				$this->fields[$post_vars['reg_new_name']] = array (
+				$this->fields[$post_vars['reg_new_name']] = array(
 					'field_name' => 'reg_new'
 				);
 			}
 
 			$fields = $this->fields;
-			reset ($fields);
-			while (list ($num, $field_info) = each ($fields))
+			reset($fields);
+			while (list ($num, $field_info) = each($fields))
 			{
 				$name = $field_info['field_name'];
 				if ($post_vars[$name . '_remove'])
 				{
-					unset ($this->fields[$name]);
+					unset($this->fields[$name]);
 				}
 				else
 				{
 					if ($post_vars[$name . '_name'] != $name)
 					{
-						unset ($this->fields[$name]);
+						unset($this->fields[$name]);
 					}
 
-					$updated_field_info = array (
-						'field_name'   => $post_vars[$name . '_name'],
-						'field_text'   => $post_vars[$name . '_text'],
-						'field_type'   => $post_vars[$name . '_type'],
+					$updated_field_info = array(
+						'field_name' => $post_vars[$name . '_name'],
+						'field_text' => $post_vars[$name . '_text'],
+						'field_type' => $post_vars[$name . '_type'],
 						'field_values' => $post_vars[$name . '_values'],
 						'field_required' => $post_vars[$name . '_required'] ? 'Y' : 'N',
-						'field_order'  => $post_vars[$name . '_order']
+						'field_order' => $post_vars[$name . '_order']
 					);
 
 					$this->fields[$post_vars[$name . '_name']] = $updated_field_info;
 				}
 			}
 
-			$rv = $this->save_fields ($this->fields);
+			$rv = $this->save_fields($this->fields);
 
 			return $rv;
 		}
 
-		function get_next_field_order ($fields)
+		function get_next_field_order( $fields )
 		{
-			reset ($fields);
-			while (list (,$field_info) = each ($fields))
+			reset($fields);
+			while (list (, $field_info) = each($fields))
 			{
 				if ($field_info['field_order'] > $max)
 				{
@@ -235,10 +234,10 @@
 			{
 				$admin = True;
 			}
-				
+
 			if (!$admin)
 			{
-				Header ('Location: ' . $GLOBALS['phpgw']->link ('/index.php'));
+				Header('Location: ' . $GLOBALS['phpgw']->link('/index.php'));
 			}
 		}
 	}

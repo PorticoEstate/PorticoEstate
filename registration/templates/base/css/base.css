@@ -7,8 +7,8 @@ form#invoice_run th {
 	background-color: #CDCDCD;
 	padding: 5px;
 	border: 1px solid #ABABAB;
-	 font-weight: bolder;
-	}
+	font-weight: bolder;
+}
 
 div#contract_lists td {
 	margin:0;
@@ -16,13 +16,13 @@ div#contract_lists td {
 }
 form#invoice_run td { 
 	border: 1px solid #CDCDCD;
-	}
+}
 
 
 div#invoice_details dt{
 	float:left;
-	 font-weight: bolder;
-	 margin-right: 1em;
+	font-weight: bolder;
+	margin-right: 1em;
 }
 div.content {
 	margin: 2em;	
@@ -31,11 +31,11 @@ div.content {
 .hd {
 	margin-bottom: 0;
 	text-align: center;
-	}
-	
+}
+
 .hd img {
 	vertical-align: middle;
-	}
+}
 
 fieldset {
 	margin-top: 0.5em;	
@@ -63,33 +63,33 @@ label {
 #dashboard_column_2 { margin-left:50%; width:50%;}
 
 #inactive {
-				background-color: #ff5555;
-				width: 10em;
-				padding: 1em;
-				border: 0.2em dotted #000000;
-				letter-spacing: 2px;
+	background-color: #ff5555;
+	width: 10em;
+	padding: 1em;
+	border: 0.2em dotted #000000;
+	letter-spacing: 2px;
 }
 #active {
-				background-color: #ffffff;
-				width: 10em;
-				padding: 1em;
-				border: 0em dotted #000000;
-				letter-spacing: 2px;
+	background-color: #ffffff;
+	width: 10em;
+	padding: 1em;
+	border: 0em dotted #000000;
+	letter-spacing: 2px;
 }
 
 #inactivate-button {
-				border: 1px solid #000000;
-				margin-top: 1em;
-				padding: 0.1em;
-				background-color: #ffffff;
-				}
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
 
 #activate-button {
-				border: 1px solid #000000;
-				margin-top: 1em;
-				padding: 0.1em;
-				background-color: #ffffff;
-				}
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
 
 .breadcrumbs{
 	margin-left: 20px;	
@@ -162,7 +162,7 @@ dl.proplist-col dt {
 
 dl.proplist-col,
 dl.form-col {
-/*    width: 18em; */
+	/*    width: 18em; */
     float: left;
 }
 
@@ -207,7 +207,7 @@ div.identifier-header label {
 
 table.datatableToolbar {
 	padding: .3em;
-	}
+}
 
 
 #controller_user_error {
@@ -232,25 +232,25 @@ table.datatableToolbar {
 
 .toolbarelement {
 	vertical-align:middle;
-	}
+}
 td.toolbarlabel {
 	width: 10em;
 	font-weight: bold;	
-	}
+}
 td.toolbarcol {
 	padding-left: 1em;
-	}
-	
+}
+
 div.calendarButtons {
-		vertical-align:middle;
-		background-color: grey;
-	}
-	
+	vertical-align:middle;
+	background-color: grey;
+}
+
 label.toolbar_element_label {
 	padding-left: .25em;
 	padding-right: .50em;
 	vertical-align: middle;
-	}
+}
 #toolbar input[type="text"] {
     font-size: 120%;
     margin: auto .25em;
@@ -402,13 +402,13 @@ legend, label, input, select {
     margin: 0 13px 0 0;
     padding: 2px;
 }
-	
+
 label {
 	line-height:1.5em;
 }
 
 
-	
+
 fieldset {
 	border-bottom:0px solid #ccc;
 	padding:5px 0px 5px 10px;
@@ -543,9 +543,9 @@ ul.expand_list h4 span {
     padding: 1px 15px;
 }
 h1 img{
- 	margin-right:5px;
- }
- 
+	margin-right:5px;
+}
+
 #control_tabview .yui-navset, #control_location_tabview .yui-navset{
 	margin:0;
 }
@@ -573,28 +573,28 @@ dl.proplist, dl.proplist-col {
 }
 
 .drag_elem{
-  z-index: 100;
-  position:absolute;
-  opacity: .50;
-  filter: alpha(opacity=50);
+	z-index: 100;
+	position:absolute;
+	opacity: .50;
+	filter: alpha(opacity=50);
 }
 
 #list{
-  width: 650px;
-  position:relative;
+	width: 650px;
+	position:relative;
 }
 
 .list_item{
-  position:relative;
-  z-index: 1;
-  opacity: 1;
-  filter: alpha(opacity=100);
-  top: 0px;
-  left: 0px;
+	position:relative;
+	z-index: 1;
+	opacity: 1;
+	filter: alpha(opacity=100);
+	top: 0px;
+	left: 0px;
 }
 
 .list_item:hover, .drag_group:hover{
-  cursor: move;
+	cursor: move;
 }
 
 .frm_save_order input[type='submit']{
@@ -618,11 +618,11 @@ dl.proplist, dl.proplist-col {
 }
 
 #paginator.top {
-	 margin: 20px 0 0 20px;
+	margin: 20px 0 0 20px;
 }
 
 .yui-skin-sam .yui-button button, .yui-skin-sam .yui-button a, .yui-skin-sam .yui-button a:visited {
- 	height: 24px;
+	height: 24px;
 }
 
 #toolbar {
@@ -955,7 +955,7 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     padding-left: 5px;
 }
 #info_box h5 {
- 	font-size: 15px;
+	font-size: 15px;
     font-weight: bold;
     padding: 0 0 8px;
     text-align: center;
@@ -966,7 +966,7 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     padding: 0 0 5px;
 }
 .yui-pg-first{
-  	margin-left: 14px;
+	margin-left: 14px;
     margin-top: 5px;	
 }
 #data_paginator, #loc_paginator{
@@ -1265,7 +1265,7 @@ ul#icon_color_map span{
     overflow: hidden;
 }
 .content_wrp {
- 	background: none repeat scroll 0 0 #EDF5FF;
+	background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
     margin-bottom: 20px;
     padding: 15px;
@@ -1317,7 +1317,7 @@ li.check_item_case ul li {
 	float:right;	
 }
 a.view_check_list{
- 	color: #FFFFFF;
+	color: #FFFFFF;
     display: block;
     font-size: 10px;
     font-weight: bold;
@@ -1353,12 +1353,12 @@ ul#groups h4{
     margin: 4px 0;
 }
 .input_error_msg{
- 	background:#FBE3E4;
- 	border-bottom-right-radius: 4px;
- 	color: #D12F19;
- 	display: block;
- 	padding: 4px 5px;
- 	width: 150px;
+	background:#FBE3E4;
+	border-bottom-right-radius: 4px;
+	color: #D12F19;
+	display: block;
+	padding: 4px 5px;
+	width: 150px;
 }
 
 input.focus, select.focus{
@@ -1377,7 +1377,7 @@ div.controller_checklist {
 	width: 25%;
 }
 .error_msg {
-  	color: red;
+	color: red;
     display: none;
     font-size: 14px;
     padding: 7px 0;

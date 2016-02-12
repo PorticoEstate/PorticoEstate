@@ -2,17 +2,17 @@
 	
 	<div id="content">
 		<xsl:for-each select="pathway">
-		<ul class="pathway">
-			<li>
+			<ul class="pathway">
+				<li>
 					<a href="index.php?menuaction=bookingfrontend.uisearch.index">
 						<xsl:value-of select="lang_home" />
-				</a>
-			</li>
-			<li>
+					</a>
+				</li>
+				<li>
 					<a href="{building_link}">
 						<xsl:value-of select="building_name"/>
-				</a>
-			</li>
+					</a>
+				</li>
 				<li>
 					<a href="{resource_link}">
 						<xsl:value-of select="resource_name"/>
@@ -21,7 +21,7 @@
 				<li>
 					<xsl:value-of select="lang_schedule"/>
 				</li>
-		</ul>
+			</ul>
 		</xsl:for-each>
 
 
@@ -64,7 +64,7 @@
 		schedule.newApplicationUrl = '<xsl:value-of select="resource/application_link" />';
 		schedule.includeResource = false;
 		schedule.colFormatter = 'frontendScheduleDateColumn';
-    var handleHistoryNavigation = function (state) {
+		var handleHistoryNavigation = function (state) {
 		schedule.date = parseISO8601(state);
 		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
 		}
@@ -73,12 +73,12 @@
         
 		var state = getUrlData("date") || initialRequest;
 		if (state) {
-			handleHistoryNavigation(state);
+		handleHistoryNavigation(state);
 		schedule.week = $.datepicker.iso8601Week(schedule.date);
 		$('#cal_container #numberWeek').text(schedule.week);
 		$('#cal_container #datepicker').datepicker("setDate", parseISO8601(state));
 		}
-    });
+		});
 
 	</script>
 

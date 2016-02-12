@@ -1,6 +1,7 @@
 
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	var api = oTable0.api();
 	api.on('draw', sum_columns);
@@ -20,9 +21,9 @@ function sum_columns()
 	var intVal = function (i)
 	{
 		return typeof i === 'string' ?
-				i.replace(/[\$,]/g, '') * 1 :
-				typeof i === 'number' ?
-				i : 0;
+			i.replace(/[\$,]/g, '') * 1 :
+			typeof i === 'number' ?
+			i : 0;
 	};
 
 	for (var i = 0; i < data.length; i++)

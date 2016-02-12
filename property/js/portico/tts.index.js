@@ -60,9 +60,11 @@ this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTab
 	}
 }
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#datatable-container").on("click", "tr", function () {
+	$("#datatable-container").on("click", "tr", function ()
+	{
 
 		$('td', this).removeClass('priority1');
 		$('td', this).removeClass('priority2');
@@ -72,7 +74,8 @@ $(document).ready(function () {
 
 });
 
-JqueryPortico.formatLinkRelated = function (key, oData) {
+JqueryPortico.formatLinkRelated = function (key, oData)
+{
 
 	if (!oData['child_date'])
 	{
@@ -94,14 +97,16 @@ JqueryPortico.formatLinkRelated = function (key, oData) {
 	return '<a href="' + link + '" title="' + title + '">' + name + '</a>';
 };
 
-JqueryPortico.formatTtsIdLink = function (key, oData) {
+JqueryPortico.formatTtsIdLink = function (key, oData)
+{
 
 	var name = oData[key] + oData['new_ticket'];
 	var link = oData['link'];
 	return '<a href="' + link + '">' + name + '</a>';
 };
 
-JqueryPortico.searchLinkTts = function (key, oData) {
+JqueryPortico.searchLinkTts = function (key, oData)
+{
 
 	var name = oData[key];
 	return '<a id="' + name + '" onclick="searchData(this.id);">' + name + '</a>';

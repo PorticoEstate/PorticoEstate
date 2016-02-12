@@ -1,50 +1,48 @@
 <?php
 	/**
-	* phpGroupWare - SMS: A SMS Gateway.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package sms
-	* @subpackage board
- 	* @version $Id$
-	*/
+	 * phpGroupWare - SMS: A SMS Gateway.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package sms
+	 * @subpackage board
+	 * @version $Id$
+	 */
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_uiboard
 	{
+
 		var $public_functions = array(
-			'index'			=> true,
-			'view'			=> true,
-			'add'			=> true,
-			'add_yes'		=> true,
-			'edit'			=> true,
-			'edit_yes'		=> true,
-			'delete'		=> true,
-
-			);
-
+			'index' => true,
+			'view' => true,
+			'add' => true,
+			'add_yes' => true,
+			'edit' => true,
+			'edit_yes' => true,
+			'delete' => true,
+		);
 
 		function __construct()
 		{
-		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->sms					= CreateObject('sms.sms');
-			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location 		= '.board';
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->allrows				= $this->bo->allrows;
+			//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bocommon = CreateObject('sms.bocommon');
+			$this->sms = CreateObject('sms.sms');
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = '.board';
+			$this->start = $this->bo->start;
+			$this->query = $this->bo->query;
+			$this->sort = $this->bo->sort;
+			$this->order = $this->bo->order;
+			$this->allrows = $this->bo->allrows;
 
-			$this->db 					= clone $GLOBALS['phpgw']->db;
+			$this->db = clone $GLOBALS['phpgw']->db;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::board';
 		}
@@ -52,7 +50,7 @@
 		function index()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -60,41 +58,44 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('List/Edit/Delete SMS boards');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('List/Edit/Delete SMS boards');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
 
-			$err	= urldecode(phpgw::get_var('err'));
+			$err = urldecode(phpgw::get_var('err'));
 
 			if ($err)
 			{
-			    $content = "<p><font color=red>$err</font><p>";
+				$content = "<p><font color=red>$err</font><p>";
 			}
 
 
-			$add_data = array('menuaction'	=> 'sms.uiboard.add');
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_data = array('menuaction' => 'sms.uiboard.add');
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			$content .= "
 			    <p>
 			    <a href=\"$add_url\">[  Add SMS board ]</a>
 			    <p>
 			";
-/*			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
-			{
-			    $query_user_only = "WHERE uid='" . $this->account ."'";
-			}
-*/
+			/* 			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
+			  {
+			  $query_user_only = "WHERE uid='" . $this->account ."'";
+			  }
+			 */
 			$sql = "SELECT * FROM phpgw_sms_featboard $query_user_only ORDER BY board_code";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$owner = $GLOBALS['phpgw']->accounts->id2name($this->db->f('uid'));
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.view', 'board_id'=> $this->db->f('board_id'))) . ">v</a>] ";
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.edit', 'board_id'=> $this->db->f('board_id'))) . ">e</a>] ";
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.delete', 'board_id'=> $this->db->f('board_id'))) . ">x</a>] ";
-			    $content .= "<b>Code:</b> " . $this->db->f('board_code') . "&nbsp;&nbsp;<b>Forward:</b> " . $this->db->f('board_forward_email',true) . "&nbsp;&nbsp;<b>User:</b> $owner<br>";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.view',
+						'board_id' => $this->db->f('board_id'))) . ">v</a>] ";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.edit',
+						'board_id' => $this->db->f('board_id'))) . ">e</a>] ";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.delete',
+						'board_id' => $this->db->f('board_id'))) . ">x</a>] ";
+				$content .= "<b>Code:</b> " . $this->db->f('board_code') . "&nbsp;&nbsp;<b>Forward:</b> " . $this->db->f('board_forward_email', true) . "&nbsp;&nbsp;<b>User:</b> $owner<br>";
 			}
 
 			$content .= "
@@ -103,12 +104,12 @@
 			    <p>
 			";
 
-				$done_data = array(
-				'menuaction'	=> 'sms.uisms.index');
+			$done_data = array(
+				'menuaction' => 'sms.uisms.index');
 
-				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
-				$content .= "
+			$content .= "
 				    <p><li>
 				    <a href=\"$done_url\">Back</a>
 				    <p>
@@ -117,12 +118,10 @@
 			echo $content;
 		}
 
-
-
 		function view()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -130,45 +129,45 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('View SMS board');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('View SMS board');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
 
-			$board_id	= urldecode(phpgw::get_var('board_id'));
+			$board_id = urldecode(phpgw::get_var('board_id'));
 
 			$sql = "SELECT board_code FROM phpgw_sms_featboard WHERE board_id='$board_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$board_code = $this->db->f('board_code');
 
 			if (!$board_code)
 			{
-			    $board_code = $_GET[tag];
+				$board_code = $_GET[tag];
 			}
 			if ($board_code)
 			{
-			    $board_code = strtoupper($board_code);
-			    $line = $_GET[line];
-			    $type = $_GET[type];
-			    switch ($type)
-			    {
-				case "xml":
-				    $content = $this->sms->outputtorss($board_code,$line);
-				    echo $content;
-				    break;
-				case "html":
-				default:
-				    $bodybgcolor = $_GET[bodybgcolor];
-				    $oddbgcolor = $_GET[oddbgcolor];
-				    $evenbgcolor = $_GET[evenbgcolor];
-				    $content = $this->sms->outputtohtml($board_code,$line,$bodybgcolor,$oddbgcolor,$evenbgcolor);
-				    echo $content;
-			    }
+				$board_code = strtoupper($board_code);
+				$line = $_GET[line];
+				$type = $_GET[type];
+				switch ($type)
+				{
+					case "xml":
+						$content = $this->sms->outputtorss($board_code, $line);
+						echo $content;
+						break;
+					case "html":
+					default:
+						$bodybgcolor = $_GET[bodybgcolor];
+						$oddbgcolor = $_GET[oddbgcolor];
+						$evenbgcolor = $_GET[evenbgcolor];
+						$content = $this->sms->outputtohtml($board_code, $line, $bodybgcolor, $oddbgcolor, $evenbgcolor);
+						echo $content;
+				}
 			}
 
-			$done_data = array('menuaction'	=> 'sms.uiboard.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_data = array('menuaction' => 'sms.uiboard.index');
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content = "
 			    <p>
@@ -182,7 +181,7 @@
 		function add()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -190,27 +189,27 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS board');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Add SMS board');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
 
-			$err		= urldecode(phpgw::get_var('err'));
-			$board_code	= phpgw::get_var('board_code');
-			$email		= phpgw::get_var('email', 'email');
-			$template	= phpgw::get_var('template');
+			$err = urldecode(phpgw::get_var('err'));
+			$board_code = phpgw::get_var('board_code');
+			$email = phpgw::get_var('email', 'email');
+			$template = phpgw::get_var('template');
 
 			if ($err)
 			{
-			    $content = "<p><font color=red>$err</font><p>";
+				$content = "<p><font color=red>$err</font><p>";
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiboard.add_yes',
+				'menuaction' => 'sms.uiboard.add_yes',
 				'autoreply_id' => $autoreply_id
-				);
+			);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			$content .= "
 			    <p>
@@ -224,8 +223,8 @@
 			    </form>
 			";
 
-			$done_data = array('menuaction'	=> 'sms.uiboard.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_data = array('menuaction' => 'sms.uiboard.index');
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p>
@@ -239,29 +238,29 @@
 		function add_yes()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$board_code	= strtoupper(phpgw::get_var('board_code'));
-			$email		= phpgw::get_var('email', 'email');
-			$template	= phpgw::get_var('template');
+			$board_code = strtoupper(phpgw::get_var('board_code'));
+			$email = phpgw::get_var('email', 'email');
+			$template = phpgw::get_var('template');
 
 			$uid = $this->account;
 			$target = 'add';
 
 			if ($board_code)
 			{
-			    if ($this->sms->checkavailablecode($board_code))
+				if ($this->sms->checkavailablecode($board_code))
 				{
 					if (!$template)
 					{
-					    $template = "<font color=black size=-1><b>##SENDER##</b></font><br>";
-					    $template .= "<font color=black size=-2><i>##DATETIME##</i></font><br>";
-					    $template .= "<font color=black size=-1>##MESSAGE##</font>";
+						$template = "<font color=black size=-1><b>##SENDER##</b></font><br>";
+						$template .= "<font color=black size=-2><i>##DATETIME##</i></font><br>";
+						$template .= "<font color=black size=-1>##MESSAGE##</font>";
 					}
 
 					$template = $this->db->db_addslashes($template);
@@ -270,80 +269,79 @@
 		   				 VALUES ('$uid','$board_code','$email','$template')	";
 					$this->db->transaction_begin();
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featboard','board_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featboard', 'board_id');
 
 					$this->db->transaction_commit();
 
 					if ($new_uid)
 					{
-			    			$error_string = "SMS board code `$board_code` has been added";
+						$error_string = "SMS board code `$board_code` has been added";
 					}
 					else
 					{
 						$error_string = "Fail to add SMS board code `$board_code`";
 					}
-			    }
-			    else
-			    {
+				}
+				else
+				{
 					$error_string = "SMS code `$board_code` already exists, reserved or use by other feature!";
-			    }
+				}
 			}
 			else
 			{
-			    $error_string = "You must fill board code field!";
+				$error_string = "You must fill board code field!";
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiboard.' . $target,
+				'menuaction' => 'sms.uiboard.' . $target,
 				'err' => urlencode($error_string)
-				);
+			);
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function edit()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS board');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Edit SMS board');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
 
-			$err	= urldecode(phpgw::get_var('err'));
-			$board_id	= phpgw::get_var('board_id');
+			$err = urldecode(phpgw::get_var('err'));
+			$board_id = phpgw::get_var('board_id');
 
 			if ($err)
 			{
-			    $content = "<p><font color=red>$err</font><p>";
+				$content = "<p><font color=red>$err</font><p>";
 			}
 
 
 			$sql = "SELECT * FROM phpgw_sms_featboard WHERE board_id='$board_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$board_code = $this->db->f('board_code');
-			$email = $this->db->f('board_forward_email',true);
-			$template = $this->db->f('board_pref_template',true);
+			$email = $this->db->f('board_forward_email', true);
+			$template = $this->db->f('board_pref_template', true);
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiboard.edit_yes',
-				'board_id'	=> $board_id,
-				'board_code'	=> $board_code,
-				);
+				'menuaction' => 'sms.uiboard.edit_yes',
+				'board_id' => $board_id,
+				'board_code' => $board_code,
+			);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
-			$board_url = $this->db->f('board_url',true);
+			$board_url = $this->db->f('board_url', true);
 
 			$content .= "
 				<p>
@@ -355,8 +353,8 @@
 				<p><input type=submit class=button value=Save>
 				</form>";
 
-			$done_data = array('menuaction'	=> 'sms.uiboard.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_data = array('menuaction' => 'sms.uiboard.index');
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p>
@@ -369,17 +367,17 @@
 
 		function edit_yes()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$board_id	= phpgw::get_var('board_id');
-			$board_code	= phpgw::get_var('board_code');
-			$email		= phpgw::get_var('email', 'email');
-			$template	= phpgw::get_var('template');
+			$board_id = phpgw::get_var('board_id');
+			$board_code = phpgw::get_var('board_code');
+			$email = phpgw::get_var('email', 'email');
+			$template = phpgw::get_var('template');
 
 
 			$uid = $this->account;
@@ -389,9 +387,9 @@
 			{
 				if (!$template)
 				{
-				    $template = "<font color=black size=-1><b>##SENDER##</b></font><br>";
-				    $template .= "<font color=black size=-2><i>##DATETIME##</i></font><br>";
-				    $template .= "<font color=black size=-1>##MESSAGE##</font>";
+					$template = "<font color=black size=-1><b>##SENDER##</b></font><br>";
+					$template .= "<font color=black size=-2><i>##DATETIME##</i></font><br>";
+					$template .= "<font color=black size=-1>##MESSAGE##</font>";
 				}
 
 				$template = $this->db->db_addslashes($template);
@@ -400,55 +398,54 @@
 				WHERE board_id='$board_id'";
 
 				$this->db->transaction_begin();
-				$this->db->query($sql,__LINE__,__FILE__);
-				if ($this->db->affected_rows()>0)
+				$this->db->query($sql, __LINE__, __FILE__);
+				if ($this->db->affected_rows() > 0)
 				{
 					$error_string = "SMS board code `$board_code` has been saved";
 				}
 				else
 				{
-			   	    $error_string = "Fail to save SMS board code `$board_code`";
+					$error_string = "Fail to save SMS board code `$board_code`";
 				}
 				$this->db->transaction_commit();
 			}
 			else
 			{
-			    $error_string = "You must fill all fields!";
+				$error_string = "You must fill all fields!";
 			}
 
 			$add_data = array(
-				'menuaction'	=> 'sms.uiboard.' . $target,
-				'board_id'	=> $board_id,
-				'err'		=> urlencode($error_string)
-				);
+				'menuaction' => 'sms.uiboard.' . $target,
+				'board_id' => $board_id,
+				'err' => urlencode($error_string)
+			);
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$board_id	= phpgw::get_var('board_id');
-			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+			$board_id = phpgw::get_var('board_id');
+			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
-			(
+				(
 				'menuaction' => 'sms.uiboard.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($autoreply_id);
+				//	$this->bo->delete_type($autoreply_id);
 
 				$sql = "SELECT board_code FROM phpgw_sms_featboard WHERE board_id='$board_id'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$board_code = $this->db->f('board_code');
@@ -457,50 +454,50 @@
 				{
 					$sql = "DELETE FROM phpgw_sms_featboard WHERE board_code='$board_code'";
 					$this->db->transaction_begin();
-					$this->db->query($sql,__LINE__,__FILE__);
-					if ($this->db->affected_rows()>0)
-	    			{
+					$this->db->query($sql, __LINE__, __FILE__);
+					if ($this->db->affected_rows() > 0)
+					{
 						$db_query = "DELETE FROM phpgw_sms_tblSMSIncoming WHERE in_code='$board_code'";
-						$this->db->query($sql,__LINE__,__FILE__);
-						if ($this->db->affected_rows()>0)
+						$this->db->query($sql, __LINE__, __FILE__);
+						if ($this->db->affected_rows() > 0)
 						{
-		    					$error_string = "SMS board `$board_code` with all its messages has been deleted!";
+							$error_string = "SMS board `$board_code` with all its messages has been deleted!";
 						}
 						else
 						{
-		    					$error_string = "SMS board `$board_code` with no messages has been deleted!";
+							$error_string = "SMS board `$board_code` with no messages has been deleted!";
 						}
 					}
 					else
 					{
 						$error_string = "Fail to delete SMS board code `$board_code`";
-
 					}
 
-	    			$this->db->transaction_commit();
+					$this->db->transaction_commit();
 				}
 
 				$link_data['err'] = urlencode($error_string);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
 			$data = array
-			(
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.delete', 'board_id'=> $board_id)),
-				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
-				'lang_yes'					=> lang('yes'),
-				'lang_yes_statustext'		=> lang('Delete the entry'),
-				'lang_no_statustext'		=> lang('Back to the list'),
-				'lang_no'					=> lang('no')
+				(
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.delete',
+					'board_id' => $board_id)),
+				'lang_confirm_msg' => lang('do you really want to delete this entry'),
+				'lang_yes' => lang('yes'),
+				'lang_yes_statustext' => lang('Delete the entry'),
+				'lang_no_statustext' => lang('Back to the list'),
+				'lang_no' => lang('no')
 			);
 
-			$function_msg	= lang('delete SMS board code');
+			$function_msg = lang('delete SMS board code');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 	}

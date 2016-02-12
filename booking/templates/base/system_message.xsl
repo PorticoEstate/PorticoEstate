@@ -1,17 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-        <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="system_message/tabs"/>
 			<div id="system_message" class="booking-container">
-			<input name="title" type="hidden" value="{system_message/title}" />
-			<input name="message" type="hidden" value="{system_message/message}" />
-  			<input name="created" type="hidden" value="{system_message/created}" />
-  			<input name="name" type="hidden" value="{system_message/name}" />
-  			<input name="phone" type="hidden" value="{system_message/phone}" />
-  			<input name="email" type="hidden" value="{system_message/email}" />
-  			<input name="status" type="hidden" value="CLOSED" />
+				<input name="title" type="hidden" value="{system_message/title}" />
+				<input name="message" type="hidden" value="{system_message/message}" />
+				<input name="created" type="hidden" value="{system_message/created}" />
+				<input name="name" type="hidden" value="{system_message/name}" />
+				<input name="phone" type="hidden" value="{system_message/phone}" />
+				<input name="email" type="hidden" value="{system_message/email}" />
+				<input name="status" type="hidden" value="CLOSED" />
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Created')" />
@@ -66,8 +66,8 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="system_message/back_link"/>
 				</xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Back')" />
-        </a>
+				<xsl:value-of select="php:function('lang', 'Back')" />
+			</a>
 		</div>
 	</form>
 </xsl:template>

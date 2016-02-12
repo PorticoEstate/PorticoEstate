@@ -1,9 +1,9 @@
 <!-- $Id$ -->
 
-	<xsl:template match="send" xmlns:php="http://php.net/xsl">
-		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+<xsl:template match="send" xmlns:php="http://php.net/xsl">
+	<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 		<table cellpadding="0" cellspacing="0" width="100%">
- 			<xsl:choose>
+			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
 						<td align="left" colspan="2">
@@ -13,7 +13,7 @@
 				</xsl:when>
 			</xsl:choose>
 
- 			<tr class="th">
+			<tr class="th">
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'address')" />
 				</td>
@@ -79,13 +79,15 @@
 
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>					
+					<xsl:variable name="lang_send">
+						<xsl:value-of select="php:function('lang', 'send')" />
+					</xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'>
 					</input>
 				</td>
 			</tr>
 
- 		</table>
- 		</form>
-	</xsl:template>
+		</table>
+	</form>
+</xsl:template>
 

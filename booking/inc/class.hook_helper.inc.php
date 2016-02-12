@@ -45,7 +45,7 @@
 		/**
 		 * Handle a new activity being added, create location to hold ACL-data
 		 */
-		function activity_add($data)
+		function activity_add( $data )
 		{
 			$GLOBALS['phpgw']->locations->add(".application.{$data['id']}", $data['name'], 'booking', false, null, false, true);
 			$GLOBALS['phpgw']->locations->add(".resource.{$data['id']}", $data['name'], 'booking', false, null, false, true);
@@ -54,7 +54,7 @@
 		/**
 		 * Handle a activity being deleted, remove the location
 		 */
-		function activity_delete($data)
+		function activity_delete( $data )
 		{
 			$GLOBALS['phpgw']->locations->delete('booking', ".application.{$data['id']}", false);
 			$GLOBALS['phpgw']->locations->delete('booking', ".resource.{$data['id']}", false);
@@ -63,7 +63,7 @@
 		/**
 		 * Handle a activity being edited, update the location info
 		 */
-		function activity_edit($data)
+		function activity_edit( $data )
 		{
 			$GLOBALS['phpgw']->locations->update_description(".application.{$data['id']}", $data['name'], 'booking');
 			$GLOBALS['phpgw']->locations->update_description(".resource.{$data['id']}", $data['name'], 'booking');

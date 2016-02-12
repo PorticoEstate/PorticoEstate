@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('booking.bocommon');
-	
+
 	class bookingfrontend_bobuilding extends booking_bocommon
 	{
 

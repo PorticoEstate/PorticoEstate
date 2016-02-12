@@ -20,8 +20,8 @@
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please enter a from date')" />
 						</xsl:attribute>
-						</input>
-					</div>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label for="end_date">
 						<h4>
@@ -38,8 +38,8 @@
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
 						</xsl:attribute>
-						</input>
-					</div>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label for="field_building" style="vertical-align:top;">
 						<h4>
@@ -74,19 +74,19 @@
 						</h4>
 					</label>
 					<select id="otype" name="otype">
-							<option value="PDF">PDF</option>
-							<option value="CSV">CSV</option>
+						<option value="PDF">PDF</option>
+						<option value="CSV">CSV</option>
 						<option value="XLS">XLS</option>
 					</select>
 				</div>
 			</div>
 		</div>
-			<div class="form-buttons">
+		<div class="form-buttons">
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Create report')"/>
 				</xsl:attribute>
-				</input>
-			</div>
-		</form>
+			</input>
+		</div>
+	</form>
 </xsl:template>

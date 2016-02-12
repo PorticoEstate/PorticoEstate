@@ -1,7 +1,9 @@
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#edit_inventory").on("submit", function (e) {
+	$("#edit_inventory").on("submit", function (e)
+	{
 
 		e.preventDefault();
 
@@ -11,7 +13,8 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			success: function (data) {
+			success: function (data)
+			{
 				if (data)
 				{
 					if (data.sessionExpired)
@@ -26,13 +29,15 @@ $(document).ready(function () {
 					if (obj.status == "updated")
 					{
 						$(submitBnt).val("Lagret");
-					} else
+					}
+					else
 					{
 						$(submitBnt).val("Feil ved lagring");
 					}
 
 					// Changes text on save button back to original
-					window.setTimeout(function () {
+					window.setTimeout(function ()
+					{
 						$(submitBnt).val('Lagre');
 						$(submitBnt).addClass("not_active");
 					}, 1000);
@@ -74,7 +79,8 @@ $(document).ready(function () {
 		});
 	});
 
-	$("#workorder_cancel").on("submit", function (e) {
+	$("#workorder_cancel").on("submit", function (e)
+	{
 		if ($("#lean").val() == 0)
 		{
 			return;
