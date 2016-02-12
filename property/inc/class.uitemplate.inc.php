@@ -550,11 +550,10 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		function edit_template()
+		function edit_template($values = array())
 		{
-			$template_id = phpgw::get_var('template_id', 'int');
-			$values = phpgw::get_var('values');
-			$receipt = array();
+			$template_id = isset($values['template_id']) && $values['template_id'] ? $values['template_id'] : (int)phpgw::get_var('template_id', 'int');
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
 			$tabs = array();
@@ -577,11 +576,9 @@
 				'template_id' => $template_id
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitemplate.index',
 					'template_id' => $template_id)),
@@ -638,7 +635,6 @@
 				{
 					$receipt = $this->bo->save_template($values);
 					$template_id = $receipt['template_id'];
-					$msgbox_data = $this->bocommon->msgbox_data($receipt);
 				}
 				catch (Exception $e)
 				{
@@ -650,15 +646,14 @@
 					}
 				}
 
-				$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
+				self::message_set($receipt);
 				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitemplate.edit_template',
 					'template_id' => $template_id));
 			}
 			else
 			{
-				$this->edit_template();
+				$this->edit_template($values);
 			}
 		}
 

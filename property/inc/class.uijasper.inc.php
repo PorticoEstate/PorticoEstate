@@ -519,7 +519,6 @@
 					{
 						$receipt = $this->bo->save($values);
 						$id = $receipt['id'];
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 						//-------------start files
 						$bofiles = CreateObject('property.bofiles');
@@ -594,14 +593,15 @@
 						}
 					}
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uijasper.edit',
-						'id' => $id));
+					self::redirect(array('menuaction' => 'property.uijasper.edit','id' => $id));
 				}
 				else
 				{
+					if ($id)
+					{
+						self::message_set($receipt);
+						self::redirect(array('menuaction' => 'property.uijasper.edit', 'id' => $id));
+					}
 					$this->edit();
 				}
 			}

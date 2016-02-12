@@ -673,7 +673,6 @@
 						$receipt = $this->bo->save($values, $values_attribute, $action);
 						$id = $receipt['s_agreement_id'];
 						$this->cat_id = ($values['cat_id'] ? $values['cat_id'] : $this->cat_id);
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 						if ($values['file_name'])
 						{
@@ -709,8 +708,7 @@
 						}
 					}
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+					self::message_set($receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uis_agreement.edit',
 						'id' => $id));
 				}

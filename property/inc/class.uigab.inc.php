@@ -912,8 +912,8 @@ JS;
 				try
 				{
 					$receipt = $this->bo->save($data);
-					$values['location_code'] = $receipt['location_code'];
-					$values['gab_id'] = $receipt['gab_id'];
+					$location_code = $values['location_code'] = $receipt['location_code'];
+					$gab_id = $values['gab_id'] = $receipt['gab_id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -924,7 +924,14 @@ JS;
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($location_code)
+				{
+					self::message_set($receipt);
+					self::redirect(array('menuaction' => 'property.uigab.edit', 'gab_id' => $gab_id,
+						'location_code' => $location_code,
+						'from' => phpgw::get_var('from')));
+				}
+
 				$this->edit($values);
 				return;
 			}

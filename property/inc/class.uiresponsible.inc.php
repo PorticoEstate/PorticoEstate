@@ -521,7 +521,6 @@
 
 						$receipt = $this->bo->save_type($values);
 						$id = $receipt['id'];
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 						if (isset($values['save']) && $values['save'])
 						{
@@ -540,10 +539,8 @@
 							return;
 						}
 					}
+					self::message_set($receipt);
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiresponsible.edit',
 						'appname' => $this->appname, 'id' => $id));
 				}
