@@ -633,13 +633,14 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-				{
-				extend: 'copy',
-				text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
-				},
-				'csvFlash',
+//				{
+//				extend: 'copyHtml5',
+//				text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
+//				},
+//				'csvHtml5',
+//				'excelHtml5',
+//				'pdfHtml5'
 				'excelFlash',
-				'pdfFlash'
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
