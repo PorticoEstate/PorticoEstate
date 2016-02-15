@@ -78,12 +78,11 @@
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
-//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
-//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
 			//Buttons
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/dataTables.buttons.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.colVis.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.flash.js');
+//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.html5.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Select/js/dataTables.select.min.js');
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -92,9 +91,6 @@
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Buttons/css/buttons.dataTables.css');
 
 			//pop up script
