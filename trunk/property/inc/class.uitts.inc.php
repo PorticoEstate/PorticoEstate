@@ -608,7 +608,7 @@
 				'list' => $values_combo_box[3]
 			);
 
-			//		if(!$this->simple)
+			if(!$this->simple)
 			{
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
 					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
