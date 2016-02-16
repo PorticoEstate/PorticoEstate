@@ -1168,7 +1168,7 @@
 				{
 					self::message_set($this->receipt);
 					self::redirect(array(
-						'menuaction' => 'property.uiproject.edit',
+						'menuaction' => 'property.uiworkorder.edit',
 						'id' => $id));
 				}
 				$this->edit($values);
