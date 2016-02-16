@@ -200,15 +200,15 @@ function onSave()
 		values['num_days'][i] = num_days[i].value;
 		values['sign_orig'][i] = d.sign_orig;
 
-		if ((sign[i].name != "") && (sign[i].value != d.sign_orig) && (sign[i].checked))
+		if (typeof(sign[i]) != 'undefined' && (sign[i].name != "") && (sign[i].value != d.sign_orig) && (sign[i].checked))
 		{
 			values['sign'][i] = sign[i].value;
 		}
-		else if ((supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked))
+		else if (typeof(supervisor[i]) != 'undefined' && (supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked))
 		{
 			values['sign'][i] = supervisor[i].value;
 		}
-		else if ((budget_responsible[i].name != "") && (budget_responsible[i].value != d.sign_orig) && (budget_responsible[i].checked))
+		else if (typeof(budget_responsible[i]) != 'undefined' && (budget_responsible[i].name != "") && (budget_responsible[i].value != d.sign_orig) && (budget_responsible[i].checked))
 		{
 			values['sign'][i] = budget_responsible[i].value;
 		}
@@ -217,7 +217,7 @@ function onSave()
 			values['sign'][i] = '';
 		}
 
-		if ((kreditnota_tmp[i].checked))
+		if (typeof(kreditnota_tmp[i]) != 'undefined' && (kreditnota_tmp[i].checked))
 		{
 			values['kreditnota'][i] = true;
 		}
@@ -226,7 +226,7 @@ function onSave()
 			values['kreditnota'][i] = '';
 		}
 
-		if ((transfer_id[i].checked))
+		if (typeof(transfer_id[i]) != 'undefined' && (transfer_id[i].checked))
 		{
 			values['transfer'][i] = true;
 		}
