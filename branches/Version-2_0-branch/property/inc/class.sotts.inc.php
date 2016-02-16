@@ -1660,7 +1660,7 @@
 
 			$value_set = array();
 
-			if (isset($ticket['extra']) && is_array($ticket['extra']))
+			if (isset($ticket['extra']) && is_array($ticket['extra']) && $ticket['extra'])
 			{
 				foreach ($ticket['extra'] as $column => $value)
 				{
