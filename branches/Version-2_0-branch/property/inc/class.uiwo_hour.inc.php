@@ -1415,8 +1415,7 @@ HTML;
 						$attachments = array_merge($attachments, $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']['workorder']));
 						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']['project']) . ', ' . implode(', ', $values['file_action']['workorder']);
 					}
-					_debug_array($attachment_log);
-					die();
+
 					if ($send_as_pdf)
 					{
 						$pdfcode = $this->pdf_order($workorder_id, $show_cost);
