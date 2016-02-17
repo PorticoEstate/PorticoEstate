@@ -298,6 +298,17 @@
 			$result_count = 0;
 
 			$values = $this->bo->read($params);
+			foreach ($values as &$entry)
+			{
+				$entry['url']	= "{$entry['name']}&data=" . urlencode(urlencode($entry['data']));
+				$data_set = unserialize($entry['data']);
+				$method_data=array();
+				foreach ($data_set as $key => $value)
+				{
+					$method_data[] = "{$key}={$value}";
+				}
+				$entry['data']	= @implode (',',$method_data);
+			}
 
 			if (phpgw::get_var('export', 'bool'))
 			{
