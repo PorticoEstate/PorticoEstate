@@ -1137,7 +1137,7 @@
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no criteria')));
 			$filters[2] = array('type' => 'filter',
 				'name' => 'criteria_id',
-				'text' => lang('criteria'),
+				'text' => lang('search criteria'),
 				'list' => $values_combo_box[2]
 			);
 

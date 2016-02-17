@@ -417,7 +417,7 @@
 			$combos[] = array('type' => 'filter',
 				'name' => 'criteria_id',
 				'extra' => '',
-				'text' => lang('criteria'),
+				'text' => lang('search criteria'),
 				'list' => $values_combo_box[$count]
 			);
 
