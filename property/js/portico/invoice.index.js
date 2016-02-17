@@ -181,7 +181,7 @@ function onSave()
 	values['timestamp_voucher_date'] = {};
 
 	var sign = $('.signClass');
-	//var janitor = $('.janitorClass');
+	var janitor = $('.janitorClass');
 	var supervisor = $('.supervisorClass');
 	var budget_responsible = $('.budget_responsibleClass');
 	var kreditnota_tmp = $('.kreditnota_tmp');
@@ -203,6 +203,10 @@ function onSave()
 		if (typeof(sign[i]) != 'undefined' && (sign[i].name != "") && (sign[i].value != d.sign_orig) && (sign[i].checked))
 		{
 			values['sign'][i] = sign[i].value;
+		}
+		else if (typeof(janitor[i]) != 'undefined' && (janitor[i].name != "") && (janitor[i].value != d.sign_orig) && (janitor[i].checked))
+		{
+			values['sign'][i] = janitor[i].value;
 		}
 		else if (typeof(supervisor[i]) != 'undefined' && (supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked))
 		{
