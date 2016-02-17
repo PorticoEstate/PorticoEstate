@@ -743,7 +743,7 @@
 
 		function index()
 		{
-			$type_id = phpgw::get_var('type_id');
+			$type_id = phpgw::get_var('type_id','int', 'GET', 1);
 			// $lookup use for pop-up
 			$lookup = phpgw::get_var('lookup');
 			// $lookup_name use in pop-up option "project"

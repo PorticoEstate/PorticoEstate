@@ -41,8 +41,8 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('catch');
-			$this->function_msg = 'Import info from files';
+			$this->sub_location = lang('property');
+			$this->function_msg = 'Synkroniser avdelinger med Fellesdata';
 		}
 
 		function execute()
