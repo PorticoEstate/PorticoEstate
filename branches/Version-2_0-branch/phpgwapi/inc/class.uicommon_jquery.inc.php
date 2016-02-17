@@ -76,14 +76,18 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($currentapp);
 
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('contextMenu');
+
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
 			//Buttons
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/dataTables.buttons.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.colVis.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.flash.js');
-//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.html5.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.html5.js');
+			self::add_javascript('phpgwapi', 'jszip', 'jszip.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Select/js/dataTables.select.min.js');
+//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColReorder/js/dataTables.ColReorder.min.js');
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
