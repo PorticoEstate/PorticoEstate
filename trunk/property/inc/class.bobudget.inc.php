@@ -115,7 +115,7 @@
 			$this->month = isset($month) && $month ? $month : 0;
 			$this->details = $details;
 
-			if (isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction'] == 'property.uibudget.obligations')
+			if (isset($year) && $this->year != $year && $GLOBALS['phpgw_info']['menuaction'] != 'property.uibudget.obligations')
 			{
 				$this->grouping = '';
 				$this->revision = '';

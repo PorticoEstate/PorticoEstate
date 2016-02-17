@@ -381,10 +381,9 @@
 
 			$lookup = '';
 
-			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
-			if ($default_district && !$second_display && !$this->district_id)
+			if ($default_district && ! isset($_REQUEST['district_id']))
 			{
 				$this->bo->district_id = $default_district;
 				$this->district_id = $default_district;
@@ -1035,7 +1034,7 @@
 				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) && $config->config_data['mailnotification'])
 //						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 				{
-					if (!$this->account == $project['coordinator'] && $config->config_data['notify_project_owner'])
+					if ($this->account != $project['coordinator'] && $config->config_data['notify_project_owner'])
 					{
 						$prefs_coordinator = $this->bocommon->create_preferences('property', $project['coordinator']);
 						if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])

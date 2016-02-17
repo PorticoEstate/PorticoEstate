@@ -158,7 +158,7 @@
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
 
-			if ($default_category && !$second_display)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
@@ -306,7 +306,7 @@
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
 
-			if ($default_category && !$second_display)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
@@ -410,7 +410,7 @@
 		{
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_vendor_category'];
 
-			if ($default_category)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
@@ -517,7 +517,9 @@
 				'name' => array('id', 'org_name', 'status'),
 				'formatter' => array('', '', ''),
 				'descr' => array(lang('ID'), lang('Name'), lang('status')),
-				'sortable' => array(true, true, false)
+				'sortable' => array(true, true, false),
+				'dir' => array(false, "asc", false)
+
 			);
 
 			$count_uicols_name = count($uicols['name']);
@@ -528,7 +530,8 @@
 					'key' => $uicols['name'][$k],
 					'label' => $uicols['descr'][$k],
 					'sortable' => $uicols['sortable'][$k],
-					'hidden' => false
+					'hidden' => false,
+					'dir' => $uicols['dir'][$k] ? $uicols['dir'][$k] : '',
 				);
 
 				array_push($data['datatable']['field'], $params);
@@ -958,10 +961,9 @@
 			$this->location_code = $boentity->location_code;
 			$this->criteria_id = $boentity->criteria_id;
 
-			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
-			if ($default_district && !$second_display && !$this->district_id)
+			if ($default_district && ! isset($_REQUEST['district_id']))
 			{
 				$this->bo->district_id = $default_district;
 				$this->district_id = $default_district;
@@ -1044,7 +1046,6 @@
 						'container' => 'datatable-container',
 						'requestUrl' => self::link(array(
 							'menuaction' => 'property.uilookup.entity',
-							'second_display' => $second_display,
 							'cat_id' => $this->cat_id,
 							'entity_id' => $this->entity_id,
 							'district_id' => $this->district_id,
