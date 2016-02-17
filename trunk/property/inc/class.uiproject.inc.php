@@ -284,7 +284,7 @@
 				(
 				'type' => 'filter',
 				'name' => 'criteria_id',
-				'text' => lang('Criteria'),
+				'text' => lang('search criteria'),
 				'list' => $values_combo_box[5]
 			);
 

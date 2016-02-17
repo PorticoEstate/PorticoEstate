@@ -360,11 +360,11 @@
 					'id' => '5',
 					'name' => lang('title')
 				),
-				array
-					(
-					'id' => '6',
-					'name' => lang('module')
-				),
+//				array
+//					(
+//					'id' => '6',
+//					'name' => lang('module')
+//				),
 				array
 					(
 					'id' => '7',

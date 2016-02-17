@@ -292,7 +292,7 @@
 				'type' => 'filter',
 				'name' => 'criteria_id',
 				'extra' => '',
-				'text' => lang('Criteria'),
+				'text' => lang('search criteria'),
 				'list' => $values_combo_box[4]
 			);
 
