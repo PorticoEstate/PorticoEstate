@@ -511,6 +511,7 @@
 				'my_name' => 'download_agresso',
 				'text' => lang('Download Agresso import file'),
 				'type' => 'custom',
+				'className'	=> 'download', // If there is a className - the button is not per record, but global for the table
 				'custom_code' => "
 					var oArgs = " . json_encode(array(
 					'menuaction' => 'rental.uiparty.download_agresso',
