@@ -2331,7 +2331,7 @@
 				}
 
 				//override if periode is closed
-				if (!isset($active_period[$period]) || !$active_period[$period] == 1)
+				if (!isset($active_period[$period]) || $active_period[$period] != 1)
 				{
 					$_sum_oblications = 0;
 				}

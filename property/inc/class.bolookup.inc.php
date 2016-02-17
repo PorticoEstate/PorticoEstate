@@ -252,7 +252,7 @@
 					{
 						if ($field['name'] == 'member_of')
 						{
-							$filter[$field['name']] = phpgw::get_var('cat_id');
+							$filter[$field['name']] = $this->cat_id;
 						}
 						else
 						{

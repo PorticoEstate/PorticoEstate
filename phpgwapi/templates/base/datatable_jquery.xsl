@@ -489,7 +489,7 @@
 		var columns = [
 		<xsl:for-each select="//datatable/field">
 			{
-			data:			"<xsl:value-of select="key"/>",
+			data: "<xsl:value-of select="key"/>",
 			<xsl:if test="className">
 				<xsl:choose>
 					<xsl:when test="className='right' or className='center'">
@@ -531,9 +531,11 @@
 				return ret;
 				},
 			</xsl:if>
-			<xsl:if test="dir">
-				dir: "<xsl:value-of select="dir"/>",
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="dir !=''">
+					dir: "<xsl:value-of select="dir"/>",
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="editor">
 					<xsl:if test="editor =0">
@@ -578,7 +580,9 @@
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
 		var select_all = '<xsl:value-of select="select_all"/>';
 		var initial_search = {"search": "<xsl:value-of select="query"/>" };
-			
+		var action_def = null;
+		var contextMenuItems={};
+		var InitContextMenu=false
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -638,9 +642,9 @@
 //				text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
 //				},
 //				'csvHtml5',
-//				'excelHtml5',
+				'excelHtml5',
 //				'pdfHtml5'
-				'excelFlash',
+//				'excelFlash',
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
@@ -671,127 +675,128 @@
 									document.body.appendChild( iframe );
 								}
 								]]>
-						}
+							}
 
 						}
 					</xsl:when>
 				</xsl:choose>
+				];
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
-						<xsl:for-each select="//datatable/actions">
+					var action_def = [
+					<xsl:for-each select="//datatable/actions">
 							<xsl:choose>
 								<xsl:when test="type = 'custom'">
-									,{
-									text: "<xsl:value-of select="text"/>",
-									<xsl:choose>
-										<xsl:when test="className">
-											className: "<xsl:value-of select="className"/>",
-										</xsl:when>
-										<xsl:otherwise>
-											enabled: false,
-											className: 'record',
-										</xsl:otherwise>
-									</xsl:choose>
-									action: function (e, dt, node, config)
 									{
-									<xsl:if test="confirm_msg">
-										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-										var r = confirm(confirm_msg);
-										if (r != true) {
-										return false;
+										text: "<xsl:value-of select="text"/>",
+										<xsl:choose>
+											<xsl:when test="className">
+												className: "<xsl:value-of select="className"/>",
+											</xsl:when>
+											<xsl:otherwise>
+												enabled: false,
+												className: 'record',
+											</xsl:otherwise>
+										</xsl:choose>
+										action: function (e, dt, node, config)
+										{
+										<xsl:if test="confirm_msg">
+											var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+											var r = confirm(confirm_msg);
+											if (r != true) {
+											return false;
+											}
+										</xsl:if>
+										<xsl:value-of select="custom_code"/>
 										}
-									</xsl:if>
-									<xsl:value-of select="custom_code"/>
-									}
-
-									}
+									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									,{
-									text: "<xsl:value-of select="text"/>",
-									<xsl:choose>
-										<xsl:when test="className">
-											className: "<xsl:value-of select="className"/>",
-										</xsl:when>
-										<xsl:otherwise>
-											enabled: false,
-											className: 'record',
-										</xsl:otherwise>
-									</xsl:choose>
-									action: function (e, dt, node, config) {
-									var receiptmsg = [];
-									var selected = fnGetSelected();
-									var numSelected = 	selected.length;
+									{
+										text: "<xsl:value-of select="text"/>",
+										<xsl:choose>
+											<xsl:when test="className">
+												className: "<xsl:value-of select="className"/>",
+											</xsl:when>
+											<xsl:otherwise>
+												enabled: false,
+												className: 'record',
+											</xsl:otherwise>
+										</xsl:choose>
+										action: function (e, dt, node, config) {
+											var receiptmsg = [];
+											var selected = fnGetSelected();
+											var numSelected = 	selected.length;
 
-									if (numSelected ==0){
-									alert('None selected');
-									return false;
-									}
+											if (numSelected ==0){
+												alert('None selected');
+												return false;
+											}
 
-									<xsl:if test="confirm_msg">
-										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-										var r = confirm(confirm_msg);
-										if (r != true) {
-										return false;
+											<xsl:if test="confirm_msg">
+												var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+												var r = confirm(confirm_msg);
+												if (r != true) {
+												return false;
+												}
+											</xsl:if>
+
+											var target = "<xsl:value-of select="target"/>";
+											if(!target)
+											{
+												target = '_self';
+											}
+
+											if (numSelected &gt; 1){
+												target = '_blank';
+											}
+
+											var n = 0;
+											for (; n &lt; numSelected; ) {
+												//				console.log(selected[n]);
+													var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
+												//				console.log(aData);
+
+												//delete stuff comes here
+												var action = "<xsl:value-of select="action"/>";
+												var my_name = "<xsl:value-of select="my_name"/>";
+
+												<xsl:if test="parameters">
+													var parameters = <xsl:value-of select="parameters"/>;
+													//						console.log(parameters.parameter);
+													var i = 0;
+													len = parameters.parameter.length;
+													for (; i &lt; len; ) {
+													action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+													i++;
+													}
+												</xsl:if>
+
+												// look for the word "DELETE" in URL and my_name
+												if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
+												{
+													action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+													execute_ajax(action, function(result){
+														document.getElementById("message").innerHTML += '<br/>' + result;
+														oTable.fnDraw();
+													});
+												}
+												else if (target == 'ajax')
+												{
+													action += "&amp;phpgw_return_as=json";
+													execute_ajax(action, function(result){
+														document.getElementById("message").innerHTML += '<br/>' + result;
+														oTable.fnDraw();
+													});
+												}
+												else
+												{
+													window.open(action,target);
+												}
+												n++;
+											}
 										}
-									</xsl:if>
-
-									var target = "<xsl:value-of select="target"/>";
-									if(!target)
-									{
-									target = '_self';
-									}
-
-									if (numSelected &gt; 1){
-									target = '_blank';
-									}
-
-									var n = 0;
-									for (; n &lt; numSelected; ) {
-									//				console.log(selected[n]);
-									var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
-									//				console.log(aData);
-
-									//delete stuff comes here
-									var action = "<xsl:value-of select="action"/>";
-									var my_name = "<xsl:value-of select="my_name"/>";
-
-									<xsl:if test="parameters">
-										var parameters = <xsl:value-of select="parameters"/>;
-										//						console.log(parameters.parameter);
-										var i = 0;
-										len = parameters.parameter.length;
-										for (; i &lt; len; ) {
-										action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-										i++;
-										}
-									</xsl:if>
-
-									// look for the word "DELETE" in URL and my_name
-									if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
-									{
-									action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-									execute_ajax(action, function(result){
-									document.getElementById("message").innerHTML += '<br/>' + result;
-									oTable.fnDraw();
-									});
-									}
-									else if (target == 'ajax')
-									{
-									action += "&amp;phpgw_return_as=json";
-									execute_ajax(action, function(result){
-									document.getElementById("message").innerHTML += '<br/>' + result;
-									oTable.fnDraw();
-									});
-									}
-									else
-									{
-									window.open(action,target);
-									}
-									n++;
-									}
-									}
-									}
+									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:for-each>
@@ -806,29 +811,41 @@
 						var group_buttons = false;
 					</xsl:otherwise>
 				</xsl:choose>
+	<![CDATA[
 
+			var item_name = '';
+			var contextMenuItem = {};
+			for(i=0;i < action_def.length;i++)
+			{
+				button_def.push(action_def[i]);
+				if( typeof(action_def[i]['className']) != 'undefined' && action_def[i]['className'] == 'record')
+				{
+					contextMenuItems[i] = {name:action_def[i]['text'], callback:action_def[i]['action']};
+					InitContextMenu = true;
+				}
+			}
+	]]>
 				if($(document).width() &lt; 1000)
 				{
-				group_buttons = true;
+					group_buttons = true;
 				}
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
 
 				if(group_buttons === true)
 				{
-				JqueryPortico.buttons = [
-				{
-				extend: 'collection',
-				text: "<xsl:value-of select="php:function('lang', 'collection')"/>",
-				collectionLayout: 'three-column',
-				buttons: button_def
-				}
-				];
-
+					JqueryPortico.buttons = [
+						{
+							extend: 'collection',
+							text: "<xsl:value-of select="php:function('lang', 'collection')"/>",
+							collectionLayout: 'three-column',
+							buttons: button_def
+						}
+					];
 				}
 				else
 				{
-				JqueryPortico.buttons = button_def;
+					JqueryPortico.buttons = button_def;
 				}
 			</xsl:when>
 			<xsl:otherwise>
@@ -859,7 +876,7 @@
 			var order_def = [];
 			for(i=0;i < JqueryPortico.columns.length;i++)
 			{
-				if (JqueryPortico.columns[i]['orderable'] === true)
+				if (JqueryPortico.columns[i]['orderable'] === true && typeof(JqueryPortico.columns[i]['dir']) != 'undefined')
 				{
 					var dir = JqueryPortico.columns[i]['dir'] || "desc";
 					order_def.push([i, dir]);
@@ -877,7 +894,7 @@
 			{
 				var sDom_def = '<"clear">lfrtip';
 			}
-	
+
 		$(document).ready(function() {
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
@@ -889,7 +906,7 @@
 				ajax:			{
 					url: ajax_url,
 					data: {},
-							type: 'POST'
+					type: 'POST'
 				},
 				fnServerParams: function ( aoData ) {
 					if(typeof(aoData.order[0]) != 'undefined')
@@ -902,13 +919,13 @@
 						aoData.columns[column] = column_to_keep;
 					}
 				 },
+				fnCreatedRow  : function( nRow, aData, iDataIndex ){
+ 				},
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-								if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
-								{
-								// nRow.addClass(''),
-								//	console.log(nRow),
-									$('td', nRow).addClass('priority' + aData['priority']);
-								}
+							if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
+							{
+								$('td', nRow).addClass('priority' + aData['priority']);
+							}
                 },
 				fnDrawCallback: function () {
 					oTable.makeEditable({
@@ -979,10 +996,18 @@
 					}
 			   } );
 
-			  if(number_of_toolbar_items < 4)
-			  {
+			if(InitContextMenu === true)
+			{
+				$('#datatable-container').contextMenu({
+					  selector: 'tr',
+					   items: contextMenuItems,
+				});
+			}
+
+			if(number_of_toolbar_items < 4)
+			{
 				$('#header1').prop("checked", true);
-			  }
+			}
 		});
 	]]>
 
@@ -1022,32 +1047,33 @@
 			<xsl:if test="type = 'filter'">
 				$('select#<xsl:value-of select="name"/>').change( function()
 				{
-				<xsl:value-of select="extra"/>
-				filterData('<xsl:value-of select="name"/>', $(this).val());
+					<xsl:value-of select="extra"/>
+					filterData('<xsl:value-of select="name"/>', $(this).val());
 				});
 			</xsl:if>
 			<xsl:if test="type = 'date-picker'">
 				var previous_<xsl:value-of select="id"/>;
 				$("#filter_<xsl:value-of select="id"/>").on('keyup change', function ()
 				{
-				if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
-				{
-				filterData('<xsl:value-of select="id"/>', $(this).val());
-				previous_<xsl:value-of select="id"/> = $(this).val();
-				}
+					if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
+					{
+						filterData('<xsl:value-of select="id"/>', $(this).val());
+						previous_<xsl:value-of select="id"/> = $(this).val();
+					}
 				});
 			</xsl:if>
 			<xsl:if test="type = 'autocomplete'">
 				$(document).ready(function() {
-				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
-				filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
-				});
-				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
-				if ($(this).val() == ''){
-				$('#filter_<xsl:value-of select="name"/>_id').val('');
-				filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
-				}
-				});
+					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
+						filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
+					});
+					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
+						if ($(this).val() == '')
+						{
+							$('#filter_<xsl:value-of select="name"/>_id').val('');
+							filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
+						}
+					});
 				});
 			</xsl:if>
 		</xsl:for-each>

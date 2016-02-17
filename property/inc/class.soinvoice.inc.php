@@ -1676,7 +1676,7 @@
 							$local_error = true;
 						}
 
-						if (!($check_count['kostra_count'] == $values['invoice_count'][$n]))
+						if ($check_count['kostra_count'] != $values['invoice_count'][$n])
 						{
 							$receipt['error'][] = array('msg' => 'Tjenestekode mangler for undebilag: ' . " " . $values['voucher_id'][$n]);
 							$local_error = true;
@@ -1819,7 +1819,7 @@
 						$transfer_sign_field = 'utbetalingid=';
 						$transfer_date_field = 'utbetalingsigndato=';
 
-						if (!($values['num_days_orig'][$n] == $values['num_days'][$n]))
+						if ($values['num_days_orig'][$n] != $values['num_days'][$n])
 						{
 							$payment_date = date($this->db->date_format(), $values['timestamp_voucher_date'][$n] + (24 * 3600 * $values['num_days'][$n]));
 							$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set forfallsdato= '$payment_date' where bilagsnr='$voucher_id'");
@@ -2053,19 +2053,19 @@
 
 				if ($global_check)
 				{
-					if (!($check_count['dima_count'] == $check_count['invoice_count']))
+					if ($check_count['dima_count'] != $check_count['invoice_count'])
 					{
 						phpgwapi_cache::message_set(lang('Dima is missing from sub invoice in:') . " " . $data['voucher_id'], 'error');
 						$local_error = true;
 					}
 
-					if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
+					if ($check_count['spbudact_code_count'] != $check_count['invoice_count'])
 					{
 						phpgwapi_cache::message_set(lang('Budget code is missing from sub invoice in :') . " " . $data['voucher_id'], 'error');
 						$local_error = true;
 					}
 
-					if (!($check_count['kostra_count'] == $check_count['invoice_count']))
+					if ($check_count['kostra_count'] != $check_count['invoice_count'])
 					{
 						phpgwapi_cache::message_set('Tjenestekode mangler for undebilag: ' . " " . $data['voucher_id'], 'error');
 						$local_error = true;
