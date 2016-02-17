@@ -1087,11 +1087,9 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$second_display = phpgw::get_var('second_display', 'bool');
-
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
-			if ($default_district && !$second_display && !$this->district_id)
+			if ($default_district && ! isset($_REQUEST['district_id']))
 			{
 				$this->bo->district_id = $default_district;
 				$this->district_id = $default_district;
@@ -1178,7 +1176,6 @@
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uientity.index',
-						'second_display' => $second_display,
 						'entity_id' => $this->entity_id,
 						'cat_id' => $this->cat_id,
 						'type' => $this->type,
@@ -1188,7 +1185,6 @@
 					)),
 					'download' => self::link(array(
 						'menuaction' => 'property.uientity.download',
-						'second_display' => $second_display,
 						'entity_id' => $this->entity_id,
 						'cat_id' => $this->cat_id,
 						'type' => $this->type,

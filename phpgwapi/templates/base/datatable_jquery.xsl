@@ -489,7 +489,7 @@
 		var columns = [
 		<xsl:for-each select="//datatable/field">
 			{
-			data:			"<xsl:value-of select="key"/>",
+			data: "<xsl:value-of select="key"/>",
 			<xsl:if test="className">
 				<xsl:choose>
 					<xsl:when test="className='right' or className='center'">
@@ -531,9 +531,11 @@
 				return ret;
 				},
 			</xsl:if>
-			<xsl:if test="dir">
-				dir: "<xsl:value-of select="dir"/>",
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="dir !=''">
+					dir: "<xsl:value-of select="dir"/>",
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="editor">
 					<xsl:if test="editor =0">
@@ -580,6 +582,7 @@
 		var initial_search = {"search": "<xsl:value-of select="query"/>" };
 		var action_def = null;
 		var contextMenuItems={};
+		var InitContextMenu=false
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -818,6 +821,7 @@
 				if( typeof(action_def[i]['className']) != 'undefined' && action_def[i]['className'] == 'record')
 				{
 					contextMenuItems[i] = {name:action_def[i]['text'], callback:action_def[i]['action']};
+					InitContextMenu = true;
 				}
 			}
 	]]>
@@ -872,7 +876,7 @@
 			var order_def = [];
 			for(i=0;i < JqueryPortico.columns.length;i++)
 			{
-				if (JqueryPortico.columns[i]['orderable'] === true)
+				if (JqueryPortico.columns[i]['orderable'] === true && typeof(JqueryPortico.columns[i]['dir']) != 'undefined')
 				{
 					var dir = JqueryPortico.columns[i]['dir'] || "desc";
 					order_def.push([i, dir]);
@@ -890,7 +894,7 @@
 			{
 				var sDom_def = '<"clear">lfrtip';
 			}
-	
+
 		$(document).ready(function() {
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
@@ -902,7 +906,7 @@
 				ajax:			{
 					url: ajax_url,
 					data: {},
-							type: 'POST'
+					type: 'POST'
 				},
 				fnServerParams: function ( aoData ) {
 					if(typeof(aoData.order[0]) != 'undefined')
@@ -992,15 +996,18 @@
 					}
 			   } );
 
-			$('#datatable-container').contextMenu({
-				  selector: 'tr',
-				   items: contextMenuItems,
-			  });
+			if(InitContextMenu === true)
+			{
+				$('#datatable-container').contextMenu({
+					  selector: 'tr',
+					   items: contextMenuItems,
+				});
+			}
 
-			  if(number_of_toolbar_items < 4)
-			  {
+			if(number_of_toolbar_items < 4)
+			{
 				$('#header1').prop("checked", true);
-			  }
+			}
 		});
 	]]>
 
@@ -1040,32 +1047,33 @@
 			<xsl:if test="type = 'filter'">
 				$('select#<xsl:value-of select="name"/>').change( function()
 				{
-				<xsl:value-of select="extra"/>
-				filterData('<xsl:value-of select="name"/>', $(this).val());
+					<xsl:value-of select="extra"/>
+					filterData('<xsl:value-of select="name"/>', $(this).val());
 				});
 			</xsl:if>
 			<xsl:if test="type = 'date-picker'">
 				var previous_<xsl:value-of select="id"/>;
 				$("#filter_<xsl:value-of select="id"/>").on('keyup change', function ()
 				{
-				if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
-				{
-				filterData('<xsl:value-of select="id"/>', $(this).val());
-				previous_<xsl:value-of select="id"/> = $(this).val();
-				}
+					if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
+					{
+						filterData('<xsl:value-of select="id"/>', $(this).val());
+						previous_<xsl:value-of select="id"/> = $(this).val();
+					}
 				});
 			</xsl:if>
 			<xsl:if test="type = 'autocomplete'">
 				$(document).ready(function() {
-				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
-				filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
-				});
-				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
-				if ($(this).val() == ''){
-				$('#filter_<xsl:value-of select="name"/>_id').val('');
-				filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
-				}
-				});
+					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
+						filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
+					});
+					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
+						if ($(this).val() == '')
+						{
+							$('#filter_<xsl:value-of select="name"/>_id').val('');
+							filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
+						}
+					});
 				});
 			</xsl:if>
 		</xsl:for-each>
