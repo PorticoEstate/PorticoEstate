@@ -168,7 +168,11 @@
 				$entity['related'][] = array
 					(
 					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.index',
-						'query' => $location_code, 'criteria_id' => 4)), //criteria 4 is for location_code
+						'query' => $location_code,
+						'criteria_id' => 4, //criteria 4 is for location_code
+						'status_id' => 'all',
+						'filter_year' => 'all')
+					),
 					'name' => lang('project') . " [{$hits}]",
 					'descr' => lang('project')
 				);
