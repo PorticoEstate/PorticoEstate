@@ -89,6 +89,7 @@
 				$revision = isset($data['revision']) ? $data['revision'] : '';
 				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 				$dimb_id = isset($data['dimb_id']) && $data['dimb_id'] ? $data['dimb_id'] : 0;
+				$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			}
 
 			$cat_ids = $this->get_sub_cats($cat_id);
@@ -169,7 +170,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -212,6 +213,7 @@
 				$year = isset($data['year']) ? $data['year'] : '';
 				$grouping = isset($data['grouping']) ? $data['grouping'] : '';
 				$revision = isset($data['revision']) ? $data['revision'] : '';
+				$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -261,7 +263,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -524,6 +526,7 @@
 			$dimb_id = isset($data['dimb_id']) && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
 			$org_unit_id = isset($data['org_unit_id']) && $data['org_unit_id'] ? (int)$data['org_unit_id'] : 0;
 			$direction = isset($data['direction']) && $data['direction'] ? $data['direction'] : 'expenses';
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 
 			if (!$year)
 			{
@@ -1131,8 +1134,14 @@
 
 			if (!$allrows)
 			{
-				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) : 15;
-
+				if ($results)
+				{
+					$num_rows = $results;
+				}
+				else
+				{
+					$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) : 15;
+				}
 				//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));
 				$page = ceil(( $start / $this->total_records ) * ($this->total_records / $num_rows));
 

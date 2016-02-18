@@ -169,6 +169,7 @@
 			$filter_year = isset($data['filter_year']) ? $data['filter_year'] : '';
 			$tender_deadline = isset($data['tender_deadline']) && $data['tender_deadline'] ? (int)$data['tender_deadline'] : 0;
 			$inspection_on_completion = isset($data['inspection_on_completion']) && $data['inspection_on_completion'] ? (int)$data['inspection_on_completion'] : 0;
+			$results = (isset($data['results']) ? $data['results'] : 0);
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder' . !!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -788,7 +789,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql_end, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql_end, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{

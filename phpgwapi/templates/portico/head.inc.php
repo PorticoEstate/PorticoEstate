@@ -22,7 +22,6 @@
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
-	phpgwapi_jquery::load_widget('layout');
 
 	$javascripts = array
 	(
@@ -36,6 +35,7 @@
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
+		phpgwapi_jquery::load_widget('layout');
 		phpgwapi_jquery::load_widget('treeview');
 
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu

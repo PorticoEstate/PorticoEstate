@@ -137,20 +137,8 @@
 
 		function read_invoice( $data )
 		{
-			if (!phpgw::get_var('paid', 'bool'))
-			{
-//				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
-			}
-
 			$start_date = $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date = $this->bocommon->date_to_timestamp($data['end_date']);
-
-			/* $invoice = $this->so->read_invoice(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'user_lid' => $this->user_lid,'cat_id' => $this->cat_id, 'paid' => $paid,
-			  'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
-			  'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
-			  'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
-			  'district_id' => $this->district_id, 'invoice_id' => $invoice_id, 'ecodimb' => $ecodimb, 'project_id' => $project_id)); */
 
 			$invoice = $this->so->read_invoice(array(
 				'start' => $data['start'],
@@ -171,7 +159,8 @@
 				'district_id' => $this->district_id,
 				'invoice_id' => $data['invoice_id'],
 				'ecodimb' => $data['ecodimb'],
-				'project_id' => ($data['project_id']) ? $data['project_id'] : 0
+				'project_id' => ($data['project_id']) ? $data['project_id'] : 0,
+				'results' => $data['results']
 				)
 			);
 
@@ -214,9 +203,6 @@
 
 		function read_invoice_sub( $data )
 		{
-			/* $invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows)); */
-
 			$invoice = $this->so->read_invoice_sub(array(
 				'start' => $data['start'],
 				'query' => $data['query'],

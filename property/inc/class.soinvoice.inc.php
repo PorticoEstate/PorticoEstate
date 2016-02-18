@@ -86,6 +86,8 @@
 			$district_id = isset($data['district_id']) ? $data['district_id'] : '';
 			$invoice_id = $data['invoice_id'] ? $data['invoice_id'] : '';
 			$ecodimb = isset($data['ecodimb']) ? $data['ecodimb'] : '';
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+
 
 			$join_tables = '';
 			$filtermethod = '';
@@ -239,7 +241,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
