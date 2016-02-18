@@ -525,14 +525,6 @@
 			{
 				$data['allrows'] = true;
 			}
-
-			/* $workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
-			  'wo_hour_cat_id' => $this->wo_hour_cat_id,
-			  'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
-			  'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
-			  'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id),
-			  'obligation' => $this->obligation, 'filter_year' => $this->filter_year) ); */
 			$workorder = $this->so->read(array(
 				'start' => $data['start'],
 				'query' => $data['query'],
@@ -551,6 +543,7 @@
 				'b_account' => $this->b_account,
 				'district_id' => $this->district_id,
 				'dry_run' => $data['dry_run'],
+				'results' => $data['results'],
 				'criteria' => $this->get_criteria($this->criteria_id),
 				'obligation' => $this->obligation,
 				'filter_year' => $this->filter_year

@@ -485,6 +485,7 @@
 				'sort' => $data['sort'],
 				'order' => $data['order'],
 				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'results' => $data['results'],
 				'dry_run' => $data['dry_run'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,

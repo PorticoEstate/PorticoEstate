@@ -30,6 +30,7 @@
 <xsl:template name="datatable">
 	<script type="text/javascript">
 		var number_of_toolbar_items = 0;
+		var filter_selects = [];
 	</script>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -212,6 +213,9 @@
 										<xsl:variable name="name">
 											<xsl:value-of select="name"/>
 										</xsl:variable>
+										<script type="text/javascript">
+											filter_selects.push('<xsl:value-of select="$name"/>');
+										</script>
 										<select id="{$name}" name="{$name}">
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
@@ -637,14 +641,7 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-//				{
-//				extend: 'copyHtml5',
-//				text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
-//				},
-//				'csvHtml5',
 				'excelHtml5',
-//				'pdfHtml5'
-//				'excelFlash',
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
@@ -681,9 +678,9 @@
 					</xsl:when>
 				</xsl:choose>
 				];
+				var action_def = [
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
-					var action_def = [
 					<xsl:for-each select="//datatable/actions">
 							<xsl:choose>
 								<xsl:when test="type = 'custom'">
@@ -824,6 +821,12 @@
 					InitContextMenu = true;
 				}
 			}
+
+				if(button_def.length > 10)
+				{
+					group_buttons = true;
+				}
+
 	]]>
 				if($(document).width() &lt; 1000)
 				{
@@ -918,6 +921,16 @@
 						aoData.columns = {};
 						aoData.columns[column] = column_to_keep;
 					}
+
+					var select = null;
+					for (var i = 0; i < filter_selects.length; i++)
+					{
+						  select = $("#" + filter_selects[i]);
+						  var select_name = select.prop("name");
+						  var select_value = select.val();
+						  aoData[select_name] = select_value;
+					}
+
 				 },
 				fnCreatedRow  : function( nRow, aData, iDataIndex ){
  				},
