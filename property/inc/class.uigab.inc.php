@@ -216,6 +216,7 @@
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			$location_code = phpgw::get_var('location_code');
 
 			$appname = lang('gab');
 			$function_msg = lang('list gab');
@@ -244,6 +245,7 @@
 					)),
 					'allrows' => true,
 					'editor_action' => '',
+					'query'		=> $location_code,
 					'field' => array()
 				)
 			);
@@ -332,6 +334,18 @@
 				'address' => lang('Address')
 			);
 
+			if($location_code)
+			{
+				$set_location_code = <<<JS
+
+					$( '#location_code').val('{$location_code}');
+JS;
+			}
+			else
+			{
+				$set_location_code = '';
+			}
+
 			$code = "var inputFilters = " . json_encode($inputFilters);
 
 			$code .= <<<JS
@@ -339,10 +353,12 @@
 				function initCompleteDatatable(oSettings, json, oTable) 
 				{
 					$('#datatable-container_filter').empty();
-					$.each(inputFilters, function(i, val) 
-				{
+					$.each(inputFilters, function(i, val)
+					{
 						$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val+'" id="'+i+'" />');
 					});
+
+					{$set_location_code}
 
 					var valuesInputFilter = {};
 
@@ -350,12 +366,12 @@
 					{
 						valuesInputFilter[i] = '';
 						$( '#' + i).on( 'keyup change', function () 
-					{
+						{
 							if ( $.trim($(this).val()) != $.trim(valuesInputFilter[i]) ) 
-				{
+							{
 								filterData(i, $(this).val());
 								valuesInputFilter[i] = $(this).val();
-			}
+							}
 						});
 					});
 				};
@@ -392,7 +408,7 @@ JS;
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
-				'location_code' => $location_code,
+				'location_code' => $location_code ? $location_code : $search['value'],
 				'gaards_nr' => $gaards_nr,
 				'bruksnr' => $bruksnr,
 				'feste_nr' => $feste_nr,

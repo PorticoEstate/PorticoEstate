@@ -860,7 +860,7 @@
 					'new_item' => self::link(array('menuaction' => 'property.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),
-					'group_buttons' => true,
+					'query' => phpgw::get_var('query')
 				)
 			);
 
@@ -1027,7 +1027,6 @@
 				$data['datatable']['group_buttons'] = false;
 			}
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
