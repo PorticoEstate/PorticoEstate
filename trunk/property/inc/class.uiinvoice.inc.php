@@ -3405,6 +3405,7 @@ JS;
 						$this->bo->export_deposition();
 					}
 				}
+				return;
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
