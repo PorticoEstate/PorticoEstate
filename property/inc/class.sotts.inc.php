@@ -1751,6 +1751,8 @@
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_tts_history WHERE history_record_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_tts_views WHERE id = {$id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_tts_tickets WHERE id = {$id}", __LINE__, __FILE__);
 

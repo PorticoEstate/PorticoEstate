@@ -865,6 +865,7 @@
 			{
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
+			phpgwapi_jquery::formvalidator_generate(array('file'));
 
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
@@ -948,9 +949,9 @@
 					$active_tab = 'step_1';
 					$lang_submit = lang('continue');
 					$tabs['step_1'] = array('label' => lang('choose file'), 'link' => '#step_1');
-					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => null);
-					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null);
-					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
+					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => null, 'disable' => true);
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null, 'disable' => true);
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null, 'disable' => true);
 					break;
 				case 1:
 					$active_tab = 'step_2';
@@ -959,8 +960,8 @@
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 0,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_2'] = array('label' => lang('choose sheet'), 'link' => '#step_2');
-					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null);
-					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
+					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => null, 'disable' => true);
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null, 'disable' => true);
 					break;
 				case 2:
 					$active_tab = 'step_3';
@@ -972,7 +973,7 @@
 							'menuaction' => 'property.uicondition_survey.import', 'id' => $id, 'step' => 1,
 							'sheet_id' => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_3'] = array('label' => lang('choose start line'), 'link' => '#step_3');
-					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null);
+					$tabs['step_4'] = array('label' => lang('choose columns'), 'link' => null, 'disable' => true);
 					break;
 				case 3:
 					$active_tab = 'step_4';
@@ -1026,6 +1027,9 @@
 					}
 
 					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+					$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+					$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+					$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
 				}
 				catch (Exception $e)
 				{
@@ -1040,12 +1044,8 @@
 
 			$survey = $this->bo->read_single(array('id' => $id, 'view' => $mode == 'view'));
 
-			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
-
 			$i = 0;
-			$html_table = '<table border="1">';
+			$html_table = '<table class="pure-table pure-table-bordered">';
 			if ($rows > 1 && $step == 2)
 			{
 
@@ -1055,7 +1055,7 @@
 					$cols[] = $this->getexcelcolumnname($j);
 				}
 
-				$html_table .= "<tr><th align = 'center'>" . lang('start') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr>';
+				$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
 				foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
 				{
 					if ($i > 20)
@@ -1071,7 +1071,7 @@
 						$_checked = 'checked="checked"';
 					}
 
-					$_radio = "[{$row_key}]<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+					$_radio = "<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
 
 					$cellIterator = $row->getCellIterator();
 					$cellIterator->setIterateOnlyExistingCells(false);
@@ -1084,7 +1084,7 @@
 							$row_values[] = $cell->getCalculatedValue();
 						}
 					}
-					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
+					$html_table .= "<tr><td>{$_radio}</td><td>{$row_key}</td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
 				}
 				echo '</table>';
 			}
