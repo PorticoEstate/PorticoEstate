@@ -75,10 +75,6 @@
 			{
 				$this->set_output('wml');
 			}
-			else
-			{
-				$this->set_output();
-			}
 		}
 
 		/**
@@ -271,6 +267,7 @@
 		>
 
 XSLT;
+
 				switch ( $this->output )
 				{
 					case 'wml':
@@ -278,7 +275,7 @@ XSLT;
 						break;
 
 					case 'html5':
-						$this->xsldata .= '<xsl:output  method="xml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes" />'."\n";
+						$this->xsldata .= '<xsl:output  method="html" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes" />'."\n";
 						break;
 
 					case 'html':
