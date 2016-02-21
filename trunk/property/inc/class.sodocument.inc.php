@@ -122,6 +122,7 @@
 			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$results = isset($data['results']) && $data['results'] ? $data['results'] : 0;
 				$filter = isset($data['filter']) ? $data['filter'] : '';
 				$query = isset($data['query']) ? $data['query'] : '';
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -131,23 +132,29 @@
 				$entity_id = isset($data['entity_id']) ? $data['entity_id'] : '';
 				$doc_type = isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type'] : 0;
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+				$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
-
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
-			if (!$sql)
+			if (true)
 			{
 
 				$document_table = 'fm_document';
-
-				$cols = $document_table . '.location_code';
-				$cols_return[] = 'location_code';
-
 				$uicols = array();
 				$joinmethod = '';
 				$paranthesis = '';
+
+				$cols = $document_table . '.location_code';
+				$cols_return[] = 'location_code';
+				$cols .= ", {$document_table}.category AS doc_type";
+				$cols_return[] = 'doc_type';
+
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'location_code';
+				$uicols['descr'][] = lang('location code');
+				$uicols['statustext'][] = lang('location_code');
 
 				if ($entity_id)
 				{
@@ -182,6 +189,7 @@
 					'joinmethod' => $joinmethod,
 					'paranthesis' => $paranthesis,
 					'query' => $query,
+					'location_level' => 2,
 					'force_location' => true,
 					'no_address' => false,
 				));
@@ -207,7 +215,7 @@
 				$this->cols_extra = $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 //_debug_array($this->uicols);
-			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name";
+			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name, fm_location1.category";
 
 			if ($entity_id)
 			{
@@ -278,7 +286,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -319,7 +327,7 @@
 				$query = isset($data['query']) ? $data['query'] : '';
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
-				$filter = isset($data['filter']) && $data['filter'] ? (int)$data['filter'] : 0;
+				$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : '';
 				$entity_id = isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id'] : 0;
 				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 				$p_num = isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : 0;
@@ -364,9 +372,9 @@
 				$where = 'AND';
 			}
 
-			if ($filter > 0)
+			if ($status_id)
 			{
-				$filtermethod .= "  $where fm_document.user_id='$filter' ";
+				$filtermethod .= "  $where fm_document.status='$status_id' ";
 				$where = 'AND';
 			}
 
