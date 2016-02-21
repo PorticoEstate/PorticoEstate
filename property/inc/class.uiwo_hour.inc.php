@@ -1338,12 +1338,12 @@
 
 				$email_data['use_yui_table'] = true;
 
+				$this->create_html->set_output();
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
 
 				$xml = new DOMDocument;
 				$xml->loadXML($this->create_html->xmldata);
-
 				$xsl = new DOMDocument;
 				$xsl->loadXML($this->create_html->xsldata);
 
@@ -1351,20 +1351,31 @@
 				$proc = new XSLTProcessor;
 				$proc->registerPHPFunctions(); // enable php functions
 				$proc->importStyleSheet($xsl); // attach the xsl rules
+				$css	= file_get_contents( PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+				$css	.= file_get_contents( PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
 
 				$header = <<<HTML
+<!DOCTYPE HTML>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
 		<body>
+			<div class="pure-form pure-form-aligned">
 HTML;
 
 				$footer = <<<HTML
+			</div>
 	</body>
 </html>
 HTML;
 
-				$html = $proc->transformToXML($xml);
+				$html = trim($proc->transformToXML($xml));
+				$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+				$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
 				if ($print)
 				{

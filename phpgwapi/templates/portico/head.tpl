@@ -1,8 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <!-- BEGIN head -->
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8">
 		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
 		<meta name="keywords" content="phpGroupWare">
