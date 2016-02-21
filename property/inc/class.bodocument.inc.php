@@ -146,12 +146,21 @@
 			return $this->bocommon->select_list($selected, $branch_entries);
 		}
 
-		function read()
+		function read( $data = array() )
 		{
-			$documents = $this->so->read(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'entity_id' => $this->entity_id,
-				'doc_type' => $this->doc_type));
+			$documents = $this->so->read(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'results' => $data['results'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'entity_id' => $this->entity_id,
+				'doc_type' => $this->doc_type,
+				'dry_run' => $data['dry_run'])
+			);
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;
@@ -224,7 +233,7 @@
 			return $this->so->get_files_at_location($data);
 		}
 
-		function read_at_location( $location_code = '' )
+		function read_at_location( $data = array() )
 		{
 			$use_svn = false;
 			if (preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
@@ -232,12 +241,21 @@
 				//		$use_svn = true;
 			}
 
-
-			$document = $this->so->read_at_location(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'filter' => $this->filter, 'p_num' => $this->p_num, 'cat_id' => $this->cat_id,
+			$document = $this->so->read_at_location(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'results' => $data['results'],
+				'location_code' => $data['location_code'],
+				'status_id' => $this->status_id,
+				'p_num' => $this->p_num,
+				'cat_id' => $this->cat_id,
 				'entity_id' => $this->entity_id,
-				'location_code' => $location_code, 'doc_type' => $this->doc_type, 'allrows' => $this->allrows));
+				'doc_type' => $this->doc_type,
+				)
+			);
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

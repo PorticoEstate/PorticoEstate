@@ -1153,7 +1153,6 @@
 			$lookup = isset($data['lookup']) ? $data['lookup'] : '';
 			$location_level = isset($data['location_level']) && $data['location_level'] > 0 ? (int)$data['location_level'] : 0;
 			$no_address = isset($data['no_address']) ? $data['no_address'] : '';
-			$uicol_address = isset($data['uicol_address']) ? $data['uicol_address'] : '';
 			$force_location = isset($data['force_location']) ? $data['force_location'] : '';
 			$cols_extra = array();
 			$cols_return_lookup = array();
