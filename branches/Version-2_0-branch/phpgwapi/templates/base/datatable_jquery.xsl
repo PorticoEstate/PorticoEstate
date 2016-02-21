@@ -30,7 +30,7 @@
 <xsl:template name="datatable">
 	<script type="text/javascript">
 		var number_of_toolbar_items = 0;
-		var filter_selects = [];
+		var filter_selects = {};
 	</script>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -87,6 +87,7 @@
 		content: "\2212";
 		}
 	</style>
+	<div id="active_filters"></div>
 
 	<input class="toggle-box" id="header1" type="checkbox" />
 	<label for="header1">
@@ -96,7 +97,7 @@
 	<div id="toolbar">
 		<!--xsl:if test="item/text and normalize-space(item/text)"-->
 		<xsl:if test="item">
-			<table id="toolbar_table" class="pure-table">
+			<table id="toolbar_table" class="pure-table pure-table-horizontal">
 				<thead>
 					<tr>
 						<th>
@@ -214,9 +215,9 @@
 											<xsl:value-of select="name"/>
 										</xsl:variable>
 										<script type="text/javascript">
-											filter_selects.push('<xsl:value-of select="$name"/>');
+											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 										</script>
-										<select id="{$name}" name="{$name}">
+										<select id="{$name}" name="{$name}" width="250" style="width: 250px">
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
@@ -922,13 +923,25 @@
 						aoData.columns[column] = column_to_keep;
 					}
 
+					active_filters_html = [];
 					var select = null;
-					for (var i = 0; i < filter_selects.length; i++)
+					for (var i in filter_selects)
 					{
 						  select = $("#" + filter_selects[i]);
 						  var select_name = select.prop("name");
 						  var select_value = select.val();
 						  aoData[select_name] = select_value;
+
+						  if(select_value && select_value !=0 )
+						  {
+							active_filters_html.push(i);
+						  }
+
+					}
+				  
+					if(active_filters_html.length > 0)
+					{
+						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
 					}
 
 				 },
