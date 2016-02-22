@@ -189,9 +189,26 @@
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
 	}
+	$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+	$css .= file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
 
-	$html = <<<HTML
-	<table>
+	$header = <<<HTML
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
+		<body>
+			<div class="pure-form pure-form-aligned">
+HTML;
+
+	$footer = <<<HTML
+			</div>
+	</body>
+</html>
 HTML;
 	$bra5ServiceLogout = new Bra5ServiceLogout();
 	$bra5ServiceLogout->Logout(new Bra5StructLogout($secKey));
@@ -216,10 +233,14 @@ HTML;
 		'BrukerID',
 		'Team'
 	);
+	$content = <<<HTML
+	<table class="pure-table pure-table-bordered">
+		<thead>
+HTML;
 
-	$html .='<th>';
-	$html .='Last ned';
-	$html . '</th>';
+	$content .='<th>';
+	$content .='Last ned';
+	$content . '</th>';
 
 	$location_id = phpgw::get_var('location_id', 'int');
 	$section = phpgw::get_var('section', 'string');
@@ -236,14 +257,15 @@ HTML;
 		{
 			continue;
 		}
-		$html .='<th>';
-		$html .=$attribute->Name;
-		$html . '</th>';
+		$content .='<th>';
+		$content .=$attribute->Name;
+		$content . '</th>';
 	}
 
+	$content .='</thead>';
 	foreach ($_result as $document)
 	{
-		$attributes = $document->getAttributes()->Attribute;
+//		$attributes = $document->getAttributes()->Attribute;
 	}
 
 	$case_array = array();
@@ -308,13 +330,13 @@ HTML;
 //_debug_array($case_array);
 	foreach ($case_array as $case)
 	{
-		$html .= implode('', $case);
+		$content .= implode('', $case);
 	}
 
-	$html .=<<<HTML
+	$content .=<<<HTML
 	</table>
 HTML;
 
-	echo $html;
+	echo $header . $content . $footer;
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
