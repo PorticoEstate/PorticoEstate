@@ -138,9 +138,8 @@
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
-			if (true)
+			if (!$sql)
 			{
-
 				$document_table = 'fm_document';
 				$uicols = array();
 				$joinmethod = '';
