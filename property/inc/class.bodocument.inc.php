@@ -155,7 +155,7 @@
 				'order' => $data['order'],
 				'allrows' => $data['allrows'],
 				'results' => $data['results'],
-				'filter' => $this->filter,
+				'status_id' => $this->status_id,
 				'cat_id' => $this->cat_id,
 				'entity_id' => $this->entity_id,
 				'doc_type' => $this->doc_type,
