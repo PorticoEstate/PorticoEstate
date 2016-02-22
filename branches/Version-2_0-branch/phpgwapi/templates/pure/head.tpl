@@ -15,24 +15,6 @@
         <!-- END stylesheet -->
 		{menu_stylesheet_widescreen}
 
-		
-		<style>
-			.priority1
-			{
-				background-color: #da7a7a !important;
-			}
-
-			.priority2
-			{
-				background-color: #dababa !important;
-			}
-
-			.priority3
-			{
-				background-color: #dadada !important;
-			}
-		</style>
-
 		<script type="text/javascript">
 		<!--
 			var strBaseURL = '{str_base_url}';

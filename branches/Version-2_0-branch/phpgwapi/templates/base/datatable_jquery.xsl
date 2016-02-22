@@ -38,7 +38,7 @@
 		<xsl:call-template name="msgbox"/>
 	</div>
 	<div id="message" class='message'/>
-	<xsl:apply-templates select="datatable"/> 
+	<xsl:apply-templates select="datatable"/>
 	<xsl:apply-templates select="form/list_actions"/>
 </xsl:template>
 
@@ -574,7 +574,7 @@
 
 	<script type="text/javascript" class="init">
 		var lang_ButtonText_columns = "<xsl:value-of select="php:function('lang', 'columns')"/>";
-		
+
 		var oTable = null;
 		$(document).ready(function() {
 		var ajax_url = '<xsl:value-of select="source"/>';
@@ -705,6 +705,7 @@
 											return false;
 											}
 										</xsl:if>
+										fnSetSelected(this);
 										<xsl:value-of select="custom_code"/>
 										}
 									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
@@ -723,6 +724,9 @@
 										</xsl:choose>
 										action: function (e, dt, node, config) {
 											var receiptmsg = [];
+
+											fnSetSelected(this);
+
 											var selected = fnGetSelected();
 											var numSelected = 	selected.length;
 
@@ -938,7 +942,7 @@
 						  }
 
 					}
-				  
+
 					if(active_filters_html.length > 0)
 					{
 						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
@@ -956,21 +960,21 @@
 				fnDrawCallback: function () {
 					oTable.makeEditable({
 							sUpdateURL: editor_action,
-							fnOnEditing: function(input){  
+							fnOnEditing: function(input){
 								cell = input.parents("td");
 									id = input.parents("tr").children("td:first").text();
 								return true;
 							},
 							fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
-							{ 	
+							{
 								document.getElementById("message").innerHTML += '<br/>' + status;
 							},
-							oUpdateParameters: { 
+							oUpdateParameters: {
 								"id": function(){ return id; }
 							},
-							aoColumns: editor_cols,		
+							aoColumns: editor_cols,
 						    sSuccessResponse: "IGNORE",
-							fnShowError: function(){ return; }		
+							fnShowError: function(){ return; }
 					});
 					if(typeof(addFooterDatatable) == 'function')
 					{
@@ -1118,12 +1122,27 @@
 				 return aReturn;
 			}
 
+			function fnSetSelected( row )
+			{
+				if(typeof(row[0]) == 'undefined')
+				{
+					return false;
+				}
+
+				var sectionRowIndex = row[0].sectionRowIndex;
+				if(typeof(sectionRowIndex) != 'undefined')
+				{
+					var table = oTable.DataTable();
+					var selected = table.row( sectionRowIndex ).select();
+				}
+			}
+
 			function execute_ajax(requestUrl, callback, data,type, dataType)
-			{                                       
+			{
 				type = typeof type !== 'undefined' ? type : 'POST';
 				dataType = typeof dataType !== 'undefined' ? dataType : 'html';
 				data = typeof data !== 'undefined' ? data : {};
-                                
+
 				$.ajax({
 					type: type,
 					dataType: dataType,
@@ -1171,12 +1190,12 @@
 			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
 			oTable.fnDraw();
 		}
-		
+
 		function clearFilterParam(param)
 		{
 			oTable.dataTableSettings[0]['ajax']['data'][param] = '';
 		}
-		
+
 		function reloadData()
 		{
 			var api = oTable.api();

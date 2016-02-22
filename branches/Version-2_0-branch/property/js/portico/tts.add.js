@@ -48,8 +48,32 @@ this.confirm_session = function (action)
 		},
 		failure: function (o)
 		{
-			window.alert('failure - try again - once')
+			window.alert('failure - try again - once');
 		},
 		timeout: 5000
 	});
-}
+};
+$(document).ready(function ()
+{
+
+	$('#group_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
+	$('#user_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
+});
+
+$.formUtils.addValidator({
+	name: 'assigned',
+	validatorFunction: function (value, $el, config, languaje, $form)
+	{
+		var v = false;
+		var group_id = $('#group_id').val();
+		var user_id = $('#user_id').val();
+		if (group_id != "" || user_id != "")
+		{
+			v = true;
+		}
+		return v;
+	},
+	errorMessage: 'Assigned is required',
+	errorMessageKey: ''
+});
+
