@@ -63,7 +63,7 @@ HTML;
 	{
 		$stylesheets[] = "/phpgwapi/templates/pure/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-	//$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	//$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
