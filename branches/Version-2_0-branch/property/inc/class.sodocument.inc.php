@@ -123,7 +123,7 @@
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$results = isset($data['results']) && $data['results'] ? $data['results'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : '';
+				$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : '';
 				$query = isset($data['query']) ? $data['query'] : '';
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
@@ -138,9 +138,8 @@
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
-			if (true)
+			if (!$sql)
 			{
-
 				$document_table = 'fm_document';
 				$uicols = array();
 				$joinmethod = '';
@@ -265,9 +264,10 @@
 				$where = 'AND';
 			}
 
-			if ($filter != 'all' && $filter)
+			if ($status_id)
 			{
-				$filtermethod .= " $where fm_document.user_id='$filter' ";
+				$filtermethod .= "  $where fm_document.status='$status_id' ";
+				$where = 'AND';
 			}
 
 			$querymethod = '';
