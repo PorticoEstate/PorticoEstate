@@ -692,7 +692,9 @@
 				);
 			}
 
-			//		if($order_read)
+			$order_read = $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
+
+			if($order_read)
 			{
 				$combos[] = array('type' => 'filter',
 					'name' => 'vendor_id',
@@ -1392,6 +1394,7 @@
 				'lang_send' => lang('send'),
 				'value_details' => (isset($values['details']) ? $values['details'] : ''),
 				'value_subject' => (isset($values['subject']) ? $values['subject'] : ''),
+				'tts_mandatory_title' => $this->bo->config->config_data['tts_mandatory_title'],
 				'value_finnish_date' => (isset($values['finnish_date']) ? $values['finnish_date'] : ''),
 				'lang_finnish_date_statustext' => lang('Select the estimated date for closing the task'),
 				'lang_cancel_statustext' => lang('Back to the ticket list'),

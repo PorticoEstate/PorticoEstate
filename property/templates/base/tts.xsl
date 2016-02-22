@@ -19,6 +19,7 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !')"/>;
 	</script>
 
 	<dl>
@@ -156,12 +157,14 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please enter a title !')"/>
-							</xsl:attribute>
+							<xsl:if test="tts_mandatory_title != ''">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter a title !')"/>
+								</xsl:attribute>
+							</xsl:if>
 
 						</input>
 					</div>
