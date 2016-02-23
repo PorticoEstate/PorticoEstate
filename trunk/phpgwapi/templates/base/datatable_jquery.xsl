@@ -705,7 +705,7 @@
 											return false;
 											}
 										</xsl:if>
-										fnSetSelected(this);
+										fnSetSelected(this, dt);
 										<xsl:value-of select="custom_code"/>
 										}
 									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
@@ -724,8 +724,7 @@
 										</xsl:choose>
 										action: function (e, dt, node, config) {
 											var receiptmsg = [];
-
-											fnSetSelected(this);
+											fnSetSelected(this, dt);
 
 											var selected = fnGetSelected();
 											var numSelected = 	selected.length;
@@ -1122,8 +1121,21 @@
 				 return aReturn;
 			}
 
-			function fnSetSelected( row )
+			function fnSetSelected( row , dt)
 			{
+				var table = oTable.DataTable();
+				if(typeof(dt.trigger) != 'undefined' && dt.trigger == 'right')
+				{
+					var aTrs = oTable.fnGetNodes();
+					for ( var i=0 ; i < aTrs.length ; i++ )
+					{
+						if ( $(aTrs[i]).hasClass('selected') )
+						{
+							table.row( i ).deselect();
+						}
+					}
+				}
+
 				if(typeof(row[0]) == 'undefined')
 				{
 					return false;
@@ -1132,7 +1144,6 @@
 				var sectionRowIndex = row[0].sectionRowIndex;
 				if(typeof(sectionRowIndex) != 'undefined')
 				{
-					var table = oTable.DataTable();
 					var selected = table.row( sectionRowIndex ).select();
 				}
 			}
