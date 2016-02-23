@@ -2707,6 +2707,10 @@
 			$value_set['loc1'] = $order_info['loc1'];
 			$value_set['line_text'] = $order_info['title'];
 			$value_set['spbudact_code'] = $order_info['spbudact_code'];
+			$value_set['oppsynsigndato'] = false;
+			$value_set['saksigndato'] = false;
+			$value_set['budsjettsigndato'] = false;
+			$value_set['utbetalingsigndato'] = false;
 			if (isset($order_info['janitor']) && $order_info['janitor'])
 			{
 				$value_set['oppsynsmannid'] = $order_info['janitor'];
