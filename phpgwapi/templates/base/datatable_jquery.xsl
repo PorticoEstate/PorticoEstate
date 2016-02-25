@@ -910,9 +910,21 @@
 				responsive:		true,
 				select: select_all ? { style: 'multi' } : true,
 				deferRender:	true,
-				ajax:			{
+				ajax:{
 					url: ajax_url,
-					data: {},
+					data:{},
+					dataSrc: function ( json ) {
+						if (typeof(json.sessionExpired) != 'undefined' && json.sessionExpired == true)
+						{
+							window.alert('sessionExpired - please log in');
+							JqueryPortico.lightboxlogin();//defined in common.js
+		//					oTable.api().ajax.reload( null, false ); // user paging is not reset on reload
+						}
+						else
+						{
+							return json.data;
+						}
+					  },
 					type: 'POST'
 				},
 				fnServerParams: function ( aoData ) {
