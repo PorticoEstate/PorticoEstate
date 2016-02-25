@@ -60,7 +60,8 @@
 				</div>
 				<div class="pure-u-1">
 					<div class="heading">
-						<xsl:value-of select="php:function('lang', 'I am feeling lucky')" />
+						<!--xsl:value-of select="php:function('lang', 'I am feeling lucky')" /-->
+						Søk fritekst
 					</div>
 					<input id="field_searchterm" name="searchterm" type="text">
 						<xsl:attribute name="value">
