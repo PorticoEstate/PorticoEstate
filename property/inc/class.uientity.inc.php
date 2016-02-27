@@ -75,6 +75,7 @@
 			'get_controls_at_component' => true,
 			'get_assigned_history' => true,
 			'get_cases' => true,
+			'get_checklists'=>true,
 			'get_cases_for_checklist' => true
 		);
 
@@ -2188,33 +2189,31 @@
 							array('singleSelect' => true)
 						)
 					);
+					$_cases = $this->get_cases($location_id, $id, date('Y')); // initial search
+
+					$_case_def = array
+						(
+						array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,
+							'resizeable' => true),
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_6',
+						'requestUrl' => "''",
+						'ColumnDefs' => $_case_def,
+						'data' => json_encode($_cases),
+						'config' => array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
+						)
+					);
 				}
-
-				$_cases = $this->get_cases($location_id, $id, date('Y')); // initial search
-				$cases_time_span = $this->cases_time_span;
-
-				$_case_def = array
-					(
-					array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
-					array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
-					array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,
-						'resizeable' => true),
-				);
-
-				$datatable_def[] = array
-					(
-					'container' => 'datatable-container_6',
-					'requestUrl' => "''",
-					'ColumnDefs' => $_case_def,
-					'data' => json_encode($_cases),
-					'config' => array(
-						array('disableFilter' => true),
-						array('disablePagination' => true)
-					)
-				);
 			}
 
 			//$category['org_unit'] =1;
@@ -3451,7 +3450,7 @@ HTML;
 						(
 						'url' => "<a href=\"{$_link}\" > {$check_list_id}</a>",
 						'type' => $_control_name,
-						'title' =>$check_item->get_control_item()->get_title(),
+						'title' => $check_item->get_control_item()->get_title(),
 						'value' => $case->get_measurement(),
 						'status' => $_statustext[$case->get_status()],
 						'user' => $GLOBALS['phpgw']->accounts->get($case->get_user_id())->__toString(),
@@ -3496,10 +3495,27 @@ HTML;
 			{
 				$year = phpgw::get_var('year', 'int', 'REQUEST', date('Y'));
 			}
-
-			$from_date_ts = 0;//mktime(0, 0, 0, 1, 1, $year);
-			$to_date_ts = mktime(23, 59, 59, 12, 31, ($year + 2));
 			$socheck_list = CreateObject('controller.socheck_list');
+
+			$start_and_end = $socheck_list->get_start_and_end_for_component($location_id, $id);
+			$start_year = date('Y', $start_and_end['start_timestamp']);
+			$end_year = date('Y', $start_and_end['end_timestamp']);
+			if (!$year)
+			{
+				$year = $end_year;
+			}
+
+			for ($j = $start_year; $j < ($end_year + 1); $j++)
+			{
+				$this->cases_time_span[] = array(
+					'id' => $j,
+					'name' => $j,
+					'selected' => $j == date('Y') ? 1 : 0
+				);
+			}
+
+			$from_date_ts = mktime(0, 0, 0, 1, 1, $year);
+			$to_date_ts = mktime(23, 59, 59, 12, 31, $year);
 			$socontrol = CreateObject('controller.socontrol');
 
 			$control_id_with_check_list_array = $socheck_list->get_check_lists_for_component($location_id, $id, $from_date_ts, $to_date_ts);
