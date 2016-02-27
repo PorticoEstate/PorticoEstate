@@ -74,7 +74,8 @@
 			'inventory_calendar' => true,
 			'get_controls_at_component' => true,
 			'get_assigned_history' => true,
-			'get_cases' => true
+			'get_cases' => true,
+			'get_cases_for_checklist' => true
 		);
 
 		function __construct()
@@ -1089,7 +1090,7 @@
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
-			if ($default_district && ! isset($_REQUEST['district_id']))
+			if ($default_district && !isset($_REQUEST['district_id']))
 			{
 				$this->bo->district_id = $default_district;
 				$this->district_id = $default_district;
@@ -1202,7 +1203,7 @@
 					'allrows' => true,
 					'editor_action' => '',
 					'field' => array(),
-					'query'	=> phpgw::get_var('location_code')
+					'query' => phpgw::get_var('location_code')
 				)
 			);
 
@@ -2159,32 +2160,61 @@
 						)
 					);
 
-					$_cases = $this->get_cases($location_id, $id, date('Y'));
+					$_checklists = $this->get_checklists($location_id, $id, date('Y'));
 					$cases_time_span = $this->cases_time_span;
 
-					$_case_def = array
+					$_checklists_def = array
 						(
-						array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
-						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
-						array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,
-							'resizeable' => true),
+						array('key' => 'id', 'label' => lang('id'), 'sortable' => false),
+						array('key' => 'control_name', 'label' => lang('name'), 'sortable' => false),
+						array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+						array('key' => 'user', 'label' => lang('user'), 'sortable' => false),
+						array('key' => 'deadline', 'label' => lang('deadline'), 'sortable' => false),
+						array('key' => 'planned_date', 'label' => lang('planned date'), 'sortable' => true),
+						array('key' => 'completed_date', 'label' => lang('completed date'), 'sortable' => false),
+						array('key' => 'num_open_cases', 'label' => lang('open_cases'), 'sortable' => false),
+						array('key' => 'num_pending_cases', 'label' => lang('pending_cases'), 'sortable' => false),
 					);
 
 					$datatable_def[] = array
 						(
 						'container' => 'datatable-container_5',
 						'requestUrl' => "''",
-						'ColumnDefs' => $_case_def,
-						'data' => json_encode($_cases),
+						'ColumnDefs' => $_checklists_def,
+						'data' => json_encode($_checklists),
 						'config' => array(
 							array('disableFilter' => true),
-							array('disablePagination' => true)
+							array('disablePagination' => true),
+							array('singleSelect' => true)
 						)
 					);
 				}
+
+				$_cases = $this->get_cases($location_id, $id, date('Y')); // initial search
+				$cases_time_span = $this->cases_time_span;
+
+				$_case_def = array
+					(
+					array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
+					array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
+					array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,
+						'resizeable' => true),
+				);
+
+				$datatable_def[] = array
+					(
+					'container' => 'datatable-container_6',
+					'requestUrl' => "''",
+					'ColumnDefs' => $_case_def,
+					'data' => json_encode($_cases),
+					'config' => array(
+						array('disableFilter' => true),
+						array('disablePagination' => true)
+					)
+				);
 			}
 
 			//$category['org_unit'] =1;
@@ -3218,23 +3248,6 @@ HTML;
 				'location_id' => $location_id, 'component_id' => $id));
 			foreach ($controls as &$entry)
 			{
-				/*
-				  $menuaction	= 'controller.uicalendar.view_calendar_year_for_locations';
-				  if($entry['repeat_type'] < 2)
-				  {
-				  $menuaction	= 'controller.uicalendar.view_calendar_month_for_locations';
-				  }
-
-				  $control_link_data = array
-				  (
-				  'menuaction'	=> $menuaction,
-				  'control_id'	=> $entry['control_id'],
-				  'location_id'	=> $location_id,
-				  'component_id'	=> $id,
-				  'serie_id'		=> $entry['serie_id']
-				  );
-				 */
-
 				$menuaction = 'controller.uicomponent.index';
 
 				$control_link_data = array
@@ -3250,7 +3263,6 @@ HTML;
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
 				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
-//				$entry['select'] = "<input type='checkbox' class='mychecks' value='{$entry['serie_id']}'></input>";
 			}
 
 			$phpgw_return_as = phpgw::get_var('phpgw_return_as');
@@ -3351,7 +3363,7 @@ HTML;
 					(
 					'url' => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
 					'type' => $_control_name,
-					'title' => $case['descr'],
+					'title' => $case['title'],
 					'value' => $case['measurement'],
 					'status' => $_statustext[$case['status']],
 					'user' => $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
@@ -3382,5 +3394,160 @@ HTML;
 				return $this->jquery_results($result_data);
 			}
 			return $_cases;
+		}
+
+		/**
+		 * Get controller cases related to this item and a spesific checklist.
+		 * @return array
+		 */
+		public function get_cases_for_checklist()
+		{
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+			$so_check_item = CreateObject('controller.socheck_item');
+			$controller_cases = $so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'all', null, null);
+
+			$_statustext = array();
+			$_statustext[0] = lang('open');
+			$_statustext[1] = lang('closed');
+			$_statustext[2] = lang('pending');
+
+			$_case_years = array();
+			$_cases = array();
+
+			$socheck_list = CreateObject('controller.socheck_list');
+			$socontrol = CreateObject('controller.socontrol');
+
+			foreach ($controller_cases as $check_item)
+			{
+				$checklist_id = $check_item->get_check_list_id();
+				$control_id = $socheck_list->get_single($checklist_id)->get_control_id();
+
+				$_control_name = $socontrol->get_single($control_id)->get_title();
+
+				$cases_array = $check_item->get_cases_array();
+				foreach ($cases_array as $case)
+				{
+					switch ($case->get_status())
+					{
+						case 0:
+						case 2:
+							$_method = 'view_open_cases';
+							break;
+						case 1:
+							$_method = 'view_closed_cases';
+							break;
+						default:
+							$_method = 'view_open_cases';
+					}
+
+					$_link = $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => "controller.uicase.{$_method}",
+						'check_list_id' => $check_list_id
+						)
+					);
+
+					$_cases[] = array
+						(
+						'url' => "<a href=\"{$_link}\" > {$check_list_id}</a>",
+						'type' => $_control_name,
+						'title' =>$check_item->get_control_item()->get_title(),
+						'value' => $case->get_measurement(),
+						'status' => $_statustext[$case->get_status()],
+						'user' => $GLOBALS['phpgw']->accounts->get($case->get_user_id())->__toString(),
+						'entry_date' => $GLOBALS['phpgw']->common->show_date($case->get_modified_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+					unset($_link);
+				}
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$result_data = array
+					(
+					'results' => $_cases,
+					'total_records' => count($_cases),
+					'draw' => phpgw::get_var('draw', 'int')
+				);
+
+				return $this->jquery_results($result_data);
+			}
+			return $_cases;
+		}
+
+		/**
+		 * Get controller checklists related to this item.
+		 * @param integer $location_id
+		 * @param integer $id
+		 * @param integer $year
+		 * @return string
+		 */
+		public function get_checklists( $location_id = 0, $id = 0, $year = 0 )
+		{
+			if (!$location_id)
+			{
+				$location_id = phpgw::get_var('location_id', 'int');
+			}
+			if (!$id)
+			{
+				$id = phpgw::get_var('id', 'int');
+			}
+			if (!$year)
+			{
+				$year = phpgw::get_var('year', 'int', 'REQUEST', date('Y'));
+			}
+
+			$from_date_ts = 0;//mktime(0, 0, 0, 1, 1, $year);
+			$to_date_ts = mktime(23, 59, 59, 12, 31, ($year + 2));
+			$socheck_list = CreateObject('controller.socheck_list');
+			$socontrol = CreateObject('controller.socontrol');
+
+			$control_id_with_check_list_array = $socheck_list->get_check_lists_for_component($location_id, $id, $from_date_ts, $to_date_ts);
+
+			$_statustext = array();
+			$_statustext[0] = lang('open');
+			$_statustext[1] = lang('closed');
+			$_statustext[2] = lang('pending');
+			$_check_list = array();
+			foreach ($control_id_with_check_list_array as $control)
+			{
+				$_control_name = $socontrol->get_single($control->get_id())->get_title();
+				$check_lists = $control->get_check_lists_array();
+
+				foreach ($check_lists as $check_list)
+				{
+					$_link = self::link(array(
+							'menuaction' => "controller.uicheck_list.edit_check_list",
+							'check_list_id' => $check_list->get_id()
+							)
+					);
+					$_check_list[] = array
+						(
+						'id' => $check_list->get_id(),
+						'control_name' => "<a href=\"{$_link}\" >{$_control_name}</a>",
+						'status' => $_statustext[$check_list->get_status()],
+						'user' => $GLOBALS['phpgw']->accounts->get($check_list->get_assigned_to())->__toString(),
+						'deadline' => $GLOBALS['phpgw']->common->show_date($check_list->get_deadline(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						'planned_date' => $GLOBALS['phpgw']->common->show_date($check_list->get_planned_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						'completed_date' => $GLOBALS['phpgw']->common->show_date($check_list->get_completed_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						'num_open_cases' => $check_list->get_num_open_cases(),
+						'num_pending_cases' => $check_list->get_num_pending_cases(),
+					);
+					unset($_link);
+				}
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$result_data = array
+					(
+					'results' => $_check_list,
+					'total_records' => count($_check_list),
+					'draw' => phpgw::get_var('draw', 'int')
+				);
+
+				return $this->jquery_results($result_data);
+			}
+			return $_check_list;
 		}
 	}

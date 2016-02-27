@@ -281,6 +281,26 @@ $(document).ready(function ()
 	{
 		var oArgs = {menuaction: 'property.uientity.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-		JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);
+		JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
 	});
+
+
+	$("#datatable-container_5 tr").on("click", function (e)
+	{
+		var check_list_id = $('td', this).eq(0).text();
+		updateCaseTable(check_list_id);
+	});
+
 });
+
+function updateCaseTable(check_list_id)
+{
+	if (!check_list_id)
+	{
+		return;
+	}
+	$("#cases_time_span").hide();
+	var oArgs = {menuaction: 'property.uientity.get_cases_for_checklist', check_list_id: check_list_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
+}
