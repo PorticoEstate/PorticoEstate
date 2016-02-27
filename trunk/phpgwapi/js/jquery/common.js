@@ -258,6 +258,12 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		var ajax_def = false;
 		var serverSide_def = false;
 	}
+
+	if (singleSelect == true)
+	{
+		select = true;
+	}
+
 	if (buttons_def)
 	{
 		var sDom_def = 'B<"clear">lfrtip';
