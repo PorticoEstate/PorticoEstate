@@ -650,14 +650,14 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'checklist')" />
 							</label>
-							<select id = "cases_time_span" name="cases_time_span">
+							<select id = "check_lst_time_span" name="check_lst_time_span">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select')"/>
 								</xsl:attribute>
 								<option value="0">
 									<xsl:value-of select="php:function('lang', 'select')"/>
 								</option>
-								<xsl:apply-templates select="cases_time_span/options"/>
+								<xsl:apply-templates select="check_lst_time_span/options"/>
 							</select>
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_5'">

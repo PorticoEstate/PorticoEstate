@@ -47,7 +47,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
-		var $cases_time_span = array();
+		var $check_lst_time_span = array();
 		var $public_functions = array
 			(
 			'columns' => true,
@@ -2162,7 +2162,7 @@
 					);
 
 					$_checklists = $this->get_checklists($location_id, $id, date('Y'));
-					$cases_time_span = $this->cases_time_span;
+					$check_lst_time_span = $this->check_lst_time_span;
 
 					$_checklists_def = array
 						(
@@ -2257,7 +2257,7 @@ JS;
 				'datatable_def' => $datatable_def,
 				'repeat_types' => array('options' => $repeat_types),
 				'controller' => $_enable_controller && $id,
-				'cases_time_span' => array('options' => $cases_time_span),
+				'check_lst_time_span' => array('options' => $check_lst_time_span),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
 				'enable_bulk' => $category['enable_bulk'],
 				'org_unit' => $category['org_unit'],
@@ -3256,6 +3256,7 @@ HTML;
 					'component_id' => $id,
 				);
 
+				$entry['title_text'] = $entry['title'];
 				$entry['title'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . '" target="_blank">' . $entry['title'] . '</a>';
 				$entry['assigned_to_name'] = "<a title=\"{$lang_history}\" onclick='javascript:showlightbox_assigned_history({$entry['serie_id']});'>{$entry['assigned_to_name']}</a>";
 
@@ -3314,12 +3315,10 @@ HTML;
 			$_statustext[1] = lang('closed');
 			$_statustext[2] = lang('pending');
 
-			$_case_years = array();
 			$_cases = array();
 			foreach ($controller_cases as $case)
 			{
 				$_case_year = date('Y', $case['modified_date']);
-				$_case_years[] = $_case_year;
 
 				if ($_case_year != $year && $year != -1)
 				{
@@ -3332,7 +3331,7 @@ HTML;
 				{
 					if ($_control['control_id'] == $control_id)
 					{
-						$_control_name = $_control['title'];
+						$_control_name = $_control['title_text'];
 						break;
 					}
 				}
@@ -3362,24 +3361,14 @@ HTML;
 					(
 					'url' => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
 					'type' => $_control_name,
-					'title' => $case['title'],
+					'title' => "<a href=\"{$_link}\" > {$case['title']}</a>",
 					'value' => $case['measurement'],
 					'status' => $_statustext[$case['status']],
 					'user' => $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
 					'entry_date' => $GLOBALS['phpgw']->common->show_date($case['modified_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 				);
 				unset($_link);
-				unset($_case_year);
 			}
-			$_case_years = array_unique($_case_years);
-			$cases_time_span = array();
-
-			foreach ($_case_years as $_case_year)
-			{
-				$cases_time_span[] = array('id' => $_case_year, 'name' => $_case_year, 'selected' => $_case_year == date('Y') ? 1 : 0);
-			}
-
-			$this->cases_time_span = $cases_time_span;
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -3450,7 +3439,7 @@ HTML;
 						(
 						'url' => "<a href=\"{$_link}\" > {$check_list_id}</a>",
 						'type' => $_control_name,
-						'title' => $check_item->get_control_item()->get_title(),
+						'title' => "<a href=\"{$_link}\" >" . $check_item->get_control_item()->get_title() . "</a>",
 						'value' => $case->get_measurement(),
 						'status' => $_statustext[$case->get_status()],
 						'user' => $GLOBALS['phpgw']->accounts->get($case->get_user_id())->__toString(),
@@ -3507,7 +3496,7 @@ HTML;
 
 			for ($j = $start_year; $j < ($end_year + 1); $j++)
 			{
-				$this->cases_time_span[] = array(
+				$this->check_lst_time_span[] = array(
 					'id' => $j,
 					'name' => $j,
 					'selected' => $j == date('Y') ? 1 : 0

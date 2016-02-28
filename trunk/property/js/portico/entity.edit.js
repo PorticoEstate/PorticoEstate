@@ -277,7 +277,7 @@ $(document).ready(function ()
 $(document).ready(function ()
 {
 	var click_action_on_table = false;
-	$("#cases_time_span").change(function ()
+	$("#check_lst_time_span").change(function ()
 	{
 		var oArgs = {menuaction: 'property.uientity.get_checklists', location_id: location_id, id: item_id, year: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
