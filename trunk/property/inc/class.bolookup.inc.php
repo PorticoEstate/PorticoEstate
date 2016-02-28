@@ -289,6 +289,12 @@
 				$user_list = array();
 				foreach ($users as $user)
 				{
+
+					if ($data['query'] && (!preg_match("/{$data['query']}/i", $user['account_lastname']) || !preg_match("/{$data['query']}/i", $user['account_lastname'])))
+					{
+						continue;
+					}
+
 					$user_list[] = array
 						(
 						'id' => $user['account_id'],
@@ -296,14 +302,40 @@
 						'first_name' => $user['account_firstname'],
 					);
 				}
-				$this->total_record = count($user_list);
-				return $user_list;
+				$this->total_records = count($user_list);
+
+				$allrows = $data['allrows'];
+				$start = $data['start'];
+				$total_records = $this->total_records;
+				$num_rows = $data['results'];
+
+				if ($allrows)
+				{
+					$out = $user_list;
+				}
+				else
+				{
+					if ($total_records > $num_rows)
+					{
+						$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+						$values_part = array_chunk($user_list, $num_rows);
+						$out = $values_part[$page];
+					}
+					else
+					{
+						$out = $user_list;
+					}
+				}
+				return $out;
 			}
+			else
+			{
 
-			$phpgw_user = $this->so->read_phpgw_user($data);
-			$this->total_records = $this->so->total_records;
+				$phpgw_user = $this->so->read_phpgw_user($data);
+				$this->total_records = $this->so->total_records;
 
-			return $phpgw_user;
+				return $phpgw_user;
+			}
 		}
 
 		function read_ecodimb( $data = array() )
