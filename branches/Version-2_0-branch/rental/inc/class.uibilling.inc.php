@@ -32,7 +32,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('invoice_menu');
 		}
 
-		private function _object_to_array( $contract )
+		private function _object_to_array( $contract , $include_billing = false)
 		{
 			$values['old_contract_id'] = $contract->get_old_contract_id();
 			$values['start_date'] = ($contract->get_contract_date()->has_start_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_start_date()) : '';
@@ -43,12 +43,20 @@
 			$values['rented_area'] = $contract->get_rented_area();
 			if ($contract->get_bill_only_one_time())
 			{
-				$values['bill_only_one_time'] = lang('only_one_time_yes') . '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/><input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
+				$values['bill_only_one_time'] = lang('only_one_time_yes');
+				$values['old_contract_id'] .=  '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/>'
+					. '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
 			}
 			else
 			{
 				$values['bill_only_one_time'] = lang('only_one_time_no');
 			}
+
+			if($include_billing)
+			{
+				$values['old_contract_id'] .= '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
+			}
+
 			$values['billing_start_date'] = date($this->dateFormat, $contract->get_billing_start_date());
 			$values['id'] = $contract->get_id();
 
@@ -366,7 +374,7 @@
 
 							if (!empty($contracts[$id]))
 							{
-								$array_contracts[] = $this->_object_to_array($contracts[$id]);
+								$array_contracts[] = $this->_object_to_array($contracts[$id], true);
 							}
 						}
 					}
@@ -417,14 +425,16 @@
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'override_all',
-					'text' => lang('Override all'),
+					'className'=> 'select',
+					'text' => lang('Override'),
 					'type' => 'custom',
 					'custom_code' => "checkOverride();"
 				);
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'bill2_all',
-					'text' => lang('Bill2 all'),
+					'className'=> 'select',
+					'text' => lang('Bill2'),
 					'type' => 'custom',
 					'custom_code' => "checkBill2()"
 				);

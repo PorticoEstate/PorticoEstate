@@ -29,6 +29,7 @@
 	 */
 	phpgw::import_class('controller.socommon');
 
+	include_class('controller', 'control_item', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_item_case', 'inc/model/');
 

@@ -485,6 +485,26 @@
 			return $controls_array;
 		}
 
+		function get_start_and_end_for_component( $location_id, $component_id )
+		{
+			$location_id = (int)$location_id;
+			$component_id = (int)$component_id;
+
+			$sql = "SELECT  MIN(deadline) AS start_timestamp, MAX(deadline) AS end_timestamp"
+				. " FROM controller_check_list"
+				. " WHERE location_id = {$location_id}"
+				. " AND component_id = {$component_id}";
+
+			$this->db->query($sql);
+			$this->db->next_record();
+			
+			return array(
+				'start_timestamp' => $this->db->f('start_timestamp'),
+				'end_timestamp' => $this->db->f('end_timestamp'),
+			);
+
+		}
+
 		/**
 		 * Get array with check lists for a component within time period and for a specified repeat type
 		 *
