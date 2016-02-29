@@ -373,6 +373,14 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 					fnOnEdited: function (status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
 					{
 						//document.getElementById("message").innerHTML += '<br/>' + status;
+						try
+						{
+							window['local_OnEditedCallback_' + container.replace('-', '_')](oTable);
+						}
+						catch (err)
+						{
+							//nothing
+						}
 					},
 					oUpdateParameters: {
 						"id": function ()
