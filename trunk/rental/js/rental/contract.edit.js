@@ -747,3 +747,7 @@ addNotification = function ()
 
 	}, data, 'POST', 'JSON');
 };
+this.local_OnEditedCallback_datatable_container_5 = function (oTable)
+{
+	oTable0.fnDraw();
+}
