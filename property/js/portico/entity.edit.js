@@ -276,11 +276,51 @@ $(document).ready(function ()
 
 $(document).ready(function ()
 {
-
-	$("#cases_time_span").change(function ()
+	var click_action_on_table = false;
+	$("#check_lst_time_span").change(function ()
 	{
-		var oArgs = {menuaction: 'property.uientity.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
+		var oArgs = {menuaction: 'property.uientity.get_checklists', location_id: location_id, id: item_id, year: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-		JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);
+		var _oTable = JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);
+
+		oArgs = {menuaction: 'property.uientity.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
+		requestUrl = phpGWLink('index.php', oArgs, true);
+		JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
+
+		if (click_action_on_table == false)
+		{
+			$(_oTable).on("click", function (e)
+			{
+				var aTrs = _oTable.fnGetNodes();
+				for (var i = 0; i < aTrs.length; i++)
+				{
+					if ($(aTrs[i]).hasClass('selected'))
+					{
+						var check_list_id = $('td', aTrs[i]).eq(0).text();
+						updateCaseTable(check_list_id);
+					}
+				}
+			});
+			click_action_on_table = true
+		}
+
 	});
+
+	$("#datatable-container_5 tr").on("click", function (e)
+	{
+		var check_list_id = $('td', this).eq(0).text();
+		updateCaseTable(check_list_id);
+	});
+
 });
+
+function updateCaseTable(check_list_id)
+{
+	if (!check_list_id)
+	{
+		return;
+	}
+	var oArgs = {menuaction: 'property.uientity.get_cases_for_checklist', check_list_id: check_list_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
+}

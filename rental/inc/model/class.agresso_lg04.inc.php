@@ -71,6 +71,10 @@
 				$missing_billing_info[] = 'Missing payer id.';
 			}
 
+			if(!$contract->get_billing_start_date())
+			{
+				$missing_billing_info[] = 'Missing start_date.';
+			}
 			return $missing_billing_info;
 		}
 
