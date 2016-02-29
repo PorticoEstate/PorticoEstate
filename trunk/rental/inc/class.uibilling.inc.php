@@ -417,14 +417,16 @@
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'override_all',
-					'text' => lang('Override all'),
+					'className'=> 'select',
+					'text' => lang('Override'),
 					'type' => 'custom',
 					'custom_code' => "checkOverride();"
 				);
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'bill2_all',
-					'text' => lang('Bill2 all'),
+					'className'=> 'select',
+					'text' => lang('Bill2'),
 					'type' => 'custom',
 					'custom_code' => "checkBill2()"
 				);
