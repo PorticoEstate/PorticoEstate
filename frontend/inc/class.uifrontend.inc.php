@@ -33,11 +33,6 @@
 	class frontend_uifrontend extends frontend_uicommon
 	{
 
-		public $public_functions = array
-			(
-			'index' => true
-		);
-
 		public function __construct()
 		{
 			parent::__construct();

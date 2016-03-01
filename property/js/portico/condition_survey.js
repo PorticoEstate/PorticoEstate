@@ -14,7 +14,7 @@ var setSuma = function (api, i)
 	{
 		return intVal(a) + intVal(b);
 	}) : 0;
-	var amount = $.number(pageTotal, 0, ',', ' ');
+	var amount = $.number(pageTotal, 0, ',', '.');
 
 	$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 };

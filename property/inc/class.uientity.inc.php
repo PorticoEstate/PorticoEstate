@@ -2196,6 +2196,7 @@
 						array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
 						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'value', 'label' => lang('value'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
 						array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,

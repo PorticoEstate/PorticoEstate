@@ -741,19 +741,23 @@
 			}
 
 			$borequest = CreateObject('property.borequest');
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$sortKey = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
-			$sortDir = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
 
-			$criteria = array
-				(
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
 				'condition_survey_id' => $id,
-				'start' => $start,
-				'order' => $sortKey,
-				'sort' => $sortDir
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
 
-			$values = $borequest->read_survey_data($criteria);
+			$values = $borequest->read_survey_data($params);
 			$total_records = $borequest->total_records;
 
 			$base_url = self::link(array('menuaction' => 'property.uirequest.edit'));

@@ -207,7 +207,7 @@
 		return intVal(a) + intVal(b);
 		}) : 0;
 				
-		pageTotal = $.number( pageTotal, 0, ',', ' ' );
+		pageTotal = $.number( pageTotal, 0, ',', '.' );
 		$(api.column(col).footer()).html(pageTotal);
   	});
 		}
