@@ -697,7 +697,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'date_emd')"/>
+								<xsl:value-of select="php:function('lang', 'date_end')"/>
 							</label>
 							<xsl:value-of select="value_date_end"/>
 						</div>
