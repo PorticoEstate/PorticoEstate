@@ -935,23 +935,24 @@
 						var column_to_keep = aoData.columns[column];
 						delete aoData.columns;
 						aoData.columns = {};
-						aoData.columns[column] = column_to_keep;
+						if(JqueryPortico.columns[column]['orderable'] == true)
+						{
+							aoData.columns[column] = column_to_keep;
+						}
 					}
-
 					active_filters_html = [];
 					var select = null;
 					for (var i in filter_selects)
 					{
-						  select = $("#" + filter_selects[i]);
-						  var select_name = select.prop("name");
-						  var select_value = select.val();
-						  aoData[select_name] = select_value;
+						select = $("#" + filter_selects[i]);
+						var select_name = select.prop("name");
+						var select_value = select.val();
+						aoData[select_name] = select_value;
 
-						  if(select_value && select_value !=0 )
-						  {
+						if(select_value && select_value !=0 )
+						{
 							active_filters_html.push(i);
-						  }
-
+						}
 					}
 
 					if(active_filters_html.length > 0)

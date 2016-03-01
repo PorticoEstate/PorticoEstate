@@ -31,8 +31,8 @@ function sum_columns()
 		amount += intVal(data[i]['amount']);
 		approved_amount += intVal(data[i]['approved_amount_hidden']);
 	}
-	amount = $.number(amount, 2, ',', '');
-	approved_amount = $.number(approved_amount, 2, ',', '');
+	amount = $.number(amount, 2, ',', '.');
+	approved_amount = $.number(approved_amount, 2, ',', '.');
 	$(api.column(0).footer()).html("Sum:");
 	$(api.column(2).footer()).html("<div align=\"right\">" + amount + "</div>");
 	$(api.column(3).footer()).html("<div align=\"right\">" + approved_amount + "</div>");
