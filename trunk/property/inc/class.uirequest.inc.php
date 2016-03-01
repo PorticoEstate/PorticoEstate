@@ -165,10 +165,10 @@
 
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
-			$result_data['amount_investment'] = number_format($this->bo->sum_investment, 0, ',', ' ');
-			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', ' ');
-			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
-			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', ' ');
+			$result_data['amount_investment'] = number_format($this->bo->sum_investment, 0, ',', '.');
+			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', '.');
+			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', '.');
+			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', '.');
 
 			return $this->jquery_results($result_data);
 		}
@@ -615,6 +615,7 @@
 				$lookup = true;
 			}
 
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -757,6 +758,18 @@
 				if (in_array($uicols['name'][$k], $searc_levels))
 				{
 					$params['formatter'] = 'JqueryPortico.searchLink';
+				}
+				if ($uicols['name'][$k] == 'amount_investment')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'amount_operation')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'amount_potential_grants')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
 				}
 
 				array_push($data['datatable']['field'], $params);

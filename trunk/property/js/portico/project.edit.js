@@ -292,7 +292,7 @@ function sum_columns_table_orders()
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		pageTotal = $.number(pageTotal, 0, ',', ' ');
+		pageTotal = $.number(pageTotal, 0, ',', '.');
 		$(api.column(col).footer()).html(pageTotal);
 	});
 }
@@ -320,7 +320,7 @@ function sum_columns_table_invoice()
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		pageTotal = $.number(pageTotal, 2, ',', ' ');
+		pageTotal = $.number(pageTotal, 2, ',', '.');
 		$(api.column(col).footer()).html(pageTotal);
 	});
 }
