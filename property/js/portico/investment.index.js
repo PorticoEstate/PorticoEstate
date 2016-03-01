@@ -26,7 +26,7 @@ var addFooterDatatable = function (oTable)
 					return intVal(a) + intVal(b)
 				}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}
@@ -40,7 +40,7 @@ var addFooterDatatable = function (oTable)
 					return intVal(a) + intVal(b)
 				}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}
@@ -54,7 +54,7 @@ var addFooterDatatable = function (oTable)
 					return intVal(a) + intVal(b)
 				}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}

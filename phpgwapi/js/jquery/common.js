@@ -212,15 +212,15 @@ JqueryPortico.showPicture = function (key, oData)
 JqueryPortico.FormatterAmount0 = function (key, oData)
 {
 
-	var amount = $.number(oData[key], 0, ',', ' ');
-	return amount;
+	var amount = $.number(oData[key], 0, ',', '.');
+	return "<div align=\"right\">" + amount + "</div>";
 };
 
 JqueryPortico.FormatterAmount2 = function (key, oData)
 {
 
-	var amount = $.number(oData[key], 2, ',', ' ');
-	return amount;
+	var amount = $.number(oData[key], 2, ',', '.');
+	return "<div align=\"right\">" + amount + "</div>";
 };
 
 JqueryPortico.FormatterRight = function (key, oData)

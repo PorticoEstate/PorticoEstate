@@ -349,7 +349,7 @@
 			{
 				return $this->query();
 			}
-
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -451,6 +451,26 @@
 				{
 					# Aca debe ser el Onclick
 					$params['formatter'] = 'JqueryPortico.searchLink';
+				}
+				if ($uicols['name'][$k] == 'actual_cost')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'combined_cost')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'budget')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'diff')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'obligation')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
 				}
 
 				array_push($data['datatable']['field'], $params);
@@ -1607,13 +1627,13 @@ JS;
 			if (isset($values['reserve']) && $values['reserve'] != 0)
 			{
 				$reserve_remainder = $values['reserve'] - $values['deviation'];
-				$remainder_percent = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
+				$remainder_percent = number_format(($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '.');
 				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
 			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
-			$values['sum'] = number_format($values['sum'], 0, $this->decimal_separator, ' ');
-			$value_remainder = number_format($value_remainder, 0, $this->decimal_separator, ' ');
+			$values['sum'] = number_format($values['sum'], 0, $this->decimal_separator, '.');
+			$value_remainder = number_format($value_remainder, 0, $this->decimal_separator, '.');
 
 			if (isset($values['project_type_id']) && $values['project_type_id'] == 3)
 			{
@@ -1633,11 +1653,11 @@ JS;
 					array('key' => 'year', 'label' => lang('year'), 'sortable' => false, 'value_footer' => lang('Sum')),
 					array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => true),
 					array('key' => 'amount_in', 'label' => lang('amount in'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_in, 0, $this->decimal_separator, ' ')),
+						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_in, 0, $this->decimal_separator, '.')),
 					array('key' => 'from_project', 'label' => lang('from project'), 'sortable' => true,
 						'className' => 'right', 'formatter' => 'project_link'),
 					array('key' => 'amount_out', 'label' => lang('amount out'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_out, 0, $this->decimal_separator, ' ')),
+						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_out, 0, $this->decimal_separator, '.')),
 					array('key' => 'to_project', 'label' => lang('to project'), 'sortable' => true,
 						'formatter' => 'project_link'),
 					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true)
@@ -1650,15 +1670,15 @@ JS;
 					array('key' => 'year', 'label' => lang('year'), 'sortable' => false, 'value_footer' => lang('Sum')),
 					array('key' => 'month', 'label' => lang('month'), 'sortable' => false),
 					array('key' => 'budget', 'label' => lang('budget'), 'sortable' => false, 'className' => 'right',
-						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_budget, 0, $this->decimal_separator, ' ')),
+						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_budget, 0, $this->decimal_separator, '.')),
 					array('key' => 'sum_oblications', 'label' => lang('sum orders'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_orders, 0, $this->decimal_separator, ' ')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_orders, 0, $this->decimal_separator, '.')),
 					array('key' => 'actual_cost', 'label' => lang('actual cost'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_actual_cost, 0, $this->decimal_separator, ' ')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_actual_cost, 0, $this->decimal_separator, '.')),
 					array('key' => 'diff', 'label' => lang('difference'), 'sortable' => false, 'className' => 'right',
-						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_diff, 0, $this->decimal_separator, ' ')),
+						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_diff, 0, $this->decimal_separator, '.')),
 					array('key' => 'deviation_period', 'label' => lang('deviation'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_deviation, 0, $this->decimal_separator, ' ')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_deviation, 0, $this->decimal_separator, '.')),
 					array('key' => 'deviation_acc', 'label' => lang('deviation') . '::' . lang('accumulated'),
 						'sortable' => false, 'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0'),
 					array('key' => 'deviation_percent_period', 'label' => lang('deviation') . '::' . lang('percent'),

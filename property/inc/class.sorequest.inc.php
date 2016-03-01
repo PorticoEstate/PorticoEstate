@@ -197,7 +197,10 @@
 			$condition_survey_id = $data['condition_survey_id'] ? (int)$data['condition_survey_id'] : 0;
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : '';
-
+			$query = isset($data['query']) ? $data['query'] : '';
+			$allrows = isset($data['allrows']) ? $data['allrows'] : false;
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 
 			if ($order)
 			{
@@ -223,6 +226,11 @@
 
 			$filtermethod = " WHERE fm_request.condition_survey_id = '{$condition_survey_id}'";
 
+			if($query)
+			{
+				$filtermethod .= " AND fm_request.title {$this->_like} '%$query%'";
+			}
+
 
 			if ($cat_id > 0)
 			{
@@ -232,7 +240,6 @@
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
 				. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 				. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
-				//		. " sum(fm_request_planning.amount) as planned_budget,"
 				. " (fm_request.amount_investment * fm_request.multiplier) as amount_investment,"
 				. " (fm_request.amount_operation * fm_request.multiplier) as amount_operation,"
 				. " (fm_request.amount_potential_grants * fm_request.multiplier) as amount_potential_grants,"
@@ -240,14 +247,12 @@
 				. " fm_request.recommended_year,"
 				. " fm_request.start_date"
 				. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
-				//		. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
-				//		. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 				. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 				. " {$filtermethod}"
 				. " GROUP BY fm_request.category, fm_request.multiplier,fm_request.recommended_year, fm_request_status.descr,"
 				. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
 				. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
-//_debug_array($sql);
+
 			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
 			$this->_db->query($sql2, __LINE__, __FILE__);
@@ -257,18 +262,9 @@
 			$this->sum_operation = $this->_db->f('sum_operation');
 			$this->sum_potential_grants = $this->_db->f('sum_potential_grants');
 
-
-
-			/*
-			  $sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
-			  $this->_db->query($sql3,__LINE__,__FILE__);
-			  $this->_db->next_record();
-			  $this->sum_consume	= $this->_db->f('sum_consume');
-			 */
-
 			if (!$allrows)
 			{
-				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{

@@ -567,7 +567,18 @@
 				{
 					$params['formatter'] = 'JqueryPortico.searchLinkTts';
 				}
-
+				if ($uicols['name'][$k] == 'estimate')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'actual_cost')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'difference')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
 				if ($uicols['name'][$k] == 'address' || $uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'priority')
 				{
 					$params['sortable'] = true;
@@ -807,6 +818,7 @@
 				return $this->query();
 			}
 
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'tts.index.js');
