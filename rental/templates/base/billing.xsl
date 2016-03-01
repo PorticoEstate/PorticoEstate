@@ -28,7 +28,7 @@
 					<fieldset>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'fields_of_responsibility')"/>
+								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="fields_of_responsibility_label"/>
