@@ -151,11 +151,14 @@
 							</div>
 							<h3>Fakturakjøringsvalg</h3>
 							<div class="pure-control-group">
+								<xsl:variable name="previous">
+									<xsl:value-of select="php:function('lang', 'previous')"/>
+								</xsl:variable>
 								<xsl:variable name="next">
 									<xsl:value-of select="php:function('lang', 'bill2')"/>
 								</xsl:variable>
 								<div class="proplist-col">
-									<input type="submit" class="pure-button pure-button-primary" name="previous" value="previous"/>
+									<input type="submit" class="pure-button pure-button-primary" name="previous" value="{$previous}"/>
 									<input type="submit" class="pure-button pure-button-primary" name="next" value="{$next}"/>
 								</div>
 							</div>

@@ -17,7 +17,7 @@ $(document).ready(function () {
 			, spacing_closed: 22
 			, togglerLength_closed: 140
 			, togglerAlign_closed: "top"
-			, togglerContent_closed: "C<BR>o<BR>n<BR>t<BR>e<BR>n<BR>t<BR>s"
+			, togglerContent_closed: "M<BR>E<BR>N<BR>Y"
 			, togglerTip_closed: "Open & Pin Contents"
 			, sliderTip: "Slide Open Contents"
 			, slideTrigger_open: "mouseover"
