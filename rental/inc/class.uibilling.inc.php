@@ -1299,7 +1299,7 @@ JS;
 							array
 								(
 								'string' => $path,
-								RELATIVE_NONE
+								'relatives' => array( RELATIVE_NONE)
 							)
 					);
 
