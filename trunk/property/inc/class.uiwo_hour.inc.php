@@ -1242,7 +1242,7 @@
 				(
 				'formatted_gab_id' => $formatted_gab_id,
 				'org_name' => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
-				'location_data' => $location_data,
+				'location_data_local' => $location_data,
 				'lang_workorder' => lang('Workorder ID'),
 				'workorder_id' => $workorder_id,
 				'lang_reminder' => $lang_reminder,
