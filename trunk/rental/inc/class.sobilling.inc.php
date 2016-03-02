@@ -92,7 +92,7 @@
 					array
 						(
 						'string' => "/rental/billings/{$id}",
-						RELATIVE_NONE
+						'relatives' => array( RELATIVE_NONE)
 					)
 				);
 
