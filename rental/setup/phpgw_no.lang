@@ -37,6 +37,7 @@ add_location	rental	no	Legg enhet til leieobjektet
 address1	rental	no	Adresse 1
 address2	rental	no	Adresse 2
 all	rental	no	Alle
+alle	rental	no	Alle
 all_locations	rental	no	Enheter fra eiendomsregisteret
 and	rental	no	og
 annually	rental	no	Årlig
@@ -59,6 +60,7 @@ available_parties	rental	no	Tilgjengelige kontraktsparter
 available_price_items	rental	no	Tilgjengelige priselementer
 available?	rental	no	Kan leies ut?
 available	rental	no	Tilgjengelig
+available ?	rental	no	Tilgjengelig
 available_for_pick	rental	no	tilgjengelig
 back	rental	no	Tilbake
 bank_guarantee	rental	no	Bankgaranti
@@ -188,6 +190,8 @@ deposit	rental	no	Depositum
 description	rental	no	Beskrivelse
 details	rental	no	Detaljer
 document_type	rental	no	Dokumenttype
+document_name	rental	no	Dokumentnavn
+document_title	rental	no	Dokumenttittel
 documents	rental	no	Dokumenter
 Download Agresso import file	rental	no	Last ned Agresso-importfil (CS15)
 Download as %1	rental	no	Last tabellen i %1-format
@@ -401,6 +405,7 @@ only_one_time	rental	no	Status
 only_one_time_yes	rental	no	Avviker fra vanlig faktureringssyklus, kun engangsbeløp
 only_one_time_no	rental	no	Følger vanlig fakturasyklus
 open_and_exported_exist	rental	no	En fakturakjøring som ikke er avsluttet med eksportert til Agresso-format eksisterer for dette ansvarsområdet. Denne må enten slettes eller avsluttes før denne fakturakjøringen kan eksportes.
+organization	rental	no	Organisasjon
 organisation_number	rental	no	Organisasjonsnummer
 organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
@@ -410,6 +415,7 @@ org_unit_name	rental	no	Navn på tilsvarende enhet i Fellesdata
 org_unit_exist	rental	no	Eksisterer
 other_guarantee	rental	no	Annen garanti
 others	rental	no	Annet
+other operations	rental	no	Andre operasjoner
 out_of_operation	rental	no	Ikke i drift
 overridden_address	rental	no	Overstyrt adresse
 override	rental	no	Fakturer fra
@@ -487,6 +493,7 @@ save	rental	no	Lagre
 save_setup	rental	no	Lagre oppsett på forsiden
 search_for	rental	no	Søk etter
 search_options	rental	no	Søkevalg
+search option	rental	no	Søkevalg
 search	rental	no	Søk
 search_where	rental	no	i
 second_half	rental	no	2. halvår
@@ -605,3 +612,7 @@ extra_adjustment	rental	no	Ekstra regulering
 free_of_charge	rental	no	Vederlagsfritt
 select	rental	no	Velg
 district	rental	no	Område
+list %1	rental	no	Alle %1
+new	rental	no	Ny
+download excel export bk	rental	no	Last ned Excel-eksport BK
+serial_number	rental	no	Serienummer
