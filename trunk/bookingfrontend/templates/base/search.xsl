@@ -127,12 +127,10 @@
 					</ul>
 				</div>
 
-				<div class="pure-u-1" id="activity_tree">
+				<!--div class="pure-u-1" id="activity_tree">
 					<div class="heading">
-						<!--xsl:value-of select="php:function('lang', 'Resource')" /-->
 						Velg type lokale/anlegg/utstyr.
 					</div>
-					<!-- Some style for the expand/contract section-->
 					<style>
 						#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
 						#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
@@ -141,7 +139,6 @@
 					<script type="text/javascript">
 						filter_tree = <xsl:value-of select="filter_tree"/>;
 					</script>
-					<!-- markup for expand/contract links -->
 					<div id="treecontrol">
 						<a id="collapse1" title="Collapse the entire tree below" href="#">
 							<xsl:value-of select="php:function('lang', 'collapse all')"/>
@@ -152,7 +149,7 @@
 						</a>
 					</div>
 					<div id="treeDiv1"></div>
-				</div>
+				</div-->
 
 				<div class="pure-u-1">
 					<div class="heading">
