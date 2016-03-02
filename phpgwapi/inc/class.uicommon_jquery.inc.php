@@ -216,7 +216,7 @@
 			{
 				foreach ($messages['error'] as $key => $entry)
 				{
-					phpgwapi_cache::message_set($entry['msg'], 'message');
+					phpgwapi_cache::message_set($entry['msg'], 'error');
 				}
 				unset($entry);
 			}
