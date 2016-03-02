@@ -1272,6 +1272,7 @@ ul#icon_color_map {
   border-radius: 4px 4px 4px 4px;
   float: right;
   padding: 6px 10px;
+  list-style-type: none;
 }
 
 ul#icon_color_map li {
