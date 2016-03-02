@@ -380,7 +380,7 @@
 					$vfs->override_acl = 1;
 
 					$path = "/rental";
-					$dir = array('string' => $path, RELATIVE_NONE);
+					$dir = array('string' => $path, 'relatives' => array(RELATIVE_NONE));
 					if (!$vfs->file_exists($dir))
 					{
 						if (!$vfs->mkdir($dir))
@@ -390,7 +390,7 @@
 					}
 
 					$path .= "/billings";
-					$dir = array('string' => $path, RELATIVE_NONE);
+					$dir = array('string' => $path,'relatives' => array( RELATIVE_NONE));
 					if (!$vfs->file_exists($dir))
 					{
 						if (!$vfs->mkdir($dir))
@@ -399,18 +399,15 @@
 						}
 					}
 
-
 					$id = $billing_job->get_id();
 					$export_data = $exportable->get_contents();
 					$file_path = $path . "/{$id}";
 					if ($export_data != "")
 					{
-						$result = $vfs->write
-							(
-							array
-								(
+						$result = $vfs->write(
+							array(
 								'string' => $file_path,
-								RELATIVE_NONE,
+								'relatives' => array(RELATIVE_NONE),
 								'content' => $export_data
 							)
 						);
