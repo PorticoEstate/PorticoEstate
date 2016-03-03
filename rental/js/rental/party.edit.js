@@ -99,6 +99,25 @@ $(document).ready(function ()
 			}
 		});
 	});
+	$.formUtils.addValidator({
+		name: 'naming',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var v = false;
+			var firstname = $('#firstname').val();
+			var lastname = $('#lastname').val();
+			var company_name = $('#company_name').val();
+			var department = $('#department').val();
+			if ((firstname != "" && lastname != "") || (company_name != "" && department != ""))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['Name or company is required'],
+		errorMessageKey: ''
+	});
+
 });
 
 function filterDataContract(param, value)
