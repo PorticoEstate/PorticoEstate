@@ -699,18 +699,6 @@
 											<xsl:apply-templates select="order_dim1_list/options"/>
 										</select>
 									</div>
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
-										</label>
-										<input type="text" name="values[budget]" value="{value_budget}">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
-											</xsl:attribute>
-										</input>
-										<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-									</div>
-
 
 									<div class="pure-control-group">
 										<label>

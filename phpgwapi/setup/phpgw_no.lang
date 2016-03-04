@@ -1,3 +1,5 @@
+: activate to sort column ascending	common	no	: sorter kolonne stigende
+: activate to sort column descending	common	no	: sorter kolonne synkende
 features	common	no	Egenskaper
 select none	common	no	Velg ingen
 bookmarks	common	no	Snarveier
@@ -42,6 +44,7 @@ exit	common	no	Avslutt
 february	common	no	Februar
 files	common	no	Filer
 filter	common	no	Filter
+filtered from _MAX_ total entries	common	no	filtrert fra totalt _MAX_ poster
 first name	common	no	Fornavn
 first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
 first	common	no	Første
@@ -66,6 +69,7 @@ last name	common	no	Etternavn
 last name of the user, eg. %1	common	no	Etternavn til bruker, %1
 last page	common	no	siste side
 last	common	no	Siste
+Loading...	common	no	Laster...
 login	common	no	Login
 logout	common	no	Logg ut
 low	common	no	Lav
@@ -79,7 +83,9 @@ new entry added sucessfully	common	no	Ny entry er lagt til
 next page	common	no	neste side
 next	common	no	Neste
 no	common	no	Nei
+No matching records found	common	no	Ingen poster funnet som passer med søket
 none	common	no	Ikke angitt
+No data available in table	common	no	Ingen data i tabell
 normal	common	no	Normal
 november	common	no	November
 october	common	no	Oktober
@@ -97,6 +103,7 @@ prev	common	no	Forrige
 print	common	no	Utskrift
 priority	common	no	Prioritet
 private	common	no	Privat
+Processing...	common	no	Prosesserer...
 rename	common	no	Endre navn
 rental	common	no	Leie
 saturday	common	no	Lørdag
@@ -109,6 +116,9 @@ showing %1	common	no	showing %1
 showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
 showing items	common	no	Viser
 shows from	common	no	Viser fra
+Showing _START_ to _END_ of _TOTAL_ entries	common	no	Viser _START_ til _END_ av _TOTAL_ poster
+Showing 0 to 0 of 0 entries	common	no	Viser 0 til 0 av 0 poster
+Show _MENU_ entries	common	no	Vis _MENU_ poster
 site configuration	common	no	Konfigurasjon av moduler
 sorry, there was a problem processing your request.	common	no	Beklager, der var problemer ved din forespørsel.
 submit	common	no	Submit
@@ -163,3 +173,4 @@ down	common	no	ned
 no access	common	no	Ingen Tilgang
 toolbar	common	no	Verktøy
 collection	common	no	Samling..
+item	common	no	Valg

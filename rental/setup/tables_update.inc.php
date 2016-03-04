@@ -153,7 +153,7 @@
 		$vfs->override_acl = 1;
 
 		$path = "/rental";
-		$dir = array('string' => $path, RELATIVE_NONE);
+		$dir = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 		if (!$vfs->file_exists($dir))
 		{
 			if (!$vfs->mkdir($dir))
@@ -163,7 +163,7 @@
 		}
 
 		$path .= "/billings";
-		$dir = array('string' => $path, RELATIVE_NONE);
+		$dir = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 		if (!$vfs->file_exists($dir))
 		{
 			if (!$vfs->mkdir($dir))
@@ -188,7 +188,7 @@
 					array
 						(
 						'string' => $file_path,
-						RELATIVE_NONE,
+						'relatives' => array( RELATIVE_NONE),
 						'content' => $export_data
 					)
 				);

@@ -216,7 +216,7 @@
 			{
 				foreach ($messages['error'] as $key => $entry)
 				{
-					phpgwapi_cache::message_set($entry['msg'], 'message');
+					phpgwapi_cache::message_set($entry['msg'], 'error');
 				}
 				unset($entry);
 			}
@@ -314,6 +314,8 @@
 			$to = lang('to');
 			$shows_from = lang('shows from');
 			$of_total = lang('of total');
+                        $sort_asc = lang(': activate to sort column ascending');
+			$sort_desc = lang(': activate to sort column descending');
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -337,17 +339,17 @@
 			}
 			$data['jquery_phpgw_i18n'] = array(
 				'datatable' => array(
-					'emptyTable' => json_encode("No data available in table"),
-					'info' => json_encode("Showing _START_ to _END_ of _TOTAL_ entries"),
-					'infoEmpty' => json_encode("Showing 0 to 0 of 0 entries"),
-					'infoFiltered' => json_encode("(filtered from _MAX_ total entries)"),
+					'emptyTable' => json_encode(lang("No data available in table")),
+					'info' => json_encode(lang("Showing _START_ to _END_ of _TOTAL_ entries")),
+					'infoEmpty' => json_encode(lang("Showing 0 to 0 of 0 entries")),
+					'infoFiltered' => json_encode(lang("(filtered from _MAX_ total entries)")),
 					'infoPostFix' => json_encode(""),
 					'thousands' => json_encode(","),
-					'lengthMenu' => json_encode("Show _MENU_ entries"),
-					'loadingRecords' => json_encode("Loading..."),
-					'processing' => json_encode("Processing..."),
+					'lengthMenu' => json_encode(lang("Show _MENU_ entries")),
+					'loadingRecords' => json_encode(lang("Loading...")),
+					'processing' => json_encode(lang("Processing...")),
 					'search' => json_encode(lang('search')),
-					'zeroRecords' => json_encode("No matching records found"),
+					'zeroRecords' => json_encode(lang("No matching records found")),
 					'paginate' => json_encode(array(
 						'first' => $first,
 						'last' => $last,
@@ -355,11 +357,12 @@
 						'previous' => $previous
 					)),
 					'aria' => json_encode(array(
-						'sortAscending' => ": activate to sort column ascending",
-						'sortDescending' => ": activate to sort column descending"
+						'sortAscending' => $sort_asc,
+						'sortDescending' => $sort_desc
 					)),
 				),
-				'lengthmenu' => array('_' => json_encode($lengthmenu))
+				'lengthmenu' => array('_' => json_encode($lengthmenu)),
+				'lengthmenu_allrows' => array('_' => json_encode(array(-1, lang('all'))))
 			);
 //			_debug_array($data['jquery_phpgw_i18n']);die();
 		}
