@@ -473,7 +473,10 @@
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request',
 						'id' => $id, 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $related_def
+				'ColumnDefs' => $related_def,
+				'config' => array(
+					array('allrows' => true),
+				)
 			);
 
 			$summation_def = array

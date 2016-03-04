@@ -361,7 +361,8 @@
 						'sortDescending' => $sort_desc
 					)),
 				),
-				'lengthmenu' => array('_' => json_encode($lengthmenu))
+				'lengthmenu' => array('_' => json_encode($lengthmenu)),
+				'lengthmenu_allrows' => array('_' => json_encode(array(-1, lang('all'))))
 			);
 //			_debug_array($data['jquery_phpgw_i18n']);die();
 		}

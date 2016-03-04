@@ -247,6 +247,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var initial_search = options['initial_search'] || false;
 	var editor_action = options['editor_action'] || false;
 	var editor_cols = [];
+	var allrows = options['allrows'] || false;
 
 	for (i = 0; i < columns.length; i++)
 	{
@@ -268,6 +269,34 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	catch (err)
 	{
 		lengthMenu = [10, 25, 50, 100];
+	}
+
+	if (allrows == true)
+	{
+		lengthmenu_allrows = [];
+
+		try
+		{
+			lengthmenu_allrows = JqueryPortico.i18n.lengthmenu_allrows();
+
+			if (lengthMenu.length == 2)
+			{
+				lengthMenu[0].push(lengthmenu_allrows[0]);
+				lengthMenu[1].push(lengthmenu_allrows[1]);
+			}
+		}
+		catch (err)
+		{
+		}
+	}
+
+	var language = null;
+	try
+	{
+		language = JqueryPortico.i18n.datatable();
+	}
+	catch (err)
+	{
 	}
 
 	data = data || {};
@@ -351,7 +380,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			 }*/
 		},
 		lengthMenu: lengthMenu,
-		//	language:		JqueryPortico.i18n.datatable(),
+		language: language,
 		columns: columns,
 		//	stateSave:		true,
 		//	stateDuration: -1, //sessionstorage
