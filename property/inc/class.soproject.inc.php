@@ -1200,7 +1200,14 @@
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location,periodization_id $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
-			if ($project['budget'])
+			/**
+			 *  insert an entry for the budget anyhow
+			 */
+			if ($project['project_type_id'] == 3)//buffer
+			{
+				$this->_update_buffer_budget($id, $project['budget_year'], $project['budget'], null, null);
+			}
+			else
 			{
 				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 			}
