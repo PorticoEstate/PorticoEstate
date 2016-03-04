@@ -342,6 +342,9 @@
 
 		var options<xsl:number value="($num - 1)"/> = {};
 		<xsl:for-each select="$config">
+			<xsl:if test="allrows">
+				options<xsl:number value="($num - 1)"/>.allrows = true;
+			</xsl:if>
 			<xsl:if test="singleSelect">
 				options<xsl:number value="($num - 1)"/>.singleSelect = true;
 			</xsl:if>

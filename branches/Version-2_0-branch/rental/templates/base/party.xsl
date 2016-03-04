@@ -31,6 +31,9 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+	</script>
 
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
@@ -41,16 +44,20 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'identifier')"/>
 							</label>
-							<input type="text" name="identifier" value="{value_identifier}"></input>
+							<input type="text" name="identifier" value="{value_identifier}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
 							<input type="hidden" name="id" value="{party_id}"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'firstname')"/>
 							</label>
-							<input type="text" name="firstname" value="{value_firstname}">
+							<input type="text" id="firstname" name="firstname" value="{value_firstname}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>naming</xsl:text>
 								</xsl:attribute>								
 							</input>
 						</div>
@@ -58,7 +65,12 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'lastname')"/>
 							</label>
-							<input type="text" name="lastname" value="{value_lastname}"></input>
+							<input type="text" id="lastname" name="lastname" value="{value_lastname}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>naming</xsl:text>
+								</xsl:attribute>
+
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -70,13 +82,23 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'company')"/>
 							</label>
-							<input type="text" id="company_name" name="company_name" value="{value_company}"></input>
+							<input type="text" id="company_name" name="company_name" value="{value_company}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>naming</xsl:text>
+								</xsl:attribute>
+
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'department')"/>
 							</label>
-							<input type="text" id="department" name="department" value="{value_department}"></input>
+							<input type="text" id="department" name="department" value="{value_department}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>naming</xsl:text>
+								</xsl:attribute>
+
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -130,7 +152,11 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
-							<input type="text" name="email" id="email" value="{value_email}"></input>
+							<input type="text" name="email" id="email" value="{value_email}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
 							<xsl:choose>
 								<xsl:when test="valid_email = 1">
 									<xsl:text> </xsl:text>

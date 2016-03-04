@@ -950,6 +950,10 @@ input.date {
   width:71%;
 }
 
+#check-list-heading .box-1 h2 {
+    border: none;
+}
+
 #check-list-heading .box-2 {
   float:right; 
   width:25%;
@@ -1040,6 +1044,7 @@ input.date {
 #check_list_details .col_1, #check_list_details .col_2 {
   float: left;
   vertical-align: top;
+  border: none;
 }
 
 #check_list_details .col_1 {
@@ -1272,6 +1277,7 @@ ul#icon_color_map {
   border-radius: 4px 4px 4px 4px;
   float: right;
   padding: 6px 10px;
+  list-style-type: none;
 }
 
 ul#icon_color_map li {
@@ -1641,6 +1647,14 @@ ul.check_items h5{
   padding: 0 20px 20px;
 }
 
+#tab_content h2 {
+    border: none;
+}
+
+#tab_content #control_details {
+    border: none;
+}
+
 /* ======================== CHECK LIST MENU ========================== */
 #check_list_menu {
   clear: both;
@@ -1907,6 +1921,22 @@ li.check_item_case ul li .col_3 {
   background: none repeat scroll 0 0 transparent;
   margin: 0;
   padding: 0;
+}
+
+ul.add-cases {
+    list-style-type: none;
+}
+
+ul.add-cases li.expanded {
+    list-style-type: none;
+}
+
+ul.expand_list {
+    list-style-type: none;
+}
+
+ul.expand_list li.expanded {
+    list-style-type: none;
 }
 
 .add-cases .expand_list h4 span{

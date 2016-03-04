@@ -2052,3 +2052,5 @@ enable bulk	common	no	Aktiver bulk
 enable controller	common	no	Aktiver Kontroll
 entity group	common	no	RegisterGruppe
 modified on	common	no	Oppdatert
+property type	property	no	Type
+hjemmel	common	no	Hjemmel

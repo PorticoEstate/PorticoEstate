@@ -32,7 +32,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('invoice_menu');
 		}
 
-		private function _object_to_array( $contract , $include_billing = false)
+		private function _object_to_array( $contract, $include_billing = false )
 		{
 			$values['old_contract_id'] = $contract->get_old_contract_id();
 			$values['start_date'] = ($contract->get_contract_date()->has_start_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_start_date()) : '';
@@ -44,7 +44,7 @@
 			if ($contract->get_bill_only_one_time())
 			{
 				$values['bill_only_one_time'] = lang('only_one_time_yes');
-				$values['old_contract_id'] .=  '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/>'
+				$values['old_contract_id'] .= '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/>'
 					. '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
 			}
 			else
@@ -52,7 +52,7 @@
 				$values['bill_only_one_time'] = lang('only_one_time_no');
 			}
 
-			if($include_billing)
+			if ($include_billing)
 			{
 				$values['old_contract_id'] .= '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
 			}
@@ -84,6 +84,15 @@
 			// Step 3 - the billing job
 			if (phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
 			{
+				if ($GLOBALS['phpgw']->session->is_repost())
+				{
+					phpgwapi_cache::message_set(lang('Hmm... looks like a repost!'), 'error');
+					self::redirect(array(
+						'menuaction' => 'rental.uibilling.index'
+						)
+					);
+				}
+
 				$use_existing = phpgw::get_var('use_existing');
 				$existing_billing = phpgw::get_var('existing_billing');
 				if ($use_existing < 1)
@@ -425,7 +434,7 @@
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'override_all',
-					'className'=> 'select',
+					'className' => 'select',
 					'text' => lang('Override'),
 					'type' => 'custom',
 					'custom_code' => "checkOverride();"
@@ -433,7 +442,7 @@
 				$tabletools_irregular_contracts[] = array
 					(
 					'my_name' => 'bill2_all',
-					'className'=> 'select',
+					'className' => 'select',
 					'text' => lang('Bill2'),
 					'type' => 'custom',
 					'custom_code' => "checkBill2()"
@@ -1290,7 +1299,7 @@ JS;
 							array
 								(
 								'string' => $path,
-								RELATIVE_NONE
+								'relatives' => array( RELATIVE_NONE)
 							)
 					);
 

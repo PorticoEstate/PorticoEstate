@@ -236,7 +236,7 @@
 			$vfs->override_acl = 1;
 
 			$path = "/{$root_directory}";
-			$dir = array('string' => $path, RELATIVE_NONE);
+			$dir = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 			if (!$vfs->file_exists($dir))
 			{
 				if (!$vfs->mkdir($dir))
@@ -246,7 +246,7 @@
 			}
 
 			$path .= "/{$type_directory}";
-			$dir = array('string' => $path, RELATIVE_NONE);
+			$dir = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 			if (!$vfs->file_exists($dir))
 			{
 				if (!$vfs->mkdir($dir))
@@ -256,7 +256,7 @@
 			}
 
 			$path .= "/{$id}";
-			$dir = array('string' => $path, RELATIVE_NONE);
+			$dir = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 			if (!$vfs->file_exists($dir))
 			{
 				if (!$vfs->mkdir($dir))
@@ -281,14 +281,14 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 			$path .= "/{$name}";
-			$file = array('string' => $path, RELATIVE_NONE);
+			$file = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 
 			return $vfs->write
 					(
 					array
 						(
 						'string' => $path,
-						RELATIVE_NONE,
+						'relatives' => array( RELATIVE_NONE),
 						'content' => file_get_contents($temporary_name)
 					)
 			);
@@ -308,7 +308,7 @@
 					array
 						(
 						'string' => $path,
-						RELATIVE_NONE
+						'relatives' => array( RELATIVE_NONE)
 					)
 			);
 		}
@@ -327,7 +327,7 @@
 					array
 						(
 						'string' => $path,
-						RELATIVE_NONE
+						'relatives' => array( RELATIVE_NONE)
 					)
 			);
 		}
