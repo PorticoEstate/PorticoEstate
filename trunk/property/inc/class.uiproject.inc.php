@@ -1635,10 +1635,11 @@ JS;
 			$values['sum'] = number_format($values['sum'], 0, $this->decimal_separator, '.');
 			$value_remainder = number_format($value_remainder, 0, $this->decimal_separator, '.');
 
+			$s_amount_in = 0;
+			$s_amount_out = 0;
+
 			if (isset($values['project_type_id']) && $values['project_type_id'] == 3)
 			{
-				$s_amount_in = 0;
-				$s_amount_out = 0;
 				$content_budget = $this->bo->get_buffer_budget($id);
 				foreach ($content_budget as & $b_entry)
 				{
@@ -1653,11 +1654,11 @@ JS;
 					array('key' => 'year', 'label' => lang('year'), 'sortable' => false, 'value_footer' => lang('Sum')),
 					array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => true),
 					array('key' => 'amount_in', 'label' => lang('amount in'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_in, 0, $this->decimal_separator, '.')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_amount_in, 0, $this->decimal_separator, '.')),
 					array('key' => 'from_project', 'label' => lang('from project'), 'sortable' => true,
 						'className' => 'right', 'formatter' => 'project_link'),
 					array('key' => 'amount_out', 'label' => lang('amount out'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'FormatterAmount0', 'value_footer' => number_format($s_amount_out, 0, $this->decimal_separator, '.')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_amount_out, 0, $this->decimal_separator, '.')),
 					array('key' => 'to_project', 'label' => lang('to project'), 'sortable' => true,
 						'formatter' => 'project_link'),
 					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true)
@@ -1693,6 +1694,8 @@ JS;
 						'className' => 'center')
 				);
 			}
+
+			$check_for_budget = (int)abs($s_budget) + (int)abs($s_amount_in);
 
 			$datatable_def[] = array
 				(
@@ -2040,6 +2043,7 @@ JS;
 				'lang_power_meter_statustext' => lang('Enter the power meter'),
 				'value_power_meter' => isset($values['power_meter']) ? $values['power_meter'] : '',
 				'value_budget' => isset($values['budget']) && $this->receipt['error'] ? $values['budget'] : '',
+				'check_for_budget'	=> $check_for_budget,
 				'lang_reserve' => lang('reserve'),
 				'value_reserve' => isset($values['reserve']) ? $values['reserve'] : '',
 				'lang_reserve_statustext' => lang('Enter the reserve'),

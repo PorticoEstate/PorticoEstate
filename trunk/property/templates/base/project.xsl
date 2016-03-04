@@ -373,11 +373,23 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 								</xsl:attribute>
-								<xsl:if test="not(value_project_id &gt; 0)  and mode='edit'">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
+								<xsl:choose>
+									<xsl:when  test="not(value_project_id &gt; 0) and mode='edit'">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when  test="value_project_id &gt; 0 and not(check_for_budget &gt; 0) and mode='edit'">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
 							</input>
 							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							<select name="values[budget_year]">
