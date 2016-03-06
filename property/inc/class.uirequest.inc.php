@@ -732,7 +732,7 @@
 			$this->bo->read(array('project_id' => $project_id, 'allrows' => $this->allrows,
 				'dry_run' => true));
 			$uicols = $this->bo->uicols;
-
+			//_debug_array($uicols);die();
 			$count_uicols_name = count($uicols['name']);
 
 			$type_id = 4;
