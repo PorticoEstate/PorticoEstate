@@ -2054,3 +2054,4 @@ entity group	common	no	RegisterGruppe
 modified on	common	no	Oppdatert
 property type	property	no	Type
 hjemmel	common	no	Hjemmel
+record has been edited	common	no	data er editert
