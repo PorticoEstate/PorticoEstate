@@ -330,6 +330,7 @@
 
 			$uicols = array();
 			$cols .= "{$entity_table}.location_code";
+			$cols .= ",{$entity_table}.loc1";
 			$cols_return[] = 'location_code';
 			$cols_group[] = "{$entity_table}.location_code";
 			$cols_group[] = 'fm_location1.loc1_name';
@@ -609,6 +610,9 @@
 				{
 					case 'planned_year':
 						$ordermethod = " ORDER BY planned_year $sort";
+						break;
+					case 'loc1':
+						$ordermethod = " ORDER BY fm_request.loc1 $sort";
 						break;
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name $sort";

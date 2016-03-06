@@ -609,42 +609,30 @@
 			$function_exchange_values = '';
 			if ($lookup)
 			{
-				$lookup_target = array
-					(
-					'menuaction' => 'property.ui' . $from . '.edit',
-					'origin' => phpgw::get_var('origin'),
-					'origin_id' => phpgw::get_var('origin_id')
-				);
+				$oArg = "{menuaction: 'property.ui{$from}.edit',"
+					. "origin:'" . phpgw::get_var('origin') . "',"
+					. "origin_id:'" .  phpgw::get_var('origin_id') ."',"
+					. "project_id: aData['project_id']}";
 
-				for ($i = 0; $i < $count_uicols_name; $i++)
-				{
-					if ($uicols['name'][$i] == 'project_id')
-					{
-						$function_exchange_values .= "var code_project = data.getData('" . $uicols["name"][$i] . "');" . "\r\n";
-						$function_exchange_values .= "valida('" . $GLOBALS['phpgw']->link('/index.php', $lookup_target) . "', code_project);";
-						$function_detail .= "var url=data+'&project_id='+param;" . "\r\n";
-						$function_detail .= "window.open(url,'_self');";
-					}
-				}
-				$datatable['exchange_values'] = $function_exchange_values;
-				$datatable['valida'] = $function_detail;
-
-				$query = phpgw::get_var('query');
-				if (!empty($query))
-				{
-					$code = <<<JS
-						function initCompleteDatatable(oSettings, json, oTable) 
-						{ 
-							setTimeout(function() {
-								var api = oTable.api();
-								api.search( '$query' ).draw();
-							}, 1);
+				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
 			}
+
+			$query = phpgw::get_var('query');
+			if (!empty($query))
+			{
+				$code = <<<JS
+					function initCompleteDatatable(oSettings, json, oTable)
+					{
+						setTimeout(function() {
+							var api = oTable.api();
+							api.search( '$query' ).draw();
+						}, 1);
+		}
 JS;
 
-					$GLOBALS['phpgw']->js->add_code('', $code, true);
-				}
+				$GLOBALS['phpgw']->js->add_code('', $code, true);
 			}
+			
 
 			self::add_javascript('property', 'portico', 'project.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
