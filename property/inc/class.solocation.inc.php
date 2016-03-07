@@ -153,7 +153,7 @@
 				$entity['related'][] = array
 					(
 					'entity_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.index',
-						'query' => $location_code)),
+						'query' => $location_code, 'status_id' => 'all')),
 					'name' => lang('request') . " [{$hits}]",
 					'descr' => lang('request')
 				);
