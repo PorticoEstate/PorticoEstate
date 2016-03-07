@@ -63,10 +63,18 @@
 											<xsl:value-of select="value_id"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<input data-validation="number" type="text" name="values[{id_name}]" value="{value_id}">
+											<input type="text" name="values[{id_name}]" value="{value_id}">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 												</xsl:attribute>
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:if test="id_type != 'varchar'">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
 											</input>
 										</xsl:otherwise>
 									</xsl:choose>

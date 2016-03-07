@@ -262,9 +262,14 @@
 			);
 
 			$count = count($values_combo_box);
-			$values_combo_box[$count] = $this->bo->select_status_list('filter', $this->status_id);
+			$values_combo_box[$count] = $this->bo->select_status_list('filter');
 			array_unshift($values_combo_box[$count], array('id' => 'all', 'name' => lang('all')));
 			array_unshift($values_combo_box[$count], array('id' => 'open', 'name' => lang('open')));
+			foreach ($values_combo_box[$count] as &$_entry)
+			{
+				$_entry['selected'] = $_entry['id'] == $this->status_id ? 1 : 0;
+			}
+			unset($_entry);
 			$combos[] = array
 				(
 				'type' => 'filter',
@@ -281,6 +286,11 @@
 				$_degree['id'] ++;
 			}
 			array_unshift($values_combo_box[$count], array('id' => '', 'name' => lang('condition degree')));
+			foreach ($values_combo_box[$count] as &$_entry)
+			{
+				$_entry['selected'] = $_entry['id'] == $this->degree_id ? 1 : 0;
+			}
+			unset($_entry);
 			$combos[] = array
 				(
 				'type' => 'filter',
@@ -684,7 +694,8 @@
 					'allrows' => true,
 					'select_all' => !!$project_id,
 					'editor_action' => array(),
-					'field' => array()
+					'field' => array(),
+					'query'	=> phpgw::get_var('query')
 				)
 			);
 

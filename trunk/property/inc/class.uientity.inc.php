@@ -2082,7 +2082,7 @@
 						)
 					);
 				}
-				if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				if ($_enable_controller)
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 					$_controls = $this->get_controls_at_component($location_id, $id);

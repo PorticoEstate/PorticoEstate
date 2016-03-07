@@ -497,12 +497,23 @@
 
 			$this->db->query($sql);
 			$this->db->next_record();
-			
-			return array(
-				'start_timestamp' => $this->db->f('start_timestamp'),
-				'end_timestamp' => $this->db->f('end_timestamp'),
-			);
+			$start_timestamp = $this->db->f('start_timestamp');
+			$end_timestamp = $this->db->f('end_timestamp');
 
+			if($start_timestamp)
+			{
+				return array(
+					'start_timestamp' => $start_timestamp,
+					'end_timestamp' => $end_timestamp
+				);
+			}
+			else
+			{
+				return array(
+					'start_timestamp' => time(),
+					'end_timestamp' => time()
+				);
+			}
 		}
 
 		/**
