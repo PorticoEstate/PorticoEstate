@@ -1245,7 +1245,7 @@
 					$uicols['datatype'][] = '';
 					$uicols['formatter'][] = '';
 					$uicols['classname'][] = '';
-					$uicols['sortable'][] = $_level === 1;
+					$uicols['sortable'][] = $_level == 1;
 				}
 			}
 
