@@ -13,6 +13,25 @@ $(document).ready(function ()
 		}
 		check_and_submit_valid_session();
 	});
+
+	$.formUtils.addValidator({
+		name: 'budget',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			//check_for_budget is defined in xsl-template
+			var v = false;
+			var budget = $('#field_budget').val();
+			var contract_sum = $('#field_contract_sum').val();
+			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['please enter either a budget or contrakt sum'],
+		errorMessageKey: ''
+	});
+
 });
 
 function check_and_submit_valid_session()

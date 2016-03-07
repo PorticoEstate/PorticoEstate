@@ -330,6 +330,7 @@
 
 			$uicols = array();
 			$cols .= "{$entity_table}.location_code";
+			$cols .= ",{$entity_table}.loc1";
 			$cols_return[] = 'location_code';
 			$cols_group[] = "{$entity_table}.location_code";
 			$cols_group[] = 'fm_location1.loc1_name';
@@ -478,8 +479,7 @@
 			$uicols['classname'][] = 'rightClasss';
 			$uicols['sortable'][] = true;
 
-//			$cols.= ",sum(amount) as consume";
-//			$cols_return[] 				= 'consume';
+/*
 			$uicols['input_type'][] = 'text';
 			$uicols['name'][] = 'consume';
 			$uicols['descr'][] = lang('consume');
@@ -490,7 +490,7 @@
 			$uicols['formatter'][] = 'FormatterRight';
 			$uicols['classname'][] = '';
 			$uicols['sortable'][] = true;
-
+*/
 
 			$cols.= ",$entity_table.score";
 			$cols_return[] = 'score';
@@ -579,8 +579,8 @@
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->_left_join} fm_request_planning ON {$entity_table}.id = fm_request_planning.request_id)";
 
-			$paranthesis .= '(';
-			$joinmethod .= "{$this->_left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
+//			$paranthesis .= '(';
+//			$joinmethod .= "{$this->_left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->_left_join} fm_request_condition ON {$entity_table}.id = fm_request_condition.request_id)";
 
@@ -609,6 +609,9 @@
 				{
 					case 'planned_year':
 						$ordermethod = " ORDER BY planned_year $sort";
+						break;
+					case 'loc1':
+						$ordermethod = " ORDER BY fm_request.loc1 $sort";
 						break;
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name $sort";
@@ -739,8 +742,12 @@
 				}
 				else
 				{
+					if(ctype_digit($query))
+					{
+						$_filter_id = "OR fm_request.id =" . (int)$query;
+					}
 					$query = $this->_db->db_addslashes($query);
-					$querymethod = " $where (fm_request.title {$this->_like} '%$query%' OR fm_request.address {$this->_like} '%$query%' OR fm_request.location_code {$this->_like} '%$query%' OR fm_request.id =" . (int)$query;
+					$querymethod = " $where (fm_request.title {$this->_like} '%$query%' OR fm_request.address {$this->_like} '%$query%' OR fm_request.location_code {$this->_like} '%$query%' {$_filter_id}";
 					for ($i = 1; $i <= ($_location_level); $i++)
 					{
 						$querymethod .= " OR fm_location{$i}.loc{$i}_name {$this->_like} '%$query%'";
@@ -791,12 +798,12 @@
 			$this->sum_investment = $this->_db->f('sum_investment');
 			$this->sum_operation = $this->_db->f('sum_operation');
 			$this->sum_potential_grants = $this->_db->f('sum_potential_grants');
-
+/*
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
 			$this->_db->query($sql3, __LINE__, __FILE__);
 			$this->_db->next_record();
 			$this->sum_consume = $this->_db->f('sum_consume');
-
+*/
 //			_debug_array($sql_arr);
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if ($dry_run)
@@ -834,7 +841,7 @@
 				}
 				$j++;
 			}
-
+/*
 			foreach ($dataset as &$entry)
 			{
 				$sql = "SELECT sum(amount) as consume FROM fm_request_consume WHERE request_id={$entry['request_id']['value']}";
@@ -848,7 +855,7 @@
 					'attrib_id' => false,
 				);
 			}
-
+*/
 			$values = $this->custom->translate_value($dataset, $location_id);
 
 			return $values;

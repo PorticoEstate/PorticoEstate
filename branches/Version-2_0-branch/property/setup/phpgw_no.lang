@@ -1417,7 +1417,7 @@ request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
 request id	property	no	Behov ID
 request start date	property	no	Behov startdato
-request status	property	no	Status
+request status	property	no	Status for behov
 request title	property	no	Tiltak tittel
 request description	property	no	Tilstandbeskrivelse
 requirement	property	no	Behov/pålegg
@@ -2054,3 +2054,4 @@ entity group	common	no	RegisterGruppe
 modified on	common	no	Oppdatert
 property type	property	no	Type
 hjemmel	common	no	Hjemmel
+record has been edited	common	no	data er editert

@@ -147,7 +147,7 @@
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
-							<option value="0">
+							<option value="">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>
 							<xsl:apply-templates select="project_types/options"/>
