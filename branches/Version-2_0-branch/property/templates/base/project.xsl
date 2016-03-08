@@ -24,7 +24,7 @@
 		}
 		var project_type_id = '<xsl:value-of select="project_type_id"/>';
 		var project_id = '<xsl:value-of select="value_project_id"/>';
-		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 	</script>
 	<xsl:choose>

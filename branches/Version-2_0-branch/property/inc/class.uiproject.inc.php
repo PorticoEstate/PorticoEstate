@@ -2108,7 +2108,7 @@ JS;
 				'value_approval_mail_address' => $supervisor_email,
 				'currency' => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 				'base_java_url' => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
-				'base_java_notify_url' => "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+				'location_item_id' => $id,
 				'edit_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
 					'id' => $id)),
 				'lang_edit_statustext' => lang('Edit this entry '),
