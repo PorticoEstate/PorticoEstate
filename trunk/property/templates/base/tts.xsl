@@ -280,7 +280,7 @@
 		var my_groups = <xsl:value-of select="my_groups"/>;
 
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
-		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
 	</script>
 	<dl>
