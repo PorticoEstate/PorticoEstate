@@ -235,3 +235,10 @@ H5 EM {
 	float: right;
 	margin-top: -1.4em;
 }
+.home_portal_controls
+{
+	float: right;
+	text-align: right;
+	padding: 0px 0px 0px 0px;
+	width: 15px;
+}
