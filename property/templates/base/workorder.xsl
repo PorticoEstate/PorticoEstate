@@ -948,6 +948,7 @@
 				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum')"/>;
 				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
+				var location_item_id = '<xsl:value-of select="location_item_id"/>';
 			</script>
 		</div>
 		<div class="proplist-col">

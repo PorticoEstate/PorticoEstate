@@ -2337,7 +2337,7 @@
 				'lang_file_statustext' => lang('Select file to upload'),
 				'value_billable_hours' => $values['billable_hours'],
 				'base_java_url' => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
-				'base_java_notify_url' => "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
+				'location_item_id' => $id,
 				'edit_action' => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiworkorder.edit',
 					'id' => $id)),
