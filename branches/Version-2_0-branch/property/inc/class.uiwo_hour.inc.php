@@ -685,6 +685,7 @@
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('numberformat');
 
 			$appname = lang('Workorder');
 			$function_msg = lang('list hours');
@@ -918,6 +919,16 @@
 					'sortable' => ($uicols['sortable'][$k]) ? true : false,
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
+				switch ($uicols['name'][$k])
+				{
+					case 'billperae':
+					case 'cost':
+					case 'deviation':
+					case 'result':
+					case 'quantity':
+						$params['formatter'] = 'JqueryPortico.FormatterAmount2';
+						break;
+				}
 
 				array_push($data['datatable']['field'], $params);
 			}
@@ -1351,8 +1362,8 @@
 				$proc = new XSLTProcessor;
 				$proc->registerPHPFunctions(); // enable php functions
 				$proc->importStyleSheet($xsl); // attach the xsl rules
-				$css	= file_get_contents( PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
-				$css	.= file_get_contents( PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
+				$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+				$css .= file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
 
 				$header = <<<HTML
 <!DOCTYPE HTML>
