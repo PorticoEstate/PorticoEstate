@@ -2926,6 +2926,13 @@
 	 */
 	function booking_upgrade0_2_14()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_building');
+		if(isset($metadata['calendar_text']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.15';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN calendar_text varchar(50)");
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -2943,6 +2950,13 @@
 	 */
 	function booking_upgrade0_2_15()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_building');
+		if(isset($metadata['tilsyn_name2']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.16';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_name2 varchar(50)");
@@ -2964,6 +2978,13 @@
 	 */
 	function booking_upgrade0_2_16()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_building');
+		if(isset($metadata['extra_kalendar']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.17';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN  extra_kalendar int NOT NULL DEFAULT 0");
@@ -2984,6 +3005,13 @@
 	 */
 	function booking_upgrade0_2_17()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_application');
+		if(isset($metadata['equipment']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.18';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN equipment text DEFAULT NULL");
@@ -3004,6 +3032,13 @@
 	 */
 	function booking_upgrade0_2_18()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_event');
+		if(isset($metadata['building_id']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.19';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN building_id int DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET building_id = br2.building_id FROM bb_resource br2 WHERE EXISTS (SELECT 1 FROM bb_event be, bb_event_resource ber, bb_resource br WHERE be.id = ber.event_id AND ber.resource_id = br.id AND br2.id = br.id AND bb_event.id=be.id )");
@@ -3021,6 +3056,13 @@
 	 */
 	function booking_upgrade0_2_19()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_resource');
+		if(isset($metadata['organizations_ids']))
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.20';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN organizations_ids varchar(50) DEFAULT NULL");
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
