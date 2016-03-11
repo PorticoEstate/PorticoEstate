@@ -2408,7 +2408,7 @@
 				'ColumnDefs' => array(array('key' => 'period', 'label' => lang('period'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'resizeable' => true,
-						'formatter' => 'FormatterAmount2'),
+						'formatter' => 'JqueryPortico.FormatterAmount2'),
 					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => false, 'resizeable' => true)),
 				'data' => json_encode($budgets),
 				'config' => array(
@@ -2424,7 +2424,7 @@
 				'ColumnDefs' => array(array('key' => 'period', 'label' => lang('period'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'resizeable' => true,
-						'formatter' => 'FormatterAmount2'),
+						'formatter' => 'JqueryPortico.FormatterAmount2'),
 					array('key' => 'remark', 'label' => lang('remark'), 'sortable' => false, 'resizeable' => true)),
 				'data' => json_encode($payments),
 				'config' => array(
@@ -2641,6 +2641,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
