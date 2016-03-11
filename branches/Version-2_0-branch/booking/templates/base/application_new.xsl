@@ -227,6 +227,9 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_" />
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
 													</input>
 												</div>
 												<div class="pure-control-group">
@@ -245,6 +248,9 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
 													</input>
 												</div>
 											</div>
@@ -259,6 +265,9 @@
 													<input class="datetime pure-input-2-3" id="start_date" type="text" name="from_[]">
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
+														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>
 													</input>
 												</div>
@@ -277,6 +286,9 @@
 													<input class="datetime pure-input-2-3" id="end_date" type="text" name="to_[]">
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
+														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>
 													</input>
 												</div>

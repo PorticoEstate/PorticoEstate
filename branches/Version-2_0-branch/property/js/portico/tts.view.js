@@ -25,7 +25,7 @@ this.local_DrawCallback4 = function ()
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 	});
 
 };
@@ -53,7 +53,7 @@ this.local_DrawCallback5 = function ()
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 	});
 
 };
@@ -64,10 +64,6 @@ var FormatterCenter = function (key, oData)
 	return "<center>" + oData[key] + "</center>";
 };
 
-var FormatterAmount2 = function (key, oData)
-{
-	return "<div align=\"right\">" + oData[key] + "</div>";
-};
 
 /********************************************************************************/
 
