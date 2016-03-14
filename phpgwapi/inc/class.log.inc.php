@@ -280,12 +280,14 @@
 				}
 
 
-				$message = '<h1>' . lang('Fatal Error') . "</h1>\n"
-					. "<h2>{$msg}</h2>\n"
+				$message = '<h1>' . lang('Fatal Error') . "</h1>\n";
+				if (ini_get('display_errors'))
+				{
+					$message .= "<h2>{$msg}</h2>\n"
 					. '<p>' . lang('file') . ': ' . $err->fname . "<br>\n"
 					. lang('line') . ': ' . $err->line . "</p>\n"
 					. $trace;
-
+				}
 
 				if(phpgw::get_var('phpgw_return_as') == 'json')
 				{
