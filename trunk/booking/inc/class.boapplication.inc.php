@@ -254,7 +254,8 @@
 			}
 			else
 			{
-				$where_clauses[] = "(%%table%%.case_officer_id = " . intval($for_case_officer_id[1]) . ')';
+				$where_clauses[] = "(%%table%%.display_in_dashboard = 1)";
+//				$where_clauses[] = "(%%table%%.case_officer_id = " . intval($for_case_officer_id[1]) . ')';
 			}
 
 			if ($building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', 0))
@@ -269,7 +270,7 @@
 			{
 				$params['filters']['status'] = phpgw::get_var('status');
 			}
-
+	
 			$params['filters']['where'] = $where_clauses;
 
 			return $this->so->read($params);
