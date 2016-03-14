@@ -31,7 +31,7 @@
 						</label>
 						<div class="pure-custom">
 							<textarea id="field_frontpagetext" class="full-width" name="frontpagetext">
-								<xsl:value-of select="config_data/frontpagetext"/>
+								<xsl:value-of disable-output-escaping="yes" select="config_data/frontpagetext"/>
 							</textarea>
 						</div>
 					</div>
