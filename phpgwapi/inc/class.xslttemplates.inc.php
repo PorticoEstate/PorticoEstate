@@ -257,6 +257,12 @@
 	<!DOCTYPE xsl:stylesheet [
 		<!ENTITY nl "&#10;">
 		<!ENTITY nbsp "&#160;">
+		<!ENTITY AElig "&#198;">
+		<!ENTITY aelig "&#230;">
+		<!ENTITY Oslash "&#216;">
+		<!ENTITY oslash "&#248;">
+		<!ENTITY Aring "&#197;">
+		<!ENTITY aring "&#229;">
 		]>
 	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 		xmlns:phpgw="http://phpgroupware.org/functions"
