@@ -178,11 +178,8 @@
 
 		public function query()
 		{
-//            Analizar luego esta variable -> $this->current_account_id()
-			$this->db = $GLOBALS['phpgw']->db;
 			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(
-					null, 7) : array(1, 7));
-//            echo '<pre>'; print_r($applications); echo '</pre>';exit('saul');
+					null, $this->current_account_id()) : array(1, $this->current_account_id()));
 			foreach ($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
@@ -202,12 +199,10 @@
 					}
 					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
 				}
-
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $application['case_officer_name'] . "'";
-				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($application['case_officer_name']);
+				if($account_id)
 				{
-					$application['case_officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$application['case_officer_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");

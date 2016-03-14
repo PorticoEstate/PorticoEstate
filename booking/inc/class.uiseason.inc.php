@@ -44,8 +44,6 @@
 
 		public function index()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
@@ -138,11 +136,10 @@
 					$season['resource_list'] = implode(', ', $temparray);
 				}
 
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $season['officer_name'] . "'";
-				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($season['officer_name']);
+				if($account_id)
 				{
-					$season['officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$season['officer_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			return $this->jquery_results($seasons);
