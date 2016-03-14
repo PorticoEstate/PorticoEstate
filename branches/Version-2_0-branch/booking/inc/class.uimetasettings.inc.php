@@ -24,7 +24,6 @@
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
-	_debug_array($config->config_data['frontpagetext']);
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
