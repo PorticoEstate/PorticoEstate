@@ -194,8 +194,6 @@
 
 		public function query()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
 			$permissions = $this->bo->read();
 			foreach ($permissions['results'] as &$permission)
 			{
@@ -210,11 +208,10 @@
 					$permission['opcion_delete'] = $this->get_object_typed_link('delete', array(
 						'id' => $permission['id']));
 
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $permission['subject_name'] . "'";
-				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($permission['subject_name']);
+				if($account_id)
 				{
-					$permission['subject_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$permission['subject_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 
 				$permission['actions'] = $permission_actions;
