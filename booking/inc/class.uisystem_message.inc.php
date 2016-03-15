@@ -305,7 +305,7 @@
 			}
 			$this->flash_form_errors($errors);
 
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
@@ -313,7 +313,7 @@
 
 			$system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			self::render_template('system_message_edit', array('system_message' => $system_message,
 				'module' => $this->module));

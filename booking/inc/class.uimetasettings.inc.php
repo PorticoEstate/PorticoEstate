@@ -48,7 +48,7 @@
 			$active_tab = 'meta';
 
 			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			phpgwapi_jquery::init_ckeditor('field_frontpagetext');
+			self::rich_text_editor('field_frontpagetext');
 
 			self::render_template('metasettings', array('config_data' => $config->config_data,
 				'meta' => $meta));

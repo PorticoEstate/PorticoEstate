@@ -352,7 +352,7 @@
       <td colspan="5" valign="middle">
         <div ID="wait">
 	<center>
-		<font style="font-weight=bold; font-family=Helvetica,Arial,sans-serif">
+		<font style="font-weight:bold; font-family:Helvetica,Arial,sans-serif">
 			Please Wait!
 		</font>
 	</div>

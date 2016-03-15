@@ -166,7 +166,7 @@
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -232,7 +232,7 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach ($activity_data['results'] as $acKey => $acValue)
 			{

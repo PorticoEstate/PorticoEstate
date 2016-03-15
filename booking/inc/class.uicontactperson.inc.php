@@ -149,7 +149,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			phpgwapi_jquery::init_ckeditor('contact-field-description');
+			self::rich_text_editor('contact-field-description');
 
 			self::add_template_file("contactperson_fields");
 			self::render_template_xsl('contactperson_edit', array('person' => $person,));
