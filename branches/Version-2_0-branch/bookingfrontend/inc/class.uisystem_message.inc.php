@@ -23,7 +23,7 @@
 		public function show()
 		{
 			parent::show();
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 		}
 
 		public function edit()
@@ -65,7 +65,7 @@
 			}
 			$this->flash_form_errors($errors);
 
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'));

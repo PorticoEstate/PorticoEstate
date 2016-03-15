@@ -9,15 +9,15 @@
 		margin-left: 4px;
 		margin-bottom: 4px;
 		
-		#font-family: "Courier New", Courier, fixed;
-		#font-family: "lucida console", Courier, fixed;
+		/*font-family: "Courier New", Courier, fixed;*/
+		/*font-family: "lucida console", Courier, fixed;*/
 		font-family: "lucida", Courier, fixed;
 		
-		#font-size: 0.8em;
+		/*font-size: 0.8em;*/
 		font-size: 0.9em;
-		#font-size: 1.0em;
+		/*font-size: 1.0em;*/
 		
-		# font-weight: bold;
+		/* font-weight: bold;*/
 	}
 -->
 </style>

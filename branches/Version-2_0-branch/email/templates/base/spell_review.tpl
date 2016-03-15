@@ -4,12 +4,12 @@
 <!--
 	P.spell_review
 	{
-		## display: inline;
-		## font-size: 1.2em;
+		/* display: inline;*/
+		/* font-size: 1.2em;*/
 		vertical-align: middle;
-		## line-height: 1.8em;
-		## padding: 1.8em;
-		## margin: 1.8em;
+		/* line-height: 1.8em;*/
+		/* padding: 1.8em;*/
+		/* margin: 1.8em;*/
 	}
 -->
 </style>

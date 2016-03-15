@@ -36,9 +36,9 @@
 		const UI_SESSION_FLASH = 'flash_msgs';
 
 		protected
-		$filesArray,
-		$ui_session_key,
-		$flash_msgs;
+			$filesArray,
+			$ui_session_key,
+			$flash_msgs;
 		public $dateFormat;
 		public $type_of_user;
 
@@ -314,7 +314,7 @@
 			$to = lang('to');
 			$shows_from = lang('shows from');
 			$of_total = lang('of total');
-                        $sort_asc = lang(': activate to sort column ascending');
+			$sort_asc = lang(': activate to sort column ascending');
 			$sort_desc = lang(': activate to sort column descending');
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -485,6 +485,12 @@
 		 */
 		public function rich_text_editor( $targets )
 		{
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+				|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+			{
+				return;
+			}
+
 			if (!is_array($targets))
 			{
 				$targets = array($targets);
@@ -796,11 +802,11 @@
 			foreach (array_keys($data['name']) as $key)
 			{
 				$files[$key] = self::fix_php_files_array(array(
-					'error' => $data['error'][$key],
-					'name' => $data['name'][$key],
-					'type' => $data['type'][$key],
-					'tmp_name' => $data['tmp_name'][$key],
-					'size' => $data['size'][$key],
+						'error' => $data['error'][$key],
+						'name' => $data['name'][$key],
+						'type' => $data['type'][$key],
+						'tmp_name' => $data['tmp_name'][$key],
+						'size' => $data['size'][$key],
 				));
 			}
 
