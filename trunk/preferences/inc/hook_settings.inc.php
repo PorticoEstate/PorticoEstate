@@ -143,8 +143,7 @@
 	$rteditors = array
 	(
 		'none'		=> lang('none'),
-		'fckeditor'	=> 'FCKeditor',
-		'tinymce'	=> 'tinyMCE'
+		'ckeditor'	=> 'CKeditor'
 	);
 	create_select_box('Rich text (WYSIWYG) editor', 'rteditor', $rteditors,
 		'Which editor would you like to use for editing html and other rich content?');

@@ -226,7 +226,7 @@
 			$activities = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$this->add_template_helpers();
 
@@ -298,7 +298,7 @@
 			$activities = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array('organization' => $organization,

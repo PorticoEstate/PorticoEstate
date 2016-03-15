@@ -206,7 +206,7 @@
 			$activity_data = $this->activity_bo->get_top_level();
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
@@ -262,7 +262,7 @@
 			$this->flash_form_errors($errors);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');

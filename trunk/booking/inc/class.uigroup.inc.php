@@ -309,7 +309,7 @@
 			$activities = $activities['results'];
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs = array();
 			$tab_text = ($id) ? 'Group Edit' : 'Group New';
