@@ -264,7 +264,7 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 
 			self::render_template_xsl('event_delete', array('event' => $event, 'activities' => $activities,
 				'can_delete_events' => $can_delete_events));
