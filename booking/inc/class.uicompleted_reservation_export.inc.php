@@ -211,9 +211,6 @@
 
 		public function query() //index_json
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
-
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
@@ -273,10 +270,6 @@
 				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
 
-
-
-
-
 			$params = array(
 				'start' => $start,
 				'results' => $results,
@@ -286,8 +279,6 @@
 				'filters' => $filters
 			);
 
-
-
 			$exports = $this->bo->so->read($params);
 			array_walk($exports["results"], array($this, "_add_links"), $this->module . ".uicompleted_reservation_export.show");
 
@@ -295,12 +286,10 @@
 			{
 				$export = $this->bo->so->initialize_entity($export);
 				$this->add_default_display_data($export);
-
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $export['created_by_name'] . "'";
-				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($export['created_by_name']);
+				if($account_id)
 				{
-					$export['created_by_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$export['created_by_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			$results = $this->jquery_results($exports);
