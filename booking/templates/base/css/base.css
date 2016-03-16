@@ -262,7 +262,9 @@ dl.proplist-col dd.address {
     width: 25px;
     height: 15px;
     cursor: pointer;
-    color: white;
+    color: black;
+    font-weight: normal;
+    font-size: 400%;
 }
 
 #agegroup {

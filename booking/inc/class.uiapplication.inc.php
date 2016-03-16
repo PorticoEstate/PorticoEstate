@@ -962,8 +962,6 @@
 					unset($application['frontend_modified']);
 				}
 
-				$errors = $this->validate($application);
-
 				foreach ($_POST['from_'] as &$from)
 				{
 					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
@@ -975,6 +973,7 @@
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
+				$errors = $this->validate($application);
 
 				if (!$errors)
 				{
