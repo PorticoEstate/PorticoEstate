@@ -94,7 +94,7 @@
 		<xsl:value-of select="php:function('lang', 'toolbar')"/>
 	</label>
 
-	<div id="toolbar">
+	<div id="toolbar" class='dtable_custom_controls'>
 		<!--xsl:if test="item/text and normalize-space(item/text)"-->
 		<xsl:if test="item">
 			<table id="toolbar_table" class="pure-table pure-table-horizontal">
@@ -903,6 +903,17 @@
 			}
 
 		$(document).ready(function() {
+
+			/*
+			* For namespacing the state
+			*/
+			var table_url = JqueryPortico.parseURL(window.location.href);
+			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
+			/*
+			 * Find and assign actions to filters
+			 */
+			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
+
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				processing:		true,
@@ -926,6 +937,51 @@
 						}
 					  },
 					type: 'POST'
+				},
+				fnStateSaveParams: 	function ( oSettings, sValue ) {
+					//Save custom filters
+					var temp = {};
+					temp[menuaction] = {}
+					oControls.each(function() {
+						if ( $(this).attr('name') )
+						{
+							sValue[ $(this).attr('name') ] = $(this).val().replace('"', '"');
+							temp[ $(this).attr('name') ] = $(this).val().replace('"', '"');
+						}
+					});
+					for (var attrname in sValue)
+					{
+						temp[attrname] = sValue[attrname];
+					}
+					localStorage.setItem('state_' + menuaction, JSON.stringify(temp));
+					return sValue;
+				},
+				fnStateLoadParams: function ( oSettings, oData ) {
+					//Load custom filters
+					var retrievedObject = localStorage.getItem('state_' + menuaction);
+					if(typeof(retrievedObject) != 'undefined')
+					{
+						try
+						{
+							var params = JSON.parse(retrievedObject);
+						}
+						catch(err)
+						{
+							params = {}
+						}
+					}
+					console.log(oData);
+					console.log(params);
+					oControls.each(function() {
+						var oControl = $(this);
+						$.each(params, function(index, value) {
+							if ( index == oControl.attr('name') )
+							{
+								oControl.val( value );
+							}
+						});
+					});
+					return true;
 				},
 				fnServerParams: function ( aoData ) {
 					if(typeof(aoData.order[0]) != 'undefined')
