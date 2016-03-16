@@ -429,16 +429,14 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'organization number')" />
 									</label>
-									<span>
-										<xsl:value-of select="application/customer_organization_number"/>
-									</span>
+									<br/>
+									<xsl:value-of select="application/customer_organization_number"/>
 								</xsl:if>
-							</div>
-							<div class="pure-control-group">
 								<xsl:if test="application/customer_identifier_type = 'ssn'">
 									<label>
 										<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
 									</label>
+									<br/>
 									<xsl:value-of select="application/customer_ssn"/>
 								</xsl:if>
 							</div>

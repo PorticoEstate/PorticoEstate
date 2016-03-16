@@ -81,6 +81,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
+				'datatable_name' => lang('dashboard'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

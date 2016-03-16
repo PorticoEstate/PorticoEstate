@@ -137,7 +137,7 @@
 
 		protected function is_assigned_to_current_user( &$application )
 		{
-			$current_account_id = 7;
+			$current_account_id = $this->current_account_id();
 			if (empty($current_account_id) || !isset($application['case_officer_id']))
 			{
 				return false;
@@ -157,7 +157,7 @@
 
 		protected function assign_to_current_user( &$application )
 		{
-			$current_account_id = 7;
+			$current_account_id = $this->current_account_id();
 
 			if (!empty($current_account_id) && is_array($application) &&
 				!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id)
@@ -250,6 +250,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => lang('application'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -655,7 +656,7 @@
 					'name' => $application['case_officer_name'],
 				);
 
-				if ($application['case_officer_id'] == 7)
+				if ($application['case_officer_id'] == $this->current_account_id())
 				{
 					$application['case_officer']['is_current_user'] = true;
 				}
@@ -1278,10 +1279,14 @@
 			}
 			$from = array("data" => implode(',', $from));
 			$num_associations = $associations['total_records'];
-			if ($this->is_assigned_to_current_user($application) && $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			if ($this->is_assigned_to_current_user($application) || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
 				$application['currentuser'] = true;
+			}
 			else
+			{
 				$application['currentuser'] = false;
+			}
 
 			$collision_dates = array();
 			foreach ($application['dates'] as &$date)
