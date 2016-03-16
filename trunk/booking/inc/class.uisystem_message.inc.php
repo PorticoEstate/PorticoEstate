@@ -147,10 +147,9 @@
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 
-//            $current_user = $this->current_account_id();
-			$current_user = 7;
+            $current_user = (int)$this->current_account_id();
 			$current_user_building_data = array();
-			$sql = "select object_id from bb_permission where subject_id=" . $current_user . " and role='case_officer';";
+			$sql = "SELECT object_id FROM bb_permission WHERE subject_id= {$current_user} AND role='case_officer';";
 			$this->db->query($sql);
 			while ($record = array_shift($this->db->resultSet))
 			{
@@ -221,8 +220,11 @@
 				$this->db->query($sql);
 				while ($record = array_shift($this->db->resultSet))
 				{
-					$building_case_officers_data[] = array('account_id' => $record['account_id'],
-						'account_lid' => $record['account_lid'], 'account_name' => $record['account_firstname'] . " " . $record['account_lastname']);
+					$building_case_officers_data[] = array(
+						'account_id' => $record['account_id'],
+						'account_lid' => $record['account_lid'],
+						'account_name' => $record['account_firstname'] . " " . $record['account_lastname']
+					);
 					$building_case_officers[] = $record['account_id'];
 				}
 
@@ -245,7 +247,9 @@
 				while ($case_officer = array_shift($building_case_officers_data))
 				{
 					if ($system_message['case_officer_name'] = $case_officer['account_id'])
+					{
 						$system_message['case_officer_name'] = $case_officer['account_name'];
+					}
 				}
 			}
 			return $this->jquery_results($system_messages);
