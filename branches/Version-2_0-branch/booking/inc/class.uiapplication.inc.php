@@ -137,7 +137,7 @@
 
 		protected function is_assigned_to_current_user( &$application )
 		{
-			$current_account_id = 7;
+			$current_account_id = $this->current_account_id();
 			if (empty($current_account_id) || !isset($application['case_officer_id']))
 			{
 				return false;
@@ -157,7 +157,7 @@
 
 		protected function assign_to_current_user( &$application )
 		{
-			$current_account_id = 7;
+			$current_account_id = $this->current_account_id();
 
 			if (!empty($current_account_id) && is_array($application) &&
 				!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id)
@@ -248,8 +248,10 @@
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
+				'datatable_name' => lang('application'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -280,21 +282,29 @@
 									)
 								)
 							),
-							array('type' => 'filter',
+/*							array('type' => 'filter',
 								'name' => 'buildings',
 								'text' => lang('Building') . ':',
 								'list' => $this->bo->so->get_buildings(),
+							),
+*/
+							array('type' => 'autocomplete',
+								'name' => 'building',
+								'ui' => 'building',
+								'text' => lang('Building') . ':',
+								'onItemSelect' => 'updateBuildingFilter',
+								'onClearSelection' => 'clearBuildingFilter'
 							),
 							array('type' => 'filter',
 								'name' => 'activities',
 								'text' => lang('Activity') . ':',
 								'list' => $this->bo->so->get_activities_main_level(),
 							),
-							array(
+						/*	array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+							),*/
 						),
 					),
 				),
@@ -359,36 +369,31 @@
 
 		public function query()
 		{
-
+			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
-			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-				!$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
 			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
+			}
+			else if($building_id)
+			{
+				$filters['id'] = $this->bo->accessable_applications(null, $building_id);
+			}
+
+			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
+			if ($activity_id)
+			{
+				$filters['activity_id'] = $this->bo->so->get_activities($activity_id);
+			}
+			else
+			{
+				unset($filters['activity_id']);
 			}
 			$filters['status'] = 'NEW';
 			if (isset($_SESSION['showall']))
 			{
 				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
 			}
 			else
 			{
@@ -399,29 +404,11 @@
 				}
 				elseif (isset($test))
 				{
-					$filters['status'] = phpgw::get_var('status');
+					$filters['status'] = $test;
 				}
 				else
 				{
 					$filters['status'] = 'NEW';
-				}
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
 				}
 			}
 
@@ -482,123 +469,6 @@
 			return $this->jquery_results($applications);
 		}
 
-		public function index_json()
-		{
-			// users with the booking role admin should have access to all buildings
-			// admin users should have access to all buildings
-			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-				!$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
-			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
-			}
-			$filters['status'] = 'NEW';
-			if (isset($_SESSION['showall']))
-			{
-				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
-			}
-			else
-			{
-				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
-				if (phpgw::get_var('status') == 'none')
-				{
-					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				}
-				elseif (isset($test))
-				{
-					$filters['status'] = phpgw::get_var('status');
-				}
-				else
-				{
-					$filters['status'] = 'NEW';
-				}
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
-			}
-
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
-
-			$applications = $this->bo->so->read($params);
-
-			foreach ($applications['results'] as &$application)
-			{
-				if (strstr($application['building_name'], "%"))
-				{
-					$search = array('%2C', '%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86',
-						'%C3%A6');
-					$replace = array(',', 'Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
-					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
-				}
-
-				$dates = array();
-				foreach ($application['dates'] as $data)
-				{
-					$dates[] = $data['from_'];
-					break;
-				}
-				$fromdate = implode(',', $dates);
-				$application['from_'] = pretty_timestamp($fromdate);
-				$application['status'] = lang($application['status']);
-				$application['created'] = pretty_timestamp($application['created']);
-				$application['modified'] = pretty_timestamp($application['modified']);
-				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('filters' => array(
-						'id' => $application['resources'])));
-				$application['resources'] = $application['resources']['results'];
-				if ($application['resources'])
-				{
-					$names = array();
-					foreach ($application['resources'] as $res)
-					{
-						$names[] = $res['name'];
-					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
-				}
-			}
-			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
-			return $this->yui_results($applications);
-		}
-
 		public function associated()
 		{
 			$associations = $this->assoc_bo->read();
@@ -655,7 +525,7 @@
 					'name' => $application['case_officer_name'],
 				);
 
-				if ($application['case_officer_id'] == 7)
+				if ($application['case_officer_id'] == $this->current_account_id())
 				{
 					$application['case_officer']['is_current_user'] = true;
 				}
@@ -1278,10 +1148,14 @@
 			}
 			$from = array("data" => implode(',', $from));
 			$num_associations = $associations['total_records'];
-			if ($this->is_assigned_to_current_user($application) && $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			if ($this->is_assigned_to_current_user($application) || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
 				$application['currentuser'] = true;
+			}
 			else
+			{
 				$application['currentuser'] = false;
+			}
 
 			$collision_dates = array();
 			foreach ($application['dates'] as &$date)
