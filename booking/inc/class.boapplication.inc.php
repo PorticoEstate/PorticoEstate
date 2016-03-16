@@ -215,20 +215,34 @@
 		 * which the given user has access to
 		 *
 		 * @param int $user_id
+		 * @param int $building_id
 		 */
-		public function accessable_applications( $user_id )
+		public function accessable_applications( $user_id, $building_id )
 		{
 			$applications = array();
 			$this->db = & $GLOBALS['phpgw']->db;
 
-			$sql = "SELECT DISTINCT ap.id
-					FROM bb_application ap
-					INNER JOIN bb_application_resource ar ON ar.application_id = ap.id
-					INNER JOIN bb_resource re ON re.id = ar.resource_id
-					INNER JOIN bb_building_resource br ON re.id = br.resource_id
-					INNER JOIN bb_building bu ON bu.id = br.resource_id
-					INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'
-					WHERE pe.subject_id = " . $user_id;
+			$filtermethod = array();
+
+			$filtermethod[] = '1=1';
+
+			if($user_id)
+			{
+				$filtermethod[] = "pe.subject_id = {$user_id}";
+			}
+			if($building_id)
+			{
+				$filtermethod[] = "bu.id = {$building_id}";
+			}
+
+			$sql = "SELECT DISTINCT ap.id"
+				. " FROM bb_application ap"
+				. " INNER JOIN bb_application_resource ar ON ar.application_id = ap.id"
+				. " INNER JOIN bb_building_resource br ON br.resource_id = ar.resource_id"
+				. " INNER JOIN bb_building bu ON bu.id = br.building_id"
+				. " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'"
+				. " WHERE " . implode(' AND ', $filtermethod);
+
 			$this->db->query($sql);
 			$result = $this->db->resultSet;
 
