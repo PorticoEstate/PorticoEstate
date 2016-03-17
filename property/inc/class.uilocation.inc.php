@@ -1354,12 +1354,12 @@ JS;
 								formatter = function (dummy1, dummy2, oData) {
 								try {
 									var ret = {$uicols['formatter'][$k]}('{$uicols['name'][$k]}', oData);
-					}
+								}
 								catch(err) {
 									return err.message;
-					}
+								}
 								return ret;
-				}
+							}
 JS;
 						}
 						if (in_array($uicols['name'][$k], $searc_levels))
@@ -1368,12 +1368,12 @@ JS;
 								formatter = function (dummy1, dummy2, oData) {
 								try {
 									var ret = JqueryPortico.searchLink('{$uicols['name'][$k]}', oData);
-				}
+								}
 								catch(err) {
 									return err.message;
-			}
+								}
 								return ret;
-			}
+							}
 JS;
 						}
 						if ($uicols['name'][$k] == 'loc1')
@@ -1382,12 +1382,12 @@ JS;
 								formatter = function (dummy1, dummy2, oData) {
 								try {
 									var ret = JqueryPortico.searchLink('{$uicols['name'][$k]}', oData);
-			}
+								}
 								catch(err) {
 									return err.message;
-			}
+								}
 								return ret;
-			}
+							}
 JS;
 							$params['sortable'] = true;
 						}
@@ -1577,6 +1577,7 @@ JS;
 					(
 					'my_name' => 'save',
 					'type' => 'custom',
+					'className' => 'save',
 					'custom_code' => $code,
 					'text' => lang('save')
 				);
