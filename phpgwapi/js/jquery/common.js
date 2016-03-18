@@ -294,7 +294,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	}
 	catch (err)
 	{
-		lengthMenu = [10, 25, 50, 100];
+		lengthMenu = [[10, 25, 50, 100],[10, 25, 50, 100]];
 	}
 
 	if (allrows == true)
@@ -305,14 +305,16 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		{
 			lengthmenu_allrows = JqueryPortico.i18n.lengthmenu_allrows();
 
-			if (lengthMenu.length == 2)
-			{
-				lengthMenu[0].push(lengthmenu_allrows[0]);
-				lengthMenu[1].push(lengthmenu_allrows[1]);
-			}
 		}
 		catch (err)
 		{
+			lengthmenu_allrows = [-1, 'All'];
+		}
+
+		if (lengthMenu.length == 2)
+		{
+			lengthMenu[0].push(lengthmenu_allrows[0]);
+			lengthMenu[1].push(lengthmenu_allrows[1]);
 		}
 	}
 
