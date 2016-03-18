@@ -864,7 +864,7 @@
 							$filters = array('contract_status' => 'ended', 'contract_type' => $comma_seperated_ids);
 							break;
 						case 'last_edited':  // Contracts that are last edited in areas of resposibility
-							$filters = array('contract_type' => $comma_seperated_ids);
+							$filters = array('contract_type' => $comma_seperated_ids, 'contract_status' => 'active' );
 							$sort_field = 'contract.last_updated';
 							$sort_ascending = false;
 							break;

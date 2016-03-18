@@ -513,14 +513,13 @@
 		function get_category_name( $category_id )
 		{
 			$result = "Ingen";
-			if ($category_id != null)
+			$category_id = (int)$category_id;
+			if ($category_id)
 			{
-				$sql = "SELECT name FROM bb_activity where id=$category_id";
+				$sql = "SELECT name FROM bb_activity where id={$category_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('name');
 			}
 			return $result;
 		}
@@ -534,7 +533,7 @@
 			{
 				$category = new activitycalendar_category($this->db->f('id'));
 				$category->set_parent_id($this->db->f('parent_id'));
-				$category->set_name($this->db->f('name'));
+				$category->set_name($this->db->f('name', true));
 				$categories[] = $category;
 			}
 			return $categories;
@@ -543,13 +542,13 @@
 		function select_district_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_district where id >'0' AND NOT descr LIKE '%vrige%' ORDER BY id ", __LINE__, __FILE__);
-
-			$i = 0;
+			$district = array();
 			while ($this->db->next_record())
 			{
-				$district[$i]['id'] = $this->db->f('id');
-				$district[$i]['name'] = stripslashes($this->db->f('descr'));
-				$i++;
+				$district[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('descr', true)
+				);
 			}
 
 			return $district;
@@ -558,26 +557,20 @@
 		function get_district_from_name( $name )
 		{
 			$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
-			while ($this->db->next_record())
-			{
-				$result = $this->db->f('part_of_town_id');
-			}
-			return $result;
+			$this->db->next_record();
+			return $this->db->f('part_of_town_id');
 		}
 
 		function get_district_from_id( $d_id )
 		{
-			$this->db->query("SELECT name FROM fm_part_of_town where part_of_town_id={$d_id} ", __LINE__, __FILE__);
-			while ($this->db->next_record())
-			{
-				$result = $this->db->f('name');
-			}
-			return $result;
+			$d_id = (int)$d_id;
+			$this->db->query("SELECT name FROM fm_part_of_town where part_of_town_id={$d_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('name', true);
 		}
 
 		function get_district_name( $district_id )
 		{
-			//$result = "Ingen";
 			$values = array();
 			if ($district_id != null)
 			{
@@ -585,9 +578,7 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$name = $this->db->f('name');
-					$values[] = $name;
-					//$result .= $name . ',';
+					$values[] = $this->db->f('name', true);
 				}
 				$result = implode(", ", $values);
 				return $result;
@@ -598,17 +589,18 @@
 		function get_districts()
 		{
 			$this->db->query("SELECT part_of_town_id, name FROM fm_part_of_town district_id ", __LINE__, __FILE__);
-
-			$i = 0;
+			$district = array();
 			while ($this->db->next_record())
 			{
 				$name = $this->db->f('name');
-				if ($name != 'ØVRIGE')
+				if ($name == 'ØVRIGE')
 				{
-					$district[$i]['part_of_town_id'] = $this->db->f('part_of_town_id');
-					$district[$i]['name'] = stripslashes($this->db->f('name'));
-					$i++;
+					continue;
 				}
+				$district[] = array(
+					'part_of_town_id' => $this->db->f('part_of_town_id'),
+					'name' => stripslashes($name)
+				);
 			}
 
 			return $district;
@@ -622,25 +614,43 @@
 				$q1 = "SELECT office FROM bb_office_user WHERE account_id={$user_id}";
 				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$office_id = $this->db->f('office');
-				}
+				$this->db->next_record();
+
+				$office_id = $this->db->f('office', true);
 			}
 			return $office_id;
 		}
 
+		/**
+		 * DEMO::This one is vulnerable to SQL-injection
+		 *
+		 *
+		 *
+		  function get_office_name( $district_id )
+		  {
+		  $result = "Ingen";
+		  if ($district_id != null)
+		  {
+		  $sql = "SELECT descr FROM fm_district where id=$district_id";
+		  $this->db->query($sql, __LINE__, __FILE__);
+		  while ($this->db->next_record())
+		  {
+		  $result = $this->db->f('descr');
+		  }
+		  }
+		  return $result;
+		  }
+		 */
 		function get_office_name( $district_id )
 		{
+			$district_id = (int)$district_id;
 			$result = "Ingen";
-			if ($district_id != null)
+			if ($district_id)
 			{
-				$sql = "SELECT descr FROM fm_district where id=$district_id";
+				$sql = "SELECT descr FROM fm_district where id = {$district_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('descr');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('descr', true);
 			}
 			return $result;
 		}
@@ -648,14 +658,13 @@
 		function get_office_description( $office_id )
 		{
 			$result = "";
-			if ($office_id != null)
+			$office_id = (int)$office_id;
+			if ($office_id)
 			{
-				$sql = "SELECT description FROM bb_office where id=$office_id";
+				$sql = "SELECT description FROM bb_office where id={$office_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('description');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('description', true);
 			}
 			return $result;
 		}
@@ -663,14 +672,14 @@
 		function get_target_name( $target_id )
 		{
 			$result = "Ingen";
-			if ($target_id != null)
+			$target_id = (int)$target_id;
+			if ($target_id)
 			{
-				$sql = "SELECT name FROM bb_agegroup where id=$target_id";
+				$sql = "SELECT name FROM bb_agegroup where id={$target_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 			return $result;
 		}
@@ -682,14 +691,15 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$name = $this->db->f('name');
-				if ($name != 'Tilskuere')
+				$name = $this->db->f('name', true);
+				if ($name == 'Tilskuere')
 				{
-					$target = new activitycalendar_target($this->db->f('id'));
-					$target->set_description($this->db->f('description'));
-					$target->set_name($this->db->f('name'));
-					$targets[] = $target;
+					continue;
 				}
+				$target = new activitycalendar_target($this->db->f('id'));
+				$target->set_description($this->db->f('description', true));
+				$target->set_name($name);
+				$targets[] = $target;
 			}
 			return $targets;
 		}
@@ -700,24 +710,22 @@
 			{
 				$sql = "select id from bb_activity where name like '%{$name}%'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('id');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('id');
 			}
 			return $result;
 		}
 
 		function get_target_from_sort_id( $id )
 		{
-			if ($id != null && is_numeric($id))
+			$id = (int)$id;
+			if ($id)
 			{
 				$sql = "select id from bb_agegroup where sort={$id} and active=1";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('id');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('id');
 			}
 			return $result;
 		}
@@ -728,32 +736,33 @@
 			{
 				$sql = "select id from bb_organization where organization_number='{$orgno}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('id');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('id');
 			}
 			return $result;
 		}
 
 		function update_org_description( $org_id, $description )
 		{
-			if ($org_id != null)
+			$description = $this->db->db_addslashes($description);
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$sql = "update bb_organization set description='{$description}' where id={$org_id}";
 				$result = $this->db->query($sql, __LINE__, __FILE__);
 			}
-			return isset($result);
+			return ($result);
 		}
 
 		function set_org_active( $org_id )
 		{
-			if ($org_id != null)
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$sql = "update bb_organization set show_in_portal=1 where id={$org_id}";
 				$result = $this->db->query($sql, __LINE__, __FILE__);
 			}
-			return isset($result);
+			return ($result);
 		}
 
 		function get_activities( $parameters = array() )
@@ -817,49 +826,46 @@
 
 		function get_contact_person( $org_id, $group_id, $cont_pers )
 		{
+			$org_id = (int)$org_id;
+			$group_id = (int)$group_id;
 			if ($group_id)
 			{
-				$group_id = (int)$group_id;
-				//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 				$this->db->query("SELECT * FROM bb_group_contact WHERE group_id={$group_id} LIMIT 1", __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-						'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
-				}
+				$this->db->next_record();
+
+				$result = array(
+					'name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'phone' => $this->db->f('phone'), 'email' => $this->db->f('email')
+				);
 			}
 			else if ($org_id)
 			{
-				$org_id = (int)$org_id;
 				$this->db->query("SELECT * FROM bb_organization_contact WHERE organization_id={$org_id} LIMIT 1", __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-						'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
-				}
+				$this->db->next_record();
+				$result = array(
+					'name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
 			}
 			return $result;
 		}
 
 		function get_activity_description( $org_id, $group_id )
 		{
+			$org_id = (int)$org_id;
+			$group_id = (int)$group_id;
 			if ($group_id)
 			{
-				$group_id = (int)$group_id;
 				$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->soap ? $this->db->f('description') : utf8_decode($this->db->f('description'));
-				}
+				$this->db->next_record();
+
+				$result = $this->soap ? $this->db->f('description', true) : utf8_decode($this->db->f('description', true));
 			}
 			else if ($org_id)
 			{
-				$org_id = (int)$org_id;
 				$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->soap ? $this->db->f('description') : utf8_decode($this->db->f('description'));
-				}
+				$this->db->next_record();
+
+				$result = $this->soap ? $this->db->f('description', true) : utf8_decode($this->db->f('description', true));
 			}
 			return $result;
 		}
@@ -878,9 +884,9 @@
 				$organizations[] = array
 					(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name')),
-					'shortname' => utf8_decode($this->db->f('shortname')),
-					'description' => utf8_decode($this->db->f('description')),
+					'name' => utf8_decode($this->db->f('name', true)),
+					'shortname' => utf8_decode($this->db->f('shortname', true)),
+					'description' => utf8_decode($this->db->f('description', true)),
 					'homepage' => $homepage,
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email')
@@ -892,17 +898,16 @@
 
 		function get_org_info( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result = array();
 			if ($org_id)
 			{
-				$org_id = (int)$org_id;
 				$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$result = array
-					(
-					'name' => utf8_decode($this->db->f('name')),
-					'shortname' => utf8_decode($this->db->f('shortname')),
-					'description' => utf8_decode($this->db->f('description')),
+				$result = array(
+					'name' => utf8_decode($this->db->f('name', true)),
+					'shortname' => utf8_decode($this->db->f('shortname', true)),
+					'description' => utf8_decode($this->db->f('description', true)),
 					'homepage' => $this->db->f('homepage'),
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email')
@@ -921,9 +926,9 @@
 				$groups[] = array
 					(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name')),
-					'shortname' => utf8_decode($this->db->f('shortname')),
-					'description' => utf8_decode($this->db->f('description')),
+					'name' => utf8_decode($this->db->f('name', true)),
+					'shortname' => utf8_decode($this->db->f('shortname', true)),
+					'description' => utf8_decode($this->db->f('description', true)),
 					'homepage' => utf8_decode($this->db->f('homepage')),
 					'organization_id' => $this->db->f('organization_id')
 				);
@@ -949,17 +954,17 @@
 
 		function get_group_info( $group_id )
 		{
+			$group_id = (int)$group_id;
 			$result = array();
 			if ($group_id)
 			{
-				$group_id = (int)$group_id;
 				$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array
 					(
-					'name' => utf8_decode($this->db->f('name')),
-					'shortname' => utf8_decode($this->db->f('shortname')),
-					'description' => utf8_decode($this->db->f('description')),
+					'name' => utf8_decode($this->db->f('name', true)),
+					'shortname' => utf8_decode($this->db->f('shortname', true)),
+					'description' => utf8_decode($this->db->f('description', true)),
 					'organization_id' => $this->db->f('organization_id')
 				);
 			}
@@ -969,26 +974,24 @@
 		function get_all_arena_info( $arena_id, $int_arena_id )
 		{
 			$result = array();
-			if ($arena_id && is_numeric($arena_id))
+			$arena_id = (int)$arena_id;
+			$int_arena_id = (int)$int_arena_id;
+			if ($arena_id)
 			{
-				$arena_id = (int)$arena_id;
 				$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$result = array
-					(
-					'arena_name' => $this->soap ? $this->db->f('arena_name') : utf8_decode($this->db->f('arena_name')),
-					'address' => $this->soap ? $this->db->f('address') : utf8_decode($this->db->f('address'))
+				$result = array(
+					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : utf8_decode($this->db->f('arena_name', true)),
+					'address' => $this->soap ? $this->db->f('address', true) : utf8_decode($this->db->f('address', true))
 				);
 			}
-			else if ($int_arena_id && is_numeric($int_arena_id))
+			else if ($int_arena_id)
 			{
-				$int_arena_id = (int)$int_arena_id;
 				$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$int_arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$result = array
-					(
-					'arena_name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-					'address' => $this->soap ? $this->db->f('street') : utf8_decode($this->db->f('street'))
+				$result = array(
+					'arena_name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'address' => $this->soap ? $this->db->f('street', true) : utf8_decode($this->db->f('street', true))
 				);
 			}
 			return $result;
@@ -997,15 +1000,14 @@
 		function get_arena_info( $arena_id )
 		{
 			$result = array();
+			$arena_id = (int)$arena_id;
 			if ($arena_id)
 			{
-				$arena_id = (int)$arena_id;
 				$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$result = array
-					(
-					'arena_name' => $this->soap ? $this->db->f('arena_name') : utf8_decode($this->db->f('arena_name')),
-					'address' => $this->soap ? $this->db->f('address') : utf8_decode($this->db->f('address'))
+				$result = array(
+					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : utf8_decode($this->db->f('arena_name', true)),
+					'address' => $this->soap ? $this->db->f('address', true) : utf8_decode($this->db->f('address', true))
 				);
 			}
 			return $result;
@@ -1014,15 +1016,14 @@
 		function get_internal_arena_info( $arena_id )
 		{
 			$result = array();
+			$arena_id = (int)$arena_id;
 			if ($arena_id)
 			{
-				$arena_id = (int)$arena_id;
 				$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$result = array
-					(
-					'arena_name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
-					'address' => $this->soap ? $this->db->f('street') : utf8_decode($this->db->f('street'))
+				$result = array(
+					'arena_name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'address' => $this->soap ? $this->db->f('street', true) : utf8_decode($this->db->f('street', true))
 				);
 			}
 			return $result;
@@ -1059,6 +1060,7 @@
 		{
 			$sql = "SELECT * FROM bb_activity where active=1 and parent_id=1";
 			$this->db->query($sql, __LINE__, __FILE__);
+			$categories = array();
 			while ($this->db->next_record())
 			{
 				$categories[] = array(
@@ -1131,7 +1133,7 @@
 				'show_in_portal = 1'
 			);
 
-			$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__, __FILE__);
+			$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id = {$orgid}", __LINE__, __FILE__);
 		}
 
 		function add_organization( $org_info )
@@ -1328,10 +1330,10 @@
 
 		function delete_contact_persons( $org_id )
 		{
+			$org_id = (int)$org_id;
 			if ($org_id)
 			{
-				$org = (int)$org_id;
-				$sql = "DELETE FROM bb_organization_contact WHERE organization_id={$org}";
+				$sql = "DELETE FROM bb_organization_contact WHERE organization_id={$org_id}";
 				$result = $this->db->query($sql, __LINE__, __FILE__);
 				return isset($result);
 			}
@@ -1441,6 +1443,7 @@
 
 		function get_activities_for_update( $org_id, $group = false )
 		{
+			$org_id = (int)$org_id;
 			$activity_ids = array();
 			if ($group)
 			{
@@ -1462,6 +1465,7 @@
 
 		function get_connected_activities( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$activities = array();
 			$sql = "SELECT * FROM activity_activity WHERE organization_id={$org_id}";
 
@@ -1498,12 +1502,9 @@
 
 		function update_organization_connection( $activity_id, $organization_id )
 		{
-			$id = intval($activity_id);
-			$org_id = intval($organization_id);
-
-			$result = $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__, __FILE__);
-
-			return isset($result);
+			$id = (int)$activity_id;
+			$org_id = (int)$organization_id;
+			return $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__, __FILE__);
 		}
 
 		function get_activities_without_groups()
@@ -1514,9 +1515,9 @@
 			while ($this->db->next_record())
 			{
 				$activity_id = $this->db->f('id');
-				$activity_title = $this->db->f('title');
+				$activity_title = $this->db->f('title', true);
 				$activity_organization = $this->db->f('organization_id');
-				$description = $this->db->f('org_desc');
+				$description = $this->db->f('org_desc', true);
 
 				$activities[] = array(
 					'id' => $activity_id,
@@ -1540,7 +1541,7 @@
 
 		function remove_old_activities( $activity_id )
 		{
-			//$sql = "delete from activity_activity where id in (1293,1294,1297,1299)"; //1293,1294,1297,1299
+			$activity_id = (int)$activity_id;
 			$sql = "delete from activity_activity where id={$activity_id}";
 			$result = $this->db->query($sql, __LINE__, __FILE__);
 
@@ -1549,7 +1550,7 @@
 
 		function save_with_no_changes( $activity )
 		{
-			$id = intval($activity->get_id());
+			$id = (int)$activity->get_id();
 			$ts_now = strtotime('now');
 
 			$values = "last_change_date = " . $this->marshal($ts_now, 'int');
@@ -1561,15 +1562,9 @@
 
 		function update_activity_group( $activity_id, $group_id )
 		{
-			$id = intval($activity_id);
-			$g_id = intval($group_id);
-
+			$id = (int)$activity_id;
+			$g_id = (int)$group_id;
 			$values = "group_id = " . $g_id;
-			//var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
-			//die;
-
-			$result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__, __FILE__);
-
-			return isset($result);
+			return $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__, __FILE__);
 		}
 	}

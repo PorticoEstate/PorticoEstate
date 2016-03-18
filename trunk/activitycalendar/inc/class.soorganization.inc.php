@@ -210,15 +210,15 @@
 		function get_organization_name( $org_id )
 		{
 			$result = "Ingen";
-			if (isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$org_id = intval($org_id);
 				$q1 = "SELECT name FROM bb_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
@@ -352,14 +352,14 @@
 		function get_organization_name_local( $org_id )
 		{
 			$result = "Ingen";
-			if (isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$q1 = "SELECT name FROM activity_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
@@ -368,16 +368,15 @@
 		function get_contacts( $organization_id )
 		{
 			$contacts = array();
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$cont_id = $this->db->f('id');
-					$contacts[] = $cont_id;
+					$contacts[] = $this->db->f('id');
 				}
-				//$result=$contacts;
 			}
 			return $contacts;
 		}
@@ -385,10 +384,10 @@
 		function get_contacts_as_objects( $organization_id )
 		{
 			$contacts = array();
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT * FROM bb_organization_contact WHERE organization_id={$organization_id}";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
@@ -407,17 +406,15 @@
 		function get_contacts_local( $organization_id )
 		{
 			$contacts = array();
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$cont_id = $this->db->f('id');
-					$contacts[] = $cont_id;
+					$contacts[] = $this->db->f('id');
 				}
-				//$result=$contacts;
 			}
 			return $contacts;
 		}
@@ -425,10 +422,10 @@
 		function get_contacts_local_as_objects( $organization_id )
 		{
 			$contacts = array();
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT * FROM activity_contact_person WHERE organization_id='{$organization_id}'";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
@@ -446,28 +443,28 @@
 
 		function get_description( $organization_id )
 		{
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT description FROM bb_organization WHERE id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
 
 		function get_description_local( $organization_id )
 		{
-			if (isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT description FROM activity_organization WHERE id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
@@ -475,10 +472,10 @@
 		function get_district_from_name( $name )
 		{
 			$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
-			while ($this->db->next_record())
-			{
-				$result = $this->db->f('part_of_town_id');
-			}
+			$this->db->next_record();
+
+			$result = $this->db->f('part_of_town_id');
+
 			return $result;
 		}
 
@@ -490,10 +487,9 @@
 				$q1 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
 				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$office_name = $this->db->f('descr');
-				}
+				$this->db->next_record();
+
+				$office_name = $this->db->f('descr', true);
 			}
 			return $office_name;
 		}
@@ -532,23 +528,24 @@
 			$transferred = ($organization->get_transferred() == 1 || $organization->get_transferred() == true) ? 'true' : 'false';
 			$original_org_id = ($organization->get_original_org_id() && $organization->get_original_org_id() != '') ? $organization->get_original_org_id() : 0;
 
-			$values[] = "NAME='{$name}'";
-			$values[] = "HOMEPAGE='{$homepage}'";
-			$values[] = "PHONE='{$phone}'";
-			$values[] = "EMAIL='{$email}'";
-			$values[] = "DESCRIPTION='{$description}'";
-			$values[] = "ADDRESS='{$street}'";
-			$values[] = "ADDRESSNUMBER='{$streetnumber}'";
-			$values[] = "ZIP_CODE='{$zip_code}'";
-			$values[] = "CITY='{$city}'";
-			$values[] = "ORGNO='{$orgnr}'";
-			$values[] = "DISTRICT='{$district}'";
-			$values[] = "CHANGE_TYPE='{$change_type}'";
-			$values[] = "TRANSFERRED={$transferred}";
-			$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
+			$values[] = "name='{$name}'";
+			$values[] = "homepage='{$homepage}'";
+			$values[] = "phone='{$phone}'";
+			$values[] = "email='{$email}'";
+			$values[] = "description='{$description}'";
+			$values[] = "address='{$street}'";
+			$values[] = "addressnumber='{$streetnumber}'";
+			$values[] = "zip_code='{$zip_code}'";
+			$values[] = "city='{$city}'";
+			$values[] = "orgno='{$orgnr}'";
+			$values[] = "district='{$district}'";
+			$values[] = "change_type='{$change_type}'";
+			$values[] = "transferred={$transferred}";
+			$values[] = "original_org_id={$original_org_id}";
 			$vals = implode(',', $values);
 
-			$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+			$id = (int)$organization->get_id();
+			$sql = "UPDATE activity_organization SET {$vals} WHERE id={$id}";
 			$result = $this->db->query($sql, __LINE__, __FILE__);
 			if (isset($result))
 			{
@@ -622,19 +619,19 @@
 				$original_org_id = 0;
 			}
 
-
-			$values[] = "NAME='{$name}'";
-			$values[] = "HOMEPAGE='{$homepage}'";
-			$values[] = "ADDRESS='{$street}'";
-			$values[] = "ADDRESSNUMBER='{$streetnumber}'";
-			$values[] = "ZIP_CODE='{$zip_code}'";
-			$values[] = "CITY='{$city}'";
-			$values[] = "ORGNO='{$orgnr}'";
-			$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
+			$values[] = "name='{$name}'";
+			$values[] = "homepage='{$homepage}'";
+			$values[] = "address='{$street}'";
+			$values[] = "addressnumber='{$streetnumber}'";
+			$values[] = "zip_code='{$zip_code}'";
+			$values[] = "city='{$city}'";
+			$values[] = "orgno='{$orgnr}'";
+			$values[] = "original_org_id={$original_org_id}";
 			$vals = implode(',', $values);
 
 			//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
-			$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+			$id = (int)$organization->get_id();
+			$sql = "UPDATE activity_organization SET {$vals} WHERE id={$id}";
 			$result = $this->db->query($sql, __LINE__, __FILE__);
 			if (isset($result))
 			{
@@ -705,6 +702,8 @@
 
 		function get_organization_local( $org_id )
 		{
+			$org_id = (int)$org_id;
+
 			$sql = "SELECT * FROM activity_organization WHERE id={$org_id}";
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -819,14 +818,15 @@
 
 		function set_organization_inactive( $org_id )
 		{
-			$orgid = (int)$org_id;
+			$org_id = (int)$org_id;
 
 			//var_dump("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}");
-			$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}", __LINE__, __FILE__);
+			$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$org_id}", __LINE__, __FILE__);
 		}
 
 		function get_affected_allocations( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result = array();
 			$sql = "select id from bb_allocation where organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -840,11 +840,14 @@
 
 		function update_affected_allocations( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_allocation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_allocation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
 		function get_affected_reservations( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result = array();
 			$sql = "select id from bb_completed_reservation where organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -858,11 +861,14 @@
 
 		function update_affected_reservations( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_completed_reservation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_completed_reservation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
 		function get_affected_events( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result = array();
 			$sql = "select id from bb_event where customer_organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -876,7 +882,9 @@
 
 		function update_affected_events( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_event set customer_organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_event set customer_organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
 		function update( $organization )
@@ -886,7 +894,9 @@
 
 		function update_org_district_local( $org_id, $district_id )
 		{
-			$sql = "UPDATE activity_organization SET district='{$district_id}' WHERE ID={$org_id}";
+			$district_id = (int)$district_id;
+			$org_id = (int)$org_id;
+			$sql = "UPDATE activity_organization SET district='{$district_id}' WHERE id={$org_id}";
 			$result = $this->db->query($sql, __LINE__, __FILE__);
 			if (isset($result))
 			{
@@ -901,15 +911,13 @@
 		function get_organization_homepage( $org_id )
 		{
 			$result = "Ingen";
-			if (isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
-				$org_id = intval($org_id);
 				$q1 = "SELECT homepage FROM bb_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('homepage');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('homepage');
 			}
 
 			return $result;
@@ -918,14 +926,14 @@
 		function get_organization_homepage_local( $org_id )
 		{
 			$result = "Ingen";
-			if (isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$q1 = "SELECT homepage FROM activity_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('homepage');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('homepage');
 			}
 
 			return $result;
@@ -934,18 +942,11 @@
 		//$org->set_change_type("rejected");
 		function reject_organization( $org_id )
 		{
-			if (isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$query = "UPDATE activity_organization set change_type='rejected' where id={$org_id}";
-				$result = $this->db->query($query, __LINE__, __FILE__);
-				if (isset($result))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return $this->db->query($query, __LINE__, __FILE__);
 			}
 			return false;
 		}
