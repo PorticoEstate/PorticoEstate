@@ -38,6 +38,11 @@
 
 			$tabletools[] = array
 				(
+				'my_name' => 'excelHtml5',
+			);
+
+			$tabletools[] = array
+				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
 				'action' => self::link(array(
@@ -87,7 +92,9 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+//					array('allrows' => true),
+
 				)
 			);
 
@@ -112,6 +119,11 @@
 					'className' => 'right', 'formatter' => 'formatterArea'),
 				array('key' => 'contract_status', 'label' => lang('contract_status'), 'sortable' => false,
 					'className' => 'center')
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'excelHtml5',
 			);
 
 			$tabletools[] = array
@@ -153,7 +165,8 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+					array('allrows' => true),
 				)
 			);
 
@@ -177,6 +190,11 @@
 					'className' => 'right', 'formatter' => 'formatterArea'),
 				array('key' => 'contract_status', 'label' => lang('contract_status'), 'sortable' => false,
 					'className' => 'center')
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'excelHtml5',
 			);
 
 			$tabletools[] = array
@@ -207,7 +225,8 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+					array('allrows' => true),
 				)
 			);
 
@@ -231,6 +250,11 @@
 					'className' => 'right', 'formatter' => 'formatterArea'),
 				array('key' => 'contract_status', 'label' => lang('contract_status'), 'sortable' => false,
 					'className' => 'center')
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'excelHtml5',
 			);
 
 			$tabletools[] = array
@@ -261,7 +285,8 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+					array('allrows' => true),
 				)
 			);
 
@@ -281,6 +306,11 @@
 					'className' => 'right', 'formatter' => 'formatterArea'),
 				array('key' => 'contract_status', 'label' => lang('contract_status'), 'sortable' => false,
 					'className' => 'center')
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'excelHtml5',
 			);
 
 			$tabletools[] = array
@@ -311,7 +341,8 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+					array('allrows' => true),
 				)
 			);
 
@@ -339,6 +370,11 @@
 				)),
 				'parameters' => json_encode(array('parameter' => array(array('name' => 'id',
 							'source' => 'contract_id'))))
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'excelHtml5',
 			);
 
 			$tabletools[] = array
@@ -394,7 +430,8 @@
 				'ColumnDefs' => $columns_def,
 				'tabletools' => $tabletools,
 				'config' => array(
-					array('disableFilter' => true)
+					array('disableFilter' => true),
+					array('allrows' => true),
 				)
 			);
 
