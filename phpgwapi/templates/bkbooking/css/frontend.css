@@ -32,7 +32,7 @@ div#header a {
 	float: left;
 }
 div#logo {
-    width: 125px;
+    width: 170px;
     height: 114px;
     margin-left: 10px;
 }
@@ -320,7 +320,7 @@ line-height: 1.2em;
 }
 
 #logo{
-background: url(../images/newlayout/logo.png) no-repeat;
+background: url(../images/newlayout/logo_bk.svg) no-repeat;
 float: left;
 height: 75px;
 width: 102px;
