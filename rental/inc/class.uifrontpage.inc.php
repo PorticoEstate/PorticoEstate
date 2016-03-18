@@ -73,7 +73,7 @@
 				'parameters' => json_encode(array('parameter' => array(array('name' => 'id',
 							'source' => 'id'))))
 			);
-
+/*
 			$tabletools[] = array
 				(
 				'my_name' => 'download',
@@ -82,7 +82,7 @@
 					'type' => 'last_edited',
 					'export' => true))
 			);
-
+*/
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_0',

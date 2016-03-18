@@ -194,14 +194,13 @@
 		function get_group_contact_name( $id )
 		{
 			$result = "Ingen";
-			if (isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM bb_group_contact WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
@@ -209,14 +208,14 @@
 		function get_group_contact_name_local( $id )
 		{
 			$result = "Ingen";
-			if (isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
@@ -224,14 +223,14 @@
 		function get_org_contact_name( $id )
 		{
 			$result = "Ingen";
-			if (isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM bb_organization_contact WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
@@ -239,42 +238,39 @@
 		function get_org_contact_name_local( $id )
 		{
 			$result = "Ingen";
-			if (isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
 
 		function get_mailaddress_for_group_contact( $contact_person_id )
 		{
+			$contact_person_id = (int)$contact_person_id;
 			if ($contact_person_id)
 			{
 				$q1 = "SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('email');
 			}
 			return $result;
 		}
 
 		function get_mailaddress_for_org_contact( $contact_person_id )
 		{
+			$contact_person_id = (int)$contact_person_id;
 			if ($contact_person_id)
 			{
 				$q1 = "SELECT email FROM bb_organization_contact WHERE id={$contact_person_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('email');
 			}
 			return $result;
 		}
@@ -339,7 +335,8 @@
 		function get_local_contact_persons( $id, $group = false )
 		{
 			$result = array();
-			if (isset($id))
+			$id = (int)$id;
+			if ($id)
 			{
 				if ($group)
 				{
@@ -367,7 +364,8 @@
 		function get_booking_contact_persons( $id, $group = false )
 		{
 			$result = array();
-			if (isset($id))
+			$id = (int)$id;
+			if ($id)
 			{
 				$columns[] = 'group_contact.id';
 				$columns[] = 'group_contact.name';
@@ -399,7 +397,7 @@
 
 		function update_local_contact_person( $contact )
 		{
-			$id = $contact['id'];
+			$id = (int)$contact['id'];
 			$name = $contact['name'];
 			$phone = $contact['phone'];
 			$mail = $contact['mail'];
