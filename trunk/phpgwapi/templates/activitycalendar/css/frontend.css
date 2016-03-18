@@ -44,7 +44,7 @@ div#header a {
 	float: left;
 }
 div#logo {
-	width: 125px; height: 114px; margin-left: 10px;
+	width: 170px; height: 114px; margin-left: 10px;
 }
 div#centerimage {
 	margin: 0px auto; height: 109px; overflow: hidden; padding-top: 4px;
@@ -299,7 +299,8 @@ body {
 	padding: 0px 0.5em; line-height: 1.2em; border-right-color: rgb(87, 87, 87); border-right-width: 1px; border-right-style: solid;
 }
 #logo {
-	background: url("../images/newlayout/logo.png") no-repeat; margin: 14px 0px 0px 49px !important; width: 102px; height: 75px; float: left;
+	background: url(../images/newlayout/logo_bk.svg) no-repeat;
+	margin: 14px 0px 0px 49px !important; width: 102px; height: 75px; float: left;
 }
 #centerimage {
 	padding: 22px 0px 0px 100px !important; width: 172px !important; height: 108px !important; margin-right: 5px !important; display: block !important;
