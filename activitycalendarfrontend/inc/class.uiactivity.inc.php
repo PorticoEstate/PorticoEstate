@@ -43,10 +43,6 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$district_id = phpgw::get_var('district_id');
 
-			//test
-//			$district_id = "1 UNION ALL SELECT (CHR(113)||CHR(118)||CHR(118)||CHR(120)||CHR(113))||(CHR(119)||CHR(66)||CHR(122)||CHR(88)||CHR(111)||CHR(104)||CHR(78)||CHR(70)||CHR(76)||CHR(115)||CHR(89)||CHR(84)||CHR(85)||CHR(110)||CHR(104)||CHR(104)||CHR(101)||CHR(66)||CHR(80)||CHR(108)||CHR(77)||CHR(87)||CHR(83)||CHR(85)||CHR(110)||CHR(108)||CHR(76)||CHR(84)||CHR(88)||CHR(70)||CHR(78)||CHR(70)||CHR(67)||CHR(110)||CHR(114)||CHR(98)||CHR(82)||CHR(65)||CHR(100)||CHR(111))||(CHR(113)||CHR(112)||CHR(120)||CHR(113)||CHR(113))-- -";
-
-
 			$district = $this->so_activity->get_district( $district_id );
 			print_r($district);
 		}

@@ -626,13 +626,15 @@
 		 *
 		 *
 		 */
-		function get_district( $district_id )
+		function get_district( $id )
 		{
 			$result = "Ingen";
 //			$district_id = (int)$district_id;
-			if ($district_id != null)
+			$table = 'fm_district';// id is integer
+//			$table = 'fm_request_status';// id is varchar
+			if ($id != null)
 			{
-				$sql = "SELECT descr FROM fm_district WHERE id={$district_id}";
+				$sql = "SELECT descr FROM {$table} WHERE id={$id}";
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
