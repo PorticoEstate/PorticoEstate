@@ -752,7 +752,7 @@
 						$first_element = false;
 						continue;
 					}
-					if(preg_match("/\bUNION\b/i", $sql)) // FIND 'UNION ALL SELECT'
+					if(preg_match("/(\bUNION\b|\bPG_SLEEP\b|\bCHR\b|\bGENERATE_SERIES\b)/i", $sql)) // FIND 'UNION ALL SELECT'
 					{
 						$this->transaction_abort();
 						trigger_error('Attempt on SQL-injection: UNION ALL SELECT', E_USER_ERROR);
