@@ -449,7 +449,7 @@
 			return $desc;
 		}
 
-		protected function populate( $group_id, &$group )
+		protected function populate( int $group_id, &$group )
 		{
 
 			if ($group == null)
