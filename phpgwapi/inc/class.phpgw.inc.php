@@ -400,7 +400,8 @@
 					case 'string':
 					default:
 						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-						$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+						$value = str_replace(array('(', ')', '=', ';'),array('&#40;', '&#41;', '&#61;', '&#59;'), $value); // prevent SQL-injection
 						break;
 
 					case 'boolean':
