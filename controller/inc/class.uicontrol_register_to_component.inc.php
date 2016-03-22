@@ -28,7 +28,6 @@
 	 * @subpackage controller
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Import the jQuery class
