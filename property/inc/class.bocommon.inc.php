@@ -165,7 +165,8 @@
 				{
 					if ($entry['id'] == $selected)
 					{
-						$entry['selected'] = 'selected';
+						$entry['selected'] = 1;
+						break;
 					}
 				}
 				return $list;

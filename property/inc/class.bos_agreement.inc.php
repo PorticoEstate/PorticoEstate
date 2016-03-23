@@ -520,9 +520,4 @@
 
 			return $values;
 		}
-
-		function delete_year_from_budget( $data, $agreement_id )
-		{
-			return $this->so->delete_year_from_budget($data, $agreement_id);
-		}
 	}
