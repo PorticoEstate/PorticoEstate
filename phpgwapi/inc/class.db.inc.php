@@ -752,7 +752,7 @@
 						$first_element = false;
 						continue;
 					}
-					if(preg_match("/(\bUNION\b|\bPG_SLEEP\b|\bCHR\b|\bGENERATE_SERIES\b)/i", $sql))
+					if(preg_match("/(UNION ALL|\bPG_SLEEP\b|\bCHR\b|\bGENERATE_SERIES\b)/i", $sql))
 					{
 						$this->transaction_abort();
 						trigger_error('Attempt on SQL-injection', E_USER_ERROR);
