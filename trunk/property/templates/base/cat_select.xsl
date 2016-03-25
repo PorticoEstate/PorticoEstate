@@ -45,7 +45,7 @@
 		<xsl:value-of select="id"/>
 	</xsl:variable>
 	<option value="{$id}{cat_id}">
-		<xsl:if test="selected='1' or selected='selected'">
+		<xsl:if test="selected='selected' or selected = 1">
 			<xsl:attribute name="selected">
 				<xsl:text>selected</xsl:text>
 			</xsl:attribute>

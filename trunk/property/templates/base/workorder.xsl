@@ -269,7 +269,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_branch"/>
 						</label>
-						<xsl:for-each select="branch_list[selected='selected']">
+						<xsl:for-each select="branch_list[selected='selected' or selected = 1]">
 							<xsl:value-of select="name"/>
 							<xsl:if test="position() != last()">, </xsl:if>
 						</xsl:for-each>
@@ -1271,7 +1271,7 @@
 <!-- New template-->
 <xsl:template match="options_lid">
 	<option value="{lid}">
-		<xsl:if test="selected = 'selected'">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected"/>
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="lastname"/>

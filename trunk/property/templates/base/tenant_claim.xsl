@@ -83,7 +83,7 @@
 					</label>
 					<xsl:for-each select="cat_list_project" data-validation="required">
 								<xsl:choose>
-									<xsl:when test="selected='selected'">
+									<xsl:when test="selected='selected' or selected = 1">
 											<xsl:value-of select="name"/>
 									</xsl:when>
 								</xsl:choose>
@@ -411,7 +411,7 @@
 						</label>
 		<xsl:for-each select="cat_list_project">
 		    <xsl:choose>
-			<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 				<xsl:value-of select="name"/>
 			</xsl:when>
 		    </xsl:choose>
@@ -553,7 +553,7 @@
 						</label>
 		<xsl:for-each select="status_list">
 		    <xsl:choose>
-			<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 				<xsl:value-of select="name"/>
 			</xsl:when>
 		    </xsl:choose>
@@ -582,7 +582,7 @@
 						</label>
 		<xsl:for-each select="cat_list">
 		    <xsl:choose>
-			<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 				<xsl:value-of select="name"/>
 			</xsl:when>
 		    </xsl:choose>
