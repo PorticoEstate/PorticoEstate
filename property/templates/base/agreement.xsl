@@ -289,7 +289,7 @@
 										<xsl:variable name="lang_member_of_statustext">
 											<xsl:value-of select="lang_member_of_statustext"/>
 										</xsl:variable>
-										<select name="values[member_of][]" disabled="disabled" class="forms" multiple="multiple" title="window.status='{$lang_member_of_statustext}'; return true;">
+										<select name="values[member_of][]" disabled="disabled" class="forms" multiple="multiple" title="{$lang_member_of_statustext}">
 											<xsl:apply-templates select="member_of_list"/>
 										</select>
 									</div>
@@ -857,7 +857,7 @@
 										<xsl:variable name="lang_member_of_statustext">
 											<xsl:value-of select="lang_member_of_statustext"/>
 										</xsl:variable>
-										<select disabled="disabled" name="values[member_of][]" class="forms" multiple="multiple" title="window.status='{$lang_member_of_statustext}'; return true;">
+										<select disabled="disabled" name="values[member_of][]" class="forms" multiple="multiple" title="{$lang_member_of_statustext}">
 											<xsl:apply-templates select="member_of_list"/>
 										</select>
 									</div>
