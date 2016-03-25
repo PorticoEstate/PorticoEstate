@@ -282,7 +282,7 @@
 							</td>
 							<td align="left">
 								<xsl:choose>
-									<xsl:when test="selected='selected'">
+									<xsl:when test="selected='selected' or selected = 1">
 										<input type="radio" name="values[{//column_name}]" value="{id}" checked="checked" onMouseout="window.status='';return true;">
 											<xsl:attribute name="title">
 												<xsl:value-of select="//lang_config_statustext"/>
@@ -1106,7 +1106,7 @@
 					</td>
 					<td align="center">
 						<xsl:choose>
-							<xsl:when test="selected='selected'">
+							<xsl:when test="selected='selected' or selected = 1">
 								<input type="checkbox" name="values[list_info][{id}]" value="{id}" checked="checked" onMouseout="window.status='';return true;">
 									<xsl:attribute name="title">
 										<xsl:value-of select="//lang_list_type_statustext"/>

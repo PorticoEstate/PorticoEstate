@@ -695,7 +695,6 @@
 
 			$id = phpgw::get_var('id', 'int');
 			$values = phpgw::get_var('values');
-			$values_attribute = phpgw::get_var('values_attribute');
 
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
@@ -703,9 +702,46 @@
 				$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 				$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
 
+				$values_attribute = phpgw::get_var('values_attribute');
+
+				$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement', 'property');
+				if (isset($insert_record_agreement) && is_array($insert_record_agreement))
+				{
+					for ($j = 0; $j < count($insert_record_agreement); $j++)
+					{
+						$insert_record['extra'][$insert_record_agreement[$j]] = $insert_record_agreement[$j];
+					}
+				}
+				if (isset($insert_record['extra']) && is_array($insert_record['extra']))
+				{
+					foreach ($insert_record['extra'] as $key => $column)
+					{
+						if ($_POST[$key])
+						{
+							$values['extra'][$column] = phpgw::get_var($key, 'string', 'POST');
+						}
+					}
+				}
+
 				if (!$values['cat_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a category !'));
+				}
+				if (!$values['name'])
+				{
+					$receipt['error'][] = array('msg' => lang('please enter a name !'));
+				}
+				if (!$values['descr'])
+				{
+					$receipt['error'][] = array('msg' => lang('please enter a description!'));
+				}
+				if (!$values['start_date'])
+				{
+					$receipt['error'][] = array('msg' => lang('please enter a start date!'));
+				}
+				if (!$values['end_date'])
+				{
+					$receipt['error'][] = array('msg' => lang('please enter a end date!'));
 				}
 
 				if ($id)
@@ -780,14 +816,18 @@
 						}
 					}
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+					self::message_set($receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiagreement.edit',
 						'id' => $id));
 				}
 				else
 				{
-					$this->edit();
+					self::message_set($receipt);
+					if (isset($receipt['error']) && (isset($values_attribute) && is_array($values_attribute)))
+					{
+						$values = $this->bocommon->preserve_attribute_values($values, $values_attribute);
+					}
+					$this->edit($values);
 				}
 			}
 			else
@@ -996,62 +1036,15 @@
 			}
 
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
-			$values = phpgw::get_var('values');
-
-			$delete_item = phpgw::get_var('delete_item', 'bool');
-			$activity_id = phpgw::get_var('activity_id', 'int');
-			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
 			$config = CreateObject('phpgwapi.config', 'property');
-			$boalarm = CreateObject('property.boalarm');
-			$receipt = array();
 			$get_items = false;
 
-			$values_attribute = phpgw::get_var('values_attribute');
-			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement', 'property');
 
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 			$tabs['items'] = array('label' => lang('items'), 'link' => "#items");
-
-			if (isset($insert_record_agreement) && is_array($insert_record_agreement))
-			{
-				for ($j = 0; $j < count($insert_record_agreement); $j++)
-				{
-					$insert_record['extra'][$insert_record_agreement[$j]] = $insert_record_agreement[$j];
-				}
-			}
-
-			$receipt = array();
-			if (is_array($values))
-			{
-				if (isset($insert_record['extra']) && is_array($insert_record['extra']))
-				{
-					foreach ($insert_record['extra'] as $key => $column)
-					//	while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-					{
-						if ($_POST[$key])
-						{
-							$values['extra'][$column] = phpgw::get_var($key, 'string', 'POST');
-						}
-					}
-				}
-				if ((!isset($values['save']) || !$values['save']) && (!isset($values['apply']) || !$values['apply']) && (!isset($values['update']) || !$values['update']))
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiagreement.index',
-						'role' => $this->role));
-				}
-			}
-
-
-			$agreement = $this->bo->read_single(array('agreement_id' => $id));
-
-			/* Preserve attribute values from post */
-			if (isset($receipt['error']) && (isset($values_attribute) && is_array($values_attribute)))
-			{
-				$agreement = $this->bocommon->preserve_attribute_values($agreement, $values_attribute);
-			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
@@ -1059,8 +1052,11 @@
 
 			if ($id)
 			{
-				$this->cat_id = ($agreement['cat_id'] ? $agreement['cat_id'] : $this->cat_id);
-				$this->member_id = ($agreement['member_of'] ? $agreement['member_of'] : $this->member_id);
+				$agreement = $this->bo->read_single(array('agreement_id' => $id));
+				if($values)
+				{
+					$agreement = array_merge($agreement, $values);
+				}
 				$list = $this->bo->read_details($id);
 
 				$content = $list;
@@ -1090,6 +1086,12 @@
 					);
 				}
 			}
+			else
+			{
+				$agreement = $values;
+			}
+			$this->cat_id = ($agreement['cat_id'] ? $agreement['cat_id'] : $this->cat_id);
+			$this->member_id = ($agreement['member_of'] ? $agreement['member_of'] : $this->member_id);
 
 			$link_data = array
 				(
@@ -1108,7 +1110,10 @@
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id' => $agreement['vendor_id'],
-				'vendor_name' => isset($agreement['vendor_name']) ? $agreement['vendor_name'] : ''));
+				'vendor_name' => isset($agreement['vendor_name']) ? $agreement['vendor_name'] : '',
+				'required'	=> true
+				)
+			);
 
 			if ($agreement['vendor_id'])
 			{
@@ -1127,8 +1132,6 @@
 				'data' => isset($data) ? $data : '',
 				'account_id' => isset($account_id) ? $account_id : ''
 			));
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$table_add[] = array
 				(
@@ -1189,32 +1192,6 @@
 				}
 				unset($attributes_groups);
 				unset($agreement['attributes']);
-			}
-
-			//------JSON code-------------------
-			//-- ALARMS ---
-			else if (phpgw::get_var('phpgw_return_as') == 'json' && !$get_items)
-			{
-				$alarm_data = $this->bocommon->initiate_ui_alarm(array(
-					'acl_location' => $this->acl_location,
-					'alarm_type' => 'agreement',
-					'type' => 'form',
-					'text' => 'Email notification',
-					'times' => isset($times) ? $times : '',
-					'id' => $id,
-					'method' => isset($method) ? $method : '',
-					'data' => isset($data) ? $data : '',
-					'account_id' => isset($account_id) ? $account_id : ''
-				));
-				//$alarm_data['values'] = array();
-				if (count($alarm_data['values']))
-				{
-					return json_encode($alarm_data['values']);
-				}
-				else
-				{
-					return "";
-				}
 			}
 
 			//---datatable0 settings---------------------------------------------------
@@ -1508,7 +1485,6 @@
 				'lang_file_action_statustext' => lang('Check to delete file'),
 				'lang_upload_file' => lang('Upload file'),
 				'lang_file_statustext' => lang('Select file to upload'),
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_data_cancel),
 				'lang_id' => lang('ID'),
@@ -1564,6 +1540,7 @@
 				'lang_status' => lang('Status'),
 				'status_list' => $this->bo->select_status_list('select', $agreement['status']),
 				'status_name' => 'values[status]',
+				'status_required'	=> true,
 				'lang_no_status' => lang('Select status'),
 				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,

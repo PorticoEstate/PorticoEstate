@@ -30,7 +30,7 @@
 <!-- New template-->
 <xsl:template match="cat_list">
 		<xsl:choose>
-			<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 				<option value="{id}{cat_id}" selected="selected">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</option>
