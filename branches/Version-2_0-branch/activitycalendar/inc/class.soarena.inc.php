@@ -184,14 +184,14 @@
 		function get_arena_name( $arena_id )
 		{
 			$result = "Ingen";
-			if (isset($arena_id) && $arena_id != '')
+			$arena_id = (int)$arena_id;
+			if ($arena_id)
 			{
 				$q1 = "SELECT arena_name FROM activity_arena WHERE id={$arena_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('arena_name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('arena_name', true);
 			}
 
 			return $result;
@@ -211,7 +211,7 @@
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$buildings[$id] = $this->db->f('name');
+				$buildings[$id] = $this->db->f('name', true);
 			}
 			return $buildings;
 		}
@@ -224,9 +224,9 @@
 		 */
 		function get_building_name( $building_id )
 		{
-			if (isset($building_id))
+			$building_id = (int)$building_id;
+			if ($building_id)
 			{
-				$building_id = (int)$building_id;
 				$q1 = "SELECT name FROM bb_building WHERE id={$building_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
 				while ($this->db->next_record())
@@ -249,7 +249,7 @@
 			$q = "INSERT INTO activity_arena (arena_name) VALUES ('test')";
 			$result = $this->db->query($q);
 
-			if (isset($result))
+			if ($result)
 			{
 				// Set the new party ID
 				$arena->set_id($this->db->get_last_insert_id('activity_arena', 'id'));
@@ -270,7 +270,7 @@
 		 */
 		function update( $arena )
 		{
-			$id = intval($arena->get_id());
+			$id = (int)$arena->get_id();
 
 			$values = array(
 				'arena_name = ' . $this->marshal($arena->get_arena_name(), 'string'),
@@ -282,9 +282,9 @@
 				'active = ' . $this->marshal(($arena->is_active() ? 'true' : 'false'), 'bool'),
 			);
 
-			$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
+			$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id={$id}", __LINE__, __FILE__);
 
-			return isset($result);
+			return $result;
 		}
 
 		public function get_id_field_name( $extended_info = false )
@@ -315,15 +315,9 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					//$result_arr = $this->db->f('name');
-					/* if($curr_index == 0)
-					  {
-					  $result_arr[] = "<option value='0'>Velg gateadresse</option>";
-					  }
-					  $result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-					  $curr_index++; */
-
-					$result_arr[]['name'] = $this->db->f('descr');
+					$result_arr[] = array(
+						'name' => $this->db->f('descr', true)
+					);
 				}
 			}
 			//$result = implode(' ', $result_arr);
@@ -334,14 +328,12 @@
 		public function get_arena_id_by_name( $arena_name )
 		{
 			$result = 0;
-			if (isset($arena_name) && $arena_name != '')
+			if ($arena_name)
 			{
 				$q1 = "SELECT id FROM activity_arena WHERE UPPER(arena_name) = UPPER('{$arena_name}')";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$result = $this->db->f('id');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('id');
 			}
 			return $result;
 		}

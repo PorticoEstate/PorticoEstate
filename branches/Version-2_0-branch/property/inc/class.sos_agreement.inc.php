@@ -836,7 +836,7 @@
 
 			$vals = $this->db->validate_insert($vals);
 
-			if (isset($values['budget']) && $values['budget'])
+			if (isset($values['budget']) && $values['budget'] && isset($values['b_account_id']) && $values['b_account_id'] && isset($values['ecodimb']) && $values['ecodimb'])
 			{
 				$_budget = array
 					(
@@ -851,8 +851,8 @@
 				$this->update_budget($_budget);
 			}
 
-			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,member_of,start_date,end_date,termination_date,vendor_id,account_id,user_id $cols) "
-				. "VALUES ($vals)", __LINE__, __FILE__);
+			$this->db->query("INSERT INTO {$table} (id,name,descr,entry_date,category,member_of,start_date,end_date,termination_date,vendor_id,account_id,user_id $cols) "
+				. "VALUES ({$vals})", __LINE__, __FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ($id,'s_agreement')");
 
@@ -862,7 +862,7 @@
 				$this->db->query("UPDATE fm_vendor SET member_of = '{$member_of}' WHERE id= {$vendor_id}");
 			}
 
-			$receipt['s_agreement_id'] = $id;//$this->db->get_last_insert_id($table,'id');
+			$receipt['s_agreement_id'] = $id;
 
 			$receipt['message'][] = array('msg' => lang('s_agreement %1 has been saved', $receipt['s_agreement_id']));
 
@@ -1071,7 +1071,7 @@
 			}
 
 			$this->db->transaction_begin();
-			if (isset($values['budget']) && $values['budget'])
+			if (isset($values['budget']) && $values['budget'] && isset($values['b_account_id']) && $values['b_account_id'] && isset($values['ecodimb']) && $values['ecodimb'])
 			{
 				$_budget = array
 					(
@@ -1094,6 +1094,10 @@
 			{
 				$vendor_id = (int)$values['vendor_id'];
 				$this->db->query("UPDATE fm_vendor SET member_of = '{$member_of}' WHERE id= {$vendor_id}");
+			}
+			if (isset($values['delete_b_year']) && is_array($values['delete_b_year']))
+			{
+				$this->delete_year_from_budget($values['delete_b_year'], $values['s_agreement_id']);
 			}
 
 			$this->db->transaction_commit();

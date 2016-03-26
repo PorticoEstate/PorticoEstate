@@ -694,7 +694,7 @@
 				</td>
 				<xsl:for-each select="cat_list">
 					<xsl:choose>
-						<xsl:when test="selected='selected'">
+						<xsl:when test="selected='selected' or selected = 1">
 							<td>
 								<xsl:value-of select="name"/>
 							</td>

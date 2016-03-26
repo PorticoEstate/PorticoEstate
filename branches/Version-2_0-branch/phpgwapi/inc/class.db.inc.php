@@ -737,4 +737,28 @@
 		{
 			return $this->Transaction;
 		}
+
+		final public function sanitize($sql)
+		{
+//			return;
+			$sql_parts = preg_split('/where/i', $sql);
+			if (is_array($sql_parts) && count($sql_parts) >1 )
+			{
+				$first_element = true;
+				foreach ($sql_parts as $sql_part)
+				{
+					if($first_element == true)
+					{
+						$first_element = false;
+						continue;
+					}
+					if(preg_match("/((?=.*\bUNION\b)(?=.*\bALL\b)|\bPG_SLEEP\b|\bCHR\b|\bGENERATE_SERIES\b)/i", $sql))
+					{
+						$this->transaction_abort();
+						trigger_error('Attempt on SQL-injection', E_USER_ERROR);
+						exit;
+					}
+				}	
+			}
+		}
 	}
