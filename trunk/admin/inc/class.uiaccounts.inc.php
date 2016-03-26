@@ -1076,9 +1076,13 @@
 
 
 			$all_groups = $account->get_list('groups');
-
 			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
+				$test_admins = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
+				foreach ($test_admins as $test_admin)
+				{
+					unset($all_groups[$test_admin]); // not allowed to elevate privileges
+				}
 				$available_apps = $GLOBALS['phpgw_info']['apps'];
 				$valid_groups = array();
 				foreach($available_apps as $_app => $dummy)
