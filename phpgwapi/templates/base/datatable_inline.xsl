@@ -95,7 +95,11 @@
 														var selectedRows = api.rows( { selected: true } ).count();
 														api.buttons( '.record' ).enable( selectedRows > 0 );
 													}
-												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+											</xsl:when>
+											<xsl:when test="my_name = 'excelHtml5'">
+												'excelHtml5'
+												<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 											</xsl:when>
 											<xsl:when test="my_name = 'select_none'">
 												{

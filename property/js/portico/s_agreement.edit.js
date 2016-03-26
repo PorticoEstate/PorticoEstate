@@ -5,6 +5,29 @@
  */
 var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uis_agreement.edit_alarm'});
 
+$(document).ready(function ()
+{
+	$.formUtils.addValidator({
+		name: 'budget',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var v = false;
+			var budget = $('#field_budget').val();
+			var ecodimb = $('#field_ecodimb').val();
+			var category_id = $('#global_category_id').val();
+			var b_account_id = $('#b_account_id').val();
+
+			if (budget == "" || (budget != "" && ecodimb != "" && category_id != "" && b_account_id != ""))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: '',
+		errorMessageKey: ''
+	});
+});
+
 onActionsClick_notify = function (type, ids, requestUrl)
 {
 
@@ -22,7 +45,7 @@ onActionsClick_notify = function (type, ids, requestUrl)
 			JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 		}
 	});
-}
+};
 
 onAddClick_Alarm = function (type)
 {
@@ -53,7 +76,7 @@ onAddClick_Alarm = function (type)
 	{
 		return false;
 	}
-}
+};
 
 onUpdateClickAlarm = function (type)
 {
@@ -111,7 +134,7 @@ onUpdateClickAlarm = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onUpdateClickItems = function (type)
 {
@@ -161,7 +184,7 @@ onUpdateClickItems = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onActionsClickDeleteLastIndex = function (type)
 {
@@ -185,4 +208,4 @@ onActionsClickDeleteLastIndex = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};

@@ -41,19 +41,15 @@
 </xsl:template>
 <!-- New template-->
 <xsl:template match="cat_list">
-		<xsl:variable name="id">
-			<xsl:value-of select="id"/>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected='selected'">
-				<option value="{$id}{cat_id}" selected="selected">
-					<xsl:value-of disable-output-escaping="yes" select="name"/>
-				</option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}{cat_id}">
-					<xsl:value-of disable-output-escaping="yes" select="name"/>
-				</option>
-			</xsl:otherwise>
-		</xsl:choose>
+	<xsl:variable name="id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+	<option value="{$id}{cat_id}">
+		<xsl:if test="selected='selected' or selected = 1">
+			<xsl:attribute name="selected">
+				<xsl:text>selected</xsl:text>
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

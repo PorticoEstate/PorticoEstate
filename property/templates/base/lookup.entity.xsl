@@ -463,8 +463,15 @@
 													<xsl:when test="type = 'custom'">
 														,{
 															text: "<xsl:value-of select="text"/>",
-															enabled: false,
-															className: 'record',
+															<xsl:choose>
+																<xsl:when test="className">
+																	className: "<xsl:value-of select="className"/>",
+																</xsl:when>
+																<xsl:otherwise>
+																	enabled: false,
+																	className: 'record',
+																</xsl:otherwise>
+															</xsl:choose>
 															action: function (e, dt, node, config) {
 																<xsl:if test="confirm_msg">
 																	var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
@@ -482,8 +489,15 @@
 													<xsl:otherwise>
 														,{
 															text: "<xsl:value-of select="text"/>",
-															enabled: false,
-															className: 'record',
+															<xsl:choose>
+																<xsl:when test="className">
+																	className: "<xsl:value-of select="className"/>",
+																</xsl:when>
+																<xsl:otherwise>
+																	enabled: false,
+																	className: 'record',
+																</xsl:otherwise>
+															</xsl:choose>
 															action: function (e, dt, node, config) {
 																var receiptmsg = [];
 																var selected = fnGetSelected();
