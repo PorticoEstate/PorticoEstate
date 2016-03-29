@@ -190,7 +190,7 @@
 				case 'allocation':
 					return $this->get_building_for_season($reservation['season_id']);
 				case 'event':
-					return count($reservation['resources']) > 0 ? $this->get_building_for_resource($reservation['resources'][0]) : '';
+					return array('id' => $reservation['building_id'], 'name' => $reservation['building_name'] );
 			}
 
 			return '';
