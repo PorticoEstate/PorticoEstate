@@ -433,9 +433,27 @@
 					$error =  'SQL-injection spottet.';
 					$error .= " <br/> Your IP is logged";
 					$ip_address = self::get_ip_address();
-					echo $error;
-					trigger_error("$error: {$ip_address}", E_USER_ERROR);
-					$GLOBALS['phpgw']->common->phpgw_exit();
+					if($_POST) //$_POST: it "could" be a valid userinput...
+					{
+						/*
+						 * Log entry - just in case..
+						 */
+							$GLOBALS['phpgw']->log->error(array(
+							'text'	=> 'Possible SQL-injection spottet from IP: %1. Error: %2',
+							'p1'	=> $ip_address,
+							'p2'	=> 'input value ending with apos',
+							'line'	=> __LINE__,
+							'file'	=> __FILE__
+						));
+
+					}
+					else
+					{
+						echo $error;
+						$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+						trigger_error("$error: {$ip_address}", E_USER_ERROR);
+						$GLOBALS['phpgw']->common->phpgw_exit();
+					}
 				}
 
 				switch ( $value_type )
