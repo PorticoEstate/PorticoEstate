@@ -400,8 +400,19 @@ _debug_array($error_line);
 	 */
 	function phpgw_handle_exception(Exception $e)
 	{
-		$msg = $e->getMessage();
 		$help = 'Please contact your administrator for assistance';
+
+		if (!ini_get('display_errors'))
+		{
+			echo <<<HTML
+				<h1>Uncaught Exception</h1>
+				<p>{$help}</p>
+HTML;
+			exit;
+		}
+
+		$msg = $e->getMessage();
+		$help = 'Please contact your administrator for assistance.';
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
 			<h1>Uncaught Exception: {$msg}</h1>
