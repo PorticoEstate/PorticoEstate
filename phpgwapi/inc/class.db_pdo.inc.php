@@ -357,7 +357,7 @@
  * CREATE OPERATOR ~@| (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_any);
  * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
  */
-			self::sanitize($sql);
+//			self::sanitize($sql);//killing performance
 			self::_get_fetchmode();
 			self::set_fetch_single($_fetch_single);
 
@@ -457,7 +457,7 @@
 
 		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			self::sanitize($sql);
+//			self::sanitize($sql);//killing performance
 
 			$this->_get_fetchmode();
 

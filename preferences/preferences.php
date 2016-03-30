@@ -531,7 +531,7 @@
 		$GLOBALS['type'] = 'user';
 	}
 
-	$show_help = true;
+	$show_help = false;
 	if ( isset($session_data['show_help']) 
 		&& $session_data['show_help'] != '' 
 		&& $session_data['appname'] == $appname )
