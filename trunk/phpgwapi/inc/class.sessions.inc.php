@@ -278,7 +278,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
-				$this->phpgw_setcookie(session_name(), $this->_sessionid);
+//				$this->phpgw_setcookie(session_name(), $this->_sessionid);// already sendt with session_start()
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -830,7 +830,15 @@
 		*/
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
-			setcookie($cookiename, $cookievalue, $cookietime);
+			$cookie_params = session_get_cookie_params();
+			setcookie($cookiename,
+				$cookievalue,
+				$cookietime,
+				$cookie_params['path'],
+				$cookie_params['domain'],
+				!!$cookie_params['secure'],
+				!!$cookie_params['httponly']
+			);
 		}
 
 
@@ -947,15 +955,14 @@
 		 */
 		public function register_session($login, $user_ip, $now, $session_flags)
 		{
-			if ( $this->_sessionid )
+			if ( $this->_sessionid != session_id())
 			{
-				session_id($this->_sessionid);
+				throw new Exception("sessions::sessionid is tampered");
 			}
 
 			if ( !strlen(session_id()) )
 			{
 				throw new Exception("sessions::register_session() - No value for session_id()");
-//				session_start();
 			}
 
 			$_SESSION['phpgw_session'] = array
