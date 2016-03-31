@@ -892,12 +892,18 @@
 		 */
 		public function read_session($sessionid)
 		{
+/*
 			if($sessionid)
 			{
 				session_id($sessionid);
 			}
-
+*/
 			session_start();
+
+			if(!session_id() == $sessionid)
+			{
+				return array();
+			}
 
 			if ( isset($_SESSION['phpgw_session']) && is_array($_SESSION['phpgw_session']) )
 			{
@@ -1121,6 +1127,10 @@
 			$this->_sessionid = $sessionid;
 
 			$session = $this->read_session($sessionid);
+			if(!$session)
+			{
+				return false;
+			}
 			$this->_session_flags = $session['session_flags'];
 
 			$lid_data = explode('#', $session['session_lid']);

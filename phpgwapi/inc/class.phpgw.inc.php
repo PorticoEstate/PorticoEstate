@@ -462,7 +462,7 @@
 					default:
 						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-						$value = str_replace(array('(', ')', ';', '=', '-'),array('&#40;', '&#41;', '&#59;', '&#61;','&#8722;'), $value); // prevent SQL-injection
+						$value = str_replace(array('(', ')', ';', '=', '--'),array('&#40;', '&#41;', '&#59;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
 						break;
 
 					case 'boolean':
@@ -529,7 +529,7 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_IP);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+							return $filtered;
 						}
 
 						// make the default sane
@@ -545,7 +545,7 @@
 						$filtered =  filter_var($value, FILTER_VALIDATE_REGEXP, $regex);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+							return $filtered;
 						}
 						return (string) $default;
 
@@ -553,11 +553,14 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_URL);
 						if ( $filtered == $value )
 						{
-                                if ($filtered) {
+							if ($filtered)
+							{
 								return $filtered;
-                                } else {
-                                    return $value;
-                                }
+							}
+							else
+							{
+								return $value;
+							}
 						}
 						return (string) $default;
 
