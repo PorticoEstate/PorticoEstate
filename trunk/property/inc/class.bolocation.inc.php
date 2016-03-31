@@ -1065,4 +1065,9 @@ JS;
 			}
 			return $locations[$location_code];
 		}
+
+		function get_item_id( $location_code )
+		{
+			return $this->so->get_item_id($location_code);
+		}
 	}
