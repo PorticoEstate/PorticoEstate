@@ -91,7 +91,7 @@
 
 	<input class="toggle-box" id="header1" type="checkbox" />
 	<label for="header1">
-		<xsl:value-of select="php:function('lang', 'toolbar')"/>
+		<xsl:value-of select="php:function('lang', 'filter')"/>
 	</label>
 
 	<div id="toolbar" class='dtable_custom_controls'>
@@ -844,7 +844,7 @@
 					JqueryPortico.buttons = [
 						{
 							extend: 'collection',
-							text: "<xsl:value-of select="php:function('lang', 'collection')"/>",
+							text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
 							collectionLayout: 'three-column',
 							buttons: button_def
 						}
