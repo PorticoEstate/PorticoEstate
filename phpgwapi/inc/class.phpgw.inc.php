@@ -529,7 +529,7 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_IP);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+							return $filtered;
 						}
 
 						// make the default sane
@@ -545,7 +545,7 @@
 						$filtered =  filter_var($value, FILTER_VALIDATE_REGEXP, $regex);
 						if ( $filtered == $value )
 						{
-								return $filtered;
+							return $filtered;
 						}
 						return (string) $default;
 
@@ -553,11 +553,14 @@
 						$filtered = filter_var($value, FILTER_VALIDATE_URL);
 						if ( $filtered == $value )
 						{
-                                if ($filtered) {
+							if ($filtered)
+							{
 								return $filtered;
-                                } else {
-                                    return $value;
-                                }
+							}
+							else
+							{
+								return $value;
+							}
 						}
 						return (string) $default;
 
