@@ -9,10 +9,15 @@
 		}
 
 		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+		$extra_vars = array();
+		foreach($_GET as $name => $value)
+		{
+			$extra_vars[$name] = phpgw::clean_value($value);
+		}
 
 		$var = array
 		(
-			'print_url'		=> strpos($_SERVER['REQUEST_URI'], '?') ? "{$_SERVER['REQUEST_URI']}&phpgw_return_as=noframes" : "{$_SERVER['REQUEST_URI']}?phpgw_return_as=noframes",
+			'print_url'		=> "{$_SERVER['PHP_SELF']}?" . http_build_query(array_merge($extra_vars, array('phpgw_return_as' => 'noframes'))),
 			'print_text'	=> lang('print'),
 			'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
 			'home_text'		=> lang('home'),
@@ -83,7 +88,7 @@
 		$current_url = array
 		(
 			'id'	=> $flags['menu_selection'],
-			'url'	=> phpgw::get_var('REQUEST_URI', 'string', 'SERVER'),
+			'url'	=> 	"{$_SERVER['PHP_SELF']}?" . http_build_query($extra_vars),
 			'name'	=> $var['current_app_title']
 		);
 		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');

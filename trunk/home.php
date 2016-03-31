@@ -39,7 +39,7 @@
 			if (preg_match('/phpgw_/', $name) && ($name != 'phpgw_forward'))
 			{
 				$name = substr($name, 6); // cut 'phpgw_'
-				$extra_vars[$name] = $value;
+				$extra_vars[$name] = phpgw::clean_value($value);
 			}
 		}
 
