@@ -1176,6 +1176,7 @@
 
 		public function update_price_items( $contract_id, $rented_area )
 		{
+			$db2 = clone($this->db);
 			$success_price_item = true;
 			$new_area = $rented_area;
 			$q_price_items = "SELECT id AS rpi_id, price as rpi_price FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area";
@@ -1186,24 +1187,9 @@
 				$price = $this->db->f('rpi_price');
 				$curr_total_price = ($new_area * $price);
 				$sql_pi = "UPDATE rental_contract_price_item SET area={$new_area}, total_price={$curr_total_price} WHERE id={$id}";
-				$result = $this->db->query($sql_pi, __LINE__, __FILE__, false, true);
-				if ($result)
-				{
-					//noop
-				}
-				else
-				{
-					$success_price_item = false;
-				}
+				$success_price_item = $db2->query($sql_pi, __LINE__, __FILE__);
 			}
-			if ($success_price_item)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return $success_price_item;
 		}
 
 		public function import_contract_reference( $contract_id, $reference )
