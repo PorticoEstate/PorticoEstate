@@ -332,22 +332,28 @@ _debug_array($error_line);
 			'line'	=> $error_line,
 			'text'	=> "$error_msg\n" . phpgw_parse_backtrace($bt)
 		);
-
+		$message = '';
 		switch ( $error_level )
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
-				echo '<p class="msg">' . lang('ERROR: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-				die('<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n");
-
+				if (ini_get('display_errors'))
+				{
+					echo '<p class="msg">' . lang('ERROR: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+					die('<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n");
+				}
+				else
+				{
+					die('Error');
+				}
 			case E_WARNING:
 			case E_USER_WARNING:
 				$log_args['severity'] = 'W';
 				$log->warn($log_args);
-				echo '<p class="msg">' . lang('Warning: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				$message .= '<p class="msg">' . lang('Warning: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				$message .= '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				break;
 
 			case PHPGW_E_INFO:
@@ -366,8 +372,8 @@ _debug_array($error_line);
 				$log->notice($log_args);
 				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
 				{
-					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+					$message .=  '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+					$message .=  '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
 				break;
 			case E_STRICT:
@@ -386,9 +392,14 @@ _debug_array($error_line);
 			case E_USER_DEPRECATED:
 				$log_args['severity'] = 'DP';
 				$log->deprecated($log_args);
-				echo '<p class="msg">' . lang('deprecated: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
-				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				$message .=  '<p class="msg">' . lang('deprecated: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				$message .=  '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				break;
+		}
+
+		if (ini_get('display_errors'))
+		{
+			echo $message;
 		}
 	}
 	set_error_handler('phpgw_handle_error');

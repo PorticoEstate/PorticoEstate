@@ -2263,7 +2263,7 @@
 					</td>
 					<td align="center">
 						<xsl:choose>
-							<xsl:when test="selected='selected' or selected = 1>
+							<xsl:when test="selected='selected' or selected = 1">
 								<input type="checkbox" name="values[lookup_entity][]" value="{id}" checked="checked" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
