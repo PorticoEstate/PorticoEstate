@@ -831,6 +831,7 @@
 					group_buttons = true;
 				}
 
+				var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 	]]>
 				if($(document).width() &lt; 1000)
 				{
@@ -838,6 +839,11 @@
 				}
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
+
+				if(isChrome == true)
+				{
+					group_buttons = false;
+				}
 
 				if(group_buttons === true)
 				{
