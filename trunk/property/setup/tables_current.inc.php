@@ -13,11 +13,11 @@
 	$phpgw_baseline = array(
 		'fm_part_of_town' => array(
 			'fd' => array(
-				'part_of_town_id' => array('type' => 'auto', 'precision' => '2', 'nullable' => False),
+				'id' => array('type' => 'auto', 'precision' => '2', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
 				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => True)
 			),
-			'pk' => array('part_of_town_id'),
+			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

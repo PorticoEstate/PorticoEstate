@@ -383,7 +383,7 @@
 
 			if ($part_of_town_id > 0)
 			{
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id= " . (int)$part_of_town_id;
+				$filtermethod .= " $where fm_part_of_town.id= " . (int)$part_of_town_id;
 				$where = 'AND';
 			}
 
@@ -542,13 +542,13 @@
 
 			$union_budget = "SELECT {$return_fields_union}, 0 as actual_cost ,SUM(fm_tts_budget.amount) as budget FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
-				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " {$order_join}{$date_budget_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
 			$union_cost = "SELECT {$return_fields_union},SUM(fm_tts_payments.amount) as actual_cost, 0 as budget FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
-				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " {$order_join}{$date_cost_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
@@ -564,7 +564,7 @@
 
 			$sql = "SELECT DISTINCT {$return_fields_plain} FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
-				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " {$order_join}{$date_cost_join}{$date_budget_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
@@ -602,7 +602,7 @@
 
 			$sql_cnt = "SELECT DISTINCT budget,actual_cost, fm_tts_tickets.id FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
-				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " {$order_join}{$date_cost_join}{$date_budget_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
