@@ -99,7 +99,7 @@
 
 			if ($part_of_town_id)
 			{
-				$filtermethod = "and fm_part_of_town.part_of_town_id ='$part_of_town_id'";
+				$filtermethod = "and fm_part_of_town.id ='$part_of_town_id'";
 			}
 
 			if ($filter == 'investment')
@@ -119,7 +119,7 @@
 					. " FROM (((fm_investment $this->join fm_investment_value ON ( fm_investment.entity_id = fm_investment_value.entity_id) AND "
 					. " (fm_investment.invest_id = fm_investment_value.invest_id )) "
 					. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)) "
 					. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 			}
 			else
@@ -132,7 +132,7 @@
 					. " fm_investment_value ON (fm_investment_value.entity_id = fm_investment.entity_id) AND "
 					. " (fm_investment_value.invest_id = fm_investment.invest_id)) "
 					. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)) "
 					. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 			}
 			if ($sql)

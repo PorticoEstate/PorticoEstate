@@ -402,7 +402,7 @@
 					$info = array
 						(
 						'table' => 'fm_part_of_town',
-						'id' => array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
+						'id' => array('name' => 'id', 'type' => 'int', 'descr' => lang('id')),
 						'fields' => array
 							(
 							array

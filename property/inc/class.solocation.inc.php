@@ -410,7 +410,7 @@
 				}
 
 				//			$paranthesis .='(';
-				//			$joinmethod .= " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+				//			$joinmethod .= " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 
 				$config = $this->soadmin_location->read_config('');
 
@@ -759,7 +759,7 @@
 
 			if ($part_of_town_id > 0)
 			{
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
+				$filtermethod .= " $where fm_part_of_town.id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 
@@ -1710,7 +1710,7 @@
 				$uicols['input_type'][] = 'text';
 				$groupmethod .= " ,fm_part_of_town.name";
 				$cols.=", fm_part_of_town.name as part_of_town";
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id = {$part_of_town_id}";
+				$filtermethod .= " $where fm_part_of_town.id = {$part_of_town_id}";
 				$where = 'AND';
 			}
 
@@ -1733,7 +1733,7 @@
 
 			$this->uicols = $uicols;
 
-			$joinmethod = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+			$joinmethod = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 			$paranthesis .='(';
 			$joinmethod .= " {$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id))";
 			$paranthesis .='(';
@@ -1943,8 +1943,8 @@
 
 				if ($part_of_town_id)
 				{
-					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.part_of_town_id = fm_location1.part_of_town_id";
-					$filtermethod = 'AND fm_part_of_town.part_of_town_id =' . (int)$part_of_town_id;
+					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.id = fm_location1.part_of_town_id";
+					$filtermethod = 'AND fm_part_of_town.id =' . (int)$part_of_town_id;
 				}
 			}
 			else

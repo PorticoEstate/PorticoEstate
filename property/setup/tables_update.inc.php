@@ -8816,3 +8816,25 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.695 to 0.9.17.696
+	* Alter name of part of town id.
+	*/
+	$test[] = '0.9.17.695';
+
+	function property_upgrade0_9_17_695()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_config SET reference_id = 'id' WHERE column_name = 'part_of_town_id'");
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_part_of_town', 'part_of_town_id', 'id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.696';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

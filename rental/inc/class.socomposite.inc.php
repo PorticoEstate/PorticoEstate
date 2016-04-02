@@ -167,7 +167,7 @@
 			{
 				$joins .= "	{$this->join} fm_locations ON (rental_unit.location_code = fm_locations.location_code)";
 				$joins .= "	{$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)";
-				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 
 				$filter_clauses[] = "fm_part_of_town.district_id =" . (int)$filters['district_id'];
 			}

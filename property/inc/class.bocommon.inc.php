@@ -1195,7 +1195,7 @@
 				$cols.= ",fm_location1.loc1_name";
 				$joinmethod .= " {$this->join}  fm_location1 ON ({$_location_table}.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
-				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 				$paranthesis .='(';
 				$joinmethod .= " {$this->join}  fm_owner ON (fm_location1.owner_id = fm_owner.id))";
 				$paranthesis .='(';
