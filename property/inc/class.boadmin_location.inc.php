@@ -183,8 +183,16 @@
 
 		function get_attrib_group_list( $type_id, $selected )
 		{
-			$location = ".location.{$type_id}";
-			$group_list = $this->read_attrib_group($location, true);
+			$params = array(
+				'start' => 0,
+				'query' => '',
+				'sort' => 'ASC',
+				'order' => 'group_sort',
+				'allrows' => true,
+				'type_id' => $type_id
+			);
+
+			$group_list = $this->read_attrib_group($params);
 
 			foreach ($group_list as &$group)
 			{
