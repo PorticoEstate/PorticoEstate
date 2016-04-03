@@ -1981,7 +1981,7 @@
 				$values[] = array
 					(
 					'id' => $id,
-					'name' => $this->db->f('name')
+					'name' => $this->db->f('name',true)
 				);
 			}
 			return $values;
@@ -2013,5 +2013,24 @@
 				}
 			}
 			return $values;
+		}
+
+		public function get_booking_part_of_towns( )
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
+			. " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
+			. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+			. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id ORDER BY name ASC";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('name',true)
+				);
+			}
+			return $values;
+
 		}
 	}
