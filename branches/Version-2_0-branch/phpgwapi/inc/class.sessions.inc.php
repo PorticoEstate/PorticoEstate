@@ -278,7 +278,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
-//				$this->phpgw_setcookie(session_name(), $this->_sessionid);// already sendt with session_start()
+				$this->phpgw_setcookie(session_name(), $this->_sessionid);
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -552,12 +552,12 @@
 				}
 			}
 
-			//W3C Compliant in markup	
-			$term = '&amp;'; 
+			//W3C Compliant in markup
+			$term = '&amp;';
 			if ( $redirect )
 			{
 				// RFC Compliant for Header('Location: ...
-				$term = '&'; 
+				$term = '&';
 			}
 
 			/* first we process the $url to build the full scriptname */
@@ -695,7 +695,7 @@
 			// We cache the data for 5mins system wide as this is an expensive operation
 			$last_updated = 0; //phpgwapi_cache::system_get('phpgwapi', 'session_list_saved');
 
-			if ( is_null($last_updated) 
+			if ( is_null($last_updated)
 				|| $last_updated < 60 * 5 )
 			{
 				$data = array();
@@ -830,15 +830,20 @@
 		*/
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
-			$cookie_params = session_get_cookie_params();
-			setcookie($cookiename,
-				$cookievalue,
-				$cookietime,
-				$cookie_params['path'],
-				$cookie_params['domain'],
-				!!$cookie_params['secure'],
-				!!$cookie_params['httponly']
-			);
+/*			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+
+			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
+			{
+				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/';
+			}
+			else
+			{
+				$webserver_url = '/';
+			}
+*/
+//			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
+//					$this->_cookie_domain, $secure, true);
+			setcookie($cookiename, $cookievalue, $cookietime);
 		}
 
 
@@ -900,18 +905,12 @@
 		 */
 		public function read_session($sessionid)
 		{
-/*
 			if($sessionid)
 			{
 				session_id($sessionid);
 			}
-*/
-			session_start();
 
-			if(!session_id() == $sessionid)
-			{
-				return array();
-			}
+			session_start();
 
 			if ( isset($_SESSION['phpgw_session']) && is_array($_SESSION['phpgw_session']) )
 			{
@@ -955,14 +954,15 @@
 		 */
 		public function register_session($login, $user_ip, $now, $session_flags)
 		{
-			if ( $this->_sessionid != session_id())
+			if ( $this->_sessionid )
 			{
-				throw new Exception("sessions::sessionid is tampered");
+				session_id($this->_sessionid);
 			}
 
 			if ( !strlen(session_id()) )
 			{
 				throw new Exception("sessions::register_session() - No value for session_id()");
+//				session_start();
 			}
 
 			$_SESSION['phpgw_session'] = array
@@ -1134,10 +1134,6 @@
 			$this->_sessionid = $sessionid;
 
 			$session = $this->read_session($sessionid);
-			if(!$session)
-			{
-				return false;
-			}
 			$this->_session_flags = $session['session_flags'];
 
 			$lid_data = explode('#', $session['session_lid']);
@@ -1381,7 +1377,7 @@
 
 			/*
 			   Yes recursive - from the manual
-			   There is an optional N argument to this [session.save_path] that determines 
+			   There is an optional N argument to this [session.save_path] that determines
 			   the number of directory levels your session files will be spread around in.
 			 */
 			$path = session_save_path();
