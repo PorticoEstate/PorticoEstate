@@ -311,7 +311,7 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index',
 						'phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 'created', 'dir' => 'asc'),
+					'sorted_by' => array('key' => 4, 'dir' => 'asc'),//created
 					'field' => array(
 						array(
 							'key' => 'id',
