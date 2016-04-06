@@ -6,7 +6,8 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Ralf Becker <ralfbecker@outdoor-training.de>
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2000-2016 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgroupware
 	* @subpackage phpgwapi
