@@ -114,7 +114,7 @@
 		{
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'O'; //O='Open'
-			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$user_id = isset($data['user_id']) && $data['user_id'] ? abs((int)$data['user_id']) : 0;
 			$reported_by = isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
