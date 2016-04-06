@@ -257,9 +257,13 @@
 			$this->store_flash_msgs();
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
 				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
+			}
 			else
+			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+			}
 		}
 
 		public function create_error_stack( $errors = array() )

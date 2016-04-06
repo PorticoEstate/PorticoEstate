@@ -471,10 +471,10 @@
 
 		function get_district_from_name( $name )
 		{
-			$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+			$this->db->query("SELECT id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$result = $this->db->f('part_of_town_id');
+			$result = $this->db->f('id');
 
 			return $result;
 		}
@@ -484,7 +484,7 @@
 			if ($district_id)
 			{
 				$district_id = (int)$district_id;
-				$q1 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
+				$q1 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
 				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
 				$this->db->next_record();

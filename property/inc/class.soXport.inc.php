@@ -126,7 +126,7 @@
 		{
 			$this->db->query("SELECT $meter_table.maaler_nr,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
 				. " FROM $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
-				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id WHERE $meter_table.ext_system_id='$anleggsnr'");
+				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id WHERE $meter_table.ext_system_id='$anleggsnr'");
 
 			$this->db->next_record();
 
@@ -154,7 +154,7 @@
 				. " substring(fm_gab_location.gab_id,18,3)='$sekjonnr' AND"
 				. " fm_gab_location.loc1=fm_location1.loc1 AND"
 				. " fm_location1.owner_id=fm_owner.id AND"
-				. " fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id ";
+				. " fm_location1.part_of_town_id = fm_part_of_town.id ";
 			//	. "      and (fm_owner.category=0 or fm_owner.category=2)";
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
@@ -569,7 +569,7 @@
 
 		function select_underbilag( $bilagsnr )
 		{
-			$sql = "SELECT fm_ecobilag.* ,fm_part_of_town.district_id FROM (fm_location1 $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) $this->join fm_ecobilag ON fm_location1.loc1 = fm_ecobilag.loc1 WHERE bilagsnr='$bilagsnr'";
+			$sql = "SELECT fm_ecobilag.* ,fm_part_of_town.district_id FROM (fm_location1 $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id) $this->join fm_ecobilag ON fm_location1.loc1 = fm_ecobilag.loc1 WHERE bilagsnr='$bilagsnr'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i = 0;

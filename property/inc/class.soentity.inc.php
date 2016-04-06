@@ -560,7 +560,7 @@
 			}
 			else if ($part_of_town_id > 0 && $category['location_level'])
 			{
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
+				$filtermethod .= " $where fm_part_of_town.id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 
@@ -783,7 +783,7 @@
 			if (isset($category['location_level']) && $category['location_level'] > 0)
 			{
 				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
-				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 				$sql .= "{$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id)";
 				$sql .= "{$this->join} fm_locations ON (fm_bim_item.location_code = fm_locations.location_code)";
 
@@ -1533,7 +1533,7 @@
 			}
 			else if ($part_of_town_id > 0 && $category['location_level'])
 			{
-				$filtermethod .= " $where  fm_part_of_town.part_of_town_id='$part_of_town_id' ";
+				$filtermethod .= " $where  fm_part_of_town.id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 

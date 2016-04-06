@@ -556,15 +556,15 @@
 
 		function get_district_from_name( $name )
 		{
-			$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+			$this->db->query("SELECT id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
 			$this->db->next_record();
-			return $this->db->f('part_of_town_id');
+			return $this->db->f('id');
 		}
 
 		function get_district_from_id( $d_id )
 		{
 			$d_id = (int)$d_id;
-			$this->db->query("SELECT name FROM fm_part_of_town where part_of_town_id={$d_id}", __LINE__, __FILE__);
+			$this->db->query("SELECT name FROM fm_part_of_town where id={$d_id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('name', true);
 		}
@@ -574,7 +574,7 @@
 			$values = array();
 			if ($district_id != null)
 			{
-				$sql = "SELECT district_id, name FROM fm_part_of_town where part_of_town_id in ($district_id)";
+				$sql = "SELECT district_id, name FROM fm_part_of_town where id in ($district_id)";
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
@@ -588,7 +588,7 @@
 
 		function get_districts()
 		{
-			$this->db->query("SELECT part_of_town_id, name FROM fm_part_of_town district_id ", __LINE__, __FILE__);
+			$this->db->query("SELECT id, name FROM fm_part_of_town", __LINE__, __FILE__);
 			$district = array();
 			while ($this->db->next_record())
 			{
@@ -598,7 +598,7 @@
 					continue;
 				}
 				$district[] = array(
-					'part_of_town_id' => $this->db->f('part_of_town_id'),
+					'part_of_town_id' => $this->db->f('id'),
 					'name' => stripslashes($name)
 				);
 			}

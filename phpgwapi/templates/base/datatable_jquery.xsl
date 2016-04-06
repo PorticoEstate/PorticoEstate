@@ -334,7 +334,7 @@
 <xsl:template match="form/list_actions">
 	<form id="list_actions_form" method="POST">
 		<!-- Form action is set by javascript listener -->
-		<div id="list_actions" class='yui-skin-sam'>
+		<div id="list_actions">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<xsl:for-each select="item">
@@ -578,6 +578,11 @@
 		var oTable = null;
 		$(document).ready(function() {
 		var ajax_url = '<xsl:value-of select="source"/>';
+		var order_def = [];
+		<xsl:if test="sorted_by/key">
+			order_def.push([<xsl:value-of select="sorted_by/key"/>, '<xsl:value-of select="sorted_by/dir"/>']);
+		</xsl:if>
+
 		var download_url = '<xsl:value-of select="download"/>';
 		var exclude_colvis = [];
 		var editor_cols = [];
@@ -831,6 +836,7 @@
 					group_buttons = true;
 				}
 
+				var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 	]]>
 				if($(document).width() &lt; 1000)
 				{
@@ -838,6 +844,11 @@
 				}
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
+
+				if(isChrome == true)
+				{
+					group_buttons = false;
+				}
 
 				if(group_buttons === true)
 				{
@@ -880,14 +891,16 @@
 				}
 			}
 
-			var order_def = [];
-			for(i=0;i < JqueryPortico.columns.length;i++)
+			if(order_def.length == 0)
 			{
-				if (JqueryPortico.columns[i]['orderable'] === true && typeof(JqueryPortico.columns[i]['dir']) != 'undefined')
+				for(i=0;i < JqueryPortico.columns.length;i++)
 				{
-					var dir = JqueryPortico.columns[i]['dir'] || "desc";
-					order_def.push([i, dir]);
-					break;
+					if (JqueryPortico.columns[i]['orderable'] === true && typeof(JqueryPortico.columns[i]['dir']) != 'undefined')
+					{
+						var dir = JqueryPortico.columns[i]['dir'] || "desc";
+						order_def.push([i, dir]);
+						break;
+					}
 				}
 			}
 
@@ -913,7 +926,7 @@
 			 * Find and assign actions to filters
 			 */
 			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
-
+//console.log(oControls);
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				processing:		true,
@@ -970,8 +983,8 @@
 							params = {}
 						}
 					}
-					console.log(oData);
-					console.log(params);
+				//	console.log(oData);
+				//	console.log(params);
 					oControls.each(function() {
 						var oControl = $(this);
 						$.each(params, function(index, value) {
@@ -1010,6 +1023,20 @@
 							active_filters_html.push(i);
 						}
 					}
+//					console.log(oControls);
+					oControls.each(function()
+					{
+						if ( $(this).attr('name') )
+						{
+							value = $(this).val().replace('"', '"');
+							aoData[ $(this).attr('name') ] = value;
+						}
+
+//						if(value && value !=0 )
+//						{
+//							active_filters_html.push($(this).attr('name'));
+//						}
+					});
 
 					if(active_filters_html.length > 0)
 					{
