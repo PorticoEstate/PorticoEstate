@@ -38,6 +38,16 @@
 
 		public function test_sql_injection()
 		{
+			$c = createobject('phpgwapi.config', 'activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+
+			$allow_test = $c->config_data['allow_test'];
+			if($allow_test != 1)
+			{
+				echo "<H1>Test not activated in config</H>";
+				exit;
+			}
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
