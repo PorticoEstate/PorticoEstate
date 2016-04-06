@@ -4,6 +4,7 @@
 
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
+	phpgw::import_class('phpgwapi.datetime');
 
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 
@@ -129,6 +130,7 @@
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Completed'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -163,16 +165,17 @@
 					'list_actions' => array(
 						'item' => array(
 							array(
-								'type' => 'submit',
+								'type' => 'button',
 								'name' => 'export',
 								'value' => lang('Export') . '...',
+								'onClick' => "export_completed_reservations();"
 							),
 						)
 					),
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -322,12 +325,12 @@
 			}
 
 			$filter_to = phpgw::get_var('to', 'string', 'REQUEST', null);
+			$to_date = $filter_to ? $filter_to : phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 
-			if ($filter_to)
+			if ($to_date)
 			{
-				$filter_to2 = split("/", $filter_to);
-				$filter_to = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
-				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$filter_to2 = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($to_date));
+				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to2));
 			}
 
 			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings

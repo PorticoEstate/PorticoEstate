@@ -681,8 +681,11 @@
 				);
 
 				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
-				array_unshift($values_combo_box[4], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
-					'name' => lang('my assigned tickets')));
+				array_unshift($values_combo_box[4], array(
+					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
+					'name' => lang('my assigned tickets'),
+					'selected'	=> (int)$this->user_id <= 0 ? 1 : 0));
+
 				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
 				$combos[] = array('type' => 'filter',
 					'name' => 'user_id',

@@ -210,13 +210,13 @@
 			{
 				$filter = "WHERE district_id = '$district_id'";
 			}
-			$this->db->query("SELECT name, part_of_town_id, district_id FROM fm_part_of_town $filter ORDER BY name ", __LINE__, __FILE__);
+			$this->db->query("SELECT name, id, district_id FROM fm_part_of_town $filter ORDER BY name ", __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
 				$part_of_town[] = array
 					(
-					'id' => $this->db->f('part_of_town_id'),
+					'id' => $this->db->f('id'),
 					'name' => $this->db->f('name', true),
 					'district_id' => $this->db->f('district_id')
 				);

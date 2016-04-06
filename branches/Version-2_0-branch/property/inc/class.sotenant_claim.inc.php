@@ -121,7 +121,7 @@
 				. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
 				. " $this->join fm_project ON fm_project.id = fm_tenant_claim.project_id"
 				. " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);

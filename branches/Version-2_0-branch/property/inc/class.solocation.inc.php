@@ -238,7 +238,7 @@
 				$status[] = array
 					(
 					'id' => $this->db->f('id'),
-					'name' => stripslashes($this->db->f('value'))
+					'name' => $this->db->f('value',true)
 				);
 			}
 
@@ -249,26 +249,27 @@
 		{
 			$this->db->query("SELECT id,descr FROM fm_owner_category  ORDER BY descr ");
 
-			$i = 0;
+			$owner_type = array();
 			while ($this->db->next_record())
 			{
-				$owner_type[$i]['id'] = $this->db->f('id');
-				$owner_type[$i]['name'] = stripslashes($this->db->f('descr'));
-				$i++;
+				$owner_type[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('descr',true)
+				);
 			}
 			return $owner_type;
 		}
 
 		function get_owner_list()
 		{
-//			$this->db->query("SELECT fm_owner.* ,fm_owner_category.descr as category FROM fm_owner $this->join fm_owner_category on fm_owner.category=fm_owner_category.id  ORDER BY descr ");
 			$this->db->query("SELECT *  FROM fm_owner ORDER BY org_name ");
-			$i = 0;
+			$owners = array();
 			while ($this->db->next_record())
 			{
-				$owners[$i]['id'] = $this->db->f('id');
-				$owners[$i]['name'] = stripslashes($this->db->f('org_name')); // . ' ['. $this->db->f('category') . ']';
-				$i++;
+				$owners[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('org_name',true)
+				);
 			}
 			return $owners;
 		}
@@ -410,7 +411,7 @@
 				}
 
 				//			$paranthesis .='(';
-				//			$joinmethod .= " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+				//			$joinmethod .= " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 
 				$config = $this->soadmin_location->read_config('');
 
@@ -759,7 +760,7 @@
 
 			if ($part_of_town_id > 0)
 			{
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
+				$filtermethod .= " $where fm_part_of_town.id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 
@@ -1710,7 +1711,7 @@
 				$uicols['input_type'][] = 'text';
 				$groupmethod .= " ,fm_part_of_town.name";
 				$cols.=", fm_part_of_town.name as part_of_town";
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id = {$part_of_town_id}";
+				$filtermethod .= " $where fm_part_of_town.id = {$part_of_town_id}";
 				$where = 'AND';
 			}
 
@@ -1733,7 +1734,7 @@
 
 			$this->uicols = $uicols;
 
-			$joinmethod = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+			$joinmethod = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 			$paranthesis .='(';
 			$joinmethod .= " {$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id))";
 			$paranthesis .='(';
@@ -1943,8 +1944,8 @@
 
 				if ($part_of_town_id)
 				{
-					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.part_of_town_id = fm_location1.part_of_town_id";
-					$filtermethod = 'AND fm_part_of_town.part_of_town_id =' . (int)$part_of_town_id;
+					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.id = fm_location1.part_of_town_id";
+					$filtermethod = 'AND fm_part_of_town.id =' . (int)$part_of_town_id;
 				}
 			}
 			else
@@ -1980,7 +1981,7 @@
 				$values[] = array
 					(
 					'id' => $id,
-					'name' => $this->db->f('name')
+					'name' => $this->db->f('name',true)
 				);
 			}
 			return $values;
@@ -2012,5 +2013,24 @@
 				}
 			}
 			return $values;
+		}
+
+		public function get_booking_part_of_towns( )
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
+			. " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
+			. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+			. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id ORDER BY name ASC";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('name',true)
+				);
+			}
+			return $values;
+
 		}
 	}

@@ -137,7 +137,7 @@
 			{
 				$filtermethod .= " $where  district_id='$district_id' ";
 				$join_tables = " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
-					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 				$where = 'AND';
 			}
 
@@ -720,7 +720,7 @@
 
 			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
 				. " FROM  fm_ecobilagoverf {$this->join} fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
-				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id) "
 				. " {$this->join} fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
 				. " WHERE (periode >='{$start_periode}' AND periode <= '{$end_periode}' {$filtermethod})"
 				. " GROUP BY district_id,periode $group_account_class"
@@ -746,7 +746,7 @@
 
 			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
 				. " FROM  fm_ecobilag {$this->join} fm_location1 ON (fm_ecobilag.loc1 = fm_location1.loc1) "
-				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id) "
 				. " {$this->join} fm_b_account ON (fm_ecobilag.spbudact_code = fm_b_account.id) "
 				. " WHERE (1=1 {$filtermethod})"
 				. " GROUP BY district_id,periode $group_account_class"

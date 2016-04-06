@@ -102,8 +102,10 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_to');
 			phpgwapi_jquery::load_widget('datepicker');
 
+			self::add_javascript('booking', 'booking', 'completed_reservation_export.js');
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Exported Files'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -128,7 +130,7 @@
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -193,9 +195,11 @@
 				$data['form']['list_actions'] = array(
 					'item' => array(
 						array(
-							'type' => 'submit',
+							'type' => 'button',
 							'name' => 'generate_files',
 							'value' => lang('Generate files') . '...',
+							'onClick' => "generatefiles();"
+
 						),
 					)
 				);
@@ -204,8 +208,6 @@
 			$filters_to = strtotime(extract_values($_GET, array("filter_to")));
 			$data['filters'] = date("Y-m-d", $filters_to);
 
-
-//			$this->render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -249,7 +251,9 @@
 					$_sort = array('created_on', 'id');
 					break;
 				default:
-					$_sort = $sort;
+					$_sort = array('created_on', 'id');
+//					$_sort = $sort;
+					$dir = 'DESC';
 					break;
 			}
 
@@ -398,7 +402,6 @@
 		{
 			//Values passed in from the "Export"-action in uicompleted_reservation.index
 			$export = extract_values($_GET, $this->fields);
-
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -429,9 +432,14 @@
 				$export['to_'] = date('Y-m-d');
 			}
 
-			$this->pre_validate($export);
+			//$this->flash_form_errors($errors);
 
-			$this->flash_form_errors($errors);
+			foreach ($errors as $key => $value)
+			{
+				phpgwapi_cache::message_set($value, 'error');
+			}
+
+			$this->pre_validate($export);
 
 			$cancel_params = array('ui' => 'completed_reservation');
 			if ($export_key = $this->get_export_key())
@@ -440,8 +448,9 @@
 			}
 
 			$export['cancel_link'] = $this->link_to('index', $cancel_params);
+			phpgwapi_jquery::load_widget('autocomplete');
 
-			$this->render_template('completed_reservation_export_form', array('new_form' => true,
+			self::render_template_xsl('completed_reservation_export_form', array('new_form' => true,
 				'export' => $export));
 		}
 	}

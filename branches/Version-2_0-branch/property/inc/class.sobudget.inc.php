@@ -652,7 +652,7 @@
 				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
 				. " {$_join_district}"
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
 				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
 				. " ORDER BY fm_workorder.id ASC";
 
@@ -788,7 +788,7 @@
 				. " FROM fm_tts_tickets"
 				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $filtermethod2 $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id $filtermethod $filtermethod2 $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
@@ -814,7 +814,7 @@
 				. " FROM fm_tts_tickets"
 				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id {$filtermethod} {$querymethod} {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id {$filtermethod} {$querymethod} {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 
 			$sql = str_replace('budget', 'actual_cost', $sql);

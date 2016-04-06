@@ -6,7 +6,8 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Ralf Becker <ralfbecker@outdoor-training.de>
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2000-2016 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgroupware
 	* @subpackage phpgwapi
@@ -278,7 +279,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
-				$this->phpgw_setcookie(session_name(), $this->_sessionid);
+//				$this->phpgw_setcookie(session_name(), $this->_sessionid);// already sendt with session_start()
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -830,20 +831,15 @@
 		*/
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
-/*			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
-
-			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
-			{
-				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/';
-			}
-			else
-			{
-				$webserver_url = '/';
-			}
-*/
-//			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
-//					$this->_cookie_domain, $secure, true);
-			setcookie($cookiename, $cookievalue, $cookietime);
+			$cookie_params = session_get_cookie_params();
+			setcookie($cookiename,
+				$cookievalue,
+				$cookietime,
+				$cookie_params['path'],
+				$cookie_params['domain'],
+				!!$cookie_params['secure'],
+				!!$cookie_params['httponly']
+			);
 		}
 
 
@@ -905,12 +901,18 @@
 		 */
 		public function read_session($sessionid)
 		{
+/*
 			if($sessionid)
 			{
 				session_id($sessionid);
 			}
-
+*/
 			session_start();
+
+			if(!session_id() == $sessionid)
+			{
+				return array();
+			}
 
 			if ( isset($_SESSION['phpgw_session']) && is_array($_SESSION['phpgw_session']) )
 			{
@@ -954,15 +956,14 @@
 		 */
 		public function register_session($login, $user_ip, $now, $session_flags)
 		{
-			if ( $this->_sessionid )
+			if ( $this->_sessionid != session_id())
 			{
-				session_id($this->_sessionid);
+				throw new Exception("sessions::sessionid is tampered");
 			}
 
 			if ( !strlen(session_id()) )
 			{
 				throw new Exception("sessions::register_session() - No value for session_id()");
-//				session_start();
 			}
 
 			$_SESSION['phpgw_session'] = array
@@ -1134,6 +1135,10 @@
 			$this->_sessionid = $sessionid;
 
 			$session = $this->read_session($sessionid);
+			if(!$session)
+			{
+				return false;
+			}
 			$this->_session_flags = $session['session_flags'];
 
 			$lid_data = explode('#', $session['session_lid']);
