@@ -73,9 +73,10 @@
 			}
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Generated Files'),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),
 					'field' => array(
 						array(
 							'key' => 'id',

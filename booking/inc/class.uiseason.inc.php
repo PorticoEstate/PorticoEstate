@@ -63,7 +63,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiseason.index', 'phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 'to_', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 5, 'dir' => 'desc'),//to_
 					'field' => array(
 						array(
 							'key' => 'name',

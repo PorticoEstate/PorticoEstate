@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('booking.socommon');
 	phpgw::import_class('booking.sopermission');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class booking_socompleted_reservation_export extends booking_socommon
 	{
@@ -64,9 +65,10 @@
 
 		protected function _get_search_to_date( &$entity )
 		{
-			$to_date = (isset($entity['to_']) && !empty($entity['to_']) ? $entity['to_'] : date('Y-m-d'));
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$to_date = isset($entity['to_']) && $entity['to_'] ? $entity['to_'] : date($dateformat);
 
-			$to_date = date('Y-m-d', strtotime($to_date));
+			$to_date = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($to_date));
 
 			if (strtotime($to_date) > strtotime('tomorrow'))
 			{
