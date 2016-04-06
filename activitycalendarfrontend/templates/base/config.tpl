@@ -30,6 +30,15 @@
 			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
 		</tr>
 		<tr bgcolor="{row_on}">
+			<td>{lang_allow_test_for_sql_injection}:</td>
+			<td>
+				<select name="newsettings[allow_test]">
+					<option value="" {selected_allow_test_}>NO</option>
+					<option value="1" {selected_allow_test_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr bgcolor="{row_on}">
 
 			<!-- END body -->
 
