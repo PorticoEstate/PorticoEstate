@@ -922,6 +922,25 @@
 			*/
 			var table_url = JqueryPortico.parseURL(window.location.href);
 			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
+
+			//uiocation
+			if(typeof(table_url.searchObject.type_id) != 'undefined')
+			{
+				menuaction += '_type_id' + table_url.searchObject.type_id;
+			}
+
+			//uientity
+			if(typeof(table_url.searchObject.entity_id) != 'undefined' && typeof(table_url.searchObject.cat_id) != 'undefined')
+			{
+				menuaction += '_entity_id' + table_url.searchObject.entity_id + '_cat_id' + table_url.searchObject.cat_id;
+			}
+
+			//uigeneric
+			if(typeof(table_url.searchObject.type) != 'undefined' && menuaction.search("uigeneric") > 0)
+			{
+				menuaction += '_type_' + table_url.searchObject.type;
+			}
+
 			/*
 			 * Find and assign actions to filters
 			 */
