@@ -149,6 +149,7 @@
 				'my_name' => 'new_ticket',
 				'text' => lang('new_ticket'),
 				'type' => 'custom',
+				'className' => 'new_ticket',//activate button
 				'custom_code' => "
 						var oArgs = " . json_encode(array(
 					'menuaction' => 'frontend.uihelpdesk.add_ticket',
