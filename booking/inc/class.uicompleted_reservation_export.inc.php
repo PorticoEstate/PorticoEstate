@@ -394,7 +394,11 @@
 				$redirect_params['export_key'] = $export_key;
 			}
 
-			$this->flash_form_errors($export_errors);
+//			$this->flash_form_errors($export_errors);
+			foreach ($export_errors as $key => $value)
+			{
+				phpgwapi_cache::message_set($value, 'error');
+			}
 			$this->redirect_to('index', $redirect_params);
 		}
 
