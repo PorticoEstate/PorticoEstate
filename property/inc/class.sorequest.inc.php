@@ -229,6 +229,7 @@
 			if($query)
 			{
 				$filtermethod .= " AND fm_request.title {$this->_like} '%$query%'";
+				$filtermethod .= " OR fm_request.id =" . (int) $query;
 			}
 
 

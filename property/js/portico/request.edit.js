@@ -24,7 +24,7 @@ this.local_DrawCallback2 = function ()
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
 	});
 
 };
