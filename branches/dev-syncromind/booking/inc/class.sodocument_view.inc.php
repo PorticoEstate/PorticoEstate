@@ -25,10 +25,10 @@
 
 		public static function get_document_storage_objects()
 		{
-			if(!is_array(self::$document_so_objects))
+			if (!is_array(self::$document_so_objects))
 			{
 				self::$document_so_objects = array();
-				foreach(booking_sodocument::get_document_owners() as $owner_type)
+				foreach (booking_sodocument::get_document_owners() as $owner_type)
 				{
 					self::$document_so_objects[$owner_type] = CreateObject('booking.sodocument_' . $owner_type);
 				}
@@ -42,18 +42,18 @@
 			return $this->document_so->get_categories();
 		}
 
-		public function read_single($id)
+		public function read_single( $id )
 		{
 			list($type, $id_value) = explode('::', $id, 2);
 
-			if(!$id_value || !$type)
+			if (!$id_value || !$type)
 			{
 				throw new LogicException('Missing type or id');
 			}
 
 			$document_storage_objects = self::get_document_storage_objects();
 
-			if(!isset($document_storage_objects[$type]))
+			if (!isset($document_storage_objects[$type]))
 			{
 				throw new LogicException(sprintf('Could not determine document storage for document type "%s"', $type));
 			}

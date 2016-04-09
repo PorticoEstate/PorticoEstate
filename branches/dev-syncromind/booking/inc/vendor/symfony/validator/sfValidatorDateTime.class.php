@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,23 +7,24 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorDateTime validates a date and a time. It also converts the input value to a valid date.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorDateTime extends sfValidatorDate
-{
+	class sfValidatorDateTime extends sfValidatorDate
+	{
+
   /**
    * @see sfValidatorDate
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     parent::configure($options, $messages);
 
     $this->setOption('with_time', true);
   }
-}
+	}

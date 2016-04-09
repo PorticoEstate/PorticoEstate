@@ -47,7 +47,7 @@
 		 *
 		 * @return void
 		 */
-		public function __construct($appname = null)
+		public function __construct( $appname = null )
 		{
 			parent::__construct($appname);
 			$this->_db2 = clone($this->_db);
@@ -64,7 +64,7 @@
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
-		public function prepare($values, $appname, $location, $view_only = '')
+		public function prepare( $values, $appname, $location, $view_only = '' )
 		{
 			$cache_custom_lookup = array();
 
@@ -87,28 +87,28 @@
 
 			$m = 0;
 			$i = 0;
-			foreach($values['attributes'] as &$attributes)
+			foreach ($values['attributes'] as &$attributes)
 			{
 				$attributes['datatype_text'] = $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url'] = $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'manual.uimanual.attrib_help', 'appname' => $appname, 'location' => $location,
 					'id' => $attributes['id'])) : '';
 
-				if(!$view_only && $attributes['history'])
+				if (!$view_only && $attributes['history'])
 				{
 					$GLOBALS['phpgw']->jqcal->add_listener("values_attribute_{$i}_date");
 				}
 
-				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
+				if ($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
-					if(!$view_only)
+					if (!$view_only)
 					{
 						$GLOBALS['phpgw']->jqcal->add_listener('values_attribute_' . $i);
 						$attributes['lang_datetitle'] = lang('Select date');
 					}
 
 
-					if($attributes['datatype'] == 'D')
+					if ($attributes['datatype'] == 'D')
 					{
 						$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
 						$confirm_msg = lang('delete') . '?';
@@ -121,7 +121,7 @@
 JS;
 						$m++;
 					}
-					else if($attributes['datatype'] == 'DT')
+					else if ($attributes['datatype'] == 'DT')
 					{
 						$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
 						$confirm_msg = lang('delete') . '?';
@@ -139,9 +139,9 @@ JS;
 						$m++;
 					}
 
-					if(isset($attributes['value']) && $attributes['value'])
+					if (isset($attributes['value']) && $attributes['value'])
 					{
-						if($attributes['datatype'] == 'DT')
+						if ($attributes['datatype'] == 'DT')
 						{
 							$timestamp = strtotime($attributes['value']);
 							$attributes['value'] = array();
@@ -156,9 +156,9 @@ JS;
 						}
 					}
 				}
-				else if($attributes['datatype'] == 'AB')
+				else if ($attributes['datatype'] == 'AB')
 				{
-					if($attributes['value'])
+					if ($attributes['value'])
 					{
 						$contact_data = $this->contacts->read_single_entry($attributes['value'], array(
 							'fn', 'tel_work', 'email'));
@@ -185,9 +185,9 @@ JS;
 JS;
 					$m++;
 				}
-				else if($attributes['datatype'] == 'ABO')
+				else if ($attributes['datatype'] == 'ABO')
 				{
-					if($attributes['value'])
+					if ($attributes['value'])
 					{
 						$contact_data = $this->contacts->get_principal_organizations_data($attributes['value']);
 						$attributes['org_name'] = $contact_data[0]['org_name'];
@@ -195,15 +195,15 @@ JS;
 						$comms = $this->contacts->get_comm_contact_data($attributes['value'], $fields_comms = '', $simple = false);
 
 						$comm_data = array();
-						if(is_array($comms))
+						if (is_array($comms))
 						{
-							foreach($comms as $key => $value)
+							foreach ($comms as $key => $value)
 							{
 								$comm_data[$value['comm_contact_id']][$value['comm_description']] = $value['comm_data'];
 							}
 						}
 
-						if(count($comm_data))
+						if (count($comm_data))
 						{
 							$attributes['org_email'] = isset($comm_data[$attributes['value']]['work email']) ? $comm_data[$attributes['value']]['work email'] : '';
 							$attributes['org_tel'] = isset($comm_data[$attributes['value']]['work phone']) ? $comm_data[$attributes['value']]['work phone'] : '';
@@ -218,16 +218,16 @@ JS;
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if($attributes['datatype'] == 'VENDOR')
+				else if ($attributes['datatype'] == 'VENDOR')
 				{
-					if($attributes['value'])
+					if ($attributes['value'])
 					{
 						$vendor_data = $vendor->read_single(array('id' => $attributes['value']), array(
 							'attributes' => array(0 => array('column_name' => 'org_name'))));
 
-						for($n = 0; $n < count($vendor_data['attributes']); $n++)
+						for ($n = 0; $n < count($vendor_data['attributes']); $n++)
 						{
-							if($vendor_data['attributes'][$n]['column_name'] == 'org_name')
+							if ($vendor_data['attributes'][$n]['column_name'] == 'org_name')
 							{
 								$attributes['vendor_name'] = $vendor_data['attributes'][$n]['value'];
 								$n = count($vendor_data['attributes']);
@@ -243,14 +243,14 @@ JS;
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if($attributes['datatype'] == 'custom1') // select
+				else if ($attributes['datatype'] == 'custom1') // select
 				{
 					$attributes['choice'] = array();
 
-					if($attributes['get_list_function'])
+					if ($attributes['get_list_function'])
 					{
 						$_compare_key = $this->_get_compare_key($attributes['get_list_function'], $attributes['get_list_function_input']);
-						if(isset($cache_custom_lookup[$_compare_key]))
+						if (isset($cache_custom_lookup[$_compare_key]))
 						{
 							$attributes['choice'] = $cache_custom_lookup[$_compare_key];
 						}
@@ -261,16 +261,16 @@ JS;
 						}
 					}
 
-					foreach($attributes['choice'] as &$_choice)
+					foreach ($attributes['choice'] as &$_choice)
 					{
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
 					}
 				}
-				else if($attributes['datatype'] == 'custom2') //lookup
+				else if ($attributes['datatype'] == 'custom2') //lookup
 				{
-					if($attributes['value'] && $attributes['get_single_function'])
+					if ($attributes['value'] && $attributes['get_single_function'])
 					{
-						if(!$attributes['get_single_function_input'])
+						if (!$attributes['get_single_function_input'])
 						{
 							$attributes['get_single_function_input'] = $attributes['value'];
 						}
@@ -289,11 +289,11 @@ JS;
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if($attributes['datatype'] == 'custom3') //autocomplete
+				else if ($attributes['datatype'] == 'custom3') //autocomplete
 				{
-					if($attributes['value'] && $attributes['get_single_function'])
+					if ($attributes['value'] && $attributes['get_single_function'])
 					{
-						if(!$attributes['get_single_function_input'])
+						if (!$attributes['get_single_function_input'])
 						{
 							$attributes['get_single_function_input'] = $attributes['value'];
 						}
@@ -303,7 +303,7 @@ JS;
 					$insert_record_values[] = $attributes['name'];
 
 					$_append_url = '';
-					if(isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
+					if (isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
 					{
 						$_append_url = '&' . http_build_query($attributes['get_list_function_input']);
 					}
@@ -317,14 +317,14 @@ JS;
 					JqueryPortico.autocompleteHelper(strURL, '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
 
 JS;
-					if(!$view_only)
+					if (!$view_only)
 					{
 						$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
 					}
 				}
-				else if($attributes['datatype'] == 'user')
+				else if ($attributes['datatype'] == 'user')
 				{
-					if($attributes['value'])
+					if ($attributes['value'])
 					{
 						$attributes['user_name'] = $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
 					}
@@ -338,25 +338,25 @@ JS;
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
+				else if ($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
 				{
 					$input_type = $input_type_array[$attributes['datatype']];
 
-					if($attributes['datatype'] == 'CH')
+					if ($attributes['datatype'] == 'CH')
 					{
 //						$attributes['value'] = unserialize($attributes['value']);
 						$attributes['value'] = explode(',', trim($attributes['value'], ','));
 
-						if(isset($attributes['choice']) AND is_array($attributes['choice']))
+						if (isset($attributes['choice']) AND is_array($attributes['choice']))
 						{
-							foreach($attributes['choice'] as &$choice)
+							foreach ($attributes['choice'] as &$choice)
 							{
 								$choice['input_type'] = $input_type;
-								if(isset($attributes['value']) && is_array($attributes['value']))
+								if (isset($attributes['value']) && is_array($attributes['value']))
 								{
-									foreach($attributes['value'] as &$selected)
+									foreach ($attributes['value'] as &$selected)
 									{
-										if($selected == $choice['id'])
+										if ($selected == $choice['id'])
 										{
 											$choice['checked'] = 'checked';
 										}
@@ -367,24 +367,24 @@ JS;
 					}
 					else
 					{
-						for($j = 0; $j < count($attributes['choice']); $j++)
+						for ($j = 0; $j < count($attributes['choice']); $j++)
 						{
 							$attributes['choice'][$j]['input_type'] = $input_type;
-							if($attributes['choice'][$j]['id'] == $attributes['value'])
+							if ($attributes['choice'][$j]['id'] == $attributes['value'])
 							{
 								$attributes['choice'][$j]['checked'] = 'checked';
 							}
 						}
 					}
 				}
-				else if($attributes['datatype'] == 'event')
+				else if ($attributes['datatype'] == 'event')
 				{
 					// If the record is not saved - issue a warning
-					if(isset($values['id']) || $values['id'])
+					if (isset($values['id']) || $values['id'])
 					{
 						$attributes['item_id'] = $values['id'];
 					}
-					else if(isset($values['location_code']) || $values['location_code'])
+					else if (isset($values['location_code']) || $values['location_code'])
 					{
 						$attributes['item_id'] = execMethod('property.solocation.get_item_id', $values['location_code']);
 					}
@@ -393,7 +393,7 @@ JS;
 						$attributes['warning'] = lang('Warning: the record has to be saved in order to plan an event');
 					}
 
-					if(isset($attributes['value']) && $attributes['value'])
+					if (isset($attributes['value']) && $attributes['value'])
 					{
 						$event = execMethod('property.soevent.read_single', $attributes['value']);
 						$attributes['descr'] = $event['descr'];
@@ -428,7 +428,7 @@ JS;
 					$lookup_functions[$m]['action'] .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
-				else if(isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype'] != 'I' && $entity['attributes'][$i]['value'])
+				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype'] != 'I' && $entity['attributes'][$i]['value'])
 				{
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
 				}
@@ -438,9 +438,9 @@ JS;
 				$i++;
 			}
 
-			if(isset($lookup_functions) && is_array($lookup_functions))
+			if (isset($lookup_functions) && is_array($lookup_functions))
 			{
-				foreach($lookup_functions as $lookup_function)
+				foreach ($lookup_functions as $lookup_function)
 				{
 					$values['lookup_functions'] .= 'function ' . $lookup_function['name'] . "\r\n";
 					$values['lookup_functions'] .= '{' . "\r\n";
@@ -449,9 +449,9 @@ JS;
 				}
 			}
 
-			if(isset($clear_functions) && $clear_functions)
+			if (isset($clear_functions) && $clear_functions)
 			{
-				foreach($clear_functions as $clear_function)
+				foreach ($clear_functions as $clear_function)
 				{
 					$values['lookup_functions'] .= 'function ' . $clear_function['name'] . "\r\n";
 					$values['lookup_functions'] .= '{' . "\r\n";
@@ -460,7 +460,7 @@ JS;
 				}
 			}
 //_debug_array($values);die();
-			if(isset($lookup_functions) && $lookup_functions)
+			if (isset($lookup_functions) && $lookup_functions)
 			{
 				$GLOBALS['phpgw']->session->appsession('insert_record_values' . $location, $appname, $insert_record_values);
 			}
@@ -468,15 +468,15 @@ JS;
 			return $values;
 		}
 
-		protected function _get_compare_key($get_list_function, $get_list_function_input)
+		protected function _get_compare_key( $get_list_function, $get_list_function_input )
 		{
 			$_compare_key = '';
 			$_compare_key .= $get_list_function;
-			if($get_list_function_input)
+			if ($get_list_function_input)
 			{
-				if(is_array($get_list_function_input))
+				if (is_array($get_list_function_input))
 				{
-					foreach($get_list_function_input as $_key => $_value)
+					foreach ($get_list_function_input as $_key => $_value)
 					{
 						$_compare_key .= $_key;
 						$_compare_key .= $_value;
@@ -490,20 +490,20 @@ JS;
 			return md5($_compare_key);
 		}
 
-		function prepare_for_db($table, $values_attribute, $id = 0)
+		function prepare_for_db( $table, $values_attribute, $id = 0 )
 		{
 			$id = (int)$id;
 			$data = array();
-			if(isset($values_attribute) && is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
-				foreach($values_attribute as $entry)
+				foreach ($values_attribute as $entry)
 				{
-					if($entry['disabled'])
+					if ($entry['disabled'])
 					{
 						continue;
 					}
 
-					switch($entry['datatype'])
+					switch ($entry['datatype'])
 					{
 						case 'C':
 						case 'T':
@@ -542,11 +542,11 @@ JS;
 							$data['value_set'][$entry['name']] = isset($entry['value']) && $entry['value'] ? $entry['value'] : '';
 							break;
 						case 'pwd':
-							if($entry['value'] && $entry['value2'])
+							if ($entry['value'] && $entry['value2'])
 							{
-								if($entry['value'] || $entry['value2'])
+								if ($entry['value'] || $entry['value2'])
 								{
-									if($entry['value'] == $entry['value2'])
+									if ($entry['value'] == $entry['value2'])
 									{
 										$data['value_set'][$entry['name']] = md5($entry['value']);
 									}
@@ -568,14 +568,14 @@ JS;
 					}
 
 
-					if($entry['history'] == 1)
+					if ($entry['history'] == 1)
 					{
-						if($id)
+						if ($id)
 						{
 							$this->_db2->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}", __LINE__, __FILE__);
 							$this->_db2->next_record();
 							$old_value = $this->_db2->f($entry['name']);
-							if($entry['value'] != $old_value)
+							if ($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
 									(
@@ -595,7 +595,7 @@ JS;
 			return $data;
 		}
 
-		public function get_translated_value($data, $location_id)
+		public function get_translated_value( $data, $location_id )
 		{
 			static $cache_lb = array();
 			static $cache_contact = array();
@@ -604,7 +604,7 @@ JS;
 			static $cache_account = array();
 			static $cache_custom_lookup = array();
 
-			if(!$data['value'])
+			if (!$data['value'])
 			{
 				return $data['value'];
 			}
@@ -615,13 +615,13 @@ JS;
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " location_id = {$location_id}";
 
-			switch($data['datatype'])
+			switch ($data['datatype'])
 			{
 				case 'R':
 				case 'LB':
-					if($data['attrib_id'])
+					if ($data['attrib_id'])
 					{
-						if(!isset($cache_lb[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_lb[$location_id][$data['attrib_id']][$data['value']])
+						if (!isset($cache_lb[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_lb[$location_id][$data['attrib_id']][$data['value']])
 						{
 							$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . (int)$data['attrib_id'] . "  AND id=" . (int)$data['value'];
 							$this->_db2->query($sql);
@@ -632,7 +632,7 @@ JS;
 					}
 					break;
 				case 'AB':
-					if(!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
+					if (!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
 					{
 						$contact_data = $this->contacts->read_single_entry($data['value'], array(
 							'fn'));
@@ -641,7 +641,7 @@ JS;
 					}
 					break;
 				case 'ABO':
-					if(!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
+					if (!isset($cache_contact[$data['value']]) || $ret != $cache_contact[$data['value']])
 					{
 						$contact_data = $this->contacts->get_principal_organizations_data($data['value']);
 						$ret = $contact_data[0]['org_name'];
@@ -649,7 +649,7 @@ JS;
 					}
 					break;
 				case 'VENDOR':
-					if(!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
+					if (!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
 					{
 						$sql = "SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
 						$this->_db2->query($sql);
@@ -659,19 +659,19 @@ JS;
 					}
 					break;
 				case 'CH':
-					if($data['attrib_id'])
+					if ($data['attrib_id'])
 					{
 						$ret = '';
-						if(!isset($cache_ch[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_ch[$location_id][$data['attrib_id']][$data['value']])
+						if (!isset($cache_ch[$location_id][$data['attrib_id']][$data['value']]) || $ret != $cache_ch[$location_id][$data['attrib_id']][$data['value']])
 						{
 							$ch = explode(',', trim($data['value'], ','));
-							if(isset($ch) AND is_array($ch))
+							if (isset($ch) AND is_array($ch))
 							{
-								for($k = 0; $k < count($ch); $k++)
+								for ($k = 0; $k < count($ch); $k++)
 								{
 									$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
 									$this->_db2->query($sql);
-									while($this->_db2->next_record())
+									while ($this->_db2->next_record())
 									{
 										$ch_value[] = $this->_db2->f('value');
 									}
@@ -697,7 +697,7 @@ JS;
 					$ret = phpgw::safe_redirect($data['value']);
 					break;
 				case 'user':
-					if(!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
+					if (!isset($cache_vendor[$data['value']]) || $ret != $cache_vendor[$data['value']])
 					{
 						$ret = $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
 						$cache_vendor[$data['value']] = $ret;
@@ -709,33 +709,33 @@ JS;
 				case 'custom1':
 
 					$ret = '';
-					if($data['value'] && $data['get_single_function'])
+					if ($data['value'] && $data['get_single_function'])
 					{
-						if(!$data['get_single_function_input'])
+						if (!$data['get_single_function_input'])
 						{
 							$data['get_single_function_input'] = $data['value'];
 						}
 						$_compare_key = $this->_get_compare_key($data['get_single_function'], $data['get_single_function_input']);
-						if(!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
+						if (!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
 						{
 							$ret = execMethod($data['get_single_function'], $data['get_single_function_input']);
 							$cache_custom_lookup[$_compare_key] = $ret;
 						}
 					}
-					else if($data['value'] && $data['get_list_function'])
+					else if ($data['value'] && $data['get_list_function'])
 					{
 						$_compare_key = $this->_get_compare_key($data['get_list_function'], $data['get_list_function_input']);
-						if(!isset($cache_custom_lookup[$_compare_key]) || $_list != $cache_custom_lookup[$_compare_key])
+						if (!isset($cache_custom_lookup[$_compare_key]) || $_list != $cache_custom_lookup[$_compare_key])
 						{
 							$_list = execMethod($data['get_list_function'], $data['get_list_function_input']);
 							$cache_custom_lookup[$_compare_key] = $_list;
 						}
 
-						if(isset($_list) && is_array($_list))
+						if (isset($_list) && is_array($_list))
 						{
-							foreach($_list as $_key => $_entry)
+							foreach ($_list as $_key => $_entry)
 							{
-								if($_entry['id'] == $data['value'])
+								if ($_entry['id'] == $data['value'])
 								{
 									$ret = $_entry['name'];
 									break;
@@ -747,14 +747,14 @@ JS;
 					break;
 				case 'custom2':
 				case 'custom3':
-					if($data['value'] && $data['get_single_function'])
+					if ($data['value'] && $data['get_single_function'])
 					{
-						if(!$data['get_single_function_input'])
+						if (!$data['get_single_function_input'])
 						{
 							$data['get_single_function_input'] = $data['value'];
 						}
 						$_compare_key = $this->_get_compare_key($data['get_single_function'], $data['get_single_function_input']);
-						if(!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
+						if (!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
 						{
 							$ret = execMethod($data['get_single_function'], $data['get_single_function_input']);
 							$cache_custom_lookup[$_compare_key] = $ret;
@@ -763,7 +763,7 @@ JS;
 
 					break;
 				default:
-					if(is_array($data['value']))
+					if (is_array($data['value']))
 					{
 						$ret = $data['value'];
 					}
@@ -775,31 +775,31 @@ JS;
 			return $ret;
 		}
 
-		function translate_value($values, $location_id, $location_count = 0)
+		function translate_value( $values, $location_id, $location_count = 0 )
 		{
 //			_debug_array($values);die();
 			$location = array();
 			$ret = array();
 			$j = 0;
-			foreach($values as $row)
+			foreach ($values as $row)
 			{
-				foreach($row as $field => $data)
+				foreach ($row as $field => $data)
 				{
-					if($field == 'location_code')
+					if ($field == 'location_code')
 					{
 						$location = explode('-', $data['value']);
 					}
 
 					$ret[$j][$field] = $this->get_translated_value($data, $location_id);
 
-					if($location)
+					if ($location)
 					{
 						$_location_count = $location_count;
-						if(!$_location_count)
+						if (!$_location_count)
 						{
 							$_location_count = count($location);
 						}
-						for($m = 0; $m < $_location_count; $m++)
+						for ($m = 0; $m < $_location_count; $m++)
 						{
 							$ret[$j]['loc' . ($m + 1)] = $location[$m];
 							$ret[$j]['query_location']['loc' . ($m + 1)] = implode('-', array_slice($location, 0, ($m + 1)));
@@ -820,35 +820,35 @@ JS;
 		 * @param string $query
 		 * @return array
 		 */
-		function get_custom_filter($location_id, $entity_table, $criteria_id = '', $query = '')
+		function get_custom_filter( $location_id, $entity_table, $criteria_id = '', $query = '' )
 		{
 			$choice_table = 'phpgw_cust_choice';
 			$_querymethod = array();
 			$__querymethod = array();
 			$_joinmethod_datatype = array();
 
-			if($criteria_id)
+			if ($criteria_id)
 			{
 				$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 			}
 
 			$this->_db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND search='1'");
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
-				switch($this->_db->f('datatype'))
+				switch ($this->_db->f('datatype'))
 				{
 					case 'V':
 					case 'email':
 					case 'T':
-						if(!$criteria_id)
+						if (!$criteria_id)
 						{
 							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
 							$__querymethod = array(); // remove block
 						}
 						break;
 					case 'CH':
-						if(!$criteria_id)
+						if (!$criteria_id)
 						{
 							// from filter
 							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,{$query},%'";
@@ -859,7 +859,7 @@ JS;
 							. " AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
 
 							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
-							while($this->_db2->next_record())
+							while ($this->_db2->next_record())
 							{
 								$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%," . $this->_db2->f('id') . ",%'";
 							}
@@ -867,7 +867,7 @@ JS;
 						break;
 					case 'R':
 					case 'LB':
-						if(!$criteria_id)
+						if (!$criteria_id)
 						{
 							$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->_db->f('location_id')
 							. " AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
@@ -875,12 +875,12 @@ JS;
 
 							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
 							$__filter_choise = array();
-							while($this->_db2->next_record())
+							while ($this->_db2->next_record())
 							{
 								$__filter_choise[] = $this->_db2->f('id');
 							}
 
-							if($__filter_choise)
+							if ($__filter_choise)
 							{
 								$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
 							}
@@ -889,35 +889,35 @@ JS;
 						}
 						break;
 					case 'I':
-						if(ctype_digit($query) && !$criteria_id)
+						if (ctype_digit($query) && !$criteria_id)
 						{
 							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " = " . (int)$query;
 							$__querymethod = array(); // remove block
 						}
 						break;
 					case 'VENDOR':
-						if($criteria_id == 'vendor')
+						if ($criteria_id == 'vendor')
 						{
 							$_joinmethod_datatype[] = "{$this->_join} fm_vendor ON ({$entity_table}." . $this->_db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->_like} '%{$query}%') ";
 							$__querymethod = array(); // remove block
 						}
 						break;
 					case 'AB':
-						if($criteria_id == 'ab')
+						if ($criteria_id == 'ab')
 						{
 							$_joinmethod_datatype[] = "{$this->_join} phpgw_contact_person ON ({$entity_table}." . $this->_db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->_like} '%{$query}%' OR phpgw_contact_person.last_name {$this->_like} '%{$query}%'))";
 							$__querymethod = array(); // remove block
 						}
 						break;
 					case 'ABO':
-						if($criteria_id == 'abo')
+						if ($criteria_id == 'abo')
 						{
 							$_joinmethod_datatype[] = "{$this->_join} phpgw_contact_org ON ({$entity_table}." . $this->_db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->_like} '%{$query}%')";
 							$__querymethod = array(); // remove block
 						}
 						break;
 					default:
-						if(!$criteria_id)
+						if (!$criteria_id)
 						{
 							$_querymethod[] = "$entity_table." . $this->_db->f('column_name') . " = '{$query}'";
 							$__querymethod = array(); // remove block

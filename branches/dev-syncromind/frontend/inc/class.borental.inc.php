@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,8 +31,7 @@
 
     class frontend_borental
     {
-
-/*		//FIXME Sigurd 22. nov 2013: - not used?
+		/* 		//FIXME Sigurd 22. nov 2013: - not used?
     	public static function contract_exist_per_location($contract_id, $location_code, $contract_state_identifier)
     	{
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', $contract_state_identifier);
@@ -47,23 +45,24 @@
     		}
     		return $exist;
     	}
-*/
-    	public static function send_contract_message(int $contract_id, string $contract_message, string $from_address)
+		 */
+
+		public static function send_contract_message( int $contract_id, string $contract_message, string $from_address )
     	{
     		$contract = rental_socontract::get_instance()->get_single($contract_id);
-    		if(isset($contract) && isset($contract_message) && $contract_message != '')
+			if (isset($contract) && isset($contract_message) && $contract_message != '')
     		{
 	    		$title = lang('title_contract_message');
-	    		$title .= " ".$contract->get_old_contract_id();
-	    		$title .= "(".lang($contract->get_contract_type_title()).")";
+				$title .= " " . $contract->get_old_contract_id();
+				$title .= "(" . lang($contract->get_contract_type_title()) . ")";
 
-	    		$config	= CreateObject('phpgwapi.config','frontend');
+				$config = CreateObject('phpgwapi.config', 'frontend');
 				$config->read();
 	    		$to = $config->config_data['email_contract_messages'];
 
 	    		if (isset($contract_message) && isset($to) && isset($from_address))
 				{
-					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
@@ -73,12 +72,9 @@
 						$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
 
 						$receive_notification = false;
-						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
-							 stripslashes(nl2br($contract_message)), '', $from, '',
-							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
-							 'html', '', array() , $receive_notification);
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $to, $title, stripslashes(nl2br($contract_message)), '', $from, '', $from, $GLOBALS['phpgw_info']['user']['fullname'], 'html', '', array(), $receive_notification);
 
-						if($rcpt)
+						if ($rcpt)
 						{
 							return true;
 						}
@@ -90,28 +86,27 @@
     	}
 
     	//FIXME : Sigurd 16 okt 2013: not used?
-    	public static function get_first_contract_per_location($location_code)
+		public static function get_first_contract_per_location( $location_code )
     	{
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
     		return $contracts_per_location[$location_code][0];
     	}
 
     	//FIXME : Sigurd 16 okt 2013: not used?
-   		public static function get_first_contract_in_per_location($location_code)
+		public static function get_first_contract_in_per_location( $location_code )
     	{
     		$contracts_in_per_location = phpgwapi_cache::session_get('frontend', 'contracts_in_per_location');
     		return $contracts_in_per_location[$location_code][0];
     	}
 
-
         /**
          *
          * @param array $org_unit_ids
          */
-        public static function get_property_locations($array,$top_org_units)
+		public static function get_property_locations( $array, $top_org_units )
         {
 
-	       	foreach($array as $row)
+			foreach ($array as $row)
         	{
         		/*
              * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
@@ -119,9 +114,9 @@
              * 3. hent alle leieobjekt på kontraktene
              * 4. hent ut bygg-ider, location_code, fra leieobjektet
              */
-        		if(is_array($row))
+				if (is_array($row))
         		{
-	        		if(!isset($row['ORG_UNIT_ID']) || $row['ORG_UNIT_ID'] == '')
+					if (!isset($row['ORG_UNIT_ID']) || $row['ORG_UNIT_ID'] == '')
 	        		{
 	        			continue;
 	        		}
@@ -129,7 +124,8 @@
         		}
         		else
         		{
-        			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('email' => $row));
+					$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+						'email' => $row));
         			$parties = array_keys($parties);
         		}
 
@@ -145,30 +141,28 @@
 			return $locations;
 		}
 		
-
 		/**
 		* Get the org_units by hierarchical inheritance
 		*/
-		function get_all_parties($top_org_units = array(),$selected_org_unit = 0)
+		function get_all_parties( $top_org_units = array(), $selected_org_unit = 0 )
 		{
-			static $parties =array(); // cache result
-			
+			static $parties = array(); // cache result
 			//already calculated
-			if($parties)
+			if ($parties)
 			{
 				return $parties;
 			}
-/*
+			/*
 			$bt = debug_backtrace();
 			echo "<b>frontend_borental::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
 			unset($bt);
-*/
+			 */
 
 			$org_units = array();
 
-			if($selected_org_unit == 'all')
+			if ($selected_org_unit == 'all')
 			{
-				foreach($top_org_units as $entry)
+				foreach ($top_org_units as $entry)
 				{
 					$org_units[] = $entry['ORG_UNIT_ID'];
 				}
@@ -194,11 +188,9 @@
 			return $parties;
 		}
 
-
-		public static function get_total_cost_and_area($org_units = array(),$selected_location ='')
+		public static function get_total_cost_and_area( $org_units = array(), $selected_location = '' )
 		{
     		$sorental	= CreateObject('frontend.sorental');
     		return $sorental->get_total_cost_and_area($org_units, $selected_location);
 		}
-
     }

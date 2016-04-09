@@ -31,19 +31,19 @@
 			$this->url_prefix	 = 'booking.uiaccount_code_set';
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function redirect_to($action, $params = array())
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -59,7 +59,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -84,29 +84,29 @@
 			$data['datatable']['source'][]	 = $this->link_to('index', array('phpgw_return_as' => 'json'));
 			$data['datatable']['field'][]	 = array(
 				'key'		 => 'name', 'label'		 => lang('Name'), 'formatter'	 => 'JqueryPortico.formatLink');
-			if(isset($config->config_data['dim_3']))
+			if (isset($config->config_data['dim_3']))
 				$data['datatable']['field'][]	 = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
-			if(isset($config->config_data['dim_1']))
+			if (isset($config->config_data['dim_1']))
 				$data['datatable']['field'][]	 = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
-			if(isset($config->config_data['article']))
+			if (isset($config->config_data['article']))
 				$data['datatable']['field'][]	 = array('key' => 'article', 'label' => lang('Article'));
-			if(isset($config->config_data['dim_2']))
+			if (isset($config->config_data['dim_2']))
 				$data['datatable']['field'][]	 = array('key' => 'service', 'label' => $config->config_data['dim_2']);
-			if(isset($config->config_data['dim_4']))
+			if (isset($config->config_data['dim_4']))
 				$data['datatable']['field'][]	 = array('key' => 'dim_4', 'label' => $config->config_data['dim_4']);
-			if(isset($config->config_data['dim_5']))
+			if (isset($config->config_data['dim_5']))
 				$data['datatable']['field'][]	 = array('key' => 'project_number', 'label' => $config->config_data['dim_5']);
-			if(isset($config->config_data['dim_value_1']))
+			if (isset($config->config_data['dim_value_1']))
 				$data['datatable']['field'][]	 = array('key' => 'unit_number', 'label' => $config->config_data['dim_value_1']);
-			if(isset($config->config_data['dim_value_4']))
+			if (isset($config->config_data['dim_value_4']))
 				$data['datatable']['field'][]	 = array('key' => 'dim_value_4', 'label' => $config->config_data['dim_value_4']);
-			if(isset($config->config_data['dim_value_5']))
+			if (isset($config->config_data['dim_value_5']))
 				$data['datatable']['field'][]	 = array('key' => 'dim_value_5', 'label' => $config->config_data['dim_value_5']);
-			if($config->config_data['external_format'] != 'KOMMFAKT')
+			if ($config->config_data['external_format'] != 'KOMMFAKT')
 				$data['datatable']['field'][]	 = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
 			$data['datatable']['field'][]	 = array('key' => 'link', 'hidden' => true);
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type'	 => 'link',
@@ -130,7 +130,7 @@
 			return $results;
 		}
 
-		protected function add_default_display_data(&$account_code_set)
+		protected function add_default_display_data( &$account_code_set )
 		{
 			$account_code_set['edit_link']			 = $this->link_to('edit', array('id' => $account_code_set['id']));
 			$account_code_set['account_codes_link']	 = $this->link_to('index');
@@ -163,18 +163,18 @@
 			$config->read();
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$account_code_set	 = array_merge($account_code_set, extract_values($_POST, $this->fields));
 				$errors				 = $this->bo->validate($account_code_set);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->update($account_code_set);
 						$this->redirect_to('show', array('id' => $account_code_set['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
@@ -203,11 +203,11 @@
 			$config->read();
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$account_code_set			 = extract_values($_POST, $this->fields);
 				$account_code_set['active']	 = '1';
-				if($config->config_data['external_format'] == 'KOMMFAKT')
+				if ($config->config_data['external_format'] == 'KOMMFAKT')
 				{
 					$account_code_set['article']		 = '1';
 					$account_code_set['service']		 = '1';
@@ -217,21 +217,21 @@
 				}
 
 				$errors = $this->bo->validate($account_code_set);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->add($account_code_set);
 						$this->redirect_to('index');
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
 			}
 			$this->add_default_display_data($account_code_set);
-			if($config->config_data['external_format'] != 'KOMMFAKT')
+			if ($config->config_data['external_format'] != 'KOMMFAKT')
 			{
 				$account_code_set['project_number'] = '9';
 			}

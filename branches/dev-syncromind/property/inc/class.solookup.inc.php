@@ -45,7 +45,7 @@
 			$this->like = & $this->db->like;
 		}
 
-		function read_b_account($data)
+		function read_b_account( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
@@ -57,7 +57,7 @@
 
 			$join = '';
 			$filter_parent = '';
-			if($role == 'group')
+			if ($role == 'group')
 			{
 				$table = 'fm_b_account_category';
 			}
@@ -67,7 +67,7 @@
 				$join = " {$this->join} fm_b_account_category ON (fm_b_account.category = fm_b_account_category.id AND fm_b_account_category.active = 1)";
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " ORDER BY {$table}.{$order} $sort";
 			}
@@ -79,17 +79,17 @@
 			$filtermethod = " WHERE {$table}.active = 1";
 			$where = 'AND';
 
-			if($parent)
+			if ($parent)
 			{
 				$filtermethod .= " {$where} category = {$parent}";
 				$where = 'AND';
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
-				if($role == 'group')
+				if ($role == 'group')
 				{
 					$querymethod = " $where ({$table}.id = " . (int)$query . " OR {$table}.descr $this->like '%$query%')";
 				}
@@ -104,7 +104,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -114,7 +114,7 @@
 			}
 
 			$b_account = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$b_account[] = array
 					(
@@ -126,9 +126,9 @@
 			return $b_account;
 		}
 
-		function read_phpgw_user($data)
+		function read_phpgw_user( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter = isset($data['filter']) ? $data['filter'] : 'none';
@@ -139,7 +139,7 @@
 				$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -148,7 +148,7 @@
 				$ordermethod = ' order by account_lastname DESC';
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -162,7 +162,7 @@
 			$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 
 			$phpgw_user = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$phpgw_user[] = array
 					(

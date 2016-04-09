@@ -24,7 +24,7 @@
 		}
 		var project_type_id = '<xsl:value-of select="project_type_id"/>';
 		var project_id = '<xsl:value-of select="value_project_id"/>';
-		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 	</script>
 	<xsl:choose>
@@ -43,7 +43,7 @@
 					<xsl:variable name="lang_add_sub_entry">
 						<xsl:value-of select="lang_add_sub_entry"/>
 					</xsl:variable>
-					<input type="button" class="pure-button pure-button-primary" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
+					<input type="button" class="pure-button pure-button-primary" id="add_sub_entry" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_add_sub_entry_statustext"/>
 						</xsl:attribute>
@@ -147,7 +147,7 @@
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
-							<option value="0">
+							<option value="">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>
 							<xsl:apply-templates select="project_types/options"/>
@@ -373,11 +373,23 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 								</xsl:attribute>
-								<xsl:if test="not(value_project_id &gt; 0)  and mode='edit'">
+								<xsl:choose>
+									<xsl:when  test="not(value_project_id &gt; 0) and mode='edit'">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
-								</xsl:if>
+									</xsl:when>
+									<xsl:when  test="value_project_id &gt; 0 and not(check_for_budget &gt; 0) and mode='edit'">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
 							</input>
 							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							<select name="values[budget_year]">
@@ -757,7 +769,7 @@
 						<xsl:value-of select="lang_save"/>
 					</xsl:variable>
 					<input type="hidden" name='save'  value=""/>
-					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
+					<input type="submit" id="submitform" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
@@ -767,7 +779,7 @@
 					<xsl:variable name="lang_edit">
 						<xsl:value-of select="lang_edit"/>
 					</xsl:variable>
-					<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_edit}" onClick="document.edit_form.submit();">
+					<input type="button" id="editform" class="pure-button pure-button-primary" name="edit" value="{$lang_edit}" onClick="document.edit_form.submit();">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_edit_statustext"/>
 						</xsl:attribute>
@@ -777,7 +789,7 @@
 			<xsl:variable name="lang_done">
 				<xsl:value-of select="lang_done"/>
 			</xsl:variable>
-			<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
+			<input type="button" id="cancelform" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_done_statustext"/>
 				</xsl:attribute>

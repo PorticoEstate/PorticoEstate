@@ -1,5 +1,5 @@
 <?php
-	/**************************************************************************\
+	/*	 * ************************************************************************\
 	* phpGroupWare - Registration                                              *
 	* http://www.phpgroupware.org                                              *
 	* This application written by Joseph Engo <jengo@phpgroupware.org>         *
@@ -10,12 +10,13 @@
 	*  under the terms of the GNU General Public License as published by the   *
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
-	\**************************************************************************/
+	  \************************************************************************* */
 	/* $Id$ */
 
 	$file = array
 	(
-		'Site Configuration'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'registration') ),
-		'Manage Fields'			=> $GLOBALS['phpgw']->link ('/index.php', array('menuaction' => 'registration.uimanagefields.admin') )
+		'Site Configuration' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+			'appname' => 'registration')),
+		'Manage Fields' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uimanagefields.admin'))
 	);
-	$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
+	$GLOBALS['phpgw']->common->display_mainscreen($appname, $file);

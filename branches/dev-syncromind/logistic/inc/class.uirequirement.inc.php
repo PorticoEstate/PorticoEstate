@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -28,7 +27,6 @@
 	 * @subpackage logistic
 	 * @version $Id $
 	 */
-
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.sorequirement');
 	phpgw::import_class('logistic.soactivity');
@@ -43,6 +41,7 @@
 
 	class logistic_uirequirement extends phpgwapi_uicommon_jquery
 	{
+
 		private $so;
 		private $so_requirement_value;
 		private $so_entity;
@@ -51,13 +50,11 @@
 		private $so_resource_type_requirement;
 		private $so_resource_allocation;
 		private $nonavbar;
-
 	    private $read;
 	    private $add;
 	    private $edit;
 	    private $delete;
 	    private $manage;
-
 		public $public_functions = array
 		(
 			'query' 						=> true,
@@ -89,14 +86,14 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
 
-/*
+			/*
 			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
-*/
+			 */
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 			$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
@@ -111,7 +108,6 @@
 			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
-
 		public function query()
 		{
 			$search = phpgw::get_var('search');
@@ -119,7 +115,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -190,7 +186,7 @@
 
 //_debug_array($rows);
 			$line_id = 0; // optional preselect
-			foreach($rows as &$entry)
+			foreach ($rows as &$entry)
 			{
 
 //-----------Sigurd
@@ -199,9 +195,9 @@
 
 				$location_id = $entry['location_id'];
 				$criterias = array();
-				if( count( $requirement_values_array ) > 0 )
+				if (count($requirement_values_array) > 0)
 				{
-					foreach($requirement_values_array as $requirement_value)
+					foreach ($requirement_values_array as $requirement_value)
 					{
 						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
 						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
@@ -210,18 +206,18 @@
 
 						$_criterie = $attrib_data['input_text'];
 
-						if(isset($attrib_data['choice']))
+						if (isset($attrib_data['choice']))
 						{
 							foreach ($attrib_data['choice'] as $_choice)
 							{
-								if($_choice['id'] == $requirement_value->get_value())
+								if ($_choice['id'] == $requirement_value->get_value())
 								{
 									$_criterie .= "::{$_choice['value']}";
 									break;
 								}
 							}
 						}
-						else if($requirement_value->get_value())
+						else if ($requirement_value->get_value())
 						{
 							$_criterie .= "::{$requirement_value->get_value()}";
 						}
@@ -231,12 +227,12 @@
 //						$operator	= $requirement_value->get_operator();
 					}
 				}
-				$entry['criterias'] = implode(',',$criterias);
+				$entry['criterias'] = implode(',', $criterias);
 
 //-------------
 				$_checked = '';
 
-				if($entry['id'] == $line_id)
+				if ($entry['id'] == $line_id)
 				{
 					$_checked = 'checked="checked"';
 				}
@@ -248,7 +244,7 @@
 				$entry['allocated'] = $num_allocated;
 				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
 
-				if($num_allocated == $num_required)
+				if ($num_allocated == $num_required)
 				{
 					$entry['status'] = "OK";
 
@@ -259,7 +255,8 @@
 					$num_remaining = $num_required - $num_allocated;
 					$entry['status'] = "MANGLER (" . $num_remaining . ")";
 
-					$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
+					$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit',
+							'requirement_id' => $entry['id']));
 					$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 				}
 
@@ -311,7 +308,8 @@
 					)
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index',
+						'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'select',
@@ -379,12 +377,12 @@
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
-			self::render_template_xsl( 'requirement/requirement_overview', $data);
+			self::render_template_xsl('requirement/requirement_overview', $data);
 		}
 
 		public function view()
 		{
-			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if ($this->nonavbar = phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
@@ -393,9 +391,10 @@
 
 			$requirement_id = phpgw::get_var('id');
 
-			if(isset($_POST['edit_requirement']))
+			if (isset($_POST['edit_requirement']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit', 'id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit',
+					'id' => $requirement_id));
 			}
 			else
 			{
@@ -430,9 +429,9 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
 		}
 
-		public function edit($requirement = null)
+		public function edit( $requirement = null )
 		{
-			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if ($this->nonavbar = phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
@@ -442,26 +441,26 @@
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
-			if ( ($requirement == null) && ($requirement_id) && (is_numeric($requirement_id)) )
+			if (($requirement == null) && ($requirement_id) && (is_numeric($requirement_id)))
 			{
 				$requirement = $this->so->get_single($requirement_id);
 
-				$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
-				$project = $this->so_project->get_single( $activity->get_project_id() );
+				$activity = $this->so_activity->get_single($requirement->get_activity_id());
+				$project = $this->so_project->get_single($activity->get_project_id());
 			}
 			else
 			{
-				if($requirement == null)
+				if ($requirement == null)
 				{
 					$requirement = new logistic_requirement();
 				}
 
 				if ($activity_id && is_numeric($activity_id))
 				{
-					$activity = $this->so_activity->get_single( $activity_id );
+					$activity = $this->so_activity->get_single($activity_id);
 					$requirement->set_start_date($activity->get_start_date());
 					$requirement->set_end_date($activity->get_end_date());
-					$project = $this->so_project->get_single( $activity->get_project_id() );
+					$project = $this->so_project->get_single($activity->get_project_id());
 				}
 			}
 
@@ -475,7 +474,7 @@
 
 			$distict_location_ids_array = array();
 
-			foreach($distict_location_ids as $logistic_resource_type_requirement )
+			foreach ($distict_location_ids as $logistic_resource_type_requirement)
 			{
 				$location_id = $logistic_resource_type_requirement->get_id();
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
@@ -489,13 +488,13 @@
 
 			$attribute_requirement_array = array();
 
-			foreach($attribute_requirement_types as $attribute_requirement)
+			foreach ($attribute_requirement_types as $attribute_requirement)
 			{
 				$location_id = $attribute_requirement->get_location_id();
 				$cust_attribute_id = $attribute_requirement->get_cust_attribute_id();
 
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$entity_arr = explode('.',$loc_arr['location']);
+				$entity_arr = explode('.', $loc_arr['location']);
 
 				$entity_id = $entity_arr[2];
 				$cat_id = $entity_arr[3];
@@ -517,13 +516,13 @@
 				'nonavbar'			=> $this->nonavbar
 			);
 
-			if($activity_id > 0)
+			if ($activity_id > 0)
 			{
 				$data['activity'] = $activity;
 			}
 			else
 			{
-				$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
+				$activity = $this->so_activity->get_single($requirement->get_activity_id());
 				$data['activity'] = $activity;
 			}
 
@@ -538,16 +537,17 @@
 			$requirement_id = phpgw::get_var('id', 'int');
 			$new_location_id = phpgw::get_var('location_id');
 
-			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if ($this->nonavbar = phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
 
-			if(!$this->read)
+			if (!$this->read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
+					'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 				return false; // in case redirect fail;
 			}
 
@@ -563,7 +563,7 @@
 
 			$requirement->populate();
 
-			if( $requirement->validate() )
+			if ($requirement->validate())
 			{
 //				$db_requirement = $this->so->get_db();
 //				$db_requirement->transaction_begin();
@@ -571,13 +571,13 @@
 				$requirement_id = $this->so->store($requirement);
 
 				$status_delete_values = true;
-				if( ($old_location_id > 0) && (is_numeric($old_location_id) ) && ($old_location_id != $new_location_id) )
+				if (($old_location_id > 0) && (is_numeric($old_location_id) ) && ($old_location_id != $new_location_id))
 				{
-					$status_delete_values = $this->so_requirement_value->delete_values( $requirement_id );
-					$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );
+					$status_delete_values = $this->so_requirement_value->delete_values($requirement_id);
+					$status_delete_resources = $this->so_resource_allocation->delete_resources($requirement_id);
 				}
 
-				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
+				if (($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources))
 				{
 //					$db_requirement->transaction_commit();
 					$GLOBALS['phpgw']->db->transaction_commit();
@@ -588,7 +588,8 @@
 //					$db_requirement->transaction_abort();
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
+					'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 			}
 			else
 			{
@@ -598,7 +599,7 @@
 
 		public function delete()
 		{
-			if(!$this->delete)
+			if (!$this->delete)
 			{
 				return false;
 			}
@@ -607,13 +608,13 @@
 			$GLOBALS['phpgw']->db->transaction_begin();
 			try
 			{
-				$this->so_requirement_value->delete_values( $requirement_id );
-				$this->so_resource_allocation->delete_resources( $requirement_id );
-				$this->so->delete( $requirement_id );
+				$this->so_requirement_value->delete_values($requirement_id);
+				$this->so_resource_allocation->delete_resources($requirement_id);
+				$this->so->delete($requirement_id);
 			}
 			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					$GLOBALS['phpgw']->db->transaction_abort();
 
@@ -624,7 +625,6 @@
 						'line'	=> __LINE__,
 						'file'	=> __FILE__
 					));
-
 				}
 
 				return $e->getMessage();
@@ -634,7 +634,7 @@
 
 		public function add_requirement_values()
 		{
-			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if ($this->nonavbar = phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
@@ -663,14 +663,14 @@
 
 			$custom	= createObject('phpgwapi.custom_fields');
 
-			if( count( $requirement_values_array ) > 0 )
+			if (count($requirement_values_array) > 0)
 			{
-				foreach($requirement_values_array as $requirement_value)
+				foreach ($requirement_values_array as $requirement_value)
 				{
 					$location_id = $requirement->get_location_id();
 
 					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-					$entity_arr = explode('.',$loc_arr['location']);
+					$entity_arr = explode('.', $loc_arr['location']);
 
 					$entity_id = $entity_arr[2];
 					$cat_id = $entity_arr[3];
@@ -687,11 +687,11 @@
 				}
 
 
-				foreach($temp_requirement_attributes_array as $req_attrib)
+				foreach ($temp_requirement_attributes_array as $req_attrib)
 				{
-					if( count( $req_attrib ) > 1 )
+					if (count($req_attrib) > 1)
 					{
-						if( $req_attrib[0]['operator'] == 'gt' )
+						if ($req_attrib[0]['operator'] == 'gt')
 						{
 							$constraint_1 = $req_attrib[0];
 							$constraint_2 = $req_attrib[1];
@@ -714,7 +714,7 @@
 			}
 			else
 			{
-				foreach($custom_attributes_array as $cust_attrib)
+				foreach ($custom_attributes_array as $cust_attrib)
 				{
 					$requirement_attributes_array[] = array(
 						"id" 							=> "",
@@ -738,7 +738,7 @@
 				'nonavbar'						=> $this->nonavbar
 			);
 
-			if($activity_id > 0)
+			if ($activity_id > 0)
 			{
 				$data['activity'] = $activity;
 			}
@@ -751,7 +751,7 @@
 
 		public function view_requirement_values()
 		{
-			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if ($this->nonavbar = phpgw::get_var('nonavbar', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
@@ -771,7 +771,8 @@
 
 			if (isset($_POST['edit_requirement_values']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.add_requirement_values', 'requirement_id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.add_requirement_values',
+					'requirement_id' => $requirement_id));
 			}
 
 			$filters = array('requirement_id' => $requirement_id);
@@ -779,12 +780,12 @@
 
 			$custom	= createObject('phpgwapi.custom_fields');
 
-			foreach($requirement_values_array as $requirement_value)
+			foreach ($requirement_values_array as $requirement_value)
 			{
 				$location_id = $requirement->get_location_id();
 
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$entity_arr = explode('.',$loc_arr['location']);
+				$entity_arr = explode('.', $loc_arr['location']);
 
 				$entity_id = $entity_arr[2];
 				$cat_id = $entity_arr[3];
@@ -800,11 +801,11 @@
 				);
 			}
 
-			foreach($temp_requirement_attributes_array as $req_attrib)
+			foreach ($temp_requirement_attributes_array as $req_attrib)
 			{
-				if( count( $req_attrib ) > 1 )
+				if (count($req_attrib) > 1)
 				{
-					if( $req_attrib[0]['operator'] == 'gt' )
+					if ($req_attrib[0]['operator'] == 'gt')
 					{
 						$constraint_1 = $req_attrib[0];
 						$constraint_2 = $req_attrib[1];
@@ -827,7 +828,7 @@
 
 			$tabs = $this->make_tab_menu($requirement_id);
 
-			$activity = $this->so_activity->get_single( $requirement->get_activity_id() ); 
+			$activity = $this->so_activity->get_single($requirement->get_activity_id());
 
 			$data = array
 			(
@@ -852,41 +853,42 @@
 
 				$this->so_requirement_value->delete_values($requirement_id);
 
-				foreach($attributes_array as $attribute)
+			foreach ($attributes_array as $attribute)
 				{
-					$attribute_array = explode ( ":", $attribute );
+				$attribute_array = explode(":", $attribute);
 					$cust_attribute_id = $attribute_array[0];
 					$operator = $attribute_array[1];
 					$attrib_value = $attribute_array[2];
 
 					$requirement_value = new logistic_requirement_value();
-					$requirement_value->set_requirement_id( $requirement_id );
-					$requirement_value->set_value( $attrib_value );
-					$requirement_value->set_operator( $operator );
-					$requirement_value->set_cust_attribute_id( $cust_attribute_id );
+				$requirement_value->set_requirement_id($requirement_id);
+				$requirement_value->set_value($attrib_value);
+				$requirement_value->set_operator($operator);
+				$requirement_value->set_cust_attribute_id($cust_attribute_id);
 					$user_id = $GLOBALS['phpgw_info']['user']['id'];
 					$requirement_value->set_create_user($user_id);
 
 					$this->so_requirement_value->store($requirement_value);
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id, 'nonavbar' => $this->nonavbar));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
+				'requirement_id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 		}
 
-		public function get_custom_attributes($location_id, $activity_id)
+		public function get_custom_attributes( $location_id, $activity_id )
 		{
-			if($location_id == "")
+			if ($location_id == "")
 			{
 				$location_id = phpgw::get_var('location_id');
 			}
 
-			if($activity_id == "")
+			if ($activity_id == "")
 			{
 				$activity_id = phpgw::get_var('activity_id');
 			}
 
-			$activity = $this->so_activity->get_single( $activity_id );
-			$project = $this->so_project->get_single( $activity->get_project_id() );
+			$activity = $this->so_activity->get_single($activity_id);
+			$project = $this->so_project->get_single($activity->get_project_id());
 			$project_type_id = $project->get_project_type_id();
 
 			$filters = array('location_id' => $location_id, 'project_type_id' => $project_type_id);
@@ -896,13 +898,13 @@
 
 			$attribute_requirement_array = array();
 
-			foreach($requirement_custom_attributes_array as $attribute_requirement)
+			foreach ($requirement_custom_attributes_array as $attribute_requirement)
 			{
 				$location_id = $attribute_requirement->get_location_id();
 				$cust_attribute_id = $attribute_requirement->get_cust_attribute_id();
 
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$entity_arr = explode('.',$loc_arr['location']);
+				$entity_arr = explode('.', $loc_arr['location']);
 
 				$entity_id = $entity_arr[2];
 				$cat_id = $entity_arr[3];
@@ -919,9 +921,9 @@
 		{
 			$assign_requirement_json = str_replace('&quot;', '"', phpgw::get_var('assign_requirement'));
 
-			$assign_requirement=json_decode($assign_requirement_json);
+			$assign_requirement = json_decode($assign_requirement_json);
 //_debug_array($assign_requirement);die();
-			if(!$assign_requirement || !is_array($assign_requirement))
+			if (!$assign_requirement || !is_array($assign_requirement))
 			{
 				echo 'Nothing to do';
 				return;
@@ -938,7 +940,6 @@
 				$inventory_id = (int)$assign_arr[4];
 
 				$allocations[] = $this->so_resource_allocation->get_single($allocation_id);
-
 			}
 
 
@@ -952,9 +953,9 @@
 
 			$location_id = $requirement->get_location_id();
 			$criterias = array();
-			if( count( $requirement_values_array ) > 0 )
+			if (count($requirement_values_array) > 0)
 			{
-				foreach($requirement_values_array as $requirement_value)
+				foreach ($requirement_values_array as $requirement_value)
 				{
 					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
 
@@ -964,18 +965,18 @@
 
 					$_criterie = $attrib_data['input_text'];
 
-					if(isset($attrib_data['choice']))
+					if (isset($attrib_data['choice']))
 					{
 						foreach ($attrib_data['choice'] as $_choice)
 						{
-							if($_choice['id'] == $requirement_value->get_value())
+							if ($_choice['id'] == $requirement_value->get_value())
 							{
 								$_criterie .= "::{$_choice['value']}";
 								break;
 							}
 						}
 					}
-					else if($requirement_value->get_value())
+					else if ($requirement_value->get_value())
 					{
 						$_criterie .= "::{$requirement_value->get_value()}";
 					}
@@ -990,16 +991,16 @@
 			$path = $this->so_activity->get_path($requirement->get_activity_id());
 
 			$breadcrumb_array = array();
-			foreach($path as $menu_item)
+			foreach ($path as $menu_item)
 			{
 				$breadcrumb_array[] = $menu_item['name'];
 			}
 			
-			$title = implode(' -> ',$breadcrumb_array);
+			$title = implode(' -> ', $breadcrumb_array);
 
 
 			$message .= 'Hvor: ' . $title . "\n\n";
-			$requirement_descr = $loc_arr['descr'] . '::' . implode(',',$criterias);
+			$requirement_descr = $loc_arr['descr'] . '::' . implode(',', $criterias);
 			$message .= 'Hva: ' . $requirement_descr . "\n\n";
 				
 			#FIXME timezone..
@@ -1018,19 +1019,19 @@
 				$message .= ' Fra: ';
 
 
-				if($allocation->get_inventory_id())
+				if ($allocation->get_inventory_id())
 				{
-					$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $allocation->get_inventory_id()));
+					$inventory = execMethod('property.soentity.get_inventory', array('inventory_id' => $allocation->get_inventory_id()));
 					$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
 					$name = 'N∕A';
-					if( preg_match('/.location./i', $system_location['location']) )
+					if (preg_match('/.location./i', $system_location['location']))
 					{
 						$location_code = execMethod('property.solocation.get_location_code', $inventory[0]['p_id']);
 						$location = execMethod('property.solocation.read_single', $location_code);
 						$location_arr = explode('-', $location_code);
-						$i=1;
+						$i = 1;
 						$name_arr = array();
-						foreach($location_arr as $_dummy)
+						foreach ($location_arr as $_dummy)
 						{
 							$name_arr[] = $location["loc{$i}_name"];
 							$i++;
@@ -1038,12 +1039,11 @@
 
 						$name = implode('::', $name_arr);
 					}
-					else if( preg_match('/.entity./i', $system_location['location']) )
+					else if (preg_match('/.entity./i', $system_location['location']))
 					{
-						$name = execMethod('property.soentity.get_short_description', 
-									array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
+						$name = execMethod('property.soentity.get_short_description', array('location_id' => $inventory[0]['p_location_id'],
+							'id' => $inventory[0]['p_id']));
 					}
-
 				}
 
 				$message .= "$name ($location_code)\n";
@@ -1055,7 +1055,8 @@
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
-			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+			$categories = $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
 
 			$data = array
@@ -1070,7 +1071,7 @@
 				'priority_list'				=> array('options' => execMethod('property.botts.get_priority_list'))
 			);
 						
-			if(count( $buildings_array ) > 0)
+			if (count($buildings_array) > 0)
 			{
 				$data['buildings_array']  = $buildings_array;
 			}
@@ -1085,22 +1086,20 @@
 			
 			self::render_template_xsl(array('allocation/assign_job'), $data);
 //------
-
 		}
-
 
 		function send_job_ticket()
 		{
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
 			}
 
 			$assign_requirement_json = str_replace('&quot;', '"', phpgw::get_var('assign_requirement'));
 
-			$assign_requirement=json_decode($assign_requirement_json);
+			$assign_requirement = json_decode($assign_requirement_json);
 
-			if(!$assign_requirement || !is_array($assign_requirement))
+			if (!$assign_requirement || !is_array($assign_requirement))
 			{
 				echo 'Nothing to do';
 				return;
@@ -1117,7 +1116,6 @@
 				$inventory_id = (int)$assign_arr[4];
 
 				$allocations[] = $this->so_resource_allocation->get_single($allocation_id);
-
 			}
 
 			$requirement = $this->so->get_single($requirement_id);
@@ -1137,9 +1135,9 @@
 				'file_input_name'	=> 'file' // navn på felt som inneholder fil
 			);
 			
-			$botts = CreateObject('property.botts',true);
+			$botts = CreateObject('property.botts', true);
 			$message_ticket_id = $botts->add_ticket($ticket);
-			if($location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket'))
+			if ($location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket'))
 			{
 
 //---Sigurd: start register allocation to ticket
@@ -1166,7 +1164,7 @@
 						'account_id'        => $user_id
 					);
 
-					if(!isset($interlink_verify[$location_id][$item_id][$location_id_ticket][$message_ticket_id]))
+					if (!isset($interlink_verify[$location_id][$item_id][$location_id_ticket][$message_ticket_id]))
 					{
 						execMethod('property.interlink.add', $interlink_data);
 						$interlink_verify[$location_id][$item_id][$location_id_ticket][$message_ticket_id] = true;
@@ -1181,31 +1179,27 @@
 			}
 
 //---End register allocation to ticket
-			
 		}
 
-
-
-
-		private function make_tab_menu($requirement_id)
+		private function make_tab_menu( $requirement_id )
 		{
 			$tabs = array();
 
-			if($requirement_id > 0)
+			if ($requirement_id > 0)
 			{
 
 				$requirement = $this->so->get_single($requirement_id);
 
 				$tabs = array
 				(
-					'details'=> array
+					'details' => array
 					(
 						'label' => "1: " . lang('Requirement details'),
 						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
 																				   	 'id' => $requirement->get_id(),
 																				   	 'nonavbar' => $this->nonavbar))
 						),
-					'constraints'=> array
+					'constraints' => array
 					(
 						'label' => "2: " . lang('Add constraints'),
 						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
@@ -1217,13 +1211,13 @@
 			{
 				$tabs = array
 				(
-					'details'=> array
+					'details' => array
 					(
 						'label' => "1: " . lang('Requirement details'),
 						'link' => '#details',
 						'disable' => 0
 					),
-					'constraints'=> array
+					'constraints' => array
 					(
 						'label' => "2: " . lang('Add constraints'),
 						'link' => '#constraints',

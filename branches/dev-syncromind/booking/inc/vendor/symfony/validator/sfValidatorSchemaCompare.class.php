@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorSchemaCompare compares several values from an array.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorSchemaCompare extends sfValidatorSchema
-{
+	class sfValidatorSchemaCompare extends sfValidatorSchema
+	{
+
   const EQUAL              = '==';
   const NOT_EQUAL          = '!=';
   const LESS_THAN          = '<';
@@ -49,7 +49,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    *
    * @see sfValidatorBase
    */
-  public function __construct($leftField, $operator, $rightField, $options = array(), $messages = array())
+		public function __construct( $leftField, $operator, $rightField, $options = array(), $messages = array() )
   {
     $this->addOption('left_field', $leftField);
     $this->addOption('operator', $operator);
@@ -63,7 +63,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($values)
+		protected function doClean( $values )
   {
     if (is_null($values))
     {
@@ -123,7 +123,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     $options = $this->getOptionsWithoutDefaults();
     $messages = $this->getMessagesWithoutDefaults();
@@ -132,18 +132,11 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
     $arguments = '';
     if ($options || $messages)
     {
-      $arguments = sprintf('(%s%s)',
-        $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
-        $messages ? ', '.sfYamlInline::dump($messages) : ''
+				$arguments = sprintf('(%s%s)', $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
       );
     }
 
-    return sprintf('%s%s %s%s %s',
-      str_repeat(' ', $indent),
-      $this->getOption('left_field'),
-      $this->getOption('operator'),
-      $arguments,
-      $this->getOption('right_field')
+			return sprintf('%s%s %s%s %s', str_repeat(' ', $indent), $this->getOption('left_field'), $this->getOption('operator'), $arguments, $this->getOption('right_field')
     );
   }
-}
+	}

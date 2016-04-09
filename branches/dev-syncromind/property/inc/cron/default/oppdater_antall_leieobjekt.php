@@ -55,9 +55,9 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('kunde_nr_lev'))
+				if ($this->db->f('kunde_nr_lev'))
 				{
 					$update[] = array(
 						'kunde_nr_lev' => $this->db->f('kunde_nr_lev'),
@@ -68,7 +68,7 @@
 
 //_debug_array($update);
 
-			for($i = 0; $i < count($update); $i++)
+			for ($i = 0; $i < count($update); $i++)
 			{
 				$this->db->query("UPDATE fm_entity_1_3 set ant_leil_pt =" . $update[$i]['antall_leieobjekt'] . " WHERE kunde_nr_lev= '" . $update[$i]['kunde_nr_lev'] . "'", __LINE__, __FILE__);
 			}

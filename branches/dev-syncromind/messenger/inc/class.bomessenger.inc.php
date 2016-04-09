@@ -1,5 +1,5 @@
 <?php
-	/**************************************************************************\
+	/*	 * ************************************************************************\
 	* phpGroupWare - Messenger                                                 *
 	* http://www.phpgroupware.org                                              *
 	* This application written by Joseph Engo <jengo@phpgroupware.org>         *
@@ -10,12 +10,13 @@
 	*  under the terms of the GNU General Public License as published by the   *
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
-	\**************************************************************************/
+	  \************************************************************************* */
 
 	/* $Id$ */
 
 	class bomessenger
 	{
+
 		var $so;
 		var $public_functions = array
 		(
@@ -39,9 +40,7 @@
 
 			$config = createObject('phpgwapi.config', 'messenger');
 			$config->read();
-			if ( isset($config->config_data['restrict_to_group'] )
-				&& $config->config_data['restrict_to_group'] 
-				&& !isset($GLOBALS['phpgw_info']['user']['apps']['admin'])
+			if (isset($config->config_data['restrict_to_group']) && $config->config_data['restrict_to_group'] && !isset($GLOBALS['phpgw_info']['user']['apps']['admin'])
 			)
 			{
 				
@@ -49,13 +48,13 @@
 				{
 					$tmp_users = $GLOBALS['phpgw']->accounts->member($restrict_to_group, true);
 
-					foreach ( $tmp_users as $user )
+					foreach ($tmp_users as $user)
 					{
 						$users[$user['account_id']] = $user['account_name'];
 					}
 				}
 
-				if($users)
+				if ($users)
 				{
 					array_multisort($users, SORT_ASC, $users);
 				}
@@ -63,9 +62,9 @@
 			else
 			{
 				$tmp_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1);
-				foreach ( $tmp_users as $user )
+				foreach ($tmp_users as $user)
 				{
-					if($user->enabled)
+					if ($user->enabled)
 					{
 						$users[$user->id] = $GLOBALS['phpgw']->common->display_fullname($user->lid, $user->firstname, $user->lastname);
 					}
@@ -74,9 +73,9 @@
 			return $users;
 		}
 
-		function send_global_message($data='')
+		function send_global_message( $data = '' )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$message = $data['message'];
 				$send    = $data['send'];
@@ -89,25 +88,25 @@
 				$cancel  = phpgw::get_var('cancel');
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('run',1,'admin') || $cancel)
+			if (!$GLOBALS['phpgw']->acl->check('run', 1, 'admin') || $cancel)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 				return False;
 			}
 
-			if (! $message['subject'])
+			if (!$message['subject'])
 			{
 				$errors[] = lang('You must enter a subject');
 			}
 
-			if (! $message['content'])
+			if (!$message['content'])
 			{
 				$errors[] = lang("You didn't enter anything for the message");
 			}
 
 			if (is_array($errors))
 			{
-				ExecMethod('messenger.uimessenger.compose',$errors);
+				ExecMethod('messenger.uimessenger.compose', $errors);
 				//$this->ui->compose($errors);
 			}
 			else
@@ -116,24 +115,24 @@
 
 				$this->so->db->transaction_begin();
 				
-				foreach($account_info as $account)
+				foreach ($account_info as $account)
 				{
 					$message['to'] = $account->id;
-					$this->so->send_message($message,True);
+					$this->so->send_message($message, True);
 				}
 				$this->so->db->transaction_commit();
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}
 		}
 
-		function check_for_missing_fields($message)
+		function check_for_missing_fields( $message )
 		{
 			$errors = array();
 			if ($message['to'] > 0)
 			{
 				$user = $this->get_available_users();
 
-				if ( !isset($user[$message['to']]) )
+				if (!isset($user[$message['to']]))
 				{
 					$errors[] = lang('You are not allow to send messages to the user you have selected');
 				}
@@ -147,15 +146,15 @@
 			$acct->read();
 			if ($acct->is_expired() && $GLOBALS['phpgw']->accounts->name2id($message['to']))
 			{
-				$errors[] = lang("Sorry, %1's account is not currently active",$message['to']);
+				$errors[] = lang("Sorry, %1's account is not currently active", $message['to']);
 			}
 
-			if (! $message['subject'])
+			if (!$message['subject'])
 			{
 				$errors[] = lang('You must enter a subject');
 			}
 
-			if (! $message['content'])
+			if (!$message['content'])
 			{
 				$errors[] = lang("You didn't enter anything for the message");
 			}
@@ -167,7 +166,7 @@
 			return $this->so->connected;
 		}
 
-		public function send_to_groups($values)
+		public function send_to_groups( $values )
 		{
 			foreach ($values['account_groups'] as $group)
 			{
@@ -175,7 +174,7 @@
 
 				if (isset($members) AND is_array($members))
 				{
-					foreach($members as $user)
+					foreach ($members as $user)
 					{
 						$accounts[$user['account_id']] = array
 						(
@@ -189,15 +188,16 @@
 			$receipt = array();
 			foreach ($accounts as $account)
 			{
-				$this->so->send_message(array('to' => $account['account_id'], 'subject' => $values['subject'], 'content' => $values['content']));
-				$receipt['message'][]=array('msg'=>lang('message sent to' . " {$account['account_name']}" ));
+				$this->so->send_message(array('to' => $account['account_id'], 'subject' => $values['subject'],
+					'content' => $values['content']));
+				$receipt['message'][] = array('msg' => lang('message sent to' . " {$account['account_name']}"));
 			}
 			return $receipt;
 		}
 
-		function send_message($data='')
+		function send_message( $data = '' )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$message = $data['message'];
 				$send    = $data['send'];
@@ -218,9 +218,9 @@
 
 			$errors = $this->check_for_missing_fields($message);
 
-			if ( count($errors))
+			if (count($errors))
 			{
-				ExecMethod('messenger.uimessenger.compose',$errors);
+				ExecMethod('messenger.uimessenger.compose', $errors);
 			}
 			else
 			{
@@ -229,13 +229,13 @@
 			}
 		}
 
-		function read_inbox($params)
+		function read_inbox( $params )
 		{
 			$_messages = array();
 
 			$messages = $this->so->read_inbox($params);
 
-			foreach ( $messages as $message )
+			foreach ($messages as $message)
 			{
 				if ($message['from'] == -1)
 				{
@@ -244,7 +244,7 @@
 				}
 
 				// Cache our results, so we don't query the same account multiable times
-				if ( !isset($cached[$message['from']]) || !$cached[$message['from']] )
+				if (!isset($cached[$message['from']]) || !$cached[$message['from']])
 				{
 					$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
 					$cached[$message['from']]       = $message['from'];
@@ -252,10 +252,10 @@
 				}
 
 				/*
-				** N - New
-				** R - Replied
-				** O - Old (read)
-				** F - Forwarded
+				 * * N - New
+				 * * R - Replied
+				 * * O - Old (read)
+				 * * F - Forwarded
 				*/
 				if ($message['status'] == 'N')
 				{
@@ -286,7 +286,7 @@
 			return $_messages;
 		}
 
-		function read_message($message_id)
+		function read_message( $message_id )
 		{
 			$message = $this->so->read_message($message_id);
 
@@ -306,9 +306,9 @@
 			return $message;
 		}
 
-		function read_message_for_reply($message_id,$type,$n_message='')
+		function read_message_for_reply( $message_id, $type, $n_message = '' )
 		{
-			if(!$n_message)
+			if (!$n_message)
 			{
 				$n_message = phpgw::get_var('n_message');
 			}
@@ -317,18 +317,18 @@
 
 			$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
 
-			if (! $n_message['content'])
+			if (!$n_message['content'])
 			{
-				$content_array = explode("\n",$message['content']);
+				$content_array = explode("\n", $message['content']);
 
 				$new_content_array[] = ' ';
 				$new_content_array[] = '> ' . $acct->__toString() . ' wrote:';
 				$new_content_array[] = '>';
-				while (list(,$line) = each($content_array))
+				while (list(, $line) = each($content_array))
 				{
 					$new_content_array[] = '> ' . $line;
 				}
-				$message['content'] = implode("\n",$new_content_array);
+				$message['content'] = implode("\n", $new_content_array);
 			}
 
 			$message['subject'] = $type . ': ' . $message['subject'];
@@ -336,20 +336,20 @@
 			return $message;
 		}
 
-		function delete_message($messages='')
+		function delete_message( $messages = '' )
 		{
-			if(!$messages)
+			if (!$messages)
 			{
 				$messages = phpgw::get_var('messages');
 			}
 
-			if (! is_array($messages))
+			if (!is_array($messages))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 				return False;
 			}
 			$this->so->transaction_begin();
-			while (list(,$message_id) = each($messages))
+			while (list(, $message_id) = each($messages))
 			{
 				$this->so->delete_message($message_id);
 			}
@@ -357,13 +357,13 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 		}
 
-		function reply($message_id='',$n_message='')
+		function reply( $message_id = '', $n_message = '' )
 		{
-			if (phpgw::get_var('cancel','bool') == true)
+			if (phpgw::get_var('cancel', 'bool') == true)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}
-			if(!$message_id)
+			if (!$message_id)
 			{
 				$message_id = phpgw::get_var('message_id');
 				$n_message  = phpgw::get_var('n_message');
@@ -372,20 +372,20 @@
 			$errors = $this->check_for_missing_fields($n_message);
 			if ($errors)
 			{
-				ExecMethod('messenger.uimessenger.reply',array($errors,$n_message));
+				ExecMethod('messenger.uimessenger.reply', array($errors, $n_message));
 				//$this->ui->reply($errors, $n_message);
 			}
 			else
 			{
 				$this->so->send_message($n_message);
-				$this->so->update_message_status('R',$message_id);
+				$this->so->update_message_status('R', $message_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}
 		}
 
-		function forward($message_id='',$n_message='')
+		function forward( $message_id = '', $n_message = '' )
 		{
-			if(!$message_id)
+			if (!$message_id)
 			{
 				$message_id = phpgw::get_var('message_id');
 				$message  = phpgw::get_var('message');
@@ -395,23 +395,23 @@
 
 			if ($errors)
 			{
-				ExecMethod('messenger.uimessenger.forward',array($errors,$message));
+				ExecMethod('messenger.uimessenger.forward', array($errors, $message));
 				//$this->ui->forward($errors, $n_message);
 			}
 			else
 			{
 				$this->so->send_message($message);
-				$this->so->update_message_status('F',$message_id);
+				$this->so->update_message_status('F', $message_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}
 		}
 
-		function total_messages($extra_where_clause = '')
+		function total_messages( $extra_where_clause = '' )
 		{
 			return $this->so->total_messages($extra_where_clause);
 		}
 
-		function list_methods($_type='xmlrpc')
+		function list_methods( $_type = 'xmlrpc' )
 		{
 			/*
 			  This handles introspection or discovery by the logged in client,
@@ -422,48 +422,48 @@
 			{
 				$_type = $_type['type'] ? $_type['type'] : $_type[0];
 			}
-			switch($_type)
+			switch ($_type)
 			{
 				case 'xmlrpc':
 					$xml_functions = array(
 						'delete_message' => array(
 							'function'  => 'delete_message',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcStruct)),
 							'docstring' => lang('Delete a message.')
 						),
 						'read_message' => array(
 							'function'  => 'read_message',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcString)),
 							'docstring' => lang('Read a single message.')
 						),
 						'read_inbox' => array(
 							'function'  => 'read_inbox',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString,xmlrpcString,xmlrpcString)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcString, xmlrpcString, xmlrpcString)),
 							'docstring' => lang('Read a list of messages.')
 						),
 						'send_message' => array(
 							'function'  => 'send_message',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcStruct)),
 							'docstring' => lang('Send a message to a single recipient.')
 						),
 						'send_global_message' => array(
 							'function'  => 'send_global_message',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcStruct)),
 							'docstring' => lang('Send a global message.')
 						),
 						'reply' => array(
 							'function'  => 'reply',
-							'signature' => array(array(xmlrpcInt,xmlrpcInt)),
+							'signature' => array(array(xmlrpcInt, xmlrpcInt)),
 							'docstring' => lang('Reply to a received message.')
 						),
 						'forward' => array(
 							'function'  => 'forward',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcStruct)),
 							'docstring' => lang('Forward a message to another user.')
 						),
 						'list_methods' => array(
 							'function'  => 'list_methods',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
+							'signature' => array(array(xmlrpcStruct, xmlrpcString)),
 							'docstring' => lang('Read this list of methods.')
 						)
 					);

@@ -29,6 +29,7 @@
 	 */
 	phpgw::import_class('controller.socommon');
 
+	include_class('controller', 'control_item', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_item_case', 'inc/model/');
 
@@ -44,7 +45,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socheck_item');
 			}
@@ -57,7 +58,7 @@
 		 * @param	$check_item check item oject to be added
 		 * @return id of the inserted check item, 0 otherwise
 		 */
-		function add(&$check_item)
+		function add( &$check_item )
 		{
 			$cols = array(
 				'control_item_id',
@@ -80,7 +81,7 @@
 		 * @param	$check_item check item oject to be updated
 		 * @return  id of the inserted check item, 0 otherwise
 		 */
-		function update($check_item)
+		function update( $check_item )
 		{
 			$id = $check_item->get_id();
 
@@ -91,7 +92,7 @@
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				return $id;
 			}
@@ -107,7 +108,7 @@
 		 * @param	$check_item_id id to check item to be fetched from database
 		 * @return  check item object
 		 */
-		public function get_single($check_item_id)
+		public function get_single( $check_item_id )
 		{
 			$check_item_id = (int)$check_item_id;
 
@@ -118,7 +119,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id'), 'int'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
@@ -223,7 +224,7 @@
 		 * @param	$check_item_id control item id
 		 * @return check item object
 		 */
-		public function get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id)
+		public function get_check_item_by_check_list_and_control_item( $check_list_id, $control_item_id )
 		{
 			$check_list_id	 = (int)$check_list_id;
 			$control_item_id = (int)$control_item_id;
@@ -236,7 +237,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id'), 'int'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
@@ -268,7 +269,7 @@
 		 * @param	$messageStatus is there a message registered for the case
 		 * @return check item objects
 		 */
-		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $location_code = null)
+		public function get_check_items_with_cases( $check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $location_code = null )
 		{
 			$check_list_id	 = (int)$check_list_id;
 			$sql			 = "SELECT ci.id as ci_id, control_item_id, check_list_id, cic.component_location_id,";
@@ -283,38 +284,38 @@
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 			$sql .= "WHERE ci.check_list_id = {$check_list_id} ";
 
-			if($status == 'open')
+			if ($status == 'open')
 			{
 				$sql .= "AND cic.status = 0 ";
 			}
-			else if($status == 'closed')
+			else if ($status == 'closed')
 			{
 				$sql .= "AND cic.status = 1 ";
 			}
-			else if($status == 'waiting')
+			else if ($status == 'waiting')
 			{
 				$sql .= "AND cic.status = 2 ";
 			}
-			else if($status == 'open_or_waiting')
+			else if ($status == 'open_or_waiting')
 			{
 				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
 			}
 
-			if($type != null)
+			if ($type != null)
 			{
 				$sql .= "AND coi.type = '$type' ";
 			}
 
-			if($messageStatus != null & $messageStatus == 'no_message_registered')
+			if ($messageStatus != null & $messageStatus == 'no_message_registered')
 			{
 				$sql .= "AND cic.location_item_id IS NULL ";
 			}
-			else if($messageStatus != null & $messageStatus == 'message_registered')
+			else if ($messageStatus != null & $messageStatus == 'message_registered')
 			{
 				$sql .= "AND cic.location_item_id > 0 ";
 			}
 
-			if($location_code != null)
+			if ($location_code != null)
 			{
 				$sql .= "AND cic.location_code = '$location_code' ";
 			}
@@ -327,11 +328,11 @@
 			$check_item			 = null;
 			$check_items_array	 = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('ci_id') != $check_item_id)
+				if ($this->db->f('ci_id') != $check_item_id)
 				{
-					if($check_item_id)
+					if ($check_item_id)
 					{
 						$check_item->set_cases_array($cases_array);
 
@@ -355,7 +356,7 @@
 					$cases_array = array();
 				}
 
-				if($this->db->f('cic_id'))
+				if ($this->db->f('cic_id'))
 				{
 					$case			 = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -376,7 +377,7 @@
 				$check_item_id = $check_item->get_id();
 			}
 
-			if($check_item != null)
+			if ($check_item != null)
 			{
 				$check_item->set_cases_array($cases_array);
 
@@ -392,7 +393,7 @@
 		 * @param	$message_ticket_id get check items and cases for this message
 		 * @return check item objects
 		 */
-		public function get_check_items_with_cases_by_message($message_ticket_id)
+		public function get_check_items_with_cases_by_message( $message_ticket_id )
 		{
 			$message_ticket_id = (int)$message_ticket_id;
 
@@ -409,11 +410,11 @@
 
 			$check_item_id	 = 0;
 			$check_item		 = null;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('ci_id') != $check_item_id)
+				if ($this->db->f('ci_id') != $check_item_id)
 				{
-					if($check_item_id)
+					if ($check_item_id)
 					{
 						$check_item->set_cases_array($cases_array);
 
@@ -438,7 +439,7 @@
 					$cases_array = array();
 				}
 
-				if($this->db->f('cic_id'))
+				if ($this->db->f('cic_id'))
 				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_status($this->unmarshal($this->db->f('cic_status'), 'int'));
@@ -457,7 +458,7 @@
 				$check_item_id = $check_item->get_id();
 			}
 
-			if($check_item != null)
+			if ($check_item != null)
 			{
 				$check_item->set_cases_array($cases_array);
 				$check_items_array[] = $check_item;
@@ -496,12 +497,12 @@
 		  }
 		 */
 
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 
 		}
 
-		function populate(int $object_id, &$object)
+		function populate( int $object_id, &$object )
 		{
 
 		}

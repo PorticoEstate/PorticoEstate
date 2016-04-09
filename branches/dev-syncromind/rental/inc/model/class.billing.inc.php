@@ -29,7 +29,7 @@
 		protected $responsibility_title;
 		public static $so;
 
-		public function __construct(int $id, int $location_id, $title, int $created_by)
+		public function __construct( int $id, int $location_id, $title, int $created_by )
 		{
 			$this->id					 = (int)$id;
 			$this->location_id			 = (int)$location_id;
@@ -42,79 +42,99 @@
 		}
 
 		public function get_id()
-		{ return $this->id;}
+		{
+			return $this->id;
+		}
 
-		public function set_id(int $id)
+		public function set_id( int $id )
 		{
 			$this->id = (int)$id;
 		}
 
 		public function get_contract_type_title()
-		{ return $this->contract_type_title;}
+		{
+			return $this->contract_type_title;
+		}
 
-		public function set_contract_type_title($contract_type_title)
+		public function set_contract_type_title( $contract_type_title )
 		{
 			$this->contract_type_title = $contract_type_title;
 		}
 
 		public function get_billing_term()
-		{ return $this->billing_term;}
+		{
+			return $this->billing_term;
+		}
 
-		public function set_total_sum(float $total_sum)
+		public function set_total_sum( float $total_sum )
 		{
 			$this->total_sum = (float)$total_sum;
 		}
 
 		public function get_location_id()
-		{ return $this->location_id;}
+		{
+			return $this->location_id;
+		}
 
 		public function get_year()
-		{ return $this->year;}
+		{
+			return $this->year;
+		}
 
-		public function set_year($year)
+		public function set_year( $year )
 		{
 			$this->year = $year;
 		}
 
 		public function get_month()
-		{ return $this->month;}
+		{
+			return $this->month;
+		}
 
-		public function set_month($month)
+		public function set_month( $month )
 		{
 			$this->month = $month;
 		}
 
 		public function get_total_sum()
-		{ return $this->total_sum;}
+		{
+			return $this->total_sum;
+		}
 
-		public function set_timestamp_start(int $timestamp_start)
+		public function set_timestamp_start( int $timestamp_start )
 		{
 			$this->timestamp_start = (int)$timestamp_start;
 		}
 
 		public function get_timestamp_start()
-		{ return $this->timestamp_start;}
+		{
+			return $this->timestamp_start;
+		}
 
-		public function set_timestamp_stop(int $timestamp_stop)
+		public function set_timestamp_stop( int $timestamp_stop )
 		{
 			$this->timestamp_stop = (int)$timestamp_stop;
 		}
 
 		public function get_timestamp_stop()
-		{ return $this->timestamp_stop;}
+		{
+			return $this->timestamp_stop;
+		}
 
-		public function set_success($success)
+		public function set_success( $success )
 		{
 			$this->success = (boolean)$success;
 		}
 
-		public function set_timestamp_commit($timestamp_commit)
+		public function set_timestamp_commit( $timestamp_commit )
 		{
 			$this->timestamp_commit = $timestamp_commit;
 		}
 
 		public function get_timestamp_commit()
-		{ return $this->timestamp_commit;}
+		{
+			return $this->timestamp_commit;
+		}
 
 		/**
 		 * Convenience method for checking if a billing job has been commited or
@@ -128,44 +148,56 @@
 		}
 
 		public function is_success()
-		{ return $this->success;}
+		{
+			return $this->success;
+		}
 
-		public function set_created_by(int $created_by)
+		public function set_created_by( int $created_by )
 		{
 			$this->created_by = (int)$created_by;
 		}
 
-		public function set_deleted(boolean $deleted)
+		public function set_deleted( boolean $deleted )
 		{
 			$this->deleted = (boolean)$deleted;
 		}
 
 		public function is_deleted()
-		{ return $this->deleted;}
+		{
+			return $this->deleted;
+		}
 
 		public function get_created_by()
-		{ return $this->created_by;}
+		{
+			return $this->created_by;
+		}
 
 		public function has_generated_export()
-		{ return $this->has_generated_export;}
+		{
+			return $this->has_generated_export;
+		}
 
-		public function set_generated_export(boolean $has_generated_export)
+		public function set_generated_export( boolean $has_generated_export )
 		{
 			$this->has_generated_export = (boolean)$has_generated_export;
 		}
 
-		public function set_export_format($export_format)
+		public function set_export_format( $export_format )
 		{
 			$this->export_format = $export_format;
 		}
 
 		public function get_export_format()
-		{ return $this->export_format;}
+		{
+			return $this->export_format;
+		}
 
 		public function get_responsibility_title()
-		{ return $this->responsibility_title;}
+		{
+			return $this->responsibility_title;
+		}
 
-		public function set_responsibility_title($responsibility_title)
+		public function set_responsibility_title( $responsibility_title )
 		{
 			$this->responsibility_title = $responsibility_title;
 		}
@@ -176,19 +208,19 @@
 			$location_id		 = $this->get_location_id();
 			$account			 = $GLOBALS['phpgw']->accounts->get($this->get_created_by());
 			$timestamp_commit	 = '';
-			if($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
+			if ($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
 			{
 				$timestamp_commit = $GLOBALS['phpgw']->common->show_date($this->get_timestamp_commit(), $date_format . ' H:i:s');
 				//$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
 			}
 			$billing_info_content = array();
-			foreach($this->get_billing_info() as $bi)
+			foreach ($this->get_billing_info() as $bi)
 			{
 				$term		 = $bi->get_term_id();
 				$term_label	 = "";
 				$month		 = $bi->get_month();
 				$year		 = $bi->get_year();
-				if($term == 1)
+				if ($term == 1)
 				{
 					$term_label = lang('month ' . $bi->get_month() . ' capitalized');
 				}
@@ -218,7 +250,7 @@
 			return $this->title;
 		}
 
-		public function set_title($title)
+		public function set_title( $title )
 		{
 			$this->title = $title;
 		}
@@ -228,17 +260,17 @@
 			return $this->billing_info;
 		}
 
-		public function add_billing_info(rental_billing_info $new_billing_info)
+		public function add_billing_info( rental_billing_info $new_billing_info )
 		{
 			$new_billing_info_id = $new_billing_info->get_id();
 
-			if(!in_array($new_billing_info_id, $this->billing_info))
+			if (!in_array($new_billing_info_id, $this->billing_info))
 			{
 				$this->billing_info[$new_billing_info_id] = $new_billing_info;
 			}
 		}
 
-		public function set_billing_info($billing_info)
+		public function set_billing_info( $billing_info )
 		{
 			$this->billing_info = $billing_info;
 		}

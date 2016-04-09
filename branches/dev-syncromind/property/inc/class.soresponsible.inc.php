@@ -67,9 +67,9 @@
 		 *
 		 * @return array Responsibility types
 		 */
-		public function read_type($data)
+		public function read_type( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 				$query = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
@@ -82,7 +82,7 @@
 				$results = (isset($data['results']) ? $data['results'] : 0);
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " ORDER BY fm_responsibility.$order $sort";
 			}
@@ -95,7 +95,7 @@
 			$filtermethod = '';
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$querymethod = "$where (fm_responsibility.name {$this->like} '%$query%' OR fm_responsibility.descr {$this->like} '%$query%')";
 			}
@@ -106,7 +106,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -117,7 +117,7 @@
 
 			$values = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$values[] = array
 					(
@@ -128,12 +128,12 @@
 			}
 
 			$cats = CreateObject('phpgwapi.categories', -1);
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
 				$sql = "SELECT * FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$locations = array();
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$location_id = $this->db->f('location_id');
 					$cat_id = $this->db->f('cat_id');
@@ -143,7 +143,7 @@
 					$entry['created_on'] = $this->db->f('created_on');
 				}
 				$__location_info = array();
-				foreach($locations as $location => $dummy)
+				foreach ($locations as $location => $dummy)
 				{
 
 					$location_arr = explode('_', $location);
@@ -167,7 +167,7 @@
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
-		public function add_type($data)
+		public function add_type( $data )
 		{
 			$receipt = array();
 			$data['name'] = $this->db->db_addslashes($data['name']);
@@ -190,13 +190,13 @@
 
 			$id = $this->db->get_last_insert_id('fm_responsibility', 'id');
 
-			if($data['cat_id'])
+			if ($data['cat_id'])
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($data['appname'], $data['location']);
 
 				$this->db->query("SELECT * FROM fm_responsibility_module  WHERE location_id = " . (int)$location_id . ' AND cat_id = ' . (int)$data['cat_id'], __LINE__, __FILE__);
 
-				if(!$this->db->next_record())
+				if (!$this->db->next_record())
 				{
 					$value_set = array();
 
@@ -213,7 +213,7 @@
 				}
 			}
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('Responsibility type has been saved'));
 				$receipt['id'] = $id;
@@ -233,7 +233,7 @@
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
-		public function edit_type($data)
+		public function edit_type( $data )
 		{
 			$receipt = array();
 			$value_set = array();
@@ -247,13 +247,13 @@
 			$this->db->query("UPDATE fm_responsibility SET $value_set WHERE id = " . (int)$data['id'], __LINE__, __FILE__);
 			$this->db->query("UPDATE fm_responsibility_module SET active = NULL WHERE responsibility_id = " . (int)$data['id'], __LINE__, __FILE__);
 
-			if($data['cat_id'])
+			if ($data['cat_id'])
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($data['appname'], $data['location']);
 
 				$this->db->query("SELECT * FROM fm_responsibility_module  WHERE responsibility_id = " . (int)$data['id'] . ' AND location_id = ' . (int)$location_id . ' AND cat_id = ' . (int)$data['cat_id'], __LINE__, __FILE__);
 
-				if(!$this->db->next_record())
+				if (!$this->db->next_record())
 				{
 					$value_set = array();
 
@@ -271,18 +271,18 @@
 			}
 
 //_debug_array($data);die();
-			if(isset($data['delete_module']) && $data['delete_module'])
+			if (isset($data['delete_module']) && $data['delete_module'])
 			{
-				foreach($data['delete_module'] as $to_delete)
+				foreach ($data['delete_module'] as $to_delete)
 				{
 					$_to_delete = explode('_', $to_delete);
 					$this->db->query("DELETE FROM fm_responsibility_module  WHERE location_id = " . (int)$_to_delete[0] . ' AND cat_id = ' . (int)$_to_delete[1], __LINE__, __FILE__);
 				}
 			}
 
-			if(isset($data['set_active']) && $data['set_active'])
+			if (isset($data['set_active']) && $data['set_active'])
 			{
-				foreach($data['set_active'] as $set_active)
+				foreach ($data['set_active'] as $set_active)
 				{
 					$_set_active = explode('_', $set_active);
 					$this->db->query("UPDATE fm_responsibility_module SET active = 1 WHERE location_id = " . (int)$_set_active[0] . ' AND cat_id = ' . (int)$_set_active[1], __LINE__, __FILE__);
@@ -291,7 +291,7 @@
 //_debug_array($data);die();
 
 			$receipt['id'] = $data['id'];
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('responsibility type has been edited'));
 			}
@@ -309,7 +309,7 @@
 		 *
 		 * @return array Responsibility type
 		 */
-		public function read_single_type($id)
+		public function read_single_type( $id )
 		{
 			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int)$id;
 
@@ -338,7 +338,7 @@
 		 *
 		 * @return array Responsibility type
 		 */
-		public function read_single_role($id)
+		public function read_single_role( $id )
 		{
 			$id = (int)$id;
 			$sql = "SELECT * FROM fm_responsibility_role WHERE id= {$id}";
@@ -364,7 +364,7 @@
 			return $values;
 		}
 
-		public function add_role($data)
+		public function add_role( $data )
 		{
 			$receipt = array();
 
@@ -385,7 +385,7 @@
 			. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('Responsibility role has been changed'));
 				$receipt['id'] = $values_insert['id'];//$this->db->get_last_insert_id('fm_responsibility_role', 'id');
@@ -398,7 +398,7 @@
 			return $receipt;
 		}
 
-		public function edit_role($data)
+		public function edit_role( $data )
 		{
 			$receipt = array();
 
@@ -415,7 +415,7 @@
 
 			$this->db->query("UPDATE fm_responsibility_role set $value_set WHERE id = " . (int)$data['id'], __LINE__, __FILE__);
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('Responsibility role has been changed'));
 			}
@@ -434,12 +434,12 @@
 		 * @param type $id responsibility id
 		 * @return string responsibility name
 		 */
-		public function get_responsibility_name($id)
+		public function get_responsibility_name( $id )
 		{
 			static $names = array();
 			$i = (int)$id;
 
-			if($names[$i])
+			if ($names[$i])
 			{
 				return $names[$i];
 			}
@@ -458,12 +458,12 @@
 		 * @param type $id role id
 		 * @return string responsibility name
 		 */
-		public function get_responsibility_name_from_role($id)
+		public function get_responsibility_name_from_role( $id )
 		{
 			static $names = array();
 			$i = (int)$id;
 
-			if($names[$i])
+			if ($names[$i])
 			{
 				return $names[$i];
 			}
@@ -485,7 +485,7 @@
 		 *
 		 * @return array Responsibility type
 		 */
-		public function read_single($id)
+		public function read_single( $id )
 		{
 			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int)$id;
 
@@ -493,7 +493,7 @@
 
 			$values = array();
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$values = array
 					(
@@ -506,7 +506,7 @@
 
 				$sql = 'SELECT * FROM fm_responsibility_module WHERE responsibility_id= ' . (int)$id;
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$values['module'][] = array
 						(
@@ -529,7 +529,7 @@
 		 *
 		 * @return void
 		 */
-		function delete_type($id)
+		function delete_type( $id )
 		{
 			$id = (int)$id;
 			$this->db->transaction_begin();
@@ -537,11 +537,11 @@
 			$this->db->query("SELECT id FROM fm_responsibility_role WHERE responsibility_id = {$id}", __LINE__, __FILE__);
 
 			$responsibility_role_ids = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$responsibility_role_ids[] = $this->db->f('id');
 			}
-			if($responsibility_role_ids)
+			if ($responsibility_role_ids)
 			{
 				$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_role_id IN(' . implode(',', $responsibility_role_ids) . ')', __LINE__, __FILE__);
 			}
@@ -558,9 +558,9 @@
 		 *
 		 * @return array Responsibility type contacts
 		 */
-		public function read_contact($data)
+		public function read_contact( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 				$query = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
@@ -571,7 +571,7 @@
 				$role_id = isset($data['role_id']) && $data['role_id'] ? (int)$data['role_id'] : 0;
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = "ORDER BY $order $sort";
 			}
@@ -583,17 +583,17 @@
 			$filtermethod = 'WHERE expired_on IS NULL';
 			$where = 'AND';
 
-			if($type_id > 0)
+			if ($type_id > 0)
 			{
 				$filtermethod .= " {$where} responsibility_id = {$type_id}";
 			}
-			if($role_id > 0)
+			if ($role_id > 0)
 			{
 				$filtermethod .= " {$where} responsibility_role_id = {$type_id}";
 			}
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$querymethod = "$where (remark $this->like '%$query%')";
 			}
@@ -605,7 +605,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -616,7 +616,7 @@
 
 			$values = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$values[] = array
 					(
@@ -649,7 +649,7 @@
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
-		public function add_contact($values)
+		public function add_contact( $values )
 		{
 			$receipt = array();
 			$values['remark'] = $this->db->db_addslashes($values['remark']);
@@ -677,7 +677,7 @@
 			. " location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
 			. " VALUES ($insert_values)", __LINE__, __FILE__);
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('Responsibility contact has been saved'));
 				$receipt['id'] = $this->db->get_last_insert_id('fm_responsibility_contact', 'id');
@@ -697,17 +697,17 @@
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
-		public function edit_contact($values)
+		public function edit_contact( $values )
 		{
 			$receipt = array();
 
 			$orig = $this->read_single_contact($values['id']);
 
-			if(isset($values['location']) && (@implode('-', $values['location']) != $orig['location_code']) || $values['contact_id'] != $orig['contact_id'] || $values['active_from'] != $orig['active_from'] || $values['active_to'] != $orig['active_to'] || $values['extra']['p_num'] != $orig['p_num'] || $values['remark'] != $orig['remark'])
+			if (isset($values['location']) && (@implode('-', $values['location']) != $orig['location_code']) || $values['contact_id'] != $orig['contact_id'] || $values['active_from'] != $orig['active_from'] || $values['active_to'] != $orig['active_to'] || $values['extra']['p_num'] != $orig['p_num'] || $values['remark'] != $orig['remark'])
 			{
 				$receipt = $this->add_contact($values);
 
-				if(!isset($receipt['error']))
+				if (!isset($receipt['error']))
 				{
 					unset($receipt['message']);
 
@@ -721,7 +721,7 @@
 
 				$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int)$values['id'], __LINE__, __FILE__);
 
-				if($this->db->transaction_commit())
+				if ($this->db->transaction_commit())
 				{
 					$receipt['message'][] = array('msg' => lang('Responsibility contact has been changed'));
 				}
@@ -746,7 +746,7 @@
 		 *
 		 * @return array Responsibility contact
 		 */
-		public function read_single_contact($id)
+		public function read_single_contact( $id )
 		{
 			$sql = "SELECT fm_responsibility_contact.*, fm_responsibility.id as responsibility_id,  fm_responsibility.name AS responsibility_name, fm_responsibility_role.name AS role_name"
 			. " FROM fm_responsibility_contact"
@@ -791,7 +791,7 @@
 		 *
 		 * @return void
 		 */
-		function delete_contact($id)
+		function delete_contact( $id )
 		{
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id=' . (int)$id, __LINE__, __FILE__);
 		}
@@ -803,7 +803,7 @@
 		 *
 		 * @return void
 		 */
-		function expire_contact($id)
+		function expire_contact( $id )
 		{
 			$value_set['expired_by'] = $this->account;
 			$value_set['expired_on'] = time();
@@ -821,7 +821,7 @@
 		 *
 		 * @return array
 		 */
-		public function get_active_responsible_at_location($location_code, $role_id)
+		public function get_active_responsible_at_location( $location_code, $role_id )
 		{
 			$role_id = (int)$role_id;
 			$time = time() + 1;
@@ -835,7 +835,7 @@
 			$values = array();
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$values = array
 					(
@@ -854,14 +854,14 @@
 		 *
 		 * @return contact_id
 		 */
-		public function get_responsible($data = array())
+		public function get_responsible( $data = array() )
 		{
 			$location_filter = array();
 
 			$todo = false;
 			$item_filter = '';
 
-			if(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
+			if (isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
 			{
 				$location_code = implode('-', $data['location']);
 
@@ -872,9 +872,9 @@
 				$location_filter[] = " AND location_code = '{$location_code}'";
 				$todo = true;
 			}
-			else if(isset($data['location']) && $data['location'])
+			else if (isset($data['location']) && $data['location'])
 			{
-				if(!is_array($data['location']))
+				if (!is_array($data['location']))
 				{
 					throw new exception('soresponsible::get_responsible(): location-input needs to be an array');
 				}
@@ -882,7 +882,7 @@
 				$location_filter[] = ''; // when the responsibility is generic - not located to any location
 				$location_code = '';
 				$location_array = array();
-				foreach($data['location'] as $location)
+				foreach ($data['location'] as $location)
 				{
 					$location_array[] = $location;
 					$location_code = implode('-', $location_array);
@@ -895,7 +895,7 @@
 				$todo = true;
 			}
 
-			if(!$todo)
+			if (!$todo)
 			{
 				return 0;
 			}
@@ -908,11 +908,11 @@
 			. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
 			. " {$item_filter}";
 
-			foreach($location_filter as $filter_at_location)
+			foreach ($location_filter as $filter_at_location)
 			{
 				$this->db->query($sql . $filter_at_location, __LINE__, __FILE__);
 				$this->db->next_record();
-				if($this->db->f('contact_id'))
+				if ($this->db->f('contact_id'))
 				{
 					return $this->db->f('contact_id');
 				}
@@ -928,7 +928,7 @@
 		 *
 		 * @return user_id
 		 */
-		public function get_contact_user_id($person_id)
+		public function get_contact_user_id( $person_id )
 		{
 			$person_id = (int)$person_id;
 			$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id ={$person_id}";
@@ -944,7 +944,7 @@
 		 *
 		 * @return user_id
 		 */
-		public function get_responsible_user_id($data = array())
+		public function get_responsible_user_id( $data = array() )
 		{
 			$responsibility_role_id = (int)$data['responsibility_role_id'];
 			$location_code = $data['location_code'];

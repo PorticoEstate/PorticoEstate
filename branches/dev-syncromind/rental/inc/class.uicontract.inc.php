@@ -61,16 +61,16 @@
 		{
 			$filters = array();
 
-			if($this->isAdministrator() || $this->isExecutiveOfficer())
+			if ($this->isAdministrator() || $this->isExecutiveOfficer())
 			{
 				/* $config	= CreateObject('phpgwapi.config','rental');
 				  $config->read(); */
 				$valid_contract_types = array();
-				if(isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
+				if (isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
 				{
-					foreach($this->config->config_data['contract_types'] as $_key => $_value)
+					foreach ($this->config->config_data['contract_types'] as $_key => $_value)
 					{
-						if($_value)
+						if ($_value)
 						{
 							$valid_contract_types[] = $_value;
 						}
@@ -78,16 +78,16 @@
 				}
 				$new_contract_options = array();
 				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($types as $id => $label)
+				foreach ($types as $id => $label)
 				{
-					if($valid_contract_types && !in_array($id, $valid_contract_types))
+					if ($valid_contract_types && !in_array($id, $valid_contract_types))
 					{
 						continue;
 					}
 					$names = $this->locations->get_name($id);
-					if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+					if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 					{
-						if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+						if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 						{
 							$new_contract_options[] = array('id' => $id, 'name' => lang($label));
 						}
@@ -138,7 +138,7 @@
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$types_options = array();
 			array_unshift($types_options, array('id' => 'all', 'name' => lang('all')));
-			foreach($types as $id => $label)
+			foreach ($types as $id => $label)
 			{
 				$types_options[] = array('id' => $id, 'name' => lang($label));
 			}
@@ -153,26 +153,26 @@
 			return $filters;
 		}
 
-		private function _get_tableDef_composite($mode, $contract_id)
+		private function _get_tableDef_composite( $mode, $contract_id )
 		{
 			$uicols_composite = rental_socomposite::get_instance()->get_uicols();
 			$columns_def = array();
 			$uicols_count = count($uicols_composite['descr']);
-			for($i = 0; $i < $uicols_count; $i++)
+			for ($i = 0; $i < $uicols_count; $i++)
 			{
-				if($uicols_composite['input_type'][$i] != 'hidden')
+				if ($uicols_composite['input_type'][$i] != 'hidden')
 				{
 					$columns_def[$i]['key'] = $uicols_composite['name'][$i];
 					$columns_def[$i]['label'] = $uicols_composite['descr'][$i];
 					$columns_def[$i]['sortable'] = $uicols_composite['sortable'][$i];
 				}
 			}
-			if(!empty($this->config->config_data['contract_future_info']))
+			if (!empty($this->config->config_data['contract_future_info']))
 			{
 				$columns_def[] = array("key" => "contracts", "label" => lang('contract_future_info'),
 					"sortable" => false, "hidden" => false);
 			}
-			if(!empty($this->config->config_data['contract_furnished_status']))
+			if (!empty($this->config->config_data['contract_furnished_status']))
 			{
 				$columns_def[] = array("key" => "furnished_status", "label" => lang('furnish_type'),
 					"sortable" => false, "hidden" => false);
@@ -189,7 +189,7 @@
 							'source' => 'id'))))
 			);
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$tabletools_composite1[] = array
 					(
@@ -232,7 +232,7 @@
 				)
 			);
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$tabletools_composite2[] = array
 					(
@@ -294,7 +294,7 @@
 			return $datatable_def;
 		}
 
-		private function _get_tableDef_party($mode, $contract_id)
+		private function _get_tableDef_party( $mode, $contract_id )
 		{
 			$columns_def = array(
 				array('key' => 'identifier', 'label' => lang('identifier'), 'className' => '',
@@ -330,7 +330,7 @@
 					'allrows' => true))
 			);
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$columns_def[3]['formatter'] = 'formatterPayer';
 
@@ -440,23 +440,33 @@
 			return $datatable_def;
 		}
 
-		private function _get_tableDef_price($mode, $contract_id)
+		private function _get_tableDef_price( $mode, $contract_id )
 		{
 			$columns_def = array(
-				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',	'sortable' => true, 'hidden' => false),
-				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,	'hidden' => false, 'editor'=> $mode == 'edit' ? true : false),
-				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,	'hidden' => false),
-				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,'formatter' => 'formatterPrice', 'className' => 'right', 'editor'=>  $mode == 'edit' ? true : false),
-				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",	'className' => 'right'),
-				array("key" => "count", "label" => lang('count'), 'editor'=>  $mode == 'edit' ? true : false),
-				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',	'className' => 'right'),
-				array("key" => "date_start", "label" => lang('date_start'), 'formatter' =>  $mode == 'edit' ? 'formatterDateStart_price_item' : "",	'className' => 'center'),
-				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",'className' => 'center'),
-				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "", 'className' => 'center'),
-				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,'className' => 'center')
+				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',
+					'sortable' => true, 'hidden' => false),
+				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,
+					'hidden' => false, 'editor' => $mode == 'edit' ? true : false),
+				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,
+					'hidden' => false),
+				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,
+					'formatter' => 'formatterPrice', 'className' => 'right', 'editor' => $mode == 'edit' ? true : false),
+				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
+					'className' => 'right'),
+				array("key" => "count", "label" => lang('count'), 'editor' => $mode == 'edit' ? true : false),
+				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',
+					'className' => 'right'),
+				array("key" => "date_start", "label" => lang('date_start'), 'formatter' => $mode == 'edit' ? 'formatterDateStart_price_item' : "",
+					'className' => 'center'),
+				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",
+					'className' => 'center'),
+				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "",
+					'className' => 'center'),
+				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,
+					'className' => 'center')
 			);
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$tabletools_price1[] = array
 					(
@@ -524,7 +534,7 @@
 
 				$sogeneric = CreateObject('property.sogeneric', 'composite_standard');
 				$composite_standards = $sogeneric->read(array('allrows' => true));
-				foreach($composite_standards as $composite_standard)
+				foreach ($composite_standards as $composite_standard)
 				{
 					$tabletools_price2[] = array
 						(
@@ -581,7 +591,7 @@
 			return $datatable_def;
 		}
 
-		private function _get_tableDef_invoice($mode, $contract_id)
+		private function _get_tableDef_invoice( $mode, $contract_id )
 		{
 			$tabletools_invoice[] = array
 				(
@@ -599,7 +609,7 @@
 					"
 			);
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$table_name = 'datatable-container_7';
 			}
@@ -646,7 +656,7 @@
 			return $datatable_def;
 		}
 
-		private function _get_tableDef_document($mode, $contract_id, $permission = false)
+		private function _get_tableDef_document( $mode, $contract_id, $permission = false )
 		{
 			$tabletools_documents[] = array
 				(
@@ -661,7 +671,7 @@
 
 			$table_name = 'datatable-container_5';
 
-			if(($mode == 'edit') && $permission)
+			if (($mode == 'edit') && $permission)
 			{
 				$tabletools_documents[] = array
 					(
@@ -705,13 +715,13 @@
 			return $datatable_def;
 		}
 
-		private function _get_tableDef_notification($mode, $contract_id)
+		private function _get_tableDef_notification( $mode, $contract_id )
 		{
 			$table_name = 'datatable-container_6';
 
 			$tabletools_notification = array();
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$tabletools_notification[] = array
 					(
@@ -763,14 +773,9 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
+			$length = phpgw::get_var('length', 'int');
+
+			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -778,7 +783,8 @@
 			$columns = phpgw::get_var('columns');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$num_of_objects = $length == -1 ? null : $user_rows_per_page;
+
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'old_contract_id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
@@ -791,7 +797,7 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
@@ -799,7 +805,7 @@
 			$price_items_only = phpgw::get_var('price_items'); //should only export contract price items
 
 			$type = phpgw::get_var('type');
-			switch($type)
+			switch ($type)
 			{
 				case 'contracts_for_adjustment':
 					$adjustment_id = (int)phpgw::get_var('id');
@@ -824,12 +830,12 @@
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
 					$read_access = array();
-					foreach($types as $id => $label)
+					foreach ($types as $id => $label)
 					{
 						$names = $this->locations->get_name($id);
-						if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+						if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 						{
-							if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+							if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 							{
 								$ids[] = $id;
 							}
@@ -840,7 +846,7 @@
 						}
 					}
 
-					if(count($ids) > 0)
+					if (count($ids) > 0)
 					{
 						$comma_seperated_ids = implode(',', $ids);
 					}
@@ -849,7 +855,7 @@
 						$comma_seperated_ids = implode(',', $read_access);
 					}
 
-					switch($type)
+					switch ($type)
 					{
 						case 'ending_contracts':   // Contracts that are about to end in areas of responsibility
 							$filters = array('contract_status' => 'under_dismissal', 'contract_type' => $comma_seperated_ids);
@@ -858,7 +864,7 @@
 							$filters = array('contract_status' => 'ended', 'contract_type' => $comma_seperated_ids);
 							break;
 						case 'last_edited':  // Contracts that are last edited in areas of resposibility
-							$filters = array('contract_type' => $comma_seperated_ids);
+							$filters = array('contract_type' => $comma_seperated_ids, 'contract_status' => 'active' );
 							$sort_field = 'contract.last_updated';
 							$sort_ascending = false;
 							break;
@@ -902,18 +908,18 @@
 
 			//Serialize the contracts found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
-					if(isset($price_items_only))
+					if (isset($price_items_only))
 					{
 						//export contract price items
 						$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
 							'contract_id' => $result->get_id(), 'export' => 'true', 'include_billed' => 'true'));
-						foreach($result_objects_pi as $result_pi)
+						foreach ($result_objects_pi as $result_pi)
 						{
-							if(isset($result_pi))
+							if (isset($result_pi))
 							{
 								$rows[] = $result_pi->serialize();
 							}
@@ -943,7 +949,7 @@
 			  array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id_in,$entity_id_out,$category_id_in,$category_id_out));
 			  } */
 
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}
@@ -1034,7 +1040,7 @@
 		 */
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -1195,7 +1201,7 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -1236,7 +1242,7 @@
 			);
 
 			$temlate_counter = 0;
-			foreach($this->pdf_templates as $pdf_template)
+			foreach ($this->pdf_templates as $pdf_template)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -1254,14 +1260,14 @@
 			}
 
 			$access = $this->acl->check('.', PHPGW_ACL_READ, 'catch');
-			if($access)
+			if ($access)
 			{
 				$entity_id_in = $this->config->config_data['entity_config_move_in'];
 				$entity_id_out = $this->config->config_data['entity_config_move_out'];
 				$category_id_in = $this->config->config_data['category_config_move_in'];
 				$category_id_out = $this->config->config_data['category_config_move_out'];
 
-				if(!empty($entity_id_in) && !empty($category_id_in))
+				if (!empty($entity_id_in) && !empty($category_id_in))
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -1279,7 +1285,7 @@
 					);
 				}
 
-				if(!empty($entity_id_out) && !empty($category_id_out))
+				if (!empty($entity_id_out) && !empty($category_id_out))
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -1322,11 +1328,11 @@ JS;
 			$error = null;
 			$add_default_price_items = false;
 
-			if(isset($contract_id) && $contract_id > 0)
+			if (isset($contract_id) && $contract_id > 0)
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 
-				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
+				if (!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_contract'));
 				}
@@ -1335,7 +1341,7 @@ JS;
 				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
-				if(!is_numeric(phpgw::get_var('contract_type')) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0))
+				if (!is_numeric(phpgw::get_var('contract_type')) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0))
 				{
 					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
 					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error');
@@ -1348,14 +1354,14 @@ JS;
 				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($location_id);
 
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
-				if(!is_numeric(phpgw::get_var('contract_type')) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0))
+				if (!is_numeric(phpgw::get_var('contract_type')) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0))
 				{
 					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id, 'message' => $message, 'error' => $error));
 					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error');
 					$this->edit();
 				}
 
-				if(isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					$contract = new rental_contract();
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -1368,7 +1374,7 @@ JS;
 			$date_start = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_start'));
 			$date_end = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_end'));
 
-			if(isset($contract))
+			if (isset($contract))
 			{
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				$contract->set_security_type(phpgw::get_var('security_type'));
@@ -1376,7 +1382,7 @@ JS;
 				$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
 				$contract->set_comment(phpgw::get_var('comment'));
 
-				if(isset($location_id) && $location_id > 0)
+				if (isset($location_id) && $location_id > 0)
 				{
 					$contract->set_location_id($location_id); // only present when new contract
 				}
@@ -1398,11 +1404,11 @@ JS;
 				$new_rented_area = phpgw::get_var('rented_area');
 				$new_rented_area = str_replace(',', '.', $new_rented_area);
 				$validated_numeric = false;
-				if(!isset($new_rented_area) || $new_rented_area == '')
+				if (!isset($new_rented_area) || $new_rented_area == '')
 				{
 					$new_rented_area = 0;
 				}
-				if($old_rented_area != $new_rented_area)
+				if ($old_rented_area != $new_rented_area)
 				{
 					$update_price_items = true;
 				}
@@ -1413,17 +1419,17 @@ JS;
 				$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
 				$validated_numeric = $contract->validate_numeric();
 
-				if($validated_numeric)
+				if ($validated_numeric)
 				{
 					$so_contract = rental_socontract::get_instance();
 					$db_contract = $so_contract->get_db();
 					$db_contract->transaction_begin();
-					if($so_contract->store($contract))
+					if ($so_contract->store($contract))
 					{
-						if($update_price_items)
+						if ($update_price_items)
 						{
 							$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
-							if($success)
+							if ($success)
 							{
 								$db_contract->transaction_commit();
 								$message = lang('messages_saved_form');
@@ -1435,14 +1441,14 @@ JS;
 								$error = lang('messages_form_error');
 							}
 						}
-						else if($add_default_price_items)
+						else if ($add_default_price_items)
 						{
 							$so_price_item = rental_soprice_item::get_instance();
 							//get default price items for location_id
 							$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
 
 							//add price_items to contract
-							foreach($default_price_items as $price_item_id)
+							foreach ($default_price_items as $price_item_id)
 							{
 								$so_price_item->add_price_item($contract->get_id(), $price_item_id);
 							}
@@ -1469,11 +1475,11 @@ JS;
 				}
 			}
 
-			if(!empty($error))
+			if (!empty($error))
 			{
 				phpgwapi_cache::message_set($error, 'error');
 			}
-			if(!empty($message))
+			if (!empty($message))
 			{
 				phpgwapi_cache::message_set($message, 'message');
 			}
@@ -1489,11 +1495,11 @@ JS;
 			$adjustment_id = (int)phpgw::get_var('adjustment_id');
 			$mode = 'view';
 
-			if(!empty($contract_id))
+			if (!empty($contract_id))
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 
-				if(!($contract && $contract->has_permission(PHPGW_ACL_READ)))
+				if (!($contract && $contract->has_permission(PHPGW_ACL_READ)))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_contract'));
 				}
@@ -1506,22 +1512,22 @@ JS;
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.index'));
 			}
 
-			if(!$executive_officer = $contract->get_executive_officer_id())
+			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
 				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
-			if(!$current_term_id = $contract->get_term_id())
+			if (!$current_term_id = $contract->get_term_id())
 			{
 				$current_term_id = $this->config->config_data['default_billing_term'];
 			}
 
 			$current_contract_type_label = rental_socontract::get_instance()->get_contract_type_label($contract->get_contract_type_id());
 
-			if($executive_officer)
+			if ($executive_officer)
 			{
 				$account = $GLOBALS['phpgw']->accounts->get($executive_officer);
-				if(!empty($account))
+				if (!empty($account))
 				{
 					$executive_officer_label = $account->__toString();
 				}
@@ -1537,7 +1543,7 @@ JS;
 
 			$billing_term_label = lang(rental_socontract::get_instance()->get_term_label($current_term_id));
 
-			switch($contract->get_security_type())
+			switch ($contract->get_security_type())
 			{
 				case rental_contract::SECURITY_TYPE_BANK_GUARANTEE:
 					$security_type_label = lang('bank_guarantee');
@@ -1577,7 +1583,7 @@ JS;
 			);
 			$cancel_text = 'cancel';
 
-			if($adjustment_id)
+			if ($adjustment_id)
 			{
 				$link_cancel = array('menuaction' => 'rental.uiadjustment.show_affected_contracts',
 					'id' => $adjustment_id);
@@ -1638,9 +1644,9 @@ JS;
 			/*			 * ***************************** invoice filters */
 			$invoices = rental_soinvoice::get_instance()->get(null, null, null, false, null, null, array(
 				'contract_id' => $contract->get_id()));
-			if($invoices != null && count($invoices) > 0)
+			if ($invoices != null && count($invoices) > 0)
 			{
-				foreach($invoices as $invoice)
+				foreach ($invoices as $invoice)
 				{
 					$serial = $invoice->get_serial_number();
 					$serial_number = isset($serial) ? " - " . $invoice->get_serial_number() : "";
@@ -1656,7 +1662,7 @@ JS;
 			/*			 * ***************************** document filters */
 			$document_types = rental_sodocument::get_instance()->get_document_types();
 			$document_types_options = array();
-			foreach($document_types as $id => $label)
+			foreach ($document_types as $id => $label)
 			{
 				$document_types_options[] = array('id' => $id, 'name' => lang($label));
 			}
@@ -1735,7 +1741,7 @@ JS;
 		/**
 		 * Edit a contract
 		 */
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 
@@ -1745,16 +1751,16 @@ JS;
 
 			$list_consistency_warnings = array();
 
-			if($values['contract_id'])
+			if ($values['contract_id'])
 			{
 				$contract_id = $values['contract_id'];
 			}
 
-			if(!empty($contract_id))
+			if (!empty($contract_id))
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 
-				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
+				if (!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_contract'));
 				}
@@ -1765,7 +1771,7 @@ JS;
 			}
 			else
 			{
-				if($this->isAdministrator() || $this->isExecutiveOfficer())
+				if ($this->isAdministrator() || $this->isExecutiveOfficer())
 				{
 					$created = date($this->dateFormat, strtotime('now'));
 					$created_by = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw_info']['user']['account_id']);
@@ -1781,12 +1787,12 @@ JS;
 				}
 			}
 
-			if(!$executive_officer = $contract->get_executive_officer_id())
+			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
 				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
-			if(!$current_term_id = $contract->get_term_id())
+			if (!$current_term_id = $contract->get_term_id())
 			{
 				$current_term_id = $this->config->config_data['default_billing_term'];
 			}
@@ -1799,7 +1805,7 @@ JS;
 
 			$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 			$current_contract_type_id = $contract->get_contract_type_id();
-			if(strcmp($responsibility_area, "contract_type_eksternleie") != 0)
+			if (strcmp($responsibility_area, "contract_type_eksternleie") != 0)
 			{
 				$contract_type_options[] = array(
 					'id' => '',
@@ -1809,9 +1815,9 @@ JS;
 			}
 			//rental_socontract::get_instance()->get_contract_types($contract->get_location_id());
 			$contract_types = rental_socontract::get_instance()->get_contract_types($contract->get_location_id());
-			foreach($contract_types as $contract_type_id => $contract_type_label)
+			foreach ($contract_types as $contract_type_id => $contract_type_label)
 			{
-				if($contract_type_id)
+				if ($contract_type_id)
 				{
 					$contract_type_options[] = array(
 						'id' => $contract_type_id,
@@ -1824,7 +1830,7 @@ JS;
 			$location_name = $contract->get_field_of_responsibility_name();
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_name, 'rental');
 			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);
-			foreach($accounts as $account)
+			foreach ($accounts as $account)
 			{
 				$executive_officer_options[] = array(
 					'id' => $account['account_id'],
@@ -1835,7 +1841,7 @@ JS;
 
 			$billing_terms = rental_sobilling::get_instance()->get_billing_terms();
 			$billing_term_options = array();
-			foreach($billing_terms as $term_id => $term_title)
+			foreach ($billing_terms as $term_id => $term_title)
 			{
 				$billing_term_options[] = array(
 					'id' => $term_id,
@@ -1847,9 +1853,9 @@ JS;
 			$cur_responsibility_id = $contract->get_responsibility_id();
 			$contract_responsibility_arr = $contract->get_responsibility_arr($cur_responsibility_id);
 			$responsibility_options = array();
-			if($contract_responsibility_arr)
+			if ($contract_responsibility_arr)
 			{
-				foreach($contract_responsibility_arr as $contract_responsibility)
+				foreach ($contract_responsibility_arr as $contract_responsibility)
 				{
 					$responsibility_options[] = array(
 						'id' => $contract_responsibility['id'],
@@ -1906,7 +1912,7 @@ JS;
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 
 			$_contract_id = $contract->get_id();
-			if(empty($_contract_id))
+			if (empty($_contract_id))
 			{
 				$account_in = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
 				$account_out = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
@@ -1933,7 +1939,7 @@ JS;
 			);
 			$cancel_text = 'cancel';
 
-			if($adjustment_id)
+			if ($adjustment_id)
 			{
 				$link_cancel = array('menuaction' => 'rental.uiadjustment.show_affected_contracts',
 					'id' => $adjustment_id);
@@ -1946,7 +1952,7 @@ JS;
 
 			$datatable_def = array();
 
-			if($contract_id)
+			if ($contract_id)
 			{
 				$datatable_def[] = array
 					(
@@ -2021,11 +2027,11 @@ JS;
 				);
 
 				$furnish_types_options = array();
-				if(!empty($this->config->config_data['contract_furnished_status']))
+				if (!empty($this->config->config_data['contract_furnished_status']))
 				{
 					$furnish_types_arr = rental_composite::get_furnish_types();
 					array_unshift($furnish_types_options, array('id' => '4', 'name' => lang('Alle')));
-					foreach($furnish_types_arr as $id => $title)
+					foreach ($furnish_types_arr as $id => $title)
 					{
 						$furnish_types_options[] = array('id' => $id, 'name' => $title);
 					}
@@ -2058,7 +2064,7 @@ JS;
 				$party_types = rental_socontract::get_instance()->get_fields_of_responsibility();
 				$party_types_options = array();
 				array_unshift($party_types_options, array('id' => 'all', 'name' => lang('all')));
-				foreach($party_types as $id => $label)
+				foreach ($party_types as $id => $label)
 				{
 					$party_types_options[] = array('id' => $id, 'name' => lang($label));
 				}
@@ -2084,9 +2090,9 @@ JS;
 
 				$accounts_users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'rental');
 				$users[] = array('id' => $GLOBALS['phpgw_info']['user']['account_id'], 'name' => lang('target_me'));
-				foreach($accounts_users as $account)
+				foreach ($accounts_users as $account)
 				{
-					if($account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
+					if ($account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
 					{
 						$users[] = array('id' => $account['account_id'], 'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString());
 					}
@@ -2095,7 +2101,7 @@ JS;
 					'options' => $users);
 
 				$accounts_groups = $GLOBALS['phpgw']->accounts->get_list('groups');
-				foreach($accounts_groups as $account)
+				foreach ($accounts_groups as $account)
 				{
 					$groups[] = array('id' => $account->id, 'name' => $account->firstname);
 				}
@@ -2104,10 +2110,10 @@ JS;
 
 				$field_of_responsibility_options = array();
 				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($types as $id => $label)
+				foreach ($types as $id => $label)
 				{
 					$names = $this->locations->get_name($id);
-					if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+					if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 					{
 						$selected = ($id == $contract->get_location_id()) ? 1 : 0;
 						$field_of_responsibility_options[] = array('id' => $id, 'name' => lang($label),
@@ -2119,9 +2125,9 @@ JS;
 				/*				 * ***************************** invoice filters */
 				$invoices = rental_soinvoice::get_instance()->get(null, null, null, false, null, null, array(
 					'contract_id' => $contract->get_id()));
-				if($invoices != null && count($invoices) > 0)
+				if ($invoices != null && count($invoices) > 0)
 				{
-					foreach($invoices as $invoice)
+					foreach ($invoices as $invoice)
 					{
 						$serial = $invoice->get_serial_number();
 						$serial_number = isset($serial) ? " - " . $invoice->get_serial_number() : "";
@@ -2137,7 +2143,7 @@ JS;
 				/*				 * ***************************** document filters */
 				$document_types = rental_sodocument::get_instance()->get_document_types();
 				$document_types_options = array();
-				foreach($document_types as $id => $label)
+				foreach ($document_types as $id => $label)
 				{
 					$document_types_options[] = array('id' => $id, 'name' => lang($label));
 				}
@@ -2239,7 +2245,7 @@ JS;
 		public function add()
 		{
 			$location_id = phpgw::get_var('location_id');
-			if(isset($location_id) && $location_id > 0)
+			if (isset($location_id) && $location_id > 0)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
 					'location_id' => $location_id));
@@ -2278,28 +2284,28 @@ JS;
 
 			//		_debug_array($contract); die();
 
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$so_contract = rental_socontract::get_instance();
 				$db_contract = $so_contract->get_db();
 				$db_contract->transaction_begin();
-				if($so_contract->store($contract))
+				if ($so_contract->store($contract))
 				{
 					// Add standard price items to contract
-					if($contract->get_location_id() && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+					if ($contract->get_location_id() && ($this->isExecutiveOfficer() || $this->isAdministrator()))
 					{
 						$so_price_item = rental_soprice_item::get_instance();
 						//get default price items for location_id
 						$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
 
-						foreach($default_price_items as $price_item_id)
+						foreach ($default_price_items as $price_item_id)
 						{
 							$so_price_item->add_price_item($contract->get_id(), $price_item_id);
 						}
 					}
 					// Add that composite to the new contract
 					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
-					if($success)
+					if ($success)
 					{
 						$db_contract->transaction_commit();
 						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
@@ -2340,7 +2346,7 @@ JS;
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
 			$old_contract_old_id = $contract->get_old_contract_id();
 			$db_contract = $so_contract->get_db();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$db_contract->transaction_begin();
 				//reset id's and contract dates
@@ -2350,11 +2356,11 @@ JS;
 				$contract->set_due_date(null);
 				$contract->set_billing_start_date(null);
 				$contract->set_billing_end_date(null);
-				if($so_contract->store($contract))
+				if ($so_contract->store($contract))
 				{
 					// copy the contract
 					$success = $so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
-					if($success)
+					if ($success)
 					{
 						$db_contract->transaction_commit();
 						$message = lang(messages_new_contract_copied) . ' ' . $old_contract_old_id;
@@ -2400,12 +2406,12 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				foreach($list_party_id as $party_id)
+				foreach ($list_party_id as $party_id)
 				{
 					$result = $so_contract->add_party($contract_id, $party_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'party ' . $party_id . ' ' . lang('has been added'));
 					}
@@ -2432,12 +2438,12 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				foreach($list_party_id as $party_id)
+				foreach ($list_party_id as $party_id)
 				{
 					$result = $so_contract->remove_party($contract_id, $party_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'party ' . $party_id . ' ' . lang('has been removed'));
 					}
@@ -2464,10 +2470,10 @@ JS;
 			$contract = $so_contract->get_single($contract_id);
 
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$result = $so_contract->set_payer($contract_id, $party_id);
-				if($result)
+				if ($result)
 				{
 					$message['message'][] = array('msg' => lang('party has been saved'));
 				}
@@ -2493,12 +2499,12 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				foreach($list_composite_id as $composite_id)
+				foreach ($list_composite_id as $composite_id)
 				{
 					$result = $so_contract->add_composite($contract_id, $composite_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'composite ' . $composite_id . ' ' . lang('has been added'));
 					}
@@ -2525,12 +2531,12 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if(isset($contract) && $contract->has_permission(PHPGW_ACL_EDIT))
+			if (isset($contract) && $contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				foreach($list_composite_id as $composite_id)
+				foreach ($list_composite_id as $composite_id)
 				{
 					$result = $so_contract->remove_composite($contract_id, $composite_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'composite ' . $composite_id . ' ' . lang('has been removed'));
 					}
@@ -2558,13 +2564,13 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				//return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
-				foreach($list_price_item_id as $price_item_id)
+				foreach ($list_price_item_id as $price_item_id)
 				{
 					$result = rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'price_item ' . $price_item_id . ' ' . lang('has been added'));
 					}
@@ -2591,12 +2597,12 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				foreach($list_price_item_id as $price_item_id)
+				foreach ($list_price_item_id as $price_item_id)
 				{
 					$result = rental_soprice_item::get_instance()->remove_price_item($contract_id, $price_item_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'price_item ' . $price_item_id . ' ' . lang('has been removed'));
 					}
@@ -2623,13 +2629,13 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				//return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
-				foreach($list_price_item_id as $price_item_id)
+				foreach ($list_price_item_id as $price_item_id)
 				{
 					$result = rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'price_item ' . $price_item_id . ' ' . lang('has been reseted'));
 					}
@@ -2652,14 +2658,14 @@ JS;
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				if($date)
+				if ($date)
 				{
 					$date = phpgwapi_datetime::date_to_timestamp($date);
 				}
 				$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
-				if(rental_sonotification::get_instance()->store($notification))
+				if (rental_sonotification::get_instance()->store($notification))
 				{
 					$message['message'][] = array('msg' => 'notification ' . lang('has been added'));
 				}
@@ -2682,7 +2688,7 @@ JS;
 			$contract = $so_contract->get_single($contract_id);
 			$area = $contract->get_rented_area();
 
-			if(!empty($area) && !empty($total_price))
+			if (!empty($area) && !empty($total_price))
 			{
 				$price_per_unit = $total_price / $area;
 			}
@@ -2724,10 +2730,10 @@ JS;
 		{
 			$get_template_config = true;
 			$files = scandir('rental/templates/base/pdf/');
-			foreach($files as $file)
+			foreach ($files as $file)
 			{
 				$ending = substr($file, -3, 3);
-				if($ending == 'php')
+				if ($ending == 'php')
 				{
 					include 'rental/templates/base/pdf/' . $file;
 					$template_files = array($template_name, $file);

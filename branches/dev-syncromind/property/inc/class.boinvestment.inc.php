@@ -52,13 +52,13 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.soinvestment');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->socommon = CreateObject('property.socommon');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -73,7 +73,7 @@
 			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -82,31 +82,31 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
+			if (isset($query))
 			{
 				$this->query = $query;
 			}
-			if(isset($filter))
+			if (isset($filter))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id))
+			if (isset($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if(isset($part_of_town_id))
+			if (isset($part_of_town_id))
 			{
 				$this->part_of_town_id = $part_of_town_id;
 			}
-			if(isset($allrows))
+			if (isset($allrows))
 			{
 				$this->allrows = $allrows;
 			}
@@ -125,15 +125,15 @@
 			$this->allrows = $data['allrows'];
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'investment', $data);
 			}
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 
 			$investment = $this->so->read($data);
@@ -149,9 +149,9 @@
 			return $investment;
 		}
 
-		function select_category($format = '', $selected = '')
+		function select_category( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
@@ -166,7 +166,7 @@
 			return $this->bocommon->select_list($selected, $categories);
 		}
 
-		function write_off_period_list($selected = '')
+		function write_off_period_list( $selected = '' )
 		{
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
@@ -174,10 +174,10 @@
 
 			$categories = $this->so->write_off_period_list();
 
-			while(is_array($categories) && list(, $category) = each($categories))
+			while (is_array($categories) && list(, $category) = each($categories))
 			{
 				$sel_category = '';
-				if($category['period'] == $selected)
+				if ($category['period'] == $selected)
 				{
 					$sel_category = 'selected';
 				}
@@ -190,9 +190,9 @@
 				);
 			}
 
-			for($i = 0; $i < count($category_list); $i++)
+			for ($i = 0; $i < count($category_list); $i++)
 			{
-				if($category_list[$i]['selected'] != 'selected')
+				if ($category_list[$i]['selected'] != 'selected')
 				{
 					unset($category_list[$i]['selected']);
 				}
@@ -201,11 +201,11 @@
 			return $category_list;
 		}
 
-		function save_investment($values)
+		function save_investment( $values )
 		{
-			while(is_array($values['location']) && list(, $value) = each($values['location']))
+			while (is_array($values['location']) && list(, $value) = each($values['location']))
 			{
-				if($value)
+				if ($value)
 				{
 					$location[] = $value;
 				}
@@ -220,18 +220,18 @@
 
 			$values['initial_value'] = abs($values['initial_value']);
 
-			if($values['type'] == 'funding')
+			if ($values['type'] == 'funding')
 			{
 				$values['initial_value'] = -$values['initial_value'];
 			}
 
-			if($values['new_period'])
+			if ($values['new_period'])
 			{
 				$values['period'] = $values['new_period'];
 				unset($values['new_period']);
 			}
 
-			if($values['extra']['p_num'])
+			if ($values['extra']['p_num'])
 			{
 				$boadmin_entity = CreateObject('property.boadmin_entity');
 				$category = $boadmin_entity->read_single_category($values['extra']['p_entity_id'], $values['extra']['p_cat_id']);
@@ -250,7 +250,7 @@
 			return $receipt;
 		}
 
-		function update_investment($values)
+		function update_investment( $values )
 		{
 
 			$date_array = phpgwapi_datetime::date_array($values['date']);
@@ -261,14 +261,14 @@
 			$new_index = str_replace(",", ".", $values['new_index']);
 
 			$update = array();
-			foreach($values['update'] as $entry)
+			foreach ($values['update'] as $entry)
 			{
 				$local_error = false;
 				$n = $entry;
 
-				if($values['value'][$n])
+				if ($values['value'][$n])
 				{
-					if((abs($values['value'][$n]) - abs(($values['initial_value'][$n] * $new_index))) < 0)
+					if ((abs($values['value'][$n]) - abs(($values['initial_value'][$n] * $new_index))) < 0)
 					{
 						$new_value = 0;
 						$new_index = $values['value'][$n] / $values['initial_value'][$n];
@@ -291,9 +291,9 @@
 			return $this->so->update_investment($update);
 		}
 
-		function filter($format = '', $selected = '')
+		function filter( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
@@ -311,7 +311,7 @@
 			return $this->bocommon->select_list($selected, $filters);
 		}
 
-		function read_single($entity_id, $investment_id)
+		function read_single( $entity_id, $investment_id )
 		{
 			$history = $this->so->read_single($entity_id, $investment_id, $this->start, $this->allrows);
 
@@ -320,12 +320,12 @@
 			return $history;
 		}
 
-		function select_part_of_town($part_of_town_id)
+		function select_part_of_town( $part_of_town_id )
 		{
 			return $this->socommon->select_part_of_town($part_of_town_id);
 		}
 
-		function delete($entity_id, $investment_id, $index_count)
+		function delete( $entity_id, $investment_id, $index_count )
 		{
 			$this->so->delete($entity_id, $investment_id, $index_count);
 		}

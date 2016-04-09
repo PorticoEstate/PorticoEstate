@@ -8,13 +8,10 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
-
 	/**
 	 * Description
 	 * @package demo
 	 */
-
 	$GLOBALS['phpgw']->locations->add('.demo_location', 'Demo location', 'demo', $allow_grant = true, $custom_tbl = 'phpgw_demo_table', $c_function = true);

@@ -33,11 +33,11 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-stacked">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details">
-					<fieldset>
+				<div id="details" class="pure-g">
+					<div class="pure-u-1 pure-u-lg-1-2">
 						<input type="hidden" name="id" value="{composite_id}"/>
 						<div class="pure-control-group">
 							<label>
@@ -105,6 +105,9 @@
 								<xsl:value-of select="value_description"/>
 							</textarea>
 						</div>
+					</div>
+					<div class="pure-u-1 pure-u-lg-1-2">
+
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'area_gros')"/>
@@ -127,7 +130,7 @@
 								</xsl:if>
 							</input>
 						</div>
-					</fieldset>
+					</div>
 				</div>
 				<xsl:choose>
 					<xsl:when test="composite_id > 0">
@@ -262,11 +265,11 @@
 
 	<xsl:call-template name="top-toolbar" />
 	<div>
-		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-stacked">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details">
-					<fieldset>
+				<div id="details" class="pure-g">
+					<div class="pure-u-1 pure-u-lg-1-2">
 						<input type="hidden" name="id" value="{composite_id}"/>
 						<div class="pure-control-group">
 							<label>
@@ -327,6 +330,9 @@
 							</label>
 							<xsl:value-of select="value_description"/>
 						</div>
+					</div>
+					<div class="pure-u-1 pure-u-lg-1-2">
+
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'area_gros')"/>
@@ -349,7 +355,7 @@
 								</xsl:if>
 							</input>
 						</div>
-					</fieldset>
+					</div>
 				</div>
 				<div id="units">
 					<div>

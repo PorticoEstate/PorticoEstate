@@ -7,9 +7,8 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$GLOBALS['phpgw_info']        = array();
 	
 	$GLOBALS['phpgw_info']['flags'] = array(
@@ -30,12 +29,12 @@
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
 	{
-		if ( is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") && !empty($session_id) )
+		if (is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") && !empty($session_id))
 		{
 			$dh = dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
-			while ( ($file = $dh->read()) !== false )
+			while (($file = $dh->read()) !== false)
 			{
-				if ( $file == '.' || $file == '..' )
+				if ($file == '.' || $file == '..')
 				{
 					continue;
 				}
@@ -50,7 +49,7 @@
 	}
 	else
 	{
-		if(is_object($GLOBALS['phpgw']->log))
+		if (is_object($GLOBALS['phpgw']->log))
 		{
 			$GLOBALS['phpgw']->log->write(array(
 				'text' => 'W-VerifySession, could not verify session during logout',
@@ -60,8 +59,7 @@
 		}
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+	if (isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'])
 	{
 		$GLOBALS['phpgw']->session->phpgw_setcookie('sessionphpgwsessid');
 		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');

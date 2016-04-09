@@ -1,17 +1,16 @@
 <?php
-
 // Default user
-$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
-$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
+	$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
 
-$modules = array
-(
+	$modules = array
+		(
 	'activitycalendar',
 //	'preferences'
-);
+	);
 
-$aclobj =& $GLOBALS['phpgw']->acl;
-/*
+	$aclobj = & $GLOBALS['phpgw']->acl;
+	/*
 if (!$GLOBALS['phpgw']->accounts->exists('bookingguest') ) // no guest account already exists
 {
 	$GLOBALS['phpgw_info']['server']['password_level'] = '8CHAR';

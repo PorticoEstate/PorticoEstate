@@ -21,7 +21,7 @@
 		protected $timestamp_end; // End date for the given invoice
 		public static $so;
 
-		public function __construct(int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end)
+		public function __construct( int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end )
 		{
 			$this->decimals			 = (int)$decimals;
 			$this->id				 = (int)$id;
@@ -37,51 +37,61 @@
 			$this->total_price		 = null; // Needs to be re-calculated
 		}
 
-		public function set_invoice_id(int $invoice_id)
+		public function set_invoice_id( int $invoice_id )
 		{
 			$this->invoice_id = (int)$invoice_id;
 		}
 
 		public function get_invoice_id()
-		{ return $this->invoice_id;}
+		{
+			return $this->invoice_id;
+		}
 
-		public function set_is_area(boolean $is_area)
+		public function set_is_area( boolean $is_area )
 		{
 			$this->is_area		 = (boolean)$is_area;
 			$this->total_price	 = null; // Needs to be re-calculated
 		}
 
 		public function is_area()
-		{ return $this->is_area;}
+		{
+			return $this->is_area;
+		}
 
-		public function set_count(int $count)
+		public function set_count( int $count )
 		{
 			$this->count		 = (int)$count;
 			$this->total_price	 = null; // Needs to be re-calculated
 		}
 
-		public function set_price($price_per_year)
+		public function set_price( $price_per_year )
 		{
 			$this->price_per_year	 = (float)$price_per_year;
 			$this->total_price		 = null; // Needs to be re-calculated
 		}
 
 		public function get_price()
-		{ return $this->price_per_year;}
+		{
+			return $this->price_per_year;
+		}
 
-		public function set_area($area)
+		public function set_area( $area )
 		{
 			$this->area			 = (float)$area;
 			$this->total_price	 = null; // Needs to be re-calculated
 		}
 
 		public function get_area()
-		{ return $this->area;}
+		{
+			return $this->area;
+		}
 
 		public function get_count()
-		{ return $this->count;}
+		{
+			return $this->count;
+		}
 
-		public function set_total_price(float $total_price)
+		public function set_total_price( float $total_price )
 		{
 			$this->total_price = (float)$total_price;
 		}
@@ -93,7 +103,7 @@
 		 */
 		public function get_total_price()
 		{
-			if($this->total_price == null) // Needs to be calculated
+			if ($this->total_price == null) // Needs to be calculated
 			{
 				// The calculation of the price for complete months (meaning the item applies for the whole month) ..
 				$num_of_complete_months = 0;
@@ -114,26 +124,26 @@
 				$date_end['day']	 = (int)date('j', $this->get_timestamp_end());
 
 				// Runs through all the years this price item goes for
-				for($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--)
+				for ($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--)
 				{
 					// Within each year: which months do the price item run for
 					// First we set the defaults (whole year)
 					$current_start_month = 1; // January
 					$current_end_month	 = 12; // December
 					// If we are at the start year, use the start month of this year as start month
-					if($current_year == $date_start['year'])
+					if ($current_year == $date_start['year'])
 					{
 						$current_start_month = $date_start['month'];
 					}
 
 					// If we are at the start year, use the end month of this year as end month
-					if($current_year == $date_end['year'])
+					if ($current_year == $date_end['year'])
 					{
 						$current_end_month = $date_end['month'];
 					}
 
 					// Runs through all of the months of the current year (we go backwards since we go backwards with the years)
-					for($current_month = $current_end_month; $current_month >= $current_start_month; $current_month--)
+					for ($current_month = $current_end_month; $current_month >= $current_start_month; $current_month--)
 					{
 						// Retrive the number of days in the current month
 						$num_of_days_in_current_month = date('t', strtotime($current_year . '-' . $current_month . '-01'));
@@ -143,19 +153,19 @@
 						$last_day	 = $num_of_days_in_current_month;
 
 						// If we are at the start month in the start year, use day in this month as first day
-						if($current_year == $date_start['year'] && $current_month == $date_start['month'])
+						if ($current_year == $date_start['year'] && $current_month == $date_start['month'])
 						{
 							$first_day = $date_start['day'];
 						}
 
 						// If we are at the end month in the end year, use the day in this month as end day
-						if($current_year == $date_end['year'] && $current_month == $date_end['month'])
+						if ($current_year == $date_end['year'] && $current_month == $date_end['month'])
 						{
 							$last_day = $date_end['day']; // The end date's day is the item's end day
 						}
 
 						// Increase counter: complete months or incomplete months (number of days in this year and number of days )
-						if($first_day === 1 && $last_day == $num_of_days_in_current_month)
+						if ($first_day === 1 && $last_day == $num_of_days_in_current_month)
 						{ // This is a whole month
 							$num_of_complete_months++;
 						}
@@ -180,7 +190,7 @@
 				$price_per_year = $this->get_price() * $amount;
 
 				// Run through all the incomplete months ...
-				foreach($incomplete_months as $day_factors)
+				foreach ($incomplete_months as $day_factors)
 				{
 					// ... and add the sum of each incomplete month to the total price of the price item
 					// Calculation: Price per day (price per year divided with number of days in year) multiplied with number of days in incomplete month
@@ -192,23 +202,27 @@
 			return $this->total_price;
 		}
 
-		public function set_timestamp_start(int $timestamp_start)
+		public function set_timestamp_start( int $timestamp_start )
 		{
 			$this->timestamp_start	 = (int)$timestamp_start;
 			$this->total_price		 = null; // Needs to be re-calculated
 		}
 
 		public function get_timestamp_start()
-		{ return $this->timestamp_start;}
+		{
+			return $this->timestamp_start;
+		}
 
-		public function set_timestamp_end(int $timestamp_end)
+		public function set_timestamp_end( int $timestamp_end )
 		{
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_price	 = null; // Needs to be re-calculated
 		}
 
 		public function get_timestamp_end()
-		{ return $this->timestamp_end;}
+		{
+			return $this->timestamp_end;
+		}
 
 		public function serialize()
 		{

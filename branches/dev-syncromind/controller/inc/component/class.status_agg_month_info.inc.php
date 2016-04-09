@@ -39,7 +39,7 @@
 			
 		}
 
-		public function set_month_nr($month_nr)
+		public function set_month_nr( $month_nr )
 		{
 			$this->month_nr = $month_nr;
 		}
@@ -49,7 +49,7 @@
 			return $this->month_nr;
 		}
 
-		public function set_agg_open_cases($agg_open_cases)
+		public function set_agg_open_cases( $agg_open_cases )
 		{
 			$this->agg_open_cases = $agg_open_cases;
 		}

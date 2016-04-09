@@ -9,9 +9,9 @@
 		 * @param string $date the date to convert, must contain keys day, month & year
 		 * @return int unix timestamp
 		 */
-		public static function date_to_timestamp($datestr = '')
+		public static function date_to_timestamp( $datestr = '' )
 		{
-			if(!$datestr)
+			if (!$datestr)
 			{
 				return 0;
 			}
@@ -20,7 +20,7 @@
 			$minute	 = 0;
 			$second	 = 0;
 
-			if(strpos($datestr, ':'))
+			if (strpos($datestr, ':'))
 			{
 				$date_part	 = explode(' ', $datestr);
 				$time_part	 = explode(':', $date_part[1]);
@@ -31,7 +31,7 @@
 			}
 
 
-			if(version_compare(PHP_VERSION, '5.3.0') >= 0 && strpos($datestr, ':'))
+			if (version_compare(PHP_VERSION, '5.3.0') >= 0 && strpos($datestr, ':'))
 			{
 				return self::datetime_to_timestamp($datestr);
 			}
@@ -46,17 +46,17 @@
 		 * @param string $datestr the date string to convert - must match user's preferred date format
 		 * @return array date parts: year,month and day
 		 */
-		public static function date_array($datestr)
+		public static function date_array( $datestr )
 		{
 			$dateformat = & $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$pattern = '/[\.\/\-]/';
 			$fields	 = preg_split($pattern, $datestr);
-			foreach(preg_split($pattern, $dateformat) as $n => $field)
+			foreach (preg_split($pattern, $dateformat) as $n => $field)
 			{
 				$date[$field] = (int)$fields[$n];
 
-				if($field == 'M')
+				if ($field == 'M')
 				{
 					$date['m'] = self::convert_M_to_int($fields[$n]);
 				}
@@ -76,25 +76,25 @@
 		 * @param string $date the date convert
 		 * @return int unix timestamp
 		 */
-		public static function datetime_to_timestamp($datestr = '')
+		public static function datetime_to_timestamp( $datestr = '' )
 		{
-			if(!$datestr)
+			if (!$datestr)
 			{
 				return 0;
 			}
 
 			$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(substr_count($datestr, ':') == 1)
+			if (substr_count($datestr, ':') == 1)
 			{
 				$format .= ' H:i';
 			}
-			else if(substr_count($datestr, ':') == 2)
+			else if (substr_count($datestr, ':') == 2)
 			{
 				$format .= ' H:i:s';
 			}
 
 			$date = DateTime::createFromFormat("{$format}", $datestr);
-			if($date)
+			if ($date)
 			{
 				return $date->getTimestamp();
 			}
@@ -110,11 +110,11 @@
 		 * @param string $str abbreviated month name string
 		 * @return int the month number - 0 is returned for invalid input
 		 */
-		private static function convert_M_to_int($str)
+		private static function convert_M_to_int( $str )
 		{
-			for($i = 1; $i <= 12; ++$i)
+			for ($i = 1; $i <= 12; ++$i)
 			{
-				if(date('M', mktime(0, 0, 0, $i, 1, 2000)) == $str)
+				if (date('M', mktime(0, 0, 0, $i, 1, 2000)) == $str)
 				{
 					return $i;
 				}
@@ -130,10 +130,10 @@
 		public static function get_dow_fullnames()
 		{
 			static $dow_list = null;
-			if(is_null($dow_list))
+			if (is_null($dow_list))
 			{
 				$dow_list = array();
-				foreach(self::$dow_fullnames as $id => $dow_name)
+				foreach (self::$dow_fullnames as $id => $dow_name)
 				{
 					$dow_list[$id] = lang($dow_name);
 				}
@@ -149,15 +149,15 @@
 		public static function get_month_fullnames()
 		{
 			static $month_list = null;
-			if(is_null($month_list))
+			if (is_null($month_list))
 			{
 				$raw_list = self::$month_fullnames;
 				unset($raw_list[0]); // WAR month index hack
 
 				$month_list = array();
-				foreach($raw_list as $id => $month)
+				foreach ($raw_list as $id => $month)
 				{
-					if($id == 0)
+					if ($id == 0)
 					{
 						continue;
 					}
@@ -173,10 +173,10 @@
 		 * @param int $dow ISO 8601 day of week number
 		 * @return string local say of week name
 		 */
-		public static function nr2weekday($dow = 0)
+		public static function nr2weekday( $dow = 0 )
 		{
 			$dow_list = self::get_dow_fullnames();
-			if(isset($dow_list[$dow]))
+			if (isset($dow_list[$dow]))
 			{
 				return $dow_list[$dow];
 			}

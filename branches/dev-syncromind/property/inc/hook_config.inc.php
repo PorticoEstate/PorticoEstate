@@ -31,15 +31,15 @@
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function fmtts_assign_group_candidates($config)
+	function fmtts_assign_group_candidates( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_assign_group_candidates']) ? $config['fmtts_assign_group_candidates'] : array();
 		$out = '';
-		foreach($groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$checked = '';
-			if(in_array($group, $groups_assigned))
+			if (in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -57,15 +57,15 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function fmttssimple_group($config)
+	function fmttssimple_group( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
 		$out = '';
-		foreach($groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$checked = '';
-			if(in_array($group, $groups_assigned))
+			if (in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -83,15 +83,15 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function fmtts_group_finnish_date($config)
+	function fmtts_group_finnish_date( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_group_finnish_date']) ? $config['fmtts_group_finnish_date'] : array();
 		$out = '';
-		foreach($groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$checked = '';
-			if(in_array($group, $groups_assigned))
+			if (in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -109,7 +109,7 @@ HTML;
 	 * @param $config
 	 * @return string HTML listbox to be placed in a table
 	 */
-	function dimb_cat_1($config)
+	function dimb_cat_1( $config )
 	{
 		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
 		$cats->supress_info = true;
@@ -126,7 +126,7 @@ HTML;
 	 * @param $config
 	 * @return string HTML listbox to be placed in a table
 	 */
-	function dimb_cat_2($config)
+	function dimb_cat_2( $config )
 	{
 		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
 		$cats->supress_info = true;
@@ -143,17 +143,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function project_approval_status($config)
+	function project_approval_status( $config )
 	{
 		$status_entries = execMethod('property.soproject.select_status_list');
 
 		$status_assigned = isset($config['project_approval_status']) ? $config['project_approval_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -172,7 +172,7 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function project_status_on_last_order_closed($config)
+	function project_status_on_last_order_closed( $config )
 	{
 		$status_assigned = isset($config['project_status_on_last_order_closed']) ? $config['project_status_on_last_order_closed'] : array();
 
@@ -180,7 +180,7 @@ HTML;
 			'selected' => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = $status['selected'] ? ' selected = "selected"' : '';
 
@@ -197,17 +197,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function workorder_approval_status($config)
+	function workorder_approval_status( $config )
 	{
 		$status_entries = execMethod('property.soworkorder.select_status_list');
 
 		$status_assigned = isset($config['workorder_approval_status']) ? $config['workorder_approval_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -226,17 +226,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function workorder_ordered_status($config)
+	function workorder_ordered_status( $config )
 	{
 		$status_entries = execMethod('property.soworkorder.select_status_list');
 
 		$status_assigned = isset($config['workorder_ordered_status']) ? $config['workorder_ordered_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -253,16 +253,40 @@ HTML;
 	 * Get HTML listbox with request status that are to be set when request is added to a project
 	 *
 	 * @param $config
-	 * @return string HTML checkboxes to be placed in a table
+	 * @return string HTML listbox to be placed in a table
 	 */
-	function request_project_hookup_status($config)
+	function request_project_hookup_status( $config )
 	{
 		$status_assigned = isset($config['request_project_hookup_status']) ? $config['request_project_hookup_status'] : '';
 		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
 			'selected' => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
+		{
+			$selected = $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+	/**
+	 * Get HTML listbox with request status that are to be set when request is added to a ticket
+	 *
+	 * @param $config
+	 * @return string HTML listbox to be placed in a table
+	 */
+	function request_ticket_hookup_status( $config )
+	{
+		$status_assigned = isset($config['request_ticket_hookup_status']) ? $config['request_ticket_hookup_status'] : '';
+		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
+			'selected' => $status_assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
 		{
 			$selected = $status['selected'] ? ' selected = "selected"' : '';
 
@@ -280,17 +304,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function workorder_closed_status($config)
+	function workorder_closed_status( $config )
 	{
 		$status_entries = execMethod('property.soworkorder.select_status_list');
 
 		$status_assigned = isset($config['workorder_closed_status']) ? $config['workorder_closed_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -309,17 +333,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function workorder_reopen_status($config)
+	function workorder_reopen_status( $config )
 	{
 		$status_entries = execMethod('property.soworkorder.select_status_list');
 
 		$status_assigned = isset($config['workorder_reopen_status']) ? $config['workorder_reopen_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -338,16 +362,16 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function list_location_level($config)
+	function list_location_level( $config )
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
 		$level_assigned = isset($config['list_location_level']) ? $config['list_location_level'] : array();
 		$out = '';
-		foreach($location_types as $dummy => $level)
+		foreach ($location_types as $dummy => $level)
 		{
 			$checked = '';
-			if(in_array($level['id'], $level_assigned))
+			if (in_array($level['id'], $level_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -365,16 +389,16 @@ HTML;
 	 * @param $config
 	 * @return string HTML options to be placed in a select
 	 */
-	function list_location_level_otions($config)
+	function list_location_level_otions( $config )
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
 		$level_assigned = isset($config['request_location_level']) ? $config['request_location_level'] : 0;
 		$out = '';
-		foreach($location_types as $dummy => $level)
+		foreach ($location_types as $dummy => $level)
 		{
 			$selected = '';
-			if(($level['id'] == $level_assigned))
+			if (($level['id'] == $level_assigned))
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -391,7 +415,7 @@ HTML;
 	 * @param $config
 	 * @return string HTML listbox to be placed in a table
 	 */
-	function filter_buildingpart($config)
+	function filter_buildingpart( $config )
 	{
 		$filters = array
 			(
@@ -411,16 +435,16 @@ HTML;
 		$filter_assigned = isset($config['filter_buildingpart']) ? $config['filter_buildingpart'] : array();
 
 		$out = '';
-		foreach($filters as $filter_key => $filter_name)
+		foreach ($filters as $filter_key => $filter_name)
 		{
 			$out .= <<<HTML
 			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[filter_buildingpart][{$filter_key}]">
 HTML;
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			foreach($locations as $key => $name)
+			foreach ($locations as $key => $name)
 			{
 				$selected = '';
-				if(isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
+				if (isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
 				{
 					$selected = ' selected = "selected"';
 				}
@@ -443,7 +467,7 @@ HTML;
 	 * @param $config
 	 * @return string options for selectbox
 	 */
-	function condition_survey_import_cat($config)
+	function condition_survey_import_cat( $config )
 	{
 		$filters = array
 			(
@@ -459,21 +483,21 @@ HTML;
 		$filter_assigned = isset($config['condition_survey_import_cat']) ? $config['condition_survey_import_cat'] : array();
 
 		$out = '';
-		foreach($filters as $filter_key => $filter_name)
+		foreach ($filters as $filter_key => $filter_name)
 		{
 			$out .= <<<HTML
 			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[condition_survey_import_cat][{$filter_key}]">
 HTML;
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			foreach($values as $key => $category)
+			foreach ($values as $key => $category)
 			{
-				if(!$category['active'])
+				if (!$category['active'])
 				{
 					continue;
 				}
 
 				$selected = '';
-				if(isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
+				if (isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
 				{
 					$selected = ' selected = "selected"';
 				}
@@ -496,17 +520,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
-	function condition_survey_initial_status($config)
+	function condition_survey_initial_status( $config )
 	{
 		$status_entries = execMethod('property.sorequest.select_status_list');
 
 		$status_assigned = isset($config['condition_survey_initial_status']) ? $config['condition_survey_initial_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -525,17 +549,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
-	function condition_survey_hidden_status($config)
+	function condition_survey_hidden_status( $config )
 	{
 		$status_entries = execMethod('property.sorequest.select_status_list');
 
 		$status_assigned = isset($config['condition_survey_hidden_status']) ? $config['condition_survey_hidden_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -554,17 +578,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
-	function condition_survey_obsolete_status($config)
+	function condition_survey_obsolete_status( $config )
 	{
 		$status_entries = execMethod('property.sorequest.select_status_list');
 
 		$status_assigned = isset($config['condition_survey_obsolete_status']) ? $config['condition_survey_obsolete_status'] : array();
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach($status_entries as $status)
+		foreach ($status_entries as $status)
 		{
 			$selected = '';
-			if($status_assigned == $status['id'])
+			if ($status_assigned == $status['id'])
 			{
 				$selected = ' selected = "selected"';
 			}
@@ -583,16 +607,16 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function bypass_acl_at_entity($config)
+	function bypass_acl_at_entity( $config )
 	{
 		$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
 		$acl_bypass = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
 		$out = '';
-		foreach($entity_list as $dummy => $entity)
+		foreach ($entity_list as $dummy => $entity)
 		{
 			$checked = '';
-			if(in_array($entity['id'], $acl_bypass))
+			if (in_array($entity['id'], $acl_bypass))
 			{
 				$checked = ' checked';
 			}

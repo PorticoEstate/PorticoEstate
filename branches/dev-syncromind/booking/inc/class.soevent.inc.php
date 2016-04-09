@@ -92,7 +92,7 @@
 			);
 		}
 
-		function get_building_info($id)
+		function get_building_info( $id )
 		{
 			$sql = "SELECT bb_building.id, bb_building.name, bb_building.email,"
 			. " bb_building.tilsyn_email, bb_building.tilsyn_email2"
@@ -103,7 +103,7 @@
 			. " AND bb_event_resource.event_id=" . intval($id);
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -114,11 +114,11 @@
 				'tilsyn_email2'	 => $this->db->f('tilsyn_email2', false));
 		}
 
-		function get_ordered_comments($id)
+		function get_ordered_comments( $id )
 		{
 			$results = array();
 			$this->db->query("select time,author,comment,type from bb_event_comment where event_id=($id) order by time desc", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('time'		 => $this->db->f('time', false),
 					'author'	 => $this->db->f('author', false),
@@ -128,15 +128,15 @@
 			return $results;
 		}
 
-		function get_ordered_costs($id)
+		function get_ordered_costs( $id )
 		{
 			$results = array();
 			$this->db->query("SELECT * FROM bb_event_cost WHERE event_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array(
 					'time'		 => $this->db->f('time'),
-					'author'	 => $this->db->f('author',true),
+					'author' => $this->db->f('author', true),
 					'comment'	 => $this->db->f('comment', true),
 					'cost'		 => $this->db->f('cost')
 				);
@@ -144,10 +144,10 @@
 			return $results;
 		}
 
-		function get_resource_info($id)
+		function get_resource_info( $id )
 		{
 			$this->db->limit_query("SELECT bb_resource.id, bb_resource.name FROM bb_resource WHERE bb_resource.id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -155,9 +155,9 @@
 				'name'	 => $this->db->f('name', false));
 		}
 
-		function get_overlap_time_info($resource_id, $overlap_id, $type)
+		function get_overlap_time_info( $resource_id, $overlap_id, $type )
 		{
-			if($type == 'allocation')
+			if ($type == 'allocation')
 			{
 				$this->db->limit_query("SELECT bb_allocation.from_,bb_allocation.to_ FROM bb_allocation,bb_allocation_resource WHERE bb_allocation.id = $overlap_id
  AND  bb_allocation_resource.allocation_id  = $overlap_id AND bb_allocation_resource.resource_id =" . intval($resource_id), 0, __LINE__, __FILE__, 1);
@@ -167,7 +167,7 @@
 				$this->db->limit_query("SELECT bb_booking.from_,bb_booking.to_ FROM bb_booking,bb_booking_resource WHERE bb_booking.id = $overlap_id
  AND  bb_booking_resource.booking_id  = $overlap_id AND bb_booking_resource.resource_id =" . intval($resource_id), 0, __LINE__, __FILE__, 1);
 			}
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -175,10 +175,10 @@
 				'to'	 => $this->db->f('to_', false));
 		}
 
-		function get_contact_mail($id, $type)
+		function get_contact_mail( $id, $type )
 		{
 			$mail = array();
-			if($type == 'allocation')
+			if ($type == 'allocation')
 			{
 				$sql = "SELECT bb_organization_contact.email FROM bb_organization_contact WHERE organization_id IN (SELECT bb_allocation.organization_id FROM bb_allocation WHERE id=$id)";
 			}
@@ -187,9 +187,9 @@
 				$sql = "SELECT bb_group_contact.email FROM bb_group_contact WHERE group_id IN (SELECT bb_booking.group_id FROM bb_booking WHERE id=$id)";
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
-			if($result = $this->db->resultSet)
+			if ($result = $this->db->resultSet)
 			{
-				foreach($result as $res)
+				foreach ($result as $res)
 				{
 					$mail[] = $res['email'];
 				}
@@ -198,7 +198,7 @@
 			return $mail;
 		}
 
-		public function update_comment($allids)
+		public function update_comment( $allids )
 		{
 			$db						 = $this->db;
 			$config					 = CreateObject('phpgwapi.config', 'booking');
@@ -206,13 +206,13 @@
 			$external_site_address	 = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$comment = lang('Multiple Events was created') . ',<br />' . lang('Event') . ' ';
-			foreach($allids as $id)
+			foreach ($allids as $id)
 			{
 				$comment .= '<a href="' . $external_site_address . '/?menuaction=booking.uievent.edit&id=' . $id[0] . '">#' . $id[0] . '</a>, ';
 			}
 			$comment = substr($comment, 0, -2);
 			$comment .= '.';
-			foreach($allids as $id)
+			foreach ($allids as $id)
 			{
 				$myid	 = $id[0];
 				$sql	 = "UPDATE bb_event_comment SET comment='" . $comment . "' WHERE event_id=" . intval($myid) . ";";
@@ -220,7 +220,7 @@
 			}
 		}
 
-		protected function doValidate($entity, booking_errorstack $errors)
+		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			$event_id	 = $entity['id'] ? $entity['id'] : -1;
 			// Make sure to_ > from_
@@ -229,15 +229,15 @@
 			$start		 = $from_->format('Y-m-d H:i');
 			$end		 = $to_->format('Y-m-d H:i');
 
-			if($from_ > $to_)
+			if ($from_ > $to_)
 			{
 				$errors['from_'] = lang('Invalid from date');
 			}
-			if(strlen($entity['contact_name']) > 50)
+			if (strlen($entity['contact_name']) > 50)
 			{
 				$errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
 			}
-			if($entity['resources'])
+			if ($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
 				// Check if we overlap with any existing event
@@ -247,7 +247,7 @@
 									((e.from_ >= '$start' AND e.from_ < '$end') OR 
 						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR 
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$errors['event'] = lang('Overlaps with existing event');
 				}
@@ -258,9 +258,9 @@
 									((a.from_ >= '$start' AND a.from_ < '$end') OR 
 						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
-				if($result = $this->db->resultSet)
+				if ($result = $this->db->resultSet)
 				{
-					foreach($result as $r)
+					foreach ($result as $r)
 					{
 						$allocation[] = $r['id'];
 					}
@@ -274,9 +274,9 @@
 									((b.from_ >= '$start' AND b.from_ < '$end') OR 
 						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
-				if($result = $this->db->resultSet)
+				if ($result = $this->db->resultSet)
 				{
-					foreach($result as $r)
+					foreach ($result as $r)
 					{
 						$booking[] = $r['id'];
 					}
@@ -300,7 +300,7 @@
 			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
 		}
 
-		public function complete_expired(&$events)
+		public function complete_expired( &$events )
 		{
 			$table_name	 = $this->table_name;
 			$db			 = $this->db;
@@ -309,7 +309,7 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
-		public function delete_event($id)
+		public function delete_event( $id )
 		{
 			$db			 = $this->db;
 			$table_name	 = $this->table_name . '_comment';
@@ -341,22 +341,22 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
-		function get_building($id)
+		function get_building( $id )
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('name', false);
 		}
 
-		function get_org($orgnumber)
+		function get_org( $orgnumber )
 		{
 			$sql = "SELECT id,name FROM bb_organization WHERE (organization_number='" . $orgnumber . "' OR customer_organization_number='" . $orgnumber . "') AND active != 0";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$results = array('id'	 => $this->db->f('id', false),
 					'name'	 => $this->db->f('name', false));
@@ -374,7 +374,7 @@
 			$results	 = array();
 			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('id'	 => $this->db->f('id', false),
 					'name'	 => $this->db->f('name', false));
@@ -387,30 +387,30 @@
 			$results	 = array();
 			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
 			}
 			return $results;
 		}
 
-		function get_activities($id)
+		function get_activities( $id )
 		{
 			$results = array();
 			$this->db->query("select id from bb_activity where id = ($id) or  parent_id = ($id) or parent_id in (select id from bb_activity where parent_id = ($id))", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
 
-		function get_resources($ids)
+		function get_resources( $ids )
 		{
 
 			$results = array();
 			$this->db->query("select name from bb_resource where id in ($ids)", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = $this->db->f('name', false);
 			}

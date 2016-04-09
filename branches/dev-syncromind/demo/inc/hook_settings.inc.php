@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	//$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 	$yes_and_no = array(

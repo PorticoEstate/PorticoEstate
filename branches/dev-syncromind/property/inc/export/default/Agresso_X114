@@ -56,13 +56,13 @@
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$this->cats->supress_info = true;
 
-			if(!isset($this->config->config_data['common']['method']))
+			if (!isset($this->config->config_data['common']['method']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 					'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')));
 			}
 
-			if(isset($this->config->config_data['export']['cleanup_old']) && $this->config->config_data['export']['cleanup_old'])
+			if (isset($this->config->config_data['export']['cleanup_old']) && $this->config->config_data['export']['cleanup_old'])
 			{
 				$this->cleanup_old();
 			}
@@ -71,20 +71,20 @@
 			$period_config = $sogeneric->read(array('allrows' => true));
 
 			$period_transition = array();
-			foreach($period_config as $entry)
+			foreach ($period_config as $entry)
 			{
 				$period_transition[$entry['month']] = $entry;
 			}
 
 			$current_month = date('n');
 
-			if(isset($period_transition[$current_month]))
+			if (isset($period_transition[$current_month]))
 			{
 				$_lag_day = (int)$period_transition[$current_month]['day'];
 				$_lag_hour = (int)$period_transition[$current_month]['hour'];
 				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
-			else if(isset($period_transition[13]))
+			else if (isset($period_transition[13]))
 			{
 				$_lag_day = (int)$period_transition[13]['day'];
 				$_lag_hour = (int)$period_transition[13]['hour'];
@@ -102,7 +102,7 @@
 			$time = time();
 			$timestamp_at_start_month = mktime($hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y"));
 
-			if(($time - $timestamp_at_start_month) < $_lag_seconds)
+			if (($time - $timestamp_at_start_month) < $_lag_seconds)
 			{
 				$time = $time - $_lag_seconds;
 			}
@@ -132,7 +132,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$bilagsnr = (int)$this->db->f('bilagsnr');
-			if($bilagsnr)
+			if ($bilagsnr)
 			{
 				$correction = $bilagsnr - 1;
 				$sql = "UPDATE fm_ecobilagoverf SET bilagsnr = bilagsnr - {$correction}";
@@ -144,7 +144,7 @@
 
 		protected function select_vouchers_to_transfer()
 		{
-			if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] == 1)
+			if (isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] == 1)
 			{
 				$sql = "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE approved_amount = '0.00' OR budsjettsigndato IS NOT NULL ORDER BY bilagsnr ASC";
 			}
@@ -155,18 +155,18 @@
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
 			$vouchers_step1 = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$vouchers_step1[] = $this->db->f('bilagsnr');
 			}
 
 			//Filter out partially approved
 			$vouchers = array();
-			foreach($vouchers_step1 as $bilagsnr)
+			foreach ($vouchers_step1 as $bilagsnr)
 			{
 				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE bilagsnr = {$bilagsnr} AND budsjettsigndato IS NULL";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if(!$this->db->next_record())
+				if (!$this->db->next_record())
 				{
 					$vouchers[] = $bilagsnr;
 				}
@@ -177,14 +177,14 @@
 			$extra_candidates = array();
 			$sql = "SELECT DISTINCT bilagsnr FROM fm_ecobilag WHERE (godkjentbelop = '0' OR godkjentbelop = '0.00') AND budsjettsigndato IS NULL";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$extra_candidates[] = $this->db->f('bilagsnr');
 			}
 
-			foreach($extra_candidates as $extra_candidate)
+			foreach ($extra_candidates as $extra_candidate)
 			{
-				if(in_array($extra_candidate, $vouchers))
+				if (in_array($extra_candidate, $vouchers))
 				{
 					continue;
 				}
@@ -193,33 +193,33 @@
 
 				$this->db->query($sql, __LINE__, __FILE__);
 				$transfer_extra = true;
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$oppsynsigndato = $this->db->f('oppsynsigndato');
 					$saksigndato = $this->db->f('saksigndato');
 					$budsjettsigndato = $this->db->f('budsjettsigndato');
 
-					if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] == 1)
+					if (isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] == 1)
 					{
-						if(!$budsjettsigndato)
+						if (!$budsjettsigndato)
 						{
 							$transfer_extra = false;
 						}
 					}
 					else
 					{
-						if(!$budsjettsigndato)
+						if (!$budsjettsigndato)
 						{
 							$transfer_extra = false;
 						}
-						else if($budsjettsigndato && !$saksigndato && !$oppsynsigndato)
+						else if ($budsjettsigndato && !$saksigndato && !$oppsynsigndato)
 						{
 							$transfer_extra = false;
 						}
 					}
 				}
 
-				if($transfer_extra)
+				if ($transfer_extra)
 				{
 					$vouchers[] = $extra_candidate;
 				}
@@ -228,14 +228,14 @@
 			return $vouchers;
 		}
 
-		protected function log_end($batchid)
+		protected function log_end( $batchid )
 		{
 			$tid = date($this->soXport->datetimeformat);
 			$sql = "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','End transfer','$tid')";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		protected function log_error($batchid, $error_desr)
+		protected function log_error( $batchid, $error_desr )
 		{
 			$tid = date($this->soXport->datetimeformat);
 			$sql = "INSERT INTO fm_ecologg (batchid,ecobilagid,status,melding,tid) VALUES ('$batchid',NULL,0,'$error_desr','$tid')";
@@ -260,14 +260,14 @@
 		}
 
 		//Lagre start melding
-		protected function log_start($batchid)
+		protected function log_start( $batchid )
 		{
 			$tid = date($this->db->datetime_format());
 			$sql = "INSERT INTO fm_ecologg (batchid,melding,tid) VALUES ('$batchid','Start transfer','$tid')";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		protected function get_vendor_info($vendor_id = '')
+		protected function get_vendor_info( $vendor_id = '' )
 		{
 			$sql = "SELECT org_nr, konto_nr FROM fm_vendor WHERE id='$vendor_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -282,14 +282,14 @@
 			return $vendor_info;
 		}
 
-		protected function get_order_info($order_id = '')
+		protected function get_order_info( $order_id = '' )
 		{
 			$order_info = array();
 			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			switch($this->db->f('type'))
+			switch ($this->db->f('type'))
 			{
 				case 'workorder':
 					$sql2 = "SELECT title, category FROM fm_workorder WHERE id='$order_id'";
@@ -312,14 +312,14 @@
 			return $order_info;
 		}
 
-		protected function select_invoice_rollback($date, $Filnavn, $rollback_voucher, $rollback_internal_voucher)
+		protected function select_invoice_rollback( $date, $Filnavn, $rollback_voucher, $rollback_internal_voucher )
 		{
 			$date_array = phpgwapi_datetime::date_array($date);
 			$day = $date_array['day'];
 			$month = $date_array['month'];
 			$year = $date_array['year'];
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mssql':
 					$datepart_year = "datepart(year,overftid)";
@@ -343,12 +343,12 @@
 					break;
 			}
 
-			if($rollback_voucher)
+			if ($rollback_voucher)
 			{
 				$rollback_voucher = (int)$rollback_voucher;
 				$sql = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher} AND manual_record IS NULL";
 			}
-			else if($rollback_internal_voucher)
+			else if ($rollback_internal_voucher)
 			{
 				$rollback_internal_voucher = (int)$rollback_internal_voucher;
 				$sql = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
@@ -360,7 +360,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$invoice_rollback = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$invoice_rollback[] = array
 					(
@@ -417,7 +417,7 @@
 		}
 
 		//rollback function
-		protected function bilag_update_overf($BilagOverf)
+		protected function bilag_update_overf( $BilagOverf )
 		{
 			$values = array
 				(
@@ -479,14 +479,14 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		public function overfor($download, $force_period_year = '')
+		public function overfor( $download, $force_period_year = '' )
 		{
 //			$download = 'on';
 //			$download = False;
 //			$this->debug=True;
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
-			if($download == 'on')
+			if ($download == 'on')
 			{
 				$this->increment_batchid();
 				//Lagre melding
@@ -496,14 +496,14 @@
 			//Velg ut alle hoved bilag som skal overføres
 			$vouchers = $this->select_vouchers_to_transfer();
 
-			foreach($vouchers as $voucher_id)
+			foreach ($vouchers as $voucher_id)
 			{
 				$receipt['message'][] = array('msg' => $this->transfer_voucher($batchid, $voucher_id, $download, $force_period_year));
 			}
 
-			if($this->connection)
+			if ($this->connection)
 			{
-				switch($this->config->config_data['common']['method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						ftp_quit($this->connection);
@@ -514,12 +514,12 @@
 				}
 			}
 			//Lagre melding
-			if($download == 'on')
+			if ($download == 'on')
 			{
 				$this->log_end($batchid); //Lagre melding
 			}
 
-			if(!$vouchers)
+			if (!$vouchers)
 			{
 				$receipt['message'][] = array('msg' => 'Ingen bilag funnet for overføring');
 			}
@@ -531,9 +531,9 @@
 		 * @param integer $batchid
 		 * @param string $error_desr
 		 */
-		protected function errorhandler($batchid, $error_desr)
+		protected function errorhandler( $batchid, $error_desr )
 		{
-			if($this->db->get_transaction())
+			if ($this->db->get_transaction())
 			{
 				$this->db->transaction_abort();
 			}
@@ -553,11 +553,11 @@
 		 * @param integer $rollback_internal_voucher
 		 * @return array Receipt
 		 */
-		public function RullTilbake($Filnavn, $date, $rollback_voucher, $rollback_internal_voucher)
+		public function RullTilbake( $Filnavn, $date, $rollback_voucher, $rollback_internal_voucher )
 		{
 			$voucher = $this->select_invoice_rollback($date, $Filnavn, $rollback_voucher, $rollback_internal_voucher);
 
-			if($this->db->get_transaction())
+			if ($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -567,17 +567,17 @@
 				$this->db->transaction_begin();
 			}
 
-			foreach($voucher as $line)
+			foreach ($voucher as $line)
 			{
 				$this->bilag_update_overf($line);
 
-				if($line['pmwrkord_code'])
+				if ($line['pmwrkord_code'])
 				{
 					$orders_affected[$line['pmwrkord_code']] = true;
 
 					$Belop = sprintf("%01.2f", $line['ordrebelop']) * 100;
 
-					if($line['dimd'] % 2 == 0)
+					if ($line['dimd'] % 2 == 0)
 					{
 						$actual_cost_field = 'act_mtrl_cost';
 					}
@@ -598,22 +598,22 @@
 			}
 
 			$antall = count($voucher);
-			if($antall > 0)
+			if ($antall > 0)
 			{
 				$fil_katalog = $this->config->config_data['export']['path'];
 
-				if($rollback_voucher || $rollback_internal_voucher)
+				if ($rollback_voucher || $rollback_internal_voucher)
 				{
-					if(!$this->global_lock)
+					if (!$this->global_lock)
 					{
 						$this->db->transaction_commit();
 					}
 
 					$receipt['message'][] = array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
 				}
-				else if(unlink($fil_katalog . '/' . $Filnavn))
+				else if (unlink($fil_katalog . '/' . $Filnavn))
 				{
-					if(!$this->global_lock)
+					if (!$this->global_lock)
 					{
 						$this->db->transaction_commit();
 					}
@@ -629,7 +629,7 @@
 			}
 			else
 			{
-				if(!$this->global_lock)
+				if (!$this->global_lock)
 				{
 					$this->db->transaction_commit();
 				}
@@ -639,9 +639,9 @@
 			return $receipt;
 		}
 
-		protected function LagFilnavn($ref = '')
+		protected function LagFilnavn( $ref = '' )
 		{
-			if(!$ref)
+			if (!$ref)
 			{
 				throw new Exception('Agresso_X114::LagFilnavn() Mangler SCANNINGNO');
 			}
@@ -650,7 +650,7 @@
 			$Filnavn = $fil_katalog . "/x114_{$this->client_code}_OK_{$ref}.xml";
 
 			//Sjekk om filen eksisterer
-			if(file_exists($Filnavn))
+			if (file_exists($Filnavn))
 			{
 				unlink($Filnavn);
 			}
@@ -658,13 +658,13 @@
 			return $Filnavn;
 		}
 
-		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
+		protected function transfer_voucher( $batchid, $voucher_id, $download, $force_period_year = '' )
 		{
 			$oRsBilag = $this->soXport->get_voucher($voucher_id);
 
 			$skip_agresso = false;
 			//FIXME
-			if(!isset($oRsBilag[0]['external_ref']) || !$oRsBilag[0]['external_ref'])
+			if (!isset($oRsBilag[0]['external_ref']) || !$oRsBilag[0]['external_ref'])
 			{
 				$skip_agresso = true;
 			}
@@ -676,9 +676,9 @@
 				$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_ref']);
 				//	$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_voucher_id']);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					$message = $e->getMessage();
 					$this->errorhandler($batchid, $message);
@@ -687,16 +687,16 @@
 			}
 
 			//Test om filen kan opprettes og skrives til
-			if(!$skip_agresso)
+			if (!$skip_agresso)
 			{
-				if(@fopen($Filnavn, "wb"))
+				if (@fopen($Filnavn, "wb"))
 				{
 					unlink($Filnavn);
 				}
 				else
 				{
 					$message = 'kan ikke lagre til fil: ' . $Filnavn . '<br>';
-					if($this->debug)
+					if ($this->debug)
 					{
 						echo $message;
 					}
@@ -719,25 +719,25 @@
 			}
 
 			$bilagsnr_ut = $oRsBilag[0]['bilagsnr_ut'];
-			if(!$bilagsnr_ut)
+			if (!$bilagsnr_ut)
 			{
 				$get_bilagsnr_ut = false;
-				foreach($oRsBilag as $line)
+				foreach ($oRsBilag as $line)
 				{
-					if(abs($line['godkjentbelop']) > 0)
+					if (abs($line['godkjentbelop']) > 0)
 					{
 						$get_bilagsnr_ut = true;
 					}
 				}
 
-				if($get_bilagsnr_ut)
+				if ($get_bilagsnr_ut)
 				{
 					$bilagsnr_ut = $this->increment_voucher_id();
 				}
 			}
 
 			$purchaseorderstatus = 'OK';
-			if(!$bilagsnr_ut)
+			if (!$bilagsnr_ut)
 			{
 				$Filnavn = str_replace('_OK_', '_E_', $Filnavn);
 				$purchaseorderstatus = 'Feil';
@@ -791,7 +791,7 @@
 
 			$_periode = $oRsBilag[0]['periode'] ? $oRsBilag[0]['periode'] : date('Ym');
 
-			if((int)$this->min_period < (int)$_periode)
+			if ((int)$this->min_period < (int)$_periode)
 			{
 				$periode = $this->min_period;
 			}
@@ -802,9 +802,9 @@
 
 			$sum_amount = 0;
 			$comment = array();
-			foreach($oRsBilag as $line)
+			foreach ($oRsBilag as $line)
 			{
-				if($line['process_log'])
+				if ($line['process_log'])
 				{
 					$comment[] = "{$line['belop']}::{$line['process_log']}";
 				}
@@ -814,14 +814,14 @@
 				$amount = $line[$BelopFelt] * 100;
 				$amount = number_format($amount, 0, '', '');
 
-				if($line['order_id'])
+				if ($line['order_id'])
 				{
 					$orders_affected[$line['order_id']] = true;
 
 					//Oppdater beløp på arbeidsordre
-					if($download == 'on')
+					if ($download == 'on')
 					{
-						if($line['dimd'] % 2 == 0)
+						if ($line['dimd'] % 2 == 0)
 						{
 							$actual_cost_field = 'act_mtrl_cost';
 						}
@@ -831,7 +831,7 @@
 						}
 						$operator = '+';
 
-						if(!$this->debug)
+						if (!$this->debug)
 						{
 							$this->soXport->correct_actual_cost($line['order_id'], $amount, $actual_cost_field, $operator);
 						}
@@ -845,7 +845,7 @@
 				$oRsOverfBilag['bilagsnr_ut'] = $bilagsnr_ut;
 				$oRsOverfBilag['periode'] = $periode;
 
-				if($line['dime'])
+				if ($line['dime'])
 				{
 					$category = $this->cats->return_single($line['dime']);
 					$category_arr = explode('-', $category[0]['name']);
@@ -857,26 +857,26 @@
 				}
 
 				//Kopier verdier  til fm_ecobilagoverf
-				if($download == 'on' && !$this->debug)
+				if ($download == 'on' && !$this->debug)
 				{
 					$this->soXport->add_OverfBilag($oRsOverfBilag);
 				}
 
-				if($line['order_id'])
+				if ($line['order_id'])
 				{
 					$order_info = $this->get_order_info($line['order_id']);
-					if(!$dim6)
+					if (!$dim6)
 					{
 						$dim6 = isset($order_info['category']) && $order_info['category'] ? $order_info['category'] : '';
 					}
 				}
 
 				$descr = '';
-				if($line['line_text'])
+				if ($line['line_text'])
 				{
 					$descr = substr($line['line_text'], 0, 60);
 				}
-				else if($line['order_id'])
+				else if ($line['order_id'])
 				{
 					$descr = substr($order_info['title'], 0, 60);
 				}
@@ -910,7 +910,7 @@
 				);
 			}
 
-			if($accountline)
+			if ($accountline)
 			{
 				$this->db->query('SELECT category FROM fm_vendor WHERE id=' . (int)$oRsBilag[0]['spvend_code']);
 				$this->db->next_record();
@@ -945,7 +945,7 @@
 			}
 
 //			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
-			if($comment)
+			if ($comment)
 			{
 				$invoiceheader[0]['PURCHASEORDERSTATUS.CODE'] .= " \n" . implode("\n", $comment);
 			}
@@ -982,7 +982,7 @@
 			$buffer = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
 
 			//Slett bilaget i fm_ecobilag
-			if($download == 'on' && !$this->debug)
+			if ($download == 'on' && !$this->debug)
 			{
 				$this->_delete_from_fm_ecobilag($voucher_id);
 				//Logg transaksjon
@@ -990,12 +990,12 @@
 			}
 
 			//Fullfør transaksjon
-			if($download == 'on' && !$this->debug)
+			if ($download == 'on' && !$this->debug)
 			{
 				//	$file_written = true;
 				// -- Start
 
-				if($skip_agresso)
+				if ($skip_agresso)
 				{
 //					if ( !$this->global_lock )
 					{
@@ -1009,22 +1009,22 @@
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp, $buffer);
 
-				if(fclose($fp))
+				if (fclose($fp))
 				{
 					$file_written = true;
 				}
 
 				// -- END
-				if($file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
+				if ($file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
-				else if($file_written)
+				else if ($file_written)
 				{
 					$transfer_ok = $this->transfer($buffer, $Filnavn, $batchid, $tranfser_bilag);
 				}
 
-				if($transfer_ok)
+				if ($transfer_ok)
 				{
 					$this->soXport->update_actual_cost_from_archive($this->orders_affected);
 
@@ -1063,25 +1063,25 @@
 			return $next_id;
 		}
 
-		protected function _delete_from_fm_ecobilag($bilagsnr)
+		protected function _delete_from_fm_ecobilag( $bilagsnr )
 		{
 			$bilagsnr = (int)$bilagsnr;
 			$sql = "DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		protected function transfer($buffer, $Filnavn, $batchid, $tranfser_bilag)
+		protected function transfer( $buffer, $Filnavn, $batchid, $tranfser_bilag )
 		{
 			$transfer_ok = false;
-			if($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
+			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
 			{
-				if(!$connection = $this->connection)
+				if (!$connection = $this->connection)
 				{
 					$connection = $this->phpftp_connect();
 				}
 
 				$basedir = $this->config->config_data['export']['remote_basedir'];
-				if($basedir)
+				if ($basedir)
 				{
 					$remote_file = $basedir . '/' . basename($Filnavn);
 				}
@@ -1090,7 +1090,7 @@
 					$remote_file = basename($Filnavn);
 				}
 
-				switch($this->config->config_data['common']['method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
@@ -1105,21 +1105,21 @@
 					default:
 						$transfer_ok = false;
 				}
-				if($transfer_ok)
+				if ($transfer_ok)
 				{
-					for($i = 0; $i < count($tranfser_bilag); $i++)
+					for ($i = 0; $i < count($tranfser_bilag); $i++)
 					{
 						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Invoice transferred %1 to Agresso', basename($Filnavn)));
 					}
 				}
 				else
 				{
-					for($i = 0; $i < count($tranfser_bilag); $i++)
+					for ($i = 0; $i < count($tranfser_bilag); $i++)
 					{
 						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Failed to transfere %1 to Agresso', basename($Filnavn)));
 					}
 				}
-				if(!$transfer_ok)
+				if (!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
@@ -1134,20 +1134,20 @@
 			$password = $this->config->config_data['common']['password'];
 			$port = 22;
 
-			switch($this->config->config_data['common']['method'])
+			switch ($this->config->config_data['common']['method'])
 			{
 				case 'ftp';
-					if($connection = ftp_connect($server))
+					if ($connection = ftp_connect($server))
 					{
 						ftp_login($connection, $user, $password);
 					}
 					break;
 				case 'ssh';
-					if(!function_exists("ssh2_connect"))
+					if (!function_exists("ssh2_connect"))
 					{
 						die("function ssh2_connect doesn't exist");
 					}
-					if(!($connection = ssh2_connect("$server", $port)))
+					if (!($connection = ssh2_connect("$server", $port)))
 					{
 						$message = "fail: unable to establish connection";
 						_debug_array($message);
@@ -1156,7 +1156,7 @@
 					else
 					{
 						// try to authenticate with username root, password secretpassword
-						if(!ssh2_auth_password($connection, $user, $password))
+						if (!ssh2_auth_password($connection, $user, $password))
 						{
 							$message = "fail: unable to authenticate";
 							_debug_array($message);

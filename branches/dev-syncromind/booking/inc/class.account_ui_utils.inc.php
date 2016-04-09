@@ -12,7 +12,7 @@
 
 			$result = array();
 
-			foreach($account_info as $account)
+			foreach ($account_info as $account)
 			{
 				$firstname	 = $account->firstname;
 				$lastname	 = $account->lastname;

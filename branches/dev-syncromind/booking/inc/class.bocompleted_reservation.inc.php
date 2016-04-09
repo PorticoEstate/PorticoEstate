@@ -30,17 +30,17 @@
 			//build_default_read_params will not automatically build a filter for the to_ field
 			//because it cannot match the name 'filter_to' to an existing field once the prefix 
 			//'filter' is removed nor do we want it to, so we build that filter manually here:
-			if($filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null))
+			if ($filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null))
 			{
 				$where_clauses[] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
 
-			if(!isset($_SESSION['show_all_completed_reservations']))
+			if (!isset($_SESSION['show_all_completed_reservations']))
 			{
 				$params['filters']['exported'] = null;
 			}
 
-			if(count($where_clauses) > O)
+			if (count($where_clauses) > O)
 			{
 				$params['filters']['where'] = $where_clauses;
 			}
@@ -53,7 +53,7 @@
 		 *
 		 * @param int $user_id
 		 */
-		public function accessable_buildings($user_id)
+		public function accessable_buildings( $user_id )
 		{
 			$buildings	 = array();
 			$this->db	 = & $GLOBALS['phpgw']->db;
@@ -65,7 +65,7 @@
 			$this->db->query($sql);
 			$result	 = $this->db->resultSet;
 
-			foreach($result as $r)
+			foreach ($result as $r)
 			{
 				$buildings[] = $r['id'];
 			}

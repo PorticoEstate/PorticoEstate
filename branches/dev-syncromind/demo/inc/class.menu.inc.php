@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -30,9 +29,9 @@
 	 * Description
 	 * @package demo
 	 */
-
 	class demo_menu
 	{
+
 		/**
 		 * Get the menus for the demo
 		 *
@@ -41,8 +40,7 @@
 		public function get_menu()
 		{
 			$start_page = 'demo';
-			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'])
-					&& $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'] )
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page']) && $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'])
 			{
 					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['demo']['default_start_page'];
 			}
@@ -52,7 +50,7 @@
 				'demo' => array
 				(
 					'text'	=> lang('demo'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "demo.ui{$start_page}.index") ),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "demo.ui{$start_page}.index")),
 					'image'	=> array('demo', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -60,46 +58,52 @@
 			);
 
 			$menus['toolbar'] = array();
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 				$menus['admin'] = array
 				(
 					'categories'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'demo'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index',
+							'appname' => 'demo'))
 					),
 					'acl'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'demo'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
+							'acl_app' => 'demo'))
 					),
 					'list_atrribs'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('custom fields', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'demo'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+							'appname' => 'demo'))
 					),
 					'list_functions'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('custom functions', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function', 'appname' =>  'demo'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+							'appname' => 'demo'))
 					)
 				);
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$menus['preferences'] = array
 				(
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'demo', 'type'=> 'user') )
+						'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'demo',
+							'type' => 'user'))
 					),
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'demo') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs',
+							'acl_app' => 'demo'))
 					)
 				);
 
@@ -116,12 +120,14 @@
 				'html'	=> array
 				(
 					'text'	=> 'HTML',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'html'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index',
+						'output' => 'html'))
 				),
 				'wml'	=> array
 				(
 					'text'	=> 'WML',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index', 'output' => 'wml'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index',
+						'output' => 'wml'))
 				),
 				'alternative'	=> array
 				(

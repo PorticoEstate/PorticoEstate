@@ -8,16 +8,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage autoreply
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_uiautoreply
 	{
+
 		var $public_functions = array(
 			'index'			=> true,
 			'add'			=> true,
@@ -35,7 +35,7 @@
 		{
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('sms.boautoreply',true);
+			$this->bo = CreateObject('sms.boautoreply', true);
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms					= CreateObject('sms.sms');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -66,27 +66,28 @@
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('autoreply','nextmatchs',
+			$GLOBALS['phpgw']->xslttpl->add_file(array('autoreply', 'nextmatchs',
 										'search_field'));
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt');
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'sms_reply_receipt');
 
-			$GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt','');
+			$GLOBALS['phpgw']->session->appsession('session_data', 'sms_reply_receipt', '');
 
 			$autoreply_info = $this->bo->read();
 
 			foreach ($autoreply_info as $entry)
 			{
-				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
+				if ($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $entry['id']));
+					$link_delete = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.delete',
+						'autoreply_id' => $entry['id']));
 					$text_delete		= lang('delete');
 					$lang_delete_text 	= lang('delete the autoreply code');
 				}
@@ -95,7 +96,8 @@
 				(
 					'code'					=> $entry['code'],
 					'user'					=> $GLOBALS['phpgw']->accounts->id2name($entry['uid']),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.manage', 'autoreply_id'=> $entry['id'])),
+					'link_edit' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.manage',
+						'autoreply_id' => $entry['id'])),
 					'link_delete'				=> $link_delete,
 //					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.view&', 'autoreply_id'=> $entry['id'])),
 //					'lang_view_config_text'			=> lang('view the config'),
@@ -106,15 +108,14 @@
 					'lang_delete_text'			=> $lang_delete_text,
 				);
 
-				unset ($link_delete);
-				unset ($text_delete);
-				unset ($lang_delete_text);
+				unset($link_delete);
+				unset($text_delete);
+				unset($lang_delete_text);
 			}
 
 
 			$table_header[] = array
 			(
-
 				'sort_code'	=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
@@ -132,7 +133,7 @@
 				'lang_user'		=> lang('user'),
 			);
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -157,7 +158,7 @@
 				(
 					'lang_add'		=> lang('add'),
 					'lang_add_statustext'	=> lang('add a autoreply'),
-					'add_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.add')),
+					'add_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.add')),
 				);
 			}
 
@@ -173,8 +174,8 @@
 				'record_limit'						=> $record_limit,
 				'num_records'						=> count($autoreply_info),
 				'all_records'						=> $this->bo->total_records,
-				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
 				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
 				'query'								=> $this->query,
@@ -188,13 +189,13 @@
 			$function_msg					= lang('list SMS autoreplies');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list' => $data));
 			$this->save_sessiondata();
 		}
 
 		function add()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -202,7 +203,7 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS autoreply');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Add SMS autoreply');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -220,7 +221,7 @@
 				'autoreply_id'	=> $autoreply_id
 				);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 
 			$content .= "
@@ -233,7 +234,7 @@
 
 
 			$done_data = array('menuaction'	=> 'sms.uiautoreply.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p>
@@ -243,13 +244,12 @@
 
 
 			echo $content;
-
 		}
 
 		function add_yes()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -268,16 +268,16 @@
 					$sql = "INSERT INTO phpgw_sms_featautoreply (uid,autoreply_code) VALUES ('$uid','$add_autoreply_code')";
 					$this->db->transaction_begin();
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply,'autoreply_id');
+					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply, 'autoreply_id');
 
 					$this->db->transaction_commit();
 
 					if ($new_uid)
 					{
-						$receipt['message'][]=array('msg'=>lang('SMS autoreply code %1 has been added', $add_autoreply_code));
-						$GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt',$receipt);
+						$receipt['message'][] = array('msg' => lang('SMS autoreply code %1 has been added', $add_autoreply_code));
+						$GLOBALS['phpgw']->session->appsession('session_data', 'sms_reply_receipt', $receipt);
 						$target = 'index';
 					}
 					else
@@ -287,7 +287,7 @@
 			    }
 			    else
 			    {
-					$error_string = lang('SMS code %1 already exists, reserved or use by other feature!',$add_autoreply_code);
+					$error_string = lang('SMS code %1 already exists, reserved or use by other feature!', $add_autoreply_code);
 			    }
 			}
 			else
@@ -300,14 +300,13 @@
 				'err'		=> urlencode($error_string)
 				);
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function add_scenario()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -315,7 +314,7 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS autoreply scenario');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Add SMS autoreply scenario');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -327,7 +326,7 @@
 
 			$sql = "SELECT * FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$autoreply_code = $this->db->f('autoreply_code');
@@ -343,7 +342,7 @@
 				'autoreply_id'	=> $autoreply_id
 				);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 
 			$content .= "
@@ -352,10 +351,11 @@
 			    <p>
 			    <form action=$add_url method=post>
 			";
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    ${"add_autoreply_scenario_param".$i} = strtoupper(get_var("add_autoreply_scenario_param$i",array('POST','GET')));
-			    $content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=add_autoreply_scenario_param$i value=\"".${"add_autoreply_scenario_param".$i}."\">\n";
+				${"add_autoreply_scenario_param" . $i} = strtoupper(get_var("add_autoreply_scenario_param$i", array(
+					'POST', 'GET')));
+				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=add_autoreply_scenario_param$i value=\"" . ${"add_autoreply_scenario_param" . $i} . "\">\n";
 			}
 
 			$content .= "
@@ -368,7 +368,7 @@
 				'menuaction'	=> 'sms.uiautoreply.manage',
 				'autoreply_id'	=> $autoreply_id);
 
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p><li>
@@ -381,7 +381,7 @@
 		function add_scenario_yes()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -393,32 +393,32 @@
 
 			$ok = 0;
 
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    ${"add_autoreply_scenario_param".$i} = strtoupper(get_var("add_autoreply_scenario_param$i",array('POST','GET')));
-			    if(${"add_autoreply_scenario_param".$i})
+				${"add_autoreply_scenario_param" . $i} = strtoupper(get_var("add_autoreply_scenario_param$i", array(
+					'POST', 'GET')));
+				if (${"add_autoreply_scenario_param" . $i})
 			    {
 			    	$ok++;
 			    }
-
 			}
 			if ($add_autoreply_scenario_result && ($ok > 0))
 			{
-			    for ($i=1;$i<=7;$i++)
+				for ($i = 1; $i <= 7; $i++)
 			    {
 				$autoreply_scenario_param_list .= "autoreply_scenario_param$i,";
 			    }
-			    for ($i=1;$i<=7;$i++)
+				for ($i = 1; $i <= 7; $i++)
 			    {
-				$autoreply_scenario_code_param_entry .= "'".${"add_autoreply_scenario_param".$i}."',";
+					$autoreply_scenario_code_param_entry .= "'" . ${"add_autoreply_scenario_param" . $i} . "',";
 			    }
 			    $sql = "
 				INSERT INTO phpgw_sms_featautoreply_scenario
-				(autoreply_id,".$autoreply_scenario_param_list."autoreply_scenario_result) VALUES ('$autoreply_id',$autoreply_scenario_code_param_entry'$add_autoreply_scenario_result')";
+				(autoreply_id," . $autoreply_scenario_param_list . "autoreply_scenario_result) VALUES ('$autoreply_id',$autoreply_scenario_code_param_entry'$add_autoreply_scenario_result')";
 
 				$this->db->transaction_begin();
-				$this->db->query($sql,__LINE__,__FILE__);
-				$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply_scenario,'autoreply_scenario_id');
+				$this->db->query($sql, __LINE__, __FILE__);
+				$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply_scenario, 'autoreply_scenario_id');
 				$this->db->transaction_commit();
 
 				if ($new_uid)
@@ -443,19 +443,18 @@
 				'add_autoreply_scenario_result' => $add_autoreply_scenario_result
 				);
 
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    $add_data["add_autoreply_scenario_param".$i] = strtoupper(phpgw::get_var("add_autoreply_scenario_param$i", 'string', 'POST'));
+				$add_data["add_autoreply_scenario_param" . $i] = strtoupper(phpgw::get_var("add_autoreply_scenario_param$i", 'string', 'POST'));
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function edit_scenario()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -463,7 +462,7 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS autoreply scenario');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Edit SMS autoreply scenario');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -475,7 +474,7 @@
 
 			$sql = "SELECT * FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$autoreply_code = $this->db->f('autoreply_code');
@@ -492,7 +491,7 @@
 				'autoreply_scenario_id'	=> $autoreply_scenario_id
 				);
 
-			$edit_url = $GLOBALS['phpgw']->link('/index.php',$edit_data);
+			$edit_url = $GLOBALS['phpgw']->link('/index.php', $edit_data);
 
 
 			$content .= "
@@ -502,15 +501,15 @@
 			    <form action=$edit_url method=post>
 			";
 			$sql = "SELECT * FROM phpgw_sms_featautoreply_scenario WHERE autoreply_id='$autoreply_id' AND autoreply_scenario_id='$autoreply_scenario_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    ${"edit_autoreply_scenario_param".$i} =  $this->db->f("autoreply_scenario_param$i");
+				${"edit_autoreply_scenario_param" . $i} = $this->db->f("autoreply_scenario_param$i");
 			}
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    $content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=edit_autoreply_scenario_param$i value=\"".${"edit_autoreply_scenario_param".$i}."\">\n";
+				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=edit_autoreply_scenario_param$i value=\"" . ${"edit_autoreply_scenario_param" . $i} . "\">\n";
 			}
 			$edit_autoreply_scenario_result = $this->db->f('autoreply_scenario_result');
 			$content .= "
@@ -522,7 +521,7 @@
 				'menuaction'	=> 'sms.uiautoreply.manage',
 				'autoreply_id'	=> $autoreply_id);
 
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p><li>
@@ -532,12 +531,10 @@
 			echo $content;
 		}
 
-
-
 		function edit_scenario_yes()
 		{
 
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -546,12 +543,14 @@
 
 			$autoreply_scenario_id	= phpgw::get_var('autoreply_scenario_id');
 			$autoreply_id	= phpgw::get_var('autoreply_id');
-			$edit_autoreply_scenario_result	= get_var('edit_autoreply_scenario_result',array('POST','GET'));
+			$edit_autoreply_scenario_result = get_var('edit_autoreply_scenario_result', array(
+				'POST', 'GET'));
 
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    ${"edit_autoreply_scenario_param".$i} = strtoupper(get_var("edit_autoreply_scenario_param$i",array('POST','GET')));
-			    if(${"edit_autoreply_scenario_param".$i})
+				${"edit_autoreply_scenario_param" . $i} = strtoupper(get_var("edit_autoreply_scenario_param$i", array(
+					'POST', 'GET')));
+				if (${"edit_autoreply_scenario_param" . $i})
 			    {
 			    	$ok++;
 			    }
@@ -559,18 +558,18 @@
 
 			if ($edit_autoreply_scenario_result  && ($ok > 0))
 			{
-			    for ($i=1;$i<=7;$i++)
+				for ($i = 1; $i <= 7; $i++)
 			    {
-					$autoreply_scenario_param_list .= "autoreply_scenario_param$i='".${"edit_autoreply_scenario_param".$i}."',";
+					$autoreply_scenario_param_list .= "autoreply_scenario_param$i='" . ${"edit_autoreply_scenario_param" . $i} . "',";
 			    }
 			    $sql = "
 				UPDATE phpgw_sms_featautoreply_scenario
-				SET ".$autoreply_scenario_param_list."autoreply_scenario_result='$edit_autoreply_scenario_result'
+				SET " . $autoreply_scenario_param_list . "autoreply_scenario_result='$edit_autoreply_scenario_result'
 				WHERE autoreply_id='$autoreply_id' AND autoreply_scenario_id='$autoreply_scenario_id'
 			    ";
 
 				$this->db->transaction_begin();
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->affected_rows())
 			    {
 					$error_string = "SMS autoreply scenario has been edited";
@@ -581,7 +580,6 @@
 			    }
 
 				$this->db->transaction_commit();
-
 			}
 			else
 			{
@@ -598,26 +596,25 @@
 				'edit_autoreply_scenario_result'	=> $edit_autoreply_scenario_result
 				);
 
-			for ($i=1;$i<=7;$i++)
+			for ($i = 1; $i <= 7; $i++)
 			{
-			    $add_data["edit_autoreply_scenario_param".$i] = strtoupper(get_var("edit_autoreply_scenario_param$i",array('POST')));
+				$add_data["edit_autoreply_scenario_param" . $i] = strtoupper(get_var("edit_autoreply_scenario_param$i", array(
+					'POST')));
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
-
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function manage()
 		{
-			if(!$this->acl->check($this->acl_location, 16, 'sms'))
+			if (!$this->acl->check($this->acl_location, 16, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Manage SMS autoreply');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Manage SMS autoreply');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -626,14 +623,14 @@
 			$autoreply_id	= phpgw::get_var('autoreply_id');
 			$err	= urldecode(phpgw::get_var('err'));
 
-/*			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
+			/* 			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
 			    $query_user_only = "AND uid='$uid'";
 			}
-*/
+			 */
 			$sql = "SELECT * FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id' $query_user_only";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$manage_autoreply_code = $this->db->f('autoreply_code');
@@ -648,7 +645,7 @@
 				'autoreply_id'	=> $autoreply_id
 				);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			$content .= "
 			    <p>
@@ -662,20 +659,22 @@
 			";
 
 			$sql = "SELECT * FROM phpgw_sms_featautoreply_scenario WHERE autoreply_id='$autoreply_id' ORDER BY autoreply_scenario_param1";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
 			    $owner = $GLOBALS['phpgw']->accounts->id2name($o_uid);
 			    $list_of_param = "";
-			    for ($i=1;$i<=7;$i++)
+				for ($i = 1; $i <= 7; $i++)
 			    {
-					$list_of_param .= $this->db->f("autoreply_scenario_param$i")."&nbsp;";
+					$list_of_param .= $this->db->f("autoreply_scenario_param$i") . "&nbsp;";
 			    }
 
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiautoreply.edit_scenario', 'autoreply_id'=> $this->db->f('autoreply_id'), 'autoreply_scenario_id'=> $this->db->f('autoreply_scenario_id'))) . ">e</a>] ";
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiautoreply.delete_scenario', 'autoreply_id'=> $this->db->f('autoreply_id'), 'autoreply_scenario_id'=> $this->db->f('autoreply_scenario_id'))) . ">x</a>] ";
-				$content .= " <b>Param:</b> ".$list_of_param."&nbsp;<br><b>Return:</b> ".$this->db->f('autoreply_scenario_result')."&nbsp;&nbsp;<b>User:</b> $owner<br><br>";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.edit_scenario',
+						'autoreply_id' => $this->db->f('autoreply_id'), 'autoreply_scenario_id' => $this->db->f('autoreply_scenario_id'))) . ">e</a>] ";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.delete_scenario',
+						'autoreply_id' => $this->db->f('autoreply_id'), 'autoreply_scenario_id' => $this->db->f('autoreply_scenario_id'))) . ">x</a>] ";
+				$content .= " <b>Param:</b> " . $list_of_param . "&nbsp;<br><b>Return:</b> " . $this->db->f('autoreply_scenario_result') . "&nbsp;&nbsp;<b>User:</b> $owner<br><br>";
 			}
 			$content .= "
 			    <p>
@@ -686,7 +685,7 @@
 			$done_data = array(
 				'menuaction'	=> 'sms.uiautoreply.index');
 
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p><li>
@@ -694,13 +693,12 @@
 			    <p>
 			";
 			echo $content;
-
 		}
 
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -719,7 +717,7 @@
 			{
 
 				$sql = "SELECT autoreply_code FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$code_name = $this->db->f('autoreply_code');
@@ -728,23 +726,23 @@
 				{
 					$sql = "DELETE FROM phpgw_sms_featautoreply WHERE autoreply_code='$code_name'";
 					$this->db->transaction_begin();
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					if ($this->db->affected_rows())
 	    				{
-						$receipt['message'][]=array('msg'=>lang('SMS autoreply code %1 has been deleted!', $code_name));
+						$receipt['message'][] = array('msg' => lang('SMS autoreply code %1 has been deleted!', $code_name));
 						$error_string = "SMS autoreply code `$code_name` has been deleted!";
 					}
 					else
 	    				{
-						$receipt['message'][]=array('msg'=>lang('Fail to delete SMS autoreply code') . ' ' . $code_name);
+						$receipt['message'][] = array('msg' => lang('Fail to delete SMS autoreply code') . ' ' . $code_name);
 						$error_string = "Fail to delete SMS autoreply code `$code_name`";
 	    				}
 	    				$this->db->transaction_commit();
 				}
 
 				$link_data['err'] = urlencode($error_string);
-				$GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt',$receipt);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'sms_reply_receipt', $receipt);
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
 
@@ -753,8 +751,9 @@
 
 			$data = array
 			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $autoreply_id)),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.delete',
+					'autoreply_id' => $autoreply_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -766,13 +765,13 @@
 			$function_msg	= lang('delete autoreply');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
 		function delete_scenario()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -792,7 +791,7 @@
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$sql = "SELECT autoreply_scenario_result FROM phpgw_sms_featautoreply_scenario WHERE autoreply_scenario_id='$autoreply_scenario_id'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$scenario_result = $this->db->f('autoreply_scenario_result');
@@ -802,7 +801,7 @@
 				    $sql = "DELETE FROM phpgw_sms_featautoreply_scenario WHERE autoreply_id='$autoreply_id' AND autoreply_scenario_id='$autoreply_scenario_id'";
 
 					$this->db->transaction_begin();
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					if ($this->db->affected_rows())
 				    {
 						$error_string = "SMS autoreply scenario result `$scenario_result` has been deleted!";
@@ -815,15 +814,16 @@
 
 				$link_data['err'] = urlencode($error_string);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
 			$data = array
 			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete_scenario', 'autoreply_id'=> $autoreply_id, 'autoreply_scenario_id'=> $autoreply_scenario_id)),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.delete_scenario',
+					'autoreply_id' => $autoreply_id, 'autoreply_scenario_id' => $autoreply_scenario_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -835,6 +835,6 @@
 			$function_msg	= lang('delete autoreply');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 	}

@@ -6,9 +6,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package sms
 	* @subpackage setup
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$setup_info['sms']['name']      = 'sms';
 	$setup_info['sms']['version']   = '0.9.17.512';
 	$setup_info['sms']['app_order'] = 8;
@@ -67,15 +66,15 @@
 	$setup_info['sms']['depends'][] = array
 	(
 		'appname'  => 'phpgwapi',
-		'versions' => Array('0.9.16','0.9.17', '0.9.18')
+		'versions' => Array('0.9.16', '0.9.17', '0.9.18')
 	);
 
 	$setup_info['sms']['depends'][] = array(
 		'appname'  => 'admin',
-		'versions' => Array('0.9.16','0.9.17', '0.9.18')
+		'versions' => Array('0.9.16', '0.9.17', '0.9.18')
 	);
 
 	$setup_info['sms']['depends'][] = array(
 		'appname'  => 'preferences',
-		'versions' => Array('0.9.16','0.9.17', '0.9.18')
+		'versions' => Array('0.9.16', '0.9.17', '0.9.18')
 	);

@@ -44,11 +44,11 @@
 
 			//Serialize the documents found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
+					if ($result->has_permission(PHPGW_ACL_READ)) // check for read permission
 					{
 						$rows[] = $result->serialize();
 					}
@@ -73,7 +73,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			unset($value['query_location']);
 
@@ -89,7 +89,7 @@
 				'location_code'	 => $value['location_code'])));
 			$value['labels'][]	 = lang('show');
 
-			if($editable == true)
+			if ($editable == true)
 			{
 				$value['ajax'][]	 = true;
 				$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit',

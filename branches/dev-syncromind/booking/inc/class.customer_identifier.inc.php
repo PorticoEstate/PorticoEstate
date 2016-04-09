@@ -19,23 +19,23 @@
 			$this->identifier_type_field = $this->field_prefix . 'identifier_type';
 		}
 
-		public function is_valid_customer_identifier_type($type)
+		public function is_valid_customer_identifier_type( $type )
 		{
 			return in_array($type, $this->get_valid_types());
 		}
 
-		public function copy_between(array $from_entity, array &$to_entity)
+		public function copy_between( array $from_entity, array &$to_entity )
 		{
-			if($from_entity_customer_identifier = $this->get_current_identifier_type($from_entity))
+			if ($from_entity_customer_identifier = $this->get_current_identifier_type($from_entity))
 			{
 				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
-				if(intval($from_entity['customer_internal']) == 1)
+				if (intval($from_entity['customer_internal']) == 1)
 				{
-					if((strlen($from_entity['customer_number']) == 6) || (strlen($from_entity['customer_number']) == 5))
+					if ((strlen($from_entity['customer_number']) == 6) || (strlen($from_entity['customer_number']) == 5))
 					{
 						$to_entity[$this->field_prefix . $from_entity_customer_identifier] = $from_entity['customer_number'];
 					}
-					elseif((strlen($from_entity['customer_organization_number']) == 6) || (strlen($from_entity['customer_organization_number']) == 5))
+					elseif ((strlen($from_entity['customer_organization_number']) == 6) || (strlen($from_entity['customer_organization_number']) == 5))
 					{
 						$to_entity[$this->field_prefix . $from_entity_customer_identifier] = $from_entity['customer_organization_number'];
 					}
@@ -55,15 +55,15 @@
 		/**
 		 * Extract customer identifier from _POST into $data
 		 */
-		public function extract_form_data(&$data)
+		public function extract_form_data( &$data )
 		{
 			$current_type = isset($_POST[$this->identifier_type_field]) && $this->is_valid_customer_identifier_type($_POST[$this->identifier_type_field]) ?
 			$_POST[$this->identifier_type_field] : null;
 
-			if(!$current_type)
+			if (!$current_type)
 			{
 				$data[$this->identifier_type_field] = null;
-				foreach($this->get_valid_types() as $type)
+				foreach ($this->get_valid_types() as $type)
 				{
 					$data[$this->field_prefix . $type] = null;
 				}
@@ -73,7 +73,7 @@
 			$identifier_field	 = $this->field_prefix . $current_type;
 			$identifier_value	 = isset($_POST[$identifier_field]) ? trim($_POST[$identifier_field]) : null;
 
-			if(empty($identifier_value))
+			if (empty($identifier_value))
 			{
 				$data[$this->identifier_type_field]	 = null;
 				$data[$identifier_field]			 = null;
@@ -86,24 +86,24 @@
 
 
 			//Clear other customer identifier fields
-			foreach($this->get_valid_types() as $type)
+			foreach ($this->get_valid_types() as $type)
 			{
 				$current_type != $type AND $data[$this->field_prefix . $type] = null;
 			}
 		}
 
-		public function validate($data)
+		public function validate( $data )
 		{
-			if(isset($data[$this->identifier_type_field]))
+			if (isset($data[$this->identifier_type_field]))
 			{
-				if(!$this->is_valid_customer_identifier_type($data[$this->identifier_type_field]))
+				if (!$this->is_valid_customer_identifier_type($data[$this->identifier_type_field]))
 				{
 					return array($this->field_prefix . $current_type => 'Invalid customer identifier type');
 				}
 
 				$identifier_field = trim($data[$this->identifier_type_field]);
 
-				if(empty($identifier_field))
+				if (empty($identifier_field))
 				{
 					return array($this->field_prefix . $current_type => sprintf('Missing value for customer\'s %s', $data[$this->identifier_type_field]));
 				}
@@ -112,9 +112,9 @@
 			}
 			else
 			{
-				foreach($this->get_valid_types() as $type)
+				foreach ($this->get_valid_types() as $type)
 				{
-					if(isset($data[$this->field_prefix . $type]) && !empty($data[$this->field_prefix . $type]))
+					if (isset($data[$this->field_prefix . $type]) && !empty($data[$this->field_prefix . $type]))
 					{
 						return array($this->field_prefix . $current_type => 'Customer identifier type must be specified');
 					}
@@ -124,9 +124,9 @@
 			return array();
 		}
 
-		public function get_current_identifier_value($data)
+		public function get_current_identifier_value( $data )
 		{
-			if(!($identifier_field = $this->get_current_identifier_type($data)))
+			if (!($identifier_field = $this->get_current_identifier_type($data)))
 			{
 				return null;
 			}
@@ -134,12 +134,12 @@
 			$identifier_field	 = $this->field_prefix . $identifier_field;
 			$identifier_value	 = isset($data[$identifier_field]) ? trim($data[$identifier_field]) : null;
 
-			if($identifier_field == 'customer_organization_number' and ( strlen($identifier_value) != 5 and strlen($identifier_value) != 6 and strlen($identifier_value) != 9))
+			if ($identifier_field == 'customer_organization_number' and ( strlen($identifier_value) != 5 and strlen($identifier_value) != 6 and strlen($identifier_value) != 9))
 			{
 				return null;
 			}
 
-			if($identifier_field == 'customer_ssn' and strlen($identifier_value) != 11)
+			if ($identifier_field == 'customer_ssn' and strlen($identifier_value) != 11)
 			{
 				return null;
 			}
@@ -147,13 +147,13 @@
 			return (empty($identifier_value) ? null : $identifier_value);
 		}
 
-		public function get_current_identifier_type($data)
+		public function get_current_identifier_type( $data )
 		{
 			$identifier_field = trim($data[$this->identifier_type_field]);
 			return (empty($identifier_field) ? null : $identifier_field);
 		}
 
-		public function install(booking_uicommon $ui, &$entity = null)
+		public function install( booking_uicommon $ui, &$entity = null )
 		{
 			$js = <<<JST
 			(function() {
@@ -205,7 +205,7 @@
 			})();
 JST;
 
-			if(is_array($entity))
+			if (is_array($entity))
 			{
 				$this->add_current_identifier_info($entity);
 			}
@@ -214,16 +214,16 @@ JST;
 			$ui->add_js_load_event($js);
 		}
 
-		public function add_current_identifier_info(&$entity)
+		public function add_current_identifier_info( &$entity )
 		{
 			$entity['customer_identifier_types'] = $this->get_valid_types_ui_values();
 
-			if($customer_identifier_type = $this->get_current_identifier_type($entity))
+			if ($customer_identifier_type = $this->get_current_identifier_type($entity))
 			{
 				$entity['customer_identifier_label'] = booking_uicommon::humanize($customer_identifier_type);
 			}
 
-			if($customer_identifier_value = $this->get_current_identifier_value($entity))
+			if ($customer_identifier_value = $this->get_current_identifier_value($entity))
 			{
 				$entity['customer_identifier_value'] = $customer_identifier_value;
 			}

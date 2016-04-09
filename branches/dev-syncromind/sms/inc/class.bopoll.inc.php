@@ -8,23 +8,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage poll
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_bopoll
 	{
+
 		var $start;
 		var $query;
 		var $filter;
 		var $sort;
 		var $order;
 		var $cat_id;
-
 		var $public_functions = array
 		(
 			'read'				=> true,
@@ -34,7 +33,7 @@
 			'check_perms'		=> true
 		);
 
-		function __construct($session=false)
+		function __construct( $session = false )
 		{
 			$this->so 			= CreateObject('sms.sopoll');
 			$this->bocommon 	= CreateObject('sms.bocommon');
@@ -51,27 +50,27 @@
 			$order	= phpgw::get_var('order');
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
+			$allrows = phpgw::get_var('allrows', 'bool');
 
 			$this->start = $start ? $start : 0;
 
-			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
+			if (array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
 			{
 				$this->query = $query;
 			}
-			if(array_key_exists('filter',$_POST) || array_key_exists('filter',$_GET))
+			if (array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
 			{
 				$this->filter = $filter;
 			}
-			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
+			if (array_key_exists('sort', $_POST) || array_key_exists('sort', $_GET))
 			{
 				$this->sort = $sort;
 			}
-			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
+			if (array_key_exists('order', $_POST) || array_key_exists('order', $_GET))
 			{
 				$this->order = $order;
 			}
-			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
+			if (array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
 			{
 				$this->cat_id = $cat_id;
 			}
@@ -81,17 +80,17 @@
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','sms_poll',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'sms_poll', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','sms_poll');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'sms_poll');
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -103,22 +102,23 @@
 
 		function read()
 		{
-			$poll_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+			$poll_info = $this->so->read(array('start' => $this->start, 'query' => $this->query,
+				'sort' => $this->sort, 'order' => $this->order,
+				'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $poll_info;
 		}
 
-		function read_single_poll($id)
+		function read_single_poll( $id )
 		{
-			$values =$this->so->read_single_poll($id);
+			$values = $this->so->read_single_poll($id);
 			return $values;
 		}
 
-		function save_poll($values,$action='')
+		function save_poll( $values, $action = '' )
 		{
 
-			if ($action=='edit')
+			if ($action == 'edit')
 			{
 				if ($values['poll_id'] != '')
 				{
@@ -127,7 +127,7 @@
 				}
 				else
 				{
-					$receipt['error'][]=array('msg'=>lang('Error'));
+					$receipt['error'][] = array('msg' => lang('Error'));
 				}
 			}
 			else
@@ -138,19 +138,18 @@
 			return $receipt;
 		}
 
-		function delete_poll($id)
+		function delete_poll( $id )
 		{
 			$this->so->delete_poll($id);
 		}
 
-
-		function select_type_list($selected='')
+		function select_type_list( $selected = '' )
 		{
 			$input_poll[0]['id'] = 'php';
 			$input_poll[0]['name'] = 'php code';
 			$input_poll[1]['id'] = 'shell';
 			$input_poll[1]['name'] = 'poll or shell script';
 
-			return $this->bocommon->select_list($selected,$input_poll);
+			return $this->bocommon->select_list($selected, $input_poll);
 		}
 	}

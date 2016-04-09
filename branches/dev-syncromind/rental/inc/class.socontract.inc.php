@@ -45,7 +45,7 @@
 
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.socontract');
 			}
@@ -65,7 +65,7 @@
 		 *
 		 * @see rental/inc/rental_socommon#get_query($sort_field, $ascending, $search_for, $search_type, $filters, $return_count)
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -73,30 +73,30 @@
 			$columns = array();
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			if($sort_field == null || $sort_field == '')
+			if ($sort_field == null || $sort_field == '')
 			{
 				$sort_field = 'contract.id';
 			}
-			else if($sort_field == 'party')
+			else if ($sort_field == 'party')
 			{
 				$sort_field = "party.company_name {$dir}, party.last_name {$dir}, party.first_name";
 			}
-			else if($sort_field == 'composite')
+			else if ($sort_field == 'composite')
 			{
 				$sort_field = "composite.name";
 			}
-			else if($sort_field == 'type')
+			else if ($sort_field == 'type')
 			{
 				$sort_field = 'contract.location_id';
 			}
-			else if($sort_field == 'term_label')
+			else if ($sort_field == 'term_label')
 			{
 				$sort_field = 'contract.term_id';
 			}
 			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
 
 			//Contracts for billing should always be sorted on biling start
-			if(isset($filters['contracts_for_billing']))
+			if (isset($filters['contracts_for_billing']))
 			{
 				$order = "ORDER BY contract.billing_start ASC";
 			}
@@ -106,13 +106,13 @@
 			}
 
 			// Search for based on search type
-			if($search_for)
+			if ($search_for)
 			{
 				$search_for			 = $this->marshal($search_for, 'field');
 				$like_pattern		 = "'%" . $search_for . "%'";
 				$int_value_of_search = (int)$search_for;
 				$like_clauses		 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "id":
 						$like_clauses[]		 = "contract.old_contract_id $this->like $like_pattern";
@@ -143,16 +143,16 @@
 						break;
 				}
 
-				if($composite_address)
+				if ($composite_address)
 				{
 					$sql_composite_address	 = "select rental_composite.id as rc_id from rental_composite,rental_unit,fm_gab_location where rental_unit.composite_id=rental_composite.id and fm_gab_location.location_code=rental_unit.location_code and fm_gab_location.address like upper({$like_pattern})";
 					$this->db->query($sql_composite_address, __LINE__, __FILE__, false, true);
 					$array_composites		 = array();
-					while($this->db->next_record())
+					while ($this->db->next_record())
 					{
 						$array_composites[] = $this->db->f('rc_id');
 					}
-					if($array_composites)
+					if ($array_composites)
 					{
 						$composites		 = implode(',', $array_composites);
 						$like_clauses[]	 = "composite.id in ($composites)";
@@ -164,7 +164,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -173,51 +173,51 @@
 			$filter_clauses = array();
 
 			// Contracts with party as contract party
-			if(isset($filters['party_id']))
+			if (isset($filters['party_id']))
 			{
 				$party_id			 = $this->marshal($filters['party_id'], 'int');
 				$filter_clauses[]	 = "party.id = $party_id";
 			}
 
 			// Contracts for this executive officer
-			if(isset($filters['executive_officer']))
+			if (isset($filters['executive_officer']))
 			{
 				$account_id			 = $this->marshal($filters['executive_officer'], 'int');
 				$filter_clauses[]	 = "contract.executive_officer = $account_id";
 			}
 
 			// Contracts of type
-			if(isset($filters['contract_type']) && $filters['contract_type'] != 'all')
+			if (isset($filters['contract_type']) && $filters['contract_type'] != 'all')
 			{
 				$type				 = $this->marshal($filters['contract_type'], 'field');
 				$filter_clauses[]	 = "contract.location_id IN ($type)";
 			}
 
 			// Contracts with this id (filter for retrieveing a single contract)
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "contract.id = {$id}";
 			}
 
 			// All contracts with composite as contract composite
-			if(isset($filters['composite_id']))
+			if (isset($filters['composite_id']))
 			{
 				$composite_id		 = $this->marshal($filters['composite_id'], 'int');
 				$filter_clauses[]	 = "composite.id = {$composite_id}";
 			}
 
 			// Affected contracts by regulation
-			if(isset($filters['adjustment_interval']) && isset($filters['adjustment_year']))
+			if (isset($filters['adjustment_interval']) && isset($filters['adjustment_year']))
 			{
 				$adjustment_interval = $this->marshal($filters['adjustment_interval'], 'int');
 				$adjustment_year	 = $this->marshal($filters['adjustment_year'], 'int');
 
-				if($filters['adjustment_is_executed'])
+				if ($filters['adjustment_is_executed'])
 				{
 					$filter_clauses[] = "contract.adjustment_year = {$adjustment_year}";
 				}
-				else if($filters['extra_adjustment'])
+				else if ($filters['extra_adjustment'])
 				{
 					$filter_clauses[] = "(contract.adjustment_year + {$adjustment_interval} <= {$adjustment_year} OR contract.adjustment_year = {$adjustment_year} )";
 				}
@@ -250,21 +250,21 @@
 			 * - ended:
 			 * the end date is smaller than the target date
 			 */
-			if($filters['start_date_report'])
+			if ($filters['start_date_report'])
 			{
 				$filters['contract_status']	 = 'all';
 				$filter_clauses[]			 = "contract.date_end > {$filters['start_date_report']}";
 				$filter_clauses[]			 = "contract.date_start < {$filters['start_date_report']}";
 			}
-			if($filters['end_date_report'])
+			if ($filters['end_date_report'])
 			{
 				$filters['contract_status']	 = 'all';
 				$filter_clauses[]			 = "contract.date_end < {$filters['end_date_report']}";
 			}
 //_debug_array($filtes);die();
-			if(isset($filters['contract_status']) && $filters['contract_status'] != 'all')
+			if (isset($filters['contract_status']) && $filters['contract_status'] != 'all')
 			{
-				if(isset($filters['status_date']) && $filters['status_date'])
+				if (isset($filters['status_date']) && $filters['status_date'])
 				{
 					$ts_query = $filters['status_date']; // target timestamp specified by user
 				}
@@ -272,7 +272,7 @@
 				{
 					$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 				}
-				switch($filters['contract_status'])
+				switch ($filters['contract_status'])
 				{
 					case 'under_planning':
 						$filter_clauses[]	 = "contract.date_start > {$ts_query} OR contract.date_start IS NULL";
@@ -302,16 +302,16 @@
 			/*
 			 * Contracts for billing
 			 */
-			if(isset($filters['contracts_for_billing']))
+			if (isset($filters['contracts_for_billing']))
 			{
 				$billing_term_id = (int)$filters['billing_term_id'];
 				$sql			 = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
 				$result			 = $this->db->query($sql);
-				if(!$result)
+				if (!$result)
 				{
 					return;
 				}
-				if(!$this->db->next_record())
+				if (!$this->db->next_record())
 				{
 					return;
 				}
@@ -319,7 +319,7 @@
 				$year			 = (int)$filters['year'];
 				$months			 = $this->unmarshal($this->db->f('months', true), 'int');
 				$timestamp_end	 = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-				if($months == 1)
+				if ($months == 1)
 				{
 					$timestamp_start = $timestamp_end; // The first day of the period to bill for
 				}
@@ -340,14 +340,14 @@
 				$order				 = $order ? $order . ', ' . $specific_ordering : "ORDER BY {$specific_ordering}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols	 = 'COUNT(DISTINCT(contract.id)) AS count';
 				$order	 = ''; // No ordering
@@ -384,9 +384,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'contract_id';
 			}
@@ -402,10 +402,10 @@
 			return $ret;
 		}
 
-		function populate(int $contract_id, &$contract)
+		function populate( int $contract_id, &$contract )
 		{
 
-			if($contract == null) // new contract
+			if ($contract == null) // new contract
 			{
 				$contract_id = (int)$contract_id;
 				$contract	 = new rental_contract($contract_id);
@@ -449,19 +449,19 @@
 
 			$timestamp_end	 = $this->unmarshal($this->db->f('timestamp_end'), 'int');
 			$billing_deleted = $this->unmarshal($this->db->f('deleted'), 'bool');
-			if($timestamp_end && !$billing_deleted)
+			if ($timestamp_end && !$billing_deleted)
 			{
 				$contract->add_bill_timestamp($timestamp_end);
 			}
 
 			$total_price = $this->unmarshal($this->db->f('total_price'), 'int');
-			if($total_price)
+			if ($total_price)
 			{
 				$contract->set_total_price($total_price);
 			}
 
 			$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
-			if($party_id)
+			if ($party_id)
 			{
 				$party		 = new rental_party($party_id);
 				$party->set_first_name($this->unmarshal($this->db->f('first_name', true), 'string'));
@@ -470,7 +470,7 @@
 				$party->set_department($this->unmarshal($this->db->f('department', true), 'string'));
 				$party->set_org_enhet_id($this->unmarshal($this->db->f('org_enhet_id'), 'int'));
 				$is_payer	 = $this->unmarshal($this->db->f('is_payer', true), 'bool');
-				if($is_payer)
+				if ($is_payer)
 				{
 					$contract->set_payer_id($party_id);
 				}
@@ -478,7 +478,7 @@
 			}
 
 			$composite_id = $this->unmarshal($this->db->f('composite_id', true), 'int');
-			if($composite_id)
+			if ($composite_id)
 			{
 				$composite = new rental_composite($composite_id);
 				$composite->set_name($this->unmarshal($this->db->f('composite_name', true), 'string'));
@@ -494,12 +494,12 @@
 		 */
 		function get_fields_of_responsibility()
 		{
-			if($this->fields_of_responsibility == null)
+			if ($this->fields_of_responsibility == null)
 			{
 				$sql	 = "SELECT location_id,title FROM rental_contract_responsibility";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$results = array();
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$location_id			 = $this->db->f('location_id', true);
 					$results[$location_id]	 = $this->db->f('title', true);
@@ -509,11 +509,11 @@
 			return $this->fields_of_responsibility;
 		}
 
-		function get_default_account(int $location_id, bool $in)
+		function get_default_account( int $location_id, bool $in )
 		{
-			if(isset($location_id) && $location_id > 0)
+			if (isset($location_id) && $location_id > 0)
 			{
-				if($in)
+				if ($in)
 				{
 					$col = 'account_in';
 				}
@@ -530,9 +530,9 @@
 			return '';
 		}
 
-		function get_default_project_number(int $location_id)
+		function get_default_project_number( int $location_id )
 		{
-			if(isset($location_id) && $location_id > 0)
+			if (isset($location_id) && $location_id > 0)
 			{
 				$sql = "SELECT project_number FROM rental_contract_responsibility WHERE location_id = {$location_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -541,9 +541,9 @@
 			}
 		}
 
-		function get_responsibility_title(int $location_id)
+		function get_responsibility_title( int $location_id )
 		{
-			if(isset($location_id) && $location_id > 0)
+			if (isset($location_id) && $location_id > 0)
 			{
 				$sql = "SELECT title FROM rental_contract_responsibility WHERE location_id = {$location_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -565,20 +565,20 @@
 			$sql		 = "SELECT date_start FROM rental_contract ORDER BY date_start ASC";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$first_year	 = (int)date('Y'); // First year in the array returned - we first set it to default this year
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$date = $this->unmarshal($this->db->f('date_start', true), 'int');
-				if($date != null && $date != '')
+				if ($date != null && $date != '')
 				{
 					$first_contract_year = (int)date('Y', $date);
-					if($first_contract_year < $first_year) // First contract year is before this year
+					if ($first_contract_year < $first_year) // First contract year is before this year
 					{
 						$first_year = $first_contract_year;
 					}
 				}
 			}
 			$next_year = (int)date('Y', strtotime('+1 year'));
-			for($year = $next_year; $year >= $first_year; $year--) // Runs through all years from next year to the first year we want
+			for ($year = $next_year; $year >= $first_year; $year--) // Runs through all years from next year to the first year we want
 			{
 				$year_range[] = $year;
 			}
@@ -592,7 +592,7 @@
 		 * @param $contract the contract to be updated
 		 * @return result receipt from the db operation
 		 */
-		function update($contract)
+		function update( $contract )
 		{
 			$id = intval($contract->get_id());
 
@@ -603,7 +603,7 @@
 			$values[]	 = "contract_type_id = " . $this->marshal($contract->get_contract_type_id(), 'int');
 			$values[]	 = "executive_officer = " . $this->marshal($contract->get_executive_officer_id(), 'int');
 
-			if($contract->get_contract_date())
+			if ($contract->get_contract_date())
 			{
 				$values[]	 = "date_start = " . $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 				$values[]	 = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
@@ -639,7 +639,7 @@
 
 			$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if(isset($result))
+			if (isset($result))
 			{
 				$this->last_edited_by($id);
 				return true;
@@ -655,7 +655,7 @@
 		 * @param $contract_id
 		 * @return true if the contract was marker, false otherwise
 		 */
-		public function last_edited_by($contract_id)
+		public function last_edited_by( $contract_id )
 		{
 			$account_id	 = $GLOBALS['phpgw_info']['user']['account_id']; // current user
 			$ts_now		 = strtotime('now');
@@ -663,9 +663,9 @@
 			$sql_has_edited_before	 = "SELECT account_id FROM rental_contract_last_edited WHERE contract_id = $contract_id AND account_id = $account_id";
 			$result					 = $this->db->query($sql_has_edited_before);
 
-			if(isset($result))
+			if (isset($result))
 			{
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$sql = "UPDATE rental_contract_last_edited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
 				}
@@ -674,7 +674,7 @@
 					$sql = "INSERT INTO rental_contract_last_edited VALUES ($contract_id,$account_id,$ts_now)";
 				}
 				$result = $this->db->query($sql);
-				if(isset($result))
+				if (isset($result))
 				{
 					return true;
 				}
@@ -688,13 +688,13 @@
 			$this->db->query($sql);
 		}
 
-		public function get_last_edited_by($contract_id)
+		public function get_last_edited_by( $contract_id )
 		{
 			$sql	 = "SELECT account_id FROM rental_contract_last_edited where contract_id={$contract_id} ORDER by edited_on DESC";
 			$result	 = $this->db->limit_query($sql, 0, null, null, 1);
-			if(isset($result))
+			if (isset($result))
 			{
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$account_id = $this->db->f("account_id");
 				}
@@ -709,12 +709,12 @@
 		 * @param $contract_id
 		 * @return true if the contract was marked, false otherwise
 		 */
-		public function last_updated($contract_id)
+		public function last_updated( $contract_id )
 		{
 			$ts_now	 = strtotime('now');
 			$sql	 = "UPDATE rental_contract SET last_updated=$ts_now where id=$contract_id";
 			$result	 = $this->db->query($sql);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -730,13 +730,13 @@
 		 * @param $contract the contract to be added
 		 * @return array result receipt from the db operation
 		 */
-		function add(&$contract)
+		function add( &$contract )
 		{
 
 			$contract->set_id(self::get_new_id($contract->get_old_contract_id()));
 
 			// Contract has no old or new ID, get next ID available from DB
-			if($this->marshal($contract->get_id(), 'int') == 0)
+			if ($this->marshal($contract->get_id(), 'int') == 0)
 			{
 				$new_id = $this->db->next_id('rental_contract');
 				$contract->set_id($new_id);
@@ -757,19 +757,19 @@
 
 
 			// Check values that can be null before trying to add them to the db-pretty list
-			if($contract->get_billing_start_date())
+			if ($contract->get_billing_start_date())
 			{
 				$cols[]		 = 'billing_start';
 				$values[]	 = $this->marshal($contract->get_billing_start_date(), 'int');
 			}
 
-			if($contract->get_billing_end_date())
+			if ($contract->get_billing_end_date())
 			{
 				$cols[]		 = 'billing_end';
 				$values[]	 = $this->marshal($contract->get_billing_end_date(), 'int');
 			}
 
-			if($contract->get_contract_date())
+			if ($contract->get_contract_date())
 			{
 				$cols[]		 = 'date_start';
 				$cols[]		 = 'date_end';
@@ -777,7 +777,7 @@
 				$values[]	 = $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 			}
 
-			if($contract->get_executive_officer_id())
+			if ($contract->get_executive_officer_id())
 			{
 				$cols[]		 = 'executive_officer';
 				$values[]	 = $this->marshal($contract->get_executive_officer_id(), 'int');
@@ -832,7 +832,7 @@
 			$values[]	 = ($contract->get_publish_comment() ? "true" : "false");
 
 
-			if($contract->get_security_type())
+			if ($contract->get_security_type())
 			{
 				$cols[]		 = 'security_type';
 				$values[]	 = $this->marshal($contract->get_security_type(), 'int');
@@ -840,13 +840,13 @@
 				$values[]	 = $this->marshal($contract->get_security_amount(), 'string');
 			}
 
-			if($contract->get_due_date())
+			if ($contract->get_due_date())
 			{
 				$cols[]		 = 'due_date';
 				$values[]	 = $this->marshal($contract->get_due_date(), 'int');
 			}
 
-			if($contract->get_contract_type_id())
+			if ($contract->get_contract_type_id())
 			{
 				$cols[]		 = 'contract_type_id';
 				$values[]	 = $this->marshal($contract->get_contract_type_id(), 'int');
@@ -866,11 +866,11 @@
 		 * @param $party_id	the party to add
 		 * @return true if successful, false otherwise
 		 */
-		function add_party($contract_id, $party_id)
+		function add_party( $contract_id, $party_id )
 		{
 			$q		 = "INSERT INTO rental_contract_party (contract_id, party_id) VALUES ($contract_id, $party_id)";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				$this->last_updated($contract_id);
 				$this->last_edited_by($contract_id);
@@ -886,11 +886,11 @@
 		 * @param $party_id	the party to remove
 		 * @return true if successful, false otherwise
 		 */
-		function remove_party($contract_id, $party_id)
+		function remove_party( $contract_id, $party_id )
 		{
 			$q		 = "DELETE FROM rental_contract_party WHERE contract_id = $contract_id AND party_id = $party_id";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				$this->last_updated($contract_id);
 				$this->last_edited_by($contract_id);
@@ -906,11 +906,11 @@
 		 * @param $composite_id	the composite to add
 		 * @return true if successful, false otherwise
 		 */
-		function add_composite($contract_id, $composite_id)
+		function add_composite( $contract_id, $composite_id )
 		{
 			$q		 = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ($contract_id, $composite_id)";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				$this->last_updated($contract_id);
 				$this->last_edited_by($contract_id);
@@ -926,11 +926,11 @@
 		 * @param $party_id	the composite to remove
 		 * @return true if successful, false otherwise
 		 */
-		function remove_composite($contract_id, $composite_id)
+		function remove_composite( $contract_id, $composite_id )
 		{
 			$q		 = "DELETE FROM rental_contract_composite WHERE contract_id = {$contract_id} AND composite_id = {$composite_id}";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				$this->last_updated($contract_id);
 				$this->last_edited_by($contract_id);
@@ -946,7 +946,7 @@
 		 * @param $party_id	the party to be the payer
 		 * @return true if successful, false otherwise
 		 */
-		function set_payer($contract_id, $party_id)
+		function set_payer( $contract_id, $party_id )
 		{
 			$pid	 = $this->marshal($party_id, 'int');
 			$cid	 = $this->marshal($contract_id, 'int');
@@ -955,7 +955,7 @@
 			$result	 = $this->db->query($q);
 			$q1		 = "UPDATE rental_contract_party SET is_payer = false WHERE party_id != " . $pid . " AND contract_id = " . $cid;
 			$result1 = $this->db->query($q1);
-			if($result && $result1)
+			if ($result && $result1)
 			{
 				$this->db->transaction_commit();
 				$this->last_updated($contract_id);
@@ -975,7 +975,7 @@
 		 * @param $cid Old contract ID
 		 * @return int New contract ID
 		 */
-		public static function get_new_id($old)
+		public static function get_new_id( $old )
 		{
 			return (int)preg_replace('/[a-z]/i', '', $old);
 		}
@@ -986,13 +986,13 @@
 		 * @param $cid New contract ID
 		 * @return string "Old" contract ID
 		 */
-		public static function get_old_id($cid, $prefix = 'K', $digits = 8)
+		public static function get_old_id( $cid, $prefix = 'K', $digits = 8 )
 		{
 			$length = strlen('' . $cid);
 
-			while($length != $digits)
+			while ($length != $digits)
 			{
-				if($digits < $length)
+				if ($digits < $length)
 				{
 					// If number of digits is lower that current length, this will loop forever, return null to stop it.
 					return null;
@@ -1004,27 +1004,27 @@
 			return $prefix . $cid;
 		}
 
-		public function get_contract_types($location_id)
+		public function get_contract_types( $location_id )
 		{
 			$q1		 = "SELECT rct.id, rct.label FROM rental_contract_types rct, rental_contract_responsibility rcr WHERE rcr.location_id={$location_id} AND rct.responsibility_id=rcr.id";
 			$this->db->query($q1, __LINE__, __FILE__);
 			$results = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				$results[$this->db->f('id')] = $this->db->f('label',true);
+				$results[$this->db->f('id')] = $this->db->f('label', true);
 			}
 
 			return $results;
 		}
 
-		public function get_contract_type_label($contract_type_id)
+		public function get_contract_type_label( $contract_type_id )
 		{
 			$result = "Ingen";
-			if(isset($contract_type_id))
+			if (isset($contract_type_id))
 			{
 				$q1 = "SELECT rct.label FROM rental_contract_types rct WHERE rct.id={$contract_type_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$result = $this->db->f('label');
 				}
@@ -1033,12 +1033,12 @@
 			return $result;
 		}
 
-		public function get_contract_type_account($contract_type_id)
+		public function get_contract_type_account( $contract_type_id )
 		{
 			$q1		 = "SELECT rct.account FROM rental_contract_types rct WHERE rct.id={$contract_type_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			$results = "";
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result = $this->db->f('account');
 			}
@@ -1046,12 +1046,12 @@
 			return $result;
 		}
 
-		public function get_term_label($billing_term_id)
+		public function get_term_label( $billing_term_id )
 		{
 			$q1		 = "SELECT rbt.title FROM rental_billing_term rbt WHERE rbt.id={$billing_term_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			$results = "";
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result = $this->db->f('title');
 			}
@@ -1065,7 +1065,7 @@
 			$this->db->query($q, '', '', true);
 		}
 
-		public function copy_contract($contract_id, $old_contract_id)
+		public function copy_contract( $contract_id, $old_contract_id )
 		{
 			//queries for selecting composites, parties and price items for the contract to be copied
 			$q_composites		 = "SELECT composite_id FROM rental_contract_composite WHERE contract_id={$old_contract_id}";
@@ -1078,13 +1078,13 @@
 			$db2 = clone($this->db);
 			//composites
 			$this->db->query($q_composites);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$composite_id		 = $this->unmarshal($this->db->f('composite_id'), 'int');
 				$composite_id		 = $this->marshal($composite_id, 'int');
 				$sql				 = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ({$contract_id}, {$composite_id})";
 				$result_composites	 = $db2->query($sql);
-				if($result_composites)
+				if ($result_composites)
 				{
 					//noop
 				}
@@ -1096,7 +1096,7 @@
 
 			//parties
 			$this->db->query($q_parties);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$party_id		 = $this->unmarshal($this->db->f('party_id'), 'int');
 				$party_id		 = $this->marshal($party_id, 'int');
@@ -1104,7 +1104,7 @@
 				$is_payer		 = $this->marshal($is_payer ? 'true' : 'false', 'bool');
 				$sql			 = "INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES ({$contract_id}, {$party_id}, {$is_payer})";
 				$result_parties	 = $db2->query($sql);
-				if($result_parties)
+				if ($result_parties)
 				{
 					//noop
 				}
@@ -1116,7 +1116,7 @@
 
 			//price items
 			$this->db->query($q_price_items);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$price_item_id		 = $this->unmarshal($this->db->f('price_item_id'), 'int');
 				$price_item_id		 = $this->marshal($price_item_id, 'int');
@@ -1138,7 +1138,7 @@
 				$is_one_time		 = $this->marshal($is_one_time ? 'true' : 'false', 'bool');
 				$sql				 = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, {$is_one_time}, null, null)";
 				$result_price_items	 = $db2->query($sql);
-				if($result_price_items)
+				if ($result_price_items)
 				{
 					//noop
 				}
@@ -1148,7 +1148,7 @@
 				}
 			}
 //    	var_dump($success_composites.' '.$success_parties.' '.$success_price_items);
-			if($success_composites && $success_parties && $success_price_items)
+			if ($success_composites && $success_parties && $success_price_items)
 			{
 				return true;
 			}
@@ -1158,15 +1158,15 @@
 			}
 		}
 
-		public function get_months_in_term($term_id)
+		public function get_months_in_term( $term_id )
 		{
 			$sql	 = "SELECT months FROM rental_billing_term WHERE id = {$term_id}";
 			$result	 = $this->db->query($sql);
-			if(!$result)
+			if (!$result)
 			{
 				return 0;
 			}
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return 0;
 			}
@@ -1174,46 +1174,32 @@
 			return $months;
 		}
 
-		public function update_price_items($contract_id, $rented_area)
+		public function update_price_items( $contract_id, $rented_area )
 		{
+			$db2 = clone($this->db);
 			$success_price_item	 = true;
 			$new_area			 = $rented_area;
 			$q_price_items		 = "SELECT id AS rpi_id, price as rpi_price FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area";
 			$res1				 = $this->db->query($q_price_items, __LINE__, __FILE__, false, true);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$id					 = $this->db->f('rpi_id');
 				$price				 = $this->db->f('rpi_price');
 				$curr_total_price	 = ($new_area * $price);
 				$sql_pi				 = "UPDATE rental_contract_price_item SET area={$new_area}, total_price={$curr_total_price} WHERE id={$id}";
-				$result				 = $this->db->query($sql_pi, __LINE__, __FILE__, false, true);
-				if($result)
-				{
-					//noop
-				}
-				else
-				{
-					$success_price_item = false;
-				}
+				$success_price_item = $db2->query($sql_pi, __LINE__, __FILE__);
 			}
-			if($success_price_item)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return $success_price_item;
 		}
 
-		public function import_contract_reference($contract_id, $reference)
+		public function import_contract_reference( $contract_id, $reference )
 		{
 			$reference	 = $this->marshal($reference, 'string');
 			$sql		 = "UPDATE rental_contract SET reference={$reference} WHERE id = {$contract_id}";
 			$this->db->query($sql);
 		}
 
-		public function update_adjustment_year_interval($contract_id, $adjusted_year, $adjustment_interval)
+		public function update_adjustment_year_interval( $contract_id, $adjusted_year, $adjustment_interval )
 		{
 			$new_adjusted_year		 = $this->marshal($adjusted_year, 'int');
 			$new_adjustment_interval = $this->marshal($adjustment_interval, 'int');
@@ -1222,7 +1208,7 @@
 			return $this->db->affected_rows() > 0 ? true : false;
 		}
 
-		public function update_contract_end_date($contract_id, $date)
+		public function update_contract_end_date( $contract_id, $date )
 		{
 			$cid		 = $this->marshal($contract_id, 'int');
 			$end_date	 = $this->marshal($date, 'int');
@@ -1230,7 +1216,7 @@
 			$this->db->query($sql);
 		}
 
-		public function update_adjustment_year($contract_id, $adjusted_year)
+		public function update_adjustment_year( $contract_id, $adjusted_year )
 		{
 			$new_adjusted_year	 = $this->marshal($adjusted_year, 'int');
 			$sql				 = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id={$contract_id} AND(adjustment_year IS NULL OR adjustment_year<{$new_adjusted_year})";
@@ -1238,14 +1224,14 @@
 			return $this->db->affected_rows() > 0 ? true : false;
 		}
 
-		public function update_adjustment_share($contract_id, $adjustment_share)
+		public function update_adjustment_share( $contract_id, $adjustment_share )
 		{
 			$new_adjustment_share	 = $this->marshal($adjustment_share, 'int');
 			$sql					 = "UPDATE rental_contract SET adjustment_share={$new_adjustment_share} WHERE id = {$contract_id}";
 			$this->db->query($sql);
 		}
 
-		public function get_default_price_items($location_id)
+		public function get_default_price_items( $location_id )
 		{
 			$price_items = array();
 			$loc_id		 = $this->marshal($location_id, 'int');
@@ -1253,7 +1239,7 @@
 			//select all standard price_items for given location_id
 			$sql = "SELECT id FROM rental_price_item WHERE responsibility_id={$loc_id} AND NOT is_inactive AND standard";
 			$this->db->query($sql);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$price_item_id	 = $this->unmarshal($this->db->f('id'), 'int');
 				$price_items[]	 = $price_item_id;

@@ -28,7 +28,7 @@
 
 			$delegates_per_org_unit = array();
 
-			if(isset($unit_id) && $unit_id > 0)
+			if (isset($unit_id) && $unit_id > 0)
 			{
 				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
 
@@ -55,13 +55,13 @@
 			/* nothing... */
 		}
 
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			$config = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
 			{
 				$unit_id = $params[0];
 

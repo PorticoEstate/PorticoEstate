@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * Frontend : a simplified tool for end users.
 	 *
@@ -9,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,7 +30,6 @@
 	 *
 	 * @package Frontend
 	 */
-
 	class frontend_uientity extends frontend_uicommon
 	{
 
@@ -65,12 +62,12 @@
 			$this->type					= $this->bo->type;
 			$this->type_app				= $this->bo->type_app;
 
-			if(isset($location_arr[3]))
+			if (isset($location_arr[3]))
 			{
 				$this->bo->entity_id	= $this->entity_id;
 				$this->bo->cat_id		= $this->cat_id;
 				$this->acl_location		= ".{$this->type}.$this->entity_id";
-				if( $this->cat_id )
+				if ($this->cat_id)
 				{
 					$this->acl_location	.= ".{$this->cat_id}";
 				}
@@ -93,7 +90,7 @@
 			$this->status				= $this->bo->status;
 //			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
-			$GLOBALS['phpgw']->session->appsession('entity_id','property',$this->entity_id);
+			$GLOBALS['phpgw']->session->appsession('entity_id', 'property', $this->entity_id);
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->allrows				= $this->bo->allrows;
@@ -101,23 +98,24 @@
 			$this->bo->category_dir			= $this->category_dir;
 
 
-			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
+			phpgwapi_cache::session_set('frontend', 'tab', $this->location_id);
 			
 			$this->location_code = $this->header_state['selected_location'];
 			$this->bo->location_code = $this->location_code;
 
 			$_org_units = array();
-			if(is_array($this->header_state['org_unit']))
+			if (is_array($this->header_state['org_unit']))
 			{
 				foreach ($this->header_state['org_unit'] as $org_unit)
 				{
 					$_org_unit_id = (int)$org_unit['ORG_UNIT_ID'];
-					$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'org_unit'));
+					$_subs = execMethod('property.sogeneric.read_tree', array('node_id' => $_org_unit_id,
+						'type' => 'org_unit'));
 					$_org_units[$_org_unit_id] = true;
-					foreach($_subs as $entry)
+					foreach ($_subs as $entry)
 					{
 						$_org_units[$entry['id']] = true;
-						if(isset($entry['children']) && $entry['children'])
+						if (isset($entry['children']) && $entry['children'])
 						{
 							$this->_get_children($entry['children'], $_org_units);
 						}
@@ -128,7 +126,7 @@
 			$this->bo->org_units = $org_units;
 		}
 
-		private function _get_filters($selected = 0)
+		private function _get_filters( $selected = 0 )
 		{
 			$values_combo_box	 = array();
 			$combos				 = array();
@@ -136,12 +134,12 @@
 			$custom		 = createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '', '', '', true, true);
 
-			if($attrib_data)
+			if ($attrib_data)
 			{
 				$count = count($values_combo_box);
-				foreach($attrib_data as $attrib)
+				foreach ($attrib_data as $attrib)
 				{
-					if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
 					{
 						$values_combo_box[$count][] = array
 							(
@@ -149,7 +147,7 @@
 							'name'	 => $attrib['input_text']
 						);
 
-						foreach($attrib['choice'] as $choice)
+						foreach ($attrib['choice'] as $choice)
 						{
 							$values_combo_box[$count][] = array
 								(
@@ -176,18 +174,17 @@
 		/**
 		* Get the sublevels of the org tree into one arry
 		*/
-		private function _get_children($data = array(), &$_org_units)
+		private function _get_children( $data = array(), &$_org_units )
 		{
 			foreach ($data as $entry)
 			{
 				$_org_units[$entry['id']] = true;
-				if(isset($entry['children']) && $entry['children'])
+				if (isset($entry['children']) && $entry['children'])
 				{
 					$this->_get_children($entry['children'], $_org_units);
 				}
 			}
 		}
-
 
 		function download()
 		{
@@ -197,34 +194,34 @@
 
 			//$start_date 	= urldecode($this->start_date);
 			//$end_date 	= urldecode($this->end_date);
-
 			//$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date, 'type' => $this->type));
 			$list = $this->query();
 			$uicols	= $this->bo->uicols;
 
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($list, $uicols['name'], $uicols['descr'], $uicols['input_type']);
 		}
-
 
 		public function index()
 		{
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'entity.index';
 			$this->insert_links_on_header_state();
 
-			if($this->entity_id && !$this->cat_id)
+			if ($this->entity_id && !$this->cat_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'frontend.uientity.index', 'entity_id'=>$this->entity_id, 'cat_id'=> 1, 'type' => $this->type));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uientity.index',
+					'entity_id' => $this->entity_id, 'cat_id' => 1, 'type' => $this->type));
 			}
 
 			//redirect if no rights
-			if(!$this->acl_read && $this->cat_id)
+			if (!$this->acl_read && $this->cat_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 			
 			$second_display = phpgw::get_var('second_display', 'bool');
 			
-			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
 			if ($default_district && !$second_display && !$this->district_id)
 			{
@@ -233,9 +230,9 @@
 			}
 
 
-			if($this->cat_id)
+			if ($this->cat_id)
 			{
-				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
 			}
 
 			$filters = $this->_get_filters();
@@ -294,7 +291,7 @@
 			$count_uicols_name = count($uicols['name']);
 			
 			$uicols_entity = array();
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key'		 => $uicols['name'][$k],
@@ -303,7 +300,7 @@
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if(!empty($uicols['formatter'][$k]))
+				if (!empty($uicols['formatter'][$k]))
 				{
 					$params['formatter'] = $uicols['formatter'][$k];
 				}
@@ -320,11 +317,11 @@
 				}
 
 				$denied = array('merknad');
-				if(in_array($uicols['name'][$k], $denied))
+				if (in_array($uicols['name'][$k], $denied))
 				{
 					$params['sortable'] = false;
 				}
-				else if(isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
+				else if (isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
 				{
 					$params['sortable'] = true;
 				}
@@ -374,7 +371,7 @@
 					(
 						'my_name'		=> 'view',
 						'text' 			=> lang('view'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'frontend.uientity.view',
 							'location_id'	=> $this->location_id,
@@ -391,7 +388,7 @@
 						'text'	 		=> lang('start ticket'),
 						'type'			=> 'custom',
 						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
+							var oArgs = " . json_encode(array(
 									'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
 									'noframework'	=> 1,
 									'p_entity_id'	=> $this->entity_id,
@@ -399,8 +396,8 @@
 									'type'			=> $this->type,
 									'bypass'		=> true,
 									'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}"
-								)).";
-							var parameters = ".json_encode($parameters2).";
+					)) . ";
+							var parameters = " . json_encode($parameters2) . ";
 							startTicket(oArgs, parameters);
 						"
 					);
@@ -414,13 +411,14 @@
 						'text' 			=> lang('add'),
 						'type'			=> 'custom',
 						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
+							var oArgs = " . json_encode(array(
 									'menuaction'	=> 'property.uientity.edit',
 									'location_id'	=> $this->location_id,
 									'lean'			=> true,
 									'noframework'	=> true								
-								)).";
-							var parameters = ".json_encode(array('parameter' => array(array('name'=> 'dummy', 'source' => 'id')))).";
+					)) . ";
+							var parameters = " . json_encode(array('parameter' => array(array('name' => 'dummy',
+								'source' => 'id')))) . ";
 							addEntity(oArgs, parameters);
 						"						
 					);
@@ -434,7 +432,7 @@
 					(
 						'my_name'		=> 'edit',
 						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'property.uijasper.view',
 							'jasper_id'		=> $report['id'],
@@ -450,7 +448,7 @@
 					'text'			=> lang('download'),
 					'type'			=> 'custom',
 					'custom_code'	=> "
-						var oArgs = ".json_encode(array(
+						var oArgs = " . json_encode(array(
 									'menuaction'	=> 'frontend.uientity.download',
 									'entity_id'     => $this->entity_id,
 									'cat_id'        => $this->cat_id,
@@ -458,7 +456,7 @@
 									'location_id'	=> $this->location_id,
 									'export'		=> true,
 									'allrows'		=> true
-							)).";
+				)) . ";
 						download(oArgs);
 					"					
 				);
@@ -484,17 +482,17 @@
 			$appname = lang('entity');
 
 			//Title of Page
-			if($this->entity_id && $this->cat_id)
+			if ($this->entity_id && $this->cat_id)
 			{
-				$entity	   = $this->soadmin_entity->read_single($this->entity_id,false);
+				$entity = $this->soadmin_entity->read_single($this->entity_id, false);
 				$appname	  = $entity['name'];
-				$category	 = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
 				$function_msg = 'list ' . $category['name'];
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			}
 
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
-			phpgwapi_cache::session_clear('frontend','msgbox');
+			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 
 			$data = array(				
 				'header'			=> $this->header_state,
@@ -509,10 +507,9 @@
 			);
 			
 			self::add_javascript('frontend', 'jquery', 'entity.list.js');
-			self::render_template_xsl(array( 'entity', 'datatable_inline', 'frontend'), $data);			
+			self::render_template_xsl(array('entity', 'datatable_inline', 'frontend'), $data);
 		}
 
-		
 		public function query()
 		{
 			$search	 = phpgw::get_var('search');
@@ -536,7 +533,7 @@
 			);
 
 			$values = $this->bo->read($params);
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -546,9 +543,9 @@
 			$_config		 = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
 			$remote_image_in_table = false;
-			foreach($_config as $_config_section => $_config_section_data)
+			foreach ($_config as $_config_section => $_config_section_data)
 			{
-				if($_config_section_data['image_in_table'])
+				if ($_config_section_data['image_in_table'])
 				{
 					$remote_image_in_table = true;
 					break;
@@ -573,11 +570,11 @@
 				'type'		 => $this->type
 			);
 
-			foreach($values as &$entity_entry)
+			foreach ($values as &$entity_entry)
 			{
 				$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
 
-				if($remote_image_in_table)
+				if ($remote_image_in_table)
 				{
 					$entity_entry['file_name']		 = $entity_entry[$_config_section_data['img_key_local']];
 					$entity_entry['img_id']			 = $entity_entry[$_config_section_data['img_key_local']];
@@ -591,7 +588,7 @@
 						'relatives'	 => array(RELATIVE_NONE)));
 
 					$mime_in_array = in_array($_files[0]['mime_type'], $img_types);
-					if(!empty($_files[0]) && $mime_in_array)
+					if (!empty($_files[0]) && $mime_in_array)
 					{
 						$entity_entry['file_name']		 = $_files[0]['name'];
 						$entity_entry['img_id']			 = $_files[0]['file_id'];
@@ -616,10 +613,9 @@
 			return $this->jquery_results($result_data);
 		}
 		
-		
 		public function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				return;
 			}
@@ -635,21 +631,21 @@
 		*
 		* @return void
 		*/
-
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$bo	= & $this->bo;
 			$id = phpgw::get_var('id');
-			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'view' => true));
+			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id,
+				'cat_id' => $this->cat_id, 'view' => true));
 
 			$entity = $this->soadmin_entity->read_single($this->entity_id);
-			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+			$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
 			$location_data = array();
 
-			if($entity['location_form'] && $category['location_level'] > 0)
+			if ($entity['location_form'] && $category['location_level'] > 0)
 			{
 				$bolocation	= CreateObject('property.bolocation');
-				$location_data=$bolocation->initiate_ui_location(array
+				$location_data = $bolocation->initiate_ui_location(array
 					(
 						'values'	=> $values['location_data'],
 						'type_id'	=> (int)$category['location_level'],
@@ -657,14 +653,14 @@
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
 						'lookup_entity'	=> $lookup_entity,
-						'entity_data'	=> isset($values['p'])?$values['p']:''
+					'entity_data' => isset($values['p']) ? $values['p'] : ''
 					));
 			}
 
 
 // ---- START INTEGRATION -------------------------
 
-			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
+			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
 			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
 			$tabs = array();
@@ -674,9 +670,9 @@
 			$integration = array();
 			foreach ($_config as $_config_section => $_config_section_data)
 			{
-				if(isset($_config_section_data['tab']) && $values['id'])
+				if (isset($_config_section_data['tab']) && $values['id'])
 				{
-					if(!isset($_config_section_data['url']))
+					if (!isset($_config_section_data['url']))
 					{
 						phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
 						break;
@@ -696,7 +692,7 @@
 						),
 					);
 
-					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					if (isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
 					{
 						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
 					}
@@ -714,11 +710,11 @@
 						$_keys[] = $_substitute;
 
 						$__value = false;
-						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
+						if (!$__value = urlencode($values[str_replace(array('__', '*'), array('', ''), $_substitute)]))
 						{
 							foreach ($values['attributes'] as $_attribute)
 							{
-								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
+								if (str_replace(array('__', '*'), array('', ''), $_substitute) == $_attribute['name'])
 								{
 									$__value = urlencode($_attribute['value']);
 									break;
@@ -726,7 +722,7 @@
 							}
 						}
 
-						if($__value)
+						if ($__value)
 						{
 							$_values[] = $__value;
 						}
@@ -738,7 +734,7 @@
 					unset($output);
 					unset($__value);
 					$_sep = '?';
-					if (stripos($_config_section_data['url'],'?'))
+					if (stripos($_config_section_data['url'], '?'))
 					{
 						$_sep = '&';
 					}
@@ -747,10 +743,10 @@
 					unset($_values);
 	//				$integration_src = phpgw::safe_redirect("{$_config_section_data['url']}{$_sep}{$_param}");
 					$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
-					if($_config_section_data['action'])
+					if ($_config_section_data['action'])
 					{
 						$_sep = '?';
-						if (stripos($integration_src,'?'))
+						if (stripos($integration_src, '?'))
 						{
 							$_sep = '&';
 						}
@@ -759,7 +755,7 @@
 
 					$arguments = array($_config_section_data['auth_key_name'] => $response);
 
-					if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+					if (isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
 					{
 						$_config_section_data['location_data']	= htmlspecialchars_decode($_config_section_data['location_data']);
 						parse_str($_config_section_data['location_data'], $output);
@@ -774,7 +770,8 @@
 					$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
 					//_debug_array($values);
 					//_debug_array($integration_src);die();
-					$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
+					$tabs[$_config_section] = array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}",
+						'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
 
 					$integration[]	= array
 					(
@@ -782,31 +779,28 @@
 						'height'	=> isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500,
 						'src'		=> $integration_src
 					);
-
 				}
 			}
 
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
-			phpgwapi_cache::session_clear('frontend','msgbox');
+			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 
 			$data = array(
 				'header' 		=> $this->header_state,
 				'section'	=> array
 					(
-						'entitylist'	=> $GLOBALS['phpgw']->link('/index.php',
-									array
+					'entitylist' => $GLOBALS['phpgw']->link('/index.php', array
 									(
 										'menuaction'		=> 'frontend.uientity.index',
 										'location_id'		=> $this->location_id
 									)),
-						'entityedit'	=> $GLOBALS['phpgw']->link('/index.php',
-									array
+					'entityedit' => $GLOBALS['phpgw']->link('/index.php', array
 									(
 										'menuaction'		=> 'frontend.uientity.edit',
 										'location_id'		=> $this->location_id,
 										'id'				=> $id
 									)),
-						'start_ticket'		=> $GLOBALS['phpgw']->link('/index.php',array
+					'start_ticket' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
 							'noframework'	=> 1,

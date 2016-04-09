@@ -97,6 +97,10 @@
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
+											<xsl:when test="my_name = 'excelHtml5'">
+												'excelHtml5'
+												<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+											</xsl:when>
 											<xsl:when test="my_name = 'select_none'">
 												{
 													text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
@@ -342,6 +346,9 @@
 
 		var options<xsl:number value="($num - 1)"/> = {};
 		<xsl:for-each select="$config">
+			<xsl:if test="allrows">
+				options<xsl:number value="($num - 1)"/>.allrows = true;
+			</xsl:if>
 			<xsl:if test="singleSelect">
 				options<xsl:number value="($num - 1)"/>.singleSelect = true;
 			</xsl:if>
@@ -376,8 +383,8 @@
 			 </xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		$(document).ready(function() {
+//		$(document).ready(function() {
 			oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
-	});
+//	});
 	</script>
 </xsl:template>

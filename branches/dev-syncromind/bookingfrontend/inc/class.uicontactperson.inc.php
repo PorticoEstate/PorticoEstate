@@ -20,7 +20,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->index_json();
 			}
@@ -28,7 +28,7 @@
 
 		public function index_json()
 		{
-			if($id = phpgw::get_var('id', 'int'))
+			if ($id = phpgw::get_var('id', 'int'))
 			{
 				$person = $this->bo->read_single($id);
 				return $this->jquery_results(array("total_records" => 1, "results" => $person));

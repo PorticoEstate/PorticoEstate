@@ -10,7 +10,7 @@
 		protected $date_str;
 		protected $orders;
 
-		public function __construct($billing_job)
+		public function __construct( $billing_job )
 		{
 			$this->billing_job	 = $billing_job;
 			$this->date_str		 = date('ymd', $billing_job->get_timestamp_stop());
@@ -33,13 +33,13 @@
 		public function get_contents()
 		{
 			$contents = '';
-			if($this->orders == null) // Data hasn't been created yet
+			if ($this->orders == null) // Data hasn't been created yet
 			{
 				$this->run();
 			}
-			foreach($this->orders as $order)
+			foreach ($this->orders as $order)
 			{
-				foreach($order as $line)
+				foreach ($order as $line)
 				{
 					$contents .= "{$line}\n";
 				}
@@ -47,30 +47,34 @@
 			return $contents;
 		}
 
-		public function get_contents_excel($excel_export_type)
+		public function get_contents_excel( $excel_export_type )
 		{
-			if($this->orders == null) // Data hasn't been created yet
+			if ($this->orders == null) // Data hasn't been created yet
 			{
 				$this->run_excel_export($excel_export_type);
 			}
 			return $this->orders;
 		}
 
-		public function get_missing_billing_info($contract)
+		public function get_missing_billing_info( $contract )
 		{
 			$missing_billing_info	 = array();
 			$contract_parties		 = $contract->get_parties();
-			if($contract_parties == null || count($contract_parties) < 1)
+			if ($contract_parties == null || count($contract_parties) < 1)
 			{
 				$missing_billing_info[] = 'Missing contract party.';
 			}
 
 			$payer_id	 = $contract->get_payer_id();
-			if($payer_id == null || $payer_id	 = 0)
+			if ($payer_id == null || $payer_id = 0)
 			{
 				$missing_billing_info[] = 'Missing payer id.';
 			}
 
+			if(!$contract->get_billing_start_date())
+			{
+				$missing_billing_info[] = 'Missing start_date.';
+			}
 			return $missing_billing_info;
 		}
 
@@ -94,12 +98,12 @@
 			$serial_config_stop	 = $config->config_data['serial_stop'];
 
 
-			if(isset($serial_config_start) && is_numeric($serial_config_start) &&
+			if (isset($serial_config_start) && is_numeric($serial_config_start) &&
 			isset($serial_config_stop) && is_numeric($serial_config_stop))
 			{
 				$max_serial_number_used = rental_soinvoice::get_instance()->get_max_serial_number_used($serial_config_start, $serial_config_stop);
 
-				if(isset($max_serial_number_used) && is_numeric($max_serial_number_used) && $max_serial_number_used > 0)
+				if (isset($max_serial_number_used) && is_numeric($max_serial_number_used) && $max_serial_number_used > 0)
 				{
 					$serial_number = $max_serial_number_used + 1;
 				}
@@ -110,7 +114,7 @@
 
 				$number_left_in_sequence = $serial_config_stop - $serial_number;
 
-				if($number_left_in_sequence < count($invoices))
+				if ($number_left_in_sequence < count($invoices))
 				{
 					//var_dump("Out of sequence numbers");
 					//Give error message (out of sequence numbers) and return
@@ -122,7 +126,7 @@
 				//Give error message (not configured properly) and return
 			}
 
-			foreach($invoices as $invoice) // Runs through all invoices
+			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
 				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
@@ -131,7 +135,7 @@
 				// We need to get the composites to get a composite name for the Agresso export
 				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
 					'contract_id' => $invoice->get_contract_id()));
-				if($composites != null && count($composites) > 0)
+				if ($composites != null && count($composites) > 0)
 				{
 					$keys			 = array_keys($composites);
 					$composite_name	 = $composites[$keys[0]]->get_name();
@@ -140,14 +144,14 @@
 				$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
 
 				$price_item_data = array();
-				foreach($price_items as $price_item) // Runs through all items
+				foreach ($price_items as $price_item) // Runs through all items
 				{
 					$data			 = array();
 					$data['amount']	 = $price_item->get_total_price();
 					$description	 = $price_item->get_title();
 					$start			 = $price_item->get_timestamp_start();
 					$stop			 = $price_item->get_timestamp_end();
-					if(isset($start) && isset($stop))
+					if (isset($start) && isset($stop))
 					{
 						$description .= ' ' . date('j/n', $start) . '-' . date('j/n', $stop);
 					}
@@ -164,16 +168,16 @@
 
 			$so_invoice->transaction_begin();
 			//Store invoices with serial numbers
-			foreach($invoices as $invoice) // Runs through all invoices
+			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				$so_invoice->store($invoice);
 			}
 			return $so_invoice->transaction_commit();
 		}
 
-		protected function run_excel_export($excel_export_type)
+		protected function run_excel_export( $excel_export_type )
 		{
-			switch($excel_export_type)
+			switch ($excel_export_type)
 			{
 				case 'bk':
 					$get_order_excel = 'get_order_excel_bk';
@@ -194,7 +198,7 @@
 				'billing_id' => $this->billing_job->get_id()));
 			$dateformat			 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			foreach($invoices as $invoice) // Runs through all invoices
+			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
 				$price_items	 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
@@ -203,7 +207,7 @@
 				// We need to get the composites to get a composite name for the Agresso export
 				$composites		 = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
 					'contract_id' => $invoice->get_contract_id()));
-				if($composites != null && count($composites) > 0)
+				if ($composites != null && count($composites) > 0)
 				{
 					$keys			 = array_keys($composites);
 					$composite_name	 = $composites[$keys[0]]->get_name();
@@ -226,14 +230,14 @@
 
 				$price_item_data	 = array();
 				$price_item_counter	 = 0;
-				foreach($price_items as $price_item) // Runs through all items
+				foreach ($price_items as $price_item) // Runs through all items
 				{
 					$data			 = array();
 					$data['amount']	 = $price_item->get_total_price();
 					$description	 = $price_item->get_title();
 					$start			 = $price_item->get_timestamp_start();
 					$stop			 = $price_item->get_timestamp_end();
-					if(isset($start) && isset($stop))
+					if (isset($start) && isset($stop))
 					{
 						$description .= ' ' . date('j/n', $start) . '-' . date('j/n', $stop);
 					}
@@ -245,11 +249,11 @@
 					$party_name			 = $serialized_party['name'];
 					$_party_names		 = array();
 
-					if(count($party_names) > 1)
+					if (count($party_names) > 1)
 					{
-						foreach($party_names as $value)
+						foreach ($party_names as $value)
 						{
-							if($party_name == $value)
+							if ($party_name == $value)
 							{
 								continue;
 							}
@@ -278,7 +282,7 @@
 		 * Builds one single order of the Agresso file.
 		 * 
 		 */
-		protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref)
+		protected function get_order( $header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref )
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -371,7 +375,7 @@
 			. sprintf("%15s", '') // 	96		zip_code
 			;
 			$item_counter	 = 0;
-			foreach($product_items as $item) // All products (=price items)
+			foreach ($product_items as $item) // All products (=price items)
 			{
 				$order[] = // Product line
 				'0'  //	1		0 for påfølgende linjer etter ordrehde
@@ -462,7 +466,7 @@
 		 * 
 		 */
 		protected function get_order_excel_bk(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id)
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id )
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -503,7 +507,7 @@
 		}
 
 		protected function get_order_excel_nlsh(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id)
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id )
 		{
 
 //_debug_array(func_get_args());
@@ -549,23 +553,23 @@
 			return str_replace(array("\n", "\r"), '', $order);
 		}
 
-		protected function get_formatted_amount($amount)
+		protected function get_formatted_amount( $amount )
 		{
 			$amount = round($amount, 2) * 100;
-			if($amount < 0) // Negative number
+			if ($amount < 0) // Negative number
 			{
 				return '-' . sprintf("%016.16s", abs($amount)); // We have to have the sign at the start of the string
 			}
 			return sprintf("%017.17s", $amount);
 		}
 
-		protected function get_formatted_amount_excel($amount)
+		protected function get_formatted_amount_excel( $amount )
 		{
 //            var_dump($amount);
 //            var_dump($belop);
 			$amount	 = round($amount, 2) * 100;
 			$belop	 = substr($amount, 0, strlen($amount) - 2) . '.' . substr($amount, -2);
-			if($amount < 0) // Negative number
+			if ($amount < 0) // Negative number
 			{
 				return '-' . sprintf("%016.16s", abs($belop)); // We have to have the sign at the start of the string
 			}

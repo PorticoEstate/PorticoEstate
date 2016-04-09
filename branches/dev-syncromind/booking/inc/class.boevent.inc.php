@@ -15,13 +15,13 @@
 		/**
 		 * @see booking_bocommon_authorized
 		 */
-		protected function get_subject_roles($for_object = null, $initial_roles = array())
+		protected function get_subject_roles( $for_object = null, $initial_roles = array() )
 		{
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$bouser = CreateObject('bookingfrontend.bouser');
 
-				if(is_array($for_object) && $for_object['customer_organization_number'])
+				if (is_array($for_object) && $for_object['customer_organization_number'])
 				{
 					$org										 = $this->so->get_org($for_object['customer_organization_number']);
 					$for_object['customer_organization_id']		 = $org['id'];
@@ -30,7 +30,7 @@
 
 				$org_id = is_array($for_object) ? $for_object['customer_organization_id'] : (!is_null($for_object) ? $for_object : null);
 
-				if($bouser->is_organization_admin($org_id))
+				if ($bouser->is_organization_admin($org_id))
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
@@ -41,9 +41,9 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
-			if($this->current_app() == 'booking')
+			if ($this->current_app() == 'booking')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT] = array
 					(
@@ -54,7 +54,7 @@
 				);
 			}
 
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions[self::ROLE_ADMIN] = array
 					(
@@ -70,9 +70,9 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
-			if($this->current_app() == 'booking')
+			if ($this->current_app() == 'booking')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create']	 = true;
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write']	 = true;
@@ -81,12 +81,12 @@
 			return $defaultPermissions;
 		}
 
-		public function get_permissions(array $entity)
+		public function get_permissions( array $entity )
 		{
 			return parent::get_permissions($entity);
 		}
 
-		public function complete_expired(&$events)
+		public function complete_expired( &$events )
 		{
 			$this->so->complete_expired($events);
 		}
@@ -99,9 +99,9 @@
 		/**
 		 * @ Send message about cancelation/modification on event to users of building.
 		 */
-		function send_notification($type, $event, $mailadresses, $orgdate = null)
+		function send_notification( $type, $event, $mailadresses, $orgdate = null )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -120,7 +120,7 @@
 			$link .= $event['building_id'] . '&date=' . substr($event['from_'], 0, 10);
 			$body	 = "";
 			$subject = "";
-			if(!$type)
+			if (!$type)
 			{
 				$subject .= $config->config_data['event_canceled_mail_subject'];
 				$body .= "<p>" . $config->config_data['event_canceled_mail'];
@@ -131,19 +131,19 @@
 				$body .= "<p>" . $config->config_data['event_edited_mail'];
 			}
 
-			if($_POST['org_from'] < $event['from_'] && $_POST['org_to'] == $event['to_'])
+			if ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] == $event['to_'])
 			{
 				$event['from_']	 = $_POST['org_from'];
 				$event['to_']	 = $event['from_'];
 				$freetime		 = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']);
 			}
-			elseif($_POST['org_from'] == $event['from_'] && $_POST['org_to'] > $event['to_'])
+			elseif ($_POST['org_from'] == $event['from_'] && $_POST['org_to'] > $event['to_'])
 			{
 				$event['from_']	 = $event['to_'];
 				$event['to_']	 = $_POST['org_to'];
 				$freetime		 = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']);
 			}
-			elseif($_POST['org_from'] < $event['from_'] && $_POST['org_to'] > $event['to_'])
+			elseif ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] > $event['to_'])
 			{
 				$freetime = pretty_timestamp($_POST['org_from']) . ' til ' . pretty_timestamp($event['from_']) . " og \n";
 				$freetime .= pretty_timestamp($event['to_']) . ' til ' . pretty_timestamp($_POST['org_to']);
@@ -158,13 +158,13 @@
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -174,9 +174,9 @@
 		/**
 		 * @ Send message about cancelation/modification on event to admins of building.
 		 */
-		function send_admin_notification($type, $event, $message = null, $orgdate = null)
+		function send_admin_notification( $type, $event, $message = null, $orgdate = null )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -187,7 +187,7 @@
 
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			if(!$type)
+			if (!$type)
 			{
 				$subject = $config->config_data['event_canceled_mail_subject'];
 			}
@@ -208,7 +208,7 @@
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';
 			$link .= $event['building_id'] . '&date=' . substr($event['from_'], 0, 10);
 
-			if(!$type)
+			if (!$type)
 			{
 				$body .= $config->config_data['event_canceled_mail_subject'];
 				$body .= "<p>" . $config->config_data['event_canceled_mail'];
@@ -219,19 +219,19 @@
 				$body .= "<p>" . $config->config_data['event_edited_mail'];
 			}
 
-			if($_POST['org_from'] < $event['from_'] && $_POST['org_to'] == $event['to_'])
+			if ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] == $event['to_'])
 			{
 				$event['from_']	 = $_POST['org_from'];
 				$event['to_']	 = $event['from_'];
 				$freetime		 = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']);
 			}
-			elseif($_POST['org_from'] == $event['from_'] && $_POST['org_to'] > $event['to_'])
+			elseif ($_POST['org_from'] == $event['from_'] && $_POST['org_to'] > $event['to_'])
 			{
 				$event['from_']	 = $event['to_'];
 				$event['to_']	 = $_POST['org_to'];
 				$freetime		 = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']);
 			}
-			elseif($_POST['org_from'] < $event['from_'] && $_POST['org_to'] > $event['to_'])
+			elseif ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] > $event['to_'])
 			{
 				$freetime = pretty_timestamp($_POST['org_from']) . ' til ' . pretty_timestamp($event['from_']) . " og \n";
 				$freetime .= pretty_timestamp($event['to_']) . ' til ' . pretty_timestamp($_POST['org_to']);
@@ -246,13 +246,13 @@
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}

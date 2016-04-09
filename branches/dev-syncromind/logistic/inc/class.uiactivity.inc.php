@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -29,7 +28,6 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
-
 	phpgw::import_class('logistic.sorequirement');
 	phpgw::import_class('logistic.sorequirement_resource_allocation');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
@@ -40,17 +38,16 @@
 
 	class logistic_uiactivity extends phpgwapi_uicommon_jquery
 	{
+
 		private $so;
 		private $so_project;
 		private $so_requirement;
 		private $so_resource_allocation;
-
 	    private $read;
 	    private $add;
 	    private $edit;
 	    private $delete;
 	    private $manage;
-
 		public $public_functions = array(
 			'query'			=> true,
 			'add' 			=> true,
@@ -117,7 +114,8 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json', 'filter' => phpgw::get_var('filter', 'int'))),
+					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json',
+						'filter' => phpgw::get_var('filter', 'int'))),
 					'allrows'	=> true,
 					'field' => array(
 						array(
@@ -205,7 +203,7 @@
 					(
 						'my_name'		=> 'new',
 						'text' 			=> lang('add sub activity'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
 						)),
@@ -216,7 +214,7 @@
 					(
 						'my_name'		=> 'new_requirement',
 						'text' 			=> lang('t_new_requirement'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'logistic.uirequirement.edit',
 							'nonavbar'		=> true
@@ -228,7 +226,7 @@
 					(
 						'my_name'		=> 'view_requirements',
 						'text' 			=> lang('t_view_requirements'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'logistic.uiactivity.view_resource_allocation'
 						)),
@@ -239,7 +237,7 @@
 					(
 						'my_name'		=> 'add_favorite',
 						'text' 			=> lang('toggle as favorite'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit_favorite'
 						)),
@@ -257,7 +255,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -307,7 +305,7 @@
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count();
 					array_shift($result_objects);
-					if($result_objects)
+					if ($result_objects)
 					{
 						$object_count --;
 					}
@@ -320,7 +318,8 @@
 					break;
 				default: // ... all activities, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'activity_query', $search_for);
-					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'), 'activity' => phpgw::get_var('filter', 'int'));
+					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'),
+						'activity' => phpgw::get_var('filter', 'int'));
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->total_records;
 					break;
@@ -335,12 +334,12 @@
 					$filters = array('activity' => $activity->get_id());
 					$requirements_for_activity = $this->so_requirement->get(0, null, null, null, null, null, $filters);
 
-					if( count( $requirements_for_activity ) > 0 )
+					if (count($requirements_for_activity) > 0)
 					{
 						$total_num_alloc = 0;
 						$total_num_required = 0;
 
-						foreach($requirements_for_activity as $requirement)
+						foreach ($requirements_for_activity as $requirement)
 						{
 							$filters = array('requirement_id' => $requirement->get_id());
 							$num_allocated = $this->so_resource_allocation->get_count(null, null, $filters);
@@ -351,13 +350,13 @@
 							$total_num_required += $num_required;
 						}
 
-						if($total_num_alloc == $total_num_required)
+						if ($total_num_alloc == $total_num_required)
 						{
 							$status = "Behov dekket";
 						}
 						else
 						{
-							$status = "Udekket behov (" . ($total_num_required - $total_num_alloc) . ")" ;
+							$status = "Udekket behov (" . ($total_num_required - $total_num_alloc) . ")";
 						}
 					}
 					else
@@ -393,7 +392,7 @@
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(	$result_data['results'],array($this, '_add_links'),	"logistic.uiactivity.view");
+				array_walk($result_data['results'], array($this, '_add_links'), "logistic.uiactivity.view");
 			}
 
 			return $this->jquery_results($result_data);
@@ -404,15 +403,15 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit'));
 		}
 
-		public function edit($activity = null)
+		public function edit( $activity = null )
 		{
 			$activity_id = phpgw::get_var('id');
 			$parent_activity_id = phpgw::get_var('parent_id', 'int');
 			$project_id = phpgw::get_var('project_id', 'int');
 
-			if($activity == null)
+			if ($activity == null)
 			{
-				if( $activity_id && is_numeric($activity_id) )
+				if ($activity_id && is_numeric($activity_id))
 				{
 					$activity = $this->so->get_single($activity_id);
 					$project_id = $activity->get_project_id();
@@ -421,17 +420,17 @@
 				{
 					$activity = new logistic_activity();
 
-					if( $project_id && is_numeric($project_id) )
+					if ($project_id && is_numeric($project_id))
 					{
 						$project = $this->so_project->get_single($project_id);
-						$activity->set_project_id( $project_id );
+						$activity->set_project_id($project_id);
 					}
-					else if($parent_activity_id)
+					else if ($parent_activity_id)
 					{
-						$activity->set_parent_id( $parent_activity_id );
-						$parent_activity = $this->so->get_single( $parent_activity_id );
+						$activity->set_parent_id($parent_activity_id);
+						$parent_activity = $this->so->get_single($parent_activity_id);
 						$project_id = $parent_activity->get_project_id();
-						$activity->set_project_id( $project_id );
+						$activity->set_project_id($project_id);
 
 						$activity->set_start_date($parent_activity->get_start_date());
 						$activity->set_end_date($parent_activity->get_end_date());
@@ -443,20 +442,20 @@
 
 			$activities = $this->so->get(0, 0, 'name', true, null, null, null, true);
 
-			if($activity_id)
+			if ($activity_id)
 			{
 				$exclude = array($activity_id);
-				$children = $this->so->get_children($activity_id, 0,true);
+				$children = $this->so->get_children($activity_id, 0, true);
 
-				foreach($children as $child)
+				foreach ($children as $child)
 				{
 					$exclude[] = $child['id']; 
 				}
 
 				$k = count($activities);
-				for ($i=0; $i<$k; $i++)
+				for ($i = 0; $i < $k; $i++)
 				{
-					if (in_array($activities[$i]->get_id(),$exclude))
+					if (in_array($activities[$i]->get_id(), $exclude))
 					{
 						unset($activities[$i]);
 					}
@@ -469,19 +468,19 @@
 				'activities' => $project_id ? $activities : array(),
 				'activity' => $activity,
 				'editable' => true,
-				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
+				'breadcrumb' => $this->_get_breadcrumb($activity_id, 'logistic.uiactivity.edit', 'id')
 			);
 
-			if($project)
+			if ($project)
 			{
 				$data['project'] = $project;
 			}
 
 //			if($activity->get_parent_id() || $activity_id)
 //			if(	$activity_id )
-			if($project_id)
+			if ($project_id)
 			{
-				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
+				$parent_activity = $this->so->get_single($activity->get_parent_id());
 				$data['parent_activity'] = $parent_activity;
 			}
 			else
@@ -497,7 +496,8 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 
 			self::add_javascript('logistic', 'logistic', 'activity.js');
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'),'activity_form');
+			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
+				'file'), 'activity_form');
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}
 
@@ -507,12 +507,12 @@
 
 			if ($activity_id && is_numeric($activity_id))
 			{
-				$activity = $this->so->get_single( $activity_id );
+				$activity = $this->so->get_single($activity_id);
 
-				$responsible_user = $this->so->get_responsible_user( $activity->get_responsible_user_id() );
+				$responsible_user = $this->so->get_responsible_user($activity->get_responsible_user_id());
 
-				$activity->set_responsible_user_name( $responsible_user );
-				$breadcrumb = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view', 'id');
+				$activity->set_responsible_user_name($responsible_user);
+				$breadcrumb = $this->_get_breadcrumb($activity_id, 'logistic.uiactivity.view', 'id');
 			}
 
 			$datatable_def = array();
@@ -520,15 +520,16 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'logistic.uiactivity.index', 'activity_id' => $activity_id, 'type' => 'children', 'phpgw_return_as'=>'json'))),
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'logistic.uiactivity.index',
+						'activity_id' => $activity_id, 'type' => 'children', 'phpgw_return_as' => 'json'))),
 				'ColumnDefs'	=> array
 					(
-						array('key' => 'id', 'label'=>lang('id'), 'sortable'=>false),
-						array('key' => 'name',	'label'=>lang('name'), 'sortable'=>false),
-						array('key' => 'start_date',	'label'=>lang('start date'), 'sortable'=>false),
-						array('key' => 'end_date','label'=>lang('end date'), 'sortable'=>false),
-						array('key' => 'responsible_user_name','label'=>lang('responsible'), 'sortable'=>false),
-						array('key' => 'status','label'=>lang('status'), 'sortable'=>false)
+					array('key' => 'id', 'label' => lang('id'), 'sortable' => false),
+					array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
+					array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+					array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => false),
+					array('key' => 'responsible_user_name', 'label' => lang('responsible'), 'sortable' => false),
+					array('key' => 'status', 'label' => lang('status'), 'sortable' => false)
 					),
 				'data'			=> json_encode(array()),
 				'config'		=> array(
@@ -547,13 +548,14 @@
 				'breadcrumb'	=> $breadcrumb
 			);
 
-			if($activity->get_parent_id() > 0)
+			if ($activity->get_parent_id() > 0)
 			{
 				$parent_activity = $this->so->get_single($activity->get_parent_id());
 				$data['parent_activity'] = $parent_activity;
 			}
 
-			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs', 'datatable_inline'), $data);
+			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs',
+				'datatable_inline'), $data);
 		}
 
 		public function save()
@@ -572,10 +574,11 @@
 			$activity->populate();
 
 //_debug_array($activity);die();
-			if( $activity->validate() )
+			if ($activity->validate())
 			{
 				$activity_id = $this->so->store($activity);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
+					'id' => $activity_id, 'project_id' => $activity->get_project_id()));
 			}
 			else
 			{
@@ -585,11 +588,11 @@
 
 		public function edit_favorite()
 		{
-			if($activity_id = phpgw::get_var('id'))
+			if ($activity_id = phpgw::get_var('id'))
 			{
 				$activity = $this->so->get_single($activity_id);
 
-				if(isset($GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites']) && $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'])
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites']) && $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'])
 				{
 					$menu_favorites = $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'];
 				}
@@ -598,7 +601,7 @@
 					$menu_favorites = array();
 				}
 
-				if(isset($menu_favorites['activity'][$activity_id]))
+				if (isset($menu_favorites['activity'][$activity_id]))
 				{
 					unset($menu_favorites['activity'][$activity_id]);
 				}
@@ -609,7 +612,7 @@
 
 				$GLOBALS['phpgw']->preferences->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 				$GLOBALS['phpgw']->preferences->read();
-				$GLOBALS['phpgw']->preferences->add('logistic','menu_favorites',$menu_favorites,'user');
+				$GLOBALS['phpgw']->preferences->add('logistic', 'menu_favorites', $menu_favorites, 'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 				execMethod('phpgwapi.menu.clear');
 			}
@@ -624,17 +627,17 @@
 
 			$ColumnDefs0 = array
 				(
-					array('key' => 'id', 'label'=>lang('id'), 'sortable'=>true),
-					array('key' => 'start_date',	'label'=>lang('start date'), 'sortable'=>false),
-					array('key' => 'end_date','label'=>lang('end date'), 'sortable'=>false),
-					array('key' => 'no_of_items','label'=>lang('Num required'), 'sortable'=>false),
-					array('key' => 'allocated','label'=>lang('Num allocated'), 'sortable'=>false),
-					array('key' => 'location_label','label'=>lang('Resource type'), 'sortable'=>false),
-					array('key' => 'criterias','label'=>lang('criterias'), 'sortable'=>false),
-					array('key' => 'status','label'=>lang('Status requirement'), 'sortable'=>false)
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => false),
+				array('key' => 'no_of_items', 'label' => lang('Num required'), 'sortable' => false),
+				array('key' => 'allocated', 'label' => lang('Num allocated'), 'sortable' => false),
+				array('key' => 'location_label', 'label' => lang('Resource type'), 'sortable' => false),
+				array('key' => 'criterias', 'label' => lang('criterias'), 'sortable' => false),
+				array('key' => 'status', 'label' => lang('Status requirement'), 'sortable' => false)
 				);
 
-			if($this->acl_add)
+			if ($this->acl_add)
 			{
 				$ColumnDefs0[] = array
 				(
@@ -643,7 +646,7 @@
 					'sortable'	=> false,
 				);
 			}
-			if($this->acl_add)
+			if ($this->acl_add)
 			{
 				$ColumnDefs0[] = array
 				(
@@ -653,7 +656,7 @@
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$ColumnDefs0[] = array
 				(
@@ -668,7 +671,8 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'requirement-container',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json'))),
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'logistic.uirequirement.index',
+						'activity_id' => $activity_id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs'	=> $ColumnDefs0,
 				'data'			=> json_encode(array()),
 				'config'		=> array(
@@ -679,22 +683,23 @@
 
 			$ColumnDefs1 = array
 				(
-					array('key' => 'id', 'label'=>lang('id'), 'sortable'=>true),
-					array('key' => 'fm_bim_item_name',	'label'=>'Navn på ressurs', 'sortable'=>true),
-					array('key' => 'resource_type_descr', 'label'=>lang('resource type descr'), 'sortable'=>true),
-					array('key' => 'allocated_amount','label'=>lang('allocated amount'), 'sortable'=>false),
-					array('key' => 'location_code','label'=>lang('location code'), 'sortable'=>true),
-					array('key' => 'fm_bim_item_address','label'=>lang('address'), 'sortable'=>true),
-					array('key' => 'delete_link','label'=>lang('delete'), 'sortable'=>false),
-					array('key' => 'assign_job','label'=>lang('assign job'), 'sortable'=>false),
-					array('key' => 'related','label'=>lang('related'), 'sortable'=>false),
-					array('key' => 'status','label'=>lang('Status requirement'), 'sortable'=>false)
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'fm_bim_item_name', 'label' => 'Navn på ressurs', 'sortable' => true),
+				array('key' => 'resource_type_descr', 'label' => lang('resource type descr'),
+					'sortable' => true),
+				array('key' => 'allocated_amount', 'label' => lang('allocated amount'), 'sortable' => false),
+				array('key' => 'location_code', 'label' => lang('location code'), 'sortable' => true),
+				array('key' => 'fm_bim_item_address', 'label' => lang('address'), 'sortable' => true),
+				array('key' => 'delete_link', 'label' => lang('delete'), 'sortable' => false),
+				array('key' => 'assign_job', 'label' => lang('assign job'), 'sortable' => false),
+				array('key' => 'related', 'label' => lang('related'), 'sortable' => false),
+				array('key' => 'status', 'label' => lang('Status requirement'), 'sortable' => false)
 				);
 
 			$datatable_def[] = array
 			(
 				'container'		=> 'allocation-container',
-				'requestUrl'	=> "''",//json_encode(self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'requirement_id' => $requirement_id, 'type' => "requirement_id", 'phpgw_return_as' => 'json'))),
+				'requestUrl' => "''", //json_encode(self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'requirement_id' => $requirement_id, 'type' => "requirement_id", 'phpgw_return_as' => 'json'))),
 				'ColumnDefs'	=> $ColumnDefs1,
 				'data'			=> json_encode(array()),
 				'config'		=> array(
@@ -711,7 +716,7 @@
 				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'allocation'),
 				'view'			=> 'requirement_overview',
 				'activity'		=> $activity,
-				'breadcrumb'	=> $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id'),
+				'breadcrumb' => $this->_get_breadcrumb($activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id'),
 				'acl_add'		=> $this->acl_add
 			);
 
@@ -722,7 +727,8 @@
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs','datatable_inline'), $data);
+			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview',
+				'activity/activity_tabs', 'datatable_inline'), $data);
 		}
 
 		private function get_user_array()
@@ -741,18 +747,18 @@
 			return $user_array;
 		}
 
-		function make_tab_menu($activity_id)
+		function make_tab_menu( $activity_id )
 		{
 			$tabs = array();
 
-			if($activity_id > 0)
+			if ($activity_id > 0)
 			{
 
 				$activity = $this->so->get_single($activity_id);
 
 				$tabs = array
 				(
-					'details'=> array
+					'details' => array
 					(
 						'label' => "1: " . lang('Activity details'),
 						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
@@ -770,12 +776,11 @@
 			{
 				$tabs = array
 				(
-					'details'=>   array
+					'details' => array
 					(
 						'label' => "1: " . lang('Activity details'),
 						'link' => '#details',
 						'disable' => 0
-
 					),
 					'allocation' => array
 					(
@@ -789,27 +794,27 @@
 			return $tabs;
 		}
 
-		private function _get_breadcrumb($activity_id, $menuaction, $id_name = 'id')
+		private function _get_breadcrumb( $activity_id, $menuaction, $id_name = 'id' )
 		{
-			if(!$activity_id)
+			if (!$activity_id)
 			{
 				return;
 			}
 
 			$path = $this->so->get_path($activity_id);
 
-			foreach($path as $menu_item)
+			foreach ($path as $menu_item)
 			{
-				if($menu_item['id'] == $activity_id)
+				if ($menu_item['id'] == $activity_id)
 				{
 					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => "", "current" => 1);
 				}
 				else
 				{
-					$_link = self::link(array('menuaction' => $menuaction, $id_name => $menu_item['id'] ));
-					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => $_link, "current" => 0);
+					$_link = self::link(array('menuaction' => $menuaction, $id_name => $menu_item['id']));
+					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => $_link,
+						"current" => 0);
 				}
-
 			}
 
 			return $breadcrumb_array;

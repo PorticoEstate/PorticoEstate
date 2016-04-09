@@ -1,6 +1,8 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
 
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 
 	<div class="frontend_body">
 		<div class="pure-form pure-form-aligned">

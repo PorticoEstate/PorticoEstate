@@ -50,12 +50,12 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.soasync');
 			$this->socommon = CreateObject('property.socommon');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -76,9 +76,9 @@
 			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'async', $data);
 			}
@@ -96,7 +96,7 @@
 			$this->cat_id = $data['cat_id'];
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			/* $method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 			  'allrows' => $this->allrows)); */
@@ -107,16 +107,16 @@
 			return $method;
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			return $this->so->read_single($id);
 		}
 
-		function save($method, $action = '')
+		function save( $method, $action = '' )
 		{
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
-				if($method['id'] != '')
+				if ($method['id'] != '')
 				{
 
 					$receipt = $this->so->edit($method);
@@ -129,7 +129,7 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$this->so->delete($id);
 		}

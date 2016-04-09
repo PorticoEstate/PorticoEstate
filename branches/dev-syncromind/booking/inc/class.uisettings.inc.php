@@ -25,11 +25,11 @@
 			$internal_value	 = null;
 			$external_value	 = null;
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				foreach($_POST['config_data'] as $dim => $value)
+				foreach ($_POST['config_data'] as $dim => $value)
 				{
-					if(strlen(trim($value)) > 0)
+					if (strlen(trim($value)) > 0)
 					{
 						$config->value($dim, trim($value));
 					}
@@ -41,7 +41,7 @@
 				$config->save_repository();
 
 				// Save internal and external sequential numbers to database
-				if(isset($_POST['billing']))
+				if (isset($_POST['billing']))
 				{
 					$internal_value	 = intval($_POST['billing']['internal']);
 					$external_value	 = intval($_POST['billing']['external']);
@@ -51,17 +51,17 @@
 			}
 
 			// Load internal and external sequential numbers from database (if not already set) and insert into $billing
-			if(is_null($internal_value) || is_null($external_value))
+			if (is_null($internal_value) || is_null($external_value))
 			{
 				$db = $GLOBALS['phpgw']->db;
 				$db->query("SELECT name, value FROM bb_billing_sequential_number_generator WHERE name='internal' OR name='external' LIMIT 2");
-				while($db->next_record())
+				while ($db->next_record())
 				{
-					if(!strcmp($db->f('name', false), "internal"))
+					if (!strcmp($db->f('name', false), "internal"))
 					{
 						$internal_value = intval($db->f('value', false));
 					}
-					else if(!strcmp($db->f('name', false), "external"))
+					else if (!strcmp($db->f('name', false), "external"))
 					{
 						$external_value = intval($db->f('value', false));
 					}

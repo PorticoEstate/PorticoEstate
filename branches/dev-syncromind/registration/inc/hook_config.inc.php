@@ -10,7 +10,6 @@
 	* @category hooks
 	* @version $Id: hook_config.inc.php 8281 2011-12-13 09:24:03Z sigurdne $
 	*/
-
 	/*
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,24 +25,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
-
 	/**
 	* Get HTML listbox with workorder status that are to be set when invoice is processed
 	*
 	* @param $config
 	* @return string HTML checkboxes to be placed in a table
 	*/
-	function default_group($config)
+	function default_group( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 
 		$_selected = isset($config['default_group_id']) ? $config['default_group_id'] : '';
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		foreach ( $groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$selected = '';
-			if ( $_selected == $group)
+			if ($_selected == $group)
 			{
 				$selected = 'selected =  "selected"';
 			}
@@ -55,4 +53,3 @@ HTML;
 
 		return $out;
 	}
-

@@ -25,13 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/
-	
 	phpgw::import_class('controller.uicheck_list');
 
 	class mobilefrontend_uicheck_list extends controller_uicheck_list
 	{
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -39,14 +39,13 @@
 			//FIXME
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
 		}
-    
     /**
 		 * Public function for displaying the edit check list form  
 		 * 
 		 * @param HTTP:: check list id
 		 * @return data array
 		*/
-/*
+		/*
 		function edit_check_list( $check_list = null ){
 			if($check_list == null)
 			{

@@ -92,12 +92,12 @@
 		{
 			$output = phpgw::get_var('output');
 
-			if(!$output)
+			if (!$output)
 			{
 				$output = 'html';
 			}
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->no_access();
 				return;
@@ -111,17 +111,17 @@
 //_debug_array($uicols);
 			$j = 0;
 
-			if(isset($ifc_info) AND is_array($ifc_info))
+			if (isset($ifc_info) AND is_array($ifc_info))
 			{
-				foreach($ifc_info as $entry)
+				foreach ($ifc_info as $entry)
 				{
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
-						if($uicols['input_type'][$i] != 'hidden')
+						if ($uicols['input_type'][$i] != 'hidden')
 						{
 							$content[$j]['row'][$i]['value'] = $entry[$uicols['name'][$i]];
 							$content[$j]['row'][$i]['name'] = $uicols['name'][$i];
-							if($uicols['input_type'][$i] == 'link')
+							if ($uicols['input_type'][$i] == 'link')
 							{
 								$content[$j]['row'][$i]['text'] = lang('link');
 								$content[$j]['row'][$i]['link'] = $entry[$uicols['name'][$i]];
@@ -130,21 +130,21 @@
 						}
 					}
 
-					if($this->acl_read)
+					if ($this->acl_read)
 					{
 						$content[$j]['row'][$i]['statustext'] = lang('view the record');
 						$content[$j]['row'][$i]['text'] = lang('view');
 						$content[$j]['row'][$i++]['link'] = $GLOBALS['phpgw']->link('/index.php', array(
 							'menuaction' => 'property.uiifc.view', 'ifc_id' => $entry['id']));
 					}
-					if($this->acl_edit)
+					if ($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext'] = lang('edit the record');
 						$content[$j]['row'][$i]['text'] = lang('edit');
 						$content[$j]['row'][$i++]['link'] = $GLOBALS['phpgw']->link('/index.php', array(
 							'menuaction' => 'property.uiifc.edit', 'ifc_id' => $entry['id']));
 					}
-					if($this->acl_delete)
+					if ($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext'] = lang('delete the record');
 						$content[$j]['row'][$i]['text'] = lang('delete');
@@ -156,14 +156,14 @@
 				}
 			}
 
-			for($i = 0; $i < count($uicols['descr']); $i++)
+			for ($i = 0; $i < count($uicols['descr']); $i++)
 			{
-				if($uicols['input_type'][$i] != 'hidden')
+				if ($uicols['input_type'][$i] != 'hidden')
 				{
 					$table_header[$i]['header'] = $uicols['descr'][$i];
 					$table_header[$i]['width'] = '5%';
 					$table_header[$i]['align'] = 'center';
-					if($uicols['datatype'][$i] != 'T' && $uicols['datatype'][$i] != 'CH')
+					if ($uicols['datatype'][$i] != 'T' && $uicols['datatype'][$i] != 'CH')
 					{
 						$table_header[$i]['sort_link'] = true;
 						$table_header[$i]['sort'] = $this->nextmatchs->show_sort_order(array
@@ -183,21 +183,21 @@
 				}
 			}
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$table_header[$i]['width'] = '5%';
 				$table_header[$i]['align'] = 'center';
 				$table_header[$i]['header'] = lang('view');
 				$i++;
 			}
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$table_header[$i]['width'] = '5%';
 				$table_header[$i]['align'] = 'center';
 				$table_header[$i]['header'] = lang('edit');
 				$i++;
 			}
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$table_header[$i]['width'] = '5%';
 				$table_header[$i]['align'] = 'center';
@@ -206,7 +206,7 @@
 			}
 
 
-			if($this->acl_add)
+			if ($this->acl_add)
 			{
 				$table_add[] = array
 					(
@@ -217,7 +217,7 @@
 				);
 			}
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -268,7 +268,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ': ' . $function_msg;
 
-			if($output == 'wml')
+			if ($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
@@ -280,7 +280,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$acl_location = '.ifc.import';
-			if(!$this->acl->check($acl_location, PHPGW_ACL_ADD, 'property'))
+			if (!$this->acl->check($acl_location, PHPGW_ACL_ADD, 'property'))
 			{
 //				$this->no_access();
 //				return;
@@ -291,28 +291,28 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc'));
 			$values = phpgw::get_var('values');
 
-			if(isset($values) && is_array($values))
+			if (isset($values) && is_array($values))
 			{
-				if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 					$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
 					$ifcfile = $_FILES['ifcfile']['tmp_name'];
 
-					if(!$ifcfile)
+					if (!$ifcfile)
 					{
 						$ifcfile = phpgw::get_var('tsvfile');
 					}
 
-					if(!isset($receipt['error']) || !$receipt['error'])
+					if (!isset($receipt['error']) || !$receipt['error'])
 					{
 						//	$values['ifc_id']	= $ifc_id;
 						$receipt = $this->bo->import($values, $ifcfile);
 						$ifc_id = $receipt['ifc_id'];
 						//	$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'ifc_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiifc.index'));
@@ -321,7 +321,7 @@
 				}
 				else
 				{
-					if($ifcfile)
+					if ($ifcfile)
 					{
 						unlink($ifcfile);
 					}
@@ -373,7 +373,7 @@
 		function edit()
 		{
 			$acl_location = '.ifc';
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$this->no_access();
 				return;
@@ -381,7 +381,7 @@
 
 			$output = phpgw::get_var('output');
 
-			if(!$output)
+			if (!$output)
 			{
 				$output = 'html';
 			}
@@ -392,9 +392,9 @@
 
 			$insert_record_values = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $acl_location, 'ifc');
 
-			if(isset($insert_record_values) && is_array($insert_record_values))
+			if (isset($insert_record_values) && is_array($insert_record_values))
 			{
-				for($j = 0; $j < count($insert_record_values); $j++)
+				for ($j = 0; $j < count($insert_record_values); $j++)
 				{
 					$insert_record['extra'][$insert_record_values[$j]] = $insert_record_values[$j];
 				}
@@ -402,70 +402,70 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc', 'attributes_form'));
 
-			if(isset($values) && is_array($values))
+			if (isset($values) && is_array($values))
 			{
-				if(!$this->acl_edit)
+				if (!$this->acl_edit)
 				{
 					$this->no_access();
 					return;
 				}
 
-				if(isset($insert_record['extra']) && is_array($insert_record['extra']))
+				if (isset($insert_record['extra']) && is_array($insert_record['extra']))
 				{
-					while(is_array($insert_record['extra']) && list($key, $column) = each($insert_record['extra']))
+					while (is_array($insert_record['extra']) && list($key, $column) = each($insert_record['extra']))
 					{
-						if(isset($_POST[$key]) && $_POST[$key])
+						if (isset($_POST[$key]) && $_POST[$key])
 						{
 							$values['extra'][$column] = phpgw::get_var($key, 'string', 'POST');
 						}
 					}
 				}
 
-				if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!$values['cat_id'] || $values['cat_id'] == 'none')
+					if (!$values['cat_id'] || $values['cat_id'] == 'none')
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a category!'));
 					}
-					if(!$values['name'])
+					if (!$values['name'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter a name !'));
 					}
-					if(!$values['address'])
+					if (!$values['address'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter an address !'));
 					}
-					if(!$values['zip'])
+					if (!$values['zip'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter a zip code !'));
 					}
-					if(!$values['town'])
+					if (!$values['town'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter a town !'));
 					}
 
-					if(isset($values_attribute) && is_array($values_attribute))
+					if (isset($values_attribute) && is_array($values_attribute))
 					{
-						foreach($values_attribute as $attribute)
+						foreach ($values_attribute as $attribute)
 						{
-							if($attribute['allow_null'] != 'true' && !$attribute['value'])
+							if ($attribute['allow_null'] != 'true' && !$attribute['value'])
 							{
 								$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
 							}
 						}
 					}
 
-					if($ifc_id)
+					if ($ifc_id)
 					{
 						$values['ifc_id'] = $ifc_id;
 					}
 
-					if(!isset($receipt['error']) || !$receipt['error'])
+					if (!isset($receipt['error']) || !$receipt['error'])
 					{
 						$receipt = $this->bo->save($values, $values_attribute);
 						$ifc_id = $receipt['ifc_id'];
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'hrm_training_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiifc.index',
@@ -483,12 +483,12 @@
 			$values = $this->bo->read_single($ifc_id);
 
 			/* Preserve attribute values from post */
-			if(isset($receipt['error']) && (isset($values_attribute) && is_array($values_attribute)))
+			if (isset($receipt['error']) && (isset($values_attribute) && is_array($values_attribute)))
 			{
 				$values = $this->bo->preserve_attribute_values($values, $values_attribute);
 			}
 
-			if($ifc_id)
+			if ($ifc_id)
 			{
 				$function_msg = lang('edit ifc');
 			}
@@ -546,7 +546,7 @@
 			$appname = lang('ifc');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			if($output == 'wml')
+			if ($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
@@ -555,7 +555,7 @@
 
 		function view()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$this->no_access();
 				return;
@@ -563,7 +563,7 @@
 
 			$output = phpgw::get_var('output');
 
-			if(!$output)
+			if (!$output)
 			{
 				$output = 'html';
 			}
@@ -573,7 +573,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('ifc', 'attributes_view'));
 
-			if($ifc_id)
+			if ($ifc_id)
 			{
 				$values = $this->bo->read_single($ifc_id);
 				$function_msg = lang('view ifc');
@@ -614,7 +614,7 @@
 			$appname = lang('ifc');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			if($output == 'wml')
+			if ($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}
@@ -624,7 +624,7 @@
 
 		function delete()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$this->no_access();
 				return;
@@ -632,7 +632,7 @@
 
 			$output = phpgw::get_var('output');
 
-			if(!$output)
+			if (!$output)
 			{
 				$output = 'html';
 			}
@@ -645,7 +645,7 @@
 				'menuaction' => 'property.uiifc.index'
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($ifc_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
@@ -670,7 +670,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			if($output == 'wml')
+			if ($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
 			}

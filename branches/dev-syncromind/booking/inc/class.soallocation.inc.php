@@ -85,22 +85,24 @@
 		 *
 		 * @return array
 		 */
-		public function filter_conflict_errors(array $errors)
+		public function filter_conflict_errors( array $errors )
 		{
 			return array_diff_key($errors, self::$allocation_conflict_error_types);
 		}
 
-		protected function doValidate($entity, booking_errorstack $errors)
+		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			set_time_limit(300);
 			$allocation_id = $entity['id'] ? $entity['id'] : -1;
 
 			// FIXME: Validate: Season contains all resources
 
-			if(count($errors) > 0)
-			{ return; /* Basic validation failed */ }
+			if (count($errors) > 0)
+			{
+				return; /* Basic validation failed */
+			}
 
-			if(false == (boolean)intval($entity['active']))
+			if (false == (boolean)intval($entity['active']))
 			{
 				return; //Don't care about if allocation is within necessary boundaries if dealing with inactivated entity
 			}
@@ -110,13 +112,13 @@
 			$start	 = $from_->format('Y-m-d H:i');
 			$end	 = $to_->format('Y-m-d H:i');
 
-			if(strtotime($start) > strtotime($end))
+			if (strtotime($start) > strtotime($end))
 			{
 				$errors['from_'] = lang('Invalid from date');
 				return; //No need to continue validation if dates are invalid
 			}
 
-			if($entity['resources'])
+			if ($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
 				// Check if we overlap with any existing event
@@ -126,7 +128,7 @@
 									((e.from_ >= '$start' AND e.from_ < '$end') OR 
 						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR 
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$errors[self::ERROR_CONFLICTING_EVENT] = lang('Overlaps with existing event');
 				}
@@ -137,7 +139,7 @@
 									((a.from_ >= '$start' AND a.from_ < '$end') OR 
 						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$errors[self::ERROR_CONFLICTING_ALLOCATION] = lang('Overlaps with existing allocation');
 				}
@@ -148,32 +150,32 @@
 									((b.from_ >= '$start' AND b.from_ < '$end') OR 
 						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$errors[self::ERROR_CONFLICTING_BOOKING] = lang('Overlaps with existing booking');
 				}
 			}
 
-			if(!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_))
+			if (!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_))
 			{
 				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
 		}
 
-		function get_resource($id)
+		function get_resource( $id )
 		{
 			$this->db->limit_query("SELECT name FROM bb_resource where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('name', false);
 		}
 
-		function get_building($id)
+		function get_building( $id )
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -185,7 +187,7 @@
 			$results	 = array();
 			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('id'	 => $this->db->f('id', false),
 					'name'	 => $this->db->f('name', false));
@@ -193,10 +195,10 @@
 			return $results;
 		}
 
-		function get_organization($id)
+		function get_organization( $id )
 		{
 			$this->db->limit_query("SELECT id FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -208,7 +210,7 @@
 			$results	 = array();
 			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
 			$this->db->query("SELECT id, name FROM bb_organization WHERE active = 1 ORDER BY name ASC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('id'	 => $this->db->f('id', false),
 					'name'	 => $this->db->f('name', false));
@@ -216,21 +218,21 @@
 			return $results;
 		}
 
-		function get_season($id)
+		function get_season( $id )
 		{
 			$this->db->limit_query("SELECT id FROM bb_season where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('id', false);
 		}
 
-		function get_seasons($build_id)
+		function get_seasons( $build_id )
 		{
 			$results	 = array();
 			$results[]	 = array('id' => 0, 'name' => lang('Not selected'));
-			if(isset($build_id))
+			if (isset($build_id))
 			{
 				$this->db->query("SELECT id, name FROM bb_season WHERE status NOT IN ('ARCHIVED') AND building_id = ($build_id) ORDER BY name ASC", __LINE__, __FILE__);
 			}
@@ -239,7 +241,7 @@
 				$this->db->query("SELECT id, name FROM bb_season WHERE status NOT IN ('ARCHIVED') ORDER BY name ASC", __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array('id'	 => $this->db->f('id', false),
 					'name'	 => $this->db->f('name', false));
@@ -247,7 +249,7 @@
 			return $results;
 		}
 
-		function get_allocation_id($allocation)
+		function get_allocation_id( $allocation )
 		{
 
 			$from		 = "'" . $allocation['from_'] . "'";
@@ -259,26 +261,26 @@
 			$sql = "SELECT id FROM bb_allocation ba2 JOIN bb_allocation_resource bar2 ON (ba2.id = bar2.allocation_id) WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = ($org_id) AND ba2.season_id = ($season_id) AND  bar2.resource_id IN ($resources)";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('id', false);
 		}
 
-		function check_for_booking($id)
+		function check_for_booking( $id )
 		{
 			$sql = "SELECT id FROM bb_booking  WHERE allocation_id = ($id)";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('id', false);
 		}
 
-		public function delete_allocation($id)
+		public function delete_allocation( $id )
 		{
 			$db			 = $this->db;
 			$table_name	 = $this->table_name . '_resource';
@@ -313,7 +315,7 @@
 			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
 		}
 
-		public function complete_expired(&$allocations)
+		public function complete_expired( &$allocations )
 		{
 			$table_name	 = $this->table_name;
 			$db			 = $this->db;
@@ -322,20 +324,19 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
-		function get_ordered_costs($id)
+		function get_ordered_costs( $id )
 		{
 			$results = array();
 			$this->db->query("SELECT * FROM bb_allocation_cost WHERE allocation_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array(
 					'time'		 => $this->db->f('time'),
-					'author'	 => $this->db->f('author',true),
+					'author' => $this->db->f('author', true),
 					'comment'	 => $this->db->f('comment', true),
 					'cost'		 => $this->db->f('cost')
 				);
 			}
 			return $results;
 		}
-
 	}

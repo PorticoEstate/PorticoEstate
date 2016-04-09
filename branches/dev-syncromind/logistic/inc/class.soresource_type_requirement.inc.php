@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* phpGroupWare - logistic: a part of a Facilities Management System.
 	*
@@ -25,15 +24,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('logistic.socommon');
 
 	include_class('logistic', 'resource_type_requirement', 'inc/model/');
 
 	class logistic_soresource_type_requirement extends logistic_socommon
 	{
+
 		protected static $so;
 		private $local_db;
 
@@ -43,7 +42,7 @@
 			$this->local_db = clone $this->db;
 		}
 
-		protected function add(&$object)
+		protected function add( &$object )
 		{
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$now = time();
@@ -52,9 +51,9 @@
 			$type_id = $object->get_project_type_id();
 
 			$sql = "INSERT INTO lg_resource_type_requirement (location_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ($location_id,$cust_attribute_id,$type_id, $user_id, $now)";
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Set the new bim_item_type_requirement ID
 				return $this->db->get_last_insert_id('lg_resource_type_requirement', 'id');
@@ -67,7 +66,7 @@
 
 		protected function get_id_field_name()
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -84,11 +83,11 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
-			/*if($search_for)
+			/* if($search_for)
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
@@ -102,23 +101,23 @@
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
-			}*/
+			  } */
 
 			$filter_clauses = array();
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['location_id']))
+			if (isset($filters['location_id']))
 			{
-				$filter_clauses[] = "type_requirement.location_id = {$this->marshal($filters['location_id'],'int')}";
+				$filter_clauses[] = "type_requirement.location_id = {$this->marshal($filters['location_id'], 'int')}";
 			}
-			if(isset($filters['project_type_id']))
+			if (isset($filters['project_type_id']))
 			{
-				$filter_clauses[] = "type_requirement.project_type_id = {$this->marshal($filters['project_type_id'],'int')}";
+				$filter_clauses[] = "type_requirement.project_type_id = {$this->marshal($filters['project_type_id'], 'int')}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -129,9 +128,9 @@
 
 			$tables = "lg_resource_type_requirement type_requirement";
 
-			if($search_type && $search_type == 'resource_type_requirement_list')
+			if ($search_type && $search_type == 'resource_type_requirement_list')
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(type_requirement.location_id, type_requirement.project_type_id)) AS count';
 				}
@@ -140,13 +139,13 @@
 					$cols .= "DISTINCT(type_requirement.location_id, type_requirement.project_type_id) as id, (type_requirement.location_id * type_requirement.project_type_id) as id, type_requirement.location_id, type_requirement.project_type_id ";
 				}
 			}
-			else if($search_type && $search_type == 'distinct_location_id')
+			else if ($search_type && $search_type == 'distinct_location_id')
 			{
 				$cols .= "DISTINCT(type_requirement.location_id) as id ";
 			}
 			else
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(type_requirement.id)) AS count';
 				}
@@ -157,16 +156,16 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $req_id, &$resource_type_requirement)
+		protected function populate( int $req_id, &$resource_type_requirement )
 		{
-			if($resource_type_requirement == null)
+			if ($resource_type_requirement == null)
 			{
-				$resource_type_requirement = new logistic_resource_type_requirement((int) $req_id);
+				$resource_type_requirement = new logistic_resource_type_requirement((int)$req_id);
 
 				$resource_type_requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$resource_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'string'));
@@ -176,7 +175,7 @@
 			return $resource_type_requirement;
 		}
 
-		protected function update($object)
+		protected function update( $object )
 		{
 			$id = intval($object->get_id());
 
@@ -186,9 +185,9 @@
 				'project_type_id = ' . $this->marshal($object->get_project_type_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_resource_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_resource_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if( $result )
+			if ($result)
 			{
 				return $id;
 			}
@@ -198,12 +197,12 @@
 			}
 		}
 
-		public function delete($object)
+		public function delete( $object )
 		{
 			$sql = "DELETE FROM lg_resource_type_requirement where id={$object->get_id()}";
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if( $result )
+			if ($result)
 			{
 				return true;
 			}
@@ -222,7 +221,7 @@
 			return self::$so;
 		}
 
-		public function get_selected_attributes($location_id, $project_type_id)
+		public function get_selected_attributes( $location_id, $project_type_id )
 		{
 			$attributes = array();
 			$sql = "SELECT cust_attribute_id FROM lg_resource_type_requirement where location_id={$location_id} AND project_type_id={$project_type_id}";

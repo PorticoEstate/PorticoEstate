@@ -16,7 +16,7 @@
 		protected $cat_id;
 		protected $metadata = array();
 
-		public function __construct($location_id, $debug = false)
+		public function __construct( $location_id, $debug = false )
 		{
 			$location_id = (int)$location_id;
 			set_time_limit(10000); //Set the time limit for this request
@@ -24,12 +24,12 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = $this->db->join;
 
-			if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
+			if ($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
 			{
 				throw new Exception("Not a valid location for {$location_id}");
 			}
 
-			if($debug)
+			if ($debug)
 			{
 				$this->debug = true;
 			}
@@ -41,7 +41,7 @@
 			$this->cat_id = $category['id'];
 
 
-			if($this->is_eav)
+			if ($this->is_eav)
 			{
 				$this->table = 'fm_bim_item';
 				$sql = "SELECT fm_bim_type.id FROM fm_bim_type WHERE location_id = {$location_id}";
@@ -61,7 +61,7 @@
 				$this->metadata['entry_date'] = array();
 				$this->metadata['user_id'] = array();
 
-				foreach($attributes as $attribute)
+				foreach ($attributes as $attribute)
 				{
 					$this->metadata[$attribute['column_name']] = array();
 				}
@@ -73,19 +73,19 @@
 			}
 		}
 
-		public function set_table($table)
+		public function set_table( $table )
 		{
 			$this->table = $table;
 		}
 
-		public function set_metadata($metadata)
+		public function set_metadata( $metadata )
 		{
 			$this->metadata = $metadata;
 		}
 
-		public function add($data)
+		public function add( $data )
 		{
-			if($this->is_eav)
+			if ($this->is_eav)
 			{
 				$ok = $this->_add_eav($data);
 			}
@@ -96,7 +96,7 @@
 			return $ok;
 		}
 
-		private function _add_eav($data)
+		private function _add_eav( $data )
 		{
 			static $count_records = 0;
 // -------- produce data_set
@@ -105,38 +105,38 @@
 			$table = $this->table;
 			$fields = $this->fields;
 
-			if(!$table)
+			if (!$table)
 			{
 				throw new Exception("Tabell er ikke angitt");
 			}
 
 			$remove_keys = array();
-			foreach($this->metadata as $key => $info)
+			foreach ($this->metadata as $key => $info)
 			{
-				if(isset($info['primary_key']) && $info['primary_key'])
+				if (isset($info['primary_key']) && $info['primary_key'])
 				{
 					$_value = $data[array_search($key, $fields)];
-					if(!array_search($key, $fields) || !$_value)
+					if (!array_search($key, $fields) || !$_value)
 					{
-						if(array_search($key, $fields) === 0 && $_value)
+						if (array_search($key, $fields) === 0 && $_value)
 						{
 							break;
 						}
-						if($count_records === 0)// first one
+						if ($count_records === 0)// first one
 						{
 							throw new Exception("Fant ikke verdi for feltet 'primary key' $key");
 						}
 						else
 						{
 							$found_data = false;
-							foreach($data as $value)
+							foreach ($data as $value)
 							{
-								if($value && !$found_data)
+								if ($value && !$found_data)
 								{
 									$found_data = true;
 								}
 							}
-							if($found_data)
+							if ($found_data)
 							{
 								throw new Exception("Fant ikke verdi for feltet 'primary key' $key");
 							}
@@ -156,9 +156,9 @@
 			unset($_value);
 
 			$value_set = array();
-			foreach($fields as $key => $field)
+			foreach ($fields as $key => $field)
 			{
-				if(isset($this->metadata[$field]))
+				if (isset($this->metadata[$field]))
 				{
 					$value_set[$field] = $this->validate_value($data[$key], $field);
 				}
@@ -177,11 +177,11 @@
 
 			$location_name = "_entity_{$this->entity_id}_{$this->cat_id}";
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 
-				foreach($remove_keys as $remove_key)
+				foreach ($remove_keys as $remove_key)
 				{
 					unset($value_set[$remove_key]);
 				}
@@ -241,7 +241,7 @@
 
 				$xml = $doc->saveXML();
 
-				if(function_exists('com_create_guid') === true)
+				if (function_exists('com_create_guid') === true)
 				{
 					$guid = trim(com_create_guid(), '{}');
 				}
@@ -272,7 +272,7 @@
 			}
 
 			$ok = false;
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array($sql);
 			}
@@ -281,7 +281,7 @@
 				$ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			if($ok)
+			if ($ok)
 			{
 				$this->messages[] = "Successfully imported record: id ({$id})";
 			}
@@ -292,29 +292,29 @@
 			return $ok;
 		}
 
-		private function _add_sql($data)
+		private function _add_sql( $data )
 		{
 			$error = false;
 			$table = $this->table;
 			$fields = $this->fields;
 
-			if(!$table)
+			if (!$table)
 			{
 				throw new Exception("Tabell er ikke angitt");
 			}
 
-			if(!$fields)
+			if (!$fields)
 			{
 				throw new Exception("Felter er ikke definert");
 			}
 
 			$primary_key = array();
 			$remove_keys = array();
-			foreach($this->metadata as $key => $info)
+			foreach ($this->metadata as $key => $info)
 			{
-				if(isset($info->primary_key) && $info->primary_key)
+				if (isset($info->primary_key) && $info->primary_key)
 				{
-					if(!$_value = $data[array_search($key, $fields)])
+					if (!$_value = $data[array_search($key, $fields)])
 					{
 						throw new Exception("Fant ikke verdi for feltet 'primary key' {$key}");
 					}
@@ -330,9 +330,9 @@
 			$filtermethod = implode(' AND ', $primary_key);
 
 			$value_set = array();
-			foreach($fields as $key => $field)
+			foreach ($fields as $key => $field)
 			{
-				if(isset($this->metadata[$field]))
+				if (isset($this->metadata[$field]))
 				{
 					$value_set[$field] = $this->validate_value($data[$key], $field);
 				}
@@ -340,9 +340,9 @@
 
 			$this->db->query("SELECT count(*) as cnt FROM {$table} WHERE {$filtermethod}", __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
-				foreach($remove_keys as $remove_key)
+				foreach ($remove_keys as $remove_key)
 				{
 					unset($value_set[$remove_key]);
 				}
@@ -363,7 +363,7 @@
 				$action = 'inserted';
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array($sql);
 			}
@@ -372,7 +372,7 @@
 				$ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			if($ok)
+			if ($ok)
 			{
 				$this->messages[] = "Successfully {$action} record: " . implode(', ', $primary_key);
 			}
@@ -383,16 +383,16 @@
 			return $ok;
 		}
 
-		protected function validate_value($value, $field)
+		protected function validate_value( $value, $field )
 		{
 			$value = trim($value);
 
-			if($value == '#N/A')
+			if ($value == '#N/A')
 			{
 				return '';
 			}
 
-			if(is_object($this->metadata[$field]))
+			if (is_object($this->metadata[$field]))
 			{
 				$datatype = $this->metadata[$field]->type;
 			}
@@ -400,7 +400,7 @@
 			{
 				$datatype = $this->metadata[$field]['type'];
 			}
-			switch($datatype)
+			switch ($datatype)
 			{
 				case 'char':
 				case 'varchar':

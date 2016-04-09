@@ -1,13 +1,13 @@
 <?php
 	require_once dirname(__FILE__) . '/entryPoint.php';
 
-	function setBookingAppVersion(PhpgwContext $c)
+	function setBookingAppVersion( PhpgwContext $c )
 	{
 		$options = array('version' => null);
 
 		$options['version'] = (isset($_ENV['VERSION']) && strlen($_ENV['VERSION'] > 0)) ? $_ENV['VERSION'] : null;
 
-		if(!$options['version'])
+		if (!$options['version'])
 		{
 			throw new InvalidArgumentException('Missing VERSION');
 		}

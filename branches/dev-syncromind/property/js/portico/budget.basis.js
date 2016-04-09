@@ -16,11 +16,12 @@ var addFooterDatatable = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pageTotal = data.length ?
-					data.reduce(function (a, b) {
+				data.reduce(function (a, b)
+				{
 						return intVal(a) + intVal(b);
 					}) : 0;
 
-			var amount = $.number(pageTotal, 0, ',', ' ');
+			var amount = $.number(pageTotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}

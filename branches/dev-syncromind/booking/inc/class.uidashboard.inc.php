@@ -32,7 +32,7 @@
 
 		public function toggle_show_all_dashboard_applications()
 		{
-			if($this->show_all_dashboard_applications())
+			if ($this->show_all_dashboard_applications())
 			{
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY]);
 			}
@@ -51,7 +51,7 @@
 
 		public function toggle_show_all_dashboard_messages()
 		{
-			if($this->show_all_dashboard_messages())
+			if ($this->show_all_dashboard_messages())
 			{
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
 			}
@@ -70,7 +70,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 
 				return $this->query();
@@ -81,6 +81,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
+				'datatable_name' => lang('dashboard'),
 				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
@@ -178,12 +179,9 @@
 
 		public function query()
 		{
-//            Analizar luego esta variable -> $this->current_account_id()
-			$this->db		 = $GLOBALS['phpgw']->db;
 			$applications	 = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(
-				null, 7) : array(1, 7));
-//            echo '<pre>'; print_r($applications); echo '</pre>';exit('saul');
-			foreach($applications['results'] as &$application)
+					null, $this->current_account_id()) : array(1, $this->current_account_id()));
+			foreach ($applications['results'] as &$application)
 			{
 				$application['status']				 = lang($application['status']);
 				$application['type']				 = lang($application['type']);
@@ -193,26 +191,23 @@
 				$application['resources']			 = $this->resource_bo->so->read(array('filters' => array(
 						'id' => $application['resources'])));
 				$application['resources']			 = $application['resources']['results'];
-				if($application['resources'])
+				if ($application['resources'])
 				{
 					$names = array();
-					foreach($application['resources'] as $res)
+					foreach ($application['resources'] as $res)
 					{
 						$names[] = $res['name'];
 					}
 					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
 				}
-
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $application['case_officer_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($application['case_officer_name']);
+				if($account_id)
 				{
-					$application['case_officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$application['case_officer_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 
 			return $this->jquery_results($applications);
 		}
-
 	}

@@ -5,14 +5,16 @@
  */
 var sUrl_alarm = phpGWLink('index.php', {'menuaction': 'property.uialarm.edit_alarm'});
 
-onActionsClick_Toolbar = function (type, ids) {
+onActionsClick_Toolbar = function (type, ids)
+{
 
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
 		url: "" + sUrl_alarm + "&phpgw_return_as=json",
 		data: {ids: ids, type: type},
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 

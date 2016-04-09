@@ -51,23 +51,23 @@
 		var $alternate_handlers = array();
 		var $account;
 
-		function __construct($appname, $acl_location = '')
+		function __construct( $appname, $acl_location = '' )
 		{
-			if(!$this->account)
+			if (!$this->account)
 			{
 				$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
-			if(!$appname)
+			if (!$appname)
 			{
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
-			if(substr($appname, 0, 6) == 'entity')
+			if (substr($appname, 0, 6) == 'entity')
 			{
 				$selector = 'entity';
 			}
-			else if(substr($appname, 0, 5) == 'catch')
+			else if (substr($appname, 0, 5) == 'catch')
 			{
 				$selector = 'catch';
 			}
@@ -76,11 +76,11 @@
 				$selector = $appname;
 			}
 
-			if($acl_location)
+			if ($acl_location)
 			{
 				$selector = $acl_location;
 			}
-			switch($selector)
+			switch ($selector)
 			{
 				case 'request':
 					$this->table = 'fm_request_history';
@@ -128,15 +128,15 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 		}
 
-		function delete($record_id, $attrib_id = 0)
+		function delete( $record_id, $attrib_id = 0 )
 		{
 			$condition = '';
-			if($attrib_id)
+			if ($attrib_id)
 			{
 				$condition .= " AND history_attrib_id = $attrib_id";
 			}
 
-			if($this->location_id_field)
+			if ($this->location_id_field)
 			{
 				$condition .= " AND {$this->location_id_field} = {$this->location_id}";
 			}
@@ -145,14 +145,14 @@
 			. "history_appname='{$this->appname}'{$condition}", __LINE__, __FILE__);
 		}
 
-		function delete_single_record($history_id)
+		function delete_single_record( $history_id )
 		{
 			$this->db->query("DELETE FROM {$this->table} WHERE history_id='{$history_id}'", __LINE__, __FILE__);
 		}
 
-		function add($status, $record_id, $new_value, $old_value = '', $attrib_id = 0, $date = 0, $detail_id = 0)
+		function add( $status, $record_id, $new_value, $old_value = '', $attrib_id = 0, $date = 0, $detail_id = 0 )
 		{
-			if($date)
+			if ($date)
 			{
 				$timestamp = date($this->db->date_format(), $date);
 			}
@@ -171,16 +171,16 @@
 				'history_timestamp' => "'" . $timestamp . "'",
 			);
 
-			if($this->attrib_id_field && $attrib_id)
+			if ($this->attrib_id_field && $attrib_id)
 			{
 				$value_set[$this->attrib_id_field] = (int)$attrib_id;
 			}
-			if($this->detail_id_field && $detail_id)
+			if ($this->detail_id_field && $detail_id)
 			{
 				$value_set[$this->detail_id_field] = (int)$detail_id;
 			}
 
-			if($this->app_id)
+			if ($this->app_id)
 			{
 				$value_set[$this->app_id_field] = (int)$this->app_id;
 			}
@@ -189,7 +189,7 @@
 				$value_set['history_appname'] = "'{$this->appname}'";
 			}
 
-			if($this->location_id_field)
+			if ($this->location_id_field)
 			{
 				$value_set[$this->location_id_field] = (int)$this->location_id;
 			}
@@ -201,7 +201,7 @@
 		}
 
 		// array $filter_out
-		function return_array($filter_out, $only_show, $_orderby = '', $sort = '', $record_id, $attrib_id = 0, $detail_id = 0)
+		function return_array( $filter_out, $only_show, $_orderby = '', $sort = '', $record_id, $attrib_id = 0, $detail_id = 0 )
 		{
 			$record_id = (int)$record_id;
 			$attrib_id = (int)$attrib_id;
@@ -209,7 +209,7 @@
 
 			$location_filter = '';
 
-			if($this->app_id)
+			if ($this->app_id)
 			{
 				$location_filter .= " WHERE {$this->app_id_field} = " . (int)$this->app_id;
 			}
@@ -218,12 +218,12 @@
 				$location_filter .= " WHERE history_appname	= '{$this->appname}'";
 			}
 
-			if($this->location_id_field)
+			if ($this->location_id_field)
 			{
 				$location_filter .= " AND {$this->location_id_field} = " . (int)$this->location_id;
 			}
 
-			if(!$sort || !$_orderby)
+			if (!$sort || !$_orderby)
 			{
 				$orderby = 'ORDER BY history_timestamp,history_id';
 			}
@@ -232,34 +232,34 @@
 				$orderby = "ORDER BY $_orderby $sort";
 			}
 
-			while(is_array($filter_out) && list(, $_filter) = each($filter_out))
+			while (is_array($filter_out) && list(, $_filter) = each($filter_out))
 			{
 				$filtered[] = "history_status != '{$_filter}'";
 			}
 
 			$filter = '';
-			if(isset($filtered))
+			if (isset($filtered))
 			{
 				$filter = ' AND ' . implode(' AND ', $filtered);
 			}
 
-			if($attrib_id)
+			if ($attrib_id)
 			{
 				$filter .= " AND history_attrib_id = $attrib_id";
 			}
 
-			if($detail_id)
+			if ($detail_id)
 			{
 				$filter .= " AND history_detail_id = $detail_id";
 			}
 
-			while(is_array($only_show) && list(, $_filter) = each($only_show))
+			while (is_array($only_show) && list(, $_filter) = each($only_show))
 			{
 				$_only_show[] = "history_status='{$_filter}'";
 			}
 
 			$only_show_filter = '';
-			if(isset($_only_show))
+			if (isset($_only_show))
 			{
 				$only_show_filter = ' AND (' . implode(' OR ', $_only_show) . ')';
 			}
@@ -268,7 +268,7 @@
 			. " AND history_record_id={$record_id} {$filter} {$only_show_filter} {$orderby}", __LINE__, __FILE__);
 
 			$return_values = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$return_values[] = array
 					(

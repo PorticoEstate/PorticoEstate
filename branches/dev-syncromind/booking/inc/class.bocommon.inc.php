@@ -11,12 +11,12 @@
 		/**
 		 * Forwards method invocations to so
 		 */
-		public function __call($method, $arguments)
+		public function __call( $method, $arguments )
 		{
 			return call_user_func_array(array($this->so, $method), $arguments);
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			return $this->so->read_single($id);
 		}
@@ -31,9 +31,9 @@
 			unset($_SESSION['showall']);
 		}
 
-		public function link($data)
+		public function link( $data )
 		{
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
 			else
 				return $GLOBALS['phpgw']->link('/index.php', $data);
@@ -65,7 +65,7 @@
 			/*
 			 * Sigurd: Temporary est for new datatables
 			 */
-			if($columns = phpgw::get_var('columns'))
+			if ($columns = phpgw::get_var('columns'))
 			{
 				return $this->build_default_read_params_new();
 			}
@@ -77,17 +77,17 @@
 			$dir	 = phpgw::get_var('dir');
 
 			$filters = array();
-			foreach($this->so->get_field_defs() as $field => $params)
+			foreach ($this->so->get_field_defs() as $field => $params)
 			{
-				if(phpgw::get_var("filter_$field"))
+				if (phpgw::get_var("filter_$field"))
 				{
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
 
-			if(!isset($_SESSION['showall']))
+			if (!isset($_SESSION['showall']))
 			{
-				if(!isset($filters['application_id']))
+				if (!isset($filters['application_id']))
 				{
 					$filters['active'] = "1";
 				}
@@ -120,17 +120,17 @@
 				'allrows'	 => phpgw::get_var('length', 'int') == -1,
 			);
 
-			foreach($this->so->get_field_defs() as $field => $_params)
+			foreach ($this->so->get_field_defs() as $field => $_params)
 			{
-				if(phpgw::get_var("filter_$field"))
+				if (phpgw::get_var("filter_$field"))
 				{
 					$params['filters'][$field] = phpgw::get_var("filter_$field");
 				}
 			}
 
-			if(!isset($_SESSION['showall']))
+			if (!isset($_SESSION['showall']))
 			{
-				if(!isset($params['filters']['application_id']))
+				if (!isset($params['filters']['application_id']))
 				{
 					$params['filters']['active'] = "1";
 				}
@@ -139,22 +139,22 @@
 			return $params;
 		}
 
-		function add($entity)
+		function add( $entity )
 		{
 			return $this->so->add($entity);
 		}
 
-		function smart_read($entity)
+		function smart_read( $entity )
 		{
 			return $this->so->read($entity);
 		}
 
-		public function create_error_stack($errors = array())
+		public function create_error_stack( $errors = array() )
 		{
 			return $this->so->create_error_stack($errors);
 		}
 
-		function validate($entity)
+		function validate( $entity )
 		{
 			$error_stack = $this->create_error_stack($this->so->validate($entity));
 			$this->doValidate($entity, $error_stack);
@@ -164,22 +164,22 @@
 		/**
 		 * Implement in subclasses to perform custom validation.
 		 */
-		protected function doValidate($entity, booking_errorstack $error_stack)
+		protected function doValidate( $entity, booking_errorstack $error_stack )
 		{
 
 		}
 
-		function update($entity)
+		function update( $entity )
 		{
 			return $this->so->update($entity);
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			return $this->so->delete($id);
 		}
 
-		function set_active($id, $active)
+		function set_active( $id, $active )
 		{
 			return $this->so->set_active($id, $active);
 		}
@@ -188,7 +188,7 @@
 		 * Checks if the current user has any role
 		 * Use booking_sopermission::ROLE_MANAGER or booking_sopermission::CASE_OFFICER for the role parameter
 		 */
-		function has_role($role)
+		function has_role( $role )
 		{
 			$permission_root_bo					 = CreateObject('booking.bopermission_root');
 			$filters['filters']['role']			 = $role;
@@ -196,7 +196,7 @@
 
 			$booking_roles = $permission_root_bo->so->read($filters);
 
-			if(intval($booking_roles['total_records']) == 1)
+			if (intval($booking_roles['total_records']) == 1)
 			{
 				return true;
 			}

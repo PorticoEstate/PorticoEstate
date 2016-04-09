@@ -11,6 +11,7 @@
 <!-- New template-->
 <xsl:template match="columns">
 	<div align="left">
+		<form method="post" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -21,18 +22,17 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
-				<tr>
-					<td valign="top">
-						<b>
+			</table>
+
+			<fieldset>
+				<legend>
 							<xsl:value-of select="lang_columns"/>
-						</b>
-					</td>
-				</tr>
+				</legend>
+				<div class="pure-g">
 				<xsl:apply-templates select="column_list"/>
+				</div>
+			</fieldset>
+
 				<tr height="50">
 					<td>
 						<xsl:variable name="lang_save">
@@ -46,7 +46,6 @@
 					</td>
 				</tr>
 			</form>
-		</table>
 	</div>
 </xsl:template>
 
@@ -55,8 +54,12 @@
 	<xsl:variable name="id">
 		<xsl:value-of select="id"/>
 	</xsl:variable>
-	<tr>
-		<td>
+	<div class="pure-u-1 pure-u-sm-1-3">
+		<div class="pure-u-1">
+			<div class="pure-control-group">
+				<label>
+					<xsl:value-of select="name"/>
+				</label>
 			<xsl:choose>
 				<xsl:when test="selected">
 					<input id="column{$id}" name="values[columns][]" value="{$id}" checked="checked" type="checkbox"/>
@@ -65,7 +68,7 @@
 					<input id="column{$id}" name="values[columns][]" value="{$id}" type="checkbox"/>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:value-of select="name"/>
-		</td>
-	</tr>
+			</div>
+		</div>
+	</div>
 </xsl:template>

@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorError represents a validation error.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorError extends Exception implements Serializable
-{
+	class sfValidatorError extends Exception implements Serializable
+	{
+
   protected
     $validator = null,
     $arguments = array();
@@ -29,7 +29,7 @@ class sfValidatorError extends Exception implements Serializable
    * @param string          $code       The error code
    * @param array           $arguments  An array of named arguments needed to render the error message
    */
-  public function __construct(sfValidatorBase $validator, $code, $arguments = array())
+		public function __construct( sfValidatorBase $validator, $code, $arguments = array() )
   {
     $this->validator = $validator;
     $this->arguments = $arguments;
@@ -81,7 +81,7 @@ class sfValidatorError extends Exception implements Serializable
    *
    * @see getMessageFormat()
    */
-  public function getArguments($raw = false)
+		public function getArguments( $raw = false )
   {
     if ($raw)
     {
@@ -149,8 +149,8 @@ class sfValidatorError extends Exception implements Serializable
    * @param string $serialized  A serialized sfValidatorError instance
    *
    */
-  public function unserialize($serialized)
+		public function unserialize( $serialized )
   {
     list($this->validator, $this->arguments, $this->code, $this->message) = unserialize($serialized);
   }
-}
+	}

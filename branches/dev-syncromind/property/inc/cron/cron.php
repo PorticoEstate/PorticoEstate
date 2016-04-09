@@ -36,7 +36,7 @@
 
 	$_GET['domain'] = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : 'default';
 
-	if(!$function = $_SERVER['argv'][2])
+	if (!$function = $_SERVER['argv'][2])
 	{
 		echo "Nothing to execute\n";
 		return;
@@ -56,7 +56,7 @@
 	$GLOBALS['phpgw_info']['server']['sessions_type'] = 'db';
 
 	$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
-	if(!$_domain_info)
+	if (!$_domain_info)
 	{
 		echo "not a valid domain\n";
 		die();
@@ -70,7 +70,7 @@
 	include(PHPGW_API_INC . '/functions.inc.php');
 
 	$data = array('function' => $function, 'enabled' => 1);
-	while($argc > 3)
+	while ($argc > 3)
 	{
 		list($key, $value) = explode('=', $argv[3]);
 		$data[$key] = $value;
@@ -79,7 +79,7 @@
 	}
 
 	$destroy_session = false;
-	if(!isset($GLOBALS['phpgw']->session->sessionid) || !$GLOBALS['phpgw']->session->sessionid)
+	if (!isset($GLOBALS['phpgw']->session->sessionid) || !$GLOBALS['phpgw']->session->sessionid)
 	{
 		$GLOBALS['phpgw']->session->sessionid = md5($GLOBALS['phpgw']->common->randomstring(10));
 		$destroy_session = true;
@@ -93,7 +93,7 @@
 	$num = ExecMethod('property.custom_functions.index', $data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";
 
-	if($destroy_session)
+	if ($destroy_session)
 	{
 		$GLOBALS['phpgw']->session->destroy($GLOBALS['phpgw']->session->sessionid, true);
 	}

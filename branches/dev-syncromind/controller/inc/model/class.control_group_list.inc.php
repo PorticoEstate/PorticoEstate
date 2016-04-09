@@ -44,12 +44,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -59,7 +59,7 @@
 			return $this->id;
 		}
 
-		public function set_control_id($control_id)
+		public function set_control_id( $control_id )
 		{
 			$this->control_id = $control_id;
 		}
@@ -69,7 +69,7 @@
 			return $this->control_id;
 		}
 
-		public function set_control_group_id($control_group_id)
+		public function set_control_group_id( $control_group_id )
 		{
 			$this->control_group_id = $control_group_id;
 		}
@@ -79,7 +79,7 @@
 			return $this->control_group_id;
 		}
 
-		public function set_order_nr($order_nr)
+		public function set_order_nr( $order_nr )
 		{
 			$this->order_nr = $order_nr;
 		}
@@ -96,7 +96,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_group_list');
 			}

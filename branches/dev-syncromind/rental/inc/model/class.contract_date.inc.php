@@ -16,9 +16,9 @@
 		 * @param $start_date int with start of contract.
 		 * @param $end_date int with end of contract.
 		 */
-		public function __construct(int $start_date = null, int $end_date = null)
+		public function __construct( int $start_date = null, int $end_date = null )
 		{
-			if($start_date != '')
+			if ($start_date != '')
 			{
 				$this->start_date = (int)$start_date;
 			}
@@ -26,7 +26,7 @@
 			{
 				$this->start_date = null;
 			}
-			if($end_date != '')
+			if ($end_date != '')
 			{
 				$this->end_date = (int)$end_date;
 			}

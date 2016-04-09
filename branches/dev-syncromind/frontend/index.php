@@ -7,4 +7,4 @@
 
     include_once('../header.inc.php');
 
-	$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'frontend.uifrontend.index'));
+	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uifrontend.index'));

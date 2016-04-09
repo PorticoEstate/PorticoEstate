@@ -28,7 +28,7 @@
 		{
 			$settings = $this->bo->read();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$settings['booking_async_task_update_reservation_state_enabled'] = phpgw::get_var('booking_async_task_update_reservation_state_enabled', 'bool', 'POST');
 				$settings['booking_async_task_send_reminder_enabled']			 = phpgw::get_var('booking_async_task_send_reminder_enabled', 'bool', 'POST');

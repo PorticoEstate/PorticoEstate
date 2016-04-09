@@ -53,7 +53,7 @@
 	$GLOBALS['phpgw_info']['message']['errors'] = array();
 	$system_name = $GLOBALS['phpgw_info']['server']['system_name'];
 
-	if(!isset($_GET['domain']) || !$_GET['domain'])
+	if (!isset($_GET['domain']) || !$_GET['domain'])
 	{
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::domain not given as input";
 	}
@@ -61,7 +61,7 @@
 	{
 		$_REQUEST['domain'] = $_GET['domain'];
 		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
-		if(!$_domain_info)
+		if (!$_domain_info)
 		{
 			$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::not a valid domain";
 		}
@@ -79,7 +79,7 @@
 	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
 	$fileid = phpgw::get_var('fileid', 'string');
 
-	if(!$fileid && !$bygningsnr)
+	if (!$fileid && !$bygningsnr)
 	{
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
 	}
@@ -100,17 +100,17 @@
 
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
-	if(!$GLOBALS['sessionid'])
+	if (!$GLOBALS['sessionid'])
 	{
 		$lang_denied = lang('Anonymous access not correctly configured');
-		if($GLOBALS['phpgw']->session->reason)
+		if ($GLOBALS['phpgw']->session->reason)
 		{
 			$lang_denied = $GLOBALS['phpgw']->session->reason;
 		}
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::{$lang_denied}";
 	}
 
-	if($GLOBALS['phpgw_info']['message']['errors'])
+	if ($GLOBALS['phpgw_info']['message']['errors'])
 	{
 		_debug_array($GLOBALS['phpgw_info']['message']['errors']);
 		$GLOBALS['phpgw']->common->phpgw_exit();
@@ -139,7 +139,7 @@
 	$wsdlObject = new Bra5WsdlClass($options);
 
 	$bra5ServiceLogin = new Bra5ServiceLogin();
-	if($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
+	if ($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
 	{
 		$secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
 	}
@@ -148,11 +148,11 @@
 		print_r($bra5ServiceLogin->getLastError());
 	}
 
-	if($fileid)
+	if ($fileid)
 	{
 		$bra5ServiceGet = new Bra5ServiceGet();
 
-		if($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid)))
+		if ($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid)))
 		{
 			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
 			$file = base64_decode($file_result->getFileAsByteArrayResult);
@@ -184,19 +184,36 @@
 	  print_r($bra5ServiceSearch->getLastError());
 	  }
 	 */
-	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where = "Byggnr = {$bygningsnr}", $_maxhits = -1)))
+	if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where = "Byggnr = {$bygningsnr}", $_maxhits = -1)))
 	{
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
 	}
+	$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+	$css .= file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
 
-	$html = <<<HTML
-	<table>
+	$header = <<<HTML
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
+		<body>
+			<div class="pure-form pure-form-aligned">
+HTML;
+
+	$footer = <<<HTML
+			</div>
+	</body>
+</html>
 HTML;
 	$bra5ServiceLogout = new Bra5ServiceLogout();
 	$bra5ServiceLogout->Logout(new Bra5StructLogout($secKey));
 
-	if(!$_result)
+	if (!$_result)
 	{
 		echo "<H2> Ingen treff </H2>";
 		$GLOBALS['phpgw']->common->phpgw_exit();
@@ -216,10 +233,14 @@ HTML;
 		'BrukerID',
 		'Team'
 	);
+	$content = <<<HTML
+	<table class="pure-table pure-table-bordered">
+		<thead>
+HTML;
 
-	$html .='<th>';
-	$html .='Last ned';
-	$html . '</th>';
+	$content .='<th>';
+	$content .='Last ned';
+	$content . '</th>';
 
 	$location_id = phpgw::get_var('location_id', 'int');
 	$section = phpgw::get_var('section', 'string');
@@ -230,54 +251,55 @@ HTML;
 		'section' => $section
 	)
 	);
-	foreach($_result[0]->getAttributes()->Attribute as $attribute)
+	foreach ($_result[0]->getAttributes()->Attribute as $attribute)
 	{
-		if(in_array($attribute->Name, $skip_field))
+		if (in_array($attribute->Name, $skip_field))
 		{
 			continue;
 		}
-		$html .='<th>';
-		$html .=$attribute->Name;
-		$html . '</th>';
+		$content .='<th>';
+		$content .=$attribute->Name;
+		$content . '</th>';
 	}
 
-	foreach($_result as $document)
+	$content .='</thead>';
+	foreach ($_result as $document)
 	{
-		$attributes = $document->getAttributes()->Attribute;
+//		$attributes = $document->getAttributes()->Attribute;
 	}
 
 	$case_array = array();
-	foreach($_result as $document)
+	foreach ($_result as $document)
 	{
 		$_html = '<tr>';
 		$_html .='<td>';
 		$_html .="<a href ='{$base_url}&fileid={$document->ID}' title = '{$document->Name}' target = '_blank'>{$document->ID}</a>";
 		$_html .='</td>';
 
-		foreach($document->getAttributes()->Attribute as $attribute)
+		foreach ($document->getAttributes()->Attribute as $attribute)
 		{
-			if(in_array($attribute->Name, $skip_field))
+			if (in_array($attribute->Name, $skip_field))
 			{
 				continue;
 			}
 
-			if($attribute->Name == 'Saksdato')
+			if ($attribute->Name == 'Saksdato')
 			{
 				$_key = strtotime($attribute->Value->anyType);
 			}
 
 			$_html .='<td>';
 
-			if(is_array($attribute->Value->anyType))
+			if (is_array($attribute->Value->anyType))
 			{
 				$_html .= '<table>';
 
-				foreach($attribute->Value->anyType as $value)
+				foreach ($attribute->Value->anyType as $value)
 				{
 					$_html .= '<tr>';
 					$_html .= '<td>';
 
-					if(isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
+					if (isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
 					{
 						$_html .= $value->enc_value->GNr;
 						$_html .= '/' . $value->enc_value->BNr;
@@ -306,15 +328,15 @@ HTML;
 
 	ksort($case_array);
 //_debug_array($case_array);
-	foreach($case_array as $case)
+	foreach ($case_array as $case)
 	{
-		$html .= implode('', $case);
+		$content .= implode('', $case);
 	}
 
-	$html .=<<<HTML
+	$content .=<<<HTML
 	</table>
 HTML;
 
-	echo $html;
+	echo $header . $content . $footer;
 
 	$GLOBALS['phpgw']->common->phpgw_exit();

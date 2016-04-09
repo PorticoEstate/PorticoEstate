@@ -36,9 +36,9 @@
 		 *
 		 * @return void
 		 */
-		public function add_contract_from_composite(&$data)
+		public function add_contract_from_composite( &$data )
 		{
-			if(!isset($data['location_code']) || !$data['location_code'])
+			if (!isset($data['location_code']) || !$data['location_code'])
 			{
 				phpgwapi_cache::message_set("location_code not set", 'error');
 				return false;
@@ -54,16 +54,16 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach($custom_functions as $entry)
+			foreach ($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if(preg_match('/\.\./', $entry['file_name']))
+				if (preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if($entry['active'] && is_file($file) && !$entry['client_side'])
+				if ($entry['active'] && is_file($file) && !$entry['client_side'])
 				{
 					require $file;
 				}

@@ -16,7 +16,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('activitycalendar.soarena');
 			}
@@ -35,34 +35,34 @@
 		 * @param boolean $return_count
 		 * @return string SQL
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			//Add columns to this array to include them in the query
 			$columns = array();
 
-			if($sort_field != null)
+			if ($sort_field != null)
 			{
 				$dir = $ascending ? 'ASC' : 'DESC';
-				if($sort_field == 'arena_id')
+				if ($sort_field == 'arena_id')
 				{
 					$sort_field = 'id';
 				}
 				$order = "ORDER BY {$this->marshal($sort_field, 'field')} $dir";
 			}
-			else if(!$return_count)
+			else if (!$return_count)
 			{
 				$dir	 = $ascending ? 'ASC' : 'DESC';
 				$order	 = "ORDER BY arena.arena_name $dir";
 			}
 
-			if($search_for)
+			if ($search_for)
 			{
 				$query			 = $this->marshal($search_for, 'string');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "all":
 					default:
@@ -72,7 +72,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -80,39 +80,39 @@
 
 			$filter_clauses = array();
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "arena.id = {$id}";
 			}
 
 			//filter on active/non-active
-			if(isset($filters['active']))
+			if (isset($filters['active']))
 			{
-				if($filters['active'] == 'active')
+				if ($filters['active'] == 'active')
 				{
 					$filter_clauses[] = "arena.active = TRUE";
 				}
-				else if($filters['active'] == 'inactive')
+				else if ($filters['active'] == 'inactive')
 				{
 					$filter_clauses[] = "NOT arena.active";
 				}
 			}
 
 			//filter on internal/not internal arena
-			if(isset($filters['arena_type']))
+			if (isset($filters['arena_type']))
 			{
-				if($filters['arena_type'] == 'internal')
+				if ($filters['arena_type'] == 'internal')
 				{
 					$filter_clauses[] = "NOT arena.internal_arena_id IS NULL";
 				}
-				else if($filters['arena_type'] == 'not_internal')
+				else if ($filters['arena_type'] == 'not_internal')
 				{
 					$filter_clauses[] = "arena.internal_arena_id IS NULL";
 				}
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -122,7 +122,7 @@
 			//var_dump($filter_clauses);
 			//var_dump($condition);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(arena.id)) AS count';
 			}
@@ -157,10 +157,10 @@
 		 *  @param activitycalendar_arena $arena
 		 *  @return activitycalendar_arena $arena
 		 */
-		protected function populate(int $arena_id, &$arena)
+		protected function populate( int $arena_id, &$arena )
 		{
 
-			if($arena == null)
+			if ($arena == null)
 			{
 				$arena = new activitycalendar_arena((int)$arena_id);
 
@@ -181,17 +181,17 @@
 		 * @param int $arena_id
 		 * @return string arena name
 		 */
-		function get_arena_name($arena_id)
+		function get_arena_name( $arena_id )
 		{
 			$result = "Ingen";
-			if(isset($arena_id) && $arena_id != '')
+			$arena_id = (int)$arena_id;
+			if ($arena_id)
 			{
 				$q1 = "SELECT arena_name FROM activity_arena WHERE id={$arena_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('arena_name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('arena_name', true);
 			}
 
 			return $result;
@@ -208,10 +208,10 @@
 			$q_buildings = "SELECT id, name FROM bb_building WHERE active=1 ORDER BY name ASC";
 			//var_dump($q_buildings);
 			$this->db->query($q_buildings, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$id				 = $this->db->f('id');
-				$buildings[$id]	 = $this->db->f('name');
+				$buildings[$id] = $this->db->f('name', true);
 			}
 			return $buildings;
 		}
@@ -222,14 +222,14 @@
 		 * @param int $building_id
 		 * @return string building name
 		 */
-		function get_building_name($building_id)
-		{
-			if(isset($building_id))
+		function get_building_name( $building_id )
 			{
 				$building_id = (int)$building_id;
+			if ($building_id)
+			{
 				$q1			 = "SELECT name FROM bb_building WHERE id={$building_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$result = $this->db->f('name');
 				}
@@ -243,13 +243,13 @@
 		 * @param activitycalendar_arena $arena the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$arena)
+		function add( &$arena )
 		{
 			// Insert a new arena
 			$q		 = "INSERT INTO activity_arena (arena_name) VALUES ('test')";
 			$result	 = $this->db->query($q);
 
-			if(isset($result))
+			if ($result)
 			{
 				// Set the new party ID
 				$arena->set_id($this->db->get_last_insert_id('activity_arena', 'id'));
@@ -268,9 +268,9 @@
 		 * @param $arena the arena to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($arena)
+		function update( $arena )
 		{
-			$id = intval($arena->get_id());
+			$id = (int)$arena->get_id();
 
 			$values = array(
 				'arena_name = ' . $this->marshal($arena->get_arena_name(), 'string'),
@@ -282,14 +282,14 @@
 				'active = ' . $this->marshal(($arena->is_active() ? 'true' : 'false'), 'bool'),
 			);
 
-			$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
+			$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id={$id}", __LINE__, __FILE__);
 
-			return isset($result);
+			return $result;
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -305,25 +305,19 @@
 			return $ret;
 		}
 
-		public function get_address($search)
+		public function get_address( $search )
 		{
 			$result_arr	 = array();
 			$curr_index	 = 0;
-			if($search)
+			if ($search)
 			{
 				$sql = "select * from fm_streetaddress where UPPER(descr) like UPPER('{$search}%')";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					//$result_arr = $this->db->f('name');
-					/* if($curr_index == 0)
-					  {
-					  $result_arr[] = "<option value='0'>Velg gateadresse</option>";
-					  }
-					  $result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-					  $curr_index++; */
-
-					$result_arr[]['name'] = $this->db->f('descr');
+					$result_arr[] = array(
+						'name' => $this->db->f('descr', true)
+					);
 				}
 			}
 			//$result = implode(' ', $result_arr);
@@ -331,18 +325,16 @@
 			return array('ResultSet' => array('Result' => $result_arr));
 		}
 
-		public function get_arena_id_by_name($arena_name)
+		public function get_arena_id_by_name( $arena_name )
 		{
 			$result = 0;
-			if(isset($arena_name) && $arena_name != '')
+			if ($arena_name)
 			{
 				$q1 = "SELECT id FROM activity_arena WHERE UPPER(arena_name) = UPPER('{$arena_name}')";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
 					$result = $this->db->f('id');
 				}
-			}
 			return $result;
 		}
 	}

@@ -156,7 +156,7 @@
 			$idchecks = !empty($_POST['mckec']) ? $_POST['mckec'] : '';
 
 			$receipt = array();
-			if($idevent && $idchecks)
+			if ($idevent && $idchecks)
 			{
 				$values = array
 					(
@@ -171,7 +171,7 @@
 		function index()
 		{
 			$this->acl_location = '.scheduled_events';
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -190,14 +190,14 @@
 			$end_date = urldecode(phpgw::get_var('end_date'));
 
 			$receipt = array();
-			if($values && $this->acl_edit)
+			if ($values && $this->acl_edit)
 			{
 				$receipt = $this->bo->update_receipt($values);
 			}
 
 			$this->save_sessiondata();
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -312,7 +312,7 @@
 			$dry_run = true;
 
 			$filters = $this->_get_Filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -344,7 +344,7 @@
 				)
 			);
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -403,7 +403,7 @@
 			);
 
 			$values = $this->bo->read($params);
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -418,12 +418,12 @@
 		{
 			$lookup = phpgw::get_var('lookup');
 
-			if($lookup)
+			if ($lookup)
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -438,7 +438,7 @@
 
 			$receipt = array();
 
-			if(is_array($values))
+			if (is_array($values))
 			{
 				$values['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $location);
 				$values['attrib_id'] = $attrib_id;
@@ -446,25 +446,25 @@
 				$attrib = $this->custom->get('property', $location, $attrib_id);
 				$field_name = $attrib ? $attrib['column_name'] : $attrib_id;
 
-				if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!isset($values['descr']) || !$values['descr'])
+					if (!isset($values['descr']) || !$values['descr'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please enter a description'));
 					}
-					if(!isset($values['responsible_id']) || !$values['responsible_id'])
+					if (!isset($values['responsible_id']) || !$values['responsible_id'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a responsible'));
 					}
-					if(!isset($values['action']) || !$values['action'])
+					if (!isset($values['action']) || !$values['action'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please select an action'));
 					}
-					if(!isset($values['start_date']) || !$values['start_date'])
+					if (!isset($values['start_date']) || !$values['start_date'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a start date'));
 					}
-					if(!isset($values['repeat_type']) || !$values['repeat_type'])
+					if (!isset($values['repeat_type']) || !$values['repeat_type'])
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a repeat type'));
 					}
@@ -474,7 +474,7 @@
 					  $values['repeat_interval'] = 0;
 					  }
 					 */
-					if($id)
+					if ($id)
 					{
 						$values['id'] = $id;
 					}
@@ -483,7 +483,7 @@
 						$id = $values['id'];
 					}
 
-					if(!$receipt['error'])
+					if (!$receipt['error'])
 					{
 						$receipt = $this->bo->save($values, $action);
 
@@ -491,7 +491,7 @@
 						$js .= "parent.document.getElementsByName('" . $field_name . "_descr')[0].value = '{$values['descr']}';\n";
 						//$js .= "parent.document.form.submit();\n";
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$js .= "parent.TINY.box.hide();";
 						}
@@ -504,12 +504,12 @@
 						$id = '';
 					}
 				}
-				else if((isset($values['delete']) && $values['delete']))
+				else if ((isset($values['delete']) && $values['delete']))
 				{
 					$attrib = $this->custom->get('property', $location, $attrib_id);
 					$js = "parent.document.getElementsByName('" . $field_name . "')[0].value = '';\n";
 					$js .= "parent.document.getElementsByName('" . $field_name . "_descr')[0].value = '';\n";
-					if($this->delete($id))
+					if ($this->delete($id))
 					{
 						$GLOBALS['phpgw']->js->add_event('load', $js);
 						unset($values);
@@ -520,7 +520,7 @@
 				unset($attrib);
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit event');
@@ -557,7 +557,7 @@
 
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$tabs['repeat'] = array('label' => lang('repeat'), 'link' => '#repeat');
-			if($id)
+			if ($id)
 			{
 				$tabs['plan'] = array('label' => lang('plan'), 'link' => '#plan');
 			}
@@ -624,7 +624,7 @@
 
 			$schedule = array();
 
-			if($id)
+			if ($id)
 			{
 				$link_shedule2 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uievent.schedule2',
 					'id' => $id, 'phpgw_return_as' => 'json'));
@@ -646,7 +646,7 @@
 				);
 
 				$tabletools = array();
-				foreach($buttons as $entry)
+				foreach ($buttons as $entry)
 				{
 					$tabletools[] = array
 						(
@@ -735,9 +735,9 @@ JS;
 			self::render_template_xsl(array('event', 'datatable_inline'), array('edit' => $data));
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -746,17 +746,17 @@ JS;
 			return $this->bo->delete($id);
 		}
 
-		function schedule2($id = 0)
+		function schedule2( $id = 0 )
 		{
-			if(!$id)
+			if (!$id)
 			{
 				$id = phpgw::get_var('id', 'int');
 			}
 			$values = phpgw::get_var('values');
 
-			if(is_array($values))
+			if (is_array($values))
 			{
-				if($values['alarm'])
+				if ($values['alarm'])
 				{
 					$receipt = $this->bo->set_exceptions(
 					array
@@ -779,7 +779,7 @@ JS;
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$i = 1;
 			$values = array();
-			foreach($event as $entry)
+			foreach ($event as $entry)
 			{
 				$values[] = array
 					(
@@ -823,9 +823,9 @@ JS;
 
 			//----------JSON CODE ----------------------------------------------
 			//---GET ALARM
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if(count($values))
+				if (count($values))
 				{
 					$draw = phpgw::get_var('draw', 'int');
 					$allrows = phpgw::get_var('length', 'int') == -1;
@@ -834,13 +834,13 @@ JS;
 
 					$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
 
-					if($allrows)
+					if ($allrows)
 					{
 						$out = $values;
 					}
 					else
 					{
-						if($total_records > $num_rows)
+						if ($total_records > $num_rows)
 						{
 							$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
 							$values_part = array_chunk($values, $num_rows);

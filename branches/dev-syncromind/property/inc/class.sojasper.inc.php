@@ -44,7 +44,7 @@
 			$this->grants = $GLOBALS['phpgw']->acl->get_grants('property', '.jasper');
 		}
 
-		public function read($data)
+		public function read( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
@@ -59,13 +59,13 @@
 
 			$table = 'fm_jasper';
 			$app_filter = '';
-			if($app)
+			if ($app)
 			{
 				$app_id = (int)$GLOBALS['phpgw_info']['apps'][$app]['id'];
 				$app_filter = "{$this->join} phpgw_locations ON (phpgw_locations.app_id = {$app_id} AND phpgw_locations.location_id = {$table}.location_id)";
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " ORDER BY $order $sort";
 			}
@@ -76,9 +76,9 @@
 
 
 			$filtermethod = "WHERE ( {$table}.user_id = {$this->account}";
-			if(is_array($grants))
+			if (is_array($grants))
 			{
-				foreach($grants as $user => $right)
+				foreach ($grants as $user => $right)
 				{
 					$public_user_list[] = $user;
 				}
@@ -90,12 +90,12 @@
 				$filtermethod .= ' )';
 			}
 
-			if($location_id)
+			if ($location_id)
 			{
 				$filtermethod .= " AND location_id = {$location_id}";
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = "AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
@@ -103,7 +103,7 @@
 
 			$sql = "SELECT * FROM {$table} {$app_filter} {$filtermethod} {$querymethod}";
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->query("SELECT count(*) as cnt FROM {$table} {$app_filter} {$filtermethod} {$querymethod}", __LINE__, __FILE__);
 				$this->db->next_record();
@@ -117,7 +117,7 @@
 			}
 
 			$jasper = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$jasper[] = array
 					(
@@ -137,7 +137,7 @@
 			return $jasper;
 		}
 
-		public function read_single($id)
+		public function read_single( $id )
 		{
 
 			$id = (int)$id;
@@ -148,7 +148,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$jasper = array();
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$jasper = array
 					(
@@ -169,7 +169,7 @@
 				. " FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$i = 0;
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$jasper['input'][] = array
 						(
@@ -187,7 +187,7 @@
 			return $jasper;
 		}
 
-		public function add($jasper)
+		public function add( $jasper )
 		{
 			$receipt = array();
 			$table = 'fm_jasper';
@@ -214,7 +214,7 @@
 
 			$id = $this->db->get_last_insert_id($table, 'id');
 
-			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
+			if (isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
 			{
 				$jasper['input_name'] = $this->db->db_addslashes($jasper['input_name']);
 				$jasper['input_type'] = (int)$jasper['input_type'];
@@ -224,7 +224,7 @@
 				. " VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}',{$is_id})", __LINE__, __FILE__);
 			}
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('JasperReport %1 has been saved', $id));
 				$receipt['id'] = $id;
@@ -232,7 +232,7 @@
 			return $receipt;
 		}
 
-		public function edit($jasper)
+		public function edit( $jasper )
 		{
 			$receipt = array();
 			$jasper['id'] = (int)$jasper['id'];
@@ -244,7 +244,7 @@
 			$this->db->next_record();
 			$user_id = $this->db->f('user_id');
 
-			if(!($this->grants[$user_id] & PHPGW_ACL_EDIT))
+			if (!($this->grants[$user_id] & PHPGW_ACL_EDIT))
 			{
 				$receipt['error'][] = array('msg' => lang('JasperReport %1 has not been edited', $jasper['id']));
 				return $receipt;
@@ -267,22 +267,22 @@
 
 			$this->db->query("UPDATE fm_jasper_input SET is_id = 0 WHERE jasper_id = {$jasper['id']}", __LINE__, __FILE__);
 
-			if(isset($jasper['edit_is_id']) && $jasper['edit_is_id'])
+			if (isset($jasper['edit_is_id']) && $jasper['edit_is_id'])
 			{
-				foreach($jasper['edit_is_id'] as $edit_is_id)
+				foreach ($jasper['edit_is_id'] as $edit_is_id)
 				{
 					$this->db->query("UPDATE fm_jasper_input SET is_id = 1 WHERE id = {$edit_is_id} AND jasper_id = {$jasper['id']}", __LINE__, __FILE__);
 				}
 			}
 
-			if(isset($jasper['delete_input']) && $jasper['delete_input'])
+			if (isset($jasper['delete_input']) && $jasper['delete_input'])
 			{
-				foreach($jasper['delete_input'] as $delete_input)
+				foreach ($jasper['delete_input'] as $delete_input)
 				{
 					$this->db->query("DELETE FROM fm_jasper_input WHERE id = {$delete_input} AND jasper_id = {$jasper['id']}", __LINE__, __FILE__);
 				}
 			}
-			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
+			if (isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
 			{
 				$jasper['input_name'] = $this->db->db_addslashes($jasper['input_name']);
 				$jasper['input_type'] = (int)$jasper['input_type'];
@@ -292,7 +292,7 @@
 				. " VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}',$is_id)", __LINE__, __FILE__);
 			}
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('JasperReport %1 has been edited', $jasper['id']));
 			}
@@ -300,7 +300,7 @@
 			return $receipt;
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
 			$id = (int)$id;
 
@@ -315,7 +315,7 @@
 			$this->db->query('SELECT * FROM fm_jasper_input_type', __LINE__, __FILE__);
 
 			$input_types = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$input_types[] = array
 					(
@@ -331,7 +331,7 @@
 			$this->db->query('SELECT * FROM fm_jasper_format_type', __LINE__, __FILE__);
 
 			$format_types = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$format_types[] = array
 					(

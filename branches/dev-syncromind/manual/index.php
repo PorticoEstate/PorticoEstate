@@ -5,9 +5,8 @@
 	* @copyright Copyright (C) 2000-2002,2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'		=> true,
@@ -20,5 +19,5 @@
 	 */
 	include('../header.inc.php');
 
-	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'manual.uimanual.index') );
+	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'manual.uimanual.index'));
 ?>

@@ -22,12 +22,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -37,7 +37,7 @@
 			return $this->id;
 		}
 
-		public function set_internal_arena_id($id)
+		public function set_internal_arena_id( $id )
 		{
 			$this->internal_arena_id = $id;
 		}
@@ -47,7 +47,7 @@
 			return $this->internal_arena_id;
 		}
 
-		public function set_arena_name($arena_name)
+		public function set_arena_name( $arena_name )
 		{
 			$this->arena_name = $arena_name;
 		}
@@ -57,7 +57,7 @@
 			return $this->arena_name;
 		}
 
-		public function set_active(bool $active)
+		public function set_active( bool $active )
 		{
 			$this->active = (bool)$active;
 		}
@@ -67,7 +67,7 @@
 			return $this->active;
 		}
 
-		public function set_address($address)
+		public function set_address( $address )
 		{
 			$this->address = $address;
 		}
@@ -77,7 +77,7 @@
 			return $this->address;
 		}
 
-		public function set_addressnumber($addressnumber)
+		public function set_addressnumber( $addressnumber )
 		{
 			$this->addressnumber = $addressnumber;
 		}
@@ -87,7 +87,7 @@
 			return $this->addressnumber;
 		}
 
-		public function set_zip_code($zip_code)
+		public function set_zip_code( $zip_code )
 		{
 			$this->zip_code = $zip_code;
 		}
@@ -97,7 +97,7 @@
 			return $this->zip_code;
 		}
 
-		public function set_city($city)
+		public function set_city( $city )
 		{
 			$this->city = $city;
 		}
@@ -114,7 +114,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.socontract');
 			}

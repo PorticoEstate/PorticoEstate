@@ -93,13 +93,13 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		private function get_external_source($file, $thumb)
+		private function get_external_source( $file, $thumb )
 		{
 			$file = ltrim($file, 'external_source/');
 
 			$url = "bkbilde.bergen.kommune.no/fotoweb/cmdrequest/rest/PreviewAgent.fwx?ar=5008&rs=0&pg=0&username=FDV&password=FDV123&sr={$file}*";
 
-			if($thumb)
+			if ($thumb)
 			{
 				$url .= '&sz=50';
 			}
@@ -129,7 +129,7 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -141,14 +141,14 @@
 
 			$directory = explode('/', $file);
 
-			if($directory[0] == 'external_source')
+			if ($directory[0] == 'external_source')
 			{
 				return $this->get_external_source($file, $thumb);
 			}
 
 			$location_info = $this->bo->get_location($directory);
 
-			if(!$this->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
+			if (!$this->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
 			{
 				echo 'sorry - no access';
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -159,22 +159,22 @@
 			$thumbfile = "$source.thumb";
 
 			// prevent path traversal
-			if(preg_match('/\.\./', $source))
+			if (preg_match('/\.\./', $source))
 			{
 				return false;
 			}
 
 			$re_create = false;
-			if($this->is_image($source) && $thumb && $re_create)
+			if ($this->is_image($source) && $thumb && $re_create)
 			{
 				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
 			}
-			else if($thumb && is_file($thumbfile))
+			else if ($thumb && is_file($thumbfile))
 			{
 				readfile($thumbfile);
 			}
-			else if($this->is_image($source) && $thumb)
+			else if ($this->is_image($source) && $thumb)
 			{
 				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
@@ -185,7 +185,7 @@
 			}
 		}
 
-		function create_thumb($source, $dest, $target_height = 100)
+		function create_thumb( $source, $dest, $target_height = 100 )
 		{
 			$size = getimagesize($source);
 			$width = $size[0];
@@ -193,12 +193,12 @@
 
 			$target_width = round($width * ($target_height / $height));
 
-			if($width > $height)
+			if ($width > $height)
 			{
 				$x = ceil(($width - $height) / 2);
 				$width = $height;
 			}
-			else if($height > $width)
+			else if ($height > $width)
 			{
 				$y = ceil(($height - $width) / 2);
 				$height = $width;
@@ -208,19 +208,19 @@
 
 			@$imgInfo = getimagesize($source);
 
-			if($imgInfo[2] == IMAGETYPE_JPEG)
+			if ($imgInfo[2] == IMAGETYPE_JPEG)
 			{
 				$im = imagecreatefromjpeg($source);
 				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
 				imagejpeg($new_im, $dest, 75); // Thumbnail quality (Value from 1 to 100)
 			}
-			else if($imgInfo[2] == IMAGETYPE_GIF)
+			else if ($imgInfo[2] == IMAGETYPE_GIF)
 			{
 				$im = imagecreatefromgif($source);
 				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
 				imagegif($new_im, $dest);
 			}
-			else if($imgInfo[2] == IMAGETYPE_PNG)
+			else if ($imgInfo[2] == IMAGETYPE_PNG)
 			{
 				$im = imagecreatefrompng($source);
 				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
@@ -228,10 +228,10 @@
 			}
 		}
 
-		function is_image($fileName)
+		function is_image( $fileName )
 		{
 			// Verifies that a file is an image
-			if($fileName !== '.' && $fileName !== '..')
+			if ($fileName !== '.' && $fileName !== '..')
 			{
 				@$imgInfo = getimagesize($fileName);
 
@@ -242,7 +242,7 @@
 					IMAGETYPE_PNG,
 				);
 
-				if(in_array($imgInfo[2], $imgType))
+				if (in_array($imgInfo[2], $imgType))
 				{
 					return true;
 				}
@@ -296,7 +296,7 @@
 		function index()
 		{
 			$this->acl_location = '.document';
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -310,7 +310,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::gallery";
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -425,7 +425,7 @@
 				)
 			);
 			$filters = $this->_get_Filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -448,7 +448,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			if($start_date && empty($end_date))
+			if ($start_date && empty($end_date))
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
@@ -474,7 +474,7 @@
 
 			$values = $this->bo->read($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}

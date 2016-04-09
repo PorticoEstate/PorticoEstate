@@ -15,7 +15,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -38,7 +38,7 @@
 			$search_type	 = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 			$export			 = phpgw::get_var('export', 'bool');
 
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
@@ -48,7 +48,7 @@
 			$object_count	 = 0;
 			//Retrieve the type of query and perform type specific logic
 			$query_type		 = phpgw::get_var('type');
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'invoice_price_items':
 					$filters		 = array('invoice_id' => phpgw::get_var('invoice_id'));
@@ -59,11 +59,11 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ))
+					if ($result->has_permission(PHPGW_ACL_READ))
 					{
 						// ... add a serialized result
 						$rows[] = $result->serialize();
@@ -71,7 +71,7 @@
 				}
 			}
 
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}

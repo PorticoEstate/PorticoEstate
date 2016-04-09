@@ -23,5 +23,5 @@
 		 *
 		 * @return array with missing billing info
 		 */
-		public function get_missing_billing_info($contract);
+		public function get_missing_billing_info( $contract );
 	}

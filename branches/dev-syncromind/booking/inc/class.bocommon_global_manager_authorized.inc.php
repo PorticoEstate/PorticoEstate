@@ -7,7 +7,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -28,7 +28,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
 			return array_merge(
 			array

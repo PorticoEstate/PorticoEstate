@@ -103,7 +103,7 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt', '');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -172,7 +172,7 @@
 				)
 			);
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -187,7 +187,7 @@
 				);
 			}
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -202,7 +202,7 @@
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -246,7 +246,7 @@
 
 			$values = $this->bo->read($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -259,7 +259,7 @@
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -269,19 +269,19 @@
 			$values['sql_text'] = $_POST['values']['sql_text'];
 
 
-			if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if(!$values['name'])
+				if (!$values['name'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a name !'));
 				}
 
-				if(!$values['sql_text'])
+				if (!$values['sql_text'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a sql query !'));
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					try
 					{
@@ -289,17 +289,16 @@
 						$receipt = $this->bo->save($values);
 						$custom_id = $receipt['custom_id'];
 						$this->cat_id = ($values['cat_id'] ? $values['cat_id'] : $this->cat_id);
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-						if($values['save'])
+						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.index'));
 						}
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
-						if($e)
+						if ($e)
 						{
 							phpgwapi_cache::message_set($e->getMessage(), 'error');
 							$this->edit();
@@ -307,8 +306,7 @@
 						}
 					}
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+					self::message_set($receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.edit',
 						'custom_id' => $custom_id));
 				}
@@ -325,7 +323,7 @@
 
 		function edit()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -336,7 +334,7 @@
 			$resort = phpgw::get_var('resort');
 			$values = phpgw::get_var('values');
 			$values['sql_text'] = $_POST['values']['sql_text'];
-			if($cols_id)
+			if ($cols_id)
 			{
 				$this->bo->resort(array('custom_id' => $custom_id, 'id' => $cols_id, 'resort' => $resort));
 			}
@@ -347,12 +345,12 @@
 //			$tabs['items']	= array('label' => lang('items'), 'link' => "#items");
 			//$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
-			if($values['cancel'])
+			if ($values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.index'));
 			}
 
-			if($custom_id)
+			if ($custom_id)
 			{
 				$custom = $this->bo->read_single($custom_id);
 				$this->cat_id = ($custom['cat_id'] ? $custom['cat_id'] : $this->cat_id);
@@ -382,7 +380,7 @@
 				array('key' => 'link_down', 'label' => lang('Down'), 'sortable' => FALSE, 'hidden' => TRUE)
 			);
 			//formatLink formatCheck
-			while(is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
+			while (is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
 			{
 				$cols[] = array(
 					'id' => $entry['id'],
@@ -466,7 +464,7 @@
 				'menuaction' => 'property.uicustom.index'
 			);
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($custom_id);
 				return "custom_id " . $custom_id . " " . lang("has been deleted");
@@ -507,7 +505,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_view($custom_id);
 			}
@@ -547,7 +545,7 @@
 
 			$count_uicols_name = count($uicols);
 
-			for($i = 0; $i < $count_uicols_name; $i++)
+			for ($i = 0; $i < $count_uicols_name; $i++)
 			{
 
 				$params = array
@@ -566,7 +564,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query_view($custom_id)
+		public function query_view( $custom_id )
 		{
 
 			$search = phpgw::get_var('search');
@@ -587,7 +585,7 @@
 
 			$values = $this->bo->read_custom($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -608,7 +606,7 @@
 			);
 			$list = $this->bo->read_custom($params);
 			$uicols = $this->bo->uicols;
-			foreach($uicols as $col)
+			foreach ($uicols as $col)
 			{
 				$names[] = $col['name'];
 				$descr[] = $col['descr'];

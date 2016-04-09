@@ -48,7 +48,7 @@
 		function __construct()
 		{
 
-			if(is_object($GLOBALS['phpgw']->db))
+			if (is_object($GLOBALS['phpgw']->db))
 			{
 				$this->db = & $GLOBALS['phpgw']->db;
 			}
@@ -56,7 +56,7 @@
 			{
 				$this->db = CreateObject('phpgwapi.db');
 				$this->db->fetchmode = 'ASSOC';
-				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
+				if (isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
 					$this->db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
@@ -67,7 +67,7 @@
 				else
 				{
 					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'COOKIE');
-					if(!$ConfigDomain)
+					if (!$ConfigDomain)
 					{
 						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
@@ -82,7 +82,7 @@
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'pgsql':
 					$this->join = " JOIN ";
@@ -99,13 +99,13 @@
 			$this->left_join = " LEFT JOIN ";
 		}
 
-		function fm_cache($name = '', $value = '')
+		function fm_cache( $name = '', $value = '' )
 		{
-			if($name && $value)
+			if ($name && $value)
 			{
 				$value = serialize($value);
 
-				if(function_exists('gzcompress'))
+				if (function_exists('gzcompress'))
 				{
 					$value = base64_encode(gzcompress($value, 9));
 				}
@@ -116,7 +116,7 @@
 
 				$this->db->query("SELECT value FROM fm_cache WHERE name='{$name}'");
 
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$this->db->query("UPDATE fm_cache SET value = '{$value}' WHERE name='{$name}'", __LINE__, __FILE__);
 				}
@@ -128,11 +128,11 @@
 			else
 			{
 				$this->db->query("SELECT value FROM fm_cache where name='$name'");
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$ret = $this->db->f('value');
 
-					if(function_exists('gzcompress'))
+					if (function_exists('gzcompress'))
 					{
 						$ret = gzuncompress(base64_decode($ret));
 					}
@@ -166,7 +166,7 @@
 			return $this->db->affected_rows();
 		}
 
-		function create_preferences($app = '', $user_id = '')
+		function create_preferences( $app = '', $user_id = '' )
 		{
 			$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=" . (int)$user_id);
 			$this->db->next_record();
@@ -174,7 +174,7 @@
 			return $value;
 		}
 
-		function read_single_tenant($id)
+		function read_single_tenant( $id )
 		{
 			$this->db->query("SELECT * FROM fm_tenant WHERE id =$id", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -191,32 +191,32 @@
 			return $tenant_data;
 		}
 
-		function check_location($location_code = '', $type_id = '')
+		function check_location( $location_code = '', $type_id = '' )
 		{
 			$this->db->query("SELECT count(*) as cnt FROM fm_location$type_id where location_code='$location_code'");
 			$this->db->next_record();
 
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				return true;
 			}
 		}
 
-		function select_part_of_town($district_id = '')
+		function select_part_of_town( $district_id = '' )
 		{
 			$filter = '';
 			$part_of_town = array();
-			if($district_id)
+			if ($district_id)
 			{
 				$filter = "WHERE district_id = '$district_id'";
 			}
-			$this->db->query("SELECT name, part_of_town_id, district_id FROM fm_part_of_town $filter ORDER BY name ", __LINE__, __FILE__);
+			$this->db->query("SELECT name, id, district_id FROM fm_part_of_town $filter ORDER BY name ", __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$part_of_town[] = array
 					(
-					'id' => $this->db->f('part_of_town_id'),
+					'id' => $this->db->f('id'),
 					'name' => $this->db->f('name', true),
 					'district_id' => $this->db->f('district_id')
 				);
@@ -230,7 +230,7 @@
 			$this->db->query("SELECT id, descr FROM fm_district where id >'0' ORDER BY id ");
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$district[$i]['id'] = $this->db->f('id');
 				$district[$i]['name'] = stripslashes($this->db->f('descr'));
@@ -247,15 +247,15 @@
 		 * @param array $key conditions
 		 * @return int the next id
 		 */
-		function next_id($table = '', $key = '')
+		function next_id( $table = '', $key = '' )
 		{
 			$where = '';
-			if(is_array($key))
+			if (is_array($key))
 			{
 				//	while (is_array($key) && list($column,$value) = each($key))
-				foreach($key as $column => $value)
+				foreach ($key as $column => $value)
 				{
-					if($value)
+					if ($value)
 					{
 						$condition[] = $column . "='" . $value;
 					}
@@ -270,11 +270,11 @@
 			return $next_id;
 		}
 
-		function get_lookup_entity($location)
+		function get_lookup_entity( $location )
 		{
 			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='lookup' AND location='{$location}'  ");
 			$entity = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$entity[] = array
 					(
@@ -285,12 +285,12 @@
 			return $entity;
 		}
 
-		function get_start_entity($location)
+		function get_start_entity( $location )
 		{
 			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='start' AND location='{$location}'  ");
 
 			$entity = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$entity[] = array
 					(
@@ -301,25 +301,25 @@
 			return $entity;
 		}
 
-		function increment_id($name)
+		function increment_id( $name )
 		{
-			if(!$name)
+			if (!$name)
 			{
 				throw new Exception("property_socommon::increment_id() - Missing name");
 			}
 
-			if($name == 'order') // FIXME: temporary hack
+			if ($name == 'order') // FIXME: temporary hack
 			{
 				$name = 'workorder';
 			}
-			else if($name == 'helpdesk')
+			else if ($name == 'helpdesk')
 			{
 				$name = 'workorder';
 			}
 
 			$this->db->query("SELECT name FROM fm_idgenerator WHERE name='{$name}'");
 			$this->db->next_record();
-			if(!$this->db->f('name'))
+			if (!$this->db->f('name'))
 			{
 				throw new Exception("property_socommon::increment_id() - not a valid name: '{$name}'");
 			}
@@ -333,20 +333,20 @@
 			return $next_id;
 		}
 
-		function new_db($db = '')
+		function new_db( $db = '' )
 		{
-			if(is_object($db))
+			if (is_object($db))
 			{
 				$db = clone($db);
 			}
-			else if(is_object($GLOBALS['phpgw']->db))
+			else if (is_object($GLOBALS['phpgw']->db))
 			{
 				$db = & $GLOBALS['phpgw']->db;
 			}
 			else
 			{
 				$db = CreateObject('phpgwapi.db');
-				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
+				if (isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
 					$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
@@ -357,7 +357,7 @@
 				else
 				{
 					$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'COOKIE');
-					if(!$ConfigDomain)
+					if (!$ConfigDomain)
 					{
 						$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'POST');
 					}
@@ -387,16 +387,16 @@
 		 *
 		 * @return array $access_location list of accessible physical locations
 		 */
-		public function get_location_list($required)
+		public function get_location_list( $required )
 		{
 			$access_list = $GLOBALS['phpgw']->acl->get_location_list('property', $required);
 
 			$needle = ".location.1.";
 			$needle_len = strlen($needle);
 			$access_location = array();
-			foreach($access_list as $location)
+			foreach ($access_list as $location)
 			{
-				if(strrpos($location, $needle) === 0)
+				if (strrpos($location, $needle) === 0)
 				{
 					$target_len = strlen($location) - $needle_len;
 					$access_location[] = substr($location, -$target_len);

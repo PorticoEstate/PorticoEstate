@@ -7,7 +7,9 @@
 	    </xsl:when>
    </xsl:choose>
    
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 
 	<div class="frontend_body">	
 		<div class="pure-form pure-form-aligned">
@@ -20,10 +22,14 @@
 								<div class="pure-g">
 									<div class="pure-u-1">
 										<xsl:for-each select="filters">
-											<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+											<xsl:variable name="name">
+												<xsl:value-of select="name"/>
+											</xsl:variable>
 											<select id="{$name}" name="{$name}" class="filter_entity">
 												<xsl:for-each select="list">
-													<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+													<xsl:variable name="id">
+														<xsl:value-of select="id"/>
+													</xsl:variable>
 													<xsl:choose>
 														<xsl:when test="id = 'NEW'">
 															<option value="{$id}" selected="selected">

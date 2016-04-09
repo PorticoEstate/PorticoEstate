@@ -25,7 +25,7 @@
 		 * 
 		 * @param int $id the id of this price item
 		 */
-		public function __construct($id = 0)
+		public function __construct( $id = 0 )
 		{
 			parent::__construct($id);
 			/*
@@ -46,7 +46,7 @@
 			return $this->price_item_id;
 		}
 
-		public function set_price_item_id($id)
+		public function set_price_item_id( $id )
 		{
 			$this->price_item_id = $id;
 		}
@@ -56,45 +56,45 @@
 			return $this->contract_id;
 		}
 
-		public function set_contract_id($contract_id)
+		public function set_contract_id( $contract_id )
 		{
 			$this->contract_id = $contract_id;
 		}
 
 		public function get_area()
 		{
-			if(!$this->area)
+			if (!$this->area)
 				$this->area = 0;
 
 			return $this->area;
 		}
 
-		public function set_area($area)
+		public function set_area( $area )
 		{
 			$this->area = $area;
 		}
 
 		public function get_count()
 		{
-			if(!$this->count)
+			if (!$this->count)
 				$this->count = 0;
 
 			return $this->count;
 		}
 
-		public function set_count($count)
+		public function set_count( $count )
 		{
 			$this->count = $count;
 		}
 
 		public function get_total_price()
 		{
-			if(!$this->total_price)
+			if (!$this->total_price)
 				$this->total_price = 0;
 			return $this->total_price;
 		}
 
-		public function set_total_price($total_price)
+		public function set_total_price( $total_price )
 		{
 			$this->total_price = $total_price;
 		}
@@ -104,7 +104,7 @@
 			return $this->date_start;
 		}
 
-		public function set_date_start($date_start)
+		public function set_date_start( $date_start )
 		{
 			$this->date_start = $date_start;
 		}
@@ -114,7 +114,7 @@
 			return $this->date_end;
 		}
 
-		public function set_date_end($date_end)
+		public function set_date_end( $date_end )
 		{
 			$this->date_end = $date_end;
 		}
@@ -125,11 +125,11 @@
 		 * @param $date the date to check
 		 * @return boolean
 		 */
-		public function is_active_at($date)
+		public function is_active_at( $date )
 		{
-			if($date >= strtotime($this->get_date_start()))
+			if ($date >= strtotime($this->get_date_start()))
 			{
-				if(!$this->get_date_end() || ($this->get_date_end() && $date <= strtotime($this->get_date_end())))
+				if (!$this->get_date_end() || ($this->get_date_end() && $date <= strtotime($this->get_date_end())))
 				{
 					return true;
 				}
@@ -161,11 +161,11 @@
 
 		public function store()
 		{
-			if($this->validates())
+			if ($this->validates())
 			{
 				$so = $this->get_so();
 
-				if($this->id)
+				if ($this->id)
 				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $so->update_contract_price_item($this);
@@ -210,7 +210,7 @@
 			);
 		}
 
-		public function set_is_billed($is_billed)
+		public function set_is_billed( $is_billed )
 		{
 			$this->is_billed = (boolean)$is_billed;
 		}
@@ -220,7 +220,7 @@
 			return $this->is_billed;
 		}
 
-		public function set_is_one_time($is_one_time)
+		public function set_is_one_time( $is_one_time )
 		{
 			$this->is_one_time = (boolean)$is_one_time;
 		}

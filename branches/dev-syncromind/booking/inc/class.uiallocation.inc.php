@@ -40,7 +40,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -117,7 +117,7 @@
 			);
 
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiallocation.add'));
 			}
@@ -130,7 +130,7 @@
 
 		public function query()
 		{
-			if(isset($_SESSION['showall']))
+			if (isset($_SESSION['showall']))
 			{
 				unset($filters['building_name']);
 				unset($filters['organization_id']);
@@ -139,7 +139,7 @@
 			else
 			{
 				$testdata = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
-				if($testdata != 0)
+				if ($testdata != 0)
 				{
 					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));
 				}
@@ -148,7 +148,7 @@
 					unset($filters['building_name']);
 				}
 				$testdata2 = phpgw::get_var('organizations', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
+				if ($testdata2 != 0)
 				{
 					$filters['organization_id'] = $this->bo->so->get_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));
 				}
@@ -157,7 +157,7 @@
 					unset($filters['organization_id']);
 				}
 				$testdata3 = phpgw::get_var('filter_season_id', 'int', 'REQUEST', null);
-				if($testdata3 != 0)
+				if ($testdata3 != 0)
 				{
 					$filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('filter_season_id', 'int', 'REQUEST', null));
 				}
@@ -184,7 +184,7 @@
 			$allocations = $this->bo->so->read($params);
 			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
 
-			foreach($allocations['results'] as &$allocation)
+			foreach ($allocations['results'] as &$allocation)
 			{
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_']	 = pretty_timestamp($allocation['to_']);
@@ -195,7 +195,7 @@
 
 		public function index_json()
 		{
-			if(isset($_SESSION['showall']))
+			if (isset($_SESSION['showall']))
 			{
 				unset($filters['building_name']);
 				unset($filters['organization_id']);
@@ -204,7 +204,7 @@
 			else
 			{
 				$testdata = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
-				if($testdata != 0)
+				if ($testdata != 0)
 				{
 					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));
 				}
@@ -213,7 +213,7 @@
 					unset($filters['building_name']);
 				}
 				$testdata2 = phpgw::get_var('organizations', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
+				if ($testdata2 != 0)
 				{
 					$filters['organization_id'] = $this->bo->so->get_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));
 				}
@@ -222,7 +222,7 @@
 					unset($filters['organization_id']);
 				}
 				$testdata3 = phpgw::get_var('filter_season_id', 'int', 'REQUEST', null);
-				if($testdata3 != 0)
+				if ($testdata3 != 0)
 				{
 					$filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('filter_season_id', 'int', 'REQUEST', null));
 				}
@@ -244,7 +244,7 @@
 			$allocations = $this->bo->so->read($params);
 			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
 
-			foreach($allocations['results'] as &$allocation)
+			foreach ($allocations['results'] as &$allocation)
 			{
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_']	 = pretty_timestamp($allocation['to_']);
@@ -253,9 +253,9 @@
 			return $this->yui_results($allocations);
 		}
 
-		protected function add_cost_history(&$allocation, $comment = '', $cost = '0.00')
+		protected function add_cost_history( &$allocation, $comment = '', $cost = '0.00' )
 		{
-			if(!$comment)
+			if (!$comment)
 			{
 				$comment = lang('cost is set');
 			}
@@ -275,19 +275,19 @@
 			$invalid_dates	 = array();
 			$valid_dates	 = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$season					 = $this->season_bo->read_single($_POST['season_id']);
 				array_set_default($_POST, 'resources', array());
 				$allocation				 = extract_values($_POST, $this->fields);
-				if($_POST['cost'])
+				if ($_POST['cost'])
 				{
-					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 				$allocation['active']	 = '1';
 				$allocation['completed'] = '0';
 
-				if(phpgw::get_var('weekday', 'string') != '')
+				if (phpgw::get_var('weekday', 'string') != '')
 				{
 					$from_date	 = phpgw::get_var('from_', 'string');
 					$to_date	 = phpgw::get_var('to_', 'string');
@@ -297,7 +297,7 @@
 					$datet		 = explode(' ', $to_date[0]);
 					$timet		 = $_POST['to_'];
 
-					if(strlen($_POST['from_']) < 14)
+					if (strlen($_POST['from_']) < 14)
 					{
 						$allocation['from_'] = $datef[0] . " " . $timef;
 						$allocation['to_']	 = $datet[0] . " " . $timet;
@@ -323,9 +323,9 @@
 				}
 
 
-				if(($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == 'sunday' && date('w') < date('w', strtotime($_POST['weekday']))))
+				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == 'sunday' && date('w') < date('w', strtotime($_POST['weekday']))))
 				{
-					if(phpgw::get_var('weekday', 'string') == '')
+					if (phpgw::get_var('weekday', 'string') == '')
 					{
 						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']) - 60 * 60 * 24 * 7);
 						$allocation['to_']	 = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']) - 60 * 60 * 24 * 7);
@@ -336,11 +336,11 @@
 
 				$errors = $this->bo->validate($allocation);
 
-				if(!$errors)
+				if (!$errors)
 				{
 					$step++;
 				}
-				if(!$errors && $_POST['outseason'] != 'on')
+				if (!$errors && $_POST['outseason'] != 'on')
 				{
 					try
 					{
@@ -348,12 +348,12 @@
 						$this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
-				else if($_POST['outseason'] == 'on' && !$errors && $step > 1)
+				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
 				{
 
 					$repeat_until			 = strtotime($season['to_']) + 60 * 60 * 24;
@@ -364,14 +364,14 @@
 					$i			 = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
-					while(($max_dato + ($interval * $i)) <= $repeat_until)
+					while (($max_dato + ($interval * $i)) <= $repeat_until)
 					{
 						$fromdate			 = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval * $i));
 						$todate				 = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
 						$allocation['from_'] = $fromdate;
 						$allocation['to_']	 = $todate;
 						$err				 = $this->bo->validate($allocation);
-						if($err)
+						if ($err)
 						{
 							$invalid_dates[$i]['from_']	 = $fromdate;
 							$invalid_dates[$i]['to_']	 = $todate;
@@ -380,13 +380,13 @@
 						{
 							$valid_dates[$i]['from_']	 = $fromdate;
 							$valid_dates[$i]['to_']		 = $todate;
-							if($step == 3)
+							if ($step == 3)
 							{
 								try
 								{
 									$receipt = $this->bo->add($allocation);
 								}
-								catch(booking_unauthorized_exception $e)
+								catch (booking_unauthorized_exception $e)
 								{
 									$errors['global'] = lang('Could not add object due to insufficient permissions');
 								}
@@ -394,14 +394,14 @@
 						}
 						$i++;
 					}
-					if($step == 3)
+					if ($step == 3)
 					{
 						$this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
 				}
 			}
-			if(phpgw::get_var('building_name', 'string') == '')
+			if (phpgw::get_var('building_name', 'string') == '')
 			{
 				array_set_default($allocation, 'resources', array());
 				$weekday = 'monday';
@@ -412,7 +412,7 @@
 				$dateTimeTo		 = phpgw::get_var('to_', 'string');
 				$dateTimeFromE	 = explode(" ", $dateTimeFrom[0]);
 				$dateTimeToE	 = explode(" ", $dateTimeTo[0]);
-				if(phpgw::get_var('from_', 'string') < 14)
+				if (phpgw::get_var('from_', 'string') < 14)
 				{
 					$timeFrom[]	 = phpgw::get_var('from_', 'string');
 					$timeTo[]	 = phpgw::get_var('to_', 'string');
@@ -448,9 +448,9 @@
 			$allocation['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
-			if($step < 2)
+			if ($step < 2)
 			{
-				if($_SERVER['REQUEST_METHOD'] == 'POST' && $errors)
+				if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors)
 				{
 					$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
 					$allocation['to_']	 = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
@@ -463,7 +463,7 @@
 					'weekday'		 => $weekday,
 				));
 			}
-			else if($step == 2)
+			else if ($step == 2)
 			{
 				self::render_template_xsl('allocation_new_preview', array('allocation'	 => $allocation,
 					'step'			 => $step,
@@ -480,7 +480,7 @@
 			}
 		}
 
-		private function send_mailnotification_to_organization($organization, $subject, $body)
+		private function send_mailnotification_to_organization( $organization, $subject, $body )
 		{
 			$send = CreateObject('phpgwapi.send');
 
@@ -488,20 +488,20 @@
 			$config->read();
 			$from	 = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
-			if(strlen(trim($body)) == 0)
+			if (strlen(trim($body)) == 0)
 			{
 				return false;
 			}
 
-			foreach($organization['contacts'] as $contact)
+			foreach ($organization['contacts'] as $contact)
 			{
-				if(strlen($contact['email']) > 0)
+				if (strlen($contact['email']) > 0)
 				{
 					try
 					{
 						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
 					}
-					catch(phpmailerException $e)
+					catch (phpmailerException $e)
 					{
 
 					}
@@ -521,7 +521,7 @@
 			$tabs['generic']			 = array('label' => lang('Allocations Edit'), 'link' => '#allocations_edit');
 			$active_tab					 = 'generic';
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$_POST['from_']	 = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : $_POST['from_'];
 				$_POST['to_']	 = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : $_POST['to_'];
@@ -529,13 +529,13 @@
 				$allocation		 = array_merge($allocation, extract_values($_POST, $this->fields));
 				$organization	 = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int', 'POST')));
 
-				if($_POST['cost'] != $_POST['cost_orig'])
+				if ($_POST['cost'] != $_POST['cost_orig'])
 				{
-					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 
 				$errors = $this->bo->validate($allocation);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
@@ -544,7 +544,7 @@
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'string', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
@@ -569,7 +569,8 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
 
-			self::render_template_xsl('allocation_edit', array('allocation' => $allocation, 'cost_history' => $cost_history));
+			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
+				'cost_history' => $cost_history));
 		}
 
 		public function delete()
@@ -587,7 +588,7 @@
 			$valid_dates	 = array();
 
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
 				$_POST['from_']			 = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
@@ -597,11 +598,11 @@
 				$from_date	 = $_POST['from_'];
 				$to_date	 = $_POST['to_'];
 
-				if($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
+				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 
 					$err = $this->bo->so->check_for_booking($id);
-					if($err)
+					if ($err)
 					{
 						$errors['booking'] = lang('Could not delete allocation due to a booking still use it');
 					}
@@ -614,7 +615,7 @@
 				else
 				{
 					$step++;
-					if($_POST['recurring'] == 'on')
+					if ($_POST['recurring'] == 'on')
 					{
 						$repeat_until = strtotime($_POST['repeat_until']) + 60 * 60 * 24;
 					}
@@ -630,7 +631,7 @@
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
 
-					while(($max_dato + ($interval * $i)) <= $repeat_until)
+					while (($max_dato + ($interval * $i)) <= $repeat_until)
 					{
 						$fromdate			 = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval * $i));
 						$todate				 = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
@@ -640,7 +641,7 @@
 						$todate				 = pretty_timestamp($todate);
 
 						$id = $this->bo->so->get_allocation_id($allocation);
-						if($id)
+						if ($id)
 						{
 							$err = $this->bo->so->check_for_booking($id);
 						}
@@ -649,7 +650,7 @@
 							$err = true;
 						}
 
-						if($err)
+						if ($err)
 						{
 							$invalid_dates[$i]['from_']	 = $fromdate;
 							$invalid_dates[$i]['to_']	 = $todate;
@@ -658,14 +659,14 @@
 						{
 							$valid_dates[$i]['from_']	 = $fromdate;
 							$valid_dates[$i]['to_']		 = $todate;
-							if($step == 3)
+							if ($step == 3)
 							{
 								$stat = $this->bo->so->delete_allocation($id);
 							}
 						}
 						$i++;
 					}
-					if($step == 3)
+					if ($step == 3)
 					{
 						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
 					}
@@ -691,7 +692,7 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
 
-			if($step < 2)
+			if ($step < 2)
 			{
 				self::render_template('allocation_delete', array('allocation'	 => $allocation,
 					'recurring'		 => $recurring,
@@ -700,7 +701,7 @@
 					'repeat_until'	 => $repeat_until,
 				));
 			}
-			elseif($step == 2)
+			elseif ($step == 2)
 			{
 				self::render_template('allocation_delete_preview', array('allocation'	 => $allocation,
 					'step'			 => $step,
@@ -731,7 +732,7 @@
 			$active_tab		 = 'generic';
 
 			$resource_ids = '';
-			foreach($allocation['resources'] as $res)
+			foreach ($allocation['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
@@ -748,7 +749,7 @@
 				'sort' => 'name'));
 			$allocation['resources'] = $resources['results'];
 			$res_names				 = array();
-			foreach($allocation['resources'] as $res)
+			foreach ($allocation['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
 			}

@@ -46,8 +46,12 @@
 	
 	<xsl:template match="/office:document">
 		<html xmlns="http://www.w3.org/1999/xhtml">
-			<xsl:attribute name="xml:lang"><xsl:value-of select="substring(office:document-meta/office:meta/dc:language,1,2)"/></xsl:attribute>
-			<xsl:attribute name="lang"><xsl:value-of select="substring(office:document-meta/office:meta/dc:language,1,2)"/></xsl:attribute>
+			<xsl:attribute name="xml:lang">
+				<xsl:value-of select="substring(office:document-meta/office:meta/dc:language,1,2)"/>
+			</xsl:attribute>
+			<xsl:attribute name="lang">
+				<xsl:value-of select="substring(office:document-meta/office:meta/dc:language,1,2)"/>
+			</xsl:attribute>
 		<head>
 			<xsl:apply-templates select="office:document-meta"/>
 			<xsl:call-template name="process-all-styles"/>
@@ -65,12 +69,14 @@
 		</body>
 	</xsl:template>	
 	
-<!-- element p -->	
+	<!-- element p -->
 	<xsl:template match="text:p">
 		<xsl:choose>
 			<xsl:when test="descendant::draw:*">
 				<xsl:apply-templates/>
-				<xsl:if test="count(node())=0"><br/></xsl:if>
+				<xsl:if test="count(node())=0">
+					<br/>
+				</xsl:if>
 			</xsl:when>
 			
 			<xsl:when test="@text:style-name='Quotations' and node()">
@@ -84,20 +90,22 @@
 			<xsl:otherwise>
 				<p class="{translate(@text:style-name,'.','_')}">
 					<xsl:apply-templates/>
-					<xsl:if test="count(node())=0"><br/></xsl:if>
+					<xsl:if test="count(node())=0">
+						<br/>
+					</xsl:if>
 				</p>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 	
-<!-- element span -->	
+	<!-- element span -->
 	<xsl:template match="text:span">
 	<span class="{translate(@text:style-name,'.','_')}">
 		<xsl:apply-templates/>
 	</span>
 	</xsl:template>
 	
-<!-- element h -->
+	<!-- element h -->
 	<xsl:template match="text:h">
 	<!-- Heading levels go only to 6 in XHTML -->
 	<xsl:if test="node()">
@@ -142,25 +150,29 @@
 	</xsl:template>
 	
 	<xsl:template match="text:sub">
-		<sub class="{translate(@text:style-name,'.','_')}"><xsl:apply-templates/></sub>
+		<sub class="{translate(@text:style-name,'.','_')}">
+			<xsl:apply-templates/>
+		</sub>
 	</xsl:template>
 	
 	<xsl:template match="text:sup">
-		<sup class="{translate(@text:style-name,'.','_')}"><xsl:apply-templates/></sup>
+		<sup class="{translate(@text:style-name,'.','_')}">
+			<xsl:apply-templates/>
+		</sup>
 	</xsl:template>
 	<!-- end adding -->
 	
-<!-- preserve tabulation -->
+	<!-- preserve tabulation -->
 	<xsl:template match="text:tab">
 		<xsl:text xml:space="preserve"> </xsl:text>
 	</xsl:template>
 	
-<!-- element br -->
+	<!-- element br -->
 	<xsl:template match="text:line-break">
 	<br/>
 	</xsl:template>
 	
-<!-- preserve spaces -->
+	<!-- preserve spaces -->
 	<xsl:variable name="spaces" xml:space="preserve"/>
 	
 	<xsl:template match="text:s">
@@ -175,7 +187,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-<!-- insert spaces -->
+	<!-- insert spaces -->
 	<xsl:template name="insert-spaces">
 	<xsl:param name="n"/>
 		<xsl:choose>
@@ -192,11 +204,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-<!-- element a -->
+	<!-- element a -->
 	<xsl:template match="text:a">
-		<a href="{@xlink:href}"><xsl:apply-templates/></a>
+		<a href="{@xlink:href}">
+			<xsl:apply-templates/>
+		</a>
 	</xsl:template>
-<!-- preserve bookmark -->	
+	<!-- preserve bookmark -->
 	<xsl:template match="text:bookmark-start|text:bookmark">
 		<a name="{@text:name}">
 			<span style="font-size: 0px">
@@ -204,26 +218,33 @@
 			</span>
 		</a>
 	</xsl:template>
-<!-- preserve footnote -->
+	<!-- preserve footnote -->
   <xsl:template match="text:note">
 	<xsl:variable name="footnote-id" select="text:note-citation"/>
 	<a href="#footnote-{$footnote-id}">
-		<sup><xsl:value-of select="$footnote-id"/></sup>
+			<sup>
+				<xsl:value-of select="$footnote-id"/>
+			</sup>
 	</a>
 	</xsl:template>
-<!-- preserve note body -->
+	<!-- preserve note body -->
 	<xsl:template match="text:note-body"/>
 	<xsl:template name="add-footnote-bodies">
 		<xsl:apply-templates select="//text:note" mode="add-footnote-bodies"/>
 	</xsl:template>
-<!-- preserve footnote bodies -->
+	<!-- preserve footnote bodies -->
 	<xsl:template match="text:note" mode="add-footnote-bodies">
 		<xsl:variable name="footnote-id" select="text:note-citation"/>
-			<p><a name="footnote-{$footnote-id}"><sup><xsl:value-of select="$footnote-id"/></sup>:</a></p>
+		<p>
+			<a name="footnote-{$footnote-id}">
+				<sup>
+					<xsl:value-of select="$footnote-id"/>
+				</sup>:</a>
+		</p>
 		<xsl:apply-templates select="text:note-body/*"/>
 	</xsl:template>
 
-<!-- procede all styles -->
+	<!-- procede all styles -->
 	<xsl:template name="process-all-styles">
 	<style type="text/css">
 	/* ODF paragraphs, by default, don't have any line spacing. */
@@ -237,7 +258,7 @@
 	</style>
 	</xsl:template>
 	
-<!-- procede toc styles -->
+	<!-- procede toc styles -->
 	<xsl:template name="toc-styles">
 		<xsl:apply-templates select="//text:table-of-content" mode="toc-styles"/>
 	</xsl:template>
@@ -301,7 +322,8 @@
 				<xsl:value-of select="translate(@style:family,'.','_')"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		<xsl:text> {</xsl:text><xsl:value-of select="$lineBreak"/>
+		<xsl:text> {</xsl:text>
+		<xsl:value-of select="$lineBreak"/>
    
 		<xsl:call-template name="process-styles">
 			<xsl:with-param name="node" select="."/>
@@ -313,7 +335,8 @@
 	<xsl:template match="style:style">
 		<xsl:text>.</xsl:text>
 		<xsl:value-of select="translate(@style:name,'.','_')"/>
-		<xsl:text> {</xsl:text><xsl:value-of select="$lineBreak"/>
+		<xsl:text> {</xsl:text>
+		<xsl:value-of select="$lineBreak"/>
 
 		<xsl:call-template name="process-styles">
 			<xsl:with-param name="node" select="."/>
@@ -345,25 +368,33 @@
 
 	<xsl:template match="@style:font-name" mode="styleattr">
 		<xsl:text>font-family: '</xsl:text>
-		<xsl:value-of select="."/><xsl:text>';</xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text>';</xsl:text>
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
 
 	<xsl:template match="@style:text-underline-style|@style:text-underline-type" mode="styleattr">
-<!-- CSS2 only has one type of underline.
+		<!-- CSS2 only has one type of underline.
 	We can improve this when CSS3 is better supported.
--->
+		-->
 		<xsl:if test="not(.='none')">
 			<xsl:text>text-decoration: underline;</xsl:text>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="@fo:text-align" mode="styleattr">
-		<xsl:value-of select="local-name()"/><xsl:text>: </xsl:text>
+		<xsl:value-of select="local-name()"/>
+		<xsl:text>: </xsl:text>
 		<xsl:choose>
-			<xsl:when test=".='start'"><xsl:text>left</xsl:text></xsl:when>
-			<xsl:when test=".='end'"><xsl:text>right</xsl:text></xsl:when>
-			<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+			<xsl:when test=".='start'">
+				<xsl:text>left</xsl:text>
+			</xsl:when>
+			<xsl:when test=".='end'">
+				<xsl:text>right</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:text>;</xsl:text>
 		<xsl:value-of select="$lineBreak"/>
@@ -389,7 +420,9 @@
 	</xsl:template>
 
 	<xsl:template match="@style:column-width" mode="styleattr">
-		<xsl:text>width: </xsl:text><xsl:value-of select="."/><xsl:text>;</xsl:text>
+		<xsl:text>width: </xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text>;</xsl:text>
 	</xsl:template>
 
 	<xsl:template match="@*" mode="styleattr">
@@ -397,13 +430,14 @@
 	</xsl:template>
 
 	<xsl:template name="pass-through">
-		<xsl:value-of select="local-name()"/><xsl:text>: </xsl:text>
+		<xsl:value-of select="local-name()"/>
+		<xsl:text>: </xsl:text>
 		<xsl:value-of select="."/>
 		<xsl:text>; </xsl:text>
 		
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
-<!-- style li -->
+	<!-- style li -->
 	<xsl:template match="text:list-level-style-bullet">
 		<xsl:text>.</xsl:text>
 		<xsl:value-of select="../@style:name"/>
@@ -419,7 +453,7 @@
 		<xsl:text>;}&#xa;</xsl:text>
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
-<!-- style ol -->
+	<!-- style ol -->
 	<xsl:template match="text:list-level-style-number">
 		<xsl:text>.</xsl:text>
 		<xsl:value-of select="../@style:name"/>
@@ -437,14 +471,16 @@
 		<xsl:text>;}&#xa;</xsl:text>
 		<xsl:value-of select="$lineBreak"/>
 	</xsl:template>
-<!-- element table -->
+	<!-- element table -->
 	<xsl:template match="table:table">
 		<table>
 			<xsl:if test="@table:style-name">
 				<xsl:attribute name="class">
 					<xsl:value-of select="@table:style-name"/>
 				</xsl:attribute>
-				<caption><xsl:value-of select="@table:style-name"/></caption>
+				<caption>
+					<xsl:value-of select="@table:style-name"/>
+				</caption>
 			</xsl:if>
 				<colgroup>
 					<xsl:apply-templates select="table:table-column"/>
@@ -479,7 +515,7 @@
 			</xsl:if>
 		</col>
 	</xsl:template>
-<!-- element tr -->
+	<!-- element tr -->
 	<xsl:template match="table:table-row">
 	<tr>
 		<xsl:apply-templates select="table:table-cell"/>
@@ -500,7 +536,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-<!-- element td -->
+	<!-- element td -->
 	<xsl:template name="process-table-cell">
 	<xsl:param name="n"/>
 		<xsl:if test="$n != 0">
@@ -563,17 +599,19 @@
 		</xsl:choose>
 	</xsl:template>
 	
-<!-- element li -->
+	<!-- element li -->
 	<xsl:template match="text:list-item">
-		<li><xsl:apply-templates/></li>
+		<li>
+			<xsl:apply-templates/>
+		</li>
 	</xsl:template>
 
-<!-- manage office:document-meta -->
+	<!-- manage office:document-meta -->
 	<xsl:template match="office:document-meta">
 		<xsl:apply-templates/>
 	</xsl:template>
 	
-<!-- element meta -->
+	<!-- element meta -->
 	<xsl:template match="office:meta">
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
 		<xsl:comment> Metadata starts </xsl:comment>
@@ -593,63 +631,65 @@
 		<xsl:comment> Metadata ends </xsl:comment>
 	</xsl:template>
 
-<!-- meta generator -->	
+	<!-- meta generator -->
 	<xsl:template match="meta:generator">
 		<meta name="generator" content="{current()}"/>
 	</xsl:template>
 	
-<!-- dc title -->
+	<!-- dc title -->
 	<xsl:template match="dc:title">
-		<title><xsl:apply-templates/></title>
+		<title>
+			<xsl:apply-templates/>
+		</title>
 		<meta name="DC.Title" content="{current()}"/>
 	</xsl:template>
 
-<!-- dc description -->
+	<!-- dc description -->
 	<xsl:template match="dc:description">
 		<meta name="Description" content="{current()}"/>
 		<meta name="DC.Description" content="{current()}"/>
 	</xsl:template>
 	
-<!-- dc subject -->
+	<!-- dc subject -->
 	<xsl:template match="dc:subject">
 	<meta name="DC.Subject" content="{current()}"/>
 	</xsl:template>
 	
-<!-- meta keyword -->
+	<!-- meta keyword -->
 	<xsl:template match="meta:keyword">
 		<meta name="keywords" content="{current()}"/>
 	</xsl:template>
 
-<!-- meta initial creator -->
+	<!-- meta initial creator -->
 	<xsl:template match="meta:initial-creator">
 		<meta name="author" content="{current()}"/>
 		<meta name="DC.Creator" content="{current()}"/>
 	</xsl:template>
 	
-<!-- dc creator -->
+	<!-- dc creator -->
 	<xsl:template match="dc:creator">
 		<meta name="DC.Contributor" content="{current()}"/>
 	</xsl:template>
 	
-<!-- dc language -->
+	<!-- dc language -->
 	<xsl:template match="dc:language">
 		<meta http-equiv="content-language" content="{current()}"/>
 		<meta name="DC.Language" content="{current()}"/>
 	</xsl:template>
 	
-<!-- dc description -->
+	<!-- dc description -->
 	<xsl:template match="dc:description">
 		<meta name="description" content="{current()}"/>
 		<meta name="DC.Description" content="{current()}"/>
 	</xsl:template>
 	
-<!-- meta creation date -->
+	<!-- meta creation date -->
 	<xsl:template match="meta:creation-date">
 		<meta name="DC.Date.created" content="{current()}"/>
 		<meta name="DC.Date.dateCopyrighted" content="{current()}"/>
 	</xsl:template>
 
-<!-- dc date -->
+	<!-- dc date -->
 	<xsl:template match="dc:date">
 		<meta name="revised" content="{current()}"/>
 		<meta name="DC.Date.modified" content="{current()}"/>
@@ -701,7 +741,9 @@
 								<xsl:apply-templates/>
 							</xsl:element>
 						</xsl:when>
-						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+						<xsl:otherwise>
+							<xsl:apply-templates/>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:element>
 			</xsl:when>
@@ -757,7 +799,9 @@
 								<xsl:apply-templates/>
 							</xsl:element>
 						</xsl:when>
-						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+						<xsl:otherwise>
+							<xsl:apply-templates/>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:element>
 			</xsl:when>
@@ -827,7 +871,9 @@
 				<xsl:otherwise>1</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<a href="#{generate-id()}"><xsl:value-of select="."/></a>
+			<a href="#{generate-id()}">
+				<xsl:value-of select="."/>
+			</a>
 		</xsl:element>
 	</xsl:template>
 

@@ -53,7 +53,7 @@
 			{
 				$this->import_ppc();
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
@@ -72,7 +72,7 @@
 
 			$bofiles = CreateObject('property.bofiles');
 
-			foreach($config->config_data as $config_data)
+			foreach ($config->config_data as $config_data)
 			{
 				$this->pickup_path = $config_data['pickup_path'];
 				$target = $config_data['target'];
@@ -83,7 +83,7 @@
 				$schema_text = "{$target} {$category['name']}";
 
 				$metadata = $this->db->metadata($target_table);
-				if(!$metadata)
+				if (!$metadata)
 				{
 					throw new Exception(lang('no valid target'));
 				}
@@ -94,7 +94,7 @@
 				$file_list = $this->get_files();
 
 				$i = 0;
-				foreach($file_list as $file)
+				foreach ($file_list as $file)
 				{
 					$xml = new DOMDocument('1.0', 'utf-8');
 					$xml->load($file);
@@ -103,7 +103,7 @@
 
 					//_debug_array($xml->getElementsByTagName('PPCC')->item(0)->getattribute('UUID'));die();
 
-					foreach($metadata as $field => $field_info)
+					foreach ($metadata as $field => $field_info)
 					{
 						$var_result[$field] = $xml->getElementsByTagName($field)->item(0)->nodeValue;
 					}
@@ -116,23 +116,23 @@
 					$cols = array();
 					$val_errors = array();
 
-					foreach($metadata as $field => $field_info)
+					foreach ($metadata as $field => $field_info)
 					{
 						// If field is missing from file jump to next
-						if(!isset($var_result[$field]))
+						if (!isset($var_result[$field]))
 						{
 							continue;
 						}
 
 						$insert_value = trim($var_result[$field]);
-						switch($field_info->type)
+						switch ($field_info->type)
 						{
 							case 'string':
 							case 'varchar':
 								$max_length = intval($field_info->max_length);
 								$input_length = strlen($insert_value);
 
-								if($input_length > $max_length)
+								if ($input_length > $max_length)
 								{
 									$val_errors[] = lang('Input for field "%1" is %2 characters, max for field is %3 (%4)', $field_info->name, $input_length, $max_length, $file);
 								}
@@ -163,12 +163,12 @@
 					}
 
 					// Raise exception if we have validation errors
-					if(count($val_errors) > 0)
+					if (count($val_errors) > 0)
 					{
 						throw new Exception(implode("<br>", $val_errors));
 					}
 
-					if($cols) // something to import
+					if ($cols) // something to import
 					{
 						$movefiles = array();
 
@@ -181,7 +181,7 @@
 						$this->db->query("SELECT * FROM fm_catch_1_1 WHERE unitid ='{$var_result['unitid']}'", __LINE__, __FILE__);
 						$this->db->next_record();
 						$user_id = $this->db->f('user_');
-						if(!$user_id)
+						if (!$user_id)
 						{
 							throw new Exception(lang('no valid user for this UnitID: %1', $var_result['unitid']));
 						}
@@ -195,16 +195,16 @@
 						. "VALUES ($id, '$num', $user_id, $insert_values)", __LINE__, __FILE__);
 
 						//attachment
-						foreach($var_result as $field => $data)
+						foreach ($var_result as $field => $data)
 						{
-							if(is_file("{$this->pickup_path}/{$data}"))
+							if (is_file("{$this->pickup_path}/{$data}"))
 							{
 								$to_file = "{$bofiles->fakebase}/{$this->category_dir}/dummy/{$id}/{$field}_{$data}"; // the dummy is for being consistant with the entity-code that relies on loc1
 								$bofiles->create_document_dir("{$this->category_dir}/dummy/{$id}");
 
 								$bofiles->vfs->override_acl = 1;
 
-								if(!$bofiles->vfs->cp(array(
+								if (!$bofiles->vfs->cp(array(
 									'from' => "{$this->pickup_path}/{$data}",
 									'to' => $to_file,
 									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -224,15 +224,15 @@
 
 
 						$ok = false;
-						if($this->db->transaction_commit())
+						if ($this->db->transaction_commit())
 						{
-							foreach($movefiles as $movefrom => $moveto)
+							foreach ($movefiles as $movefrom => $moveto)
 							{
 								$ok = @rename($movefrom, $moveto);
 							}
 						}
 
-						if(!$ok)
+						if (!$ok)
 						{
 							$this->db->query("DELETE FROM $target_table WHERE id =" . (int)$id, __LINE__, __FILE__);
 							$i--;
@@ -251,16 +251,16 @@
 
 							$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-							foreach($custom_functions as $entry)
+							foreach ($custom_functions as $entry)
 							{
 								// prevent path traversal
-								if(preg_match('/\.\./', $entry['file_name']))
+								if (preg_match('/\.\./', $entry['file_name']))
 								{
 									continue;
 								}
 
 								$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-								if($entry['active'] && is_file($file))
+								if ($entry['active'] && is_file($file))
 								{
 									require $file;
 								}
@@ -276,18 +276,18 @@
 		{
 			$dirname = $this->pickup_path;
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable()
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable()
 					//|| mime_content_type($file->getPathname()) != 'text/xml')
 					//|| finfo_file( finfo_open(FILEINFO_MIME, '/usr/share/file/magic'), $file->getPathname() ) != 'text/xml')
 					|| strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)

@@ -14,7 +14,7 @@
 
 		protected $db;
 
-		function __construct($callable, $parameters = array())
+		function __construct( $callable, $parameters = array() )
 		{
 			$this->call($callable, $parameters);
 		}
@@ -37,11 +37,11 @@
 			unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
 			$db_type = $GLOBALS['phpgw_domain'][$_GET['domain']]['db_type'];
-			if($db_type == 'postgres')
+			if ($db_type == 'postgres')
 			{
 				$db_type = 'pgsql';
 			}
-			if(!extension_loaded($db_type) && !dl($db_type . '.so'))
+			if (!extension_loaded($db_type) && !dl($db_type . '.so'))
 			{
 				echo "Extension '$db_type' is not loaded and can't be loaded via dl('$db_type.so') !!!\n";
 			}
@@ -53,12 +53,12 @@
 			 */
 			include(PHPGW_API_INC . '/functions.inc.php');
 
-			for($i = 0; $i < 10; $i++)
+			for ($i = 0; $i < 10; $i++)
 			{
 				restore_error_handler(); //Remove at least 10 levels of custom error handling
 			}
 
-			for($i = 0; $i < 10; $i++)
+			for ($i = 0; $i < 10; $i++)
 			{
 				restore_exception_handler(); //Remove at least 10 levels of custom exception handling
 			}
@@ -83,7 +83,7 @@
 			return $this->db;
 		}
 
-		protected function call($callable, $parameters = array())
+		protected function call( $callable, $parameters = array() )
 		{
 			$this->in();
 			array_unshift($parameters, $this);
@@ -91,7 +91,7 @@
 			$this->out();
 		}
 
-		static public function phpgw_call($callable, $parameters = array())
+		static public function phpgw_call( $callable, $parameters = array() )
 		{
 			new self($callable, $parameters);
 		}

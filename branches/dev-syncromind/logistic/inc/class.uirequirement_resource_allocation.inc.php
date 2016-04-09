@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -35,7 +34,6 @@
 	include_class('logistic', 'requirement_value', '/inc/model/');
 	include_class('logistic', 'requirement_resource_allocation', '/inc/model/');
 
-
 	class logistic_uirequirement_resource_allocation extends phpgwapi_uicommon_jquery
 	{
 
@@ -47,7 +45,6 @@
 		var $filter;
 		var $type_id;
 		var $location_code;
-
 		private $bo;
 		private $bocommon;
 		private $so_activity;
@@ -59,7 +56,6 @@
 	    private $edit;
 	    private $delete;
 	    private $manage;
-
 		public $public_functions = array(
 			'query' => true,
 			'add' 	=> true,
@@ -79,7 +75,7 @@
 			$this->so_requirement 		= createObject('logistic.sorequirement');
 			$this->so_requirement_value = CreateObject('logistic.sorequirement_value');
 
-			$this->bo										= CreateObject('property.bolocation',true);
+			$this->bo = CreateObject('property.bolocation', true);
 			$this->bocommon							= & $this->bo->bocommon;
 
 			$this->type_id							= $this->bo->type_id;
@@ -103,7 +99,6 @@
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
 			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
 			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
-
 		}
 
 		public function index()
@@ -116,7 +111,7 @@
 			$user_array = $this->get_user_array();
 
 			$data = array(
-				'datatable_name'	=>  lang('Activity'). ' :: ' . lang('allocation'),
+				'datatable_name' => lang('Activity') . ' :: ' . lang('allocation'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -129,7 +124,8 @@
 					)
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index',
+						'phpgw_return_as' => 'json')),
 					'field' => array(
 					array(
 							'key' => 'id',
@@ -175,7 +171,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -241,27 +237,27 @@
 				{
 					$allocation = $result->serialize();
 
-					if($short_desc = execMethod('property.soentity.get_short_description', 
-							array('location_id' => $allocation['location_id'], 'id' => $allocation['resource_id'])))
+					if ($short_desc = execMethod('property.soentity.get_short_description', array(
+						'location_id' => $allocation['location_id'], 'id' => $allocation['resource_id'])))
 					{
 						$allocation['fm_bim_item_name'] = $short_desc;
 					}
 
-					if($allocation['inventory_id'])
+					if ($allocation['inventory_id'])
 					{
-						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $allocation['inventory_id']));
+						$inventory = execMethod('property.soentity.get_inventory', array('inventory_id' => $allocation['inventory_id']));
 
 						$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
 
 						$name = 'N∕A';
-						if( preg_match('/.location./i', $system_location['location']) )
+						if (preg_match('/.location./i', $system_location['location']))
 						{
 							$location_code = execMethod('property.solocation.get_location_code', $inventory[0]['p_id']);
 							$location = execMethod('property.solocation.read_single', $location_code);
 							$location_arr = explode('-', $location_code);
-							$i=1;
+							$i = 1;
 							$name_arr = array();
-							foreach($location_arr as $_dummy)
+							foreach ($location_arr as $_dummy)
 							{
 								$name_arr[] = $location["loc{$i}_name"];
 								$i++;
@@ -269,10 +265,10 @@
 
 							$name = implode('::', $name_arr);
 						}
-						else if( preg_match('/.entity./i', $system_location['location']) )
+						else if (preg_match('/.entity./i', $system_location['location']))
 						{
-							$name = execMethod('property.soentity.get_short_description', 
-										array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
+							$name = execMethod('property.soentity.get_short_description', array('location_id' => $inventory[0]['p_location_id'],
+								'id' => $inventory[0]['p_id']));
 						}
 
 						$allocation['location_code'] = $location_code;
@@ -292,14 +288,14 @@
 					
 					$disabled = $allocation['ticket_id'] ? 'disabled = "disabled"' : '';
 
-					if($allocation['ticket_id'])
+					if ($allocation['ticket_id'])
 					{
 
-						 $related_href = self::link(array('menuaction' => 'property.uitts.view','id' => $allocation['ticket_id']));
+						$related_href = self::link(array('menuaction' => 'property.uitts.view', 'id' => $allocation['ticket_id']));
 						 $allocation['related'] = "<a  href=\"{$related_href}\">{$lang_ticket} #{$allocation['ticket_id']}</a>";
 						
-						$relation_info = execMethod('property.interlink.get_relation_info', 
-										array('location' => '.ticket', 'id' => $allocation['ticket_id']));
+						$relation_info = execMethod('property.interlink.get_relation_info', array(
+							'location' => '.ticket', 'id' => $allocation['ticket_id']));
 
 						$allocation['status'] = $relation_info['statustext'];
 					}
@@ -326,7 +322,7 @@
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(	$result_data['results'], array($this, '_add_links'), "logistic.uirequirement_resource_allocation.view");
+				array_walk($result_data['results'], array($this, '_add_links'), "logistic.uirequirement_resource_allocation.view");
 			}
 			return $this->jquery_results($result_data);
 		}
@@ -347,7 +343,7 @@
 				$activity = $this->so_activity->get_single($activity_id);
 			}
 
-			if($requirement_id && is_numeric($requirement_id))
+			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
 			}
@@ -364,9 +360,10 @@
 //			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 			$allocation_suggestions = array();
 
-			if($requirement)
+			if ($requirement)
 			{
-				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
+				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array(
+					'requirement_id' => $requirement->get_id()));
 
 				$criterias_array = array();
 
@@ -380,21 +377,21 @@
 				$view_criterias_array = array();
 				$custom	= createObject('phpgwapi.custom_fields');
 
-				foreach($requirement_values as $requirement_value)
+				foreach ($requirement_values as $requirement_value)
 				{
 					$attrib_value = $requirement_value->get_value();
 					$operator = $requirement_value->get_operator();
 					$cust_attribute_id = $requirement_value->get_cust_attribute_id();
 
-					if($operator == "eq")
+					if ($operator == "eq")
 					{
 						$operator_str = "=";
 					}
-					else if($operator == "lt")
+					else if ($operator == "lt")
 					{
 						$operator_str = "<";
 					}
-					else if($operator == "gt")
+					else if ($operator == "gt")
 					{
 						$operator_str = ">";
 					}
@@ -421,17 +418,16 @@
 
 				$allocation_suggestions = execMethod('property.soentity.get_eav_list', $criterias_array);
 				
-				if($entity_category['enable_bulk'])
+				if ($entity_category['enable_bulk'])
 				{
 					foreach ($allocation_suggestions as &$entry)
 					{
-						$entry['inventory'] = execMethod('property.boentity.get_inventory', array('location_id' => $location_id, 'id' => $entry['id']));
+						$entry['inventory'] = execMethod('property.boentity.get_inventory', array(
+							'location_id' => $location_id, 'id' => $entry['id']));
 					}
 				}
-
 			}
 //Start fuzzy
-
 //_debug_array($allocation_suggestions);die();
 
 			$suggestion_ids = array();
@@ -452,22 +448,22 @@
 			
 			foreach ($allocation_suggestions as &$allocation_suggestion)
 			{
-				if(isset($allocated['items'][$allocation_suggestion['id']]))
+				if (isset($allocated['items'][$allocation_suggestion['id']]))
 				{
 					$allocation_suggestion['allocated'] = true;
 					$allocated_where = array();
 					$allocated_date = array();
 					foreach ($allocated['calendar'][$allocation_suggestion['id']] as $calendar_entry)
 					{
-						$allocated_date[] = $GLOBALS['phpgw']->common->show_date($calendar_entry['start_date'] ,$dateformat)
-											. ' - ' . $GLOBALS['phpgw']->common->show_date($calendar_entry['end_date'] ,$dateformat);
+						$allocated_date[] = $GLOBALS['phpgw']->common->show_date($calendar_entry['start_date'], $dateformat)
+							. ' - ' . $GLOBALS['phpgw']->common->show_date($calendar_entry['end_date'], $dateformat);
 
-						if(!isset($activities[$calendar_entry['activity_id']]))
+						if (!isset($activities[$calendar_entry['activity_id']]))
 						{
-							$activities[$calendar_entry['activity_id']] = $this->so_activity->get_single( $calendar_entry['activity_id'] );
+							$activities[$calendar_entry['activity_id']] = $this->so_activity->get_single($calendar_entry['activity_id']);
 						}
 						
-						if($activities[$calendar_entry['activity_id']])
+						if ($activities[$calendar_entry['activity_id']])
 						{
 							$allocated_where[] = $activities[$calendar_entry['activity_id']]->get_name();
 						}
@@ -480,13 +476,13 @@
 					$allocation_suggestion['allocated_date'] = implode('; ', $allocated_date);
 					$allocation_suggestion['allocated_where'] = implode('; ', $allocated_where);
 				}
-				if(isset($allocation_suggestion['inventory']))
+				if (isset($allocation_suggestion['inventory']))
 				{
 					foreach ($allocation_suggestion['inventory'] as & $inventory)
 					{
 						
 						//Allocated to another requirement:
-						if(isset($allocated['allocations'][$inventory['inventory_id']]['requirement_id']) && $requirement->get_id() != $allocated['allocations'][$inventory['inventory_id']]['requirement_id'])
+						if (isset($allocated['allocations'][$inventory['inventory_id']]['requirement_id']) && $requirement->get_id() != $allocated['allocations'][$inventory['inventory_id']]['requirement_id'])
 						{
 							$inventory['disabled'] = true;
 						}
@@ -497,18 +493,16 @@
 
 						$inventory['allocation_id'] = $allocated['allocations'][$inventory['inventory_id']]['allocation_id'];
 						
-						if($allocated['allocations'][$inventory['inventory_id']]['start_date'])
+						if ($allocated['allocations'][$inventory['inventory_id']]['start_date'])
 						{
-							$inventory['allocated_date'] = $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['start_date'] ,$dateformat)
-											. ' - ' . $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['end_date'] ,$dateformat);
+							$inventory['allocated_date'] = $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['start_date'], $dateformat)
+								. ' - ' . $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['end_date'], $dateformat);
 						}
-
-
 					}
 				}
 			}
 
-			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
+			$activity = $this->so_activity->get_single($requirement->get_activity_id());
 
 			$data = array
 			(
@@ -526,7 +520,7 @@
 		{
 			$requirement_id = phpgw::get_var('requirement_id');
 
-			if($requirement_id && is_numeric($requirement_id))
+			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
 				$activity_id = $requirement->get_activity_id();
@@ -538,7 +532,6 @@
 			$inventory_ids = phpgw::get_var('inventory_ids');
 			$allocations = phpgw::get_var('allocations');
 			//FIXME: Bruk 'allocation_id' i staden.
-
 //_debug_array($inventory_ids_orig);die();
 			$filters = array('requirement_id' => $requirement->get_id());
 			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);
@@ -547,79 +540,76 @@
 
 			$num_allowed_bookings = $num_required - $num_allocated;
 
-			if($inventory_ids)
+			if ($inventory_ids)
 			{
 				foreach ($inventory_ids as $resource => $allocated_amount)
 				{
-					if($allocated_amount)
+					if ($allocated_amount)
 					{
 						$resource_arr = explode('_', $resource);
 						$resource_id = $resource_arr[0];
 						$inventory_id = $resource_arr[1];
 
 						$resource_alloc = new logistic_requirement_resource_allocation();
-						$resource_alloc->set_requirement_id( $requirement->get_id() );
-						$resource_alloc->set_resource_id( $resource_id );
-						$resource_alloc->set_inventory_id( $inventory_id );
-						$resource_alloc->set_allocated_amount( $allocated_amount );
-						$resource_alloc->set_id( $allocations[$resource] );
-						$resource_alloc->set_location_id( $requirement->get_location_id() );
-						$resource_alloc->set_create_user( $user_id );
-						$resource_alloc->set_start_date( $requirement->get_start_date() );
-						$resource_alloc->set_end_date( $requirement->get_start_date() );
-						$resource_alloc_id = $this->so->store( $resource_alloc );
-
+						$resource_alloc->set_requirement_id($requirement->get_id());
+						$resource_alloc->set_resource_id($resource_id);
+						$resource_alloc->set_inventory_id($inventory_id);
+						$resource_alloc->set_allocated_amount($allocated_amount);
+						$resource_alloc->set_id($allocations[$resource]);
+						$resource_alloc->set_location_id($requirement->get_location_id());
+						$resource_alloc->set_create_user($user_id);
+						$resource_alloc->set_start_date($requirement->get_start_date());
+						$resource_alloc->set_end_date($requirement->get_start_date());
+						$resource_alloc_id = $this->so->store($resource_alloc);
 					}
 				}
-
 			}
-			else if( count($chosen_resources) <=  $num_allowed_bookings)
+			else if (count($chosen_resources) <= $num_allowed_bookings)
 			{
-				foreach($chosen_resources as $resource_id)
+				foreach ($chosen_resources as $resource_id)
 				{
 					$resource_alloc = new logistic_requirement_resource_allocation();
-					$resource_alloc->set_requirement_id( $requirement->get_id() );
-					$resource_alloc->set_resource_id( $resource_id );
-					$resource_alloc->set_location_id( $requirement->get_location_id() );
-					$resource_alloc->set_create_user( $user_id );
-					$resource_alloc->set_start_date( $requirement->get_start_date() );
-					$resource_alloc->set_end_date( $requirement->get_start_date() );
+					$resource_alloc->set_requirement_id($requirement->get_id());
+					$resource_alloc->set_resource_id($resource_id);
+					$resource_alloc->set_location_id($requirement->get_location_id());
+					$resource_alloc->set_create_user($user_id);
+					$resource_alloc->set_start_date($requirement->get_start_date());
+					$resource_alloc->set_end_date($requirement->get_start_date());
 
-					$resource_alloc_id = $this->so->store( $resource_alloc );
+					$resource_alloc_id = $this->so->store($resource_alloc);
 				}
-
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
-
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
+				'activity_id' => $requirement->get_activity_id()));
 		}
 
 		public function delete()
 		{
-			if(!$this->delete)
+			if (!$this->delete)
 			{
-				return array( "status" => "not_deleted" );			
+				return array("status" => "not_deleted");
 			}
 
 			$resource_allocation_id = phpgw::get_var('id');
 
 			$status = $this->so->delete($resource_allocation_id);
 
-			if($status)
+			if ($status)
 			{
-				return array( "status" => "deleted" );
+				return array("status" => "deleted");
 			}
 			else
 			{
-				return array( "status" => "not_deleted" );
+				return array("status" => "not_deleted");
 			}
 		} 
 
-		function convert_to_array($object_list)
+		function convert_to_array( $object_list )
 		{
 			$converted_array = array();
 
-			foreach($object_list as $object)
+			foreach ($object_list as $object)
 			{
 				$converted_array[] = $object->toArray();
 			}
@@ -634,11 +624,13 @@
 			$requirement_id = phpgw::get_var('requirement_id');
 			if (isset($_POST['edit_allocation']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'id' => $activity_id, 'requirement_id' => $requirement_id, 'allocation_id' => $allocation_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.edit',
+					'id' => $activity_id, 'requirement_id' => $requirement_id, 'allocation_id' => $allocation_id));
 			}
 			else if (isset($_POST['new_activity']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'id' => $activity_id, 'requirement_id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.edit',
+					'id' => $activity_id, 'requirement_id' => $requirement_id));
 			}
 			else
 			{

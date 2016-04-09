@@ -44,9 +44,7 @@
 
 		public function index()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -65,7 +63,7 @@
 				),
 				'datatable'	 => array(
 					'source'	 => self::link(array('menuaction' => 'booking.uiseason.index', 'phpgw_return_as' => 'json')),
-					'sorted_by'	 => array('key' => 'to_', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 5, 'dir' => 'desc'),//to_
 					'field'		 => array(
 						array(
 							'key'		 => 'name',
@@ -107,7 +105,7 @@
 
 			$data['datatable']['actions'][] = array();
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiseason.add'));
 			}
@@ -119,30 +117,29 @@
 			$seasons = $this->bo->read();
 			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
 
-			foreach($seasons['results'] as &$season)
+			foreach ($seasons['results'] as &$season)
 			{
 				$season['status']	 = lang($season['status']);
 				$season['from_']	 = pretty_timestamp($season['from_']);
 				$season['to_']		 = pretty_timestamp($season['to_']);
 
 				$resources = $this->resource_bo->read_single($season['id']);
-				if(isset($season['resources']))
+				if (isset($season['resources']))
 				{
 					$filters['filters']['id']	 = $season['resources'];
 					$resources					 = $this->resource_bo->so->read($filters);
 					$temparray					 = array();
-					foreach($resources['results'] as $resource)
+					foreach ($resources['results'] as $resource)
 					{
 						$temparray[] = $resource['name'];
 					}
 					$season['resource_list'] = implode(', ', $temparray);
 				}
 
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $season['officer_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($season['officer_name']);
+				if($account_id)
 				{
-					$season['officer_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$season['officer_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			return $this->jquery_results($seasons);
@@ -152,7 +149,7 @@
 		{
 			$errors	 = array();
 			$season	 = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$season				 = extract_values($_POST, $this->fields);
 				$season['active']	 = '1';
@@ -163,14 +160,14 @@
 
 				$errors = $this->bo->validate($season);
 
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->add($season);
 						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $receipt['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -218,21 +215,21 @@
 
 			$errors = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
 				$season			 = array_merge($season, extract_values($_POST, $this->fields));
 				$season['from_'] = ($season['from_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_'])) : $season['from_'];
 				$season['to_']	 = ($season['to_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_'])) : $season['to_'];
 				$errors			 = $this->bo->validate($season);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->update($season);
 						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
@@ -277,13 +274,13 @@
 			$season['add_permission_link']	 = booking_uipermission::generate_inline_link('season', $season['id'], 'add');
 			$resource_ids					 = '';
 
-			if(count($season['resources']) == 0)
+			if (count($season['resources']) == 0)
 			{
 				$resource_ids = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
 			}
 			else
 			{
-				foreach($season['resources'] as $res)
+				foreach ($season['resources'] as $res)
 				{
 					$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 				}
@@ -316,19 +313,19 @@
 				'id' => $season['id']));
 			$weekdays					 = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
 				'Saturday', 'Sunday');
-			foreach($boundaries as &$boundary)
+			foreach ($boundaries as &$boundary)
 			{
 				$boundary['wday_name']	 = lang($weekdays[$boundary['wday'] - 1]);
 				$boundary['delete_link'] = self::link(array('menuaction' => 'booking.uiseason.delete_boundary',
 					'id' => $boundary['id']));
 			}
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$boundary				 = extract_values($_POST, $this->boundary_fields);
 				$boundary['season_id']	 = $season_id;
 				$errors					 = $this->bo->validate_boundary($boundary);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add_boundary($boundary);
 					$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season_id));
@@ -417,26 +414,26 @@
 			//$season_id = phpgw::get_var('season_id', 'int');
 			//$phpgw_return_as = phpgw::get_var('phpgw_return_as');
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$alloc				 = extract_values($_POST, $this->wtemplate_alloc_fields);
 				//$alloc['season_id'] = $season_id;
 				$alloc['season_id']	 = phpgw::get_var('season_id', 'int');
 
 				$errors = $this->bo->validate_wtemplate_alloc($alloc);
-				if(!$errors && $alloc['id'])
+				if (!$errors && $alloc['id'])
 				{
 					$receipt = $this->bo->update_wtemplate_alloc($alloc);
 				}
-				else if(!$errors && !$alloc['id'])
+				else if (!$errors && !$alloc['id'])
 				{
 					$receipt = $this->bo->add_wtemplate_alloc($alloc);
 				}
 
 				$message = array();
-				if(count($errors))
+				if (count($errors))
 				{
-					foreach($errors as $error)
+					foreach ($errors as $error)
 					{
 						$message['error'][] = array('msg' => $error[0]);
 					}
@@ -450,7 +447,7 @@
 			$_to	 = phpgw::get_var('_to', 'string');
 			$wday	 = phpgw::get_var('wday', 'string');//int?
 
-			if(!empty($id))
+			if (!empty($id))
 			{
 				$alloc						 = $this->bo->wtemplate_alloc_read_single($id);
 				$season						 = $alloc;
@@ -475,13 +472,13 @@
 			$resource_ids = phpgw::get_var('filter_id', 'int');
 
 			$filters = null;
-			if(count($resource_ids) == 0)
+			if (count($resource_ids) == 0)
 			{
 				$filters = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
 			}
 			else
 			{
-				foreach($resource_ids as $res)
+				foreach ($resource_ids as $res)
 				{
 					$filters = $filters . '&filter_id[]=' . $res;
 				}
@@ -536,7 +533,7 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
 			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step	 = phpgw::get_var('create') ? 3 : 2;
 				$from	 = phpgw::get_var('from_', 'string');
@@ -545,15 +542,15 @@ JS;
 				$to_	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($to));
 
 				$interval = phpgw::get_var('field_interval');
-				if($from_ < $season['from_'])
+				if ($from_ < $season['from_'])
 				{
 					$errors['from_'] = lang('Start date must be after %1', pretty_timestamp($season['from_']));
 				}
-				if($to_ > $season['to_'])
+				if ($to_ > $season['to_'])
 				{
 					$errors['to_'] = lang('To date must be before %1', pretty_timestamp($season['to_']));
 				}
-				if($errors)
+				if ($errors)
 				{
 					$step = 1;
 				}

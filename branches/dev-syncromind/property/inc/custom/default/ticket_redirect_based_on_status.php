@@ -19,12 +19,12 @@
 			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$this->config = $custom_config->config_data;
 			$this->status_text = parent::get_status_text();
-			if($this->acl_location != '.ticket')
+			if ($this->acl_location != '.ticket')
 			{
 				throw new Exception("'catch_ticket_export'  is intended for location = '.ticket'");
 			}
 
-			if(!isset($this->config['ticket_redirect']) || !$this->config['ticket_redirect'])
+			if (!isset($this->config['ticket_redirect']) || !$this->config['ticket_redirect'])
 			{
 				$this->custom_config = $custom_config;
 				$this->initiate_config();
@@ -59,14 +59,14 @@
 				'section_id' => $receipt_section['section_id'], 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')));
 		}
 
-		function check_status($data)
+		function check_status( $data )
 		{
 			$status_arr = explode(',', $this->config['ticket_redirect']['status']);
 			$target_arr = explode(',', $this->config['ticket_redirect']['target']);
 
-			foreach($status_arr as $key => $status_redirect)
+			foreach ($status_arr as $key => $status_redirect)
 			{
-				if($data['status'] != $data['old_status'] && trim($data['status'], 'C') == $status_redirect && isset($target_arr[$key]) && $target_arr[$key])
+				if ($data['status'] != $data['old_status'] && trim($data['status'], 'C') == $status_redirect && isset($target_arr[$key]) && $target_arr[$key])
 				{
 					$link_data = array
 						(

@@ -15,7 +15,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('activitycalendar.sogroup');
 			}
@@ -36,24 +36,24 @@
 		 * @param boolean $return_count
 		 * @return string SQL
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			//Add columns to this array to include them in the query
 			$columns = array();
 
-			if($sort_field != null)
+			if ($sort_field != null)
 			{
 				$dir	 = $ascending ? 'ASC' : 'DESC';
 				$order	 = "ORDER BY bb_group.id $dir";
 			}
-			if($search_for)
+			if ($search_for)
 			{
 				$query			 = $this->marshal($search_for, 'string');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "name":
 						$like_clauses[]	 = "group.name $this->like $like_pattern";
@@ -62,7 +62,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -71,46 +71,46 @@
 			$use_local_group	 = false;
 			$filter_clauses		 = array();
 			$filter_clauses[]	 = "bb_group.show_in_portal=1";
-			if(isset($filters['org_id']))
+			if (isset($filters['org_id']))
 			{
 				$group_org_id = $this->marshal($filters['org_id'], 'int');
-				if(isset($group_org_id) && $group_org_id > 0)
+				if (isset($group_org_id) && $group_org_id > 0)
 				{
 					$filter_clauses[] = "bb_group.organization_id = {$group_org_id}";
 				}
 			}
-			if(isset($filters['changed_groups']))
+			if (isset($filters['changed_groups']))
 			{
 				$use_local_group = true;
 				unset($filter_clauses);
-				if(isset($filters[$this->get_id_field_name()]))
+				if (isset($filters[$this->get_id_field_name()]))
 				{
 					$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 					$filter_clauses[]	 = "activity_group.id = {$id}";
 				}
 			}
-			if(isset($filters['new_groups']))
+			if (isset($filters['new_groups']))
 			{
 				$use_local_group	 = true;
 				unset($filter_clauses);
 				$filter_clauses[]	 = "(activity_group.change_type = 'new' OR activity_group.change_type = 'change') ";
-				if(isset($filters['group_id']))
+				if (isset($filters['group_id']))
 				{
 					$id					 = $this->marshal($filters['group_id'], 'int');
 					$filter_clauses[]	 = "activity_group.id = {$id}";
 				}
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($use_local_group)
+			if ($use_local_group)
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(activity_group.id)) AS count';
 				}
@@ -134,7 +134,7 @@
 			}
 			else
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(bb_group.id)) AS count';
 				}
@@ -167,7 +167,7 @@
 		 * @param rental_party $party the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$group)
+		function add( &$group )
 		{
 			return false;
 		}
@@ -178,16 +178,18 @@
 		 * @param $party the party to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($group)
+		function update( $group )
 		{
 			return false;
 		}
 
-		function update_group_description($group_id, $desc)
+		function update_group_description( $group_id, $desc )
 		{
-			$sql	 = "UPDATE bb_group SET description='{$desc}' WHERE ID={$group_id}";
+			$desc = $this->db->db_addslashes($desc);
+			$group_id = (int)$group_id;
+			$sql = "UPDATE bb_group SET description='{$desc}' WHERE id={$group_id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -197,16 +199,16 @@
 			}
 		}
 
-		function update_group_contact($contact)
+		function update_group_contact( $contact )
 		{
-			$id		 = intval($contact['original_id']);
-			$name	 = $contact['name'];
+			$id = (int)$contact['original_id'];
+			$name = $this->db->db_addslashes($contact['name']);
 			$phone	 = $contact['phone'];
 			$mail	 = $contact['mail'];
 
-			$sql	 = "UPDATE bb_group_contact SET NAME='{$name}', PHONE='{$phone}', EMAIL='{$mail}' WHERE id={$id}";
+			$sql = "UPDATE bb_group_contact SET name='{$name}', phone='{$phone}', email='{$mail}' WHERE id={$id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -216,9 +218,9 @@
 			}
 		}
 
-		function add_group_contact_local($contact)
+		function add_group_contact_local( $contact )
 		{
-			$name		 = $contact['name'];
+			$name = $this->db->db_addslashes($contact['name']);
 			$phone		 = $contact['phone'];
 			$mail		 = $contact['mail'];
 			$original_id = $contact['original_id'];
@@ -252,9 +254,9 @@
 			return isset($result);
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = array
 					(
@@ -275,95 +277,96 @@
 			return $ret;
 		}
 
-		function get_group_name($group_id)
+		function get_group_name( $group_id )
 		{
 			$result = "Ingen";
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT name FROM bb_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
 		}
 
-		function get_group_name_local($group_id)
+		function get_group_name_local( $group_id )
 		{
 			$result = "Ingen";
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT name FROM activity_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
 		}
 
-		function get_orgid_from_group($group_id)
+		function get_orgid_from_group( $group_id )
 		{
 			$result = 0;
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT organization_id FROM bb_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
+
 					$result = $this->db->f('organization_id');
 				}
-			}
 
 			return $result;
 		}
 
-		function get_orgid_from_group_local($group_id)
+		function get_orgid_from_group_local( $group_id )
 		{
 			$result = 0;
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT organization_id FROM activity_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
+
 					$result = $this->db->f('organization_id');
 				}
-			}
 
 			return $result;
 		}
 
-		function get_contacts($group_id)
+		function get_contacts( $group_id )
 		{
 			$contacts = array();
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT id FROM bb_group_contact WHERE group_id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contacts[] = $this->db->f('id');
 				}
-				//$result = $contacts;
 			}
 
 			return $contacts;
 		}
 
-		function get_contacts_as_objects($group_id)
+		function get_contacts_as_objects( $group_id )
 		{
 			$contacts = array();
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT * FROM bb_group_contact WHERE group_id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -373,37 +376,37 @@
 					$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
 					$contacts[]		 = $contact_person;
 				}
-				//$result = $contacts;
 			}
 
 			return $contacts;
 		}
 
-		function get_contacts_local($group_id)
+		function get_contacts_local( $group_id )
 		{
 			$contacts = array();
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT id FROM activity_contact_person WHERE group_id='{$group_id}'";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contacts[] = $this->db->f('id');
 				}
-				//$result = $contacts;
 			}
 
 			return $contacts;
 		}
 
-		function get_contacts_local_as_objects($group_id)
+		function get_contacts_local_as_objects( $group_id )
 		{
 			$contacts = array();
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT * FROM activity_contact_person WHERE group_id='{$group_id}'";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -413,44 +416,43 @@
 					$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
 					$contacts[]		 = $contact_person;
 				}
-				//$result = $contacts;
 			}
 
 			return $contacts;
 		}
 
-		function get_description($group_id)
+		function get_description( $group_id )
 		{
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT description FROM bb_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
 
-		function get_description_local($group_id)
+		function get_description_local( $group_id )
 		{
-			if(isset($group_id))
+			$group_id = (int)$group_id;
+			if ($group_id)
 			{
 				$q1 = "SELECT description FROM activity_group WHERE id={$group_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
 
-		protected function populate(int $group_id, &$group)
+		protected function populate( int $group_id, &$group )
 		{
 
-			if($group == null)
+			if ($group == null)
 			{
 				$group = new activitycalendar_group((int)$group_id);
 
@@ -466,7 +468,7 @@
 			return $group;
 		}
 
-		function update_local($group)
+		function update_local( $group )
 		{
 			$name		 = $group->get_name();
 			$orgid		 = $group->get_organization_id();
@@ -474,16 +476,17 @@
 			$change_type = $group->get_change_type();
 			$transferred = ($group->get_transferred() == 1 || $group->get_transferred() == true) ? 'true' : 'false';
 
-			$values[]	 = "NAME='{$name}'";
-			$values[]	 = "DESCRIPTION='{$description}'";
-			$values[]	 = "ORGANIZATION_ID='{$orgid}'";
-			$values[]	 = "CHANGE_TYPE='{$change_type}'";
-			$values[]	 = "TRANSFERRED={$transferred}";
+			$values[] = "name='{$name}'";
+			$values[] = "description='{$description}'";
+			$values[] = "organization_id='{$orgid}'";
+			$values[] = "change_type='{$change_type}'";
+			$values[] = "transferred={$transferred}";
 			$vals		 = implode(',', $values);
 
-			$sql	 = "UPDATE activity_group SET {$vals} WHERE ID={$group->get_id()}";
+			$id = (int)$group->get_id();
+			$sql = "UPDATE activity_group SET {$vals} WHERE id={$id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -493,7 +496,7 @@
 			}
 		}
 
-		function transfer_group($group_info)
+		function transfer_group( $group_info )
 		{
 			$name			 = $group_info['name'];
 			$orgid			 = $group_info['organization_id'];
@@ -517,7 +520,7 @@
 
 			$sql	 = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return $this->db->get_last_insert_id('bb_group', 'id');
 			}
@@ -527,8 +530,9 @@
 			}
 		}
 
-		function get_group_local($g_id)
+		function get_group_local( $g_id )
 		{
+			$g_id = (int)$g_id;
 			$columns[]	 = 'activity_group.id';
 			$columns[]	 = 'activity_group.name';
 			$columns[]	 = 'activity_group.description';
@@ -545,9 +549,9 @@
 
 			$sql	 = "SELECT {$cols} FROM {$table} WHERE activity_group.id={$g_id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
-			{
-				$group = new activitycalendar_group((int)$g_id);
+			$this->db->next_record();
+
+			$group = new activitycalendar_group($g_id);
 
 				$group->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$group->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -560,13 +564,12 @@
 
 				return $group;
 			}
-		}
 
-		function add_new_group_from_activity($group_info)
+		function add_new_group_from_activity( $group_info )
 		{
-			$name			 = $group_info['name'];
+			$name = $this->db->db_addslashes($group_info['name']);
 			$orgid			 = $group_info['organization_id'];
-			$description	 = $group_info['description'];
+			$description = $this->db->db_addslashes($group_info['description']);
 			$activity_id	 = 1;
 			$show_in_portal	 = 1;
 
@@ -587,7 +590,7 @@
 			$sql	 = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
 
-			if(isset($result))
+			if (isset($result))
 			{
 				return $this->db->get_last_insert_id('bb_group', 'id');
 			}

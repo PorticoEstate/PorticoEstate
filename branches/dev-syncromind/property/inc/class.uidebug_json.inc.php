@@ -49,7 +49,7 @@
 
 		public function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				echo lang('no access');
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -59,12 +59,12 @@
 
 			//get session's values
 			$data = phpgwapi_cache::session_get($app, 'id_debug');
-			if(isset($data))
+			if (isset($data))
 			{
 				//clear session
 				phpgwapi_cache::session_clear($app, 'id_debug');
 				//replace '<' and '>'
-				if(is_array($data))
+				if (is_array($data))
 				{
 					self::_my_print_rec($data, 0);
 				}
@@ -81,11 +81,11 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
-		static protected function _my_print_rec(&$val, $nivel = 0)
+		static protected function _my_print_rec( &$val, $nivel = 0 )
 		{
-			foreach($val as $key => &$value)
+			foreach ($val as $key => &$value)
 			{
-				if(is_array($value))
+				if (is_array($value))
 				{
 					self::_my_print_rec($value, $nivel + 1);
 				}

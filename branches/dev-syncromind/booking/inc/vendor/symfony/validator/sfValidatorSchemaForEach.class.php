@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorSchemaForEach wraps a validator multiple times in a single validator.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorSchemaForEach extends sfValidatorSchema
-{
+	class sfValidatorSchemaForEach extends sfValidatorSchema
+	{
+
   /**
    * Constructor.
    *
@@ -28,7 +28,7 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
    *
    * @see sfValidatorBase
    */
-  public function __construct(sfValidatorBase $validator, $count, $options = array(), $messages = array())
+		public function __construct( sfValidatorBase $validator, $count, $options = array(), $messages = array() )
   {
     $fields = array();
     for ($i = 0; $i < $count; $i++)
@@ -42,8 +42,8 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     throw new Exception('Unable to convert a sfValidatorSchemaForEach to string.');
   }
-}
+	}

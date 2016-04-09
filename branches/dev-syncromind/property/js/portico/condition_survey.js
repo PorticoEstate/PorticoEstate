@@ -10,10 +10,11 @@ var intVal = function (i)
 var setSuma = function (api, i)
 {
 	var data = api.column(i, {page: 'current'}).data();
-	var pageTotal = data.length ? data.reduce(function (a, b) {
+	var pageTotal = data.length ? data.reduce(function (a, b)
+	{
 		return intVal(a) + intVal(b);
 	}) : 0;
-	var amount = $.number(pageTotal, 0, ',', ' ');
+	var amount = $.number(pageTotal, 0, ',', '.');
 
 	$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 };

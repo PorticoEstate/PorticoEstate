@@ -31,9 +31,9 @@
 	 * @package property
 	 * @subpackage utilities
 	 */
-	if(!isset($GLOBALS['phpgw_info']['server']['temp_dir']) || !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']))
+	if (!isset($GLOBALS['phpgw_info']['server']['temp_dir']) || !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']))
 	{
-		if(substr(PHP_OS, 3) == 'WIN')
+		if (substr(PHP_OS, 3) == 'WIN')
 		{
 			$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
 		}
@@ -61,7 +61,7 @@
 
 		}
 
-		function parseOds($file)
+		function parseOds( $file )
 		{
 			$tmp = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			copy($file, $tmp . '/' . basename($file));
@@ -73,7 +73,7 @@
 			return $this;
 		}
 
-		function saveOds($obj, $file)
+		function saveOds( $obj, $file )
 		{
 			$tmp = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			$uid = uniqid();
@@ -115,32 +115,32 @@
 		 *
 		 * @return bool true on success
 		 */
-		function advancedrmdir($path)
+		function advancedrmdir( $path )
 		{
 			$origipath = $path;
 			$handler = opendir($path);
-			while(true)
+			while (true)
 			{
 				$item = readdir($handler);
-				if($item == "." or $item == "..")
+				if ($item == "." or $item == "..")
 				{
 					continue;
 				}
-				else if(gettype($item) == "boolean")
+				else if (gettype($item) == "boolean")
 				{
 					closedir($handler);
-					if(!@rmdir($path))
+					if (!@rmdir($path))
 					{
 						return false;
 					}
-					if($path == $origipath)
+					if ($path == $origipath)
 					{
 						break;
 					}
 					$path = substr($path, 0, strrpos($path, "/"));
 					$handler = opendir($path);
 				}
-				else if(is_dir($path . "/" . $item))
+				else if (is_dir($path . "/" . $item))
 				{
 					closedir($handler);
 					$path = $path . "/" . $item;

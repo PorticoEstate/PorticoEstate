@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -31,7 +30,6 @@
 	 *
 	 * @package Frontend
 	 */
-
     class frontend_uipictures extends frontend_uicommon
     {
 
@@ -49,17 +47,18 @@
 		{
 			$data = array
 			(
-				'header' =>$this->header_state,
+				'header' => $this->header_state,
 				'section'	=> array('maintenance' => lang('not_implemented'),
 					'tabs' => $this->tabs,
-					'tabs_content'=>$this->tabs_content,
-					'tab_selected'=>$this->tab_selected
+					'tabs_content' => $this->tabs_content,
+					'tab_selected' => $this->tab_selected
 				)
 			);
 			self::render_template_xsl(array('pictures', 'datatable_inline', 'frontend'), $data);
+		}
 			
+		public function query()
+		{
 
 		}
-		
-		public function query() {}
     }

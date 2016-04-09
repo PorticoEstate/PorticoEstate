@@ -41,8 +41,8 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('catch');
-			$this->function_msg = 'Import info from files';
+			$this->sub_location = lang('property');
+			$this->function_msg = 'Synkroniser avdelinger med Fellesdata';
 		}
 
 		function execute()
@@ -54,7 +54,7 @@
 
 			$fellesdata->get_org_unit_ids_from_top();
 
-			if($this->debug)
+			if ($this->debug)
 			{
 //				_debug_array($fellesdata->unit_ids);
 			}
@@ -63,18 +63,18 @@
 			{
 				$fellesdata->insert_values();
 
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
+				if (isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
 				{
 					$this->update_rental_party();
 				}
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
 
 			$messages = $fellesdata->messages;
-			foreach($messages as $message)
+			foreach ($messages as $message)
 			{
 				$this->receipt['message'][] = array('msg' => $message);
 			}
@@ -86,16 +86,16 @@
 			$sql = "SELECT DISTINCT org_enhet_id FROM rental_party WHERE org_enhet_id IS NOT NULL";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$parties = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$parties[] = $this->db->f('org_enhet_id');
 			}
 
-			foreach($parties as $party)
+			foreach ($parties as $party)
 			{
 				$sql = "SELECT name, parent_id FROM fm_org_unit WHERE id  = {$party}";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$name = $this->db->f('name');
 					$parent_id = $this->db->f('parent_id');
@@ -112,7 +112,7 @@
 					$sql = "UPDATE rental_party SET {$value_set} WHERE org_enhet_id ={$party}";
 
 					$this->db->query($sql, __LINE__, __FILE__);
-					if($this->debug)
+					if ($this->debug)
 					{
 						$this->receipt['message'][] = array('msg' => $sql);
 					}
@@ -138,13 +138,13 @@
 		{
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
 
-			if(!isset($this->config->config_data['fellesdata']) || !$this->config->config_data['fellesdata'])
+			if (!isset($this->config->config_data['fellesdata']) || !$this->config->config_data['fellesdata'])
 			{
 				$this->initiate_config();
 			}
 		}
 
-		public function set_debug($debug)
+		public function set_debug( $debug )
 		{
 			$this->debug = $debug;
 		}
@@ -209,9 +209,9 @@
 		 *
 		 * @return mixed the value of the variable sought - null if not found
 		 */
-		public function __get($varname)
+		public function __get( $varname )
 		{
-			switch($varname)
+			switch ($varname)
 			{
 				case 'unit_ids':
 					return $this->unit_ids;
@@ -228,7 +228,7 @@
 		}
 		/* our simple php ping function */
 
-		function ping($host)
+		function ping( $host )
 		{
 			exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
 			return $rval === 0;
@@ -236,12 +236,12 @@
 
 		public function get_db()
 		{
-			if($this->db && is_object($this->db))
+			if ($this->db && is_object($this->db))
 			{
 				return $this->db;
 			}
 
-			if(!$this->config->config_data['fellesdata']['host'] || !$this->ping($this->config->config_data['fellesdata']['host']))
+			if (!$this->config->config_data['fellesdata']['host'] || !$this->ping($this->config->config_data['fellesdata']['host']))
 			{
 				$message = "Database server {$this->config->config_data['fellesdata']['host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
@@ -263,7 +263,7 @@
 				$db->connect();
 				$this->connected = true;
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$status = lang('unable_to_connect_to_database');
 			}
@@ -280,7 +280,7 @@
 
 			$units = $this->unit_ids;
 
-			foreach($units as $unit)
+			foreach ($units as $unit)
 			{
 				$value_set = array
 					(
@@ -297,11 +297,11 @@
 				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'], __LINE__, __FILE__);
 				$db->next_record();
 
-				if($db->f('cnt'))
+				if ($db->f('cnt'))
 				{
 					unset($value_set['id']);
 
-					if($this->debug)
+					if ($this->debug)
 					{
 						$this->messages[] = "ID finnes fra før: {$unit['id']}, oppdaterer: {$unit['name']}";
 					}
@@ -310,7 +310,7 @@
 				}
 				else
 				{
-					if($this->debug)
+					if ($this->debug)
 					{
 						$this->messages[] = "ID fantes ikke fra før: {$unit['id']}, legger til: {$unit['name']}";
 					}
@@ -327,7 +327,7 @@
 
 		function get_org_unit_ids_from_top()
 		{
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
@@ -335,7 +335,7 @@
 			$sql = "SELECT ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET";
 //			$sql = "SELECT * FROM V_ORG_ENHET";
 			$db->query($sql, __LINE__, __FILE__);
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
 				$name = $db->f('ORG_NAVN', true);
@@ -348,7 +348,7 @@
 
 			$db->query($sql);
 
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
 				$this->unit_ids[] = array
@@ -364,7 +364,7 @@
 			return $this->unit_ids;
 		}
 
-		function get_org_unit_ids_children($org_unit_id)
+		function get_org_unit_ids_children( $org_unit_id )
 		{
 			$org_unit_id = (int)$org_unit_id;
 			$db = clone($this->db);
@@ -374,7 +374,7 @@
 
 			$db->query($q);
 
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$child_org_unit_id = $db->f('ORG_ENHET_ID');
 				$this->unit_ids[] = array
@@ -385,7 +385,7 @@
 					'level' => $db->f('ORG_NIVAA')
 				);
 
-				if($db->f('ANT_ENHETER_UNDER'))
+				if ($db->f('ANT_ENHETER_UNDER'))
 				{
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}

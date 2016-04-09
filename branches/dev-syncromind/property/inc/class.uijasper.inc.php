@@ -122,7 +122,7 @@
 
 		function get_file()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -156,13 +156,13 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -345,7 +345,7 @@
 			  );
 			  } */
 			$filters = $this->_get_Filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -376,7 +376,7 @@
 				)
 			);
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -391,7 +391,7 @@
 				);
 			}
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -417,7 +417,7 @@
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -470,7 +470,7 @@
 
 			$values = $this->bo->read($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -487,24 +487,24 @@
 			$id = phpgw::get_var('id', 'int');
 			$values = phpgw::get_var('values');
 
-			if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if($GLOBALS['phpgw']->session->is_repost())
+				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-				if(!isset($values['location']) || !$values['location'])
+				if (!isset($values['location']) || !$values['location'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a location!'));
 				}
 
-				if(!isset($values['title']) || !$values['title'])
+				if (!isset($values['title']) || !$values['title'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a title!'));
 				}
 
-				if($id)
+				if ($id)
 				{
 					$values['id'] = $id;
 				}
@@ -513,25 +513,24 @@
 					$id = $values['id'];
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					try
 					{
 						$receipt = $this->bo->save($values);
 						$id = $receipt['id'];
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 						//-------------start files
 						$bofiles = CreateObject('property.bofiles');
 						$file = array();
-						if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
+						if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
 						{
 							$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 							$values['file_name'] = $file_name;
 
 							$to_file = "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
 
-							if($old_file = $bofiles->vfs->ls(array(
+							if ($old_file = $bofiles->vfs->ls(array(
 								'string' => "{$bofiles->fakebase}/jasper/{$id}",
 								'relatives' => Array(RELATIVE_NONE)
 							)))
@@ -554,12 +553,12 @@
 							unset($to_file);
 
 
-							if($file)
+							if ($file)
 							{
 								$bofiles->create_document_dir("jasper/{$id}");
 								$bofiles->vfs->override_acl = 1;
 
-								if($bofiles->vfs->cp(array(
+								if ($bofiles->vfs->cp(array(
 									'from' => $file['from_file'],
 									'to' => $file['to_file'],
 									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -577,16 +576,16 @@
 						}
 						//-------------end files
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'jasper_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uijasper.index',
 								'app' => $this->app));
 						}
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
-						if($e)
+						if ($e)
 						{
 							phpgwapi_cache::message_set($e->getMessage(), 'error');
 							$this->edit($values);
@@ -594,14 +593,15 @@
 						}
 					}
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uijasper.edit',
-						'id' => $id));
+					self::redirect(array('menuaction' => 'property.uijasper.edit','id' => $id));
 				}
 				else
 				{
+					if ($id)
+					{
+						self::message_set($receipt);
+						self::redirect(array('menuaction' => 'property.uijasper.edit', 'id' => $id));
+					}
 					$this->edit();
 				}
 			}
@@ -614,7 +614,7 @@
 		function edit()
 		{
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -626,19 +626,19 @@
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
-			if(isset($values['cancel']) && $values['cancel'])
+			if (isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uijasper.index',
 					'app' => $this->app));
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit report');
 				$this->acl->set_account_id($this->account);
 				$grants = $this->acl->get_grants('property', '.jasper');
-				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
+				if (!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
 				{
 					$values = array();
 					$receipt['error'][] = array('msg' => lang('You are not granted sufficient rights for this entry'));
@@ -664,14 +664,14 @@
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->app);
 			$selected_location = isset($values['location']) ? $values['location'] : '';
-			if(isset($values['location_id']) && $values['location_id'])
+			if (isset($values['location_id']) && $values['location_id'])
 			{
 				$locations_info = $GLOBALS['phpgw']->locations->get_name($values['location_id']);
 				$selected_location = $locations_info['location'];
 			}
 
 			$location_list = array();
-			foreach($locations as $location => $descr)
+			foreach ($locations as $location => $descr)
 			{
 				$location_list[] = array
 					(
@@ -695,11 +695,11 @@
 
 			$inputs = isset($values['input']) && $values['input'] ? $values['input'] : array();
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$type_def[] = array('key' => 'delete_input', 'label' => lang('delete'), 'sortable' => false,
 					'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter');
-				foreach($inputs as &$input)
+				foreach ($inputs as &$input)
 				{
 					$_checked = $input['is_id'] ? 'checked = "checked"' : '';
 					$input['is_id'] = "<input type='checkbox' name='values[edit_is_id][]' {$_checked} value='" . $input['id'] . "' title='" . lang('Check to set as is id') . "'>";
@@ -774,12 +774,12 @@
 			$sel_format = phpgw::get_var('sel_format');
 			$first_run = true;
 
-			if($values_attribute)
+			if ($values_attribute)
 			{
 				$values['input'] = $values_attribute;
 				$first_run = false;
 			}
-			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_READ))
+			if (!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_READ))
 			{
 				echo lang('not allowed');
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -787,49 +787,49 @@
 			$user_input = false;
 
 
-			if($first_run)
+			if ($first_run)
 			{
-				foreach($values['input'] as &$input)
+				foreach ($values['input'] as &$input)
 				{
 					$input['name'] = $input['input_name'];
-					if(!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
+					if (!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
 					{
 						$user_input = true;
 					}
 				}
-				if(isset($values['formats'][1]) && $values['formats'][1])// More than one
+				if (isset($values['formats'][1]) && $values['formats'][1])// More than one
 				{
 					$user_input = true;
 				}
 			}
 			else
 			{
-				foreach($values['input'] as &$input)
+				foreach ($values['input'] as &$input)
 				{
 					$input['name'] = $input['input_name'];
-					if(!$input['value'])
+					if (!$input['value'])
 					{
 						$user_input = true;
 						$input['name'] = $input['input_name'];
-						if(($input['value'] = phpgw::get_var(strtolower($input['input_name']))))
+						if (($input['value'] = phpgw::get_var(strtolower($input['input_name']))))
 						{
 							$user_input = false;
 						}
 					}
 					else
 					{
-						if($input['datatype'] == 'date')
+						if ($input['datatype'] == 'date')
 						{
 							$input['value'] = date($GLOBALS['phpgw']->db->date_format(), strtotime($input['value']));
 						}
-						if($input['datatype'] == 'timestamp')
+						if ($input['datatype'] == 'timestamp')
 						{
 							$input['value'] = strtotime($input['value']);
 						}
 					}
 				}
 			}
-			if(!$user_input)
+			if (!$user_input)
 			{
 				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -838,10 +838,10 @@
 				$jasper_parameters = '';
 				$_parameters = array();
 
-				foreach($values['input'] as &$input)
+				foreach ($values['input'] as &$input)
 				{
 
-					if(is_array($input['value']))
+					if (is_array($input['value']))
 					{
 						$_parameters[] = $input['input_name'] . '|' . implode(',', $input['value']);
 					}
@@ -850,14 +850,14 @@
 						$_parameters[] = $input['input_name'] . '|' . $input['value'];
 					}
 				}
-				if($_parameters)
+				if ($_parameters)
 				{
 					$jasper_parameters = '"' . implode(';', $_parameters) . '"';
 				}
 
 				unset($_parameters);
 
-				if($sel_format)
+				if ($sel_format)
 				{
 					$output_type = $sel_format;
 				}
@@ -877,7 +877,7 @@
 				{
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 					$error = $e->getMessage();
 					//FIXME Do something clever with the error
@@ -888,7 +888,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-				if(!isset($values['formats'][0]))
+				if (!isset($values['formats'][0]))
 				{
 					$values['formats'][0] = 'PDF';
 				}
@@ -911,7 +911,7 @@
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 				$formats = array();
-				foreach($values['formats'] as $format)
+				foreach ($values['formats'] as $format)
 				{
 					$formats[] = array
 						(
@@ -938,22 +938,22 @@
 
 		function delete()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				return lang('not allowed');
 			}
 
 			$id = phpgw::get_var('id'); // string
 			$values = $this->bo->read_single($id);
-			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
+			if (!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
 			{
 				return lang('not allowed');
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$bofiles = CreateObject('property.bofiles');
-				if($old_file = $bofiles->vfs->ls(array(
+				if ($old_file = $bofiles->vfs->ls(array(
 					'string' => "{$bofiles->fakebase}/jasper/{$id}",
 					'relatives' => Array(RELATIVE_NONE)
 				)))

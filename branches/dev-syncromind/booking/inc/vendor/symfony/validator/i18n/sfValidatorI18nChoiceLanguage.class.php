@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorI18nChoiceLanguage validates than the value is a valid language.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
-{
+	class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
+	{
+
   /**
    * Configures the current validator.
    *
@@ -30,7 +30,7 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
    *
    * @see sfValidatorChoice
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     parent::configure($options, $messages);
 
@@ -56,4 +56,4 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
 
     $this->setOption('choices', $languages);
   }
-}
+	}

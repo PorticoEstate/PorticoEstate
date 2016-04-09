@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorDecorator decorates another validator.
  *
  * This validator has exactly the same behavior as the Decorator validator.
@@ -18,17 +17,18 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-abstract class sfValidatorDecorator extends sfValidatorBase
-{
+	abstract class sfValidatorDecorator extends sfValidatorBase
+	{
+
   protected
     $validator = null;
 
   /**
    * @see sfValidatorBase
    */
-  public function __construct($options = array(), $messages = array())
+		public function __construct( $options = array(), $messages = array() )
   {
     $this->validator = $this->getValidator();
 
@@ -60,7 +60,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function clean($value)
+		public function clean( $value )
   {
     return $this->doClean($value);
   }
@@ -68,7 +68,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     return $this->validator->clean($value);
   }
@@ -76,7 +76,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function getMessage($name)
+		public function getMessage( $name )
   {
     return $this->validator->getMessage($name);
   }
@@ -84,7 +84,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function setMessage($name, $value)
+		public function setMessage( $name, $value )
   {
     $this->validator->setMessage($name, $value);
   }
@@ -100,7 +100,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function setMessages($values)
+		public function setMessages( $values )
   {
     return $this->validator->setMessages($values);
   }
@@ -108,7 +108,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function getOption($name)
+		public function getOption( $name )
   {
     return $this->validator->getOption($name);
   }
@@ -116,7 +116,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function setOption($name, $value)
+		public function setOption( $name, $value )
   {
     $this->validator->setOption($name, $value);
   }
@@ -124,7 +124,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function hasOption($name)
+		public function hasOption( $name )
   {
     return $this->validator->hasOption($name);
   }
@@ -140,7 +140,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function setOptions($values)
+		public function setOptions( $values )
   {
     $this->validator->setOptions($values);
   }
@@ -148,7 +148,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     return $this->validator->asString($indent);
   }
@@ -168,4 +168,4 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   {
     return $this->validator->getDefaultMessages();
   }
-}
+	}

@@ -31,19 +31,19 @@
 			$this->url_prefix		 = 'booking.uicompleted_reservation_export_file';
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function redirect_to($action, $params = array())
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -57,7 +57,7 @@
 			return array_merge(array('menuaction' => $action), $params);
 		}
 
-		public function add_default_display_data(&$export_file)
+		public function add_default_display_data( &$export_file )
 		{
 			$export_file['created_on']		 = pretty_timestamp($export_file['created_on']);
 			$export_file['index_link']		 = $this->link_to('index');
@@ -67,15 +67,16 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Generated Files'),
 				'datatable' => array(
 					'source'	 => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by'	 => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),
 					'field'		 => array(
 						array(
 							'key'		 => 'id',
@@ -140,7 +141,7 @@
 #            if ($config->config_data['output_files'] == 'single')
 			$export_files	 = $this->bo->read();
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module . ".uicompleted_reservation_export_file.show");
-			foreach($export_files["results"] as &$export_file)
+			foreach ($export_files["results"] as &$export_file)
 			{
 				$export_file['created_on']	 = pretty_timestamp(substr($export_file['created_on'], 0, 19));
 				$export_file['type']		 = lang($export_file['type']);
@@ -149,7 +150,7 @@
 					'label'	 => lang('Download'),
 					'href'	 => $this->link_to('download', array('id' => $export_file['id']))
 				);
-				if($export_file['total_items'] > 0 and ! empty($export_file['log_filename'])) //and $export_file['id'] > $config->config_data['invoice_last_id'] )
+				if ($export_file['total_items'] > 0 and ! empty($export_file['log_filename'])) //and $export_file['id'] > $config->config_data['invoice_last_id'] )
 				{
 					$export_file['log'] = array(
 						'label'	 => lang('log'),
@@ -163,7 +164,7 @@
 						'href'	 => '#'
 					);
 				}
-				if($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
+				if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
 				{
 					$export_file['upload'] = array(
 						'label'	 => lang('Upload'),
@@ -179,7 +180,7 @@
 				}
 				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $export_file['created_by_name'] . "'";
 				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				while ($record = array_shift($this->db->resultSet))
 				{
 					$export_file['created_by_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
 				}
@@ -205,7 +206,7 @@
 		{
 			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
-			if(!is_array($export_file))
+			if (!is_array($export_file))
 			{
 				$this->redirect_to('index');
 			}
@@ -219,7 +220,7 @@
 		{
 			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
-			if(!is_array($export_file))
+			if (!is_array($export_file))
 			{
 				$this->redirect_to('index');
 			}
@@ -234,7 +235,7 @@
 			$id			 = phpgw::get_var('id', 'int');
 			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
-			if(!is_array($export_file))
+			if (!is_array($export_file))
 			{
 				$this->redirect_to('index');
 			}

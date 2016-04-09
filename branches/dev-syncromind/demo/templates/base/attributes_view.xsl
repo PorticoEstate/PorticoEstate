@@ -1,11 +1,13 @@
 <!-- $Id$ -->
 
-	<xsl:template name="attributes_view">
+<xsl:template name="attributes_view">
 		<xsl:apply-templates select="attributes_values"/>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="attributes_values">
-		<xsl:variable name="lang_attribute_statustext"><xsl:value-of select="lang_attribute_statustext"/></xsl:variable>
+<xsl:template match="attributes_values">
+	<xsl:variable name="lang_attribute_statustext">
+		<xsl:value-of select="lang_attribute_statustext"/>
+	</xsl:variable>
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
@@ -25,7 +27,9 @@
 					<xsl:value-of select="input_text"/>
 					<xsl:choose>
 						<xsl:when test="datatype='D'">
-							<xsl:text>[</xsl:text><xsl:value-of select="//lang_dateformat"/><xsl:text>]</xsl:text>			
+					<xsl:text>[</xsl:text>
+					<xsl:value-of select="//lang_dateformat"/>
+					<xsl:text>]</xsl:text>
 						</xsl:when>
 					</xsl:choose>
 				</td>
@@ -43,15 +47,23 @@
 								</xsl:when>
 								<xsl:when test="datatype='LB'">
 									<select disabled="disabled" class="forms" onMouseover="window.status='{statustext}'; return true;" onMouseout="window.status='';return true;">
-										<option value=""><xsl:value-of select="//lang_none"/></option>
+								<option value="">
+									<xsl:value-of select="//lang_none"/>
+								</option>
 										<xsl:for-each select="choice">	
-											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+									<xsl:variable name="id">
+										<xsl:value-of select="id"/>
+									</xsl:variable>
 											<xsl:choose>
 												<xsl:when test="checked='checked'">
-													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+											<option value="{$id}" selected="selected">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
 												</xsl:when>
 												<xsl:otherwise>
-													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+											<option value="{$id}">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
 												</xsl:otherwise>
 											</xsl:choose>				
 										</xsl:for-each>
@@ -120,13 +132,20 @@
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="history=1">									
-									<xsl:variable name="link_history"><xsl:value-of select="link_history"/></xsl:variable>
-									<xsl:variable name="lang_history_help"><xsl:value-of select="//lang_history_help"/></xsl:variable>
-									<xsl:variable name="lang_history"><xsl:value-of select="//lang_history"/></xsl:variable>
+							<xsl:variable name="link_history">
+								<xsl:value-of select="link_history"/>
+							</xsl:variable>
+							<xsl:variable name="lang_history_help">
+								<xsl:value-of select="//lang_history_help"/>
+							</xsl:variable>
+							<xsl:variable name="lang_history">
+								<xsl:value-of select="//lang_history"/>
+							</xsl:variable>
 									<a href="javascript:var w=window.open('{$link_history}','','width=550,height=400,scrollbars')"
 									onMouseOver="overlib('{$lang_history_help}', CAPTION, '{$lang_history}')"
 									onMouseOut="nd()">
-									<xsl:value-of select="//lang_history"/></a>					
+								<xsl:value-of select="//lang_history"/>
+							</a>
 
 								</xsl:when>
 							</xsl:choose>
@@ -135,11 +154,13 @@
 					</xsl:choose>
 				</td>
 			</tr>
-	</xsl:template>
+</xsl:template>
 
 
-	<xsl:template name="choice_view">
-		<xsl:variable name="counter"><xsl:value-of select="counter"/></xsl:variable>
+<xsl:template name="choice_view">
+	<xsl:variable name="counter">
+		<xsl:value-of select="counter"/>
+	</xsl:variable>
 			<table cellpadding="2" cellspacing="2" width="50%" align="left">
 				<xsl:for-each select="choice" >
 					<tr>
@@ -160,7 +181,9 @@
 						<xsl:value-of select="value"/>
 						<xsl:text> </xsl:text>
 					</td>
-					<xsl:variable name="checked"><xsl:value-of select="checked"/></xsl:variable>
+				<xsl:variable name="checked">
+					<xsl:value-of select="checked"/>
+				</xsl:variable>
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="checked='checked'">
@@ -174,6 +197,6 @@
 					</tr>
 				</xsl:for-each>				
 			</table>
-	</xsl:template>
+</xsl:template>
 
 

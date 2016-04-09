@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage project
 	 * @version $Id: class.uirequest.inc.php 11843 2014-03-19 10:02:57Z sigurdne $
 	 */
-
   	phpgw::import_class('property.notify');
 
 	class mobilefrontend_notify extends property_notify
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

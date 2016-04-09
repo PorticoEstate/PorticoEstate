@@ -2,7 +2,9 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete Booking')"/></dt>
+			<dt class="heading">
+				<xsl:value-of select="php:function('lang', 'Delete Booking')"/>
+			</dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
@@ -37,19 +39,27 @@
 				<input type="hidden" name="resources[]" value="{.}" />
 			</xsl:for-each>
 			<xsl:for-each select="booking/agegroups">
-				<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+				<xsl:variable name="id">
+					<xsl:value-of select="id"/>
+				</xsl:variable>
 				<input type="hidden">
 					<xsl:attribute name="name">male[<xsl:value-of select="agegroup_id"/>]</xsl:attribute>
-					<xsl:attribute name="value"><xsl:value-of select="male"/></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="male"/>
+					</xsl:attribute>
 				</input>
 				<input type="hidden">
 					<xsl:attribute name="name">female[<xsl:value-of select="agegroup_id"/>]</xsl:attribute>
-					<xsl:attribute name="value"><xsl:value-of select="female"/></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="female"/>
+					</xsl:attribute>
 				</input>
 			</xsl:for-each>
 
 
-			<h4><xsl:value-of select="php:function('lang', 'Bookings to be deleted')" /></h4>
+			<h4>
+				<xsl:value-of select="php:function('lang', 'Bookings to be deleted')" />
+			</h4>
 			<div class="allocation-list">
 				<xsl:for-each select="valid_dates">
 					<li>
@@ -58,7 +68,9 @@
 				</xsl:for-each>
 			</div>
             <xsl:if test="delete_allocation='on'">
-			<h4><xsl:value-of select="php:function('lang', 'Allocations that is going to be deleted')" /></h4>
+				<h4>
+					<xsl:value-of select="php:function('lang', 'Allocations that is going to be deleted')" />
+				</h4>
 			<div class="allocation-list">
 				<xsl:for-each select="allocation_delete">
 					<li>
@@ -67,7 +79,9 @@
 				</xsl:for-each>
 			</div>
 
-			<h4><xsl:value-of select="php:function('lang', 'Allocations with still existing bookings (%1)', count(allocation_keep[from_]))" /></h4>
+				<h4>
+					<xsl:value-of select="php:function('lang', 'Allocations with still existing bookings (%1)', count(allocation_keep[from_]))" />
+				</h4>
 			<div class="allocation-list">
 				<xsl:for-each select="allocation_keep">
 					<li>
@@ -78,10 +92,14 @@
             </xsl:if>
 	        <div class="form-buttons">
 	            <input type="submit" name="delete">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')" /></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Delete')" />
+					</xsl:attribute>
 				</input>
 	            <a class="cancel">
-	                <xsl:attribute name="href"><xsl:value-of select="season/wtemplate_link"/></xsl:attribute>
+					<xsl:attribute name="href">
+						<xsl:value-of select="season/wtemplate_link"/>
+					</xsl:attribute>
 	                <xsl:value-of select="php:function('lang', 'Cancel')" />
 	            </a>
 	        </div>
@@ -97,8 +115,12 @@
 </xsl:template>
 <xsl:template name="xmlsource">
   NODE <xsl:value-of select="name()"/>
-  ATTR { <xsl:for-each select="attribute::*"><xsl:value-of select="name()"/>=<xsl:value-of select="."/> </xsl:for-each> }
-  CHILDREN: { <xsl:for-each select="*"><xsl:call-template name="xmlsource"/></xsl:for-each> }
+	ATTR { <xsl:for-each select="attribute::*">
+		<xsl:value-of select="name()"/>=<xsl:value-of select="."/>
+	</xsl:for-each> }
+	CHILDREN: { <xsl:for-each select="*">
+		<xsl:call-template name="xmlsource"/>
+	</xsl:for-each> }
   TEXT <xsl:value-of select="text()"/>
   <br/>
 </xsl:template>

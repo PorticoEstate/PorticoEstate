@@ -17,7 +17,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.socomposite');
 			}
@@ -25,16 +25,16 @@
 			return self::$so;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$location_id_into = $GLOBALS['phpgw']->locations->get_id('rental', '.RESPONSIBILITY.INTO');
 
 			$clauses = array('1=1');
-			if($search_for)
+			if ($search_for)
 			{
 				$like_pattern	 = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "name":
 						$like_clauses[]	 = "rental_composite.name $this->like $like_pattern";
@@ -55,14 +55,14 @@
 						$like_clauses[]	 = "rental_unit.location_code $this->like $like_pattern";
 						break;
 				}
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
 			$filter_clauses = array();
-			switch($filters['is_active'])
+			switch ($filters['is_active'])
 			{
 				case "active":
 					$filter_clauses[]	 = "rental_composite.is_active = TRUE";
@@ -78,17 +78,17 @@
 			$availability_date_from	 = $ts_query;
 			$availability_date_to	 = $ts_query;
 
-			if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != '')
+			if (isset($filters['availability_date_from']) && $filters['availability_date_from'] != '')
 			{
 				$availability_date_from = strtotime($filters['availability_date_from']);
 			}
 
-			if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != '')
+			if (isset($filters['availability_date_to']) && $filters['availability_date_to'] != '')
 			{
 				$availability_date_to = strtotime($filters['availability_date_to']);
 			}
 
-			switch($filters['has_contract'])
+			switch ($filters['has_contract'])
 			{
 				case "has_contract":
 					$filter_clauses[]	 = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
@@ -128,31 +128,31 @@
 			}
 
 			// Furnished, partly furnished, not furnished, not specified
-			if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4)
+			if (isset($filters['furnished_status']) & $filters['furnished_status'] < 4)
 			{
 				// Not specified
-				if($filters['furnished_status'] == 0)
+				if ($filters['furnished_status'] == 0)
 					$filter_clauses[]	 = "rental_composite.furnish_type_id IS NULL";
 				else
 					$filter_clauses[]	 = "rental_composite.furnish_type_id=" . $filters['furnished_status'];
 			}
 
-			if(isset($filters['not_in_contract']))
+			if (isset($filters['not_in_contract']))
 			{
 				$filter_clauses[] = "(rental_contract_composite.contract_id != " . $filters['not_in_contract'] . " OR rental_contract_composite.contract_id IS NULL)";
 			}
 
-			if(isset($filters['location_code']))
+			if (isset($filters['location_code']))
 			{
 				$filter_clauses[] = "rental_unit.location_code = '" . $filters['location_code'] . "'";
 			}
 
-			if(isset($filters['contract_id']))
+			if (isset($filters['contract_id']))
 			{
 				$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'], 'int')}";
 			}
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
@@ -163,28 +163,28 @@
 			$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 			$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 
-			if(isset($filters['district_id']) && $filters['district_id'])
+			if (isset($filters['district_id']) && $filters['district_id'])
 			{
 				$joins .= "	{$this->join} fm_locations ON (rental_unit.location_code = fm_locations.location_code)";
 				$joins .= "	{$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)";
-				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 
 				$filter_clauses[] = "fm_part_of_town.district_id =" . (int)$filters['district_id'];
 			}
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
 			}
 			else
 			{
-				if($special_query)
+				if ($special_query)
 				{
 					$cols = "DISTINCT(rental_composite.id) AS composite_id,";
 				}
@@ -212,7 +212,7 @@
 			$order				 = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 			$this->sort_field	 = $sort_field;
 
-			switch($sort_field)
+			switch ($sort_field)
 			{
 				case 'status':
 					$this->skip_limit_query = true;
@@ -227,15 +227,15 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function populate(int $composite_id, &$composite)
+		function populate( int $composite_id, &$composite )
 		{
-			if($composite == null) // new object
+			if ($composite == null) // new object
 			{
 				$composite		 = new rental_composite($composite_id);
 				$composite->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$composite->set_is_active($this->db->f('is_active'));
 				$composite_name	 = $this->unmarshal($this->db->f('name', true), 'string');
-				if($composite_name == null || $composite_name == '')
+				if ($composite_name == null || $composite_name == '')
 				{
 					$composite_name = lang('no_name_composite', $composite_id);
 				}
@@ -258,7 +258,7 @@
 			$database_status	 = $this->unmarshal($this->db->f('status', true), 'string');
 			$composite_status	 = $composite->get_status();
 
-			if($composite_status != 'Ikke ledig')
+			if ($composite_status != 'Ikke ledig')
 			{
 				$composite->set_status($database_status);
 			}
@@ -266,7 +266,7 @@
 			$contract_id = $this->unmarshal($this->db->f('contract_id', true), 'int');
 
 			// Adds contract to array in composite object if it's not already added
-			if($contract_id != 0 & !$composite->contains_contract($contract_id))
+			if ($contract_id != 0 & !$composite->contains_contract($contract_id))
 			{
 				$contract = new rental_contract($contract_id);
 
@@ -275,7 +275,7 @@
 				$old_contract_id = $this->unmarshal($this->db->f('old_contract_id', true), 'string');
 
 				// Adds contract if end date is not specified or greater than todays date
-				if($end_date == 0 || $end_date > time())
+				if ($end_date == 0 || $end_date > time())
 				{
 					$contract_date = new rental_contract_date($start_date, $end_date);
 					$contract->set_contract_date($contract_date);
@@ -285,7 +285,7 @@
 				}
 			}
 
-			if(!$composite->contains_unit($location_code))
+			if (!$composite->contains_unit($location_code))
 			{
 				//composite inneholder ikke unit -> legg den til
 				$location = null;
@@ -294,15 +294,15 @@
 					// We get the data from the property module
 					$data = @execMethod('property.bolocation.read_single', array('location_code'	 => $location_code,
 						'extra'			 => array('view' => true)));
-					if($data != null)
+					if ($data != null)
 					{
 						$level		 = -1;
 						$names		 = array();
 						$levelFound	 = false;
-						for($i = 1; $i < 6; $i++)
+						for ($i = 1; $i < 6; $i++)
 						{
 							$loc_name = 'loc' . $i . '_name';
-							if(array_key_exists($loc_name, $data))
+							if (array_key_exists($loc_name, $data))
 							{
 								$level			 = $i;
 								$names[$level]	 = $data[$loc_name];
@@ -311,20 +311,20 @@
 						$gab_id		 = '';
 						$gabinfos	 = @execMethod('property.sogab.read', array('location_code'	 => $location_code,
 							'allrows'		 => true));
-						if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+						if ($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 						{
 							$gabinfo = array_shift($gabinfos);
 							$gab_id	 = $gabinfo['gab_id'];
 						}
 						$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
-						if(isset($data['street_name']) && $data['street_name'])
+						if (isset($data['street_name']) && $data['street_name'])
 						{
 							$location->set_address_1($data['street_name'] . ' ' . $data['street_number']);
 						}
 						//$location->set_address_1($data['address']);
-						foreach($data['attributes'] as $attributes)
+						foreach ($data['attributes'] as $attributes)
 						{
-							switch($attributes['column_name'])
+							switch ($attributes['column_name'])
 							{
 								case 'area_gross':
 									$location->set_area_gros($attributes['value']);
@@ -340,7 +340,7 @@
 						$location = new rental_property_location($location_code, null, 1, array());
 					}
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 					$location = new rental_property_location($location_code, null, 1, array());
 				}
@@ -350,9 +350,9 @@
 			return $composite;
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'composite_id';
 			}
@@ -374,7 +374,7 @@
 		 * @param $composite the composite to be updated
 		 * @return result receipt from the db operation
 		 */
-		public function update($composite)
+		public function update( $composite )
 		{
 			$id = intval($composite->get_id());
 
@@ -406,7 +406,7 @@
 		 * @param $composite the composite to be added
 		 * @return int with id of the composite
 		 */
-		public function add(&$composite)
+		public function add( &$composite )
 		{
 			// Build a db-friendly array of the composite object
 			$cols	 = array('name', 'description', 'has_custom_address', 'address_1', 'address_2',
@@ -443,15 +443,15 @@
 		 * @param $contract_id int with id of contract.
 		 * @return string with location code, empty string if not found.
 		 */
-		public function get_building_location_code($contract_id)
+		public function get_building_location_code( $contract_id )
 		{
 			$query	 = "SELECT location_code FROM rental_unit {$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_unit.composite_id) WHERE rental_contract_composite.contract_id = {$contract_id}";
 			$result	 = $this->db->limit_query($query, 0, __LINE__, __FILE__, 1);
 
-			if($result && $this->db->next_record()) // Query ok
+			if ($result && $this->db->next_record()) // Query ok
 			{
 				$location_code = $this->db->f('location_code', true);
-				if($location_code != null && $location_code != '')
+				if ($location_code != null && $location_code != '')
 				{
 					return substr(str_replace('-', '', $location_code), 0, 6);
 				}
@@ -459,12 +459,12 @@
 			return '';
 		}
 
-		public function get_area($composite_id)
+		public function get_area( $composite_id )
 		{
 			$sql = "SELECT area FROM rental_composite WHERE id = " . $this->marshal($composite_id, 'float');
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return $this->unmarshal($this->db->f('area', true), 'float');
 			}

@@ -10,15 +10,13 @@
 	* @subpackage sms
  	* @version $Id: config_VASK 18297 2007-10-03 13:34:09Z sigurdne $
 	*/
-
 	/**
 	 * Description
 	 * @package sms
 	 * Config values for SMS-command "STATUS" - (setting status of workorders) as example - as it is configured at BBB
 	 * This file is for redirecting from log items to the subject of the log 
 	 */
-
-	$param 		= explode(' ' , $param);	
+	$param = explode(' ', $param);
 
 	$link_data = array
 	(

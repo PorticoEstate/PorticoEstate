@@ -42,14 +42,14 @@ div#content {
 #header-search .query { width: 15em;}
 
 .frontend_content {
-    //background: url(../images/header_bg.png) repeat-x;
-    //height: 129px;
+/*  background: url(../images/header_bg.png) repeat-x;
+    height: 129px;*/
 	display: inline-block;
 	width: 100%;
 }
 
 .frontend_content a {
-	//float: left;
+	/*float: left;*/
 }
 div#logo {
     width: 125px;
@@ -71,7 +71,7 @@ div#footer {
     font-size: 90%;
 }
 ul.nav { 
-    list-style-type: 0;
+    list-style-type: none;
     padding-left: 0;
 }
 div.clr {clear: both;}
@@ -82,7 +82,7 @@ ul.nav li:first-child:before { display: none; }
 #login-bar {
     clear: right;
     float: right;
-    //padding: .5em 1em 0 0;
+    /*padding: .5em 1em 0 0;*/
 }
 form#search {
     text-align: center;
@@ -321,18 +321,18 @@ table .frontend_content {
 
 div#unit_selector {
 	float: left;
-	//list-style:none;
-	//padding: 2px;
-	//padding-left: 5px;
-	//padding:0.5em 1em 0 0;	
+	/*list-style:none;
+	padding: 2px;
+	padding-left: 5px;
+	padding:0.5em 1em 0 0;*/
 }
 
 div#area_and_price2 {
 	float: left;
-	//list-style:none;
-	//padding: 2px;
-	//padding-left: 5px;
-	//padding:0.5em 1em 0 0;
+	/*list-style:none;
+	padding: 2px;
+	padding-left: 5px;
+	padding:0.5em 1em 0 0;*/
 }
 
 div#all_units_key_data {
@@ -394,7 +394,7 @@ table#key_data td {
 .user_menu {
 	list-style:none;
 	height: 100%;
-	//padding: 2px;
+	/*padding: 2px;*/
 	border-style: none none none solid;
 	border-width: 1px;
 	border-color: grey;
@@ -408,10 +408,10 @@ table#key_data td {
 #area_and_price {
 	list-style:none;
 	height: 100%;
-	//padding: 2px;
-	//padding-left: 5px;
+	/*padding: 2px;*/
+	/*padding-left: 5px;*/
 	float:right;
-	//padding:0.5em 1em 0 0;
+	/*padding:0.5em 1em 0 0;*/
 }
 
 #area_and_price li {
@@ -421,10 +421,10 @@ table#key_data td {
 #org_units {
 	list-style: none;
 	height: 100%;
-	//padding: 2px;
-	//padding-left: 5px;
+	/*padding: 2px;*/
+	/*padding-left: 5px;*/
 	float:right;
-	//padding:0.5em 1em 0 0;
+	/*padding:0.5em 1em 0 0;*/
 }
 
 #org_units li {
@@ -434,10 +434,10 @@ table#key_data td {
 #information {
 	list-style:none;
 	height: 100%;
-	//padding: 2px;
-	//padding-left: 5px;
+	/*padding: 2px;*/
+	/*padding-left: 5px;*/
 	float:right;
-	//padding:0.5em 1em 0 0;
+	/*padding:0.5em 1em 0 0;*/
 }
 
 #information li {
@@ -452,12 +452,12 @@ a.header_link {
 #logo_holder {
 	float: left;
 	border: 0 none;
-	//font-family:Arial,sans-serif;
-	//font-size:65%;
-	//line-height:1.166;
+	/*font-family:Arial,sans-serif;
+	font-size:65%;
+	line-height:1.166;*/
 	padding-top: 0.5em;
 	padding-left: 0.5em;
-	//position: absolute;
+	/*position: absolute;*/
 }
 
 em#bold {

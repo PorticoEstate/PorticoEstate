@@ -43,7 +43,7 @@
 			$this->interlink = CreateObject('property.interlink');
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : '0';
@@ -57,9 +57,9 @@
 			$district_id = isset($data['district_id']) ? (int)$data['district_id'] : 0;
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
-			if($order)
+			if ($order)
 			{
-				switch($order)
+				switch ($order)
 				{
 					case 'claim_id':
 						$order = 'fm_tenant_claim.id';
@@ -77,38 +77,38 @@
 
 
 			$where = 'WHERE';
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_tenant_claim.category='$cat_id' ";
 				$where = 'AND';
 			}
 
-			if($project_id > 0)
+			if ($project_id > 0)
 			{
 				$filtermethod .= " $where project_id='$project_id' ";
 				$where = 'AND';
 			}
 
-			if($status && $status != 'all')
+			if ($status && $status != 'all')
 			{
 				$filtermethod .= " $where fm_tenant_claim.status='{$status}'";
 				$where = 'AND';
 			}
 
-			if($user_id > 0)
+			if ($user_id > 0)
 			{
 				$filtermethod .= " $where fm_tenant_claim.user_id={$user_id} ";
 				$where = 'AND';
 			}
 
-			if($district_id > 0)
+			if ($district_id > 0)
 			{
 				$filtermethod .= " $where  district_id=" . (int)$district_id;
 				$where = 'AND';
 			}
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -121,13 +121,13 @@
 			. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
 			. " $this->join fm_project ON fm_project.id = fm_tenant_claim.project_id"
 			. " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
-			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 			. " $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE_, $results);
 			}
@@ -137,7 +137,7 @@
 			}
 
 			$claims = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$claims[] = array
 					(
@@ -160,7 +160,7 @@
 			return $claims;
 		}
 
-		function check_claim_project($project_id)
+		function check_claim_project( $project_id )
 		{
 			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim"
 			. " {$this->join} fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
@@ -171,7 +171,7 @@
 
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$claims[] = array
 					(
@@ -186,22 +186,22 @@
 		}
 
 		//FIXME: to be removed
-		function check_claim_workorder($workorder_id)
+		function check_claim_workorder( $workorder_id )
 		{
 			$claim = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $workorder_id, 'origin');
 
-			if($claim)
+			if ($claim)
 			{
 				return implode(",", $claim);
 			}
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			$id = (int)$id;
 			$this->db->query("SELECT * FROM fm_tenant_claim WHERE id={$id}", __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$claim['id'] = $id;
 				$claim['project_id'] = $this->db->f('project_id');
@@ -220,10 +220,10 @@
 			$claim['workorders'] = $targets;
 			$claim['claim_issued'] = array();
 
-			foreach($targets as $workorder_id)
+			foreach ($targets as $workorder_id)
 			{
 				$this->db->query("SELECT claim_issued FROM fm_workorder WHERE id='{$workorder_id}' AND claim_issued = 1", __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$claim['claim_issued'][] = $workorder_id;
 				}
@@ -232,7 +232,7 @@
 			return $claim;
 		}
 
-		function add($claim)
+		function add( $claim )
 		{
 			$this->db->transaction_begin();
 
@@ -260,7 +260,7 @@
 			$claim_id = $this->db->get_last_insert_id('fm_tenant_claim', 'id');
 			$receipt['claim_id'] = $claim_id;
 
-			foreach($claim['workorder'] as $workorder_id)
+			foreach ($claim['workorder'] as $workorder_id)
 			{
 				$interlink_data = array
 					(
@@ -282,7 +282,7 @@
 			return $receipt;
 		}
 
-		function edit($claim)
+		function edit( $claim )
 		{
 			$historylog = CreateObject('property.historylog', 'tenant_claim');
 
@@ -312,7 +312,7 @@
 			$claim_id = (int)$claim['claim_id'];
 			$this->db->query("UPDATE fm_tenant_claim set {$value_set} WHERE id={$claim_id}", __LINE__, __FILE__);
 
-			if($old_status != $claim['status'])
+			if ($old_status != $claim['status'])
 			{
 
 				$historylog->add('S', $claim_id, $claim['status'], $old_status);
@@ -322,7 +322,7 @@
 
 			$this->db->query("UPDATE fm_workorder set claim_issued = NULL WHERE project_id = {$claim['project_id']}", __LINE__, __FILE__);
 
-			foreach($claim['workorder'] as $workorder_id)
+			foreach ($claim['workorder'] as $workorder_id)
 			{
 				$interlink_data = array
 					(
@@ -345,7 +345,7 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$this->db->transaction_begin();
 			$this->db->query('DELETE FROM fm_tenant_claim WHERE id=' . intval($id), __LINE__, __FILE__);

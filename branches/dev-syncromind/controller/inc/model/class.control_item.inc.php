@@ -55,12 +55,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -70,7 +70,7 @@
 			return $this->id;
 		}
 
-		public function set_title($title)
+		public function set_title( $title )
 		{
 			$this->title = $title;
 		}
@@ -80,7 +80,7 @@
 			return $this->title;
 		}
 
-		public function set_required($required)
+		public function set_required( $required )
 		{
 			$this->required = $required;
 		}
@@ -90,7 +90,7 @@
 			return $this->required;
 		}
 
-		public function set_what_to_do($what_to_do)
+		public function set_what_to_do( $what_to_do )
 		{
 			$this->what_to_do = $what_to_do;
 		}
@@ -100,7 +100,7 @@
 			return $this->what_to_do;
 		}
 
-		public function set_how_to_do($how_to_do)
+		public function set_how_to_do( $how_to_do )
 		{
 			$this->how_to_do = $how_to_do;
 		}
@@ -110,7 +110,7 @@
 			return $this->how_to_do;
 		}
 
-		public function set_control_group_id($control_group_id)
+		public function set_control_group_id( $control_group_id )
 		{
 			$this->control_group_id = $control_group_id;
 		}
@@ -120,7 +120,7 @@
 			return $this->control_group_id;
 		}
 
-		public function set_control_group_name($control_group_name)
+		public function set_control_group_name( $control_group_name )
 		{
 			$this->control_group_name = $control_group_name;
 		}
@@ -130,7 +130,7 @@
 			return $this->control_group_name;
 		}
 
-		public function set_control_area_id($control_area_id)
+		public function set_control_area_id( $control_area_id )
 		{
 			$this->control_area_id = $control_area_id;
 		}
@@ -140,7 +140,7 @@
 			return $this->control_area_id;
 		}
 
-		public function set_control_area_name($control_area_name)
+		public function set_control_area_name( $control_area_name )
 		{
 			$this->control_area_name = $control_area_name;
 		}
@@ -150,7 +150,7 @@
 			return $this->control_area_name;
 		}
 
-		public function set_type($type)
+		public function set_type( $type )
 		{
 			$this->type = $type;
 		}
@@ -160,7 +160,7 @@
 			return $this->type;
 		}
 
-		public function set_component_location_id($component_location_id)
+		public function set_component_location_id( $component_location_id )
 		{
 			$this->component_location_id = $component_location_id;
 		}
@@ -170,7 +170,7 @@
 			return $this->component_location_id;
 		}
 
-		public function set_options_array($options_array)
+		public function set_options_array( $options_array )
 		{
 			$this->options_array = $options_array;
 		}
@@ -190,7 +190,7 @@
 			return $this->error_msg_array;
 		}
 
-		public function set_error_msg_array($error_msg_array)
+		public function set_error_msg_array( $error_msg_array )
 		{
 			$this->error_msg_array = $error_msg_array;
 		}
@@ -202,7 +202,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item');
 			}
@@ -229,25 +229,25 @@
 		{
 			$status = true;
 
-			if($this->title == '')
+			if ($this->title == '')
 			{
 				$status							 = false;
 				$this->error_msg_array['title']	 = "error_msg_1";
 			}
 
-			if($this->what_to_do == '' | strlen($this->what_to_do) == 0)
+			if ($this->what_to_do == '' | strlen($this->what_to_do) == 0)
 			{
 				$status								 = false;
 				$this->error_msg_array['what_to_do'] = "error_msg_1";
 			}
 
-			if($this->how_to_do == '')
+			if ($this->how_to_do == '')
 			{
 				$status								 = false;
 				$this->error_msg_array['how_to_do']	 = "error_msg_1";
 			}
 
-			if($this->control_area_id == '' && intval($this->control_area_id) > 0)
+			if ($this->control_area_id == '' && intval($this->control_area_id) > 0)
 			{
 				$status										 = false;
 				$this->error_msg_array['control_area_id']	 = "error_msg_2";

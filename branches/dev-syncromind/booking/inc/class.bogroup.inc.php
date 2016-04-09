@@ -14,14 +14,14 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function include_subject_parent_roles(array $for_object = null)
+		protected function include_subject_parent_roles( array $for_object = null )
 		{
 			$parent_roles	 = null;
 			$parent_org		 = null;
 
-			if(is_array($for_object))
+			if (is_array($for_object))
 			{
-				if(!isset($for_object['organization_id']))
+				if (!isset($for_object['organization_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless organization_id is provided');
 				}
@@ -40,9 +40,9 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
-			if($this->current_app() == 'booking')
+			if ($this->current_app() == 'booking')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT] = array
 					(
@@ -55,7 +55,7 @@
 				$defaultPermissions['parent_role_permissions']['organization'] = array();
 			}
 
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions['parent_role_permissions']['organization'][booking_boorganization::ROLE_ADMIN] = array
 					(
@@ -70,14 +70,14 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
-			if($this->current_app() == 'booking')
+			if ($this->current_app() == 'booking')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
 			}
 
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions['parent_role_permissions']['organization'][booking_boorganization::ROLE_ADMIN]['create'] = true;
 			}

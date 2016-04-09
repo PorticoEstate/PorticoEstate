@@ -7,17 +7,15 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package hrm
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	 * Start page
 	 *
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-
-	$currentapp='demo';
+	$currentapp = 'demo';
 
 
 	$GLOBALS['phpgw_info']['flags'] = array(
@@ -28,16 +26,16 @@
 
 	include('../header.inc.php');
 
-	$start_page=(isset($GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page'])?$GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page']:'');
+	$start_page = (isset($GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page']) ? $GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page'] : '');
 
 	if ($start_page)
 	{
-		$start_page =array('menuaction'=> $currentapp.'.ui'.$start_page.'.index');
+		$start_page = array('menuaction' => $currentapp . '.ui' . $start_page . '.index');
 	}
 	else
 	{
-		$start_page = array('menuaction'=> $currentapp.'.uidemo.index');
+		$start_page = array('menuaction' => $currentapp . '.uidemo.index');
 	}
 
-	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
+	$GLOBALS['phpgw']->redirect_link('/index.php', $start_page);
 ?>

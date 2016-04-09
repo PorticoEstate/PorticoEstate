@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage tts
 	 * @version $Id$
 	 */
-
   	phpgw::import_class('property.uilocation');
 
 	class mobilefrontend_uilocation extends property_uilocation
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

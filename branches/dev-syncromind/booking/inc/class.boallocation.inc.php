@@ -13,9 +13,9 @@
 		/**
 		 * @ Send message about cancelation to users of building. 
 		 */
-		function send_notification($allocation, $maildata, $mailadresses)
+		function send_notification( $allocation, $maildata, $mailadresses )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -26,10 +26,10 @@
 
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			if($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on')
+			if ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on')
 			{
 				$res_names = '';
-				foreach($allocation['resources'] as $res)
+				foreach ($allocation['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
@@ -50,12 +50,12 @@
 			else
 			{
 				$res_names = '';
-				foreach($allocation['resources'] as $res)
+				foreach ($allocation['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($maildata['delete'] as $valid_date)
+				foreach ($maildata['delete'] as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -75,22 +75,22 @@
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
 			}
 		}
 
-		function send_admin_notification($allocation, $maildata, $system_message)
+		function send_admin_notification( $allocation, $maildata, $system_message )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -108,12 +108,12 @@
 			$body	 = '<b>Beksjed fra ' . $system_message['name'] . '</b><br />' . $system_message['message'] . '<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
 
 
-			if($config->config_data['user_can_delete_allocations'] == 'yes')
+			if ($config->config_data['user_can_delete_allocations'] == 'yes')
 			{
-				if($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on')
+				if ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on')
 				{
 					$res_names = '';
-					foreach($allocation['resources'] as $res)
+					foreach ($allocation['resources'] as $res)
 					{
 						$res_names = $res_names . $this->so->get_resource($res) . " ";
 					}
@@ -133,12 +133,12 @@
 				else
 				{
 					$res_names = '';
-					foreach($allocation['resources'] as $res)
+					foreach ($allocation['resources'] as $res)
 					{
 						$res_names = $res_names . $this->so->get_resource($res) . " ";
 					}
 					$info_deleted = ':<p>';
-					foreach($maildata['delete'] as $valid_date)
+					foreach ($maildata['delete'] as $valid_date)
 					{
 						$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 						$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -160,13 +160,13 @@
 			}
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -176,15 +176,15 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function include_subject_parent_roles(array $for_object = null)
+		protected function include_subject_parent_roles( array $for_object = null )
 		{
 			$this->season_bo = CreateObject('booking.boseason');
 			$parent_roles	 = null;
 			$parent_season	 = null;
 
-			if(is_array($for_object))
+			if (is_array($for_object))
 			{
-				if(!isset($for_object['season_id']))
+				if (!isset($for_object['season_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless season_id is provided');
 				}
@@ -200,7 +200,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -243,7 +243,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -278,7 +278,7 @@
 			);
 		}
 
-		public function complete_expired(&$allocations)
+		public function complete_expired( &$allocations )
 		{
 			$this->so->complete_expired($allocations);
 		}

@@ -22,7 +22,7 @@
 	include_once('../header.inc.php');
 
 
-	if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+	if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 	{
 		$organize = new organize_energy_pdf_bbb();
 		$organize->pre_run();
@@ -58,12 +58,12 @@
 			$confirm = get_var('confirm', array('POST'));
 			$execute = get_var('execute', array('GET'));
 
-			if(!$execute)
+			if (!$execute)
 			{
 				$dry_run = True;
 			}
 
-			if($confirm)
+			if ($confirm)
 			{
 				$this->execute($dry_run, $cron);
 			}
@@ -73,7 +73,7 @@
 			}
 		}
 
-		function confirm($execute = '', $done = '')
+		function confirm( $execute = '', $done = '' )
 		{
 			$link_data = array
 				(
@@ -83,9 +83,9 @@
 			);
 
 			$lang_confirm_msg = '';
-			if(!$done)
+			if (!$done)
 			{
-				if(!$execute)
+				if (!$execute)
 				{
 					$lang_confirm_msg = 'Gå videre for å se hva som blir lagt til';
 				}
@@ -123,12 +123,12 @@
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($dry_run = '', $cron = '')
+		function execute( $dry_run = '', $cron = '' )
 		{
 			set_time_limit(1000);
-			if(!is_dir("{$this->dir}/archive"))
+			if (!is_dir("{$this->dir}/archive"))
 			{
-				if(!mkdir("{$this->dir}/archive"))
+				if (!mkdir("{$this->dir}/archive"))
 				{
 					$this->receipt['error'][] = array('msg' => lang('failed to create directory') . " :{$this->dir}/archive");
 					$this->confirm('', true);
@@ -138,22 +138,22 @@
 
 			$file_list = $this->get_files();
 
-			if($dry_run)
+			if ($dry_run)
 			{
 				$this->confirm($execute = True);
 				_debug_array($file_list);
 			}
 			else
 			{
-				if($file_list && isset($file_list['valid']))
+				if ($file_list && isset($file_list['valid']))
 				{
-					foreach($file_list['valid'] as $file_entry)
+					foreach ($file_list['valid'] as $file_entry)
 					{
 						$this->create_dir($file_entry['location_code']);
 						$this->copy_file($file_entry);
 					}
 				}
-				if(!$cron)
+				if (!$cron)
 				{
 					$this->confirm($execute = false, $done = true);
 				}
@@ -180,24 +180,24 @@
 		{
 			$myfilearray = array();
 
-			if(!is_dir($this->dir))
+			if (!is_dir($this->dir))
 			{
 				return $myfilearray;
 			}
 			$dir = new DirectoryIterator($this->dir);
 
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), $this->suffix) != 0)
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), $this->suffix) != 0)
 					{
 						continue;
 					}
 					$file_name = $file->getFilename();
 					$loc1 = substr($file_name, 0, 4);
 
-					if($this->check_loc1($loc1))
+					if ($this->check_loc1($loc1))
 					{
 						$myfilearray['valid'][] = array
 							(
@@ -225,30 +225,30 @@
 			return $myfilearray;
 		}
 
-		function check_loc1($loc1)
+		function check_loc1( $loc1 )
 		{
 			$sql = "SELECT count(*) as cnt FROM fm_location1 WHERE loc1= '{$loc1}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				return True;
 			}
 		}
 
-		function create_dir($location_code = '')
+		function create_dir( $location_code = '' )
 		{
 			$this->vfs->override_acl = 1;
 
 			$dir = "{$this->fakebase}/document/{$location_code}";
 
-			if(!$this->vfs->file_exists(array(
+			if (!$this->vfs->file_exists(array(
 				'string' => $dir,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
-				if(!$this->vfs->mkdir(array(
+				if (!$this->vfs->mkdir(array(
 					'string' => $dir,
 					'relatives' => array(
 						RELATIVE_NONE
@@ -265,12 +265,12 @@
 
 
 			$dir = "{$this->fakebase}/document/{$location_code}/{$this->cat_id}";
-			if(!$this->vfs->file_exists(array(
+			if (!$this->vfs->file_exists(array(
 				'string' => $dir,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
-				if(!$this->vfs->mkdir(array(
+				if (!$this->vfs->mkdir(array(
 					'string' => $dir,
 					'relatives' => array(
 						RELATIVE_NONE
@@ -289,7 +289,7 @@
 			$this->vfs->override_acl = 0;
 		}
 
-		function copy_file($values)
+		function copy_file( $values )
 		{
 			$to_new_file = "{$this->fakebase}/document/{$values['location_code']}/{$this->cat_id}/{$values['new_file_name']}";
 
@@ -300,7 +300,7 @@
 			$this->vfs->override_acl = 1;
 
 
-			if($this->vfs->file_exists(array(
+			if ($this->vfs->file_exists(array(
 				'string' => $to_new_file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
@@ -309,7 +309,7 @@
 			}
 			else
 			{
-				if(!$this->vfs->cp(array(
+				if (!$this->vfs->cp(array(
 					'from' => $from_file,
 					'to' => $to_new_file,
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -359,7 +359,7 @@
 			$this->vfs->override_acl = 0;
 		}
 
-		function get_address($loc1 = '')
+		function get_address( $loc1 = '' )
 		{
 			$sql = "SELECT loc1_name as address FROM fm_location1 WHERE loc1='{$loc1}'";
 

@@ -46,15 +46,15 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function doValidate($entity, booking_errorstack $errors)
+		function doValidate( $entity, booking_errorstack $errors )
 		{
 			parent::doValidate($entity, $errors);
 			// Make sure to_ > from_
-			if(count($errors) == 0)
+			if (count($errors) == 0)
 			{
 				$from_	 = date_parse($entity['from_']);
 				$to_	 = date_parse($entity['to_']);
-				if($from_ > $to_)
+				if ($from_ > $to_)
 				{
 					$errors['from_'] = lang('Invalid from date');
 				}
@@ -66,14 +66,14 @@
 		 * @param type $season_id
 		 * @return type
 		 * */
-		public function retrieve_season_boundaries($season_id, $coalesce_days = false)
+		public function retrieve_season_boundaries( $season_id, $coalesce_days = false )
 		{
 			return $this->get_boundary_storage()->retrieve_season_boundaries($season_id, $coalesce_days);
 		}
 
 		public function get_boundary_storage()
 		{
-			if(!$this->so_boundary)
+			if (!$this->so_boundary)
 			{
 				$this->so_boundary = new booking_soseason_boundary();
 			}
@@ -90,19 +90,21 @@
 		 *
 		 * @return boolean
 		 */
-		public function timespan_within_season($season_id, $from_, $to_)
+		public function timespan_within_season( $season_id, $from_, $to_ )
 		{
 			$season = $this->read_single($season_id);
 
-			if(!$season)
-			{ throw new InvalidArgumentException('Invalid season_id');}
+			if (!$season)
+			{
+				throw new InvalidArgumentException('Invalid season_id');
+			}
 
-			if(!(isset($season['from_']) && ($season['to_'])))
+			if (!(isset($season['from_']) && ($season['to_'])))
 			{
 				throw new InvalidArgumentException('Invalid season');
 			}
 
-			if(strtotime($season['from_']) > strtotime($from_->format('Y-m-d')) || strtotime($season['to_']) < strtotime($to_->format('Y-m-d')))
+			if (strtotime($season['from_']) > strtotime($from_->format('Y-m-d')) || strtotime($season['to_']) < strtotime($to_->format('Y-m-d')))
 			{
 				return false;
 			}
@@ -110,7 +112,7 @@
 			$seconds_in_a_day	 = 86400;
 			$days_in_period		 = abs(strtotime('+1 day', strtotime($to_->format('Y-m-d'))) - strtotime($from_->format('Y-m-d'))) / $seconds_in_a_day;
 
-			if($days_in_period <= 7)
+			if ($days_in_period <= 7)
 			{
 				$from_week_day	 = (int)$from_->format('N');
 				$to_week_day	 = (int)$to_->format('N');
@@ -125,7 +127,7 @@
 				$to_time		 = '23:59:00';
 			}
 
-			if($from_week_day > $to_week_day)
+			if ($from_week_day > $to_week_day)
 			{
 				//booking week wraps around from end of week to start of week, 
 				//so we split it into two periods and validate each by itself
@@ -137,9 +139,9 @@
 				$end_of_week_f	 = $start_of_week->format('Y-m-d H:i:s');
 				$start_of_week_f = $end_of_week->format('Y-m-d H:i:s');
 
-				if(false == $this->timespan_within_season($season_id, $from_, $end_of_week))
+				if (false == $this->timespan_within_season($season_id, $from_, $end_of_week))
 					return false;
-				if(false == $this->timespan_within_season($season_id, $start_of_week, $to_))
+				if (false == $this->timespan_within_season($season_id, $start_of_week, $to_))
 					return false;
 				return true;
 			}
@@ -149,10 +151,12 @@
 
 			$coalesced_boundaries = $this->retrieve_season_boundaries($season_id, true);
 
-			foreach($coalesced_boundaries as $b)
+			foreach ($coalesced_boundaries as $b)
 			{
-				if(strtotime($b['from_']) <= $from_wday_ts && strtotime($b['to_']) >= $to_wday_ts)
-				{ return true;}
+				if (strtotime($b['from_']) <= $from_wday_ts && strtotime($b['to_']) >= $to_wday_ts)
+			{
+					return true;
+				}
 			}
 
 			return false;
@@ -182,11 +186,11 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function doValidate($entity, booking_errorstack $errors)
+		function doValidate( $entity, booking_errorstack $errors )
 		{
 			parent::doValidate($entity, $errors);
 
-			if($entity['to_'] <= $entity['from_'])
+			if ($entity['to_'] <= $entity['from_'])
 			{
 				$errors['to'] = lang('TO needs to be later than FROM');
 			}
@@ -214,7 +218,7 @@
 			"      AND sb1.id <> $id " .
 			"      AND sb1.season_id IN ($subselect) ", __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$errors['overlaps'] = lang("This boundary overlaps another boundary");
 			}
@@ -226,7 +230,7 @@
 		 * @param type $season_id
 		 * @return type
 		 * */
-		public function retrieve_season_boundaries($season_id, $coalesce_days = false)
+		public function retrieve_season_boundaries( $season_id, $coalesce_days = false )
 		{
 			$view_sql = <<<EOT
 			CREATE OR REPLACE TEMP VIEW bsbt AS SELECT
@@ -264,10 +268,10 @@ EOT;
 			return $coalesce_days ? $this->coalesce_season_boundaries_over_days($this->db->resultSet) : $this->db->resultSet;
 		}
 
-		public function coalesce_season_boundaries_over_days(&$result_set)
+		public function coalesce_season_boundaries_over_days( &$result_set )
 		{
 			$coalesced_result	 = array();
-			while($record				 = array_shift($result_set))
+			while ($record = array_shift($result_set))
 			{
 				$this->coalesce_boundary($record, $result_set);
 				$coalesced_result[] = $record;
@@ -275,17 +279,17 @@ EOT;
 			return $coalesced_result;
 		}
 
-		protected function coalesce_boundary(&$r, &$result_set)
+		protected function coalesce_boundary( &$r, &$result_set )
 		{
 			$ts_to = strtotime($r['to_']);
 
-			if(!$ts_to >= strtotime('23:59:00', $ts_to))
+			if (!$ts_to >= strtotime('23:59:00', $ts_to))
 				return;
-			if(!$record = array_shift($result_set))
+			if (!$record = array_shift($result_set))
 				return;
 
 			$ts_from = strtotime($record['from_']);
-			if($ts_from <= strtotime('00:00:59', $ts_from))
+			if ($ts_from <= strtotime('00:00:59', $ts_from))
 			{
 				$r['to_']	 = $record['to_'];
 				$r[1]		 = $record['to_'];
@@ -337,20 +341,20 @@ EOT;
 			);
 		}
 
-		protected function doValidate($entity, booking_errorstack $errors)
+		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			parent::doValidate($entity, $errors);
 			// Make sure the template allocation doesn't overlap with any
 			// other existing template allocation
-			if($entity['to_'] <= $entity['from_'])
+			if ($entity['to_'] <= $entity['from_'])
 			{
 				$errors['to'] = lang('TO needs to be later than FROM');
 			}
-			if($entity['cost'] < 0)
+			if ($entity['cost'] < 0)
 			{
 				$errors['cost'] = lang('COST needs to be non-negative');
 			}
-			if(!$entity['resources'])
+			if (!$entity['resources'])
 			{
 				return;
 			}
@@ -370,20 +374,20 @@ EOT;
 			"     ((a1.from_ >= $from_ AND a1.from_ < $to_) OR " .
 			"	   (a1.to_ > $from_ AND a1.to_ <= $to_) OR " .
 			"	   (a1.from_ < $from_ AND a1.to_ > $to_)) ", __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$errors['overlaps'] = lang("This allocation overlaps another allocation");
 			}
 			$this->db->query(
 			"SELECT 1 FROM bb_season_boundary " .
 			"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_} AND season_id = ${season_id}", __LINE__, __FILE__);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				$errors['overlaps'] = lang("This allocation is outside season boundaries");
 			}
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$this->db->query("DELETE FROM bb_wtemplate_alloc_resource WHERE allocation_id=" . intval($id), __LINE__, __FILE__);
 			$this->db->query("DELETE FROM bb_wtemplate_alloc WHERE id=" . intval($id), __LINE__, __FILE__);

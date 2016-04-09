@@ -77,18 +77,18 @@
 			$this->type = 'entity';
 		}
 
-		function list_methods($_type = 'xmlrpc')
+		function list_methods( $_type = 'xmlrpc' )
 		{
 			/*
 			  This handles introspection or discovery by the logged in client,
 			  in which case the input might be an array.  The server always calls
 			  this function to fill the server dispatch map using a string.
 			 */
-			if(is_array($_type))
+			if (is_array($_type))
 			{
 				$_type = $_type['type'] ? $_type['type'] : $_type[0];
 			}
-			switch($_type)
+			switch ($_type)
 			{
 				case 'xmlrpc':
 					$xml_functions = array(
@@ -109,13 +109,13 @@
 			}
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			$this->entity_id = isset($data['entity_id']) && $data['entity_id'] ? $data['entity_id'] : $this->entity_id;
 			$this->cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : $this->cat_id;
 			$acl_location = ".entity.{$this->entity_id}.{$this->cat_id}";
 
-			if(!$this->acl->check($acl_location, PHPGW_ACL_READ, 'property'))
+			if (!$this->acl->check($acl_location, PHPGW_ACL_READ, 'property'))
 			{
 				return array('error' => 'sorry: no access to this function');
 			}
@@ -124,7 +124,7 @@
 			$soentity->type = $this->type;
 
 
-			if(isset($this->allrows))
+			if (isset($this->allrows))
 			{
 				$data['allrows'] = true;
 			}
@@ -133,20 +133,20 @@
 			$attrib_data = $custom->find('property', $this->acl_location, 0, '', '', '', true, true);
 
 			$attrib_filter = array();
-			if($attrib_data)
+			if ($attrib_data)
 			{
-				foreach($attrib_data as $attrib)
+				foreach ($attrib_data as $attrib)
 				{
-					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
+					if ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
 					{
-						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						if ($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
 							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
 						}
 					}
-					else if($attrib['datatype'] == 'CH')
+					else if ($attrib['datatype'] == 'CH')
 					{
-						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						if ($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
 							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
 						}
@@ -186,9 +186,9 @@
 
 			$_values['attributes'] = $custom->find('property', '.location.1', 0, '', 'ASC', 'attrib_sort', true, true);
 
-			if(isset($data['get_location_info']) && $data['get_location_info'])
+			if (isset($data['get_location_info']) && $data['get_location_info'])
 			{
-				foreach($values as &$entry)
+				foreach ($values as &$entry)
 				{
 					//				$entry['address'] = utf8_decode($entry['address']);
 					//				$entry['user'] = utf8_decode($entry['user_id']);

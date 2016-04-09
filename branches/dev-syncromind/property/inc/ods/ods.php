@@ -38,7 +38,7 @@
 			$this->repeat = 0;
 		}
 
-		function parse($data)
+		function parse( $data )
 		{
 			$xml_parser = xml_parser_create();
 			xml_set_object($xml_parser, $this);
@@ -63,10 +63,10 @@
 
 			// Fonts
 			$string .= '<office:font-face-decls>';
-			foreach($fontArray as $fontName => $fontAttribs)
+			foreach ($fontArray as $fontName => $fontAttribs)
 			{
 				$string .= '<style:font-face ';
-				foreach($fontAttribs as $attrName => $attrValue)
+				foreach ($fontAttribs as $attrName => $attrValue)
 				{
 					$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 				}
@@ -76,20 +76,20 @@
 
 			// Styles
 			$string .= '<office:automatic-styles>';
-			foreach($styleArray as $styleName => $styleAttribs)
+			foreach ($styleArray as $styleName => $styleAttribs)
 			{
 				$string .= '<style:style ';
-				foreach($styleAttribs['attrs'] as $attrName => $attrValue)
+				foreach ($styleAttribs['attrs'] as $attrName => $attrValue)
 				{
 					$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 				}
 				$string .= '>';
 
 				// Subnodes
-				foreach($styleAttribs['styles'] as $nodeName => $nodeTree)
+				foreach ($styleAttribs['styles'] as $nodeName => $nodeTree)
 				{
 					$string .= '<' . $nodeName . ' ';
-					foreach($nodeTree as $attrName => $attrValue)
+					foreach ($nodeTree as $attrName => $attrValue)
 					{
 						$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 					}
@@ -103,25 +103,25 @@
 			// Body
 			$string .= '<office:body>';
 			$string .= '<office:spreadsheet>';
-			foreach($sheetArray as $tableIndex => $tableContent)
+			foreach ($sheetArray as $tableIndex => $tableContent)
 			{
 				$string .= '<table:table table:name="' . $tableIndex . '" table:print="false">';
 				//$string .= '<office:forms form:automatic-focus="false" form:apply-design-mode="false"/>';
 
-				foreach($tableContent['rows'] as $rowIndex => $rowContent)
+				foreach ($tableContent['rows'] as $rowIndex => $rowContent)
 				{
 					$string .= '<table:table-row>';
 
-					foreach($rowContent as $cellIndex => $cellContent)
+					foreach ($rowContent as $cellIndex => $cellContent)
 					{
 						$string .= '<table:table-cell ';
-						foreach($cellContent['attrs'] as $attrName => $attrValue)
+						foreach ($cellContent['attrs'] as $attrName => $attrValue)
 						{
 							$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 						}
 						$string .= '>';
 
-						if(isset($cellContent['value']))
+						if (isset($cellContent['value']))
 						{
 							$string .= '<text:p>' . $cellContent['value'] . '</text:p>';
 						}
@@ -144,32 +144,31 @@
 			return $string;
 		}
 
-		function startElement($parser, $tagName, $attrs)
+		function startElement( $parser, $tagName, $attrs )
 		{
 			$cTagName = strtolower($tagName);
-			if($cTagName == 'style:font-face')
+			if ($cTagName == 'style:font-face')
 			{
 				$this->fonts[$attrs['STYLE:NAME']] = $attrs;
 			}
-			elseif($cTagName == 'style:style')
+			elseif ($cTagName == 'style:style')
 			{
 				$this->lastElement = $attrs['STYLE:NAME'];
 				$this->styles[$this->lastElement]['attrs'] = $attrs;
 			}
-			elseif($cTagName == 'style:table-column-properties' || $cTagName == 'style:table-row-properties'
-			|| $cTagName == 'style:table-properties' || $cTagName == 'style:text-properties')
+			elseif ($cTagName == 'style:table-column-properties' || $cTagName == 'style:table-row-properties' || $cTagName == 'style:table-properties' || $cTagName == 'style:text-properties')
 			{
 				$this->styles[$this->lastElement]['styles'][$cTagName] = $attrs;
 			}
-			elseif($cTagName == 'table:table-cell')
+			elseif ($cTagName == 'table:table-cell')
 			{
 				$this->lastElement = $cTagName;
 				$this->sheets[$this->currentSheet]['rows'][$this->currentRow][$this->currentCell]['attrs'] = $attrs;
-				if(isset($attrs['TABLE:NUMBER-COLUMNS-REPEATED']))
+				if (isset($attrs['TABLE:NUMBER-COLUMNS-REPEATED']))
 				{
 					$times = intval($attrs['TABLE:NUMBER-COLUMNS-REPEATED']);
 					$times--;
-					for($i = 1; $i <= $times; $i++)
+					for ($i = 1; $i <= $times; $i++)
 					{
 						$cnum = $this->currentCell + $i;
 						$this->sheets[$this->currentSheet]['rows'][$this->currentRow][$cnum]['attrs'] = $attrs;
@@ -177,11 +176,11 @@
 					$this->currentCell += $times;
 					$this->repeat = $times;
 				}
-				if(isset($this->lastRowAtt['TABLE:NUMBER-ROWS-REPEATED']))
+				if (isset($this->lastRowAtt['TABLE:NUMBER-ROWS-REPEATED']))
 				{
 					$times = intval($this->lastRowAtt['TABLE:NUMBER-ROWS-REPEATED']);
 					$times--;
-					for($i = 1; $i <= $times; $i++)
+					for ($i = 1; $i <= $times; $i++)
 					{
 						$cnum = $this->currentRow + $i;
 						$this->sheets[$this->currentSheet]['rows'][$cnum][$i - 1]['attrs'] = $attrs;
@@ -189,40 +188,40 @@
 					$this->currentRow += $times;
 				}
 			}
-			elseif($cTagName == 'table:table-row')
+			elseif ($cTagName == 'table:table-row')
 			{
 				$this->lastRowAtt = $attrs;
 			}
 		}
 
-		function endElement($parser, $tagName)
+		function endElement( $parser, $tagName )
 		{
 			$cTagName = strtolower($tagName);
-			if($cTagName == 'table:table')
+			if ($cTagName == 'table:table')
 			{
 				$this->currentSheet++;
 				$this->currentRow = 0;
 			}
-			elseif($cTagName == 'table:table-row')
+			elseif ($cTagName == 'table:table-row')
 			{
 				$this->currentRow++;
 				$this->currentCell = 0;
 			}
-			elseif($cTagName == 'table:table-cell')
+			elseif ($cTagName == 'table:table-cell')
 			{
 				$this->currentCell++;
 				$this->repeat = 0;
 			}
 		}
 
-		function characterData($parser, $data)
+		function characterData( $parser, $data )
 		{
-			if($this->lastElement == 'table:table-cell')
+			if ($this->lastElement == 'table:table-cell')
 			{
 				$this->sheets[$this->currentSheet]['rows'][$this->currentRow][$this->currentCell]['value'] = $data;
-				if($this->repeat > 0)
+				if ($this->repeat > 0)
 				{
-					for($i = 0; $i < $this->repeat; $i++)
+					for ($i = 0; $i < $this->repeat; $i++)
 					{
 						$cnum = $this->currentCell - ($i + 1);
 						$this->sheets[$this->currentSheet]['rows'][$this->currentRow][$cnum]['value'] = $data;
@@ -231,7 +230,7 @@
 			}
 		}
 
-		function getMeta($lang)
+		function getMeta( $lang )
 		{
 			$myDate = date('Y-m-j\TH:i:s');
 			$meta = '<?xml version="1.0" encoding="UTF-8"?>
@@ -290,14 +289,14 @@
 </manifest:manifest>';
 		}
 
-		function addCell($sheet, $row, $cell, $value, $type)
+		function addCell( $sheet, $row, $cell, $value, $type )
 		{
 			$this->sheets[$sheet]['rows'][$row][$cell]['attrs'] = array('OFFICE:VALUE-TYPE' => $type,
 				'OFFICE:VALUE' => $value);
 			$this->sheets[$sheet]['rows'][$row][$cell]['value'] = $value;
 		}
 
-		function editCell($sheet, $row, $cell, $value)
+		function editCell( $sheet, $row, $cell, $value )
 		{
 			$this->sheets[$sheet]['rows'][$row][$cell]['attrs']['OFFICE:VALUE'] = $value;
 			$this->sheets[$sheet]['rows'][$row][$cell]['value'] = $value;

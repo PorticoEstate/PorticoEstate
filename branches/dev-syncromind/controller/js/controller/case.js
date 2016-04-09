@@ -1,7 +1,9 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	// REGISTER CASE
-	$(".frm_register_case").on("submit", function (e) {
+	$(".frm_register_case").on("submit", function (e)
+	{
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -26,22 +28,27 @@ $(document).ready(function () {
 
 		var validate_status = validate_form(thisForm);
 
-		if (validate_status) {
+		if (validate_status)
+		{
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
-				success: function (data) {
-					if (data) {
+				success: function (data)
+				{
+					if (data)
+					{
 						var jsonObj = jQuery.parseJSON(data);
 
-						if (jsonObj.status == "saved") {
+						if (jsonObj.status == "saved")
+						{
 							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
 							clear_form(thisForm);
 
 							// Changes text on save button back to original
-							window.setTimeout(function () {
+							window.setTimeout(function ()
+							{
 								if (type == "control_item_type_2")
 								{
 									$(submitBnt).val('Lagre måling');
@@ -75,11 +82,14 @@ $(document).ready(function () {
 				type: 'POST',
 				dataType: 'json',
 				url: requestUrl,
-				success: function (data) {
-					if (data != null) {
+				success: function (data)
+				{
+					if (data != null)
+					{
 						var obj = jQuery.parseJSON(data);
 
-						$.each(obj, function (i, control_group) {
+						$.each(obj, function (i, control_group)
+						{
 
 							$.each(control_group, function (j, control_item)
 							{
@@ -93,9 +103,11 @@ $(document).ready(function () {
 									htmlString = "";
 
 									var component_options = control_item.components_at_location;
-									$.each(component_options, function (k, options) {
+									$.each(component_options, function (k, options)
+									{
 
-										$.each(options, function (k, option) {
+										$.each(options, function (k, option)
+										{
 
 											var selected = '';
 
@@ -120,7 +132,8 @@ $(document).ready(function () {
 	});
 
 	// UPDATE CASE
-	$(".frm_update_case").on("submit", function (e) {
+	$(".frm_update_case").on("submit", function (e)
+	{
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -131,19 +144,24 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&" + $(thisForm).serialize(),
-			success: function (data) {
-				if (data) {
+			success: function (data)
+			{
+				if (data)
+				{
 					var jsonObj = jQuery.parseJSON(data);
 
-					if (jsonObj.status == "saved") {
+					if (jsonObj.status == "saved")
+					{
 						var type = $(thisForm).find("input[name=control_item_type]").val();
 
-						if (type == "control_item_type_1") {
+						if (type == "control_item_type_1")
+						{
 							var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 
 							$(clickRow).find(".case_info .case_status").empty().text(case_status);
 						}
-						else if (type == "control_item_type_2") {
+						else if (type == "control_item_type_2")
+						{
 							var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 
 							$(clickRow).find(".case_info .case_status").empty().text(case_status);
@@ -151,7 +169,8 @@ $(document).ready(function () {
 							var measurement_text = $(thisForm).find("input[name='measurement']").val();
 							$(clickRow).find(".case_info .measurement").text(measurement_text);
 						}
-						else if (type == "control_item_type_3") {
+						else if (type == "control_item_type_3")
+						{
 							var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 
 							$(clickRow).find(".case_info .case_status").empty().text(case_status);
@@ -159,7 +178,8 @@ $(document).ready(function () {
 							var measurement_text = $(thisForm).find("select[name='measurement'] option:selected").val();
 							$(clickRow).find(".case_info .measurement").text(measurement_text);
 						}
-						else if (type == "control_item_type_4") {
+						else if (type == "control_item_type_4")
+						{
 							var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 
 							$(clickRow).find(".case_info .case_status").empty().text(case_status);
@@ -181,7 +201,8 @@ $(document).ready(function () {
 		});
 	});
 
-	$("a.quick_edit_case").on("click", function (e) {
+	$("a.quick_edit_case").on("click", function (e)
+	{
 		e.preventDefault();
 		//   console.log("sdfsdfsd");
 		var clickRow = $(this).closest("li");
@@ -192,7 +213,8 @@ $(document).ready(function () {
 		return false;
 	});
 
-	$(".frm_update_case .cancel").on("click", function (e) {
+	$(".frm_update_case .cancel").on("click", function (e)
+	{
 		var clickRow = $(this).closest("li");
 
 
@@ -203,7 +225,8 @@ $(document).ready(function () {
 	});
 
 	// DELETE CASE
-	$(".delete_case").on("click", function () {
+	$(".delete_case").on("click", function ()
+	{
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -215,24 +238,32 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function (data) {
+			success: function (data)
+			{
 				var obj = jQuery.parseJSON(data);
 
-				if (obj.status == "deleted") {
-					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function () {
+				if (obj.status == "deleted")
+				{
+					if ($(clickItem).children("li").length > 1)
+					{
+						$(clickRow).fadeOut(300, function ()
+						{
 							$(clickRow).remove();
 						});
 
 						var next_row = $(clickRow).next();
 
 						// Updating order numbers for rows below deleted row  
-						while ($(next_row).length > 0) {
+						while ($(next_row).length > 0)
+						{
 							update_order_nr_for_row(next_row, "-");
 							next_row = $(next_row).next();
 						}
-					} else {
-						$(checkItemRow).fadeOut(300, function () {
+					}
+					else
+					{
+						$(checkItemRow).fadeOut(300, function ()
+						{
 							$(checkItemRow).remove();
 						});
 					}
@@ -244,7 +275,8 @@ $(document).ready(function () {
 	});
 
 	// CLOSE CASE
-	$(".close_case").on("click", function () {
+	$(".close_case").on("click", function ()
+	{
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -256,24 +288,32 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function (data) {
+			success: function (data)
+			{
 				var obj = jQuery.parseJSON(data);
 
-				if (obj.status == "true") {
-					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function () {
+				if (obj.status == "true")
+				{
+					if ($(clickItem).children("li").length > 1)
+					{
+						$(clickRow).fadeOut(300, function ()
+						{
 							$(clickRow).remove();
 						});
 
 						var next_row = $(clickRow).next();
 
 						// Updating order numbers for rows below deleted row  
-						while ($(next_row).length > 0) {
+						while ($(next_row).length > 0)
+						{
 							update_order_nr_for_row(next_row, "-");
 							next_row = $(next_row).next();
 						}
-					} else {
-						$(checkItemRow).fadeOut(300, function () {
+					}
+					else
+					{
+						$(checkItemRow).fadeOut(300, function ()
+						{
 							$(checkItemRow).remove();
 						});
 					}
@@ -285,7 +325,8 @@ $(document).ready(function () {
 	});
 
 	// OPEN CASE
-	$(".open_case").on("click", function () {
+	$(".open_case").on("click", function ()
+	{
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -297,24 +338,32 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			success: function (data) {
+			success: function (data)
+			{
 				var obj = jQuery.parseJSON(data);
 
-				if (obj.status == "true") {
-					if ($(clickItem).children("li").length > 1) {
-						$(clickRow).fadeOut(300, function () {
+				if (obj.status == "true")
+				{
+					if ($(clickItem).children("li").length > 1)
+					{
+						$(clickRow).fadeOut(300, function ()
+						{
 							$(clickRow).remove();
 						});
 
 						var next_row = $(clickRow).next();
 
 						// Updating order numbers for rows below deleted row  
-						while ($(next_row).length > 0) {
+						while ($(next_row).length > 0)
+						{
 							update_order_nr_for_row(next_row, "-");
 							next_row = $(next_row).next();
 						}
-					} else {
-						$(checkItemRow).fadeOut(300, function () {
+					}
+					else
+					{
+						$(checkItemRow).fadeOut(300, function ()
+						{
 							$(checkItemRow).remove();
 						});
 					}
@@ -325,11 +374,13 @@ $(document).ready(function () {
 		return false;
 	});
 
-	$("#choose-building-on-property").change(function () {
+	$("#choose-building-on-property").change(function ()
+	{
 		var location_code = $(this).val();
 		var search = location.search.substring(1);
 		var oArgs = search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-				function (key, value) {
+			function (key, value)
+			{
 					return key === "" ? value : decodeURIComponent(value)
 				}) : {}
 
@@ -358,7 +409,8 @@ function validate_form(formObj)
 
 	$(formObj).find(".input_error_msg").remove();
 
-	$(formObj).find(":input.required").each(function () {
+	$(formObj).find(":input.required").each(function ()
+	{
 		var thisInput = $(this);
 
 		if ($(thisInput).val() == '')
@@ -366,7 +418,8 @@ function validate_form(formObj)
 			if ($(thisInput).attr("type") == 'hidden')
 			{
 				$(formObj).prepend("<div class='input_error_msg'>Du må spesifisere lokalisering</div>");
-			} else
+			}
+			else
 			{
 				$(thisInput).before("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");
 			}
@@ -379,7 +432,8 @@ function validate_form(formObj)
 }
 
 //Updates order number for hidden field and number in front of row
-function update_order_nr_for_row(element, sign) {
+function update_order_nr_for_row(element, sign)
+{
 
 	var span_order_nr = $(element).find("span.order_nr");
 	var order_nr = $(span_order_nr).text();

@@ -16,7 +16,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.sobilling_info');
 			}
@@ -28,7 +28,7 @@
 			return 'id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -40,24 +40,24 @@
 
 			$filter_clauses = array();
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "{$this->get_id_field_name()} = {$id}";
 			}
-			if(isset($filters['billing_id']))
+			if (isset($filters['billing_id']))
 			{
 				$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'], 'int')}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(id)) AS count';
 			}
@@ -72,9 +72,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $billing_info_id, &$billing_info)
+		protected function populate( int $billing_info_id, &$billing_info )
 		{
-			if($billing_info == null)
+			if ($billing_info == null)
 			{
 				$billing_info = new rental_billing_info($this->unmarshal($this->db->f('id'), 'int'));
 				$billing_info->set_billing_id($this->unmarshal($this->db->f('billing_id'), 'int'));
@@ -82,13 +82,13 @@
 				$billing_info->set_term_id($this->unmarshal($this->db->f('term_id'), 'int'));
 				$billing_info->set_year($this->unmarshal($this->db->f('year'), 'int'));
 				$billing_info->set_month($this->unmarshal($this->db->f('month'), 'int'));
-				if($billing_info->get_term_id() == 2)
+				if ($billing_info->get_term_id() == 2)
 				{ // yearly
 					$billing_info->set_term_label(lang('annually'));
 				}
-				else if($billing_info->get_term_id() == 3)
+				else if ($billing_info->get_term_id() == 3)
 				{ // half year
-					if($billing_info->get_month() == 6)
+					if ($billing_info->get_month() == 6)
 					{
 						$billing_info->set_term_label(lang('first_half'));
 					}
@@ -97,17 +97,17 @@
 						$billing_info->set_term_label(lang('second_half'));
 					}
 				}
-				else if($billing_info->get_term_id() == 4)
+				else if ($billing_info->get_term_id() == 4)
 				{ // quarterly
-					if($billing_info->get_month() == 3)
+					if ($billing_info->get_month() == 3)
 					{
 						$billing_info->set_term_label(lang('first_quarter'));
 					}
-					else if($billing_info->get_month() == 6)
+					else if ($billing_info->get_month() == 6)
 					{
 						$billing_info->set_term_label(lang('second_quarter'));
 					}
-					else if($billing_info->get_month() == 9)
+					else if ($billing_info->get_month() == 9)
 					{
 						$billing_info->set_term_label(lang('third_quarter'));
 					}
@@ -126,7 +126,7 @@
 		 * @param $billing_info the billing_info to be added
 		 * @return mixed receipt from the db operation
 		 */
-		protected function add(&$billing_info)
+		protected function add( &$billing_info )
 		{
 			// Build a db-friendly array of the composite object
 			$values = array(
@@ -156,7 +156,7 @@
 		 * @param $billing_info the billing info to be updated
 		 * @return result receipt from the db operation
 		 */
-		protected function update($billing_info)
+		protected function update( $billing_info )
 		{
 			$id = intval($billing_info->get_id());
 

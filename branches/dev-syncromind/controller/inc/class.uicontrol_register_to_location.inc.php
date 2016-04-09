@@ -28,7 +28,6 @@
 	 * @subpackage controller
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Import the jQuery class
@@ -96,13 +95,13 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = true;
 			$receipt									 = array();
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			$msgbox_data = array();
-			if(phpgw::get_var('phpgw_return_as') != 'json' && $receipt	 = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
@@ -129,7 +128,7 @@
 
 
 			$control_area_list = array();
-			foreach($control_area['cat_list'] as $cat_list)
+			foreach ($control_area['cat_list'] as $cat_list)
 			{
 				$control_area_list[] = array
 					(
@@ -255,9 +254,9 @@
 
 			$count_fields = count($uicols['name']);
 
-			for($i = 0; $i < $count_fields; $i++)
+			for ($i = 0; $i < $count_fields; $i++)
 			{
-				switch($uicols['datatype'][$i])
+				switch ($uicols['datatype'][$i])
 				{
 					case 'link':
 						$formatter	 = 'link';
@@ -266,9 +265,9 @@
 						$formatter	 = $uicols['formatter'][$i];
 				}
 
-				if($uicols['name'][$i])
+				if ($uicols['name'][$i])
 				{
-					if($uicols['input_type'][$i] == 'hidden')
+					if ($uicols['input_type'][$i] == 'hidden')
 					{
 						continue;
 					}
@@ -284,9 +283,9 @@
 				}
 			}
 
-			foreach($columndef as &$entry)
+			foreach ($columndef as &$entry)
 			{
-				if($entry['formatter'])
+				if ($entry['formatter'])
 				{
 					$render			 = <<<JS
 					function (dummy1, dummy2, oData) {
@@ -352,14 +351,14 @@ JS;
 
 			$values = $this->bo->read($params);
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
 				$entry['select'] = '';
 				$entry['delete'] = '';
-				if($control_id)
+				if ($control_id)
 				{
 					$checked = '';
-					if($this->so_control->get_control_location($control_id, $entry['location_code']))
+					if ($this->so_control->get_control_location($control_id, $entry['location_code']))
 					{
 						$checked		 = 'checked = "checked" disabled = "disabled"';
 						$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$entry['location_code']}\">";
@@ -380,17 +379,17 @@ JS;
 
 		public function edit_location()
 		{
-			if($values = phpgw::get_var('values'))
+			if ($values = phpgw::get_var('values'))
 			{
-				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
+				if (!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
 				}
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 
-					if($this->so_control->register_control_to_location($values))
+					if ($this->so_control->register_control_to_location($values))
 					{
 						$result = array
 							(
@@ -407,9 +406,9 @@ JS;
 				}
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;

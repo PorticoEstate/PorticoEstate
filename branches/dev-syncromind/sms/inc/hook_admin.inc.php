@@ -8,15 +8,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 		{
 			$file = array
 			(
-				'Configuration' => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.index')),
-				'Configure Access Permissions'=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'preferences.uiadmin_acl.list_acl', 'acl_app'=>$appname)),
+			'Configuration' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiconfig.index')),
+			'Configure Access Permissions' => $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => $appname)),
 			);
-		display_section($appname,$appname,$file);
+		display_section($appname, $appname, $file);
 		}
 

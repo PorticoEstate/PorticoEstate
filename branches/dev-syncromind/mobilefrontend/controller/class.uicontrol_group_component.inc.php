@@ -25,14 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
-
   	phpgw::import_class('controller.uicontrol_group_component');
 
 	class mobilefrontend_uicontrol_group_component extends controller_uicontrol_group_component
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

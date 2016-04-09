@@ -15,12 +15,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -30,7 +30,7 @@
 			return $this->id;
 		}
 
-		public function set_parent_id($parent_id)
+		public function set_parent_id( $parent_id )
 		{
 			$this->parent_id = $parent_id;
 		}
@@ -40,13 +40,15 @@
 			return $this->parent_id;
 		}
 
-		public function set_name($name)
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
 
 		public function get_name()
-		{ return $this->name;}
+		{
+			return $this->name;
+		}
 
 		public function serialize()
 		{

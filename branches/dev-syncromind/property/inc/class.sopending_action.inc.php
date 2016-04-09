@@ -71,7 +71,7 @@
 		 *
 		 * @return integer $reminder  number of request for this action
 		 */
-		public function set_pending_action($data = array())
+		public function set_pending_action( $data = array() )
 		{
 			$appname = $data['appname'];
 			$location = $data['location'];
@@ -81,14 +81,14 @@
 			$remark = $this->db->db_addslashes($data['remark']);
 			$deadline = (int)$data['deadline'];
 
-			if(!$item_id)
+			if (!$item_id)
 			{
 				throw new Exception("No item_id given");
 			}
 
 			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
 
-			if(!in_array($responsible_type, $this->valid_responsible_types))
+			if (!in_array($responsible_type, $this->valid_responsible_types))
 			{
 				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
@@ -97,21 +97,21 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$action_category = $this->db->f('id');
-			if(!$action_category)
+			if (!$action_category)
 			{
 				throw new Exception("'{$action}' is not a valid action_type");
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			if(!$location_id)
+			if (!$location_id)
 			{
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
 			}
 
 			$reminder = 1;
 
-			if($this->db->get_transaction())
+			if ($this->db->get_transaction())
 			{
 				$this->global_transaction = true;
 			}
@@ -131,7 +131,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('reminder'))
+			if ($this->db->f('reminder'))
 			{
 				$reminder = $this->db->f('reminder') + 1;
 				$id = $this->db->f('id');
@@ -142,12 +142,12 @@
 					'expired_by' => $this->account,
 				);
 
-				if($deadline > 0)
+				if ($deadline > 0)
 				{
 					$value_set['deadline'] = $deadline;
 				}
 
-				if(isset($data['close']) && $data['close'])
+				if (isset($data['close']) && $data['close'])
 				{
 					$value_set['action_performed'] = phpgwapi_datetime::user_localtime();
 				}
@@ -156,9 +156,9 @@
 				$sql = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
 				$ok = !!$this->db->query($sql, __LINE__, __FILE__);
 
-				if(isset($data['close']) && $data['close'])
+				if (isset($data['close']) && $data['close'])
 				{
-					if(!$this->global_transaction)
+					if (!$this->global_transaction)
 					{
 						$this->db->transaction_commit();
 					}
@@ -167,7 +167,7 @@
 			}
 
 			//if nothing found - and you want to close
-			if(isset($data['close']) && $data['close'])
+			if (isset($data['close']) && $data['close'])
 			{
 				return 0;
 			}
@@ -195,7 +195,7 @@
 			. "created_on, created_by, remark) VALUES ( $values $vals)";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if(!$this->global_transaction)
+			if (!$this->global_transaction)
 			{
 				$this->db->transaction_commit();
 			}
@@ -217,7 +217,7 @@
 		 *
 		 * @return array $ret  dataset also containing an url to the item in question
 		 */
-		public function get_pending_action($data = array())
+		public function get_pending_action( $data = array() )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$appname = isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
@@ -233,14 +233,14 @@
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 
-			if(!in_array($responsible_type, $this->valid_responsible_types))
+			if (!in_array($responsible_type, $this->valid_responsible_types))
 			{
 				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			if(!$location_id)
+			if (!$location_id)
 			{
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
 			}
@@ -248,27 +248,27 @@
 			$ret = array();
 			$condition = " WHERE action_performed IS NULL AND expired_on IS NULL AND num = '{$action}' AND location_id = {$location_id}";
 
-			if($responsible)
+			if ($responsible)
 			{
 				$condition .= " AND responsible = {$responsible}";
 			}
 
-			if($item_id)
+			if ($item_id)
 			{
 				$condition .= " AND item_id = {$item_id}";
 			}
 
-			if($deadline)
+			if ($deadline)
 			{
 				$condition .= " AND deadline < {$deadline}";
 			}
 
-			if($created_by)
+			if ($created_by)
 			{
 				$condition .= " AND created_by = {$created_by}";
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " ORDER BY $order $sort";
 			}
@@ -283,7 +283,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -296,9 +296,9 @@
 
 			$interlink = CreateObject('property.interlink');
 
-			foreach($ret as &$entry)
+			foreach ($ret as &$entry)
 			{
-				if(!$location)
+				if (!$location)
 				{
 					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				}
@@ -321,7 +321,7 @@
 		 *
 		 * @return integer $reminder  number of request for this action
 		 */
-		public function close_pending_action($data = array())
+		public function close_pending_action( $data = array() )
 		{
 			$data['close'] = true;
 			return !!$this->set_pending_action($data);

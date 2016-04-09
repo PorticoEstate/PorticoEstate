@@ -29,21 +29,23 @@
 			$this->module = "booking";
 		}
 
-		public function link_to_parent_params($action = 'show', $params = array())
+		public function link_to_parent_params( $action = 'show', $params = array() )
 		{
 			return array_merge(array('menuaction' => sprintf($this->module . '.ui%s.%s', $this->get_current_parent_type(), $action),
 				'id' => $this->get_parent_id()), $params);
 		}
 
-		public function link_to_parent($action = 'show', $params = array())
+		public function link_to_parent( $action = 'show', $params = array() )
 		{
 			return $this->link($this->link_to_parent_params($action, $params));
 		}
 
 		public function get_current_parent_type()
 		{
-			if(!$this->is_inline())
-			{ return null;}
+			if (!$this->is_inline())
+			{
+				return null;
+			}
 			$parts	 = explode('_', key($a		 = $this->get_inline_params()));
 			return $parts[1];
 		}
@@ -56,14 +58,14 @@
 
 		public function get_parent_if_inline()
 		{
-			if(!$this->is_inline())
+			if (!$this->is_inline())
 				return null;
 			return CreateObject('booking.bo' . $this->get_current_parent_type())->read_single($this->get_parent_id());
 		}
 
 		public function redirect_to_parent_if_inline()
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$this->redirect($this->link_to_parent_params());
 			}
@@ -71,14 +73,14 @@
 			return false;
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -93,9 +95,9 @@
 			return array_merge(array('menuaction' => $action), $params);
 		}
 
-		public function apply_inline_params(&$params)
+		public function apply_inline_params( &$params )
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$params['filter_organization_id'] = intval(phpgw::get_var('filter_organization_id'));
 			}
@@ -114,7 +116,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -182,13 +184,13 @@
 			$groups = $this->bo->read();
 
 			array_walk($groups["results"], array($this, "_add_links"), $this->module . ".uigroup.show");
-			foreach($groups["results"] as &$group)
+			foreach ($groups["results"] as &$group)
 			{
 
 				$contact	 = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
 				$contact2	 = (isset($group['contacts']) && isset($group['contacts'][1])) ? $group['contacts'][1] : null;
 
-				if($contact)
+				if ($contact)
 				{
 					$group += array(
 						"primary_contact_name"	 => ($contact["name"]) ? $contact["name"] : '',
@@ -196,7 +198,7 @@
 						"primary_contact_email"	 => ($contact["email"]) ? $contact["email"] : '',
 					);
 				}
-				if($contact2)
+				if ($contact2)
 				{
 					$group += array(
 						"secondary_contact_name"	 => ($contact2["name"]) ? $contact2["name"] : '',
@@ -207,9 +209,9 @@
 			}
 			$results = $this->jquery_results($groups);
 
-			if(is_array($parent_entity = $this->get_parent_if_inline()))
+			if (is_array($parent_entity = $this->get_parent_if_inline()))
 			{
-				if($this->bo->allow_create(array($this->get_current_parent_type() . '_id' => $parent_entity['id'])))
+				if ($this->bo->allow_create(array($this->get_current_parent_type() . '_id' => $parent_entity['id'])))
 				{
 					$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
 				}
@@ -218,13 +220,12 @@
 			return $results;
 		}
 
-
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
 
 
-			if($id)
+			if ($id)
 			{
 				$group						 = $this->bo->read_single($id);
 				$group['id']				 = $id;
@@ -233,7 +234,7 @@
 
 				$group['cancel_link'] = $this->link_to('show', array('id' => $id));
 
-				if($this->is_inline())
+				if ($this->is_inline())
 				{
 					$group['cancel_link'] = $this->link_to_parent();
 				}
@@ -243,7 +244,7 @@
 				$group					 = array();
 				$group['cancel_link']	 = $this->link_to('index', array('ui' => 'organization'));
 
-				if($this->is_inline())
+				if ($this->is_inline())
 				{
 					$group['organization_link']	 = $this->link_to_parent();
 					$group['cancel_link']		 = $this->link_to_parent();
@@ -254,7 +255,7 @@
 			$group['organizations_link'] = $this->link_to('index', array('ui' => 'organization'));
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$group = array_merge($group, extract_values($_POST, array(
 					'name'				 => 'string',
@@ -267,23 +268,23 @@
 					'activity_id'		 => 'int',
 					'show_in_portal'	 => 'int',
 				)));
-				if(!isset($group["active"]))
+				if (!isset($group["active"]))
 				{
 					$group['active'] = '1';
 				}
 
 				$errors = $this->bo->validate($group);
-				if(strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 50)
 				{
 					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
 				}
-				if(strlen($_POST['shortname']) > 11)
+				if (strlen($_POST['shortname']) > 11)
 				{
 					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
 				}
-				if(!$errors)
+				if (!$errors)
 				{
-					if($id)
+					if ($id)
 					{
 						$receipt = $this->bo->update($group);
 					}
@@ -298,7 +299,7 @@
 			}
 			$this->flash_form_errors($errors);
 
-			if(is_array($parent_entity = $this->get_parent_if_inline()))
+			if (is_array($parent_entity = $this->get_parent_if_inline()))
 			{
 				$group[$this->get_current_parent_type() . '_id']	 = $parent_entity['id'];
 				$group[$this->get_current_parent_type() . '_name'] = $parent_entity['name'];
@@ -308,11 +309,11 @@
 			$activities	 = $activities['results'];
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs		 = array();
 			$tab_text	 = ($id) ? 'Group Edit' : 'Group New';
-			if(id)
+			if (id)
 			{
 				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#group_edit');
 			}

@@ -22,25 +22,25 @@
 		 * @param $type the type of value
 		 * @return database value
 		 */
-		protected function marshal($value, $type)
+		protected function marshal( $value, $type )
 		{
-			if($value === null)
+			if ($value === null)
 			{
 				return 'NULL';
 			}
-			else if($type == 'int')
+			else if ($type == 'int')
 			{
-				if($value == '')
+				if ($value == '')
 				{
 					return 'NULL';
 				}
 				return intval($value);
 			}
-			else if($type == 'float')
+			else if ($type == 'float')
 			{
 				return str_replace(',', '.', $value);
 			}
-			else if($type == 'field')
+			else if ($type == 'field')
 			{
 				return $this->db->db_addslashes($value);
 			}
@@ -53,21 +53,21 @@
 		 * @param $type	a string dictating value type
 		 * @return the php value
 		 */
-		protected function unmarshal($value, $type)
+		protected function unmarshal( $value, $type )
 		{
-			if($type == 'bool')
+			if ($type == 'bool')
 			{
 				return (boolean)$value;
 			}
-			elseif($value === null || $value == 'NULL')
+			elseif ($value === null || $value == 'NULL')
 			{
 				return null;
 			}
-			elseif($type == 'int')
+			elseif ($type == 'int')
 			{
 				return intval($value);
 			}
-			elseif($type == 'float')
+			elseif ($type == 'float')
 			{
 				return floatval($value);
 			}
@@ -81,10 +81,10 @@
 		 * @param $sql the sql query
 		 * @return the count value
 		 */
-		protected function get_query_count($sql)
+		protected function get_query_count( $sql )
 		{
 			$result = $this->db->query($sql);
-			if($result && $this->db->next_record())
+			if ($result && $this->db->next_record())
 			{
 				return $this->unmarshal($this->db->f('count', true), 'int');
 			}
@@ -104,10 +104,10 @@
 		 * @param $id int with id of object to return.
 		 * @return object with the specified id, null if not found.
 		 */
-		public function get_single(int $id)
+		public function get_single( int $id )
 		{
 			$objects = $this->get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
-			if(count($objects) > 0)
+			if (count($objects) > 0)
 			{
 				$keys = array_keys($objects);
 				return $objects[$keys[0]];
@@ -137,7 +137,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
+		public function get( int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters )
 		{
 			$results			 = array();   // Array to store result objects
 			$map				 = array(); // Array to hold number of records per target object
@@ -148,7 +148,7 @@
 			// $break_on_limit - 	flag indicating whether to break the loop when the number of records
 			// 						for all the result objects are traversed
 			$id_field_name_info	 = $this->get_id_field_name(true);
-			if(is_array($id_field_name_info))
+			if (is_array($id_field_name_info))
 			{
 				$break_on_limit	 = true;
 				$id_field_name	 = $id_field_name_info['translated'];
@@ -162,7 +162,7 @@
 			// Special case: Sort on id field. Always changed to the id field name.
 			// $break_when_num_of_objects_reached - flag indicating to break the loop when the number of
 			//		results are reached and we are sure that the records are ordered by the id
-			if($sort_field == null || $sort_field == 'id' || $sort_field == '')
+			if ($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{
 				$sort_field							 = $id_field_name;
 				$break_when_num_of_objects_reached	 = true;
@@ -173,7 +173,7 @@
 			}
 
 			// Only allow positive start index
-			if($start_index < 0)
+			if ($start_index < 0)
 			{
 				$start_index = 0;
 			}
@@ -186,31 +186,31 @@
 			$sql_parts	 = explode('1=1', $sql); // Split the query to insert extra condition on test for break
 			$this->db->query($sql, __LINE__, __FILE__, false, true);
 
-			while($this->db->next_record()) // Runs through all of the results
+			while ($this->db->next_record()) // Runs through all of the results
 			{
 				$should_populate_object	 = false; // Default value - we won't populate object
 				$result_id				 = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
-				if(in_array($result_id, $added_object_ids)) // Object with this id already added
+				if (in_array($result_id, $added_object_ids)) // Object with this id already added
 				{
 					$should_populate_object = true; // We should populate this object as we already have it in our result array
 				}
 				else // Object isn't already added to array
 				{
-					if(!in_array($result_id, $object_ids)) // Haven't already added this id
+					if (!in_array($result_id, $object_ids)) // Haven't already added this id
 					{
 						$object_ids[] = $result_id; // We have to add the new id
 					}
 					// We have to check if we should populate this object
-					if(count($object_ids) > $start_index) // We're at index above start index
+					if (count($object_ids) > $start_index) // We're at index above start index
 					{
-						if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
+						if ($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
 						{
 							$should_populate_object	 = true; // We should populate this object
 							$added_object_ids[]		 = $result_id; // We keep the id
 						}
 					}
 				}
-				if($should_populate_object)
+				if ($should_populate_object)
 				{
 					$result				 = &$results[$result_id];
 					$results[$result_id] = $this->populate($result_id, $result);
@@ -219,17 +219,17 @@
 				}
 
 				//Stop looping when array not sorted on other then id and wanted number of results is reached
-				if(count($results) == $num_of_objects && $last_result_id != $result_id && $break_when_num_of_objects_reached)
+				if (count($results) == $num_of_objects && $last_result_id != $result_id && $break_when_num_of_objects_reached)
 				{
 					break;
 				}
 				// else stop looping when wanted number of results is reached all records for result objects are read
-				else if($break_on_limit && (count($results) == $num_of_objects) && $last_result_id != $result_id)
+				else if ($break_on_limit && (count($results) == $num_of_objects) && $last_result_id != $result_id)
 				{
 					$id_ok = 0;
-					foreach($map as $_result_id => $_count)
+					foreach ($map as $_result_id => $_count)
 					{
-						if(!isset($check_map[$_result_id]))
+						if (!isset($check_map[$_result_id]))
 						{
 							// Query the number of records for the specific object in question
 							$sql2					 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
@@ -237,12 +237,12 @@
 							$db2->next_record();
 							$check_map[$_result_id]	 = $db2->num_rows();
 						}
-						if($check_map[$_result_id] == $_count)
+						if ($check_map[$_result_id] == $_count)
 						{
 							$id_ok++;
 						}
 					}
-					if($id_ok == $num_of_objects)
+					if ($id_ok == $num_of_objects)
 					{
 						break;
 					}
@@ -259,7 +259,7 @@
 		 * @param $filters array with key => value of filters.
 		 * @return int with object count.
 		 */
-		public function get_count(string $search_for, string $search_type, array $filters)
+		public function get_count( string $search_for, string $search_type, array $filters )
 		{
 			return $this->get_query_count($this->get_query(null, null, $search_for, $search_type, $filters, true));
 		}
@@ -287,23 +287,23 @@
 		 * matching objects, or the objects themself.
 		 * @return string with SQL.
 		 */
-		protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
+		protected abstract function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count );
 
-		protected abstract function populate(int $object_id, &$object);
+		protected abstract function populate( int $object_id, &$object );
 
-		protected abstract function add(&$object);
+		protected abstract function add( &$object );
 
-		protected abstract function update($object);
+		protected abstract function update( $object );
 
 		/**
 		 * Store the object in the database.  If the object has no ID it is assumed to be new and
 		 * inserted for the first time.  The object is then updated with the new insert id.
 		 */
-		public function store(&$object)
+		public function store( &$object )
 		{
-			if($object->validates())
+			if ($object->validates())
 			{
-				if($object->get_id() > 0)
+				if ($object->get_id() > 0)
 				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $this->update($object);
@@ -319,7 +319,7 @@
 			return false;
 		}
 
-		protected function generate_secret($length = 10)
+		protected function generate_secret( $length = 10 )
 		{
 			return substr(base64_encode(rand(1000000000, 9999999999)), 0, $length);
 		}

@@ -47,7 +47,7 @@
 			$this->db->query("DELETE FROM fm_cache ", __LINE__, __FILE__);
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$data['order'] = ($data['order'] == 'location_id') ? 'id' : $data['order'];
 
@@ -59,7 +59,7 @@
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -71,7 +71,7 @@
 			$table = 'fm_location_type';
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = $this->db->db_addslashes($query);
@@ -84,7 +84,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -95,7 +95,7 @@
 			#$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$standard = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$standard[] = array
 					(
@@ -107,9 +107,9 @@
 			return $standard;
 		}
 
-		function read_config($data = 0)
+		function read_config( $data = 0 )
 		{
-			if(isset($data['start']))
+			if (isset($data['start']))
 			{
 				$start = $data['start'];
 			}
@@ -125,7 +125,7 @@
 				$order = (isset($data['order']) ? $data['order'] : '');
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -135,7 +135,7 @@
 			}
 
 			$querymethod = '';
-			if(isset($query))
+			if (isset($query))
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = $this->db->db_addslashes($query);
@@ -150,7 +150,7 @@
 
 			$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$config[] = array
 					(
@@ -169,14 +169,14 @@
 			return $config;
 		}
 
-		function read_config_single($column_name = '')
+		function read_config_single( $column_name = '' )
 		{
 			$this->db->query("SELECT location_type FROM fm_location_config where column_name='$column_name'", __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('location_type');
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 
 			$id = (int)$id;
@@ -187,7 +187,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$standard = array();
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$standard = array
 					(
@@ -202,7 +202,7 @@
 			return $standard;
 		}
 
-		function add($standard)
+		function add( $standard )
 		{
 
 			$standard['name'] = $this->db->db_addslashes($standard['name']);
@@ -340,9 +340,9 @@
 			$fd = array();
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => false);
 
-			for($i = 1; $i < $standard['id'] + 1; $i++)
+			for ($i = 1; $i < $standard['id'] + 1; $i++)
 			{
-				if($i == 1)
+				if ($i == 1)
 				{
 					$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 6, 'nullable' => false);
 				}
@@ -366,12 +366,12 @@
 
 			$fk_table = 'fm_location' . ($standard['id'] - 1);
 
-			for($i = 1; $i < $standard['id']; $i++)
+			for ($i = 1; $i < $standard['id']; $i++)
 			{
 				$fk[$fk_table]['loc' . $i] = 'loc' . $i;
 			}
 
-			if($standard['id'] == 1)
+			if ($standard['id'] == 1)
 			{
 				$fd['part_of_town_id'] = array('type' => 'int', 'precision' => 2, 'nullable' => true);
 			}
@@ -403,7 +403,7 @@
 
 			$this->db->transaction_begin();
 
-			if($this->oProc->CreateTable('fm_location' . $standard['id'], array('fd' => $fd,
+			if ($this->oProc->CreateTable('fm_location' . $standard['id'], array('fd' => $fd,
 				'pk' => $pk, 'fk' => $fk, 'ix' => $ix, 'uc' => $uc)) && $this->oProc->CreateTable('fm_location' . $standard['id'] . '_history', array(
 				'fd' => $fd_history)))
 			{
@@ -418,7 +418,7 @@
 					'ix' => array(),
 					'uc' => array()));
 
-				for($i = 0; $i < count($add_columns_in_tables); $i++)
+				for ($i = 0; $i < count($add_columns_in_tables); $i++)
 				{
 					$this->oProc->AddColumn($add_columns_in_tables[$i], 'loc' . $standard['id'], array(
 						'type' => 'varchar', 'precision' => 4, 'nullable' => true));
@@ -441,7 +441,7 @@
 
 				$location_id = $GLOBALS['phpgw']->locations->add(".location.{$standard['id']}", $standard['name'], 'property', true, "fm_location{$standard['id']}");
 
-				for($i = 0; $i < count($default_attrib['id']); $i++)
+				for ($i = 0; $i < count($default_attrib['id']); $i++)
 				{
 					$values_insert = array(
 						$location_id,
@@ -479,7 +479,7 @@
 			else
 			{
 				$receipt['error'][] = array('msg' => lang('table could not be added'));
-				if($this->db->get_transaction())
+				if ($this->db->get_transaction())
 				{
 					$this->db->transaction_abort();
 				}
@@ -507,10 +507,10 @@
 
 			$entity = CreateObject('property.soadmin_entity');
 			$entity_list = $entity->read(array('allrows' => true));
-			foreach($entity_list as $entry)
+			foreach ($entity_list as $entry)
 			{
 				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id']));
-				foreach($cat_list as $category)
+				foreach ($cat_list as $category)
 				{
 					$tables[] = "fm_entity_{$entry['id']}_{$category['id']}";
 				}
@@ -518,7 +518,7 @@
 			return $tables;
 		}
 
-		function edit($values)
+		function edit( $values )
 		{
 
 			$table = 'fm_location_type';
@@ -541,7 +541,7 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$tables_to_drop_from = $this->get_tables_to_alter();
 
@@ -552,7 +552,7 @@
 			$table = 'fm_location_type';
 			$this->db->query("SELECT max(id) as id FROM $table", __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('id') > $id)
+			if ($this->db->f('id') > $id)
 			{
 				$this->db->transaction_abort();
 				$receipt['error'][] = array('msg' => lang('please delete from the bottom'));
@@ -563,7 +563,7 @@
 			$this->oProc->DropTable('fm_location' . $id . '_category');
 			$this->oProc->DropTable('fm_location' . $id . '_history');
 
-			foreach($tables_to_drop_from as $entry)
+			foreach ($tables_to_drop_from as $entry)
 			{
 				$this->oProc->DropColumn($entry, array(), "loc{$id}");
 			}
@@ -576,7 +576,7 @@
 			$this->db->query("DELETE FROM {$choice_table} WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM {$table} WHERE id=" . (int)$id, __LINE__, __FILE__);
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('location at level %1 has been deleted', $id));
 			}
@@ -594,7 +594,7 @@
 			$this->oProc->m_odb->Halt_On_Error = 'yes';
 		}
 
-		function save_config($values = '', $column_name = '')
+		function save_config( $values = '', $column_name = '' )
 		{
 			$this->db->query("SELECT * FROM fm_location_config  WHERE column_name='$column_name' ", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -612,7 +612,7 @@
 			$history_table_def = $custom->get_table_def('fm_location' . $location_type . '_history');
 			//_debug_array($table_def);
 			//_debug_array($history_table_def);
-			if(!($location_type == $values[$column_name]))
+			if (!($location_type == $values[$column_name]))
 			{
 				$id = $this->db->next_id('phpgw_cust_attribute', array('location_id' => $location_id));
 
@@ -620,9 +620,9 @@
 
 				//			$this->oProc->m_odb->transaction_begin();
 				$this->db->transaction_begin();
-				if($this->oProc->AddColumn('fm_location' . $values[$column_name], $column_name, $column_info) && $this->oProc->AddColumn('fm_location' . $values[$column_name] . '_history', $column_name, $column_info))
+				if ($this->oProc->AddColumn('fm_location' . $values[$column_name], $column_name, $column_info) && $this->oProc->AddColumn('fm_location' . $values[$column_name] . '_history', $column_name, $column_info))
 				{
-					if($column_name == 'street_id')
+					if ($column_name == 'street_id')
 					{
 						$this->oProc->AddColumn('fm_location' . $values[$column_name], 'street_number', array(
 							'type' => 'varchar', 'precision' => 10));
@@ -663,7 +663,7 @@
 					$ok = true;
 				}
 
-				if(isset($ok) && $ok)
+				if (isset($ok) && $ok)
 				{
 					$this->db->transaction_commit();
 					//					$this->oProc->m_odb->transaction_commit();
@@ -689,7 +689,7 @@
 			$this->db->query("SELECT * FROM fm_location_type ORDER BY id ");
 
 			$location_type = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$location_type[] = array(
 					'id' => $this->db->f('id'),

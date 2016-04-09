@@ -45,7 +45,7 @@ service_id	frontend	no	Tjenestested
 responsibility_id	frontend	no	Ansvarssted
 logout	frontend	no	Logg ut
 help	frontend	no	Hjelp
-contact_BKB	frontend	no	Kontakt BKB
+contact_BKB	frontend	no	Kontakt EBE
 folder	frontend	no	Informasjon internleie
 number_of_units	frontend	no	Antall bygg
 total_area	frontend	no	Totalt areal
@@ -92,7 +92,7 @@ btn_add	frontend	no	Deleger tilgang til bruker
 btn_search	frontend	no	Finn bruker
 btn_remove	frontend	no	Fjern myndighet
 btn_send	frontend	no	Send melding
-send_contract_message	frontend	no	Send melding til BKB angående kontrakten
+send_contract_message	frontend	no	Send melding til EBE angående kontrakten
 user_found_in_Fellesdata	frontend	no	Personen finnes i Fellesdata.
 user_found_in_PE	frontend	no	Personen er bruker av dette systemet.
 delegation_successful	frontend	no	Velykket delegering

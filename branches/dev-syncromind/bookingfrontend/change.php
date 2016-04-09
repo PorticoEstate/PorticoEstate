@@ -11,7 +11,7 @@
 
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
 
-	if(file_exists('../header.inc.php'))
+	if (file_exists('../header.inc.php'))
 	{
 		include_once('../header.inc.php');
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
@@ -30,7 +30,7 @@
 	$bouser->change_org(phpgw::get_var('orgnumber', 'string'));
 
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
-	if(!$after)
+	if (!$after)
 	{
 		$after = array('menuaction' => 'bookingfrontend.uisearch.index');
 	}

@@ -274,21 +274,26 @@ var olIe55 = false; // Added additional variable to identify IE5.5+
 var docRoot = 'document.body';
 
 // Resize fix for NS4.x to keep track of layer
-if (olNs4) {
+if (olNs4)
+{
 	var oW = window.innerWidth;
 	var oH = window.innerHeight;
-	window.onresize = function () {
+	window.onresize = function ()
+	{
 		if (oW != window.innerWidth || oH != window.innerHeight)
 			location.reload();
 	}
 }
 
 // Microsoft Stupidity Check(tm).
-if (olIe4) {
+if (olIe4)
+{
 	var agent = navigator.userAgent;
-	if (/MSIE/.test(agent)) {
+	if (/MSIE/.test(agent))
+	{
 		var versNum = parseFloat(agent.match(/MSIE[ ](\d\.\d+)\.*/i)[1]);
-		if (versNum >= 5) {
+		if (versNum >= 5)
+		{
 			olIe5 = true;
 			olIe55 = (versNum >= 5.5 && !olOp) ? true : false;
 			if (olNs6)
@@ -300,7 +305,8 @@ if (olIe4) {
 }
 
 // Check for compatability mode.
-if (document.compatMode && document.compatMode == 'CSS1Compat') {
+if (document.compatMode && document.compatMode == 'CSS1Compat')
+{
 	docRoot = ((olIe4 && !olOp) ? 'document.documentElement' : docRoot);
 }
 
@@ -321,12 +327,14 @@ var capExtent;
 
 // overlib(arg0,...,argN)
 // Loads parameters into global runtime variables.
-function overlib() {
+function overlib()
+{
 	if (!olLoaded || isExclusive(overlib.arguments))
 		return true;
 	if (olCheckMouseCapture)
 		olMouseCapture();
-	if (over) {
+	if (over)
+	{
 		over = (typeof over.id != 'string') ? o3_frame.document.all['overDiv'] : over;
 		cClick();
 	}
@@ -406,29 +414,38 @@ function overlib() {
 	if (!postParseChecks())
 		return false;
 
-	if (o3_delay == 0) {
+	if (o3_delay == 0)
+	{
 		return runHook("olMain", FREPLACE);
-	} else {
+	}
+	else
+	{
 		o3_delayid = setTimeout("runHook('olMain', FREPLACE)", o3_delay);
 		return false;
 	}
 }
 
 // Clears popups if appropriate
-function nd(time) {
-	if (olLoaded && !isExclusive()) {
+function nd(time)
+{
+	if (olLoaded && !isExclusive())
+	{
 		hideDelay(time);  // delay popup close if time specified
 
-		if (o3_removecounter >= 1) {
+		if (o3_removecounter >= 1)
+		{
 			o3_showingsticky = 0
 		}
 		;
 
-		if (o3_showingsticky == 0) {
+		if (o3_showingsticky == 0)
+		{
 			o3_allowmove = 0;
 			if (over != null && o3_timerid == 0)
 				runHook("hideObject", FREPLACE, over);
-		} else {
+		}
+		else
+		{
 			o3_removecounter++;
 		}
 	}
@@ -437,8 +454,10 @@ function nd(time) {
 }
 
 // The Close onMouseOver function for stickies
-function cClick() {
-	if (olLoaded) {
+function cClick()
+{
+	if (olLoaded)
+	{
 		runHook("hideObject", FREPLACE, over);
 		o3_showingsticky = 0;
 	}
@@ -446,7 +465,8 @@ function cClick() {
 }
 
 // Method for setting page specific defaults.
-function overlib_pagedefaults() {
+function overlib_pagedefaults()
+{
 	parseTokens('ol_', overlib_pagedefaults.arguments);
 }
 
@@ -456,14 +476,18 @@ function overlib_pagedefaults() {
 ////////
 
 // This function decides what it is we want to display and how we want it done.
-function olMain() {
+function olMain()
+{
 	var layerhtml, styleType;
 	runHook("olMain", FBEFORE);
 
-	if (o3_background != "" || o3_fullhtml) {
+	if (o3_background != "" || o3_fullhtml)
+	{
 		// Use background instead of box.
 		layerhtml = runHook('ol_content_background', FALTERNATE, o3_css, o3_text, o3_background, o3_fullhtml);
-	} else {
+	}
+	else
+	{
 		// They want a popup box.
 		styleType = (pms[o3_css - 1 - pmStart] == "cssoff" || pms[o3_css - 1 - pmStart] == "cssclass");
 
@@ -486,15 +510,21 @@ function olMain() {
 			o3_height = "";
 
 		// Decide which kinda box.
-		if (o3_cap == "") {
+		if (o3_cap == "")
+		{
 			// Plain
 			layerhtml = runHook('ol_content_simple', FALTERNATE, o3_css, o3_text);
-		} else {
+		}
+		else
+		{
 			// With caption
-			if (o3_sticky) {
+			if (o3_sticky)
+			{
 				// Show close text
 				layerhtml = runHook('ol_content_caption', FALTERNATE, o3_css, o3_text, o3_cap, o3_close);
-			} else {
+			}
+			else
+			{
 				// No close text
 				layerhtml = runHook('ol_content_caption', FALTERNATE, o3_css, o3_text, o3_cap, "");
 			}
@@ -502,8 +532,10 @@ function olMain() {
 	}
 
 	// We want it to stick!
-	if (o3_sticky) {
-		if (o3_timerid > 0) {
+	if (o3_sticky)
+	{
+		if (o3_timerid > 0)
+		{
 			clearTimeout(o3_timerid);
 			o3_timerid = 0;
 		}
@@ -517,7 +549,8 @@ function olMain() {
 		return false;
 
 	// Prepare status bar
-	if (o3_autostatus > 0) {
+	if (o3_autostatus > 0)
+	{
 		o3_status = o3_text;
 		if (o3_autostatus > 1)
 			o3_status = o3_cap;
@@ -527,7 +560,8 @@ function olMain() {
 	o3_allowmove = 0;
 
 	// Initiate a timer for timeout
-	if (o3_timeout > 0) {
+	if (o3_timeout > 0)
+	{
 		if (o3_timerid > 0)
 			clearTimeout(o3_timerid);
 		o3_timerid = setTimeout("cClick()", o3_timeout);
@@ -546,7 +580,8 @@ function olMain() {
 // These functions just handle popup content with tags that should adhere to the W3C standards specification.
 
 // Makes simple table without caption
-function ol_content_simple(text) {
+function ol_content_simple(text)
+{
 	var cpIsMultiple = /,/.test(o3_cellpad);
 	var txt = '<table width="' + o3_width + '" border="0" cellpadding="' + o3_border + '" cellspacing="0" ' + (o3_bgclass ? 'class="' + o3_bgclass + '"' : o3_bgcolor + ' ' + o3_height) + '><tr><td><table width="100%" border="0" ' + ((olNs4 || !cpIsMultiple) ? 'cellpadding="' + o3_cellpad + '" ' : '') + 'cellspacing="0" ' + (o3_fgclass ? 'class="' + o3_fgclass + '"' : o3_fgcolor + ' ' + o3_fgbackground + ' ' + o3_height) + '><tr><td valign="TOP"' + (o3_textfontclass ? ' class="' + o3_textfontclass + '">' : ((!olNs4 && cpIsMultiple) ? ' style="' + setCellPadStr(o3_cellpad) + '">' : '>')) + (o3_textfontclass ? '' : wrapStr(0, o3_textsize, 'text')) + text + (o3_textfontclass ? '' : wrapStr(1, o3_textsize)) + '</td></tr></table></td></tr></table>';
 
@@ -555,7 +590,8 @@ function ol_content_simple(text) {
 }
 
 // Makes table with caption and optional close link
-function ol_content_caption(text, title, close) {
+function ol_content_caption(text, title, close)
+{
 	var nameId, txt, cpIsMultiple = /,/.test(o3_cellpad);
 	var closing, closeevent;
 
@@ -563,7 +599,8 @@ function ol_content_caption(text, title, close) {
 	closeevent = "onmouseover";
 	if (o3_closeclick == 1)
 		closeevent = (o3_closetitle ? "title='" + o3_closetitle + "'" : "") + " onclick";
-	if (o3_capicon != "") {
+	if (o3_capicon != "")
+	{
 		nameId = ' hspace = \"5\"' + ' align = \"middle\" alt = \"\"';
 		if (typeof o3_dragimg != 'undefined' && o3_dragimg)
 			nameId = ' hspace=\"5\"' + ' name=\"' + o3_dragimg + '\" id=\"' + o3_dragimg + '\" align=\"middle\" alt=\"Drag Enabled\" title=\"Drag Enabled\"';
@@ -579,10 +616,14 @@ function ol_content_caption(text, title, close) {
 }
 
 // Sets the background picture,padding and lots more. :)
-function ol_content_background(text, picture, hasfullhtml) {
-	if (hasfullhtml) {
+function ol_content_background(text, picture, hasfullhtml)
+{
+	if (hasfullhtml)
+	{
 		txt = text;
-	} else {
+	}
+	else
+	{
 		txt = '<table width="' + o3_width + '" border="0" cellpadding="0" cellspacing="0" height="' + o3_height + '"><tr><td colspan="3" height="' + o3_padyt + '"></td></tr><tr><td width="' + o3_padxl + '"></td><td valign="TOP" width="' + (o3_width - o3_padxl - o3_padxr) + (o3_textfontclass ? '" class="' + o3_textfontclass : '') + '">' + (o3_textfontclass ? '' : wrapStr(0, o3_textsize, 'text')) + text + (o3_textfontclass ? '' : wrapStr(1, o3_textsize)) + '</td><td width="' + o3_padxr + '"></td></tr><tr><td colspan="3" height="' + o3_padyb + '"></td></tr></table>';
 	}
 
@@ -591,17 +632,27 @@ function ol_content_background(text, picture, hasfullhtml) {
 }
 
 // Loads a picture into the div.
-function set_background(pic) {
-	if (pic == "") {
-		if (olNs4) {
+function set_background(pic)
+{
+	if (pic == "")
+	{
+		if (olNs4)
+		{
 			over.background.src = null;
-		} else if (over.style) {
+		}
+		else if (over.style)
+		{
 			over.style.backgroundImage = "none";
 		}
-	} else {
-		if (olNs4) {
+	}
+	else
+	{
+		if (olNs4)
+		{
 			over.background.src = pic;
-		} else if (over.style) {
+		}
+		else if (over.style)
+		{
 			over.style.width = o3_width + 'px';
 			over.style.backgroundImage = "url(" + pic + ")";
 		}
@@ -614,10 +665,12 @@ function set_background(pic) {
 var olShowId = -1;
 
 // Displays the popup
-function disp(statustext) {
+function disp(statustext)
+{
 	runHook("disp", FBEFORE);
 
-	if (o3_allowmove == 0) {
+	if (o3_allowmove == 0)
+	{
 		runHook("placeLayer", FREPLACE);
 		(olNs6 && olShowId < 0) ? olShowId = setTimeout("runHook('showObject', FREPLACE, over)", 1) : runHook("showObject", FREPLACE, over);
 		o3_allowmove = (o3_sticky || o3_followmouse == 0) ? 0 : 1;
@@ -630,15 +683,18 @@ function disp(statustext) {
 }
 
 // Creates the actual popup structure
-function createPopup(lyrContent) {
+function createPopup(lyrContent)
+{
 	runHook("createPopup", FBEFORE);
 
-	if (o3_wrap) {
+	if (o3_wrap)
+	{
 		var wd, ww, theObj = (olNs4 ? over : over.style);
 		theObj.top = theObj.left = ((olIe4 && !olOp) ? 0 : -10000) + (!olNs4 ? 'px' : 0);
 		layerWrite(lyrContent);
 		wd = (olNs4 ? over.clip.width : over.offsetWidth);
-		if (wd > (ww = _windowWidth())) {
+		if (wd > (ww = _windowWidth()))
+		{
 			lyrContent = lyrContent.replace(/\&nbsp;/g, ' ');
 			o3_width = ww;
 			o3_wrap = 0;
@@ -657,7 +713,8 @@ function createPopup(lyrContent) {
 }
 
 // Decides where we want the popup.
-function placeLayer() {
+function placeLayer()
+{
 	var placeX, placeY, widthFix = 0;
 
 	// HORIZONTAL PLACEMENT, re-arranged to work in Safari
@@ -671,9 +728,12 @@ function placeLayer() {
 	placeX = runHook('horizontalPlacement', FCHAIN, iwidth, winoffset, widthFix);
 
 	// VERTICAL PLACEMENT, re-arranged to work in Safari
-	if (o3_frame.innerHeight) {
+	if (o3_frame.innerHeight)
+	{
 		iheight = o3_frame.innerHeight;
-	} else if (eval('o3_frame.' + docRoot) && eval("typeof o3_frame." + docRoot + ".clientHeight=='number'") && eval('o3_frame.' + docRoot + '.clientHeight')) {
+	}
+	else if (eval('o3_frame.' + docRoot) && eval("typeof o3_frame." + docRoot + ".clientHeight=='number'") && eval('o3_frame.' + docRoot + '.clientHeight'))
+	{
 		iheight = eval('o3_frame.' + docRoot + '.clientHeight');
 	}
 
@@ -686,13 +746,17 @@ function placeLayer() {
 }
 
 // Moves the layer
-function olMouseMove(e) {
+function olMouseMove(e)
+{
 	var e = (e) ? e : event;
 
-	if (e.pageX) {
+	if (e.pageX)
+	{
 		o3_x = e.pageX;
 		o3_y = e.pageY;
-	} else if (e.clientX) {
+	}
+	else if (e.clientX)
+	{
 		o3_x = eval('e.clientX+o3_frame.' + docRoot + '.scrollLeft');
 		o3_y = eval('e.clientY+o3_frame.' + docRoot + '.scrollTop');
 	}
@@ -701,37 +765,46 @@ function olMouseMove(e) {
 		runHook("placeLayer", FREPLACE);
 
 	// MouseOut handler
-	if (hoveringSwitch && !olNs4 && runHook("cursorOff", FREPLACE)) {
+	if (hoveringSwitch && !olNs4 && runHook("cursorOff", FREPLACE))
+	{
 		(olHideDelay ? hideDelay(olHideDelay) : cClick());
 		hoveringSwitch = !hoveringSwitch;
 	}
 }
 
 // Fake function for 3.0 users.
-function no_overlib() {
+function no_overlib()
+{
 	return ver3fix;
 }
 
 // Capture the mouse and chain other scripts.
-function olMouseCapture() {
+function olMouseCapture()
+{
 	capExtent = document;
 	var fN, str = '', l, k, f, wMv, sS, mseHandler = olMouseMove;
 	var re = /function[ ]*(\w*)\(/;
 
 	wMv = (!olIe4 && window.onmousemove);
-	if (document.onmousemove || wMv) {
+	if (document.onmousemove || wMv)
+	{
 		if (wMv)
 			capExtent = window;
 		f = capExtent.onmousemove.toString();
 		fN = f.match(re);
-		if (fN == null) {
+		if (fN == null)
+		{
 			str = f + '(e); ';
-		} else if (fN[1] == 'anonymous' || fN[1] == 'olMouseMove' || (wMv && fN[1] == 'onmousemove')) {
-			if (!olOp && wMv) {
+		}
+		else if (fN[1] == 'anonymous' || fN[1] == 'olMouseMove' || (wMv && fN[1] == 'onmousemove'))
+		{
+			if (!olOp && wMv)
+			{
 				l = f.indexOf('{') + 1;
 				k = f.lastIndexOf('}');
 				sS = f.substring(l, k);
-				if ((l = sS.indexOf('(')) != -1) {
+				if ((l = sS.indexOf('(')) != -1)
+				{
 					sS = sS.substring(0, l).replace(/^\s+/, '').replace(/\s+$/, '');
 					if (eval("typeof " + sS + " == 'undefined'"))
 						window.onmousemove = null;
@@ -739,14 +812,18 @@ function olMouseCapture() {
 						str = sS + '(e);';
 				}
 			}
-			if (!str) {
+			if (!str)
+			{
 				olCheckMouseCapture = false;
 				return;
 			}
-		} else {
+		}
+		else
+		{
 			if (fN[1])
 				str = fN[1] + '(e); ';
-			else {
+			else
+			{
 				l = f.indexOf('{') + 1;
 				k = f.lastIndexOf('}');
 				str = f.substring(l, k) + '\n';
@@ -766,20 +843,27 @@ function olMouseCapture() {
 ////////
 
 // Does the actual command parsing.
-function parseTokens(pf, ar) {
+function parseTokens(pf, ar)
+{
 	// What the next argument is expected to be.
 	var v, i, mode = -1, par = (pf != 'ol_');
 	var fnMark = (par && !ar.length ? 1 : 0);
 
-	for (i = 0; i < ar.length; i++) {
-		if (mode < 0) {
+	for (i = 0; i < ar.length; i++)
+	{
+		if (mode < 0)
+		{
 			// Arg is maintext,unless its a number between pmStart and pmUpper
 			// then its a command.
-			if (typeof ar[i] == 'number' && ar[i] > pmStart && ar[i] < pmUpper) {
+			if (typeof ar[i] == 'number' && ar[i] > pmStart && ar[i] < pmUpper)
+			{
 				fnMark = (par ? 1 : 0);
 				i--;   // backup one so that the next block can parse it
-			} else {
-				switch (pf) {
+			}
+			else
+			{
+				switch (pf)
+				{
 					case 'ol_':
 						ol_text = ar[i].toString();
 						break;
@@ -788,196 +872,246 @@ function parseTokens(pf, ar) {
 				}
 			}
 			mode = 0;
-		} else {
+		}
+		else
+		{
 			// Note: NS4 doesn't like switch cases with vars.
-			if (ar[i] >= pmCount || ar[i] == DONOTHING) {
+			if (ar[i] >= pmCount || ar[i] == DONOTHING)
+			{
 				continue;
 			}
-			if (ar[i] == INARRAY) {
+			if (ar[i] == INARRAY)
+			{
 				fnMark = 0;
 				eval(pf + 'text=ol_texts[' + ar[++i] + '].toString()');
 				continue;
 			}
-			if (ar[i] == CAPARRAY) {
+			if (ar[i] == CAPARRAY)
+			{
 				eval(pf + 'cap=ol_caps[' + ar[++i] + '].toString()');
 				continue;
 			}
-			if (ar[i] == STICKY) {
+			if (ar[i] == STICKY)
+			{
 				if (pf != 'ol_')
 					eval(pf + 'sticky=1');
 				continue;
 			}
-			if (ar[i] == BACKGROUND) {
+			if (ar[i] == BACKGROUND)
+			{
 				eval(pf + 'background="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == NOCLOSE) {
+			if (ar[i] == NOCLOSE)
+			{
 				if (pf != 'ol_')
 					opt_NOCLOSE();
 				continue;
 			}
-			if (ar[i] == CAPTION) {
+			if (ar[i] == CAPTION)
+			{
 				eval(pf + "cap='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == CENTER || ar[i] == LEFT || ar[i] == RIGHT) {
+			if (ar[i] == CENTER || ar[i] == LEFT || ar[i] == RIGHT)
+			{
 				eval(pf + 'hpos=' + ar[i]);
 				if (pf != 'ol_')
 					olHautoFlag = 1;
 				continue;
 			}
-			if (ar[i] == OFFSETX) {
+			if (ar[i] == OFFSETX)
+			{
 				eval(pf + 'offsetx=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == OFFSETY) {
+			if (ar[i] == OFFSETY)
+			{
 				eval(pf + 'offsety=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FGCOLOR) {
+			if (ar[i] == FGCOLOR)
+			{
 				eval(pf + 'fgcolor="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == BGCOLOR) {
+			if (ar[i] == BGCOLOR)
+			{
 				eval(pf + 'bgcolor="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == TEXTCOLOR) {
+			if (ar[i] == TEXTCOLOR)
+			{
 				eval(pf + 'textcolor="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CAPCOLOR) {
+			if (ar[i] == CAPCOLOR)
+			{
 				eval(pf + 'capcolor="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CLOSECOLOR) {
+			if (ar[i] == CLOSECOLOR)
+			{
 				eval(pf + 'closecolor="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == WIDTH) {
+			if (ar[i] == WIDTH)
+			{
 				eval(pf + 'width=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == BORDER) {
+			if (ar[i] == BORDER)
+			{
 				eval(pf + 'border=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == CELLPAD) {
+			if (ar[i] == CELLPAD)
+			{
 				i = opt_MULTIPLEARGS(++i, ar, (pf + 'cellpad'));
 				continue;
 			}
-			if (ar[i] == STATUS) {
+			if (ar[i] == STATUS)
+			{
 				eval(pf + "status='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == AUTOSTATUS) {
+			if (ar[i] == AUTOSTATUS)
+			{
 				eval(pf + 'autostatus=(' + pf + 'autostatus == 1) ? 0 : 1');
 				continue;
 			}
-			if (ar[i] == AUTOSTATUSCAP) {
+			if (ar[i] == AUTOSTATUSCAP)
+			{
 				eval(pf + 'autostatus=(' + pf + 'autostatus == 2) ? 0 : 2');
 				continue;
 			}
-			if (ar[i] == HEIGHT) {
+			if (ar[i] == HEIGHT)
+			{
 				eval(pf + 'height=' + pf + 'aboveheight=' + ar[++i]);
 				continue;
 			} // Same param again.
-			if (ar[i] == CLOSETEXT) {
+			if (ar[i] == CLOSETEXT)
+			{
 				eval(pf + "close='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == SNAPX) {
+			if (ar[i] == SNAPX)
+			{
 				eval(pf + 'snapx=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == SNAPY) {
+			if (ar[i] == SNAPY)
+			{
 				eval(pf + 'snapy=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FIXX) {
+			if (ar[i] == FIXX)
+			{
 				eval(pf + 'fixx=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FIXY) {
+			if (ar[i] == FIXY)
+			{
 				eval(pf + 'fixy=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == RELX) {
+			if (ar[i] == RELX)
+			{
 				eval(pf + 'relx=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == RELY) {
+			if (ar[i] == RELY)
+			{
 				eval(pf + 'rely=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FGBACKGROUND) {
+			if (ar[i] == FGBACKGROUND)
+			{
 				eval(pf + 'fgbackground="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == BGBACKGROUND) {
+			if (ar[i] == BGBACKGROUND)
+			{
 				eval(pf + 'bgbackground="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == PADX) {
+			if (ar[i] == PADX)
+			{
 				eval(pf + 'padxl=' + ar[++i]);
 				eval(pf + 'padxr=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == PADY) {
+			if (ar[i] == PADY)
+			{
 				eval(pf + 'padyt=' + ar[++i]);
 				eval(pf + 'padyb=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FULLHTML) {
+			if (ar[i] == FULLHTML)
+			{
 				if (pf != 'ol_')
 					eval(pf + 'fullhtml=1');
 				continue;
 			}
-			if (ar[i] == BELOW || ar[i] == ABOVE) {
+			if (ar[i] == BELOW || ar[i] == ABOVE)
+			{
 				eval(pf + 'vpos=' + ar[i]);
 				if (pf != 'ol_')
 					olVautoFlag = 1;
 				continue;
 			}
-			if (ar[i] == CAPICON) {
+			if (ar[i] == CAPICON)
+			{
 				eval(pf + 'capicon="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == TEXTFONT) {
+			if (ar[i] == TEXTFONT)
+			{
 				eval(pf + "textfont='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == CAPTIONFONT) {
+			if (ar[i] == CAPTIONFONT)
+			{
 				eval(pf + "captionfont='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == CLOSEFONT) {
+			if (ar[i] == CLOSEFONT)
+			{
 				eval(pf + "closefont='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == TEXTSIZE) {
+			if (ar[i] == TEXTSIZE)
+			{
 				eval(pf + 'textsize="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CAPTIONSIZE) {
+			if (ar[i] == CAPTIONSIZE)
+			{
 				eval(pf + 'captionsize="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CLOSESIZE) {
+			if (ar[i] == CLOSESIZE)
+			{
 				eval(pf + 'closesize="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == TIMEOUT) {
+			if (ar[i] == TIMEOUT)
+			{
 				eval(pf + 'timeout=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == FUNCTION) {
-				if (pf == 'ol_') {
-					if (typeof ar[i + 1] != 'number') {
+			if (ar[i] == FUNCTION)
+			{
+				if (pf == 'ol_')
+				{
+					if (typeof ar[i + 1] != 'number')
+					{
 						v = ar[++i];
 						ol_function = (typeof v == 'function' ? v : null);
 					}
-				} else {
+				}
+				else
+				{
 					fnMark = 0;
 					v = null;
 					if (typeof ar[i + 1] != 'number')
@@ -986,66 +1120,81 @@ function parseTokens(pf, ar) {
 				}
 				continue;
 			}
-			if (ar[i] == DELAY) {
+			if (ar[i] == DELAY)
+			{
 				eval(pf + 'delay=' + ar[++i]);
 				continue;
 			}
-			if (ar[i] == HAUTO) {
+			if (ar[i] == HAUTO)
+			{
 				eval(pf + 'hauto=(' + pf + 'hauto == 0) ? 1 : 0');
 				continue;
 			}
-			if (ar[i] == VAUTO) {
+			if (ar[i] == VAUTO)
+			{
 				eval(pf + 'vauto=(' + pf + 'vauto == 0) ? 1 : 0');
 				continue;
 			}
-			if (ar[i] == CLOSECLICK) {
+			if (ar[i] == CLOSECLICK)
+			{
 				eval(pf + 'closeclick=(' + pf + 'closeclick == 0) ? 1 : 0');
 				continue;
 			}
-			if (ar[i] == WRAP) {
+			if (ar[i] == WRAP)
+			{
 				eval(pf + 'wrap=(' + pf + 'wrap == 0) ? 1 : 0');
 				continue;
 			}
-			if (ar[i] == FOLLOWMOUSE) {
+			if (ar[i] == FOLLOWMOUSE)
+			{
 				eval(pf + 'followmouse=(' + pf + 'followmouse == 1) ? 0 : 1');
 				continue;
 			}
-			if (ar[i] == MOUSEOFF) {
+			if (ar[i] == MOUSEOFF)
+			{
 				eval(pf + 'mouseoff=(' + pf + 'mouseoff==0) ? 1 : 0');
 				v = ar[i + 1];
 				if (pf != 'ol_' && eval(pf + 'mouseoff') && typeof v == 'number' && (v < pmStart || v > pmUpper))
 					olHideDelay = ar[++i];
 				continue;
 			}
-			if (ar[i] == CLOSETITLE) {
+			if (ar[i] == CLOSETITLE)
+			{
 				eval(pf + "closetitle='" + escSglQuote(ar[++i]) + "'");
 				continue;
 			}
-			if (ar[i] == CSSOFF || ar[i] == CSSCLASS) {
+			if (ar[i] == CSSOFF || ar[i] == CSSCLASS)
+			{
 				eval(pf + 'css=' + ar[i]);
 				continue;
 			}
-			if (ar[i] == COMPATMODE) {
+			if (ar[i] == COMPATMODE)
+			{
 				eval(pf + 'compatmode=(' + pf + 'compatmode==0) ? 1 : 0');
 				continue;
 			}
-			if (ar[i] == FGCLASS) {
+			if (ar[i] == FGCLASS)
+			{
 				eval(pf + 'fgclass="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == BGCLASS) {
+			if (ar[i] == BGCLASS)
+			{
 				eval(pf + 'bgclass="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == TEXTFONTCLASS) {
+			if (ar[i] == TEXTFONTCLASS)
+			{
 				eval(pf + 'textfontclass="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CAPTIONFONTCLASS) {
+			if (ar[i] == CAPTIONFONTCLASS)
+			{
 				eval(pf + 'captionfontclass="' + ar[++i] + '"');
 				continue;
 			}
-			if (ar[i] == CLOSEFONTCLASS) {
+			if (ar[i] == CLOSEFONTCLASS)
+			{
 				eval(pf + 'closefontclass="' + ar[++i] + '"');
 				continue;
 			}
@@ -1056,7 +1205,8 @@ function parseTokens(pf, ar) {
 	if (fnMark && o3_function)
 		o3_text = o3_function();
 
-	if ((pf == 'o3_') && o3_wrap) {
+	if ((pf == 'o3_') && o3_wrap)
+	{
 		o3_width = 0;
 
 		var tReg = /<.*\n*>/ig;
@@ -1065,7 +1215,8 @@ function parseTokens(pf, ar) {
 		if (!tReg.test(o3_cap))
 			o3_cap = o3_cap.replace(/[ ]+/g, '&nbsp;');
 	}
-	if ((pf == 'o3_') && o3_sticky) {
+	if ((pf == 'o3_') && o3_sticky)
+	{
 		if (!o3_close && (o3_frame != ol_frame))
 			o3_close = ol_close;
 		if (o3_mouseoff && (o3_frame == ol_frame))
@@ -1079,22 +1230,29 @@ function parseTokens(pf, ar) {
 ////////
 
 // Writes to a layer
-function layerWrite(txt) {
+function layerWrite(txt)
+{
 	txt += "\n";
-	if (olNs4) {
+	if (olNs4)
+	{
 		var lyr = o3_frame.document.layers['overDiv'].document
 		lyr.write(txt)
 		lyr.close()
-	} else if (typeof over.innerHTML != 'undefined') {
+	}
+	else if (typeof over.innerHTML != 'undefined')
+	{
 		if (olIe5 && isMac)
 			over.innerHTML = '';
 		over.innerHTML = txt;
-	} else {
+	}
+	else
+	{
 		range = o3_frame.document.createRange();
 		range.setStartAfter(over);
 		domfrag = range.createContextualFragment(txt);
 
-		while (over.hasChildNodes()) {
+		while (over.hasChildNodes())
+		{
 			over.removeChild(over.lastChild);
 		}
 
@@ -1103,7 +1261,8 @@ function layerWrite(txt) {
 }
 
 // Make an object visible
-function showObject(obj) {
+function showObject(obj)
+{
 	runHook("showObject", FBEFORE);
 
 	var theObj = (olNs4 ? obj : obj.style);
@@ -1113,11 +1272,13 @@ function showObject(obj) {
 }
 
 // Hides an object
-function hideObject(obj) {
+function hideObject(obj)
+{
 	runHook("hideObject", FBEFORE);
 
 	var theObj = (olNs4 ? obj : obj.style);
-	if (olNs6 && olShowId > 0) {
+	if (olNs6 && olShowId > 0)
+	{
 		clearTimeout(olShowId);
 		olShowId = 0;
 	}
@@ -1133,7 +1294,8 @@ function hideObject(obj) {
 	o3_delayid = 0;
 	self.status = "";
 
-	if (obj.onmouseout || obj.onmouseover) {
+	if (obj.onmouseout || obj.onmouseover)
+	{
 		if (olNs4)
 			obj.releaseEvents(Event.MOUSEOUT || Event.MOUSEOVER);
 		obj.onmouseout = obj.onmouseover = null;
@@ -1143,14 +1305,16 @@ function hideObject(obj) {
 }
 
 // Move a layer
-function repositionTo(obj, xL, yL) {
+function repositionTo(obj, xL, yL)
+{
 	var theObj = (olNs4 ? obj : obj.style);
 	theObj.left = xL + (!olNs4 ? 'px' : 0);
 	theObj.top = yL + (!olNs4 ? 'px' : 0);
 }
 
 // Check position of cursor relative to overDiv DIVision; mouseOut function
-function cursorOff() {
+function cursorOff()
+{
 	var left = parseInt(over.style.left);
 	var top = parseInt(over.style.top);
 	var right = left + (over.offsetWidth >= parseInt(o3_width) ? over.offsetWidth : parseInt(o3_width));
@@ -1168,35 +1332,45 @@ function cursorOff() {
 ////////
 
 // Calls callme or the default function.
-function opt_FUNCTION(callme) {
+function opt_FUNCTION(callme)
+{
 	o3_text = (callme ? (typeof callme == 'string' ? (/.+\(.*\)/.test(callme) ? eval(callme) : callme) : callme()) : (o3_function ? o3_function() : 'No Function'));
 
 	return 0;
 }
 
 // Handle hovering
-function opt_NOCLOSE(unused) {
+function opt_NOCLOSE(unused)
+{
 	if (!unused)
 		o3_close = "";
 
-	if (olNs4) {
+	if (olNs4)
+	{
 		over.captureEvents(Event.MOUSEOUT || Event.MOUSEOVER);
-		over.onmouseover = function () {
-			if (o3_timerid > 0) {
+		over.onmouseover = function ()
+		{
+			if (o3_timerid > 0)
+			{
 				clearTimeout(o3_timerid);
 				o3_timerid = 0;
 			}
 		}
-		over.onmouseout = function (e) {
+		over.onmouseout = function (e)
+		{
 			if (olHideDelay)
 				hideDelay(olHideDelay);
 			else
 				cClick(e);
 		}
-	} else {
-		over.onmouseover = function () {
+	}
+	else
+	{
+		over.onmouseover = function ()
+		{
 			hoveringSwitch = true;
-			if (o3_timerid > 0) {
+			if (o3_timerid > 0)
+			{
 				clearTimeout(o3_timerid);
 				o3_timerid = 0;
 			}
@@ -1207,10 +1381,12 @@ function opt_NOCLOSE(unused) {
 }
 
 // Function to scan command line arguments for multiples
-function opt_MULTIPLEARGS(i, args, parameter) {
+function opt_MULTIPLEARGS(i, args, parameter)
+{
 	var k = i, re, pV, str = '';
 
-	for (k = i; k < args.length; k++) {
+	for (k = i; k < args.length; k++)
+	{
 		if (typeof args[k] == 'number' && args[k] > pmStart)
 			break;
 		str += args[k] + ',';
@@ -1226,20 +1402,24 @@ function opt_MULTIPLEARGS(i, args, parameter) {
 }
 
 // Remove &nbsp; in texts when done.
-function nbspCleanup() {
-	if (o3_wrap) {
+function nbspCleanup()
+{
+	if (o3_wrap)
+	{
 		o3_text = o3_text.replace(/\&nbsp;/g, ' ');
 		o3_cap = o3_cap.replace(/\&nbsp;/g, ' ');
 	}
 }
 
 // Escape embedded single quotes in text strings
-function escSglQuote(str) {
+function escSglQuote(str)
+{
 	return str.toString().replace(/'/g, "\\'");
 }
 
 // Onload handler for window onload event
-function OLonLoad_handler(e) {
+function OLonLoad_handler(e)
+{
 	var re = /\w+\(.*\)[;\s]+/g, olre = /overlib\(|nd\(|cClick\(/, fn, l, i;
 
 	if (!olLoaded)
@@ -1248,16 +1428,21 @@ function OLonLoad_handler(e) {
 	// Remove it for Gecko based browsers
 	if (window.removeEventListener && e.eventPhase == 3)
 		window.removeEventListener("load", OLonLoad_handler, false);
-	else if (window.detachEvent) { // and for IE and Opera 4.x but execute calls to overlib, nd, or cClick()
+	else if (window.detachEvent)
+	{ // and for IE and Opera 4.x but execute calls to overlib, nd, or cClick()
 		window.detachEvent("onload", OLonLoad_handler);
 		var fN = document.body.getAttribute('onload');
-		if (fN) {
+		if (fN)
+		{
 			fN = fN.toString().match(re);
-			if (fN && fN.length) {
-				for (i = 0; i < fN.length; i++) {
+			if (fN && fN.length)
+			{
+				for (i = 0; i < fN.length; i++)
+				{
 					if (/anonymous/.test(fN[i]))
 						continue;
-					while ((l = fN[i].search(/\)[;\s]+/)) != -1) {
+					while ((l = fN[i].search(/\)[;\s]+/)) != -1)
+					{
 						fn = fN[i].substring(0, l + 1);
 						fN[i] = fN[i].substring(l + 2);
 						if (olre.test(fn))
@@ -1273,12 +1458,14 @@ function OLonLoad_handler(e) {
 //    endWrap true(if end tag) or false if start tag
 //    fontSizeStr - font size string such as '1' or '10px'
 //    whichString is being wrapped -- 'text', 'caption', or 'close'
-function wrapStr(endWrap, fontSizeStr, whichString) {
+function wrapStr(endWrap, fontSizeStr, whichString)
+{
 	var fontStr, fontColor, isClose = ((whichString == 'close') ? 1 : 0), hasDims = /[%\-a-z]+$/.test(fontSizeStr);
 	fontSizeStr = (olNs4) ? (!hasDims ? fontSizeStr : '1') : fontSizeStr;
 	if (endWrap)
 		return (hasDims && !olNs4) ? (isClose ? '</span>' : '</div>') : '</font>';
-	else {
+	else
+	{
 		fontStr = 'o3_' + whichString + 'font';
 		fontColor = 'o3_' + ((whichString == 'caption') ? 'cap' : whichString) + 'color';
 		return (hasDims && !olNs4) ? (isClose ? '<span style="font-family: ' + quoteMultiNameFonts(eval(fontStr)) + '; color: ' + eval(fontColor) + '; font-size: ' + fontSizeStr + ';">' : '<div style="font-family: ' + quoteMultiNameFonts(eval(fontStr)) + '; color: ' + eval(fontColor) + '; font-size: ' + fontSizeStr + ';">') : '<font face="' + eval(fontStr) + '" color="' + eval(fontColor) + '" size="' + (parseInt(fontSizeStr) > 7 ? '7' : fontSizeStr) + '">';
@@ -1286,12 +1473,15 @@ function wrapStr(endWrap, fontSizeStr, whichString) {
 }
 
 // Quotes Multi word font names; needed for CSS Standards adherence in font-family
-function quoteMultiNameFonts(theFont) {
+function quoteMultiNameFonts(theFont)
+{
 	var v, pM = theFont.split(',');
-	for (var i = 0; i < pM.length; i++) {
+	for (var i = 0; i < pM.length; i++)
+	{
 		v = pM[i];
 		v = v.replace(/^\s+/, '').replace(/\s+$/, '');
-		if (/\s/.test(v) && !/['"]/.test(v)) {
+		if (/\s/.test(v) && !/['"]/.test(v))
+		{
 			v = "\'" + v + "\'";
 			pM[i] = v;
 		}
@@ -1300,18 +1490,21 @@ function quoteMultiNameFonts(theFont) {
 }
 
 // dummy function which will be overridden 
-function isExclusive(args) {
+function isExclusive(args)
+{
 	return false;
 }
 
 // Sets cellpadding style string value
-function setCellPadStr(parameter) {
+function setCellPadStr(parameter)
+{
 	var Str = '', j = 0, ary = new Array(), top, bottom, left, right;
 
 	Str += 'padding: ';
 	ary = parameter.replace(/\s+/g, '').split(',');
 
-	switch (ary.length) {
+	switch (ary.length)
+	{
 		case 2:
 			top = bottom = ary[j];
 			left = right = ary[++j];
@@ -1335,8 +1528,10 @@ function setCellPadStr(parameter) {
 }
 
 // function will delay close by time milliseconds
-function hideDelay(time) {
-	if (time && !o3_delay) {
+function hideDelay(time)
+{
+	if (time && !o3_delay)
+	{
 		if (o3_timerid > 0)
 			clearTimeout(o3_timerid);
 
@@ -1345,53 +1540,69 @@ function hideDelay(time) {
 }
 
 // Was originally in the placeLayer() routine; separated out for future ease
-function horizontalPlacement(browserWidth, horizontalScrollAmount, widthFix) {
+function horizontalPlacement(browserWidth, horizontalScrollAmount, widthFix)
+{
 	var placeX, iwidth = browserWidth, winoffset = horizontalScrollAmount;
 	var parsedWidth = parseInt(o3_width);
 
-	if (o3_fixx > -1 || o3_relx != null) {
+	if (o3_fixx > -1 || o3_relx != null)
+	{
 		// Fixed position
 		placeX = (o3_relx != null ? (o3_relx < 0 ? winoffset + o3_relx + iwidth - parsedWidth - widthFix : winoffset + o3_relx) : o3_fixx);
-	} else {
+	}
+	else
+	{
 		// If HAUTO, decide what to use.
-		if (o3_hauto == 1) {
-			if ((o3_x - winoffset) > (iwidth / 2)) {
+		if (o3_hauto == 1)
+		{
+			if ((o3_x - winoffset) > (iwidth / 2))
+			{
 				o3_hpos = LEFT;
-			} else {
+			}
+			else
+			{
 				o3_hpos = RIGHT;
 			}
 		}
 
 		// From mouse
-		if (o3_hpos == CENTER) { // Center
+		if (o3_hpos == CENTER)
+		{ // Center
 			placeX = o3_x + o3_offsetx - (parsedWidth / 2);
 
 			if (placeX < winoffset)
 				placeX = winoffset;
 		}
 
-		if (o3_hpos == RIGHT) { // Right
+		if (o3_hpos == RIGHT)
+		{ // Right
 			placeX = o3_x + o3_offsetx;
 
-			if ((placeX + parsedWidth) > (winoffset + iwidth - widthFix)) {
+			if ((placeX + parsedWidth) > (winoffset + iwidth - widthFix))
+			{
 				placeX = iwidth + winoffset - parsedWidth - widthFix;
 				if (placeX < 0)
 					placeX = 0;
 			}
 		}
-		if (o3_hpos == LEFT) { // Left
+		if (o3_hpos == LEFT)
+		{ // Left
 			placeX = o3_x - o3_offsetx - parsedWidth;
 			if (placeX < winoffset)
 				placeX = winoffset;
 		}
 
 		// Snapping!
-		if (o3_snapx > 1) {
+		if (o3_snapx > 1)
+		{
 			var snapping = placeX % o3_snapx;
 
-			if (o3_hpos == LEFT) {
+			if (o3_hpos == LEFT)
+			{
 				placeX = placeX - (o3_snapx + snapping);
-			} else {
+			}
+			else
+			{
 				// CENTER and RIGHT
 				placeX = placeX + (o3_snapx - snapping);
 			}
@@ -1405,43 +1616,58 @@ function horizontalPlacement(browserWidth, horizontalScrollAmount, widthFix) {
 }
 
 // was originally in the placeLayer() routine; separated out for future ease
-function verticalPlacement(browserHeight, verticalScrollAmount) {
+function verticalPlacement(browserHeight, verticalScrollAmount)
+{
 	var placeY, iheight = browserHeight, scrolloffset = verticalScrollAmount;
 	var parsedHeight = (o3_aboveheight ? parseInt(o3_aboveheight) : (olNs4 ? over.clip.height : over.offsetHeight));
 
-	if (o3_fixy > -1 || o3_rely != null) {
+	if (o3_fixy > -1 || o3_rely != null)
+	{
 		// Fixed position
 		placeY = (o3_rely != null ? (o3_rely < 0 ? scrolloffset + o3_rely + iheight - parsedHeight : scrolloffset + o3_rely) : o3_fixy);
-	} else {
+	}
+	else
+	{
 		// If VAUTO, decide what to use.
-		if (o3_vauto == 1) {
-			if ((o3_y - scrolloffset) > (iheight / 2) && o3_vpos == BELOW && (o3_y + parsedHeight + o3_offsety - (scrolloffset + iheight) > 0)) {
+		if (o3_vauto == 1)
+		{
+			if ((o3_y - scrolloffset) > (iheight / 2) && o3_vpos == BELOW && (o3_y + parsedHeight + o3_offsety - (scrolloffset + iheight) > 0))
+			{
 				o3_vpos = ABOVE;
-			} else if (o3_vpos == ABOVE && (o3_y - (parsedHeight + o3_offsety) - scrolloffset < 0)) {
+			}
+			else if (o3_vpos == ABOVE && (o3_y - (parsedHeight + o3_offsety) - scrolloffset < 0))
+			{
 				o3_vpos = BELOW;
 			}
 		}
 
 		// From mouse
-		if (o3_vpos == ABOVE) {
+		if (o3_vpos == ABOVE)
+		{
 			if (o3_aboveheight == 0)
 				o3_aboveheight = parsedHeight;
 
 			placeY = o3_y - (o3_aboveheight + o3_offsety);
 			if (placeY < scrolloffset)
 				placeY = scrolloffset;
-		} else {
+		}
+		else
+		{
 			// BELOW
 			placeY = o3_y + o3_offsety;
 		}
 
 		// Snapping!
-		if (o3_snapy > 1) {
+		if (o3_snapy > 1)
+		{
 			var snapping = placeY % o3_snapy;
 
-			if (o3_aboveheight > 0 && o3_vpos == ABOVE) {
+			if (o3_aboveheight > 0 && o3_vpos == ABOVE)
+			{
 				placeY = placeY - (o3_snapy + snapping);
-			} else {
+			}
+			else
+			{
 				placeY = placeY + (o3_snapy - snapping);
 			}
 
@@ -1454,7 +1680,8 @@ function verticalPlacement(browserHeight, verticalScrollAmount) {
 }
 
 // checks positioning flags
-function checkPositionFlags() {
+function checkPositionFlags()
+{
 	if (olHautoFlag)
 		olHautoFlag = o3_hauto = 0;
 	if (olVautoFlag)
@@ -1463,7 +1690,8 @@ function checkPositionFlags() {
 }
 
 // get Browser window width
-function _windowWidth() {
+function _windowWidth()
+{
 	var w;
 	if (o3_frame.innerWidth)
 		w = o3_frame.innerWidth;
@@ -1473,20 +1701,28 @@ function _windowWidth() {
 }
 
 // create the div container for popup content if it doesn't exist
-function createDivContainer(id, frm, zValue) {
+function createDivContainer(id, frm, zValue)
+{
 	id = (id || 'overDiv'), frm = (frm || o3_frame), zValue = (zValue || 1000);
 	var objRef, divContainer = layerReference(id);
 
-	if (divContainer == null) {
-		if (olNs4) {
+	if (divContainer == null)
+	{
+		if (olNs4)
+		{
 			divContainer = frm.document.layers[id] = new Layer(window.innerWidth, frm);
 			objRef = divContainer;
-		} else {
+		}
+		else
+		{
 			var body = (olIe4 ? frm.document.all.tags('BODY')[0] : frm.document.getElementsByTagName("BODY")[0]);
-			if (olIe4 && !document.getElementById) {
+			if (olIe4 && !document.getElementById)
+			{
 				body.insertAdjacentHTML("beforeEnd", '<div id="' + id + '"></div>');
 				divContainer = layerReference(id);
-			} else {
+			}
+			else
+			{
 				divContainer = frm.document.createElement("DIV");
 				divContainer.id = id;
 				body.appendChild(divContainer);
@@ -1507,7 +1743,8 @@ function createDivContainer(id, frm, zValue) {
 }
 
 // get reference to a layer with ID=id
-function layerReference(id) {
+function layerReference(id)
+{
 	return (olNs4 ? o3_frame.document.layers[id] : (document.all ? o3_frame.document.all[id] : o3_frame.document.getElementById(id)));
 }
 ////////
@@ -1515,17 +1752,22 @@ function layerReference(id) {
 ////////
 
 // Checks if something is a function.
-function isFunction(fnRef) {
+function isFunction(fnRef)
+{
 	var rtn = true;
 
-	if (typeof fnRef == 'object') {
-		for (var i = 0; i < fnRef.length; i++) {
+	if (typeof fnRef == 'object')
+	{
+		for (var i = 0; i < fnRef.length; i++)
+		{
 			if (typeof fnRef[i] == 'function')
 				continue;
 			rtn = false;
 			break;
 		}
-	} else if (typeof fnRef != 'function') {
+	}
+	else if (typeof fnRef != 'function')
+	{
 		rtn = false;
 	}
 
@@ -1533,11 +1775,13 @@ function isFunction(fnRef) {
 }
 
 // Converts an array into an argument string for use in eval.
-function argToString(array, strtInd, argName) {
+function argToString(array, strtInd, argName)
+{
 	var jS = strtInd, aS = '', ar = array;
 	argName = (argName ? argName : 'ar');
 
-	if (ar.length > jS) {
+	if (ar.length > jS)
+	{
 		for (var k = jS; k < ar.length; k++)
 			aS += argName + '[' + k + '], ';
 		aS = aS.substring(0, aS.length - 2);
@@ -1547,26 +1791,36 @@ function argToString(array, strtInd, argName) {
 }
 
 // Places a hook in the correct position in a hook point.
-function reOrder(hookPt, fnRef, order) {
+function reOrder(hookPt, fnRef, order)
+{
 	var newPt = new Array(), match, i, j;
 
 	if (!order || typeof order == 'undefined' || typeof order == 'number')
 		return hookPt;
 
-	if (typeof order == 'function') {
-		if (typeof fnRef == 'object') {
+	if (typeof order == 'function')
+	{
+		if (typeof fnRef == 'object')
+		{
 			newPt = newPt.concat(fnRef);
-		} else {
+		}
+		else
+		{
 			newPt[newPt.length++] = fnRef;
 		}
 
-		for (i = 0; i < hookPt.length; i++) {
+		for (i = 0; i < hookPt.length; i++)
+		{
 			match = false;
-			if (typeof fnRef == 'function' && hookPt[i] == fnRef) {
+			if (typeof fnRef == 'function' && hookPt[i] == fnRef)
+			{
 				continue;
-			} else {
+			}
+			else
+			{
 				for (j = 0; j < fnRef.length; j++)
-					if (hookPt[i] == fnRef[j]) {
+					if (hookPt[i] == fnRef[j])
+					{
 						match = true;
 						break;
 					}
@@ -1577,20 +1831,30 @@ function reOrder(hookPt, fnRef, order) {
 
 		newPt[newPt.length++] = order;
 
-	} else if (typeof order == 'object') {
-		if (typeof fnRef == 'object') {
+	}
+	else if (typeof order == 'object')
+	{
+		if (typeof fnRef == 'object')
+		{
 			newPt = newPt.concat(fnRef);
-		} else {
+		}
+		else
+		{
 			newPt[newPt.length++] = fnRef;
 		}
 
-		for (j = 0; j < hookPt.length; j++) {
+		for (j = 0; j < hookPt.length; j++)
+		{
 			match = false;
-			if (typeof fnRef == 'function' && hookPt[j] == fnRef) {
+			if (typeof fnRef == 'function' && hookPt[j] == fnRef)
+			{
 				continue;
-			} else {
+			}
+			else
+			{
 				for (i = 0; i < fnRef.length; i++)
-					if (hookPt[j] == fnRef[i]) {
+					if (hookPt[j] == fnRef[i])
+					{
 						match = true;
 						break;
 					}
@@ -1603,10 +1867,13 @@ function reOrder(hookPt, fnRef, order) {
 			hookPt[i] = newPt[i];
 		newPt.length = 0;
 
-		for (j = 0; j < hookPt.length; j++) {
+		for (j = 0; j < hookPt.length; j++)
+		{
 			match = false;
-			for (i = 0; i < order.length; i++) {
-				if (hookPt[j] == order[i]) {
+			for (i = 0; i < order.length; i++)
+			{
+				if (hookPt[j] == order[i])
+				{
 					match = true;
 					break;
 				}
@@ -1627,20 +1894,27 @@ function reOrder(hookPt, fnRef, order) {
 ////////
 
 // Runs plugin functions to set runtime variables.
-function setRunTimeVariables() {
-	if (typeof runTime != 'undefined' && runTime.length) {
-		for (var k = 0; k < runTime.length; k++) {
+function setRunTimeVariables()
+{
+	if (typeof runTime != 'undefined' && runTime.length)
+	{
+		for (var k = 0; k < runTime.length; k++)
+		{
 			runTime[k]();
 		}
 	}
 }
 
 // Runs plugin functions to parse commands.
-function parseCmdLine(pf, i, args) {
-	if (typeof cmdLine != 'undefined' && cmdLine.length) {
-		for (var k = 0; k < cmdLine.length; k++) {
+function parseCmdLine(pf, i, args)
+{
+	if (typeof cmdLine != 'undefined' && cmdLine.length)
+	{
+		for (var k = 0; k < cmdLine.length; k++)
+		{
 			var j = cmdLine[k](pf, i, args);
-			if (j > -1) {
+			if (j > -1)
+			{
 				i = j;
 				break;
 			}
@@ -1651,9 +1925,12 @@ function parseCmdLine(pf, i, args) {
 }
 
 // Runs plugin functions to do things after parse.
-function postParseChecks(pf, args) {
-	if (typeof postParse != 'undefined' && postParse.length) {
-		for (var k = 0; k < postParse.length; k++) {
+function postParseChecks(pf, args)
+{
+	if (typeof postParse != 'undefined' && postParse.length)
+	{
+		for (var k = 0; k < postParse.length; k++)
+		{
 			if (postParse[k](pf, args))
 				continue;
 			return false;  // end now since have an error
@@ -1668,27 +1945,31 @@ function postParseChecks(pf, args) {
 ////////
 
 // Registers commands and creates constants.
-function registerCommands(cmdStr) {
+function registerCommands(cmdStr)
+{
 	if (typeof cmdStr != 'string')
 		return;
 
 	var pM = cmdStr.split(',');
 	pms = pms.concat(pM);
 
-	for (var i = 0; i < pM.length; i++) {
+	for (var i = 0; i < pM.length; i++)
+	{
 		eval(pM[i].toUpperCase() + '=' + pmCount++);
 	}
 }
 
 // Registers no-parameter commands
-function registerNoParameterCommands(cmdStr) {
+function registerNoParameterCommands(cmdStr)
+{
 	if (!cmdStr && typeof cmdStr != 'string')
 		return;
 	pmt = (!pmt) ? cmdStr : pmt + ',' + cmdStr;
 }
 
 // Register a function to hook at a certain point.
-function registerHook(fnHookTo, fnRef, hookType, optPm) {
+function registerHook(fnHookTo, fnRef, hookType, optPm)
+{
 	var hookPt, last = typeof optPm;
 
 	if (fnHookTo == 'plgIn' || fnHookTo == 'postParse')
@@ -1698,28 +1979,39 @@ function registerHook(fnHookTo, fnRef, hookType, optPm) {
 
 	hookPt = hookPts[fnHookTo];
 
-	if (hookType != null) {
-		if (hookType == FREPLACE) {
+	if (hookType != null)
+	{
+		if (hookType == FREPLACE)
+		{
 			hookPt.ovload = fnRef;  // replace normal overlib routine
 			if (fnHookTo.indexOf('ol_content_') > -1)
 				hookPt.alt[pms[CSSOFF - 1 - pmStart]] = fnRef;
 
-		} else if (hookType == FBEFORE || hookType == FAFTER) {
+		}
+		else if (hookType == FBEFORE || hookType == FAFTER)
+		{
 			var hookPt = (hookType == 1 ? hookPt.before : hookPt.after);
 
-			if (typeof fnRef == 'object') {
+			if (typeof fnRef == 'object')
+			{
 				hookPt = hookPt.concat(fnRef);
-			} else {
+			}
+			else
+			{
 				hookPt[hookPt.length++] = fnRef;
 			}
 
 			if (optPm)
 				hookPt = reOrder(hookPt, fnRef, optPm);
 
-		} else if (hookType == FALTERNATE) {
+		}
+		else if (hookType == FALTERNATE)
+		{
 			if (last == 'number')
 				hookPt.alt[pms[optPm - 1 - pmStart]] = fnRef;
-		} else if (hookType == FCHAIN) {
+		}
+		else if (hookType == FCHAIN)
+		{
 			hookPt = hookPt.chain;
 			if (typeof fnRef == 'object')
 				hookPt = hookPt.concat(fnRef); // add other functions
@@ -1732,33 +2024,48 @@ function registerHook(fnHookTo, fnRef, hookType, optPm) {
 }
 
 // Register a function that will set runtime variables.
-function registerRunTimeFunction(fn) {
-	if (isFunction(fn)) {
-		if (typeof fn == 'object') {
+function registerRunTimeFunction(fn)
+{
+	if (isFunction(fn))
+	{
+		if (typeof fn == 'object')
+		{
 			runTime = runTime.concat(fn);
-		} else {
+		}
+		else
+		{
 			runTime[runTime.length++] = fn;
 		}
 	}
 }
 
 // Register a function that will handle command parsing.
-function registerCmdLineFunction(fn) {
-	if (isFunction(fn)) {
-		if (typeof fn == 'object') {
+function registerCmdLineFunction(fn)
+{
+	if (isFunction(fn))
+	{
+		if (typeof fn == 'object')
+		{
 			cmdLine = cmdLine.concat(fn);
-		} else {
+		}
+		else
+		{
 			cmdLine[cmdLine.length++] = fn;
 		}
 	}
 }
 
 // Register a function that does things after command parsing. 
-function registerPostParseFunction(fn) {
-	if (isFunction(fn)) {
-		if (typeof fn == 'object') {
+function registerPostParseFunction(fn)
+{
+	if (isFunction(fn))
+	{
+		if (typeof fn == 'object')
+		{
 			postParse = postParse.concat(fn);
-		} else {
+		}
+		else
+		{
 			postParse[postParse.length++] = fn;
 		}
 	}
@@ -1769,10 +2076,12 @@ function registerPostParseFunction(fn) {
 ////////
 
 // Runs any hooks registered.
-function runHook(fnHookTo, hookType) {
+function runHook(fnHookTo, hookType)
+{
 	var l = hookPts[fnHookTo], k, rtnVal = null, optPm, arS, ar = runHook.arguments;
 
-	if (hookType == FREPLACE) {
+	if (hookType == FREPLACE)
+	{
 		arS = argToString(ar, 2);
 
 		if (typeof l == 'undefined' || !(l = l.ovload))
@@ -1780,26 +2089,37 @@ function runHook(fnHookTo, hookType) {
 		else
 			rtnVal = eval('l(' + arS + ')');
 
-	} else if (hookType == FBEFORE || hookType == FAFTER) {
-		if (typeof l != 'undefined') {
+	}
+	else if (hookType == FBEFORE || hookType == FAFTER)
+	{
+		if (typeof l != 'undefined')
+		{
 			l = (hookType == 1 ? l.before : l.after);
 
-			if (l.length) {
+			if (l.length)
+			{
 				arS = argToString(ar, 2);
 				for (var k = 0; k < l.length; k++)
 					eval('l[k](' + arS + ')');
 			}
 		}
-	} else if (hookType == FALTERNATE) {
+	}
+	else if (hookType == FALTERNATE)
+	{
 		optPm = ar[2];
 		arS = argToString(ar, 3);
 
-		if (typeof l == 'undefined' || (l = l.alt[pms[optPm - 1 - pmStart]]) == 'undefined') {
+		if (typeof l == 'undefined' || (l = l.alt[pms[optPm - 1 - pmStart]]) == 'undefined')
+		{
 			rtnVal = eval(fnHookTo + '(' + arS + ')');
-		} else {
+		}
+		else
+		{
 			rtnVal = eval('l(' + arS + ')');
 		}
-	} else if (hookType == FCHAIN) {
+	}
+	else if (hookType == FCHAIN)
+	{
 		arS = argToString(ar, 2);
 		l = l.chain;
 
@@ -1816,7 +2136,8 @@ function runHook(fnHookTo, hookType) {
 ////////
 
 // Object for handling hooks.
-function FunctionReference() {
+function FunctionReference()
+{
 	this.ovload = null;
 	this.before = new Array();
 	this.after = new Array();
@@ -1826,7 +2147,8 @@ function FunctionReference() {
 
 // Object for simple access to the overLIB version used.
 // Examples: simpleversion:351 major:3 minor:5 revision:1
-function Info(version, prerelease) {
+function Info(version, prerelease)
+{
 	this.version = version;
 	this.prerelease = prerelease;
 
@@ -1838,7 +2160,8 @@ function Info(version, prerelease) {
 }
 
 // checks for Core Version required
-function meets(reqdVersion) {
+function meets(reqdVersion)
+{
 	return (!reqdVersion) ? false : this.simpleversion >= Math.round(100 * parseFloat(reqdVersion));
 }
 
@@ -1865,9 +2188,12 @@ registerNoParameterCommands('sticky,autostatus,autostatuscap,fullhtml,hauto,vaut
 
 // Capture events, alt. diffuses the overlib function.
 var olCheckMouseCapture = true;
-if ((olNs4 || olNs6 || olIe4)) {
+if ((olNs4 || olNs6 || olIe4))
+{
 	olMouseCapture();
-} else {
+}
+else
+{
 	overlib = no_overlib;
 	nd = no_overlib;
 	ver3fix = true;

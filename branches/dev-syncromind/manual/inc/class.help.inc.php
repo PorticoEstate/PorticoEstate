@@ -1,5 +1,5 @@
 <?php
-	/*******************************************************************\
+	/*	 * *****************************************************************\
 	* phpGroupWare API - help system manager                            *
 	* Written by Bettina Gille [ceb@phpgroupware.org]                   *
 	* Manager for the phpGroupWare help system                          *
@@ -21,11 +21,12 @@
 	* You should have received a copy of the GNU General Public License *
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
-	\*******************************************************************/
+	  \****************************************************************** */
 	/* $Id$ */
 
 	class help
 	{
+
 		var $lang;
 		var $app_name;
 		var $app_version;
@@ -35,14 +36,11 @@
 		var $intro;
 		var $app_intro;
 		var $note;
-
 		var $extrabox;
 		var $xhelp;
 		var $listbox;
-
 		var $output;
 		var $data;
-
 		var $title;
 		var $section;
 		var $currentapp;
@@ -50,7 +48,7 @@
 
 		/* This is the constructor for the object. */
 
-		function __construct($reset = False)
+		function __construct( $reset = False )
 		{
 			$this->lang			= $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			$this->title		= '';
@@ -73,17 +71,17 @@
 			{
 				$this->output = array();
 			}
-			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . '/help');
+			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual', 'base') . '/help');
 		}
-
 		/*
 		Use these functions to get and set the values of this
 		object's variables. This is good OO practice, as it means
 		that datatype checking can be completed and errors raised accordingly.
 		*/
-		function setvar($var,$value='')
+
+		function setvar( $var, $value = '' )
 		{
-			if ($value=='')
+			if ($value == '')
 			{
 				global $$var;
 				$value = $$var;
@@ -92,11 +90,11 @@
 			// echo $var." = ".$this->$var."<br>\n";
 		}
 
-		function getvar($var='')
+		function getvar( $var = '' )
 		{
-			if ($var=='' || !isset($this->$var))
+			if ($var == '' || !isset($this->$var))
 			{
-				echo 'Programming Error: '.$this->getvar('classname').'->getvar('.$var.')!<br>'."\n";
+				echo 'Programming Error: ' . $this->getvar('classname') . '->getvar(' . $var . ')!<br>' . "\n";
 				$GLOBALS['phpgw_info']['flags']['nodisplay'] = True;
 				exit;
 			}
@@ -109,40 +107,40 @@
 		{
 			if ($this->app_name)
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual','base') . '/help_data');
+				$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('manual', 'base') . '/help_data');
 		//		$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir($this->app_name,'base') . '/help_data');
 			}
 		}
 
-		function set_controls($type = 'app', $control='', $control_url='')
+		function set_controls( $type = 'app', $control = '', $control_url = '' )
 		{
-			switch($type)
+			switch ($type)
 			{
 				case 'app':
-					if($control != '' && $control_url != '')
+					if ($control != '' && $control_url != '')
 					{
-						$this->setvar($control,$this->check_help_file($control_url));
+						$this->setvar($control, $this->check_help_file($control_url));
 					}
 					break;
 				default:
-					$this->setvar('intro',$GLOBALS['phpgw']->link('/help.php'));
-					$this->setvar('app_intro',$GLOBALS['phpgw']->link('/help.php',array('app'=> $this->app_name)));
-					$this->setvar('note',$GLOBALS['phpgw']->link('/help.php',array('note'=>'True')));
+					$this->setvar('intro', $GLOBALS['phpgw']->link('/help.php'));
+					$this->setvar('app_intro', $GLOBALS['phpgw']->link('/help.php', array('app' => $this->app_name)));
+					$this->setvar('note', $GLOBALS['phpgw']->link('/help.php', array('note' => 'True')));
 					break;
 			}
 		}
 
-		function set_internal($extra_data = '')
+		function set_internal( $extra_data = '' )
 		{
-			if($extra_data !='')
+			if ($extra_data != '')
 			{
 				$this->extrabox = $extra_data;
 			}
 		}
 
-		function set_xinternal($extra_data='')
+		function set_xinternal( $extra_data = '' )
 		{
-			if($extra_data !='')
+			if ($extra_data != '')
 			{
 				$this->xhelp = $extra_data;
 			}
@@ -155,15 +153,15 @@
 				'intro'		=> True
 			);
 
-			if($this->app_intro)
+			if ($this->app_intro)
 			{
 				$control_array['app_intro'] = True;
 			}
-			if($this->up)
+			if ($this->up)
 			{
 				$control_array['up'] = True;
 			}
-			if($this->down)
+			if ($this->down)
 			{
 				$control_array['down'] = True;
 			}
@@ -172,16 +170,16 @@
 			//_debug_array($control_array);
 
 			@reset($control_array);
-			while(list($param,$value) = each($control_array))
+			while (list($param, $value) = each($control_array))
 			{
-				if(isset($this->$param) && $this->$param)
+				if (isset($this->$param) && $this->$param)
 				{
 					$image_width = 15;
 
 					$control_link[] = array
 					(
 						'param_url' 		=> $this->$param,
-						'link_img'			=> $GLOBALS['phpgw']->common->image('phpgwapi',$param.'_help'),
+						'link_img' => $GLOBALS['phpgw']->common->image('phpgwapi', $param . '_help'),
 						'img_width'			=> $image_width,
 						'lang_param_title'	=> lang($param)
 					);
@@ -190,11 +188,11 @@
 
 			if ($this->app_name == 'manual')
 			{
-				$logo_img = $GLOBALS['phpgw']->common->image('phpgwapi','logo','',True);
+				$logo_img = $GLOBALS['phpgw']->common->image('phpgwapi', 'logo', '', True);
 			}
 			else
 			{
-				$logo_img = $GLOBALS['phpgw']->common->image($this->app_name,'navbar','',True);
+				$logo_img = $GLOBALS['phpgw']->common->image($this->app_name, 'navbar', '', True);
 			}
 
 			$this->output['help_values'][] = array
@@ -203,18 +201,18 @@
 				'title'			=> $this->title,
 				'lang_version'	=> lang('version'),
 				'version'		=> $this->app_version,
-				'control_link' 	=> (isset($control_link)?$control_link:''),
+				'control_link' => (isset($control_link) ? $control_link : ''),
 				'listbox'		=> $this->listbox,
 				'extrabox'		=> $this->extrabox,
 				'xhelp'			=> $this->xhelp
 			);
 		}
 
-		function check_file($file)
+		function check_file( $file )
 		{
 			$check_file = PHPGW_SERVER_ROOT . $file;
 
-			if(@is_file($check_file))
+			if (@is_file($check_file))
 			{
 				return $file;
 			}
@@ -224,31 +222,30 @@
 			}
 		}
 
-		function check_help_file($file)
+		function check_help_file( $file )
 		{
 			$lang = strtoupper($this->lang);
 
-			$help_file = $this->check_file('/' . $this->app_name . '/help/'. $lang . '/' . $file);
+			$help_file = $this->check_file('/' . $this->app_name . '/help/' . $lang . '/' . $file);
 
-			if($help_file == '')
+			if ($help_file == '')
 			{
 				$help_file = $this->check_file('/' . $this->app_name . '/help/EN/' . $file);
 			}
 	
-			if($this->section == basename($help_file, ".odt") && $this->app_name == $this->currentapp)
+			if ($this->section == basename($help_file, ".odt") && $this->app_name == $this->currentapp)
 			{
-				$this->appsection =count($this->data);
+				$this->appsection = count($this->data);
 			}
 		//	if ($help_file)
 			{
-				return $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uimanual.help','app' => $this->app_name,'section' => basename($help_file, ".odt"), 'navbar' => true));
+				return $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uimanual.help',
+						'app' => $this->app_name, 'section' => basename($help_file, ".odt"), 'navbar' => true));
 			}
 
 			return False;
 		}
-
-
-		/*function display_manual_section($appname,$file)
+		/* function display_manual_section($appname,$file)
 		{
 			$font = $GLOBALS['phpgw_info']['theme']['font'];
 		$navbar = $GLOBALS['phpgw_info']['user']['preferences']['common']['navbar_format'];
@@ -288,5 +285,5 @@
 		$str .= $menutree->showtree($GLOBALS['treemenu'],$expandlevels).'</td></table>';
 
 		return $str;
-	}*/
+		  } */
 	}

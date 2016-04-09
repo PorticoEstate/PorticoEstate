@@ -185,6 +185,10 @@
 													<xsl:attribute name="value">
 														<xsl:value-of select="from_" />
 													</xsl:attribute>
+													<xsl:attribute name="readonly">
+														<xsl:text>readonly</xsl:text>
+													</xsl:attribute>
+
 												</input>
 											</dd>
 											<dt>
@@ -197,6 +201,10 @@
 													<xsl:attribute name="value">
 														<xsl:value-of select="to_" />
 													</xsl:attribute>
+													<xsl:attribute name="readonly">
+														<xsl:text>readonly</xsl:text>
+													</xsl:attribute>
+
 												</input>
 											</dd>
 										</div>
@@ -214,6 +222,10 @@
 													<xsl:attribute name="value">
 														<xsl:value-of select="from_" />
 													</xsl:attribute>
+													<xsl:attribute name="readonly">
+														<xsl:text>readonly</xsl:text>
+													</xsl:attribute>
+
 												</input>
 											</dd>
 											<dt>
@@ -226,6 +238,10 @@
 													<xsl:attribute name="value">
 														<xsl:value-of select="to_" />
 													</xsl:attribute>
+													<xsl:attribute name="readonly">
+														<xsl:text>readonly</xsl:text>
+													</xsl:attribute>
+
 												</input>
 											</dd>
 										</div>

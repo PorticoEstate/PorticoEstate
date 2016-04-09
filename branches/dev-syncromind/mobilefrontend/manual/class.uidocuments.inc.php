@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage tts
 	 * @version $Id$
 	 */
-
   	phpgw::import_class('manual.uidocuments');
 
 	class mobilefrontend_uidocuments extends manual_uidocuments
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

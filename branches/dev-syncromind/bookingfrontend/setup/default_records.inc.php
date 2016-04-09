@@ -1,19 +1,18 @@
 <?php
-
 // Default user
-$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
-$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
+	$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
 
-$modules = array
-(
+	$modules = array
+		(
 	'bookingfrontend',
 //	'preferences'
-);
+	);
 
-$aclobj =& $GLOBALS['phpgw']->acl;
+	$aclobj = & $GLOBALS['phpgw']->acl;
 
-if (!$GLOBALS['phpgw']->accounts->exists('bookingguest') ) // no guest account already exists
-{
+	if (!$GLOBALS['phpgw']->accounts->exists('bookingguest')) // no guest account already exists
+	{
 	$GLOBALS['phpgw_info']['server']['password_level'] = '8CHAR';
 	$account			= new phpgwapi_user();
 	$account->lid		= 'bookingguest';
@@ -26,6 +25,6 @@ if (!$GLOBALS['phpgw']->accounts->exists('bookingguest') ) // no guest account a
 
 	$preferences	= createObject('phpgwapi.preferences');
 	$preferences->set_account_id($bookingguest);
-	$preferences->add('bookingfrontend','template_set','bkbooking');
-	$preferences->save_repository(true,$GLOBALS['type']);
-}
+		$preferences->add('bookingfrontend', 'template_set', 'bkbooking');
+		$preferences->save_repository(true, $GLOBALS['type']);
+	}

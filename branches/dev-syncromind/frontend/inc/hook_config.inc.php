@@ -8,9 +8,8 @@
 	* @package phpgroupware
 	* @subpackage Frontend
 	* @category hooks
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,7 +31,7 @@
 	* @param $config
 	* @return string table-rows with text-input for sorting
 	*/
-	function tab_sorting($config)
+	function tab_sorting( $config )
 	{
 		$locations = $GLOBALS['phpgw']->locations->get_locations(false, 'frontend');
 
@@ -50,7 +49,7 @@
 			);
 		}
 		
-		if(isset($config['tab_sorting']) && $config['tab_sorting'])
+		if (isset($config['tab_sorting']) && $config['tab_sorting'])
 		{
 			array_multisort($config['tab_sorting'], SORT_ASC, $_locations);
 		}
@@ -76,24 +75,23 @@ HTML;
 		return $out;
 	}
 
-
 	/**
 	* Get HTML selectbox with user groups
 	*
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function tts_default_group($config)
+	function tts_default_group( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$group_assigned = isset($config['tts_default_group']) ? $config['tts_default_group'] : '';
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 
-		foreach ( $groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$selected = '';
-			if ( $group_assigned == $group )
+			if ($group_assigned == $group)
 			{
 				$selected = ' selected';
 			}
@@ -111,17 +109,17 @@ HTML;
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function frontend_default_group($config)
+	function frontend_default_group( $config )
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$group_assigned = isset($config['frontend_default_group']) ? $config['frontend_default_group'] : '';
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 
-		foreach ( $groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$selected = '';
-			if ( $group_assigned == $group )
+			if ($group_assigned == $group)
 			{
 				$selected = ' selected';
 			}
@@ -139,7 +137,7 @@ HTML;
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function picture_building_cat($config)
+	function picture_building_cat( $config )
 	{
 		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 		$cats->supress_info = true;
@@ -155,7 +153,7 @@ HTML;
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function tts_default_cat($config)
+	function tts_default_cat( $config )
 	{
 		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 		$cats->supress_info = true;
@@ -171,17 +169,17 @@ HTML;
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function tts_frontend_cat($config)
+	function tts_frontend_cat( $config )
 	{
 		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 		$cats->supress_info = true;
 		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 		$tts_frontend_cat_selected = isset($config['tts_frontend_cat']) ? $config['tts_frontend_cat'] : array();
 		$out = '';
-		foreach ( $values as $entry)
+		foreach ($values as $entry)
 		{
 			$checked = '';
-			if ( in_array($entry['id'], $tts_frontend_cat_selected))
+			if (in_array($entry['id'], $tts_frontend_cat_selected))
 			{
 				$checked = ' checked';
 			}
@@ -198,17 +196,17 @@ HTML;
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function document_frontend_cat($config)
+	function document_frontend_cat( $config )
 	{
 		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 		$cats->supress_info = true;
 		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 		$tts_frontend_cat_selected = isset($config['document_frontend_cat']) ? $config['document_frontend_cat'] : array();
 		$out = '';
-		foreach ( $values as $entry)
+		foreach ($values as $entry)
 		{
 			$checked = '';
-			if ( in_array($entry['id'], $tts_frontend_cat_selected))
+			if (in_array($entry['id'], $tts_frontend_cat_selected))
 			{
 				$checked = ' checked';
 			}
@@ -218,19 +216,20 @@ HTML;
 		}
 		return $out;
 	}
+
 	/**
 	* Get HTML checkbox with categories that are candidates for frontend documents cat
 	*
 	* @param $config
 	* @return string options for selectbox
 	*/
-	function entity_frontend($config)
+	function entity_frontend( $config )
 	{
 		$entity			= CreateObject('property.soadmin_entity');
 		$entity_list 	= $entity->read(array('allrows' => true));
 		$entity_frontend_selected = isset($config['entity_frontend']) ? $config['entity_frontend'] : array();
 		$out = '';
-		foreach($entity_list as $entry)
+		foreach ($entity_list as $entry)
 		{
 			$out .=  <<<HTML
 				<tr><td><input type="checkbox" disabled ="disabled" name="entity_{$entry['id']}" value="entity_{$entry['id']}" {$checked}><label><b>{$entry['name']}</b></label></td></tr>
@@ -240,7 +239,7 @@ HTML;
 			foreach ($categories as $category)
 			{
 				$checked = '';
-				if ( in_array(".entity.{$entry['id']}.{$category['id']}", $entity_frontend_selected))
+				if (in_array(".entity.{$entry['id']}.{$category['id']}", $entity_frontend_selected))
 				{
 					$checked = ' checked';
 				}

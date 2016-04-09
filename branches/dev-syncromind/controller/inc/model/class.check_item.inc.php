@@ -46,12 +46,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -61,7 +61,7 @@
 			return $this->id;
 		}
 
-		public function set_control_item_id($control_item_id)
+		public function set_control_item_id( $control_item_id )
 		{
 			$this->control_item_id = $control_item_id;
 		}
@@ -71,7 +71,7 @@
 			return $this->control_item_id;
 		}
 
-		public function set_check_list_id($check_list_id)
+		public function set_check_list_id( $check_list_id )
 		{
 			$this->check_list_id = $check_list_id;
 		}
@@ -83,7 +83,7 @@
 
 		// =================  Getters and setters for objects =================
 
-		public function set_control_item($control_item)
+		public function set_control_item( $control_item )
 		{
 			$this->control_item = $control_item;
 		}
@@ -93,7 +93,7 @@
 			return $this->control_item;
 		}
 
-		public function set_cases_array($cases_array)
+		public function set_cases_array( $cases_array )
 		{
 			$this->cases_array = $cases_array;
 		}

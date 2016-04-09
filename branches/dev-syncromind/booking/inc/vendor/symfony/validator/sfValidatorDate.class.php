@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorDate validates a date. It also converts the input value to a valid date.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorDate extends sfValidatorBase
-{
+	class sfValidatorDate extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -43,7 +43,7 @@ class sfValidatorDate extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addMessage('bad_format', '"%value%" does not match the date format (%date_format%).');
     $this->addMessage('max', 'The date must be before %max%.');
@@ -62,7 +62,7 @@ class sfValidatorDate extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     if (is_array($value))
     {
@@ -87,7 +87,7 @@ class sfValidatorDate extends sfValidatorBase
     }
     else
     {
-      $clean = (integer) $value;
+				$clean = (integer)$value;
     }
 
     if ($this->hasOption('max') && $clean > $this->getOption('max'))
@@ -112,7 +112,7 @@ class sfValidatorDate extends sfValidatorBase
    *
    * @return int A timestamp
    */
-  protected function convertDateArrayToTimestamp($value)
+		protected function convertDateArrayToTimestamp( $value )
   {
     // all elements must be empty or a number
     foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $key)
@@ -124,8 +124,7 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     // if one date value is empty, all others must be empty too
-    $empties =
-      (!isset($value['year']) || !$value['year'] ? 1 : 0) +
+			$empties = (!isset($value['year']) || !$value['year'] ? 1 : 0) +
       (!isset($value['month']) || !$value['month'] ? 1 : 0) +
       (!isset($value['day']) || !$value['day'] ? 1 : 0)
     ;
@@ -148,8 +147,7 @@ class sfValidatorDate extends sfValidatorBase
       // if second is set, minute and hour must be set
       // if minute is set, hour must be set
       if (
-        $this->isValueSet($value, 'second') && (!$this->isValueSet($value, 'minute') || !$this->isValueSet($value, 'hour'))
-        ||
+					$this->isValueSet($value, 'second') && (!$this->isValueSet($value, 'minute') || !$this->isValueSet($value, 'hour')) ||
         $this->isValueSet($value, 'minute') && !$this->isValueSet($value, 'hour')
       )
       {
@@ -157,12 +155,7 @@ class sfValidatorDate extends sfValidatorBase
       }
 
       $clean = mktime(
-        isset($value['hour']) ? intval($value['hour']) : 0,
-        isset($value['minute']) ? intval($value['minute']) : 0,
-        isset($value['second']) ? intval($value['second']) : 0,
-        intval($value['month']),
-        intval($value['day']),
-        intval($value['year'])
+					isset($value['hour']) ? intval($value['hour']) : 0, isset($value['minute']) ? intval($value['minute']) : 0, isset($value['second']) ? intval($value['second']) : 0, intval($value['month']), intval($value['day']), intval($value['year'])
       );
     }
     else
@@ -178,7 +171,7 @@ class sfValidatorDate extends sfValidatorBase
     return $clean;
   }
 
-  protected function isValueSet($values, $key)
+		protected function isValueSet( $values, $key )
   {
     return isset($values[$key]) && !in_array($values[$key], array(null, ''), true);
   }
@@ -186,7 +179,7 @@ class sfValidatorDate extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function isEmpty($value)
+		protected function isEmpty( $value )
   {
     if (is_array($value))
     {
@@ -197,4 +190,4 @@ class sfValidatorDate extends sfValidatorBase
 
     return parent::isEmpty($value);
   }
-}
+	}

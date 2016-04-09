@@ -8,7 +8,6 @@
 	 * @package addressbook
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -24,7 +23,6 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	 * Menus
 	 *
@@ -32,6 +30,7 @@
 	 */
 	class manual_menu
 	{
+
 		/**
 		 * Get the menus for admin
 		 *
@@ -46,8 +45,7 @@
 				'manual'	=> array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('manual', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', 
-								array
+					'url' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 									'menuaction'		=> 'manual.uidocuments.index'
 								)
@@ -60,15 +58,14 @@
 
 			$menus['admin'] = array();
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin'] = array
 				(
 					'index' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Categories', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', 
-								array
+						'url' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 									'menuaction'		=> 'admin.uicategories.index',
 									'appname'			=> 'manual',
@@ -81,7 +78,8 @@
 					'acl'	=> array
 					(
 						'text'	=> lang('Configure Access Permissions'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'manual') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
+							'acl_app' => 'manual'))
 					)
 				);
 			}
@@ -92,18 +90,18 @@
 				'add' => array
 				(
 					'text'	=> lang('add'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.add' )),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uidocuments.add')),
 					'image'	=> array('property', 'location_1'),
 				),
 				'view' => array
 				(
 					'text'	=> lang('view'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.view' )),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uidocuments.view')),
 					'image'	=> array('property', 'location_1'),
 				),
 			);
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$menus['preferences'] = array();
 			}

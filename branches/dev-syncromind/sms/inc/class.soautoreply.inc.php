@@ -8,16 +8,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage autoreply
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_soautoreply
 	{
+
 		var $grants;
 		var $db;
 		var $account;
@@ -29,12 +29,12 @@
 			$this->db 			= clone($GLOBALS['phpgw']->db);
 
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('sms','.config');
+			$this->grants = $GLOBALS['phpgw']->acl->get_grants('sms', '.config');
 			$this->join			= $this->db->join;
 			$this->like			= $this->db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query		= isset($data['query']) ? $data['query'] : '';
@@ -45,7 +45,6 @@
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -54,10 +53,10 @@
 
 			$table = 'phpgw_sms_featautoreply';
 
-			$where= 'WHERE';
+			$where = 'WHERE';
 			$grants = $this->grants;
 
-/*			if (is_array($grants))
+			/* 			if (is_array($grants))
 			{
 				while (list($user) = each($grants))
 				{
@@ -68,10 +67,10 @@
 
 				$where= 'AND';
 			}
-*/
+			 */
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where autoreply_code $this->like '%$query%'";
@@ -79,16 +78,16 @@
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
 			$autoreply_info = array();

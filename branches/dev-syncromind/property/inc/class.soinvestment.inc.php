@@ -46,7 +46,7 @@
 		{
 			$this->db->query("SELECT entity_type FROM fm_investment GROUP BY entity_type ");
 			$type_list = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$type_list[] = Array(
 					'id' => $this->db->f('entity_type'),
@@ -56,11 +56,11 @@
 			return $type_list;
 		}
 
-		function read($data)
+		function read( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
-				if($data['start'])
+				if ($data['start'])
 				{
 					$start = $data['start'];
 				}
@@ -76,18 +76,18 @@
 				$part_of_town_id = (isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '');
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 			}
-			if(!$cat_id)
+			if (!$cat_id)
 			{
 				return;
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
 			else
 			{
-				if($cat_id == 'property')
+				if ($cat_id == 'property')
 				{
 					$ordermethod = ' order by fm_part_of_town.name ,fm_location1.loc1 DESC';
 				}
@@ -97,21 +97,21 @@
 				}
 			}
 
-			if($part_of_town_id)
+			if ($part_of_town_id)
 			{
-				$filtermethod = "and fm_part_of_town.part_of_town_id ='$part_of_town_id'";
+				$filtermethod = "and fm_part_of_town.id ='$part_of_town_id'";
 			}
 
-			if($filter == 'investment')
+			if ($filter == 'investment')
 			{
 				$filtermethod .= "and initial_value > 0";
 			}
-			if($filter == 'funding')
+			if ($filter == 'funding')
 			{
 				$filtermethod .= "and initial_value < 0";
 			}
 
-			if($cat_id == 'property')
+			if ($cat_id == 'property')
 			{
 				$sql = "SELECT fm_investment.entity_id as entity_id, fm_investment.descr as descr, fm_investment_value.invest_id,initial_value, fm_location1.loc1_name as name, fm_part_of_town.district_id, fm_part_of_town.name as part_of_town,"
 				. " fm_investment_value.value, fm_investment_value.index_date, fm_investment_value.this_index, "
@@ -119,7 +119,7 @@
 				. " FROM (((fm_investment $this->join fm_investment_value ON ( fm_investment.entity_id = fm_investment_value.entity_id) AND "
 				. " (fm_investment.invest_id = fm_investment_value.invest_id )) "
 				. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)) "
 				. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 			}
 			else
@@ -132,15 +132,15 @@
 				. " fm_investment_value ON (fm_investment_value.entity_id = fm_investment.entity_id) AND "
 				. " (fm_investment_value.invest_id = fm_investment.invest_id)) "
 				. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)) "
 				. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 			}
-			if($sql)
+			if ($sql)
 			{
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->total_records = $this->db->num_rows();
 
-				if(!$allrows)
+				if (!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 				}
@@ -153,7 +153,7 @@
 
 			$investment = array();
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$investment[$i]['counter'] = $i;
 				$investment[$i]['location_code'] = $this->db->f('location_code');
@@ -167,7 +167,7 @@
 				$investment[$i]['this_index'] = $this->db->f('this_index');
 				$investment[$i]['index_count'] = $this->db->f('index_count');
 				$investment[$i]['date'] = $this->db->f('index_date');
-				if($cat_id == 'property')
+				if ($cat_id == 'property')
 				{
 					$investment[$i]['entity_name'] = $this->db->f('name');
 				}
@@ -184,43 +184,43 @@
 			return $investment;
 		}
 
-		function save_investment($values)
+		function save_investment( $values )
 		{
 			//_debug_array($values);
 
 			$receipt = array();
-			while(is_array($values['location']) && list($input_name, $value) = each($values['location']))
+			while (is_array($values['location']) && list($input_name, $value) = each($values['location']))
 			{
-				if($value)
+				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
 			}
 
-			while(is_array($values['extra']) && list($input_name, $value) = each($values['extra']))
+			while (is_array($values['extra']) && list($input_name, $value) = each($values['extra']))
 			{
-				if($value)
+				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
 			}
 
-			if($cols)
+			if ($cols)
 			{
 				$cols = "," . implode(",", $cols);
 				$vals = ",'" . implode("','", $vals) . "'";
 			}
 
-			if($values['street_name'])
+			if ($values['street_name'])
 			{
 				$address[] = $values['street_name'];
 				$address[] = $values['street_number'];
 				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if(!$address)
+			if (!$address)
 			{
 				$address = $this->db->db_addslashes($values['location_name']);
 			}
@@ -249,7 +249,7 @@
 			. " values ('$entity_id', '$next_invest_id','1', '0', '1','$initial_value','$initial_value','$date')");
 
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('Investment added !'));
 				$receipt['message'][] = array('msg' => lang('Entity ID') . ' ' . $entity_id);
@@ -258,14 +258,14 @@
 			return $receipt;
 		}
 
-		function update_investment($values)
+		function update_investment( $values )
 		{
 			$receipt = array();
 
-			if($values)
+			if ($values)
 			{
 				$this->db->transaction_begin();
-				foreach($values as $entry)
+				foreach ($values as $entry)
 				{
 					$this->db->query("select max(index_count) as max_index_count from fm_investment_value Where entity_id='" . $entry['entity_id'] . "' and invest_id=" . $entry['invest_id']);
 					$this->db->next_record();
@@ -298,9 +298,9 @@
 			}
 		}
 
-		function read_single($entity_id, $investment_id, $start, $allrows)
+		function read_single( $entity_id, $investment_id, $start, $allrows )
 		{
-			if(!$start)
+			if (!$start)
 			{
 				$start = 0;
 			}
@@ -312,7 +312,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
@@ -323,7 +323,7 @@
 
 			$investment = array();
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$investment[$i]['descr'] = $this->db->f('descr');
 				$investment[$i]['initial_value'] = $this->db->f('initial_value');
@@ -344,7 +344,7 @@
 			$this->db->query("SELECT writeoff_year FROM fm_investment GROUP BY writeoff_year ", __LINE__, __FILE__);
 
 			$period_list = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$period_list[] = Array(
 					'period' => $this->db->f('writeoff_year')
@@ -354,10 +354,10 @@
 			return $period_list;
 		}
 
-		function delete($entity_id, $invest_id, $index_count)
+		function delete( $entity_id, $invest_id, $index_count )
 		{
 			$this->db->transaction_begin();
-			if($index_count == 1)
+			if ($index_count == 1)
 			{
 				$this->db->query("update fm_investment_value set current_index = '0', this_index=Null, value=Null,initial_value=Null,index_date=Null  where entity_id='$entity_id' and invest_id= '$invest_id' and index_count= '1'");
 			}

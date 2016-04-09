@@ -9,9 +9,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage demo
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -31,9 +30,9 @@
 	 * application logic
 	 * @package demo
 	 */
-
 	class demo_bodemo
 	{
+
 		public $start;
 		public $query;
 		public $filter;
@@ -49,7 +48,7 @@
 		private $dateformat;
 		private $datetimeformat;
 
-		public function __construct($session = false)
+		public function __construct( $session = false )
 		{
 			$this->acl_location 	= '.demo_location';
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -74,17 +73,17 @@
 			$this->datetimeformat 	= phpgwapi_db::datetime_format();
 		}
 
-		public function save_sessiondata($data)
+		public function save_sessiondata( $data )
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','demo_app',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'demo_app', $data);
 			}
 		}
 
 		private function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','demo_app');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'demo_app');
 
 			$this->start	= isset($data['start']) ? $data['start'] : '';
 			$this->query	= isset($data['query']) ? $data['query'] : '';
@@ -94,7 +93,7 @@
 			$this->cat_id	= isset($data['cat_id']) ? $data['cat_id'] : '';
 		}
 
-		public static function check_perms($rights, $required)
+		public static function check_perms( $rights, $required )
 		{
 			return ($rights & $required);
 		}
@@ -122,7 +121,7 @@
 		*
 		* @return array Array with records.
 		*/
-		public function read2($dry_run = false)
+		public function read2( $dry_run = false )
 		{
 			$lookup = array
 			(
@@ -142,11 +141,11 @@
 			return $values;
 		}
 
-		public function read_single($id = 0)
+		public function read_single( $id = 0 )
 		{
 			$values['attributes'] = $this->custom->find($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->so->read_single($id, $values);
 			}
@@ -155,28 +154,28 @@
 			$values = $custom_fields->prepare($values, 'demo', $this->acl_location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($values['entry_date']) && $values['entry_date'])
+			if (isset($values['entry_date']) && $values['entry_date'])
 			{
-				$values['entry_date']	= $GLOBALS['phpgw']->common->show_date($values['entry_date'],$dateformat);
+				$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['entry_date'], $dateformat);
 			}
 
 			return $values;
 		}
 
-		public function save($values, $values_attribute = array())
+		public function save( $values, $values_attribute = array() )
 		{
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			if (isset($values['demo_id']) && $values['demo_id'])
 			{
-				$receipt = $this->so->edit($values,$values_attribute);
+				$receipt = $this->so->edit($values, $values_attribute);
 			}
 			else
 			{
-				$receipt = $this->so->add($values,$values_attribute);
+				$receipt = $this->so->add($values, $values_attribute);
 			}
 
 			$criteria = array
@@ -188,16 +187,16 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach ( $custom_functions as $entry )
+			foreach ($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if ( preg_match('/\.\./', $entry['file_name']) )
+				if (preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_APP_INC . "/custom/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file) )
+				if ($entry['active'] && is_file($file))
 				{
 					require_once PHPGW_APP_INC . "/custom/{$entry['file_name']}";
 				}
@@ -206,14 +205,14 @@
 			return $receipt;
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
 			$this->so->delete($id);
 		}
 
-		private function select_category_list($format='',$selected='')
+		private function select_category_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
@@ -226,11 +225,11 @@
 			$categories = $this->so->select_category_list();
 
 			$category_list = array();
-			if ( is_array($categories) )
+			if (is_array($categories))
 			{
-				foreach ( $categories as $category )
+				foreach ($categories as $category)
 				{
-					if ( $category['id'] == $selected )
+					if ($category['id'] == $selected)
 					{
 						$category_list[] = array
 						(
@@ -259,9 +258,9 @@
 		* @param array $values value set with
 		* @return array Array with attribute definition and values
 		*/
-		function preserve_attribute_values($values='',$values_attribute='')
+		function preserve_attribute_values( $values = '', $values_attribute = '' )
 		{
-			return $this->custom->preserve_attribute_values($values,$values_attribute);
+			return $this->custom->preserve_attribute_values($values, $values_attribute);
 		}
 
 		public function get_acl_location()

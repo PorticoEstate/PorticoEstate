@@ -1,6 +1,6 @@
 <!-- $Id: support.xsl 4904 2010-02-24 13:32:35Z sigurd $ -->
 
-	<xsl:template match="compose_groups" xmlns:php="http://php.net/xsl">
+<xsl:template match="compose_groups" xmlns:php="http://php.net/xsl">
 		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 		<table cellpadding="0" cellspacing="0" width="100%">
  			<xsl:choose>
@@ -15,13 +15,17 @@
 		</table>
 		
 			<div id="groups">
-			<h2><xsl:value-of select="php:function('lang', 'groups')" /></h2>
+			<h2>
+				<xsl:value-of select="php:function('lang', 'groups')" />
+			</h2>
 				<ul class="group_list">
 					<xsl:apply-templates select="group_list" />
 				</ul>
 			</div>
 
-			<h2><xsl:value-of select="php:function('lang', 'Compose message')" /></h2>
+		<h2>
+			<xsl:value-of select="php:function('lang', 'Compose message')" />
+		</h2>
 
 
 		<table>
@@ -56,7 +60,9 @@
 
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>					
+					<xsl:variable name="lang_send">
+						<xsl:value-of select="php:function('lang', 'send')" />
+					</xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'>
 					</input>
 				</td>
@@ -64,10 +70,10 @@
 
  		</table>
  		</form>
-	</xsl:template>
+</xsl:template>
 
 <!-- BEGIN group_list -->
-	<xsl:template match="group_list">
+<xsl:template match="group_list">
 		<li>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -97,5 +103,5 @@
 
 			<xsl:value-of select="account_lid"/>
 		</li>
-	</xsl:template>
+</xsl:template>
 

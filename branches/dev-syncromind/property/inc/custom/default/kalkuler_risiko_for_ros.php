@@ -6,12 +6,12 @@
 
 	$db = & $GLOBALS['phpgw']->db;
 
-	if(isSet($values_attribute) AND is_array($values_attribute))
+	if (isSet($values_attribute) AND is_array($values_attribute))
 	{
 
-		foreach($values_attribute as $entry)
+		foreach ($values_attribute as $entry)
 		{
-			switch($entry['name'])
+			switch ($entry['name'])
 			{
 				case 'sansynlighet':
 					$sansynlighet = (int)$entry['value'];
@@ -23,49 +23,49 @@
 
 		$value_set['r_tverrfaglig'] = 0;
 
-		foreach($values_attribute as $entry)
+		foreach ($values_attribute as $entry)
 		{
 			$risk = $entry['value'] * $sansynlighet;
-			switch($entry['name'])
+			switch ($entry['name'])
 			{
 				case 'k_beboer':
 					$value_set['r_beboer'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}
 					break;
 				case 'k_miljo':
 					$value_set['r_miljo'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}
 					break;
 				case 'k_ok_verdier':
 					$value_set['r_ok_verdier'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}
 					break;
 				case 'k_drift':
 					$value_set['r_drift'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}
 					break;
 				case 'k_ansatte':
 					$value_set['r_ansatte'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}
 					break;
 				case 'k_annet':
 					$value_set['r_annet'] = $risk;
-					if($risk > $value_set['r_tverrfaglig'])
+					if ($risk > $value_set['r_tverrfaglig'])
 					{
 						$value_set['r_tverrfaglig'] = $risk;
 					}

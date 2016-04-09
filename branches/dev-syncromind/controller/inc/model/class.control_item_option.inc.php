@@ -37,13 +37,13 @@
 		protected $option_value;
 		protected $control_item_id;
 
-		public function __construct($option_value, $control_item_id)
+		public function __construct( $option_value, $control_item_id )
 		{
 			$this->option_value		 = $option_value;
 			$this->control_item_id	 = $control_item_id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -53,7 +53,7 @@
 			return $this->id;
 		}
 
-		public function set_option_value($option_value)
+		public function set_option_value( $option_value )
 		{
 			$this->option_value = $option_value;
 		}
@@ -63,7 +63,7 @@
 			return $this->option_value;
 		}
 
-		public function set_control_item_id($control_item_id)
+		public function set_control_item_id( $control_item_id )
 		{
 			$this->control_item_id = $control_item_id;
 		}

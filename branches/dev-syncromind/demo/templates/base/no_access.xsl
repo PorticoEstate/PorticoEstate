@@ -1,14 +1,14 @@
 <!-- $Id$ -->
 
-	<xsl:template name="app_data">
+<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="no_access">
 				<xsl:apply-templates select="no_access"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
+</xsl:template>
 	
-	<xsl:template match="no_access">
+<xsl:template match="no_access">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -20,4 +20,4 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-	</xsl:template>
+</xsl:template>

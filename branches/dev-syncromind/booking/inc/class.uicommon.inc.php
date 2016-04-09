@@ -9,7 +9,7 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	function extract_values($array, $keys, $options = array())
+	function extract_values( $array, $keys, $options = array() )
 	{
 		static $default_options = array(
 			'prefix'			 => '',
@@ -22,12 +22,12 @@
 		$result	 = array();
 
 		$isIndexed = array_values($keys) === $keys;
-		if($isIndexed)
+		if ($isIndexed)
 		{
-			foreach($keys as $write_key)
+			foreach ($keys as $write_key)
 			{
 				$array_key = $options['prefix'] . $write_key . $options['suffix'];
-				if(isset($array[$array_key]))
+				if (isset($array[$array_key]))
 				{
 					$result[($options['preserve_prefix'] ? $options['prefix'] : '') . $write_key . ($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key]);
 				}
@@ -35,9 +35,9 @@
 		}
 		else
 		{
-			foreach($keys as $write_key => $type)
+			foreach ($keys as $write_key => $type)
 			{
-				switch($type)
+				switch ($type)
 				{
 					case 'string':
 					default:
@@ -84,7 +84,7 @@
 						break;
 				}
 				$array_key = $options['prefix'] . $write_key . $options['suffix'];
-				if(isset($array[$array_key]))
+				if (isset($array[$array_key]))
 				{
 					$result[($options['preserve_prefix'] ? $options['prefix'] : '') . $write_key . ($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key], $_type);
 				}
@@ -94,9 +94,9 @@
 		return $result;
 	}
 
-	function array_set_default(&$array, $key, $value)
+	function array_set_default( &$array, $key, $value )
 	{
-		if(!isset($array[$key]))
+		if (!isset($array[$key]))
 			$array[$key] = $value;
 	}
 
@@ -107,19 +107,19 @@
 	 *
 	 * @return string containg timestamp in norwegian format
 	 */
-	function pretty_timestamp($date)
+	function pretty_timestamp( $date )
 	{
-		if(empty($date))
+		if (empty($date))
 			return "";
 
-		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
+		if (is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
 		{
 			$date = $date[0]->nodeValue;
 		}
 		preg_match('/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
 
 		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		if($match[4])
+		if ($match[4])
 		{
 			$dateformat .= ' H:i';
 			$timestamp = mktime($match[5], $match[6], 0, $match[2], $match[3], $match[1]);
@@ -155,12 +155,12 @@
 
 			// Add configurable bookingfrontend template search path.
 			// This is being done here in booking because ui-classes in bookingfrontend inherit either directly or indirectly from this class.
-			if(strlen($this->config->config_data['customtemplate']))
+			if (strlen($this->config->config_data['customtemplate']))
 			{
 				array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $this->config->config_data['customtemplate']);
 			}
 
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$GLOBALS['phpgw']->translation->add_app('booking');
 			}
@@ -197,10 +197,10 @@
 
 		public static function process_booking_unauthorized_exceptions()
 		{
-			if(!self::$old_exception_handler)
+			if (!self::$old_exception_handler)
 			{
 				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
-				if(!self::$old_exception_handler)
+				if (!self::$old_exception_handler)
 				{
 					//The exception handler of phpgw has probably not been activated,
 					//so taking that as a hint to not enable any of our own either.
@@ -209,21 +209,21 @@
 			}
 		}
 
-		public static function handle_booking_unauthorized_exception(Exception $e)
+		public static function handle_booking_unauthorized_exception( Exception $e )
 		{
-			if($e instanceof booking_unauthorized_exception)
+			if ($e instanceof booking_unauthorized_exception)
 			{
 				$message			 = htmlentities('HTTP/1.0 401 Unauthorized to ' . $e->get_operation(), null, self::encoding());
 				$exception_message	 = $e->getMessage();
 
-				if(!empty($exception_message))
+				if (!empty($exception_message))
 					$message .= ' - ' . htmlentities($exception_message, null, self::encoding());
 
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else
 			{
-				if(self::$old_exception_handler)
+				if (self::$old_exception_handler)
 				{
 					call_user_func(self::$old_exception_handler, $e);
 				}
@@ -240,9 +240,9 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public function link($data)
+		public function link( $data )
 		{
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
 			}
@@ -252,35 +252,39 @@
 			}
 		}
 
-		public function redirect($link_data)
+		public function redirect( $link_data )
 		{
 			$this->store_flash_msgs();
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
 				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
+			}
 			else
+			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
+		}
 
-		public function create_error_stack($errors = array())
+		public function create_error_stack( $errors = array() )
 		{
 			return CreateObject('booking.errorstack', $errors);
 		}
 
-		public function flash_form_errors($errors)
+		public function flash_form_errors( $errors )
 		{
 			$error_stack		 = $this->create_error_stack($errors);
 			$this->flash_msgs	 = $error_stack->to_flash_error_msgs();
 		}
 
-		public function render_template($files, $data)
+		public function render_template( $files, $data )
 		{
 			parent::render_template_xsl($files, $data);
 		}
 
-		public function send_file($file_path, $options = array())
+		public function send_file( $file_path, $options = array() )
 		{
-			if(!is_readable($file_path))
+			if (!is_readable($file_path))
 			{
 				throw new InvalidArgumentException('File is not readable');
 			}
@@ -309,9 +313,9 @@
 			exit;
 		}
 
-		public function check_active($url)
+		public function check_active( $url )
 		{
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$activate = extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
@@ -319,19 +323,19 @@
 			}
 		}
 
-		protected static function get_file_type_from_extension($file, $defaultType = 'application/octet-stream')
+		protected static function get_file_type_from_extension( $file, $defaultType = 'application/octet-stream' )
 		{
-			if(false === ($extension	 = (false === $pos		 = strrpos($file, '.')) ? false : substr($file, $pos + 1)))
+			if (false === ($extension = (false === $pos = strrpos($file, '.')) ? false : substr($file, $pos + 1)))
 			{
 				return $defaultType;
 			}
 
-			if(strlen($extension) == 0)
+			if (strlen($extension) == 0)
 			{
 				return $defaultType;
 			}
 
-			switch($extension)
+			switch ($extension)
 			{
 				case 'ez': return 'application/andrew-inset';
 				case 'base64': return 'application/x-word';
@@ -703,10 +707,10 @@
 			}
 		}
 
-		public function adddatetimepicker($type = 'datetime')
+		public function adddatetimepicker( $type = 'datetime' )
 		{
 			phpgwapi_jquery::load_widget('datepicker');
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$theme = 'humanity';
 			}
@@ -717,7 +721,7 @@
 //			$theme = 'ui-lightness';
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 
-			switch($type)
+			switch ($type)
 			{
 				case 'datetime':
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
@@ -739,15 +743,15 @@
 			$lang_from			 = lang('from');
 			$lang_to			 = lang('to');
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$html = 'var html = "<div class=\'date-container\'>"+
                             "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
                             "<dt><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label></dt>"+
-                            "<dd><input class=\'new_datepicker time\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+                            "<dd><input class=\'new_datepicker time\' readonly=\'readonly\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
                             "</input></dd>"+
                             "<dt><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label></dt>"+
-                            "<dd><input class=\'new_datepicker time\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+                            "<dd><input class=\'new_datepicker time\' readonly=\'readonly\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
                             "</input></dd>"+
                         "</div>"';
 			}
@@ -757,12 +761,12 @@
 						"<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+							"<input class=\'new_datepicker time pure-input-2-3\' readonly=\'readonly\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
 							"</input>"+
 						"</div>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+							"<input class=\'new_datepicker time pure-input-2-3\' readonly=\'readonly\' name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
 							"</input>"+
 						"</div>"+
 				 	"</div>"';

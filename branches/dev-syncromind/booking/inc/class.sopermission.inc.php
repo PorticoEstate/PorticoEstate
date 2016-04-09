@@ -38,7 +38,7 @@
 				)
 			);
 
-			if(is_array($object_relations = $this->build_object_relations()))
+			if (is_array($object_relations = $this->build_object_relations()))
 			{
 				$table_def = array_merge($table_def, $object_relations);
 			}
@@ -69,19 +69,19 @@
 			);
 		}
 
-		function read($params)
+		function read( $params )
 		{
 			$params['filters']['object_type'] = $this->get_object_type();
 			return parent::read($params);
 		}
 
-		function add($entry)
+		function add( $entry )
 		{
 			$entry['object_type'] = $this->get_object_type();
 			return parent::add($entry);
 		}
 
-		function update($entry)
+		function update( $entry )
 		{
 			$entry['object_type'] = $this->get_object_type();
 			return parent::update($entry);
@@ -97,15 +97,15 @@
 			return $this->object_type;
 		}
 
-		public function read_object($object_id)
+		public function read_object( $object_id )
 		{
 			$object_so = CreateObject(sprintf('booking.so%s', $this->get_object_type()));
 			return $object_so->read_single($object_id);
 		}
 
-		protected function doValidate($entity, booking_errorstack $errors)
+		protected function doValidate( $entity, booking_errorstack $errors )
 		{
-			if(!$this->validate_uniqueness($entity, 'subject_id', 'role', 'object_type', 'object_id'))
+			if (!$this->validate_uniqueness($entity, 'subject_id', 'role', 'object_type', 'object_id'))
 			{
 				$errors['global'] = lang('Permission already exists');
 			}

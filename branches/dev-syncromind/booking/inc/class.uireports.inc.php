@@ -55,7 +55,7 @@
 			self::set_active_menu('booking::reportcenter::add_generic');
 			$errors	 = array();
 			$report	 = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
 				$activity_id			 = phpgw::get_var('activity_id', 'int');
@@ -85,16 +85,16 @@
 				$from_							 = phpgwapi_datetime::date_to_timestamp($report['start_date']);
 				$to_							 = phpgwapi_datetime::date_to_timestamp($report['end_date']);
 
-				if($report['all_buildings'] && (($to_ - $from_) > 24 * 3600 * 31))
+				if ($report['all_buildings'] && (($to_ - $from_) > 24 * 3600 * 31))
 				{
 					$errors[] = lang('Maximum 1 month for all buildings');
 				}
 
 				$report_type = phpgw::get_var('report_type');
 
-				if(!$errors)
+				if (!$errors)
 				{
-					switch($report_type)
+					switch ($report_type)
 					{
 						case 'participants_per_agegroupe':
 							$this->get_participants_per_agegroupe($report);
@@ -111,13 +111,13 @@
 					}
 				}
 			}
-			if($errors)
+			if ($errors)
 			{
 				$errors[] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
 
 
-			foreach($errors as $error)
+			foreach ($errors as $error)
 			{
 				phpgwapi_cache::message_set($error, 'error');
 			}
@@ -162,7 +162,7 @@
 				),
 			);
 
-			foreach($report['variables_vertical'] as &$entry)
+			foreach ($report['variables_vertical'] as &$entry)
 			{
 				$entry['selected'] = $entry['id'] == $report['variable_vertical'] ? 1 : 0;
 			}
@@ -188,12 +188,12 @@
 		 *
 		 * @param type $data
 		 */
-		public function get_cover_ratio($data)
+		public function get_cover_ratio( $data )
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
 			$resources = array();
-			if($data['all_buildings'])
+			if ($data['all_buildings'])
 			{
 				$sql = "SELECT DISTINCT bb_building_resource.resource_id FROM bb_building"
 				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
@@ -202,7 +202,7 @@
 				. " AND bb_resource.active = 1"
 				. " AND bb_building.activity_id IN (" . implode(',', $data['activity_ids']) . ')';
 				$db->query($sql);
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$resources[] = $db->f('resource_id');
 				}
@@ -232,7 +232,7 @@
 			$time_in			 = mktime((int)$data['start_hour'], (int)$data['start_minute']);
 			$time_out			 = mktime((int)$data['end_hour'], (int)$data['end_minute']);
 			$candidates			 = array();
-			foreach($period as $dt)
+			foreach ($period as $dt)
 			{
 
 				$check_date	 = $dt->format($db_dateformat);
@@ -254,7 +254,7 @@
 				. " AND sb.wday = ANY (string_to_array('{$weekdays_string}', ',')::int4[])";
 
 				$db->query($sql);
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$candidates[$check_date][] = array(
 						'date'			 => $check_date,
@@ -274,9 +274,9 @@
 
 			unset($check_date);
 			$ret = array();
-			foreach($candidates as $check_date => &$data_set)
+			foreach ($candidates as $check_date => &$data_set)
 			{
-				foreach($data_set as &$entry)
+				foreach ($data_set as &$entry)
 				{
 
 					$sql		 = "SELECT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (bo.to_ - bo.from_)) as timespan,
@@ -315,16 +315,16 @@
 					$timespan	 = 0;
 					$db->query($sql);
 
-					if($data['start_hour'] && $data['end_hour'])
+					if ($data['start_hour'] && $data['end_hour'])
 					{
 						$Overlap				 = new OverlapCalculator($time_in, $time_out);
 						$entry['boundary_from']	 = date('H:i', $time_in);
 						$entry['boundary_to']	 = date('H:i', $time_out);
 					}
 
-					while($db->next_record())
+					while ($db->next_record())
 					{
-						if($data['start_hour'] && $data['end_hour'])
+						if ($data['start_hour'] && $data['end_hour'])
 						{
 							$from_	 = $db->f('from_');
 							$to_	 = $db->f('to_');
@@ -339,7 +339,7 @@
 						}
 					}
 
-					if($data['start_hour'] && $data['end_hour'])
+					if ($data['start_hour'] && $data['end_hour'])
 					{
 						$timespan				 = $Overlap->getOverlap();
 						$entry['cover_ratio']	 = round((($timespan / ($time_out - $time_in)) * 100), 2, PHP_ROUND_HALF_UP);
@@ -352,7 +352,7 @@
 				}
 			}
 
-			if($ret)
+			if ($ret)
 			{
 				$bocommon = CreateObject('property.bocommon');
 				$bocommon->download($ret, array_keys($ret[0]), array_keys($ret[0]));
@@ -360,14 +360,14 @@
 			}
 		}
 
-		public function get_participants_per_agegroupe($data)
+		public function get_participants_per_agegroupe( $data )
 		{
 
 			$output_type = 'XHTML';//'XLS';
 			$db			 = & $GLOBALS['phpgw']->db;
 
 			$resources = array();
-			if($data['all_buildings'])
+			if ($data['all_buildings'])
 			{
 				$sql = "SELECT DISTINCT bb_building_resource.resource_id FROM bb_building"
 				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
@@ -376,7 +376,7 @@
 				. " AND bb_resource.active = 1"
 				. " AND bb_building.activity_id IN (" . implode(',', $data['activity_ids']) . ')';
 				$db->query($sql);
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$resources[] = $db->f('resource_id');
 				}
@@ -390,7 +390,7 @@
 			$from_	 = date($db->date_format(), phpgwapi_datetime::date_to_timestamp($data['start_date']));
 			$to_	 = date($db->date_format(), phpgwapi_datetime::date_to_timestamp($data['end_date']));
 
-			switch($data['variable_vertical'])
+			switch ($data['variable_vertical'])
 			{
 				case 'resource':
 					$jasper_parameters	 = sprintf("'BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_RESOURCES|%s;BK_WEEKDAYS|%s'", $from_, $to_, implode(",", $resources), implode(',', $data['weekdays']));
@@ -412,20 +412,20 @@
 			}
 
 
-			if(!count($errors))
+			if (!count($errors))
 			{
 				$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
 				try
 				{
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 					$errors[] = $e->getMessage();
 				}
 			}
 
-			foreach($errors as $error)
+			foreach ($errors as $error)
 			{
 				phpgwapi_cache::message_set($error, 'error');
 			}
@@ -436,16 +436,16 @@
 		 * @param type $data
 		 * @return string
 		 */
-		private function get_freetime($data)
+		private function get_freetime( $data )
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
 			$buildings = array();
-			if($data['all_buildings'])
+			if ($data['all_buildings'])
 			{
 				$sql = "SELECT id FROM bb_building WHERE active = 1";
 				$db->query($sql);
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$buildings[] = $db->f('id');
 				}
@@ -475,12 +475,12 @@
 				AND al.to_ <= '{$to}'"
 			. " AND br.activity_id IN ({$activity_ids}) ";
 
-			if($buildings)
+			if ($buildings)
 			{
 				$sql .= "and building_id in (" . $buildings . ") ";
 			}
 
-			if($weekdays)
+			if ($weekdays)
 			{
 				$sql .= "and EXTRACT(DOW FROM al.from_) in ({$weekdays}) ";
 			}
@@ -512,14 +512,14 @@
 			$organized_fields	 = ExecMethod('booking.custom_fields.get_fields', $location);
 			$variable_vertical	 = '';
 			$variable_horizontal = '';
-			foreach($organized_fields as $group)
+			foreach ($organized_fields as $group)
 			{
-				if($group[id] > 0)
+				if ($group[id] > 0)
 				{
 					$header_level = $group['level'] + 2;
-					if(isset($group['attributes']) && is_array($group['attributes']))
+					if (isset($group['attributes']) && is_array($group['attributes']))
 					{
-						foreach($group['attributes'] as $attribute)
+						foreach ($group['attributes'] as $attribute)
 						{
 							$variable_vertical .= <<<HTML
 
@@ -557,7 +557,7 @@ HTML;
 			$errors		 = array();
 			$buildings	 = $this->building_bo->read();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$to		 = phpgw::get_var('to', 'string');
 				$from	 = phpgw::get_var('from', 'string');
@@ -568,12 +568,12 @@ HTML;
 				$output_type	 = phpgw::get_var('otype', 'string');
 				$building_list	 = phpgw::get_var('building');
 
-				if(!count($building_list))
+				if (!count($building_list))
 				{
 					$errors[] = lang('No buildings selected');
 				}
 
-				if(!count($errors))
+				if (!count($errors))
 				{
 					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"", $from_, $to_, implode(",", $building_list));
 					// DEBUG
@@ -586,7 +586,7 @@ HTML;
 					{
 						$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
 						$errors[] = $e->getMessage();
 					}
@@ -623,7 +623,7 @@ HTML;
 			$buildings	 = $this->building_bo->read();
 
 			$show = '';
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$to		 = phpgw::get_var('to', 'string');
 				$from	 = phpgw::get_var('from', 'string');
@@ -637,7 +637,7 @@ HTML;
 				);
 
 				$counter = 0;
-				foreach($allocations['results'] as &$allocation)
+				foreach ($allocations['results'] as &$allocation)
 				{
 					$temp						 = array();
 					$temp[]						 = array('from_', $allocation['from_']);
@@ -651,7 +651,7 @@ HTML;
 					$allocation['event_params']	 = json_encode($temp);
 					$counter++;
 				}
-				if(count($allocations['results']) == 0)
+				if (count($allocations['results']) == 0)
 				{
 					$show		 = 'gui';
 					$errors[]	 = lang('no records found.');
@@ -682,7 +682,7 @@ HTML;
 				'from'			 => $from, 'to'			 => $to, 'buildings'		 => $buildings['results'], 'allocations'	 => $allocations['results']));
 		}
 
-		private function get_free_allocations($buildings, $from, $to, $weekdays)
+		private function get_free_allocations( $buildings, $from, $to, $weekdays )
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
@@ -700,10 +700,10 @@ HTML;
 				AND al.from_ >= '" . $from . " 00:00:00'
 				AND al.to_ <= '" . $to . " 23:59:59' ";
 
-			if($buildings)
+			if ($buildings)
 				$sql .= "and building_id in (" . $buildings . ") ";
 
-			if($weekdays)
+			if ($weekdays)
 				$sql .= "and EXTRACT(DOW FROM al.from_) in (" . $weekdays . ") ";
 
 			$sql .= "order by building_name, from_, to_, resource_name";
@@ -744,9 +744,9 @@ HTML;
 		 * @param DateTime|int $timeIn
 		 * @param DateTime|int $timeOut
 		 */
-		public function __construct($timeIn, $timeOut)
+		public function __construct( $timeIn, $timeOut )
 		{
-			if($timeIn instanceOf DateTime)
+			if ($timeIn instanceOf DateTime)
 			{
 				$this->timeIn = $timeIn->getTimestamp();
 			}
@@ -755,7 +755,7 @@ HTML;
 				$this->timeIn = $timeIn;
 			}
 
-			if($timeOut instanceOf DateTime)
+			if ($timeOut instanceOf DateTime)
 			{
 				$this->timeOut = $timeOut->getTimestamp();
 			}
@@ -769,14 +769,14 @@ HTML;
 		 * @param DateTime|int $periodStart
 		 * @param DateTime|int $periodEnd
 		 */
-		public function addOverlapFrom($periodStart, $periodEnd)
+		public function addOverlapFrom( $periodStart, $periodEnd )
 		{
-			if($periodStart instanceOf DateTime)
+			if ($periodStart instanceOf DateTime)
 			{
 				$periodStart = $periodStart->getTimestamp();
 			}
 
-			if($periodEnd instanceOf DateTime)
+			if ($periodEnd instanceOf DateTime)
 			{
 				$periodEnd = $periodEnd->getTimestamp();
 			}
@@ -789,24 +789,24 @@ HTML;
 		 * @param $periodEnd
 		 * @return int
 		 */
-		private function calculateOverlap($periodStart, $periodEnd)
+		private function calculateOverlap( $periodStart, $periodEnd )
 		{
-			if($periodStart >= $this->timeIn && $periodEnd <= $this->timeOut)
+			if ($periodStart >= $this->timeIn && $periodEnd <= $this->timeOut)
 			{
 				// The compared time range can be contained within borders of the source time range, so the over lap is the entire compared time range
 				return $periodEnd - $periodStart;
 			}
-			elseif($periodStart >= $this->timeIn && $periodStart <= $this->timeOut)
+			elseif ($periodStart >= $this->timeIn && $periodStart <= $this->timeOut)
 			{
 				// The compared time range starts after or at the source time range but also ends after it because it failed the condition above
 				return $this->timeOut - $periodStart;
 			}
-			elseif($periodEnd >= $this->timeIn && $periodEnd <= $this->timeOut)
+			elseif ($periodEnd >= $this->timeIn && $periodEnd <= $this->timeOut)
 			{
 				// The compared time range starts before the source time range and ends before the source end time
 				return $periodEnd - $this->timeIn;
 			}
-			elseif($this->timeIn > $periodStart && $this->timeOut < $periodEnd)
+			elseif ($this->timeIn > $periodStart && $this->timeOut < $periodEnd)
 			{
 				// The compared time range is actually wider than the source time range, so the overlap is the entirety of the source range
 				return $this->timeOut - $this->timeIn;

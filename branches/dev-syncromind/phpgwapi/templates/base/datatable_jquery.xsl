@@ -28,6 +28,10 @@
 
 
 <xsl:template name="datatable">
+	<script type="text/javascript">
+		var number_of_toolbar_items = 0;
+		var filter_selects = {};
+	</script>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
 	<div id="list_flash">
@@ -83,19 +87,17 @@
 		content: "\2212";
 		}
 	</style>
+	<div id="active_filters"></div>
 
 	<input class="toggle-box" id="header1" type="checkbox" />
 	<label for="header1">
-		<xsl:value-of select="php:function('lang', 'toolbar')"/>
+		<xsl:value-of select="php:function('lang', 'filter')"/>
 	</label>
 
-	<div id="toolbar">
-		<script type="text/javascript">
-			var number_of_toolbar_items = 0;
-		</script>
+	<div id="toolbar" class='dtable_custom_controls'>
 		<!--xsl:if test="item/text and normalize-space(item/text)"-->
 		<xsl:if test="item">
-			<table id="toolbar_table" class="pure-table">
+			<table id="toolbar_table" class="pure-table pure-table-horizontal">
 				<thead>
 					<tr>
 						<th>
@@ -212,7 +214,10 @@
 										<xsl:variable name="name">
 											<xsl:value-of select="name"/>
 										</xsl:variable>
-										<select id="{$name}" name="{$name}">
+										<script type="text/javascript">
+											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
+										</script>
+										<select id="{$name}" name="{$name}" width="250" style="width: 250px">
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
@@ -264,14 +269,6 @@
 												<xsl:value-of select="value"/>
 											</xsl:attribute>
 										</input>
-										<!--a href="{href}">
-											<xsl:if test="onclick">
-												<xsl:attribute name="onclick">
-													<xsl:value-of select="onclick"/>
-												</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="value"/>
-										</a-->
 									</td>
 								</xsl:when>
 								<xsl:when test="type = 'hidden'">
@@ -337,7 +334,7 @@
 <xsl:template match="form/list_actions">
 	<form id="list_actions_form" method="POST">
 		<!-- Form action is set by javascript listener -->
-		<div id="list_actions" class='yui-skin-sam'>
+		<div id="list_actions">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<xsl:for-each select="item">
@@ -540,6 +537,11 @@
 				},
 			</xsl:if>
 			<xsl:choose>
+				<xsl:when test="dir !=''">
+					dir: "<xsl:value-of select="dir"/>",
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
 				<xsl:when test="editor">
 					<xsl:if test="editor =0">
 						editor: false,
@@ -576,6 +578,11 @@
 		var oTable = null;
 		$(document).ready(function() {
 		var ajax_url = '<xsl:value-of select="source"/>';
+		var order_def = [];
+		<xsl:if test="sorted_by/key">
+			order_def.push([<xsl:value-of select="sorted_by/key"/>, '<xsl:value-of select="sorted_by/dir"/>']);
+		</xsl:if>
+
 		var download_url = '<xsl:value-of select="download"/>';
 		var exclude_colvis = [];
 		var editor_cols = [];
@@ -583,7 +590,9 @@
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
 		var select_all = '<xsl:value-of select="select_all"/>';
 		var initial_search = {"search": "<xsl:value-of select="query"/>" };
-
+		var action_def = null;
+		var contextMenuItems={};
+		var InitContextMenu=false
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -594,7 +603,7 @@
 				//										text: function ( dt, button, config ) {
 				//											return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
 				//										}
-				//									},
+				//},
 				<xsl:choose>
 					<xsl:when test="new_item">
 						{
@@ -638,13 +647,7 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-				{
-					extend: 'copy',
-					text: "<xsl:value-of select="php:function('lang', 'copy')"/>"
-				},
-				'csvFlash',
-				'excelFlash',
-				'pdfFlash'
+				'excelHtml5',
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
@@ -680,20 +683,14 @@
 						}
 					</xsl:when>
 				</xsl:choose>
+				];
+				var action_def = [
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
-						<xsl:choose>
-							<xsl:when test="ungroup_buttons=''">
-								//													,{
-								//														extend: "div",
-								//														text: "Knapper nedenfor gjelder pr valgt element "
-								//													}
-							</xsl:when>
-						</xsl:choose>
 						<xsl:for-each select="//datatable/actions">
 							<xsl:choose>
 								<xsl:when test="type = 'custom'">
-									,{
+									{
 									text: "<xsl:value-of select="text"/>",
 									<xsl:choose>
 										<xsl:when test="className">
@@ -704,7 +701,8 @@
 											className: 'record',
 										</xsl:otherwise>
 									</xsl:choose>
-									action: function (e, dt, node, config) {
+										action: function (e, dt, node, config)
+										{
 									<xsl:if test="confirm_msg">
 										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
 										var r = confirm(confirm_msg);
@@ -712,14 +710,13 @@
 										return false;
 										}
 									</xsl:if>
+										fnSetSelected(this, dt);
 									<xsl:value-of select="custom_code"/>
 									}
-
-									}
-									<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
+									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									,{
+									{
 									text: "<xsl:value-of select="text"/>",
 									<xsl:choose>
 										<xsl:when test="className">
@@ -732,6 +729,8 @@
 									</xsl:choose>
 									action: function (e, dt, node, config) {
 									var receiptmsg = [];
+											fnSetSelected(this, dt);
+
 									var selected = fnGetSelected();
 									var numSelected = selected.length;
 
@@ -803,8 +802,7 @@
 									n++;
 									}
 									}
-									}
-									<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
+									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:for-each>
@@ -819,7 +817,27 @@
 						var group_buttons = false;
 					</xsl:otherwise>
 				</xsl:choose>
+	<![CDATA[
 
+			var item_name = '';
+			var contextMenuItem = {};
+			for(i=0;i < action_def.length;i++)
+			{
+				button_def.push(action_def[i]);
+				if( typeof(action_def[i]['className']) != 'undefined' && action_def[i]['className'] == 'record')
+				{
+					contextMenuItems[i] = {name:action_def[i]['text'], callback:action_def[i]['action']};
+					InitContextMenu = true;
+				}
+			}
+
+				if(button_def.length > 10)
+				{
+					group_buttons = true;
+				}
+
+				var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+	]]>
 				if($(document).width() &lt; 1000)
 				{
 				group_buttons = true;
@@ -827,17 +845,21 @@
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
 
+				if(isChrome == true)
+				{
+					group_buttons = false;
+				}
+
 				if(group_buttons === true)
 				{
 				JqueryPortico.buttons = [
 				{
 				extend: 'collection',
-				text: "<xsl:value-of select="php:function('lang', 'collection')"/>",
+							text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
 				collectionLayout: 'three-column',
 				buttons: button_def
 				}
 				];
-
 				}
 				else
 				{
@@ -869,6 +891,19 @@
 					}
 				}
 
+			if(order_def.length == 0)
+			{
+				for(i=0;i < JqueryPortico.columns.length;i++)
+				{
+					if (JqueryPortico.columns[i]['orderable'] === true && typeof(JqueryPortico.columns[i]['dir']) != 'undefined')
+					{
+						var dir = JqueryPortico.columns[i]['dir'] || "desc";
+						order_def.push([i, dir]);
+						break;
+					}
+				}
+			}
+
 				if(JqueryPortico.buttons)
 				{
 //					var sDom_def = 'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">';
@@ -881,6 +916,36 @@
 				}
 
 				$(document).ready(function() {
+
+			/*
+			* For namespacing the state
+			*/
+			var table_url = JqueryPortico.parseURL(window.location.href);
+			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
+
+			//uiocation
+			if(typeof(table_url.searchObject.type_id) != 'undefined')
+			{
+				menuaction += '_type_id' + table_url.searchObject.type_id;
+			}
+
+			//uientity
+			if(typeof(table_url.searchObject.entity_id) != 'undefined' && typeof(table_url.searchObject.cat_id) != 'undefined')
+			{
+				menuaction += '_entity_id' + table_url.searchObject.entity_id + '_cat_id' + table_url.searchObject.cat_id;
+			}
+
+			//uigeneric
+			if(typeof(table_url.searchObject.type) != 'undefined' && menuaction.search("uigeneric") > 0)
+			{
+				menuaction += '_type_' + table_url.searchObject.type;
+			}
+
+			/*
+			 * Find and assign actions to filters
+			 */
+			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
+//console.log(oControls);
 					oTable = $('#datatable-container').dataTable({
 						paginate: disablePagination ? false : true,
 						processing: true,
@@ -888,27 +953,121 @@
 						responsive: true,
 						select: select_all ? { style: 'multi' } : true,
 						deferRender: true,
-						ajax: {
+				ajax:{
 							url: ajax_url,
-							data: {},
+					data:{},
+					dataSrc: function ( json ) {
+						if (typeof(json.sessionExpired) != 'undefined' && json.sessionExpired == true)
+						{
+							window.alert('sessionExpired - please log in');
+							JqueryPortico.lightboxlogin();//defined in common.js
+		//					oTable.api().ajax.reload( null, false ); // user paging is not reset on reload
+						}
+						else
+						{
+							return json.data;
+						}
+					  },
 							type: 'POST'
 						},
+				fnStateSaveParams: 	function ( oSettings, sValue ) {
+					//Save custom filters
+					var temp = {};
+					temp[menuaction] = {}
+					oControls.each(function() {
+						if ( $(this).attr('name') )
+						{
+							sValue[ $(this).attr('name') ] = $(this).val().replace('"', '"');
+							temp[ $(this).attr('name') ] = $(this).val().replace('"', '"');
+						}
+					});
+					for (var attrname in sValue)
+					{
+						temp[attrname] = sValue[attrname];
+					}
+					localStorage.setItem('state_' + menuaction, JSON.stringify(temp));
+					return sValue;
+				},
+				fnStateLoadParams: function ( oSettings, oData ) {
+					//Load custom filters
+					var retrievedObject = localStorage.getItem('state_' + menuaction);
+					if(typeof(retrievedObject) != 'undefined')
+					{
+						try
+						{
+							var params = JSON.parse(retrievedObject);
+						}
+						catch(err)
+						{
+							params = {}
+						}
+					}
+				//	console.log(oData);
+				//	console.log(params);
+					oControls.each(function() {
+						var oControl = $(this);
+						$.each(params, function(index, value) {
+							if ( index == oControl.attr('name') )
+							{
+								oControl.val( value );
+							}
+						});
+					});
+					return true;
+				},
 						fnServerParams: function ( aoData ) {
-							if(typeof(aoData.order) != 'undefined')
+					if(typeof(aoData.order[0]) != 'undefined')
 							{
 								var column = aoData.order[0].column;
 								var dir = aoData.order[0].dir;
 								var column_to_keep = aoData.columns[column];
 								delete aoData.columns;
 								aoData.columns = {};
+						if(JqueryPortico.columns[column]['orderable'] == true)
+						{
 								aoData.columns[column] = column_to_keep;
 							}
+					}
+					active_filters_html = [];
+					var select = null;
+					for (var i in filter_selects)
+					{
+						select = $("#" + filter_selects[i]);
+						var select_name = select.prop("name");
+						var select_value = select.val();
+						aoData[select_name] = select_value;
+
+						if(select_value && select_value !=0 )
+						{
+							active_filters_html.push(i);
+						}
+					}
+//					console.log(oControls);
+					oControls.each(function()
+					{
+						if ( $(this).attr('name') )
+						{
+							value = $(this).val().replace('"', '"');
+							aoData[ $(this).attr('name') ] = value;
+						}
+
+//						if(value && value !=0 )
+//						{
+//							active_filters_html.push($(this).attr('name'));
+//						}
+					});
+
+					if(active_filters_html.length > 0)
+					{
+						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
+					}
+
+				 },
+				fnCreatedRow  : function( nRow, aData, iDataIndex ){
 						},
 						fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 							if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
 							{
-								// nRow.addClass(''),
-								// console.log(nRow),
 								$('td', nRow).addClass('priority' + aData['priority']);
 							}
 						},
@@ -957,6 +1116,7 @@
 						stateDuration: -1, //sessionstorage
 						tabIndex: 1,
 						"search": initial_search,
+				"order": order_def,
 						buttons: JqueryPortico.buttons
 					});
 
@@ -968,7 +1128,6 @@
 							var checkbox = row.find('input[type="checkbox"]');
 
 							if(checkbox && checkbox.hasClass('mychecks'))
-//							if(select_all && checkbox)
 							{
 								if($(this).hasClass('selected'))
 								{
@@ -980,6 +1139,14 @@
 								}
 							}
 					   } );
+
+			if(InitContextMenu === true)
+			{
+				$('#datatable-container').contextMenu({
+					  selector: 'tr',
+					   items: contextMenuItems,
+				});
+			}
 
 					  if(number_of_toolbar_items < 4)
 					  {
@@ -1045,7 +1212,8 @@
 				filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
 				});
 				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
-				if ($(this).val() == ''){
+						if ($(this).val() == '')
+						{
 				$('#filter_<xsl:value-of select="name"/>_id').val('');
 				filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
 				}
@@ -1066,6 +1234,33 @@
 					}
 				}
 				return aReturn;
+			}
+
+			function fnSetSelected( row , dt)
+			{
+				var table = oTable.DataTable();
+				if(typeof(dt.trigger) != 'undefined' && dt.trigger == 'right')
+				{
+					var aTrs = oTable.fnGetNodes();
+					for ( var i=0 ; i < aTrs.length ; i++ )
+					{
+						if ( $(aTrs[i]).hasClass('selected') )
+						{
+							table.row( i ).deselect();
+						}
+					}
+				}
+
+				if(typeof(row[0]) == 'undefined')
+				{
+					return false;
+				}
+
+				var sectionRowIndex = row[0].sectionRowIndex;
+				if(typeof(sectionRowIndex) != 'undefined')
+				{
+					var selected = table.row( sectionRowIndex ).select();
+				}
 			}
 
 			function execute_ajax(requestUrl, callback, data,type, dataType)

@@ -79,13 +79,13 @@
 
 		function index()
 		{
-			if(phpgw::get_var('save_component'))
+			if (phpgw::get_var('save_component'))
 			{
 				//add component to control using component item ID
 				$items_checked	 = array();
 				$items			 = phpgw::get_var('values_assign');
 				$item_arr		 = explode('|', $items);
-				foreach($item_arr as $item)
+				foreach ($item_arr as $item)
 				{
 					$items_checked[] = explode(';', $item);
 				}
@@ -93,12 +93,12 @@
 
 				$control_group_id = phpgw::get_var('control_group_id');
 				//var_dump($control_id);
-				if($control_group_id != null && is_numeric($control_group_id))
+				if ($control_group_id != null && is_numeric($control_group_id))
 				{
 					//add chosen component to control
-					foreach($items_checked as $it)
+					foreach ($items_checked as $it)
 					{
-						if(!$this->so_control_group->exist_component_control_group($control_group_id, $it[0]))
+						if (!$this->so_control_group->exist_component_control_group($control_group_id, $it[0]))
 						{
 							$this->so_control_group->add_component_to_control_group($control_group_id, $it[0]);
 						}
@@ -109,7 +109,7 @@
 			}
 			else
 			{
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return $this->get_component();
 				}
@@ -124,7 +124,7 @@
 					'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 				array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 				$control_areas_array = array();
-				foreach($control_areas['cat_list'] as $cat_list)
+				foreach ($control_areas['cat_list'] as $cat_list)
 				{
 					$control_areas_array[] = array
 						(
@@ -181,7 +181,7 @@
 		{
 			$control_group_list = $this->so_control_group->get_control_group_component();
 
-			foreach($control_group_list as $control_group)
+			foreach ($control_group_list as $control_group)
 			{
 				$control_group['bim_name']	 = $this->so_control->getBimItemAttributeValue($control['bim_item_guid'], 'description');
 				$results['results'][]		 = $control_group;
@@ -217,14 +217,14 @@
 
 			$components_arr = array();
 
-			foreach($entity_list as $entry)
+			foreach ($entity_list as $entry)
 			{
 				//pr hovedregister...
 				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id']));
 
 				$component_arr = array();
 
-				foreach($cat_list as $category)
+				foreach ($cat_list as $category)
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$category['entity_id']}.{$category['id']}");
 
@@ -235,7 +235,7 @@
 			}
 
 			$results = array();
-			foreach($components_arr as $component)
+			foreach ($components_arr as $component)
 			{
 				$component['checked']	 = false;
 				$component['test']		 = "test";
@@ -253,7 +253,7 @@
 			return $this->yui_results($results);
 		}
 
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			unset($value['query_location']);
 
@@ -270,9 +270,9 @@
 		public function get_component_types_by_category()
 		{
 			$category = phpgw::get_var('ifc');
-			if($ifc != null)
+			if ($ifc != null)
 			{
-				if($ifc = 1)
+				if ($ifc = 1)
 				{
 					$ifc = true;
 				}
@@ -283,7 +283,7 @@
 			}
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
-			if(count($bim_types) > 0)
+			if (count($bim_types) > 0)
 			{
 				return json_encode($bim_types);
 			}

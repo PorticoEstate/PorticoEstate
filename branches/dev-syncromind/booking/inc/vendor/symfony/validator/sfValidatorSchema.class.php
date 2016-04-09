@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorSchema represents an array of fields.
  *
  * A field is a named validator.
@@ -16,10 +15,11 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
-{
+	class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
+	{
+
   protected
     $fields        = array(),
     $preValidator  = null,
@@ -39,7 +39,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @see sfValidatorBase
    */
-  public function __construct($fields = null, $options = array(), $messages = array())
+		public function __construct( $fields = null, $options = array(), $messages = array() )
   {
     if (is_array($fields))
     {
@@ -73,7 +73,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addOption('allow_extra_fields', false);
     $this->addOption('filter_extra_fields', true);
@@ -85,7 +85,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * @see sfValidatorBase
    */
-  public function clean($values)
+		public function clean( $values )
   {
     return $this->doClean($values);
   }
@@ -93,7 +93,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($values)
+		protected function doClean( $values )
   {
     if (is_null($values))
     {
@@ -110,7 +110,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     $errorSchema = new sfValidatorErrorSchema($this);
 
     // check that post_max_size has not been reached
-    if (isset($_SERVER['CONTENT_LENGTH']) && (int) $_SERVER['CONTENT_LENGTH'] > $this->getBytes(ini_get('post_max_size')))
+			if (isset($_SERVER['CONTENT_LENGTH']) && (int)$_SERVER['CONTENT_LENGTH'] > $this->getBytes(ini_get('post_max_size')))
     {
       $errorSchema->addError(new sfValidatorError($this, 'post_max_size'));
 
@@ -160,7 +160,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
       {
         $clean[$name] = null;
 
-        $errorSchema->addError($e, (string) $name);
+					$errorSchema->addError($e, (string)$name);
       }
     }
 
@@ -176,7 +176,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
       {
         $clean[$name] = null;
 
-        $errorSchema->addError($e, (string) $name);
+					$errorSchema->addError($e, (string)$name);
       }
     }
 
@@ -214,7 +214,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @throws sfValidatorError
    */
-  public function preClean($values)
+		public function preClean( $values )
   {
     if (is_null($validator = $this->getPreValidator()))
     {
@@ -236,7 +236,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @throws sfValidatorError
    */
-  public function postClean($values)
+		public function postClean( $values )
   {
     if (is_null($validator = $this->getPostValidator()))
     {
@@ -251,7 +251,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
-  public function setPreValidator(sfValidatorBase $validator)
+		public function setPreValidator( sfValidatorBase $validator )
   {
     $this->preValidator = clone $validator;
   }
@@ -271,7 +271,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
-  public function setPostValidator(sfValidatorBase $validator)
+		public function setPostValidator( sfValidatorBase $validator )
   {
     $this->postValidator = clone $validator;
   }
@@ -293,7 +293,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @return bool true if the schema has a field with the given name, false otherwise
    */
-  public function offsetExists($name)
+		public function offsetExists( $name )
   {
     return isset($this->fields[$name]);
   }
@@ -305,7 +305,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @return sfValidatorBase The sfValidatorBase instance associated with the given name, null if it does not exist
    */
-  public function offsetGet($name)
+		public function offsetGet( $name )
   {
     return isset($this->fields[$name]) ? $this->fields[$name] : null;
   }
@@ -316,7 +316,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    * @param string          $name       The field name
    * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
-  public function offsetSet($name, $validator)
+		public function offsetSet( $name, $validator )
   {
     if (!$validator instanceof sfValidatorBase)
     {
@@ -331,7 +331,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    * @param string $name
    */
-  public function offsetUnset($name)
+		public function offsetUnset( $name )
   {
     unset($this->fields[$name]);
   }
@@ -349,7 +349,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     throw new Exception('Unable to convert a sfValidatorSchema to string.');
   }
@@ -372,7 +372,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     }
   }
 
-  protected function getBytes($value)
+		protected function getBytes( $value )
   {
     $value = trim($value);
     switch (strtolower($value[strlen($value) - 1]))
@@ -388,4 +388,4 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
 
     return $value;
   }
-}
+	}

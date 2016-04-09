@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorOr validates an input value if at least one validator passes.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorOr extends sfValidatorBase
-{
+	class sfValidatorOr extends sfValidatorBase
+	{
+
   protected
     $validators = array();
 
@@ -36,7 +36,7 @@ class sfValidatorOr extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  public function __construct($validators = null, $options = array(), $messages = array())
+		public function __construct( $validators = null, $options = array(), $messages = array() )
   {
     if ($validators instanceof sfValidatorBase)
     {
@@ -60,7 +60,7 @@ class sfValidatorOr extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->setMessage('invalid', null);
   }
@@ -70,7 +70,7 @@ class sfValidatorOr extends sfValidatorBase
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
-  public function addValidator(sfValidatorBase $validator)
+		public function addValidator( sfValidatorBase $validator )
   {
     $this->validators[] = $validator;
   }
@@ -88,7 +88,7 @@ class sfValidatorOr extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     $errors = array();
     foreach ($this->validators as $validator)
@@ -114,16 +114,16 @@ class sfValidatorOr extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     $validators = '';
     for ($i = 0, $max = count($this->validators); $i < $max; $i++)
     {
-      $validators .= "\n".$this->validators[$i]->asString($indent + 2)."\n";
+				$validators .= "\n" . $this->validators[$i]->asString($indent + 2) . "\n";
 
       if ($i < $max - 1)
       {
-        $validators .= str_repeat(' ', $indent + 2).'or';
+					$validators .= str_repeat(' ', $indent + 2) . 'or';
       }
 
       if ($i == $max - 2)
@@ -133,9 +133,7 @@ class sfValidatorOr extends sfValidatorBase
 
         if ($options || $messages)
         {
-          $validators .= sprintf('(%s%s)',
-            $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
-            $messages ? ', '.sfYamlInline::dump($messages) : ''
+						$validators .= sprintf('(%s%s)', $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
           );
         }
       }
@@ -143,4 +141,4 @@ class sfValidatorOr extends sfValidatorBase
 
     return sprintf("%s(%s%s)", str_repeat(' ', $indent), $validators, str_repeat(' ', $indent));
   }
-}
+	}

@@ -15,7 +15,7 @@
 		// The property location that this unit represents
 		protected $location;
 
-		public function __construct(int $id, $composite_id = -1, rental_property_location $location = null)
+		public function __construct( int $id, $composite_id = -1, rental_property_location $location = null )
 		{
 			parent::__construct($id);
 			$this->composite_id	 = (int)$composite_id;
@@ -23,19 +23,23 @@
 		}
 
 		public function get_composite_id()
-		{ return $this->composite_id;}
+		{
+			return $this->composite_id;
+		}
 
-		public function set_location($location)
+		public function set_location( $location )
 		{
 			$this->location = $location;
 		}
 
 		public function get_location()
-		{ return $this->location;}
+		{
+			return $this->location;
+		}
 
 		public function get_location_code()
 		{
-			if($this->location != null)
+			if ($this->location != null)
 			{
 				return $this->location->get_location_code();
 			}
@@ -58,7 +62,7 @@
 			$result['id']			 = $this->get_id();
 			$result['composite_id']	 = $this->get_composite_id();
 			$location				 = $this->get_location();
-			if($location != null)
+			if ($location != null)
 			{
 				$result = array_merge($result, $location->serialize());
 			}

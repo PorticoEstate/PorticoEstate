@@ -9,7 +9,6 @@
 	 * @package messenger
 	 * @version $Id: class.hook_helper.inc.php 8281 2011-12-13 09:24:03Z sigurdne $
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -25,7 +24,6 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	 * Hook helper
 	 *
@@ -33,18 +31,19 @@
 	 */
 	class messenger_hook_helper
 	{
+
 		/**
 		 * Add welkome message to new users
 		 *
 		 * @return void
 		 */
-		public function add_welkome_message($data)
+		public function add_welkome_message( $data )
 		{
 			$message['to']      = $data['account_lid'];
 			$message['subject'] = lang('Welcome');
 			$message['content'] = $data['message'];
 
 			$so = createobject('messenger.somessenger');
-			$so->send_message($message,True);
+			$so->send_message($message, True);
 		}
 	}

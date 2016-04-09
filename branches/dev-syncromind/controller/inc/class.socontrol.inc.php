@@ -47,7 +47,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol');
 			}
@@ -59,14 +59,14 @@
 		 * @param $control control object
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$control)
+		function add( &$control )
 		{
 			$title = $control->get_title();
 
 			$sql	 = "INSERT INTO controller_control (title) VALUES ('$title')";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Set the new control ID
 				$control->set_id($this->db->get_last_insert_id('controller_control', 'id'));
@@ -86,7 +86,7 @@
 		 * @param $control the control to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($control)
+		function update( $control )
 		{
 			$id = intval($control->get_id());
 
@@ -104,7 +104,7 @@
 
 			$result = $this->db->query('UPDATE controller_control SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				return $id;
 			}
@@ -125,7 +125,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_assigned_check_list_at_location($from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object")
+		public function get_assigned_check_list_at_location( $from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object" )
 		{
 			$user_id	 = (int)$user_id;
 			$repeat_type = (int)$repeat_type;
@@ -141,13 +141,13 @@
 			. " WHERE controller_check_list.assigned_to = {$user_id} AND status = 0";
 
 //_debug_array($sql);
-			if($repeat_type)
+			if ($repeat_type)
 			{
 //				$sql .= "AND controller_control.repeat_type = $repeat_type ";
 			}
 
 			//FIXME
-			if($completed)
+			if ($completed)
 			{
 				$sql .= " AND ( planned_date < $to_date AND controller_check_list.completed_date IS NULL) ";
 
@@ -163,7 +163,7 @@
 //_debug_array($sql);
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -178,7 +178,7 @@
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_assigned_to($this->unmarshal($user_id, 'int'));
 
-				if($return_type == "return_object")
+				if ($return_type == "return_object")
 				{
 					$check_list_array[] = $check_list;
 				}
@@ -203,7 +203,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_assigned_check_list_by_component($from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object")
+		public function get_assigned_check_list_by_component( $from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object" )
 		{
 			$repeat_type = $repeat_type;
 			$user_id	 = (int)$user_id;
@@ -220,13 +220,13 @@
 			. " AND controller_control_component_list.component_id = controller_check_list.component_id)"
 			. " WHERE controller_check_list.assigned_to = {$user_id} AND status = 0";
 
-			if($repeat_type)
+			if ($repeat_type)
 			{
 //				$sql .= "AND controller_control.repeat_type = $repeat_type ";
 			}
 
 			//FIXME
-			if($completed)
+			if ($completed)
 			{
 				$sql .= " AND ( planned_date < $to_date AND controller_check_list.completed_date IS NULL) ";
 
@@ -244,7 +244,7 @@
 
 			$check_list_array = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -261,7 +261,7 @@
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 
-				if($return_type == "return_object")
+				if ($return_type == "return_object")
 				{
 					$check_list_array[] = $check_list;
 				}
@@ -286,7 +286,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
+		public function get_controls_by_location( $location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0 )
 		{
 			$role_id	 = (int)$role_id;
 			$repeat_type = (int)$repeat_type;
@@ -299,12 +299,12 @@
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			//		$sql .= "WHERE cll.location_code = '$location_code' ";
 			$sql .= "WHERE cll.location_code LIKE '$location_code%' ";
-			if($repeat_type)
+			if ($repeat_type)
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
 
-			if($role_id)
+			if ($role_id)
 			{
 				$sql .= "AND c.responsibility_id = $role_id ";
 			}
@@ -315,7 +315,7 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$_location_code = $this->db->f('location_code', true);
 
@@ -334,7 +334,7 @@
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 
-				if($return_type == "return_object")
+				if ($return_type == "return_object")
 				{
 					$controls_array[] = $control;
 				}
@@ -344,7 +344,7 @@
 				}
 			}
 
-			if(count($controls_array) > 0)
+			if (count($controls_array) > 0)
 			{
 				return $controls_array;
 			}
@@ -365,7 +365,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $role_id = 0)
+		public function get_controls_for_components_by_location( $location_code, $from_date, $to_date, $repeat_type, $role_id = 0 )
 		{
 			$controls_array = array();
 
@@ -376,12 +376,12 @@
 			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
 			$sql .= "WHERE fm_bim_item.location_code LIKE '$location_code%' ";
 
-			if($repeat_type != null)
+			if ($repeat_type != null)
 			{
 				$repeat_type = (int)$repeat_type;
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if($role_id)
+			if ($role_id)
 			{
 				$role_id = (int)$role_id;
 				$sql .= "AND c.responsibility_id = $role_id ";
@@ -392,7 +392,7 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 
 				$controls_array[] = array
@@ -429,7 +429,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_controls_by_component($from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0, $filter = null)
+		public function get_controls_by_component( $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0, $filter = null )
 		{
 			$controls_array = array();
 
@@ -443,12 +443,12 @@
 			$sql .= "JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql .= "AND bim_item.type = bim_type.id ";
 
-			if($repeat_type != null)
+			if ($repeat_type != null)
 			{
 				$repeat_type = (int)$repeat_type;
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if($role_id)
+			if ($role_id)
 			{
 				$role_id = (int)$role_id;
 				$sql .= "AND c.responsibility_id = $role_id ";
@@ -457,7 +457,7 @@
 			$sql .= "AND ((c.start_date <= $to_date AND c.end_date IS NULL) ";
 			$sql .= "OR (c.start_date <= $to_date AND c.end_date > $from_date ))";
 
-			if($filter != null)
+			if ($filter != null)
 			{
 				$sql .= "AND " . $filter;
 			}
@@ -468,16 +468,16 @@
 
 			$component_id	 = 0;
 			$component		 = null;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('component_id') != $component_id)
+				if ($this->db->f('component_id') != $component_id)
 				{
-					if($component_id != 0)
+					if ($component_id != 0)
 					{
 						$component->set_controls_array($controls_array);
 						$controls_array = array();
 
-						if($return_type == "return_array")
+						if ($return_type == "return_array")
 						{
 							$components_array[] = $component->toArray();
 						}
@@ -514,7 +514,7 @@
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 
-				if($return_type == "return_object")
+				if ($return_type == "return_object")
 				{
 					$controls_array[] = $control;
 				}
@@ -526,11 +526,11 @@
 				$component_id = $component->get_id();
 			}
 
-			if($component != null)
+			if ($component != null)
 			{
 				$component->set_controls_array($controls_array);
 
-				if($return_type == "return_array")
+				if ($return_type == "return_array")
 				{
 					$components_array[] = $component->toArray();
 				}
@@ -553,7 +553,7 @@
 		 * @param $control_area_id  
 		 * @return array with controls as objects or arrays
 		 */
-		function get_controls_by_control_area($control_area_id)
+		function get_controls_by_control_area( $control_area_id )
 		{
 			$control_area_id = (int)$control_area_id;
 			$controls_array	 = array();
@@ -561,7 +561,7 @@
 			$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -580,7 +580,7 @@
 				$controls_array[] = $control->toArray();
 			}
 
-			if(count($controls_array) > 0)
+			if (count($controls_array) > 0)
 			{
 				return $controls_array;
 			}
@@ -597,7 +597,7 @@
 		 * @param array $location_code_filter
 		 * @return array with arrays of location info  
 		 */
-		function get_locations_for_control($control_id)
+		function get_locations_for_control( $control_id )
 		{
 			$control_id = (int)$control_id;
 
@@ -611,7 +611,7 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_id		 = $this->unmarshal($this->db->f('id'), 'int');
 				$title			 = $this->unmarshal($this->db->f('title', true), 'string');
@@ -641,7 +641,7 @@
 				);
 			}
 
-			if(count($controls_array) > 0)
+			if (count($controls_array) > 0)
 			{
 				return $controls_array;
 			}
@@ -658,7 +658,7 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-		function get_components_for_control($control_id, $location_id = 0, $component_id = 0, $serie_id = 0, $user_id = 0)
+		function get_components_for_control( $control_id, $location_id = 0, $component_id = 0, $serie_id = 0, $user_id = 0 )
 		{
 			$control_id	 = (int)$control_id;
 			$serie_id	 = (int)$serie_id;
@@ -680,22 +680,22 @@
 			$sql .= "AND ccl.id = ccs.control_relation_id ";
 			$sql .= "AND ccs.control_relation_type = 'component'";
 
-			if($location_id && $component_id)
+			if ($location_id && $component_id)
 			{
 				$sql .= " AND ccl.location_id = {$location_id} AND ccl.component_id = {$component_id}";
 			}
-			if($serie_id)
+			if ($serie_id)
 			{
 				$sql .= " AND ccs.id = {$serie_id}";
 			}
-			if($user_id)
+			if ($user_id)
 			{
 				$sql .= " AND ccs.assigned_to = {$user_id}";
 			}
 //	_debug_array($sql);
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_relation = array
 					(
@@ -723,7 +723,7 @@
 				$components_array[] = $component;
 			}
 //	_debug_array($components_array);
-			if(count($components_array) > 0)
+			if (count($components_array) > 0)
 			{
 				return $components_array;
 			}
@@ -740,7 +740,7 @@
 		 * @param $location_code location code
 		 * @return array with control_location_list objects  
 		 */
-		function get_control_location($control_id, $location_code)
+		function get_control_location( $control_id, $location_code )
 		{
 			$control_id	 = (int)$control_id;
 			$sql		 = "SELECT * ";
@@ -750,7 +750,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$control_location = new controller_control_location($this->unmarshal($this->db->f('id'), 'int'));
 
@@ -765,7 +765,7 @@
 			}
 		}
 
-		public function check_control_component($control_id, $location_id, $component_id)
+		public function check_control_component( $control_id, $location_id, $component_id )
 		{
 			$control_id		 = (int)$control_id;
 			$location_id	 = (int)$location_id;
@@ -781,7 +781,7 @@
 			return $this->db->next_record();
 		}
 
-		public function get_assigned_control_components($from_date, $to_date, $assigned_to = 0)
+		public function get_assigned_control_components( $from_date, $to_date, $assigned_to = 0 )
 		{
 			$assigned_to	 = (int)$assigned_to;
 			$location_id	 = (int)$location_id;
@@ -800,7 +800,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$components = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$location_id				 = $this->db->f('location_id');
 				$components[$location_id][]	 = $this->db->f('component_id');
@@ -816,19 +816,19 @@
 		 * @param $data['location_id'] component id
 		 * @return true or false if the execution was successful
 		 */
-		function register_control_to_location($data)
+		function register_control_to_location( $data )
 		{
 
 			$delete_component	 = array();
 			$add_component		 = array();
 			$this->db->transaction_begin();
 
-			if(isset($data['register_location']) && is_array($data['register_location']))
+			if (isset($data['register_location']) && is_array($data['register_location']))
 			{
-				foreach($data['register_location'] as $location_info)
+				foreach ($data['register_location'] as $location_info)
 				{
 					$location_arr = explode('_', $location_info);
-					if(count($location_arr) != 2)
+					if (count($location_arr) != 2)
 					{
 						continue;
 					}
@@ -836,7 +836,7 @@
 					$control_id		 = (int)$location_arr[0];
 					$location_code	 = $location_arr[1];
 
-					if(!$control_id)
+					if (!$control_id)
 					{
 						return false;
 					}
@@ -848,7 +848,7 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					if(!$this->db->next_record())
+					if (!$this->db->next_record())
 					{
 						$sql = "INSERT INTO controller_control_location_list (control_id, location_code) ";
 						$sql .= "VALUES ( {$control_id}, '{$location_code}')";
@@ -858,12 +858,12 @@
 				}
 			}
 
-			if(isset($data['delete']) && is_array($data['delete']))
+			if (isset($data['delete']) && is_array($data['delete']))
 			{
-				foreach($data['delete'] as $location_info)
+				foreach ($data['delete'] as $location_info)
 				{
 					$location_arr = explode('_', $location_info);
-					if(count($location_arr) != 2)
+					if (count($location_arr) != 2)
 					{
 						continue;
 					}
@@ -887,7 +887,7 @@
 		 * @param $data['location_id'] component id
 		 * @return true or false if the execution was successful
 		 */
-		function register_control_to_component($data)
+		function register_control_to_component( $data )
 		{
 			$ret			 = 0;
 			$assigned_to	 = isset($data['assigned_to']) && $data['assigned_to'] ? $data['assigned_to'] : null;
@@ -900,7 +900,7 @@
 
 			$delete_component	 = array();
 			$add_component		 = array();
-			if($this->db->get_transaction())
+			if ($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -909,12 +909,12 @@
 				$this->db->transaction_begin();
 			}
 
-			if(isset($data['register_component']) && is_array($data['register_component']))
+			if (isset($data['register_component']) && is_array($data['register_component']))
 			{
-				foreach($data['register_component'] as $component_info)
+				foreach ($data['register_component'] as $component_info)
 				{
 					$component_arr = explode('_', $component_info);
-					if(count($component_arr) != 3)
+					if (count($component_arr) != 3)
 					{
 						continue;
 					}
@@ -923,7 +923,7 @@
 					$location_id	 = (int)$component_arr[1];
 					$component_id	 = (int)$component_arr[2];
 
-					if(!$control_id)
+					if (!$control_id)
 					{
 						return false;
 					}
@@ -937,9 +937,9 @@
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 					$relation_id = $this->db->f('id');
-					if(!$relation_id || $duplicate)
+					if (!$relation_id || $duplicate)
 					{
-						if($relation_id)
+						if ($relation_id)
 						{
 							$sql		 = "SELECT * FROM controller_control_serie"
 							. " WHERE control_relation_id = {$relation_id}"
@@ -948,7 +948,7 @@
 							$this->db->query($sql, __LINE__, __FILE__);
 							$this->db->next_record();
 							$serie_id	 = $this->db->f('id');
-							if($serie_id)
+							if ($serie_id)
 							{
 								$this->update_control_serie($data	 = array(
 									'ids'				 => array($serie_id),
@@ -1004,12 +1004,12 @@
 				}
 			}
 
-			if(isset($data['delete']) && is_array($data['delete']))
+			if (isset($data['delete']) && is_array($data['delete']))
 			{
-				foreach($data['delete'] as $component_info)
+				foreach ($data['delete'] as $component_info)
 				{
 					$component_arr = explode('_', $component_info);
-					if(count($component_arr) != 3)
+					if (count($component_arr) != 3)
 					{
 						continue;
 					}
@@ -1024,7 +1024,7 @@
 				$ret += PHPGW_ACL_DELETE; //bit - delete
 			}
 
-			if(!$this->global_lock)
+			if (!$this->global_lock)
 			{
 				$this->db->transaction_commit();
 			}
@@ -1039,7 +1039,7 @@
 		 * @param $component_id component id
 		 * @return void  
 		 */
-		function add_component_to_control($control_id, $component_id)
+		function add_component_to_control( $control_id, $component_id )
 		{
 			$sql = "INSERT INTO controller_control_component_list (control_id, component_id) values($control_id, $component_id)";
 			$this->db->query($sql);
@@ -1052,13 +1052,13 @@
 		 * @return array controls assosiated with a component
 		 * @throws Exception if missing valid input
 		 */
-		function get_controls_at_component($data)
+		function get_controls_at_component( $data )
 		{
-			if(!isset($data['location_id']) || !$data['location_id'])
+			if (!isset($data['location_id']) || !$data['location_id'])
 			{
 				throw new Exception("controller_socontrol::get_controls_at_component - Missing location_id in input");
 			}
-			if(!isset($data['component_id']) || !$data['component_id'])
+			if (!isset($data['component_id']) || !$data['component_id'])
 			{
 				throw new Exception("controller_socontrol::get_controls_at_component - Missing component_id in input");
 			}
@@ -1084,7 +1084,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$controls	 = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$controls[] = array
 					(
@@ -1106,9 +1106,9 @@
 				);
 			}
 
-			foreach($controls as &$entry)
+			foreach ($controls as &$entry)
 			{
-				if($entry['assigned_to'] && !isset($users[$entry['assigned_to']]))
+				if ($entry['assigned_to'] && !isset($users[$entry['assigned_to']]))
 				{
 					$users[$entry['assigned_to']] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
 				}
@@ -1124,13 +1124,13 @@
 		 * @return array controls assosiated with a component
 		 * @throws Exception if missing valid input
 		 */
-		function get_controls_at_component2($data)
+		function get_controls_at_component2( $data )
 		{
-			if(!isset($data['location_id']) || !$data['location_id'])
+			if (!isset($data['location_id']) || !$data['location_id'])
 			{
 				throw new Exception("controller_socontrol::get_controls_at_component - Missing location_id in input");
 			}
-			if(!isset($data['id']) || !$data['id'])
+			if (!isset($data['id']) || !$data['id'])
 			{
 				throw new Exception("controller_socontrol::get_controls_at_component - Missing component_id in input");
 			}
@@ -1158,7 +1158,7 @@
 			$components_array	 = array();
 			$control_relations	 = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_relations[] = array
 					(
@@ -1174,9 +1174,9 @@
 				);
 			}
 
-			foreach($control_relations as &$entry)
+			foreach ($control_relations as &$entry)
 			{
-				if($entry['assigned_to'] && !isset($users[$entry['assigned_to']]))
+				if ($entry['assigned_to'] && !isset($users[$entry['assigned_to']]))
 				{
 					$users[$entry['assigned_to']] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
 				}
@@ -1201,9 +1201,9 @@
 			return $components_array;
 		}
 
-		function get_id_field_name($extended_info = false)
+		function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -1220,19 +1220,19 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			$filter_clauses = array();
 
 			// Search for based on search type
-			if($search_for)
+			if ($search_for)
 			{
 				$search_for		 = $this->marshal($search_for, 'field');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					default:
 						$like_clauses[]	 = "controller_control.title $this->like $like_pattern";
@@ -1240,17 +1240,17 @@
 						break;
 				}
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['control_areas']))
+			if (isset($filters['control_areas']))
 			{
 //				$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 
@@ -1259,31 +1259,31 @@
 				$cats->supress_info	 = true;
 				$cat_list			 = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter			 = array($cat_id);
-				foreach($cat_list as $_category)
+				foreach ($cat_list as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
 
 				$filter_clauses[] = "controller_control.control_area_id IN (" . implode(',', $cat_filter) . ')';
 			}
-			if(isset($filters['responsibilities']))
+			if (isset($filters['responsibilities']))
 			{
 				$filter_clauses[] = "controller_control.responsibility_id = {$this->marshal($filters['responsibilities'], 'int')}";
 			}
 
-			if($filters['district_id'])
+			if ($filters['district_id'])
 			{
 				$sql = "SELECT DISTINCT control_id"
 				. " FROM controller_control_location_list {$this->join} fm_locations ON controller_control_location_list.location_code = fm_locations.location_code"
 				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+					. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
 				. " WHERE district_id =" . (int)$filters['district_id'];
 
 				$db = & $GLOBALS['phpgw']->db;
 				$db->query($sql, __LINE__, __FILE__);
 
 				$control_at_district = array();
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$control_at_district[] = $db->f('control_id');
 				}
@@ -1291,23 +1291,23 @@
 				$sql = "SELECT DISTINCT control_id"
 				. " FROM controller_control_component_list {$this->join} fm_bim_item ON controller_control_component_list.location_id = fm_bim_item.location_id AND controller_control_component_list.component_id = fm_bim_item.id"
 				. " {$this->join} fm_location1 ON fm_bim_item.loc1 = fm_location1.loc1"
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+					. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
 				. " WHERE district_id =" . (int)$filters['district_id'];
 
 				$db->query($sql, __LINE__, __FILE__);
 
-				while($db->next_record())
+				while ($db->next_record())
 				{
 					$control_at_district[] = $db->f('control_id');
 				}
 
-				if($control_at_district)
+				if ($control_at_district)
 				{
 					$filter_clauses[] = "controller_control.id IN (" . implode(',', array_unique($control_at_district)) . ')';
 				}
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -1318,7 +1318,7 @@
 			$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
 			$joins .= " {$this->left_join} fm_responsibility_role ON (controller_control.responsibility_id = fm_responsibility_role.id)";
 
-			if($return_count)
+			if ($return_count)
 			{
 				$cols = 'COUNT(DISTINCT(controller_control.id)) AS count';
 			}
@@ -1328,11 +1328,11 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			if($sort_field == 'title')
+			if ($sort_field == 'title')
 			{
 				$sort_field = 'controller_control.title';
 			}
-			else if($sort_field == 'id')
+			else if ($sort_field == 'id')
 			{
 				$sort_field = 'controller_control.id';
 			}
@@ -1341,9 +1341,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function populate(int $control_id, &$control)
+		function populate( int $control_id, &$control )
 		{
-			if($control == null)
+			if ($control == null)
 			{
 				$control = new controller_control((int)$control_id);
 
@@ -1374,7 +1374,7 @@
 		 * @param	$id	id of the control to return
 		 * @return a controller_control object
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id = (int)$id;
 
@@ -1417,7 +1417,7 @@
 			$sql			 = "select * from fm_responsibility_role ORDER BY name";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i				 = 1;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$ret_array[$i]['id']	 = $this->db->f('id');
 				$ret_array[$i]['name']	 = $this->db->f('name');
@@ -1426,12 +1426,12 @@
 			return $ret_array;
 		}
 
-		function get_bim_types($ifc = null)
+		function get_bim_types( $ifc = null )
 		{
 			$ret_array = array();
-			if($ifc != null)
+			if ($ifc != null)
 			{
-				if($ifc == 1)
+				if ($ifc == 1)
 				{
 					$where_clause = "WHERE is_ifc";
 				}
@@ -1443,7 +1443,7 @@
 			$sql = "select * from fm_bim_type {$where_clause} ORDER BY name";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i	 = 1;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$ret_array[$i]['id']	 = $this->db->f('id');
 				$ret_array[$i]['name']	 = $this->db->f('name', true);
@@ -1452,10 +1452,10 @@
 			return $ret_array;
 		}
 
-		public function get_control_component($noOfObjects = null, $bim_type = null)
+		public function get_control_component( $noOfObjects = null, $bim_type = null )
 		{
 			$filters = array();
-			if($noOfObjects != null && is_numeric($noOfObjects))
+			if ($noOfObjects != null && is_numeric($noOfObjects))
 			{
 				$limit = "LIMIT {$noOfObjects}";
 			}
@@ -1473,7 +1473,7 @@
 			$controlArray	 = array();
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i				 = 1;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$controlArray[$i]['id']				 = $this->db->f('control_id');
 				$controlArray[$i]['title']			 = $this->db->f('control_title');
@@ -1486,13 +1486,13 @@
 			return $controlArray;
 		}
 
-		public function getBimItemAttributeValue($bimItemGuid, $attribute)
+		public function getBimItemAttributeValue( $bimItemGuid, $attribute )
 		{
 			$columnAlias = "attribute_values";
 			$sql		 = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			if($this->db->num_rows() > 0)
+			if ($this->db->num_rows() > 0)
 			{
 				$this->db->next_record();
 				$result = $this->db->f($columnAlias, true);
@@ -1500,11 +1500,11 @@
 			}
 		}
 
-		public function getLocationCodeFromControl($control_id)
+		public function getLocationCodeFromControl( $control_id )
 		{
 			$sql = "select location_code from controller_control_location_list where control_id={$control_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			if($this->db->num_rows() > 0)
+			if ($this->db->num_rows() > 0)
 			{
 				$this->db->next_record();
 				$result = $this->db->f('location_code');
@@ -1512,13 +1512,13 @@
 			}
 		}
 
-		function update_control_serie($data = array())
+		function update_control_serie( $data = array() )
 		{
-			if(!isset($data['ids']) || !$data['ids'])
+			if (!isset($data['ids']) || !$data['ids'])
 			{
 				throw new Exception("controller_socontrol::update_control_serie - Missing ids in input");
 			}
-			if(!isset($data['action']) || !$data['action'])
+			if (!isset($data['action']) || !$data['action'])
 			{
 				throw new Exception("controller_socontrol::update_control_serie - Missing action in input");
 			}
@@ -1527,7 +1527,7 @@
 			$action		 = $data['action'];
 			$value_set	 = array();
 			$add_history = false;
-			switch($action)
+			switch ($action)
 			{
 				case 'enable':
 					$value_set['enabled']	 = 1;
@@ -1536,28 +1536,28 @@
 					$value_set['enabled']	 = 0;
 					break;
 				case 'edit':
-					if($data['assigned_to'])
+					if ($data['assigned_to'])
 					{
 						$value_set['assigned_to']	 = $data['assigned_to'];
 						$add_history				 = true;
 					}
-					if($data['start_date'])
+					if ($data['start_date'])
 					{
 						$value_set['start_date'] = $data['start_date'];
 					}
-					if($data['repeat_type'])
+					if ($data['repeat_type'])
 					{
 						$value_set['repeat_type'] = $data['repeat_type'];
 					}
-					if($data['repeat_interval'])
+					if ($data['repeat_interval'])
 					{
 						$value_set['repeat_interval'] = $data['repeat_interval'];
 					}
-					if($data['controle_time'])
+					if ($data['controle_time'])
 					{
 						$value_set['controle_time'] = $data['controle_time'];
 					}
-					if($data['service_time'])
+					if ($data['service_time'])
 					{
 						$value_set['service_time'] = $data['service_time'];
 					}
@@ -1569,17 +1569,17 @@
 			$value_set_update = $this->db->validate_update($value_set);
 
 			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
-			if($this->db->query($sql, __LINE__, __FILE__))
+			if ($this->db->query($sql, __LINE__, __FILE__))
 			{
-				if($add_history && $value_set['assigned_to'])
+				if ($add_history && $value_set['assigned_to'])
 				{
 					$assigned_date = time();
 
-					foreach($ids as $serie_id)
+					foreach ($ids as $serie_id)
 					{
 						$this->db->query("SELECT assigned_to FROM controller_control_serie_history WHERE serie_id = {$serie_id} ORDER BY id DESC", __LINE__, __FILE__);
 						$this->db->next_record();
-						if($value_set['assigned_to'] != $this->db->f('assigned_to'))
+						if ($value_set['assigned_to'] != $this->db->f('assigned_to'))
 						{
 							$this->db->query("INSERT INTO controller_control_serie_history (serie_id, assigned_to, assigned_date)"
 							. " VALUES ({$serie_id}, {$value_set['assigned_to']}, {$assigned_date})  ");
@@ -1591,10 +1591,10 @@
 			}
 		}
 
-		function add_controll_to_component_from_master($master_component, $targets = array())
+		function add_controll_to_component_from_master( $master_component, $targets = array() )
 		{
 			$master_component_arr = explode('_', $master_component);
-			if(count($master_component_arr) != 2)
+			if (count($master_component_arr) != 2)
 			{
 				throw new Exception("controller_socontrol::add_controll_to_component_from_master - Missing master component");
 			}
@@ -1611,10 +1611,10 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$series = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$start_date = $this->db->f('start_date');
-				if($start_date < time())
+				if ($start_date < time())
 				{
 					$start_date = time();
 				}
@@ -1632,13 +1632,13 @@
 
 			$this->db->transaction_begin();
 
-			foreach($targets as $target)
+			foreach ($targets as $target)
 			{
 				$target_component_arr = explode('_', $target);
 
 				$target_location_id	 = (int)$target_component_arr[0];
 				$target_component_id = (int)$target_component_arr[1];
-				foreach($series as $serie)
+				foreach ($series as $serie)
 				{
 					$values = array
 						(
@@ -1657,7 +1657,7 @@
 			return $this->db->transaction_commit();
 		}
 
-		function get_serie($serie_id)
+		function get_serie( $serie_id )
 		{
 			$serie_id	 = (int)$serie_id;
 			$serie		 = array();
@@ -1676,7 +1676,7 @@
 //			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$serie = array
 					(
@@ -1700,7 +1700,7 @@
 			return $serie;
 		}
 
-		public function get_check_list_id_for_deadline($serie_id, $deadline_ts = 0)
+		public function get_check_list_id_for_deadline( $serie_id, $deadline_ts = 0 )
 		{
 			$sql = "SELECT id FROM controller_check_list WHERE deadline = {$deadline_ts} AND serie_id = " . (int)$serie_id;
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1708,13 +1708,13 @@
 			return $this->db->f('id');
 		}
 
-		public function get_assigned_history($data)
+		public function get_assigned_history( $data )
 		{
 			$serie_id	 = (int)$data['serie_id'];
 			$sql		 = "SELECT * FROM controller_control_serie_history WHERE serie_id = {$serie_id} ORDER BY id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$history	 = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$history[] = array
 					(
@@ -1722,7 +1722,7 @@
 					'assigned_date'	 => $this->db->f('assigned_date'),
 				);
 			}
-			foreach($history as &$entry)
+			foreach ($history as &$entry)
 			{
 				$entry['assigned_to_name'] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
 			}

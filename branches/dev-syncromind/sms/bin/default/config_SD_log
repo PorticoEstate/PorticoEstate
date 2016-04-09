@@ -10,14 +10,12 @@
 	* @subpackage sms
  	* @version $Id: config_VASK 18297 2007-10-03 13:34:09Z sigurdne $
 	*/
-
 	/**
 	 * Description
 	 * @package sms
 	 * Config values for SMS-command "SD" - short for "noxious animal in Norwegian" - as example - as it is configured at BBB 
 	 * This file is for redirecting from log items to the subject of the log 
 	 */
-
 	$agreement_id = '31793';
 
 	$link_data = array

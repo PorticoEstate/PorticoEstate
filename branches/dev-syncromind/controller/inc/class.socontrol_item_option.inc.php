@@ -38,7 +38,7 @@
 
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_option');
 			}
@@ -51,7 +51,7 @@
 		 * @param	$control_item_option object to be inserted
 		 * @return true if task was successful, false otherwise
 		 */
-		function add(&$control_item_option)
+		function add( &$control_item_option )
 		{
 			$cols = array(
 				'option_value',
@@ -65,7 +65,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_item_option (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_option', 'id');
@@ -82,7 +82,7 @@
 		 * @param	$control_item_option object to be updated
 		 * @return true if task was successful, false otherwise
 		 */
-		function update($control_item_option)
+		function update( $control_item_option )
 		{
 			$id = intval($control_item_option->get_id());
 
@@ -102,7 +102,7 @@
 		 * @param	$id id of control item option to be fetched
 		 * @return control item option object
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id	 = (int)$id;
 			$sql = "SELECT p.* FROM controller_control_item_option p {$joins} WHERE p.id = " . $id;
@@ -123,7 +123,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_option');
 			}
@@ -136,12 +136,12 @@
 
 		}
 
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			
 		}
 
-		function populate(int $object_id, &$object)
+		function populate( int $object_id, &$object )
 		{
 
 		}

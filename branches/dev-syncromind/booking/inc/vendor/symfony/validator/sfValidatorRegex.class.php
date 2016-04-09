@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorRegex validates a value with a regular expression.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorRegex extends sfValidatorString
-{
+	class sfValidatorRegex extends sfValidatorString
+	{
+
   /**
    * Configures the current validator.
    *
@@ -30,7 +30,7 @@ class sfValidatorRegex extends sfValidatorString
    *
    * @see sfValidatorString
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     parent::configure($options, $messages);
 
@@ -40,7 +40,7 @@ class sfValidatorRegex extends sfValidatorString
   /**
    * @see sfValidatorString
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     $clean = parent::doClean($value);
 
@@ -51,4 +51,4 @@ class sfValidatorRegex extends sfValidatorString
 
     return $clean;
   }
-}
+	}

@@ -89,7 +89,7 @@
 			$this->type = $this->bo->type;
 			$this->type_id = $this->bo->type_id;
 
-			if($appname = $this->bo->appname)
+			if ($appname = $this->bo->appname)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
@@ -99,7 +99,7 @@
 		 * Overrides with incoming data from POST
 		 */
 
-		private function _populate($data = array())
+		private function _populate( $data = array() )
 		{
 			$id_name = $this->location_info['id']['name'];
 
@@ -107,30 +107,30 @@
 			$values = phpgw::get_var('values');
 			$values_attribute = phpgw::get_var('values_attribute');
 
-			if(!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
+			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
 			{
 				$this->receipt['error'][] = array('msg' => lang('missing value for %1', lang('id')));
 			}
 
-			if($values[$id_name] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values[$id_name]))
+			if ($values[$id_name] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values[$id_name]))
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please enter an integer !'));
 				unset($values[$id_name]);
 			}
 
-			if($values[$id_name])
+			if ($values[$id_name])
 			{
 				$data[$id_name] = $values[$id_name];
 			}
 
-			foreach($this->location_info['fields'] as $_field)
+			foreach ($this->location_info['fields'] as $_field)
 			{
 				$data[$_field['name']] = $values[$_field['name']];
 				$data[$_field['name']] = phpgw::clean_value($data[$_field['name']], $_field['type']);
 
-				if(isset($_field['nullable']) && $_field['nullable'] != true)
+				if (isset($_field['nullable']) && $_field['nullable'] != true)
 				{
-					if(empty($data[$_field['name']]))
+					if (empty($data[$_field['name']]))
 					{
 						$this->receipt['error'][] = array('msg' => lang('missing value for %1', $_field['name']));
 					}
@@ -139,13 +139,13 @@
 
 			$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", $this->location_info['acl_app']);
 
-			if(is_array($insert_record_attributes))
+			if (is_array($insert_record_attributes))
 			{
-				foreach($insert_record_attributes as $attribute)
+				foreach ($insert_record_attributes as $attribute)
 				{
-					foreach($values_attribute as &$attr)
+					foreach ($values_attribute as &$attr)
 					{
-						if($attr['name'] == $attribute)
+						if ($attr['name'] == $attribute)
 						{
 							$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
 						}
@@ -157,16 +157,16 @@
 			 * Extra data from custom fields
 			 */
 
-			if(isset($values_attribute) && is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
-				foreach($values_attribute as $attribute)
+				foreach ($values_attribute as $attribute)
 				{
-					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 					{
 						$this->receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
 
-					if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && !ctype_digit($attribute['value']))
+					if (isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && !ctype_digit($attribute['value']))
 					{
 						$this->receipt['error'][] = array('msg' => lang('Please enter integer for attribute %1', $attribute['input_text']));
 					}
@@ -178,30 +178,30 @@
 			return $data;
 		}
 
-		private function _get_filters($selected = 0)
+		private function _get_filters( $selected = 0 )
 		{
 			$values_combo_box = array();
 			$combos = array();
 			$i = 0;
-			foreach($this->location_info['fields'] as $field)
+			foreach ($this->location_info['fields'] as $field)
 			{
-				if(!empty($field['filter']) && empty($field['hidden']))
+				if (!empty($field['filter']) && empty($field['hidden']))
 				{
-					if($field['values_def']['valueset'])
+					if ($field['values_def']['valueset'])
 					{
 						$values_combo_box[] = $field['values_def']['valueset'];
 						// TODO find selected value
 					}
-					else if(isset($field['values_def']['method']))
+					else if (isset($field['values_def']['method']))
 					{
-						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
+						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
-							if(preg_match('/^##/', $_argument_value))
+							if (preg_match('/^##/', $_argument_value))
 							{
 								$_argument_value_name = trim($_argument_value, '#');
 								$_argument_value = $values[$_argument_value_name];
 							}
-							if(preg_match('/^\$this->/', $_argument_value))
+							if (preg_match('/^\$this->/', $_argument_value))
 							{
 								$_argument_value_name = ltrim($_argument_value, '$this->');
 								$_argument_value = $this->$_argument_value_name;
@@ -254,7 +254,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$values = phpgw::get_var('values');
 
-			if($values['save'])
+			if ($values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->account_id = $this->account;
 				$GLOBALS['phpgw']->preferences->read();
@@ -293,7 +293,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -301,7 +301,7 @@
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -359,7 +359,7 @@
 
 			$filters = $this->_get_filters();
 
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -369,7 +369,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -377,7 +377,7 @@
 					'sortable' => ($uicols['sortable'][$k]) ? true : false,
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
-				switch($uicols['datatype'][$k])
+				switch ($uicols['datatype'][$k])
 				{
 					case 'email':
 					case 'varchar':
@@ -387,7 +387,7 @@
 						break;
 				}
 
-				if($uicols['name'][$k] == 'id')
+				if ($uicols['name'][$k] == 'id')
 				{
 					$params['formatter'] = 'JqueryPortico.formatLink';
 					$params['editor'] = false;
@@ -407,7 +407,7 @@
 				)
 			);
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -441,7 +441,7 @@
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -486,9 +486,9 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
-			foreach($this->location_info['fields'] as $field)
+			foreach ($this->location_info['fields'] as $field)
 			{
-				if(isset($field['filter']) && $field['filter'])
+				if (isset($field['filter']) && $field['filter'])
 				{
 					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
 				}
@@ -498,7 +498,7 @@
 			$result_count = 0;
 
 			$values = $this->bo->read($params);
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -526,9 +526,9 @@
 			$this->edit();
 		}
 
-		function edit($values = array())
+		function edit( $values = array() )
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -539,7 +539,7 @@
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single(array('id' => $id));
 				$function_msg = $this->location_info['edit_msg'];
@@ -553,14 +553,14 @@
 			}
 
 			/* Preserve attribute values from post */
-			if($this->receipt['error'])
+			if ($this->receipt['error'])
 			{
-				foreach($this->location_info['fields'] as $field)
+				foreach ($this->location_info['fields'] as $field)
 				{
 					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']]);
 				}
 
-				if(isset($values_attribute) && is_array($values_attribute))
+				if (isset($values_attribute) && is_array($values_attribute))
 				{
 					$values = $this->custom->preserve_attribute_values($values, $values_attribute);
 				}
@@ -587,11 +587,11 @@
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 
-			if(isset($values['attributes']) && is_array($values['attributes']))
+			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-				foreach($values['attributes'] as & $attribute)
+				foreach ($values['attributes'] as & $attribute)
 				{
-					if($attribute['history'] == true)
+					if ($attribute['history'] == true)
 					{
 						$link_history_data = array
 							(
@@ -610,9 +610,9 @@
 				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
 
 				$attributes = array();
-				foreach($attributes_groups as $group)
+				foreach ($attributes_groups as $group)
 				{
-					if(is_array($group['attributes']))
+					if (is_array($group['attributes']))
 					{
 						$attributes[] = $group;
 					}
@@ -621,30 +621,30 @@
 				unset($values['attributes']);
 			}
 
-			foreach($this->location_info['fields'] as & $field)
+			foreach ($this->location_info['fields'] as & $field)
 			{
 				$field['value'] = isset($values[$field['name']]) ? $values[$field['name']] : '';
-				if(isset($field['values_def']))
+				if (isset($field['values_def']))
 				{
-					if($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
+					if ($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
 					{
 						$field['valueset'] = $field['values_def']['valueset'];
-						foreach($field['valueset'] as &$_entry)
+						foreach ($field['valueset'] as &$_entry)
 						{
 							$_entry['selected'] = $_entry['id'] == $field['value'] ? 1 : 0;
 						}
 					}
-					else if(isset($field['values_def']['method']))
+					else if (isset($field['values_def']['method']))
 					{
 
-						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
+						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
-							if(preg_match('/^##/', $_argument_value))
+							if (preg_match('/^##/', $_argument_value))
 							{
 								$_argument_value_name = trim($_argument_value, '#');
 								$_argument_value = $values[$_argument_value_name];
 							}
-							if(preg_match('/^\$this->/', $_argument_value))
+							if (preg_match('/^\$this->/', $_argument_value))
 							{
 								$_argument_value_name = ltrim($_argument_value, '$this->');
 								$_argument_value = $this->$_argument_value_name;
@@ -656,21 +656,21 @@
 						$field['valueset'] = execMethod($field['values_def']['method'], $method_input);
 					}
 
-					if(isset($values['id']) && $values['id'] && isset($field['role']) && $field['role'] == 'parent')
+					if (isset($values['id']) && $values['id'] && isset($field['role']) && $field['role'] == 'parent')
 					{
 						// can not select it self as parent.
 						$exclude = array($values['id']);
 						$children = $this->bo->get_children2($values['id'], 0, true);
 
-						foreach($children as $child)
+						foreach ($children as $child)
 						{
 							$exclude[] = $child['id'];
 						}
 
 						$k = count($field['valueset']);
-						for($i = 0; $i < $k; $i++)
+						for ($i = 0; $i < $k; $i++)
 						{
-							if(in_array($field['valueset'][$i]['id'], $exclude))
+							if (in_array($field['valueset'][$i]['id'], $exclude))
 							{
 								unset($field['valueset'][$i]);
 							}
@@ -733,7 +733,7 @@
 			$delete = phpgw::get_var('delete', 'bool');
 			$edit = phpgw::get_var('edit', 'bool');
 
-			if($delete)
+			if ($delete)
 			{
 				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
 				$this->bo->delete_history_item($data_lookup);
@@ -753,13 +753,13 @@
 			);
 
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$values = $this->bo->read_attrib_history($data_lookup);
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 				$content = array();
-				while(is_array($values) && list(, $entry) = each($values))
+				while (is_array($values) && list(, $entry) = each($values))
 				{
 					$content[] = array
 						(
@@ -778,13 +778,13 @@
 
 				$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
 
-				if($allrows)
+				if ($allrows)
 				{
 					$out = $content;
 				}
 				else
 				{
-					if($total_records > $num_rows)
+					if ($total_records > $num_rows)
 					{
 						$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
 						$values_part = array_chunk($content, $num_rows);
@@ -805,7 +805,7 @@
 			}
 
 			$tabletools = array();
-			if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
+			if ($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
 			{
 				$parameters = array
 					(
@@ -880,14 +880,14 @@
 
 		function delete()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				return lang('no access');
 			}
 
 			$id = phpgw::get_var($this->location_info['id']['name']);
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($id);
 				return lang('id %1 has been deleted', $id);
@@ -903,7 +903,7 @@
 		 */
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -911,7 +911,7 @@
 			$id = phpgw::get_var($this->location_info['id']['name']);
 			$values = phpgw::get_var('values');
 
-			if($id)
+			if ($id)
 			{
 				$data = $this->bo->read_single(array('id' => $id));
 				$action = 'edit';
@@ -927,7 +927,7 @@
 			 */
 			$data = $this->_populate($data);
 
-			if($this->receipt['error'])
+			if ($this->receipt['error'])
 			{
 				$this->edit();
 			}
@@ -940,11 +940,12 @@
 					unset($fields['attributes']);
 
 					$receipt = $this->bo->save($fields, $action, $attributes);
+					$id = $receipt['id'];
 					$this->receipt = $receipt;
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit();
@@ -952,13 +953,23 @@
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
-				if($values['apply'])
+				if ($values['apply'])
 				{
+					if ($id)
+					{
+						self::message_set($this->receipt);
+						self::redirect(array('menuaction' => 'property.uigeneric.edit',
+							'id' => $id,
+							'appname' => $this->appname,
+							'type' => $this->type,
+							'type_id' => $this->type_id
+							)
+						);
+					}
 					$this->edit();
 					return;
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric.index',
+				self::redirect(array('menuaction' => 'property.uigeneric.index',
 					'appname' => $this->appname,
 					'type' => $this->type,
 					'type_id' => $this->type_id));
@@ -970,12 +981,12 @@
 			$id = phpgw::get_var('id', 'int', 'POST');
 			$field_name = phpgw::get_var('field_name', 'string');
 
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				return lang('no access');
 			}
 
-			if($id && $field_name)
+			if ($id && $field_name)
 			{
 
 				$data = array
@@ -989,9 +1000,9 @@
 				{
 					$this->bo->edit_field($data);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						echo $e->getMessage();
 					}

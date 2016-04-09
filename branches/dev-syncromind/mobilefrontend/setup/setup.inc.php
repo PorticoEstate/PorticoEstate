@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package mobilefrontend
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$setup_info['mobilefrontend']['name']		= 'mobilefrontend';
 	$setup_info['mobilefrontend']['version']	= '0.1.2';
 	$setup_info['mobilefrontend']['app_order']	= 80;
@@ -30,8 +29,7 @@
 	);
 
 	$setup_info['mobilefrontend']['license']  = 'GPL';
-	$setup_info['mobilefrontend']['description'] =
-	'<div align="left">
+	$setup_info['mobilefrontend']['description'] = '<div align="left">
 
 	<b>Mobilefrontend</b> for:
 	<ol>
@@ -42,7 +40,7 @@
 	<b>Mobilefrontend</b> is organized as a set of submodules as extensions to their backend-parents.
 	</div>';
 
-	$setup_info['mobilefrontend']['note'] ='';
+	$setup_info['mobilefrontend']['note'] = '';
 
 
 //	$setup_info['mobilefrontend']['tables'] = array();
@@ -63,7 +61,7 @@
 		'versions' => array('0.9.17', '0.9.18')
 	);
 
-/*
+	/*
 	$setup_info['mobilefrontend']['depends'][] = array
 	(
 		'appname'  => 'controller',

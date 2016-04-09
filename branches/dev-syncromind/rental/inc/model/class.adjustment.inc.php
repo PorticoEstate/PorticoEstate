@@ -16,7 +16,7 @@
 		protected $adjustment_type;
 		protected $is_executed;
 
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$adjustment_id = intval($id);
 			parent::__construct($adjustment_id);
@@ -27,7 +27,7 @@
 			return $this->id;
 		}
 
-		public function set_id(int $id)
+		public function set_id( int $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -37,7 +37,7 @@
 			return $this->price_item_id;
 		}
 
-		public function set_price_item_id(int $price_item_id)
+		public function set_price_item_id( int $price_item_id )
 		{
 			$this->price_item_id = (int)$price_item_id;
 		}
@@ -47,7 +47,7 @@
 			return $this->responsibility_id;
 		}
 
-		public function set_responsibility_id(int $responsibility_id)
+		public function set_responsibility_id( int $responsibility_id )
 		{
 			$this->responsibility_id = (int)$responsibility_id;
 		}
@@ -57,7 +57,7 @@
 			return $this->new_price;
 		}
 
-		public function set_new_price($new_price)
+		public function set_new_price( $new_price )
 		{
 			$this->new_price = $new_price;
 		}
@@ -67,7 +67,7 @@
 			return $this->percent;
 		}
 
-		public function set_percent($percent)
+		public function set_percent( $percent )
 		{
 			$this->percent = $percent;
 		}
@@ -77,7 +77,7 @@
 			return $this->adjustment_date;
 		}
 
-		public function set_year($year)
+		public function set_year( $year )
 		{
 			$this->year = $year;
 		}
@@ -87,7 +87,7 @@
 			return $this->year;
 		}
 
-		public function set_adjustment_date($adjustment_date)
+		public function set_adjustment_date( $adjustment_date )
 		{
 			$this->adjustment_date = $adjustment_date;
 		}
@@ -102,7 +102,7 @@
 			return $this->is_manual;
 		}
 
-		public function set_is_manual($is_manual)
+		public function set_is_manual( $is_manual )
 		{
 			$this->is_manual = (boolean)$is_manual;
 		}
@@ -117,7 +117,7 @@
 			return $this->is_executed;
 		}
 
-		public function set_is_executed($is_executed)
+		public function set_is_executed( $is_executed )
 		{
 			$this->is_executed = (boolean)$is_executed;
 		}
@@ -132,7 +132,7 @@
 			return $this->extra_adjustment;
 		}
 
-		public function set_extra_adjustment($extra_adjustment)
+		public function set_extra_adjustment( $extra_adjustment )
 		{
 			$this->extra_adjustment = (boolean)$extra_adjustment;
 		}
@@ -142,7 +142,7 @@
 			return $this->interval;
 		}
 
-		public function set_interval(int $interval)
+		public function set_interval( int $interval )
 		{
 			$this->interval = (int)$interval;
 		}
@@ -152,7 +152,7 @@
 			return $this->adjustment_type;
 		}
 
-		public function set_adjustment_type($adjustment_type)
+		public function set_adjustment_type( $adjustment_type )
 		{
 			$this->adjustment_type = $adjustment_type;
 		}

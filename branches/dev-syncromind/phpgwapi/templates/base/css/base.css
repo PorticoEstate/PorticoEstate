@@ -1,8 +1,9 @@
+/*
 body, div, input, p, select, textarea
 {
 	font-family: "Liberation Sans", Verdana, sans-serif;
 	font-size: 1em;
-}
+}*/
 /*
 a
 {
@@ -18,11 +19,11 @@ img
 {
 	border: 0px;
 }
-
+/*
 textarea
 {
 	white-space: normal;
-}
+}*/
 
 thead
 {
@@ -234,4 +235,11 @@ H5 EM {
 	font-size: 0.9em;
 	float: right;
 	margin-top: -1.4em;
+}
+.home_portal_controls
+{
+	float: right;
+	text-align: right;
+	padding: 0px 0px 0px 0px;
+	width: 15px;
 }

@@ -8,16 +8,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage custom
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_uicustom
 	{
+
 		var $public_functions = array(
 			'index'			=> true,
 			'add'			=> true,
@@ -25,9 +25,7 @@
 			'edit'			=> true,
 			'edit_yes'		=> true,
 			'delete'		=> true,
-
 			);
-
 
 		function __construct()
 		{
@@ -37,7 +35,7 @@
 			$this->sms					= CreateObject('sms.sms');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 		= '.custom';
-			$this->menu->sub			=$this->acl_location;
+			$this->menu->sub = $this->acl_location;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
@@ -50,7 +48,7 @@
 
 		function index()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -58,7 +56,7 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('List/Edit/Delete SMS customs');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('List/Edit/Delete SMS customs');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -72,25 +70,27 @@
 
 
 			$add_data = array('menuaction'	=> 'sms.uicustom.add');
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			$content .= "
 			    <p>
 			    <a href=\"$add_url\">[  Add SMS custom ]</a>
 			    <p>
 			";
-/*			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
+			/* 			if (!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
 			{
 			    $query_user_only = "WHERE uid='" . $this->account ."'";
 			}
-*/
+			 */
 			$sql = "SELECT * FROM phpgw_sms_featcustom $query_user_only ORDER BY custom_code";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$owner = $GLOBALS['phpgw']->accounts->id2name($this->db->f('uid'));
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicustom.edit' , 'custom_id'=> $this->db->f('custom_id'))) . ">e</a>] ";
-				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicustom.delete', 'custom_id'=> $this->db->f('custom_id'))) . ">x</a>] ";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.edit',
+						'custom_id' => $this->db->f('custom_id'))) . ">e</a>] ";
+				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.delete',
+						'custom_id' => $this->db->f('custom_id'))) . ">x</a>] ";
 			    $content .= "<b>Code:</b> " . $this->db->f('custom_code') . " &nbsp;&nbsp;<b>User:</b> $owner<br><b>URL:</b><br>" . stripslashes($this->db->f('custom_url')) . "<br><br>";
 			}
 
@@ -103,7 +103,7 @@
 				$done_data = array(
 				'menuaction'	=> 'sms.uisms.index');
 
-				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 				$content .= "
 				    <p><li>
@@ -116,7 +116,7 @@
 
 		function add()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -124,7 +124,7 @@
 			}
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Add SMS custom');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Add SMS custom');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -143,7 +143,7 @@
 				'autoreply_id' => $autoreply_id
 				);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			$content .= "
 			    <p>
@@ -160,7 +160,7 @@
 			";
 
 			$done_data = array('menuaction'	=> 'sms.uicustom.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p>
@@ -173,7 +173,7 @@
 
 		function add_yes()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -195,9 +195,9 @@
 					$sql = "INSERT INTO phpgw_sms_featcustom (uid,custom_code,custom_url) VALUES ('$uid','$custom_code','$custom_url')";
 					$this->db->transaction_begin();
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featcustom,'custom_id');
+					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featcustom, 'custom_id');
 
 					$this->db->transaction_commit();
 
@@ -225,20 +225,19 @@
 				'err' => urlencode($error_string)
 				);
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function edit()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
 				return;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').' - '.lang('Edit SMS custom');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS') . ' - ' . lang('Edit SMS custom');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
 			echo parse_navbar();
@@ -255,7 +254,7 @@
 
 
 			$sql = "SELECT * FROM phpgw_sms_featcustom WHERE custom_id='$custom_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$custom_code = $this->db->f('custom_code');
 
@@ -265,10 +264,10 @@
 				'custom_code' => $custom_code,
 				);
 
-			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
+			$add_url = $GLOBALS['phpgw']->link('/index.php', $add_data);
 
 			//FIXME
-			$custom_url = $this->db->f('custom_url',true);
+			$custom_url = $this->db->f('custom_url', true);
 
 			$content .= "
 			    <p>
@@ -285,7 +284,7 @@
 			";
 
 			$done_data = array('menuaction'	=> 'sms.uicustom.index');
-			$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
+			$done_url = $GLOBALS['phpgw']->link('/index.php', $done_data);
 
 			$content .= "
 			    <p>
@@ -298,7 +297,7 @@
 
 		function edit_yes()
 		{
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				$this->bocommon->no_access();
@@ -319,8 +318,8 @@
 
 				$sql = "UPDATE phpgw_sms_featcustom SET custom_url='$custom_url' WHERE custom_code='$custom_code'";
 				$this->db->transaction_begin();
-				$this->db->query($sql,__LINE__,__FILE__);
-				if ($this->db->affected_rows()>0)
+				$this->db->query($sql, __LINE__, __FILE__);
+				if ($this->db->affected_rows() > 0)
 				{
 					$error_string = "SMS custom code `$custom_code` has been saved";
 				}
@@ -341,14 +340,13 @@
 				'err' => urlencode($error_string)
 				);
 
-			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
+			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);
 		}
-
 
 		function delete()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			if(!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
+			if (!$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'sms'))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -365,7 +363,7 @@
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$sql = "SELECT custom_code FROM phpgw_sms_featcustom WHERE custom_id='$custom_id'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$custom_code = $this->db->f('custom_code');
@@ -374,7 +372,7 @@
 				{
 					$sql = "DELETE FROM phpgw_sms_featcustom WHERE custom_code='$custom_code'";
 					$this->db->transaction_begin();
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql, __LINE__, __FILE__);
 					if ($this->db->affected_rows())
 	    			{
 						$error_string = "SMS custom code `$custom_code` has been deleted!";
@@ -382,7 +380,6 @@
 					else
 					{
 						$error_string = "Fail to delete SMS custom code `$custom_code`";
-
 					}
 
 	    			$this->db->transaction_commit();
@@ -390,15 +387,16 @@
 
 				$link_data['err'] = urlencode($error_string);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
 			$data = array
 			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicustom.delete', 'custom_id'=> $custom_id)),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.delete',
+					'custom_id' => $custom_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'				=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -409,6 +407,6 @@
 			$function_msg	= lang('delete SMS custom code');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 	}

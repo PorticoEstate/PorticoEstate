@@ -23,7 +23,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -40,7 +40,7 @@
 			$start_index	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$num_of_objects	 = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field		 = 'id';
-			switch($columns[$order[0]['column']]['data'])
+			switch ($columns[$order[0]['column']]['data'])
 			{
 				case 'type':
 					$sort_field	 = 'rental_document.type_id';
@@ -67,13 +67,13 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
-			if(isset($contract_id))
+			if (isset($contract_id))
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 			}
 
 			$type = phpgw::get_var('type');
-			switch($type)
+			switch ($type)
 			{
 				case 'documents_for_contract':
 					$filters = array('contract_id' => $contract_id, 'document_type' => phpgw::get_var('document_type'));
@@ -88,9 +88,9 @@
 
 			//Serialize the documents found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
@@ -111,7 +111,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 
 			$value['ajax']		 = array();
@@ -129,10 +129,10 @@
 			$user_is		 = $params[2];
 			$editable		 = $params[3];
 
-			switch($type)
+			switch ($type)
 			{
 				case 'documents_for_contract':
-					if($edit_permission && $editable)
+					if ($edit_permission && $editable)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete',
@@ -141,7 +141,7 @@
 					}
 					break;
 				case 'documents_for_party':
-					if($user_is[EXECUTIVE_OFFICER] && $editable)
+					if ($user_is[EXECUTIVE_OFFICER] && $editable)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete',
@@ -168,11 +168,11 @@
 			$message = array();
 
 			// Check permissions if contract id is set
-			if(isset($contract_id) && $contract_id > 0)
+			if (isset($contract_id) && $contract_id > 0)
 			{
 				//Load contract
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
-				if(!$contract->has_permission(PHPGW_ACL_EDIT))
+				if (!$contract->has_permission(PHPGW_ACL_EDIT))
 				{
 					$message['error'][] = array('msg' => lang('permission_denied_add_document'));
 					return $message;
@@ -180,11 +180,11 @@
 			}
 
 			// Check permissions if party id is set
-			if(isset($party_id) && $party_id > 0)
+			if (isset($party_id) && $party_id > 0)
 			{
 				//Load party
 				$party = rental_soparty::get_instance()->get_single($party_id);
-				if(!($this->isAdministrator() || $this->isExecutiveOfficer()))
+				if (!($this->isAdministrator() || $this->isExecutiveOfficer()))
 				{
 					$message['error'][] = array('msg' => lang('permission_denied_add_document'));
 					return $message;
@@ -192,13 +192,13 @@
 			}
 
 			// If no contract or party is loaded
-			if(!(isset($party) || isset($contract)))
+			if (!(isset($party) || isset($contract)))
 			{
 				$message['error'][] = array('msg' => lang('permission_denied_add_document'));
 				return $message;
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				//Create a document object
 				$document = new rental_document();
@@ -217,9 +217,9 @@
 				$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
 				);
 
-				if($result)
+				if ($result)
 				{
-					if(rental_sodocument::get_instance()->store($document))
+					if (rental_sodocument::get_instance()->store($document))
 					{
 						$message['message'][] = array('msg' => lang('document has been added'));
 					}
@@ -248,7 +248,7 @@
 		{
 			$document_id = intval(phpgw::get_var('id'));
 			$document	 = rental_sodocument::get_instance()->get_single($document_id);
-			if($document->has_permission(PHPGW_ACL_READ))
+			if ($document->has_permission(PHPGW_ACL_READ))
 			{
 				$document_properties = $this->get_type_and_id($document);
 
@@ -307,12 +307,12 @@
 			$list_document_id	 = phpgw::get_var('id');
 			$message			 = array();
 
-			foreach($list_document_id as $document_id)
+			foreach ($list_document_id as $document_id)
 			{
 				$document			 = rental_sodocument::get_instance()->get_single($document_id);
 				$document_properties = $this->get_type_and_id($document);
 
-				if(!$this->check_permissions($document, $document_properties))
+				if (!$this->check_permissions($document, $document_properties))
 				{
 					$message['error'][] = array('msg' => lang('permission_denied') . ' to remove ' . $document->get_name());
 					continue;
@@ -323,9 +323,9 @@
 				$document_properties['document_type'], $document_properties['id'], $document->get_name()
 				);
 
-				if($result)
+				if ($result)
 				{
-					if(rental_sodocument::get_instance()->delete_document($document_id))
+					if (rental_sodocument::get_instance()->delete_document($document_id))
 					{
 						$message['message'][] = array('msg' => lang('document %1 has been removed', $document->get_name()));
 					}
@@ -351,14 +351,14 @@
 		 * @param $error	an error message
 		 * @param $message	a user message
 		 */
-		public function redirect($document, $document_properties, $error, $message)
+		public function redirect( $document, $document_properties, $error, $message )
 		{
-			if($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
+			if ($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
 					'id'		 => $document_properties['id'], 'error'		 => $error, 'message'	 => $message));
 			}
-			else if($document_properties['document_type'] == rental_sodocument::$PARTY_DOCUMENTS)
+			else if ($document_properties['document_type'] == rental_sodocument::$PARTY_DOCUMENTS)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
 					'id'		 => $document_properties['id'], 'error'		 => $error, 'message'	 => $message));
@@ -375,19 +375,19 @@
 		 * @param $document_properties	the document type and object id
 		 * @return true if correct privileges, false otherwise
 		 */
-		private function check_permissions($document, $document_properties)
+		private function check_permissions( $document, $document_properties )
 		{
-			if($document_properties == rental_sodocument::$CONTRACT_DOCUMENTS)
+			if ($document_properties == rental_sodocument::$CONTRACT_DOCUMENTS)
 			{
 				$contract = rental_socontract::get_instance()->get_single($document_properties['id']);
-				if(!$contract->has_permission(PHPGW_ACL_EDIT))
+				if (!$contract->has_permission(PHPGW_ACL_EDIT))
 				{
 					return false;
 				}
 			}
 			else
 			{
-				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					return false;
 				}
@@ -402,18 +402,18 @@
 		 * @param $document	the given document
 		 * @return name/value array ('document_type','id')
 		 */
-		private function get_type_and_id($document)
+		private function get_type_and_id( $document )
 		{
 			$document_type;
 			$id;
 			$contract_id = $document->get_contract_id();
 			$party_id	 = $document->get_party_id();
-			if(isset($contract_id) && $contract_id > 0)
+			if (isset($contract_id) && $contract_id > 0)
 			{
 				$document_type	 = rental_sodocument::$CONTRACT_DOCUMENTS;
 				$id				 = $contract_id;
 			}
-			else if(isset($party_id) && $party_id > 0)
+			else if (isset($party_id) && $party_id > 0)
 			{
 				$document_type	 = rental_sodocument::$PARTY_DOCUMENTS;
 				$id				 = $party_id;

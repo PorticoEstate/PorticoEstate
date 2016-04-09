@@ -63,9 +63,9 @@
 		 * @param array $data location_id and location_item_id
 		 * @return array content.
 		 */
-		public function read($data = array())
+		public function read( $data = array() )
 		{
-			if(!isset($data['location_id']) || !isset($data['location_item_id']) || !$data['location_item_id'])
+			if (!isset($data['location_id']) || !isset($data['location_item_id']) || !$data['location_item_id'])
 			{
 				return array();
 			}
@@ -86,7 +86,7 @@
 			$lang_yes = lang('yes');
 			$lang_no = lang('no');
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$values[] = array
 					(
@@ -108,7 +108,7 @@
 			$socommon = CreateObject('property.socommon');
 
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
 				$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data', $entry['contact_id']);
 
@@ -118,7 +118,7 @@
 
 				$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id = " . (int)$entry['contact_id'];
 				$this->_db->query($sql, __LINE__, __FILE__);
-				if($this->_db->next_record())
+				if ($this->_db->next_record())
 				{
 					$account_id = $this->_db->f('account_id');
 					$prefs = $socommon->create_preferences('property', $account_id);
@@ -137,14 +137,14 @@
 		 * @param array $data location and the number of preceding tables in the same page
 		 * @return array table def data and prepared content.
 		 */
-		public function get_jquery_table_def($data = array())
+		public function get_jquery_table_def( $data = array() )
 		{
-			if(!isset($data['count']))
+			if (!isset($data['count']))
 			{
 				throw new Exception("property_notify::get_jquery_table_def() - Missing count in input");
 			}
 
-			if(!isset($data['requestUrl']) || !$requestUrl = $data['requestUrl'])
+			if (!isset($data['requestUrl']) || !$requestUrl = $data['requestUrl'])
 			{
 				throw new Exception("property_notify::get_jquery_table_def() - Missing requestUrl in input");
 			}
@@ -153,7 +153,7 @@
 
 			$content = array();
 
-			if(isset($data['location_id']) && isset($data['location_item_id']))
+			if (isset($data['location_id']) && isset($data['location_item_id']))
 			{
 				$content = $this->read($data);
 			}
@@ -210,7 +210,7 @@
 				array('my_name' => 'select_none')
 			);
 
-			foreach($buttons as $entry)
+			foreach ($buttons as $entry)
 			{
 				$tabletools[] = array
 					(
@@ -285,7 +285,7 @@ JS;
 		public function update_data()
 		{
 			$action = phpgw::get_var('action', 'string', 'GET');
-			switch($action)
+			switch ($action)
 			{
 				case 'refresh_notify_contact':
 					return $this->refresh_notify_contact();
@@ -302,23 +302,23 @@ JS;
 
 			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-			if(!$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_EDIT, $location_info['appname']))
+			if (!$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_EDIT, $location_info['appname']))
 			{
 				return;
 			}
 
 			$update = false;
 			$type = phpgw::get_var('type');
-			if($notify = phpgw::get_var('notify'))
+			if ($notify = phpgw::get_var('notify'))
 			{
 				$ids = $notify['ids'];
 				$ids = phpgw::get_var('ids');
 //				_debug_array($ids);
-				if($ids)
+				if ($ids)
 				{
 					$value_set = array();
 
-					switch($type)
+					switch ($type)
 					{
 						case 'email':
 							$value_set['notification_method'] = 'email';
@@ -339,7 +339,7 @@ JS;
 							break;
 					}
 
-					if($value_set)
+					if ($value_set)
 					{
 						$value_set = $this->_db->validate_update($value_set);
 //						_debug_array("UPDATE phpgw_notification SET {$value_set} WHERE id IN (". implode(',', $ids) . ')');
@@ -350,11 +350,11 @@ JS;
 				$update = true;
 			}
 
-			if($location_id && $location_item_id && $contact_id && !$update)
+			if ($location_id && $location_item_id && $contact_id && !$update)
 			{
 				$sql = "SELECT id FROM phpgw_notification WHERE location_id = {$location_id} AND location_item_id = {$location_item_id} AND contact_id = {$contact_id}";
 				$this->_db->query($sql, __LINE__, __FILE__);
-				if(!$this->_db->next_record())
+				if (!$this->_db->next_record())
 				{
 					$values_insert = array
 						(
@@ -374,7 +374,7 @@ JS;
 
 			$content = $this->read(array('location_id' => $location_id, 'location_item_id' => $location_item_id));
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$result_data = array
 					(

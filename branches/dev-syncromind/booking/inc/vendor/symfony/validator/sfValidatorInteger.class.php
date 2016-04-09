@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorInteger validates an integer. It also converts the input value to an integer.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorInteger extends sfValidatorBase
-{
+	class sfValidatorInteger extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -36,7 +36,7 @@ class sfValidatorInteger extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addMessage('max', '"%value%" must be less than %max%.');
     $this->addMessage('min', '"%value%" must be greater than %min%.');
@@ -50,7 +50,7 @@ class sfValidatorInteger extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     $clean = intval($value);
 
@@ -71,4 +71,4 @@ class sfValidatorInteger extends sfValidatorBase
 
     return $clean;
   }
-}
+	}

@@ -1,9 +1,9 @@
 <!-- BEGIN form -->
 <b>{lang_changepassword} {value_username}</b><hr><p>
 
-   <center>{errors}</center>
+<center>{errors}</center>
 
-   <form method="POST" action="{form_action}">
+<form method="POST" action="{form_action}">
     <table border="0">
      <tr>
        <td>
@@ -27,7 +27,7 @@
        </td>
      </tr>
     </table>
-   </form>
-   <br>
-   <pre>{sql_message}</pre>
+</form>
+<br>
+<pre>{sql_message}</pre>
 <!-- END form -->

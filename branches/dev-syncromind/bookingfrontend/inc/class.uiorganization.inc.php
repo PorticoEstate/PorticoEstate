@@ -26,7 +26,7 @@
 			return parent::index_json();
 		}
 
-		public function get_orgid($orgnr)
+		public function get_orgid( $orgnr )
 		{
 			return $this->bo->so->get_orgid($orgnr);
 		}
@@ -35,7 +35,7 @@
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
-			if(isset($organization['permission']['write']))
+			if (isset($organization['permission']['write']))
 			{
 				parent::edit();
 			}
@@ -53,7 +53,7 @@
 				'id' => $organization['id']));
 			$organization['start']				 = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
 				'type' => "organization"));
-			if(trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])))
+			if (trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])))
 			{
 				$organization['homepage'] = 'http://' . $organization['homepage'];
 			}
@@ -66,7 +66,7 @@
 			$bouser						 = CreateObject('bookingfrontend.bouser');
 			$organization['login_link']	 = 'login.php' . $auth_forward;
 			$organization['logoff_link'] = 'logoff.php' . $auth_forward;
-			if($bouser->is_organization_admin($organization['id']))
+			if ($bouser->is_organization_admin($organization['id']))
 				$organization['logged_on']	 = true;
 
 			phpgwapi_jquery::load_widget("core");

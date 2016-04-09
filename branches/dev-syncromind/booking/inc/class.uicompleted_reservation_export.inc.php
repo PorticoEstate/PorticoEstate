@@ -30,19 +30,19 @@
 			$this->url_prefix			 = 'booking.uicompleted_reservation_export';
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function redirect_to($action, $params = array())
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -61,7 +61,7 @@
 			$filter_to		 = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 			$filter_params	 = is_null($filter_to) ? array() : array('filter_to' => $filter_to);
 
-			if(!($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking') || $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))
+			if (!($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking') || $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))
 			{
 				//$this->flash_form_errors(array('access_denied' => lang("Access denied")));
 				phpgwapi_cache::message_set(lang('Access denied'), 'error');
@@ -70,14 +70,14 @@
 			//This will read all of the list data using the values of the standard search filters in the ui index view
 			$exports = $this->bo->read_all();
 
-			if(!is_array($exports) || count($exports['results']) <= 0)
+			if (!is_array($exports) || count($exports['results']) <= 0)
 			{
 				//$this->flash_form_errors(array('empty_list' => lang("Cannot generate files from empty list")));
 				phpgwapi_cache::message_set(lang('Cannot generate files from empty list'), 'error');
 				$this->redirect_to('index', $filter_params);
 			}
 
-			if(is_array($this->generated_files_bo->generate_for($exports['results'])))
+			if (is_array($this->generated_files_bo->generate_for($exports['results'])))
 			{
 				$this->redirect_to('index', array('ui' => 'completed_reservation_export_file'));
 			}
@@ -89,12 +89,12 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-			if(phpgw::get_var('generate_files'))
+			if (phpgw::get_var('generate_files'))
 			{
 				$this->generate_files();
 			}
@@ -102,8 +102,10 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_to');
 			phpgwapi_jquery::load_widget('datepicker');
 
+			self::add_javascript('booking', 'booking', 'completed_reservation_export.js');
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Exported Files'),
 				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
@@ -128,7 +130,7 @@
 				),
 				'datatable'	 => array(
 					'source'	 => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by'	 => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
 					'field'		 => array(
 						array(
 							'key'		 => 'id',
@@ -188,14 +190,16 @@
 					)
 				)
 			);
-			if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking') || $this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking') || $this->bo->has_role(booking_sopermission::ROLE_MANAGER))
 			{
 				$data['form']['list_actions'] = array(
 					'item' => array(
 						array(
-							'type'	 => 'submit',
+							'type' => 'button',
 							'name'	 => 'generate_files',
 							'value'	 => lang('Generate files') . '...',
+							'onClick' => "generatefiles();"
+
 						),
 					)
 				);
@@ -204,16 +208,11 @@
 			$filters_to		 = strtotime(extract_values($_GET, array("filter_to")));
 			$data['filters'] = date("Y-m-d", $filters_to);
 
-
-//			$this->render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function query() //index_json
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
-
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
@@ -225,7 +224,7 @@
 			$dir	 = $order[0]['dir'];
 
 
-			switch($sort)
+			switch ($sort)
 			{
 				case 'building_id':
 					$_sort	 = array('building_id', 'id');
@@ -252,30 +251,28 @@
 					$_sort	 = array('created_on', 'id');
 					break;
 				default:
-					$_sort	 = $sort;
+					$_sort = array('created_on', 'id');
+//					$_sort = $sort;
+					$dir = 'DESC';
 					break;
 			}
 
 			$filters = array();
-			foreach($this->bo->so->get_field_defs() as $field => $params)
+			foreach ($this->bo->so->get_field_defs() as $field => $params)
 			{
-				if(phpgw::get_var("filter_$field"))
+				if (phpgw::get_var("filter_$field"))
 				{
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
 			$filter_to = phpgw::get_var('to', 'string', 'REQUEST', null);
 
-			if($filter_to)
+			if ($filter_to)
 			{
 				$filter_to2			 = split("/", $filter_to);
 				$filter_to			 = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
 				$filters['where'][]	 = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
-
-
-
-
 
 			$params = array(
 				'start'		 => $start,
@@ -286,32 +283,28 @@
 				'filters'	 => $filters
 			);
 
-
-
 			$exports = $this->bo->so->read($params);
 			array_walk($exports["results"], array($this, "_add_links"), $this->module . ".uicompleted_reservation_export.show");
 
-			foreach($exports["results"] as &$export)
+			foreach ($exports["results"] as &$export)
 			{
 				$export = $this->bo->so->initialize_entity($export);
 				$this->add_default_display_data($export);
-
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $export['created_by_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($export['created_by_name']);
+				if($account_id)
 				{
-					$export['created_by_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$export['created_by_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			$results = $this->jquery_results($exports);
 			return $results;
 		}
 
-		public function create_link_data($entity, $id_key, $label_key, $null_label, $ui, $action = 'show')
+		public function create_link_data( $entity, $id_key, $label_key, $null_label, $ui, $action = 'show' )
 		{
 			$link_data = array();
 
-			if(isset($entity[$id_key]) && !empty($entity[$id_key]))
+			if (isset($entity[$id_key]) && !empty($entity[$id_key]))
 			{
 				$link_data['label']	 = $entity[$label_key];
 				$link_data['href']	 = $this->link_to($action, array('ui' => $ui, 'id' => $entity[$id_key]));
@@ -324,12 +317,12 @@
 			return $link_data;
 		}
 
-		public function create_link_data_by_ref(&$entity, $id_key, $label_key, $null_label, $ui, $action = 'show')
+		public function create_link_data_by_ref( &$entity, $id_key, $label_key, $null_label, $ui, $action = 'show' )
 		{
 			$entity[$id_key] = $this->create_link_data($entity, $id_key, $label_key, $null_label, $ui, $action);
 		}
 
-		public function add_default_display_data(&$export)
+		public function add_default_display_data( &$export )
 		{
 			$this->create_link_data_by_ref($export, 'season_id', 'season_name', lang('All'), 'season');
 			$this->create_link_data_by_ref($export, 'building_id', 'building_name', lang('All'), 'building');
@@ -341,13 +334,13 @@
 			$this->add_export_configurations_display_data($export);
 		}
 
-		public function add_export_configurations_display_data(&$export)
+		public function add_export_configurations_display_data( &$export )
 		{
-			if(is_array($export['export_configurations']))
+			if (is_array($export['export_configurations']))
 			{
-				foreach($export['export_configurations'] as $type => $conf)
+				foreach ($export['export_configurations'] as $type => $conf)
 				{
-					if(!is_string($type))
+					if (!is_string($type))
 					{
 						throw new LogicException("Invalid export configuration type");
 					}
@@ -378,26 +371,34 @@
 			return phpgw::get_var('export_key', 'string', 'REQUEST', null);
 		}
 
-		public function pre_validate($export)
+		public function pre_validate( $export )
 		{
-			if(!is_array($errors = $this->bo->validate($export)))
-			{ return;}
+			if (!is_array($errors = $this->bo->validate($export)))
+			{
+				return;
+			}
 
 			$export_errors = array_intersect_key(
 			$errors, array('nothing_to_export' => true, 'invalid_customer_ids' => true)
 			);
 
-			if(!count($export_errors) > 0)
-			{ return;}
+			if (!count($export_errors) > 0)
+			{
+				return;
+			}
 
 			$redirect_params = array('ui' => 'completed_reservation');
 
-			if($export_key = $this->get_export_key())
+			if ($export_key = $this->get_export_key())
 			{
 				$redirect_params['export_key'] = $export_key;
 			}
 
-			$this->flash_form_errors($export_errors);
+//			$this->flash_form_errors($export_errors);
+			foreach ($export_errors as $key => $value)
+			{
+				phpgwapi_cache::message_set($value, 'error');
+			}
 			$this->redirect_to('index', $redirect_params);
 		}
 
@@ -405,9 +406,8 @@
 		{
 			//Values passed in from the "Export"-action in uicompleted_reservation.index
 			$export = extract_values($_GET, $this->fields);
-
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$export	 = array();
 				$export	 = extract_values($_POST, $this->fields);
@@ -417,38 +417,44 @@
 				$export['from_'] = date('Y-m-d H:i:s');
 
 				$errors = $this->bo->validate($export);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->add($export);
 						$this->redirect_to('index');
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
 			}
 
-			if(!isset($export['to_']) || empty($export['to_']))
+			if (!isset($export['to_']) || empty($export['to_']))
 			{
 				$export['to_'] = date('Y-m-d');
 			}
 
+			//$this->flash_form_errors($errors);
+
+			foreach ($errors as $key => $value)
+			{
+				phpgwapi_cache::message_set($value, 'error');
+			}
+
 			$this->pre_validate($export);
 
-			$this->flash_form_errors($errors);
-
 			$cancel_params	 = array('ui' => 'completed_reservation');
-			if($export_key		 = $this->get_export_key())
+			if ($export_key = $this->get_export_key())
 			{
 				$cancel_params['export_key'] = $export_key;
 			}
 
 			$export['cancel_link'] = $this->link_to('index', $cancel_params);
+			phpgwapi_jquery::load_widget('autocomplete');
 
-			$this->render_template('completed_reservation_export_form', array('new_form' => true,
+			self::render_template_xsl('completed_reservation_export_form', array('new_form' => true,
 				'export' => $export));
 		}
 	}

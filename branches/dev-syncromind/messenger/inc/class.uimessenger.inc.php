@@ -38,7 +38,7 @@
 			$this->template		 = $GLOBALS['phpgw']->template;
 			$this->bo			 = CreateObject('messenger.bomessenger');
 			$this->nextmatchs	 = createobject('phpgwapi.nextmatchs');
-			if(!$this->bo->is_connected())
+			if (!$this->bo->is_connected())
 			{
 				$this->_error_not_connected();
 			}
@@ -50,9 +50,9 @@
 			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'messenger');
 		}
 
-		function compose($errors = '')
+		function compose( $errors = '' )
 		{
-			if(!$GLOBALS['phpgw']->acl->check('.compose', PHPGW_ACL_ADD, 'messenger'))
+			if (!$GLOBALS['phpgw']->acl->check('.compose', PHPGW_ACL_ADD, 'messenger'))
 			{
 				$this->_no_access('compose');
 			}
@@ -65,7 +65,7 @@
 			$this->_display_headers();
 			$this->_set_compose_read_blocks();
 
-			if(is_array($errors))
+			if (is_array($errors))
 			{
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
@@ -74,7 +74,7 @@
 			$this->template->set_var('header_message', lang('Compose message'));
 
 			$users = $this->bo->get_available_users();
-			foreach($users as $uid => $name)
+			foreach ($users as $uid => $name)
 			{
 				$this->template->set_var(array
 					(
@@ -100,7 +100,7 @@
 
 		function compose_groups()
 		{
-			if(!$GLOBALS['phpgw']->acl->check('.compose_groups', PHPGW_ACL_ADD, 'messenger'))
+			if (!$GLOBALS['phpgw']->acl->check('.compose_groups', PHPGW_ACL_ADD, 'messenger'))
 			{
 				$this->_no_access('compose_groups');
 			}
@@ -112,29 +112,29 @@
 			$values['account_groups']	 = (array)phpgw::get_var('account_groups', 'int', 'POST');
 			$receipt					 = array();
 
-			if(isset($values['save']))
+			if (isset($values['save']))
 			{
-				if(!$values['account_groups'])
+				if (!$values['account_groups'])
 				{
 					$receipt['error'][] = array('msg' => lang('Missing groups'));
 				}
 
-				if($GLOBALS['phpgw']->session->is_repost())
+				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][] = array('msg' => lang('repost'));
 				}
 
-				if(!isset($values['subject']) || !$values['subject'])
+				if (!isset($values['subject']) || !$values['subject'])
 				{
 					$receipt['error'][] = array('msg' => lang('Missing subject'));
 				}
 
-				if(!isset($values['content']) || !$values['content'])
+				if (!isset($values['content']) || !$values['content'])
 				{
 					$receipt['error'][] = array('msg' => lang('Missing content'));
 				}
 
-				if(isset($values['save']) && $values['account_groups'] && !$receipt['error'])
+				if (isset($values['save']) && $values['account_groups'] && !$receipt['error'])
 				{
 					$receipt = $this->bo->send_to_groups($values);
 				}
@@ -143,13 +143,13 @@
 
 			$all_groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 
-			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$available_apps	 = $GLOBALS['phpgw_info']['apps'];
 				$valid_groups	 = array();
-				foreach($available_apps as $_app => $dummy)
+				foreach ($available_apps as $_app => $dummy)
 				{
-					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
 					{
 						$valid_groups = array_merge($valid_groups, $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
 					}
@@ -162,7 +162,7 @@
 				$valid_groups = array_keys($all_groups);
 			}
 
-			foreach($all_groups as $group)
+			foreach ($all_groups as $group)
 			{
 				$group_list[$group->id] = array
 					(
@@ -186,9 +186,9 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('compose_groups' => $data));
 		}
 
-		function compose_global($errors = '')
+		function compose_global( $errors = '' )
 		{
-			if(!$GLOBALS['phpgw']->acl->check('.compose_global', PHPGW_ACL_ADD, 'messenger'))
+			if (!$GLOBALS['phpgw']->acl->check('.compose_global', PHPGW_ACL_ADD, 'messenger'))
 			{
 				$this->_no_access('compose_global');
 			}
@@ -200,7 +200,7 @@
 			$this->_display_headers();
 			$this->_set_compose_read_blocks();
 
-			if(is_array($errors))
+			if (is_array($errors))
 			{
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
@@ -247,7 +247,7 @@
 				'cat_id'	 => $cat_id
 			);
 
-			switch($columns[$order[0]['column']]['data'])
+			switch ($columns[$order[0]['column']]['data'])
 			{
 				case 'id':
 					$params['order'] = 'message_id';
@@ -269,7 +269,7 @@
 			$values = $this->bo->read_inbox($params);
 
 			$new_values = array();
-			foreach($values as &$value)
+			foreach ($values as &$value)
 			{
 				$value['status']		 = $value['status'] == '&nbsp;' ? '' : $value['status'];
 				$value['message_date']	 = $value['date'];
@@ -278,7 +278,7 @@
 				$new_values[]			 = $value;
 			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $new_values;
 			}
@@ -293,14 +293,14 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				phpgw::no_access();
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "messenger::inbox";
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 
 				return $this->query();
@@ -386,7 +386,7 @@
 				)
 			);
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 
 				$data['datatable']['actions'][] = array(
@@ -410,7 +410,7 @@
 					'confirm_msg'	 => lang('do you really want to delete this entry'),
 					'action'		 => $GLOBALS['phpgw']->link
 					(
-					'/index.php', array('menuaction' => 'messenger.uimessenger.delete'	)
+						'/index.php', array('menuaction' => 'messenger.uimessenger.delete')
 					),
 					'parameters'	 => json_encode($parameters)
 				);
@@ -420,7 +420,6 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
-
 
 		function inbox()
 		{
@@ -452,7 +451,7 @@
 			);
 			$messages	 = $this->bo->read_inbox($params);
 
-			if(!is_array($messages))
+			if (!is_array($messages))
 			{
 				$this->template->set_var('lang_empty', lang('You have no messages'));
 				$this->template->fp('rows', 'row_empty', True);
@@ -463,10 +462,10 @@
 					'menuaction' => 'messenger.uimessenger.delete')));
 				$this->template->set_var('button_delete', '<input type="image" src="' . PHPGW_IMAGES . '/delete.gif" name="delete" title="' . lang('Delete selected') . '" border="0">');
 				$i = 0;
-				foreach($messages as $message)
+				foreach ($messages as $message)
 				{
 					$status = $message['status'];
-					if($message['status'] == 'N' || $message['status'] == 'O')
+					if ($message['status'] == 'N' || $message['status'] == 'O')
 					{
 						$status = '&nbsp;';
 					}
@@ -521,14 +520,17 @@
 				'message_id' => $message['id']))
 			. '">' . lang('Forward') . '</a>');
 
-			switch($message['status'])
+			switch ($message['status'])
 			{
-				case 'N': $this->template->set_var('value_status', lang('New'));break;
-				case 'R': $this->template->set_var('value_status', lang('Replied'));break;
-				case 'F': $this->template->set_var('value_status', lang('Forwarded'));break;
+				case 'N': $this->template->set_var('value_status', lang('New'));
+					break;
+				case 'R': $this->template->set_var('value_status', lang('Replied'));
+					break;
+				case 'F': $this->template->set_var('value_status', lang('Forwarded'));
+					break;
 			}
 
-			if(isset($message['global_message']) && $message['global_message'])
+			if (isset($message['global_message']) && $message['global_message'])
 			{
 				$this->template->fp('read_buttons', 'form_read_buttons_for_global');
 			}
@@ -542,17 +544,17 @@
 			$this->template->pfp('out', 'form');
 		}
 
-		function reply($errors = '', $message = '')
+		function reply( $errors = '', $message = '' )
 		{
 			$message_id = $_REQUEST['message_id'];
 
-			if(is_array($errors))
+			if (is_array($errors))
 			{
 				$errors	 = $errors['errors'];
 				$message = $errors['message'];
 			}
 
-			if(!$message)
+			if (!$message)
 			{
 				$message = $this->bo->read_message_for_reply($message_id, 'RE');
 			}
@@ -562,7 +564,7 @@
 			$this->_set_common_langs();
 			$this->template->set_block('_form', 'form_reply_to');
 
-			if(is_array($errors))
+			if (is_array($errors))
 			{
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
@@ -583,17 +585,17 @@
 			$this->template->pfp('out', 'form');
 		}
 
-		function forward($errors = array(), $message = '')
+		function forward( $errors = array(), $message = '' )
 		{
 			$message_id = $_REQUEST['message_id'];
 
-			if($errors)
+			if ($errors)
 			{
 				$errors = $errors['errors'];
 //				$message = $errors['message'];
 			}
 
-			if(!$message)
+			if (!$message)
 			{
 				$message = $this->bo->read_message_for_reply($message_id, 'FW');
 			}
@@ -603,7 +605,7 @@
 			$this->_set_common_langs();
 
 			$users = $this->bo->get_available_users();
-			foreach($users as $uid => $name)
+			foreach ($users as $uid => $name)
 			{
 				$this->template->set_var(array
 					(
@@ -614,7 +616,7 @@
 			}
 
 
-			if($errors)
+			if ($errors)
 			{
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
@@ -635,7 +637,7 @@
 			$this->template->pfp('out', 'form');
 		}
 
-		function _display_headers($extras = '')
+		function _display_headers( $extras = '' )
 		{
 			$this->template->set_file('_header', 'header.tpl');
 			$this->template->set_block('_header', 'global_header');
@@ -644,12 +646,12 @@
 			$this->template->set_var('lang_compose', '<a href="' . $GLOBALS['phpgw']->link('/index.php', array(
 				'menuaction' => 'messenger.uimessenger.compose')) . '">' . lang('Compose') . '</a>');
 
-			if(isset($extras['nextmatchs_left']) && $extras['nextmatchs_left'])
+			if (isset($extras['nextmatchs_left']) && $extras['nextmatchs_left'])
 			{
 				$this->template->set_var('nextmatchs_left', $extras['nextmatchs_left']);
 			}
 
-			if(isset($extras['nextmatchs_right']) && $extras['nextmatchs_right'])
+			if (isset($extras['nextmatchs_right']) && $extras['nextmatchs_right'])
 			{
 				$this->template->set_var('nextmatchs_right', $extras['nextmatchs_right']);
 			}
@@ -688,7 +690,7 @@
 			$this->template->set_block('_form', 'form_read_buttons_for_global');
 		}
 
-		function _no_access($location)
+		function _no_access( $location )
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 

@@ -1,29 +1,36 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	// When janitor is selected, vouchers are fetched from db and voucer select list is populated
-	$("#janitor_lid").change(function () {
+	$("#janitor_lid").change(function ()
+	{
 		update_voucher_filter();
 	});
 
-	$("#supervisor_lid").change(function () {
+	$("#supervisor_lid").change(function ()
+	{
 		update_voucher_filter();
 	});
 
-	$("#budget_responsible_lid").change(function () {
+	$("#budget_responsible_lid").change(function ()
+	{
 		update_voucher_filter();
 	});
 
-	$("#search").click(function (e) {
+	$("#search").click(function (e)
+	{
 		update_voucher_filter();
 	});
 
-	$("#get_template").click(function (e) {
+	$("#get_template").click(function (e)
+	{
 		var oArgs_template = {menuaction: 'property.uiinvoice2.get_split_template', voucher_id: $("#voucher_id").val()};
 		var requestUrl_template = phpGWLink('index.php', oArgs_template);
 		window.open(requestUrl_template);
 	});
 
-	$("#voucher_id_filter").change(function () {
+	$("#voucher_id_filter").change(function ()
+	{
 
 		$("#voucher_id").val('');
 		$("#voucher_id_text").html('');
@@ -74,7 +81,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl + "&voucher_id=" + voucher_id,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					line_id = data['line_id'];
@@ -87,14 +95,16 @@ $(document).ready(function () {
 		});
 	});
 
-	$(document).on("click", "#approve_line", function (e) {
+	$(document).on("click", "#approve_line", function (e)
+	{
 		$("#receipt").html('');
 		var line_id = $(this).val();
 		var voucher_id_orig = $("#voucher_id").val();
 		update_form_values(line_id, voucher_id_orig);
 	});
 
-	$("#dim_e").change(function () {
+	$("#dim_e").change(function ()
+	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -102,7 +112,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					if (data.active != 1)
@@ -114,7 +125,8 @@ $(document).ready(function () {
 		});
 	});
 
-	$("#voucher_form").on("submit", function (e) {
+	$("#voucher_form").on("submit", function (e)
+	{
 		e.preventDefault();
 		var line_id = $("#line_id").val();
 		var voucher_id_orig = $("#voucher_id").val();
@@ -188,7 +200,8 @@ $(document).ready(function () {
 //			data: formData,
 //			processData: false,
 //			contentType: false,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data)
 				{
 					if (data.sessionExpired)
@@ -215,13 +228,15 @@ $(document).ready(function () {
 						var requestUrl_table = phpGWLink('index.php', oArgs_table, true);
 						JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl_table);
 
-					} else
+					}
+					else
 					{
 						$(submitBnt).val("Feil ved lagring");
 					}
 
 					// Changes text on save button back to original
-					window.setTimeout(function () {
+					window.setTimeout(function ()
+					{
 						$(submitBnt).val('Lagre Linje');
 						$(submitBnt).addClass("not_active");
 					}, 1000);
@@ -258,7 +273,8 @@ $(document).ready(function () {
 
 
 
-function update_voucher_filter() {
+function update_voucher_filter()
+{
 
 	var oArgs = {
 		menuaction: 'property.uiinvoice2.get_vouchers',
@@ -277,7 +293,8 @@ function update_voucher_filter() {
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				if (data.sessionExpired)
@@ -289,12 +306,14 @@ function update_voucher_filter() {
 				htmlString = "<option>" + data.length + " bilag funnet</option>"
 				var obj = data;
 
-				$.each(obj, function (i) {
+				$.each(obj, function (i)
+				{
 					htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 				});
 
 				$("#voucher_id_filter").html(htmlString);
-			} else
+			}
+			else
 			{
 				htmlString += "<option>Ingen bilag</option>"
 				$("#voucher_id_filter").html(htmlString);
@@ -304,7 +323,8 @@ function update_voucher_filter() {
 }
 
 
-function update_form_values(line_id, voucher_id_orig) {
+function update_form_values(line_id, voucher_id_orig)
+{
 	var oArgs = {menuaction: 'property.uiinvoice2.get_single_line'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -312,7 +332,8 @@ function update_form_values(line_id, voucher_id_orig) {
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl + "&line_id=" + line_id,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data.sessionExpired)
 			{
 				alert('Sesjonen er utløpt - du må logge inn på nytt');
@@ -333,7 +354,8 @@ function update_form_values(line_id, voucher_id_orig) {
 				if (voucher[0].voucher_out_id)
 				{
 					var voucher_id_text = voucher[0].voucher_out_id;
-				} else
+				}
+				else
 				{
 					var voucher_id_text = voucher[0].voucher_id;
 				}
@@ -355,7 +377,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString_order = " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
 
 					$("#order_text").html(htmlString_order);
-				} else
+				}
+				else
 				{
 					$("#order_text").html('Bestilling');
 				}
@@ -368,7 +391,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					{
 						$("#invoice_id_text").html(voucher[0].external_ref);
 						document.getElementById('image_content').src = voucher[0].image_url;
-					} else
+					}
+					else
 					{
 						$("#invoice_id_text").html('FakturaNr');
 						document.getElementById('image_content').src = '';
@@ -420,10 +444,12 @@ function update_form_values(line_id, voucher_id_orig) {
 				if (voucher[0].closed)
 				{
 					checked_close_order = "checked = \"checked\"";
-				} else if (voucher[0].project_type_id == 1 && voucher[0].periodization_id) // operation projekts
+				}
+				else if (voucher[0].project_type_id == 1 && voucher[0].periodization_id) // operation projekts
 				{
 					checked_close_order = "checked = \"checked\"";
-				} else if (!voucher[0].continuous)
+				}
+				else if (!voucher[0].continuous)
 				{
 					checked_close_order = "checked = \"checked\"";
 				}
@@ -438,7 +464,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString = "";
 					var obj = data['generic']['dimb_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].dim_b)
 						{
@@ -454,7 +481,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString = "";
 					var obj = data['generic']['dime_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].dim_e)
 						{
@@ -473,7 +501,8 @@ function update_form_values(line_id, voucher_id_orig) {
 
 					var obj = data['generic']['tax_code_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].tax_code)
 						{
@@ -490,7 +519,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString = "";
 					var obj = data['generic']['period_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].period)
 						{
@@ -506,7 +536,8 @@ function update_form_values(line_id, voucher_id_orig) {
 
 					var obj = data['generic']['periodization_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].periodization)
 						{
@@ -523,7 +554,8 @@ function update_form_values(line_id, voucher_id_orig) {
 
 					var obj = data['generic']['periodization_start_list']['options'];
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].periodization_start)
 						{
@@ -540,7 +572,8 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString = "";
 
 					var obj = data['generic']['process_code_list']['options'];
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var selected = '';
 						if (obj[i].id == voucher[0].process_code)
 						{
@@ -563,11 +596,13 @@ function update_form_values(line_id, voucher_id_orig) {
 						if (data['generic']['approved_list'][i].date)
 						{
 							var htmlString = role_initials + ": " + data['generic']['approved_list'][i].date;
-						} else
+						}
+						else
 						{
 							var htmlString = "<select id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
 							var obj = data['generic']['approved_list'][i]['user_list'].options;
-							$.each(obj, function (i) {
+							$.each(obj, function (i)
+							{
 								var selected = '';
 								if (obj[i].id == role_initials)
 								{
@@ -588,11 +623,13 @@ function update_form_values(line_id, voucher_id_orig) {
 					var htmlString2 = "<table><tr>";
 
 					var obj = data['generic']['approve_list']['options'];
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						htmlString2 += "<td align=\"center\">" + obj[i].name + "</td>";
 					});
 					htmlString2 += "</tr><tr>";
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 						var checked = '';
 						var selected = '';
 						if (typeof (obj[i].selected) != 'undefined' && obj[i].selected == 1)
@@ -613,7 +650,8 @@ function update_form_values(line_id, voucher_id_orig) {
 				var email_buttons = "<input type=\"button\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('" + Url_email + "');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
 				email_buttons += "<input type=\"button\" value=\"Åpne epost\" onClick=\"javascript:location.href = 'mailto:?subject=Link til faktura&body=Lim inn linken her...';\" />";
 				$("#email_link").html(email_buttons);
-			} else
+			}
+			else
 			{
 				$("#line_text").val('');
 				$("#voucher_id").val('');
@@ -657,18 +695,22 @@ function update_form_values(line_id, voucher_id_orig) {
 
 //------------
 
-function load_order(id) {
+function load_order(id)
+{
 	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function () {
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+		{
 			closeJS_local();
 		}});
 }
 
-function load_split(voucher_id) {
+function load_split(voucher_id)
+{
 	var oArgs = {menuaction: 'property.uiinvoice2.split_voucher', voucher_id: voucher_id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function () {
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+		{
 			reset_table(voucher_id);
 		}});
 }
@@ -683,7 +725,8 @@ function reset_table(voucher_id)
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				line_id = data['line_id'];
@@ -712,7 +755,8 @@ function closeJS_remote()
 	TINY.box.hide();
 }
 
-function hide_popupBox( ) {
+function hide_popupBox( )
+{
 	var line_id = $("#line_id").val( );
 	var voucher_id_orig = $("#voucher_id").val();
 	$("#curtain").hide();
@@ -722,7 +766,8 @@ function hide_popupBox( ) {
 
 
 
-function copyToClipboard(text) {
+function copyToClipboard(text)
+{
 	window.prompt("Kopier til utklippstavle: Ctrl+C, Enter", text);
 	// window.open("mailto:?&subject=Link til faktura");
 	// window.close();

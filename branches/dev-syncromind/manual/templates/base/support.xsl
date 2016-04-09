@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-	<xsl:template match="send" xmlns:php="http://php.net/xsl">
+<xsl:template match="send" xmlns:php="http://php.net/xsl">
 		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 		<table cellpadding="0" cellspacing="0" width="100%">
  			<xsl:choose>
@@ -79,7 +79,9 @@
 
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>					
+					<xsl:variable name="lang_send">
+						<xsl:value-of select="php:function('lang', 'send')" />
+					</xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'>
 					</input>
 				</td>
@@ -87,5 +89,5 @@
 
  		</table>
  		</form>
-	</xsl:template>
+</xsl:template>
 

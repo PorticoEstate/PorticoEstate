@@ -25,14 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+	 * @version $Id$
 	*/	
-
-
    	phpgw::import_class('controller.uiprocedure');
 
 	class mobilefrontend_uiprocedure extends controller_uiprocedure
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

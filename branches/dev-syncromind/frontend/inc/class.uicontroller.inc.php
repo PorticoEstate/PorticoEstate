@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * Frontend : a simplified tool for end users.
 	 *
@@ -9,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id: class.uientity.inc.php 11914 2014-04-23 13:12:52Z sigurdne $
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,7 +30,6 @@
 	 *
 	 * @package Frontend
 	 */
-
 	class frontend_uicontroller extends frontend_uicommon
 	{
 
@@ -53,10 +50,10 @@
 			$this->acl 					= & $GLOBALS['phpgw']->acl;			
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'frontend');
 	
-			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
+			phpgwapi_cache::session_set('frontend', 'tab', $this->location_id);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
-/*
+			/*
 			$this->bo->location_code = $this->location_code;
 			
 			$_org_units = array();
@@ -79,24 +76,23 @@
 			}
 			$org_units = array_keys($_org_units);
 			$this->bo->org_units = $org_units;
-*/
+			 */
 		}
 
 		/**
 		* Get the sublevels of the org tree into one arry
 		*/
-		private function _get_children($data = array(), &$_org_units)
+		private function _get_children( $data = array(), &$_org_units )
 		{
 			foreach ($data as $entry)
 			{
 				$_org_units[$entry['id']] = true;
-				if(isset($entry['children']) && $entry['children'])
+				if (isset($entry['children']) && $entry['children'])
 				{
 					$this->_get_children($entry['children'], $_org_units);			
 				}
 			}
 		}
-
 
 		public function index()
 		{
@@ -104,22 +100,26 @@
 			$this->insert_links_on_header_state();
 			//redirect if no rights
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 			
 			$data = array
 			(
-				'header'		=>$this->header_state,
-				'section'		=>array(
+				'header' => $this->header_state,
+				'section' => array(
 					'tabs'			=> $this->tabs,
 					'menu'			=> $this->menu,
-					'controller'	=> array('location_code'=> $this->location_code)
+					'controller' => array('location_code' => $this->location_code)
 					)
 			);
-			self::render_template_xsl(array( 'controller', 'datatable_inline', 'frontend'),  $data);
+			self::render_template_xsl(array('controller', 'datatable_inline', 'frontend'), $data);
 		}
 		
-		public function query() {}
+		public function query()
+		{
+
+		}
 	}

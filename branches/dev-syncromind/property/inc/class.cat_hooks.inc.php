@@ -37,15 +37,15 @@
 		/**
 		 * Handle a new category being added, create location to hold ACL-data
 		 */
-		function cat_add($data)
+		function cat_add( $data )
 		{
-			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
 
 			$location = '';
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = $location_info['location'];
@@ -56,13 +56,13 @@
 		/**
 		 * Handle a category being deleted, remove the location 
 		 */
-		function cat_delete($data)
+		function cat_delete( $data )
 		{
-			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
@@ -73,14 +73,14 @@
 		/**
 		 * Handle a category being edited, update the location info
 		 */
-		function cat_edit($data)
+		function cat_edit( $data )
 		{
-			if(isset($data['cat_owner']) && $data['cat_owner'] != -1)
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
 
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";

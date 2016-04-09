@@ -12,7 +12,7 @@
 		return $numberGeneratorInstance;
 	}
 
-	function testNumberGenerator(PhpgwContext $c)
+	function testNumberGenerator( PhpgwContext $c )
 	{
 		$numberGeneratorInstance = get_external_generator();
 
@@ -22,7 +22,7 @@
 		{
 			$numberGeneratorInstance->increment();
 		}
-		catch(LogicException $e)
+		catch (LogicException $e)
 		{
 			$logic_exception_if_no_active_transaction = true;
 		}
@@ -41,7 +41,7 @@
 			$numberGeneratorInstance->increment();
 			$no_logic_exception_if_active_transaction	 = true;
 		}
-		catch(LogicException $e)
+		catch (LogicException $e)
 		{
 
 		}
@@ -70,7 +70,7 @@
 		{
 			$numberGeneratorInstance->get_current();
 		}
-		catch(Exception $e)
+		catch (Exception $e)
 		{
 			print_info($e->getMessage());
 			$cannotGetCurrentWithoutLock = true;
@@ -102,7 +102,7 @@
 		{
 			$numberGeneratorInstance->get_current();
 		}
-		catch(LogicException $e)
+		catch (LogicException $e)
 		{
 			$unableToUseGeneratorPostTransaction = true;
 		}
@@ -113,7 +113,7 @@
 		$c->getDb()->transaction_begin(); //Begin transaction
 		$numberGeneratorInstance = get_external_generator();
 		sleep(4);
-		for($i = 0; $i < 10; $i++)
+		for ($i = 0; $i < 10; $i++)
 		{
 			print_info($numberGeneratorInstance->increment()->get_current());
 		}
@@ -124,7 +124,7 @@
 		$c->getDb()->transaction_begin(); //Begin transaction
 		$numberGeneratorInstance = get_external_generator();
 		sleep(4);
-		for($i = 0; $i < 10; $i++)
+		for ($i = 0; $i < 10; $i++)
 		{
 			print_info($numberGeneratorInstance->increment()->get_current());
 		}
@@ -132,18 +132,18 @@
 		sleep(4);
 	}
 
-	function pass_test($message)
+	function pass_test( $message )
 	{
 		echo "PASSED: " . $message . "\n";
 	}
 
-	function print_info($message)
+	function print_info( $message )
 	{
 		echo "INFO: " . $message . "\n";
 	}
 
 	// Create a handler function
-	function my_assert_handler($file, $line, $code)
+	function my_assert_handler( $file, $line, $code )
 	{
 		echo "Assertion Failed:\n" .
 		"File '$file'\n" .

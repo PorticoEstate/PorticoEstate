@@ -89,7 +89,7 @@
 
 		function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -99,7 +99,7 @@
 			$controls_array		 = $this->so_control->get_controls_by_control_area($control_areas_array[0]['id']);
 			$control_id			 = $control_areas_array[0]['id'];
 
-			if($control_id == null)
+			if ($control_id == null)
 				$control_id = 0;
 
 			$tabs = array(array(
@@ -156,13 +156,13 @@
 
 		function add_component_to_control()
 		{
-			if(phpgw::get_var('save_component'))
+			if (phpgw::get_var('save_component'))
 			{
 				//add component to control using component item ID
 				$items_checked	 = array();
 				$items			 = phpgw::get_var('values_assign');
 				$item_arr		 = explode('|', $items);
-				foreach($item_arr as $item)
+				foreach ($item_arr as $item)
 				{
 					$items_checked[] = explode(';', $item);
 				}
@@ -170,10 +170,10 @@
 
 				$control_id = phpgw::get_var('control_id');
 				//var_dump($control_id);
-				if($control_id != null && is_numeric($control_id))
+				if ($control_id != null && is_numeric($control_id))
 				{
 					//add chosen component to control
-					foreach($items_checked as $it)
+					foreach ($items_checked as $it)
 					{
 						$this->so_control->add_component_to_control($control_id, $it[0]);
 					}
@@ -182,7 +182,7 @@
 			}
 			else
 			{
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return $this->get_component();
 				}
@@ -263,7 +263,7 @@
 		{
 			$control_list = $this->so_control->get_control_component();
 
-			foreach($control_list as $control)
+			foreach ($control_list as $control)
 			{
 				$control['bim_name']	 = $this->so_control->getBimItemAttributeValue($control['bim_item_guid'], 'description');
 				$results['results'][]	 = $control;
@@ -293,7 +293,7 @@
 
 
 			$results = array();
-			foreach($component_list as $component)
+			foreach ($component_list as $component)
 			{
 				$component['checked']	 = false;
 				$results['results'][]	 = $component;
@@ -310,7 +310,7 @@
 			return $this->yui_results($results);
 		}
 
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			unset($value['query_location']);
 
@@ -332,9 +332,9 @@
 		public function get_component_types_by_category()
 		{
 			$category = phpgw::get_var('ifc');
-			if($ifc != null)
+			if ($ifc != null)
 			{
-				if($ifc = 1)
+				if ($ifc = 1)
 				{
 					$ifc = true;
 				}
@@ -345,7 +345,7 @@
 			}
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
-			if(count($bim_types) > 0)
+			if (count($bim_types) > 0)
 				return json_encode($bim_types);
 			else
 				return null;

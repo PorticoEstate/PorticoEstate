@@ -9,7 +9,7 @@
 		{
 			#parent::__construct();
 
-			if(!isset($GLOBALS['phpgw']->asyncservice) || !is_object($GLOBALS['phpgw']->asyncservice))
+			if (!isset($GLOBALS['phpgw']->asyncservice) || !is_object($GLOBALS['phpgw']->asyncservice))
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
@@ -31,14 +31,14 @@
 		 * @return boolean true if authorized
 		 * @throws booking_unauthorized_exception if not authorized
 		 */
-		protected function authorize($operation, $object = null)
+		protected function authorize( $operation, $object = null )
 		{
-			switch($operation)
+			switch ($operation)
 			{
 				case 'read':
 					return true;
 				case 'write':
-					if($this->current_account_member_of_admins())
+					if ($this->current_account_member_of_admins())
 					{
 						return true;
 					}
@@ -53,7 +53,7 @@
 
 			$settings = array();
 
-			foreach(booking_async_task::getAvailableTasks() as $task_class)
+			foreach (booking_async_task::getAvailableTasks() as $task_class)
 			{
 				$task														 = booking_async_task::create($task_class);
 				$settings[str_replace('.', '_', "{$task_class}_enabled")]	 = $task->is_enabled();
@@ -64,15 +64,15 @@
 			return $settings;
 		}
 
-		function update($settings)
+		function update( $settings )
 		{
 			$this->authorize('write', $settings);
-			foreach(booking_async_task::getAvailableTasks() as $task_class)
+			foreach (booking_async_task::getAvailableTasks() as $task_class)
 			{
 				$task = booking_async_task::create($task_class);
 				$task->disable();
 
-				if($settings[str_replace('.', '_', "{$task_class}_enabled")] === true)
+				if ($settings[str_replace('.', '_', "{$task_class}_enabled")] === true)
 				{
 					$task->enable();
 				}
@@ -82,7 +82,7 @@
 		public function get_permissions()
 		{
 			$permission = array('read' => true);
-			if($this->current_account_member_of_admins())
+			if ($this->current_account_member_of_admins())
 			{
 				$permission['write'] = true;
 			}

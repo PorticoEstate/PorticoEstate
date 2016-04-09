@@ -23,27 +23,27 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.soadjustment');
 			}
 			return self::$so;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			$filter_clauses = array();
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "{$this->get_id_field_name()} = {$id}";
 			}
 			else
 			{
-				if(isset($filters['manual_adjustment']))
+				if (isset($filters['manual_adjustment']))
 				{
 					$clauses[] = "is_manual";
 				}
@@ -53,7 +53,7 @@
 				}
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -63,7 +63,7 @@
 			$tables	 = "rental_adjustment";
 			$joins	 = "";
 			$dir	 = $ascending ? 'ASC' : 'DESC';
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols	 = 'COUNT(DISTINCT(id)) AS count';
 				$order	 = "";
@@ -77,9 +77,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function populate(int $adjustment_id, &$adjustment)
+		function populate( int $adjustment_id, &$adjustment )
 		{
-			if($adjustment == null) // new object
+			if ($adjustment == null) // new object
 			{
 				$adjustment = new rental_adjustment($adjustment_id);
 				$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
@@ -109,7 +109,7 @@
 		 * @param $composite the composite to be updated
 		 * @return result receipt from the db operation
 		 */
-		public function update($adjustment)
+		public function update( $adjustment )
 		{
 			$id = intval($adjustment->get_id());
 
@@ -138,7 +138,7 @@
 		 * @param $adjustment the adjustment to be added
 		 * @return int with id of the adjustment
 		 */
-		public function add(&$adjustment)
+		public function add( &$adjustment )
 		{
 			// Build a db-friendly array of the adjustment object
 			$cols	 = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval',
@@ -167,7 +167,7 @@
 			return $adjustment_id;
 		}
 
-		public function adjustment_exist($adjustment)
+		public function adjustment_exist( $adjustment )
 		{
 			$query	 = "SELECT * FROM rental_adjustment WHERE " .
 			"responsibility_id = {$adjustment->get_responsibility_id()} " .
@@ -176,21 +176,21 @@
 			"AND adjustment_interval = {$adjustment->get_interval()} " .
 			"AND percent = {$adjustment->get_percent()}";
 			$result	 = $this->db->query($query);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return true;
 			}
 			return false;
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
 			//TODO: Should be updated when run status is included in database design
-			if(isset($id) && $id > 0)
+			if (isset($id) && $id > 0)
 			{
 				$query	 = "DELETE FROM rental_adjustment WHERE id = {$id} AND NOT is_executed";
 				$result	 = $this->db->query($query);
-				if($result && ($this->db->affected_rows() > 0))
+				if ($result && ($this->db->affected_rows() > 0))
 				{
 					return true;
 				}
@@ -221,7 +221,7 @@
 			//var_dump("etter spr");
 			//there are un-executed adjustments
 			$adjustments		 = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$adjustment_id	 = $this->unmarshal($this->db->f('id', true), 'int');
 				$adjustment		 = new rental_adjustment($adjustment_id);
@@ -239,11 +239,11 @@
 				$adjustments[]	 = $adjustment;
 			}
 
-			if(count($adjustments) > 0)
+			if (count($adjustments) > 0)
 			{
 				$this->db->transaction_begin();
 				$success = $this->adjust_contracts($adjustments);
-				if($success)
+				if ($success)
 				{
 					$this->db->transaction_commit();
 				}
@@ -256,7 +256,7 @@
 			return false;
 		}
 
-		public function adjust_contracts($adjustments)
+		public function adjust_contracts( $adjustments )
 		{
 			/*
 			 * gather all adjustable contracts with 
@@ -271,7 +271,7 @@
 			$current_year = (int)date('Y');
 
 			//var_dump("innicontr");
-			foreach($adjustments as $adjustment)
+			foreach ($adjustments as $adjustment)
 			{
 				//gather all adjustable contracts
 				$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
@@ -280,7 +280,7 @@
 				$adjustable_contracts .= "AND (((adjustment_year + {$adjustment->get_interval()}) <= {$adjustment->get_year()})";
 				$adjustable_contracts .= " OR ";
 				$adjustable_contracts .= "(";
-				if($adjustment->is_extra_adjustment())
+				if ($adjustment->is_extra_adjustment())
 				{
 					$adjustable_contracts .= "adjustment_year = {$adjustment->get_year()}";
 					$adjustable_contracts .= " OR ";
@@ -290,7 +290,7 @@
 				//var_dump($adjustable_contracts);
 				//die();
 				$result = $this->db->query($adjustable_contracts);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contract_id		 = $this->unmarshal($this->db->f('id', true), 'int');
 					$adjustment_share	 = $this->unmarshal($this->db->f('adjustment_share', true), 'int');
@@ -301,14 +301,14 @@
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
 
 					$firstJanAdjYear = mktime(0, 0, 0, 1, 1, $adjustment->get_year());
-					if($contract->is_active($firstJanAdjYear) && (($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() <= $adjustment->get_year()))))
+					if ($contract->is_active($firstJanAdjYear) && (($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() <= $adjustment->get_year()))))
 					{
 						//update adjustment_year on contract
 						rental_socontract::get_instance()->update_adjustment_year($contract_id, $adjustment->get_year());
 						//gather price items to be adjusted
 						$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
 							'contract_id' => $contract_id));
-						foreach($contract_price_items as $cpi)
+						foreach ($contract_price_items as $cpi)
 						{
 							//update price according to adjustment info
 							$cpi_old_price	 = $cpi->get_price();
@@ -321,12 +321,12 @@
 				}
 
 				//TODO: update price book
-				if($adjustment->get_interval() == 1)
+				if ($adjustment->get_interval() == 1)
 				{
 					$adjustable_price_items	 = "SELECT * FROM rental_price_item WHERE responsibility_id = {$adjustment->get_responsibility_id()} AND is_adjustable";
 					$result					 = $this->db->query($adjustable_price_items);
 					$price_items			 = array();
-					while($this->db->next_record())
+					while ($this->db->next_record())
 					{
 						$price_item = new rental_price_item($this->unmarshal($this->db->f('id'), 'int'));
 						$price_item->set_title($this->unmarshal($this->db->f('title'), 'string'));
@@ -342,7 +342,7 @@
 						$price_items[] = $price_item;
 					}
 
-					foreach($price_items as $pi)
+					foreach ($price_items as $pi)
 					{
 						$pi_old_price	 = $pi->get_price();
 						$pi_adjustment	 = $pi_old_price * ($adjustment->get_percent() / 100);
@@ -357,13 +357,13 @@
 
 				//notify all users with write access on the field of responsibility
 				$location_id = $adjustment->get_responsibility_id();
-				if($location_id)
+				if ($location_id)
 				{
 					$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
-					if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+					if ($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 					{
 						$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $location_names['location']);
-						foreach($responsible_accounts as $ra)
+						foreach ($responsible_accounts as $ra)
 						{
 							$account_ids[] = $ra['account_id'];
 						}
@@ -375,9 +375,9 @@
 				$day			 = date("Y-m-d", strtotime('now'));
 				$ts_today		 = strtotime($day);
 				//notify each unique account
-				foreach($account_ids as $account_id)
+				foreach ($account_ids as $account_id)
 				{
-					if($account_id && $account_id > 0)
+					if ($account_id && $account_id > 0)
 					{
 
 						$notification = new rental_notification
@@ -394,7 +394,7 @@
 			return true;
 		}
 
-		public function newer_executed_regulation_exists($adjustment)
+		public function newer_executed_regulation_exists( $adjustment )
 		{
 			$columns	 = "id";
 			$table		 = "rental_adjustment";
@@ -406,7 +406,7 @@
 
 			$result = $this->db->query($sql);
 
-			if($this->db->num_rows() > 0)
+			if ($this->db->num_rows() > 0)
 			{
 				return true;
 			}

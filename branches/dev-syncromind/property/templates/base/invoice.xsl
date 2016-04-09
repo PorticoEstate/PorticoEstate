@@ -1667,7 +1667,7 @@
 <!-- New template-->
 <xsl:template match="options_user">
 	<option value="{lid}">
-		<xsl:if test="selected = 'selected'">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected"/>
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="lastname"/>

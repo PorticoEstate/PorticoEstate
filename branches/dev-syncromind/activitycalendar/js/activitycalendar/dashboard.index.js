@@ -1,11 +1,12 @@
 
 function sendMail(oArgs, parameters)
 {
-	var api =$( '#datatable-container_1' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_1').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 1;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -22,7 +23,8 @@ function sendMail(oArgs, parameters)
 
 		var requestUrl = phpGWLink('index.php', oArgs);
 
-		JqueryPortico.execute_ajax(requestUrl, function (result) {
+		JqueryPortico.execute_ajax(requestUrl, function (result)
+		{
 
 			JqueryPortico.show_message(nTable, result);
 

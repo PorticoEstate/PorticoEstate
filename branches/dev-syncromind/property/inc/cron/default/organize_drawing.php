@@ -52,19 +52,19 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 		}
 
-		function pre_run($data = '')
+		function pre_run( $data = '' )
 		{
 
-			if($data['enabled'] == 1)
+			if ($data['enabled'] == 1)
 			{
 				$confirm = true;
 				$execute = true;
 				$cron = true;
-				if($data['suffix'])
+				if ($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
 				}
-				if($data['dir'])
+				if ($data['dir'])
 				{
 					$this->dir = $data['dir'];
 				}
@@ -73,22 +73,22 @@
 			{
 				$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 				$execute = phpgw::get_var('execute', 'bool', 'GET');
-				if(phpgw::get_var('dir', 'string', 'GET'))
+				if (phpgw::get_var('dir', 'string', 'GET'))
 				{
 					$this->dir = urldecode(phpgw::get_var('dir', 'string', 'GET'));
 				}
-				if(phpgw::get_var('suffix', 'string', 'GET'))
+				if (phpgw::get_var('suffix', 'string', 'GET'))
 				{
 					$this->suffix = phpgw::get_var('suffix', 'string', 'GET');
 				}
 			}
 
-			if(!$execute)
+			if (!$execute)
 			{
 				$dry_run = true;
 			}
 
-			if($confirm)
+			if ($confirm)
 			{
 				$this->execute($dry_run, $cron);
 			}
@@ -98,7 +98,7 @@
 			}
 		}
 
-		function confirm($execute = '', $done = '')
+		function confirm( $execute = '', $done = '' )
 		{
 			$link_data = array
 				(
@@ -109,9 +109,9 @@
 				'suffix' => $this->suffix,
 			);
 
-			if(!$done)
+			if (!$done)
 			{
-				if(!$execute)
+				if (!$execute)
 				{
 					$lang_confirm_msg = 'Ga videre for aa se hva som blir lagt til';
 				}
@@ -149,38 +149,38 @@
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($dry_run = '', $cron = '')
+		function execute( $dry_run = '', $cron = '' )
 		{
 
 			$file_list = $this->get_files();
 
-			if($dry_run)
+			if ($dry_run)
 			{
 				$this->confirm($execute = true);
 				_debug_array($file_list);
 			}
 			else
 			{
-				if(isSet($file_list) AND is_array($file_list))
+				if (isSet($file_list) AND is_array($file_list))
 				{
-					foreach($file_list as $file_entry)
+					foreach ($file_list as $file_entry)
 					{
 						$loc1_list[$file_entry['loc1']] = true;
 					}
 
 					$loc1_list = array_keys($loc1_list);
 
-					for($i = 0; $i < count($loc1_list); $i++)
+					for ($i = 0; $i < count($loc1_list); $i++)
 					{
 						$this->create_loc1_dir($loc1_list[$i]);
 					}
 
-					for($i = 0; $i < count($file_list); $i++)
+					for ($i = 0; $i < count($file_list); $i++)
 					{
 						$this->copy_files($file_list[$i]);
 					}
 				}
-				if(!$cron)
+				if (!$cron)
 				{
 					$this->confirm($execute = false, $done = true);
 				}
@@ -222,9 +222,9 @@
 
 			$i = 0;
 			$myfilearray = '';
-			while($file = @readdir($dir_handle))
+			while ($file = @readdir($dir_handle))
 			{
-				if((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . '/' . $file))
+				if ((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . '/' . $file))
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -233,7 +233,7 @@
 			@closedir($dir_handle);
 			@sort($myfilearray);
 
-			for($i = 0; $i < count($myfilearray); $i++)
+			for ($i = 0; $i < count($myfilearray); $i++)
 			{
 				$fname = $myfilearray[$i];
 				$loc1 = substr($myfilearray[$i], 4, 4);
@@ -244,7 +244,7 @@
 				$direction = '';
 
 				$type = $this->get_type($myfilearray[$i]);
-				switch($type)
+				switch ($type)
 				{
 					case 'plan':
 						$etasje = substr($myfilearray[$i], 13, 2);
@@ -265,7 +265,7 @@
 
 				$branch = $drawing_branch[strtolower(substr($myfilearray[$i], -5, 1))];
 
-				if($this->check_building($loc1, $loc2) && $type && $branch)
+				if ($this->check_building($loc1, $loc2) && $type && $branch)
 				{
 					$file_list[] = array
 						(
@@ -288,7 +288,7 @@
 			return $file_list;
 		}
 
-		function get_type($filename = '')
+		function get_type( $filename = '' )
 		{
 			$drawing_type = array(
 				'p' => 'plan',
@@ -296,44 +296,44 @@
 				's' => 'snitt'
 			);
 
-			for($i = 10; $i < strlen($filename); $i++)
+			for ($i = 10; $i < strlen($filename); $i++)
 			{
 				$type = $drawing_type[strtolower(substr($filename, $i, 1))];
-				if($type)
+				if ($type)
 				{
 					return $type;
 				}
 			}
 		}
 
-		function check_building($loc1 = '', $loc2 = '')
+		function check_building( $loc1 = '', $loc2 = '' )
 		{
 			$sql = "SELECT count(*) as cnt FROM fm_location2 WHERE loc1= '$loc1' AND loc2= '$loc2'";
 
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				return true;
 			}
 
-			if($this->bypass)
+			if ($this->bypass)
 			{
 				return true;
 			}
 		}
 
-		function create_loc1_dir($loc1 = '')
+		function create_loc1_dir( $loc1 = '' )
 		{
-			if(!$this->vfs->file_exists(array(
+			if (!$this->vfs->file_exists(array(
 				'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
 				$this->vfs->override_acl = 1;
 
-				if(!$this->vfs->mkdir(array(
+				if (!$this->vfs->mkdir(array(
 					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
 					'relatives' => array(
 						RELATIVE_NONE
@@ -352,7 +352,7 @@
 //			return $this->receipt;
 		}
 
-		function copy_files($values)
+		function copy_files( $values )
 		{
 			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'];
 			$from_file = $this->dir . '/' . $values['file_name'];
@@ -360,7 +360,7 @@
 
 
 //_debug_array($to_file);
-			if($this->vfs->file_exists(array(
+			if ($this->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
@@ -370,7 +370,7 @@
 			else
 			{
 
-				if(!$this->vfs->cp(array(
+				if (!$this->vfs->cp(array(
 					'from' => $from_file,
 					'to' => $to_file,
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -381,7 +381,7 @@
 				{
 					$address = $this->get_address($values['loc1'], $values['loc2'], $values['loc3']);
 
-					switch($values['type'])
+					switch ($values['type'])
 					{
 						case 'plan':
 							$values['title'] = $this->db->db_addslashes($values['branch'] . ', ' . $values['type'] . ', etasje: ' . $values['etasje']);
@@ -433,9 +433,9 @@
 //			return $this->receipt;
 		}
 
-		function get_address($loc1 = '', $loc2 = '', $loc3 = '')
+		function get_address( $loc1 = '', $loc2 = '', $loc3 = '' )
 		{
-			if($loc3)
+			if ($loc3)
 			{
 				$sql = "SELECT loc3_name as address FROM fm_location3 WHERE loc1='$loc1' AND loc2='$loc2' AND loc3='$loc3'";
 			}

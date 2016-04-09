@@ -10,7 +10,7 @@
             return $this->location_description;
         }
 
-        public function set_location_description($location_description)
+		public function set_location_description( $location_description )
         {
             $this->location_description = $location_description;
         }
@@ -20,7 +20,7 @@
             return $this->id;
         }
 
-        public function set_id($id)
+		public function set_id( $id )
         {
             $this->id = $id;
         }
@@ -30,7 +30,7 @@
             return $this->title;
         }
 
-        public function set_title($title)
+		public function set_title( $title )
         {
             $this->title = $title;
         }
@@ -40,7 +40,7 @@
             return $this->date;
         }
 
-        public function set_date($date)
+		public function set_date( $date )
         {
             $this->date = $date;
         }
@@ -50,7 +50,7 @@
             return $this->user;
         }
 
-        public function set_user($user)
+		public function set_user( $user )
         {
             $this->user = $user;
         }
@@ -60,7 +60,7 @@
             return $this->messages;
         }
 
-        public function set_messages($messages)
+		public function set_messages( $messages )
         {
             $this->messages = $messages;
         }
@@ -73,11 +73,5 @@
                 'user'		=> $this->get_user(),
                 'date'      => $this->get_date()
             );
-
-
         }
-
-
-
-
     }

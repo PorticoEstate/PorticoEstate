@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -31,8 +30,8 @@
 
 	class logistic_requirement_value extends logistic_model
 	{
-		public static $so;
 
+		public static $so;
 		protected $id;
 		protected $requirement_id;
 		protected $value;
@@ -46,12 +45,12 @@
 		 *
 		 * @param int $id the id of this project
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
-			$this->id = (int) $id;
+			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -61,7 +60,7 @@
 			return $this->id;
 		}
 
-		public function set_requirement_id($requirement_id)
+		public function set_requirement_id( $requirement_id )
 		{
 			$this->requirement_id = $requirement_id;
 		}
@@ -71,7 +70,7 @@
 			return $this->requirement_id;
 		}
 
-		public function set_cust_attribute_id($cust_attribute_id)
+		public function set_cust_attribute_id( $cust_attribute_id )
 		{
 			$this->cust_attribute_id = $cust_attribute_id;
 		}
@@ -81,7 +80,7 @@
 			return $this->cust_attribute_id;
 		}
 
-		public function set_value($value)
+		public function set_value( $value )
 		{
 			$this->value = $value;
 		}
@@ -91,7 +90,7 @@
 			return $this->value;
 		}
 		
-		public function set_operator($operator)
+		public function set_operator( $operator )
 		{
 			$this->operator = $operator;
 		}
@@ -101,12 +100,15 @@
 			return $this->operator;
 		}
 		
-		public function set_create_user($create_user)
+		public function set_create_user( $create_user )
 		{
 			$this->create_user = $create_user;
 		}
 		
-		public function get_create_user() { return $this->create_user; }
+		public function get_create_user()
+		{
+			return $this->create_user;
+		}
 
 		/**
 		* Get a static reference to the storage object associated with this model object
@@ -115,7 +117,8 @@
 		*/
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('logistic.sorequirement');
 			}
 

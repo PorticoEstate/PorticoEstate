@@ -1,4 +1,3 @@
 <?php
-
-$phpgw_baseline = array();
+	$phpgw_baseline = array();
 ?>

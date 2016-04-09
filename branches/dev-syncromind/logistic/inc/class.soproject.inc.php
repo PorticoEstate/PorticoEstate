@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* phpGroupWare - logistic: a part of a Facilities Management System.
 	*
@@ -25,15 +24,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('logistic.socommon');
 
 	include_class('logistic', 'project', 'inc/model/');
 
 	class logistic_soproject extends logistic_socommon
 	{
+
 		protected static $so;
 		protected $db3;
 
@@ -57,7 +56,7 @@
 			return self::$so;
 		}
 
-		protected function add(&$project)
+		protected function add( &$project )
 		{		
 			$cols = array(
 				'name',
@@ -84,9 +83,9 @@
 
 			$sql = 'INSERT INTO lg_project (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Set the new project ID
 				return $this->db->get_last_insert_id('lg_project', 'id');
@@ -97,8 +96,7 @@
 			}
 		}
 
-
-		protected function update($project)
+		protected function update( $project )
 		{
 			$id = intval($project->get_id());
 
@@ -110,9 +108,9 @@
 				'end_date = ' . $this->marshal($project->get_end_date(), 'int'),
 			);
 
-			$result = $this->db->query('UPDATE lg_project SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_project SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if( $result )
+			if ($result)
 			{
 				return $id;
 			}
@@ -124,7 +122,7 @@
 
 		protected function get_id_field_name()
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -141,44 +139,44 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 			$project_type = false;
 			$table_alias = 'project';
-			if($search_type && $search_type == 'project_type')
+			if ($search_type && $search_type == 'project_type')
 			{
 				$project_type = true;
 				$table_alias = 'project_type';
 			}
 
-			if($search_for)
+			if ($search_for)
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					default:
 						$like_clauses[] = "{$table_alias}.name $this->like $like_pattern";
 						break;
 				}
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
 			$filter_clauses = array();
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "{$table_alias}.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "{$table_alias}.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['project_type']) && (!$filters['project_type'] == '' || !$filters['project_type'] == 0))
+			if (isset($filters['project_type']) && (!$filters['project_type'] == '' || !$filters['project_type'] == 0))
 			{
 				$filter_clauses[] = "{$table_alias}.project_type_id = {$this->marshal($filters['project_type'], 'int')}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -187,7 +185,7 @@
 
 			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
-			if($project_type)
+			if ($project_type)
 			{
 				$tables = "lg_project_type project_type";
 			}
@@ -196,9 +194,9 @@
 				$tables = "lg_project project";
 			}
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
-				$cols = 'COUNT(DISTINCT('.$table_alias.'.id)) AS count';
+				$cols = 'COUNT(DISTINCT(' . $table_alias . '.id)) AS count';
 			}
 			else
 			{
@@ -206,23 +204,23 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $project_id, &$project)
+		protected function populate( int $project_id, &$project )
 		{
-			if($project == null)
+			if ($project == null)
 			{
-				$project = new logistic_project((int) $project_id);
+				$project = new logistic_project((int)$project_id);
 
 				$project->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$project->set_description($this->unmarshal($this->db->f('description'), 'string'));
 				$project->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
-				if($project->get_project_type_id() && $project->get_project_type_id() > 0)
+				if ($project->get_project_type_id() && $project->get_project_type_id() > 0)
 				{
 					$project->set_project_type_label($this->get_project_type_label($this->unmarshal($this->db->f('project_type_id'), 'int')));
 				}
@@ -254,8 +252,7 @@
 			return $project_array;
 		}
 
-
-		public function get_project_type_label($id)
+		public function get_project_type_label( $id )
 		{
 			$sql = "SELECT name FROM lg_project_type where id=$id";
 			$this->db3->query($sql, __LINE__, __FILE__);
@@ -266,10 +263,10 @@
 			}
 		}
 
-		public function get_project_types($selected_id = null)
+		public function get_project_types( $selected_id = null )
 		{
 			$project_type_array = array();
-			if(!$selected_id)
+			if (!$selected_id)
 			{
 				$project_type_array[] = array(
 					'id' => '',
@@ -289,7 +286,7 @@
 
 			while ($this->db->next_record())
 			{
-				if(!$selected_id == null && $this->db->f('id') == $selected_id)
+				if (!$selected_id == null && $this->db->f('id') == $selected_id)
 				{
 				$project_type_array[] = array(
 						'id' => $this->db->f('id'),
@@ -308,12 +305,12 @@
 			return $project_type_array;
 		}
 
-		public function update_project_type($id, $name)
+		public function update_project_type( $id, $name )
 		{
 			$sql = "UPDATE lg_project_type set name='{$name}' where id={$id}";
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if( $result )
+			if ($result)
 			{
 				return $id;
 			}
@@ -323,14 +320,14 @@
 			}
 		}
 
-		public function add_project_type($name)
+		public function add_project_type( $name )
 		{
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$now = time();
 			$sql = "INSERT INTO lg_project_type (name, create_user, create_date) VALUES ('{$name}', $user_id, $now)";
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				return $this->db->get_last_insert_id('lg_project_type', 'id');
 			}

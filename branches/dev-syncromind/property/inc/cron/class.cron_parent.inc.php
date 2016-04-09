@@ -49,9 +49,9 @@
 			$this->like = & $this->db->like;
 		}
 
-		function pre_run($data = array())
+		function pre_run( $data = array() )
 		{
-			if(isset($data['enabled']) && $data['enabled'] == 1)
+			if (isset($data['enabled']) && $data['enabled'] == 1)
 			{
 				$confirm = true;
 				$cron = true;
@@ -63,7 +63,7 @@
 				$execute = phpgw::get_var('execute', 'bool', 'GET');
 			}
 
-			if(isset($data['debug']) && $data['debug'])
+			if (isset($data['debug']) && $data['debug'])
 			{
 				$this->debug = true;
 			}
@@ -72,12 +72,12 @@
 				$this->debug = phpgw::get_var('debug', 'bool');
 			}
 
-			if($confirm)
+			if ($confirm)
 			{
 				$this->execute($data);
 				$this->cron_log($cron);
 				// initiated from ui
-				if(!$cron)
+				if (!$cron)
 				{
 					$this->confirm($execute = false);
 				}
@@ -88,7 +88,7 @@
 			}
 		}
 
-		function confirm($execute = '')
+		function confirm( $execute = '' )
 		{
 			$link_data = array
 				(
@@ -98,7 +98,7 @@
 			);
 
 
-			if(!$execute)
+			if (!$execute)
 			{
 				$lang_confirm_msg = lang('do you want to perform this action');
 			}
@@ -132,14 +132,14 @@
 
 		abstract public function execute();
 
-		private function cron_log($cron)
+		private function cron_log( $cron )
 		{
-			if(!$this->receipt)
+			if (!$this->receipt)
 			{
 				return;
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				return;
 			}

@@ -56,13 +56,13 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.soagreement');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom = createObject('property.custom_fields');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -92,20 +92,20 @@
 			$this->member_id = isset($_REQUEST['member_id']) ? $member_id : $this->member_id;
 			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
 
-			if(!empty($filter))
+			if (!empty($filter))
 			{
 				$this->filter = $filter;
 			}
 
-			if($allrows)
+			if ($allrows)
 			{
 				$this->allrows = $allrows;
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'agreement', $data);
 			}
@@ -128,14 +128,14 @@
 			$this->status_id = $data['status_id'];
 		}
 
-		function check_perms($has, $needed)
+		function check_perms( $has, $needed )
 		{
 			return (!!($has & $needed) == true);
 		}
 
-		function select_vendor_list($format = '', $selected = '')
+		function select_vendor_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('select_vendor'));
@@ -151,7 +151,7 @@
 			return $vendor_list;
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			/* $agreements = $this->so->read( array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order,
 			  'filter' => $this->filter, 'cat_id' => $this->cat_id, 'allrows' => $this->allrows, 'member_id' => $this->member_id,
@@ -162,18 +162,18 @@
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
-			foreach($agreements as &$agreement)
+			foreach ($agreements as &$agreement)
 			{
-				if($agreement['start_date'])
+				if ($agreement['start_date'])
 				{
 					$agreement['start_date'] = $GLOBALS['phpgw']->common->show_date($agreement['start_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
-				if($agreement['termination_date'])
+				if ($agreement['termination_date'])
 				{
 					$agreement['termination_date'] = $GLOBALS['phpgw']->common->show_date($agreement['termination_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
 
-				if($agreement['end_date'])
+				if ($agreement['end_date'])
 				{
 					$agreement['end_date'] = $GLOBALS['phpgw']->common->show_date($agreement['end_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
@@ -181,9 +181,9 @@
 			return $agreements;
 		}
 
-		function read_details($id, $params = '')
+		function read_details( $id, $params = '' )
 		{
-			if(!empty($params))
+			if (!empty($params))
 			{
 				$sort = $params['sort'];
 				$order = $params['order'];
@@ -206,14 +206,14 @@
 			return $list;
 		}
 
-		function read_prizing($data)
+		function read_prizing( $data )
 		{
 			$list = $this->so->read_prizing($data);
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;
 
-			for($i = 0; $i < count($list); $i++)
+			for ($i = 0; $i < count($list); $i++)
 			{
 				$list[$i]['index_date'] = $GLOBALS['phpgw']->common->show_date($list[$i]['index_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
@@ -221,7 +221,7 @@
 			return $list;
 		}
 
-		function read_event($data)
+		function read_event( $data )
 		{
 			$boalarm = CreateObject('property.boalarm');
 			$event = $this->so->read_single($data['agreement_id']);
@@ -230,11 +230,11 @@
 			return $event;
 		}
 
-		function read_single($data)
+		function read_single( $data )
 		{
 			$values['attributes'] = $this->custom->find('property', '.agreement', 0, '', 'ASC', 'attrib_sort', true, true);
 
-			if(isset($data['agreement_id']) && $data['agreement_id'])
+			if (isset($data['agreement_id']) && $data['agreement_id'])
 			{
 				$values = $this->so->read_single($data['agreement_id'], $values);
 			}
@@ -242,14 +242,14 @@
 			$values = $this->custom->prepare($values, 'property', '.agreement');
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($values['entry_date']) && $values['entry_date'])
+			if (isset($values['entry_date']) && $values['entry_date'])
 			{
 				$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['entry_date'], $dateformat);
 			}
 
 			$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
 			$values['end_date'] = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
-			if(isset($values['termination_date']) && $values['termination_date'])
+			if (isset($values['termination_date']) && $values['termination_date'])
 			{
 				$values['termination_date'] = $GLOBALS['phpgw']->common->show_date($values['termination_date'], $dateformat);
 			}
@@ -263,7 +263,7 @@
 
 			$vfs->override_acl = 0;
 
-			if(!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
+			if (!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
 			{
 				unset($values['files']);
 			}
@@ -271,10 +271,10 @@
 			return $values;
 		}
 
-		function read_single_item($data)
+		function read_single_item( $data )
 		{
 			$values['attributes'] = $this->custom->find('property', '.agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
-			if(isset($data['agreement_id']) && $data['agreement_id'] && isset($data['id']) && $data['id'])
+			if (isset($data['agreement_id']) && $data['agreement_id'] && isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single_item($data, $values);
 			}
@@ -290,26 +290,26 @@
 		 *
 		 * @return array the grouped attributes
 		 */
-		public function get_attribute_groups($location, $attributes = array())
+		public function get_attribute_groups( $location, $attributes = array() )
 		{
 			return $this->custom->get_attribute_groups('property', $location, $attributes);
 		}
 
-		function save($values, $values_attribute = '', $action = '')
+		function save( $values, $values_attribute = '', $action = '' )
 		{
 			$values['start_date'] = $this->bocommon->date_to_timestamp($values['start_date']);
 			$values['end_date'] = $this->bocommon->date_to_timestamp($values['end_date']);
 			$values['termination_date'] = $this->bocommon->date_to_timestamp($values['termination_date']);
 
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			if($action == 'edit')
+			if ($action == 'edit')
 			//			if ($values['agreement_id'])
 			{
-				if($values['agreement_id'] != 0)
+				if ($values['agreement_id'] != 0)
 				{
 					$receipt = $this->so->edit($values, $values_attribute);
 				}
@@ -321,16 +321,16 @@
 			return $receipt;
 		}
 
-		function save_item($values, $values_attribute = '')
+		function save_item( $values, $values_attribute = '' )
 		{
 			//_debug_array($values);
 			$values['m_cost'] = str_replace(",", ".", $values['m_cost']);
 			$values['w_cost'] = str_replace(",", ".", $values['w_cost']);
 			$values['total_cost'] = $values['m_cost'] + $values['w_cost'];
 
-			if($values['index_count'] > 0)
+			if ($values['index_count'] > 0)
 			{
-				if($values['id'] != 0)
+				if ($values['id'] != 0)
 				{
 					$receipt = $this->so->edit_item($values);
 				}
@@ -342,30 +342,30 @@
 			return $receipt;
 		}
 
-		function update($values)
+		function update( $values )
 		{
 			$values['date'] = $this->bocommon->date_to_timestamp($values['date']);
 			return $this->so->update($values);
 		}
 
-		function delete_last_index($agreement_id, $id)
+		function delete_last_index( $agreement_id, $id )
 		{
 			$this->so->delete_last_index($agreement_id, $id);
 		}
 
-		function delete_item($agreement_id, $activity_id)
+		function delete_item( $agreement_id, $activity_id )
 		{
 			$this->so->delete_item($agreement_id, $activity_id);
 		}
 
-		function delete($agreement_id = '')
+		function delete( $agreement_id = '' )
 		{
 			$this->so->delete($agreement_id);
 		}
 
-		function column_list($selected = '', $allrows = '')
+		function column_list( $selected = '', $allrows = '' )
 		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"] : '';
 			}
@@ -383,27 +383,27 @@
 			return $this->so->request_next_id();
 		}
 
-		function get_agreement_group_list($selected = '')
+		function get_agreement_group_list( $selected = '' )
 		{
 			$agreement_groups = $this->so->get_agreement_group_list();
 			return $this->bocommon->select_list($selected, $agreement_groups);
 		}
 
-		function read_group_activity($group_id = '', $agreement_id = '')
+		function read_group_activity( $group_id = '', $agreement_id = '' )
 		{
 			$activity_list = $this->so->read_group_activity($group_id, $agreement_id);
 			$this->uicols = $this->so->uicols;
 			return $activity_list;
 		}
 
-		function add_activity($values, $agreement_id)
+		function add_activity( $values, $agreement_id )
 		{
 			return $this->so->add_activity($values, $agreement_id);
 		}
 
-		function select_status_list($format = '', $selected = '')
+		function select_status_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
@@ -418,7 +418,7 @@
 			return $this->bocommon->select_list($selected, $status_entries);
 		}
 
-		function get_activity_descr($id)
+		function get_activity_descr( $id )
 		{
 			return $this->so->get_activity_descr($id);
 		}

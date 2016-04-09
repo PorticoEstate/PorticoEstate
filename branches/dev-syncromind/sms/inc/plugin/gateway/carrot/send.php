@@ -2,6 +2,7 @@
 
 	class sms_sms extends sms_sms_
 	{
+
 		function __construct()
 		{
 			parent::__construct();
@@ -14,26 +15,25 @@
 			$i_right = 0;
 			$vars = array();
 			// Search for a tag in string
-			while( is_int(($i_left = strpos($s_str,"<!--",$i_right)))) 
+			while (is_int(($i_left = strpos($s_str, "<!--", $i_right))))
 			{
 				$i_left = $i_left + 4;
-				$i_right = strpos($s_str,"-->", $i_left);
-				$s_temp = substr($s_str, $i_left, ($i_right-$i_left) );
-				$a_tag = explode('=', $s_temp );
+				$i_right = strpos($s_str, "-->", $i_left);
+				$s_temp = substr($s_str, $i_left, ($i_right - $i_left));
+				$a_tag = explode('=', $s_temp);
 				$vars[strtolower($a_tag[0])] = $a_tag[1];
 			}
 			return $vars;
 		}
 
-
-		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false)
+		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
 			$result = array();
 //			$sms_msg = utf8_decode($sms_msg);
 			
 			$sms_to = ltrim($sms_to, '+');
 			
-			if( strlen($sms_to) > 8)
+			if (strlen($sms_to) > 8)
 			{
 				$sms_to = "+{$sms_to}";
 			}
@@ -45,19 +45,18 @@
 //				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
 				'content'			=> utf8_decode($sms_msg),
 //				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
-				'originator'		=> $this->carrot_param['originator'],//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
-				'originatortype'	=> $this->carrot_param['originatortype'],//$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
+				'originator' => $this->carrot_param['originator'], //$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
+				'originatortype' => $this->carrot_param['originatortype'], //$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
 				'recipient'			=> $sms_to,
 				'username'			=> $this->carrot_param['login'],
 				'password'			=> $this->carrot_param['password'],
 //				'priority'			=> '',
 //				'price'				=> '0',
-				'differentiator'	=> $this->carrot_param['differentiator'],//'Test',
+				'differentiator' => $this->carrot_param['differentiator'], //'Test',
 //				'TTL'				=> ''
-
 			);
 
-			if($this->carrot_param['type'] == 'GET')
+			if ($this->carrot_param['type'] == 'GET')
 			{
 				$query = http_build_query($arguments);
 				$request = "{$this->carrot_param['send_url']}?{$query}";
@@ -81,7 +80,7 @@
 			{
 				require_once 'SMSGatewayService.php';
 
-				$options=array();
+				$options = array();
 				$options['soap_version'] = SOAP_1_1;
 				$options['location'] = $this->carrot_param['service_url'];
 				$options['uri']		= "http://ws.v4.sms.carrot.no";
@@ -121,36 +120,36 @@
 		    // 1 = delivered
 		    // 2 = failed
 
-			if($result['statuscode'] == 1)
+			if ($result['statuscode'] == 1)
 			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
+				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 			}
-			else if($result['statuscode'] == 5)
+			else if ($result['statuscode'] == 5)
 			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
+				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 			}
 
-			if($result['statuscode'] == 1)
+			if ($result['statuscode'] == 1)
 			{
 				return true;
 			}
 		}
 
-		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="")
+		function gw_set_delivery_status( $gp_code = "", $uid = "", $smslog_id = "", $p_datetime = "", $p_update = "" )
 		{
-return;
+			return;
 		    // p_status :
 		    // 0 = pending
 		    // 1 = delivered
 		    // 2 = failed
 
-			if($result['statuscode'] == 1)
+			if ($result['statuscode'] == 1)
 			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
+				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 			}
-			else if($result['statuscode'] == 5)
+			else if ($result['statuscode'] == 5)
 			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
+				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 			}
 
 		    return;

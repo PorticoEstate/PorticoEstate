@@ -46,13 +46,13 @@
 		var $cat_id;
 		var $location_info = array();
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.sogallery');
 			$this->mime_magic = createObject('phpgwapi.mime_magic');
 			$this->interlink = CreateObject('property.interlink');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -89,9 +89,9 @@
 			$this->end_date = isset($_REQUEST['end_date']) ? $end_date : $this->end_date;
 		}
 
-		public function save_sessiondata($data)
+		public function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'gallery', $data);
 			}
@@ -114,7 +114,7 @@
 			$this->user_id = $data['user_id'];
 		}
 
-		public function read($data = array())
+		public function read( $data = array() )
 		{
 			//$dry_run=''
 			//$data = array()
@@ -140,15 +140,15 @@
 			static $urls = array();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$i = 0;
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
-				if(!$entry['mime_type'])
+				if (!$entry['mime_type'])
 				{
 					$entry['mime_type'] = $this->mime_magic->filename2mime($entry['name']);
 				}
 
 				$entry['img_id'] = '';
-				if(in_array($entry['mime_type'], $img_types))
+				if (in_array($entry['mime_type'], $img_types))
 				{
 					$entry['img_id'] = "img-{$i}";
 					$i++;
@@ -178,10 +178,10 @@
 			return $values;
 		}
 
-		public function get_location($directory = array())
+		public function get_location( $directory = array() )
 		{
 			$values = array();
-			switch($directory[2])
+			switch ($directory[2])
 			{
 				case 'agreement':
 					$values['location'] = '.agreement';
@@ -221,9 +221,9 @@
 			$map = array_flip($this->mime_magic->mime_extension_map);
 
 			$filetypes = array();
-			foreach($values as $mime_type)
+			foreach ($values as $mime_type)
 			{
-				if($mime_type)
+				if ($mime_type)
 				{
 					$filetypes[] = array
 						(
@@ -241,14 +241,14 @@
 
 			$_locations = array();
 			$locations = array();
-			foreach($values as $entry)
+			foreach ($values as $entry)
 			{
 				$directory = explode('/', $entry);
 
-				if(isset($directory[2]) && !isset($directory[3]))
+				if (isset($directory[2]) && !isset($directory[3]))
 				{
 					$location_info = $this->get_location($directory);
-					if($GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
+					if ($GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
 					{
 						$locations[] = array
 							(

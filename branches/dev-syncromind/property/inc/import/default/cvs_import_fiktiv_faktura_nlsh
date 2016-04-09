@@ -16,12 +16,12 @@
 			'Best.nr');
 		public $filename_template;
 
-		public function __construct($location_id, $debug = false, $get_template = false)
+		public function __construct( $location_id, $debug = false, $get_template = false )
 		{
 			/*
 			 * The purpose is to get to the fields definition
 			 */
-			if($get_template)
+			if ($get_template)
 			{
 				$this->filename_template = "DTDRIFT rapport til Portico " . date(Ym);// 201401"
 				return;
@@ -38,7 +38,7 @@
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
-			if($debug)
+			if ($debug)
 			{
 				$this->debug = true;
 				$this->boinvoice->debug = true;
@@ -47,7 +47,7 @@
 			$file_info = pathinfo($_FILES['file']['name']);
 			$this->period = substr($file_info['filename'], -6);
 
-			if(!ctype_digit($this->period))
+			if (!ctype_digit($this->period))
 			{
 				throw new Exception("Ikke en periode: {$this->period}");
 			}
@@ -59,7 +59,7 @@
 			$this->date = $GLOBALS['phpgw']->common->show_date($_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 		}
 
-		public function add($data)
+		public function add( $data )
 		{
 			/*
 			  [0] => Hovedgruppering
@@ -73,18 +73,18 @@
 			$order_id = $data[5];
 			$error = false;
 
-			if(!$amount)
+			if (!$amount)
 			{
 				$this->warnings[] = "Linje mangler Beløp, hopper over: {$data[0]}";
 				return true;
 			}
-			if(!$order_id)
+			if (!$order_id)
 			{
 				$this->warnings[] = "Linje mangler bestillingsnummer, hopper over: {$data[0]}";
 				return true;
 			}
 
-			if(!execMethod('property.soXport.check_order', $order_id))
+			if (!execMethod('property.soXport.check_order', $order_id))
 			{
 				$this->errors[] = "Ikke gyldig bestillingsnummer: {$order_id}";
 				return false;
@@ -106,18 +106,18 @@
 
 			$order_info['janitor'] = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->lid;
 			$supervisor_user_id = $this->soinvoice->get_default_dimb_role_user(2, $project['ecodimb']);
-			if($supervisor_user_id)
+			if ($supervisor_user_id)
 			{
 				$values['supervisor'] = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 			}
 
 			$budget_responsible_user_id = $this->soinvoice->get_default_dimb_role_user(3, $project['ecodimb']);
-			if($budget_responsible_user_id)
+			if ($budget_responsible_user_id)
 			{
 				$values['budget_responsible'] = $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
 			}
 
-			if(!$values['budget_responsible'])
+			if (!$values['budget_responsible'])
 			{
 				$values['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
@@ -128,7 +128,7 @@
 			$location_arr = explode('-', $workorder['location_code']);
 
 			$i = 1;
-			foreach($location_arr as $_loc)
+			foreach ($location_arr as $_loc)
 			{
 				$values['location']["loc{$i}"] = $_loc;
 				$i++;
@@ -148,7 +148,7 @@
 
 			$ok = false;
 
-			if(!isset($receipt['error']) || !$receipt['error'])
+			if (!isset($receipt['error']) || !$receipt['error'])
 			{
 				$this->messages[] = "Importerer faktura med beløp {$amount} til bestilling {$order_id}";
 				$data_close = array

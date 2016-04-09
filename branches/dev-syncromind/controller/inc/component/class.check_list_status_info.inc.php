@@ -52,7 +52,7 @@
 			
 		}
 
-		public function set_check_list_id($check_list_id)
+		public function set_check_list_id( $check_list_id )
 		{
 			$this->check_list_id = $check_list_id;
 		}
@@ -62,7 +62,7 @@
 			return $this->check_list_id;
 		}
 
-		public function set_control_id($control_id)
+		public function set_control_id( $control_id )
 		{
 			$this->control_id = $control_id;
 		}
@@ -72,7 +72,7 @@
 			return $this->control_id;
 		}
 
-		public function set_status($status)
+		public function set_status( $status )
 		{
 			$this->status = $status;
 		}
@@ -82,7 +82,7 @@
 			return $this->status;
 		}
 
-		public function set_status_text($status_text)
+		public function set_status_text( $status_text )
 		{
 			$this->status_text = $status_text;
 		}
@@ -92,7 +92,7 @@
 			return $this->status_text;
 		}
 
-		public function set_deadline_date_ts($deadline_date_ts)
+		public function set_deadline_date_ts( $deadline_date_ts )
 		{
 			$this->deadline_date_ts = $deadline_date_ts;
 		}
@@ -102,7 +102,7 @@
 			return $this->deadline_date_ts;
 		}
 
-		public function set_deadline_date_txt($deadline_date_txt)
+		public function set_deadline_date_txt( $deadline_date_txt )
 		{
 			$this->deadline_date_txt = $deadline_date_txt;
 		}
@@ -112,7 +112,7 @@
 			return $this->deadline_date_txt;
 		}
 
-		public function set_info_text($info_text)
+		public function set_info_text( $info_text )
 		{
 			$this->info_text = $info_text;
 		}
@@ -122,7 +122,7 @@
 			return $this->info_text;
 		}
 
-		public function set_location_code($location_code)
+		public function set_location_code( $location_code )
 		{
 			$this->location_code = $location_code;
 		}
@@ -132,7 +132,7 @@
 			return $this->location_code;
 		}
 
-		public function set_location_id($location_id)
+		public function set_location_id( $location_id )
 		{
 			$this->location_id = $location_id;
 		}
@@ -142,7 +142,7 @@
 			return $this->location_id;
 		}
 
-		public function set_component_id($component_id)
+		public function set_component_id( $component_id )
 		{
 			$this->component_id = $component_id;
 		}
@@ -157,12 +157,12 @@
 			return $this->type;
 		}
 
-		public function set_type($type)
+		public function set_type( $type )
 		{
 			$this->type = $type;
 		}
 
-		public function set_num_open_cases($num_open_cases)
+		public function set_num_open_cases( $num_open_cases )
 		{
 			$this->num_open_cases = $num_open_cases;
 		}
@@ -172,7 +172,7 @@
 			return $this->num_open_cases;
 		}
 
-		public function set_assigned_to($assigned_to)
+		public function set_assigned_to( $assigned_to )
 		{
 			$this->assigned_to = $assigned_to;
 		}
@@ -182,7 +182,7 @@
 			return $this->assigned_to;
 		}
 
-		public function set_billable_hours($billable_hours)
+		public function set_billable_hours( $billable_hours )
 		{
 			$this->billable_hours = $billable_hours;
 		}
@@ -192,7 +192,7 @@
 			return $this->billable_hours;
 		}
 
-		public function set_serie_id($serie_id)
+		public function set_serie_id( $serie_id )
 		{
 			$this->serie_id = $serie_id;
 		}

@@ -3,12 +3,12 @@
 	$contract_ids	 = array();
 	$sql_contracts	 = "SELECT contract_id from rental_invoice, rental_billing where rental_invoice.billing_id = rental_billing.id and rental_billing.id = {$billing_id}";
 	$this->db->query($sql_contracts, __LINE__, __FILE__);
-	while($this->db->next_record())
+	while ($this->db->next_record())
 	{
 		$contract_ids[] = $this->unmarshal($this->db->f('contract_id'), 'int');
 	}
 
-	foreach($contract_ids as $contract_id)
+	foreach ($contract_ids as $contract_id)
 	{
 		$sql_parties = "select rental_party.* ";
 		$sql_parties .="from rental_party, rental_contract_party, rental_contract ";
@@ -17,7 +17,7 @@
 		$sql_parties .="and rental_party.id = rental_contract_party.party_id ";
 		$sql_parties .="and rental_contract.id = {$contract_id}";
 		$this->db->query($sql_parties, __LINE__, __FILE__);
-		while($this->db->next_record())
+		while ($this->db->next_record())
 		{
 			//generate party-objects
 			$party = new rental_party($this->unmarshal($this->db->f('id'), 'string'));
@@ -41,7 +41,7 @@
 			$party->set_title($this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url($this->unmarshal($this->db->f('url'), 'string'));
 
-			if(!in_array($party, $parties))
+			if (!in_array($party, $parties))
 			{
 				$parties[] = $party;
 			}

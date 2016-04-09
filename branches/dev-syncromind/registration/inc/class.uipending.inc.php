@@ -25,11 +25,11 @@
 	* @package registration
  	* @version $Id: class.uicheck_list.inc.php 8628 2012-01-21 10:42:05Z vator $
 	*/
-
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	class registration_uipending extends phpgwapi_uicommon_jquery
 	{
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -40,14 +40,12 @@
 		var $type_id;
 		var $location_code;
 		var $config;
-	
 		private $so_control_area;
 		private $so_control;
 		private $so_check_list;
 		private $so_control_item;
 		private $so_check_item;
 		private $so_procedure;
-
 		var $public_functions = array
 		(
 			'index'								=> true,
@@ -59,9 +57,9 @@
 		{
 			parent::__construct();
 		
-			$this->bo					= CreateObject('registration.bopending',true);
+			$this->bo = CreateObject('registration.bopending', true);
 			$this->bocommon				= CreateObject('property.bocommon');
-			$c = createobject('phpgwapi.config','registration');
+			$c = createobject('phpgwapi.config', 'registration');
 			$c->read();
 			$this->config = $c->config_data;
 
@@ -76,21 +74,20 @@
 			self::set_active_menu('registration::pending');
 		}
 
-	
 		function index()
 		{
-			if($values = phpgw::get_var('values'))
+			if ($values = phpgw::get_var('values'))
 			{
 				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
 				$values['pending_users_orig'] = isset($values['pending_users_orig']) && $values['pending_users_orig'] ? array_unique($values['pending_users_orig']) : array();
 
 				$this->bo->approve_users($values);
-				if(isset($values['process_user']) && $values['process_user'])
+				if (isset($values['process_user']) && $values['process_user'])
 				{
 					$this->bo->process_users($values);
 				}
 			}
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -119,21 +116,22 @@
 
 			$data = array(
 				'datatable_name' => lang('Pending for approval'),
-				'js_lang'	=>js_lang('edit', 'add'),
+				'js_lang' => js_lang('edit', 'add'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter', 
 								'name' => 'status_id',
-                                'text' => lang('status').':',
+								'text' => lang('status') . ':',
                                 'list' => $status_list,
 							),
 						),
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'registration.uipending.index', 'phpgw_return_as' => 'json')),
-					'ungroup_buttons'=> true,
+					'source' => self::link(array('menuaction' => 'registration.uipending.index',
+						'phpgw_return_as' => 'json')),
+					'ungroup_buttons' => true,
 					'allrows'		 => true,
 					'field' => array(
 						array(
@@ -190,7 +188,7 @@
 					(
 						'my_name'		=> 'edit',
 						'text' 			=> lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
 							'menuaction'	=> 'registration.uipending.edit'
 						)),
@@ -249,22 +247,21 @@
 			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
-
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'string');
 			$bo = createobject('registration.boreg');
 
-			if(isset($_POST['save']) && $id)
+			if (isset($_POST['save']) && $id)
 			{
 				$values = phpgw::get_var('values');
 
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
 
-				if(isset($insert_record_entity) && is_array($insert_record_entity))
+				if (isset($insert_record_entity) && is_array($insert_record_entity))
 				{
-					for ($j=0;$j<count($insert_record_entity);$j++)
+					for ($j = 0; $j < count($insert_record_entity); $j++)
 					{
 						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 					}
@@ -275,14 +272,14 @@
 				$values['account_permissions_admin']	= phpgw::get_var('account_permissions_admin');
 				$values['account_groups']				= phpgw::get_var('account_groups');
 
-				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
 				$values['id'] = $id;
 
 //_debug_array($account_permissions);
 //_debug_array($account_permissions_admin);
 //_debug_array($values);die();
-				if($this->bo->update_pending_user($values))
+				if ($this->bo->update_pending_user($values))
 				{
 					$this->bo->process_users($values);
 					$message = lang('messages_saved_form');
@@ -293,7 +290,6 @@
 					$error = lang('messages_form_error');
 					phpgwapi_cache::message_set($message, 'error');
 				}
-
 			}
 
 			if (isset($_POST['cancel'])) // The user has pressed the cancel button
@@ -307,7 +303,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 			}
 
-			if($id)
+			if ($id)
 			{
 				$user = $bo->get_pending_user($id);
 			}
@@ -323,7 +319,7 @@
 				
 			foreach ($fields as $key => $field_info)
 			{
-				if($user['reg_info'][$field_info['field_name']])
+				if ($user['reg_info'][$field_info['field_name']])
 				{
 					$user_data[] = array
 					(
@@ -334,9 +330,10 @@
 			}
 
 			$bolocation	= CreateObject('property.bolocation');
-			$user['location_data'] = isset($user['reg_info']['location_code']) && $user['reg_info']['location_code'] ? $bolocation->read_single($user['reg_info']['location_code'],array('view' => true)) : '';
+			$user['location_data'] = isset($user['reg_info']['location_code']) && $user['reg_info']['location_code'] ? $bolocation->read_single($user['reg_info']['location_code'], array(
+					'view' => true)) : '';
 				
-			$location_data=$bolocation->initiate_ui_location(array(
+			$location_data = $bolocation->initiate_ui_location(array(
 				'values'	=> $user['location_data'],
 				'type_id'	=> -1,
 				'no_link'	=> false, // disable lookup links for location type less than type_id
@@ -349,7 +346,7 @@
 			/* groups */
 			$group_list = array();
 
-			$all_groups =$GLOBALS['phpgw']->accounts->get_list('groups');
+			$all_groups = $GLOBALS['phpgw']->accounts->get_list('groups');
 
 			//FIXME!!
 			/*
@@ -376,12 +373,13 @@
 			$valid_groups = array_keys($all_groups);
 
 			$user['reg_info']['account_groups'] = isset($user['reg_info']['account_groups']) && $user['reg_info']['account_groups'] ? $user['reg_info']['account_groups'] : array();
-			if($this->config['default_group_id'] && !in_array($this->config['default_group_id'] , $user['reg_info']['account_groups']))
+			if ($this->config['default_group_id'] && !in_array($this->config['default_group_id'], $user['reg_info']['account_groups']))
 			{
-				$user['reg_info']['account_groups'] = array_merge ($user['reg_info']['account_groups'], array($this->config['default_group_id']));
+				$user['reg_info']['account_groups'] = array_merge($user['reg_info']['account_groups'], array(
+					$this->config['default_group_id']));
 			}
 
-			foreach ( $all_groups as $group )
+			foreach ($all_groups as $group)
 			{
 				$group_list[] = array
 				(
@@ -398,7 +396,7 @@
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
 
-			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
 			}
@@ -407,7 +405,7 @@
 				$valid_apps = array_keys($available_apps);
 			}
 
-			foreach ( $available_apps as $key => $application )
+			foreach ($available_apps as $key => $application)
 			{
 				if ($application['enabled'] && $application['status'] != 3)
 				{
@@ -421,7 +419,7 @@
 			asort($perm_display);
 
 			$app_list = array();
-			foreach ( $perm_display as $perm )
+			foreach ($perm_display as $perm)
 			{
 				$app_list[] = array
 				(
@@ -484,11 +482,11 @@
 		
 			$user_list = $this->bo->read($params);
 			
-			foreach($user_list as &$user)
+			foreach ($user_list as &$user)
 			{
 				$reg_info = unserialize(base64_decode($user['reg_info']));
 				$user['location_code'] = $reg_info['location_code'];
-				$results['results'][]= $user;
+				$results['results'][] = $user;
 			}
 			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
@@ -498,5 +496,4 @@
 //_debug_array($results);						
 			return $this->jquery_results($results);
 		}
-
 	}

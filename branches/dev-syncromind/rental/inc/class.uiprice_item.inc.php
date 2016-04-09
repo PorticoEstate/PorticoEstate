@@ -37,24 +37,24 @@
 
 		public function index()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			$types			 = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$types_options	 = array();
-			foreach($types as $id => $label)
+			foreach ($types as $id => $label)
 			{
 				$names = $this->locations->get_name($id);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 					{
 						$types_options[] = array('id' => $id, 'name' => lang($label));
 					}
@@ -222,7 +222,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 
-			if(!self::isExecutiveOfficer())
+			if (!self::isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -233,10 +233,10 @@ JS;
 		 * Edit the price item with the id given in the http variable 'id'
 		 */
 
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
-			if(!self::isExecutiveOfficer())
+			if (!self::isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -244,12 +244,12 @@ JS;
 			$responsibility_id	 = phpgw::get_var('responsibility_id');
 			$price_item_id		 = phpgw::get_var('id', 'int');
 
-			if(!empty($values['price_item_id']))
+			if (!empty($values['price_item_id']))
 			{
 				$price_item_id = $values['price_item_id'];
 			}
 
-			if(!empty($price_item_id))
+			if (!empty($price_item_id))
 			{
 				$price_item = rental_price_item::get($price_item_id);
 			}
@@ -281,7 +281,7 @@ JS;
 
 			$current_price_type_id	 = $price_item->get_price_type_id();
 			$types_options			 = array();
-			foreach($price_item->get_price_types() as $price_type_id => $price_type_title)
+			foreach ($price_item->get_price_types() as $price_type_id => $price_type_title)
 			{
 				$selected		 = ($current_price_type_id == $price_type_id) ? 1 : 0;
 				$types_options[] = array('id'		 => $price_type_id, 'name'		 => lang($price_type_title),
@@ -326,7 +326,7 @@ JS;
 
 		public function add()
 		{
-			if(!self::isExecutiveOfficer())
+			if (!self::isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -338,7 +338,7 @@ JS;
 		{
 			$price_item_id = phpgw::get_var('id', 'int');
 
-			if(!empty($price_item_id))
+			if (!empty($price_item_id))
 			{
 				$price_item = rental_price_item::get($price_item_id);
 			}
@@ -360,13 +360,13 @@ JS;
 			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
 			$price_item->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
-			if($price_item->get_agresso_id() == null)
+			if ($price_item->get_agresso_id() == null)
 			{
 				phpgwapi_cache::message_set(lang('missing_agresso_id'), 'error');
 			}
 			else
 			{
-				if(rental_soprice_item::get_instance()->store($price_item))
+				if (rental_soprice_item::get_instance()->store($price_item))
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 					$price_item_id = $price_item->get_id();
@@ -381,7 +381,7 @@ JS;
 
 		public function set_value()
 		{
-			if(!self::isExecutiveOfficer())
+			if (!self::isExecutiveOfficer())
 			{
 				return;
 			}
@@ -390,8 +390,14 @@ JS;
 			$value	 = phpgw::get_var('value');
 			$id		 = phpgw::get_var('id');
 
-			switch($field_name)
+			switch ($field_name)
 			{
+				case 'count':
+					$value = (int) $value;
+					break;
+				case 'price':
+					$value = trim(str_replace(array($this->currency_suffix, " "), '', $value));
+					break;
 				case 'date_start':
 				case 'date_end':
 					$value =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('value'));
@@ -406,7 +412,7 @@ JS;
 			$result		 = rental_socontract_price_item::get_instance()->store($price_item);
 
 			$message = array();
-			if($result)
+			if ($result)
 			{
 				$message['message'][] = array('msg' => lang('data has been saved'));
 			}
@@ -424,7 +430,7 @@ JS;
 		 */
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -447,17 +453,17 @@ JS;
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
-			if(isset($contract_id))
+			if (isset($contract_id))
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 			}
 
 			//Retrieve the type of query and perform type specific logic
 			$type = phpgw::get_var('type');
-			switch($type)
+			switch ($type)
 			{
 				case 'included_price_items':
-					if(isset($contract))
+					if (isset($contract))
 					{
 						$filters		 = array('contract_id' => $contract->get_id());
 						$result_objects	 = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -483,9 +489,9 @@ JS;
 
 			// Create an empty row set
 			$rows = array();
-			foreach($result_objects as $record)
+			foreach ($result_objects as $record)
 			{
-				if(isset($record))
+				if (isset($record))
 				{
 					// ... add a serialized record
 					$rows[] = $record->serialize();
@@ -566,7 +572,7 @@ JS;
 		public function manual_adjustment()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('manual_adjustment');
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -575,7 +581,7 @@ JS;
 			$types_options	 = array();
 			$types_options[] = array('id' => '', 'name' => 'Velg priselement');
 			$types			 = rental_soprice_item::get_instance()->get_manual_adjustable();
-			foreach($types as $id => $label)
+			foreach ($types as $id => $label)
 			{
 				$types_options[] = array('id' => $id, 'name' => lang($label));
 			}
@@ -728,7 +734,7 @@ JS;
 
 		public function adjust_price()
 		{
-			if(!self::isExecutiveOfficer())
+			if (!self::isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -737,11 +743,11 @@ JS;
 			$new_price	 = str_replace(',', '.', phpgw::get_var('new_price'));
 			$receipt	 = array();
 
-			if($new_price != null && is_numeric($new_price))
+			if ($new_price != null && is_numeric($new_price))
 			{
 				$price_item = rental_price_item::get($id);
 				$price_item->set_price($new_price);
-				if(rental_soprice_item::get_instance()->store($price_item))
+				if (rental_soprice_item::get_instance()->store($price_item))
 				{
 					$adjustment				 = new rental_adjustment();
 					$adjustment->set_price_item_id($price_item->get_id());
@@ -757,7 +763,7 @@ JS;
 					$receipt['message'][]	 = array('msg' => "Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}");
 					//update affected contract_price_items
 					$no_of_contracts_updated = rental_soprice_item::get_instance()->adjust_contract_price_items($id, $new_price);
-					if($no_of_contracts_updated > 0)
+					if ($no_of_contracts_updated > 0)
 					{
 						$message = $no_of_contracts_updated . ' priselementer p&aring; kontrakter er oppdatert';
 					}
@@ -769,7 +775,7 @@ JS;
 
 					$types_options[] = array('id' => '', 'name' => 'Velg priselement');
 					$types			 = rental_soprice_item::get_instance()->get_manual_adjustable();
-					foreach($types as $id => $label)
+					foreach ($types as $id => $label)
 					{
 						$types_options[] = array('id' => $id, 'name' => lang($label));
 					}

@@ -12,12 +12,12 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	function extract_values($array, $keys)
+	function extract_values( $array, $keys )
 	{
 		$result = array();
-		foreach($keys as $key)
+		foreach ($keys as $key)
 		{
-			if(in_array($key, array_keys($array)))
+			if (in_array($key, array_keys($array)))
 			{
 				$result[$key] = phpgw::clean_value($array[$key]);
 			}
@@ -25,9 +25,9 @@
 		return $result;
 	}
 
-	function array_set_default(&$array, $key, $value)
+	function array_set_default( &$array, $key, $value )
 	{
-		if(!isset($array[$key]))
+		if (!isset($array[$key]))
 			$array[$key] = $value;
 	}
 	define('MANAGER', 'MANAGER');
@@ -75,7 +75,7 @@
 		 * @param $permission
 		 * @return true if check is ok, false othewise
 		 */
-		protected function hasPermissionOn($location = activitycalendar_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE)
+		protected function hasPermissionOn( $location = activitycalendar_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE )
 		{
 			return $this->acl->check($location, $permission, 'bkbooking');
 		}
@@ -119,9 +119,9 @@
 			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_rental_unauthorized_exception'));
 		}
 
-		public static function handle_rental_unauthorized_exception(Exception $e)
+		public static function handle_rental_unauthorized_exception( Exception $e )
 		{
-			if($e instanceof rental_unauthorized_exception)
+			if ($e instanceof rental_unauthorized_exception)
 			{
 				$message = htmlentities('HTTP/1.0 401 Unauthorized - ' . $e->getMessage(), null, self::encoding());
 				header($message);
@@ -133,9 +133,9 @@
 			}
 		}
 
-		public function check_active($url)
+		public function check_active( $url )
 		{
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$activate = extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
@@ -149,7 +149,7 @@
 		 * @param $data	the data
 		 * @return YUI result { ResultSet => { totalRecords => ?, Result => ?}
 		 */
-		public function yui_results($data, $field_total = 'total_records', $field_results = 'results')
+		public function yui_results( $data, $field_total = 'total_records', $field_results = 'results' )
 		{
 			return array
 				(
@@ -168,9 +168,9 @@
 		 * @return string formatted version of the string passed to the method,
 		 * or the same string if the one passed is of an incorrect format.
 		 */
-		public static function get_nicely_formatted_gab_id(string $gab_id)
+		public static function get_nicely_formatted_gab_id( string $gab_id )
 		{
-			if(strlen($gab_id) == 20)
+			if (strlen($gab_id) == 20)
 			{
 				$gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
@@ -190,26 +190,26 @@
 		 * @param $extra_cols the list of extra columns to set
 		 * @return string javascript
 		 */
-		public static function get_extra_column_defs($array_name, $extra_cols = array())
+		public static function get_extra_column_defs( $array_name, $extra_cols = array() )
 		{
 			$result = "";
 
-			foreach($extra_cols as $col)
+			foreach ($extra_cols as $col)
 			{
 				$literal = '{';
 				$literal .= 'key: "' . $col['key'] . '",';
 				$literal .= 'label: "' . $col['label'] . '"';
-				if(isset($col['formatter']))
+				if (isset($col['formatter']))
 				{
 					$literal .= ',formatter: ' . $col['formatter'];
 				}
-				if(isset($col['parser']))
+				if (isset($col['parser']))
 				{
 					$literal .= ',parser: ' . $col['parser'];
 				}
 				$literal .= '}';
 
-				if($col["index"])
+				if ($col["index"])
 				{
 					$result .= "{$array_name}.splice(" . $col["index"] . ", 0," . $literal . ");";
 				}
@@ -231,11 +231,11 @@
 
 			$keys = array();
 
-			if(count($list[0]) > 0)
+			if (count($list[0]) > 0)
 			{
-				foreach($list[0] as $key => $value)
+				foreach ($list[0] as $key => $value)
 				{
-					if(!is_array($value))
+					if (!is_array($value))
 					{
 						array_push($keys, $key);
 					}
@@ -244,9 +244,9 @@
 
 			// Remove newlines from output
 			$count = count($list);
-			for($i = 0; $i < $count; $i++)
+			for ($i = 0; $i < $count; $i++)
 			{
-				foreach($list[$i] as $key => &$data)
+				foreach ($list[$i] as $key => &$data)
 				{
 					$data = str_replace(array("\n", "\r\n", "<br>"), '', $data);
 				}
@@ -255,7 +255,7 @@
 			// Use keys as headings
 			$headings	 = array();
 			$count_keys	 = count($keys);
-			for($j = 0; $j < $count_keys; $j++)
+			for ($j = 0; $j < $count_keys; $j++)
 			{
 				array_push($headings, lang($keys[$j]));
 			}

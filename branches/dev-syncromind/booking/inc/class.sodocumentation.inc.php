@@ -28,12 +28,12 @@
 
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
 
-			if(!file_exists($server_files_dir) || !is_dir($server_files_dir))
+			if (!file_exists($server_files_dir) || !is_dir($server_files_dir))
 			{
 				throw new LogicException('The upload directory is not properly configured: ' . $server_files_dir);
 			}
 
-			if(!is_writable($server_files_dir))
+			if (!is_writable($server_files_dir))
 			{
 				throw new LogicException('The upload directory is not writable');
 			}
@@ -66,52 +66,52 @@
 			return self::get_files_root() . DIRECTORY_SEPARATOR . 'manual';
 		}
 
-		private function _chomp_dir_sep($string)
+		private function _chomp_dir_sep( $string )
 		{
 			$sep = DIRECTORY_SEPARATOR == '/' ? '\\/' : preg_quote(DIRECTORY_SEPARATOR);
 			return preg_replace('/(' . $sep . ')+$/', '', trim($string));
 		}
 
-		public function generate_filename($document_id, $document_name)
+		public function generate_filename( $document_id, $document_name )
 		{
 			return $this->get_files_path() . DIRECTORY_SEPARATOR . $document_id . '_' . $document_name;
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			$document = parent::read_single($id);
-			if(is_array($document))
+			if (is_array($document))
 			{
 				$document['filename'] = $this->generate_filename($document['id'], $document['name']);
 			}
 			return $document;
 		}
 
-		public function read_parent($owner_id)
+		public function read_parent( $owner_id )
 		{
 			$parent_so = CreateObject(sprintf('booking.so%s', $this->get_owner_type()));
 			return $parent_so->read_single($owner_id);
 		}
 
-		protected function doValidate($document, booking_errorstack $errors)
+		protected function doValidate( $document, booking_errorstack $errors )
 		{
 			$this->newFile = null;
 
-			if(!$document['id'])
+			if (!$document['id'])
 			{
 				$fileValidator	 = createObject('booking.sfValidatorFile');
 				$files			 = $document['files'];
 				unset($document['files']);
 				try
 				{
-					if($this->newFile = $fileValidator->clean($files['name']))
+					if ($this->newFile = $fileValidator->clean($files['name']))
 					{
 						$document['name'] = $this->newFile->getOriginalName();
 					}
 				}
-				catch(sfValidatorError $e)
+				catch (sfValidatorError $e)
 				{
-					if($e->getCode() == 'required')
+					if ($e->getCode() == 'required')
 					{
 						$errors['name'] = lang('Missing file for document');
 						return;
@@ -120,16 +120,18 @@
 				}
 			}
 
-			if(!in_array($document['category'], $this->defaultCategories))
+			if (!in_array($document['category'], $this->defaultCategories))
 			{
 				$errors['category'] = lang('Invalid category');
 			}
 		}
 
-		function add($document)
+		function add( $document )
 		{
-			if(!$this->newFile)
-			{ throw new LogicException('Missing file');}
+			if (!$this->newFile)
+			{
+				throw new LogicException('Missing file');
+			}
 
 			$this->db->transaction_begin();
 
@@ -142,7 +144,7 @@
 			// make sure that uploaded images are "web friendly"
 			// automatically resize pictures that are too big
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				return $receipt;
 			}
@@ -150,9 +152,9 @@
 			throw new UnexpectedValueException('Transaction failed.');
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
-			if(!is_array($document = $this->read_single($id)))
+			if (!is_array($document = $this->read_single($id)))
 			{
 				return false;
 			}
@@ -161,9 +163,9 @@
 
 			parent::delete($id);
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
-				if(file_exists($document['filename']))
+				if (file_exists($document['filename']))
 				{
 					unlink($document['filename']);
 				}
@@ -173,29 +175,29 @@
 			return false;
 		}
 
-		function has_results(&$result)
+		function has_results( &$result )
 		{
 			return is_array($result) && isset($result['total_records']) && $result['total_records'] > 0 && isset($result['results']);
 		}
 
-		function read($params)
+		function read( $params )
 		{
 			$result = parent::read($params);
 
 			return $result;
 		}
 
-		public function get_file_extension(array &$entity)
+		public function get_file_extension( array &$entity )
 		{
 			return (false === $pos = strrpos($entity['name'], '.')) ? false : substr($entity['name'], $pos + 1);
 		}
 
-		public function getMyRole($id)
+		public function getMyRole( $id )
 		{
 
 			$db = $this->db;
 			$db->limit_query("SELECT role FROM bb_permission_root WHERE id=" . intval($GLOBALS['phpgw_info']['user']['account_id']), 0, __LINE__, __FILE__, 1);
-			if($db->next_record())
+			if ($db->next_record())
 			{
 				return $db->f('role', false);
 			}
@@ -205,7 +207,7 @@
 		public function getFrontendDoc()
 		{
 			$this->db->query("SELECT id,name FROM bb_documentation WHERE category='frontend' ORDER BY id DESC", __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$id = $this->db->f('id', false);
 				return sprintf('index.php?menuaction=bookingfrontend.uidocumentation.download&id=%s', $id);
@@ -216,7 +218,7 @@
 		public function getBackendDoc()
 		{
 			$this->db->query("SELECT id,name FROM bb_documentation WHERE category='backend' ORDER BY id DESC", __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$id = $this->db->f('id', false);
 				return sprintf('index.php?menuaction=booking.uidocumentation.download&id=%s', $id);

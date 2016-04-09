@@ -70,7 +70,7 @@
 			xmlwriter_write_attribute($memory, 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 			xmlwriter_write_attribute($memory, 'xsi:noNamespaceSchemaLocation', 'TreeListe.xsd');
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				xmlwriter_start_element($memory, 'Tree');
 				xmlwriter_write_element($memory, 'ID', 'TJ');
@@ -130,7 +130,7 @@
 			xmlwriter_end_element($memory);
 			$xml = xmlwriter_output_memory($memory, true);
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				header('Content-type: text/xml');
 				echo $xml;
@@ -159,7 +159,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		public function overfor($download)
+		public function overfor( $download )
 		{
 
 //			$download = 'on';
@@ -168,7 +168,7 @@
 			//Bestem filnavn
 			$Filnavn = $this->LagFilnavn();
 
-			if(!$Filnavn)
+			if (!$Filnavn)
 			{
 				$message = 'LagFilnavn: Filnavn er i bruk';
 				$receipt['error'][] = array('msg' => $message);
@@ -177,7 +177,7 @@
 			}
 
 			//Test om filen kan opprettes og skrives til
-			if(@fopen($Filnavn, "wb"))
+			if (@fopen($Filnavn, "wb"))
 			{
 				unlink($Filnavn);
 			}
@@ -185,7 +185,7 @@
 			{
 				$message = 'kan ikke lagre til fil: ' . $Filnavn . '<br>';
 				$receipt['error'][] = array('msg' => $message);
-				if(!$this->debug)
+				if (!$this->debug)
 				{
 					$this->log_end();
 				}
@@ -194,14 +194,14 @@
 			//Velg ut alle anlegg som skal overføres
 			$xmldata = $this->get_xmldata();
 
-			if($xmldata)
+			if ($xmldata)
 			{
 				$this->transfer_anlegg($xmldata, $Filnavn, $download);
 			}
 
-			if($this->connection)
+			if ($this->connection)
 			{
-				switch($this->config->config_data['common']['method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						ftp_quit($this->connection);
@@ -212,7 +212,7 @@
 				}
 			}
 			//Lagre melding
-			if($download == 'on')
+			if ($download == 'on')
 			{
 				$this->log_end();
 			}
@@ -228,7 +228,7 @@
 			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
 
 			//Sjekk om filen eksisterer
-			if(file_exists($Filnavn))
+			if (file_exists($Filnavn))
 			{
 				unlink($Filnavn);
 			}
@@ -236,29 +236,29 @@
 			return $Filnavn;
 		}
 
-		protected function transfer_anlegg($xmldata, $Filnavn, $download)
+		protected function transfer_anlegg( $xmldata, $Filnavn, $download )
 		{
-			if($download == 'on' && !$this->debug)
+			if ($download == 'on' && !$this->debug)
 			{
 				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp, $xmldata);
 
-				if(fclose($fp))
+				if (fclose($fp))
 				{
 					$file_written = true;
 				}
 
-				if($file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
+				if ($file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
-				else if($file_written)
+				else if ($file_written)
 				{
 					$transfer_ok = $this->transfer($xmldata, $Filnavn);
 				}
 
-				if($transfer_ok)
+				if ($transfer_ok)
 				{
 					$message = "El Anlegg er overført, fil: {$Filnavn}";
 					phpgwapi_cache::message_set($message, 'message');
@@ -277,18 +277,18 @@
 			}
 		}
 
-		protected function transfer($xmldata, $Filnavn)
+		protected function transfer( $xmldata, $Filnavn )
 		{
 			$transfer_ok = false;
-			if($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
+			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
 			{
-				if(!$connection = $this->connection)
+				if (!$connection = $this->connection)
 				{
 					$connection = $this->phpftp_connect();
 				}
 
 				$basedir = $this->config->config_data['export']['remote_basedir'];
-				if($basedir)
+				if ($basedir)
 				{
 					$remote_file = $basedir . '/' . basename($Filnavn);
 				}
@@ -297,7 +297,7 @@
 					$remote_file = basename($Filnavn);
 				}
 
-				switch($this->config->config_data['common']['method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
@@ -313,7 +313,7 @@
 						$transfer_ok = false;
 				}
 
-				if(!$transfer_ok)
+				if (!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
@@ -328,20 +328,20 @@
 			$password = $this->config->config_data['common']['password'];
 			$port = 22;
 
-			switch($this->config->config_data['common']['method'])
+			switch ($this->config->config_data['common']['method'])
 			{
 				case 'ftp';
-					if($connection = ftp_connect($server))
+					if ($connection = ftp_connect($server))
 					{
 						ftp_login($connection, $user, $password);
 					}
 					break;
 				case 'ssh';
-					if(!function_exists("ssh2_connect"))
+					if (!function_exists("ssh2_connect"))
 					{
 						die("function ssh2_connect doesn't exist");
 					}
-					if(!($connection = ssh2_connect("$server", $port)))
+					if (!($connection = ssh2_connect("$server", $port)))
 					{
 						$message = "fail: unable to establish connection";
 						_debug_array($message);
@@ -350,7 +350,7 @@
 					else
 					{
 						// try to authenticate with username root, password secretpassword
-						if(!ssh2_auth_password($connection, $user, $password))
+						if (!ssh2_auth_password($connection, $user, $password))
 						{
 							$message = "fail: unable to authenticate";
 							_debug_array($message);

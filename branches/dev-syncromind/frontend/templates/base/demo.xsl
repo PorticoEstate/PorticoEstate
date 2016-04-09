@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 <!-- 1 -->
-	<xsl:template match="demo_1" xmlns:php="http://php.net/xsl">
+<xsl:template match="demo_1" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -13,7 +13,9 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
 			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 				<div class="yui-navset" id="ticket_tabview">
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -23,9 +25,9 @@
 					</div>
 				</div>
 			</form>
-	</xsl:template>
+</xsl:template>
 <!-- 2 -->
-	<xsl:template match="demo_2" xmlns:php="http://php.net/xsl">
+<xsl:template match="demo_2" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -37,7 +39,9 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
 			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 				<div class="yui-navset" id="ticket_tabview">
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -55,11 +59,11 @@
 					</div>
 				</div>
 			</form>
-	</xsl:template>
+</xsl:template>
 	
 	
 <!-- 3 -->
-	<xsl:template match="demo_3" xmlns:php="http://php.net/xsl">
+<xsl:template match="demo_3" xmlns:php="http://php.net/xsl">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -75,7 +79,8 @@
 		<div class="yui-navset" id="ticket_tabview">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">
-				<div id="paging_0"></div><div id="datatable-container_0"></div>
+			<div id="paging_0"></div>
+			<div id="datatable-container_0"></div>
 			</div>
 		</div>
 
@@ -106,5 +111,5 @@
 				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
-	</xsl:template>
+</xsl:template>
 

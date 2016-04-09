@@ -34,7 +34,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -91,7 +91,7 @@
 		{
 			$documents = $this->bo->read();
 
-			foreach($documents['results'] as &$document)
+			foreach ($documents['results'] as &$document)
 			{
 				$document['link']		 = self::link(array('menuaction' => $this->module . '.uidocumentation.download',
 					'id' => $document['id']));
@@ -109,12 +109,11 @@
 			return $this->jquery_results($documents);
 		}
 
-
 		public function index_images()
 		{
 			$images = $this->bo->read_images();
 
-			foreach($images['results'] as &$image)
+			foreach ($images['results'] as &$image)
 			{
 				$image['src'] = $this->get_owner_typed_link('download', array('id' => $image['id']));
 			}
@@ -125,12 +124,14 @@
 		protected function get_document_categories()
 		{
 			$types = array();
-			foreach($this->bo->get_categories() as $type)
-			{ $types[$type] = self::humanize($type);}
+			foreach ($this->bo->get_categories() as $type)
+			{
+				$types[$type] = self::humanize($type);
+			}
 			return $types;
 		}
 
-		protected function add_default_display_data(&$document_data)
+		protected function add_default_display_data( &$document_data )
 		{
 #			$document_data['owner_pathway'] 	= $this->get_owner_pathway($document_data);
 #			$document_data['owner_type']  		= lang('manual');
@@ -154,12 +155,12 @@
 			$errors		 = array();
 			$document	 = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document			 = extract_values($_POST, $this->fields);
 				$document['files']	 = $this->get_files();
 				$errors				 = $this->bo->validate($document);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($document);
 					$this->redirect(array('menuaction' => 'booking.uidocumentation.index'));
@@ -188,11 +189,11 @@
 			$document	 = $this->bo->read_single($id);
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document	 = array_merge($document, extract_values($_POST, $this->fields));
 				$errors		 = $this->bo->validate($document);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($document);
 					$this->redirect(array('menuaction' => 'booking.uidocumentation.index'));
@@ -237,6 +238,8 @@
 		 *
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
-		protected function get_owner_pathway(array $forDocumentData)
-		{ return array();}
+		protected function get_owner_pathway( array $forDocumentData )
+		{
+			return array();
+		}
 	}

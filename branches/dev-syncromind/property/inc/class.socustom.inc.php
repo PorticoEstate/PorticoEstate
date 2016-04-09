@@ -42,10 +42,10 @@
 			$this->like = & $this->db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = (isset($data['start']) ? $data['start'] : 0);
 				$filter = (isset($data['filter']) ? $data['filter'] : 'none');
@@ -59,7 +59,7 @@
 
 			$order = ($order == 'custom_id') ? 'id' : $order;
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -69,13 +69,13 @@
 			}
 
 			$where = 'WHERE';
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where category='$cat_id' ";
 				$where = 'AND';
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where name $this->like '%$query%'";
@@ -86,7 +86,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -95,7 +95,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$customs[] = array
 					(
@@ -108,13 +108,13 @@
 			return $customs;
 		}
 
-		function read_single($custom_id)
+		function read_single( $custom_id )
 		{
 			$custom_id = (int)$custom_id;
 			$this->db->query("SELECT * from fm_custom where id={$custom_id}", __LINE__, __FILE__);
 
 			$custom = array();
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$custom = array
 					(
@@ -129,14 +129,14 @@
 			return $custom;
 		}
 
-		function read_cols($custom_id)
+		function read_cols( $custom_id )
 		{
 			$custom_id = (int)$custom_id;
 			$sql = "SELECT * FROM fm_custom_cols WHERE custom_id={$custom_id} ORDER by sorting";
 			$this->db->query($sql);
 
 			$cols = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$cols[] = array
 					(
@@ -149,7 +149,7 @@
 			return $cols;
 		}
 
-		function read_custom_name($custom_id)
+		function read_custom_name( $custom_id )
 		{
 			$custom_id = (int)$custom_id;
 			$this->db->query("SELECT name FROM fm_custom where id={$custom_id}", __LINE__, __FILE__);
@@ -157,7 +157,7 @@
 			return $this->db->f('name', true);
 		}
 
-		function add($custom)
+		function add( $custom )
 		{
 			$custom['name'] = $this->db->db_addslashes($custom['name']);
 			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
@@ -178,14 +178,14 @@
 			return $receipt;
 		}
 
-		function edit($custom)
+		function edit( $custom )
 		{
 			$custom['name'] = $this->db->db_addslashes($custom['name']);
 			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
 			$this->db->query("UPDATE fm_custom set sql_text='{$custom['sql_text']}', entry_date='" . time() . "', name='{$custom['name']}' WHERE id=" . (int)$custom['custom_id'], __LINE__, __FILE__);
 
-			if($custom['new_name'])
+			if ($custom['new_name'])
 			{
 				$column_id = $this->db->next_id('fm_custom_cols', array('custom_id' => $custom['custom_id']));
 
@@ -209,9 +209,9 @@
 			}
 
 
-			if($custom['delete'])
+			if ($custom['delete'])
 			{
-				for($i = 0; $i < count($custom['delete']); $i++)
+				for ($i = 0; $i < count($custom['delete']); $i++)
 				{
 
 					$sql = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete'][$i];
@@ -223,7 +223,7 @@
 					$this->db->next_record();
 					$max_sort = $this->db->f('max_sort');
 
-					if($max_sort > $sorting)
+					if ($max_sort > $sorting)
 					{
 						$sql = "UPDATE fm_custom_cols set sorting=sorting-1 WHERE sorting > $sorting AND custom_id=" . $custom['custom_id'];
 						$this->db->query($sql);
@@ -239,10 +239,10 @@
 			return $receipt;
 		}
 
-		function resort($data)
+		function resort( $data )
 		{
 			//html_print_r($data);
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$resort = (isset($data['resort']) ? $data['resort'] : 'up');
 				$custom_id = (isset($data['id']) ? $data['custom_id'] : '');
@@ -257,10 +257,10 @@
 			$this->db->query($sql);
 			$this->db->next_record();
 			$max_sort = $this->db->f('max_sort');
-			switch($resort)
+			switch ($resort)
 			{
 				case 'up':
-					if($sorting > 1)
+					if ($sorting > 1)
 					{
 						$sql = "UPDATE fm_custom_cols set sorting=$sorting WHERE custom_id = $custom_id AND sorting =" . ($sorting - 1);
 						$this->db->query($sql);
@@ -269,7 +269,7 @@
 					}
 					break;
 				case 'down':
-					if($max_sort > $sorting)
+					if ($max_sort > $sorting)
 					{
 						$sql = "UPDATE fm_custom_cols set sorting=$sorting WHERE custom_id = $custom_id AND sorting =" . ($sorting + 1);
 						$this->db->query($sql);
@@ -283,7 +283,7 @@
 			}
 		}
 
-		function read_custom($data)
+		function read_custom( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
@@ -306,7 +306,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -317,9 +317,9 @@
 
 			$n = count($uicols);
 			$j = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				for($i = 0; $i < $n; $i++)
+				for ($i = 0; $i < $n; $i++)
 				{
 					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name']);
 					$custom[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
@@ -331,7 +331,7 @@
 			return $custom;
 		}
 
-		function delete($custom_id)
+		function delete( $custom_id )
 		{
 			$custom_id = (int)$custom_id;
 			$this->db->query("DELETE FROM fm_custom WHERE id={$custom_id}", __LINE__, __FILE__);

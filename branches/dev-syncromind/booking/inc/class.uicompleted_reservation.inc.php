@@ -4,6 +4,7 @@
 
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
+	phpgw::import_class('phpgwapi.datetime');
 
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 
@@ -38,19 +39,19 @@
 			$this->restore_export_filters();
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function redirect_to($action, $params = array())
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -66,16 +67,16 @@
 
 		protected function restore_export_filters()
 		{
-			if($export_key = phpgw::get_var('export_key', 'string', 'REQUEST', null))
+			if ($export_key = phpgw::get_var('export_key', 'string', 'REQUEST', null))
 			{
-				if(is_array($export_filters = $this->ui_session_get(self::SESSION_EXPORT_FILTER_KEY . '_' . $export_key)))
+				if (is_array($export_filters = $this->ui_session_get(self::SESSION_EXPORT_FILTER_KEY . '_' . $export_key)))
 				{
 					$this->export_filters = $export_filters;
 				}
 			}
 		}
 
-		protected function store_export_filters($filters)
+		protected function store_export_filters( $filters )
 		{
 			$export_key = md5(print_r($filters, true));
 			$this->ui_session_set(self::SESSION_EXPORT_FILTER_KEY . '_' . $export_key, $filters);
@@ -100,7 +101,7 @@
 
 		public function toggle_show_all_completed_reservations()
 		{
-			if(isset($_SESSION['show_all_completed_reservations']) && !empty($_SESSION['show_all_completed_reservations']))
+			if (isset($_SESSION['show_all_completed_reservations']) && !empty($_SESSION['show_all_completed_reservations']))
 			{
 				$this->bo->unset_show_all_completed_reservations();
 			}
@@ -113,12 +114,12 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-			if(phpgw::get_var('export'))
+			if (phpgw::get_var('export'))
 			{
 				return $this->export();
 			}
@@ -129,6 +130,7 @@
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');
 
 			$data = array(
+				'datatable_name' => lang('booking') . ': ' . lang('Completed'),
 				'form'		 => array(
 					'toolbar'		 => array(
 						'item' => array(
@@ -163,16 +165,17 @@
 					'list_actions'	 => array(
 						'item' => array(
 							array(
-								'type'	 => 'submit',
+								'type' => 'button',
 								'name'	 => 'export',
 								'value'	 => lang('Export') . '...',
+								'onClick' => "export_completed_reservations();"
 							),
 						)
 					),
 				),
 				'datatable'	 => array(
 					'source'	 => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'sorted_by'	 => array('key' => 'id', 'dir' => 'desc'),
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
 					'field'		 => array(
 						array(
 							'key'		 => 'id',
@@ -254,7 +257,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		protected function add_current_customer_identifier_info(&$data)
+		protected function add_current_customer_identifier_info( &$data )
 		{
 			$this->get_customer_identifier()->add_current_identifier_info($data);
 		}
@@ -275,7 +278,7 @@
 			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
 			 */
 
-			switch($sort)
+			switch ($sort)
 			{
 				case 'cost':
 					$_sort	 = array('cost', 'id');
@@ -313,36 +316,36 @@
 			}
 
 			$filters = array();
-			foreach($this->bo->so->get_field_defs() as $field => $params)
+			foreach ($this->bo->so->get_field_defs() as $field => $params)
 			{
-				if(phpgw::get_var("filter_$field"))
+				if (phpgw::get_var("filter_$field"))
 				{
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
 
 			$filter_to = phpgw::get_var('to', 'string', 'REQUEST', null);
+			$to_date = $filter_to ? $filter_to : phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 
-			if($filter_to)
+			if ($to_date)
 			{
-				$filter_to2			 = split("/", $filter_to);
-				$filter_to			 = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
-				$filters['where'][]	 = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$filter_to2 = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($to_date));
+				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to2));
 			}
 
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
 			!$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
 			{ // users with the booking role admin should have access to all buildings
 				$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
 
 				// if no buildings are searched for, show all accessable buildings
-				if(!isset($filters['building_id']))
+				if (!isset($filters['building_id']))
 				{
 					$filters['building_id'] = $accessable_buildings;
 				}
 				else
 				{ // before displaying search result, check if the building search for is accessable
-					if(!in_array($filters['building_id'], $accessable_buildings))
+					if (!in_array($filters['building_id'], $accessable_buildings))
 					{
 						$filters['building_id'] = -1;
 						unset($filters['building_name']);
@@ -350,12 +353,12 @@
 				}
 			}
 
-			if(!isset($_SESSION['showall']))
+			if (!isset($_SESSION['showall']))
 			{
 				$filters['active'] = "1";
 			}
 
-			if(!isset($_SESSION['show_all_completed_reservations']))
+			if (!isset($_SESSION['show_all_completed_reservations']))
 			{
 				$filters['exported'] = '';
 			}
@@ -372,10 +375,10 @@
 			$reservations = $this->bo->so->read($params);
 
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module . ".uicompleted_reservation.show");
-			foreach($reservations["results"] as &$reservation)
+			foreach ($reservations["results"] as &$reservation)
 			{
 
-				if(!empty($reservation['exported']))
+				if (!empty($reservation['exported']))
 				{
 					$reservation['exported'] = array(
 						'href'	 => $this->link_to('show', array('ui' => 'completed_reservation_export',
@@ -394,7 +397,7 @@
 					'label'	 => lang($reservation['reservation_type']),
 				);
 
-				if(isset($reservation['export_file_id']) && !empty($reservation['export_file_id']))
+				if (isset($reservation['export_file_id']) && !empty($reservation['export_file_id']))
 				{
 					$reservation['export_file_id'] = array(
 						'label'	 => (string)$reservation['export_file_id'],
@@ -407,14 +410,14 @@
 					$reservation['export_file_id'] = array('label' => lang("Not Generated"));
 				}
 
-				if(empty($reservation['invoice_file_order_id']))
+				if (empty($reservation['invoice_file_order_id']))
 				{
 					$reservation['invoice_file_order_id'] = lang("Not Generated");
 				}
 
 				$this->db = & $GLOBALS['phpgw']->db;
 
-				if($reservation['reservation_type']['label'] == 'Arrangement')
+				if ($reservation['reservation_type']['label'] == 'Arrangement')
 				{
 					$sql						 = "select description,contact_name from bb_event where id=" . $reservation['reservation_id'];
 					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
@@ -423,12 +426,12 @@
 					$reservation['description']	 = $this->db->f('description', false);
 					$reservation['contact_name'] = $this->db->f('contact_name', false);
 				}
-				elseif($reservation['reservation_type']['label'] == 'Booking')
+				elseif ($reservation['reservation_type']['label'] == 'Booking')
 				{
 					$sql = "select  application_id from bb_booking where id=" . $reservation['reservation_id'];
 					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 					$this->db->next_record();
-					if(!$this->db->f('application_id', false))
+					if (!$this->db->f('application_id', false))
 					{
 						$reservation['contact_name'] = '';
 					}
@@ -447,7 +450,7 @@
 					$sql = "select  application_id from bb_allocation where id=" . $reservation['reservation_id'];
 					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 					$this->db->next_record();
-					if(!$this->db->f('application_id', false))
+					if (!$this->db->f('application_id', false))
 					{
 						$reservation['contact_name'] = '';
 					}
@@ -478,14 +481,14 @@
 			return $results;
 		}
 
-		protected function add_default_display_data(&$reservation)
+		protected function add_default_display_data( &$reservation )
 		{
 			$reservation['reservations_link']	 = $this->link_to('index');
 			$reservation['edit_link']			 = $this->link_to('edit', array('id' => $reservation['id']));
 
 			$reservation['customer_types'] = array_combine($this->bo->get_customer_types(), $this->bo->get_customer_types());
 
-			if($reservation['season_id'])
+			if ($reservation['season_id'])
 			{
 				$reservation['season_link'] = $this->link_to('show', array('ui' => 'season',
 					'id' => $reservation['season_id']));
@@ -496,7 +499,7 @@
 				unset($reservation['season_name']);
 			}
 
-			if($reservation['organization_id'])
+			if ($reservation['organization_id'])
 			{
 				$reservation['organization_link'] = $this->link_to('show', array('ui' => 'organization',
 					'id' => $reservation['organization_id']));
@@ -507,7 +510,7 @@
 				unset($reservation['organization_name']);
 			}
 
-			if(!empty($reservation['exported']))
+			if (!empty($reservation['exported']))
 			{
 				$reservation['exported_link'] = $this->link_to('show', array('ui' => 'completed_reservation_export',
 					'id' => $reservation['exported']));
@@ -517,7 +520,7 @@
 				$reservation['exported'] = lang('No');
 			}
 
-			if(!empty($reservation['export_file_id']))
+			if (!empty($reservation['export_file_id']))
 			{
 				$reservation['export_file_id'] = array(
 					'label'	 => (string)$reservation['export_file_id'],
@@ -530,7 +533,7 @@
 				$reservation['export_file_id'] = array('label' => lang("Not Generated"));
 			}
 
-			if(empty($reservation['invoice_file_order_id']))
+			if (empty($reservation['invoice_file_order_id']))
 			{
 				$reservation['invoice_file_order_id'] = lang("Not Generated");
 			}
@@ -551,7 +554,7 @@
 			$show_edit_button	 = false;
 			$building_role		 = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
 
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']) || in_array($reservation['building_id'], $building_role))
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) || in_array($reservation['building_id'], $building_role))
 			{
 				$show_edit_button = true;
 			}
@@ -574,35 +577,35 @@
 			return $this->customer_id;
 		}
 
-		protected function extract_customer_identifier(&$data)
+		protected function extract_customer_identifier( &$data )
 		{
 			$this->get_customer_identifier()->extract_form_data($data);
 		}
 
-		protected function validate_customer_identifier(&$data)
+		protected function validate_customer_identifier( &$data )
 		{
 			return $this->get_customer_identifier()->validate($data);
 		}
 
-		protected function install_customer_identifier_ui(&$entity)
+		protected function install_customer_identifier_ui( &$entity )
 		{
 			$this->get_customer_identifier()->install($this, $entity);
 		}
 
-		protected function validate(&$entity)
+		protected function validate( &$entity )
 		{
 			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
 			return $errors;
 		}
 
-		protected function extract_form_data($defaults = array())
+		protected function extract_form_data( $defaults = array() )
 		{
 			$entity = array_merge($defaults, extract_values($_POST, $this->fields));
 			$this->extract_customer_identifier($entity);
 			return $entity;
 		}
 
-		protected function extract_and_validate($defaults = array())
+		protected function extract_and_validate( $defaults = array() )
 		{
 			$entity	 = $this->extract_form_data($defaults);
 			$errors	 = $this->validate($entity);
@@ -616,30 +619,30 @@
 			$building_role	 = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
 			$reservation	 = $this->bo->read_single(phpgw::get_var('id', 'int'));
 
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !in_array($reservation['building_id'], $building_role))
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !in_array($reservation['building_id'], $building_role))
 			{
 				$this->redirect_to('show', array('id' => phpgw::get_var('id', 'int')));
 			}
 
-			if(((int)$reservation['exported']) !== 0)
+			if (((int)$reservation['exported']) !== 0)
 			{
 				//Cannot edit already exported reservation
 				$this->redirect_to('show', array('id' => $reservation['id']));
 			}
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($reservation, $errors) = $this->extract_and_validate($reservation);
 
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->update($reservation);
 						$this->redirect_to('show', array('id' => $reservation['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}

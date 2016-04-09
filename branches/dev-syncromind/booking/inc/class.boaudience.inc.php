@@ -20,10 +20,10 @@
 			unset($_SESSION['ActiveSession']);
 		}
 
-		function fetch_target_audience($top_level_activity = 0)
+		function fetch_target_audience( $top_level_activity = 0 )
 		{
 			$filters = array('active' => '1');
-			if($top_level_activity)
+			if ($top_level_activity)
 			{
 				$filters['activity_id'] = $top_level_activity;
 			}

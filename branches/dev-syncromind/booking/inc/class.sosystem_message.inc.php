@@ -24,10 +24,10 @@
 			);
 		}
 
-		function get_building($id)
+		function get_building( $id )
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}

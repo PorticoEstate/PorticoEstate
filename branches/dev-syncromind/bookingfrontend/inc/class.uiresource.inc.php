@@ -26,7 +26,7 @@
 
 		public function index_json()
 		{
-			if($sub_activity_id = phpgw::get_var('sub_activity_id'))
+			if ($sub_activity_id = phpgw::get_var('sub_activity_id'))
 			{
 				$activity_path = ExecMethod('booking.boactivity.get_path', $sub_activity_id);
 				$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
@@ -45,7 +45,7 @@
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
 			$pathway = array();
 			$lang_home = lang('home');
-			foreach($resource['buildings'] as $building_id)
+			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$pathway[] = array(
@@ -94,15 +94,15 @@
 
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
-			foreach($fields as $attrib_id => &$attrib)
+			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;
 
-				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
 				{
-					foreach($attrib['choice'] as &$choice)
+					foreach ($attrib['choice'] as &$choice)
 					{
-						if(is_array($attrib['value']))
+						if (is_array($attrib['value']))
 						{
 							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
 						}
@@ -126,12 +126,12 @@
 		public function schedule()
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'int', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
-			/*FIXME: Sigurd: handle multiple buildings*/
+			/* FIXME: Sigurd: handle multiple buildings */
 
 			$pathway = array();
 			$lang_home = lang('home');
 			$lang_schedule = lang('schedule');
-			foreach($resource['buildings'] as $building_id)
+			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$pathway[] = array(
@@ -151,7 +151,7 @@
 
 			$building = $this->building_bo->read_single($resource['buildings'][0]);
 			$resource['deactivate_application'] = $building['deactivate_application'];
-			if($building['deactivate_application'] == 0)
+			if ($building['deactivate_application'] == 0)
 			{
 				$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add',
 		//			'building_id' => $resource['building_id'],
@@ -174,6 +174,7 @@
 			phpgwapi_jquery::load_widget("datepicker");
 			$resource['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
-			self::render_template_xsl('resource_schedule', array('resource' => $resource,'pathway'	=> $pathway));
+			self::render_template_xsl('resource_schedule', array('resource' => $resource,
+				'pathway' => $pathway));
 		}
 	}

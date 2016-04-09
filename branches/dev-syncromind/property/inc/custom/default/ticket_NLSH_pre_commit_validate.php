@@ -22,7 +22,7 @@
 		 * @param array $data
 		 * @param array $values_attribute
 		 */
-		function validate($id = 0, &$data, $values_attribute = array())
+		function validate( $id = 0, &$data, $values_attribute = array() )
 		{
 			//		_debug_array($data);
 			//		$data['assignedto'] = 11;
@@ -30,7 +30,7 @@
 		}
 	}
 	$ticket_NLSH_pre_commit_validate = new ticket_NLSH_pre_commit_validate();
-	if($_error = $ticket_NLSH_pre_commit_validate->validate($id, $data, $values_attribute))
+	if ($_error = $ticket_NLSH_pre_commit_validate->validate($id, $data, $values_attribute))
 	{
 		return $receipt['error'][] = array('msg' => $_error);
 	}

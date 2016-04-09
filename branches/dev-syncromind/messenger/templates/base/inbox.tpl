@@ -1,18 +1,23 @@
 <!-- BEGIN list -->
 <script type="text/javascript">
 //<[CDATA[
-function check_all()
-{
-	for (i=0; i<document.messages.elements.length; i++) {
-		if (document.messages.elements[i].type == "checkbox") {
-			if (document.messages.elements[i].checked) {
+	function check_all()
+	{
+		for (i = 0; i < document.messages.elements.length; i++)
+		{
+			if (document.messages.elements[i].type == "checkbox")
+			{
+				if (document.messages.elements[i].checked)
+				{
 				document.messages.elements[i].checked = false;
-			} else {
+				}
+				else
+				{
 				document.messages.elements[i].checked = true;
 			}
 		} 
 	}
-}
+	}
 //]]>
 </script>
 
@@ -30,7 +35,7 @@ function check_all()
 			</tr>
 		</thead>
 		<tbody>
-<!-- BEGIN row -->
+			<!-- BEGIN row -->
 			<tr class="{row_class}">
 				<td><input type="checkbox" name="messages[]" value="{row_msg_id}" /></td>
 				<td><strong>{row_status}</strong></td>
@@ -38,7 +43,7 @@ function check_all()
 				<td>{row_from}</td>
 				<td><a href="{row_url}">{row_subject}</a></td>
 			</tr>
-<!-- END row -->
+			<!-- END row -->
 		</tbody>
     </table>
 
@@ -55,7 +60,7 @@ function check_all()
 
 
 <!-- BEGIN row_empty -->
-    <tr bgcolor="#FFFFFF">
+<tr bgcolor="#FFFFFF">
      <td colspan="5" align="center">{lang_empty}</td>
-    </tr>
+</tr>
 <!-- END row_empty -->

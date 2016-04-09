@@ -10,7 +10,7 @@
 
 			$menus = array();
 
-			if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'bookingfrontend'))
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'bookingfrontend'))
 			{
 				$menus['admin'] = array
 					(

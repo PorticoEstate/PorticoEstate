@@ -44,7 +44,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_item_list');
 			}
@@ -57,7 +57,7 @@
 		 * @param $control_item_list control item list object to be inserted
 		 * @return id of inserted control item list if successful, 0 if not successful
 		 */
-		function add(&$control_item_list)
+		function add( &$control_item_list )
 		{
 			$cols = array(
 				'control_id',
@@ -71,7 +71,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_list', 'id');
@@ -88,7 +88,7 @@
 		 * @param $control_item_list control item list object to be updated
 		 * @return id of inserted control item list if successful, 0 if not successful
 		 */
-		function update($control_item_list)
+		function update( $control_item_list )
 		{
 			$id = intval($control_item_list->get_id());
 
@@ -109,7 +109,7 @@
 		 * @param	$id	id of the control_item_list to return
 		 * @return  control item list object
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id = (int)$id;
 
@@ -132,7 +132,7 @@
 		 * @param	$control_item_id	control id
 		 * @return  control item list object
 		 */
-		function get_single_2($control_id, $control_item_id)
+		function get_single_2( $control_id, $control_item_id )
 		{
 			$control_id		 = (int)$control_id;
 			$control_item_id = (int)$control_item_id;
@@ -141,7 +141,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$result	 = $this->db->next_record();
 
-			if($result)
+			if ($result)
 			{
 				$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -162,7 +162,7 @@
 		 * @param	$control_group_id	control group id
 		 * @return  array with control items
 		 */
-		function get_control_items($control_group_id)
+		function get_control_items( $control_group_id )
 		{
 			$control_group_id = (int)$control_group_id;
 
@@ -174,7 +174,7 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -196,7 +196,7 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return  array with control items
 		 */
-		function get_control_items_by_control($control_id, $returnType = "return_object")
+		function get_control_items_by_control( $control_id, $returnType = "return_object" )
 		{
 			$control_id = (int)$control_id;
 
@@ -209,7 +209,7 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -219,7 +219,7 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				if($returnType == "return_array")
+				if ($returnType == "return_array")
 				{
 					$results[] = $control_item->toArray();
 				}
@@ -240,7 +240,7 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return  array with control items
 		 */
-		function get_control_items_by_control_and_group($control_id, $control_group_id, $returnType = "return_array")
+		function get_control_items_by_control_and_group( $control_id, $control_group_id, $returnType = "return_array" )
 		{
 			$control_id			 = (int)$control_id;
 			$control_group_id	 = (int)$control_group_id;
@@ -257,7 +257,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -267,7 +267,7 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				if($returnType == "return_array")
+				if ($returnType == "return_array")
 				{
 					$results[] = $control_item->toArray();
 				}
@@ -288,7 +288,7 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return array with control items
 		 */
-		function get_control_items_and_options_by_control_and_group($control_id, $control_group_id, $return_type = "return_array")
+		function get_control_items_and_options_by_control_and_group( $control_id, $control_group_id, $return_type = "return_array" )
 		{
 			$control_id			 = (int)$control_id;
 			$control_group_id	 = (int)$control_group_id;
@@ -309,15 +309,15 @@
 			$control_item_id	 = 0;
 			$control_item		 = null;
 			$control_item_array	 = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('ci_id') != $control_item_id)
+				if ($this->db->f('ci_id') != $control_item_id)
 				{
-					if($control_item_id)
+					if ($control_item_id)
 					{
 						$control_item->set_options_array($options_array);
 
-						if($return_type == "return_array")
+						if ($return_type == "return_array")
 						{
 							$control_item_array[] = $control_item->toArray();
 						}
@@ -341,7 +341,7 @@
 				$control_item_option = new controller_control_item_option($this->db->f('option_value', true), $this->db->f('control_item_id'));
 				$control_item_option->set_id($this->db->f('cio_id'));
 
-				if($return_type == "return_array")
+				if ($return_type == "return_array")
 				{
 					$options_array[] = $control_item_option->toArray();
 				}
@@ -353,11 +353,11 @@
 				$control_item_id = $control_item->get_id();
 			}
 
-			if($control_item != null)
+			if ($control_item != null)
 			{
 				$control_item->set_options_array($options_array);
 
-				if($return_type == "return_array")
+				if ($return_type == "return_array")
 				{
 					$control_item_array[] = $control_item->toArray();
 				}
@@ -381,7 +381,7 @@
 		 * @param	$control_group_id	control group id
 		 * @return true if successful, false otherwise
 		 */
-		function delete($control_id, $control_item_id)
+		function delete( $control_id, $control_item_id )
 		{
 			$control_id		 = (int)$control_id;
 			$control_item_id = (int)$control_item_id;
@@ -397,7 +397,7 @@
 		 * @param	$control_id	control id
 		 * @return true if successful, false otherwise
 		 */
-		function delete_control_items($control_id)
+		function delete_control_items( $control_id )
 		{
 			$control_id	 = (int)$control_id;
 			$result		 = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
@@ -412,7 +412,7 @@
 		 * @param	$control_group_id	control group id
 		 * @return true if successful, false otherwise
 		 */
-		function delete_control_items_for_group_list($control_id, $control_group_id)
+		function delete_control_items_for_group_list( $control_id, $control_group_id )
 		{
 			$control_id			 = (int)$control_id;
 			$control_group_id	 = (int)$control_group_id;
@@ -428,17 +428,17 @@
 			return $result;
 		}
 
-		function get_id_field_name($extended_info = false)
+		function get_id_field_name( $extended_info = false )
 		{
 
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 
 		}
 
-		function populate(int $control_item_id, &$control_item)
+		function populate( int $control_item_id, &$control_item )
 		{
 
 		}

@@ -124,7 +124,7 @@
 
 		public function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->no_access();
 				return;
@@ -134,9 +134,9 @@
 
 			$values = phpgw::get_var('values', 'string', 'POST');
 
-			if($values)
+			if ($values)
 			{
-				if(!$this->acl_edit)
+				if (!$this->acl_edit)
 				{
 					$this->no_access();
 					return;
@@ -149,9 +149,9 @@
 			$lang_select_migrate_text = '';
 			$text_select = '';
 
-			foreach($domain_info as $domain => $entry)
+			foreach ($domain_info as $domain => $entry)
 			{
-				if($this->acl_edit)
+				if ($this->acl_edit)
 				{
 					$lang_select_migrate_text = lang('select domain to migrate to') . ': ' . $domain;
 				}
@@ -186,7 +186,7 @@
 				'lang_select' => (isset($this->acl_edit) ? lang('select') : ''),
 			);
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}

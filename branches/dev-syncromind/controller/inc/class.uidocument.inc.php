@@ -87,7 +87,7 @@
 			$sort_field		 = $params['order'];
 
 			$ctrl_area = phpgw::get_var('control_areas');
-			if(isset($ctrl_area) && $ctrl_area > 0)
+			if (isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area;
 			}
@@ -101,13 +101,13 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$procedure_id = phpgw::get_var('procedure_id');
-			if(isset($procedure_id))
+			if (isset($procedure_id))
 			{
 				$procedure = $this->so_procedure->get_single($procedure_id);
 			}
 
 			$type = phpgw::get_var('type');
-			switch($type)
+			switch ($type)
 			{
 				case 'documents_for_procedure':
 					$filters = array('procedure_id'	 => $procedure_id,
@@ -120,9 +120,9 @@
 
 			//Serialize the documents found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
@@ -174,7 +174,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			$value['ajax']		 = array();
 			$value['actions']	 = array();
@@ -191,10 +191,10 @@
 			$user_is		 = $params[2];
 			$editable		 = $params[3];
 
-			switch($type)
+			switch ($type)
 			{
 				case 'documents_for_procedure':
-					if($edit_permission && $editable)
+					if ($edit_permission && $editable)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'controller.uidocument.delete',
@@ -224,23 +224,23 @@
 
 			$data = array();
 			// Check permissions if procedure id is set
-			if(isset($procedure_id) && $procedure_id > 0)
+			if (isset($procedure_id) && $procedure_id > 0)
 			{
 				//Load procedure
 				$procedure = $this->so_procedure->get_single($procedure_id);
 			}
 
 			// If no contract or party is loaded
-			if(!isset($procedure))
+			if (!isset($procedure))
 			{
 				$data['error'] = lang('error_no_procedure');
 				$this->render('permission_denied.php', $data);
 				return;
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if(!$this->add && !$this->edit)
+				if (!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'controller.uidocument.show',
@@ -266,11 +266,11 @@
 				$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
 				);
 
-				if($result)
+				if ($result)
 				{
-					if($this->so->store($document))
+					if ($this->so->store($document))
 					{
-						if(isset($procedure))
+						if (isset($procedure))
 						{
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'controller.uidocument.show',
 								'procedure_id'	 => $procedure->get_id(),
@@ -328,7 +328,7 @@
 
 			$procedure_id = intval(phpgw::get_var('procedure_id'));
 
-			if(!$this->delete)
+			if (!$this->delete)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'controller.uidocument.show',
@@ -351,7 +351,7 @@
 			$document_properties['document_type'], $document_properties['id'], $document->get_name()
 			);
 
-			if($result)
+			if ($result)
 			{
 				$this->so->delete_document($document_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'controller.uidocument.show',
@@ -370,9 +370,9 @@
 		 * @param $error	an error message
 		 * @param $message	a user message
 		 */
-		public function redirect($document, $document_properties, $error, $message)
+		public function redirect( $document, $document_properties, $error, $message )
 		{
-			if($document_properties['document_type'] == controller_sodocument::$PROCEDURE_DOCUMENTS)
+			if ($document_properties['document_type'] == controller_sodocument::$PROCEDURE_DOCUMENTS)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
 					'id'		 => $document_properties['id'],
@@ -391,19 +391,19 @@
 		 * @param $document_properties	the document type and object id
 		 * @return true if correct privileges, false otherwise
 		 */
-		private function check_permissions($document, $document_properties)
+		private function check_permissions( $document, $document_properties )
 		{
-			if($document_properties == controller_sodocument::$PROCEDURE_DOCUMENTS)
+			if ($document_properties == controller_sodocument::$PROCEDURE_DOCUMENTS)
 			{
 				$procedure = $this->so_procedure->get_single($document_properties['id']);
-				if(!$procedure->has_permission(PHPGW_ACL_EDIT))
+				if (!$procedure->has_permission(PHPGW_ACL_EDIT))
 				{
 					return false;
 				}
 			}
 			else
 			{
-				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					return false;
 				}
@@ -418,12 +418,12 @@
 		 * @param $document	the given document
 		 * @return name/value array ('document_type','id')
 		 */
-		private function get_type_and_id($document)
+		private function get_type_and_id( $document )
 		{
 			$document_type;
 			$id;
 			$procedure_id = $document->get_procedure_id();
-			if(isset($procedure_id) && $procedure_id > 0)
+			if (isset($procedure_id) && $procedure_id > 0)
 			{
 				$document_type	 = controller_sodocument::$PROCEDURE_DOCUMENTS;
 				$id				 = $procedure_id;
@@ -440,7 +440,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 			$procedure_id	 = (int)phpgw::get_var('procedure_id');
 			$document_type	 = phpgw::get_var('type');
-			if(isset($_POST['edit_procedure']))
+			if (isset($_POST['edit_procedure']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array(
 					'menuaction' => 'controller.uiprocedure.edit',
@@ -448,7 +448,7 @@
 			}
 			else
 			{
-				if(isset($procedure_id) && $procedure_id > 0)
+				if (isset($procedure_id) && $procedure_id > 0)
 				{
 					$procedure = $this->so_procedure->get_single($procedure_id);
 				}
@@ -458,7 +458,7 @@
 					return;
 				}
 
-				if($this->flash_msgs)
+				if ($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
@@ -472,7 +472,7 @@
 				$table_header[]	 = array('header' => lang('Document name'));
 				$table_header[]	 = array('header' => lang('Document description'));
 
-				foreach($documents as $document)
+				foreach ($documents as $document)
 				{
 					/* hack to fix display of &nbsp; char */
 					$document->set_description(str_replace("&nbsp;", " ", $document->get_description()));
@@ -517,7 +517,7 @@
 
 		public function document_types()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->get_document_types();
 			}

@@ -51,12 +51,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -66,7 +66,7 @@
 			return $this->id;
 		}
 
-		public function set_group_name($group_name)
+		public function set_group_name( $group_name )
 		{
 			$this->group_name = $group_name;
 		}
@@ -76,7 +76,7 @@
 			return $this->group_name;
 		}
 
-		public function set_procedure_id($procedure_id)
+		public function set_procedure_id( $procedure_id )
 		{
 			$this->procedure_id = $procedure_id;
 		}
@@ -86,7 +86,7 @@
 			return $this->procedure_id;
 		}
 
-		public function set_procedure_name($procedure_name)
+		public function set_procedure_name( $procedure_name )
 		{
 			$this->procedure_name = $procedure_name;
 		}
@@ -96,7 +96,7 @@
 			return $this->procedure_name;
 		}
 
-		public function set_control_area_id($control_area_id)
+		public function set_control_area_id( $control_area_id )
 		{
 			$this->control_area_id = $control_area_id;
 		}
@@ -106,7 +106,7 @@
 			return $this->control_area_id;
 		}
 
-		public function set_control_area_name($control_area_name)
+		public function set_control_area_name( $control_area_name )
 		{
 			$this->control_area_name = $control_area_name;
 		}
@@ -116,7 +116,7 @@
 			return $this->control_area_name;
 		}
 
-		public function set_building_part_id($building_part_id)
+		public function set_building_part_id( $building_part_id )
 		{
 			$this->building_part_id = $building_part_id;
 		}
@@ -126,7 +126,7 @@
 			return $this->building_part_id;
 		}
 
-		public function set_building_part_descr($building_part_descr)
+		public function set_building_part_descr( $building_part_descr )
 		{
 			$this->building_part_descr = $building_part_descr;
 		}
@@ -136,7 +136,7 @@
 			return $this->building_part_descr;
 		}
 
-		public function set_order_nr($order_nr)
+		public function set_order_nr( $order_nr )
 		{
 			$this->order_nr = $order_nr;
 		}
@@ -146,7 +146,7 @@
 			return $this->order_nr;
 		}
 
-		public function set_component_location_id($component_location_id)
+		public function set_component_location_id( $component_location_id )
 		{
 			$this->component_location_id = $component_location_id;
 		}
@@ -156,7 +156,7 @@
 			return $this->component_location_id;
 		}
 
-		public function set_component_criteria($component_criteria)
+		public function set_component_criteria( $component_criteria )
 		{
 			$this->component_criteria = $component_criteria;
 		}
@@ -195,9 +195,9 @@
 
 			$class_methods		 = get_class_methods($this);
 			$control_group_arr	 = array();
-			foreach($class_methods as $class_method)
+			foreach ($class_methods as $class_method)
 			{
-				if(stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
+				if (stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
 				{
 					$_class_method_part							 = explode('get_', $class_method);
 					$control_group_arr[$_class_method_part[1]]	 = $this->$class_method();
@@ -215,7 +215,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_group');
 			}

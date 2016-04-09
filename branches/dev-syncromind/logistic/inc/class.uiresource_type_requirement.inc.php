@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
@@ -28,7 +27,6 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
-
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.soproject');
@@ -45,9 +43,7 @@
 		private $edit;
 		private $delete;
 		private $manage;
-
 		public $public_functions = array(
-
 			'query' => true,
 			'index' => true,
 			'edit' => true,
@@ -72,7 +68,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::resource_type_requirement";
 			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
-
 		}
 
 		public function query()
@@ -82,7 +77,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -166,7 +161,7 @@
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(	$result_data['results'], array($this, '_add_links'), "logistic.uiresource_type_requirement.view");
+				array_walk($result_data['results'], array($this, '_add_links'), "logistic.uiresource_type_requirement.view");
 			}
 			return $this->jquery_results($result_data);
 		}
@@ -179,7 +174,7 @@
 			}
 
 			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
-			array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
+			array_unshift($entity_list, array('id' => '', 'name' => lang('select value')));
 			$data = array(
 				'datatable_name'	=> lang('resource_type_requirement'),
 				'form' => array(
@@ -200,7 +195,8 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index', 'phpgw_return_as' => 'json', 'type' => 'resource_type_requirement_list')),
+					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index',
+						'phpgw_return_as' => 'json', 'type' => 'resource_type_requirement_list')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -252,9 +248,10 @@
 			$custom	= createObject('phpgwapi.custom_fields');
 			$location_id = phpgw::get_var('location_id');
 			$project_type_id = phpgw::get_var('project_type_id');
-			if($location_id)
+			if ($location_id)
 			{
-				$req_types = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
+				$req_types = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+					'project_type_id' => $project_type_id));
 				if (count($req_types) > 0)
 					{
 						$keys = array_keys($req_types);
@@ -270,19 +267,20 @@
 			{
 				$entity_id = phpgw::get_var('entity_id');
 				$category_id = phpgw::get_var('category_id');
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$category_id}");
 				$req_type->set_location_id($location_id);
 				$req_type->set_project_type_id(phpgw::get_var('project_type_id'));
 				$cust_attr_ids = phpgw::get_var('attributes');
 				$selected_attributes[] = array();
 
-				$req_type_array = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
+				$req_type_array = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+					'project_type_id' => $project_type_id));
 				$req_types_for_delete = array();
 				if (count($req_type_array) > 0)
 				{
 					foreach ($req_type_array as $rt)
 					{
-						if(!in_array($rt->get_cust_attribute_id(), $cust_attr_ids))
+						if (!in_array($rt->get_cust_attribute_id(), $cust_attr_ids))
 						{
 							$req_types_for_delete[] = $rt;
 						}
@@ -291,7 +289,7 @@
 
 					foreach ($cust_attr_ids as $attr)
 					{
-						if(!in_array($attr, $selected_attributes))
+						if (!in_array($attr, $selected_attributes))
 						{
 							$req_type_new = new logistic_resource_type_requirement();
 							$req_type_new->set_location_id($location_id);
@@ -315,7 +313,8 @@
 					}
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.view', 'location_id' => $location_id, 'project_type_id' => $req_type->get_project_type_id()));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.view',
+					'location_id' => $location_id, 'project_type_id' => $req_type->get_project_type_id()));
 			}
 			else if (isset($_POST['cancel']))
 			{
@@ -324,36 +323,36 @@
 			else
 			{
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
-				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
+				array_unshift($entity_list, array('id' => '', 'name' => lang('select value')));
 
-				if($location_id)
+				if ($location_id)
 				{
 					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-					$entity_arr = explode('.',$loc_arr['location']);
+					$entity_arr = explode('.', $loc_arr['location']);
 
 					$entity = $entity_so->read_single($entity_arr[2]);
-					$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+					$category = $entity_so->read_single_category($entity_arr[2], $entity_arr[3]);
 					foreach ($entity_list as &$e)
 					{
-						if($e['id'] == $entity['id'])
+						if ($e['id'] == $entity['id'])
 						{
 							$e['selected'] = 1;
 						}
 					}
-					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$entity_arr[2]));
+					$category_list = $entity_so->read_category(array('allrows' => true, 'entity_id' => $entity_arr[2]));
 					foreach ($category_list as &$c)
 					{
-						if($c['id'] == $category['id'])
+						if ($c['id'] == $category['id'])
 						{
 							$c['selected'] = 1;
 						}
 					}
 
-					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+					$attributes = $custom->find('property', ".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '', '', '', true, true);
 					$selected_attributes = $this->so->get_selected_attributes($location_id, $project_type_id);
 					foreach ($attributes as &$a)
 					{
-						if(in_array($a['id'], $selected_attributes))
+						if (in_array($a['id'], $selected_attributes))
 						{
 							$a['checked'] = 'checked';
 						}
@@ -386,7 +385,7 @@
 			$entity_id		= phpgw::get_var('entity_id');
 			$entity			= CreateObject('property.soadmin_entity');
 
-			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
+			$category_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entity_id));
 
 			return $category_list;
 		}
@@ -397,7 +396,7 @@
 			$entity_id		= phpgw::get_var('entity_id');
 			$cat_id		= phpgw::get_var('cat_id');
 
-			$attrib_data = $custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
+			$attrib_data = $custom->find('property', ".entity.{$entity_id}.{$cat_id}", 0, '', '', '', true, true);
 
 			return $attrib_data;
 		}
@@ -407,7 +406,7 @@
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$custom	= createObject('phpgwapi.custom_fields');
 			$id_fields = phpgw::get_var('id');
-			if($id_fields && $id_fields != '')
+			if ($id_fields && $id_fields != '')
 			{
 				$id_array = explode('-', $id_fields);
 				$location_id = $id_array[0];
@@ -419,20 +418,22 @@
 				$project_type_id = phpgw::get_var('project_type_id');
 			}
 
-			if(isset($_POST['edit']))
+			if (isset($_POST['edit']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.edit', 'location_id' => $location_id, 'project_type_id' => $project_type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.edit',
+					'location_id' => $location_id, 'project_type_id' => $project_type_id));
 			}
 
-			if($location_id && is_numeric($location_id))
+			if ($location_id && is_numeric($location_id))
 			{
-				$req_types = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
+				$req_types = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+					'project_type_id' => $project_type_id));
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$entity_arr = explode('.',$loc_arr['location']);
+				$entity_arr = explode('.', $loc_arr['location']);
 
 				$entity = $entity_so->read_single($entity_arr[2]);
-				$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
-				$all_attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+				$category = $entity_so->read_single_category($entity_arr[2], $entity_arr[3]);
+				$all_attributes = $custom->find('property', ".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '', '', '', true, true);
 				$attributes = array();
 				$selected_attributes = array();
 				foreach ($req_types as $req)
@@ -442,13 +443,14 @@
 
 				foreach ($all_attributes as $attr)
 				{
-					if(in_array($attr['id'], $selected_attributes))
+					if (in_array($attr['id'], $selected_attributes))
 					{
 						$attributes[] = $attr;
 					}
 				}
 
-				$objects = $this->so_project->get(null, null, null, null, null, 'project_type', array('id' => $project_type_id));
+				$objects = $this->so_project->get(null, null, null, null, null, 'project_type', array(
+					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{
 					$keys = array_keys($objects);

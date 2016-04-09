@@ -19,7 +19,8 @@ function check_all_checkbox(which)
 			if (document.form.elements[i].checked)
 			{
 				document.form.elements[i].checked = false;
-			} else
+			}
+			else
 			{
 				document.form.elements[i].checked = true;
 			}
@@ -47,7 +48,8 @@ function check_all_checkbox2(which)
 			if (document.form2.elements[i].checked)
 			{
 				document.form2.elements[i].checked = false;
-			} else
+			}
+			else
 			{
 				document.form2.elements[i].checked = true;
 			}

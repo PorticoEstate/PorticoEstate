@@ -26,17 +26,17 @@
 	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	function create_user_based_on_email_group($config)
+	function create_user_based_on_email_group( $config )
 	{
 		$groups			 = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$group_assigned	 = isset($config['create_user_based_on_email_group']) ? $config['create_user_based_on_email_group'] : '';
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 
-		foreach($groups as $group => $label)
+		foreach ($groups as $group => $label)
 		{
 			$selected = '';
-			if($group_assigned == $group)
+			if ($group_assigned == $group)
 			{
 				$selected = ' selected';
 			}
@@ -48,23 +48,23 @@ HTML;
 		return $out;
 	}
 
-	function entity_config_move_in($config)
+	function entity_config_move_in( $config )
 	{
-		if(isset($GLOBALS['phpgw_info']['apps']['catch']))
+		if (isset($GLOBALS['phpgw_info']['apps']['catch']))
 		{
 			$entity			 = CreateObject('property.soadmin_entity');
 			$entities		 = $entity->read(array('allrows' => true, 'type' => 'catch'));
 			$selected_entity = isset($config['entity_config_move_in']) ? $config['entity_config_move_in'] : '';
 			$out			 = '<select name="newsettings[entity_config_move_in]">' . "\n";
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			if(is_array($entities) && count($entities))
+			if (is_array($entities) && count($entities))
 			{
-				foreach($entities as $entry)
+				foreach ($entities as $entry)
 				{
 
 					$id			 = $entry['id'];
 					$selected	 = '';
-					if($selected_entity == $id)
+					if ($selected_entity == $id)
 					{
 						$selected = ' selected';
 					}
@@ -83,23 +83,23 @@ HTML;
 		return $out;
 	}
 
-	function entity_config_move_out($config)
+	function entity_config_move_out( $config )
 	{
-		if(isset($GLOBALS['phpgw_info']['apps']['catch']))
+		if (isset($GLOBALS['phpgw_info']['apps']['catch']))
 		{
 			$entity			 = CreateObject('property.soadmin_entity');
 			$entities		 = $entity->read(array('allrows' => true, 'type' => 'catch'));
 			$selected_entity = isset($config['entity_config_move_out']) ? $config['entity_config_move_out'] : '';
 			$out			 = '<select name="newsettings[entity_config_move_out]">' . "\n";
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
-			if(is_array($entities) && count($entities))
+			if (is_array($entities) && count($entities))
 			{
-				foreach($entities as $entry)
+				foreach ($entities as $entry)
 				{
 
 					$id			 = $entry['id'];
 					$selected	 = '';
-					if($selected_entity == $id)
+					if ($selected_entity == $id)
 					{
 						$selected = ' selected';
 					}
@@ -118,26 +118,26 @@ HTML;
 		return $out;
 	}
 
-	function category_config_move_in($config)
+	function category_config_move_in( $config )
 	{
 		$selected_entity	 = isset($config['entity_config_move_in']) ? $config['entity_config_move_in'] : '';
 		$selected_category	 = isset($config['category_config_move_in']) ? $config['category_config_move_in'] : '';
 		$out				 = '<option value="">' . lang('none selected') . '</option>' . "\n";
 
-		if(isset($selected_entity) && $selected_entity != '')
+		if (isset($selected_entity) && $selected_entity != '')
 		{
 			$entity		 = CreateObject('property.soadmin_entity');
 			$cat_list	 = $entity->read_category(array('allrows'	 => true, 'entity_id'	 => $selected_entity,
 				'type'		 => 'catch'));
 
 
-			if(is_array($cat_list) && count($cat_list))
+			if (is_array($cat_list) && count($cat_list))
 			{
 
-				foreach($cat_list as $entry)
+				foreach ($cat_list as $entry)
 				{
 					$id = $entry['id'];
-					if($selected_category == $id)
+					if ($selected_category == $id)
 					{
 						$selected = ' selected';
 					}
@@ -152,25 +152,25 @@ HTML;
 		return $out;
 	}
 
-	function category_config_move_out($config)
+	function category_config_move_out( $config )
 	{
 		$selected_entity	 = isset($config['entity_config_move_out']) ? $config['entity_config_move_out'] : '';
 		$selected_category	 = isset($config['category_config_move_out']) ? $config['category_config_move_out'] : '';
 		$out				 = '<option value="">' . lang('none selected') . '</option>' . "\n";
 
-		if(isset($selected_entity) && $selected_entity != '')
+		if (isset($selected_entity) && $selected_entity != '')
 		{
 			$entity		 = CreateObject('property.soadmin_entity');
 			$cat_list	 = $entity->read_category(array('allrows'	 => true, 'entity_id'	 => $selected_entity,
 				'type'		 => 'catch'));
 
-			if(is_array($cat_list) && count($cat_list))
+			if (is_array($cat_list) && count($cat_list))
 			{
 
-				foreach($cat_list as $entry)
+				foreach ($cat_list as $entry)
 				{
 					$id = $entry['id'];
-					if($selected_category == $id)
+					if ($selected_category == $id)
 					{
 						$selected = ' selected';
 					}
@@ -191,17 +191,17 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function contract_types($config)
+	function contract_types( $config )
 	{
 		phpgw::import_class('rental.socontract');
 		$types			 = rental_socontract::get_instance()->get_fields_of_responsibility();
 		$types_assigned	 = isset($config['contract_types']) ? $config['contract_types'] : array();
 		$out			 = '';
-		foreach($types as $type => $_label)
+		foreach ($types as $type => $_label)
 		{
 			$label	 = $GLOBALS['phpgw']->translation->translate($_label, array(), false, 'rental');
 			$checked = '';
-			if(in_array($type, $types_assigned))
+			if (in_array($type, $types_assigned))
 			{
 				$checked = ' checked';
 			}
@@ -219,7 +219,7 @@ HTML;
 	 * @param $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
-	function default_billing_term($config)
+	function default_billing_term( $config )
 	{
 		phpgw::import_class('rental.sobilling');
 		$billing_terms	 = rental_sobilling::get_instance()->get_billing_terms();
@@ -227,11 +227,11 @@ HTML;
 		$lang_none		 = lang('none');
 		$out			 = "<tr><td><input type=\"radio\" name=\"newsettings[default_billing_term]\" value=\"\"><label>{$lang_none}</label></td></tr>";
 
-		foreach($billing_terms as $term_id => $_label)
+		foreach ($billing_terms as $term_id => $_label)
 		{
 			$label	 = $GLOBALS['phpgw']->translation->translate($_label, array(), false, 'rental');
 			$checked = '';
-			if($term_id == $term_assigned)
+			if ($term_id == $term_assigned)
 			{
 				$checked = ' checked';
 			}

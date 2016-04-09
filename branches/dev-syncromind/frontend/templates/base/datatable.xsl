@@ -178,7 +178,7 @@
 
 <!--
     Experimental support for YUI datatable
- -->
+-->
 
 <xsl:template name="datatable-yui-definition">
     <script>

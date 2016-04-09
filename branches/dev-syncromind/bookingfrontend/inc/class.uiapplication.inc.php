@@ -22,12 +22,12 @@
 			$id			 = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 
-			if($application['secret'] != phpgw::get_var('secret', 'string'))
+			if ($application['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
 			{
 				$this->add_comment($application, $_POST['comment']);
 				$this->set_display_in_dashboard($application, true, array('force' => true));
@@ -38,20 +38,20 @@
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'],
 					'secret' => $application['secret']));
 			}
-			/** Start attachment **/
-			if($_FILES)
+			/** Start attachment * */
+			if ($_FILES)
 			{
 				$document_application = createObject('booking.uidocument_application');
 
-				$oldfiles = $document_application->bo->so->read(array('filters'=> array('owner_id' => $application['id'])));
+				$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id'])));
 				$files = $this->get_files();
 				$file_exist = false;
 
-				if($oldfiles['results'])
+				if ($oldfiles['results'])
 				{
-					foreach($oldfiles['results'] as $old_file)
+					foreach ($oldfiles['results'] as $old_file)
 					{
-						if($old_file['name'] == $files['name']['name'])
+						if ($old_file['name'] == $files['name']['name'])
 						{
 							$file_exist = true;
 							phpgwapi_cache::message_set(lang('file exists'));
@@ -67,26 +67,25 @@
 				);
 				$document_errors = $document_application->bo->validate($document);
 
-				if(!$document_errors && !$file_exist)
+				if (!$document_errors && !$file_exist)
 				{
 					try
 					{
 						booking_bocommon_authorized::disable_authorization();
 						$document_receipt = $document_application->bo->add($document);
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
 					}
 				}
 			}
-			/** End attachment **/
-
+			/** End attachment * */
 			$building_info					 = $this->bo->so->get_building_info($id);
 			$application['building_id']		 = $building_info['id'];
 			$application['building_name']	 = $building_info['name'];
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['print'])
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['print'])
 			{
 				$output_type		 = 'PDF';
 				$jasper_parameters	 = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s\"", $application['building_name'], $id);
@@ -100,15 +99,17 @@
 				{
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 					$errors[] = $e->getMessage();
-					echo "<pre>\nError: ";print_r($errors[0]);exit;
+					echo "<pre>\nError: ";
+					print_r($errors[0]);
+					exit;
 				}
 			}
 
 			$resource_ids = '';
-			foreach($application['resources'] as $res)
+			foreach ($application['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}

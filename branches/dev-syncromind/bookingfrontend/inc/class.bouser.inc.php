@@ -29,11 +29,11 @@
 			$this->config->read();
 		}
 
-		protected function get_orgname_from_db($orgnr)
+		protected function get_orgname_from_db( $orgnr )
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->db->limit_query("select name from bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return $orgnr;
 			}
@@ -45,14 +45,14 @@
 			$results	 = array();
 			$this->db	 = & $GLOBALS['phpgw']->db;
 			$this->db->query("select organization_number from bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = $this->db->f('organization_number', false);
 			}
 			return $results;
 		}
 
-		protected function set_module($module = null)
+		protected function set_module( $module = null )
 		{
 			$this->module = is_string($module) ? $module : $this->default_module;
 		}
@@ -68,14 +68,14 @@
 
 			$authentication_method = isset($this->config->config_data['authentication_method']) && $this->config->config_data['authentication_method'] ? $this->config->config_data['authentication_method'] : '';
 
-			if(!$authentication_method)
+			if (!$authentication_method)
 			{
 				throw new LogicException('authentication_method not chosen');
 			}
 
 			$file = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default/{$authentication_method}";
 
-			if(!is_file($file))
+			if (!is_file($file))
 			{
 				throw new LogicException("authentication method \"{$authentication_method}\" not available");
 			}
@@ -87,12 +87,12 @@
 			$this->orgnr	 = $external_user->get_user_org_id();
 			$this->orgname	 = $this->get_orgname_from_db($this->orgnr);
 
-			if($this->is_logged_in())
+			if ($this->is_logged_in())
 			{
 				$this->write_user_orgnr_to_session();
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				echo 'is_logged_in():<br>';
 				_debug_array($this->is_logged_in());
@@ -104,21 +104,21 @@
 			return $this->is_logged_in();
 		}
 
-		public function change_org($orgnumber)
+		public function change_org( $orgnumber )
 		{
 			$orgs	 = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
 			$orglist = array();
-			foreach($orgs as $org)
+			foreach ($orgs as $org)
 			{
 				$orglist[] = $org['orgnumber'];
 			}
-			if(in_array($orgnumber, $orglist))
+			if (in_array($orgnumber, $orglist))
 			{
 
 				$this->orgnr	 = $orgnumber;
 				$this->orgname	 = $this->get_orgname_from_db($this->orgnr);
 
-				if($this->is_logged_in())
+				if ($this->is_logged_in())
 				{
 					$this->write_user_orgnr_to_session();
 				}
@@ -128,7 +128,7 @@
 			else
 			{
 
-				if($this->is_logged_in())
+				if ($this->is_logged_in())
 				{
 					$this->write_user_orgnr_to_session();
 				}
@@ -152,7 +152,7 @@
 
 		public function get_user_orgnr()
 		{
-			if(!$this->orgnr)
+			if (!$this->orgnr)
 			{
 				$this->orgnr = $this->get_user_orgnr_from_session();
 			}
@@ -164,22 +164,22 @@
 			return !!$this->get_user_orgnr();
 		}
 
-		public function is_organization_admin($organization_id = null)
+		public function is_organization_admin( $organization_id = null )
 		{
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if(strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
+			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
 			{
 				//return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if(!$this->is_logged_in())
+			if (!$this->is_logged_in())
 			{
 				//return false;
 			}
 			$so				 = CreateObject('booking.soorganization');
 			$organization	 = $so->read_single($organization_id);
 
-			if($organization['organization_number'] == '')
+			if ($organization['organization_number'] == '')
 			{
 				return false;
 			}
@@ -187,15 +187,15 @@
 			return $organization['organization_number'] == $this->orgnr;
 		}
 
-		public function is_group_admin($group_id = null)
+		public function is_group_admin( $group_id = null )
 		{
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if(strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
+			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
 			{
 				//return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if(!$this->is_logged_in())
+			if (!$this->is_logged_in())
 			{
 				//return false;
 			}
@@ -206,7 +206,7 @@
 
 		protected function write_user_orgnr_to_session()
 		{
-			if(!$this->is_logged_in())
+			if (!$this->is_logged_in())
 			{
 				throw new LogicException('Cannot write orgnr to session unless user is logged on');
 			}
@@ -230,13 +230,13 @@
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));
 			}
-			catch(sfValidatorError $e)
+			catch (sfValidatorError $e)
 			{
 				return null;
 			}
 		}
 
-		protected function get_breg_orgs($fodselsnr)
+		protected function get_breg_orgs( $fodselsnr )
 		{
 			$breg_conn	 = pg_connect("host=" . $GLOBALS['phpgw_domain']['default']['db_host'] . " port=5432 dbname=breg user=" . $GLOBALS['phpgw_domain']['default']['db_user'] . " password=" . $GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
 			$sql		 = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='" . $fodselsnr . "'";
@@ -252,35 +252,38 @@
 		{
 			$config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$config->read();
-			if($config->config_data['authentication_method'] === 'MinId.php')
+			if ($config->config_data['authentication_method'] === 'MinId.php')
 			{
 				$ipdp		 = sha1($_SERVER['HTTP_UID']);
 				$bregorgs	 = $this->get_breg_orgs($ipdp);
 				$myorgnr	 = array();
-				if($bregorgs == array())
+				if ($bregorgs == array())
 				{
-					$external_user			 = (object)'ciao';$external_user->login	 = '000000000';
+					$external_user = (object)'ciao';
+					$external_user->login = '000000000';
 				}
 				else
 				{
-					foreach($bregorgs as $org)
+					foreach ($bregorgs as $org)
 					{
 						$myorgnr[] = $org['orgnr'];
 					}
-					if(count($myorgnr) > 1)
+					if (count($myorgnr) > 1)
 					{
-						$external_user			 = (object)'ciao';$external_user->login	 = $myorgnr[0];
+						$external_user = (object)'ciao';
+						$external_user->login = $myorgnr[0];
 						$orgs					 = array();
-						foreach($myorgnr as $org)
+						foreach ($myorgnr as $org)
 						{
 							$orgs[] = array('orgnumber' => $org, 'orgname' => $this->get_orgname_from_db($org));
 						}
 						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
 					}
-					elseif(count($myorgnr) > 0)
+					elseif (count($myorgnr) > 0)
 					{
 						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
-						$external_user			 = (object)'ciao';$external_user->login	 = $myorgnr[0];
+						$external_user = (object)'ciao';
+						$external_user->login = $myorgnr[0];
 					}
 				}
 			}
@@ -292,20 +295,20 @@
 
 				$headers = getallheaders();
 
-				if(isset($config->config_data['debug']) && $config->config_data['debug'])
+				if (isset($config->config_data['debug']) && $config->config_data['debug'])
 				{
 					$this->debug = true;
 					echo 'headers:<br>';
 					_debug_array($headers);
 				}
 
-				if(isset($headers[$header_key]) && $headers[$header_key])
+				if (isset($headers[$header_key]) && $headers[$header_key])
 				{
 					$matches = array();
 					preg_match_all($header_regular_expression, $headers[$header_key], $matches);
 					$userid	 = $matches[1][0];
 
-					if($this->debug)
+					if ($this->debug)
 					{
 						echo 'matches:<br>';
 						_debug_array($matches);
@@ -318,12 +321,12 @@
 				$options['uri']			 = isset($config->config_data['soap_uri']) && $config->config_data['soap_uri'] ? $config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
 				$options['trace']		 = 1;
 
-				if(isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'])
+				if (isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'])
 				{
 					$options['proxy_host'] = $config->config_data['soap_proxy_host'];
 				}
 
-				if(isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'])
+				if (isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'])
 				{
 					$options['proxy_port'] = $config->config_data['soap_proxy_port'];
 				}
@@ -342,7 +345,7 @@
 				//$external_user = (object) 'ciao'; $external_user->login = 994239929;
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				echo 'External user:<br>';
 				_debug_array($external_user);
@@ -351,9 +354,9 @@
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
 			}
-			catch(sfValidatorError $e)
+			catch (sfValidatorError $e)
 			{
-				if($this->debug)
+				if ($this->debug)
 				{
 					echo $e->getMessage();
 					die();

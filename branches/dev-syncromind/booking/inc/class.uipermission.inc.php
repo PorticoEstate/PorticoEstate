@@ -36,7 +36,7 @@
 				'role');
 		}
 
-		protected function set_business_object(booking_bopermission $bo = null)
+		protected function set_business_object( booking_bopermission $bo = null )
 		{
 			$this->bo = is_null($bo) ? $this->create_business_object() : $bo;
 		}
@@ -48,12 +48,14 @@
 
 		protected function get_object_type()
 		{
-			if(!$this->object_type)
-			{ $this->set_object_type();}
+			if (!$this->object_type)
+			{
+				$this->set_object_type();
+			}
 			return $this->object_type;
 		}
 
-		protected function set_object_type($type = null)
+		protected function set_object_type( $type = null )
 		{
 			is_null($type) AND $type				 = substr(get_class($this), 21);
 			$this->object_type	 = $type;
@@ -68,7 +70,7 @@
 
 		public function redirect_to_parent_if_inline()
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$this->redirect($this->get_parent_url_link_params());
 			}
@@ -76,20 +78,20 @@
 			return false;
 		}
 
-		public function get_object_typed_link_params($action, $params = array())
+		public function get_object_typed_link_params( $action, $params = array() )
 		{
 			$action = sprintf('booking.uipermission_%s.%s', $this->get_object_type(), $action);
 			return array_merge(array('menuaction' => $action), $this->apply_inline_params($params));
 		}
 
-		public function get_object_typed_link($action, $params = array())
+		public function get_object_typed_link( $action, $params = array() )
 		{
 			return $this->link($this->get_object_typed_link_params($action, $params));
 		}
 
-		public function apply_inline_params(&$params)
+		public function apply_inline_params( &$params )
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$params['filter_object_id'] = phpgw::get_var('filter_object_id', 'int');
 			}
@@ -117,7 +119,7 @@
 			return false != phpgw::get_var('filter_object_id', 'int', 'REQUEST');
 		}
 
-		public static function generate_inline_link($object_type, $permissionObjectId, $action)
+		public static function generate_inline_link( $object_type, $permissionObjectId, $action )
 		{
 			return self::link(array('menuaction' => sprintf('booking.uipermission_%s.%s', $object_type, $action),
 				'filter_object_id' => $permissionObjectId));
@@ -125,7 +127,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -176,7 +178,7 @@
 
 			$data['datatable']['actions'][] = array();
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type'	 => 'link',
@@ -192,27 +194,24 @@
 
 		public function query()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
 			$permissions = $this->bo->read();
-			foreach($permissions['results'] as &$permission)
+			foreach ($permissions['results'] as &$permission)
 			{
 				$permission['link']	 = $this->get_object_typed_link('edit', array('id' => $permission['id']));
 				$permission['role']	 = lang(self::humanize($permission['role']));
 				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
 
 				$permission_actions			 = array();
-				if($this->bo->allow_write($permission))
+				if ($this->bo->allow_write($permission))
 					$permission['opcion_edit']	 = $this->get_object_typed_link('edit', array('id' => $permission['id']));
-				if($this->bo->allow_delete($permission))
+				if ($this->bo->allow_delete($permission))
 					$permission['opcion_delete'] = $this->get_object_typed_link('delete', array(
 						'id' => $permission['id']));
 
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $permission['subject_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($permission['subject_name']);
+				if($account_id)
 				{
-					$permission['subject_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$permission['subject_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 
 				$permission['actions'] = $permission_actions;
@@ -228,12 +227,14 @@
 		protected function get_available_roles()
 		{
 			$roles = array();
-			foreach($this->bo->get_roles() as $role)
-			{ $roles[$role] = self::humanize($role);}
+			foreach ($this->bo->get_roles() as $role)
+			{
+				$roles[$role] = self::humanize($role);
+			}
 			return $roles;
 		}
 
-		protected function add_default_display_data(&$permission_data)
+		protected function add_default_display_data( &$permission_data )
 		{
 			$permission_data['parent_pathway']		 = $this->get_parent_pathway($permission_data);
 			$permission_data['object_type']			 = $this->get_object_type();
@@ -258,11 +259,11 @@
 			$errors		 = array();
 			$permission	 = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$permission	 = extract_values($_POST, $this->fields);
 				$errors		 = $this->bo->validate($permission);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
@@ -270,7 +271,7 @@
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_object_typed_link_params('index'));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -282,7 +283,7 @@
 
 			$this->add_default_display_data($permission);
 
-			if(is_array($parentData = $this->get_parent_if_inline()))
+			if (is_array($parentData = $this->get_parent_if_inline()))
 			{
 				$permission['object_id']	 = $parentData['id'];
 				$permission['object_name']	 = $parentData['name'];
@@ -307,11 +308,11 @@
 			$permission	 = $this->bo->read_single($id);
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$permission	 = array_merge($permission, extract_values($_POST, $this->fields));
 				$errors		 = $this->bo->validate($permission);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
@@ -319,7 +320,7 @@
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_object_typed_link_params('index'));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
@@ -360,6 +361,8 @@
 		 *
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
-		protected function get_parent_pathway(array $forPermissionData)
-		{ return array();}
+		protected function get_parent_pathway( array $forPermissionData )
+		{
+			return array();
+		}
 	}

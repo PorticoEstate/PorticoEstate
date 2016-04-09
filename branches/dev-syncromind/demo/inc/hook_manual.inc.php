@@ -8,14 +8,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	// Only Modify the $file variable.....
 	$file = Array(
 		'User'					=>	'user.php',
 		'Job'					=>	'job.php',
 	);
 //Do not modify below this line
-	display_manual_section($appname,$file);
+	display_manual_section($appname, $file);
 

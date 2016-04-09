@@ -7,7 +7,6 @@
 	* @subpackage setup
 	* @version $Id: default_records.inc.php 4175 2009-11-22 14:00:45Z sigurd $
 	*/
-
 	$GLOBALS['phpgw']->locations->add('.', 'top', 'messenger', false);
 	$GLOBALS['phpgw']->locations->add('.compose', 'compose messages to users', 'messenger', false);
 	$GLOBALS['phpgw']->locations->add('.compose_groups', 'compose messages to groups', 'messenger', false);

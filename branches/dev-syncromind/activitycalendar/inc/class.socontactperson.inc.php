@@ -15,7 +15,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('activitycalendar.socontactperson');
 			}
@@ -36,7 +36,7 @@
 		 * @param boolean $return_count
 		 * @return string SQL
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 			$table	 = "";
@@ -49,12 +49,12 @@
 			  $order = "ORDER BY id $dir";
 			  }
 			 */
-			if($search_for)
+			if ($search_for)
 			{
 				$query			 = $this->marshal($search_for, 'string');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "name":
 						$like_clauses[]	 = "party.first_name $this->like $like_pattern";
@@ -91,7 +91,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -99,29 +99,29 @@
 
 			$filter_clauses		 = array();
 			$contact_person_id	 = $this->marshal($filters['id'], 'int');
-			if(isset($filters['org_id']))
+			if (isset($filters['org_id']))
 			{
 				$org_id = $this->marshal($filters['org_id'], 'int');
-				if(isset($org_id) && $org_id > 0)
+				if (isset($org_id) && $org_id > 0)
 				{
 					$filter_clauses[]	 = "organization_contact.organization_id = {$org_id}";
 					$filter_clauses[]	 = "organization_contact.id = {$contact_person_id}";
 					$table				 = "bb_organization_contact organization_contact";
 				}
 			}
-			if(isset($filters['organization_id']))
+			if (isset($filters['organization_id']))
 			{
 				$org_id = $this->marshal($filters['organization_id'], 'int');
-				if(isset($org_id) && $org_id > 0)
+				if (isset($org_id) && $org_id > 0)
 				{
 					$filter_clauses[]	 = "organization_contact.organization_id = {$org_id}";
 					$table				 = "bb_organization_contact organization_contact";
 				}
 			}
-			else if(isset($filters['group_id']))
+			else if (isset($filters['group_id']))
 			{
 				$group_id = $this->marshal($filters['group_id'], 'int');
-				if(isset($group_id) && $group_id > 0)
+				if (isset($group_id) && $group_id > 0)
 				{
 					$filter_clauses[]	 = "group_contact.group_id = {$group_id}";
 					$filter_clauses[]	 = "group_contact.id = {$contact_person_id}";
@@ -140,16 +140,16 @@
 			  }
 			 */
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($table == "bb_organization_contact organization_contact")
+			if ($table == "bb_organization_contact organization_contact")
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(organization_contact.id)) AS count';
 				}
@@ -167,7 +167,7 @@
 			}
 			else
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(group_contact.id)) AS count';
 				}
@@ -191,91 +191,87 @@
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		function get_group_contact_name($id)
+		function get_group_contact_name( $id )
 		{
 			$result = "Ingen";
-			if(isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM bb_group_contact WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
 
-		function get_group_contact_name_local($id)
+		function get_group_contact_name_local( $id )
 		{
 			$result = "Ingen";
-			if(isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
 
-		function get_org_contact_name($id)
+		function get_org_contact_name( $id )
 		{
 			$result = "Ingen";
-			if(isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM bb_organization_contact WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
 
-		function get_org_contact_name_local($id)
+		function get_org_contact_name_local( $id )
 		{
 			$result = "Ingen";
-			if(isset($id) && $id != '')
+			$id = (int)$id;
+			if ($id)
 			{
 				$q1 = "SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
-				}
+				$this->db->next_record();
+				$result = $this->db->f('name', true) . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
 			return $result;
 		}
 
-		function get_mailaddress_for_group_contact($contact_person_id)
+		function get_mailaddress_for_group_contact( $contact_person_id )
 		{
-			if($contact_person_id)
+			$contact_person_id = (int)$contact_person_id;
+			if ($contact_person_id)
 			{
 				$q1 = "SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
 					$result = $this->db->f('email');
 				}
-			}
 			return $result;
 		}
 
-		function get_mailaddress_for_org_contact($contact_person_id)
+		function get_mailaddress_for_org_contact( $contact_person_id )
 		{
-			if($contact_person_id)
+			$contact_person_id = (int)$contact_person_id;
+			if ($contact_person_id)
 			{
 				$q1 = "SELECT email FROM bb_organization_contact WHERE id={$contact_person_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
 					$result = $this->db->f('email');
 				}
-			}
 			return $result;
 		}
 
@@ -285,7 +281,7 @@
 		 * @param activitycalendar_activity $activity the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$contact_person)
+		function add( &$contact_person )
 		{
 			return false;
 		}
@@ -296,14 +292,14 @@
 		 * @param $activity the activity to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($contact_person)
+		function update( $contact_person )
 		{
 			return false;
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -319,10 +315,10 @@
 			return $ret;
 		}
 
-		protected function populate(int $contact_person_id, &$contact_person)
+		protected function populate( int $contact_person_id, &$contact_person )
 		{
 
-			if($contact_person == null)
+			if ($contact_person == null)
 			{
 				$contact_person = new activitycalendar_contact_person((int)$contact_person_id);
 
@@ -336,12 +332,13 @@
 			return $contact_person;
 		}
 
-		function get_local_contact_persons($id, $group = false)
+		function get_local_contact_persons( $id, $group = false )
 		{
 			$result = array();
-			if(isset($id))
+			$id = (int)$id;
+			if ($id)
 			{
-				if($group)
+				if ($group)
 				{
 					$q1 = "SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE group_id='{$id}'";
 				}
@@ -350,7 +347,7 @@
 					$q1 = "SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE organization_id='{$id}' and group_id='0'";
 				}
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person($this->db->f('id'), 'int');
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -364,17 +361,18 @@
 			return $result;
 		}
 
-		function get_booking_contact_persons($id, $group = false)
+		function get_booking_contact_persons( $id, $group = false )
 		{
 			$result = array();
-			if(isset($id))
+			$id = (int)$id;
+			if ($id)
 			{
 				$columns[]	 = 'group_contact.id';
 				$columns[]	 = 'group_contact.name';
 				$columns[]	 = 'group_contact.phone';
 				$columns[]	 = 'group_contact.email';
 				$columns[]	 = 'group_contact.group_id';
-				if($group)
+				if ($group)
 				{
 					$q1 = "SELECT id, group_id, name, phone, email FROM bb_group_contact WHERE group_id='{$id}'";
 				}
@@ -383,7 +381,7 @@
 					$q1 = "SELECT id, organization_id, name, phone, email, ssn FROM bb_organization_contact WHERE organization_id='{$id}'";
 				}
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person($this->db->f('id'), 'int');
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -397,9 +395,9 @@
 			return $result;
 		}
 
-		function update_local_contact_person($contact)
+		function update_local_contact_person( $contact )
 		{
-			$id			 = $contact['id'];
+			$id = (int)$contact['id'];
 			$name		 = $contact['name'];
 			$phone		 = $contact['phone'];
 			$mail		 = $contact['mail'];
@@ -421,7 +419,7 @@
 			return isset($result);
 		}
 
-		function add_new_group_contact($contact)
+		function add_new_group_contact( $contact )
 		{
 			$name		 = $contact->get_name();
 			$phone		 = $contact->get_phone();
@@ -443,7 +441,7 @@
 			$sql	 = "INSERT INTO bb_group_contact ({$cols}) VALUES ({$vals})";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
 
-			if(isset($result))
+			if (isset($result))
 			{
 				return $this->db->get_last_insert_id('bb_group_contact', 'id');
 			}

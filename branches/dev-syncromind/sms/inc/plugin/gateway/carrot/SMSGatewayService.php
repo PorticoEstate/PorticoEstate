@@ -9,9 +9,8 @@
 	* @package phpgroupware
 	* @subpackage communication
 	* @category core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -35,17 +34,18 @@
 	 * @subpackage sms
 	 */
 
-
 	/**
 	 * sendMTMessage
 	 */
 	class sendMTMessage
 	{
+
 		/**
 		 * @access public
 		 * @var SendSMSRequest
 		 */
 		public $mtreq;
+
 	}
 
 	/**
@@ -53,11 +53,13 @@
 	 */
 	class Recipient
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $recipient;
+
 	}
 
 	/**
@@ -65,111 +67,133 @@
 	 */
 	class SendSMSRequest
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $DCS;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $DSTPort;
+
 		/**
 		 * @access public
 		 * @var boolean
 		 */
 		public $RSR;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $SRCport;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $TTL;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $UDH;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $URI;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $address;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $appid;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $content;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $differentiator;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $originator;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $originatorType;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $password;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $price;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $priority;
+
 		/**
 		 * @access public
 		 * @var ArrayOfRecipient
 		 */
 		public $recipients;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $serviceId;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $serviceName;
+
 		/**
 		 * @access public
 		 * @var integer
 		 */
 		public $type;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $username;
+
 	}
 
 	/**
@@ -177,11 +201,13 @@
 	 */
 	class sendMTMessageResponse
 	{
+
 		/**
 		 * @access public
 		 * @var SendSMSResponse[]
 		 */
 		public $sendMTMessageReturn;
+
 	}
 
 	/**
@@ -189,26 +215,31 @@
 	 */
 	class SendSMSResponse
 	{
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $messageid;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $recipient;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $statuscode;
+
 		/**
 		 * @access public
 		 * @var string
 		 */
 		public $statusmessage;
+
 	}
 
 	/**
@@ -217,6 +248,7 @@
 	 */
 	class SMSGatewayService extends SoapClient 
 	{
+
 		/**
 		 * Default class map for wsdl=>php
 		 * @access private
@@ -236,11 +268,11 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl="carrot.wsdl", $options=array()) 
+		public function __construct( $wsdl = "carrot.wsdl", $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName) 
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
 			{
-			    if(!isset($options['classmap'][$wsdlClassName]))
+				if (!isset($options['classmap'][$wsdlClassName]))
 			    {
 			        $options['classmap'][$wsdlClassName] = $phpClassName;
 			    }
@@ -255,7 +287,7 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
 			foreach ($arguments as $arg)
@@ -266,11 +298,11 @@
 			    {
 			        $type = get_class($arg);
 			    }
-			    $variables .= "(".$type.")";
+				$variables .= "(" . $type . ")";
 			}
 			if (!in_array($variables, $validParameters))
 			{
-			    throw new Exception("Invalid parameter types: ".str_replace(")(", ", ", $variables));
+				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
 			return true;
 		}
@@ -283,7 +315,7 @@
 		 * @return sendMTMessageResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function sendMTMessage($mixed = null)
+		public function sendMTMessage( $mixed = null )
 		{
 			$validParameters = array
 			(

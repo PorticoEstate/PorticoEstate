@@ -49,7 +49,7 @@
 				)
 			);
 
-			if($GLOBALS['phpgw']->acl->check('.usertype.superuser', PHPGW_ACL_ADD, 'controller'))
+			if ($GLOBALS['phpgw']->acl->check('.usertype.superuser', PHPGW_ACL_ADD, 'controller'))
 			{
 				$menus['navigation'] = array
 					(
@@ -116,7 +116,7 @@
 				);
 			}
 
-			if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{
 				$menus['admin'] = array
 					(
@@ -161,7 +161,7 @@
 				);
 			}
 
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$menus['preferences'] = array
 					(

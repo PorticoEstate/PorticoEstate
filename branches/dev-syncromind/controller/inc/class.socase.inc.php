@@ -44,19 +44,19 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socase');
 			}
 			return self::$so;
 		}
 
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 
 		}
 
-		function populate(int $object_id, &$object)
+		function populate( int $object_id, &$object )
 		{
 
 		}
@@ -67,7 +67,7 @@
 		 * @param	$case id id of case to be returned
 		 * @return case object
 		 */
-		public function get_single($case_id)
+		public function get_single( $case_id )
 		{
 			$case_id = (int)$case_id;
 
@@ -77,7 +77,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -109,7 +109,7 @@
 		 * @param	$location_item_id location item id
 		 * @return array of case object represented as objects or arrays
 		 */
-		public function get_cases_by_message($location_id, $location_item_id)
+		public function get_cases_by_message( $location_id, $location_item_id )
 		{
 			$location_id		 = (int)$location_id;
 			$location_item_id	 = (int)$location_item_id;
@@ -121,7 +121,7 @@
 
 			$cases_array = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -151,23 +151,24 @@
 		 * @param	$location_item_id location item id
 		 * @return array of case object represented as objects or arrays
 		 */
-		public function get_cases_by_component($component_location_id, $component_id, $control_item_id = 0, $check_list_id = 0)
+		public function get_cases_by_component( $component_location_id, $component_id, $control_item_id = 0, $check_list_id = 0 )
 		{
 			$component_location_id	 = (int)$component_location_id;
 			$component_id			 = (int)$component_id;
 			$control_item_id		 = (int)$control_item_id;
 			$check_list_id			 = (int)$check_list_id;
 
-			$sql = "SELECT controller_check_item_case.*, check_list_id FROM controller_check_item_case "
+			$sql = "SELECT controller_check_item_case.*, check_list_id, controller_control_item.title FROM controller_check_item_case "
 			. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
+				. " {$this->join} controller_control_item ON controller_control_item.id = controller_check_item.control_item_id"
 			. " WHERE controller_check_item_case.component_location_id = {$component_location_id} AND controller_check_item_case.component_id = {$component_id}";
 
-			if($control_item_id)
+			if ($control_item_id)
 			{
 				$sql .= " AND controller_check_item.control_item_id = {$control_item_id}";
 			}
 
-			if($check_list_id)
+			if ($check_list_id)
 			{
 				$sql .= " AND check_list_id = {$check_list_id}";
 			}
@@ -175,12 +176,13 @@
 			$this->db->query($sql);
 
 			$values = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$values[] = array
 					(
 					'id'			 => $this->db->f('id'),
 					'check_list_id'	 => $this->db->f('check_list_id'),
+					'title' => $this->db->f('title', true),
 					'descr'			 => $this->db->f('descr', true),
 					'measurement'	 => $this->db->f('measurement', true),
 					'user_id'		 => $this->db->f('user_id'),
@@ -198,7 +200,7 @@
 		 * @param	$case to inserted
 		 * @return true or false
 		 */
-		function add(&$case)
+		function add( &$case )
 		{
 			$this->db->transaction_begin();
 
@@ -245,7 +247,7 @@
 
 //------
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				return $case_id;
 			}
@@ -255,7 +257,7 @@
 			}
 		}
 
-		function update_cases_on_check_list($check_item_id = 0)
+		function update_cases_on_check_list( $check_item_id = 0 )
 		{
 			$check_item_id	 = (int)$check_item_id;
 			$sql			 = "SELECT check_list_id  FROM controller_check_item WHERE id = {$check_item_id}";
@@ -270,17 +272,17 @@
 			$num_open_cases		 = 0;
 			$num_pending_cases	 = 0;
 
-			foreach($check_items as $check_item)
+			foreach ($check_items as $check_item)
 			{
-				foreach($check_item->get_cases_array() as $case)
+				foreach ($check_item->get_cases_array() as $case)
 				{
 
-					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					if ($case->get_status() == controller_check_item_case::STATUS_OPEN)
 					{
 						$num_open_cases++;
 					}
 
-					if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					if ($case->get_status() == controller_check_item_case::STATUS_PENDING)
 					{
 						$num_pending_cases++;
 					}
@@ -308,9 +310,9 @@
 		 * @param	$case to updated
 		 * @return true or false
 		 */
-		function update($case)
+		function update( $case )
 		{
-			if($this->db->get_transaction())
+			if ($this->db->get_transaction())
 			{
 				$this->global_lock = true;
 			}
@@ -339,12 +341,12 @@
 
 			$ok = $this->update_cases_on_check_list($case->get_check_item_id());
 
-			if(!$this->global_lock)
+			if (!$this->global_lock)
 			{
 				$this->db->transaction_commit();
 			}
 
-			if($ok)
+			if ($ok)
 			{
 				return $id;
 			}
@@ -360,7 +362,7 @@
 		 * @param	$case_id case to be deleted
 		 * @return true or false
 		 */
-		function delete($case_id)
+		function delete( $case_id )
 		{
 			$case_id = (int)$case_id;
 			return $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");

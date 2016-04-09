@@ -33,7 +33,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -91,7 +91,7 @@
 		{
 
 			$buildings = $this->bo->read();
-			foreach($buildings['results'] as &$building)
+			foreach ($buildings['results'] as &$building)
 			{
 				$building['link'] = $this->link(array('menuaction' => 'booking.uimassbooking.schedule',
 					'id' => $building['id']));
@@ -100,9 +100,9 @@
 			return $this->jquery_results($buildings);
 		}
 
-		private function item_link(&$item, $key)
+		private function item_link( &$item, $key )
 		{
-			if(in_array($item['type'], array('allocation', 'booking', 'event')))
+			if (in_array($item['type'], array('allocation', 'booking', 'event')))
 				$item['info_url'] = $this->link(array('menuaction' => 'booking.ui' . $item['type'] . '.info',
 					'id' => $item['id']));
 		}
@@ -121,7 +121,7 @@
 				'building_id'		 => $building['id'],
 				'phpgw_return_as'	 => 'json',
 			));
-			if($backend)
+			if ($backend)
 			{
 				$building['date'] = phpgw::get_var('date', 'string');
 			}
@@ -136,6 +136,7 @@
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
-			self::render_template_xsl('massbooking_schedule', array('building' => $building, 'backend' => $backend));
+			self::render_template_xsl('massbooking_schedule', array('building' => $building,
+				'backend' => $backend));
 		}
 	}

@@ -120,7 +120,7 @@
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_deviation();
 			}
@@ -238,10 +238,10 @@
 			$sum_deviation = 0;
 			$values = array();
 
-			if(isset($list) and is_array($list))
+			if (isset($list) and is_array($list))
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				foreach($list as $entry)
+				foreach ($list as $entry)
 				{
 					$sum_deviation = $sum_deviation + $entry['amount'];
 
@@ -280,25 +280,25 @@
 			$values = phpgw::get_var('values');
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			if($values['save'])
+			if ($values['save'])
 			{
 				$values['workorder_id'] = $workorder_id;
 				$values['hour_id'] = $hour_id;
-				if(!$values['amount'])
+				if (!$values['amount'])
 				{
 					$receipt['error'][] = array('msg' => lang('amount not entered!'));
 				}
 
-				if($id)
+				if ($id)
 				{
 					$values['id'] = $id;
 					$action = 'edit';
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_deviation($values, $action);
-					if(!$id)
+					if (!$id)
 					{
 						$id = $receipt['id'];
 					}
@@ -309,7 +309,7 @@
 				}
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single_deviation(array('workorder_id' => $workorder_id,
 					'hour_id' => $hour_id, 'id' => $id));
@@ -377,7 +377,7 @@
 			self::render_template_xsl(array('wo_hour'), array('edit_deviation' => $data));
 		}
 
-		function common_data($workorder_id, $view = '')
+		function common_data( $workorder_id, $view = '' )
 		{
 
 			$workorder = $this->boworkorder->read_single($workorder_id);
@@ -393,14 +393,14 @@
 			$grouping_descr_old = '';
 			$content = array();
 
-			if(isset($hour_list) AND is_array($hour_list))
+			if (isset($hour_list) AND is_array($hour_list))
 			{
-				foreach($hour_list as $hour)
+				foreach ($hour_list as $hour)
 				{
 					$sum_hour = $sum_hour + $hour['cost'];
 					$sum_deviation = $sum_deviation + $hour['deviation'];
 
-					if($hour['grouping_descr'] != $grouping_descr_old)
+					if ($hour['grouping_descr'] != $grouping_descr_old)
 					{
 						$new_grouping = true;
 					}
@@ -411,7 +411,7 @@
 
 					$grouping_descr_old = $hour['grouping_descr'];
 
-					if($hour['activity_num'])
+					if ($hour['activity_num'])
 					{
 						$code = $hour['activity_num'];
 					}
@@ -420,7 +420,7 @@
 						$code = str_replace("-", $hour['tolerance'], $hour['ns3420_id']);
 					}
 
-					if($hour['count_deviation'] || $view)
+					if ($hour['count_deviation'] || $view)
 					{
 						$deviation = $hour['deviation'];
 					}
@@ -551,7 +551,7 @@
 			$values = phpgw::get_var('values');
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 
-			if($values['name'])
+			if ($values['name'])
 			{
 				$receipt = $this->bo->add_template($values, $workorder_id);
 			}
@@ -566,11 +566,11 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			for($i = 0; $i < count($common_data['content']); $i++)
+			for ($i = 0; $i < count($common_data['content']); $i++)
 			{
-				if($common_data['content'][$i]['remark'] != "")
+				if ($common_data['content'][$i]['remark'] != "")
 				{
-					if(trim($common_data['content'][$i]["hours_descr"]) == "")
+					if (trim($common_data['content'][$i]["hours_descr"]) == "")
 					{
 						$conector = "";
 					}
@@ -665,7 +665,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -675,16 +675,17 @@
 			$hour_id = phpgw::get_var('hour_id', 'int');
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 
-			if($delete && $hour_id)
+			if ($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete($hour_id, $workorder_id);
 				return "hour_id " . $hour_id . " " . lang("has been deleted");
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('numberformat');
 
 			$appname = lang('Workorder');
 			$function_msg = lang('list hours');
@@ -909,7 +910,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -918,6 +919,16 @@
 					'sortable' => ($uicols['sortable'][$k]) ? true : false,
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
+				switch ($uicols['name'][$k])
+				{
+					case 'billperae':
+					case 'cost':
+					case 'deviation':
+					case 'result':
+					case 'quantity':
+						$params['formatter'] = 'JqueryPortico.FormatterAmount2';
+						break;
+				}
 
 				array_push($data['datatable']['field'], $params);
 			}
@@ -1039,13 +1050,13 @@
 			$content = $common_data['content'];
 			$values = array();
 			$k = 0;
-			foreach($content as $row)
+			foreach ($content as $row)
 			{
-				foreach($uicols['name'] as $name)
+				foreach ($uicols['name'] as $name)
 				{
-					if($name == 'deviation')
+					if ($name == 'deviation')
 					{
-						if(is_numeric($row[$name]))
+						if (is_numeric($row[$name]))
 						{
 							$values[$k][$name] = $row[$name];
 						}
@@ -1073,14 +1084,14 @@
 
 		function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
-			if(phpgw::get_var('done', 'bool'))
+			if (phpgw::get_var('done', 'bool'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.index',
 					'workorder_id' => $workorder_id));
@@ -1107,7 +1118,7 @@
 
 			$sms_client_order_notice = isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '';
 
-			if($sms_client_order_notice)
+			if ($sms_client_order_notice)
 			{
 				$sms_client_order_notice = str_replace(array('__order_id__'), array($workorder_id), $sms_client_order_notice);
 			}
@@ -1125,7 +1136,7 @@
 
 
 			$common_data = $this->common_data($workorder_id);
-			if($show_details)
+			if ($show_details)
 			{
 				$values_hour = $common_data['content'];
 			}
@@ -1142,21 +1153,21 @@
 				'lookup_type' => 'view'
 			));
 
-			if($project['contact_phone'])
+			if ($project['contact_phone'])
 			{
-				for($i = 0; $i < count($location_data['location']); $i++)
+				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
+					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
 					{
 						unset($location_data['location'][$i]['value']);
 					}
 				}
 			}
 
-			if(!$show_cost)
+			if (!$show_cost)
 			{
 				$m = count($values_hour);
-				for($i = 0; $i < $m; $i++)
+				for ($i = 0; $i < $m; $i++)
 				{
 					unset($values_hour[$i]['cost']);
 					unset($values_hour[$i]['billperae']);
@@ -1176,7 +1187,7 @@
 			);
 
 
-			if(!$print && !$no_email)
+			if (!$print && !$no_email)
 			{
 				$table_send[] = array
 					(
@@ -1202,7 +1213,7 @@
 			$from_name = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
 			$from_email = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
 
-			if($this->config->config_data['wo_status_sms'])
+			if ($this->config->config_data['wo_status_sms'])
 			{
 				$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 				$config_sms = CreateObject('admin.soconfig', $sms_location_id);
@@ -1223,7 +1234,7 @@
 				$sms_data['encoded_text'] = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 			}
 			$lang_reminder = '';
-			if($this->boworkorder->order_sent_adress || $sent_ok)
+			if ($this->boworkorder->order_sent_adress || $sent_ok)
 			{
 				$lang_reminder = lang('reminder');
 			}
@@ -1242,7 +1253,7 @@
 				(
 				'formatted_gab_id' => $formatted_gab_id,
 				'org_name' => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
-				'location_data' => $location_data,
+				'location_data_local' => $location_data,
 				'lang_workorder' => lang('Workorder ID'),
 				'workorder_id' => $workorder_id,
 				'lang_reminder' => $lang_reminder,
@@ -1293,32 +1304,32 @@
 				'order_footer' => $this->config->config_data['order_footer']
 			);
 
-			if($send_order && !$to_email && !$workorder['mail_recipients'])
+			if ($send_order && !$to_email && !$workorder['mail_recipients'])
 			{
 				$receipt['error'][] = array('msg' => lang('No mailaddress is selected'));
 			}
 
-			if($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
+			if ($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
 			{
-				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
 					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
 
 					$_ok = false;
-					if($approve_role['is_supervisor'])
+					if ($approve_role['is_supervisor'])
 					{
 						$_ok = true;
 					}
-					else if($approve_role['is_budget_responsible'])
+					else if ($approve_role['is_budget_responsible'])
 					{
 						$_ok = true;
 					}
-					else if($workorder['approved'])
+					else if ($workorder['approved'])
 					{
 						$_ok = true;
 					}
 
-					if(!$_ok)
+					if (!$_ok)
 					{
 						phpgwapi_cache::message_set(lang('order is not approved'), 'error');
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
@@ -1338,12 +1349,12 @@
 
 				$email_data['use_yui_table'] = true;
 
+				$this->create_html->set_output();
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
 
 				$xml = new DOMDocument;
 				$xml->loadXML($this->create_html->xmldata);
-
 				$xsl = new DOMDocument;
 				$xsl->loadXML($this->create_html->xsldata);
 
@@ -1351,22 +1362,33 @@
 				$proc = new XSLTProcessor;
 				$proc->registerPHPFunctions(); // enable php functions
 				$proc->importStyleSheet($xsl); // attach the xsl rules
+				$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+				$css .= file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-extension.css");
 
 				$header = <<<HTML
+<!DOCTYPE HTML>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
 		<body>
+			<div class="pure-form pure-form-aligned">
 HTML;
 
 				$footer = <<<HTML
+			</div>
 	</body>
 </html>
 HTML;
 
-				$html = $proc->transformToXML($xml);
+				$html = trim($proc->transformToXML($xml));
+				$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+				$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
-				if($print)
+				if ($print)
 				{
 					echo $header;
 					echo <<<HTML
@@ -1383,7 +1405,7 @@ HTML;
 					exit;
 				}
 
-				if($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
+				if ($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
 				{
 					$bcc = $from_email;
 				}
@@ -1392,12 +1414,12 @@ HTML;
 
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
 				$_address = array();
-				foreach($address_element as $entry)
+				foreach ($address_element as $entry)
 				{
 					$_address[] = "{$entry['text']}: {$entry['value']}";
 				}
 
-				if($_address)
+				if ($_address)
 				{
 					$subject .= ', ' . implode(', ', $_address);
 				}
@@ -1406,25 +1428,25 @@ HTML;
 
 				$attachments = array();
 				$attachment_log = '';
-				if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
-					if(isset($values['file_action']) && is_array($values['file_action']))
+					if (isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles = CreateObject('property.bofiles');
 						$attachments = $bofiles->get_attachments("/project/{$project['project_id']}/", $values['file_action']['project']);
 						$attachments = array_merge($attachments, $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']['workorder']));
-						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']['project']). ', ' . implode(', ', $values['file_action']['workorder']);
+						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']['project']) . ', ' . implode(', ', $values['file_action']['workorder']);
 					}
-					_debug_array($attachment_log);die();
-					if($send_as_pdf)
+
+					if ($send_as_pdf)
 					{
 						$pdfcode = $this->pdf_order($workorder_id, $show_cost);
-						if($pdfcode)
+						if ($pdfcode)
 						{
 							$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
 
 							//save the file
-							if(!file_exists($dir))
+							if (!file_exists($dir))
 							{
 								mkdir($dir, 0777);
 							}
@@ -1447,7 +1469,7 @@ HTML;
 						$body = $header . $html . $footer;
 					}
 
-					if(!is_object($GLOBALS['phpgw']->send))
+					if (!is_object($GLOBALS['phpgw']->send))
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
@@ -1459,18 +1481,18 @@ HTML;
 				}
 
 
-				if($rcpt)
+				if ($rcpt)
 				{
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
 					$historylog = CreateObject('property.historylog', 'workorder');
 					$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
 					$receipt['message'][] = array('msg' => lang('Workorder is sent by email!'));
-					if($attachment_log)
+					if ($attachment_log)
 					{
 						$receipt['message'][] = array('msg' => $attachment_log);
 					}
 
-					if(phpgw::get_var('notify_client_by_sms', 'bool') && $sms_client_order_notice && (isset($project['contact_phone']) && $project['contact_phone'] || phpgw::get_var('to_sms_phone')))
+					if (phpgw::get_var('notify_client_by_sms', 'bool') && $sms_client_order_notice && (isset($project['contact_phone']) && $project['contact_phone'] || phpgw::get_var('to_sms_phone')))
 					{
 						$to_sms_phone = phpgw::get_var('to_sms_phone');
 						$to_sms_phone = $to_sms_phone ? $to_sms_phone : $project['contact_phone'];
@@ -1509,13 +1531,13 @@ HTML;
 				}
 			}
 
-			if($this->boworkorder->order_sent_adress)
+			if ($this->boworkorder->order_sent_adress)
 			{
 				$to_email = $this->boworkorder->order_sent_adress;
 			}
 
 			$email_list = $this->bo->get_email($to_email, $workorder['vendor_id']);
-			if(count($email_list) == 1)
+			if (count($email_list) == 1)
 			{
 				$to_email = $email_list[0]['email'];
 				unset($email_list);
@@ -1532,10 +1554,10 @@ HTML;
 			//---datatable settings---------------------------------------------------			
 
 			$table_view_order = array();
-			if(count($email_data['values_view_order']))
+			if (count($email_data['values_view_order']))
 			{
 
-				for($i = 0; $i < count($email_data['values_view_order']); $i++)
+				for ($i = 0; $i < count($email_data['values_view_order']); $i++)
 				{
 					$table_view_order[$i]['post'] = $email_data['values_view_order'][$i]['post'];
 					$table_view_order[$i]['code'] = $email_data['values_view_order'][$i]['code'];
@@ -1599,9 +1621,9 @@ HTML;
 			$lang_view_file = lang('click to view file');
 			$lang_select_file = lang('select');
 
-			for($z = 0; $z < count($files); $z++)
+			for ($z = 0; $z < count($files); $z++)
 			{
-				if($link_to_files)
+				if ($link_to_files)
 				{
 					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
 				}
@@ -1623,9 +1645,9 @@ HTML;
 			$files = $this->boproject->get_files($project['project_id']);
 
 			$i = $z;
-			for($z = 0; $z < count($files); $z++)
+			for ($z = 0; $z < count($files); $z++)
 			{
-				if($link_to_files)
+				if ($link_to_files)
 				{
 					$content_files[$i]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
 				}
@@ -1722,7 +1744,7 @@ HTML;
 				'view' => $data));
 		}
 
-		protected function _get_order_details($values_hour, $show_cost = false)
+		protected function _get_order_details( $values_hour, $show_cost = false )
 		{
 			$translations = array
 				(
@@ -1737,22 +1759,22 @@ HTML;
 
 			$grouping_descr_old = '';
 			$content = array();
-			foreach($values_hour as $hour)
+			foreach ($values_hour as $hour)
 			{
 				$descr = $hour['hours_descr'];
 
-				if($hour['remark'])
+				if ($hour['remark'])
 				{
 					$descr .= "\n" . $hour['remark'];
 				}
 
-				if(!$show_cost)
+				if (!$show_cost)
 				{
 					unset($hour['billperae']);
 					unset($hour['cost']);
 				}
 
-				if($hour['grouping_descr'] != $grouping_descr_old)
+				if ($hour['grouping_descr'] != $grouping_descr_old)
 				{
 					$content[] = array
 						(
@@ -1783,14 +1805,14 @@ HTML;
 			return $content;
 		}
 
-		function pdf_order($workorder_id = '', $show_cost = false)
+		function pdf_order( $workorder_id = '', $show_cost = false )
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
-			if(!$workorder_id)
+			if (!$workorder_id)
 			{
 				$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 				$show_cost = phpgw::get_var('show_cost', 'bool');
@@ -1798,7 +1820,7 @@ HTML;
 				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			}
-			if(!$show_cost)
+			if (!$show_cost)
 			{
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
@@ -1808,25 +1830,25 @@ HTML;
 			$common_data = $this->common_data($workorder_id);
 			$project = $this->boproject->read_single($common_data['workorder']['project_id'], array(), true);
 
-			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']);
 
 				$_ok = false;
-				if($approve_role['is_supervisor'])
+				if ($approve_role['is_supervisor'])
 				{
 					$_ok = true;
 				}
-				else if($approve_role['is_budget_responsible'])
+				else if ($approve_role['is_budget_responsible'])
 				{
 					$_ok = true;
 				}
-				else if($common_data['workorder']['approved'])
+				else if ($common_data['workorder']['approved'])
 				{
 					$_ok = true;
 				}
 
-				if(!$_ok)
+				if (!$_ok)
 				{
 					phpgwapi_cache::message_set(lang('order is not approved'), 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
@@ -1849,7 +1871,7 @@ HTML;
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-			if(isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
+			if (isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
 			{
 				$pdf->addJpegFromFile($this->config->config_data['order_logo'], 40, 800, isset($this->config->config_data['order_logo_width']) && $this->config->config_data['order_logo_width'] ? $this->config->config_data['order_logo_width'] : 80
 				);
@@ -1897,14 +1919,14 @@ HTML;
 			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
 
 			$delivery_address = lang('delivery address') . ':';
-			if(isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
 			{
 				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
 			else
 			{
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
-				foreach($address_element as $entry)
+				foreach ($address_element as $entry)
 				{
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
@@ -1949,7 +1971,7 @@ HTML;
 			$pdf->ezText(lang('descr') . ':', 20);
 			$pdf->ezText($common_data['workorder']['descr'], 14);
 
-			if($content)
+			if ($content)
 			{
 				$pdf->ezSetDy(-20);
 				$pdf->ezTable($content, '', lang('details'), array('xPos' => 0, 'xOrientation' => 'right',
@@ -1991,9 +2013,9 @@ HTML;
 			));
 
 
-			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
+			if (isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
 			{
-				if(!$content)
+				if (!$content)
 				{
 					$pdf->ezSetDy(-100);
 				}
@@ -2001,7 +2023,7 @@ HTML;
 				$pdf->ezText($this->config->config_data['order_footer'], 10);
 			}
 
-			if($preview)
+			if ($preview)
 			{
 				//	$pdf->print_pdf($document,'order');
 				$pdf->ezStream();
@@ -2019,7 +2041,7 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$pdf = CreateObject('phpgwapi.pdf');
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -2053,7 +2075,7 @@ HTML;
 			$pdf->addText(50, 823, 6, lang('Chapter') . ' ' . $common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter']);
 			$pdf->addText(50, 34, 6, $this->config->config_data['org_name']);
 			$pdf->addText(300, 34, 6, $date);
-			if($mark_draft)
+			if ($mark_draft)
 			{
 				$pdf->setColor(1, 0, 0);
 				//		$pdf->setColor(66,66,99);
@@ -2077,7 +2099,7 @@ HTML;
 			$pdf->ezText(lang('Order') . ': ' . $workorder_id . ' ' . $common_data['workorder']['title'], 14);
 			$pdf->ezText(lang('Chapter') . ' ' . $common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter'], 14);
 
-			if($content)
+			if ($content)
 			{
 				$pdf->ezNewPage();
 				$pdf->ezTable($content, '', $project['name'], array('xPos' => 70, 'xOrientation' => 'right',
@@ -2098,7 +2120,7 @@ HTML;
 
 		function prizebook()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -2110,22 +2132,22 @@ HTML;
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$values = phpgw::get_var('values');
 
-			if($delete && $hour_id)
+			if ($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete($hour_id, $workorder_id);
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return "hour " . $hour_id . " " . lang("has been deleted");
 				}
 			}
 
-			if($values['add'])
+			if ($values['add'])
 			{
 				$receipt = $this->bo->add_hour($values, $workorder_id);
 				return $receipt;
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_prizebook();
 			}
@@ -2150,7 +2172,7 @@ HTML;
 			$count_uicols = count($uicols['name']);
 			$price_book_def = array();
 
-			for($k = 0; $k < $count_uicols; $k++)
+			for ($k = 0; $k < $count_uicols; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -2231,7 +2253,7 @@ HTML;
 
 			$count_uicols_name = count($uicols_hour['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols_hour['name'][$k],
@@ -2365,7 +2387,7 @@ HTML;
 					'rightClasss', '', '', '', '')
 			);
 
-			if($workorder['vendor_id'])
+			if ($workorder['vendor_id'])
 			{
 				$params = array
 					(
@@ -2387,9 +2409,9 @@ HTML;
 
 			$content = array();
 			$j = 0;
-			if(isset($pricebook_list) && is_array($pricebook_list))
+			if (isset($pricebook_list) && is_array($pricebook_list))
 			{
-				foreach($pricebook_list as $pricebook)
+				foreach ($pricebook_list as $pricebook)
 				{
 					$json_row = array();
 
@@ -2402,23 +2424,23 @@ HTML;
 					$hidden .= " <input counter='" . $j . "' name='values[descr][" . $j . "]' id='values[descr][" . $j . "]' class='descr'  type='hidden' value='" . $pricebook['descr'] . "'/>";
 					$hidden .= " <input counter='" . $j . "' name='values[total_cost][" . $j . "]' id='values[total_cost][" . $j . "]' class='total_cost'  type='hidden' value='" . $pricebook['total_cost'] . "'/>";
 
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
 						$json_row[$uicols['name'][$i]] = $pricebook[$uicols['name'][$i]];
 
-						if($uicols['name'][$i] == 'quantity')
+						if ($uicols['name'][$i] == 'quantity')
 						{
 							$json_row[$uicols['name'][$i]] = "<input counter='" . $j . "' name='values[" . $uicols['name'][$i] . "][" . $j . "]' id='values[" . $uicols['name'][$i] . "][" . $j . "]' size='4' class='quantity'/>";
 						}
-						if($uicols['name'][$i] == 'cat_per_cent')
+						if ($uicols['name'][$i] == 'cat_per_cent')
 						{
 							$json_row[$uicols['name'][$i]] = "<input counter='" . $j . "' name='values[" . $uicols['name'][$i] . "][" . $j . "]' id='values[" . $uicols['name'][$i] . "][" . $j . "]' size='4' class='cat_per_cent'/>";
 						}
 						$select = '';
-						if($uicols['input_type'][$i] == 'select')
+						if ($uicols['input_type'][$i] == 'select')
 						{
 							$select .= "<select counter='" . $j . "' name='values[" . $uicols['name'][$i] . "_list][" . $j . "]' id='values[" . $uicols['name'][$i] . "_list][" . $j . "]' class='wo_hour_cat'>";
-							for($k = 0; $k < count($values_combo_box); $k++)
+							for ($k = 0; $k < count($values_combo_box); $k++)
 							{
 								$select .= "<option value='" . $values_combo_box[$k]['id'] . "'>" . $values_combo_box[$k]['name'] . "</option>";
 							}
@@ -2440,7 +2462,7 @@ HTML;
 
 		function template()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -2454,23 +2476,23 @@ HTML;
 
 			$values = $_POST['values'] ? phpgw::get_var('values') : array();
 
-			if($delete && $hour_id)
+			if ($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete($hour_id, $workorder_id);
 
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return "hour " . $hour_id . " " . lang("has been deleted");
 				}
 			}
 
-			if($values['add'])
+			if ($values['add'])
 			{
 				$receipt = $this->bo->add_hour_from_template($values, $workorder_id);
 				return $receipt;
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_template();
 			}
@@ -2495,7 +2517,7 @@ HTML;
 			$count_uicols = count($uicols['name']);
 			$template_def = array();
 
-			for($k = 0; $k < $count_uicols; $k++)
+			for ($k = 0; $k < $count_uicols; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -2575,7 +2597,7 @@ HTML;
 
 			$count_uicols_name = count($uicols_hour['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols_hour['name'][$k],
@@ -2741,13 +2763,13 @@ HTML;
 			$grouping_descr_old = '';
 			$content = array();
 			$j = 0;
-			if(isset($template_list) && is_array($template_list))
+			if (isset($template_list) && is_array($template_list))
 			{
-				foreach($template_list as $template)
+				foreach ($template_list as $template)
 				{
 					$json_row = array();
 
-					if($template['grouping_descr'] != $grouping_descr_old)
+					if ($template['grouping_descr'] != $grouping_descr_old)
 					{
 						$new_grouping = true;
 					}
@@ -2758,7 +2780,7 @@ HTML;
 
 					$grouping_descr_old = $template['grouping_descr'];
 
-					if($template['activity_num'])
+					if ($template['activity_num'])
 					{
 						$code = $template['activity_num'];
 					}
@@ -2781,21 +2803,21 @@ HTML;
 					$hidden .= " <input counter='" . $j . "' name='values[remark][" . $j . "]' id='values[remark][" . $j . "]' class='remark'  type='hidden' value='" . $template['remark'] . "'/>";
 					$hidden .= " <input counter='" . $j . "' name='values[billperae][" . $j . "]' id='values[billperae][" . $j . "]' class='billperae'  type='hidden' value='" . $template['billperae'] . "'/>";
 
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
 						$json_row[$uicols['name'][$i]] = $template[$uicols['name'][$i]];
-						if($uicols['name'][$i] == 'code')
+						if ($uicols['name'][$i] == 'code')
 						{
 							$json_row[$uicols['name'][$i]] = $code;
 						}
-						if($uicols['name'][$i] == 'activity_num')
+						if ($uicols['name'][$i] == 'activity_num')
 						{
 							$json_row[$uicols['name'][$i]] = $new_grouping;
 						}
 
 						//$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 
-						if($uicols['input_type'][$i] == 'varchar')
+						if ($uicols['input_type'][$i] == 'varchar')
 						{
 							$json_row[$uicols['name'][$i]] = "<input counter='" . $j . "' name='values[{$uicols['name'][$i]}][{$j}]' id='values[{$uicols['name'][$i]}][{$j}]' size='4' class='" . $uicols['name'][$i] . "'/>";
 						}
@@ -2806,10 +2828,10 @@ HTML;
 						  } */
 
 						$select = '';
-						if($uicols['input_type'][$i] == 'combo')
+						if ($uicols['input_type'][$i] == 'combo')
 						{
 							$select .= "<select counter='" . $j . "' name='values[" . $uicols['name'][$i] . "_list][" . $j . "]' id='values[" . $uicols['name'][$i] . "_list][" . $j . "]' class='" . $uicols['name'][$i] . "'>";
-							for($k = 0; $k < count($values_combo_box); $k++)
+							for ($k = 0; $k < count($values_combo_box); $k++)
 							{
 								$select .= "<option value='" . $values_combo_box[$k]['id'] . "'>" . $values_combo_box[$k]['name'] . "</option>";
 							}
@@ -2832,7 +2854,7 @@ HTML;
 
 		function edit()
 		{
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -2848,16 +2870,16 @@ HTML;
 
 			$receipt = array();
 
-			if($values['save'])
+			if ($values['save'])
 			{
-				if($values['copy_hour'])
+				if ($values['copy_hour'])
 				{
 					unset($hour_id);
 				}
 
 				$values['hour_id'] = $hour_id;
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_hour($values, $workorder_id);
 
@@ -2865,7 +2887,7 @@ HTML;
 				}
 			}
 
-			if($hour_id)
+			if ($hour_id)
 			{
 				$values = $this->bo->read_single_hour($hour_id);
 				$function_msg = lang('Edit hour');
@@ -2877,7 +2899,7 @@ HTML;
 
 			$workorder = $this->boworkorder->read_single($workorder_id);
 
-			if($error_id)
+			if ($error_id)
 			{
 				unset($values['hour_id']);
 			}
@@ -2895,7 +2917,7 @@ HTML;
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
 
-			if($filter_key = array_search('.project', $filter_buildingpart))
+			if ($filter_key = array_search('.project', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
@@ -2999,7 +3021,7 @@ HTML;
 
 		function delete()
 		{
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -3012,13 +3034,13 @@ HTML;
 
 
 			//delete for JSON proerty2
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete_deviation($workorder_id, $hour_id, $deviation_id);
 				return "";
 			}
 
-			if($deviation_id)
+			if ($deviation_id)
 			{
 				$link_data = array
 					(
@@ -3050,9 +3072,9 @@ HTML;
 				$function_msg = lang('delete hour');
 			}
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-				if($deviation_id)
+				if ($deviation_id)
 				{
 					$this->bo->delete_deviation($workorder_id, $hour_id, $deviation_id);
 				}
@@ -3086,7 +3108,7 @@ HTML;
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$workorder_id = phpgw::get_var('workorder_id');
-			if($_FILES)
+			if ($_FILES)
 			{
 				$this->_import_calculation($workorder_id);
 
@@ -3096,7 +3118,7 @@ HTML;
 
 				$to_file = "{$bofiles->fakebase}/workorder/{$workorder_id}/{$file_name}";
 
-				if($bofiles->vfs->file_exists(array(
+				if ($bofiles->vfs->file_exists(array(
 					'string' => $to_file,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
@@ -3108,7 +3130,7 @@ HTML;
 					$bofiles->create_document_dir("workorder/{$workorder_id}");
 					$bofiles->vfs->override_acl = 1;
 
-					if(!$bofiles->vfs->cp(array(
+					if (!$bofiles->vfs->cp(array(
 						'from' => $_FILES['file']['tmp_name'],
 						'to' => $to_file,
 						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -3119,7 +3141,7 @@ HTML;
 				}
 			}
 
-			if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 			}
@@ -3144,12 +3166,12 @@ HTML;
 			self::render_template_xsl(array('wo_hour'), array('import_calculation' => $data));
 		}
 
-		private function _import_calculation($workorder_id)
+		private function _import_calculation( $workorder_id )
 		{
 			$error = false;
 
 			$data = array();
-			if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+			if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
 			{
 				$file = array
 					(
@@ -3163,7 +3185,7 @@ HTML;
 				return;
 			}
 
-			switch($file['type'])
+			switch ($file['type'])
 			{
 				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 				case 'application/vnd.oasis.opendocument.spreadsheet':
@@ -3175,16 +3197,16 @@ HTML;
 					$error = true;
 			}
 
-			if($data)
+			if ($data)
 			{
 				try
 				{
 					//Import
 					$this->bo->import_calculation($data, $workorder_id);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$error = true;
@@ -3192,13 +3214,13 @@ HTML;
 				}
 			}
 
-			if(!$error)
+			if (!$error)
 			{
 				phpgwapi_cache::message_set(lang('workorder is updated'), 'message');
 			}
 		}
 
-		protected function getexceldata($path)
+		protected function getexceldata( $path )
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
 
@@ -3211,7 +3233,7 @@ HTML;
 
 			$result = array();
 
-			foreach($worksheetNames as $_index => $sheet_name)
+			foreach ($worksheetNames as $_index => $sheet_name)
 			{
 				$result[$_index]['name'] = $sheet_name;
 				$objPHPExcel->setActiveSheetIndex($_index);
@@ -3227,17 +3249,17 @@ HTML;
 
 				$start = 2; // Read the first line to get the headers out of the way
 
-				for($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 				}
 
 				$rows = $rows ? $rows + 1 : 0;
-				for($row = $start; $row < $rows; $row++)
+				for ($row = $start; $row < $rows; $row++)
 				{
 					$_data = array();
 
-					for($j = 0; $j < $highestColumnIndex; $j++)
+					for ($j = 0; $j < $highestColumnIndex; $j++)
 					{
 						$_data[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 					}
@@ -3248,7 +3270,7 @@ HTML;
 			return $result;
 		}
 
-		function send_order($workorder_id)
+		function send_order( $workorder_id )
 		{
 			$workorder = $this->boworkorder->read_single($workorder_id);
 			$show_cost = true;
@@ -3258,7 +3280,7 @@ HTML;
 			$attachments = array();
 
 			//save the file
-			if(!file_exists($dir))
+			if (!file_exists($dir))
 			{
 				mkdir($dir, 0777);
 			}
@@ -3281,7 +3303,7 @@ HTML;
 
 			$from_name = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
 			$from_email = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
-			if($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
+			if ($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
 			{
 				$bcc = $from_email;
 			}
@@ -3290,24 +3312,24 @@ HTML;
 
 			$address_element = execMethod('property.botts.get_address_element', $workorder['location_code']);
 			$_address = array();
-			foreach($address_element as $entry)
+			foreach ($address_element as $entry)
 			{
 				$_address[] = "{$entry['text']}: {$entry['value']}";
 			}
 
-			if($_address)
+			if ($_address)
 			{
 				$subject .= ', ' . implode(', ', $_address);
 			}
 
-			if(!is_object($GLOBALS['phpgw']->send))
+			if (!is_object($GLOBALS['phpgw']->send))
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 			}
 
 			$_status = isset($this->config->config_data['workorder_ordered_status']) && $this->config->config_data['workorder_ordered_status'] ? $this->config->config_data['workorder_ordered_status'] : 0;
 
-			if(!$_status)
+			if (!$_status)
 			{
 				throw new Exception('status on ordered not given in config');
 			}
@@ -3316,9 +3338,9 @@ HTML;
 			{
 				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
@@ -3329,9 +3351,9 @@ HTML;
 				execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
 					'status' => $_status));
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
@@ -3342,23 +3364,22 @@ HTML;
 			$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
 		}
 
-		function get_gab_id($location_code)
+		function get_gab_id( $location_code )
 		{
 			$formatted_gab_id = '';
 			$gabinfos = execMethod('property.sogab.read', array('location_code' => $location_code,
 				'allrows' => true));
-			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+			if ($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 			{
 				$gabinfo = array_shift($gabinfos);
 				$gab_id = $gabinfo['gab_id'];
 			}
 
 			$formatted_gab_id = '';
-			if(isset($gab_id))
+			if (isset($gab_id))
 			{
 				$formatted_gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 			return $formatted_gab_id;
 		}
-
 	}

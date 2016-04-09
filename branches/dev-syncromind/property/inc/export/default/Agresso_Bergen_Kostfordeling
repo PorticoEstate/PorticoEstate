@@ -57,7 +57,7 @@
 
 		function select_periods_with_invoice_to_transfer()
 		{
-			if($this->invoice_approval == 2)
+			if ($this->invoice_approval == 2)
 			{
 				$sql = "SELECT DISTINCT periode FROM fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL or oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
 			}
@@ -69,7 +69,7 @@
 
 			$periode = array();
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$periode[] = $this->db->f('periode');
 			}
@@ -77,14 +77,14 @@
 			return $periode;
 		}
 
-		function log_end($batchid)
+		function log_end( $batchid )
 		{
 			$tid = date($this->soXport->datetimeformat);
 			$sql = "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','End transfer','$tid')";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		function log_error($batchid, $error_desr)
+		function log_error( $batchid, $error_desr )
 		{
 			$tid = date($this->soXport->datetimeformat);
 			$sql = "insert into fm_ecologg (batchid,ecobilagid,status,melding,tid) values ('$batchid',NULL,0,'$error_desr','$tid')";
@@ -112,14 +112,14 @@
 		}
 
 		//Lagre start melding
-		function log_start($batchid)
+		function log_start( $batchid )
 		{
 			$tid = date($this->soXport->datetimeformat);
 			$sql = "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','Start transfer','$tid')";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		function get_vendor_info($vendor_id = '')
+		function get_vendor_info( $vendor_id = '' )
 		{
 			$sql = "select org_nr,konto_nr from fm_vendor where id='$vendor_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -133,13 +133,13 @@
 			return $vendor_info;
 		}
 
-		function get_order_title($order_id = '')
+		function get_order_title( $order_id = '' )
 		{
 			$sql = "select type from fm_orders where id='$order_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			switch($this->db->f('type'))
+			switch ($this->db->f('type'))
 			{
 				case 'workorder':
 					$sql2 = "select title from fm_workorder where id='$order_id'";
@@ -158,10 +158,10 @@
 			return $order_title;
 		}
 
-		function select_invoice_rollback($day, $month, $year, $Filnavn)
+		function select_invoice_rollback( $day, $month, $year, $Filnavn )
 		{
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mssql':
 					$datepart_year = "datepart(year,overftid)";
@@ -187,7 +187,7 @@
 
 			$invoice_roleback = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$invoice_roleback[] = array
 					(
@@ -234,7 +234,7 @@
 		}
 
 		//rollback function
-		function bilag_update_overf($BilagOverf)
+		function bilag_update_overf( $BilagOverf )
 		{
 			$values = array
 				(
@@ -286,7 +286,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		function overfor($download, $pre_transfer = '', $force_period_year = '')
+		function overfor( $download, $pre_transfer = '', $force_period_year = '' )
 		{
 
 //			$download = 'on';
@@ -294,7 +294,7 @@
 //			$this->debug=True;
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
-			if($download == 'on')
+			if ($download == 'on')
 			{
 				$this->increment_batchid();
 				//Lagre melding
@@ -304,18 +304,18 @@
 
 			$periodes = $this->select_periods_with_invoice_to_transfer();
 
-			foreach($periodes as $periode)
+			foreach ($periodes as $periode)
 			{
 				$this->OverforPeriode($batchid, $periode, $download, $force_period_year);
 			}
 
 			//Lagre melding
-			if($download == 'on')
+			if ($download == 'on')
 			{
 				$this->log_end($batchid); //Lagre melding
 			}
 
-			if(!$download == 'on')
+			if (!$download == 'on')
 			{
 				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -328,7 +328,7 @@
 			return $receipt;
 		}
 
-		function errorhandler($batchid, $error_desr)
+		function errorhandler( $batchid, $error_desr )
 		{
 			$this->db->transaction_abort();
 
@@ -341,7 +341,7 @@
 			$this->log_error($batchid, $error_desr);
 		}
 
-		function RullTilbake($Filnavn, $Dato)
+		function RullTilbake( $Filnavn, $Dato )
 		{
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$dateformat = str_replace(".", "", $dateformat);
@@ -359,12 +359,12 @@
 			$BilagOverf = $this->select_invoice_rollback($day, $month, $year, $Filnavn);
 			$this->db->transaction_begin();
 
-			for($i = 0; $i < count($BilagOverf); $i++)
+			for ($i = 0; $i < count($BilagOverf); $i++)
 			{
 				$this->bilag_update_overf($BilagOverf[$i]);
 
 
-				if($BilagOverf[$i]['pmwrkord_code'])
+				if ($BilagOverf[$i]['pmwrkord_code'])
 				{
 					$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
 
@@ -384,11 +384,11 @@
 				$antall = $antall + 1;
 			}
 
-			if($antall > 0)
+			if ($antall > 0)
 			{
 				$fil_katalog = $this->config->config_data['export']['path'];
 
-				if(unlink($fil_katalog . '/' . $Filnavn))
+				if (unlink($fil_katalog . '/' . $Filnavn))
 				{
 					$this->db->transaction_commit();
 					$receipt['message'][] = array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
@@ -407,7 +407,7 @@
 			return $receipt;
 		}
 
-		function LagFilnavn($batchid)
+		function LagFilnavn( $batchid )
 		{
 			$fil_katalog = $this->config->config_data['export']['path'];
 			$continue = True;
@@ -417,22 +417,22 @@
 				$Filnavn = $fil_katalog . '/FDB' . date("dmy") . '_' . sprintf("%02s", $i) . '.TXT';
 
 				//Sjekk om filen eksisterer
-				If(!file_exists($Filnavn))
+				If (!file_exists($Filnavn))
 				{
 					return $Filnavn;
 				}
 
 				$i++;
 			}
-			while($continue);
+			while ($continue);
 
 			//Ingen løpenr er ledige, gi feilmelding
 			return False;
 		}
 
-		private function get_vouchers_to_transfer($periode)
+		private function get_vouchers_to_transfer( $periode )
 		{
-			if($this->invoice_approval == 2)
+			if ($this->invoice_approval == 2)
 			{
 				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL AND ( saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL ) AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";
 			}
@@ -444,7 +444,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$values[] = array
 					(
@@ -455,7 +455,7 @@
 			}
 
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
 				$sql = "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag {$this->join} fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid"
 				. " WHERE bilagsnr='{$entry['bilagsnr']}' AND fakturanr = '{$entry['fakturanr']}'";
@@ -502,9 +502,9 @@
 
 		//Velg ut alle underbilag
 
-		private function get_invoice($bilagsnr, $fakturanr)
+		private function get_invoice( $bilagsnr, $fakturanr )
 		{
-			if(!$fakturanr)
+			if (!$fakturanr)
 			{
 				throw new Exception('Mangler fakturanr');
 			}
@@ -517,7 +517,7 @@
 			$this->db2->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while($this->db2->next_record())
+			while ($this->db2->next_record())
 			{
 				$values[] = array
 					(
@@ -565,7 +565,7 @@
 			return $values;
 		}
 
-		function OverforPeriode($batchid, $periode, $download, $force_period_year = '')
+		function OverforPeriode( $batchid, $periode, $download, $force_period_year = '' )
 		{
 			$BilagId = 'NULL';
 
@@ -573,7 +573,7 @@
 
 
 			$Filnavn = $this->LagFilnavn($batchid);
-			if(!$Filnavn)
+			if (!$Filnavn)
 			{
 				$message = 'LagFilnavn: Alle loepenr for filnavn er i bruk';
 				$this->errorhandler($batchid, $message);
@@ -582,7 +582,7 @@
 			}
 
 			//Test om filen kan opprettes og skrives til
-			if(@fopen($Filnavn, "wb"))
+			if (@fopen($Filnavn, "wb"))
 			{
 				unlink($Filnavn);
 			}
@@ -600,20 +600,20 @@
 
 			$buffer = '';
 
-			foreach($oRsBilag as $invoice)
+			foreach ($oRsBilag as $invoice)
 			{
 
 				$tranfser_bilag[] = $invoice['bilagsnr'];
 
 				//Bestem belops felt
-				if($invoice['splitt'] == 0)
+				if ($invoice['splitt'] == 0)
 				{
 					//Bilaget er ikke splittet
-					if($invoice['godkjentbelop'] <> $invoice['belop'])
+					if ($invoice['godkjentbelop'] <> $invoice['belop'])
 					{
 						$BelopFelt = 'godkjentbelop';
 						//Logg til avviks tabell
-						if($download == 'on')
+						if ($download == 'on')
 						{
 //							$this->soXport->log_to_deviation_table($invoice);
 						}
@@ -625,7 +625,7 @@
 				}
 
 				//Bilaget er splittet
-				if($invoice['godkjentbelop'] == $invoice['belop'])
+				if ($invoice['godkjentbelop'] == $invoice['belop'])
 				{
 					$BelopFelt = 'godkjentbelop';
 				}
@@ -679,14 +679,14 @@
 
 				$vendor_info = $this->get_vendor_info($invoice['spvend_code']);
 
-				if(!$vendor_info['org_nr'])
+				if (!$vendor_info['org_nr'])
 				{
 					$message = 'mangler org_nr for reskontronr: ' . $invoice['spvend_code'];
 					$this->errorhandler($batchid, $message);
 					return $message;
 				}
 
-				if(!$vendor_info['konto_nr'])
+				if (!$vendor_info['konto_nr'])
 				{
 					$message = 'mangler konto for reskontronr: ' . $invoice['spvend_code'];
 					$this->errorhandler($batchid, $message);
@@ -707,14 +707,14 @@
 				$last_record = $underbilag_count - 1;
 
 				//Velg ut alle underbilag
-				foreach($invoice['invoice_line'] as $_key => $invoice_line)
+				foreach ($invoice['invoice_line'] as $_key => $invoice_line)
 				{
 					$BilagId = $invoice_line['id'];
 
 					$Belop = $invoice_line[$BelopFelt] * 100;
 					$Belop_ = $Belop;
 
-					if($Belop < 0)
+					if ($Belop < 0)
 					{
 						$Belop = abs($Belop);
 						$Belop = sprintf("%019s", $Belop);
@@ -726,19 +726,19 @@
 						$Belop = '+' . $Belop;
 					}
 
-					if($invoice_line['pmwrkord_code'])
+					if ($invoice_line['pmwrkord_code'])
 					{
 
 						$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
 
 						//Oppdater beløp på arbeidsordre
-						if($download == 'on')
+						if ($download == 'on')
 						{
 							$actual_cost_field = 'act_vendor_cost';
 
 							$operator = '+';
 
-							if(!$this->debug)
+							if (!$this->debug)
 							{
 								$this->soXport->correct_actual_cost($invoice_line['pmwrkord_code'], $Belop_, $actual_cost_field, $operator);
 							}
@@ -781,7 +781,7 @@
 
 					$Ordrenummer = sprintf("%-9s", $invoice_line['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
 					//Kopier verdier
-					if($download == 'on' && !$this->debug)
+					if ($download == 'on' && !$this->debug)
 					{
 						$this->soXport->add_OverfBilag($invoice_line);
 					}
@@ -796,7 +796,7 @@
 					$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted .
 					$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok . "\r\n";
 
-					if($_key == $last_record)
+					if ($_key == $last_record)
 					{
 						$Konto = sprintf("%-8s", '2139915');// verdi: Art, type: c8, plass: 21 - 28
 						//			$Dim_1		 = sprintf("%-8s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
@@ -811,7 +811,7 @@
 						//	$Tekst		= sprintf("%-50s",'');//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
 						//			$Tekst		 = sprintf("%-50s", '');// verdi: Tekst, type: text (50), plass: 201 - 250
 						//Ikke fortegnskifte for kostfordeling (GL)
-						if($Belop_motpost < 0)
+						if ($Belop_motpost < 0)
 						{
 							$Belop_motpost = sprintf("%019s", abs($Belop_motpost));
 							$Belop_motpost = "+{$Belop_motpost}";
@@ -836,7 +836,7 @@
 					}
 
 					//Slett post i fm_ecobilag
-					if($download == 'on' && !$this->debug)
+					if ($download == 'on' && !$this->debug)
 					{
 						$this->soXport->delete_from_fm_ecobilag($invoice_line['id']);
 						//Logg transaksjon
@@ -851,26 +851,26 @@
 
 			//Fullfør transaksjon
 
-			if($download == 'on' && !$this->debug)
+			if ($download == 'on' && !$this->debug)
 			{
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp, $buffer);
 
-				if(fclose($fp))
+				if (fclose($fp))
 				{
 					$file_written = True;
 				}
 
-				if($file_written && $this->config->config_data['common']['method'] != 'ftp')
+				if ($file_written && $this->config->config_data['common']['method'] != 'ftp')
 				{
 					$transfer_ok = True;
 				}
-				else if($file_written)
+				else if ($file_written)
 				{
 					$transfer_ok = $this->transfer($buffer, $Filnavn, $batchid, $tranfser_bilag);
 				}
 
-				if($transfer_ok)
+				if ($transfer_ok)
 				{
 					$this->db->transaction_commit();
 					$message = 'Godkjent: periode: ' . $_periode . ' antall bilag/underbilag overfort:' . $antall . ' , fil: ' . $Filnavn;
@@ -891,7 +891,7 @@
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp, $buffer);
 
-				if(fclose($fp))
+				if (fclose($fp))
 				{
 					$file_written = True;
 				}
@@ -900,15 +900,15 @@
 			}
 		}
 
-		function transfer($buffer, $Filnavn, $batchid, $tranfser_bilag)
+		function transfer( $buffer, $Filnavn, $batchid, $tranfser_bilag )
 		{
 
-			if($this->config->config_data['common']['method'] == 'ftp')
+			if ($this->config->config_data['common']['method'] == 'ftp')
 			{
 				$ftp = $this->phpftp_connect();
 
 				$basedir = $this->config->config_data['common']['remote_basedir'];
-				if($basedir)
+				if ($basedir)
 				{
 					$newfile = $basedir . '/' . basename($Filnavn);
 				}
@@ -917,9 +917,9 @@
 					$newfile = basename($Filnavn);
 				}
 
-				if(ftp_put($ftp, $newfile, $Filnavn, FTP_BINARY))
+				if (ftp_put($ftp, $newfile, $Filnavn, FTP_BINARY))
 				{
-					for($i = 0; $i < count($tranfser_bilag); $i++)
+					for ($i = 0; $i < count($tranfser_bilag); $i++)
 					{
 						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Invoice pre_transferred %1', basename($Filnavn)));
 					}
@@ -927,13 +927,13 @@
 				}
 				else
 				{
-					for($i = 0; $i < count($tranfser_bilag); $i++)
+					for ($i = 0; $i < count($tranfser_bilag); $i++)
 					{
 						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Failed to pre_transfere %1 to agresso', basename($Filnavn)));
 					}
 					$transfer_ok = False;
 				}
-				if(!$transfer_ok)
+				if (!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
@@ -951,9 +951,9 @@
 
 //			echo "connecting to $host with $user and $pass\n <br>";
 			$ftp = ftp_connect($host);
-			if($ftp)
+			if ($ftp)
 			{
-				if(ftp_login($ftp, $user, $password))
+				if (ftp_login($ftp, $user, $password))
 				{
 					return $ftp;
 				}

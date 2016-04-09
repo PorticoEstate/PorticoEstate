@@ -7,9 +7,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 		This program is free software: you can redistribute it and/or modify
 		it under the terms of the GNU Lesser General Public License as published by
@@ -25,27 +24,22 @@
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
-
-
 	/**
 	 * Description
 	 * @package frontend
 	 */
-
 	class frontend_sorental
 	{
+
 		/**
 		* @var int $_total_records total number of records found
 		*/
 		protected $_total_records = 0;
 
-
 		/**
 		* @var int $_receipt feedback on actions
 		*/
 		protected $_receipt = array();
-
 
 		/**
 		 * @var object $_db reference to the global database object
@@ -66,7 +60,6 @@
 		 * @var string $_like SQL LIKE statement
 		 */
 		protected $_like;
-
 		protected $_global_lock = false;
 
 		public function __construct()
@@ -85,7 +78,7 @@
 		 *
 		 * @return mixed the value of the variable sought - null if not found
 		 */
-		public function __get($varname)
+		public function __get( $varname )
 		{
 			switch ($varname)
 			{
@@ -100,10 +93,10 @@
 			}
 		}
 
-		public function get_location($parties)
+		public function get_location( $parties )
 		{
-			$parties = (array) $parties;
-			if(!$parties)
+			$parties = (array)$parties;
+			if (!$parties)
 			{
 				return array();
 			}
@@ -123,7 +116,7 @@
 			. " {$filtermethod}";
 
 //_debug_array($sql);
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
 			$level = 0;
@@ -143,7 +136,7 @@
 			{
 			
 				$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE location_code IN ('" . implode("','", $locations) . "')";
-				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->query($sql, __LINE__, __FILE__);
 				while ($this->_db->next_record())
 				{
 					$values[] = array
@@ -157,20 +150,19 @@
 			return $values;
 		}
 
-
 		/**
 		* translate from org_unit to party.id
-		**/
-		function get_parties($org_units)
+		 * */
+		function get_parties( $org_units )
 		{
-			if(!$org_units)
+			if (!$org_units)
 			{
 				return array();
 			}
 			
 			$sql = 'SELECT id FROM rental_party WHERE org_enhet_id IN (' . implode(',', $org_units) . ')'; 
 //_debug_array($sql);
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
 
@@ -182,9 +174,9 @@
 			return $values;
 		}
 
-		public function get_total_cost_and_area($org_units = array(), $selected_location = '')
+		public function get_total_cost_and_area( $org_units = array(), $selected_location = '' )
 		{
-			if(!$org_units)
+			if (!$org_units)
 			{
 				return array();
 			}
@@ -196,13 +188,12 @@
 			
 			
 			$join_method = '';
-			if($selected_location)
+			if ($selected_location)
 			{
 				$filtermethod .= " AND location_code {$this->_db->like} '{$selected_location}%'";
 				$join_method =  " {$this->_db->join} rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id)"
 					. " {$this->_db->join} rental_composite ON (rental_contract_composite.composite_id = rental_composite.id)"
 					. " {$this->_db->join} rental_unit ON (rental_composite.id = rental_unit.composite_id) ";
-
 			}
 			
 			$sql = "SELECT sum(total_price::numeric) AS sum_total_price FROM"
@@ -212,7 +203,7 @@
 			. " {$join_method}{$filtermethod} AND NOT is_one_time";
 
 
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
 			$this->_db->next_record();
@@ -225,7 +216,7 @@
 			. " {$join_method}{$filtermethod}";
 
 
-			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$this->_db->next_record();
 			$values['sum_total_area'] = $this->_db->f('sum_total_area');

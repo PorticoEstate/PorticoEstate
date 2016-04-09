@@ -18,14 +18,14 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function include_subject_parent_roles(array $for_object = null)
+		protected function include_subject_parent_roles( array $for_object = null )
 		{
 			$parent_roles	 = null;
 			$owner			 = null;
 
-			if(is_array($for_object))
+			if (is_array($for_object))
 			{
-				if(!isset($for_object['owner_id']))
+				if (!isset($for_object['owner_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless owner_id is provided');
 				}
@@ -43,7 +43,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -80,7 +80,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -122,7 +122,7 @@
 			return $this->so->get_categories();
 		}
 
-		public function read_parent($owner_id)
+		public function read_parent( $owner_id )
 		{
 			return $this->so->read_parent($owner_id);
 		}

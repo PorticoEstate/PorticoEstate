@@ -5,38 +5,58 @@
 	
 	<div id="content">
 		<ul class="pathway">
-			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
+			<li>
+				<a href="index.php?menuaction=bookingfrontend.uisearch.index">
+					<xsl:value-of select="php:function('lang', 'Home')" />
+				</a>
+			</li>
 			<li>
 				<a>
-					<xsl:attribute name="href"><xsl:value-of select="resource/building_link"/></xsl:attribute>
+					<xsl:attribute name="href">
+						<xsl:value-of select="resource/building_link"/>
+					</xsl:attribute>
 					<xsl:value-of select="resource/building_name"/>
 				</a>
 			</li>
 			<li>
 				<a>
-					<xsl:attribute name="href"><xsl:value-of select="resource/resource_link"/></xsl:attribute>
+					<xsl:attribute name="href">
+						<xsl:value-of select="resource/resource_link"/>
+					</xsl:attribute>
 					<xsl:value-of select="resource/name"/>
 				</a>
 			</li>
-            <li><xsl:value-of select="php:function('lang', 'schedule')"/></li>
+			<li>
+				<xsl:value-of select="php:function('lang', 'schedule')"/>
+			</li>
 		</ul>
 
         <xsl:if test="resource/deactivate_application=0">
-            <button onclick="window.location.href='{resource/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+			<button onclick="window.location.href='{resource/application_link}'">
+				<xsl:value-of select="php:function('lang', 'New booking application')" />
+			</button>
         </xsl:if>
 
 		<xsl:call-template name="msgbox"/>
 		<ul id="week-selector">
-			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
+			<li>
+				<a href="#" onclick="YAHOO.booking.prevWeek(); return false">
+					<xsl:value-of select="php:function('lang', 'Previous week')"/>
+				</a>
+			</li>
 			<li id="cal_container"/>
-			<li><a href="#" onclick="YAHOO.booking.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
+			<li>
+				<a href="#" onclick="YAHOO.booking.nextWeek(); return false">
+					<xsl:value-of select="php:function('lang', 'Next week')"/>
+				</a>
+			</li>
 		</ul>
 
 		<div id="schedule_container"/>
 	</div>
 
-<script type="text/javascript">
-YAHOO.util.Event.addListener(window, "load", function() {
+	<script type="text/javascript">
+		YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
 	YAHOO.booking.newApplicationUrl = '<xsl:value-of select="resource/application_link"/>';
@@ -53,7 +73,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			handleHistoryNavigation(state);
     });
    	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
-});
-</script>
+		});
+	</script>
 
 </xsl:template>

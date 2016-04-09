@@ -5,7 +5,7 @@
 	class booking_async_task_update_reservation_state extends booking_async_task
 	{
 
-		public function run($options = array())
+		public function run( $options = array() )
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
@@ -17,20 +17,22 @@
 			);
 			$completed_so		 = CreateObject('booking.socompleted_reservation');
 
-			foreach($reservation_types as $reservation_type)
+			foreach ($reservation_types as $reservation_type)
 			{
 				$bo = CreateObject('booking.bo' . $reservation_type);
 
 				$expired = $bo->find_expired();
 
-				if(!is_array($expired) || !isset($expired['results']))
-				{ continue;}
+				if (!is_array($expired) || !isset($expired['results']))
+				{
+					continue;
+				}
 
 				$db->transaction_begin();
 
-				if(count($expired['results']) > 0)
+				if (count($expired['results']) > 0)
 				{
-					foreach($expired['results'] as $reservation)
+					foreach ($expired['results'] as $reservation)
 					{
 						$completed_so->create_from($reservation_type, $reservation);
 					}

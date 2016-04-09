@@ -85,7 +85,7 @@
 			$this->part_of_town_id = $this->bo->part_of_town_id;
 			$this->district_id = $this->bo->district_id;
 
-			if(!isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css))
+			if (!isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css))
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
@@ -102,7 +102,7 @@
 
 		function addressbook()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -110,7 +110,7 @@
 				$columns = phpgw::get_var('columns');
 				$order_field = '';
 
-				switch($columns[$order[0]['column']]['data'])
+				switch ($columns[$order[0]['column']]['data'])
 				{
 					case 'contact_id':
 						$order_field = 'person_id';
@@ -138,7 +138,7 @@
 				 * Sigurd: For some reason - this one starts on 1 - not 0 as it is supposed to.
 				 */
 				$results = array();
-				foreach($values as $entry)
+				foreach ($values as $entry)
 				{
 					$results[] = $entry;
 				}
@@ -158,7 +158,7 @@
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
 
-			if($default_category && !$second_display)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
@@ -167,7 +167,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			if($column)
+			if ($column)
 			{
 				$contact_id = $column;
 				$contact_name = $column . '_name';
@@ -213,7 +213,7 @@
 
 			$values_combo_box = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,
 				'globals' => true));
-			foreach($values_combo_box['cat_list'] as &$val)
+			foreach ($values_combo_box['cat_list'] as &$val)
 			{
 				$val['id'] = $val['cat_id'];
 			}
@@ -240,7 +240,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -262,7 +262,7 @@
 
 		function organisation()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -286,7 +286,7 @@
 				 * Sigurd: For some reason - this one starts on 1 - not 0 as it is supposed to.
 				 */
 				$results = array();
-				foreach($values as $entry)
+				foreach ($values as $entry)
 				{
 					$results[] = $entry;
 				}
@@ -306,7 +306,7 @@
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
 
-			if($default_category && !$second_display)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
@@ -315,7 +315,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			if($column)
+			if ($column)
 			{
 				$contact_id = $column;
 				$contact_name = $column . '_name';
@@ -361,7 +361,7 @@
 
 			$values_combo_box = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,
 				'globals' => true));
-			foreach($values_combo_box['cat_list'] as &$val)
+			foreach ($values_combo_box['cat_list'] as &$val)
 			{
 				$val['id'] = $val['cat_id'];
 			}
@@ -386,7 +386,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -410,13 +410,13 @@
 		{
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_vendor_category'];
 
-			if($default_category)
+			if ($default_category && !isset($_REQUEST['cat_id']))
 			{
 				$this->bo->cat_id = $default_category;
 				$this->cat_id = $default_category;
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -450,7 +450,7 @@
 
 			$column = phpgw::get_var('column');
 
-			if($column)
+			if ($column)
 			{
 				$contact_id = $column;
 				$org_name = $column . '_org_name';
@@ -466,7 +466,7 @@
 			$action .= 'parent.document.getElementsByName("' . $org_name . '")[0].value = "";' . "\r";
 			$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].value = aData["id"];' . "\r";
 			$action .= 'parent.document.getElementsByName("' . $org_name . '")[0].value = aData["org_name"];' . "\r";
-			if($contact_id == 'vendor_id')
+			if ($contact_id == 'vendor_id')
 			{
 				$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].setAttribute("vendor_id","' . $contact_id . '",0);' . "\r";
 				$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].removeAttribute("vendor_id");' . "\r";
@@ -497,7 +497,7 @@
 
 			$values_combo_box = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,
 				'globals' => true));
-			foreach($values_combo_box['cat_list'] as &$val)
+			foreach ($values_combo_box['cat_list'] as &$val)
 			{
 				$val['id'] = $val['cat_id'];
 			}
@@ -517,18 +517,21 @@
 				'name' => array('id', 'org_name', 'status'),
 				'formatter' => array('', '', ''),
 				'descr' => array(lang('ID'), lang('Name'), lang('status')),
-				'sortable' => array(true, true, false)
+				'sortable' => array(true, true, false),
+				'dir' => array(false, "asc", false)
+
 			);
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
 					'label' => $uicols['descr'][$k],
 					'sortable' => $uicols['sortable'][$k],
-					'hidden' => false
+					'hidden' => false,
+					'dir' => $uicols['dir'][$k] ? $uicols['dir'][$k] : '',
 				);
 
 				array_push($data['datatable']['field'], $params);
@@ -548,7 +551,7 @@
 
 			$cat_id = phpgw::get_var('cat_id', 'int', 'POST');
 
-			if(isset($_POST['cat_id']))
+			if (isset($_POST['cat_id']))
 			{
 				$parent = $cat_id;
 			}
@@ -557,7 +560,7 @@
 				$parent = phpgw::get_var('parent');
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -623,7 +626,7 @@
 				)
 			);
 
-			if($role != 'group')
+			if ($role != 'group')
 			{
 				$values_combo_box = execMethod('property.bogeneric.get_list', array('type' => 'b_account',
 					'selected' => $parent, 'filter' => array('active' => 1)));
@@ -648,7 +651,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -670,7 +673,7 @@
 
 		function street()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -736,7 +739,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -758,7 +761,7 @@
 
 		function tenant()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -829,7 +832,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -851,7 +854,7 @@
 
 		function ns3420()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -921,7 +924,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -958,10 +961,9 @@
 			$this->location_code = $boentity->location_code;
 			$this->criteria_id = $boentity->criteria_id;
 
-			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
-			if($default_district && !$second_display && !$this->district_id)
+			if ($default_district && ! isset($_REQUEST['district_id']))
 			{
 				$this->bo->district_id = $default_district;
 				$this->district_id = $default_district;
@@ -976,11 +978,11 @@
 			$input_name = array_merge($input_name, $input_name_entity);
 
 			$action = '';
-			for($i = 0; $i < count($input_name); $i++)
+			for ($i = 0; $i < count($input_name); $i++)
 			{
 				$action .= "parent.document.getElementsByName('{$input_name[$i]}')[0].value = ''; \r\n";
 			}
-			for($i = 0; $i < count($input_name); $i++)
+			for ($i = 0; $i < count($input_name); $i++)
 			{
 				$action .= "if (typeof aData['{$input_name[$i]}'] !== 'undefined'){ parent.document.getElementsByName('{$input_name[$i]}')[0].value = aData['{$input_name[$i]}']; } \r\n";
 			}
@@ -989,11 +991,11 @@
 			$values = $boentity->read(array('lookup' => true, 'dry_run' => true));
 			$uicols = $boentity->uicols;
 
-			if(count($uicols['name']) > 0)
+			if (count($uicols['name']) > 0)
 			{
-				for($m = 0; $m < count($input_name); $m++)
+				for ($m = 0; $m < count($input_name); $m++)
 				{
-					if(!array_search($input_name[$m], $uicols['name']))
+					if (!array_search($input_name[$m], $uicols['name']))
 					{
 						$uicols['name'][] = $input_name[$m];
 						$uicols['descr'][] = '';
@@ -1009,14 +1011,14 @@
 			}
 
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if(phpgw::get_var('head'))
+				if (phpgw::get_var('head'))
 				{
 					$entity_def = array();
 					$head = '<thead>';
 					$count_uicols_name = count($uicols['name']);
-					for($k = 0; $k < $count_uicols_name; $k++)
+					for ($k = 0; $k < $count_uicols_name; $k++)
 					{
 						$params = array(
 							'key' => $uicols['name'][$k],
@@ -1025,14 +1027,14 @@
 							'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 						);
 
-						if($uicols['name'][$k] == 'loc1' || $uicols['name'][$k] == 'num')
+						if ($uicols['name'][$k] == 'loc1' || $uicols['name'][$k] == 'num')
 						{
 							$params['sortable'] = true;
 						}
 
 						array_push($entity_def, $params);
 
-						if($uicols['input_type'][$k] != 'hidden')
+						if ($uicols['input_type'][$k] != 'hidden')
 						{
 							$head .= '<th>' . $uicols['descr'][$k] . '</th>';
 						}
@@ -1044,7 +1046,6 @@
 						'container' => 'datatable-container',
 						'requestUrl' => self::link(array(
 							'menuaction' => 'property.uilookup.entity',
-							'second_display' => $second_display,
 							'cat_id' => $this->cat_id,
 							'entity_id' => $this->entity_id,
 							'district_id' => $this->district_id,
@@ -1136,11 +1137,11 @@
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no criteria')));
 			$filters[2] = array('type' => 'filter',
 				'name' => 'criteria_id',
-				'text' => lang('criteria'),
+				'text' => lang('search criteria'),
 				'list' => $values_combo_box[2]
 			);
 
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -1148,7 +1149,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1157,7 +1158,7 @@
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if($uicols['name'][$k] == 'loc1' || $uicols['name'][$k] == 'num')
+				if ($uicols['name'][$k] == 'loc1' || $uicols['name'][$k] == 'num')
 				{
 					$params['sortable'] = true;
 				}
@@ -1165,12 +1166,12 @@
 				array_push($data['datatable']['field'], $params);
 			}
 
-			if($this->entity_id)
+			if ($this->entity_id)
 			{
 				$entity = $boadmin_entity->read_single($this->entity_id, false);
 				$appname = $entity['name'];
 			}
-			if($this->cat_id)
+			if ($this->cat_id)
 			{
 				$category = $boadmin_entity->read_single_category($this->entity_id, $this->cat_id);
 				$function_msg = lang('lookup') . ' ' . $category['name'];
@@ -1188,14 +1189,14 @@
 			$acl_location = phpgw::get_var('acl_location');
 			$acl_required = phpgw::get_var('acl_required', 'int');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
 				$draw = phpgw::get_var('draw', 'int');
 				$columns = phpgw::get_var('columns');
 
-				switch($columns[$order[0]['column']]['data'])
+				switch ($columns[$order[0]['column']]['data'])
 				{
 					case 'id':
 						$ordering = 'account_id';
@@ -1236,7 +1237,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			if($column)
+			if ($column)
 			{
 				$user_id = $column;
 				$user_name = $column . '_user_name';
@@ -1290,7 +1291,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1312,7 +1313,7 @@
 
 		function project_group()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -1380,7 +1381,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1402,7 +1403,7 @@
 
 		function ecodimb()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -1472,7 +1473,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1494,7 +1495,7 @@
 
 		function order_template()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -1563,7 +1564,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1585,7 +1586,7 @@
 
 		function response_template()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -1656,7 +1657,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1681,7 +1682,7 @@
 			$type = phpgw::get_var('type');
 			$column = phpgw::get_var('column');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
 				$order = phpgw::get_var('order');
@@ -1755,7 +1756,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],

@@ -45,16 +45,16 @@
 
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.sodocument');
 			}
 			return self::$so;
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'document_id';
 			}
@@ -70,7 +70,7 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 
 			$clauses = array('1=1');
@@ -78,12 +78,12 @@
 			$filter_clauses = array();
 
 			// Search for based on search type
-			if($search_for)
+			if ($search_for)
 			{
 				$search_for		 = $this->marshal($search_for, 'field');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "title":
 						$like_clauses[]	 = "controller_document.title $this->like $like_pattern";
@@ -97,28 +97,28 @@
 						break;
 				}
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "controller_document.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
 
-			if(isset($filters['procedure_id']))
+			if (isset($filters['procedure_id']))
 			{
 				$filter_clauses[] = "controller_document.procedure_id = {$this->marshal($filters['procedure_id'], 'int')}";
 			}
 
-			if(isset($filters['document_type']) && $filters['document_type'] != 'all')
+			if (isset($filters['document_type']) && $filters['document_type'] != 'all')
 			{
 				$filter_clauses[] = "controller_document.type_id = {$this->marshal($filters['document_type'], 'int')}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -129,7 +129,7 @@
 			$tables	 = "controller_document";
 			$joins	 = " {$this->left_join} controller_document_types ON (controller_document.type_id = controller_document_types.id)";
 
-			if($return_count)
+			if ($return_count)
 			{
 				$cols = 'COUNT(DISTINCT(controller_document.id)) AS count';
 			}
@@ -139,11 +139,11 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			if($sort_field == 'title')
+			if ($sort_field == 'title')
 			{
 				$sort_field = 'controller_document.title';
 			}
-			else if($sort_field == 'type')
+			else if ($sort_field == 'type')
 			{
 				$sort_field = 'controller_document_types.title';
 			}
@@ -153,11 +153,11 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function populate(int $document_id, &$document)
+		function populate( int $document_id, &$document )
 		{
 			$document_id = (int)$document_id;
 
-			if($document == null)
+			if ($document == null)
 			{
 				$document = new controller_document($document_id);
 				$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
@@ -169,7 +169,7 @@
 			return $document;
 		}
 
-		public function add(&$document)
+		public function add( &$document )
 		{
 			$cols = array(
 				'title',
@@ -199,7 +199,7 @@
 			return $document;
 		}
 
-		public function update($document)
+		public function update( $document )
 		{
 			$id = intval($document->get_id());
 
@@ -218,12 +218,12 @@
 
 		public function get_document_types()
 		{
-			if($this->document_types == null)
+			if ($this->document_types == null)
 			{
 				$sql	 = "SELECT id, title FROM controller_document_types";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$results = array();
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$location_id			 = $this->db->f('id');
 					$results[$location_id]	 = $this->db->f('title', true);
@@ -238,7 +238,7 @@
 			$sql	 = "SELECT id, title FROM controller_document_types";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$results = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = array
 					(
@@ -249,11 +249,11 @@
 			return $results;
 		}
 
-		private function get_document_path(string $document_type, $id)
+		private function get_document_path( string $document_type, $id )
 		{
 			$root_directory = self::$ROOT_FOR_DOCUMENTS;
 			$type_directory;
-			if($document_type == self::$PROCEDURE_DOCUMENTS)
+			if ($document_type == self::$PROCEDURE_DOCUMENTS)
 			{
 				$type_directory = self::$PROCEDURE_DOCUMENTS;
 			}
@@ -267,9 +267,9 @@
 
 			$path	 = "/{$root_directory}";
 			$dir	 = array('string' => $path, RELATIVE_NONE);
-			if(!$vfs->file_exists($dir))
+			if (!$vfs->file_exists($dir))
 			{
-				if(!$vfs->mkdir($dir))
+				if (!$vfs->mkdir($dir))
 				{
 					return false;
 				}
@@ -277,9 +277,9 @@
 
 			$path .= "/{$type_directory}";
 			$dir = array('string' => $path, RELATIVE_NONE);
-			if(!$vfs->file_exists($dir))
+			if (!$vfs->file_exists($dir))
 			{
-				if(!$vfs->mkdir($dir))
+				if (!$vfs->mkdir($dir))
 				{
 					return false;
 				}
@@ -287,9 +287,9 @@
 
 			$path .= "/{$id}";
 			$dir = array('string' => $path, RELATIVE_NONE);
-			if(!$vfs->file_exists($dir))
+			if (!$vfs->file_exists($dir))
 			{
-				if(!$vfs->mkdir($dir))
+				if (!$vfs->mkdir($dir))
 				{
 					return false;
 				}
@@ -298,12 +298,12 @@
 			return "/{$root_directory}/{$type_directory}/{$id}";
 		}
 
-		public function write_document_to_vfs(string $document_type, $temporary_name, $id, $name)
+		public function write_document_to_vfs( string $document_type, $temporary_name, $id, $name )
 		{
 
 			$path = $this->get_document_path($document_type, $id);
 
-			if(!$path)
+			if (!$path)
 			{
 				return false;
 			}
@@ -324,7 +324,7 @@
 			);
 		}
 
-		public function read_document_from_vfs(string $document_type, $id, $name)
+		public function read_document_from_vfs( string $document_type, $id, $name )
 		{
 			$path = $this->get_document_path($document_type, $id);
 
@@ -343,7 +343,7 @@
 			);
 		}
 
-		public function delete_document_from_vfs(string $document_type, $id, $name)
+		public function delete_document_from_vfs( string $document_type, $id, $name )
 		{
 			$path = $this->get_document_path($document_type, $id);
 
@@ -362,12 +362,12 @@
 			);
 		}
 
-		public function delete_document($id)
+		public function delete_document( $id )
 		{
 			$sql = "DELETE FROM controller_document WHERE id = {$id}";
 
 			$result = $this->db->query($sql, __LINE__, __FILE__);
-			if($result)
+			if ($result)
 			{
 				return true;
 			}

@@ -34,7 +34,7 @@
 		protected $reference;
 		public static $so;
 
-		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out, string $service_id, string $responsibility_id)
+		public function __construct( int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out, string $service_id, string $responsibility_id )
 		{
 			$this->id					 = (int)$id;
 			$this->billing_id			 = (int)$billing_id;
@@ -53,69 +53,85 @@
 			$this->composite_names		 = array();
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
 
 		public function get_id()
-		{ return $this->id;}
+		{
+			return $this->id;
+		}
 
-		public function set_billing_id($billing_id)
+		public function set_billing_id( $billing_id )
 		{
 			$this->billing_id = $billing_id;
 		}
 
 		public function get_billing_id()
-		{ return $this->billing_id;}
+		{
+			return $this->billing_id;
+		}
 
-		public function set_contract_id($contract_id)
+		public function set_contract_id( $contract_id )
 		{
 			$this->contract_id = $contract_id;
 		}
 
 		public function get_contract_id()
-		{ return $this->contract_id;}
+		{
+			return $this->contract_id;
+		}
 
-		public function set_timestamp_created($timestamp_created)
+		public function set_timestamp_created( $timestamp_created )
 		{
 			$this->timestamp_created = $timestamp_created;
 		}
 
 		public function get_timestamp_created()
-		{ return $this->timestamp_created;}
+		{
+			return $this->timestamp_created;
+		}
 
-		public function set_party_id($party_id)
+		public function set_party_id( $party_id )
 		{
 			$this->party_id = $party_id;
 		}
 
 		public function get_party_id()
-		{ return $this->party_id;}
+		{
+			return $this->party_id;
+		}
 
-		public function set_party(rental_party $party)
+		public function set_party( rental_party $party )
 		{
 			$this->party = $party;
 		}
 
 		public function get_party()
-		{ return $this->party;}
+		{
+			return $this->party;
+		}
 
-		public function set_timestamp_start($timestamp_start)
+		public function set_timestamp_start( $timestamp_start )
 		{
 			$this->timestamp_start = $timestamp_start;
 		}
 
 		public function get_timestamp_start()
-		{ return $this->timestamp_start;}
+		{
+			return $this->timestamp_start;
+		}
 
-		public function set_timestamp_end($timestamp_end)
+		public function set_timestamp_end( $timestamp_end )
 		{
 			$this->timestamp_end = $timestamp_end;
 		}
 
 		public function get_timestamp_end()
-		{ return $this->timestamp_end;}
+		{
+			return $this->timestamp_end;
+		}
 
 		/**
 		 * Adds a invoice price item to the invoice.
@@ -124,152 +140,182 @@
 		 * 
 		 * @param $invoice_price_item rental_invoice_price_item to add.
 		 */
-		public function add_invoice_price_item(rental_invoice_price_item &$invoice_price_item)
+		public function add_invoice_price_item( rental_invoice_price_item &$invoice_price_item )
 		{
-			if($invoice_price_items == null)
+			if ($invoice_price_items == null)
 			{
 				$invoice_price_items = array();
 			}
 			$invoice_price_items[] = $invoice_price_item;
 		}
 
-		public function set_total_sum(float $total_sum)
+		public function set_total_sum( float $total_sum )
 		{
 			$this->total_sum = (float)$total_sum;
 		}
 
 		public function get_total_sum()
-		{ return $this->total_sum;}
+		{
+			return $this->total_sum;
+		}
 
-		public function set_total_area(float $total_area)
+		public function set_total_area( float $total_area )
 		{
 			$this->$total_area = (float)$total_area;
 		}
 
 		public function get_total_area()
-		{ return $this->total_area;}
-
-		public function add_composite_name(string $name)
 		{
-			if(!in_array($name, $this->composite_names))
+			return $this->total_area;
+		}
+
+		public function add_composite_name( string $name )
+		{
+			if (!in_array($name, $this->composite_names))
 			{
 				$this->composite_names[] = $name;
 			}
 		}
 
-		public function set_header($header)
+		public function set_header( $header )
 		{
 			$this->header = $header;
 		}
 
 		public function get_header()
-		{ return $this->header;}
+		{
+			return $this->header;
+		}
 
-		public function set_account_in($account_in)
+		public function set_account_in( $account_in )
 		{
 			$this->account_in = $account_in;
 		}
 
 		public function get_account_in()
-		{ return $this->account_in;}
+		{
+			return $this->account_in;
+		}
 
-		public function set_account_out($account_out)
+		public function set_account_out( $account_out )
 		{
 			$this->account_out = $account_out;
 		}
 
 		public function get_account_out()
-		{ return $this->account_out;}
+		{
+			return $this->account_out;
+		}
 
-		public function set_service_id($service_id)
+		public function set_service_id( $service_id )
 		{
 			$this->service_id = $service_id;
 		}
 
 		public function get_service_id()
-		{ return $this->service_id;}
+		{
+			return $this->service_id;
+		}
 
-		public function set_responsibility_id($responsibility_id)
+		public function set_responsibility_id( $responsibility_id )
 		{
 			$this->responsibility_id = $responsibility_id;
 		}
 
 		public function get_responsibility_id()
-		{ return $this->responsibility_id;}
+		{
+			return $this->responsibility_id;
+		}
 
-		public function set_project_id($project_id)
+		public function set_project_id( $project_id )
 		{
 			$this->project_id = $project_id;
 		}
 
 		public function get_project_id()
-		{ return $this->project_id;}
+		{
+			return $this->project_id;
+		}
 
-		public function set_old_contract_id($old_contract_id)
+		public function set_old_contract_id( $old_contract_id )
 		{
 			$this->old_contract_id = $old_contract_id;
 		}
 
 		public function get_old_contract_id()
-		{ return $this->old_contract_id;}
+		{
+			return $this->old_contract_id;
+		}
 
 		public function get_composite_names()
 		{
 			$names = '';
-			foreach($this->composite_names as $name)
+			foreach ($this->composite_names as $name)
 			{
 				$names .= "{$name}<br/>";
 			}
 			return $names;
 		}
 
-		public function set_term_id($term_id)
+		public function set_term_id( $term_id )
 		{
 			$this->term_id = $term_id;
 		}
 
 		public function get_term_id()
-		{ return $this->term_id;}
+		{
+			return $this->term_id;
+		}
 
-		public function set_serial_number($serial_number)
+		public function set_serial_number( $serial_number )
 		{
 			$this->serial_number = $serial_number;
 		}
 
 		public function get_serial_number()
-		{ return $this->serial_number;}
+		{
+			return $this->serial_number;
+		}
 
-		public function set_term_label($term_label)
+		public function set_term_label( $term_label )
 		{
 			$this->term_label = $term_label;
 		}
 
 		public function get_term_label()
-		{ return $this->term_label;}
+		{
+			return $this->term_label;
+		}
 
-		public function set_month($month)
+		public function set_month( $month )
 		{
 			$this->month = $month;
 		}
 
 		public function get_month()
-		{ return $this->month;}
+		{
+			return $this->month;
+		}
 
-		public function set_billing_title($billing_title)
+		public function set_billing_title( $billing_title )
 		{
 			$this->billing_title = $billing_title;
 		}
 
 		public function get_reference()
-		{ return $this->reference;}
+		{
+			return $this->reference;
+		}
 
-		public function set_reference($reference)
+		public function set_reference( $reference )
 		{
 			$this->reference = $reference;
 		}
 
 		public function get_billing_title()
-		{ return $this->billing_title;}
+		{
+			return $this->billing_title;
+		}
 
 		/**
 		 * Create invoice
@@ -283,23 +329,23 @@
 		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bil one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0)
+		public static function create_invoice( int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0 )
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 
 			// If the invoice period should be overriden with the biling start date
-			if($override)
+			if ($override)
 			{
 				$timestamp_invoice_start = $contract->get_billing_start_date();
 			}
 
 			// If no account out is specified: check if the contract type defines any data to be used in this field (AGRESSO specific logic)
 			$account_out = $contract->get_account_out();
-			if(!isset($account_out) || $account_out == '')
+			if (!isset($account_out) || $account_out == '')
 			{
 				//If no account out - check the contract type for default
 				$account_tmp = rental_socontract::get_instance()->get_contract_type_account($contract->get_contract_type_id());
-				if(isset($account_tmp) && $account_tmp != '')
+				if (isset($account_tmp) && $account_tmp != '')
 				{
 					$account_out = $account_tmp;
 				}
@@ -331,13 +377,13 @@
 			$invoice->set_project_id($contract->get_project_id());
 			$invoice->set_old_contract_id($contract->get_old_contract_id());
 
-			if(!$dry_run)
+			if (!$dry_run)
 			{
 				rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			}
 
 			// Retrieve the contract price items: only one-time or all
-			if($bill_only_one_time)
+			if ($bill_only_one_time)
 			{
 				$filters2 = array('contract_id'			 => $contract->get_id(),
 					'contract_ids_one_time'	 => true,
@@ -358,19 +404,19 @@
 			$total_sum = 0; // Holding the total price of the invoice
 
 			$contract_dates = $contract->get_contract_date();
-			if(isset($contract_dates))
+			if (isset($contract_dates))
 			{
 				$contract_start	 = $contract->get_contract_date()->get_start_date();
 				$contract_end	 = $contract->get_contract_date()->get_end_date();
 			}
 
 			// Run through the contract price items
-			foreach($contract_price_items as $contract_price_item)
+			foreach ($contract_price_items as $contract_price_item)
 			{
 				// ---- Period calculation ---
 				// Determine start date for price item
 				$contract_price_item_start = $contract_price_item->get_date_start();
-				if($contract_price_item_start == null || $contract_price_item_start == '') // Date not set
+				if ($contract_price_item_start == null || $contract_price_item_start == '') // Date not set
 				{
 					// We just use the invoice date for our calculations
 					$contract_price_item_start = $timestamp_invoice_start;
@@ -378,24 +424,24 @@
 
 				// Determine end date for price item
 				$contract_price_item_end = $contract_price_item->get_date_end();
-				if($contract_price_item_end == null || $contract_price_item_end == '') // Date not set
+				if ($contract_price_item_end == null || $contract_price_item_end == '') // Date not set
 				{
 					// We just use the invoice date for our calculations
 					$contract_price_item_end = $timestamp_invoice_end;
 				}
 
 				// Sanity check - end date should never be before start date
-				if($contract_price_item_end < $contract_price_item_start)
+				if ($contract_price_item_end < $contract_price_item_start)
 				{
 					continue; // We don't add this price item - continue to next
 				}
 
 				// Checking the start date against the invoice dates
-				if($contract_price_item_start < $timestamp_invoice_start) // Start of price item before invoice start
+				if ($contract_price_item_start < $timestamp_invoice_start) // Start of price item before invoice start
 				{
 					$invoice_price_item_start = $timestamp_invoice_start; // We use the invoice start
 				}
-				else if($contract_price_item_start > $timestamp_invoice_end) // Start of price item after this invoice ends
+				else if ($contract_price_item_start > $timestamp_invoice_end) // Start of price item after this invoice ends
 				{
 					continue; // We don't add this price item - continue to next
 				}
@@ -405,11 +451,11 @@
 				}
 
 				// Checking the end date against invoice dates
-				if($contract_price_item_end < $timestamp_invoice_start) // End of price item before this invoice starts
+				if ($contract_price_item_end < $timestamp_invoice_start) // End of price item before this invoice starts
 				{
 					continue; // We don't add this price item - continue to next
 				}
-				else if($contract_price_item_end < $timestamp_invoice_end) // End of price item before invoice end
+				else if ($contract_price_item_end < $timestamp_invoice_end) // End of price item before invoice end
 				{
 					$invoice_price_item_end = $contract_price_item_end; // We use the price item end
 				}
@@ -419,27 +465,27 @@
 				}
 
 				// Checking the contract dates against the temporary price item dates
-				if(isset($contract_start) && !$contract_price_item->is_one_time())
+				if (isset($contract_start) && !$contract_price_item->is_one_time())
 				{
-					if($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
+					if ($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
 					{
 						continue; //No price items for this contract will be billed
 					}
 
-					if($contract_start > $invoice_price_item_start) // The contract start is after the start of the price item
+					if ($contract_start > $invoice_price_item_start) // The contract start is after the start of the price item
 					{
 						$invoice_price_item_start = $contract_start;
 					}
 				}
 
-				if(isset($contract_end) && !$contract_price_item->is_one_time())
+				if (isset($contract_end) && !$contract_price_item->is_one_time())
 				{
-					if($contract_end < $timestamp_invoice_start) // The end of the contract is before the billing period (should never happen)
+					if ($contract_end < $timestamp_invoice_start) // The end of the contract is before the billing period (should never happen)
 					{
 						continue; //No price items for this contract will be billed
 					}
 
-					if($contract_end < $invoice_price_item_end) // The contract start is after the start of the price item
+					if ($contract_end < $invoice_price_item_end) // The contract start is after the start of the price item
 					{
 						$invoice_price_item_end = $contract_end;
 					}
@@ -462,22 +508,22 @@
 				);
 
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...
-				if($contract_price_item->is_one_time())
+				if ($contract_price_item->is_one_time())
 				{
-					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end)
+					if ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end)
 					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
 						// ... and set the contract price item as billed
 						$contract_price_item->set_is_billed(true);
-						if(!$dry_run)
+						if (!$dry_run)
 						{
 							rental_socontract_price_item::get_instance()->store($contract_price_item);
 						}
 					}
 				}
 
-				if(!$dry_run)
+				if (!$dry_run)
 				{
 					// Store the invoice price item
 					rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
@@ -492,7 +538,7 @@
 			// Set the total sum of the invoice rounded to the specified number of decimals
 			$invoice->set_total_sum(round($total_sum, $decimals));
 
-			if(!$dry_run)
+			if (!$dry_run)
 			{
 				// ... and store the invoice
 				rental_soinvoice::get_instance()->store($invoice);
@@ -503,7 +549,7 @@
 		public function serialize()
 		{
 			$party_name = '';
-			if($this->get_party() != null)
+			if ($this->get_party() != null)
 			{
 				$serialized_party	 = $this->get_party()->serialize();
 				$party_name			 = $serialized_party['name'];

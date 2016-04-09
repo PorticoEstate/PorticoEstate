@@ -41,7 +41,6 @@
 			$acl_delete,
 			$acl_manage,
 			$receipt = array();
-
 		public
 			$public_functions = array
 			(
@@ -73,7 +72,7 @@
 
 		public function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -88,7 +87,7 @@
 
 		public function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -110,23 +109,23 @@
 		 *
 		 * @return void
 		 */
-		public function edit($cat_id = 0, $mode = 'edit')
+		public function edit( $cat_id = 0, $mode = 'edit' )
 		{
-			if(!$cat_id)
+			if (!$cat_id)
 			{
 				$cat_id = phpgw::get_var('cat_id', 'int');
 			}
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'manual.uidocuments.view',
 					'cat_id' => $cat_id));
 			}
 
-			if($mode == 'view')
+			if ($mode == 'view')
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "manual::view";
-				if(!$this->acl_read)
+				if (!$this->acl_read)
 				{
 					$this->bocommon->no_access();
 					return;
@@ -134,7 +133,7 @@
 			}
 			else
 			{
-				if(!$this->acl_add && !$this->acl_edit)
+				if (!$this->acl_add && !$this->acl_edit)
 				{
 					$this->bocommon->no_access();
 					return;
@@ -150,7 +149,7 @@
 				(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false),
 			);
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$file_def[1] = array('key' => 'delete_file', 'label' => lang('Delete file'),
 					'sortable' => false, 'className' => 'center');
@@ -185,7 +184,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('manual') . '::' . lang('documents');
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
@@ -212,7 +211,7 @@
 		{
 			$cat_id = phpgw::get_var('cat_id', 'int');
 
-			if(!$cat_id)
+			if (!$cat_id)
 			{
 				$this->edit();
 			}
@@ -222,9 +221,9 @@
 				{
 					$this->_handle_files($cat_id);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit($values);
@@ -249,19 +248,19 @@
 		{
 			$cat_id = phpgw::get_var('cat_id', 'int', 'REQUEST');
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				return;
 			}
 
 			$cat_filter = array();
-			if($cat_id)
+			if ($cat_id)
 			{
 				$cats				 = CreateObject('phpgwapi.categories', -1, 'manual', $this->acl_location);
 				$cats->supress_info	 = true;
 				$cat_list_files		 = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter[]		 = $cat_id;
-				foreach($cat_list_files as $_category)
+				foreach ($cat_list_files as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
@@ -279,13 +278,13 @@
 			$vfs				 = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl	 = 1;
 
-			foreach($cat_filter as $_cat_id)
+			foreach ($cat_filter as $_cat_id)
 			{
 				$_files = $vfs->ls(array(
 					'string'	 => "/manual/{$_cat_id}",
 					'relatives'	 => array(RELATIVE_NONE)));
 
-				foreach($_files as &$_file)
+				foreach ($_files as &$_file)
 				{
 					$_file['path'] = "{$_cat_id}/{$_file['name']}";
 				}
@@ -303,7 +302,7 @@
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
-			if($allrows)
+			if ($allrows)
 			{
 				$out = $files;
 			}
@@ -322,7 +321,7 @@
 			$lang_delete = lang('click to delete file');
 
 			$values = array();
-			foreach($out as $_entry)
+			foreach ($out as $_entry)
 			{
 				$values[] = array
 					(
@@ -348,7 +347,7 @@
 		 */
 		function view_file()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				return lang('no access');
 			}
@@ -367,31 +366,31 @@
 		 *
 		 * @return void
 		 */
-		private function _handle_files($cat_id)
+		private function _handle_files( $cat_id )
 		{
 			$cat_id = (int)$cat_id;
-			if(!$cat_id)
+			if (!$cat_id)
 			{
 				throw new Exception('uidocuments::_handle_files() - missing cat_id');
 			}
 			$bofiles = CreateObject('property.bofiles', '/manual');
 
-			if(isset($_POST['file_action']) && is_array($_POST['file_action']))
+			if (isset($_POST['file_action']) && is_array($_POST['file_action']))
 			{
 				$bofiles->delete_file("/{$cat_id}/", array('file_action' => $_POST['file_action']));
 			}
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
-			if($file_name)
+			if ($file_name)
 			{
-				if(!is_file($_FILES['file']['tmp_name']))
+				if (!is_file($_FILES['file']['tmp_name']))
 				{
 					phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
 					return;
 				}
 
 				$to_file = "{$bofiles->fakebase}/{$cat_id}/{$file_name}";
-				if($bofiles->vfs->file_exists(array(
+				if ($bofiles->vfs->file_exists(array(
 					'string'	 => $to_file,
 					'relatives'	 => Array(RELATIVE_NONE)
 				)))
@@ -403,7 +402,7 @@
 					//			$bofiles->create_document_dir($cat_id);
 					$bofiles->vfs->override_acl = 1;
 
-					if(!$bofiles->vfs->cp(array(
+					if (!$bofiles->vfs->cp(array(
 						'from'		 => $_FILES['file']['tmp_name'],
 						'to'		 => $to_file,
 						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -415,7 +414,7 @@
 			}
 		}
 
-		private function _get_categories($selected = 0)
+		private function _get_categories( $selected = 0 )
 		{
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'manual', $this->acl_location);
 			$cats->supress_info	 = true;
@@ -424,7 +423,7 @@
 			$default_value		 = array('cat_id' => '', 'name' => lang('no category'));
 			array_unshift($categories['cat_list'], $default_value);
 
-			foreach($categories['cat_list'] as & $_category)
+			foreach ($categories['cat_list'] as & $_category)
 			{
 				$_category['id'] = $_category['cat_id'];
 			}

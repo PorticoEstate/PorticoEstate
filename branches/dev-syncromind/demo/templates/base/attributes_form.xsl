@@ -1,10 +1,10 @@
 <!-- $Id$ -->
-	<xsl:template name="attributes_form">
+<xsl:template name="attributes_form">
 		<xsl:apply-templates select="attributes_values"/>
-	</xsl:template>
+</xsl:template>
 
 
-	<xsl:template name="attributes_values" xmlns:php="http://php.net/xsl">
+<xsl:template name="attributes_values" xmlns:php="http://php.net/xsl">
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
 				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
@@ -12,17 +12,23 @@
 				</table>
 			</div>
 		</xsl:for-each>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="attributes" xmlns:php="http://php.net/xsl">
-			<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
+<xsl:template match="attributes" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="statustext">
+		<xsl:value-of select="statustext"/>
+	</xsl:variable>
 			<tr>
 				<td align="left" width="19%" valign="top" title="{$statustext}">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
-							<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
+					<xsl:variable name="help_url">
+						<xsl:value-of select="help_url"/>
+					</xsl:variable>
 							<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
-								<xsl:text>[</xsl:text><xsl:value-of select="input_text"/><xsl:text>]</xsl:text>
+						<xsl:text>[</xsl:text>
+						<xsl:value-of select="input_text"/>
+						<xsl:text>]</xsl:text>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
@@ -74,13 +80,19 @@
 											<xsl:value-of select="php:function('lang', 'select')" />
 										</option>
 										<xsl:for-each select="choice">
-											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+									<xsl:variable name="id">
+										<xsl:value-of select="id"/>
+									</xsl:variable>
 											<xsl:choose>
 												<xsl:when test="checked='checked'">
-													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+											<option value="{$id}" selected="selected">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
 												</xsl:when>
 												<xsl:otherwise>
-													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+											<option value="{$id}">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
 												</xsl:otherwise>
 											</xsl:choose>
 										</xsl:for-each>
@@ -90,9 +102,20 @@
 									<table>
 										<tr>
 											<td>
-												<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
-												<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
-												<xsl:variable name="clear_function"><xsl:text>clear_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+										<xsl:variable name="contact_name">
+											<xsl:value-of select="name"/>
+											<xsl:text>_name</xsl:text>
+										</xsl:variable>
+										<xsl:variable name="lookup_function">
+											<xsl:text>lookup_</xsl:text>
+											<xsl:value-of select="name"/>
+											<xsl:text>();</xsl:text>
+										</xsl:variable>
+										<xsl:variable name="clear_function">
+											<xsl:text>clear_</xsl:text>
+											<xsl:value-of select="name"/>
+											<xsl:text>();</xsl:text>
+										</xsl:variable>
 												<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
 													<xsl:choose>
 														<xsl:when test="disabled!=''">
@@ -134,7 +157,9 @@
 											<xsl:when test="contact_email!=''">
 												<tr>
 													<td>
-														<a href="mailto:{contact_email}"><xsl:value-of select="contact_email"/></a>
+												<a href="mailto:{contact_email}">
+													<xsl:value-of select="contact_email"/>
+												</a>
 													</td>
 												</tr>
 											</xsl:when>
@@ -145,8 +170,15 @@
 									<table>
 										<tr>
 											<td>
-												<xsl:variable name="org_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
-												<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+										<xsl:variable name="org_name">
+											<xsl:value-of select="name"/>
+											<xsl:text>_name</xsl:text>
+										</xsl:variable>
+										<xsl:variable name="lookup_function">
+											<xsl:text>lookup_</xsl:text>
+											<xsl:value-of select="name"/>
+											<xsl:text>();</xsl:text>
+										</xsl:variable>
 												<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
 													<xsl:choose>
 														<xsl:when test="disabled!=''">
@@ -180,7 +212,9 @@
 											<xsl:when test="org_email!=''">
 												<tr>
 													<td>
-														<a href="mailto:{org_email}"><xsl:value-of select="org_email"/></a>
+												<a href="mailto:{org_email}">
+													<xsl:value-of select="org_email"/>
+												</a>
 													</td>
 												</tr>
 											</xsl:when>
@@ -188,8 +222,15 @@
 									</table>
 								</xsl:when>
 								<xsl:when test="datatype='VENDOR'">
-									<xsl:variable name="vendor_name"><xsl:value-of select="name"/><xsl:text>_org_name</xsl:text></xsl:variable>
-									<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+							<xsl:variable name="vendor_name">
+								<xsl:value-of select="name"/>
+								<xsl:text>_org_name</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="lookup_function">
+								<xsl:text>lookup_</xsl:text>
+								<xsl:value-of select="name"/>
+								<xsl:text>();</xsl:text>
+							</xsl:variable>
 									<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
@@ -210,8 +251,15 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="datatype='user'">
-									<xsl:variable name="user_name"><xsl:value-of select="name"/><xsl:text>_user_name</xsl:text></xsl:variable>
-									<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+							<xsl:variable name="user_name">
+								<xsl:value-of select="name"/>
+								<xsl:text>_user_name</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="lookup_function">
+								<xsl:text>lookup_</xsl:text>
+								<xsl:value-of select="name"/>
+								<xsl:text>();</xsl:text>
+							</xsl:variable>
 									<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
@@ -311,7 +359,10 @@
 									</input>
 									<xsl:choose>
 										<xsl:when test="value!=''">
-											<br/><a href="{value}" target="_blank"><xsl:value-of select="value"/></a>
+									<br/>
+									<a href="{value}" target="_blank">
+										<xsl:value-of select="value"/>
+									</a>
 										</xsl:when>
 									</xsl:choose>
 								</xsl:when>
@@ -321,8 +372,15 @@
 											<xsl:value-of select="warning"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:variable name="event_descr"><xsl:value-of select="name"/><xsl:text>_descr</xsl:text></xsl:variable>
-											<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+									<xsl:variable name="event_descr">
+										<xsl:value-of select="name"/>
+										<xsl:text>_descr</xsl:text>
+									</xsl:variable>
+									<xsl:variable name="lookup_function">
+										<xsl:text>lookup_</xsl:text>
+										<xsl:value-of select="name"/>
+										<xsl:text>();</xsl:text>
+									</xsl:variable>
 											<table>
 												<tr>
 													<td>
@@ -376,22 +434,31 @@
 								<xsl:when test="history=1">
 									<input type="text" name="values_attribute[{counter}][date]" value="" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10" >
 									</input>
-									<xsl:variable name="link_history"><xsl:value-of select="link_history"/></xsl:variable>
-									<xsl:variable name="lang_history_help"><xsl:value-of select="//lang_history_help"/></xsl:variable>
-									<xsl:variable name="lang_history"><xsl:value-of select="//lang_history"/></xsl:variable>
+							<xsl:variable name="link_history">
+								<xsl:value-of select="link_history"/>
+							</xsl:variable>
+							<xsl:variable name="lang_history_help">
+								<xsl:value-of select="//lang_history_help"/>
+							</xsl:variable>
+							<xsl:variable name="lang_history">
+								<xsl:value-of select="//lang_history"/>
+							</xsl:variable>
 									<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')"
 										title="{$lang_history_help}">
-										<xsl:value-of select="//lang_history"/></a>
+								<xsl:value-of select="//lang_history"/>
+							</a>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
 				</td>
 			</tr>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template name="choice">
-		<xsl:variable name="counter"><xsl:value-of select="counter"/></xsl:variable>
+<xsl:template name="choice">
+	<xsl:variable name="counter">
+		<xsl:value-of select="counter"/>
+	</xsl:variable>
 		<table cellpadding="2" cellspacing="2" width="50%" align="left">
 			<xsl:for-each select="choice" >
 				<tr>
@@ -425,4 +492,4 @@
 				</tr>
 			</xsl:for-each>
 		</table>
-	</xsl:template>
+</xsl:template>

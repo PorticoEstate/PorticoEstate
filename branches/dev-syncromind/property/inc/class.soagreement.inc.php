@@ -54,7 +54,7 @@
 			$this->db->query("SELECT vendor_id,org_name FROM $table $this->join fm_vendor on fm_agreement.vendor_id=fm_vendor.id GROUP BY org_name,vendor_id ");
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$vendor[$i]['id'] = $this->db->f('vendor_id');
 				$vendor[$i]['name'] = stripslashes($this->db->f('org_name'));
@@ -63,7 +63,7 @@
 			return $vendor;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 //_debug_array($data);die();
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
@@ -152,9 +152,9 @@
 			$uicols['statustext'][] = lang('status');
 			$uicols['datatype'][] = 'V';
 
-			if($order)
+			if ($order)
 			{
-				switch($order)
+				switch ($order)
 				{
 					case 'id':
 					case 'status':
@@ -178,14 +178,14 @@
 
 			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['agreement_columns' . !!$agreement_id] : '';
 			$user_column_filter = '';
-			if(isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 			{
 				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $user_columns) . '))';
 			}
 
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ");
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = $this->db->f('column_name');
@@ -227,39 +227,39 @@
 			  }
 			 */
 
-			if($agreement_id)
+			if ($agreement_id)
 			{
 				$filtermethod .= " $where $entity_table.agreement_id=$agreement_id";
 				$filtermethod .= " AND current_index = 1";
 				$where = 'AND';
 			}
 
-			if($cat_id)
+			if ($cat_id)
 			{
 				$filtermethod .= " $where $entity_table.category='$cat_id' ";
 				$where = 'AND';
 			}
 
-			if($vendor_id)
+			if ($vendor_id)
 			{
 				$filtermethod .= " $where $entity_table.vendor_id='$vendor_id' ";
 				$where = 'AND';
 			}
 
-			if($member_id > 0)
+			if ($member_id > 0)
 			{
 				$filtermethod .= " $where fm_vendor.member_of $this->like '%,$member_id,%' ";
 				$where = 'AND';
 			}
 
-			if($status_id)
+			if ($status_id)
 			{
 				$filtermethod .= " {$where} {$entity_table}.status='{$status_id}' ";
 				$where = 'AND';
 			}
 
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -268,9 +268,9 @@
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					if($this->db->f('datatype') == 'V' || $this->db->f('datatype') == 'email' || $this->db->f('datatype') == 'CH')
+					if ($this->db->f('datatype') == 'V' || $this->db->f('datatype') == 'email' || $this->db->f('datatype') == 'CH')
 					{
 						$querymethod[] = "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
 					}
@@ -280,7 +280,7 @@
 					}
 				}
 
-				if(isset($querymethod) AND is_array($querymethod))
+				if (isset($querymethod) AND is_array($querymethod))
 				{
 					$querymethod = " $where (" . implode(' OR ', $querymethod) . ')';
 					$where = 'AND';
@@ -291,7 +291,7 @@
 
 			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -307,52 +307,52 @@
 			$contacts = CreateObject('phpgwapi.contacts');
 			$agreement_list = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				for($i = 0; $i < $n; $i++)
+				for ($i = 0; $i < $n; $i++)
 				{
 					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
 					$agreement_list[$j]['grants'] = (int)isset($grants[$this->db->f('user_id')]) ? $grants[$this->db->f('user_id')] : '';
 				}
 
-				if(isset($cols_return_extra) && is_array($cols_return_extra))
+				if (isset($cols_return_extra) && is_array($cols_return_extra))
 				{
-					for($i = 0; $i < count($cols_return_extra); $i++)
+					for ($i = 0; $i < count($cols_return_extra); $i++)
 					{
 						$value = '';
 						$value = $this->db->f($cols_return_extra[$i]['name']);
 
-						if(($cols_return_extra[$i]['datatype'] == 'R' || $cols_return_extra[$i]['datatype'] == 'LB') && $value)
+						if (($cols_return_extra[$i]['datatype'] == 'R' || $cols_return_extra[$i]['datatype'] == 'LB') && $value)
 						{
 							$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $cols_return_extra[$i]['attrib_id'] . "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'AB' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'AB' && $value)
 						{
 							$contact_data = $contacts->read_single_entry($value, array('n_given' => 'n_given',
 								'n_family' => 'n_family', 'email' => 'email'));
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'VENDOR' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'VENDOR' && $value)
 						{
 							$sql = "SELECT org_name FROM fm_vendor where id=$value";
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'CH' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'CH' && $value)
 						{
 //							$ch= unserialize($value);
 							$ch = explode(',', trim($data['value'], ','));
-							if(isset($ch) AND is_array($ch))
+							if (isset($ch) AND is_array($ch))
 							{
-								for($k = 0; $k < count($ch); $k++)
+								for ($k = 0; $k < count($ch); $k++)
 								{
 									$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $cols_return_extra[$i]['attrib_id'] . "  AND id=" . $ch[$k];
 									$this->db2->query($sql);
-									while($this->db2->next_record())
+									while ($this->db2->next_record())
 									{
 										$ch_value[] = $this->db2->f('value');
 									}
@@ -361,15 +361,15 @@
 								unset($ch_value);
 							}
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'D' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'D' && $value)
 						{
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($value));
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'timestamp' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'timestamp' && $value)
 						{
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $value);
 						}
-						else if($cols_return_extra[$i]['datatype'] == 'link' && $value)
+						else if ($cols_return_extra[$i]['datatype'] == 'link' && $value)
 						{
 							$agreement_list[$j][$cols_return_extra[$i]['name']] = phpgw::safe_redirect($value);
 						}
@@ -385,7 +385,7 @@
 			return $agreement_list;
 		}
 
-		function read_details($data)
+		function read_details( $data )
 		{
 			//print_r($data);
 //    [start] => 0
@@ -463,9 +463,9 @@
 			$uicols['descr'][] = lang('Date');
 			$uicols['input_type'][] = 'D';
 
-			if($order)
+			if ($order)
 			{
-				switch($order)
+				switch ($order)
 				{
 					case 'index_date':
 					case 'activity_id':
@@ -497,7 +497,7 @@
 			$where = 'WHERE';
 			$filtermethod = '';
 
-			if($agreement_id)
+			if ($agreement_id)
 			{
 				$filtermethod .= " $where $entity_table.agreement_id=$agreement_id";
 				$filtermethod .= " AND current_index = 1";
@@ -509,7 +509,7 @@
 
 			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -520,7 +520,7 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$details[] = array
 					(
@@ -543,9 +543,9 @@
 			return $details;
 		}
 
-		function read_prizing($data)
+		function read_prizing( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$agreement_id = (isset($data['agreement_id']) ? $data['agreement_id'] : 0);
 				$activity_id = (isset($data['activity_id']) ? $data['activity_id'] : 0);
@@ -614,7 +614,7 @@
 			$where = 'WHERE';
 
 
-			if($agreement_id)
+			if ($agreement_id)
 			{
 				$filtermethod .= " $where $entity_table.agreement_id=$agreement_id AND activity_id=$activity_id";
 				$where = 'AND';
@@ -626,7 +626,7 @@
 
 			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -638,9 +638,9 @@
 			$j = 0;
 			$n = count($cols_return);
 			//_debug_array($cols_return);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				for($i = 0; $i < $n; $i++)
+				for ($i = 0; $i < $n; $i++)
 				{
 					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
 					$agreement_list[$j]['agreement_id'] = $agreement_id;
@@ -651,13 +651,13 @@
 			return $agreement_list;
 		}
 
-		function read_single($agreement_id, $values = array())
+		function read_single( $agreement_id, $values = array() )
 		{
 			$table = 'fm_agreement';
 
 			$this->db->query("SELECT $table.*,fm_vendor.member_of FROM $table $this->join fm_vendor ON $table.vendor_id = fm_vendor.id where $table.id='$agreement_id'");
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$values['id'] = (int)$this->db->f('id');
 				$values['entry_date'] = $this->db->f('entry_date');
@@ -674,9 +674,9 @@
 				$values['status'] = $this->db->f('status');
 				$values['member_of'] = explode(',', $this->db->f('member_of'));
 
-				if(isset($values['attributes']) && is_array($values['attributes']))
+				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
-					foreach($values['attributes'] as &$attr)
+					foreach ($values['attributes'] as &$attr)
 					{
 						$attr['value'] = $this->db->f($attr['column_name']);
 					}
@@ -685,7 +685,7 @@
 			return $values;
 		}
 
-		function read_single_item($data, $values = array())
+		function read_single_item( $data, $values = array() )
 		{
 			$table = 'fm_activities';
 
@@ -694,7 +694,7 @@
 
 			$this->db->query("SELECT * from $table $this->join fm_activity_price_index on $table.id = fm_activity_price_index.activity_id where $table.id=$id AND agreement_id=$agreement_id and index_count = 1");
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$values['agreement_id'] = (int)$this->db->f('agreement_id');
 				$values['id'] = (int)$this->db->f('id');
@@ -704,9 +704,9 @@
 				$values['w_cost'] = $this->db->f('w_cost');
 				$values['total_cost'] = $this->db->f('total_cost');
 
-				if(isset($values['attributes']) && is_array($values['attributes']))
+				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
-					foreach($values['attributes'] as &$attr)
+					foreach ($values['attributes'] as &$attr)
 					{
 						$attr['value'] = $this->db->f($attr['column_name']);
 					}
@@ -715,14 +715,14 @@
 			return $values;
 		}
 
-		function add($agreement, $values_attribute = '')
+		function add( $agreement, $values_attribute = '' )
 		{
 			//_debug_array($agreement);
 			$table = 'fm_agreement';
 			$agreement['name'] = $this->db->db_addslashes($agreement['name']);
 			$agreement['descr'] = $this->db->db_addslashes($agreement['descr']);
 
-			if($agreement['member_of'])
+			if ($agreement['member_of'])
 			{
 				$agreement['member_of'] = ',' . implode(',', $agreement['member_of']) . ',';
 			}
@@ -741,11 +741,11 @@
 			$vals[] = $agreement['vendor_id'];
 			$vals[] = $this->account;
 
-			if(isset($agreement['extra']) && is_array($agreement['extra']))
+			if (isset($agreement['extra']) && is_array($agreement['extra']))
 			{
-				foreach($agreement['extra'] as $input_name => $value)
+				foreach ($agreement['extra'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
+					if (isset($value) && $value)
 					{
 						$cols[] = $input_name;
 						$vals[] = $value;
@@ -753,11 +753,11 @@
 				}
 			}
 
-			if(isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) AND is_array($values_attribute))
 			{
-				foreach($values_attribute as $entry)
+				foreach ($values_attribute as $entry)
 				{
-					if($entry['value'])
+					if ($entry['value'])
 					{
 						$cols[] = $entry['name'];
 						$vals[] = $entry['value'];
@@ -770,7 +770,7 @@
 			$cols[] = 'status';
 			$vals[] = $agreement['status'];
 
-			if($cols)
+			if ($cols)
 			{
 				$cols = "," . implode(",", $cols);
 				$vals = $this->db->validate_insert($vals);
@@ -787,7 +787,7 @@
 			return $receipt;
 		}
 
-		function add_item($values, $values_attribute = '')
+		function add_item( $values, $values_attribute = '' )
 		{
 			//_debug_array($values);
 
@@ -821,7 +821,7 @@
 			return $receipt;
 		}
 
-		function edit($values, $values_attribute = '')
+		function edit( $values, $values_attribute = '' )
 		{
 			//_debug_array($values);
 			//_debug_array($values_attribute);
@@ -829,26 +829,26 @@
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
 
-			if($values['member_of'])
+			if ($values['member_of'])
 			{
 				$values['member_of'] = ',' . implode(',', $values['member_of']) . ',';
 			}
 
-			if(isset($values['extra']) && is_array($values['extra']))
+			if (isset($values['extra']) && is_array($values['extra']))
 			{
-				foreach($values['extra'] as $column => $value)
+				foreach ($values['extra'] as $column => $value)
 				{
 					$value_set[$column] = $value;
 				}
 			}
 
-			if(isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) AND is_array($values_attribute))
 			{
-				foreach($values_attribute as $entry)
+				foreach ($values_attribute as $entry)
 				{
-					if($entry['datatype'] != 'AB' && $entry['datatype'] != 'VENDOR')
+					if ($entry['datatype'] != 'AB' && $entry['datatype'] != 'VENDOR')
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						if ($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
 							$value_set[$entry['name']] = $this->db->db_addslashes($entry['value']);
 						}
@@ -866,7 +866,7 @@
 			$value_set['status'] = $values['status'];
 			$value_set['vendor_id'] = $values['vendor_id'];
 
-			if($value_set)
+			if ($value_set)
 			{
 				$value_set = ',' . $this->db->validate_update($value_set);
 			}
@@ -881,7 +881,7 @@
 			return $receipt;
 		}
 
-		function edit_item($values)
+		function edit_item( $values )
 		{
 			//_debug_array($values);
 
@@ -889,7 +889,7 @@
 			$value_set['w_cost'] = $values['w_cost'];
 			$value_set['total_cost'] = $values['total_cost'];
 
-			if($value_set)
+			if ($value_set)
 			{
 				$value_set = ',' . $this->db->validate_update($value_set);
 			}
@@ -904,16 +904,16 @@
 			return $receipt;
 		}
 
-		function update($values)
+		function update( $values )
 		{
 //            echo '<pre>'; print_r($values);echo '</pre>'; exit('update saul');
 			//_debug_array($values);
 			$values['new_index'] = $this->floatval($values['new_index']);
 			$this->db->transaction_begin();
-			while(is_array($values['select']) && list(, $activity_id) = each($values['select']))
+			while (is_array($values['select']) && list(, $activity_id) = each($values['select']))
 			{
 
-				if($values['id'][$activity_id] > 0)
+				if ($values['id'][$activity_id] > 0)
 				{
 					$this->db->query("UPDATE fm_activity_price_index set current_index = NULL WHERE agreement_id=" . intval($values['agreement_id']) . ' AND activity_id=' . intval($activity_id));
 
@@ -930,27 +930,27 @@
 			return $receipt;
 		}
 
-		function floatval($strValue)
+		function floatval( $strValue )
 		{
 			$floatValue = preg_replace("/(^[0-9]*)(\\.|,)([0-9]*)(.*)/", "\\1.\\3", $strValue);
-			if(!is_numeric($floatValue))
+			if (!is_numeric($floatValue))
 			{
 				$floatValue = preg_replace("/(^[0-9]*)(.*)/", "\\1", $strValue);
 			}
-			if(!is_numeric($floatValue))
+			if (!is_numeric($floatValue))
 			{
 				$floatValue = 0;
 			}
 			return $floatValue;
 		}
 
-		function delete_last_index($agreement_id, $activity_id)
+		function delete_last_index( $agreement_id, $activity_id )
 		{
 			$this->db->transaction_begin();
 			$this->db->query("SELECT max(index_count) as index_count FROM fm_activity_price_index WHERE agreement_id=$agreement_id AND activity_id=$activity_id");
 			$this->db->next_record();
 			$index_count = $this->db->f('index_count');
-			if($index_count > 1)
+			if ($index_count > 1)
 			{
 				$this->db->query("DELETE FROM fm_activity_price_index WHERE agreement_id=$agreement_id AND activity_id=$activity_id AND index_count=$index_count");
 				$this->db->query("UPDATE fm_activity_price_index set current_index = 1 WHERE agreement_id=$agreement_id AND activity_id=$activity_id AND index_count =" . ($index_count - 1));
@@ -967,14 +967,14 @@
 			$this->db->transaction_commit();
 		}
 
-		function delete_item($agreement_id, $activity_id)
+		function delete_item( $agreement_id, $activity_id )
 		{
 			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM fm_activity_price_index WHERE agreement_id=$agreement_id AND activity_id=$activity_id");
 			$this->db->transaction_commit();
 		}
 
-		function delete($agreement_id)
+		function delete( $agreement_id )
 		{
 			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM fm_agreement WHERE id=" . intval($agreement_id));
@@ -982,9 +982,9 @@
 			$this->db->transaction_commit();
 		}
 
-		function get_default_column_def($table)
+		function get_default_column_def( $table )
 		{
-			switch($table)
+			switch ($table)
 			{
 				case 'fm_agreement':
 					$fd = array(
@@ -1014,14 +1014,14 @@
 			return $fd;
 		}
 
-		function get_table_def($table)
+		function get_table_def( $table )
 		{
 			$metadata = $this->db->metadata($table);
 
-			if(isset($this->db->adodb))
+			if (isset($this->db->adodb))
 			{
 				$i = 0;
-				foreach($metadata as $key => $val)
+				foreach ($metadata as $key => $val)
 				{
 					$metadata_temp[$i]['name'] = $key;
 					$i++;
@@ -1030,7 +1030,7 @@
 				unset($metadata_temp);
 			}
 
-			if($this->role == 'detail')
+			if ($this->role == 'detail')
 			{
 				$filtermethod = ' AND attrib_detail=2';
 				$pk = array('id');
@@ -1043,14 +1043,14 @@
 
 			$fd = $this->get_default_column_def($table);
 
-			for($i = 0; $i < count($metadata); $i++)
+			for ($i = 0; $i < count($metadata); $i++)
 			{
 				$sql = "SELECT * FROM fm_agreement_attribute WHERE column_name = '" . $metadata[$i]['name'] . "' $filtermethod";
 
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					if(!$precision = $this->db->f('precision_'))
+					if (!$precision = $this->db->f('precision_'))
 					{
 						$precision = $this->bocommon->translate_datatype_precision($this->db->f('datatype'));
 					}
@@ -1091,7 +1091,7 @@
 		function get_agreement_group_list()
 		{
 			$this->db->query("SELECT * FROM fm_agreement_group ORDER BY descr asc");
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$agreement_group_list[] = array
 					(
@@ -1102,7 +1102,7 @@
 			return $agreement_group_list;
 		}
 
-		function read_group_activity($group_id = '', $agreement_id = '')
+		function read_group_activity( $group_id = '', $agreement_id = '' )
 		{
 			$uicols = array();
 			$uicols['name'][] = 'id';
@@ -1124,7 +1124,7 @@
 			$this->db->query($sql);
 
 			$activity_list = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$activity_list[$this->db->f('id')] = array
 					(
@@ -1141,12 +1141,12 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				unset($activity_list[$this->db->f('activity_id')]);
 			}
 
-			foreach($activity_list as $entry)
+			foreach ($activity_list as $entry)
 			{
 				$activity_list_result[] = $entry;
 			}
@@ -1154,18 +1154,18 @@
 			return $activity_list_result;
 		}
 
-		function add_activity($values, $agreement_id)
+		function add_activity( $values, $agreement_id )
 		{
 			$agreement_id = (int)$agreement_id;
 
-			if(isset($values['select']) AND is_array($values['select']))
+			if (isset($values['select']) AND is_array($values['select']))
 			{
 				$this->db->transaction_begin();
 
 				$this->db->query("SELECT start_date FROM fm_agreement WHERE id={$agreement_id}");
 				$this->db->next_record();
 				$date = $this->db->f('start_date');
-				if(!$date)
+				if (!$date)
 				{
 					throw new Exception("missing start date for agreement {$agreement_id}");
 					//					return $receipt['error'][] = array('msg'=>lang('missing start date for agreement %1',$agreement_id));
@@ -1175,7 +1175,7 @@
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 				$valueset = array();
 
-				foreach($values['select'] as $activity_id)
+				foreach ($values['select'] as $activity_id)
 				{
 					$valueset[] = array
 						(
@@ -1232,7 +1232,7 @@
 		{
 			$this->db->query("SELECT id, descr FROM fm_agreement_status ORDER BY id ");
 			$status = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$status[] = array
 					(
@@ -1243,7 +1243,7 @@
 			return $status;
 		}
 
-		function get_activity_descr($id)
+		function get_activity_descr( $id )
 		{
 			$id = (int)$id;
 			$this->db->query("SELECT descr FROM fm_activities WHERE id = $id", __LINE__, __FILE__);

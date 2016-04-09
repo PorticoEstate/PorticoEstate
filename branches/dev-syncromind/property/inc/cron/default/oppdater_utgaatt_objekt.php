@@ -53,7 +53,7 @@
 
 			$this->db->query("UPDATE fm_location" . $m . " set	status= 2  WHERE category='99'", __LINE__, __FILE__);
 
-			for($type_id = $m; $type_id > 1; $type_id--)
+			for ($type_id = $m; $type_id > 1; $type_id--)
 			{
 				$parent_table = 'fm_location' . ($type_id - 1);
 
@@ -62,11 +62,11 @@
 				$paranthesis .='(';
 
 				$on = 'ON';
-				for($i = ($type_id - 1); $i > 0; $i--)
+				for ($i = ($type_id - 1); $i > 0; $i--)
 				{
 					$joinmethod .= " $on (fm_location" . ($type_id) . ".loc" . ($i) . ' = ' . $parent_table . ".loc" . ($i) . ")";
 					$on = 'AND';
-					if($i == 1)
+					if ($i == 1)
 					{
 						$joinmethod .= ")";
 					}
@@ -75,16 +75,16 @@
 				$sql = "SELECT $parent_table.location_code ,count(*) as count_99  FROM $paranthesis fm_location$type_id $joinmethod where fm_location$type_id.status=2 group by $parent_table.location_code ";
 				$this->db->query($sql, __LINE__, __FILE__);
 
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$outdated[$this->db->f('location_code')]['count_99'] = $this->db->f('count_99');
 				}
 
 				$sql = "SELECT $parent_table.location_code ,count(*) as count_all  FROM $paranthesis fm_location$type_id $joinmethod group by $parent_table.location_code ";
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					if($outdated[$this->db->f('location_code')]['count_99'] == $this->db->f('count_all'))
+					if ($outdated[$this->db->f('location_code')]['count_99'] == $this->db->f('count_all'))
 					{
 						$update[] = array('location_code' => $this->db->f('location_code'));
 					}
@@ -95,20 +95,20 @@
 				$this->db->transaction_begin();
 
 				$j = 0;
-				for($i = 0; $i < count($update); $i++)
+				for ($i = 0; $i < count($update); $i++)
 				{
 					$sql = "SELECT category FROM $parent_table WHERE location_code= '" . $update[$i]['location_code'] . "'";
 
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 
-					if($this->db->f('category') != 99)
+					if ($this->db->f('category') != 99)
 					{
 						$sql = "SELECT * from $parent_table WHERE location_code ='" . $update[$i]['location_code'] . "'";
 						$this->db->query($sql, __LINE__, __FILE__);
 						$this->db->next_record();
 
-						foreach($metadata as $field => $val)
+						foreach ($metadata as $field => $val)
 						{
 							$cols[] = $field;
 							$vals[] = $this->db->f($field);
@@ -127,7 +127,7 @@
 
 						$j++;
 						$this->db->query("UPDATE fm_location" . ($type_id - 1) . " set	status= 2, category=99, change_type=2  WHERE location_code= '" . $update[$i]['location_code'] . "'", __LINE__, __FILE__);
-						if($type_id == 2)
+						if ($type_id == 2)
 						{
 							$this->db->query("UPDATE fm_location1 set kostra_id = NULL  WHERE location_code= '" . $update[$i]['location_code'] . "'", __LINE__, __FILE__);
 						}

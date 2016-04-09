@@ -47,7 +47,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -141,7 +141,7 @@
 
 			$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
 
-			if(empty($arena))
+			if (empty($arena))
 			{
 				phpgwapi_cache::message_set(lang('Could not find specified arena.'), 'error');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.index'));
@@ -174,7 +174,7 @@
 			// Get the contract part id
 			$arena_id = (int)phpgw::get_var('id');
 
-			if(isset($arena_id) && $arena_id > 0)
+			if (isset($arena_id) && $arena_id > 0)
 			{
 				$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
 			}
@@ -248,12 +248,12 @@ JS;
 			$query_type		 = phpgw::get_var('type');
 
 			$export = phpgw::get_var('export', 'bool');
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
 
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'all_arenas':
 					$filters		 = array('arena_type' => phpgw::get_var('arena_type'), 'active' => phpgw::get_var('active'));
@@ -264,16 +264,16 @@ JS;
 			//var_dump($result_objects);
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					// ... add a serialized result
 					$rows[] = $result->serialize();
 				}
 			}
 
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}
@@ -289,7 +289,7 @@ JS;
 		{
 			$arena_id = (int)phpgw::get_var('id');
 			// Retrieve the activity object or create a new one
-			if(isset($arena_id) && $arena_id > 0)
+			if (isset($arena_id) && $arena_id > 0)
 			{
 				$arena = activitycalendar_soarena::get_instance()->get_single($arena_id);
 			}
@@ -306,7 +306,7 @@ JS;
 			$arena->set_city(phpgw::get_var('city'));
 			$arena->set_active(phpgw::get_var('arena_active') == 'yes' ? true : false);
 
-			if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
+			if (activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
 			{
 				phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 			}
@@ -321,7 +321,7 @@ JS;
 
 		public function download_export()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				$this->render('permission_denied.php');
 				return;
@@ -332,15 +332,15 @@ JS;
 			$stop = phpgw::get_var('date');
 
 			$cs15 = phpgw::get_var('generate_cs15');
-			if($cs15 == null)
+			if ($cs15 == null)
 			{
 				$export_format	 = explode('_', phpgw::get_var('export_format'));
 				$file_ending	 = $export_format[1];
-				if($file_ending == 'gl07')
+				if ($file_ending == 'gl07')
 				{
 					$type = 'intern';
 				}
-				else if($file_ending == 'lg04')
+				else if ($file_ending == 'lg04')
 				{
 					$type = 'faktura';
 				}

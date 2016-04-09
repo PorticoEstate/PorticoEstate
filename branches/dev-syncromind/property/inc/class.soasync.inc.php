@@ -42,9 +42,9 @@
 			$this->like = & $this->db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query = isset($data['query']) ? $data['query'] : '';
@@ -54,7 +54,7 @@
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " ORDER BY $order $sort";
 			}
@@ -66,7 +66,7 @@
 			$table = 'fm_async_method';
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " WHERE name $this->like '%$query%' OR data $this->like '%$query%' OR descr $this->like '%$query%'";
@@ -77,7 +77,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -87,7 +87,7 @@
 			}
 
 			$method = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$method[] = array
 					(
@@ -100,7 +100,7 @@
 			return $method;
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			$id = (int)$id;
 
@@ -111,7 +111,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$method = array();
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$method['id'] = $this->db->f('id');
 				$method['name'] = $this->db->f('name', true);
@@ -121,7 +121,7 @@
 			return $method;
 		}
 
-		function add($method)
+		function add( $method )
 		{
 			$receipt = array();
 			$table = 'fm_async_method';
@@ -134,7 +134,7 @@
 			$this->db->query("INSERT INTO $table (id, name,data, descr) "
 			. "VALUES ('" . $method['id'] . "','" . $method['name'] . "','" . $method['data'] . "','" . $method['descr'] . "')", __LINE__, __FILE__);
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$receipt['id'] = $method['id'];
 				$receipt['message'][] = array('msg' => lang('async method has been saved'));
@@ -143,7 +143,7 @@
 			return $receipt;
 		}
 
-		function edit($method)
+		function edit( $method )
 		{
 			$table = 'fm_async_method';
 
@@ -158,7 +158,7 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$table = 'fm_async_method';
 

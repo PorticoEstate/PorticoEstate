@@ -45,7 +45,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.soprocedure');
 			}
@@ -58,7 +58,7 @@
 		 * @param activitycalendar_activity $activity the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$procedure)
+		function add( &$procedure )
 		{
 			$cols = array(
 				'title',
@@ -92,7 +92,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_procedure (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Get the new procedure ID and return it
 				return $this->db->get_last_insert_id('controller_procedure', 'id');
@@ -109,7 +109,7 @@
 		 * @param $activity the activity to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($procedure)
+		function update( $procedure )
 		{
 			$id = intval($procedure->get_id());
 
@@ -139,7 +139,7 @@
 		 * @param	$id	id of the procedure to return
 		 * @return a controller_procedure
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id = (int)$id;
 
@@ -150,9 +150,9 @@
 			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($counter == 0)
+				if ($counter == 0)
 				{
 					$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 					$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -174,7 +174,7 @@
 					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 				}
 
-				if($this->db->f('document_id') != '')
+				if ($this->db->f('document_id') != '')
 				{
 					$document = new controller_document($this->unmarshal($this->db->f('document_id'), 'int'));
 					$document->set_procedure_id($procedure->get_id());
@@ -190,7 +190,7 @@
 			return $procedure;
 		}
 
-		function get_single_with_documents($id, $return_type = "return_object")
+		function get_single_with_documents( $id, $return_type = "return_object" )
 		{
 			$id = (int)$id;
 
@@ -201,9 +201,9 @@
 			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if(!$counter)
+				if (!$counter)
 				{
 					$procedure	 = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 					$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -222,14 +222,14 @@
 					$procedure->set_control_area_name($category[0]['name']);
 				}
 
-				if($this->db->f('document_id'))
+				if ($this->db->f('document_id'))
 				{
 					$document = new controller_document($this->unmarshal($this->db->f('document_id'), 'int'));
 					$document->set_procedure_id($procedure->get_id());
 					$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
 					$document->set_description($this->unmarshal($this->db->f('document_description', true), 'string'));
 
-					if($return_type == "return_array")
+					if ($return_type == "return_array")
 					{
 						$doc_as_array					 = $document->toArray();
 						$doc_as_array['document_link']	 = controller_uidocument::link(array('menuaction' => 'controller.uidocument.view',
@@ -246,11 +246,11 @@
 				$counter++;
 			}
 
-			if($procedure != null)
+			if ($procedure != null)
 			{
 				$procedure->set_documents($documents_array);
 
-				if($return_type == "return_array")
+				if ($return_type == "return_array")
 				{
 					return $procedure->toArray();
 				}
@@ -265,12 +265,12 @@
 			}
 		}
 
-		function get_procedures_by_control_area($control_area_id)
+		function get_procedures_by_control_area( $control_area_id )
 		{
 			$cat_id		 = (int)$control_area_id;
 			$cats		 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cat_path	 = $cats->get_path($cat_id);
-			foreach($cat_path as $_category)
+			foreach ($cat_path as $_category)
 			{
 				$cat_filter[] = $_category['id'];
 			}
@@ -282,7 +282,7 @@
 			$sql = "SELECT * FROM controller_procedure WHERE {$filter_control_area} AND end_date IS NULL ORDER BY title ASC";
 			$this->db->query($sql);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -300,7 +300,7 @@
 				$procedures_array[] = $procedure->toArray();
 			}
 
-			if(count($procedures_array) > 0)
+			if (count($procedures_array) > 0)
 			{
 				return $procedures_array;
 			}
@@ -310,7 +310,7 @@
 			}
 		}
 
-		function get_procedures($start = 0, $results = 0, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		function get_procedures( $start = 0, $results = 0, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
 		{
 			//$condition = $this->get_conditions($query, $filters,$search_option);
 			$order = $sort ? "ORDER BY $sort $dir " : '';
@@ -319,14 +319,14 @@
 
 			$condition = "WHERE end_date IS NULL";
 
-			if(isset($filters['control_areas']) && $filters['control_areas'])
+			if (isset($filters['control_areas']) && $filters['control_areas'])
 			{
 				$cat_id				 = (int)$filters['control_areas'];
 				$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	 = true;
 				$cat_list			 = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter			 = array($cat_id);
-				foreach($cat_list as $_category)
+				foreach ($cat_list as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
@@ -336,7 +336,7 @@
 
 			$sql = "SELECT * FROM controller_procedure $condition $order";
 
-			if($results)
+			if ($results)
 			{
 				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 			}
@@ -346,7 +346,7 @@
 			}
 
 			$values = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -367,7 +367,7 @@
 			return $values;
 		}
 
-		function get_procedures_as_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		function get_procedures_as_array( $start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
 		{
 			$results = array();
 
@@ -379,7 +379,7 @@
 			$sql = "SELECT * FROM controller_procedure $condition $order";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -394,13 +394,14 @@
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 
-				$results[] = $procedure->toArray();;
+				$results[] = $procedure->toArray();
+				;
 			}
 
 			return $results;
 		}
 
-		function get_old_revisions($id)
+		function get_old_revisions( $id )
 		{
 			$id		 = (int)$id;
 			$results = array();
@@ -408,7 +409,7 @@
 			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$procedure		 = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -426,16 +427,17 @@
 				$category		 = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$procedure->set_control_area_name($category_name	 = $category[0]['name']);
 
-				$results[] = $procedure->toArray();;
+				$results[] = $procedure->toArray();
+				;
 			}
 
 			return $results;
 		}
 
-		function get_id_field_name($extended_info = false)
+		function get_id_field_name( $extended_info = false )
 		{
 
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -452,20 +454,20 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
-			if($search_for)
+			if ($search_for)
 			{
 				$like_pattern	 = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					default:
 						$like_clauses[] = "procedure.title $this->like $like_pattern";
 						break;
 				}
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -484,11 +486,11 @@
 			  }
 			 */
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "procedure.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['control_areas']))
+			if (isset($filters['control_areas']))
 			{
 //				$filter_clauses[] = "procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
 
@@ -497,7 +499,7 @@
 				$cats->supress_info	 = true;
 				$cat_list			 = $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter			 = array($cat_id);
-				foreach($cat_list as $_category)
+				foreach ($cat_list as $_category)
 				{
 					$cat_filter[] = $_category['id'];
 				}
@@ -505,7 +507,7 @@
 				$filter_clauses[] = "procedure.control_area_id IN (" . implode(',', $cat_filter) . ')';
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -516,7 +518,7 @@
 
 			$tables = "controller_procedure procedure";
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(procedure.id)) AS count';
 			}
@@ -533,10 +535,10 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function populate(int $procedure_id, &$procedure)
+		function populate( int $procedure_id, &$procedure )
 		{
 
-			if($procedure == null)
+			if ($procedure == null)
 			{
 				$procedure = new controller_procedure((int)$procedure_id);
 

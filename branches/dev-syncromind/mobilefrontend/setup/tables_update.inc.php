@@ -8,17 +8,15 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package mobilefrontend
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	* Update mobilefrontend version from '0.1.1' to '0.1.2';
 	*/
-
 	$test[] = '0.1.1';
+
 	function mobilefrontend_upgrade0_1_1()
 	{
 		$GLOBALS['setup_info']['mobilefrontend']['currentver'] = '0.1.2';
 		return $GLOBALS['setup_info']['mobilefrontend']['currentver'];
 	}
-

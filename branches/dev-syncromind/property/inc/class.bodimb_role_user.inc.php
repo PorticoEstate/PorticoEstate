@@ -40,17 +40,17 @@
 			$this->allrows = $this->bo->allrows;
 		}
 
-		public function read($data)
+		public function read( $data )
 		{
 			static $users = array();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values = $this->so->read($data);
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
-				if($entry['user_id'])
+				if ($entry['user_id'])
 				{
-					if(!$entry['user'] = $users[$entry['user_id']])
+					if (!$entry['user'] = $users[$entry['user_id']])
 					{
 						$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
 						$users[$entry['user_id']] = $entry['user'];
@@ -64,7 +64,7 @@
 			return $values;
 		}
 
-		public function edit($data)
+		public function edit( $data )
 		{
 			$values = $this->so->edit($data);
 			return $values;

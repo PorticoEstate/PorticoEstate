@@ -19,7 +19,7 @@
 		private $location_code;
 		private $calendar_array = array();
 
-		public function __construct($control, $year, $month, $component, $location_code, $type)
+		public function __construct( $control, $year, $month, $component, $location_code, $type )
 		{
 			$this->control		 = $control;
 			$this->year			 = $year;
@@ -45,7 +45,7 @@
 
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $this->month, $this->year);
 
-			for($i = 1; $i <= $num_days_in_month; $i++)
+			for ($i = 1; $i <= $num_days_in_month; $i++)
 			{
 				$this->calendar_array[$i] = null;
 			}
@@ -54,13 +54,13 @@
 			$dates_array	 = $date_generator->get_dates();
 
 			// Set status for control on each date to NOT DONE or REGISTERED
-			foreach($dates_array as $date_ts)
+			foreach ($dates_array as $date_ts)
 			{
 				$check_list = new controller_check_list();
 				$check_list->set_deadline($date_ts);
 				$check_list->set_control_id($this->control->get_id());
 
-				if($this->type == "component")
+				if ($this->type == "component")
 				{
 					$check_list->set_component_id($this->component->get_id());
 					$check_list->set_location_id($this->component->get_location_id());
@@ -79,9 +79,9 @@
 			}
 		}
 
-		public function build_calendar($check_lists_array)
+		public function build_calendar( $check_lists_array )
 		{
-			foreach($check_lists_array as $check_list)
+			foreach ($check_lists_array as $check_list)
 			{
 				$check_list_status_manager	 = new check_list_status_manager($check_list);
 				$check_list_status_info		 = $check_list_status_manager->get_status_for_check_list();
@@ -93,12 +93,12 @@
 			return $this->calendar_array;
 		}
 
-		public static function get_heading_array($year, $month)
+		public static function get_heading_array( $year, $month )
 		{
 			$num_days_in_month	 = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 			$heading_array		 = array();
 
-			for($i = 1; $i <= $num_days_in_month; $i++)
+			for ($i = 1; $i <= $num_days_in_month; $i++)
 			{
 				$heading_array[$i] = "$i";
 			}
@@ -106,14 +106,14 @@
 			return $heading_array;
 		}
 
-		public static function get_start_date_month_ts($year, $month)
+		public static function get_start_date_month_ts( $year, $month )
 		{
 			return strtotime("$month/01/$year");
 		}
 
-		public static function get_next_start_date_month_ts($year, $month)
+		public static function get_next_start_date_month_ts( $year, $month )
 		{
-			if(($month + 1) > 12)
+			if (($month + 1) > 12)
 			{
 				$to_month	 = 1;
 				$to_year	 = $year + 1;

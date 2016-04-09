@@ -7,7 +7,9 @@
 	    </xsl:when>
     </xsl:choose>
 	
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 	
 	<div class="frontend_body">
 		<div class="pure-form pure-form-aligned">
@@ -19,10 +21,14 @@
 							<div class="toolbar-container">
 								<div>
 									<xsl:for-each select="filters">
-										<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+										<xsl:variable name="name">
+											<xsl:value-of select="name"/>
+										</xsl:variable>
 										<select id="{$name}" name="{$name}">
 											<xsl:for-each select="list">
-												<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+												<xsl:variable name="id">
+													<xsl:value-of select="id"/>
+												</xsl:variable>
 												<xsl:choose>
 													<xsl:when test="id = 'NEW'">
 														<option value="{$id}" selected="selected">
@@ -157,7 +163,9 @@
 							</input>
 						</div>
 						<div class="pure-control-group">
-							<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>
+							<xsl:variable name="lang_send">
+								<xsl:value-of select="php:function('lang', 'send')" />
+							</xsl:variable>
 							<label>
 								<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
 							</label>

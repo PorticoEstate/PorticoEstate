@@ -3,13 +3,13 @@
 
 	require_once "schedule.php";
 
-	function array_minus($a, $b)
+	function array_minus( $a, $b )
 	{
 		$b	 = array_flip($b);
 		$c	 = array();
-		foreach($a as $x)
+		foreach ($a as $x)
 		{
-			if(!array_key_exists($x, $b))
+			if (!array_key_exists($x, $b))
 				$c[] = $x;
 		}
 		return $c;
@@ -33,9 +33,9 @@
 		/**
 		 * @ Send message about cancelation to users of building. 
 		 */
-		function send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates = null)
+		function send_notification( $booking, $allocation, $maildata, $mailadresses, $valid_dates = null )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -47,7 +47,7 @@
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 
-			if(($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
+			if (($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
 			($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' &&
 			$maildata['allocation'] == 0))
 			{
@@ -63,15 +63,15 @@
 				$body .=' til ' . pretty_timestamp($booking['to_']);
 				$body .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a></p>';
 			}
-			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
+			elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($valid_dates as $valid_date)
+				foreach ($valid_dates as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -88,17 +88,17 @@
 				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
 				$body .= $info_deleted . '</p>';
 			}
-			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
+			elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($valid_dates as $valid_date)
+				foreach ($valid_dates as $valid_date)
 				{
-					if(!in_array($valid_date, $maildata['delete']))
+					if (!in_array($valid_date, $maildata['delete']))
 					{
 						$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 						$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -109,7 +109,7 @@
 						$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
 					}
 				}
-				foreach($maildata['delete'] as $valid_date)
+				foreach ($maildata['delete'] as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -129,12 +129,12 @@
 			else
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($maildata['delete'] as $valid_date)
+				foreach ($maildata['delete'] as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($allocation['from_']) . " - ";
@@ -152,22 +152,22 @@
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
 			}
 		}
 
-		function send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates = null)
+		function send_admin_notification( $booking, $maildata, $system_message, $allocation, $valid_dates = null )
 		{
-			if(!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
 
@@ -183,7 +183,7 @@
 			$mailadresses	 = $config->config_data['emails'];
 			$mailadresses	 = explode("\n", $mailadresses);
 
-			if(($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
+			if (($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
 			($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' &&
 			$maildata['allocation'] == 0))
 			{
@@ -197,15 +197,15 @@
 				$body .=' til ' . pretty_timestamp($booking['to_']);
 				$body .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a></p>';
 			}
-			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
+			elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on')
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($valid_dates as $valid_date)
+				foreach ($valid_dates as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -220,17 +220,17 @@
 				$body .= '<br />' . $booking['group_name'] . ' har avbestilt tid i ' . $booking['building_name'];
 				$body .= $info_deleted . '</p>';
 			}
-			elseif(($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
+			elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on')
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($valid_dates as $valid_date)
+				foreach ($valid_dates as $valid_date)
 				{
-					if(!in_array($valid_date, $maildata['delete']))
+					if (!in_array($valid_date, $maildata['delete']))
 					{
 						$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 						$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -241,7 +241,7 @@
 						$info_deleted .= ' - <a href="' . $link . '">' . lang('Apply for time') . '</a><br />';
 					}
 				}
-				foreach($maildata['delete'] as $valid_date)
+				foreach ($maildata['delete'] as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($valid_date['from_']) . " - ";
@@ -260,12 +260,12 @@
 			else
 			{
 				$res_names = '';
-				foreach($booking['resources'] as $res)
+				foreach ($booking['resources'] as $res)
 				{
 					$res_names = $res_names . $this->so->get_resource($res) . " ";
 				}
 				$info_deleted = ':<p>';
-				foreach($maildata['delete'] as $valid_date)
+				foreach ($maildata['delete'] as $valid_date)
 				{
 					$info_deleted	 = $info_deleted . "" . $res_names . " - ";
 					$info_deleted .= pretty_timestamp($allocation['from_']) . " - ";
@@ -281,13 +281,13 @@
 			}
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
-			foreach($mailadresses as $adr)
+			foreach ($mailadresses as $adr)
 			{
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -297,14 +297,14 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function include_subject_parent_roles(array $for_object = null)
+		protected function include_subject_parent_roles( array $for_object = null )
 		{
 			$parent_roles	 = null;
 			$parent_season	 = null;
 
-			if(is_array($for_object))
+			if (is_array($for_object))
 			{
-				if(!isset($for_object['season_id']))
+				if (!isset($for_object['season_id']))
 				{
 					throw new InvalidArgumentException('Cannot initialize object parent roles unless season_id is provided');
 				}
@@ -320,15 +320,15 @@
 		/**
 		 * @see booking_bocommon_authorized
 		 */
-		protected function get_subject_roles($for_object = null, $initial_roles = array())
+		protected function get_subject_roles( $for_object = null, $initial_roles = array() )
 		{
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$bouser = CreateObject('bookingfrontend.bouser');
 
 				$group_id = is_array($for_object) ? $for_object['group_id'] : (!is_null($for_object) ? $for_object : null);
 
-				if($bouser->is_group_admin($group_id))
+				if ($bouser->is_group_admin($group_id))
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
@@ -340,9 +340,9 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions[self::ROLE_ADMIN] = array
 					(
@@ -391,9 +391,9 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
-			if($this->current_app() == 'bookingfrontend')
+			if ($this->current_app() == 'bookingfrontend')
 			{
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create']	 = true;
 				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write']	 = true;
@@ -442,13 +442,13 @@
 		 * @return array containing values from $array for the keys in $keys.
 		 */
 //        todo: remove debug kode
-		function building_schedule($building_id, $date)
+		function building_schedule( $building_id, $date )
 		{
 //            echo "debug:\n";
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-			if($from->format('w') != 1)
+			if ($from->format('w') != 1)
 			{
 				$from->modify('last monday');
 			}
@@ -457,7 +457,7 @@
 			$allocation_ids	 = $this->so->allocation_ids_for_building($building_id, $from, $to);
 			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
 			$allocations	 = $allocations['results'];
-			foreach($allocations as &$allocation)
+			foreach ($allocations as &$allocation)
 			{
 				$allocation['name']		 = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
@@ -467,7 +467,7 @@
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids)));
 			$bookings	 = $bookings['results'];
-			foreach($bookings as &$booking)
+			foreach ($bookings as &$booking)
 			{
 				$booking['name']		 = $booking['group_name'];
 				$booking['shortname']	 = $booking['group_shortname'];
@@ -481,7 +481,7 @@
 			$event_ids	 = $this->so->event_ids_for_building($building_id, $from, $to);
 			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids)));
 			$events		 = $events['results'];
-			foreach($events as &$event)
+			foreach ($events as &$event)
 			{
 
 				$event['name']	 = $event['description'];
@@ -506,7 +506,7 @@
 					'active' => 1)));
 			$resources		 = $resources['results'];
 
-			foreach($resources as $key => $row)
+			foreach ($resources as $key => $row)
 			{
 				$sort[$key] = $row['sort'];
 			}
@@ -520,12 +520,12 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
-		function building_infoscreen_schedule($building_id, $date, $res = False)
+		function building_infoscreen_schedule( $building_id, $date, $res = False )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-			if($from->format('w') != 1)
+			if ($from->format('w') != 1)
 			{
 				$from->modify('last monday');
 			}
@@ -533,10 +533,10 @@
 			$to->modify('+7 days');
 			$to->modify('-1 minute');
 
-			if($res != False)
+			if ($res != False)
 			{
 				$resources	 = $this->so->get_screen_resources($building_id, $res);
-				if(count($resources) > 0)
+				if (count($resources) > 0)
 					$resources	 = "AND bb_resource.id IN (" . implode(",", $resources) . ")";
 				else
 					$resources	 = '';
@@ -547,7 +547,7 @@
 
 			$results = array();
 
-			foreach($allocations as &$allocation)
+			foreach ($allocations as &$allocation)
 			{
 				$allocation['name']		 = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
@@ -557,7 +557,7 @@
 				$allocation['weekday']	 = date('D', $datef);
 			}
 
-			foreach($bookings as &$booking)
+			foreach ($bookings as &$booking)
 			{
 				$booking['name']		 = $booking['group_name'];
 				$booking['shortname']	 = $booking['group_shortname'];
@@ -567,7 +567,7 @@
 				$booking['weekday']	 = date('D', $datef);
 			}
 
-			foreach($events as &$event)
+			foreach ($events as &$event)
 			{
 				$event['name']		 = substr($event['description'], 0, 34);
 				$event['shortname']	 = substr($event['description'], 0, 12);
@@ -582,7 +582,7 @@
 			$bookings	 = array_merge($bookings, $events);
 			$bookings	 = $this->_split_multi_day_bookings2($bookings, $from, $to);
 
-			foreach($bookings as &$allocation)
+			foreach ($bookings as &$allocation)
 			{
 				$datef	 = strtotime($allocation['from_']);
 				$datet	 = strtotime($allocation['to_']);
@@ -595,7 +595,7 @@
 				$to		 = explode(':', $timet);
 				$from	 = $from[0] * 60 + $from[1];
 				$to		 = $to[0] * 60 + $to[1];
-				if($to == 0)
+				if ($to == 0)
 					$to		 = 24 * 60;
 				$colspan = ($to - $from) / 30;
 
@@ -603,9 +603,9 @@
 				$results[$weekday][$resname][$ft]	 = $allocation;
 			}
 
-			foreach($results as &$day)
+			foreach ($results as &$day)
 			{
-				foreach($day as &$res)
+				foreach ($day as &$res)
 				{
 					ksort($res);
 				}
@@ -614,25 +614,29 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
-		function split_allocations2($allocations, $all_bookings)
+		function split_allocations2( $allocations, $all_bookings )
 		{
 
-			function get_from2($a)
-			{ return $a['from_'];}
-;
+			function get_from2( $a )
+			{
+				return $a['from_'];
+			}
+			;
 
-			function get_to2($a)
-			{ return $a['to_'];}
-;
+			function get_to2( $a )
+			{
+				return $a['to_'];
+			}
+			;
 			$new_allocations = array();
-			foreach($allocations as $allocation)
+			foreach ($allocations as $allocation)
 			{
 				// $ Find all associated bookings
 				$bookings = array();
 
-				foreach($all_bookings as $b)
+				foreach ($all_bookings as $b)
 				{
-					if($b['allocation_id'] == $allocation['id'])
+					if ($b['allocation_id'] == $allocation['id'])
 						$bookings[] = $b;
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
@@ -641,18 +645,18 @@
 				$times	 = array_merge(array_map("get_to2", $bookings), $times);
 				$times	 = array_unique($times);
 				sort($times);
-				while(count($times) >= 2)
+				while (count($times) >= 2)
 				{
 					$from_		 = $times[0];
 					$to_		 = $times[1];
 					$resources	 = array($allocation['resource_id']);
-					foreach($all_bookings as $b)
+					foreach ($all_bookings as $b)
 					{
 
-						if(($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
 							$resources = array_minus($resources, array($b['resource_id']));
 					}
-					if($resources)
+					if ($resources)
 					{
 						$a					 = $allocation;
 						$a['from_']			 = $times[0];
@@ -665,15 +669,15 @@
 			return $new_allocations;
 		}
 
-		function _remove_event_conflicts2($bookings, &$events)
+		function _remove_event_conflicts2( $bookings, &$events )
 		{
 			$new_bookings = array();
-			foreach($bookings as $b)
+			foreach ($bookings as $b)
 			{
 				$keep = true;
-				foreach($events as &$e)
+				foreach ($events as &$e)
 				{
-					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+					if ((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 					($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
 					($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && ( $b['resource_id'] == $e['resource_id']))
 					{
@@ -681,7 +685,7 @@
 						break;
 					}
 				}
-				if($keep)
+				if ($keep)
 				{
 					$new_bookings[] = $b;
 				}
@@ -689,17 +693,17 @@
 			return $new_bookings;
 		}
 
-		function _split_multi_day_bookings2($bookings, $t0, $t1)
+		function _split_multi_day_bookings2( $bookings, $t0, $t1 )
 		{
-			if($t1->format('H:i') == '00:00')
+			if ($t1->format('H:i') == '00:00')
 				$t1->modify('-1 day');
 			$new_bookings = array();
-			foreach($bookings as $booking)
+			foreach ($bookings as $booking)
 			{
 				$from	 = new DateTime($booking['from_']);
 				$to		 = new DateTime($booking['to_']);
 				// Basic one-day booking
-				if($from->format('Y-m-d') == $to->format('Y-m-d'))
+				if ($from->format('Y-m-d') == $to->format('Y-m-d'))
 				{
 					$booking['date']	 = $from->format('Y-m-d');
 					$booking['weekday']	 = date_format(date_create($booking['date']), 'D');
@@ -722,11 +726,11 @@
 						$new_booking['weekday']	 = date_format($date, 'D');
 						$new_booking['from_']	 = '00:00';
 						$new_booking['to_']		 = '00:00';
-						if($new_booking['date'] == $from->format('Y-m-d'))
+						if ($new_booking['date'] == $from->format('Y-m-d'))
 						{
 							$new_booking['from_'] = $from->format('H:i');
 						}
-						else if($new_booking['date'] == $to->format('Y-m-d'))
+						else if ($new_booking['date'] == $to->format('Y-m-d'))
 						{
 							$new_booking['to_'] = $to->format('H:i');
 						}
@@ -734,26 +738,26 @@
 						$new_booking['to_']	 = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
 						$new_bookings[]		 = $new_booking;
 
-						if($date->format('Y-m-d') == $end->format('Y-m-d'))
+						if ($date->format('Y-m-d') == $end->format('Y-m-d'))
 						{
 							break;
 						}
 
 						//		if($date->getTimestamp() > $end->getTimestamp()) // > php 5.3.0
-						if($date->format("U") > $end->format("U"))
+						if ($date->format("U") > $end->format("U"))
 						{
 							throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
 						}
 
 						$date->modify('+1 day');
 					}
-					while(true);
+					while (true);
 				}
 			}
 			return $new_bookings;
 		}
 
-		function building_extraschedule($building_id, $date)
+		function building_extraschedule( $building_id, $date )
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -761,7 +765,7 @@
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-			if($from->format('w') != 1)
+			if ($from->format('w') != 1)
 			{
 				$from->modify('last monday');
 			}
@@ -774,7 +778,7 @@
 			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids,
 					'organization_id' => $orgids), 'sort' => 'from_'));
 			$allocations = $allocations['results'];
-			foreach($allocations as &$allocation)
+			foreach ($allocations as &$allocation)
 			{
 				$allocation['name']		 = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
@@ -784,7 +788,7 @@
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids), 'sort' => 'from_'));
 			$bookings	 = $bookings['results'];
-			foreach($bookings as &$booking)
+			foreach ($bookings as &$booking)
 			{
 				$booking['name']		 = $booking['group_name'];
 				$booking['shortname']	 = $booking['group_shortname'];
@@ -799,7 +803,7 @@
 			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids),
 				'sort' => 'from_'));
 			$events		 = $events['results'];
-			foreach($events as &$event)
+			foreach ($events as &$event)
 			{
 
 				$event['name']	 = $event['description'];
@@ -819,7 +823,7 @@
 					'active' => 1)));
 			$resources		 = $resources['results'];
 
-			foreach($resources as $key => $row)
+			foreach ($resources as $key => $row)
 			{
 				$sort[$key] = $row['sort'];
 			}
@@ -841,12 +845,12 @@
 		 *
 		 * @return array containg values from $array for the keys in $keys.
 		 */
-		function resource_schedule($resource_id, $date)
+		function resource_schedule( $resource_id, $date )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-			if($from->format('w') != 1)
+			if ($from->format('w') != 1)
 			{
 				$from->modify('last monday');
 			}
@@ -856,7 +860,7 @@
 			$allocation_ids	 = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
 			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
 			$allocations	 = $allocations['results'];
-			foreach($allocations as &$allocation)
+			foreach ($allocations as &$allocation)
 			{
 				$allocation['name']		 = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
@@ -865,7 +869,7 @@
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
 			$bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids)));
 			$bookings	 = $bookings['results'];
-			foreach($bookings as &$booking)
+			foreach ($bookings as &$booking)
 			{
 				$booking['name']		 = $booking['group_name'];
 				$booking['shortname']	 = $booking['group_shortname'];
@@ -876,7 +880,7 @@
 			$event_ids	 = $this->so->event_ids_for_resource($resource_id, $from, $to);
 			$events		 = $this->event_so->read(array('filters' => array('id' => $event_ids)));
 			$events		 = $events['results'];
-			foreach($events as &$event)
+			foreach ($events as &$event)
 			{
 				$event['name']	 = $event['description'];
 				$event['type']	 = 'event';
@@ -894,24 +898,28 @@
 		 * Split allocations overlapped by bookings into multiple allocations
 		 * to avoid overlaps
 		 */
-		function split_allocations($allocations, $all_bookings)
+		function split_allocations( $allocations, $all_bookings )
 		{
 
-			function get_from2($a)
-			{ return $a['from_'];}
-;
+			function get_from2( $a )
+			{
+				return $a['from_'];
+			}
+			;
 
-			function get_to2($a)
-			{ return $a['to_'];}
-;
+			function get_to2( $a )
+			{
+				return $a['to_'];
+			}
+			;
 			$new_allocations = array();
-			foreach($allocations as $allocation)
+			foreach ($allocations as $allocation)
 			{
 				// $ Find all associated bookings
 				$bookings = array();
-				foreach($all_bookings as $b)
+				foreach ($all_bookings as $b)
 				{
-					if($b['allocation_id'] == $allocation['id'])
+					if ($b['allocation_id'] == $allocation['id'])
 						$bookings[] = $b;
 				}
 				$times	 = array($allocation['from_'], $allocation['to_']);
@@ -919,19 +927,19 @@
 				$times	 = array_merge(array_map("get_to2", $bookings), $times);
 				$times	 = array_unique($times);
 				sort($times);
-				while(count($times) >= 2)
+				while (count($times) >= 2)
 				{
 					$from_		 = $times[0];
 					$to_		 = $times[1];
 					$resources	 = $allocation['resources'];
 					$used		 = array();
-					foreach($all_bookings as $b)
+					foreach ($all_bookings as $b)
 					{
 
-						if(($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
 							$resources = array_minus($resources, $b['resources']);
 					}
-					if($resources)
+					if ($resources)
 					{
 						$a					 = $allocation;
 						$a['from_']			 = $times[0];
@@ -947,17 +955,17 @@
 		/**
 		 * Split Multi-day bookings into separate single-day bookings
 		 * */
-		function _split_multi_day_bookings($bookings, $t0, $t1)
+		function _split_multi_day_bookings( $bookings, $t0, $t1 )
 		{
-			if($t1->format('H:i') == '00:00')
+			if ($t1->format('H:i') == '00:00')
 				$t1->modify('-1 day');
 			$new_bookings = array();
-			foreach($bookings as $booking)
+			foreach ($bookings as $booking)
 			{
 				$from	 = new DateTime($booking['from_']);
 				$to		 = new DateTime($booking['to_']);
 				// Basic one-day booking
-				if($from->format('Y-m-d') == $to->format('Y-m-d'))
+				if ($from->format('Y-m-d') == $to->format('Y-m-d'))
 				{
 					$booking['date']	 = $from->format('Y-m-d');
 					$booking['wday']	 = date_format(date_create($booking['date']), 'D');
@@ -980,11 +988,11 @@
 						$new_booking['wday']	 = date_format($date, 'D');
 						$new_booking['from_']	 = '00:00';
 						$new_booking['to_']		 = '00:00';
-						if($new_booking['date'] == $from->format('Y-m-d'))
+						if ($new_booking['date'] == $from->format('Y-m-d'))
 						{
 							$new_booking['from_'] = $from->format('H:i');
 						}
-						else if($new_booking['date'] == $to->format('Y-m-d'))
+						else if ($new_booking['date'] == $to->format('Y-m-d'))
 						{
 							$new_booking['to_'] = $to->format('H:i');
 						}
@@ -992,38 +1000,38 @@
 						$new_booking['to_']	 = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
 						$new_bookings[]		 = $new_booking;
 
-						if($date->format('Y-m-d') == $end->format('Y-m-d'))
+						if ($date->format('Y-m-d') == $end->format('Y-m-d'))
 						{
 							break;
 						}
 
 						//		if($date->getTimestamp() > $end->getTimestamp()) // > php 5.3.0
-						if($date->format("U") > $end->format("U"))
+						if ($date->format("U") > $end->format("U"))
 						{
 							throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
 						}
 
 						$date->modify('+1 day');
 					}
-					while(true);
+					while (true);
 				}
 			}
 			return $new_bookings;
 		}
 
-		function _remove_event_conflicts($bookings, &$events)
+		function _remove_event_conflicts( $bookings, &$events )
 		{
-			foreach($events as &$e)
+			foreach ($events as &$e)
 			{
 				$e['conflicts'] = array();
 			}
 			$new_bookings	 = array();
 			$last			 = array();
-			foreach($bookings as $b)
+			foreach ($bookings as $b)
 			{
-				if($last)
+				if ($last)
 				{
-					foreach($last as $l)
+					foreach ($last as $l)
 					{
 //                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
 						$new_bookings[] = $l;
@@ -1032,13 +1040,13 @@
 				}
 				$keep = true;
 //                $i = 0;
-				foreach($events as &$e)
+				foreach ($events as &$e)
 				{
 
 //                    echo $b['id']."\tfrom: ".substr($b['from_'],11,19)." to: ".substr($b['to_'],11,19)."\n";
 //                    echo $e['id']."\tfrom: ".substr($e['from_'],11,19)." to: ".substr($e['to_'],11,19)." ".$e['name']."\n";
 
-					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+					if ((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 					($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
 					($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
 					{
@@ -1052,36 +1060,36 @@
 						$et	 = $e['to_'];
 						$tmp = $b;
 
-						if($last)
+						if ($last)
 						{
 							$ilast	 = $last;
 							$last	 = array();
-							foreach($ilast as $l)
+							foreach ($ilast as $l)
 							{
 								$lf	 = $l['from_'];
 								$lt	 = $l['to_'];
 								$tmp = $l;
-								if($ef <= $lf && $et >= $lt)
+								if ($ef <= $lf && $et >= $lt)
 								{
 //                                    echo "B0: break ef <= bf && et >= bt\n\n";
 									$last[] = $l;
 									break;
 								}
-								elseif(($ef >= $lf) && ($et > $lt))
+								elseif (($ef >= $lf) && ($et > $lt))
 								{
 //                                    echo "B1: (ef >= lf) && (et > lt)\n";
 									$tmp['from_']	 = $lf;
 									$tmp['to_']		 = $ef;
 									$last[]			 = $tmp;
 								}
-								elseif(($ef <= $lf) && ($et < $lt))
+								elseif (($ef <= $lf) && ($et < $lt))
 								{
 //                                    echo "B2: (ef <= lf) && (et < lt)\n";
 									$tmp['from_']	 = $et;
 									$tmp['to_']		 = $lt;
 									$last[]			 = $tmp;
 								}
-								elseif(($ef > $lf) && ($et < $lt))
+								elseif (($ef > $lf) && ($et < $lt))
 								{
 //                                    echo "B3: (ef > lf) && (et < lt)\n";
 									$tmp['from_']	 = $lf;
@@ -1101,26 +1109,26 @@
 						}
 						else
 						{
-							if($ef <= $bf && $et >= $bt)
+							if ($ef <= $bf && $et >= $bt)
 							{
 //                                echo "A0: break ef <= bf && et >= bt\n\n";
 								break;
 							}
-							elseif(($ef >= $bf) && ($et > $bt))
+							elseif (($ef >= $bf) && ($et > $bt))
 							{
 //                                echo "A1: (ef >= bf) && (et > bt)\n";
 								$tmp['from_']	 = $bf;
 								$tmp['to_']		 = $ef;
 								$last[]			 = $tmp;
 							}
-							elseif(($ef <= $bf) && ($et < $bt))
+							elseif (($ef <= $bf) && ($et < $bt))
 							{
 //                                echo "A2: (ef <= bf) && (et < bt)\n";
 								$tmp['from_']	 = $et;
 								$tmp['to_']		 = $bt;
 								$last[]			 = $tmp;
 							}
-							elseif(($ef > $bf) && ($et < $bt))
+							elseif (($ef > $bf) && ($et < $bt))
 							{
 //                                echo "A3: (ef > bf) && (et < bt)\n";
 								$tmp['from_']	 = $bf;
@@ -1141,9 +1149,9 @@
 //                    $i+=1;
 				}
 
-				if($last)
+				if ($last)
 				{
-					foreach($last as $l)
+					foreach ($last as $l)
 					{
 //                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
 						$new_bookings[] = $l;
@@ -1151,7 +1159,7 @@
 					$last = array();
 				}
 
-				if($keep)
+				if ($keep)
 				{
 					$new_bookings[] = $b;
 				}
@@ -1161,19 +1169,19 @@
 //            exit;
 		}
 
-		function _remove_event_conflicts_org($bookings, &$events)
+		function _remove_event_conflicts_org( $bookings, &$events )
 		{
-			foreach($events as &$e)
+			foreach ($events as &$e)
 			{
 				$e['conflicts'] = array();
 			}
 			$new_bookings = array();
-			foreach($bookings as $b)
+			foreach ($bookings as $b)
 			{
 				$keep = true;
-				foreach($events as &$e)
+				foreach ($events as &$e)
 				{
-					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+					if ((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 					($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
 					($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
 					{
@@ -1182,7 +1190,7 @@
 						break;
 					}
 				}
-				if($keep)
+				if ($keep)
 				{
 					$new_bookings[] = $b;
 				}
@@ -1190,7 +1198,7 @@
 			return $new_bookings;
 		}
 
-		public function complete_expired(&$bookings)
+		public function complete_expired( &$bookings )
 		{
 			$this->so->complete_expired($bookings);
 		}
@@ -1200,7 +1208,7 @@
 			return $this->so->find_expired();
 		}
 
-		function validate(&$entry)
+		function validate( &$entry )
 		{
 			$entry['allocation_id'] = $this->so->calculate_allocation_id($entry);
 			return parent::validate($entry);

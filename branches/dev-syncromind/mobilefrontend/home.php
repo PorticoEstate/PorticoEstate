@@ -7,9 +7,8 @@
 	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	* @global array $phpgw_info
 	*/
@@ -25,7 +24,6 @@
 		'enable_nextmatchs_class'	=> true,
 		'template_set'				=> 'mobilefrontend',
 		'custom_frontend'			=> 'mobilefrontend'
-
 	);
 
 	/**
@@ -33,7 +31,7 @@
 	*/
 	require_once '../header.inc.php';
 
-/*
+	/*
 	// check if forward parameter is set
 	if ( isset($_GET['phpgw_forward']) && is_array($_GET['phpgw_forward']) )
 	{
@@ -50,14 +48,13 @@
 		$GLOBALS['phpgw']->redirect_link($_GET['phpgw_forward'], $extra_vars);
 		exit;
 	}
-*/
-	if ( isset($GLOBALS['phpgw_info']['server']['force_default_app'])
-		&& $GLOBALS['phpgw_info']['server']['force_default_app'] != 'user_choice')
+	 */
+	if (isset($GLOBALS['phpgw_info']['server']['force_default_app']) && $GLOBALS['phpgw_info']['server']['force_default_app'] != 'user_choice')
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] = $GLOBALS['phpgw_info']['server']['force_default_app'];
 	}
 
-/*
+	/*
 	if (isset($_GET['cd']) && $_GET['cd']=='yes'
 		&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'])
 		&& $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']
@@ -83,15 +80,13 @@
 
 
 	// This initializes the users portal_order preference if it does not exist.
-	if ( (!isset($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) || !is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) )
-		&& $GLOBALS['phpgw_info']['apps'] )
+	if ((!isset($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) || !is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) ) && $GLOBALS['phpgw_info']['apps'])
 	{
 		$GLOBALS['phpgw']->preferences->delete('portal_order');
 		$order = 0;
-		foreach ( $GLOBALS['phpgw_info']['apps'] as $p )
+		foreach ($GLOBALS['phpgw_info']['apps'] as $p)
 		{
-			if ( isset($GLOBALS['phpgw_info']['user']['apps'][$p['name']])
-				&& $GLOBALS['phpgw_info']['user']['apps'][$p['name']] )
+			if (isset($GLOBALS['phpgw_info']['user']['apps'][$p['name']]) && $GLOBALS['phpgw_info']['user']['apps'][$p['name']])
 			{
 				$GLOBALS['phpgw']->preferences->add('portal_order', ++$order, $p['id']);
 			}
@@ -99,14 +94,13 @@
 		$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->save_repository();
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['portal_order'])
-		&& is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) )
+	if (isset($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) && is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']))
 	{
 		$app_check = array();
 		ksort($GLOBALS['phpgw_info']['user']['preferences']['portal_order']);
-		foreach($GLOBALS['phpgw_info']['user']['preferences']['portal_order'] as $app)
+		foreach ($GLOBALS['phpgw_info']['user']['preferences']['portal_order'] as $app)
 		{
-			if(!isset($app_check[$app]) || !$app_check[$app])
+			if (!isset($app_check[$app]) || !$app_check[$app])
 			{
 				$app_check[$app] = true;
 				$sorted_apps[] = $GLOBALS['phpgw']->applications->id2name($app);
@@ -114,11 +108,11 @@
 		}
 	}
 
-	$controller_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'controller.uicontrol.control_list') );
+	$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list'));
 	$controller_text = lang('controller');
-	$tts_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uitts.index') );
+	$tts_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index'));
 	$tts_text = lang('ticket');
-	$condition_survey_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uicondition_survey.index') );
+	$condition_survey_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.index'));
 	$condition_survey_text = $GLOBALS['phpgw']->translation->translate('condition survey', array(), false, 'property');
 	
 	$temp_menu = <<<HTML
@@ -133,10 +127,10 @@ HTML;
 
 	$GLOBALS['phpgw']->hooks->process('home_mobilefrontend', $sorted_apps);
 
-	if ( isset($GLOBALS['portal_order']) && is_array($GLOBALS['portal_order']) )
+	if (isset($GLOBALS['portal_order']) && is_array($GLOBALS['portal_order']))
 	{
 		$GLOBALS['phpgw']->preferences->delete('portal_order');
-		foreach ( $GLOBALS['portal_order']  as $app_order => $app_id )
+		foreach ($GLOBALS['portal_order'] as $app_order => $app_id)
 		{
 			$GLOBALS['phpgw']->preferences->add('portal_order', $app_order, $app_id);
 		}

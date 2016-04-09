@@ -29,7 +29,7 @@
 								<xsl:value-of select="statustext"/>
 							</xsl:attribute>
 							<xsl:attribute name="data-validation">
-								<xsl:text>number</xsl:text>
+								<xsl:text>required</xsl:text>
 							</xsl:attribute>
 							<xsl:attribute name="data-validation-error-msg">
 								<xsl:value-of select="php:function('lang', 'Please select a location !')"/>

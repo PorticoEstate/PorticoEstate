@@ -11,7 +11,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 
-		public function __construct(int $id)
+		public function __construct( int $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -21,7 +21,7 @@
 			return $this->id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -34,12 +34,12 @@
 		 */
 		public function get_field_of_responsibility_name()
 		{
-			if(!isset($this->field_of_responsibility_name))
+			if (!isset($this->field_of_responsibility_name))
 			{
-				if(isset($this->field_of_responsibility_id))
+				if (isset($this->field_of_responsibility_id))
 				{
 					$array				 = $GLOBALS['phpgw']->locations->get_name($this->field_of_responsibility_id);
-					if($array['appname']	 = $GLOBALS['phpgw_info']['flags']['currentapp'])
+					if ($array['appname'] = $GLOBALS['phpgw_info']['flags']['currentapp'])
 					{
 						$this->field_of_responsibility_name = $array['location'];
 					}
@@ -62,7 +62,7 @@
 		 * @param $permission
 		 * @return true if current user has permission, false otherwise
 		 */
-		public function has_permission($permission = PHPGW_ACL_PRIVATE)
+		public function has_permission( $permission = PHPGW_ACL_PRIVATE )
 		{
 			return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(), $permission, 'rental');
 		}
@@ -72,7 +72,7 @@
 		 *
 		 * @param $id the ocation identifier
 		 */
-		public function set_field_of_responsibility_id($id)
+		public function set_field_of_responsibility_id( $id )
 		{
 			$this->field_of_responsibility_id = $id;
 		}
@@ -117,7 +117,7 @@
 			return true;
 		}
 
-		public function set_validation_error(string $rule_name, string $error_language_key)
+		public function set_validation_error( string $rule_name, string $error_language_key )
 		{
 			$this->validation_errors[$rule_name] = $error_language_key;
 		}
@@ -127,12 +127,12 @@
 			return $this->validation_errors;
 		}
 
-		public function set_validation_warning(string $warning_language_key)
+		public function set_validation_warning( string $warning_language_key )
 		{
 			$this->validation_warnings[] = $warning_language_key;
 		}
 
-		public function set_consistency_warning(string $warning_language_key)
+		public function set_consistency_warning( string $warning_language_key )
 		{
 			$this->consistency_warnings[] = array('warning' => $warning_language_key);
 		}
@@ -154,7 +154,7 @@
 		 * @param $field the name of the class attribute to get
 		 * @return mixed the value of the attribute
 		 */
-		public function get_field($field)
+		public function get_field( $field )
 		{
 			return $this->{"$field"};
 		}
@@ -166,7 +166,7 @@
 		 * @param $field the name of the class attribute to set
 		 * @param $value the value to set
 		 */
-		public function set_field($field, $value)
+		public function set_field( $field, $value )
 		{
 			$this->{"$field"} = $value;
 		}

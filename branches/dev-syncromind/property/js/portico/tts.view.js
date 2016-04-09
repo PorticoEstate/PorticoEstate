@@ -20,11 +20,12 @@ this.local_DrawCallback4 = function ()
 	{
 		data = api.column(col, {page: 'current'}).data();
 		pageTotal = data.length ?
-				data.reduce(function (a, b) {
+			data.reduce(function (a, b)
+			{
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 	});
 
 };
@@ -47,11 +48,12 @@ this.local_DrawCallback5 = function ()
 	{
 		data = api.column(col, {page: 'current'}).data();
 		pageTotal = data.length ?
-				data.reduce(function (a, b) {
+			data.reduce(function (a, b)
+			{
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 	});
 
 };
@@ -62,10 +64,6 @@ var FormatterCenter = function (key, oData)
 	return "<center>" + oData[key] + "</center>";
 };
 
-var FormatterAmount2 = function (key, oData)
-{
-	return "<div align=\"right\">" + oData[key] + "</div>";
-};
 
 /********************************************************************************/
 
@@ -94,20 +92,23 @@ this.confirm_session = function (action)
 		type: 'POST',
 		dataType: 'json',
 		url: strURL,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				if (data['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
 					JqueryPortico.lightboxlogin();//defined in common.js
-				} else
+				}
+				else
 				{
 					document.getElementById(action).value = 1;
 					try
 					{
 						validate_submit();
-					} catch (e)
+					}
+					catch (e)
 					{
 						document.form.submit();
 					}
@@ -131,7 +132,8 @@ function SmsCountKeyUp(maxChar)
 	if (smsLenLeft >= 0)
 	{
 		left.value = smsLenLeft;
-	} else
+	}
+	else
 	{
 		var msgMaxLen = maxChar;
 		left.value = 0;
@@ -147,7 +149,8 @@ function SmsCountKeyDown(maxChar)
 	if (smsLenLeft >= 0)
 	{
 		left.value = smsLenLeft;
-	} else
+	}
+	else
 	{
 		var msgMaxLen = maxChar;
 		left.value = 0;
@@ -208,7 +211,8 @@ window.addEventListener("load", function ()
 		if (d.attachEvent)
 		{
 			d.attachEvent('onpropertychange', onDOMAttrModified, false);
-		} else
+		}
+		else
 		{
 			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
 		}

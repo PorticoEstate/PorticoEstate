@@ -50,11 +50,11 @@
 		 *
 		 * @return
 		 */
-		function __construct($fakebase = '/property')
+		function __construct( $fakebase = '/property' )
 		{
 			$this->vfs = CreateObject('phpgwapi.vfs');
 			$this->rootdir = $this->vfs->basedir;
-			if($fakebase)
+			if ($fakebase)
 			{
 				$this->fakebase = $fakebase;
 			}
@@ -68,9 +68,9 @@
 		 *
 		 * @return null
 		 */
-		public function set_account_id($account_id = 0)
+		public function set_account_id( $account_id = 0 )
 		{
-			if($account_id)
+			if ($account_id)
 			{
 				$this->vfs->working_id = $account_id;
 			}
@@ -83,17 +83,17 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each catalog down the path
 		 */
-		function create_document_dir($type)
+		function create_document_dir( $type )
 		{
 			$receipt = array();
 
-			if(!$this->vfs->file_exists(array(
+			if (!$this->vfs->file_exists(array(
 				'string' => $this->fakebase,
 				'relatives' => array(RELATIVE_NONE)
 			)))
 			{
 				$this->vfs->override_acl = 1;
-				if(!$this->vfs->mkdir(array(
+				if (!$this->vfs->mkdir(array(
 					'string' => $this->fakebase,
 					'relatives' => array(
 						RELATIVE_NONE
@@ -112,17 +112,17 @@
 			$type_part = explode('/', $type);
 
 			$catalog = '';
-			foreach($type_part as $entry)
+			foreach ($type_part as $entry)
 			{
 				$catalog .= "/{$entry}";
 
-				if(!$this->vfs->file_exists(array(
+				if (!$this->vfs->file_exists(array(
 					'string' => "{$this->fakebase}{$catalog}",
 					'relatives' => array(RELATIVE_NONE)
 				)))
 				{
 					$this->vfs->override_acl = 1;
-					if(!$this->vfs->mkdir(array(
+					if (!$this->vfs->mkdir(array(
 						'string' => "{$this->fakebase}{$catalog}",
 						'relatives' => array(
 							RELATIVE_NONE
@@ -150,24 +150,25 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each file
 		 */
-		function delete_file($path, $values)
+		function delete_file( $path, $values )
 		{
 			$receipt = array();
 
-			foreach($values['file_action'] as $file_name)
+			foreach ($values['file_action'] as $file_name)
 			{
 				$file_name = html_entity_decode($file_name);
+				$file_name = $this->strip_entities_from_name($file_name);
 
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
-				if($this->vfs->file_exists(array(
+				if ($this->vfs->file_exists(array(
 					'string' => $file,
 					'relatives' => array(RELATIVE_NONE)
 				)))
 				{
 					$this->vfs->override_acl = 1;
 
-					if(!$this->vfs->rm(array(
+					if (!$this->vfs->rm(array(
 						'string' => $file,
 						'relatives' => array(
 							RELATIVE_NONE
@@ -194,26 +195,27 @@
 		 *
 		 * @return null
 		 */
-		function view_file($type = '', $file = '', $jasper = '')
+		function view_file( $type = '', $file = '', $jasper = '' )
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			if(!$file)
+			if (!$file)
 			{
 				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
+				$file_name = $this->strip_entities_from_name($file_name);
 				$id = phpgw::get_var('id');
 				$file = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 
 			// prevent path traversal
-			if(preg_match('/\.\./', $file))
+			if (preg_match('/\.\./', $file))
 			{
 				return false;
 			}
 
-			if($this->vfs->file_exists(array(
+			if ($this->vfs->file_exists(array(
 				'string' => $file,
 				'relatives' => array(RELATIVE_NONE)
 			)))
@@ -225,7 +227,7 @@
 					'nofiles' => true
 				));
 
-				if(!$jasper)
+				if (!$jasper)
 				{
 					$this->vfs->override_acl = 1;
 
@@ -249,7 +251,7 @@
 					{
 						$jasper_wrapper->execute('', $output_type, $report_source);
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
 						$error = $e->getMessage();
 						//FIXME Do something clever with the error
@@ -267,15 +269,16 @@
 		 *
 		 * @return array Array with filecontent
 		 */
-		function get_attachments($path, $values)
+		function get_attachments( $path, $values )
 		{
 			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
-			foreach($values as $file_name)
+			foreach ($values as $file_name)
 			{
+				$file_name = $this->strip_entities_from_name($file_name);
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
-				if($this->vfs->file_exists(array(
+				if ($this->vfs->file_exists(array(
 					'string' => $file,
 					'relatives' => array(RELATIVE_NONE))))
 				{
@@ -290,5 +293,10 @@
 				}
 			}
 			return $attachments;
+		}
+
+		function strip_entities_from_name($file_name)
+		{
+			return str_replace(array('&#40;', '&#41;','&#8722;&#8722;'),array('(', ')', '--'), $file_name);
 		}
 	}

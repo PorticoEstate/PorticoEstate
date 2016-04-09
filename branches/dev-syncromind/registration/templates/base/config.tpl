@@ -1,12 +1,12 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-<table class="pure-table pure-table-bordered">
+	<table class="pure-table pure-table-bordered">
    <tr bgcolor="{th_bg}">
     <td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
    </tr>
-<!-- END header -->
+		<!-- END header -->
 
-<!-- BEGIN body -->
+		<!-- BEGIN body -->
    <tr bgcolor="{row_on}">
     <td colspan="2">&nbsp;</td>
    </tr>
@@ -108,12 +108,12 @@
 	</tr>
   <tr bgcolor="{row_on}">
 
-<!-- END body -->
+			<!-- END body -->
 
-<!-- BEGIN footer -->
+			<!-- BEGIN footer -->
   <tr bgcolor="{th_bg}">
     <td colspan="2">
-&nbsp;
+				&nbsp;
     </td>
   </tr>
   <tr>
@@ -122,6 +122,6 @@
       <input type="submit" name="cancel" value="{lang_cancel}">
     </td>
   </tr>
-</table>
+	</table>
 </form>
 <!-- END footer -->

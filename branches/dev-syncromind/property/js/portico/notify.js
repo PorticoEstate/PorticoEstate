@@ -15,7 +15,7 @@ formatLink_notify = function (key, oData)
 
 this.notify_contact_lookup = function ()
 {
-	if (!base_java_notify_url['location_item_id'])
+	if (!location_item_id)
 	{
 		alert(notify_lang_alert);
 		return;
@@ -31,7 +31,8 @@ this.notify_contact_lookup = function ()
  }
  */
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
 	$("#notify_contact").bind('DOMAttrModified propertychange', function (evt)
 	{

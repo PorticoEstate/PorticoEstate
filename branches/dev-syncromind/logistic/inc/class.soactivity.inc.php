@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id$
+	 * @version $Id$
 	*/
 	phpgw::import_class('logistic.socommon');
 
@@ -32,6 +32,7 @@
 
 	class logistic_soactivity extends logistic_socommon
 	{
+
 		public $total_records = 0;
 		protected static $so;
 		protected $activity_tree = array();
@@ -50,7 +51,7 @@
 			return self::$so;
 		}
 
-		protected function add(&$activity)
+		protected function add( &$activity )
 		{
 			$cols = array(
 				'parent_activity_id',
@@ -81,9 +82,9 @@
 			);
 
 			$sql = 'INSERT INTO lg_activity (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Return the new activity ID
 				return $this->db->get_last_insert_id('lg_activity', 'id');
@@ -94,7 +95,7 @@
 			}
 		}
 
-		protected function update($activity)
+		protected function update( $activity )
 		{
 			$id = intval($activity->get_id());
 
@@ -110,9 +111,9 @@
 				'update_date=' . $this->marshal(strtotime('now'), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Return the new activity ID
 				return $id;
@@ -125,7 +126,7 @@
 
 		protected function get_id_field_name()
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -142,41 +143,41 @@
 			return $ret;
 		}
 		
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
-			if($search_for)
+			if ($search_for)
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					default:
 						$like_clauses[] = "activity.name $this->like $like_pattern";
 						break;
 				}
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
 			$filter_clauses = array();
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "activity.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "activity.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['project']) && !$filters['project'] == '')
+			if (isset($filters['project']) && !$filters['project'] == '')
 			{
 				$filter_clauses[] = "activity.project_id = {$this->marshal($filters['project'], 'int')}";
 			}
-			if(isset($filters['user']) && !$filters['user'] == '')
+			if (isset($filters['user']) && !$filters['user'] == '')
 			{
 				$filter_clauses[] = "activity.responsible_user_id = {$this->marshal($filters['user'], 'int')}";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -185,7 +186,7 @@
 
 			$tables = "lg_activity activity";
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(activity.id)) AS count';
 			}
@@ -195,11 +196,10 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
-
 
 		/**
 		 * Method for retreiving objects.
@@ -215,15 +215,15 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get($start_index, $num_of_objects, $sort_field, $ascending, $search_for, $search_type, $filters, $allrows)
+		public function get( $start_index, $num_of_objects, $sort_field, $ascending, $search_for, $search_type, $filters, $allrows )
 		{
-			if($sort_field == null || $sort_field == 'id' || $sort_field == '')
+			if ($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{
 				$sort_field = 'id';
 			}
 
 			// Only allow positive start index
-			if($start_index < 0)
+			if ($start_index < 0)
 			{
 				$start_index = 0;
 			}
@@ -234,11 +234,10 @@
 			return $ret;
 		}
 
-
-		public function get_single(int $id)
+		public function get_single( int $id )
 		{
 			$objects = parent::get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
-			if(count($objects) > 0)
+			if (count($objects) > 0)
 			{
 				$keys = array_keys($objects);
 				return $objects[$keys[0]];
@@ -246,11 +245,10 @@
 			return null;
 		}
 
-		public function get_count(string $search_for, string $search_type, array $filters)
+		public function get_count( string $search_for, string $search_type, array $filters )
 		{
 			return $this->total_records;
 		}
-
 
 		/**
 		 * used for retrive the path for a particular node from a hierarchy
@@ -258,14 +256,13 @@
 		 * @param integer $node is the id of the node we want the path of
 		 * @return array $path Path
 		 */
-
-		public function get_path($node)
+		public function get_path( $node )
 		{
-			$node = (int) $node;
+			$node = (int)$node;
 			$table = "lg_activity";
 			$sql = "SELECT id, name, parent_activity_id FROM {$table} WHERE id = {$node}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$parent_id = $this->db->f('parent_activity_id');
@@ -284,7 +281,6 @@
 			return $path;
 		}
 
-
 		/**
 		 * Method for retreiving hierarchy.
 		 * 
@@ -293,14 +289,13 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-
-		public function read_tree($sql, $filters, $num_of_objects = 0, $start = 0, $allrows = false)
+		public function read_tree( $sql, $filters, $num_of_objects = 0, $start = 0, $allrows = false )
 		{
-			if($filters['activity'])
+			if ($filters['activity'])
 			{
 				$filter_clause = "activity.id = {$this->marshal($filters['activity'], 'int')}";
 			}
-			else if($filters['id'])
+			else if ($filters['id'])
 			{
 				$filter_clause = "activity.id = {$this->marshal($filters['id'], 'int')}";
 			}
@@ -309,10 +304,10 @@
 				$filter_clause = "(parent_activity_id = 0 OR parent_activity_id IS NULL)";
 			}
 
-			$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
+			$sql_parts = explode('1=1', $sql); // Split the query to insert extra condition on test for break
 			$sql = "{$sql_parts[0]} {$filter_clause} {$sql_parts[1]}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->activity_tree = array();
 			while ($this->db->next_record())
@@ -321,12 +316,12 @@
 				$activities[$id] = array
 					(
 						'id'			=> $id,
-						'name'			=> $this->db->f('name',true),
+					'name' => $this->db->f('name', true),
 						'parent_id'		=> 0
 					);
 			}
 
-			foreach($activities as $activity)
+			foreach ($activities as $activity)
 			{
 				$this->activity_tree[] = array
 					(
@@ -342,36 +337,36 @@
 //------ Start pagination
 			$this->total_records = count($this->activity_tree);
 
-			if($this->total_records == 0)
+			if ($this->total_records == 0)
 			{
 				return $result;
 			}
 
-			if($num_of_objects)
+			if ($num_of_objects)
 			{
 				$num_rows = $num_of_objects;
 			}
 			else
 			{
-				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 			}
 
-			if($allrows)
+			if ($allrows)
 			{
 				$out = $this->activity_tree;
 			}
 			else
 			{
-				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+				$page = ceil(( $start / $this->total_records ) * ($this->total_records / $num_rows));
 				$activity_tree = array_chunk($this->activity_tree, $num_rows);
 				$out = $activity_tree[$page];
 			}
 
 //------ End pagination
 
-			foreach($out as $_activity)
+			foreach ($out as $_activity)
 			{
-				$this->db->query("SELECT * FROM lg_activity WHERE id ={$_activity['id']}",__LINE__,__FILE__);
+				$this->db->query("SELECT * FROM lg_activity WHERE id ={$_activity['id']}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$activity_obj = $this->populate($_activity['id']);
 				$activity_obj->set_name($_activity['name']);
@@ -387,10 +382,9 @@
 		 * @param $level int which level to search.
 		 * @return array of children
 		 */
-
-		public function get_children($parent, $level, $reset = false)
+		public function get_children( $parent, $level, $reset = false )
 		{
-			if($reset)
+			if ($reset)
 			{
 				$this->activity_tree = array();
 			}
@@ -398,7 +392,7 @@
 			$db = clone($this->db);
 			$table = "lg_activity";
 			$sql = "SELECT id, name FROM {$table} WHERE parent_activity_id = {$parent} ORDER BY name ASC";
-			$db->query($sql,__LINE__,__FILE__);
+			$db->query($sql, __LINE__, __FILE__);
 
 			while ($db->next_record())
 			{
@@ -406,20 +400,19 @@
 				$this->activity_tree[] = array
 					(
 						'id'		=> $id,
-						'name'		=> str_repeat('..',$level).$db->f('name',true),
+					'name' => str_repeat('..', $level) . $db->f('name', true),
 						'parent_id'	=> $parent
 					);
-				$this->get_children($id, $level+1);
+				$this->get_children($id, $level + 1);
 			}
 			return $this->activity_tree;
 		} 
 
-
-		protected function populate(int $activity_id, &$activity)
+		protected function populate( int $activity_id, &$activity )
 		{
-			if($activity == null)
+			if ($activity == null)
 			{
-				$activity = new logistic_activity((int) $activity_id);
+				$activity = new logistic_activity((int)$activity_id);
 
 				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
@@ -437,13 +430,13 @@
 			return $activity;
 		}
 
-		public function get_project_name($id)
+		public function get_project_name( $id )
 		{
-			if($id && is_numeric($id))
+			if ($id && is_numeric($id))
 			{
-				$result = $this->db->query('SELECT name FROM lg_project WHERE id='.$id, __LINE__,__FILE__);
+				$result = $this->db->query('SELECT name FROM lg_project WHERE id=' . $id, __LINE__, __FILE__);
 
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					// Return the new activity ID
 					return $this->db->f('name');
@@ -451,12 +444,12 @@
 			}
 		}
 
-		public function get_responsible_user($user_id)
+		public function get_responsible_user( $user_id )
 		{
-			if($user_id && is_numeric($user_id))
+			if ($user_id && is_numeric($user_id))
 			{
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
-				if(isset($account))
+				if (isset($account))
 				{
 				 return $account->__toString();
 				}

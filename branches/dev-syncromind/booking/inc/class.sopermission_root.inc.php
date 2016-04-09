@@ -38,9 +38,9 @@
 			return $this->default_roles;
 		}
 
-		protected function doValidate($entity, booking_errorstack $errors)
+		protected function doValidate( $entity, booking_errorstack $errors )
 		{
-			if(!$this->validate_uniqueness($entity, 'subject_id', 'role'))
+			if (!$this->validate_uniqueness($entity, 'subject_id', 'role'))
 			{
 				$errors['global'] = lang('Permission already exists');
 			}

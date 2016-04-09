@@ -51,12 +51,12 @@
 
 		public function building_users()
 		{
-			if(!phpgw::get_var('phpgw_return_as') == 'json')
+			if (!phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return;
 			}
 
-			if(($building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null)))
+			if (($building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null)))
 			{
 				$organizations = $this->bo->find_building_users($building_id);
 				array_walk($organizations["results"], array($this, "_add_links"), "bookingfrontend.uiorganization.show");
@@ -68,7 +68,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -140,12 +140,12 @@
 			$organizations = $this->bo->read();
 			array_walk($organizations["results"], array($this, "_add_links"), $this->module . ".uiorganization.show");
 
-			foreach($organizations["results"] as &$organization)
+			foreach ($organizations["results"] as &$organization)
 			{
 
 				$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
 
-				if($contact)
+				if ($contact)
 				{
 					$organization += array(
 						"primary_contact_name"	 => ($contact["name"]) ? $contact["name"] : '',
@@ -162,35 +162,35 @@
 			return $this->customer_id;
 		}
 
-		protected function extract_customer_identifier(&$data)
+		protected function extract_customer_identifier( &$data )
 		{
 			$this->get_customer_identifier()->extract_form_data($data);
 		}
 
-		protected function validate_customer_identifier(&$data)
+		protected function validate_customer_identifier( &$data )
 		{
 			return $this->get_customer_identifier()->validate($data);
 		}
 
-		protected function install_customer_identifier_ui(&$organization)
+		protected function install_customer_identifier_ui( &$organization )
 		{
 			$this->get_customer_identifier()->install($this, $organization);
 		}
 
-		protected function validate(&$organization)
+		protected function validate( &$organization )
 		{
 			$errors = array_merge($this->validate_customer_identifier($organization), $this->bo->validate($organization));
 			return $errors;
 		}
 
-		protected function extract_form_data($defaults = array())
+		protected function extract_form_data( $defaults = array() )
 		{
 			$organization = array_merge($defaults, extract_values($_POST, $this->fields));
 			$this->extract_customer_identifier($organization);
 			return $organization;
 		}
 
-		protected function extract_and_validate($defaults = array())
+		protected function extract_and_validate( $defaults = array() )
 		{
 			$organization	 = $this->extract_form_data($defaults);
 			$errors			 = $this->validate($organization);
@@ -202,18 +202,18 @@
 			$errors			 = array();
 			$organization	 = array('customer_internal' => 1);
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate(array('active' => 1));
-				if(strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 50)
 				{
 					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
 				}
-				if(strlen($_POST['shortname']) > 11)
+				if (strlen($_POST['shortname']) > 11)
 				{
 					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
 				}
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($organization);
 					$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
@@ -226,7 +226,7 @@
 			$activities					 = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$this->add_template_helpers();
 
@@ -256,26 +256,26 @@
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate($organization);
-				if(strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 50)
 				{
 					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
 				}
-				if(strlen($_POST['shortname']) > 11)
+				if (strlen($_POST['shortname']) > 11)
 				{
 					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
 				}
-				if((strlen($_POST['customer_number']) != 5) && (strlen($_POST['customer_number']) != 6) && ($_POST['customer_number'] != ''))
+				if ((strlen($_POST['customer_number']) != 5) && (strlen($_POST['customer_number']) != 6) && ($_POST['customer_number'] != ''))
 				{
 					$errors['customer_number'] = lang('Resourcenumber is wrong, 5 or 6 characters long');
 				}
-				if(!$errors)
+				if (!$errors)
 				{
 					$organization['shortname']	 = $_POST['shortname'];
 					$receipt					 = $this->bo->update($organization);
-					if($this->module == "bookingfrontend")
+					if ($this->module == "bookingfrontend")
 					{
 						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $receipt["id"]));
@@ -298,7 +298,7 @@
 			$activities	 = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array('organization' => $organization,
@@ -314,7 +314,7 @@
 			$tabs['generic'] = array('label' => lang('Organization'), 'link' => '#organization');
 			$active_tab		 = 'generic';
 
-			if(trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])))
+			if (trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])))
 			{
 				$organization['homepage'] = 'http://' . $organization['homepage'];
 			}

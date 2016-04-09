@@ -47,13 +47,13 @@
 			$this->db->query("SELECT id,name,data FROM fm_async_method ORDER BY name ");
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				if($this->db->f('data'))
+				if ($this->db->f('data'))
 				{
 					$method_data = array();
 					$data_set = unserialize($this->db->f('data'));
-					while(is_array($data_set) && list($key, $value) = each($data_set))
+					while (is_array($data_set) && list($key, $value) = each($data_set))
 					{
 						$method_data[] = $key . '=' . $value;
 					}
@@ -68,14 +68,14 @@
 			return $categories;
 		}
 
-		function read_single_method($id)
+		function read_single_method( $id )
 		{
 			$this->db->query("SELECT name FROM fm_async_method  where id='$id'");
 			$this->db->next_record();
 			return $this->db->f('name');
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$id = isset($data['id']) && $data['id'] ? $data['id'] : 0;
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -86,12 +86,12 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
-			if($order == 'undefined')
+			if ($order == 'undefined')
 			{
 				$order = '';
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod .= " ORDER BY $order $sort";
 			}
@@ -103,18 +103,18 @@
 			$where = 'WHERE';
 
 			$filtermethod = '';
-			if($filter > 0)
+			if ($filter > 0)
 			{
 				$filtermethod .= " $where owner='{$filter}' ";
 				$where = 'AND';
 			}
 
 			$id = $this->db->db_addslashes($id);
-			if(strpos($id, '%') !== false || strpos($id, '_') !== false)
+			if (strpos($id, '%') !== false || strpos($id, '_') !== false)
 			{
 				$filtermethod = "$where id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
-			else if(!$id)
+			else if (!$id)
 			{
 				$filtermethod = $where . ' next<=' . time() . " AND id!='##last-check-run##'";
 			}
@@ -124,7 +124,7 @@
 			}
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND (account_lid $this->like '%$query%' OR method $this->like '%$query%' OR id $this->like '%$query%')";
@@ -135,7 +135,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -145,7 +145,7 @@
 			}
 
 			$jobs = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
 				$data = @unserialize($this->db->f('data', true));
@@ -163,14 +163,14 @@
 			return $jobs;
 		}
 
-		function read_org($id = 0)
+		function read_org( $id = 0 )
 		{
 			$id = $this->db->db_addslashes($id);
-			if(strpos($id, '%') !== false || strpos($id, '_') !== false)
+			if (strpos($id, '%') !== false || strpos($id, '_') !== false)
 			{
 				$where = "id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
-			elseif(!$id)
+			elseif (!$id)
 			{
 				$where = 'next<=' . time() . " AND id!='##last-check-run##'";
 			}
@@ -181,7 +181,7 @@
 			$this->db->query($sql = "SELECT * FROM $this->db_table WHERE $where", __LINE__, __FILE__);
 
 			$jobs = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
 
@@ -195,18 +195,18 @@
 				);
 				//echo "job id='$id'<pre>"; print_r($jobs[$id]); echo "</pre>\n";
 			}
-			if(!count($jobs))
+			if (!count($jobs))
 			{
 				return false;
 			}
 			return $jobs;
 		}
 
-		function read_single($owner_id)
+		function read_single( $owner_id )
 		{
 			$this->db->query("select * from fm_owner where owner_id='$owner_id'", __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$owner['id'] = (int)$this->db->f('owner_id');
 				$owner['abid'] = $this->db->f('abid');
@@ -219,7 +219,7 @@
 			}
 		}
 
-		function add($owner)
+		function add( $owner )
 		{
 			$owner['name'] = $this->db->db_addslashes($owner['name']);
 
@@ -232,7 +232,7 @@
 			return $receipt;
 		}
 
-		function edit($owner)
+		function edit( $owner )
 		{
 			$owner['name'] = $this->db->db_addslashes($owner['name']);
 
@@ -244,7 +244,7 @@
 			return $receipt;
 		}
 
-		function delete($owner_id)
+		function delete( $owner_id )
 		{
 			$this->db->query('DELETE FROM fm_owner WHERE owner_id=' . intval($owner_id), __LINE__, __FILE__);
 		}

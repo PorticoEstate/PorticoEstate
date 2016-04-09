@@ -41,29 +41,29 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.sounit');
 			}
 			return self::$so;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses		 = array('1=1');
 			$filter_clauses	 = array();
-			if(isset($filters['composite_id'])) // Areas/units already added to composite
+			if (isset($filters['composite_id'])) // Areas/units already added to composite
 			{
 				$filter_clauses[] = "composite_id = {$this->marshal($filters['composite_id'], 'int')}";
 			}
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 			$condition	 = join(' AND ', $clauses);
 			$tables		 = "rental_unit";
 			$joins		 = '';
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(id)) AS count';
 			}
@@ -77,7 +77,7 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $unit_id, &$unit)
+		protected function populate( int $unit_id, &$unit )
 		{
 			$location_code	 = $this->unmarshal($this->db->f('location_code', true), 'string');
 			// We get the data from the property module
@@ -86,10 +86,10 @@
 			$level			 = -1;
 			$names			 = array();
 			$levelFound		 = false;
-			for($i = 1; !$levelFound; $i++)
+			for ($i = 1; !$levelFound; $i++)
 			{
 				$loc_name = 'loc' . $i . '_name';
-				if(array_key_exists($loc_name, $data))
+				if (array_key_exists($loc_name, $data))
 				{
 					$level			 = $i;
 					$names[$level]	 = $data[$loc_name];
@@ -102,16 +102,16 @@
 			$gab_id		 = '';
 			$gabinfos	 = execMethod('property.sogab.read', array('location_code'	 => $location_code,
 				'allrows'		 => true));
-			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+			if ($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 			{
 				$gabinfo = array_shift($gabinfos);
 				$gab_id	 = $gabinfo['gab_id'];
 			}
 			$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
 			$location->set_address_1($data['street_name'] . ' ' . $data['street_number']);
-			foreach($data['attributes'] as $attributes)
+			foreach ($data['attributes'] as $attributes)
 			{
-				switch($attributes['column_name'])
+				switch ($attributes['column_name'])
 				{
 					case 'area_gross':
 						$location->set_area_gros($attributes['value']);
@@ -138,7 +138,7 @@
 		/**
 		 * @see socommon->store()
 		 */
-		protected function add(&$unit)
+		protected function add( &$unit )
 		{
 			$sql	 = "INSERT INTO rental_unit (composite_id, location_code) VALUES ({$this->marshal($unit->get_composite_id(), 'int')}, '{$unit->get_location_code()}')";
 			$result	 = $this->db->query($sql);
@@ -148,12 +148,12 @@
 		/**
 		 * @see socommon->store()
 		 */
-		protected function update($unit)
+		protected function update( $unit )
 		{
 			// There's never anything to update on a unit
 		}
 
-		public function delete(int $unit_id)
+		public function delete( int $unit_id )
 		{
 			$sql	 = "DELETE FROM rental_unit WHERE id = {$this->marshal($unit_id, 'int')}";
 			$result	 = $this->db->query($sql);

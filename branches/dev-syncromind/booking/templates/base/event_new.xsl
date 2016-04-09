@@ -162,6 +162,10 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
+
 													</input>
 												</div>
 												<div class="pure-control-group">
@@ -172,6 +176,10 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
+
 													</input>
 												</div>
 											</div>
@@ -187,6 +195,10 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
+
 													</input>
 												</div>
 												<div class="pure-control-group">
@@ -197,6 +209,10 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
+
 													</input>
 												</div>
 											</div>

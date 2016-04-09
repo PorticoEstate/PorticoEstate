@@ -39,7 +39,7 @@
 			$this->so = CreateObject('property.solocation');
 		}
 
-		function get_responsibilities($data = array())
+		function get_responsibilities( $data = array() )
 		{
 			$data['filter_role_on_contact']	 = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
 			$locations						 = $this->so->read($data);
@@ -49,12 +49,12 @@
 			return $locations;
 		}
 
-		function get_buildings_on_property($user_role, $parent_location_code, $level)
+		function get_buildings_on_property( $user_role, $parent_location_code, $level )
 		{
 
 			$children = execMethod('property.solocation.get_children', $parent_location_code);
 
-			foreach($children as &$entry)
+			foreach ($children as &$entry)
 			{
 				$entry['id'] = "{$parent_location_code}-{$entry['id']}";
 			}
@@ -93,14 +93,14 @@
 			 */
 		}
 
-		function get_building_location_code($location_code)
+		function get_building_location_code( $location_code )
 		{
-			if(strlen($location_code) == 6)
+			if (strlen($location_code) == 6)
 			{
 				$location_code_arr		 = explode('-', $location_code, 2);
 				$building_location_code	 = $location_code_arr[0];
 			}
-			else if(strlen($location_code) > 6)
+			else if (strlen($location_code) > 6)
 			{
 				$location_code_arr		 = explode('-', $location_code, 3);
 				$building_location_code	 = $location_code_arr[0] . "-" . $location_code_arr[1];
@@ -113,7 +113,7 @@
 			return $building_location_code;
 		}
 
-		function get_location_level($location_code)
+		function get_location_level( $location_code )
 		{
 			$level = count(explode('-', $location_code));
 

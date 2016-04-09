@@ -53,7 +53,7 @@
 	$GLOBALS['phpgw_info']['message']['errors'] = array();
 	$system_name = $GLOBALS['phpgw_info']['server']['system_name'];
 
-	if(!isset($_GET['domain']) || !$_GET['domain'])
+	if (!isset($_GET['domain']) || !$_GET['domain'])
 	{
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::domain not given as input";
 	}
@@ -61,7 +61,7 @@
 	{
 		$_REQUEST['domain'] = $_GET['domain'];
 		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
-		if(!$_domain_info)
+		if (!$_domain_info)
 		{
 			$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::not a valid domain";
 		}
@@ -79,7 +79,7 @@
 	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
 	$fileid = phpgw::get_var('fileid', 'string');
 
-	if(!$fileid && !$bygningsnr)
+	if (!$fileid && !$bygningsnr)
 	{
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
 	}
@@ -100,17 +100,17 @@
 
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
-	if(!$GLOBALS['sessionid'])
+	if (!$GLOBALS['sessionid'])
 	{
 		$lang_denied = lang('Anonymous access not correctly configured');
-		if($GLOBALS['phpgw']->session->reason)
+		if ($GLOBALS['phpgw']->session->reason)
 		{
 			$lang_denied = $GLOBALS['phpgw']->session->reason;
 		}
 		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::{$lang_denied}";
 	}
 
-	if($GLOBALS['phpgw_info']['message']['errors'])
+	if ($GLOBALS['phpgw_info']['message']['errors'])
 	{
 		_debug_array($GLOBALS['phpgw_info']['message']['errors']);
 		$GLOBALS['phpgw']->common->phpgw_exit();
@@ -141,7 +141,7 @@
 
 	$secKey = $LoginResponse->LoginResult;
 
-	if($fileid)
+	if ($fileid)
 	{
 		$getAvailableFileVariants = new getAvailableFileVariants();
 		$getAvailableFileVariants->secKey = $secKey;
@@ -159,7 +159,7 @@
 
 		$getFileAsByteArrayResult = $getFileAsByteArrayResponse->getFileAsByteArrayResult;
 
-		if($getFileAsByteArrayResult)
+		if ($getFileAsByteArrayResult)
 		{
 			$file = base64_decode($getFileAsByteArrayResult);
 
@@ -185,7 +185,7 @@
 	$Result = $searchAndGetDocumentsWithVariantsResponse->searchAndGetDocumentsWithVariantsResult;
 
 	$_result = array();
-	if(isset($Result->ExtendedDocument) && !is_array($Result->ExtendedDocument))
+	if (isset($Result->ExtendedDocument) && !is_array($Result->ExtendedDocument))
 	{
 		$_result = array('ExtendedDocument' => array($Result->ExtendedDocument));
 	}
@@ -202,7 +202,7 @@ HTML;
 	$Logout->secKey = $secKey;
 	$Services->Logout($Logout);
 
-	if(!$Result)
+	if (!$Result)
 	{
 		echo "<H2> Ingen treff </H2>";
 		$GLOBALS['phpgw']->common->phpgw_exit();
@@ -237,9 +237,9 @@ HTML;
 	)
 	);
 
-	foreach($_result['ExtendedDocument'][0]->Attributes->Attribute as $attribute)
+	foreach ($_result['ExtendedDocument'][0]->Attributes->Attribute as $attribute)
 	{
-		if(in_array($attribute->Name, $skip_field))
+		if (in_array($attribute->Name, $skip_field))
 		{
 			continue;
 		}
@@ -250,37 +250,37 @@ HTML;
 
 //_debug_array($_result['ExtendedDocument']);
 	$case_array = array();
-	foreach($_result['ExtendedDocument'] as $entry)
+	foreach ($_result['ExtendedDocument'] as $entry)
 	{
 		$_html = '<tr>';
 		$_html .='<td>';
 		$_html .="<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
 		$_html .='</td>';
 
-		foreach($entry->Attributes->Attribute as $attribute)
+		foreach ($entry->Attributes->Attribute as $attribute)
 		{
-			if(in_array($attribute->Name, $skip_field))
+			if (in_array($attribute->Name, $skip_field))
 			{
 				continue;
 			}
 
-			if($attribute->Name == 'Saksdato')
+			if ($attribute->Name == 'Saksdato')
 			{
 				$_key = strtotime($attribute->Value->anyType);
 			}
 
 			$_html .='<td>';
 
-			if(is_array($attribute->Value->anyType))
+			if (is_array($attribute->Value->anyType))
 			{
 				$_html .= '<table>';
 
-				foreach($attribute->Value->anyType as $value)
+				foreach ($attribute->Value->anyType as $value)
 				{
 					$_html .= '<tr>';
 					$_html .= '<td>';
 
-					if(isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
+					if (isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
 					{
 						$_html .= $value->enc_value->GNr;
 						$_html .= '/' . $value->enc_value->BNr;
@@ -309,7 +309,7 @@ HTML;
 
 	ksort($case_array);
 //_debug_array($case_array);
-	foreach($case_array as $case)
+	foreach ($case_array as $case)
 	{
 		$html .= implode('', $case);
 	}

@@ -8,24 +8,23 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/**
 	* Update sms version from 0.9.17.000 to 0.9.17.001
 	*/
-
 	$test[] = '0.9.17.501';
+
 	function sms_upgrade0_9_17_501()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_sms_config_type',array(
+			'phpgw_sms_config_type', array(
 				'fd' => array(
-					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
-					'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200, 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -35,15 +34,15 @@
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_sms_config_attrib',array(
+			'phpgw_sms_config_attrib', array(
 				'fd' => array(
-					'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-					'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
-					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
-					'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+				'type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'input_type' => array('type' => 'varchar', 'precision' => 10, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200, 'nullable' => true)
 				),
-				'pk' => array('type_id','id'),
+			'pk' => array('type_id', 'id'),
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
@@ -51,32 +50,32 @@
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_sms_config_choice',array(
+			'phpgw_sms_config_choice', array(
 				'fd' => array(
-					'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-					'value' => array('type' => 'varchar', 'precision' => 20,'nullable' => False)
+				'type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False)
 				),
-				'pk' => array('type_id','attrib_id','id'),
+			'pk' => array('type_id', 'attrib_id', 'id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('type_id','attrib_id','value')
+			'uc' => array('type_id', 'attrib_id', 'value')
 			)
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_sms_config_value',array(
+			'phpgw_sms_config_value', array(
 				'fd' => array(
-					'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-					'value' => array('type' => 'varchar', 'precision' => 200,'nullable' => False)
+				'type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False)
 				),
-				'pk' => array('type_id','attrib_id','id'),
+			'pk' => array('type_id', 'attrib_id', 'id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('type_id','attrib_id','value')
+			'uc' => array('type_id', 'attrib_id', 'value')
 			)
 		);
 
@@ -98,8 +97,8 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
-
 	$test[] = '0.9.17.502';
+
 	function sms_upgrade0_9_17_502()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -167,32 +166,36 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
-
 	$test[] = '0.9.17.503';
+
 	function sms_upgrade0_9_17_503()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand','command_type',array('type' => 'varchar','precision' => 10,'nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand','command_descr',array('type' => 'text', 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand', 'command_type', array(
+			'type' => 'varchar', 'precision' => 10, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand', 'command_descr', array(
+			'type' => 'text', 'nullable' => True));
 
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.504';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
-
 	$test[] = '0.9.17.504';
+
 	function sms_upgrade0_9_17_504()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log','command_log_param',array('type' => 'varchar','precision' => 150,'nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log','command_log_success',array('type' => 'int','precision' => 2,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log', 'command_log_param', array(
+			'type' => 'varchar', 'precision' => 150, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_featcommand_log', 'command_log_success', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
 
 		$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.505';
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
-
 	$test[] = '0.9.17.505';
+
 	function sms_upgrade0_9_17_505()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -208,37 +211,43 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['sms']['currentver'];
 	}
-	
 	/**
 	* Update property version from 0.9.17.506 to 0.9.17.507
 	*/
-
 	$test[] = '0.9.17.506';
+
 	function sms_upgrade0_9_17_506()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param2',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param3',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param4',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param5',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param6',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario','autoreply_scenario_param7',array('type' => 'varchar', 'precision' => 20,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param2', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param3', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param4', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param5', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param6', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_param7', array(
+			'type' => 'varchar', 'precision' => 20, 'nullable' => true));
 
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing','p_src',array('type' => 'varchar', 'precision' => 100,'nullable' => true));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing','p_footer',array('type' => 'varchar', 'precision' => 11,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing', 'p_src', array(
+			'type' => 'varchar', 'precision' => 100, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing', 'p_footer', array(
+			'type' => 'varchar', 'precision' => 11, 'nullable' => true));
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.507';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
-
 	/**
 	* Update sms version from 0.9.17.507 to 0.9.17.508
 	*/
-
 	$test[] = '0.9.17.507';
+
 	function sms_upgrade0_9_17_507()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -247,12 +256,12 @@
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$test = $GLOBALS['phpgw_setup']->oProc->f('name');
 
-		if($test != 'wsdl')
+		if ($test != 'wsdl')
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (section_id,attrib_id,id,value) VALUES (1, 1, 5, 'carrot')");
 			$GLOBALS['phpgw_setup']->oProc->query("SELECT max(type_id) as type_id FROM phpgw_sms_config_attrib");
 			$GLOBALS['phpgw_setup']->oProc->next_record();
-			$type_id = $GLOBALS['phpgw_setup']->oProc->f('type_id') +1;
+			$type_id = $GLOBALS['phpgw_setup']->oProc->f('type_id') + 1;
 
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 1, 'text', 'wsdl', 'Carrot wsdl')");
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 2, 'text', 'send_url', 'send url using GET')");
@@ -274,30 +283,29 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT name FROM phpgw_sms_config_type WHERE id = 6");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$test = $GLOBALS['phpgw_setup']->oProc->f('name');
-		if(!$test)
+		if (!$test)
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name,descr) VALUES (6, 'carrot', 'TDC gateway')");
 		}
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.508';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
-
 	/**
 	* Update sms version from 0.9.17.508 to 0.9.17.509
 	* Convert to new config scheme
 	*/
-
 	$test[] = '0.9.17.508';
+
 	function sms_upgrade0_9_17_508()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 
-		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 		$db->query("SELECT count(*) as num_sections FROM phpgw_config2_section");
 		$db->next_record();
 		$num_sections = $db->f('num_sections');
@@ -317,7 +325,7 @@
 
 		foreach ($sections as $section)
 		{	
-			$sql = 'INSERT INTO phpgw_config2_section(' . implode(',',array_keys($section)) . ') '
+			$sql = 'INSERT INTO phpgw_config2_section(' . implode(',', array_keys($section)) . ') '
 				 . ' VALUES (' . $db->validate_insert(array_values($section)) . ')';
 			$db->query($sql, __LINE__, __FILE__);
 		}
@@ -338,7 +346,7 @@
 
 		foreach ($attribs as $attrib)
 		{	
-			$sql = 'INSERT INTO phpgw_config2_attrib(' . implode(',',array_keys($attrib)) . ') '
+			$sql = 'INSERT INTO phpgw_config2_attrib(' . implode(',', array_keys($attrib)) . ') '
 				 . ' VALUES (' . $db->validate_insert(array_values($attrib)) . ')';
 			$db->query($sql, __LINE__, __FILE__);
 		}
@@ -358,7 +366,7 @@
 
 		foreach ($choices as $choice)
 		{	
-			$sql = 'INSERT INTO phpgw_config2_choice(' . implode(',',array_keys($choice)) . ') '
+			$sql = 'INSERT INTO phpgw_config2_choice(' . implode(',', array_keys($choice)) . ') '
 				 . ' VALUES (' . $db->validate_insert(array_values($choice)) . ')';
 			$db->query($sql, __LINE__, __FILE__);
 		}
@@ -378,7 +386,7 @@
 
 		foreach ($values as $value)
 		{	
-			$sql = 'INSERT INTO phpgw_config2_value(' . implode(',',array_keys($value)) . ') '
+			$sql = 'INSERT INTO phpgw_config2_value(' . implode(',', array_keys($value)) . ') '
 				 . ' VALUES (' . $db->validate_insert(array_values($value)) . ')';
 			$db->query($sql, __LINE__, __FILE__);
 		}
@@ -388,24 +396,23 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_choice');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_value');
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.509';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
-
 	/**
 	* Update sms version from 0.9.17.509 to 0.9.17.510
 	* Convert to new config scheme
 	*/
-
 	$test[] = '0.9.17.509';
+
 	function sms_upgrade0_9_17_509()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 		$db->query("UPDATE phpgw_config2_attrib SET name = 'gateway_module_get', descr = 'Active gateway module GET' WHERE name = 'gateway_module'");
 
 		$db->query("SELECT * FROM phpgw_config2_attrib WHERE name = 'gateway_number'");
@@ -419,24 +426,23 @@
 		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 4, 'kannel')");
 		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 5, 'carrot')");
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.510';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
-
 	/**
 	* Update sms version from 0.9.17.510 to 0.9.17.511
 	* new to new config section
 	*/
-
 	$test[] = '0.9.17.510';
+
 	function sms_upgrade0_9_17_510()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('sms', 'run'));
+		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('sms', 'run'));
 
 		$receipt_section_bergen = $custom_config->add_section(array
 			(
@@ -502,8 +508,7 @@
 			)
 		);
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_tblsmsoutgoing','external_id',
-			array
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_tblsmsoutgoing', 'external_id', array
 			(
 				'type' => 'int',
 				'precision' => 4,
@@ -511,20 +516,18 @@
 			)
 		);
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.511';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
-
-
 	/**
 	* Update sms version from 0.9.17.511 to 0.9.17.512
 	* 
 	*/
-
 	$test[] = '0.9.17.511';
+
 	function sms_upgrade0_9_17_511()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -534,11 +537,13 @@
 			'phpgw_sms_received_data', array(
 				'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => False),
-					'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),/*sms/mms/report*/
+				'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False), /* sms/mms/report */
 					'data' => array('type' => 'text', 'nullable' => False),
 					'status' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
-					'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
-					'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
+					'default' => '0'),
+				'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
+					'default' => '0'),
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -547,7 +552,7 @@
 			)
 		);
 
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.512';
 			return $GLOBALS['setup_info']['sms']['currentver'];

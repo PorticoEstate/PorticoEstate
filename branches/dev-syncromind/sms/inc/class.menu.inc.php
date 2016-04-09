@@ -8,26 +8,25 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_menu
 	{
-		var $sub;
 
+		var $sub;
 		var $public_functions = array
 		(
 			'links'	=> true,
 		);
 
-		function sms_menu($sub='')
+		function sms_menu( $sub = '' )
 		{
-			if(!$sub)
+			if (!$sub)
 			{
 				$this->sub		= $sub;
 			}
@@ -47,8 +46,7 @@
 			$menus = array();
 
 			$start_page = 'sms.index';
-			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'])
-					&& $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'] )
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page']) && $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'])
 			{
 					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['sms']['default_start_page'];
 			}
@@ -58,7 +56,7 @@
 				'sms' => array
 				(
 					'text'	=> lang('sms'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}") ),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "sms.ui{$start_page}")),
 					'image'	=> array('sms', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'facilities management'
@@ -66,7 +64,7 @@
 			);
 
 			$menus['toolbar'] = array();
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 
 				$menus['admin'] = array
@@ -74,34 +72,38 @@
 					'config'	=> array
 					(
 						'text'	=> lang('config'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('sms', 'run')))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+							'location_id' => $GLOBALS['phpgw']->locations->get_id('sms', 'run')))
 					),
 					'refresh'	=> array
 					(
 						'text'	=> lang('Daemon manual refresh'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.daemon_manual'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.daemon_manual'))
 					),
 					'acl'	=> array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'sms'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
+							'acl_app' => 'sms'))
 					)
 				);
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$menus['preferences'] = array
 				(
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'sms', 'type'=> 'user') )
+						'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'sms',
+							'type' => 'user'))
 					),
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'sms') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs',
+							'acl_app' => 'sms'))
 					)
 				);
 
@@ -118,7 +120,7 @@
 				'log'	=> array
 				(
 					'text'	=> lang('log'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.log'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicommand.log'))
 				)
 			);
 
@@ -127,38 +129,38 @@
 				'inbox'	=> array
 				(
 					'text'	=> lang('Inbox'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.index'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.index'))
 				),
 				'outbox'	=> array
 				(
 					'text'	=> lang('Outbox'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.outbox'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'))
 				),
 				'autoreply'	=> array
 				(
 					'text'	=> lang('Autoreply'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiautoreply.index'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.index'))
 				),
 				'board'	=> array
 				(
 					'text'	=> lang('Boards'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiboard.index'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.index'))
 				),
 				'command'	=> array
 				(
 					'text'	=> lang('Command'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicommand.index')),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicommand.index')),
 					'children'	=> $command_children
 				),
 				'custom'	=> array
 				(
 					'text'	=> lang('Custom'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uicustom.index'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.index'))
 				),
 				'poll'	=> array
 				(
 					'text'	=> lang('Polls'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uipoll.index'))
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uipoll.index'))
 				)
 			);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
@@ -167,36 +169,36 @@
 
 		function links()
 		{
-			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus'] == 'no')
+			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['sms']['horisontal_menus'] == 'no')
 			{
 				return;
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
 			$menu_brutto = execMethod('sms.menu.get_menu');
-			$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
-			$level=0;
-			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'],$selection,$level);
+			$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+			$level = 0;
+			$menu['navigation'] = $this->get_sub_menu($menu_brutto['navigation'], $selection, $level);
 			return $menu;
 		}
 
-		function get_sub_menu($children = array(), $selection=array(),$level='')
+		function get_sub_menu( $children = array(), $selection = array(), $level = '' )
 		{
 			$level++;
-			$i=0;
-			foreach($children as $key => $vals)
+			$i = 0;
+			foreach ($children as $key => $vals)
 			{
 				$menu[] = $vals;
-				if($key == $selection[$level])
+				if ($key == $selection[$level])
 				{
 					$menu[$i]['this'] = true;
-					if(isset($menu[$i]['children']))
+					if (isset($menu[$i]['children']))
 					{
-						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'],$selection,$level);
+						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'], $selection, $level);
 					}
 				}
 				else
 				{
-					if(isset($menu[$i]['children']))
+					if (isset($menu[$i]['children']))
 					{
 						unset($menu[$i]['children']);
 					}

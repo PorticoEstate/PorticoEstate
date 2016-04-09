@@ -24,19 +24,19 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class mobilefrontend_bocommon
 	{
 
 		function __construct()
 		{
+
 		}
 
 		/**
@@ -44,10 +44,10 @@
 		*/
 		function confirm_session()
 		{
-			if($GLOBALS['phpgw']->session->verify())
+			if ($GLOBALS['phpgw']->session->verify())
 			{
 				header('Content-Type: application/json');
-				echo json_encode(array('sessionExpired'=>false));
+				echo json_encode(array('sessionExpired' => false));
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 		}

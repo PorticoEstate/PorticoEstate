@@ -11,7 +11,7 @@
 	);
 	$GLOBALS['phpgw_info']['flags']['session_name']	 = 'bookingfrontendsession';
 
-	if(file_exists('../header.inc.php'))
+	if (file_exists('../header.inc.php'))
 	{
 		include_once('../header.inc.php');
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
@@ -23,7 +23,7 @@
 
 	$bookingfrontend_host	 = '';
 	$external_logout		 = '';
-	if($verified)
+	if ($verified)
 	{
 		$config = CreateObject('phpgwapi.config', 'bookingfrontend');
 		$config->read();
@@ -68,12 +68,12 @@
 
 	$forward = phpgw::get_var('phpgw_forward', 'int');
 
-	if($forward)
+	if ($forward)
 	{
 		$extra_vars['phpgw_forward'] = $forward;
-		foreach($_GET as $name => $value)
+		foreach ($_GET as $name => $value)
 		{
-			if(preg_match('/phpgw_/', $name))
+			if (preg_match('/phpgw_/', $name))
 			{
 				$extra_vars[$name] = phpgw::clean_value($value);
 			}
@@ -82,32 +82,32 @@
 
 	$redirect = phpgw::get_var('redirect_menuaction', 'string');
 
-	if($redirect)
+	if ($redirect)
 	{
 		$matches					 = array();
 		$extra_vars['menuaction']	 = $redirect;
-		foreach($_GET as $name => $value)
+		foreach ($_GET as $name => $value)
 		{
-			if(preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction')
+			if (preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction')
 			{
 				$extra_vars[$matches[1]] = phpgw::clean_value($value);
 			}
 		}
 	}
 
-	if(!isset($extra_vars['menuaction']))
+	if (!isset($extra_vars['menuaction']))
 	{
 		$extra_vars['menuaction'] = 'bookingfrontend.uisearch.index';
 	}
 
-	if(!$external_logout)
+	if (!$external_logout)
 	{
 		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $extra_vars);
 	}
 	else
 	{
 		$result_redirect = '';
-		if(substr($external_logout, -1) == '=')
+		if (substr($external_logout, -1) == '=')
 		{
 			$result_redirect = $GLOBALS['phpgw']->link('/bookingfrontend/', $extra_vars, true);
 		}

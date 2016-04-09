@@ -53,9 +53,9 @@
 		 *
 		 * @return void
 		 */
-		public function add_location_contact($data)
+		public function add_location_contact( $data )
 		{
-			if(!isset($data['location_code']) || !$data['location_code'])
+			if (!isset($data['location_code']) || !$data['location_code'])
 			{
 				phpgwapi_cache::message_set("location_code not set", 'error');
 				return false;
@@ -73,7 +73,7 @@
 			$sql = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
-			if($data['email'])
+			if ($data['email'])
 			{
 				$pref = CreateObject('phpgwapi.preferences', $data['account_id']);
 				$pref->read();
@@ -111,9 +111,9 @@
 			$this->home_ticket();
 		}
 
-		private function get_controls($app_id)
+		private function get_controls( $app_id )
 		{
-			if($this->skip_portalbox_controls)
+			if ($this->skip_portalbox_controls)
 			{
 				return array();
 			}
@@ -143,7 +143,7 @@
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
-			if(isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
 			{
 				$soworkorder = CreateObject('property.soworkorder');
 
@@ -165,18 +165,18 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//				$portalbox->set_controls($key,$value);
 				}
-				foreach($values as $entry)
+				foreach ($values as $entry)
 				{
 					$entry['tender_delay'] = ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
 					$portalbox->data[] = array
@@ -213,7 +213,7 @@
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
-			if(isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
 			{
 				$soproject = CreateObject('property.soproject');
 
@@ -234,18 +234,18 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//				$portalbox->set_controls($key,$value);
 				}
-				foreach($values as $entry)
+				foreach ($values as $entry)
 				{
 					$entry['delay'] = ceil(phpgwapi_datetime::get_working_days($entry['end_date'], time()));
 					$portalbox->data[] = array
@@ -282,7 +282,7 @@
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
-			if(isset($prefs['property']['mainscreen_show_open_tenant_claim']) && $prefs['property']['mainscreen_show_open_tenant_claim'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_open_tenant_claim']) && $prefs['property']['mainscreen_show_open_tenant_claim'] == 'yes')
 			{
 				$sotenant_claim = CreateObject('property.sotenant_claim');
 				$claims = $sotenant_claim->read(array
@@ -305,18 +305,18 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//				$portalbox->set_controls($key,$value);
 				}
-				foreach($claims as &$entry)
+				foreach ($claims as &$entry)
 				{
 					$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$location_info = execMethod('property.solocation.read_single', $entry['location_code']);
@@ -357,7 +357,7 @@
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
 
-			if(isset($prefs['property']['mainscreen_show_new_updated_tts']) && $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_new_updated_tts']) && $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
@@ -378,14 +378,14 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					$portalbox->set_controls($key, $value);
 				}
@@ -393,11 +393,11 @@
 				$category_name = array(); // caching
 
 				$portalbox->data = array();
-				foreach($tickets as $ticket)
+				foreach ($tickets as $ticket)
 				{
-					if(!$ticket['subject'])
+					if (!$ticket['subject'])
 					{
-						if(!isset($category_name[$ticket['cat_id']]))
+						if (!isset($category_name[$ticket['cat_id']]))
 						{
 							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
 							$category_name[$ticket['cat_id']] = $ticket['subject'];
@@ -412,7 +412,7 @@
 						'extra' => array('view' => true)));
 
 					$group = '';
-					if($ticket['group_id'])
+					if ($ticket['group_id'])
 					{
 						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
 					}
@@ -433,7 +433,7 @@
 			}
 
 
-			if(isset($prefs['property']['mainscreen_show_new_updated_tts_2']) && $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_new_updated_tts_2']) && $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['tts_status_2']) ? $prefs['property']['tts_status_2'] : '';
@@ -453,14 +453,14 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -468,11 +468,11 @@
 				$category_name = array(); // caching
 
 				$portalbox->data = array();
-				foreach($tickets as $ticket)
+				foreach ($tickets as $ticket)
 				{
-					if(!$ticket['subject'])
+					if (!$ticket['subject'])
 					{
-						if(!isset($category_name[$ticket['cat_id']]))
+						if (!isset($category_name[$ticket['cat_id']]))
 						{
 							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
 							$category_name[$ticket['cat_id']] = $ticket['subject'];
@@ -487,7 +487,7 @@
 						'extra' => array('view' => true)));
 
 					$group = '';
-					if($ticket['group_id'])
+					if ($ticket['group_id'])
 					{
 						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
 					}
@@ -509,7 +509,7 @@
 			}
 
 
-			if(isset($prefs['property']['mainscreen_show_new_updated_tts_3']) && $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_new_updated_tts_3']) && $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['tts_status_3']) ? $prefs['property']['tts_status_3'] : '';
@@ -529,14 +529,14 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -544,11 +544,11 @@
 				$category_name = array(); // caching
 
 				$portalbox->data = array();
-				foreach($tickets as $ticket)
+				foreach ($tickets as $ticket)
 				{
-					if(!$ticket['subject'])
+					if (!$ticket['subject'])
 					{
-						if(!isset($category_name[$ticket['cat_id']]))
+						if (!isset($category_name[$ticket['cat_id']]))
 						{
 							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
 							$category_name[$ticket['cat_id']] = $ticket['subject'];
@@ -562,7 +562,7 @@
 						'extra' => array('view' => true)));
 
 					$group = '';
-					if($ticket['group_id'])
+					if ($ticket['group_id'])
 					{
 						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
 					}
@@ -583,7 +583,7 @@
 				unset($default_status);
 			}
 
-			if(isset($prefs['property']['mainscreen_show_new_updated_tts_4']) && $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
+			if (isset($prefs['property']['mainscreen_show_new_updated_tts_4']) && $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['tts_status_4']) ? $prefs['property']['tts_status_4'] : '';
@@ -603,14 +603,14 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -627,7 +627,7 @@
 
 				$custom_status = execMethod('property.botts.get_custom_status');
 
-				foreach($custom_status as $custom)
+				foreach ($custom_status as $custom)
 				{
 					$status["C{$custom['id']}"] = array
 						(
@@ -638,11 +638,11 @@
 				$category_name = array(); // caching
 
 				$portalbox->data = array();
-				foreach($tickets as $ticket)
+				foreach ($tickets as $ticket)
 				{
-					if(!$ticket['subject'])
+					if (!$ticket['subject'])
 					{
-						if(!isset($category_name[$ticket['cat_id']]))
+						if (!isset($category_name[$ticket['cat_id']]))
 						{
 							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
 							$category_name[$ticket['cat_id']] = $ticket['subject'];
@@ -689,7 +689,7 @@
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
-			if(isset($prefs['property']['mainscreen_project_1']) && $prefs['property']['mainscreen_project_1'] == 'yes')
+			if (isset($prefs['property']['mainscreen_project_1']) && $prefs['property']['mainscreen_project_1'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['project_status_mainscreen_1']) ? $prefs['property']['project_status_mainscreen_1'] : '';
@@ -709,20 +709,20 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
-				foreach($projects as $project)
+				foreach ($projects as $project)
 				{
 					$portalbox->data[] = array
 						(
@@ -758,7 +758,7 @@
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
-			if(isset($prefs['property']['mainscreen_workorder_1']) && $prefs['property']['mainscreen_workorder_1'] == 'yes')
+			if (isset($prefs['property']['mainscreen_workorder_1']) && $prefs['property']['mainscreen_workorder_1'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
@@ -778,20 +778,20 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
-				foreach($workorders as $workorder)
+				foreach ($workorders as $workorder)
 				{
 					$portalbox->data[] = array
 						(
@@ -807,7 +807,7 @@
 				unset($portalbox);
 				unset($default_status);
 			}
-			if(isset($prefs['property']['mainscreen_workorder_2']) && $prefs['property']['mainscreen_workorder_2'] == 'yes')
+			if (isset($prefs['property']['mainscreen_workorder_2']) && $prefs['property']['mainscreen_workorder_2'] == 'yes')
 			{
 
 				$default_status = isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
@@ -827,20 +827,20 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
-				foreach($workorders as $workorder)
+				foreach ($workorders as $workorder)
 				{
 					$portalbox->data[] = array
 						(
@@ -857,7 +857,7 @@
 				unset($default_status);
 			}
 
-			if(isset($prefs['property']['mainscreen_showapprovals_request']) && $prefs['property']['mainscreen_showapprovals_request'] == 'yes')
+			if (isset($prefs['property']['mainscreen_showapprovals_request']) && $prefs['property']['mainscreen_showapprovals_request'] == 'yes')
 			{
 				$total_records = 0;
 				$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title'] ? "{$prefs['property']['mainscreen_showapprovals_request_title']} ({$total_records})" : lang('approvals request') . " ({$total_records})";
@@ -876,14 +876,14 @@
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
 
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -906,7 +906,7 @@
 				$total_records = $obj->total_records;
 
 				$portalbox->data = array();
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 					$portalbox->data[] = array
@@ -931,7 +931,7 @@
 				$pending_approvals = $obj->get_pending_action($action_params);
 				$total_records = $total_records + $obj->total_records;
 
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 					$portalbox->data[] = array
@@ -956,7 +956,7 @@
 				$pending_approvals = $obj->get_pending_action($action_params);
 				$total_records = $total_records + $obj->total_records;
 
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 					$portalbox->data[] = array
@@ -973,7 +973,7 @@
 				unset($pending_approvals);
 			}
 
-			if(isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
+			if (isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
 			{
 				$total_records = 0;
 				$title = 'dummy';
@@ -991,14 +991,14 @@
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
 
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -1019,7 +1019,7 @@
 				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 				$portalbox->data = array();
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$portalbox->data[] = array
 						(
@@ -1047,7 +1047,7 @@
 				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 				//		$portalbox->data = array();
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$portalbox->data[] = array
 						(
@@ -1073,7 +1073,7 @@
 				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 				//		$portalbox->data = array();
-				foreach($pending_approvals as $entry)
+				foreach ($pending_approvals as $entry)
 				{
 					$portalbox->data[] = array
 						(
@@ -1096,7 +1096,7 @@
 			//Sigurd: Consider remove
 //			if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
 //			&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
-			if(false)
+			if (false)
 			{
 				$total_records = 0;
 				$title = 'dummy';
@@ -1113,14 +1113,14 @@
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if(!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
 				$var = $this->get_controls($app_id);
 
-				foreach($var as $key => $value)
+				foreach ($var as $key => $value)
 				{
 					//			$portalbox->set_controls($key,$value);
 				}
@@ -1141,7 +1141,7 @@
 				$pending_reminder = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 				$portalbox->data = array();
-				foreach($pending_reminder as $entry)
+				foreach ($pending_reminder as $entry)
 				{
 					$sql = 'SELECT org_name FROM fm_vendor where id=' . (int)$entry['responsible'];
 					$GLOBALS['phpgw']->db;

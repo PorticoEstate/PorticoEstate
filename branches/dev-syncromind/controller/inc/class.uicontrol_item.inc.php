@@ -83,7 +83,7 @@
 		public function index()
 		{
 			$dir = phpgw::get_var('dir');
-			if($dir)
+			if ($dir)
 			{
 				$query_array = array('menuaction'		 => 'controller.uicontrol_item.index', 'phpgw_return_as'	 => 'json',
 					'sort_dir'			 => 'desc');
@@ -92,7 +92,7 @@
 			{
 				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json');
 			}
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -104,7 +104,7 @@
 				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array2	 = array();
-			foreach($control_areas['cat_list'] as $cat_list)
+			foreach ($control_areas['cat_list'] as $cat_list)
 			{
 				$control_areas_array2[] = array
 					(
@@ -214,15 +214,15 @@
 			return status;
 		}
 
-		public function edit($control_item = null)
+		public function edit( $control_item = null )
 		{
 			// NO REDIRECT
-			if($control_item == null)
+			if ($control_item == null)
 			{
 				$control_item_id = phpgw::get_var('id');
 
 				// Edit control item
-				if($control_item_id > 0)
+				if ($control_item_id > 0)
 				{
 					$control_item = $this->so->get_single_with_options($control_item_id);
 				}
@@ -268,7 +268,7 @@
 
 		public function save()
 		{
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
 			}
@@ -284,7 +284,7 @@
 			$how_to_do_txt		 = phpgw::get_var('how_to_do', 'html');
 			$how_to_do_txt		 = str_replace("&nbsp;", " ", $how_to_do_txt);
 
-			if($control_item_id > 0)
+			if ($control_item_id > 0)
 			{
 				$control_item = $this->so->get_single($control_item_id);
 			}
@@ -301,7 +301,7 @@
 			$control_item->set_what_to_do($what_to_do_txt);
 			$control_item->set_how_to_do($how_to_do_txt);
 
-			if($control_item->validate())
+			if ($control_item->validate())
 			{
 				$transaction_status = true;
 
@@ -310,7 +310,7 @@
 
 				$saved_control_item_id = $this->so->store($control_item);
 
-				if($saved_control_item_id == 0)
+				if ($saved_control_item_id == 0)
 				{
 					$transaction_status = false;
 				}
@@ -318,12 +318,12 @@
 				// Delete item option values
 				$delete_status = $this->so->delete_option_values($saved_control_item_id);
 
-				if($delete_status == 0)
+				if ($delete_status == 0)
 				{
 					$transaction_status = false;
 				}
 
-				if($transaction_status == true)
+				if ($transaction_status == true)
 				{
 					$db_control_item->transaction_commit();
 				}
@@ -336,7 +336,7 @@
 				$option_values	 = phpgw::get_var('option_values');
 
 				$option_values_array = array();
-				foreach($option_values as $option_value)
+				foreach ($option_values as $option_value)
 				{
 					$control_item_option	 = new controller_control_item_option($option_value, $saved_control_item_id);
 					$option_values_array[]	 = $control_item_option;
@@ -345,11 +345,11 @@
 				$control_item->set_options_array($option_values_array);
 
 				// Add new control item option values
-				if(($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+				if (($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
 				{
 					$control_item_options_array = $control_item->get_options_array();
 
-					foreach($control_item_options_array as $control_item_option)
+					foreach ($control_item_options_array as $control_item_option)
 					{
 						$control_item_option_id = $this->so_control_item_option->store($control_item_option);
 					}
@@ -373,7 +373,7 @@
 			//Retrieve the control_item object
 			$control_item_id = (int)phpgw::get_var('id');
 
-			if(isset($control_item_id) && $control_item_id > 0)
+			if (isset($control_item_id) && $control_item_id > 0)
 			{
 				$control_item = $this->so->get_single_with_options($control_item_id);
 			}
@@ -427,18 +427,18 @@
 
 
 			$ctrl_area = phpgw::get_var('control_areas');
-			if(isset($ctrl_area) && $ctrl_area > 0)
+			if (isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area;
 			}
 
 			$ctrl_group = phpgw::get_var('control_groups');
-			if(isset($ctrl_group) && $ctrl_group > 0)
+			if (isset($ctrl_group) && $ctrl_group > 0)
 			{
 				$filters['control_groups'] = $ctrl_group;
 			}
 
-			if($sort_field == null)
+			if ($sort_field == null)
 			{
 				$sort_field = 'id';
 			}
@@ -447,7 +447,7 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$control_item_id = phpgw::get_var('control_item_id');
-			if(isset($control_item_id) && $control_item_id)
+			if (isset($control_item_id) && $control_item_id)
 			{
 				$control_item = $this->so->get_single($control_item_id);
 			}
@@ -457,7 +457,7 @@
 
 			$results = array();
 
-			foreach($result_objects as $control_item_obj)
+			foreach ($result_objects as $control_item_obj)
 			{
 				$results['results'][] = $control_item_obj->serialize();
 			}

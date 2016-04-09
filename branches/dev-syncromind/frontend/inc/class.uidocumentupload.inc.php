@@ -1,15 +1,14 @@
 <?php
-phpgw::import_class('frontend.uicommon');
+	phpgw::import_class('frontend.uicommon');
 
-class frontend_uidocumentupload extends frontend_uicommon
-{
+	class frontend_uidocumentupload extends frontend_uicommon
+	{
+
 	public static $ROOT_FOR_DOCUMENTS = '/frontend';
 	public static $HELP_DOCUMENTS = '/help';
 	public static $LANG_DIR = '/NO';
-	
 	protected static $so;
 	protected $document_types; // Used for caching the values
-	
 	public $public_functions = array(
             'index'     => true,
 			'read_helpfile_from_vfs'	=> true
@@ -25,7 +24,8 @@ class frontend_uidocumentupload extends frontend_uicommon
 	
 	public function index()
 	{
-		if(isset($_POST['file_upload'])){
+			if (isset($_POST['file_upload']))
+			{
 			//$filename = phpgw::get_var('help_filename');
 			$test2 = "testing litt";			
 			if ($_FILES["file"]["error"] > 0)
@@ -40,8 +40,8 @@ class frontend_uidocumentupload extends frontend_uicommon
 			}
 		}
 		
-		$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidocumentupload.index'));
-		$data = array (
+			$form_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uidocumentupload.index'));
+			$data = array(
 			'header'			=>	$this->header_state,
 			'section'			=>  array(
 					'test'		=> $test2,
@@ -52,15 +52,17 @@ class frontend_uidocumentupload extends frontend_uicommon
 					'form_action' => $form_action),
 					'tab_selected'	=> $this->tab_selected,
 					'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msgbox)),
-
 		);
 
-		self::render_template_xsl(array( 'documentupload', 'datatable_inline', 'frontend'),  $data);
+			self::render_template_xsl(array('documentupload', 'datatable_inline', 'frontend'), $data);
 	}
 	
-	public function query() {}
+		public function query()
+		{
+
+		}
 	
-	public function store_doc_to_vfs($file)
+		public function store_doc_to_vfs( $file )
 	{
 		$root_directory = self::$ROOT_FOR_DOCUMENTS;
 		$type_directory = self::$HELP_DOCUMENTS;
@@ -71,8 +73,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path = $root_directory;
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return;
 			}
@@ -80,8 +83,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path .= $type_directory;
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return;
 			}
@@ -89,8 +93,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path .= $lang_directory;
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return;
 			}
@@ -100,9 +105,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$mime       = $mime_magic->filename2mime($file['name']);
 
-		if( $mime != 'application/pdf' )
+			if ($mime != 'application/pdf')
 		{
-			$message ='Only PDF is supported for this one';
+				$message = 'Only PDF is supported for this one';
 			phpgwapi_cache::message_set($message, 'error');
 			return $message;		
 		}
@@ -119,18 +124,18 @@ class frontend_uidocumentupload extends frontend_uicommon
 			)
 		);
 
-		if($result)
+			if ($result)
 		{
-			$message ='Stored in vfs';
+				$message = 'Stored in vfs';
 			phpgwapi_cache::message_set($message, 'message');
 			return $message;
 		}
 		return "something failed...";
 	}
 	
-	public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 	{
-		if(!$extended_info)
+			if (!$extended_info)
 		{
 			$ret = 'document_id';
 		}
@@ -146,7 +151,7 @@ class frontend_uidocumentupload extends frontend_uicommon
 		return $ret;
 	}
 	
-	private function get_document_path(string $filename)
+		private function get_document_path( string $filename )
 	{
 		$root_directory = self::$ROOT_FOR_DOCUMENTS;
 		$type_directory = self::$HELP_DOCUMENTS;
@@ -157,8 +162,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path = "{$root_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return false;
 			}
@@ -166,8 +172,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path .= "{$type_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return false;
 			}
@@ -175,8 +182,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path .= "{$lang_directory}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return false;
 			}
@@ -184,8 +192,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		
 		$path .= "/{$filename}";
 		$dir = array('string' => $path, RELATIVE_NONE);
-		if(!$vfs->file_exists($dir)){
-			if(!$vfs->mkdir($dir))
+			if (!$vfs->file_exists($dir))
+			{
+				if (!$vfs->mkdir($dir))
 			{
 				return false;
 			}
@@ -194,12 +203,12 @@ class frontend_uidocumentupload extends frontend_uicommon
 		return "{$root_directory}{$type_directory}{$lang_directory}/{$filename}";
 	}
 	
-	public function write_document_to_vfs(string $filename)
+		public function write_document_to_vfs( string $filename )
 	{
 	
 		$path = $this->get_document_path($filename);
 		
-		if(!$path)
+			if (!$path)
 		{
 			return false;
 		}
@@ -220,9 +229,9 @@ class frontend_uidocumentupload extends frontend_uicommon
 		);
 	} 
 	
-	public function read_document_from_vfs(string $filename)
+		public function read_document_from_vfs( string $filename )
 	{
-		if(!isset($filename))
+			if (!isset($filename))
 		{
 			$filename = 'helpdesk.index.pdf';
 		}
@@ -275,11 +284,11 @@ class frontend_uidocumentupload extends frontend_uicommon
 		}
 		
 		$browser = CreateObject('phpgwapi.browser');
-		$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
+			$browser->content_header($ls_array[0]['name'], $ls_array[0]['mime_type'], $ls_array[0]['size']);
 		echo $document;
 	}
 	
-	public function delete_document_from_vfs(string $filename)
+		public function delete_document_from_vfs( string $filename )
 	{
 		$path = $this->get_document_path($filename);
 
@@ -295,4 +304,4 @@ class frontend_uidocumentupload extends frontend_uicommon
 			)
 		);
 	}
-}
+	}

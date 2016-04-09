@@ -57,7 +57,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$workorders = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$workorders[] = array
 					(
@@ -69,7 +69,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$projects = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$projects[] = array
 					(
@@ -81,7 +81,7 @@
 			$GLOBALS['phpgw']->db->transaction_begin();
 
 			$historylog = CreateObject('property.historylog', 'workorder');
-			foreach($workorders as $workorder)
+			foreach ($workorders as $workorder)
 			{
 				$historylog->add('S', $workorder['id'], 'closed');
 			}
@@ -89,12 +89,12 @@
 			unset($historylog);
 
 			$historylog = CreateObject('property.historylog', 'project');
-			foreach($projects as $project)
+			foreach ($projects as $project)
 			{
 				$historylog->add('S', $project['id'], 'closed');
 			}
 
-			if($GLOBALS['phpgw']->db->transaction_commit())
+			if ($GLOBALS['phpgw']->db->transaction_commit())
 			{
 				$this->db->transaction_begin();
 

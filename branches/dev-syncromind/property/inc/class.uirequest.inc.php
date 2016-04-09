@@ -105,7 +105,7 @@
 			$this->recommended_year = $this->bo->recommended_year;
 
 
-			if($this->nonavbar)
+			if ($this->nonavbar)
 			{
 				$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
@@ -130,12 +130,12 @@
 			$list_descr = phpgw::get_var('list_descr', 'bool');
 
 			$query = phpgw::get_var('query');
-			if(!empty($query))
+			if (!empty($query))
 			{
 				$search['value'] = $query;
 			}
 
-			if($start_date && empty($end_date))
+			if ($start_date && empty($end_date))
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
@@ -156,7 +156,7 @@
 			);
 
 			$values = $this->bo->read($params);
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -165,10 +165,10 @@
 
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
-			$result_data['amount_investment'] = number_format($this->bo->sum_investment, 0, ',', ' ');
-			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', ' ');
-			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
-			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', ' ');
+			$result_data['amount_investment'] = number_format($this->bo->sum_investment, 0, ',', '.');
+			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', '.');
+			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', '.');
+			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', '.');
 
 			return $this->jquery_results($result_data);
 		}
@@ -210,7 +210,7 @@
 				'order' => 'descr'
 			));
 
-			if(count($values_combo_box[0]))
+			if (count($values_combo_box[0]))
 			{
 				$default_value = array('id' => '', 'name' => lang('no type'));
 				array_unshift($values_combo_box[0], $default_value);
@@ -246,7 +246,7 @@
 				'selected' => $this->cat_id, 'globals' => True));
 			$default_value = array('cat_id' => '', 'name' => lang('no category'));
 			array_unshift($categories['cat_list'], $default_value);
-			foreach($categories['cat_list'] as & $_category)
+			foreach ($categories['cat_list'] as & $_category)
 			{
 				$_category['id'] = $_category['cat_id'];
 			}
@@ -262,9 +262,14 @@
 			);
 
 			$count = count($values_combo_box);
-			$values_combo_box[$count] = $this->bo->select_status_list('filter', $this->status_id);
+			$values_combo_box[$count] = $this->bo->select_status_list('filter');
 			array_unshift($values_combo_box[$count], array('id' => 'all', 'name' => lang('all')));
 			array_unshift($values_combo_box[$count], array('id' => 'open', 'name' => lang('open')));
+			foreach ($values_combo_box[$count] as &$_entry)
+			{
+				$_entry['selected'] = $_entry['id'] == $this->status_id ? 1 : 0;
+			}
+			unset($_entry);
 			$combos[] = array
 				(
 				'type' => 'filter',
@@ -276,11 +281,16 @@
 
 			$count = count($values_combo_box);
 			$values_combo_box[$count] = $this->bo->select_degree_list();
-			foreach($values_combo_box[$count] as &$_degree)
+			foreach ($values_combo_box[$count] as &$_degree)
 			{
 				$_degree['id'] ++;
 			}
 			array_unshift($values_combo_box[$count], array('id' => '', 'name' => lang('condition degree')));
+			foreach ($values_combo_box[$count] as &$_entry)
+			{
+				$_entry['selected'] = $_entry['id'] == $this->degree_id ? 1 : 0;
+			}
+			unset($_entry);
 			$combos[] = array
 				(
 				'type' => 'filter',
@@ -294,7 +304,7 @@
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 
-			if($filter_key = array_search('.project.request', $filter_buildingpart))
+			if ($filter_key = array_search('.project.request', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
@@ -342,7 +352,7 @@
 
 			$count = count($values_combo_box);
 			$values_combo_box[$count] = $this->bo->get_user_list();
-			foreach($values_combo_box[$count] as &$valor)
+			foreach ($values_combo_box[$count] as &$valor)
 			{
 				$valor['id'] = $valor['user_id'];
 				unset($valor['user_id']);
@@ -374,71 +384,71 @@
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 			$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", 'property');
 
-			for($j = 0; $j < count($insert_record_entity); $j++)
+			for ($j = 0; $j < count($insert_record_entity); $j++)
 			{
 				$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
 			}
 			$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-			if(!$values['location'])
+			if (!$values['location'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
 				$error_id = true;
 			}
 
-			if(!$values['title'])
+			if (!$values['title'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please enter a request TITLE !'));
 				$error_id = true;
 			}
 
-			if(!$values['cat_id'])
+			if (!$values['cat_id'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a category !'));
 				$error_id = true;
 			}
 
-			if(!$values['status'])
+			if (!$values['status'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a status !'));
 			}
 
-			if(!$values['building_part'])
+			if (!$values['building_part'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a building part!'));
 			}
 
-			if($values['consume_value'] && !$values['consume_date'])
+			if ($values['consume_value'] && !$values['consume_date'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a date !'));
 			}
-			if($values['planning_value'] && !$values['planning_date'])
+			if ($values['planning_value'] && !$values['planning_date'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a date !'));
 			}
 
-			if(isset($values['amount_investment']) && $values['amount_investment'])
+			if (isset($values['amount_investment']) && $values['amount_investment'])
 			{
 				$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
-				if(!ctype_digit($values['amount_investment']))
+				if (!ctype_digit($values['amount_investment']))
 				{
 					$this->receipt['error'][] = array('msg' => lang('investment') . ': ' . lang('Please enter an integer !'));
 					$error_id = true;
 				}
 			}
-			if(isset($values['amount_operation']) && $values['amount_operation'])
+			if (isset($values['amount_operation']) && $values['amount_operation'])
 			{
 				$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
-				if(!ctype_digit($values['amount_operation']))
+				if (!ctype_digit($values['amount_operation']))
 				{
 					$this->receipt['error'][] = array('msg' => lang('operation') . ': ' . lang('Please enter an integer !'));
 					$error_id = true;
 				}
 			}
-			if(isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
+			if (isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
 			{
 				$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
-				if(!ctype_digit($values['amount_potential_grants']))
+				if (!ctype_digit($values['amount_potential_grants']))
 				{
 					$this->receipt['error'][] = array('msg' => lang('potential grants') . ': ' . lang('Please enter an integer !'));
 					$error_id = true;
@@ -448,23 +458,23 @@
 			$_condition = array_keys($values['condition']);
 			$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
 
-			if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
+			if (!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a condition!'));
 			}
 
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
-				foreach($values_attribute as $attribute)
+				foreach ($values_attribute as $attribute)
 				{
-					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 					{
 						$this->receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
 				}
 			}
 
-			if(!$id && $bypass)
+			if (!$id && $bypass)
 			{
 				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
 				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
@@ -476,16 +486,16 @@
 			return $values;
 		}
 
-		private function _handle_files($values)
+		private function _handle_files( $values )
 		{
 			$id = (int)$values['id'];
-			if(empty($id))
+			if (empty($id))
 			{
 				throw new Exception('uirequest::_handle_files() - missing id');
 			}
 
 			$bofiles = CreateObject('property.bofiles');
-			if(isset($values['file_action']) && is_array($values['file_action']))
+			if (isset($values['file_action']) && is_array($values['file_action']))
 			{
 				$bofiles->delete_file("/request/{$id}/", $values);
 			}
@@ -493,7 +503,7 @@
 			$values['file_name'] = str_replace(" ", "_", $_FILES['file']['name']);
 			$to_file = "{$bofiles->fakebase}/request/{$id}/{$values['file_name']}";
 
-			if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
+			if (!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => array(RELATIVE_NONE)
 			)))
@@ -501,12 +511,12 @@
 				$this->receipt['error'][] = array('msg' => lang('This file already exists !'));
 			}
 
-			if($values['file_name'])
+			if ($values['file_name'])
 			{
 				$bofiles->create_document_dir("request/{$id}");
 				$bofiles->vfs->override_acl = 1;
 
-				if(!$bofiles->vfs->cp(array(
+				if (!$bofiles->vfs->cp(array(
 					'from' => $_FILES['file']['tmp_name'],
 					'to' => $to_file,
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -530,7 +540,7 @@
 
 			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->add('property', 'request_columns', $values['columns'], 'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
@@ -564,7 +574,7 @@
 
 		function view_file()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -578,7 +588,7 @@
 
 		function download()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -591,7 +601,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -602,7 +612,7 @@
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -610,11 +620,12 @@
 			$project_id = phpgw::get_var('project_id', 'int'); // lookup for maintenance planning
 			$query = phpgw::get_var('query');
 
-			if($project_id)
+			if ($project_id)
 			{
 				$lookup = true;
 			}
 
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -683,7 +694,8 @@
 					'allrows' => true,
 					'select_all' => !!$project_id,
 					'editor_action' => array(),
-					'field' => array()
+					'field' => array(),
+					'query'	=> phpgw::get_var('query')
 				)
 			);
 
@@ -691,16 +703,16 @@
 
 			$custom = createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find('property', $this->acl_location, 0, '', '', '', true, true);
-			if($attrib_data)
+			if ($attrib_data)
 			{
-				foreach($attrib_data as $attrib)
+				foreach ($attrib_data as $attrib)
 				{
-					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+					if ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
 					{
 
 						$_values = array();
 						$_values[] = array('id' => '', 'name' => lang('select') . ' ' . $attrib['input_text']);
-						foreach($attrib['choice'] as $choice)
+						foreach ($attrib['choice'] as $choice)
 						{
 							$_values[] = array
 								(
@@ -723,7 +735,7 @@
 			}
 
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -731,16 +743,16 @@
 			$this->bo->read(array('project_id' => $project_id, 'allrows' => $this->allrows,
 				'dry_run' => true));
 			$uicols = $this->bo->uicols;
-
+			//_debug_array($uicols);die();
 			$count_uicols_name = count($uicols['name']);
 
 			$type_id = 4;
-			for($i = 1; $i < $type_id; $i++)
+			for ($i = 1; $i < $type_id; $i++)
 			{
 				$searc_levels[] = "loc{$i}";
 			}
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -749,20 +761,32 @@
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if($uicols['name'][$k] == 'request_id')
+				if ($uicols['name'][$k] == 'request_id')
 				{
 					$params['formatter'] = 'linkToRequest';
 				}
 
-				if(in_array($uicols['name'][$k], $searc_levels))
+				if (in_array($uicols['name'][$k], $searc_levels))
 				{
 					$params['formatter'] = 'JqueryPortico.searchLink';
+				}
+				if ($uicols['name'][$k] == 'amount_investment')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'amount_operation')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
+				}
+				if ($uicols['name'][$k] == 'amount_potential_grants')
+				{
+					$params['formatter'] = 'JqueryPortico.FormatterAmount0';
 				}
 
 				array_push($data['datatable']['field'], $params);
 			}
 
-			if($lookup)
+			if ($lookup)
 			{
 				$params = array(
 					'key' => 'select',
@@ -787,7 +811,7 @@
 				)
 			);
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -801,13 +825,13 @@
 				);
 			}
 
-			if(!$lookup)
+			if (!$lookup)
 			{
-				if($this->acl_read)
+				if ($this->acl_read)
 				{
 					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
-					foreach($jasper as $report)
+					foreach ($jasper as $report)
 					{
 						$data['datatable']['actions'][] = array
 							(
@@ -825,7 +849,7 @@
 					}
 				}
 
-				if($this->acl_edit)
+				if ($this->acl_edit)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -840,7 +864,7 @@
 					);
 				}
 
-				if($this->acl_delete)
+				if ($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -894,7 +918,7 @@
 											$('#custom_values_form').submit();"
 				);
 
-				if(!empty($query))
+				if (!empty($query))
 				{
 					$code = <<<JS
 						function initCompleteDatatable(oSettings, json, oTable) 
@@ -916,7 +940,7 @@ JS;
 
 		function priority_key()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -929,7 +953,7 @@ JS;
 
 			$values['authorities_demands'] = $values['authorities_demands'] ? $values['authorities_demands'] : $this->config->config_data['authorities_demands'];
 
-			if($values['update'])
+			if ($values['update'])
 			{
 				$receipt = $this->bo->update_priority_key($values);
 				$this->config->config_data['authorities_demands'] = (int)$values['authorities_demands'];
@@ -948,7 +972,7 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$function_exchange_values = '';
-			if($receipt != '')
+			if ($receipt != '')
 			{
 				$function_exchange_values = "window.parent.reloadData();";
 			}
@@ -971,7 +995,7 @@ JS;
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -981,18 +1005,18 @@ JS;
 
 			$values = $this->_populate();
 
-			if($id)
+			if ($id)
 			{
 				$action = 'edit';
 				$values['id'] = $id;
 			}
 
-			if($values['copy_request'])
+			if ($values['copy_request'])
 			{
 				$action = 'add';
 			}
 
-			if($this->receipt['error'])
+			if ($this->receipt['error'])
 			{
 				$this->edit($values);
 			}
@@ -1001,12 +1025,12 @@ JS;
 				try
 				{
 					$receipt = $this->bo->save($values, $action, $values_attribute);
-					$values['id'] = $receipt['id'];
+					$id = $values['id'] = $receipt['id'];
 					$this->receipt = $receipt;
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit($values);
@@ -1016,7 +1040,7 @@ JS;
 
 				$this->_handle_files($values);
 
-				if($values['notify'])
+				if ($values['notify'])
 				{
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
@@ -1028,10 +1052,10 @@ JS;
 					$subject = lang(notify) . ": " . $values['id'];
 					$message = lang(request) . " " . $values['id'] . " " . lang('is registered');
 
-					if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
 						$bcc = $coordinator_email;
-						if(!is_object($GLOBALS['phpgw']->send))
+						if (!is_object($GLOBALS['phpgw']->send))
 						{
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
@@ -1044,13 +1068,12 @@ JS;
 					}
 				}
 
-				if($rcpt)
+				if ($rcpt)
 				{
 					$this->receipt['message'][] = array('msg' => lang('%1 is notified', $values['mail_address']));
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message');
-				if($values['save_new'])
+				if ($values['save_new'])
 				{
 					$values = $this->bo->read_single($values['id']);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array
@@ -1066,9 +1089,12 @@ JS;
 					);
 				}
 
+				if($id)
+				{
+					self::message_set($this->receipt);
+					self::redirect(array('menuaction' => 'property.uirequest.edit', 'id' => $id));
+				}
 				$this->edit($values);
-
-				return;
 			}
 		}
 
@@ -1077,19 +1103,19 @@ JS;
 			$this->edit();
 		}
 
-		function edit($values = array(), $mode = 'edit')
+		function edit( $values = array(), $mode = 'edit' )
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uirequest.view',
 					'id' => $id));
 			}
 
-			if($mode == 'view')
+			if ($mode == 'view')
 			{
-				if(!$this->acl_read)
+				if (!$this->acl_read)
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1097,7 +1123,7 @@ JS;
 			}
 			else
 			{
-				if(!$this->acl_add && !$this->acl_edit)
+				if (!$this->acl_add && !$this->acl_edit)
 				{
 					$this->bocommon->no_access();
 					return;
@@ -1106,12 +1132,12 @@ JS;
 
 			$bypass = phpgw::get_var('bypass', 'bool');
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				$location_code = phpgw::get_var('location_code');
 				$tenant_id = phpgw::get_var('tenant_id', 'int');
 
-				if(phpgw::get_var('p_num'))
+				if (phpgw::get_var('p_num'))
 				{
 					$p_entity_id = phpgw::get_var('p_entity_id', 'int');
 					$p_cat_id = phpgw::get_var('p_cat_id', 'int');
@@ -1125,7 +1151,7 @@ JS;
 				$origin_id = phpgw::get_var('origin_id', 'int');
 
 				//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
-				if($origin == '.ticket' && $origin_id && !$values['descr'])
+				if ($origin == '.ticket' && $origin_id && !$values['descr'])
 				{
 					$boticket = CreateObject('property.botts');
 					$ticket = $boticket->read_single($origin_id);
@@ -1133,27 +1159,27 @@ JS;
 					$values['title'] = $ticket['subject'];
 					$ticket_notes = $boticket->read_additional_notes($origin_id);
 					$i = count($ticket_notes) - 1;
-					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+					if (isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
 					{
 						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 					}
 				}
 
-				if($p_entity_id && $p_cat_id)
+				if ($p_entity_id && $p_cat_id)
 				{
 					$boadmin_entity = CreateObject('property.boadmin_entity');
 					$entity_category = $boadmin_entity->read_single_category($p_entity_id, $p_cat_id);
 					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
 				}
 
-				if($location_code)
+				if ($location_code)
 				{
 					$values['location_data'] = $this->bolocation->read_single($location_code, array(
 						'tenant_id' => $tenant_id, 'p_num' => $p_num, 'view' => true));
 				}
 			}
 
-			if(!empty($values['origin']))
+			if (!empty($values['origin']))
 			{
 				$origin = $values['origin'];
 				$origin_id = $values['origin_id'];
@@ -1161,7 +1187,7 @@ JS;
 
 			$interlink = CreateObject('property.interlink');
 
-			if(isset($origin) && $origin)
+			if (isset($origin) && $origin)
 			{
 				$values['origin_data'][0]['location'] = $origin;
 				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
@@ -1171,23 +1197,23 @@ JS;
 				);
 			}
 
-			if(empty($id))
+			if (empty($id))
 			{
 				$id = $values['id'];
 			}
 
-			if(($values['save'] || $values['save_new']) && $mode == 'edit')
+			if (($values['save'] || $values['save_new']) && $mode == 'edit')
 			{
-				if($this->receipt['error'])
+				if ($this->receipt['error'])
 				{
-					if($values['location'])
+					if ($values['location'])
 					{
 						$location_code = implode("-", $values['location']);
 						$values['extra']['view'] = true;
 						$values['location_data'] = $this->bolocation->read_single($location_code, $values['extra']);
 					}
 
-					if($values['extra']['p_num'])
+					if ($values['extra']['p_num'])
 					{
 						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
 						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
@@ -1197,21 +1223,13 @@ JS;
 				}
 			}
 
-			if(!$this->receipt['error'] && !$bypass && $id)
+			if (!$this->receipt['error'] && !$bypass && $id)
 			{
 				$values = $this->bo->read_single($id);
 				$record_history = $this->bo->read_record_history($id);
 			}
 
-			$table_header_history[] = array
-				(
-				'lang_date' => lang('Date'),
-				'lang_user' => lang('User'),
-				'lang_action' => lang('Action'),
-				'lang_new_value' => lang('New value')
-			);
-
-			if($id)
+			if ($id)
 			{
 				$function_msg = lang("{$mode} request");
 			}
@@ -1221,7 +1239,7 @@ JS;
 				$values = $this->bo->read_single(0, $values);
 			}
 
-			if($values['cat_id'])
+			if ($values['cat_id'])
 			{
 				$this->cat_id = $values['cat_id'];
 			}
@@ -1240,11 +1258,11 @@ JS;
 			)
 			);
 
-			if($values['contact_phone'])
+			if ($values['contact_phone'])
 			{
-				for($i = 0; $i < count($location_data['location']); $i++)
+				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
+					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
 					{
 						$location_data['location'][$i]['value'] = $values['contact_phone'];
 					}
@@ -1257,7 +1275,7 @@ JS;
 				'id' => $id
 			);
 
-			if(!$values['coordinator'])
+			if (!$values['coordinator'])
 			{
 				$values['coordinator'] = $this->account;
 			}
@@ -1266,13 +1284,13 @@ JS;
 
 			$notify = $this->config->config_data['workorder_approval'];
 
-			if($supervisor_id && ($notify == 'yes'))
+			if ($supervisor_id && ($notify == 'yes'))
 			{
 				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 				$supervisor_email = $prefs['email'];
 			}
 
-			if($values['project_id'])
+			if ($values['project_id'])
 			{
 				$project_lookup_data = array
 					(
@@ -1282,7 +1300,7 @@ JS;
 
 			$show_dates = isset($this->config->config_data['request_show_dates']) && $this->config->config_data['request_show_dates'] ? 1 : '';
 
-			if($show_dates)
+			if ($show_dates)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
@@ -1301,7 +1319,7 @@ JS;
 			$link_to_files = $this->config->config_data['files_url'];
 
 			$j = count($values['files']);
-			for($i = 0; $i < $j; $i++)
+			for ($i = 0; $i < $j; $i++)
 			{
 				$values['files'][$i]['file_name'] = urlencode($values['files'][$i]['name']);
 			}
@@ -1331,9 +1349,9 @@ JS;
 
 			$content_files = array();
 
-			for($z = 0; $z < count($values['files']); $z++)
+			for ($z = 0; $z < count($values['files']); $z++)
 			{
-				if($link_to_files != '')
+				if ($link_to_files != '')
 				{
 					$content_files[$z]['file_name'] = '<a href="' . $link_to_files . '/' . $values['files'][$z]['directory'] . '/' . $values['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
 				}
@@ -1361,15 +1379,15 @@ JS;
 
 			$_consume_amount = 0;
 			$_planning_amount = 0;
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$_lang_delete = lang('Check to delete');
-				foreach($values['consume'] as & $consume)
+				foreach ($values['consume'] as & $consume)
 				{
 					$_consume_amount = $_consume_amount + $consume['amount'];
 					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$_lang_delete}'>";
 				}
-				foreach($values['planning'] as & $planning)
+				foreach ($values['planning'] as & $planning)
 				{
 					$_planning_amount = $_planning_amount + $planning['amount'];
 					$planning['delete'] = "<input type='checkbox' name='values[delete_planning][]' value='{$planning['id']}' title='{$_lang_delete}'>";
@@ -1379,7 +1397,7 @@ JS;
 			$value_diff = (int)$values['budget'] - ($_consume_amount + $_planning_amount);
 			$value_diff2 = (int)$values['budget'] - $_consume_amount;
 
-			if($value_diff < 0 || $value_diff2 < 0)
+			if ($value_diff < 0 || $value_diff2 < 0)
 			{
 				$receipt['error'][] = array('msg' => lang('negative value for budget'));
 			}
@@ -1402,7 +1420,7 @@ JS;
 					array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'budget', 'label' => lang('budget'), 'sortable' => true, 'resizeable' => false,
-						'formatter' => 'FormatterRight')),
+						'formatter' => 'JqueryPortico.FormatterAmount0')),
 				'data' => json_encode($related),
 				'config' => array(
 					array('disableFilter' => true),
@@ -1410,11 +1428,11 @@ JS;
 				)
 			);
 
-			if(isset($values['attributes']) && is_array($values['attributes']))
+			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-				foreach($values['attributes'] as & $attribute)
+				foreach ($values['attributes'] as & $attribute)
 				{
-					if($attribute['history'] == true)
+					if ($attribute['history'] == true)
 					{
 						$link_history_data = array
 							(
@@ -1432,7 +1450,7 @@ JS;
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
 
-			if($filter_key = array_search('.project.request', $filter_buildingpart))
+			if ($filter_key = array_search('.project.request', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
@@ -1496,8 +1514,6 @@ JS;
 				'importance_weight' => $importance_weight,
 				'lang_no_workorders' => lang('No workorder budget'),
 				'workorder_link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit')),
-				'record_history' => $record_history,
-				'table_header_history' => $table_header_history,
 				'lang_history' => lang('History'),
 				'lang_no_history' => lang('No history'),
 				'value_entry_date' => $values['entry_date'],
@@ -1583,6 +1599,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::add_javascript('property', 'portico', 'request.edit.js');
+			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('request', 'datatable_inline', 'files', 'attributes_form'), array(
 				'edit' => $data));
 		}
@@ -1591,13 +1608,13 @@ JS;
 		{
 			$id = phpgw::get_var('id', 'int');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($id);
 				return "id " . $id . " " . lang("has been deleted");
 			}
 
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 8, 'acl_location' => $this->acl_location));
@@ -1612,7 +1629,7 @@ JS;
 				'menuaction' => 'property.uirequest.index'
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
@@ -1642,7 +1659,7 @@ JS;
 
 		function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -1650,9 +1667,9 @@ JS;
 			$this->edit(array(), $mode = 'view');
 		}
 
-		function get_related($id)
+		function get_related( $id )
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				return array();
 			}
@@ -1661,14 +1678,14 @@ JS;
 			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
 
 			$values = array();
-			if($target)
+			if ($target)
 			{
-				foreach($target as $_target_section)
+				foreach ($target as $_target_section)
 				{
 
-					foreach($_target_section['data'] as $_target_entry)
+					foreach ($_target_section['data'] as $_target_entry)
 					{
-						switch($_target_section['location'])
+						switch ($_target_section['location'])
 						{
 							case '.ticket':
 								$ticket = execMethod('property.sotts.read_single', (int)$_target_entry['id']);
@@ -1713,7 +1730,7 @@ JS;
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
-			if($allrows)
+			if ($allrows)
 			{
 				$out = $values;
 			}

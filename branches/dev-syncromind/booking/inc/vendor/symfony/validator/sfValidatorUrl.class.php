@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,23 +7,24 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorUrl validates Urls.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorUrl extends sfValidatorRegex
-{
+	class sfValidatorUrl extends sfValidatorRegex
+	{
+
   /**
    * @param array $options   An array of options
    * @param array $messages  An array of error messages
    *
    * @see sfValidatorRegex
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     parent::configure($options, $messages);
 
@@ -39,4 +39,4 @@ class sfValidatorUrl extends sfValidatorRegex
       (/?|/\S+)                               # a /, nothing or a / with something
     $~ix');
   }
-}
+	}

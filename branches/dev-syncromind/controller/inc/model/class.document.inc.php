@@ -39,13 +39,13 @@
 		protected $type_id;
 		protected $procedure_id;
 
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$doc_id = intval($id);
 			parent::__construct($doc_id);
 		}
 
-		public function set_title($title)
+		public function set_title( $title )
 		{
 			$this->title = $title;
 		}
@@ -55,7 +55,7 @@
 			return $this->title;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -65,7 +65,7 @@
 			return $this->description;
 		}
 
-		public function set_name($name)
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
@@ -75,7 +75,7 @@
 			return $this->name;
 		}
 
-		public function set_type($type)
+		public function set_type( $type )
 		{
 			$this->type = $type;
 		}
@@ -85,7 +85,7 @@
 			return $this->type;
 		}
 
-		public function set_type_id($type_id)
+		public function set_type_id( $type_id )
 		{
 			$this->type_id = $type_id;
 		}
@@ -95,7 +95,7 @@
 			return $this->type_id;
 		}
 
-		public function set_procedure_id($procedure_id)
+		public function set_procedure_id( $procedure_id )
 		{
 			$this->procedure_id = $procedure_id;
 		}

@@ -32,7 +32,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('invoice_menu');
 		}
 
-		private function _object_to_array($contract)
+		private function _object_to_array( $contract, $include_billing = false )
 		{
 			$values['old_contract_id']	 = $contract->get_old_contract_id();
 			$values['start_date']		 = ($contract->get_contract_date()->has_start_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_start_date()) : '';
@@ -41,14 +41,22 @@
 			$values['party_name']		 = $contract->get_party_name();
 			$values['total_price']		 = $contract->get_total_price();
 			$values['rented_area']		 = $contract->get_rented_area();
-			if($contract->get_bill_only_one_time())
+			if ($contract->get_bill_only_one_time())
 			{
-				$values['bill_only_one_time'] = lang('only_one_time_yes') . '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/><input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
+				$values['bill_only_one_time'] = lang('only_one_time_yes');
+				$values['old_contract_id'] .= '<input name="bill_only_one_time[]" value="' . $contract->get_id() . '" type="hidden"/>'
+					. '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
 			}
 			else
 			{
 				$values['bill_only_one_time'] = lang('only_one_time_no');
 			}
+
+			if ($include_billing)
+			{
+				$values['old_contract_id'] .= '<input name="contract[]" value="' . $contract->get_id() . '" type="hidden"/>';
+			}
+
 			$values['billing_start_date']	 = date($this->dateFormat, $contract->get_billing_start_date());
 			$values['id']					 = $contract->get_id();
 
@@ -74,11 +82,20 @@
 			$active_tab		 = 'details';
 
 			// Step 3 - the billing job
-			if(phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
+			if (phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
 			{
+				if ($GLOBALS['phpgw']->session->is_repost())
+			{
+					phpgwapi_cache::message_set(lang('Hmm... looks like a repost!'), 'error');
+					self::redirect(array(
+						'menuaction' => 'rental.uibilling.index'
+						)
+					);
+				}
+
 				$use_existing		 = phpgw::get_var('use_existing');
 				$existing_billing	 = phpgw::get_var('existing_billing');
-				if($use_existing < 1)
+				if ($use_existing < 1)
 				{
 					$existing_billing = 0;
 				}
@@ -86,11 +103,11 @@
 
 				$contract_ids_override		 = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
 				$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
-				if(($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
+				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 				{
 					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
 
-					if($missing_billing_info == null || count($missing_billing_info) == 0)
+					if ($missing_billing_info == null || count($missing_billing_info) == 0)
 					{
 						$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing, $contract_bill_only_one_time);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.view',
@@ -99,12 +116,12 @@
 					}
 					else // Incomplete biling info
 					{
-						foreach($missing_billing_info as $contract_id => $info_array)
+						foreach ($missing_billing_info as $contract_id => $info_array)
 						{
-							if($info_array != null && count($info_array) > 0)
+							if ($info_array != null && count($info_array) > 0)
 							{
 								$errorMsgs[] = lang('Missing billing information.', $contract_id);
-								foreach($info_array as $info)
+								foreach ($info_array as $info)
 								{
 									$errorMsgs[] = ' - ' . lang($info);
 								}
@@ -120,15 +137,15 @@
 				}
 			}
 			// Step 2 - list of contracts that should be billed
-			if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
+			if ($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 			{
 				//Responsibility area
 				//$contract_type = phpgw::get_var('contract_type');
 				//Check permission
 				$names = $this->locations->get_name($contract_type);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					if(!$this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					if (!$this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 					{
 						phpgw::no_access();
 					}
@@ -138,7 +155,7 @@
 				$year = phpgw::get_var('year');
 
 				//Get term and month
-				if($step == 2)
+				if ($step == 2)
 				{
 					$billing_term_tmp = phpgw::get_var('billing_term_selection');
 				}
@@ -150,23 +167,23 @@
 				$billing_term			 = substr($billing_term_tmp, 0, 1);
 				$billing_month			 = substr($billing_term_tmp, 2);
 
-				if($billing_term == '1')
+				if ($billing_term == '1')
 				{ // monthly
 					$month = $billing_month;
 				}
-				else if($billing_term == '4')
+				else if ($billing_term == '4')
 				{ // quarterly
-					if($billing_month == '1')
+					if ($billing_month == '1')
 					{ //1. quarter
 						$month				 = 3;
 						$billing_term_label	 = lang('first_quarter');
 					}
-					else if($billing_month == '2')
+					else if ($billing_month == '2')
 					{ //2. quarter
 						$month				 = 6;
 						$billing_term_label	 = lang('second_quarter');
 					}
-					else if($billing_month == '3')
+					else if ($billing_month == '3')
 					{ //3. quarter
 						$month				 = 9;
 						$billing_term_label	 = lang('third_quarter');
@@ -177,9 +194,9 @@
 						$billing_term_label	 = lang('fourth_quarter');
 					}
 				}
-				else if($billing_term == '3')
+				else if ($billing_term == '3')
 				{ // half year
-					if($billing_month == '1')
+					if ($billing_month == '1')
 					{
 						$month				 = 6;
 						$billing_term_label	 = lang('first_half');
@@ -199,19 +216,19 @@
 				//Use existing billing?
 				$use_existing		 = false;
 				$existing_billing	 = phpgw::get_var('existing_billing');
-				if($existing_billing != 'new_billing')
+				if ($existing_billing != 'new_billing')
 				{
 					$use_existing = true;
 				}
 
 				//Determine title
 				$title = phpgw::get_var('title');
-				if(!isset($title) || $title == '')
+				if (!isset($title) || $title == '')
 				{
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-					foreach($fields as $id => $label)
+					foreach ($fields as $id => $label)
 					{
-						if($id == $contract_type)
+						if ($id == $contract_type)
 						{
 							$description = lang($label) . ' ';
 						}
@@ -221,7 +238,7 @@
 					$title = $description;
 				}
 
-				if($use_existing)
+				if ($use_existing)
 				{
 					$billing_tmp = rental_sobilling::get_instance()->get_single($existing_billing);
 					$title		 = $billing_tmp->get_title();
@@ -229,7 +246,7 @@
 
 				$contracts_with_one_time = array();
 				//Check to see if the period har been billed before
-				if(rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
+				if (rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
 				{
 					// We only give a warning and let the user go to step 2
 					$warningMsgs[] = lang('the period has been billed before.');
@@ -251,13 +268,13 @@
 						'year'					 => $year, 'month'					 => $month);
 					$contract_price_items	 = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 
-					foreach($contract_price_items as $contract_price_item)
+					foreach ($contract_price_items as $contract_price_item)
 					{
-						if(!array_key_exists($contract_price_item->get_contract_id(), $contracts))
+						if (!array_key_exists($contract_price_item->get_contract_id(), $contracts))
 						{
 							$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array(
 								'contract_id'	 => $contract_price_item->get_contract_id(), 'contract_type'	 => $contract_type));
-							if(count($aditional_contracts) == 1)
+							if (count($aditional_contracts) == 1)
 							{
 								$cid = $contract_price_item->get_contract_id();
 								$c	 = $aditional_contracts[$cid];
@@ -273,7 +290,7 @@
 							//$contracts_with_one_time[$cid] = $c;
 						}
 
-						if(!empty($c))
+						if (!empty($c))
 						{
 							$total_price				 = $socontract_price_item->get_total_price_invoice($c->get_id(), $billing_term, $month, $year);
 							$c->set_total_price($total_price);
@@ -299,9 +316,9 @@
 					$array_contracts		 = array();
 					$not_billed_contracts	 = array();
 					$removed_contracts		 = array();
-					foreach($contracts as $id => $contract)
+					foreach ($contracts as $id => $contract)
 					{
-						if(isset($contract))
+						if (isset($contract))
 						{
 							$total_price		 = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
 							$type_id			 = $contract->get_contract_type_id();
@@ -310,21 +327,21 @@
 							// Gets location title from table rental_contract_responsibility
 							$location_title = rental_socontract::get_instance()->get_responsibility_title($responsible_type_id);
 
-							if($type_id == 4) // Remove contract of a specific type (KF)
+							if ($type_id == 4) // Remove contract of a specific type (KF)
 							{
 								$warningMsgs[]		 = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
 								unset($contracts[$id]);
 								$removed_contracts[] = $this->_object_to_array($contract);
 							}
 							// A contract with responibility type contract_type_eksternleie must have a rental_contract_type
-							else if(($type_id == 0 && strcmp($location_title, "contract_type_eksternleie") == 0) || (empty($type_id) && strcmp($location_title, "contract_type_eksternleie") == 0 ))
+							else if (($type_id == 0 && strcmp($location_title, "contract_type_eksternleie") == 0) || (empty($type_id) && strcmp($location_title, "contract_type_eksternleie") == 0 ))
 							{
 								$contract->set_total_price($total_price);
 								$warningMsgs[]		 = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_external_contract');
 								unset($contracts[$id]);
 								$removed_contracts[] = $this->_object_to_array($contract);
 							}
-							else if(isset($total_price) && $total_price == 0) // Remove contract if total price is equal to zero
+							else if (isset($total_price) && $total_price == 0) // Remove contract if total price is equal to zero
 							{
 								$warningMsgs[]		 = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
 								unset($contracts[$id]);
@@ -338,7 +355,7 @@
 								$last_bill_timestamp = $contract->get_last_invoice_timestamp($bill_from_timestamp);
 
 								// If the contract has not been billed before, select the billing start date
-								if($last_bill_timestamp == null)
+								if ($last_bill_timestamp == null)
 								{
 									$next_bill_timestamp	 = $contract->get_billing_start_date();
 									$not_billed_contracts[]	 = $this->_object_to_array($contract);
@@ -352,7 +369,7 @@
 									$contract->set_next_bill_timestamp($next_bill_timestamp);
 
 									// The next time the contract should be billed from equals the first day of the current selected period
-									if($next_bill_timestamp == $bill_from_timestamp)
+									if ($next_bill_timestamp == $bill_from_timestamp)
 									{
 										//The contract follows the regular billing cycle
 									}
@@ -364,18 +381,18 @@
 								}
 							}
 
-							if(!empty($contracts[$id]))
+							if (!empty($contracts[$id]))
 							{
-								$array_contracts[] = $this->_object_to_array($contracts[$id]);
+								$array_contracts[] = $this->_object_to_array($contracts[$id], true);
 							}
 						}
 					}
 				}
 
 				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($fields as $id => $label)
+				foreach ($fields as $id => $label)
 				{
-					if($id == $contract_type)
+					if ($id == $contract_type)
 					{
 						$fields_of_responsibility_label = lang($label);
 					}
@@ -383,11 +400,11 @@
 
 				$billing_start = date($this->dateFormat, $bill_from_timestamp);
 
-				if($billing_term == 1)
+				if ($billing_term == 1)
 				{
-					foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
+					foreach (rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 					{
-						if($term_id == $billing_term)
+						if ($term_id == $billing_term)
 						{
 							$billing_term_label = lang($term_title);
 						}
@@ -417,14 +434,16 @@
 				$tabletools_irregular_contracts[]	 = array
 					(
 					'my_name'		 => 'override_all',
-					'text'			 => lang('Override all'),
+					'className' => 'select',
+					'text' => lang('Override'),
 					'type'			 => 'custom',
 					'custom_code'	 => "checkOverride();"
 				);
 				$tabletools_irregular_contracts[]	 = array
 					(
 					'my_name'		 => 'bill2_all',
-					'text'			 => lang('Bill2 all'),
+					'className' => 'select',
+					'text' => lang('Bill2'),
 					'type'			 => 'custom',
 					'custom_code'	 => "checkBill2()"
 				);
@@ -527,16 +546,16 @@
 				);
 				$template	 = 'step2';
 			}
-			else if($step == null || (phpgw::get_var('next') != null) || phpgw::get_var('step') == '2' && phpgw::get_var('previous') != null) // User clicked next on step 0 or previous on step 2
+			else if ($step == null || (phpgw::get_var('next') != null) || phpgw::get_var('step') == '2' && phpgw::get_var('previous') != null) // User clicked next on step 0 or previous on step 2
 			{
 				//$contract_type = phpgw::get_var('contract_type');
 				$export_format		 = rental_sobilling::get_instance()->get_agresso_export_format($contract_type);
 				$existing_billing	 = phpgw::get_var('existing_billing');
 
 				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($fields as $id => $label)
+				foreach ($fields as $id => $label)
 				{
-					if($id == $contract_type)
+					if ($id == $contract_type)
 					{
 						$fields_of_responsibility_label = lang($label);
 					}
@@ -545,9 +564,9 @@
 				$existing_billing_options[]	 = array('id' => 'new_billing', 'name' => lang('new_billing'));
 				$result_objects				 = rental_sobilling::get_instance()->get(null, null, null, null, null, null, array(
 					'location_id' => $contract_type));
-				foreach($result_objects as $billing)
+				foreach ($result_objects as $billing)
 				{
-					if($billing->get_location_id() == $contract_type)
+					if ($billing->get_location_id() == $contract_type)
 					{
 						$selected					 = ($billing->get_id() == $existing_billing) ? 1 : 0;
 						$existing_billing_options[]	 = array('id'		 => $billing->get_id(), 'name'		 => $billing->get_title(),
@@ -556,13 +575,13 @@
 				}
 
 				$this_year = phpgw::get_var('year');
-				if(empty($this_year))
+				if (empty($this_year))
 				{
 					$this_year = date('Y');
 				}
 				$years			 = rental_contract::get_year_range();
 				$year_options	 = array();
-				foreach($years as $year)
+				foreach ($years as $year)
 				{
 					$selected		 = ($this_year == $year) ? 1 : 0;
 					$year_options[]	 = array('id' => $year, 'name' => $year, 'selected' => $selected);
@@ -571,28 +590,28 @@
 				$billing_term_selection		 = phpgw::get_var('billing_term_selection');
 				$current					 = 0;
 				$billing_term_group_options	 = array();
-				foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
+				foreach (rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 				{
 					$options = array();
-					if($current == 0)
+					if ($current == 0)
 					{
 						$options[] = array('id' => $term_id . '-1', 'name' => lang($term_title), 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
 					}
-					else if($current == 1)
+					else if ($current == 1)
 					{
 						$options[]	 = array('id' => $term_id . '-1', 'name' => '1. halv&aring;r', 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
 						$options[]	 = array('id' => $term_id . '-2', 'name' => '2. halv&aring;r', 'selected' => (($term_id . '-2' == $billing_term_selection) ? 1 : 0));
 					}
-					else if($current == 2)
+					else if ($current == 2)
 					{
 						$options[]	 = array('id' => $term_id . '-1', 'name' => '1. kvartal', 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
 						$options[]	 = array('id' => $term_id . '-2', 'name' => '2. kvartal', 'selected' => (($term_id . '-2' == $billing_term_selection) ? 1 : 0));
 						$options[]	 = array('id' => $term_id . '-3', 'name' => '3. kvartal', 'selected' => (($term_id . '-3' == $billing_term_selection) ? 1 : 0));
 						$options[]	 = array('id' => $term_id . '-4', 'name' => '4. kvartal', 'selected' => (($term_id . '-4' == $billing_term_selection) ? 1 : 0));
 					}
-					else if($current == 3)
+					else if ($current == 3)
 					{
-						for($i = 1; $i <= 12; $i++)
+						for ($i = 1; $i <= 12; $i++)
 						{
 							$options[] = array('id'		 => $term_id . '-' . $i, 'name'		 => lang('month ' . $i . ' capitalized'),
 								'selected'	 => (($term_id . '-' . $i == $billing_term_selection) ? 1 : 0));
@@ -645,19 +664,19 @@ JS;
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			$field_of_responsibility_options = array();
 			$fields							 = rental_socontract::get_instance()->get_fields_of_responsibility();
-			foreach($fields as $id => $label)
+			foreach ($fields as $id => $label)
 			{
 				$names = $this->locations->get_name($id);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 					{
 						$field_of_responsibility_options[] = array('id' => $id, 'name' => lang($label));
 					}
@@ -797,7 +816,7 @@ JS;
 		 */
 		public function view()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp']);
 			}
@@ -808,24 +827,24 @@ JS;
 			$billing_info_array	 = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
 				'billing_id' => phpgw::get_var('id')));
 
-			if($billing_job == null) // Not found
+			if ($billing_job == null) // Not found
 			{
 				//$errorMsgs[] = lang('Could not find specified billing job.');
 				phpgwapi_cache::message_set(lang('Could not find specified billing job.'), 'error');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.index'));
 			}
-			else if(phpgw::get_var('generate_export') != null) // User wants to generate export
+			else if (phpgw::get_var('generate_export') != null) // User wants to generate export
 			{
 				$open_and_exported = rental_soinvoice::get_instance()->number_of_open_and_exported_rental_billings($billing_job->get_location_id());
 
-				if($open_and_exported == 0)
+				if ($open_and_exported == 0)
 				{
 					//Loop through  billing info array to find the first month
 					$month = 12;
-					foreach($billing_info_array as $billing_info)
+					foreach ($billing_info_array as $billing_info)
 					{
 						$year = $billing_info->get_year();
-						if($month > $billing_info->get_month())
+						if ($month > $billing_info->get_month())
 						{
 							$month = $billing_info->get_month();
 						}
@@ -834,7 +853,7 @@ JS;
 					$billing_job->set_year($year);
 					$billing_job->set_month($month);
 
-					if(rental_sobilling::get_instance()->generate_export($billing_job))
+					if (rental_sobilling::get_instance()->generate_export($billing_job))
 					{
 						//$infoMsgs[] = lang('Export generated.');
 						phpgwapi_cache::message_set(lang('Export generated.'), 'message');
@@ -852,27 +871,27 @@ JS;
 					phpgwapi_cache::message_set(lang('open_and_exported_exist'), 'error');
 				}
 			}
-			else if(phpgw::get_var('commit') != null) // User wants to commit/close billing so that it cannot be deleted
+			else if (phpgw::get_var('commit') != null) // User wants to commit/close billing so that it cannot be deleted
 			{
 				$billing_job->set_timestamp_commit(time());
 				rental_sobilling::get_instance()->store($billing_job);
 			}
 
 			$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-			foreach($fields as $id => $label)
+			foreach ($fields as $id => $label)
 			{
-				if($id == $billing_job->get_location_id())
+				if ($id == $billing_job->get_location_id())
 				{
 					$contract_type = lang($label);
 				}
 			}
 
 			$billing_terms = array();
-			if($billing_info_array != null)
+			if ($billing_info_array != null)
 			{
-				foreach($billing_info_array as $billing_info)
+				foreach ($billing_info_array as $billing_info)
 				{
-					if($billing_info->get_term_id() == 1)
+					if ($billing_info->get_term_id() == 1)
 					{
 						$billing_terms[] = lang('month ' . $billing_info->get_month() . ' capitalized') . " " . $billing_info->get_year();
 					}
@@ -887,7 +906,7 @@ JS;
 			$last_updated		 = $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_stop(), $this->dateFormat . ' H:i:s');
 			$timestamp_commit	 = $billing_job->get_timestamp_commit();
 
-			if(empty($timestamp_commit))
+			if (empty($timestamp_commit))
 			{
 				$timestamp_commit = lang('No');
 			}
@@ -1033,7 +1052,7 @@ JS;
 		 */
 		public function delete()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -1044,7 +1063,7 @@ JS;
 			//set deleted=true on billing_info
 			$billing_infos = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
 				'billing_id' => phpgw::get_var('id')));
-			foreach($billing_infos as $billing_info)
+			foreach ($billing_infos as $billing_info)
 			{
 				$billing_info->set_deleted(true);
 				rental_sobilling_info::get_instance()->store($billing_info);
@@ -1053,13 +1072,13 @@ JS;
 			//set is_billed on invoice price items to false
 			$billing_job_invoices = rental_soinvoice::get_instance()->get(null, null, null, null, null, null, array(
 				'billing_id' => phpgw::get_var('id')));
-			foreach($billing_job_invoices as $invoice)
+			foreach ($billing_job_invoices as $invoice)
 			{
 				$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
 					'contract_id'	 => $invoice->get_contract_id(), 'one_time'		 => true, 'include_billed' => true));
-				foreach($price_items as $price_item)
+				foreach ($price_items as $price_item)
 				{
-					if($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end())
+					if ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end())
 					{
 						$price_item->set_is_billed(false);
 						rental_socontract_price_item::get_instance()->store($price_item);
@@ -1069,7 +1088,7 @@ JS;
 				rental_soinvoice::get_instance()->store($invoice);
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				/* if ($result) {
 				  $message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been removed'));
@@ -1087,7 +1106,7 @@ JS;
 		 */
 		public function commit()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -1095,7 +1114,7 @@ JS;
 			$billing_job->set_timestamp_commit(time());
 			$result		 = rental_sobilling::get_instance()->store($billing_job);
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				/* if ($result) {
 				  $message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been committed'));
@@ -1110,11 +1129,11 @@ JS;
 
 		public function query()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -1143,21 +1162,21 @@ JS;
 			$query_type		 = phpgw::get_var('type');
 
 			$export = phpgw::get_var('export', 'bool');
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
 
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'all_billings':
 					$filters = array();
-					if(!$sort_field)
+					if (!$sort_field)
 					{
 						$sort_field		 = 'timestamp_stop';
 						$sort_ascending	 = false;
 					}
-					else if($sort_field == 'responsibility_title')
+					else if ($sort_field == 'responsibility_title')
 					{
 						$sort_field = 'location_id';
 					}
@@ -1165,7 +1184,7 @@ JS;
 					$object_count	 = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'invoices':
-					if($sort_field == 'term_label')
+					if ($sort_field == 'term_label')
 					{
 						$sort_field = 'term_id';
 					}
@@ -1177,11 +1196,11 @@ JS;
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ))
+					if ($result->has_permission(PHPGW_ACL_READ))
 					{
 						// ... add a serialized result
 						$rows[] = $result->serialize();
@@ -1189,13 +1208,13 @@ JS;
 				}
 			}
 
-			if(!$export)
+			if (!$export)
 			{
 				//Add action column to each row in result table
 				array_walk($rows, array($this, 'add_actions'), array($query_type));
 			}
 
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}
@@ -1214,15 +1233,15 @@ JS;
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			$value['other_operations']	 = null;
 			$query_type					 = $params[0];
 
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'all_billings':
-					if(empty($value['timestamp_commit']))
+					if (empty($value['timestamp_commit']))
 					{
 						$url_delete	 = html_entity_decode(self::link(array('menuaction'		 => 'rental.uibilling.delete',
 							'id'				 => $value['id'], 'phpgw_return_as'	 => 'json')));
@@ -1240,7 +1259,7 @@ JS;
 
 		public function download_export()
 		{
-			if(!$this->isExecutiveOfficer())
+			if (!$this->isExecutiveOfficer())
 			{
 				phpgw::no_access();
 			}
@@ -1251,17 +1270,17 @@ JS;
 
 			$cs15	 = phpgw::get_var('generate_cs15');
 			$toExcel = phpgw::get_var('toExcel');
-			if($cs15 == null)
+			if ($cs15 == null)
 			{
-				if($toExcel == null)
+				if ($toExcel == null)
 				{
 					$export_format	 = explode('_', phpgw::get_var('export_format'));
 					$file_ending	 = $export_format[1];
-					if($file_ending == 'gl07')
+					if ($file_ending == 'gl07')
 					{
 						$type = 'intern';
 					}
-					else if($file_ending == 'lg04')
+					else if ($file_ending == 'lg04')
 					{
 						$type = 'faktura';
 					}
@@ -1280,7 +1299,7 @@ JS;
 					array
 						(
 						'string' => $path,
-						RELATIVE_NONE
+								'relatives' => array( RELATIVE_NONE)
 					)
 					);
 
@@ -1292,7 +1311,7 @@ JS;
 					$billing_info_array	 = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
 						'billing_id' => phpgw::get_var('id')));
 					$type				 = phpgw::get_var('type', 'string', 'GET', 'bk');
-					if($billing_job == null) // Not found
+					if ($billing_job == null) // Not found
 					{
 						$errorMsgs[] = lang('Could not find specified billing job.');
 					}
@@ -1300,10 +1319,10 @@ JS;
 					{
 						//Loop through  billing info array to find the first month
 						$month = 12;
-						foreach($billing_info_array as $billing_info)
+						foreach ($billing_info_array as $billing_info)
 						{
 							$year = $billing_info->get_year();
-							if($month > $billing_info->get_month())
+							if ($month > $billing_info->get_month())
 							{
 								$month = $billing_info->get_month();
 							}
@@ -1319,17 +1338,17 @@ JS;
 						  _debug_array($l);
 						  } */
 
-						if(isset($list))
+						if (isset($list))
 						{
 							$infoMsgs[] = lang('Export generated.');
 
 							$keys = array();
 
-							if(count($list[0]) > 0)
+							if (count($list[0]) > 0)
 							{
-								foreach($list[0] as $key => $value)
+								foreach ($list[0] as $key => $value)
 								{
-									if(!is_array($value))
+									if (!is_array($value))
 									{
 										array_push($keys, $key);
 									}
@@ -1348,7 +1367,7 @@ JS;
 							// Use keys as headings
 							$headings	 = array();
 							$count_keys	 = count($keys);
-							for($j = 0; $j < $count_keys; $j++)
+							for ($j = 0; $j < $count_keys; $j++)
 							{
 								array_push($headings, lang($keys[$j]));
 							}

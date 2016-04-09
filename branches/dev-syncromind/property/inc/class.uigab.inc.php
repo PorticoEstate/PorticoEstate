@@ -91,7 +91,7 @@
 			$this->gab_insert_level = $this->bo->gab_insert_level;
 		}
 
-		private function _populate($data = array())
+		private function _populate( $data = array() )
 		{
 			$gab_id = phpgw::get_var('gab_id');
 			$location_code = phpgw::get_var('location_code');
@@ -104,12 +104,12 @@
 
 			$values['location_code'] = $location_code;
 
-			if(!$values['location_code'] && !$values['location'])
+			if (!$values['location_code'] && !$values['location'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
 			}
 
-			if((count($values['location']) < $this->gab_insert_level) && !$values['propagate'] && !$values['location_code'])
+			if ((count($values['location']) < $this->gab_insert_level) && !$values['propagate'] && !$values['location_code'])
 			{
 				$this->receipt['error'][] = array('msg' => lang('Either select propagate - or choose location level %1 !', $this->gab_insert_level));
 			}
@@ -160,7 +160,7 @@
 				'address' => $address
 			);
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -170,7 +170,7 @@
 
 			$i = 0;
 
-			while(is_array($gab_list) && list(, $gab) = each($gab_list))
+			while (is_array($gab_list) && list(, $gab) = each($gab_list))
 			{
 				$value_gaards_nr = substr($gab['gab_id'], 4, 5);
 				$value_bruks_nr = substr($gab['gab_id'], 9, 4);
@@ -203,19 +203,20 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			$location_code = phpgw::get_var('location_code');
 
 			$appname = lang('gab');
 			$function_msg = lang('list gab');
@@ -244,6 +245,7 @@
 					)),
 					'allrows' => true,
 					'editor_action' => '',
+					'query'		=> $location_code,
 					'field' => array()
 				)
 			);
@@ -263,7 +265,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array
 					(
@@ -274,7 +276,7 @@
 					'className' => ($uicols['className'][$k]) ? $uicols['className'][$k] : ''
 				);
 
-				if($uicols['formatter'][$k])
+				if ($uicols['formatter'][$k])
 				{
 					$params['formatter'] = $uicols['formatter'][$k];
 				}
@@ -294,7 +296,7 @@
 				)
 			);
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -332,6 +334,18 @@
 				'address' => lang('Address')
 			);
 
+			if($location_code)
+			{
+				$set_location_code = <<<JS
+
+					$( '#location_code').val('{$location_code}');
+JS;
+			}
+			else
+			{
+				$set_location_code = '';
+			}
+
 			$code = "var inputFilters = " . json_encode($inputFilters);
 
 			$code .= <<<JS
@@ -344,6 +358,8 @@
 						$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val+'" id="'+i+'" />');
 					});
 					
+					{$set_location_code}
+
 					var valuesInputFilter = {};
 					
 					$.each(inputFilters, function(i, val) 
@@ -392,7 +408,7 @@ JS;
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
-				'location_code' => $location_code,
+				'location_code' => $location_code ? $location_code : $search['value'],
 				'gaards_nr' => $gaards_nr,
 				'bruksnr' => $bruksnr,
 				'feste_nr' => $feste_nr,
@@ -407,7 +423,7 @@ JS;
 			$config->read_repository();
 
 			$link_to_map = (isset($config->config_data['map_url']) ? $config->config_data['map_url'] : '');
-			if($link_to_map)
+			if ($link_to_map)
 			{
 				$text_map = lang('Map');
 			}
@@ -415,7 +431,7 @@ JS;
 			$link_to_gab = isset($config->config_data['gab_url']) ? $config->config_data['gab_url'] : '';
 			$gab_url_paramtres = isset($config->config_data['gab_url_paramtres']) ? $config->config_data['gab_url_paramtres'] : 'type=eiendom&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__';
 
-			if($link_to_gab)
+			if ($link_to_gab)
 			{
 				$text_gab = lang('GAB');
 			}
@@ -434,28 +450,28 @@ JS;
 
 			$values = array();
 			$j = 0;
-			if(isset($gab_list) && is_array($gab_list))
+			if (isset($gab_list) && is_array($gab_list))
 			{
-				foreach($gab_list as $gab)
+				foreach ($gab_list as $gab)
 				{
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
-						if($uicols['name'][$i] == 'gaards_nr')
+						if ($uicols['name'][$i] == 'gaards_nr')
 						{
 							$value_gaards_nr = substr($gab['gab_id'], 4, 5);
 							$value = $value_gaards_nr;
 						}
-						else if($uicols['name'][$i] == 'bruksnr')
+						else if ($uicols['name'][$i] == 'bruksnr')
 						{
 							$value_bruks_nr = substr($gab['gab_id'], 9, 4);
 							$value = $value_bruks_nr;
 						}
-						else if($uicols['name'][$i] == 'feste_nr')
+						else if ($uicols['name'][$i] == 'feste_nr')
 						{
 							$value_feste_nr = substr($gab['gab_id'], 13, 4);
 							$value = $value_feste_nr;
 						}
-						else if($uicols['name'][$i] == 'seksjons_nr')
+						else if ($uicols['name'][$i] == 'seksjons_nr')
 						{
 							$value_seksjons_nr = substr($gab['gab_id'], 17, 3);
 							$value = $value_seksjons_nr;
@@ -465,7 +481,7 @@ JS;
 							$value = isset($gab[$uicols['name'][$i]]) ? $gab[$uicols['name'][$i]] : '';
 						}
 
-						if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i] == 'link' && $uicols['name'][$i] == 'map')
+						if (isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i] == 'link' && $uicols['name'][$i] == 'map')
 						{
 							$value_gaards_nr = substr($gab['gab_id'], 4, 5);
 							$value_bruks_nr = substr($gab['gab_id'], 9, 4);
@@ -475,7 +491,7 @@ JS;
 							$values[$j]['link_map'] = $link;
 							$value = $text_map;
 						}
-						if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i] == 'link' && $uicols['name'][$i] == 'gab')
+						if (isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i] == 'link' && $uicols['name'][$i] == 'gab')
 						{
 							$value_kommune_nr = substr($gab['gab_id'], 0, 4);
 							$value_gaards_nr = substr($gab['gab_id'], 4, 5);
@@ -513,7 +529,7 @@ JS;
 			}
 
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -527,13 +543,13 @@ JS;
 
 		function list_detail()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_detail();
 			}
@@ -574,7 +590,7 @@ JS;
 			$count_uicols_name = count($uicols['name']);
 
 			$detail_def = array();
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array
 					(
@@ -584,12 +600,12 @@ JS;
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if($uicols['name'][$k] == 'gab_id')
+				if ($uicols['name'][$k] == 'gab_id')
 				{
 					$params['sortable'] = true;
 				}
 
-				if($uicols['name'][$k] == 'address')
+				if ($uicols['name'][$k] == 'address')
 				{
 					$params['sortable'] = true;
 				}
@@ -611,7 +627,7 @@ JS;
 				)
 			);
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$tabletools[] = array
 					(
@@ -626,7 +642,7 @@ JS;
 				);
 			}
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$tabletools[] = array
 					(
@@ -642,7 +658,7 @@ JS;
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$tabletools[] = array
 					(
@@ -753,9 +769,9 @@ JS;
 			$this->edit();
 		}
 
-		function edit($values = array(), $mode = 'edit')
+		function edit( $values = array(), $mode = 'edit' )
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -766,23 +782,23 @@ JS;
 			$gab_id = phpgw::get_var('gab_id');
 			$location_code = phpgw::get_var('location_code');
 
-			if(!$values && $location_code)
+			if (!$values && $location_code)
 			{
 				$values['location_data'] = $this->bolocation->read_single($location_code, $values['extra']);
 			}
 
-			if($values['gab_id'])
+			if ($values['gab_id'])
 			{
 				$gab_id = $values['gab_id'];
 				$location_code = $values['location_code'];
 			}
 
-			if($gab_id && !$new)
+			if ($gab_id && !$new)
 			{
 				$values = $this->bo->read_single($gab_id, $location_code);
 			}
 
-			if($values['location_code'])
+			if ($values['location_code'])
 			{
 				$function_msg = lang('Edit gab');
 				$action = 'edit';
@@ -795,12 +811,12 @@ JS;
 				$lookup_type = 'form2';
 			}
 
-			if($values['cat_id'])
+			if ($values['cat_id'])
 			{
 				$this->cat_id = $values['cat_id'];
 			}
 
-			if($values['location_data'])
+			if ($values['location_data'])
 			{
 				$type_id = count(explode('-', $values['location_code']));
 			}
@@ -830,19 +846,19 @@ JS;
 			$active_tab = 'generic';
 
 			$done_data = array('menuaction' => 'property.uigab.' . $from);
-			if($from == 'list_detail')
+			if ($from == 'list_detail')
 			{
 				$done_data['gab_id'] = $gab_id;
 			}
 
 			$kommune_nr = substr($gab_id, 0, 4);
-			if(!$kommune_nr > 0)
+			if (!$kommune_nr > 0)
 			{
 				$this->config->read_repository();
 				$kommune_nr = $this->config->config_data['default_municipal'];
 			}
 
-			if(isset($this->receipt) && is_array($this->receipt))
+			if (isset($this->receipt) && is_array($this->receipt))
 			{
 				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 			}
@@ -894,7 +910,7 @@ JS;
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -903,7 +919,7 @@ JS;
 			 */
 			$data = $this->_populate();
 
-			if($this->receipt['error'])
+			if ($this->receipt['error'])
 			{
 				$this->edit();
 			}
@@ -912,19 +928,26 @@ JS;
 				try
 				{
 					$receipt = $this->bo->save($data);
-					$values['location_code'] = $receipt['location_code'];
-					$values['gab_id'] = $receipt['gab_id'];
+					$location_code = $values['location_code'] = $receipt['location_code'];
+					$gab_id = $values['gab_id'] = $receipt['gab_id'];
 					$this->receipt = $receipt;
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 					}
 				}
 
-				//phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($location_code)
+				{
+					self::message_set($receipt);
+					self::redirect(array('menuaction' => 'property.uigab.edit', 'gab_id' => $gab_id,
+						'location_code' => $location_code,
+						'from' => phpgw::get_var('from')));
+				}
+
 				$this->edit($values);
 				return;
 			}
@@ -932,7 +955,7 @@ JS;
 
 		function delete()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 8, 'acl_location' => $this->acl_location));
@@ -943,7 +966,7 @@ JS;
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			//cramirez add JsonCod for Delete
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($gab_id, $location_code);
 				return "gab_id " . $gab_id . " " . lang("has been deleted");
@@ -955,7 +978,7 @@ JS;
 				'gab_id' => $gab_id
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($gab_id, $location_code);
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
@@ -985,7 +1008,7 @@ JS;
 
 		function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -999,7 +1022,7 @@ JS;
 			//_debug_array($values);
 
 
-			if($gab_id && !$new)
+			if ($gab_id && !$new)
 			{
 				$values = $this->bo->read_single($gab_id, $location_code);
 			}

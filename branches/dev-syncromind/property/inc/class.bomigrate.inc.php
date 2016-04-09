@@ -35,11 +35,11 @@
 		private $use_session;
 		public $start;
 
-		public function __construct($session = false)
+		public function __construct( $session = false )
 		{
 			$this->acl_location = '.admin';
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -48,9 +48,9 @@
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 		}
 
-		public function save_sessiondata($data)
+		public function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'migrate', $data);
 			}
@@ -76,7 +76,7 @@
 			return $domain_info;
 		}
 
-		public function migrate($values, $download_script = false)
+		public function migrate( $values, $download_script = false )
 		{
 			//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
@@ -92,7 +92,7 @@
 			$setup = createObject('phpgwapi.setup_process');
 
 			$table_def = array();
-			foreach($tables as $table)
+			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
 				//_debug_array($tableinfo);
@@ -108,9 +108,9 @@
 				//die();
 				/* Work out the order of how the tables can be created
 				 */
-				if($tableinfo[2])
+				if ($tableinfo[2])
 				{
-					foreach($tableinfo[2] as $ref_set => $ref_fields)
+					foreach ($tableinfo[2] as $ref_set => $ref_fields)
 					{
 						$fk_temp = '$fk = array(' . $ref_fields . ');';
 						@eval($fk_temp);
@@ -121,10 +121,10 @@
 			}
 
 			set_time_limit(0);
-			foreach($values as $domain)
+			foreach ($values as $domain)
 			{
 				$this->oProc = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_domain'][$domain]['db_type']);
-				if(!$download_script)
+				if (!$download_script)
 				{
 					$this->oProc->m_odb = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
 					$this->oProc->m_odb->Type = $GLOBALS['phpgw_domain'][$domain]['db_type'];
@@ -136,7 +136,7 @@
 					$this->oProc->m_odb->connect();
 				}
 
-				if($download_script)
+				if ($download_script)
 				{
 					$script = $this->GenerateScripts($table_def, false, true);
 					$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
@@ -150,17 +150,17 @@
 			}
 		}
 
-		function copy_data($table_def = array())
+		function copy_data( $table_def = array() )
 		{
 			$db = $GLOBALS['phpgw']->db;
 
-			foreach($table_def as $table => $fd)
+			foreach ($table_def as $table => $fd)
 			{
-				if($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
+				if ($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
 				{
 					continue;
 				}
-				switch($table)
+				switch ($table)
 				{
 					case 'fm_document_history':
 					case 'fm_entity_history':
@@ -207,7 +207,7 @@
 				}
 
 				$db->query("SELECT * FROM {$table}");
-				foreach($db->resultSet as $row)
+				foreach ($db->resultSet as $row)
 				{
 					$insert_values = $db->validate_insert(array_values($row));
 					$insert_fields = implode(',', array_keys($row));
@@ -216,7 +216,7 @@
 			}
 		}
 
-		private function download_script($script, $filename)
+		private function download_script( $script, $filename )
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -237,30 +237,30 @@
 		 *
 		 * @return string sql-script for generate database for chosen db-platform.
 		 */
-		function GenerateScripts($aTables, $bOutputHTML = false, $return_script = false)
+		function GenerateScripts( $aTables, $bOutputHTML = false, $return_script = false )
 		{
-			if(!is_array($aTables))
+			if (!is_array($aTables))
 			{
 				return false;
 			}
 			$this->oProc->m_aTables = $aTables;
 
 			$sAllTableSQL = '';
-			foreach($this->oProc->m_aTables as $sTableName => $aTableDef)
+			foreach ($this->oProc->m_aTables as $sTableName => $aTableDef)
 			{
 				$sSequenceSQL = '';
 				$sTriggerSQL = '';
 				$this->oProc->m_oTranslator->indexes_sql = array();
-				if($this->oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
+				if ($this->oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 				{
 					$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
 					. $this->oProc->m_oTranslator->m_sStatementTerminator;
-					if($sSequenceSQL != '')
+					if ($sSequenceSQL != '')
 					{
 						$sAllTableSQL .= $sSequenceSQL . "\n";
 					}
 
-					if($sTriggerSQL != '')
+					if ($sTriggerSQL != '')
 					{
 						$sAllTableSQL .= $sTriggerSQL . "\n";
 					}
@@ -268,9 +268,9 @@
 					$sAllTableSQL .= $sTableSQL . "\n\n";
 
 					// postgres and mssql
-					if(isset($this->oProc->m_oTranslator->indexes_sql) && is_array($this->oProc->m_oTranslator->indexes_sql) && count($this->oProc->m_oTranslator->indexes_sql) > 0)
+					if (isset($this->oProc->m_oTranslator->indexes_sql) && is_array($this->oProc->m_oTranslator->indexes_sql) && count($this->oProc->m_oTranslator->indexes_sql) > 0)
 					{
-						foreach($this->oProc->m_oTranslator->indexes_sql as $key => $sIndexSQL)
+						foreach ($this->oProc->m_oTranslator->indexes_sql as $key => $sIndexSQL)
 						{
 							$ix_name = $key . '_' . $sTableName . '_idx';
 							$IndexSQL = str_replace(array('__index_name__', '__table_name__'), array(
@@ -281,7 +281,7 @@
 				}
 				else
 				{
-					if($bOutputHTML)
+					if ($bOutputHTML)
 					{
 						print('<br>Failed generating script for <b>' . $sTableName . '</b><br>');
 						echo '<pre style="text-align: left;">' . $sTableName . ' = ';
@@ -293,12 +293,12 @@
 				}
 			}
 
-			if($bOutputHTML)
+			if ($bOutputHTML)
 			{
 				print('<pre>' . $sAllTableSQL . '</pre><br><br>');
 			}
 
-			if($return_script)
+			if ($return_script)
 			{
 				return $sAllTableSQL;
 			}

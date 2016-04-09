@@ -1,50 +1,60 @@
-	function load_requirement_edit( activity_id ){
-		var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id:activity_id, nonavbar: true, lean: true};
+function load_requirement_edit(activity_id)
+{
+	var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id: activity_id, nonavbar: true, lean: true};
 		var requestUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local(activity_id)}});
-	}
-
-	function load_requirement_edit_id( id , activity_id){
-		var oArgs = {menuaction: 'logistic.uirequirement.edit', id:id, nonavbar: true, lean: true};
-		var requestUrl = phpGWLink('index.php', oArgs);
-
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local(activity_id)}});
-	}
-
-	function load_requirement_delete_id( id ){
-		confirm_msg = 'Slette behov?';
-		if(confirm(confirm_msg))
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
 		{
-			var oArgs = {menuaction: 'logistic.uirequirement.delete', id:id};
+			closeJS_local(activity_id)
+		}});
+}
+
+function load_requirement_edit_id(id, activity_id)
+{
+	var oArgs = {menuaction: 'logistic.uirequirement.edit', id: id, nonavbar: true, lean: true};
+		var requestUrl = phpGWLink('index.php', oArgs);
+
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+		{
+			closeJS_local(activity_id)
+		}});
+}
+
+function load_requirement_delete_id(id)
+{
+		confirm_msg = 'Slette behov?';
+	if (confirm(confirm_msg))
+		{
+		var oArgs = {menuaction: 'logistic.uirequirement.delete', id: id};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
-			var callback =	function(result)
+		var callback = function (result)
 				{
 					JqueryPortico.updateinlineTableHelper('requirement-container');
 				};
-			JqueryPortico.execute_ajax(requestUrl, callback, {},'POST', 'json');
-		}
+		JqueryPortico.execute_ajax(requestUrl, callback, {}, 'POST', 'json');
 	}
+}
 
 
-	function load_delete_allocation( requirement_id, id )
-	{
+function load_delete_allocation(requirement_id, id)
+{
 		confirm_msg = 'Slette allokering?';
-		if(confirm(confirm_msg))
+	if (confirm(confirm_msg))
 		{
-			var oArgs = {menuaction: 'logistic.uirequirement_resource_allocation.delete', id:id};
+		var oArgs = {menuaction: 'logistic.uirequirement_resource_allocation.delete', id: id};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
 			$.ajax({
 				  type: 'POST',
 				  url: requestUrl,
-				  success: function(data) {
+			success: function (data)
+			{
 					  var obj = data;
-					  if(obj.status == "deleted")
+				if (obj.status == "deleted")
 					  {
 						var oArgs2 = {
-								menuaction:'logistic.uirequirement_resource_allocation.index',
+						menuaction: 'logistic.uirequirement_resource_allocation.index',
 								requirement_id: requirement_id,
 								type: "requirement_id"
 							};
@@ -55,17 +65,20 @@
 						 JqueryPortico.updateinlineTableHelper('requirement-container');
 					  }
 				  },
-				  error: function(XMLHttpRequest, textStatus, errorThrown) {
-					if (XMLHttpRequest.status === 401) {
+			error: function (XMLHttpRequest, textStatus, errorThrown)
+			{
+				if (XMLHttpRequest.status === 401)
+				{
 					  window.alert('failed');
 					}
 				  }
 			});
 		}
-	}
+}
 
 
-	function load_assign_task(frm, id ){
+function load_assign_task(frm, id)
+{
 
 		var assign_requirement = new Array();
 		var message = "";
@@ -84,34 +97,37 @@
 
 		assign_requirement = encodeURI(JSON.stringify(assign_requirement));
 
-		var oArgs = {menuaction: 'logistic.uirequirement.assign_job', id:id, assign_requirement: assign_requirement, nonavbar: true};
+	var oArgs = {menuaction: 'logistic.uirequirement.assign_job', id: id, assign_requirement: assign_requirement, nonavbar: true};
 		var requestUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local_allocation(id)}});
-	}
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+		{
+			closeJS_local_allocation(id)
+		}});
+}
 
 
-	function closeJS_local(activity_id)
-	{
-		if(typeof(activity_id) == 'undefied' || !activity_id)
+function closeJS_local(activity_id)
+{
+	if (typeof (activity_id) == 'undefied' || !activity_id)
 		{
 			return;
 		}
 		var oArgs = {
-				menuaction:'logistic.uirequirement.index',
+		menuaction: 'logistic.uirequirement.index',
 				activity_id: activity_id,
 			};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		JqueryPortico.updateinlineTableHelper('requirement-container', requestUrl);
-	}
+}
 
 
-	function closeJS_local_allocation(requirement_id)
-	{
+function closeJS_local_allocation(requirement_id)
+{
 		var oArgs = {
-				menuaction:'logistic.uirequirement_resource_allocation.index',
+		menuaction: 'logistic.uirequirement_resource_allocation.index',
 				requirement_id: requirement_id,
 				type: "requirement_id"
 			};
@@ -120,4 +136,4 @@
 
 		JqueryPortico.updateinlineTableHelper(oTable1, requestUrl);
 
-	}
+}

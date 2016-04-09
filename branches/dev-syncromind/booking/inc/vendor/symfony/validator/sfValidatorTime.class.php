@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorTime validates a time. It also converts the input value to a valid time.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorTime extends sfValidatorBase
-{
+	class sfValidatorTime extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -37,7 +37,7 @@ class sfValidatorTime extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addMessage('bad_format', '"%value%" does not match the time format (%time_format%).');
 
@@ -49,7 +49,7 @@ class sfValidatorTime extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     if (is_array($value))
     {
@@ -74,7 +74,7 @@ class sfValidatorTime extends sfValidatorBase
     }
     else
     {
-      $clean = (integer) $value;
+				$clean = (integer)$value;
     }
 
     return $clean === $this->getEmptyValue() ? $clean : date($this->getOption('time_output'), $clean);
@@ -89,7 +89,7 @@ class sfValidatorTime extends sfValidatorBase
    *
    * @return int A timestamp
    */
-  protected function convertTimeArrayToTimestamp($value)
+		protected function convertTimeArrayToTimestamp( $value )
   {
     // all elements must be empty or a number
     foreach (array('hour', 'minute', 'second') as $key)
@@ -103,8 +103,7 @@ class sfValidatorTime extends sfValidatorBase
     // if second is set, minute and hour must be set
     // if minute is set, hour must be set
     if (
-      $this->isValueSet($value, 'second') && (!$this->isValueSet($value, 'minute') || !$this->isValueSet($value, 'hour'))
-      ||
+				$this->isValueSet($value, 'second') && (!$this->isValueSet($value, 'minute') || !$this->isValueSet($value, 'hour')) ||
       $this->isValueSet($value, 'minute') && !$this->isValueSet($value, 'hour')
     )
     {
@@ -112,9 +111,7 @@ class sfValidatorTime extends sfValidatorBase
     }
 
     $clean = mktime(
-      isset($value['hour']) ? intval($value['hour']) : 0,
-      isset($value['minute']) ? intval($value['minute']) : 0,
-      isset($value['second']) ? intval($value['second']) : 0
+				isset($value['hour']) ? intval($value['hour']) : 0, isset($value['minute']) ? intval($value['minute']) : 0, isset($value['second']) ? intval($value['second']) : 0
     );
 
     if (false === $clean)
@@ -125,7 +122,7 @@ class sfValidatorTime extends sfValidatorBase
     return $clean;
   }
 
-  protected function isValueSet($values, $key)
+		protected function isValueSet( $values, $key )
   {
     return isset($values[$key]) && !in_array($values[$key], array(null, ''), true);
   }
@@ -133,19 +130,20 @@ class sfValidatorTime extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function isEmpty($value)
+		protected function isEmpty( $value )
   {
     if (is_array($value))
     {
       // array is not empty when a value is found
-      foreach($value as $key => $val)
+				foreach ($value as $key => $val)
       {
         // int and string '0' are 'empty' values that are explicitly accepted
-        if ($val === 0 || $val === '0' || !empty($val)) return false;
+					if ($val === 0 || $val === '0' || !empty($val))
+						return false;
       }
       return true;
     }
 
     return parent::isEmpty($value);
   }
-}
+	}

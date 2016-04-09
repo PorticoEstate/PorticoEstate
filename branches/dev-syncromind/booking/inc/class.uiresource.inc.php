@@ -49,7 +49,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -116,7 +116,7 @@
 
 			$data['datatable']['actions'][] = array();
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiresource.add'));
 			}
@@ -135,7 +135,7 @@
 			$resource = array();
 			$resource['sort'] = '0';
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = extract_values($_POST, $this->fields);
 				$resource['active'] = '1';
@@ -145,14 +145,14 @@
 				$resource['activity_id'] = $building['activity_id'];
 
 				$errors = $this->bo->validate($resource);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
 						$receipt = $this->bo->add($resource);
 						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -166,7 +166,7 @@
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -185,7 +185,7 @@
 		protected function resource_types()
 		{
 			$types = array();
-			foreach($this->bo->allowed_types() as $type)
+			foreach ($this->bo->allowed_types() as $type)
 			{
 				$types[$type] = self::humanize($type);
 			}
@@ -205,7 +205,7 @@
 			$resource['types'] = $this->resource_types();
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($resource);
@@ -215,14 +215,14 @@
 				$fields = ExecMethod('booking.custom_fields.get_fields', $location);
 				$values_attribute = phpgw::get_var('values_attribute');
 				$json_representation = array();
-				foreach($fields as $attrib_id => &$attrib)
+				foreach ($fields as $attrib_id => &$attrib)
 				{
 					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 				}
 
 				$resource['json_representation'][$location_id] =  $json_representation;
 
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($resource);
 					$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
@@ -232,9 +232,9 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
-			foreach($activity_data['results'] as $acKey => $acValue)
+			foreach ($activity_data['results'] as $acKey => $acValue)
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
@@ -268,15 +268,15 @@
 			$custom_values = $resource['json_representation'][$location_id];
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
-			foreach($fields as $attrib_id => &$attrib)
+			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;
 
-				if(isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
 				{
-					foreach($attrib['choice'] as &$choice)
+					foreach ($attrib['choice'] as &$choice)
 					{
-						if(is_array($attrib['value']))
+						if (is_array($attrib['value']))
 						{
 							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
 						}
@@ -311,7 +311,7 @@
 			return $columns;
 		}
 
-		private static function get_building_datatable_def($id)
+		private static function get_building_datatable_def( $id )
 		{
 			return array
 				(
@@ -345,7 +345,7 @@
 		public function add_building()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
-			if(!$building_id = phpgw::get_var('building_id', 'int'))
+			if (!$building_id = phpgw::get_var('building_id', 'int'))
 			{
 				return array(
 					'ok' => false,
@@ -359,7 +359,7 @@
 				$receipt = $this->bo->add_building($resource, $resource_id, $building_id);
 				$msg = $receipt ? '' : lang('duplicate');
 			}
-			catch(booking_unauthorized_exception $e)
+			catch (booking_unauthorized_exception $e)
 			{
 				return false;
 				$msg = lang('Could not add object due to insufficient permissions');
@@ -374,7 +374,7 @@
 		public function remove_building()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
-			if(!$building_id = phpgw::get_var('building_id', 'int'))
+			if (!$building_id = phpgw::get_var('building_id', 'int'))
 			{
 				return array(
 					'ok' => false,
@@ -387,7 +387,7 @@
 				$receipt = $this->bo->remove_building($resource, $resource_id, $building_id);
 				$msg = '';
 			}
-			catch(booking_unauthorized_exception $e)
+			catch (booking_unauthorized_exception $e)
 			{
 				return false;
 				$msg = lang('Could not update object due to insufficient permissions');

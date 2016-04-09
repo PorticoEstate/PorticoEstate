@@ -6,9 +6,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package manual
 	* @subpackage setup
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	// Basic information about this app
 	$setup_info['manual']['name']      = 'manual';
 	$setup_info['manual']['version']   = '0.9.17.501';

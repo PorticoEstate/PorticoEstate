@@ -20,7 +20,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('activitycalendar.soorganization');
 			}
@@ -41,33 +41,33 @@
 		 * @param boolean $return_count
 		 * @return string SQL
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			//Add columns to this array to include them in the query
 			$columns = array();
 
-			if($sort_field != null && !$return_count)
+			if ($sort_field != null && !$return_count)
 			{
-				if($sort_field == 'identifier')
+				if ($sort_field == 'identifier')
 				{
 					$sort_field = 'org.id';
 				}
 				$dir	 = $ascending ? 'ASC' : 'DESC';
 				$order	 = "ORDER BY $sort_field $dir";
 			}
-			else if(!$return_count)
+			else if (!$return_count)
 			{
 				$dir	 = $ascending ? 'ASC' : 'DESC';
 				$order	 = "ORDER BY org.name $dir";
 			}
-			if($search_for)
+			if ($search_for)
 			{
 				$query			 = $this->marshal($search_for, 'string');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "name":
 						$like_clauses[]	 = "org.name $this->like $like_pattern";
@@ -85,7 +85,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -97,51 +97,51 @@
 
 			$use_local_org = false;
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "org.id = {$id}";
 			}
-			if(isset($filters['changed_orgs']))
+			if (isset($filters['changed_orgs']))
 			{
 				$use_local_org = true;
 				//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 				//$filter_clauses[] = "org.id = {$id}";
 				unset($filter_clauses);
-				if(isset($filters[$this->get_id_field_name()]))
+				if (isset($filters[$this->get_id_field_name()]))
 				{
 					$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 					$filter_clauses[]	 = "org.id = {$id}";
 				}
 			}
-			if(isset($filters['new_orgs']))
+			if (isset($filters['new_orgs']))
 			{
 				$use_local_org		 = true;
 				//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 				//$filter_clauses[] = "org.id = {$id}";
 				unset($filter_clauses);
 				$filter_clauses[]	 = "org.change_type = 'new' OR org.change_type = 'change' ";
-				if(isset($filters[$this->get_id_field_name()]))
+				if (isset($filters[$this->get_id_field_name()]))
 				{
 					$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 					$filter_clauses[]	 = "org.id = {$id}";
 				}
 			}
-			if(isset($filters['edit_from_frontend']))
+			if (isset($filters['edit_from_frontend']))
 			{
 				$filter_clauses[] = "org.id IN (SELECT organization_id from activity_activity where state = 3 OR state = 4)";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($use_local_org)
+			if ($use_local_org)
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(org.id)) AS count';
 				}
@@ -170,7 +170,7 @@
 			}
 			else
 			{
-				if($return_count) // We should only return a count
+				if ($return_count) // We should only return a count
 				{
 					$cols = 'COUNT(DISTINCT(org.id)) AS count';
 				}
@@ -207,18 +207,18 @@
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		function get_organization_name($org_id)
+		function get_organization_name( $org_id )
 		{
 			$result = "Ingen";
-			if(isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$org_id	 = intval($org_id);
 				$q1		 = "SELECT name FROM bb_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
@@ -231,7 +231,7 @@
 			$q1		 = "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city from bb_organization bb where bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
 //	    	$q1="SELECT name FROM bb_organization WHERE id={$org_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				//if($org->get_name() != $this->db->f('orgname')) //new organization
 				//{
@@ -268,17 +268,17 @@
 			$new_orgs		 = array();
 			$removed_orgs	 = array();
 			$orgmappings	 = array();
-			foreach($orgs1 as $org)
+			foreach ($orgs1 as $org)
 			{
 				$tmpName = $org['orgname'];
 				$curr_id = $org['orgid'];
-				if(!in_array($curr_id, $removed_orgs))
+				if (!in_array($curr_id, $removed_orgs))
 				{
-					foreach($orgs2 as $o2)
+					foreach ($orgs2 as $o2)
 					{
 						$removeId = $o2['orgid'];
 						//var_dump($removeId .':'.$curr_id . '<br/>');
-						if($removeId != $curr_id && $o2['orgname'] == $tmpName)
+						if ($removeId != $curr_id && $o2['orgname'] == $tmpName)
 						{
 							//var_dump($removeId.'-' . $o2['orgname'].' skal fjernes <br/>');
 							//update previous instance
@@ -300,14 +300,14 @@
 
 			$this->db->transaction_begin();
 			//loop through activities and update organization-connection
-			foreach($orgmappings as $key => $value)
+			foreach ($orgmappings as $key => $value)
 			{
-				foreach($value as $orgmapping)
+				foreach ($value as $orgmapping)
 				{
 //				var_dump($orgmapping.' skal flyttes til '.$key.'<br/>');
 					//get activity connected to current orgid
 					$activities = $so_activity->get_connected_activities($orgmapping);
-					foreach($activities as $activity)
+					foreach ($activities as $activity)
 					{
 						var_dump($activity->get_title() . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 						$so_activity->update_organization_connection($activity->get_id(), $key);
@@ -316,20 +316,20 @@
 					$this->set_organization_inactive($orgmapping);
 					//get affected stuff from booking
 					$alloc = $this->get_affected_allocations($orgmapping);
-					foreach($alloc as $a)
+					foreach ($alloc as $a)
 					{
 						var_dump('Allocation id: ' . $a . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 						$this->update_affected_allocations($a, $key);
 					}
 
 					$res = $this->get_affected_reservations($orgmapping);
-					foreach($res as $r)
+					foreach ($res as $r)
 					{
 						var_dump('Reservation id: ' . $r . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 						$this->update_affected_reservations($r, $key);
 					}
 					$event = $this->get_affected_events($orgmapping);
-					foreach($event as $e)
+					foreach ($event as $e)
 					{
 						var_dump('Event id: ' . $e . ' flyttes fra ' . $orgmapping . ' til ' . $key . '</br>');
 						$this->update_affected_events($e, $key);
@@ -338,7 +338,7 @@
 			}
 
 			//loop through organizations and update them.
-			foreach($new_orgs as $no)
+			foreach ($new_orgs as $no)
 			{
 				//update organization with new information
 				//_debug_array($no);
@@ -349,48 +349,47 @@
 			$this->db->transaction_commit();
 		}
 
-		function get_organization_name_local($org_id)
+		function get_organization_name_local( $org_id )
 		{
 			$result = "Ingen";
-			if(isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$q1 = "SELECT name FROM activity_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$result = $this->db->f('name');
-				}
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
 			}
 
 			return $result;
 		}
 
-		function get_contacts($organization_id)
+		function get_contacts( $organization_id )
 		{
 			$contacts = array();
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					$cont_id	 = $this->db->f('id');
-					$contacts[]	 = $cont_id;
+					$contacts[] = $this->db->f('id');
 				}
-				//$result=$contacts;
 			}
 			return $contacts;
 		}
 
-		function get_contacts_as_objects($organization_id)
+		function get_contacts_as_objects( $organization_id )
 		{
 			$contacts = array();
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT * FROM bb_organization_contact WHERE organization_id={$organization_id}";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -398,38 +397,37 @@
 					$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
 					$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
 					$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
-					$contacts[]		 = $contact_person;}
+					$contacts[] = $contact_person;
+				}
 			}
 			return $contacts;
 		}
 
-		function get_contacts_local($organization_id)
+		function get_contacts_local( $organization_id )
 		{
 			$contacts = array();
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
-					$cont_id	 = $this->db->f('id');
-					$contacts[]	 = $cont_id;
+					$contacts[] = $this->db->f('id');
 				}
-				//$result=$contacts;
 			}
 			return $contacts;
 		}
 
-		function get_contacts_local_as_objects($organization_id)
+		function get_contacts_local_as_objects( $organization_id )
 		{
 			$contacts = array();
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT * FROM activity_contact_person WHERE organization_id='{$organization_id}'";
-				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$contact_person	 = new activitycalendar_contact_person((int)$this->db->f('id'));
 					$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -443,56 +441,55 @@
 			return $contacts;
 		}
 
-		function get_description($organization_id)
+		function get_description( $organization_id )
 		{
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT description FROM bb_organization WHERE id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
 
-		function get_description_local($organization_id)
+		function get_description_local( $organization_id )
 		{
-			if(isset($organization_id))
+			$organization_id = (int)$organization_id;
+			if ($organization_id)
 			{
 				$q1 = "SELECT description FROM activity_organization WHERE id={$organization_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$desc = $this->db->f('description');
-				}
+				$this->db->next_record();
+
+				$desc = $this->db->f('description', true);
 			}
 			return $desc;
 		}
 
-		function get_district_from_name($name)
-		{
-			$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
-			while($this->db->next_record())
+		function get_district_from_name( $name )
 			{
-				$result = $this->db->f('part_of_town_id');
-			}
+			$this->db->query("SELECT id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+			$this->db->next_record();
+
+			$result = $this->db->f('id');
+
 			return $result;
 		}
 
-		function get_office_from_district($district_id)
+		function get_office_from_district( $district_id )
 		{
-			if($district_id)
+			if ($district_id)
 			{
 				$district_id = (int)$district_id;
-				$q1			 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
+				$q1 = "SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
 				//var_dump($q1);
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
-					$office_name = $this->db->f('descr');
-				}
+				$this->db->next_record();
+
+				$office_name = $this->db->f('descr', true);
 			}
 			return $office_name;
 		}
@@ -503,7 +500,7 @@
 		 * @param rental_party $party the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$organization)
+		function add( &$organization )
 		{
 			return false;
 		}
@@ -514,7 +511,7 @@
 		 * @param $party the party to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update_local($organization)
+		function update_local( $organization )
 		{
 			$name			 = $organization->get_name();
 			$orgnr			 = $organization->get_organization_number();
@@ -531,25 +528,26 @@
 			$transferred	 = ($organization->get_transferred() == 1 || $organization->get_transferred() == true) ? 'true' : 'false';
 			$original_org_id = ($organization->get_original_org_id() && $organization->get_original_org_id() != '') ? $organization->get_original_org_id() : 0;
 
-			$values[]	 = "NAME='{$name}'";
-			$values[]	 = "HOMEPAGE='{$homepage}'";
-			$values[]	 = "PHONE='{$phone}'";
-			$values[]	 = "EMAIL='{$email}'";
-			$values[]	 = "DESCRIPTION='{$description}'";
-			$values[]	 = "ADDRESS='{$street}'";
-			$values[]	 = "ADDRESSNUMBER='{$streetnumber}'";
-			$values[]	 = "ZIP_CODE='{$zip_code}'";
-			$values[]	 = "CITY='{$city}'";
-			$values[]	 = "ORGNO='{$orgnr}'";
-			$values[]	 = "DISTRICT='{$district}'";
-			$values[]	 = "CHANGE_TYPE='{$change_type}'";
-			$values[]	 = "TRANSFERRED={$transferred}";
-			$values[]	 = "ORIGINAL_ORG_ID={$original_org_id}";
+			$values[] = "name='{$name}'";
+			$values[] = "homepage='{$homepage}'";
+			$values[] = "phone='{$phone}'";
+			$values[] = "email='{$email}'";
+			$values[] = "description='{$description}'";
+			$values[] = "address='{$street}'";
+			$values[] = "addressnumber='{$streetnumber}'";
+			$values[] = "zip_code='{$zip_code}'";
+			$values[] = "city='{$city}'";
+			$values[] = "orgno='{$orgnr}'";
+			$values[] = "district='{$district}'";
+			$values[] = "change_type='{$change_type}'";
+			$values[] = "transferred={$transferred}";
+			$values[] = "original_org_id={$original_org_id}";
 			$vals		 = implode(',', $values);
 
-			$sql	 = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+			$id = (int)$organization->get_id();
+			$sql = "UPDATE activity_organization SET {$vals} WHERE id={$id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -559,9 +557,9 @@
 			}
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -577,10 +575,10 @@
 			return $ret;
 		}
 
-		protected function populate(int $org_id, &$organization)
+		protected function populate( int $org_id, &$organization )
 		{
 
-			if($organization == null)
+			if ($organization == null)
 			{
 				$organization = new activitycalendar_organization((int)$org_id);
 
@@ -603,7 +601,7 @@
 			return $organization;
 		}
 
-		function add_organization_local($organization)
+		function add_organization_local( $organization )
 		{
 			$name			 = $organization->get_name();
 			$orgnr			 = $organization->get_organization_number();
@@ -612,7 +610,7 @@
 			$streetnumber	 = $organization->get_address_number();
 			$zip_code		 = $organization->get_zip_code();
 			$city			 = $organization->get_city();
-			if($organization->get_original_org_id() && $organization->get_original_org_id() != '')
+			if ($organization->get_original_org_id() && $organization->get_original_org_id() != '')
 			{
 				$original_org_id = $organization->get_original_org_id();
 			}
@@ -621,21 +619,21 @@
 				$original_org_id = 0;
 			}
 
-
-			$values[]	 = "NAME='{$name}'";
-			$values[]	 = "HOMEPAGE='{$homepage}'";
-			$values[]	 = "ADDRESS='{$street}'";
-			$values[]	 = "ADDRESSNUMBER='{$streetnumber}'";
-			$values[]	 = "ZIP_CODE='{$zip_code}'";
-			$values[]	 = "CITY='{$city}'";
-			$values[]	 = "ORGNO='{$orgnr}'";
-			$values[]	 = "ORIGINAL_ORG_ID={$original_org_id}";
+			$values[] = "name='{$name}'";
+			$values[] = "homepage='{$homepage}'";
+			$values[] = "address='{$street}'";
+			$values[] = "addressnumber='{$streetnumber}'";
+			$values[] = "zip_code='{$zip_code}'";
+			$values[] = "city='{$city}'";
+			$values[] = "orgno='{$orgnr}'";
+			$values[] = "original_org_id={$original_org_id}";
 			$vals		 = implode(',', $values);
 
 			//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
-			$sql	 = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+			$id = (int)$organization->get_id();
+			$sql = "UPDATE activity_organization SET {$vals} WHERE id={$id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -645,7 +643,7 @@
 			}
 		}
 
-		function transfer_organization($org_info)
+		function transfer_organization( $org_info )
 		{
 			$name				 = $org_info['name'];
 			$orgnr				 = $org_info['orgnr'];
@@ -692,7 +690,7 @@
 
 			$sql	 = "INSERT INTO bb_organization ({$cols}) VALUES ({$vals})";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return $this->db->get_last_insert_id('bb_organization', 'id');
 			}
@@ -702,12 +700,14 @@
 			}
 		}
 
-		function get_organization_local($org_id)
+		function get_organization_local( $org_id )
 		{
+			$org_id = (int)$org_id;
+
 			$sql = "SELECT * FROM activity_organization WHERE id={$org_id}";
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$organization = new activitycalendar_organization((int)$this->db->f('id'));
 
@@ -731,39 +731,39 @@
 			}
 		}
 
-		function update_organization($org_info)
+		function update_organization( $org_info )
 		{
 			$name		 = $org_info['name'];
 			$orgid		 = (int)$org_info['orgid'];
 			$homepage	 = $org_info['homepage'];
-			if(!$homepage)
+			if (!$homepage)
 			{
 				$homepage = '';
 			}
 			$phone = $org_info['phone'];
-			if(!$phone)
+			if (!$phone)
 			{
 				$phone = '';
 			}
 			$email = $org_info['email'];
-			if(!$email)
+			if (!$email)
 			{
 				$email = '';
 			}
 			$description = $org_info['description'];
-			if(!$description)
+			if (!$description)
 			{
 				$description = '';
 			}
 			$street = $org_info['street'] . ' ' . $org_info['streetnumber'];
-			if(!$street)
+			if (!$street)
 			{
 				$street = '';
 			}
 			$zip_code	 = $org_info['zip_code'];
 			$city		 = $org_info['city'];
 			$district	 = $org_info['district'];
-			if(!$district)
+			if (!$district)
 			{
 				$district = '';
 			}
@@ -787,22 +787,22 @@
 			$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__, __FILE__);
 		}
 
-		function update_organization_with_new_info($organization)
+		function update_organization_with_new_info( $organization )
 		{
 			$name	 = $organization['orgname'];
 			$orgid	 = (int)$organization['orgid'];
 			$street	 = $organization['orgstreet'];
-			if(!$street)
+			if (!$street)
 			{
 				$street = '';
 			}
 			$zip = $organization['zip'];
-			if(!$zip)
+			if (!$zip)
 			{
 				$zip = '';
 			}
 			$city = $organization['city'];
-			if(!$city)
+			if (!$city)
 			{
 				$city = '';
 			}
@@ -816,20 +816,21 @@
 			$result	 = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__, __FILE__);
 		}
 
-		function set_organization_inactive($org_id)
+		function set_organization_inactive( $org_id )
 		{
-			$orgid = (int)$org_id;
+			$org_id = (int)$org_id;
 
 			//var_dump("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}");
-			$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}", __LINE__, __FILE__);
+			$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$org_id}", __LINE__, __FILE__);
 		}
 
-		function get_affected_allocations($org_id)
+		function get_affected_allocations( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result	 = array();
 			$sql	 = "select id from bb_allocation where organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result[] = $this->db->f('id');
 			}
@@ -837,17 +838,20 @@
 			return $result;
 		}
 
-		function update_affected_allocations($id, $org_id)
+		function update_affected_allocations( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_allocation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_allocation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
-		function get_affected_reservations($org_id)
+		function get_affected_reservations( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result	 = array();
 			$sql	 = "select id from bb_completed_reservation where organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result[] = $this->db->f('id');
 			}
@@ -855,17 +859,20 @@
 			return $result;
 		}
 
-		function update_affected_reservations($id, $org_id)
+		function update_affected_reservations( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_completed_reservation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_completed_reservation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
-		function get_affected_events($org_id)
+		function get_affected_events( $org_id )
 		{
+			$org_id = (int)$org_id;
 			$result	 = array();
 			$sql	 = "select id from bb_event where customer_organization_id={$org_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result[] = $this->db->f('id');
 			}
@@ -873,21 +880,25 @@
 			return $result;
 		}
 
-		function update_affected_events($id, $org_id)
+		function update_affected_events( $id, $org_id )
 		{
-			$result = $this->db->query("update bb_event set customer_organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+			$id = (int)$id;
+			$org_id = (int)$org_id;
+			return $this->db->query("update bb_event set customer_organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 		}
 
-		function update($organization)
+		function update( $organization )
 		{
 			return false;
 		}
 
-		function update_org_district_local($org_id, $district_id)
+		function update_org_district_local( $org_id, $district_id )
 		{
-			$sql	 = "UPDATE activity_organization SET district='{$district_id}' WHERE ID={$org_id}";
+			$district_id = (int)$district_id;
+			$org_id = (int)$org_id;
+			$sql = "UPDATE activity_organization SET district='{$district_id}' WHERE id={$org_id}";
 			$result	 = $this->db->query($sql, __LINE__, __FILE__);
-			if(isset($result))
+			if (isset($result))
 			{
 				return true;
 			}
@@ -897,54 +908,45 @@
 			}
 		}
 
-		function get_organization_homepage($org_id)
+		function get_organization_homepage( $org_id )
 		{
 			$result = "Ingen";
-			if(isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
-				$org_id	 = intval($org_id);
 				$q1		 = "SELECT homepage FROM bb_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
 					$result = $this->db->f('homepage');
 				}
-			}
 
 			return $result;
 		}
 
-		function get_organization_homepage_local($org_id)
+		function get_organization_homepage_local( $org_id )
 		{
 			$result = "Ingen";
-			if(isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$q1 = "SELECT homepage FROM activity_organization WHERE id={$org_id}";
 				$this->db->query($q1, __LINE__, __FILE__);
-				while($this->db->next_record())
-				{
+				$this->db->next_record();
+
 					$result = $this->db->f('homepage');
 				}
-			}
 
 			return $result;
 		}
 
 		//$org->set_change_type("rejected");
-		function reject_organization($org_id)
+		function reject_organization( $org_id )
 		{
-			if(isset($org_id))
+			$org_id = (int)$org_id;
+			if ($org_id)
 			{
 				$query	 = "UPDATE activity_organization set change_type='rejected' where id={$org_id}";
-				$result	 = $this->db->query($query, __LINE__, __FILE__);
-				if(isset($result))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return $this->db->query($query, __LINE__, __FILE__);
 			}
 			return false;
 		}

@@ -10,7 +10,7 @@
 			$this->so = CreateObject('booking.sobuilding');
 		}
 
-		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
 		{
 			return array_merge(
 			array
@@ -39,7 +39,7 @@
 			);
 		}
 
-		protected function get_collection_role_permissions($defaultPermissions)
+		protected function get_collection_role_permissions( $defaultPermissions )
 		{
 			return array_merge(
 			array(
@@ -55,11 +55,11 @@
 			);
 		}
 
-		public function get_schedule($id, $module)
+		public function get_schedule( $id, $module )
 		{
 			$date = new DateTime(phpgw::get_var('date'));
 			// Make sure $from is a monday
-			if($date->format('w') != 1)
+			if ($date->format('w') != 1)
 			{
 				$date->modify('last monday');
 			}
@@ -79,7 +79,7 @@
 				'id' => $building['id'], 'date' => $prev_date->format('Y-m-d')));
 			$building['next_link']		 = self::link(array('menuaction' => $module . '.schedule',
 				'id' => $building['id'], 'date' => $next_date->format('Y-m-d')));
-			for($i = 0; $i < 7; $i++)
+			for ($i = 0; $i < 7; $i++)
 			{
 				$building['days'][] = array('label' => sprintf('%s<br/>%s %s', lang($date->format('l')), lang($date->format('M')), $date->format('d')),
 					'key' => $date->format('D'));
@@ -91,7 +91,7 @@
 		/**
 		 * @see sobuilding
 		 */
-		function find_buildings_used_by($organization_id)
+		function find_buildings_used_by( $organization_id )
 		{
 			return $this->so->find_buildings_used_by($organization_id, $this->build_default_read_params());
 		}

@@ -1,8 +1,10 @@
 <!-- $Id: demo.xsl 7561 2011-09-07 14:01:50Z sigurdne $ -->
 
 <!-- add / edit  -->
-	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
-		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+<xsl:template match="edit" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
 		<form method="post" action="{$form_action}">
 			<div class="yui-navset yui-navset-top" id="demo_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -235,9 +237,13 @@
 					</div>
 					<table>
 						<tr height="50">
-							<td colspan = "2" align = "center"><table><tr>
+						<td colspan = "2" align = "center">
+							<table>
+								<tr>
 							<td valign="bottom">
-								<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+										<xsl:variable name="lang_save">
+											<xsl:value-of select="php:function('lang', 'save')" />
+										</xsl:variable>
 								<input type="submit" name="values[save]" value="{$lang_save}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'save')" />
@@ -245,7 +251,9 @@
 								</input>
 							</td>
 							<td valign="bottom">
-								<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
+										<xsl:variable name="lang_apply">
+											<xsl:value-of select="php:function('lang', 'apply')" />
+										</xsl:variable>
 								<input type="submit" name="values[apply]" value="{$lang_apply}">
 									<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'apply the values')" />
@@ -253,14 +261,18 @@
 								</input>
 							</td>
 							<td align="left" valign="bottom">
-								<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+										<xsl:variable name="lang_cancel">
+											<xsl:value-of select="php:function('lang', 'cancel')" />
+										</xsl:variable>
 								<input type="submit" name="values[cancel]" value="{$lang_cancel}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Back to the list')" />
 									</xsl:attribute>
 								</input>
 							</td>
-							</tr></table></td>
+								</tr>
+							</table>
+						</td>
 						</tr>
 					</table>
 				</div>
@@ -289,15 +301,15 @@
 			</xsl:for-each>
 		</script>
 
-	</xsl:template>
+</xsl:template>
 
 	
-	<xsl:template match="options">
+<xsl:template match="options">
 		<option value="{id}">
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />
 			</xsl:if>
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</option>
-	</xsl:template>
+</xsl:template>
 

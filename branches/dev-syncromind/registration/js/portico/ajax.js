@@ -1,13 +1,15 @@
-$(document).ready(function(){
+$(document).ready(function ()
+{
 
-	$("#loc1").change(function () {
+	$("#loc1").change(function ()
+	{
 
-		if(!$(this).val())
+		if (!$(this).val())
 		{
 			return false;
 		}
 
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:$(this).val(), field: 'loc1'};
+		var oArgs = {menuaction: 'registration.boreg.get_locations', location_code: $(this).val(), field: 'loc1'};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
 
 		var htmlString = "";
@@ -16,34 +18,37 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data)
+			{
+				if (data != null)
 				{
 					var obj = data.locations;
 					htmlString  = "<option value = ''>" + obj.length + " lokasjone(r) funnet</option>"
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 				else
 				{
 					htmlString  += "<option>Ingen lokasjoner</option>"
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 			}
 		});
     });
 
-	$("#loc2").change(function () {
+	$("#loc2").change(function ()
+	{
 
-		if(!$(this).val())
+		if (!$(this).val())
 		{
 			return false;
 		}
 
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:$(this).val(), field: 'loc2'};
+		var oArgs = {menuaction: 'registration.boreg.get_locations', location_code: $(this).val(), field: 'loc2'};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
 
 		var htmlString = "";
@@ -52,34 +57,37 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data)
+			{
+				if (data != null)
 				{
 					var obj = data.locations;
 					htmlString  = "<option value = ''>" + obj.length + " lokasjone(r) funnet</option>"
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 				else
 				{
 					htmlString  += "<option>Ingen lokasjoner</option>"
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 			}
 		});
     });
 
-	$("#loc3").change(function () {
+	$("#loc3").change(function ()
+	{
 
-		if(!$(this).val())
+		if (!$(this).val())
 		{
 			return false;
 		}
 
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:$(this).val(), field: 'loc3'};
+		var oArgs = {menuaction: 'registration.boreg.get_locations', location_code: $(this).val(), field: 'loc3'};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
 
 		var htmlString = "";
@@ -88,34 +96,37 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data)
+			{
+				if (data != null)
 				{
 					var obj = data.locations;
 					htmlString  = "<option value = ''>" + obj.length + " lokasjone(r) funnet</option>"
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 				else
 				{
 					htmlString  += "<option>Ingen lokasjoner</option>"
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 			}
 		});
     });
 
-	$("#loc4").change(function () {
+	$("#loc4").change(function ()
+	{
 
-		if(!$(this).val())
+		if (!$(this).val())
 		{
 			return false;
 		}
 
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:$(this).val(), field: 'loc4'};
+		var oArgs = {menuaction: 'registration.boreg.get_locations', location_code: $(this).val(), field: 'loc4'};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
 
 		var htmlString = "";
@@ -124,34 +135,37 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data)
+			{
+				if (data != null)
 				{
 					var obj = data.locations;
 					htmlString  = "<option value = ''>" + obj.length + " lokasjone(r) funnet</option>"
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 				else
 				{
 					htmlString  += "<option>Ingen lokasjoner</option>"
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 			}
 		});
     });
 
-	$("#loc5").change(function () {
+	$("#loc5").change(function ()
+	{
 
-		if(!$(this).val())
+		if (!$(this).val())
 		{
 			return false;
 		}
 
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:$(this).val(), field: 'loc5'};
+		var oArgs = {menuaction: 'registration.boreg.get_locations', location_code: $(this).val(), field: 'loc5'};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
 
 		var htmlString = "";
@@ -160,28 +174,30 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data) {
-				if( data != null)
+			success: function (data)
+			{
+				if (data != null)
 				{
 					var obj = data.locations;
 					htmlString  = "<option value = ''>" + obj.length + " lokasjone(r) funnet</option>"
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 				else
 				{
 					htmlString  += "<option>Ingen lokasjoner</option>"
-					$("#loc" + data.child_level).html( htmlString );
+					$("#loc" + data.child_level).html(htmlString);
 				}
 			}
 		});
     });
-/*
+	/*
 
-$(".choose_loc").on( "change", function () {
+	 $(".choose_loc").on( "change", function () {
 		var thisSelectBox = $(this);
 		var loc_code = $(this).val();
 		var loc_id = $(this).attr("id");
@@ -239,7 +255,7 @@ $(".choose_loc").on( "change", function () {
 		});
     });
 
-*/
+	 */
 
 });
 

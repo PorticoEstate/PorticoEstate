@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -31,7 +30,6 @@
 	 *
 	 * @package Frontend
 	 */
-
     class frontend_uiservices extends frontend_uicommon
     {
 
@@ -49,7 +47,7 @@
 		{
 			$data = array
 			(
-				'header'		=>$this->header_state,
+				'header' => $this->header_state,
 				'section'		=> array(
 					'services'		=> lang('not_implemented'),
 					'tabs'			=> $this->tabs,
@@ -61,5 +59,8 @@
 			self::render_template_xsl(array('services', 'datatable_inline', 'frontend'), $data);
 		}
 		
-		public function query() {}
+		public function query()
+		{
+
+		}
     }

@@ -5,7 +5,7 @@
 
 		public static $pattern = '.ORG.BK';
 
-		public function __construct(int $location_id, string $name, string $description)
+		public function __construct( int $location_id, string $name, string $description )
 		{
 			$this->location_id	 = $location_id;
 			$this->name			 = $name;
@@ -13,15 +13,21 @@
 		}
 
 		public function get_location_id()
-		{ return $this->location_id;}
+		{
+			return $this->location_id;
+		}
 
 		public function get_name()
-		{ return $this->name;}
+		{
+			return $this->name;
+		}
 
 		public function get_description()
-		{ return $this->description;}
+		{
+			return $this->description;
+		}
 
-		public abstract static function get_identifier_from_name(string $name);
+		public abstract static function get_identifier_from_name( string $name );
 
 		public function get_level_identifier()
 		{

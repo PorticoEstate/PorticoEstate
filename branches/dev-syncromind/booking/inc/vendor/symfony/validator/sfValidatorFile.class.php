@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorFile validates an uploaded file.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorFile extends sfValidatorBase
-{
+	class sfValidatorFile extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -50,7 +50,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addOption('max_size');
     $this->addOption('mime_types');
@@ -91,11 +91,11 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     if (!is_array($value) || !isset($value['tmp_name']))
     {
-      throw new sfValidatorError($this, 'invalid', array('value' => (string) $value));
+				throw new sfValidatorError($this, 'invalid', array('value' => (string)$value));
     }
 
     if (!isset($value['name']))
@@ -121,9 +121,10 @@ class sfValidatorFile extends sfValidatorBase
     switch ($value['error'])
     {
       case UPLOAD_ERR_INI_SIZE:
-        throw new sfValidatorError($this, 'max_size', array('max_size' => ini_get('upload_max_filesize'), 'size' => (int) $value['size']));
+					throw new sfValidatorError($this, 'max_size', array('max_size' => ini_get('upload_max_filesize'),
+					'size' => (int)$value['size']));
       case UPLOAD_ERR_FORM_SIZE:
-        throw new sfValidatorError($this, 'max_size', array('max_size' => 0, 'size' => (int) $value['size']));
+					throw new sfValidatorError($this, 'max_size', array('max_size' => 0, 'size' => (int)$value['size']));
       case UPLOAD_ERR_PARTIAL:
         throw new sfValidatorError($this, 'partial');
       case UPLOAD_ERR_NO_TMP_DIR:
@@ -135,12 +136,13 @@ class sfValidatorFile extends sfValidatorBase
     }
 
     // check file size
-    if ($this->hasOption('max_size') && $this->getOption('max_size') < (int) $value['size'])
+			if ($this->hasOption('max_size') && $this->getOption('max_size') < (int)$value['size'])
     {
-      throw new sfValidatorError($this, 'max_size', array('max_size' => $this->getOption('max_size'), 'size' => (int) $value['size']));
+				throw new sfValidatorError($this, 'max_size', array('max_size' => $this->getOption('max_size'),
+				'size' => (int)$value['size']));
     }
 
-    $mimeType = $this->getMimeType((string) $value['tmp_name'], (string) $value['type']);
+			$mimeType = $this->getMimeType((string)$value['tmp_name'], (string)$value['type']);
 
     // check mime type
     if ($this->hasOption('mime_types'))
@@ -148,7 +150,8 @@ class sfValidatorFile extends sfValidatorBase
       $mimeTypes = is_array($this->getOption('mime_types')) ? $this->getOption('mime_types') : $this->getMimeTypesFromCategory($this->getOption('mime_types'));
       if (!in_array($mimeType, $mimeTypes))
       {
-        throw new sfValidatorError($this, 'mime_types', array('mime_types' => $mimeTypes, 'mime_type' => $mimeType));
+					throw new sfValidatorError($this, 'mime_types', array('mime_types' => $mimeTypes,
+					'mime_type' => $mimeType));
       }
     }
 
@@ -168,7 +171,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @return string The mime type of the file (fallback is returned if not guessable)
    */
-  protected function getMimeType($file, $fallback)
+		protected function getMimeType( $file, $fallback )
   {
     foreach ($this->getOption('mime_type_guessers') as $method)
     {
@@ -190,7 +193,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @return string The mime type of the file (null if not guessable)
    */
-  protected function guessFromFileinfo($file)
+		protected function guessFromFileinfo( $file )
   {
     if (!function_exists('finfo_open') || !is_readable($file))
     {
@@ -214,7 +217,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @return string The mime type of the file (null if not guessable)
    */
-  protected function guessFromMimeContentType($file)
+		protected function guessFromMimeContentType( $file )
   {
     if (!function_exists('mime_content_type') || !is_readable($file))
     {
@@ -231,7 +234,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * @return string The mime type of the file (null if not guessable)
    */
-  protected function guessFromFileBinary($file)
+		protected function guessFromFileBinary( $file )
   {
     ob_start();
     passthru(sprintf('file -bi %s 2>/dev/null', escapeshellarg($file)), $return);
@@ -252,7 +255,7 @@ class sfValidatorFile extends sfValidatorBase
     return $match[1];
   }
 
-  protected function getMimeTypesFromCategory($category)
+		protected function getMimeTypesFromCategory( $category )
   {
     $categories = $this->getOption('mime_categories');
 
@@ -267,27 +270,27 @@ class sfValidatorFile extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function isEmpty($value)
+		protected function isEmpty( $value )
   {
     // empty if the value is not an array
     // or if the value comes from PHP with an error of UPLOAD_ERR_NO_FILE
     return
-      (!is_array($value))
-        ||
+				(!is_array($value)) ||
       (is_array($value) && isset($value['error']) && UPLOAD_ERR_NO_FILE === $value['error']);
   }
-}
+	}
 
-/**
+	/**
  * sfValidatedFile represents a validated uploaded file.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatedFile
-{
+	class sfValidatedFile
+	{
+
   protected
     $originalName = '',
     $tempName     = '',
@@ -304,7 +307,7 @@ class sfValidatedFile
    * @param string $tempName      The absolute temporary path to the file
    * @param int    $size          The file size (in bytes)
    */
-  public function __construct($originalName, $type, $tempName, $size, $path = null)
+		public function __construct( $originalName, $type, $tempName, $size, $path = null )
   {
     $this->originalName = $originalName;
     $this->tempName = $tempName;
@@ -338,7 +341,7 @@ class sfValidatedFile
    *
    * @throws Exception
    */
-  public function save($file = null, $fileMode = 0666, $create = true, $dirMode = 0777)
+		public function save( $file = null, $fileMode = 0666, $create = true, $dirMode = 0777 )
   {
     if (is_null($file))
     {
@@ -352,7 +355,7 @@ class sfValidatedFile
         throw new RuntimeException('You must give a "path" when you give a relative file name.');
       }
 
-      $file = $this->path.DIRECTORY_SEPARATOR.$file;
+				$file = $this->path . DIRECTORY_SEPARATOR . $file;
     }
 
     // get our directory path from the destination filename
@@ -390,7 +393,7 @@ class sfValidatedFile
 
     $this->savedName = $file;
 
-    return is_null($this->path) ? $file : str_replace($this->path.DIRECTORY_SEPARATOR, '', $file);
+			return is_null($this->path) ? $file : str_replace($this->path . DIRECTORY_SEPARATOR, '', $file);
   }
 
   /**
@@ -400,7 +403,7 @@ class sfValidatedFile
    */
   public function generateFilename()
   {
-    return sha1($this->getOriginalName().rand(11111, 99999)).$this->getExtension($this->getOriginalExtension());
+			return sha1($this->getOriginalName() . rand(11111, 99999)) . $this->getExtension($this->getOriginalExtension());
   }
 
   /**
@@ -420,7 +423,7 @@ class sfValidatedFile
    *
    * @return string The extension (with the dot)
    */
-  public function getExtension($default = '')
+		public function getExtension( $default = '' )
   {
     return $this->getExtensionFromType($this->type, $default);
   }
@@ -432,7 +435,7 @@ class sfValidatedFile
    *
    * @return string The extension of the uploaded name (with the dot)
    */
-  public function getOriginalExtension($default = '')
+		public function getOriginalExtension( $default = '' )
   {
     return (false === $pos = strrpos($this->getOriginalName(), '.')) ? $default : substr($this->getOriginalName(), $pos);
   }
@@ -505,7 +508,7 @@ class sfValidatedFile
    *
    * @return string The extension (with the dot)
    */
-  protected function getExtensionFromType($type, $default = '')
+		protected function getExtensionFromType( $type, $default = '' )
   {
     static $extensions = array(
       'application/andrew-inset' => 'ez',
@@ -916,6 +919,6 @@ class sfValidatedFile
       'x-world/x-vrml' => 'wrl',
     );
 
-    return !$type ? $default : (isset($extensions[$type]) ? '.'.$extensions[$type] : $default);
+			return !$type ? $default : (isset($extensions[$type]) ? '.' . $extensions[$type] : $default);
+		}
   }
-}

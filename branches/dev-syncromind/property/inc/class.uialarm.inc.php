@@ -114,13 +114,13 @@
 			);
 
 			$list = $this->bo->read($params);
-			foreach($list as $alarm)
+			foreach ($list as $alarm)
 			{
 				$link_edit = '';
 				$lang_edit_statustext = '';
 				$text_edit = '';
 
-				if(substr($alarm['id'], 0, 8) == 'fm_async')
+				if (substr($alarm['id'], 0, 8) == 'fm_async')
 				{
 					$link_edit = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uialarm.edit',
 						'async_id' => urlencode($alarm['id'])));
@@ -160,16 +160,16 @@
 			$ids_alarm = !empty($_POST['ids']) ? $_POST['ids'] : '';
 			$type_alarm = !empty($_POST['type']) ? $_POST['type'] : '';
 
-			if(($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
+			if (($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
 			{
 				$_enable_alarm = ($type_alarm == 'disable_alarm') ? false : true;
 				$this->bo->enable_alarm('fm_async', $ids_alarm, $_enable_alarm);
 			}
-			else if($type_alarm == 'test_cron')
+			else if ($type_alarm == 'test_cron')
 			{
 				$this->bo->test_cron($ids_alarm);
 			}
-			else if($type_alarm == 'delete_alarm' && count($ids_alarm))
+			else if ($type_alarm == 'delete_alarm' && count($ids_alarm))
 			{
 				$this->bo->delete_alarm('fm_async', $ids_alarm);
 			}
@@ -179,7 +179,7 @@
 		{
 			$values = phpgw::get_var('values');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -367,7 +367,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			switch($columns[$order[0]['column']]['data'])
+			switch ($columns[$order[0]['column']]['data'])
 			{
 				case 'next_run':
 					$order_field = 'next';
@@ -392,11 +392,11 @@
 
 //            echo '<pre>'; print_r($list); echo '</pre>';
 
-			while(is_array($list) && list($id, $alarm) = each($list))
+			while (is_array($list) && list($id, $alarm) = each($list))
 			{
-				if(is_array($alarm['times']))
+				if (is_array($alarm['times']))
 				{
-					while(is_array($alarm['times']) && list($key, $value) = each($alarm['times']))
+					while (is_array($alarm['times']) && list($key, $value) = each($alarm['times']))
 					{
 						$times .=$key . ' => ' . $value . ' ';
 					}
@@ -406,11 +406,11 @@
 					$times = $GLOBALS['phpgw']->common->show_date($alarm['times']);
 				}
 
-				if(is_array($alarm['data']))
+				if (is_array($alarm['data']))
 				{
-					while(is_array($alarm['data']) && list($key, $value) = each($alarm['data']))
+					while (is_array($alarm['data']) && list($key, $value) = each($alarm['data']))
 					{
-						if($key == 'owner')
+						if ($key == 'owner')
 						{
 							$value = $GLOBALS['phpgw']->accounts->id2name($value);
 						}
@@ -420,7 +420,7 @@
 
 				$id = explode(':', $id);
 
-				if($id[0] == 's_agreement' || $id[0] == 'agreement')
+				if ($id[0] == 's_agreement' || $id[0] == 'agreement')
 				{
 					$link_edit = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.ui' . $id[0] . '.edit',
 						'id' => $id[1]));
@@ -465,20 +465,20 @@
 			$GLOBALS['phpgw']->session->appsession('session_data', 'alarm_receipt', '');
 
 			$values = phpgw::get_var('values');
-			if($values['delete_alarm'] && count($values['alarm']))
+			if ($values['delete_alarm'] && count($values['alarm']))
 			{
 				$receipt = $this->bo->delete_alarm('fm_async', $values['alarm']);
 			}
-			else if(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
+			else if (($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
 			{
 				$receipt = $this->bo->enable_alarm('fm_async', $values['alarm'], $values['enable_alarm']);
 			}
-			else if($values['test_cron'])
+			else if ($values['test_cron'])
 			{
 				$this->bo->test_cron();
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_list();
 			}
@@ -586,7 +586,7 @@
 			$async_id = urldecode(phpgw::get_var('async_id'));
 			$values = phpgw::get_var('values');
 
-			if($async_id)
+			if ($async_id)
 			{
 				$async_id_elements = explode(':', $async_id);
 				$method_id = $async_id_elements[1];
@@ -601,7 +601,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm'));
 
 
-			if($values['save'] || $values['apply'])
+			if ($values['save'] || $values['apply'])
 			{
 
 				$units = array(
@@ -613,15 +613,15 @@
 					'min');
 
 				$times = array();
-				foreach($units as $u)
+				foreach ($units as $u)
 				{
-					if($values[$u] !== '')
+					if ($values[$u] !== '')
 					{
 						$times[$u] = $values[$u];
 					}
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$this->method_id = $values['method_id'] ? $values['method_id'] : $this->method_id;
 
@@ -638,7 +638,7 @@
 
 					$async_id = $this->bo->save_alarm($alarm_type = 'fm_async', $entity_id = $this->method_id, $alarm = $data_set, $async['name']);
 
-					if($values['save'])
+					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data', 'alarm_receipt', $receipt);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uialarm.index'));
@@ -646,12 +646,12 @@
 				}
 			}
 
-			if($values['cancel'])
+			if ($values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uialarm.index'));
 			}
 
-			if($async_id)
+			if ($async_id)
 			{
 				$alarm = $this->bo->read_alarm($alarm_type = 'fm_async', $async_id);
 
@@ -723,7 +723,7 @@
 				'menuaction' => 'property.uiowner.index'
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete($owner_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
@@ -787,7 +787,7 @@
 				'menuaction' => 'property.uialarm.index'
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->test_cron(array($id => $id));
 			}

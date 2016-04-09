@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-	<xsl:template match="no_access">
+<xsl:template match="no_access">
 		<xsl:choose>
 			<xsl:when test="menu != ''">
 				<xsl:apply-templates select="menu"/> 
@@ -17,4 +17,4 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-	</xsl:template>
+</xsl:template>

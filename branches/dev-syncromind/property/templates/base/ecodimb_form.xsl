@@ -31,7 +31,7 @@
 						<xsl:value-of select="lang_ecodimb"/>
 					</a>
 				</label>
-				<input size="9" type="text" name="ecodimb" value="{value_ecodimb}">
+				<input size="9" type="text" id="field_ecodimb" name="ecodimb" value="{value_ecodimb}">
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_ecodimb_help"/>
 					</xsl:attribute>

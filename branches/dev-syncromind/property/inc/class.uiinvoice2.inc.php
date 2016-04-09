@@ -86,11 +86,11 @@
 		 * @param bigint $order_id
 		 * @return boolean true on success
 		 */
-		public function reassign_order($line_id, $order_id, $voucher_id)
+		public function reassign_order( $line_id, $order_id, $voucher_id )
 		{
 			$voucher_info = $this->get_single_line($line_id);
 
-			if($this->bo->reassign_order($line_id, $order_id))
+			if ($this->bo->reassign_order($line_id, $order_id))
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 				phpgwapi_cache::system_clear('property', "budget_order_{$voucher_info['voucher'][0]['order_id']}"); // target is cleared in the so-class
@@ -107,9 +107,9 @@
 					'status' => 'error'
 				);
 			}
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;
@@ -129,11 +129,11 @@
 			$filename = '0000_split';
 			$data = array();
 
-			if($voucher_id)
+			if ($voucher_id)
 			{
 				$filename = "{$voucher_id}_split";
 				$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
-				foreach($voucher as $line)
+				foreach ($voucher as $line)
 				{
 					$data[] = array
 						(
@@ -165,12 +165,12 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
-			if($_FILES)
+			if ($_FILES)
 			{
 				$this->_split_voucher($voucher_id);
 			}
 
-			if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 			}
@@ -192,12 +192,12 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('split_voucher' => $data));
 		}
 
-		private function _split_voucher($voucher_id)
+		private function _split_voucher( $voucher_id )
 		{
 			$error = false;
 
 			$data = array();
-			if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+			if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
 			{
 				$file = array
 					(
@@ -211,7 +211,7 @@
 				return;
 			}
 
-			switch($file['type'])
+			switch ($file['type'])
 			{
 				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 				case 'application/vnd.oasis.opendocument.spreadsheet':
@@ -227,9 +227,9 @@
 					$error = true;
 			}
 
-			if($data)
+			if ($data)
 			{
-				if($data[0][0] != $voucher_id)
+				if ($data[0][0] != $voucher_id)
 				{
 					phpgwapi_cache::message_set("Feil bilag", 'error');
 					$error = true;
@@ -240,9 +240,9 @@
 					{
 						$line_id = $this->bo->perform_bulk_split($data, $voucher_id);
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
-						if($e)
+						if ($e)
 						{
 							phpgwapi_cache::message_set($e->getMessage(), 'error');
 							$error = true;
@@ -251,7 +251,7 @@
 				}
 			}
 
-			if(!$error)
+			if (!$error)
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 			}
@@ -285,9 +285,9 @@
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 			$line_id = phpgw::get_var('line_id', 'int');
 
-			if($values = phpgw::get_var('values'))
+			if ($values = phpgw::get_var('values'))
 			{
-				if($values['order_id'] != $values['order_id_orig'])
+				if ($values['order_id'] != $values['order_id_orig'])
 				{
 					return $this->reassign_order($line_id, $values['order_id'], $voucher_id);
 				}
@@ -295,12 +295,12 @@
 				$cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 				$cats->supress_info = true;
 				$category = $cats->return_single((int)$values['dim_e']);
-				if(!isset($category[0]) || $category[0]['active'] != 1)
+				if (!isset($category[0]) || $category[0]['active'] != 1)
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('not a valid category'), 'error');
 				}
-				if(!$this->bo->check_valid_b_account($values['b_account_id']))
+				if (!$this->bo->check_valid_b_account($values['b_account_id']))
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('not a valid budget account'), 'error');
@@ -309,7 +309,7 @@
 				$order = execMethod('property.soworkorder.read_single', $values['order_id']);
 				$project = execMethod('property.soproject.read_single', $order['project_id']);
 
-				if($project['closed'])
+				if ($project['closed'])
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('Project is closed'), 'error');
@@ -317,7 +317,7 @@
 
 				$approve = execMethod('property.boinvoice.get_approve_role', $values['dim_b']);
 
-				if(!$approve)
+				if (!$approve)
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
@@ -325,9 +325,9 @@
 
 				$values['voucher_id'] = $voucher_id;
 				$values['line_id'] = $line_id;
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
-					if($this->bo->update_voucher2($values))
+					if ($this->bo->update_voucher2($values))
 					{
 						$result = array
 							(
@@ -344,9 +344,9 @@
 				}
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;
@@ -366,12 +366,12 @@
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 			$line_id = phpgw::get_var('line_id', 'int');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$janitor_list = $this->bo->get_dimb_role_user(1, '', $janitor);
 				$supervisor_list = $this->bo->get_dimb_role_user(2, '', $supervisor);
@@ -390,17 +390,17 @@
 			$userlist_default[] = array('id' => '', 'name' => lang('no user'));
 
 			$voucher_list = array();
-			if($voucher_id)
+			if ($voucher_id)
 			{
 				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id));
 			}
 
-			if(!$voucher_list)
+			if (!$voucher_list)
 			{
 				$voucher_list = array('id' => '', 'name' => lang('select'));
 			}
 
-			foreach($userlist_default as $default)
+			foreach ($userlist_default as $default)
 			{
 				$janitor_list = array_merge(array($default), $janitor_list);
 				$supervisor_list = array_merge(array($default), $supervisor_list);
@@ -408,7 +408,7 @@
 			}
 
 			$msgbox_data = array();
-			if(phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
@@ -563,7 +563,7 @@
 			);
 			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
 
-			if(isset($GLOBALS['phpgw_info']['server']['system_name']))
+			if (isset($GLOBALS['phpgw_info']['server']['system_name']))
 			{
 				$powered_by = $GLOBALS['phpgw_info']['server']['system_name'] . ' ' . lang('version') . ' ' . $version;
 			}
@@ -627,17 +627,17 @@
 			$line_id = phpgw::get_var('line_id', 'int');
 			$draw = phpgw::get_var('draw', 'int' . 'REQUEST', 0);
 
-			if(!$voucher_id = phpgw::get_var('voucher_id_filter'))
+			if (!$voucher_id = phpgw::get_var('voucher_id_filter'))
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
 			$this->bo->allrows = true;
 			$values = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
 				$_checked = '';
-				if($entry['id'] == $line_id)
+				if ($entry['id'] == $line_id)
 				{
 					$_checked = 'checked="checked"';
 				}
@@ -646,7 +646,7 @@
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				$entry['approved_amount_hidden'] = $entry['approved_amount'];
 				$entry['approved_amount'] = "<input id=\"approved_amount_{$entry['id']}\" type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
-				if($entry['dime'])
+				if ($entry['dime'])
 				{
 					$catetory = execMethod('phpgwapi.categories.return_single', $entry['dime']);
 					$entry['dime'] = $catetory[0]['name'];
@@ -677,7 +677,7 @@
 		}
 		/* not used */
 
-		public function get_single_voucher($voucher_id = 0)
+		public function get_single_voucher( $voucher_id = 0 )
 		{
 			$voucher = $this->bo->read_single_voucher($voucher_id);
 		}
@@ -690,14 +690,14 @@
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 			$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 			$ret = array('line_id' => 0);
-			if($voucher)
+			if ($voucher)
 			{
 				$ret['line_id'] = $voucher[0]['id'];
 			}
 			return $ret;
 		}
 
-		public function get_single_line($line_id = 0)
+		public function get_single_line( $line_id = 0 )
 		{
 			$line_id = $line_id ? $line_id : phpgw::get_var('line_id', 'int');
 			$voucher_info = array();
@@ -734,12 +734,12 @@
 			$sign_orig = '';
 			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
 
-			if(count($voucher))
+			if (count($voucher))
 			{
 
 //---------start forward
 
-				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
 					$janitor_list = $this->bo->get_dimb_role_user(1, $voucher[0]['dim_b'], isset($voucher[0]['janitor']) ? $voucher[0]['janitor'] : '');
 					$supervisor_list = $this->bo->get_dimb_role_user(2, $voucher[0]['dim_b'], isset($voucher[0]['supervisor']) ? $voucher[0]['supervisor'] : '');
@@ -779,27 +779,27 @@
 					'user_list' => !$voucher[0]['budsjettsigndato'] ? array('options' => $budget_responsible_list) : ''
 				);
 
-				foreach($approved_list as &$_approved_list)
+				foreach ($approved_list as &$_approved_list)
 				{
-					if(isset($_approved_list['user_list']['options']))
+					if (isset($_approved_list['user_list']['options']))
 					{
 						array_unshift($_approved_list['user_list']['options'], array('id' => '', 'name' => lang('forward')));
 					}
 				}
 
-				foreach($approve as &$_approve)
+				foreach ($approve as &$_approve)
 				{
-					if($_approve['id'] == 'is_janitor' && $my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato'])
+					if ($_approve['id'] == 'is_janitor' && $my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato'])
 					{
 						$_approve['selected'] = 1;
 						$sign_orig = 'is_janitor';
 					}
-					else if($_approve['id'] == 'is_supervisor' && $my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato'])
+					else if ($_approve['id'] == 'is_supervisor' && $my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato'])
 					{
 						$_approve['selected'] = 1;
 						$sign_orig = 'is_supervisor';
 					}
-					else if($_approve['id'] == 'is_budget_responsible' && $my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato'])
+					else if ($_approve['id'] == 'is_budget_responsible' && $my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato'])
 					{
 						$_approve['selected'] = 1;
 						$sign_orig = 'is_budget_responsible';
@@ -809,25 +809,25 @@
 				unset($_approve);
 
 				$approve_list = array();
-				foreach($approve as $_approve)
+				foreach ($approve as $_approve)
 				{
-					if($_approve['id'] == 'is_janitor')
+					if ($_approve['id'] == 'is_janitor')
 					{
-						if(($my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato']) || !$voucher[0]['oppsynsigndato'])
+						if (($my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato']) || !$voucher[0]['oppsynsigndato'])
 						{
 							$approve_list[] = $_approve;
 						}
 					}
-					if($_approve['id'] == 'is_supervisor')
+					if ($_approve['id'] == 'is_supervisor')
 					{
-						if(($my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato']) || !$voucher[0]['saksigndato'])
+						if (($my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato']) || !$voucher[0]['saksigndato'])
 						{
 							$approve_list[] = $_approve;
 						}
 					}
-					if($_approve['id'] == 'is_budget_responsible')
+					if ($_approve['id'] == 'is_budget_responsible')
 					{
-						if(($my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato']) || !$voucher[0]['budsjettsigndato'])
+						if (($my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato']) || !$voucher[0]['budsjettsigndato'])
 						{
 							$approve_list[] = $_approve;
 						}
@@ -841,7 +841,7 @@
 
 				$voucher_info['generic']['approved_amount'] = 0;
 				$voucher_info['generic']['amount'] = 0;
-				foreach($voucher as $line)
+				foreach ($voucher as $line)
 				{
 					$voucher_info['generic']['approved_amount'] += $line['approved_amount'];
 					$voucher_info['generic']['amount'] += $line['amount'];
@@ -861,7 +861,7 @@
 				$voucher[0]['saksigndato'] = $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['saksigndato']), $dateformat) : '';
 				$voucher[0]['budsjettsigndato'] = $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($voucher[0]['budsjettsigndato']), $dateformat) : '';
 
-				if($voucher[0]['remark'])
+				if ($voucher[0]['remark'])
 				{
 					$voucher[0]['remark_link'] = " <a href=\"javascript:openwindow('" . $GLOBALS['phpgw']->link('/index.php', array
 						(
@@ -869,7 +869,7 @@
 						'id' => $voucher[0]['id'],
 					)) . "','550','400')\" >" . lang('Remark') . "</a>";
 				}
-				if($voucher[0]['order_id'])
+				if ($voucher[0]['order_id'])
 				{
 					$voucher[0]['order_link'] = $GLOBALS['phpgw']->link('/index.php', array
 						(
@@ -878,7 +878,7 @@
 					));
 				}
 
-				if($voucher[0]['external_ref'])
+				if ($voucher[0]['external_ref'])
 				{
 					$_image_url = "{$baseurl_invoice}{$voucher[0]['external_ref']}";
 					$voucher[0]['external_ref'] = " <a href=\"javascript:openwindow('{$_image_url}','640','800')\" >" . lang('invoice number') . '</a>';
@@ -916,7 +916,7 @@
 
 			$categories = $cats->formatted_xslt_list(array('selected' => isset($voucher[0]['dime']) && $voucher[0]['dime'] ? $voucher[0]['dime'] : 0));
 
-			foreach($categories['cat_list'] as &$cat)
+			foreach ($categories['cat_list'] as &$cat)
 			{
 				$cat['id'] = $cat['cat_id'];
 				$cat['selected'] = $cat['selected'] ? 1 : '';
@@ -945,7 +945,7 @@
 			return $voucher_info;
 		}
 
-		protected function getcsvdata($path)
+		protected function getcsvdata( $path )
 		{
 			// Open the csv file
 			$handle = fopen($path, "r");
@@ -955,7 +955,7 @@
 
 			$result = array();
 
-			while(($data = $this->getcsv($handle)) !== false)
+			while (($data = $this->getcsv($handle)) !== false)
 			{
 				$result[] = $data;
 			}
@@ -965,7 +965,7 @@
 			return $result;
 		}
 
-		protected function getexceldata($path)
+		protected function getexceldata( $path )
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
 
@@ -982,17 +982,17 @@
 
 			$start = 2; // Read the first line to get the headers out of the way
 
-			for($j = 0; $j < $highestColumnIndex; $j++)
+			for ($j = 0; $j < $highestColumnIndex; $j++)
 			{
 				$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 			}
 
 			$rows = $rows ? $rows + 1 : 0;
-			for($row = $start; $row < $rows; $row++)
+			for ($row = $start; $row < $rows; $row++)
 			{
 				$_result = array();
 
-				for($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 				}
@@ -1010,7 +1010,7 @@
 		 * @param file-handle $handle
 		 * @return array of values from the parsed csv line
 		 */
-		protected function getcsv($handle)
+		protected function getcsv( $handle )
 		{
 			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
 		}

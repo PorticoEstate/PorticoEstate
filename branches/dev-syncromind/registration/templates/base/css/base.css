@@ -8,7 +8,7 @@ form#invoice_run th {
 	padding: 5px;
 	border: 1px solid #ABABAB;
 	 font-weight: bolder;
-	}
+}
 
 div#contract_lists td {
 	margin:0;
@@ -16,7 +16,7 @@ div#contract_lists td {
 }
 form#invoice_run td { 
 	border: 1px solid #CDCDCD;
-	}
+}
 
 
 div#invoice_details dt{
@@ -31,11 +31,11 @@ div.content {
 .hd {
 	margin-bottom: 0;
 	text-align: center;
-	}
+}
 	
 .hd img {
 	vertical-align: middle;
-	}
+}
 
 fieldset {
 	margin-top: 0.5em;	
@@ -82,14 +82,14 @@ label {
 				margin-top: 1em;
 				padding: 0.1em;
 				background-color: #ffffff;
-				}
+}
 
 #activate-button {
 				border: 1px solid #000000;
 				margin-top: 1em;
 				padding: 0.1em;
 				background-color: #ffffff;
-				}
+}
 
 .breadcrumbs{
 	margin-left: 20px;	
@@ -162,7 +162,7 @@ dl.proplist-col dt {
 
 dl.proplist-col,
 dl.form-col {
-/*    width: 18em; */
+	/*    width: 18em; */
     float: left;
 }
 
@@ -207,7 +207,7 @@ div.identifier-header label {
 
 table.datatableToolbar {
 	padding: .3em;
-	}
+}
 
 
 #controller_user_error {
@@ -232,25 +232,25 @@ table.datatableToolbar {
 
 .toolbarelement {
 	vertical-align:middle;
-	}
+}
 td.toolbarlabel {
 	width: 10em;
 	font-weight: bold;	
-	}
+}
 td.toolbarcol {
 	padding-left: 1em;
-	}
+}
 	
 div.calendarButtons {
 		vertical-align:middle;
 		background-color: grey;
-	}
+}
 	
 label.toolbar_element_label {
 	padding-left: .25em;
 	padding-right: .50em;
 	vertical-align: middle;
-	}
+}
 #toolbar input[type="text"] {
     font-size: 120%;
     margin: auto .25em;
@@ -544,7 +544,7 @@ ul.expand_list h4 span {
 }
 h1 img{
  	margin-right:5px;
- }
+}
  
 #control_tabview .yui-navset, #control_location_tabview .yui-navset{
 	margin:0;

@@ -16,7 +16,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.sonotification');
 			}
@@ -28,22 +28,22 @@
 			return 'notification_id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			$dir	 = $ascending ? 'ASC' : 'DESC';
 			$order	 = $sort_field ? "ORDER BY $sort_field $dir" : '';
 
-			if(isset($filters))
+			if (isset($filters))
 			{
-				foreach($filters as $column => $value)
+				foreach ($filters as $column => $value)
 				{
 					$clauses[] = $this->db->db_addslashes($column) . "=" . $this->db->db_addslashes($value);
 				}
 			}
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(rn.id)) AS count';
 			}
@@ -64,9 +64,9 @@
 			return $sql;
 		}
 
-		protected function populate(int $notification_id, &$notification)
+		protected function populate( int $notification_id, &$notification )
 		{
-			if(!isset($notification_id) || $notification_id < 1)
+			if (!isset($notification_id) || $notification_id < 1)
 			{
 				$notification_id = $this->unmarshal($this->db->f('notification_id', true), 'int');
 			}
@@ -77,7 +77,7 @@
 			return $notification;
 		}
 
-		function add(&$notification)
+		function add( &$notification )
 		{
 			$cols	 = array('contract_id', 'date', 'message', 'recurrence');
 			$values	 = array(
@@ -87,13 +87,13 @@
 				(int)$notification->get_recurrence(),
 			);
 
-			if($notification->get_account_id() && $notification->get_account_id() > 0)
+			if ($notification->get_account_id() && $notification->get_account_id() > 0)
 			{
 				$cols[]		 = 'account_id';
 				$values[]	 = $notification->get_account_id();
 			}
 
-			if($notification->get_location_id() && $notification->get_location_id() > 0)
+			if ($notification->get_location_id() && $notification->get_location_id() > 0)
 			{
 				$cols[]		 = 'location_id';
 				$values[]	 = $notification->get_location_id();
@@ -101,7 +101,7 @@
 
 			$q		 = "INSERT INTO rental_notification (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				$notification->set_id($this->db->get_last_insert_id('rental_notification', 'id'));
 				$this->populate_workbench_notifications();
@@ -110,7 +110,7 @@
 			return false;
 		}
 
-		function update($notification)
+		function update( $notification )
 		{
 			// TODO: Not implemented yet
 			return false;
@@ -123,7 +123,7 @@
 		 * @param $day the day to populate the workbench
 		 * @return unknown_type
 		 */
-		public static function populate_workbench($day = null)
+		public static function populate_workbench( $day = null )
 		{
 			rental_notification::populate_workbench_notifications($day);
 		}
@@ -137,7 +137,7 @@
 		 * @param $today a string date, no parameter means today
 		 * @return unknown_type
 		 */
-		public function populate_workbench_notifications($day = null)
+		public function populate_workbench_notifications( $day = null )
 		{
 			// Select all notifications not marked as deleted
 			$sql = "SELECT * FROM rental_notification WHERE deleted = false";
@@ -145,7 +145,7 @@
 			$result = $this->db->query($sql);
 
 			//Iterate through all notifications
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$result_id		 = $this->unmarshal($this->db->f('id', true), 'int'); // The id of object
 				// Create notification object
@@ -154,7 +154,7 @@
 				// Calculate timestamps the notification date, target date (default: today) and last notified
 				$notification_date = date("Y-m-d", $notification->get_date());
 
-				if(!$day)
+				if (!$day)
 				{
 					$day = date("Y-m-d", strtotime('now'));
 				}
@@ -166,12 +166,12 @@
 
 				// Check whether today is a notification date
 				$is_today_notification_date = false;
-				if($ts_today == $ts_notification_date) // today equals notification date
+				if ($ts_today == $ts_notification_date) // today equals notification date
 				{
 					$is_today_notification_date = true;
 
 					// Delete the notification if it should not recur
-					if($notification->get_recurrence() == rental_notification::RECURRENCE_NEVER)
+					if ($notification->get_recurrence() == rental_notification::RECURRENCE_NEVER)
 					{
 						$this->delete_notification($notification->get_id());
 					}
@@ -180,7 +180,7 @@
 				{ // the original notification date is in the past
 					// Find out if today is notification date based on recurrence
 					$recurrence_interval = '';
-					switch($notification->get_recurrence())
+					switch ($notification->get_recurrence())
 					{
 						case rental_notification::RECURRENCE_ANNUALLY:
 							$recurrence_interval = 'year';
@@ -194,14 +194,14 @@
 					}
 
 					$ts_next_recurrence;
-					for($i = 1;; $i++) //loop intervals into the future
+					for ($i = 1;; $i++) //loop intervals into the future
 					{
 						// next interval
 						$ts_next_recurrence = strtotime('+' . $i . ' ' . $recurrence_interval, $ts_notification_date);
 
-						if($ts_next_recurrence > $ts_last_notified || $ts_last_notified == null) // the date for next recurrence is after last notification
+						if ($ts_next_recurrence > $ts_last_notified || $ts_last_notified == null) // the date for next recurrence is after last notification
 						{
-							if($ts_next_recurrence == $ts_today) // today equals notification date
+							if ($ts_next_recurrence == $ts_today) // today equals notification date
 							{
 								$is_today_notification_date = true;
 								break;
@@ -212,7 +212,7 @@
 				}
 
 				// If users should be notified today
-				if($is_today_notification_date)
+				if ($is_today_notification_date)
 				{
 
 					//notify all users in a group or only the single user if target audience is not a group
@@ -221,9 +221,9 @@
 					$account_ids	 = array();
 
 
-					if($account_id)
+					if ($account_id)
 					{
-						if($GLOBALS['phpgw']->accounts->get_type($account_id) == phpgwapi_account::TYPE_GROUP)
+						if ($GLOBALS['phpgw']->accounts->get_type($account_id) == phpgwapi_account::TYPE_GROUP)
 						{
 							$accounts	 = $GLOBALS['phpgw']->accounts->get_members($account_id);
 							$account_ids = array_merge($account_ids, $accounts);  //users in a group
@@ -236,13 +236,13 @@
 
 					//notify all users with write access on the field of responsibility
 					$location_id = $notification->get_location_id();
-					if($location_id)
+					if ($location_id)
 					{
 						$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
-						if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+						if ($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 						{
 							$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $location_names['location']);
-							foreach($responsible_accounts as $ra)
+							foreach ($responsible_accounts as $ra)
 							{
 								$account_ids[] = $ra['account_id'];
 							}
@@ -253,9 +253,9 @@
 					$unique_account_ids = array_unique($account_ids);
 
 					//notify each unique account
-					foreach($unique_account_ids as $unique_account)
+					foreach ($unique_account_ids as $unique_account)
 					{
-						if($unique_account && $unique_account > 0)
+						if ($unique_account && $unique_account > 0)
 						{
 
 							$notification = new rental_notification
@@ -280,15 +280,19 @@
 		 * @param $notification_date	the date to update with
 		 * @return true on successful query execution / false otherwise
 		 */
-		private function set_notification_date($notification_id, $notification_date)
+		private function set_notification_date( $notification_id, $notification_date )
 		{
 			$sql	 = "UPDATE rental_notification SET last_notified = $notification_date WHERE id = $notification_id";
 			$result	 = $this->db->query($sql);
 
-			if($result)
-			{ return true;}
+			if ($result)
+			{
+				return true;
+			}
 			else
-			{ return false;}
+			{
+				return false;
+			}
 		}
 
 		/**
@@ -296,14 +300,18 @@
 		 * @param $id	the notification id
 		 * @return true on successful query execution / false otherwise
 		 */
-		public function delete_notification($id)
+		public function delete_notification( $id )
 		{
 			$sql	 = "UPDATE rental_notification SET deleted = true WHERE id = $id";
 			$result	 = $this->db->query($sql);
 
-			if($result)
-			{ return true;}
+			if ($result)
+			{
+				return true;
+			}
 			else
-			{ return false;}
+			{
+				return false;
+			}
 		}
 	}

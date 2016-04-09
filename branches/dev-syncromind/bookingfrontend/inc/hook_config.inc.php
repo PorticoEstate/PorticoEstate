@@ -31,7 +31,7 @@
 	 * @param $config
 	 * @return string HTML select box
 	 */
-	function authentication($config)
+	function authentication( $config )
 	{
 		$selected = $config['authentication_method'];
 
@@ -43,12 +43,12 @@
 
 		$file_list	 = array();
 		$dir		 = new DirectoryIterator($dirname);
-		if(is_object($dir))
+		if (is_object($dir))
 		{
-			foreach($dir as $file)
+			foreach ($dir as $file)
 			{
 
-				if($file->isDot() || !$file->isFile() || !$file->isReadable())
+				if ($file->isDot() || !$file->isFile() || !$file->isReadable())
 				{
 					continue;
 				}
@@ -67,7 +67,7 @@
 				<option value="">{$lang_select}</option>";
 HTML;
 
-		foreach($file_list as $file)
+		foreach ($file_list as $file)
 		{
 			$out .= <<<HTML
 				<option value="{$file['id']}"{$file['selected']}>{$file['name']}</option>";

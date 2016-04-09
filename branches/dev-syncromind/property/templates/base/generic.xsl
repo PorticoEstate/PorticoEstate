@@ -63,10 +63,18 @@
 											<xsl:value-of select="value_id"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<input data-validation="number" type="text" name="values[{id_name}]" value="{value_id}">
+											<input type="text" name="values[{id_name}]" value="{value_id}">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 												</xsl:attribute>
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:if test="id_type != 'varchar'">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
 											</input>
 										</xsl:otherwise>
 									</xsl:choose>
@@ -101,7 +109,7 @@
 																				
 							<div class="pure-control-group">
 								<label for="name">
-									<xsl:value-of select="php:function('lang', $descr)"/>
+									<xsl:value-of select="$descr"/>
 								</label>
 								<xsl:choose>
 									<xsl:when test="type='text'">
@@ -112,7 +120,7 @@
 									<xsl:when test="type='varchar'">
 										<input type="text" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
-												<xsl:value-of select="descr"/>
+												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
 												<xsl:when test="nullable!='1'">
@@ -126,7 +134,7 @@
 									<xsl:when test="type='integer' or type='int'">
 										<input data-validation="number" type="text" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
-												<xsl:value-of select="descr"/>
+												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
 												<xsl:when test="nullable='1'">
@@ -140,7 +148,7 @@
 									<xsl:when test="type='numeric'">
 										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
-												<xsl:value-of select="descr"/>
+												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
 												<xsl:when test="nullable='1'">
@@ -156,14 +164,14 @@
 											<xsl:when test="value = 1">
 												<input type="checkbox" name="values[{name}]" value="1" checked="checked">
 													<xsl:attribute name="title">
-														<xsl:value-of select="descr"/>
+														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
 												</input>
 											</xsl:when>
 											<xsl:otherwise>
 												<input type="checkbox" name="values[{name}]" value="1">
 													<xsl:attribute name="title">
-														<xsl:value-of select="descr"/>
+														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
 												</input>
 											</xsl:otherwise>

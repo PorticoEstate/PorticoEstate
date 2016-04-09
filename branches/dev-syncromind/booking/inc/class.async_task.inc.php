@@ -9,7 +9,7 @@
 
 		function __construct()
 		{
-			if(!isset($GLOBALS['phpgw']->asyncservice) || !is_object($GLOBALS['phpgw']->asyncservice))
+			if (!isset($GLOBALS['phpgw']->asyncservice) || !is_object($GLOBALS['phpgw']->asyncservice))
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
@@ -17,10 +17,10 @@
 			$this->asyncservice = $GLOBALS['phpgw']->asyncservice;
 		}
 
-		public function doRun($task_args)
+		public function doRun( $task_args )
 		{
 			$task_class = $task_args['task_class'];
-			if(in_array($task_class, self::getAvailableTasks()))
+			if (in_array($task_class, self::getAvailableTasks()))
 			{
 				$task = self::create($task_class);
 				$task->run($task_args);
@@ -32,10 +32,10 @@
 			return array('booking.async_task_update_reservation_state', 'booking.async_task_send_reminder');
 		}
 
-		public static function create($task_class)
+		public static function create( $task_class )
 		{
 			$task = null;
-			if(!isset(self::$task_instances[$task_class]))
+			if (!isset(self::$task_instances[$task_class]))
 			{
 				$task								 = CreateObject($task_class);
 				self::$task_instances[$task_class]	 = $task;
@@ -66,9 +66,9 @@
 			$this->asyncservice->cancel_timer($this->get_task_id());
 		}
 
-		public function enable($times = null)
+		public function enable( $times = null )
 		{
-			if($times === null)
+			if ($times === null)
 			{
 				$times = $this->get_default_times();
 			}
@@ -82,7 +82,7 @@
 			);
 		}
 
-		public function run($options = array())
+		public function run( $options = array() )
 		{
 
 		}

@@ -54,7 +54,7 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function set_type($type)
+		public function set_type( $type )
 		{
 			$this->type = $type;
 		}
@@ -64,7 +64,7 @@
 			return $this->type;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -74,7 +74,7 @@
 			return $this->id;
 		}
 
-		public function set_location_id($location_id)
+		public function set_location_id( $location_id )
 		{
 			$this->location_id = $location_id;
 		}
@@ -84,7 +84,7 @@
 			return $this->location_id;
 		}
 
-		public function set_guid($guid)
+		public function set_guid( $guid )
 		{
 			$this->guid = $guid;
 		}
@@ -94,7 +94,7 @@
 			return $this->guid;
 		}
 
-		public function set_xml($xml)
+		public function set_xml( $xml )
 		{
 			$this->xml = $xml;
 		}
@@ -104,7 +104,7 @@
 			return $this->xml;
 		}
 
-		public function set_xml_short_desc($xml_short_desc)
+		public function set_xml_short_desc( $xml_short_desc )
 		{
 			$this->xml_short_desc = $xml_short_desc;
 		}
@@ -114,7 +114,7 @@
 			return $this->xml_short_desc;
 		}
 
-		public function set_location_code($location_code)
+		public function set_location_code( $location_code )
 		{
 			$this->location_code = $location_code;
 		}
@@ -124,7 +124,7 @@
 			return $this->location_code;
 		}
 
-		public function set_loc_1($loc_1)
+		public function set_loc_1( $loc_1 )
 		{
 			$this->loc_1 = $loc_1;
 		}
@@ -134,7 +134,7 @@
 			return $this->loc_1;
 		}
 
-		public function set_address($address)
+		public function set_address( $address )
 		{
 			$this->address = $address;
 		}
@@ -144,7 +144,7 @@
 			return $this->address;
 		}
 
-		public function set_type_str($type_str)
+		public function set_type_str( $type_str )
 		{
 			$this->type_str = $type_str;
 		}
@@ -154,7 +154,7 @@
 			return $this->type_str;
 		}
 
-		public function set_controls_array($controls_array)
+		public function set_controls_array( $controls_array )
 		{
 			$this->controls_array = $controls_array;
 		}
@@ -164,7 +164,7 @@
 			return $this->controls_array;
 		}
 
-		public function set_control_relation($control_relation)
+		public function set_control_relation( $control_relation )
 		{
 			$this->control_relation = $control_relation;
 		}

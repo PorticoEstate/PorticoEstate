@@ -11,7 +11,7 @@
 
 		//protected $exports;
 
-		public function __construct($billing_job)
+		public function __construct( $billing_job )
 		{
 			$this->billing_job	 = $billing_job;
 			$this->date_str		 = date('Ymd', $billing_job->get_timestamp_stop());
@@ -77,7 +77,7 @@
 
 		}
 
-		public function get_missing_billing_info($contract)
+		public function get_missing_billing_info( $contract )
 		{
 			
 		}
@@ -107,12 +107,12 @@
 		 * @param $bill_month
 		 * @return unknown_type
 		 */
-		protected function get_line($account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month)
+		protected function get_line( $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month )
 		{
 			
 		}
 
-		protected function get_formatted_amount($amount)
+		protected function get_formatted_amount( $amount )
 		{
 
 		}

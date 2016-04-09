@@ -57,12 +57,12 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
+		public function viewedit( $editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null )
 		{
 
 			$cancel_link	 = self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes'));
 			$adjustment_id	 = (int)phpgw::get_var('adjustment_id');
-			if($adjustment_id)
+			if ($adjustment_id)
 			{
 				$cancel_link = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts',
 					'id'		 => $adjustment_id));
@@ -70,22 +70,22 @@
 			}
 
 
-			if(isset($contract_id) && $contract_id > 0)
+			if (isset($contract_id) && $contract_id > 0)
 			{
-				if($contract == null)
+				if ($contract == null)
 				{
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
 				}
-				if($contract)
+				if ($contract)
 				{
 
-					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
+					if ($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
 					{
 						$editable = false;
 						$error .= '<br/>' . lang('permission_denied_edit_contract');
 					}
 
-					if(!$editable && !$contract->has_permission(PHPGW_ACL_READ))
+					if (!$editable && !$contract->has_permission(PHPGW_ACL_READ))
 					{
 						phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_contract'));
 					}
@@ -112,9 +112,9 @@
 					$one_time_price_items	 = array();
 					$termin_price_items		 = array();
 
-					foreach($price_items as $item)
+					foreach ($price_items as $item)
 					{
-						if($item->is_one_time())
+						if ($item->is_one_time())
 						{
 							array_push($one_time_price_items, $item);
 						}
@@ -193,7 +193,7 @@
 			//var_dump($config->config_data['path_to_wkhtmltopdf']);
 			//var_dump($GLOBALS['phpgw_info']);
 			$wkhtmltopdf_executable = $config->config_data['path_to_wkhtmltopdf'];
-			if(!is_file($wkhtmltopdf_executable))
+			if (!is_file($wkhtmltopdf_executable))
 			{
 				throw new Exception('wkhtmltopdf not configured correctly');
 			}
@@ -204,7 +204,7 @@
 
 			$contract_id = phpgw::get_var('id');
 
-			if(!is_file($pdf_file_name))
+			if (!is_file($pdf_file_name))
 			{
 				throw new Exception('pdf-file not produced');
 			}
@@ -216,7 +216,7 @@
 		 * Add generated PDF to list of contract documents
 		 */
 
-		public function savePDFToContract($file, $contract_id, $title)
+		public function savePDFToContract( $file, $contract_id, $title )
 		{
 			//Create a document object
 			$document = new rental_document();
@@ -236,9 +236,9 @@
 			$document_properties['document_type'], $file, $document_properties['id'], "Kontrakt_" . strtotime(date('Y-m-d')) . ".pdf"
 			);
 
-			if($result)
+			if ($result)
 			{
-				if(rental_sodocument::get_instance()->store($document))
+				if (rental_sodocument::get_instance()->store($document))
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
 						'id'		 => $contract_id, 'tab'		 => 'documents'));
@@ -264,18 +264,18 @@
 		 * @param $document	the given document
 		 * @return name/value array ('document_type','id')
 		 */
-		private function get_type_and_id($document)
+		private function get_type_and_id( $document )
 		{
 			$document_type;
 			$id;
 			$contract_id = $document->get_contract_id();
 			$party_id	 = $document->get_party_id();
-			if(isset($contract_id) && $contract_id > 0)
+			if (isset($contract_id) && $contract_id > 0)
 			{
 				$document_type	 = rental_sodocument::$CONTRACT_DOCUMENTS;
 				$id				 = $contract_id;
 			}
-			else if(isset($party_id) && $party_id > 0)
+			else if (isset($party_id) && $party_id > 0)
 			{
 				$document_type	 = rental_sodocument::$PARTY_DOCUMENTS;
 				$id				 = $party_id;
@@ -295,10 +295,10 @@
 		{
 			$get_template_config = true;
 			$files				 = scandir('rental/templates/base/pdf/');
-			foreach($files as $file)
+			foreach ($files as $file)
 			{
 				$ending = substr($file, -3, 3);
-				if($ending == 'php')
+				if ($ending == 'php')
 				{
 					include 'rental/templates/base/pdf/' . $file;
 					$template_files			 = array($template_name, $file);

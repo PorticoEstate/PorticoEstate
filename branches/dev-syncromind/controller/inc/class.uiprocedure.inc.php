@@ -81,7 +81,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -93,7 +93,7 @@
 				'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array2	 = array();
-			foreach($control_areas['cat_list'] as $cat_list)
+			foreach ($control_areas['cat_list'] as $cat_list)
 			{
 				$control_areas_array2[] = array
 					(
@@ -185,7 +185,7 @@
 		public function edit()
 		{
 			$procedure_id = phpgw::get_var('id');
-			if(isset($procedure_id) && $procedure_id > 0)
+			if (isset($procedure_id) && $procedure_id > 0)
 			{
 				$procedure = $this->so->get_single($procedure_id);
 			}
@@ -195,19 +195,19 @@
 			}
 
 
-			if(isset($_POST['save_procedure'])) // The user has pressed the save button
+			if (isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
 				//var_dump($_POST);
 				//var_dump(strtotime(phpgw::get_var('start_date')));
 				//die;
-				if(!$this->add && !$this->edit)
+				if (!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
 						'id'		 => $procedure_id));
 				}
 
-				if(isset($procedure)) // Edit procedure
+				if (isset($procedure)) // Edit procedure
 				{
 					$description_txt	 = phpgw::get_var('description', 'html');
 					$description_txt	 = str_replace("&nbsp;", " ", $description_txt);
@@ -229,7 +229,7 @@
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					$revision = (int)$procedure->get_revision_no();
-					if($revision && is_numeric($revision) && $revision > 0)
+					if ($revision && is_numeric($revision) && $revision > 0)
 					{
 						$procedure->set_revision_no($revision);
 					}
@@ -238,10 +238,10 @@
 						$procedure->set_revision_no(1);
 					}
 
-					if(isset($procedure_id) && $procedure_id > 0)
+					if (isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
-						if($this->so->store($procedure))
+						if ($this->so->store($procedure))
 						{
 							$message = lang('messages_saved_form');
 						}
@@ -253,7 +253,7 @@
 					else
 					{
 						$proc_id = $this->so->add($procedure);
-						if($proc_id)
+						if ($proc_id)
 						{
 							$message = lang('messages_saved_form');
 						}
@@ -266,9 +266,9 @@
 						'id'		 => $proc_id));
 				}
 			}
-			else if(isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
+			else if (isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
 			{
-				if(!$this->add && !$this->edit)
+				if (!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
@@ -276,10 +276,10 @@
 				}
 
 				$old_procedure = $this->so->get_single($procedure_id);
-				if(isset($procedure)) // Edit procedure
+				if (isset($procedure)) // Edit procedure
 				{
 					$revision = (int)$procedure->get_revision_no();
-					if($revision && is_numeric($revision))
+					if ($revision && is_numeric($revision))
 					{
 						$revision++;
 						$procedure->set_revision_no($revision);
@@ -305,15 +305,15 @@
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 
-					if(isset($procedure_id) && $procedure_id > 0)
+					if (isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
 						$old_procedure->set_id(null);
 						$old_procedure->set_end_date(time());
 						$old_procedure->set_procedure_id($proc_id);
-						if($this->so->add($old_procedure)) //add old revision of procedure to history
+						if ($this->so->add($old_procedure)) //add old revision of procedure to history
 						{
-							if($this->so->store($procedure))
+							if ($this->so->store($procedure))
 							{
 								$message = lang('messages_saved_form');
 							}
@@ -328,9 +328,9 @@
 						'id'		 => $proc_id));
 				}
 			}
-			else if(isset($_POST['cancel_procedure'])) // The user has pressed the cancel button
+			else if (isset($_POST['cancel_procedure'])) // The user has pressed the cancel button
 			{
-				if(isset($procedure_id) && $procedure_id > 0)
+				if (isset($procedure_id) && $procedure_id > 0)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
 						'id'		 => $procedure_id));
@@ -342,7 +342,7 @@
 			}
 			else
 			{
-				if($this->flash_msgs)
+				if ($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
@@ -357,9 +357,9 @@
 				array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 				$control_areas_array2	 = array();
 				//_debug_array($control_areas);
-				foreach($control_areas['cat_list'] as $cat_list)
+				foreach ($control_areas['cat_list'] as $cat_list)
 				{
-					if($cat_list['cat_id'] == $procedure->get_control_area_id())
+					if ($cat_list['cat_id'] == $procedure->get_control_area_id())
 					{
 						$control_areas_array2[] = array
 							(
@@ -454,7 +454,7 @@
 
 			$procedures_array = $this->so->get_procedures_by_control_area($control_area_id);
 
-			if(count($procedures_array) > 0)
+			if (count($procedures_array) > 0)
 			{
 				return json_encode($procedures_array);
 			}
@@ -481,7 +481,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 			$view_revision	 = phpgw::get_var('view_revision');
 			$procedure_id	 = (int)phpgw::get_var('id');
-			if(isset($_POST['edit_procedure']))
+			if (isset($_POST['edit_procedure']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
 					'id'		 => $procedure_id));
@@ -489,7 +489,7 @@
 			else
 			{
 				//Retrieve the procedure object
-				if(isset($procedure_id) && $procedure_id > 0)
+				if (isset($procedure_id) && $procedure_id > 0)
 				{
 					$procedure = $this->so->get_single($procedure_id);
 				}
@@ -499,7 +499,7 @@
 					return;
 				}
 
-				if($this->flash_msgs)
+				if ($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
@@ -514,7 +514,7 @@
 				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
 
 
-				if($procedure->get_start_date() && $procedure->get_start_date() != null)
+				if ($procedure->get_start_date() && $procedure->get_start_date() != null)
 				{
 					//$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
 					$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date()));
@@ -523,7 +523,7 @@
 				{
 					$procedure->set_start_date("");
 				}
-				if($procedure->get_end_date() && $procedure->get_end_date() != null)
+				if ($procedure->get_end_date() && $procedure->get_end_date() != null)
 				{
 					//$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
 					$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date()));
@@ -532,7 +532,7 @@
 				{
 					$procedure->set_end_date("");
 				}
-				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
+				if ($procedure->get_revision_date() && $procedure->get_revision_date() != null)
 				{
 					//$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
 					$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date()));
@@ -543,7 +543,7 @@
 				}
 				$procedure_array = $procedure->toArray();
 
-				if(!$view_revision)
+				if (!$view_revision)
 				{
 					$table_header[]	 = array('header' => lang('Procedure revision'));
 					$table_header[]	 = array('header' => lang('Procedure title'));
@@ -551,7 +551,7 @@
 					$table_header[]	 = array('header' => lang('Procedure end date'));
 
 					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
-					foreach($revised_procedures as $rev)
+					foreach ($revised_procedures as $rev)
 					{
 						$rev['link']	 = self::link(array('menuaction'	 => 'controller.uiprocedure.view',
 							'id'			 => $rev['id'], 'view_revision'	 => 'yes'));
@@ -578,7 +578,7 @@
 					'table_header'	 => $table_header,
 				);
 
-				if($procedure->get_end_date())
+				if ($procedure->get_end_date())
 				{
 					$data['inactive'] = true;
 				}
@@ -603,10 +603,10 @@
 
 			$group_procedures_array = array();
 
-			foreach($control_groups as $control_group)
+			foreach ($control_groups as $control_group)
 			{
 				$group_procedure = $this->so->get_single($control_group->get_procedure_id());
-				if(isset($group_procedure))
+				if (isset($group_procedure))
 				{
 					$group_procedures_array[] = array("control_group"	 => $control_group->toArray(),
 						"procedure"		 => $group_procedure->toArray());
@@ -649,7 +649,7 @@
 			);
 			//var_dump($procedure->toArray());
 
-			if(!empty($control_group_id))
+			if (!empty($control_group_id))
 			{
 				$control_group			 = $this->so_control_group->get_single($control_group_id);
 				$data['control_group']	 = $control_group->toArray();
@@ -684,7 +684,7 @@
 			$sort_field		 = $params['order'];
 
 			$ctrl_area = phpgw::get_var('control_areas');
-			if(isset($ctrl_area) && $ctrl_area > 0)
+			if (isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area;
 			}
@@ -700,7 +700,7 @@
 
 			$exp_param	 = phpgw::get_var('export');
 			$export		 = false;
-			if(isset($exp_param) && $exp_param)
+			if (isset($exp_param) && $exp_param)
 			{
 				$export			 = true;
 				$num_of_objects	 = null;
@@ -708,7 +708,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
-			switch($query_type)
+			switch ($query_type)
 			{
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('controller', 'procedure_query', $search_for);
@@ -720,9 +720,9 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
@@ -737,7 +737,7 @@
 			$results['dir']				 = $params['sort'];
 			$results['draw']			 = $draw;
 
-			if(!$export)
+			if (!$export)
 			{
 				//Add action column to each row in result table
 				array_walk(
@@ -746,7 +746,7 @@
 			return $this->jquery_results($results);
 		}
 
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			//Defining new columns
 			$value['ajax']		 = array();
@@ -758,7 +758,7 @@
 			$editable		 = $params[1];
 
 			// Depending on the type of query: set an ajax flag and define the action and label for each row
-			switch($type)
+			switch ($type)
 			{
 				default:
 					$value['ajax'][]	 = false;

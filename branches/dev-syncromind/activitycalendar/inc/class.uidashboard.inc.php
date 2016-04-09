@@ -125,18 +125,18 @@
 
 			$uid		 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$user_office = activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
-			if($user_office && $user_office == 1)
+			if ($user_office && $user_office == 1)
 			{
 				$user_office = 2;
 			}
-			else if($user_office == 2)
+			else if ($user_office == 2)
 			{
 				$user_office = 1;
 			}
 
 			$activity_district_options[] = array('id' => 'all', 'name' => lang('all'), 'selected' => 0);
 			$districts					 = activitycalendar_soactivity::get_instance()->select_district_list();
-			foreach($districts as $district)
+			foreach ($districts as $district)
 			{
 				$selected					 = ($user_office == $district['id']) ? 1 : 0;
 				$activity_district_options[] = array('id' => $district['id'], 'name' => $district['name'],
@@ -145,7 +145,7 @@
 
 			$activity_category_options[] = array('id' => 'all', 'name' => lang('all'), 'selected' => 0);
 			$categories					 = activitycalendar_soactivity::get_instance()->get_categories();
-			foreach($categories as $category)
+			foreach ($categories as $category)
 			{
 				$activity_category_options[] = array('id' => $category->get_id(), 'name' => $category->get_name(),
 					'selected' => 0);
@@ -180,7 +180,7 @@
 		 */
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -205,7 +205,7 @@
 
 			$exp_param	 = phpgw::get_var('export');
 			$export		 = false;
-			if(isset($exp_param))
+			if (isset($exp_param))
 			{
 				$export			 = true;
 				$num_of_objects	 = null;
@@ -215,7 +215,7 @@
 			$type			 = phpgw::get_var('type');
 			$changed_org	 = false;
 			$changed_group	 = false;
-			switch($type)
+			switch ($type)
 			{
 				case 'changed_organizations':
 					$filters		 = array('changed_orgs' => 'true');
@@ -229,7 +229,7 @@
 					//$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 					break;
 			}
-			if($changed_group)
+			if ($changed_group)
 			{
 				$result_objects	 = activitycalendar_sogroup::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$result_count	 = activitycalendar_sogroup::get_instance()->get_count($search_for, $search_type, $filters);
@@ -243,21 +243,21 @@
 			//var_dump($result_objects);
 			// Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$res	 = $result->serialize();
 					$org_id	 = $result->get_id();
 					//$rows[] = $result->serialize();
 					$rows[]	 = $res;
-					if(!$changed_group && !$changed_org)
+					if (!$changed_group && !$changed_org)
 					{
 						$filter_group	 = array('org_id' => $org_id);
 						$result_groups	 = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
-						foreach($result_groups as $result_group)
+						foreach ($result_groups as $result_group)
 						{
-							if(isset($result_group))
+							if (isset($result_group))
 							{
 								$res_g	 = $result_group->serialize();
 								$rows[]	 = $res_g;
@@ -271,7 +271,7 @@
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
-			if(!$export)
+			if (!$export)
 			{
 				array_walk(
 				$organization_data['results'], array($this, 'add_actions'), array(// Parameters (non-object pointers)
@@ -293,20 +293,20 @@
 			$org_id		 = phpgw::get_var('orgid');
 			$group_id	 = phpgw::get_var('groupid');
 			$returnHTML	 = "<option value='0'>Ingen gruppe valgt</option>";
-			if($org_id)
+			if ($org_id)
 			{
 				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
 					'org_id' => $org_id));
-				foreach($groups as $group)
+				foreach ($groups as $group)
 				{
-					if(isset($group))
+					if (isset($group))
 					{
 						//$res_g = $group->serialize();
 						$selected = "";
-						if($group_id && $group_id > 0)
+						if ($group_id && $group_id > 0)
 						{
 							$gr_id = (int)$group_id;
-							if($gr_id == (int)$group->get_id())
+							if ($gr_id == (int)$group->get_id())
 							{
 								$selected_group = " selected";
 							}
@@ -332,7 +332,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 			// Get the contract part id
 			$party_id = (int)phpgw::get_var('id');
-			if(isset($party_id) && $party_id > 0)
+			if (isset($party_id) && $party_id > 0)
 			{
 				$party = rental_soparty::get_instance()->get_single($party_id);
 			}
@@ -342,7 +342,7 @@
 				return;
 			}
 
-			if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
+			if (isset($party) && $party->has_permission(PHPGW_ACL_READ))
 			{
 				return $this->render(
 				'party.php', array(
@@ -372,7 +372,7 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			//Defining new columns
 			$value['ajax']		 = array();
@@ -381,11 +381,11 @@
 
 			$query_type = $params[0];
 
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'all_organizations':
 					$value['ajax'][] = false;
-					if($value['organization_id'] != '' && $value['organization_id'] != null)
+					if ($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uigroup.show',
 							'id'		 => $value['id'])));
@@ -400,7 +400,7 @@
 
 				case 'changed_organizations':
 					$value['ajax'][] = false;
-					if($value['organization_id'] != '' && $value['organization_id'] != null)
+					if ($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id'		 => $value['id'], 'type'		 => 'group')));
@@ -411,10 +411,10 @@
 							'id'		 => $value['id'])));
 					}
 					$value['labels'][] = lang('show');
-					if($value['transferred'] == false)
+					if ($value['transferred'] == false)
 					{
 						$value['ajax'][] = false;
-						if($value['organization_id'] != '' && $value['organization_id'] != null)
+						if ($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
 							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 								'id'		 => $value['id'], 'type'		 => 'group')));
@@ -429,7 +429,7 @@
 					break;
 				case 'changed_groups':
 					$value['ajax'][] = false;
-					if($value['organization_id'] != '' && $value['organization_id'] != null)
+					if ($value['organization_id'] != '' && $value['organization_id'] != null)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show',
 							'id'		 => $value['id'], 'type'		 => 'group')));
@@ -440,10 +440,10 @@
 							'id'		 => $value['id'])));
 					}
 					$value['labels'][] = lang('show');
-					if($value['transferred'] == false)
+					if ($value['transferred'] == false)
 					{
 						$value['ajax'][] = false;
-						if($value['organization_id'] != '' && $value['organization_id'] != null)
+						if ($value['organization_id'] != '' && $value['organization_id'] != null)
 						{
 							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit',
 								'id'		 => $value['id'], 'type'		 => 'group')));

@@ -42,7 +42,7 @@
 			$this->like = & $this->db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$query_start = phpgwapi_datetime::date_to_timestamp($data['query_start']);
 			$query_end = phpgwapi_datetime::date_to_timestamp($data['query_end']);
@@ -50,11 +50,11 @@
 
 
 			$dimb_id = (int)$data['dimb_id'];
-			if(isset($data['user_id']) && $data['user_id'])
+			if (isset($data['user_id']) && $data['user_id'])
 			{
 				$user_id = (int)$data['user_id'];
 			}
-			else if(!$dimb_id)
+			else if (!$dimb_id)
 			{
 				$user_id = $this->account_id;
 			}
@@ -64,30 +64,30 @@
 
 			$filtermethod = '';
 			$where = 'AND';
-			if($user_id)
+			if ($user_id)
 			{
 				$filtermethod .= "{$where} user_id = $user_id";
 				$where = 'AND';
 			}
-			if($role_id)
+			if ($role_id)
 			{
 				$filterrole = "WHERE id = $role_id";
 				$filtermethod .= "{$where} role_id = $role_id";
 				$where = 'AND';
 			}
-			if($dimb_id)
+			if ($dimb_id)
 			{
 				$filterdimb = "WHERE id = $dimb_id";
 				$filtermethod .= "{$where} ecodimb = $dimb_id";
 				$where = 'AND';
 			}
 
-			if($query_start)
+			if ($query_start)
 			{
 				$filtermethod .= "{$where} active_from < $query_start";
 			}
 
-			if($query_end)
+			if ($query_end)
 			{
 				$filtermethod .= "{$where} (active_to > $query_end OR active_to = 0)";
 			}
@@ -103,7 +103,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$user_data = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$user_data[$this->db->f('ecodimb')][$this->db->f('role_id')][$this->db->f('user_id')] = array
 					(
@@ -119,7 +119,7 @@
 				);
 			}
 
-			if($get_netto_list)
+			if ($get_netto_list)
 			{
 				return $user_data;
 			}
@@ -128,7 +128,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$roles = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$roles[] = array
 					(
@@ -143,13 +143,13 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$dimbs = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$dimbs[] = $this->db->f('id');
 			}
 
 
-			if($dimb_id && !$user_id)
+			if ($dimb_id && !$user_id)
 			{
 				$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, '.invoice', 'property');
 			}
@@ -160,13 +160,13 @@
 
 			$values = array();
 
-			foreach($dimbs as $dimb)
+			foreach ($dimbs as $dimb)
 			{
-				foreach($roles as $role)
+				foreach ($roles as $role)
 				{
-					foreach($users as $dummy => $user)
+					foreach ($users as $dummy => $user)
 					{
-						if(isset($user_data[$dimb][$role['id']][$user['account_id']]))
+						if (isset($user_data[$dimb][$role['id']][$user['account_id']]))
 						{
 							$values[] = $user_data[$dimb][$role['id']][$user['account_id']];
 						}
@@ -188,11 +188,12 @@
 			return $values;
 		}
 
-		public function edit($data)
+		public function edit( $data )
 		{
 			$active_from = phpgwapi_datetime::date_to_timestamp($data['active_from']);
 			$active_to = phpgwapi_datetime::date_to_timestamp($data['active_to']);
 			$delete = isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
+			$default_user_orig = isset($data['default_user_orig']) && is_array($data['default_user_orig']) ? $data['default_user_orig'] : array();
 			$default_user = isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
 			$alter_date = isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
 			$add = isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
@@ -200,33 +201,44 @@
 			$this->db->transaction_begin();
 
 			$c_default_user = 0;
-			foreach($default_user as $id)
+			foreach ($default_user as $id)
 			{
-				if(!in_array($id, $delete))
+				if (!in_array($id, $delete) && !in_array($id, $default_user_orig))
 				{
 					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 1 WHERE id = '{$id}'", __LINE__, __FILE__);
 					$c_default_user ++;
+				}
+			}
+			unset($id);
+
+			$c_default_user_orig = 0;
+			foreach ($default_user_orig as $id)
+			{
+				if ($id && !in_array($id, $delete) && !in_array($id, $default_user))
+				{
+					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 0 WHERE id = '{$id}'", __LINE__, __FILE__);
+					$c_default_user_orig ++;
 				}
 			}
 
 			unset($id);
 
 			$c_alter_date = 0;
-			foreach($alter_date as $id)
+			foreach ($alter_date as $id)
 			{
-				if(!in_array($id, $delete))
+				if (!in_array($id, $delete))
 				{
 					$value_set = array();
-					if($active_from)
+					if ($active_from)
 					{
 						$value_set['active_from'] = $active_from;
 					}
-					if($active_to)
+					if ($active_to)
 					{
 						$value_set['active_to'] = $active_to;
 					}
 
-					if($value_set)
+					if ($value_set)
 					{
 						$value_set = $this->db->validate_update($value_set);
 						$this->db->query("UPDATE fm_ecodimb_role_user SET {$value_set} WHERE id = '{$id}'", __LINE__, __FILE__);
@@ -237,7 +249,7 @@
 			}
 			unset($id);
 
-			foreach($add as $info)
+			foreach ($add as $info)
 			{
 				$user_arr = explode('_', $info);
 				$value_set = array
@@ -257,30 +269,35 @@
 			}
 
 			$ok = false;
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				$ok = true;
-				foreach($delete as $id)
+				foreach ($delete as $id)
 				{
 					$this->db->query('UPDATE fm_ecodimb_role_user SET expired_on =' . time() . " , expired_by = {$this->account_id} WHERE id = '{$id}'", __LINE__, __FILE__);
 				}
 
-				if($delete)
+				if ($delete)
 				{
 					phpgwapi_cache::message_set(lang('%1 roles deleted', count($delete)), 'message');
 				}
-				if($c_alter_date)
+				if ($c_alter_date)
 				{
 					phpgwapi_cache::message_set(lang('%1 dates altered', $c_alter_date), 'message');
 				}
-				if($add)
+				if ($add)
 				{
 					phpgwapi_cache::message_set(lang('%1 roles added', count($add)), 'message');
 				}
 
-				if($c_default_user)
+				if ($c_default_user)
 				{
-					phpgwapi_cache::message_set(lang('%1 roles set at default', $c_default_user), 'message');
+					phpgwapi_cache::message_set(lang('%1 roles set as default', $c_default_user), 'message');
+				}
+
+				if ($c_default_user_orig)
+				{
+					phpgwapi_cache::message_set(lang('%1 roles removed as default', $c_default_user_orig), 'message');
 				}
 			}
 

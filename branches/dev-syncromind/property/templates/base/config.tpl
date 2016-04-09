@@ -139,7 +139,14 @@
 				</select>
 			</td>
 		</tr>
-
+		<tr>
+			<td>{lang_request_status_on_ticket_hookup}:</td>
+			<td>
+				<select name="newsettings[request_ticket_hookup_status]">
+					{hook_request_ticket_hookup_status}
+				</select>
+			</td>
+		</tr>
 
 		<tr class="pure-table-odd">
 			<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>

@@ -8,23 +8,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
 	* @subpackage autoreply
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package sms
 	 */
-
 	class sms_boautoreply
 	{
+
 		var $start;
 		var $query;
 		var $filter;
 		var $sort;
 		var $order;
 		var $cat_id;
-
 		var $public_functions = array
 		(
 			'read'			=> true,
@@ -34,8 +33,7 @@
 			'check_perms'	=> true
 		);
 
-
-		function __construct($session=false)
+		function __construct( $session = false )
 		{
 			$this->so 		= CreateObject('sms.soautoreply');
 			$this->bocommon 	= CreateObject('sms.bocommon');
@@ -52,27 +50,27 @@
 			$order	= phpgw::get_var('order');
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
+			$allrows = phpgw::get_var('allrows', 'bool');
 
 			$this->start = $start ? $start : 0;
 
-			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
+			if (array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
 			{
 				$this->query = $query;
 			}
-			if(array_key_exists('filter',$_POST) || array_key_exists('filter',$_GET))
+			if (array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
 			{
 				$this->filter = $filter;
 			}
-			if(array_key_exists('sort',$_POST) || array_key_exists('sort',$_GET))
+			if (array_key_exists('sort', $_POST) || array_key_exists('sort', $_GET))
 			{
 				$this->sort = $sort;
 			}
-			if(array_key_exists('order',$_POST) || array_key_exists('order',$_GET))
+			if (array_key_exists('order', $_POST) || array_key_exists('order', $_GET))
 			{
 				$this->order = $order;
 			}
-			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
+			if (array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
 			{
 				$this->cat_id = $cat_id;
 			}
@@ -82,18 +80,17 @@
 			}
 		}
 
-
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','sms_autoreply',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'sms_autoreply', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','sms_autoreply');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'sms_autoreply');
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -103,11 +100,11 @@
 			$this->cat_id	= $data['cat_id'];
 		}
 
-
 		function read()
 		{
-			$autoreply_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+			$autoreply_info = $this->so->read(array('start' => $this->start, 'query' => $this->query,
+				'sort' => $this->sort, 'order' => $this->order,
+				'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $autoreply_info;
 		}

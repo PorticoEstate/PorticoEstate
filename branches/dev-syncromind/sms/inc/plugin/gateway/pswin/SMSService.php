@@ -11,7 +11,6 @@
 	* @category core
  	* @version $Id: SMSService.php 4237 2009-11-27 23:17:21Z sigurd $
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -35,27 +34,30 @@
 	 * @subpackage sms
 	 */
 	
-	
 	/**
 	 * SendSingleMessage
 	 */
 	class SendSingleMessage
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $username;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $password;
+
 		/**
 		 * @access public
 		 * @var SMSMessage
 		 */
 		public $m;
+
 	}
 	
 	/**
@@ -63,71 +65,85 @@
 	 */
 	class SMSMessage
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ReceiverNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SenderNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Text;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Network;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $TypeOfMessage;
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $Tariff;
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $TimeToLive;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $CPATag;
+
 		/**
 		 * @access public
 		 * @var sboolean
 		 */
 		public $RequestReceipt;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SessionData;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $AffiliateProgram;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $DeliveryTime;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ServiceCode;
+
 	}
 
 	/**
@@ -135,11 +151,13 @@
 	 */
 	class SendSingleMessageResponse
 	{
+
 		/**
 		 * @access public
 		 * @var ReturnValue
 		 */
 		public $SendSingleMessageResult;
+
 	}
 
 	/**
@@ -147,21 +165,25 @@
 	 */
 	class ReturnValue
 	{
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $Code;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Description;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Reference;
+
 	}
 	
 	/**
@@ -169,32 +191,39 @@
 	 */
 	class SendMessages
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $username;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $password;
+
 		/**
 		 * @access public
 		 * @var ArrayOfSMSMessage
 		 */
 		public $m;
+
 	}
 	
 	/**
 	 * SendMessagesResponse
 	 */
-	class SendMessagesResponse {
+	class SendMessagesResponse
+	{
+
 		/**
 		 * @access public
 		 * @var ArrayOfReturnValue
 		 */
 		public $SendMessagesResult;
+
 	}
 
 	/**
@@ -202,21 +231,25 @@
 	 */
 	class SendSingleWapPush
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $username;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $password;
+
 		/**
 		 * @access public
 		 * @var WapPushMessage
 		 */
 		public $m;
+
 	}
 
 	/**
@@ -224,66 +257,79 @@
 	 */
 	class WapPushMessage
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ReceiverNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SenderNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Url;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Description;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Network;
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $Tariff;
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $TimeToLive;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $CPATag;
+
 		/**
 		 * @access public
 		 * @var sboolean
 		 */
 		public $RequestReceipt;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SessionData;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $AffiliateProgram;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $DeliveryTime;
+
 	}
 
 	/**
@@ -291,11 +337,13 @@
 	 */
 	class SendSingleWapPushResponse
 	{
+
 		/**
 		 * @access public
 		 * @var ReturnValue
 		 */
 		public $SendSingleWapPushResult;
+
 	}
 
 	/**
@@ -303,32 +351,39 @@
 	 */
 	class SendMultipleWapPush
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $username;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $password;
+
 		/**
 		 * @access public
 		 * @var ArrayOfWapPushMessage
 		 */
 		public $m;
+
 	}
 
 	/**
 	 * SendMultipleWapPushResponse
 	 */
-	class SendMultipleWapPushResponse {
+	class SendMultipleWapPushResponse
+	{
+
 		/**
 		 * @access public
 		 * @var ArrayOfReturnValue
 		 */
 		public $SendMultipleWapPushResult;
+
 	}
 
 	/**
@@ -337,6 +392,7 @@
 	 */
 	class SMSService extends SoapClient
 	{
+
 		/**
 		 * Default class map for wsdl=>php
 		 * @access private
@@ -361,10 +417,12 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl="http://sms.pswin.com/SOAP/SMS.asmx?wsdl", $options=array())
+		public function __construct( $wsdl = "http://sms.pswin.com/SOAP/SMS.asmx?wsdl", $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName) {
-			    if(!isset($options['classmap'][$wsdlClassName])) {
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
+			{
+				if (!isset($options['classmap'][$wsdlClassName]))
+		{
 			        $options['classmap'][$wsdlClassName] = $phpClassName;
 			    }
 			}
@@ -378,18 +436,21 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
-			foreach ($arguments as $arg) {
+			foreach ($arguments as $arg)
+			{
 			    $type = gettype($arg);
-			    if ($type == "object") {
+				if ($type == "object")
+				{
 			        $type = get_class($arg);
 			    }
-			    $variables .= "(".$type.")";
+				$variables .= "(" . $type . ")";
 			}
-			if (!in_array($variables, $validParameters)) {
-			    throw new Exception("Invalid parameter types: ".str_replace(")(", ", ", $variables));
+			if (!in_array($variables, $validParameters))
+			{
+				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
 			return true;
 		}
@@ -403,7 +464,7 @@
 		 * @return SendSingleMessageResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function SendSingleMessage($mixed = null)
+		public function SendSingleMessage( $mixed = null )
 		{
 			$validParameters = array(
 				"(SendSingleMessage)",
@@ -414,7 +475,6 @@
 			return $this->__soapCall("SendSingleMessage", $args);
 		}
 	
-	
 		/**
 		 * Service Call: SendMessages
 		 * Parameter options:
@@ -424,7 +484,7 @@
 		 * @return SendMessagesResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function SendMessages($mixed = null)
+		public function SendMessages( $mixed = null )
 		{
 			$validParameters = array(
 				"(SendMessages)",
@@ -435,7 +495,6 @@
 			return $this->__soapCall("SendMessages", $args);
 		}
 	
-	
 		/**
 		 * Service Call: SendSingleWapPush
 		 * Parameter options:
@@ -445,7 +504,7 @@
 		 * @return SendSingleWapPushResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function SendSingleWapPush($mixed = null)
+		public function SendSingleWapPush( $mixed = null )
 		{
 			$validParameters = array(
 				"(SendSingleWapPush)",
@@ -456,7 +515,6 @@
 			return $this->__soapCall("SendSingleWapPush", $args);
 		}
 	
-	
 		/**
 		 * Service Call: SendMultipleWapPush
 		 * Parameter options:
@@ -466,7 +524,7 @@
 		 * @return SendMultipleWapPushResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function SendMultipleWapPush($mixed = null)
+		public function SendMultipleWapPush( $mixed = null )
 		{
 			$validParameters = array(
 				"(SendMultipleWapPush)",

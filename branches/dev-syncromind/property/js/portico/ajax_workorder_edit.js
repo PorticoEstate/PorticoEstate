@@ -1,6 +1,8 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 
-	$("#global_category_id").change(function () {
+	$("#global_category_id").change(function ()
+	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -10,7 +12,8 @@ $(document).ready(function () {
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					if (data.active != 1)
@@ -23,7 +26,8 @@ $(document).ready(function () {
 	});
 
 
-	$("#workorder_edit").on("submit", function (e) {
+	$("#workorder_edit").on("submit", function (e)
+	{
 
 		if ($("#lean").val() == 0)
 		{
@@ -37,7 +41,8 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			success: function (data) {
+			success: function (data)
+			{
 				if (data)
 				{
 					if (data.sessionExpired)
@@ -52,13 +57,15 @@ $(document).ready(function () {
 					if (obj.status == "updated")
 					{
 						$(submitBnt).val("Lagret");
-					} else
+					}
+					else
 					{
 						$(submitBnt).val("Feil ved lagring");
 					}
 
 					// Changes text on save button back to original
-					window.setTimeout(function () {
+					window.setTimeout(function ()
+					{
 						$(submitBnt).val('Lagre');
 						$(submitBnt).addClass("not_active");
 					}, 1000);
@@ -101,7 +108,8 @@ $(document).ready(function () {
 		});
 	});
 
-	$("#workorder_cancel").on("submit", function (e) {
+	$("#workorder_cancel").on("submit", function (e)
+	{
 		if ($("#lean").val() == 0)
 		{
 			return;

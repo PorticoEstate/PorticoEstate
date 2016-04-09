@@ -39,13 +39,17 @@
 		 * @param $dismissed date	The date for dismissal (workbench notification), optional
 		 */
 		public function __construct(
-		int $id = null, int $account_id = null, int $location_id = null, int $contract_id = null, int $date = null, string $message = null, $recurrence = RECURRENCE_NEVER, int $last_notified = null, string $title = null, int $originated_from = null)
+		int $id = null, int $account_id = null, int $location_id = null, int $contract_id = null, int $date = null, string $message = null, $recurrence = RECURRENCE_NEVER, int $last_notified = null, string $title = null, int $originated_from = null )
 		{
 			$this->id = (int)$id;
-			if($account_id > 0)
-			{ $this->account_id = (int)$account_id;}
-			if($location_id > 0)
-			{ $this->location_id = (int)$location_id;}
+			if ($account_id > 0)
+			{
+				$this->account_id = (int)$account_id;
+			}
+			if ($location_id > 0)
+			{
+				$this->location_id = (int)$location_id;
+			}
 			$this->contract_id				 = (int)$contract_id;
 			$this->date						 = $date;
 			$this->last_notified			 = $last_notified;
@@ -68,7 +72,7 @@
 
 		public function get_account_id()
 		{
-			if($this->account_id && $this->account_id > 0)
+			if ($this->account_id && $this->account_id > 0)
 				return $this->account_id;
 			return null;
 		}
@@ -109,7 +113,7 @@
 		}
 
 		// Set methods
-		public function set_id(int $id)
+		public function set_id( int $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -123,7 +127,7 @@
 		{
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$recurrence	 = lang('never'); // Default
-			switch($this->get_recurrence())
+			switch ($this->get_recurrence())
 			{
 				case rental_notification::RECURRENCE_ANNUALLY:
 					$recurrence	 = lang('annually');
@@ -137,13 +141,13 @@
 			}
 
 			$account = $GLOBALS['phpgw']->accounts->get($this->get_account_id());
-			if($account)
+			if ($account)
 			{
 				$name = $account->__toString();
 			}
 
 
-			if($this->get_field_of_responsibility())
+			if ($this->get_field_of_responsibility())
 			{
 				$responsibility = lang($this->get_field_of_responsibility());
 			}
@@ -170,7 +174,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.sonotification');
 			}
@@ -179,41 +183,41 @@
 		}
 
 		// Get all notifications
-		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		public static function get_all( $start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
 		{
 			$so = self::get_so();
 			return $so->get_notification_array($start, $results, $sort, $dir, $query, $search_option, $filters);
 		}
 
 		// Get workbench notifications
-		public static function get_workbench_notifications($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		public static function get_workbench_notifications( $start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
 		{
 			$so = self::get_so();
 			return $so->get_workbench_notifications($start, $results, $sort, $dir, $query, $search_option, $filters);
 		}
 
 		// Delete a notification
-		public static function delete_notification($id)
+		public static function delete_notification( $id )
 		{
 			$so = self::get_so();
 			return $so->delete_notification($id);
 		}
 
 		// Dismiss a workbench notification
-		public static function dismiss_notification($id, $ts_dismissed)
+		public static function dismiss_notification( $id, $ts_dismissed )
 		{
 			$so = self::get_so();
 			return $so->dismiss_notification($id, $ts_dismissed);
 		}
 
-		public static function dismiss_notification_for_all($notification_id)
+		public static function dismiss_notification_for_all( $notification_id )
 		{
 			$so = self::get_so();
 			return $so->dismiss_notification_for_all($notification_id);
 		}
 
 		// Populates the workbench on a given day
-		public static function populate_workbench_notifications($day = null)
+		public static function populate_workbench_notifications( $day = null )
 		{
 			$so = self::get_so();
 			return $so->populate_workbench_notifications();

@@ -2,10 +2,10 @@
 <form method="POST" action="{action_url}">
  <center><h3>{message}</h3></center>
  <table border="0" align="center" width="50%">
-<!-- END header -->
+		<!-- END header -->
 
-<!-- BEGIN list -->
-<table border="0" align="center" width="75%">
+		<!-- BEGIN list -->
+		<table border="0" align="center" width="75%">
   <tr class="{row_on}">
    <td colspan="7">{lang_current_fields}</td>
   </tr>
@@ -19,7 +19,7 @@
    <td>{lang_order}</td>
   </tr>
 
-<!-- BEGIN info -->
+			<!-- BEGIN info -->
   <tr class="{row_off}">
    <td><input type="text" name="{field_short_name}_name" size="10" value="{field_name}"></td>
    <td><input type="text" name="{field_short_name}_text" value="{field_text}"></td>
@@ -46,18 +46,18 @@
    <td><input type="checkbox" name="{field_short_name}_remove" {field_remove}></td>
    <td><input type="text" name="{field_short_name}_order" size="2" value="{field_order}"></td>
   </tr>
-<!-- END info -->
+			<!-- END info -->
 
-</table>
-<!-- END list -->
+		</table>
+		<!-- END list -->
 
-<!-- BEGIN footer -->
-<p>
-<table border="0" align="center" width="50%">
+		<!-- BEGIN footer -->
+		<p>
+		<table border="0" align="center" width="50%">
   <tr>
-<!--
+				<!--
    <td align="left"><input type="submit" name="cancel" value="{lang_cancel}"></td>
--->
+				-->
    <td align="center">
    <input type="submit" name="submit" value="{lang_update_add}"></td>
   </tr>

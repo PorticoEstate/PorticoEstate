@@ -49,11 +49,11 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.socustom');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -67,7 +67,7 @@
 			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -76,23 +76,23 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
+			if (isset($query))
 			{
 				$this->query = $query;
 			}
-			if(!empty($filter))
+			if (!empty($filter))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id) && !empty($cat_id))
+			if (isset($cat_id) && !empty($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
@@ -100,15 +100,15 @@
 			{
 				unset($this->cat_id);
 			}
-			if(isset($allrows))
+			if (isset($allrows))
 			{
 				$this->allrows = $allrows;
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'custom', $data);
 			}
@@ -126,12 +126,12 @@
 			$this->cat_id = $data['cat_id'];
 		}
 
-		function check_perms($has, $needed)
+		function check_perms( $has, $needed )
 		{
 			return (!!($has & $needed) == true);
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			/* $custom = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 			  'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
@@ -140,29 +140,29 @@
 			$custom = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
-			for($i = 0; $i < count($custom); $i++)
+			for ($i = 0; $i < count($custom); $i++)
 			{
 				$custom[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($custom[$i]['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 			return $custom;
 		}
 
-		function read_single($custom_id)
+		function read_single( $custom_id )
 		{
 			return $this->so->read_single($custom_id);
 		}
 
-		function read_custom_name($custom_id)
+		function read_custom_name( $custom_id )
 		{
 			return $this->so->read_custom_name($custom_id);
 		}
 
-		function save($custom)
+		function save( $custom )
 		{
 
-			if($custom['custom_id'])
+			if ($custom['custom_id'])
 			{
-				if($custom['custom_id'] != 0)
+				if ($custom['custom_id'] != 0)
 				{
 					$custom_id = $custom['custom_id'];
 					$receipt = $this->so->edit($custom);
@@ -175,9 +175,9 @@
 			return $receipt;
 		}
 
-		function delete($params)
+		function delete( $params )
 		{
-			if(is_array($params))
+			if (is_array($params))
 			{
 				$this->so->delete($params[0]);
 			}
@@ -187,15 +187,15 @@
 			}
 		}
 
-		function resort($data)
+		function resort( $data )
 		{
 			$this->so->resort($data);
 		}
 
-		function read_custom($data = array())
+		function read_custom( $data = array() )
 		{
 //            ,$custom_id,$allrows=''
-			if($data['allrows'])
+			if ($data['allrows'])
 			{
 				$data['allrows'] = $data['allrows'];
 			}

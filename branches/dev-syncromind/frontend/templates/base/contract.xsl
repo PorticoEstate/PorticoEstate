@@ -10,7 +10,9 @@
 		<div class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
-				<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+				<xsl:variable name="tab_selected">
+					<xsl:value-of select="tab_selected"/>
+				</xsl:variable>
 				<div id="{$tab_selected}">
 					<div class="pure-g">
 						<div class="pure-u-1">
@@ -19,26 +21,38 @@
 								<select name="contract_filter" onchange="this.form.submit()">
 									<xsl:choose>
 										<xsl:when test="//contract_filter = 'active'">
-											<option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
+											<option value="active" selected="selected">
+												<xsl:value-of select="php:function('lang', 'active')"/>
+											</option>
 										</xsl:when>
 										<xsl:otherwise>
-											<option value="active"><xsl:value-of select="php:function('lang', 'active')"/></option>
+											<option value="active">
+												<xsl:value-of select="php:function('lang', 'active')"/>
+											</option>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:choose>
 										<xsl:when test="//contract_filter = 'not_active'">
-											<option value="not_active" selected="selected"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+											<option value="not_active" selected="selected">
+												<xsl:value-of select="php:function('lang', 'not_active')"/>
+											</option>
 										</xsl:when>
 										<xsl:otherwise>
-											<option value="not_active"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+											<option value="not_active">
+												<xsl:value-of select="php:function('lang', 'not_active')"/>
+											</option>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:choose>
 										<xsl:when test="//contract_filter = 'all'">
-											<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all')"/></option>
+											<option value="all" selected="selected">
+												<xsl:value-of select="php:function('lang', 'all')"/>
+											</option>
 										</xsl:when>
 										<xsl:otherwise>
-											<option value="all"><xsl:value-of select="php:function('lang', 'all')"/></option>
+											<option value="all">
+												<xsl:value-of select="php:function('lang', 'all')"/>
+											</option>
 										</xsl:otherwise>
 									</xsl:choose>
 								</select>
@@ -62,7 +76,8 @@
 													<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();" style="margin-left: 1em;"></input>
 												</xsl:otherwise>
 											</xsl:choose>
-											<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
+											<label style="margin-right: 1em; padding-left: 5px;">
+												<xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
 										</xsl:for-each>
 									</form>
 								</div>
@@ -79,11 +94,35 @@
 								<xsl:for-each select="contract">
 									<div class="pure-u-1 pure-u-md-1-2">
 										<ul>
-											<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'old_contract_id')"/>: <xsl:value-of select="old_contract_id"/></li>
-											<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'contract_type')"/>: <xsl:value-of select="type"/></li>
-											<li><em><img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'contract_status')"/>: <xsl:value-of select="contract_status"/></li>
-											<li><em><img src="frontend/templates/base/images/16x16/resultset_first.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'date_start')"/>: <xsl:value-of select="date_start"/></li>
-											<li><em><img src="frontend/templates/base/images/16x16/resultset_last.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'date_end')"/>: 
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'old_contract_id')"/>: <xsl:value-of select="old_contract_id"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'contract_type')"/>: <xsl:value-of select="type"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'contract_status')"/>: <xsl:value-of select="contract_status"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/resultset_first.png"  class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'date_start')"/>: <xsl:value-of select="date_start"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/resultset_last.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'date_end')"/>:
 												<xsl:choose>
 													<xsl:when test="date_end != ''">
 														<xsl:value-of select="date_end"/>
@@ -93,10 +132,30 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</li>
-											<li><em><img src="frontend/templates/base/images/16x16/shading.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'rented_area')"/>: <xsl:value-of select="rented_area"/></li>	
-											<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>	
-											<li><em><img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'service_id')"/>: <xsl:value-of select="service_id"/></li>	
-											<li><em><img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'responsibility_id')"/>: <xsl:value-of select="responsibility_id"/></li>	
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/shading.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'rented_area')"/>: <xsl:value-of select="rented_area"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'service_id')"/>: <xsl:value-of select="service_id"/>
+											</li>
+											<li>
+												<em>
+													<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/>
+												</em>
+												<xsl:value-of select="php:function('lang', 'responsibility_id')"/>: <xsl:value-of select="responsibility_id"/>
+											</li>
 										</ul>
 									</div>
 
@@ -107,20 +166,33 @@
 												<em>Kontraktsparter</em>
 											</li>
 											<xsl:for-each select="../party">
-												<li style="margin-bottom: 5px;"><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
+												<li style="margin-bottom: 5px;">
+													<em>
+														<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" />
+													</em>
+													<xsl:value-of select="name"/>
+													<br/>
 													<ul style="margin-left: 2em;">
 														<xsl:choose>
 															<xsl:when test="normalize-space(address)">
-																<li><xsl:value-of select="address"/></li>
+																<li>
+																	<xsl:value-of select="address"/>
+																</li>
 															</xsl:when>
 															<xsl:when test="normalize-space(address1)">
-																<li><xsl:value-of select="address1"/><br/>
-																<xsl:value-of select="address2"/><br/>
+																<li>
+																	<xsl:value-of select="address1"/>
+																	<br/>
+																	<xsl:value-of select="address2"/>
+																	<br/>
 																<xsl:value-of select="postal_code"/>&nbsp;
-																<xsl:value-of select="place"/></li>
+																	<xsl:value-of select="place"/>
+																</li>
 															</xsl:when>
 															<xsl:when test="normalize-space(department)">
-																<li><xsl:value-of select="department"/></li>
+																<li>
+																	<xsl:value-of select="department"/>
+																</li>
 															</xsl:when>
 														</xsl:choose>
 													</ul>
@@ -132,11 +204,17 @@
 												<em>Leieobjekt</em>
 											</li>
 											<xsl:for-each select="../composite">
-												<li><img src="frontend/templates/base/images/16x16/application_home.png" class="list_image" /> <xsl:value-of select="name" /></li>
+												<li>
+													<img src="frontend/templates/base/images/16x16/application_home.png" class="list_image" />
+													<xsl:value-of select="name" />
+												</li>
 												<li>
 													<dl style="padding-left: 1em;">
-														<dt style="float: left;"><img src="frontend/templates/base/images/16x16/house.png" class="list_image" /></dt>
-														<dd><br/>
+														<dt style="float: left;">
+															<img src="frontend/templates/base/images/16x16/house.png" class="list_image" />
+														</dt>
+														<dd>
+															<br/>
 															<xsl:if test="normalize-space(address)">
 																<xsl:value-of select="address" disable-output-escaping="yes"/>
 															</xsl:if>
@@ -153,7 +231,9 @@
 												<xsl:when test="publish_comment = 1">
 													<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
 														<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
-														<em><xsl:value-of select="php:function('lang', 'comment')"/></em>
+														<em>
+															<xsl:value-of select="php:function('lang', 'comment')"/>
+														</em>
 													</li>
 													<li style="margin-bottom: 10px;">
 														<xsl:value-of select="comment" disable-output-escaping="yes"/>
@@ -165,12 +245,15 @@
 												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 											</li>
 											<li>
-												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
+												<xsl:variable name="btn_send">
+													<xsl:value-of select="php:function('lang', 'btn_send')"/>
+												</xsl:variable>
 												<form action="{form_url}" method="post">
 													<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 													<br/>
 													<textarea name="contract_message" cols="80" rows="5">
-													</textarea><br/>
+													</textarea>
+													<br/>
 													<input type="submit" class="pure-button pure-button-active" name="send" value="{$btn_send}"/>
 												</form>
 											</li>

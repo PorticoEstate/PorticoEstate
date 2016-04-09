@@ -2,7 +2,9 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete Booking')"/></dt>
+			<dt class="heading">
+				<xsl:value-of select="php:function('lang', 'Delete Booking')"/>
+			</dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
@@ -13,7 +15,9 @@
                 <xsl:value-of select="php:function('lang', 'Booking Delete Information3')"/>
             </xsl:if>
         </dd>
-    	<dd><xsl:value-of select="php:function('lang', 'Booking Delete Information2')"/></dd>
+			<dd>
+				<xsl:value-of select="php:function('lang', 'Booking Delete Information2')"/>
+			</dd>
 	</dl>
     <div class="clr"/>
     <form action="" method="POST">
@@ -25,25 +29,41 @@
         <input type="hidden" name="to_" value="{booking/to_}" />
 
         <dl class="form-col">
-            <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
+				<dt>
+					<label for="field_building">
+						<xsl:value-of select="php:function('lang', 'Building')" />
+					</label>
+				</dt>
             <dd>
                 <div>
                         <xsl:value-of select="booking/building_name"/>
                 </div>
             </dd>
-            <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+				<dt>
+					<label for="field_from">
+						<xsl:value-of select="php:function('lang', 'From')" />
+					</label>
+				</dt>
             <dd>
                 <div>
                     <xsl:value-of select="booking/from_"/>
                 </div>
             </dd>
-            <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')"/></label></dt>
+				<dt>
+					<label for="field_to">
+						<xsl:value-of select="php:function('lang', 'To')"/>
+					</label>
+				</dt>
             <dd>
                 <div>
                     <xsl:value-of select="booking/to_"/>
                 </div>
             </dd>
-			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label></dt>
+				<dt>
+					<label for="field_repeat_until">
+						<xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" />
+					</label>
+				</dt>
 			<dd>
 				<label>
 					<input type="checkbox" name="outseason" id="outseason">
@@ -66,10 +86,14 @@
 			</dd>
 			<dd class="date-picker">
 				<input id="field_repeat_until" name="repeat_until" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="repeat_until"/></xsl:attribute>
+						<xsl:attribute name="value">
+							<xsl:value-of select="repeat_until"/>
+						</xsl:attribute>
 				</input>
 			</dd>
-			<dt><xsl:value-of select="php:function('lang', 'Interval')" /></dt>
+				<dt>
+					<xsl:value-of select="php:function('lang', 'Interval')" />
+				</dt>
 			<dd>
 				<xsl:value-of select="../field_interval" />
 				<select id="field_interval" name="field_interval">
@@ -101,16 +125,28 @@
 			</dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
+				<dt>
+					<label for="field_group">
+						<xsl:value-of select="php:function('lang', 'Group')"/>
+					</label>
+				</dt>
             <dd>
                         <xsl:value-of select="booking/group_name"/>
             </dd>
-            <dt><label for="field_season"><xsl:value-of select="php:function('lang', 'Season')"/></label></dt>
+				<dt>
+					<label for="field_season">
+						<xsl:value-of select="php:function('lang', 'Season')"/>
+					</label>
+				</dt>
             <dd>
                         <xsl:value-of select="booking/season_name"/>
             </dd>
 			<xsl:if test="user_can_delete_allocations != 0">						
-			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Delete allocation also')" /></label></dt>
+					<dt>
+						<label for="field_repeat_until">
+							<xsl:value-of select="php:function('lang', 'Delete allocation also')" />
+						</label>
+					</dt>
 			<dd>
 				<label>
 					<input type="checkbox" name="delete_allocation" id="delete_allocation">
@@ -127,17 +163,27 @@
 		<div style='clear:left; padding:0; margin:0'/>
 
         <dl class="form-col">
-		<dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
+				<dt>
+					<label for="field_message">
+						<xsl:value-of select="php:function('lang', 'Message')" />
+					</label>
+				</dt>
 		<dd class="yui-skin-sam">
-		<textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
+					<textarea id="field-message" name="message" type="text">
+						<xsl:value-of select="system_message/message"/>
+					</textarea>
 		</dd>
         </dl>
         <div class="form-buttons">
             <input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')"/></xsl:attribute>
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Delete')"/>
+					</xsl:attribute>
 			</input>
             <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>
+					<xsl:attribute name="href">
+						<xsl:value-of select="booking/cancel_link"/>
+					</xsl:attribute>
                 <xsl:value-of select="php:function('lang', 'Cancel')"/>
             </a>
         </div>

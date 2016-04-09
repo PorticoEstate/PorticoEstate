@@ -1,5 +1,5 @@
 <?php
-	/*******************************************************************\
+	/*	 * *****************************************************************\
 	* phpGroupWare API - help system manager                            *
 	* Written by Bettina Gille [ceb@phpgroupware.org]                   *
 	* Manager for the phpGroupWare help system                          *
@@ -21,51 +21,52 @@
 	* You should have received a copy of the GNU General Public License *
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
-	\*******************************************************************/
+	  \****************************************************************** */
 	/* $Id$ */
 
 	CreateObject('manual.help');
 
 	class help_helper extends help
 	{
+
 		function __construct()
 		{
 			parent::__construct();
 		}
 
-		function set_params($param)
+		function set_params( $param )
 		{
 			$this->help(True);
 			@reset($param);
-			while(list($key,$value) = each($param))
+			while (list($key, $value) = each($param))
 			{
-				if($key != 'title')
+				if ($key != 'title')
 				{
 					//echo 'Setting '.$key.':'.$value."<br>\n";
-					$this->setvar($key,$value);
+					$this->setvar($key, $value);
 				}
 			}
 			$this->title = $param['title'];
 
-			if(isset($param['controls']) && is_array($param['controls']))
+			if (isset($param['controls']) && is_array($param['controls']))
 			{
-				while(list($key,$value) = each($param['controls']))
+				while (list($key, $value) = each($param['controls']))
 				{
-					$this->set_controls('app',$key,$value);
+					$this->set_controls('app', $key, $value);
 				}
 				$this->set_controls('base');
 			}
 		}
 
-		function draw($extra_data='')
+		function draw( $extra_data = '' )
 		{
-			if(is_array($this->data) && !empty($this->data))
+			if (is_array($this->data) && !empty($this->data))
 			{
 				for ($x = 0; $x < count($this->data); $x++)
 				{
 					$var[] = array
 					(
-						'this'					=> $this->appsection==$x?true:false,
+						'this' => $this->appsection == $x ? true : false,
 						'text'					=> $this->data[$x]['text'],
 						'url'					=> $this->data[$x]['url'],
 						'lang_link_statustext'	=> $this->data[$x]['lang_link_statustext']
@@ -78,20 +79,20 @@
 			$this->draw_box();
 		}
 
-		function xdraw($extra_data='')
+		function xdraw( $extra_data = '' )
 		{
 			if ($extra_data)
 			{
 				$this->start_template();
 			}
 
-			if(is_array($this->data) && !empty($this->data))
+			if (is_array($this->data) && !empty($this->data))
 			{
 				for ($x = 0; $x < count($this->data); $x++)
 				{
 					$var[] = array
 					(
-						'this'					=> $this->appsection==$x?true:false,
+						'this' => $this->appsection == $x ? true : false,
 						'text'					=> $this->data[$x]['text'],
 						'url'					=> $this->data[$x]['link'],
 						'lang_link_statustext'	=> $this->data[$x]['lang_link_statustext']

@@ -4,7 +4,8 @@ var oTable = null;
 $(document).ready(function ()
 {
 
-	$("#control_area_id").change(function () {
+	$("#control_area_id").change(function ()
+	{
 		var control_area_id = $(this).val();
 		var oArgs = {menuaction: 'controller.uicontrol.get_controls_by_control_area'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -17,12 +18,15 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl + "&control_area_id=" + control_area_id,
-			success: function (data) {
-				if (data != null) {
+			success: function (data)
+			{
+				if (data != null)
+				{
 					htmlString = "<option>Velg kontroll</option>"
 					var obj = jQuery.parseJSON(data);
 
-					$.each(obj, function (i) {
+					$.each(obj, function (i)
+					{
 
 						var selected = '';
 						/*
@@ -49,7 +53,8 @@ $(document).ready(function ()
 
 
 
-	$("#entity_id").change(function () {
+	$("#entity_id").change(function ()
+	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_component.get_category_by_entity', entity_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -59,8 +64,10 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
-				if (data != null) {
+			success: function (data)
+			{
+				if (data != null)
+				{
 					htmlString = "<option value=''>Velg</option>"
 					var obj = data;
 
@@ -90,7 +97,8 @@ $(document).ready(function ()
 	});
 
 
-	$("#location_type").change(function () {
+	$("#location_type").change(function ()
+	{
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -100,7 +108,8 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
@@ -125,7 +134,8 @@ $(document).ready(function ()
 		});
 	});
 
-	$("#location_type_category").change(function () {
+	$("#location_type_category").change(function ()
+	{
 		var level = $("#location_type").val();
 		update_loc(level);
 	});
@@ -135,7 +145,8 @@ $(document).ready(function ()
 	var location_type = 1;
 
 	//update part of town category based on district
-	$("#district_id").change(function () {
+	$("#district_id").change(function ()
+	{
 		var district_id = $(this).val();
 		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_district_part_of_town'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -146,7 +157,8 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl + "&district_id=" + district_id,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = jQuery.parseJSON(data);
@@ -186,7 +198,8 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
@@ -223,7 +236,8 @@ $(document).ready(function ()
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
 				{
 					var obj = data;
@@ -281,7 +295,8 @@ $(document).ready(function ()
 	});
 
 
-	$("#acl_form").on("submit", function (e) {
+	$("#acl_form").on("submit", function (e)
+	{
 		e.preventDefault();
 		var control_id = $("#control_id_hidden").val();
 
@@ -297,7 +312,8 @@ $(document).ready(function ()
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			success: function (data) {
+			success: function (data)
+			{
 				if (data)
 				{
 					if (data.sessionExpired)
@@ -320,7 +336,8 @@ $(document).ready(function ()
 					}
 
 					// Changes text on save button back to original
-					window.setTimeout(function () {
+					window.setTimeout(function ()
+					{
 						$(submitBnt).val('Lagre');
 						$(submitBnt).addClass("not_active");
 					}, 1000);
@@ -373,7 +390,8 @@ function update_loc(level)
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				var obj = data;
@@ -419,7 +437,8 @@ function get_table_def()
 		type: 'POST',
 		dataType: 'json',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				myColumnDefs = data;

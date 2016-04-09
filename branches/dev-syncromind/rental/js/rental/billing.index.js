@@ -15,20 +15,23 @@ function onCommit(requestUrl)
 {
 	$('.dataTables_processing').show();
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		document.getElementById('message').innerHTML = '';
 
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById('message').innerHTML = v.msg;
 			});
 		}
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById('message').innerHTML = v.msg;
 			});
 		}
@@ -44,20 +47,23 @@ function onDelete(requestUrl)
 {
 	$('.dataTables_processing').show();
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		document.getElementById('message').innerHTML = '';
 
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById('message').innerHTML = v.msg;
 			});
 		}
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById('message').innerHTML = v.msg;
 			});
 		}

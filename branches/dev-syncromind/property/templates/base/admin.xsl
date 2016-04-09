@@ -1076,7 +1076,7 @@
 		<xsl:value-of select="cat_id"/>
 	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 			<option value="{$cat_id}" selected="selected">
 				<xsl:value-of disable-output-escaping="yes" select="name"/>
 			</option>
@@ -1092,7 +1092,7 @@
 <!-- New template-->
 <xsl:template match="tts_category">
 	<xsl:choose>
-		<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 			<option value="{cat_id}" selected="selected">
 				<xsl:value-of disable-output-escaping="yes" select="name"/>
 			</option>

@@ -43,11 +43,11 @@
 		var $grants;
 		var $app;
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.sojasper');
 			$this->grants = & $this->so->grants;
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -73,9 +73,9 @@
 			$this->app = isset($_REQUEST['app']) ? $app : $this->app;
 		}
 
-		public function save_sessiondata($data)
+		public function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'jasper', $data);
 			}
@@ -96,7 +96,7 @@
 			$this->app = isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
-		public function read($data = array())
+		public function read( $data = array() )
 		{
 			/* $jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 			  'app' => $this->app,'allrows' => $this->allrows)); */
@@ -105,13 +105,13 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			foreach($jasper as &$entry)
+			foreach ($jasper as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
 				$location_info = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				$entry['location'] = $location_info['descr'];
-				if($entry['formats'])
+				if ($entry['formats'])
 				{
 					$entry['formats'] = implode(',', $entry['formats']);
 				}
@@ -120,7 +120,7 @@
 					$entry['formats'] = '';
 				}
 
-				if($files = $vfs->ls(array(
+				if ($files = $vfs->ls(array(
 					'string' => "/property/jasper/{$entry['id']}",
 					'relatives' => array(RELATIVE_NONE))))
 				{
@@ -134,12 +134,12 @@
 			return $jasper;
 		}
 
-		public function read_single($id)
+		public function read_single( $id )
 		{
 			$jasper = $this->so->read_single($id);
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
-			if($files = $vfs->ls(array(
+			if ($files = $vfs->ls(array(
 				'string' => "/property/jasper/{$jasper['id']}",
 				'relatives' => array(RELATIVE_NONE))))
 			{
@@ -149,9 +149,9 @@
 			return $jasper;
 		}
 
-		public function save($jasper)
+		public function save( $jasper )
 		{
-			if(isset($jasper['access']) && $jasper['access'])
+			if (isset($jasper['access']) && $jasper['access'])
 			{
 				$jasper['access'] = 'private';
 			}
@@ -160,7 +160,7 @@
 				$jasper['access'] = 'public';
 			}
 
-			if(isset($jasper['id']) && (int)$jasper['id'])
+			if (isset($jasper['id']) && (int)$jasper['id'])
 			{
 				$receipt = $this->so->edit($jasper);
 			}
@@ -172,42 +172,42 @@
 			return $receipt;
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
 			$this->so->delete($id);
 		}
 
-		public function get_input_type_list($selected = 0)
+		public function get_input_type_list( $selected = 0 )
 		{
 			$input_types = $this->so->get_input_type_list();
-			foreach($input_types as &$entry)
+			foreach ($input_types as &$entry)
 			{
 				$entry['selected'] = $entry['id'] == $selected;
 			}
 			return $input_types;
 		}
 
-		public function get_format_type_list($selected = array())
+		public function get_format_type_list( $selected = array() )
 		{
 			$format_types = $this->so->get_format_type_list();
-			foreach($format_types as &$entry)
+			foreach ($format_types as &$entry)
 			{
 				$entry['selected'] = in_array($entry['id'], $selected);
 			}
 			return $format_types;
 		}
 
-		public function get_apps($selected = '')
+		public function get_apps( $selected = '' )
 		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
 			$apps = array();
-			foreach($GLOBALS['phpgw_info']['apps'] as $app => $app_info)
+			foreach ($GLOBALS['phpgw_info']['apps'] as $app => $app_info)
 			{
-				if($app_info['enabled'] == 1 && $app_info['status'] == 1)
+				if ($app_info['enabled'] == 1 && $app_info['status'] == 1)
 				{
 					$apps[] = array
 						(

@@ -57,10 +57,10 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function get_metainfo($id)
+		function get_metainfo( $id )
 		{
 			$this->db->limit_query("SELECT name, shortname, district, city, description FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -71,20 +71,20 @@
 				'description'	 => $this->db->f('description', false));
 		}
 
-		function get_orgid($orgnr)
+		function get_orgid( $orgnr )
 		{
 			$this->db->limit_query("SELECT id FROM bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
 			return $this->db->f('id', false);
 		}
 
-		function get_groups($organization_id)
+		function get_groups( $organization_id )
 		{
 			static $groups = null;
-			if($groups === null)
+			if ($groups === null)
 			{
 				$groups = new booking_sogroup();
 			}
@@ -92,14 +92,14 @@
 			return $results;
 		}
 
-		function get_resource_activity($resources)
+		function get_resource_activity( $resources )
 		{
 //            print_r($resources);
 			$resource_ids	 = implode(',', $resources);
 			$results		 = array();
 			$sql			 = "SELECT activity_id FROM bb_resource where id in (" . $resource_ids . ")";
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$results[] = $this->db->f('activity_id', false);
 			}
@@ -117,7 +117,7 @@
 
 		  @return array (in socommon->read format)
 		 * */
-		function find_building_users($building_id, $params = array(), $split = false, $activities = array())
+		function find_building_users( $building_id, $params = array(), $split = false, $activities = array() )
 		{
 			$config	 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -128,23 +128,23 @@
 			$meeting	 = $config->config_data['split_pool3_ids'];
 			$excluded	 = $config->config_data['split_pool4_ids'];
 
-			if($split)
+			if ($split)
 			{
-				if(count($activities) > 1)
+				if (count($activities) > 1)
 				{
-					if(array_intersect($activities, explode(',', $pools)) && array_intersect($activities, explode(',', $halls)))
+					if (array_intersect($activities, explode(',', $pools)) && array_intersect($activities, explode(',', $halls)))
 					{
 						$test = " AND r.activity_id not in (" . $excluded . ") ";
 					}
-					elseif(array_intersect($activities, explode(',', $pools)))
+					elseif (array_intersect($activities, explode(',', $pools)))
 					{
 						$test = " AND r.activity_id not in (" . $pools . "," . $excluded . ") ";
 					}
-					elseif(array_intersect($activities, explode(',', $halls)))
+					elseif (array_intersect($activities, explode(',', $halls)))
 					{
 						$test = " AND r.activity_id not in (" . $halls . "," . $excluded . ") ";
 					}
-					elseif(array_intersect($activities, explode(',', $excluded)))
+					elseif (array_intersect($activities, explode(',', $excluded)))
 					{
 						$test = " AND r.activity_id not in (" . $halls . "," . $pools . "," . $meeting . "," . $excluded . ") ";
 					}
@@ -156,15 +156,15 @@
 				else
 				{
 					$activity = $activities[0];
-					if(in_array($activity, explode(',', $pools)))
+					if (in_array($activity, explode(',', $pools)))
 					{
 						$test = " AND r.activity_id not in (" . $halls . "," . $meeting . "," . $excluded . ") ";
 					}
-					elseif(in_array($activity, explode(',', $halls)))
+					elseif (in_array($activity, explode(',', $halls)))
 					{
 						$test = " AND r.activity_id not in (" . $pools . "," . $excluded . ") ";
 					}
-					elseif(in_array($activity, explode(',', $excluded)))
+					elseif (in_array($activity, explode(',', $excluded)))
 					{
 						$test = " AND r.activity_id not in (" . $halls . "," . $pools . "," . $meeting . "," . $excluded . ") ";
 					}
@@ -174,15 +174,19 @@
 					}
 				}
 			}
-			if(!isset($params['filters']))
-			{ $params['filters'] = array();}
-			if(!isset($params['filters']['where']))
-			{ $params['filters']['where'] = array();}
-			if($config->config_data['mail_users_season'] == 'yes')
+			if (!isset($params['filters']))
+			{
+				$params['filters'] = array();
+			}
+			if (!isset($params['filters']['where']))
+			{
+				$params['filters']['where'] = array();
+			}
+			if ($config->config_data['mail_users_season'] == 'yes')
 			{
 				$params['filters']['where'][] = '%%table%%.id IN (' .
 				'SELECT DISTINCT o.id FROM bb_resource r ' .
-				'JOIN bb_allocation_resource ar ON ar.resource_id = r.id '.
+					'JOIN bb_allocation_resource ar ON ar.resource_id = r.id ' .
 				'JOIN bb_allocation a ON a.id = ar.allocation_id ' .
 				'JOIN bb_building_resource br ON r.id = br.resource_id AND br.building_id = ' . $this->_marshal($building_id, 'int') . ' ' .
 				'JOIN bb_organization o ON o.id = a.organization_id ' .

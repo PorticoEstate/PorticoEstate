@@ -31,13 +31,13 @@
 			$this->bocommon = CreateObject('property.bocommon');
 		}
 
-		function execute($data = array())
+		function execute( $data = array() )
 		{
 			$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
 			$this->check_for_new_mail($data);
 		}
 
-		function check_for_new_mail($data)
+		function check_for_new_mail( $data )
 		{
 			$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
 			$GLOBALS['phpgw']->preferences->set_account_id($data['data_id'], true);
@@ -61,16 +61,16 @@
 
 			$sms = array();
 			$j = 0;
-			if(isset($headers['header']) && is_array($headers['header']))
+			if (isset($headers['header']) && is_array($headers['header']))
 			{
-				foreach($headers['header'] as $header)
+				foreach ($headers['header'] as $header)
 				{
 					//			if(!$header['seen'])
 					{
 						$sms[$j]['message'] = utf8_encode($header['subject']);
 						$bodyParts = $bofelamimail->getMessageBody($header['uid']);
 						$sms[$j]['message'] .= "\n";
-						for($i = 0; $i < count($bodyParts); $i++)
+						for ($i = 0; $i < count($bodyParts); $i++)
 						{
 							$sms[$j]['message'] .= utf8_encode($bodyParts[$i]['body']) . "\n";
 						}
@@ -82,18 +82,18 @@
 				}
 			}
 
-			if($connectionStatus)
+			if ($connectionStatus)
 			{
 				$bofelamimail->closeConnection();
 			}
 
 			$bosms = CreateObject('sms.bosms', false);
-			foreach($sms as $entry)
+			foreach ($sms as $entry)
 			{
 				$bosms->send_sms(array('p_num_text' => $data['cellphone'], 'message' => $entry['message']));
 			}
 
-			if($j)
+			if ($j)
 			{
 				$msg = $j . ' meldinger er sendt';
 				$this->receipt['message'][] = array('msg' => $msg);

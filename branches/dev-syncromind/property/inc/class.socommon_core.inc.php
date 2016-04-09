@@ -84,9 +84,9 @@
 		 *
 		 * @return mixed the value of the variable sought - null if not found
 		 */
-		public function __get($varname)
+		public function __get( $varname )
 		{
-			switch($varname)
+			switch ($varname)
 			{
 				case 'total_records':
 					return $this->_total_records;
@@ -99,13 +99,13 @@
 			}
 		}
 
-		protected function _edit($id, $value_set, $table)
+		protected function _edit( $id, $value_set, $table )
 		{
 			$id = (int)$id;
 
 			$value_set = $this->_db->validate_update($value_set);
 
-			if($this->_db->get_transaction())
+			if ($this->_db->get_transaction())
 			{
 				$this->_global_lock = true;
 			}
@@ -122,15 +122,15 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->Exception_On_Error = false;
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
 			}
 
-			if(!$this->_global_lock)
+			if (!$this->_global_lock)
 			{
 				$this->_db->transaction_commit();
 			}
@@ -145,15 +145,15 @@
 		 *
 		 * @return array $value_set to either insert or edit
 		 */
-		protected function _get_value_set($data)
+		protected function _get_value_set( $data )
 		{
 			$value_set = array();
 
-			if(isset($data['location']) && is_array($data['location']))
+			if (isset($data['location']) && is_array($data['location']))
 			{
-				foreach($data['location'] as $input_name => $value)
+				foreach ($data['location'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
+					if (isset($value) && $value)
 					{
 						$value_set[$input_name] = $value;
 					}
@@ -161,31 +161,31 @@
 				$value_set['location_code'] = implode('-', $data['location']);
 			}
 
-			if(isset($data['extra']) && is_array($data['extra']))
+			if (isset($data['extra']) && is_array($data['extra']))
 			{
-				foreach($data['extra'] as $input_name => $value)
+				foreach ($data['extra'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
+					if (isset($value) && $value)
 					{
 						$value_set[$input_name] = $value;
 					}
 				}
 
-				if($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
+				if ($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
 				{
 					$entity = CreateObject('property.soadmin_entity');
 					$entity_category = $entity->read_single_category($data['extra']['p_entity_id'], $data['extra']['p_cat_id']);
 				}
 			}
 
-			if(isset($data['attributes']) && is_array($data['attributes']))
+			if (isset($data['attributes']) && is_array($data['attributes']))
 			{
 				$data_attribute = $this->custom->prepare_for_db($table, $data['attributes']);
-				if(isset($data_attribute['value_set']))
+				if (isset($data_attribute['value_set']))
 				{
-					foreach($data_attribute['value_set'] as $input_name => $value)
+					foreach ($data_attribute['value_set'] as $input_name => $value)
 					{
-						if(isset($value) && $value)
+						if (isset($value) && $value)
 						{
 							$value_set[$input_name] = $value;
 						}
@@ -194,28 +194,28 @@
 			}
 
 			$_address = array();
-			if(isset($data['street_name']) && $data['street_name'])
+			if (isset($data['street_name']) && $data['street_name'])
 			{
 				$_address[] = "{$data['street_name']} {$data['street_number']}";
 			}
 
-			if(isset($data['location_name']) && $data['location_name'])
+			if (isset($data['location_name']) && $data['location_name'])
 			{
 				$_address[] = ucfirst(strtolower($data['location_name']));
 			}
 
-			if(isset($data['additional_info']) && $data['additional_info'])
+			if (isset($data['additional_info']) && $data['additional_info'])
 			{
-				foreach($data['additional_info'] as $key => $value)
+				foreach ($data['additional_info'] as $key => $value)
 				{
-					if($value)
+					if ($value)
 					{
 						$_address[] = "{$key}|{$value}";
 					}
 				}
 			}
 
-			if(isset($entity_category) && $entity_category)
+			if (isset($entity_category) && $entity_category)
 			{
 				$_address[] = "{$entity_category['name']}::{$data['extra']['p_num']}";
 			}
@@ -227,16 +227,16 @@
 			return $value_set;
 		}
 
-		protected function _get_interlink_data($id, $data, $location2)
+		protected function _get_interlink_data( $id, $data, $location2 )
 		{
-			if(!$id || !$location2)
+			if (!$id || !$location2)
 			{
 				throw new Exception('property_socommon_core::_get_interlink_data() - missing input');
 			}
 
 			$interlink_data = array();
 
-			if(isset($data['origin']) && $data['origin'] && isset($data['origin_id']) && $data['origin_id'])
+			if (isset($data['origin']) && $data['origin'] && isset($data['origin_id']) && $data['origin_id'])
 			{
 				$interlink_data = array
 					(
@@ -247,7 +247,7 @@
 					'account_id' => $this->account
 				);
 			}
-			else if(isset($data['extra']) && is_array($data['extra']) && isset($data['extra']['p_num']) && $data['extra']['p_num'])
+			else if (isset($data['extra']) && is_array($data['extra']) && isset($data['extra']['p_num']) && $data['extra']['p_num'])
 			{
 				$data['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$data['extra']['p_entity_id']}.{$data['extra']['p_cat_id']}");
 

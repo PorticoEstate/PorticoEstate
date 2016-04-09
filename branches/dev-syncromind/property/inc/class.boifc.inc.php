@@ -56,14 +56,14 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			//		$this->so 			= CreateObject('property.soifc');
 			$this->bocommon = createObject('property.bocommon');
 			$this->custom = createObject('property.custom_fields');
 			$this->acl_location = '.ifc';
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -77,7 +77,7 @@
 			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -86,32 +86,32 @@
 				$this->start = 0;
 			}
 
-			if(array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
+			if (array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
 			{
 				$this->query = $query;
 			}
-			if(array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
+			if (array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
 			{
 				$this->filter = $filter;
 			}
-			if(array_key_exists('sort', $_POST) || array_key_exists('sort', $_GET))
+			if (array_key_exists('sort', $_POST) || array_key_exists('sort', $_GET))
 			{
 				$this->sort = $sort;
 			}
-			if(array_key_exists('order', $_POST) || array_key_exists('order', $_GET))
+			if (array_key_exists('order', $_POST) || array_key_exists('order', $_GET))
 			{
 				$this->order = $order;
 			}
-			if(array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
+			if (array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if($allrows)
+			if ($allrows)
 			{
 				$this->allrows = $allrows;
 			}
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mssql':
 					$this->dateformat = "M d Y";
@@ -132,9 +132,9 @@
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'ifc_app', $data);
 			}
@@ -152,12 +152,12 @@
 			$this->cat_id = (isset($data['cat_id']) ? $data['cat_id'] : '');
 		}
 
-		function check_perms($rights, $required)
+		function check_perms( $rights, $required )
 		{
 			return ($rights & $required);
 		}
 
-		function import($values = '', $ifcfile = '')
+		function import( $values = '', $ifcfile = '' )
 		{
 			_debug_array($ifcfile);
 
@@ -207,11 +207,11 @@
 			return $ifc_info;
 		}
 
-		function read_single($id = '')
+		function read_single( $id = '' )
 		{
 			$values['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->so->read_single($id, $values);
 			}
@@ -219,7 +219,7 @@
 			$values = $this->custom->prepare($values, $appname = 'property', $location = $this->acl_location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($values['entry_date']) && $values['entry_date'])
+			if (isset($values['entry_date']) && $values['entry_date'])
 			{
 				$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['entry_date'], $dateformat);
 			}
@@ -227,28 +227,28 @@
 			return $values;
 		}
 
-		function save($values, $values_attribute = '')
+		function save( $values, $values_attribute = '' )
 		{
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
-				for($i = 0; $i < count($values_attribute); $i++)
+				for ($i = 0; $i < count($values_attribute); $i++)
 				{
-					if($values_attribute[$i]['datatype'] == 'CH' && $values_attribute[$i]['value'])
+					if ($values_attribute[$i]['datatype'] == 'CH' && $values_attribute[$i]['value'])
 					{
 						//					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
 						$values_attribute[$i]['value'] = ',' . implode(',', $values_attribute[$i]['value']) . ',';
 					}
-					if($values_attribute[$i]['datatype'] == 'R' && $values_attribute[$i]['value'])
+					if ($values_attribute[$i]['datatype'] == 'R' && $values_attribute[$i]['value'])
 					{
 						$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
 					}
 
-					if($values_attribute[$i]['datatype'] == 'N' && $values_attribute[$i]['value'])
+					if ($values_attribute[$i]['datatype'] == 'N' && $values_attribute[$i]['value'])
 					{
 						$values_attribute[$i]['value'] = str_replace(",", ".", $values_attribute[$i]['value']);
 					}
 
-					if($values_attribute[$i]['datatype'] == 'D' && $values_attribute[$i]['value'])
+					if ($values_attribute[$i]['datatype'] == 'D' && $values_attribute[$i]['value'])
 					{
 						$values_attribute[$i]['value'] = date($this->dateformat, $this->date_to_timestamp($values_attribute[$i]['value']));
 					}
@@ -256,7 +256,7 @@
 			}
 
 
-			if(isset($values['ifc_id']) && $values['ifc_id'])
+			if (isset($values['ifc_id']) && $values['ifc_id'])
 			{
 				$receipt = $this->so->edit($values, $values_attribute);
 			}
@@ -274,16 +274,16 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach($custom_functions as $entry)
+			foreach ($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if(preg_match('/\.\./', $entry['file_name']))
+				if (preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if($entry['active'] && is_file($file))
+				if ($entry['active'] && is_file($file))
 				{
 					require_once $file;
 				}
@@ -292,14 +292,14 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$this->so->delete($id);
 		}
 
-		function select_category_list($format = '', $selected = '')
+		function select_category_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
@@ -311,9 +311,9 @@
 
 			$categories = $this->so->select_category_list();
 
-			while(is_array($categories) && list(, $category) = each($categories))
+			while (is_array($categories) && list(, $category) = each($categories))
 			{
-				if($category['id'] == $selected)
+				if ($category['id'] == $selected)
 				{
 					$category_list[] = array
 						(
@@ -341,14 +341,14 @@
 		 * @param array $values value set with
 		 * @return array Array with attribute definition and values
 		 */
-		function preserve_attribute_values($values = '', $values_attribute = '')
+		function preserve_attribute_values( $values = '', $values_attribute = '' )
 		{
 			return $this->bocommon->preserve_attribute_values($values, $values_attribute);
 		}
 
-		function date_to_timestamp($date)
+		function date_to_timestamp( $date )
 		{
-			if($date)
+			if ($date)
 			{
 				$date_array = phpgwapi_datetime::date_array($date);
 				$date = mktime(8, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);

@@ -9,20 +9,20 @@
 		function __construct()
 		{
 			parent::__construct();
-			if($this->acl_location != '.entity.1.11')
+			if ($this->acl_location != '.entity.1.11')
 			{
 				throw new Exception("'lrs_el_anlegg'  is intended for location = '.entity.1.11'");
 			}
 		}
 
-		function check_history($values, $values_attribute, $entity_id, $cat_id, $receipt)
+		function check_history( $values, $values_attribute, $entity_id, $cat_id, $receipt )
 		{
 			$current_time = time() - 2;
 
 			$id = (int)$receipt['id'];
-			foreach($values_attribute as $entry)
+			foreach ($values_attribute as $entry)
 			{
-				if($entry['name'] == 'auto_kontering')
+				if ($entry['name'] == 'auto_kontering')
 				{
 					$attrib_id = $entry['attrib_id'];
 					$current_value = $entry['value'];
@@ -33,14 +33,14 @@
 			$historylog = CreateObject('property.historylog', 'entity_1_11');
 			$history_values = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $id, $attrib_id);
 
-			if(!$history_values)
+			if (!$history_values)
 			{
 				return;
 			}
 
-			if(($history_values[0]['datetime'] > $current_time))
+			if (($history_values[0]['datetime'] > $current_time))
 			{
-				if((int)$history_values[0]['old_value'] != (int)$current_value)
+				if ((int)$history_values[0]['old_value'] != (int)$current_value)
 				{
 					//FIXME
 
@@ -62,7 +62,7 @@
 			}
 		}
 
-		protected function get_xmldata($id = 0, $current_value)
+		protected function get_xmldata( $id = 0, $current_value )
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 
@@ -74,7 +74,7 @@
 
 			$TreeID = $this->type;
 			$PeriodFrom = date('Ym');
-			if($current_value)
+			if ($current_value)
 			{
 				$PeriodTo = 209912;
 			}
@@ -91,7 +91,7 @@
 			xmlwriter_write_attribute($memory, 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 			xmlwriter_write_attribute($memory, 'xsi:noNamespaceSchemaLocation', 'TreeListe.xsd');
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				xmlwriter_start_element($memory, 'Tree');
 				xmlwriter_write_element($memory, 'ID', 'TJ');
@@ -151,7 +151,7 @@
 			xmlwriter_end_element($memory);
 			$xml = xmlwriter_output_memory($memory, true);
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				header('Content-type: text/xml');
 				echo $xml;

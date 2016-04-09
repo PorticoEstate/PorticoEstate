@@ -26,13 +26,12 @@
 	* @subpackage logistic
  	* @version $Id $
 	*/
-
   include_class('logistic', 'model', '/inc/model/');
 
   class logistic_project extends logistic_model
 	{
-	  public static $so;
 
+		public static $so;
 		protected $id;
 		protected $name;
 		protected $project_type_id;
@@ -40,7 +39,6 @@
 		protected $description;
 		protected $start_date;
 		protected $end_date;
-		
 		protected $error_msg_array = array();
 
 		/**
@@ -49,12 +47,12 @@
 		*
 		* @param int $id the id of this project
 		*/
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -64,7 +62,7 @@
 			return $this->id;
 		}
 
-		public function set_name($name)
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
@@ -74,7 +72,7 @@
 			return $this->name;
 		}
 
-		public function set_project_type_id($project_type_id)
+		public function set_project_type_id( $project_type_id )
 		{
 			$this->project_type_id = $project_type_id;
 		}
@@ -84,7 +82,7 @@
 			return $this->project_type_id;
 		}
 
-		public function set_project_type_label($project_type_label)
+		public function set_project_type_label( $project_type_label )
 		{
 			$this->project_type_label = $project_type_label;
 		}
@@ -94,7 +92,7 @@
 			return $this->project_type_label;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -104,7 +102,7 @@
 			return $this->description;
 		}
 		
-		public function set_start_date($start_date)
+		public function set_start_date( $start_date )
 		{
 			$this->start_date = $start_date;
 		}
@@ -114,7 +112,7 @@
 			return $this->start_date;
 		}
 
-		public function set_end_date($end_date)
+		public function set_end_date( $end_date )
 		{
 			$this->end_date = $end_date;
 		}
@@ -124,7 +122,10 @@
 			return $this->end_date;
 		}
 		
-		public function get_error_msg_array() { return $this->error_msg_array; }
+		public function get_error_msg_array()
+		{
+			return $this->error_msg_array;
+		}
 		
 		public function set_error_msg_array( $error_msg_array )
 		{
@@ -138,7 +139,8 @@
 		*/
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('logistic.soproject');
 			}
 
@@ -155,27 +157,27 @@
 				'project_type_id' => $this->get_project_type_id(),
 				'project_type_label' => $this->get_project_type_label(),
 				'description' => $this->get_description(),
-				'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
-				'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
+				'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()) : '',
+				'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()) : '',
 			);
 		}
 				
 		public function populate()
 		{
-			$this->set_id( phpgw::get_var('id') );
-			$this->set_name( phpgw::get_var('name') );
-			$this->set_project_type_id( phpgw::get_var('project_type_id') );
-			$this->set_description( phpgw::get_var('description') );
+			$this->set_id(phpgw::get_var('id'));
+			$this->set_name(phpgw::get_var('name'));
+			$this->set_project_type_id(phpgw::get_var('project_type_id'));
+			$this->set_description(phpgw::get_var('description'));
 			
-			if(phpgw::get_var('start_date','string') != '')
+			if (phpgw::get_var('start_date', 'string') != '')
 			{
-				$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+				$start_date_ts = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('start_date', 'string'));
 				$this->set_start_date($start_date_ts);
 			}
 										
-			if( phpgw::get_var('end_date','string') != '')
+			if (phpgw::get_var('end_date', 'string') != '')
 			{
-				$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+				$end_date_ts = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('end_date', 'string'));
 				$this->set_end_date($end_date_ts);
 			}
 		}
@@ -185,35 +187,35 @@
 			$status = true;
 			
 			// Validate NAME
-		  if( empty($this->name) )
+			if (empty($this->name))
 		  {
 		  	$status = false;
 		  	$this->error_msg_array['name'] = "error_msg_1";
 		  }
 		  
 			// Validate DESCRIPTION
-		  if( empty($this->description) )
+			if (empty($this->description))
 		  {
 		  	$status = false;
 		  	$this->error_msg_array['description'] = "error_msg_1";
 		  }
 		  
 			// Validate PROJECT TYPE ID
-		  if( empty($this->project_type_id) )
+			if (empty($this->project_type_id))
 		  {
 		  	$status = false;
 		  	$this->error_msg_array['project_type_id'] = "error_msg_1";
 		  }
 		  
 		   // Validate START DATE
-			if( empty($this->start_date) )
+			if (empty($this->start_date))
 		  {
 		  	$status = false;
 		  	$this->error_msg_array['start_date'] = "error_msg_1";
 		  }
 
 		  // Validate END DATE
-			if( !empty($this->end_date) && ($this->end_date < $this->start_date) )
+			if (!empty($this->end_date) && ($this->end_date < $this->start_date))
 		  {
 		   	$status = false;
 		  	$this->error_msg_array['end_date'] = "error_msg_3";

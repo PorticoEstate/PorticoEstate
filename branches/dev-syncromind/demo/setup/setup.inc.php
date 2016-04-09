@@ -8,9 +8,8 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage setup
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$setup_info['demo']['name']      = 'demo';
 	$setup_info['demo']['version']   = '0.9.17.001';
 	$setup_info['demo']['app_order'] = 20;
@@ -31,8 +30,7 @@
 	);
 
 	$setup_info['demo']['license']  = 'GPL';
-	$setup_info['demo']['description'] =
-	'<div align="left">
+	$setup_info['demo']['description'] = '<div align="left">
 		<b>DEMO</b> Demo application:
 		<ol>
 			<li>XSLT</li>
@@ -45,8 +43,7 @@
 		</ol>
 	</div>';
 
-	$setup_info['demo']['note'] =
-		'Notes for the demo goes here';
+	$setup_info['demo']['note'] = 'Notes for the demo goes here';
 
 	$setup_info['demo']['tables'] = array(
 		'phpgw_demo_table'

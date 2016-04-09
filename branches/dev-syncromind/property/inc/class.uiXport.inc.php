@@ -77,7 +77,7 @@
 
 		function import()
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -114,66 +114,66 @@
 
 			$tsvfile = $_FILES['tsvfile']['tmp_name'];
 
-			if(!$tsvfile)
+			if (!$tsvfile)
 			{
 				$tsvfile = phpgw::get_var('tsvfile');
 			}
 
-			if($cancel && $tsvfile)
+			if ($cancel && $tsvfile)
 			{
 				unlink($tsvfile);
 			}
 
-			if($convert)
+			if ($convert)
 			{
 				unset($receipt);
 
-				if($conv_type == '')
+				if ($conv_type == '')
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select a import format !'));
 				}
 
-				if(!$tsvfile)
+				if (!$tsvfile)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select a file to import from !'));
 				}
 
-				if(!$art)
+				if (!$art)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select type invoice!'));
 				}
-				if(!$vendor_id)
+				if (!$vendor_id)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select Vendor!'));
 				}
 
-				if(!$type)
+				if (!$type)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select type order!'));
 				}
 
-				if(!$budget_responsible)
+				if (!$budget_responsible)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select budget responsible!'));
 				}
 
-				if(!$this->invoice->check_vendor($vendor_id))
+				if (!$this->invoice->check_vendor($vendor_id))
 				{
 					$receipt['error'][] = array('msg' => lang('That Vendor ID is not valid !') . ' : ' . $vendor_id);
 				}
 
-				if(!$payment_date && !$num_days)
+				if (!$payment_date && !$num_days)
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select either payment date or number of days from invoice date !'));
 				}
 
-				if(!file_exists($tsvfile))
+				if (!file_exists($tsvfile))
 				{
 					$receipt['error'][] = array('msg' => lang('The file is empty or removed!'));
 				}
-				if(!is_array($receipt['error']))
+				if (!is_array($receipt['error']))
 				{
-					if($invoice_date)
+					if ($invoice_date)
 					{
 						$sdateparts = phpgwapi_datetime::date_array($invoice_date);
 						$sday = $sdateparts['day'];
@@ -221,7 +221,7 @@
 
 					$buffer = $this->bo->import($invoice_common, $download);
 
-					if(!$download)
+					if (!$download)
 					{
 						$receipt = $buffer;
 						$GLOBALS['phpgw']->session->appsession('session_data', 'import_receipt', $receipt);
@@ -362,7 +362,7 @@
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function debug_import($buffer = '', $invoice_common = '')
+		function debug_import( $buffer = '', $invoice_common = '' )
 		{
 			$table = $buffer['table'];
 			$header = $buffer['header'];
@@ -371,20 +371,20 @@
 			$sum = 0;
 
 			$i = 0;
-			foreach($table as $dummy => $record)
+			foreach ($table as $dummy => $record)
 			{
 				$k = 0;
-				foreach($import as $text => $key)
+				foreach ($import as $text => $key)
 				{
 					$content[$i]['row'][$k]['value'] = $record[$key];
 					$content[$i]['row'][$k]['align'] = 'center';
-					if($key == 'belop')
+					if ($key == 'belop')
 					{
 						$content[$i]['row'][$k]['align'] = 'right';
 						$sum = $sum + $record[$key];
 						$content[$i]['row'][$k]['value'] = number_format($record[$key], 2, ',', '');
 					}
-					else if($key == 'stedsnavn')
+					else if ($key == 'stedsnavn')
 					{
 						$content[$i]['row'][$k]['align'] = 'left';
 					}
@@ -394,7 +394,7 @@
 				$i++;
 			}
 
-			foreach($import as $text => $key)
+			foreach ($import as $text => $key)
 			{
 				$table_header[] = array
 					(
@@ -433,9 +433,9 @@
 			$vendor = $this->contacts->read_single(array('id' => $invoice_common['vendor_id']), array(
 				'attributes' => array(array('column_name' => 'org_name'))));
 
-			foreach($vendor['attributes'] as $attribute)
+			foreach ($vendor['attributes'] as $attribute)
 			{
-				if($attribute['column_name'] == 'org_name')
+				if ($attribute['column_name'] == 'org_name')
 				{
 					$vendor_name = $attribute['value'];
 					break;
@@ -482,7 +482,7 @@
 
 		function export()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -496,18 +496,18 @@
 			$date = phpgw::get_var('date');
 			$receipt = array();
 
-			if($values['submit'])
+			if ($values['submit'])
 			{
-				if(!$values['conv_type'] && !$values['file'])
+				if (!$values['conv_type'] && !$values['file'])
 				{
 
 					$receipt['error'][] = array('msg' => lang('No conversion type could be located.') . ' - ' . lang('Please choose a conversion type from the list'));
 				}
-				else if($values['conv_type'] && !$values['file'])
+				else if ($values['conv_type'] && !$values['file'])
 				{
 					$receipt = $this->bo->export(array('conv_type' => $values['conv_type'], 'download' => $values['download'],
 						'force_period_year' => $values['force_period_year']));
-					if(!$values['download'])
+					if (!$values['download'])
 					{
 						$GLOBALS['phpgw_info']['flags'][noheader] = true;
 						$GLOBALS['phpgw_info']['flags'][nofooter] = true;
@@ -563,7 +563,7 @@
 
 		function rollback()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -578,19 +578,19 @@
 			$date = phpgw::get_var('date');
 			//_debug_array($values);
 
-			if($values['submit'])
+			if ($values['submit'])
 			{
-				if(!$values['conv_type'])
+				if (!$values['conv_type'])
 				{
 					$receipt['error'][] = array('msg' => lang('No conversion type could be located.') . ' - ' . lang('Please choose a conversion type from the list'));
 				}
 
-				if(!$values['file'] && !$values['voucher_id'] && !$values['voucher_id_intern'])
+				if (!$values['file'] && !$values['voucher_id'] && !$values['voucher_id_intern'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please choose a file or a voucher'));
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->rollback($values['conv_type'], $values['file'], $date, $values['voucher_id'], $values['voucher_id_intern']);
 				}

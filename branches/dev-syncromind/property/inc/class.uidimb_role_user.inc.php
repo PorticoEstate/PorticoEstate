@@ -68,59 +68,17 @@
 			$this->config->read();
 		}
 
-		public function add_javascript($app, $pkg, $name)
-		{
-			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
-		}
-
-		/**
-		 * A more flexible version of xslttemplate.add_file
-		 */
-		public function add_template_file($tmpl)
-		{
-			if(is_array($tmpl))
-			{
-				foreach($tmpl as $t)
-				{
-					$this->add_template_file($t);
-				}
-				return;
-			}
-			foreach(array_reverse($this->tmpl_search_path) as $path)
-			{
-				$filename = $path . '/' . $tmpl . '.xsl';
-				if(file_exists($filename))
-				{
-					$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
-					return;
-				}
-			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
-		}
-
-		public function link($data)
-		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
-		}
-
-		public function redirect($link_data)
-		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
-		}
-
 		function index()
 		{
 			$receipt = array();
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			$msgbox_data = array();
-			if(phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
@@ -259,22 +217,25 @@
 			$values = $this->bo->read(array('user_id' => $user_id, 'dimb_id' => $dimb_id,
 				'role_id' => $role_id, 'query_start' => $query_start, 'query_end' => $query_end));
 
-			foreach($values as &$entry)
+			foreach ($values as &$entry)
 			{
-				if($entry['active_from'])
+				if ($entry['active_from'])
 				{
 					$default_user_checked = $entry['default_user'] == 1 ? 'checked = "checked"' : '';
-					$entry['default_user'] = "<input id=\"default_user\" type =\"checkbox\" $default_user_checked name=\"values[default_user][]\" value=\"{$entry['id']}\">";
-					$entry['delete'] = "<input id=\"delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$entry['id']}\">";
-					$entry['alter_date'] = "<input id=\"alter_date\" type =\"checkbox\" name=\"values[alter_date][]\" value=\"{$entry['id']}\">";
+					$default_user_orig = $entry['default_user'] == 1 ? $entry['id'] : '';
+					$entry['default_user'] = "<input  type =\"hidden\"  name=\"values[default_user_orig][]\" value=\"{$default_user_orig}\">";
+					$entry['default_user'] .= "<input class=\"default_user\" id=\"default_user\" type =\"checkbox\" $default_user_checked name=\"values[default_user][]\" value=\"{$entry['id']}\">";
+					$entry['delete'] = "<input class=\"delete\" id=\"delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$entry['id']}\">";
+					$entry['alter_date'] = "<input class=\"alter_date\" id=\"alter_date\" type =\"checkbox\" name=\"values[alter_date][]\" value=\"{$entry['id']}\">";
 					$entry['add'] = '';
 				}
 				else
 				{
+					$entry['default_user_orig'] = '';
 					$entry['default_user'] = '';
 					$entry['delete'] = '';
 					$entry['alter_date'] = '';
-					$entry['add'] = "<input id=\"add\" type =\"checkbox\" name=\"values[add][]\" value=\"{$entry['ecodimb']}_{$entry['role_id']}_{$entry['user_id']}\">";
+					$entry['add'] = "<input class=\"add\" id=\"add\" type =\"checkbox\" name=\"values[add][]\" value=\"{$entry['ecodimb']}_{$entry['role_id']}_{$entry['user_id']}\">";
 				}
 				$results['results'][] = $entry;
 			}
@@ -299,16 +260,16 @@
 			$role_id = phpgw::get_var('role_id', 'int');
 			$query = phpgw::get_var('query');
 
-			if($values = phpgw::get_var('values'))
+			if ($values = phpgw::get_var('values'))
 			{
-				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
+				if (!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
 				{
 					$receipt['error'][] = true;
 					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
 				}
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
-					if($this->bo->edit($values))
+					if ($this->bo->edit($values))
 					{
 						$result = array
 							(
@@ -325,9 +286,9 @@
 				}
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				if ($receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;

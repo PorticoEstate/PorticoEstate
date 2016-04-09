@@ -78,7 +78,7 @@
 			$this->order = $this->bo->order;
 			$this->allrows = $this->bo->allrows;
 
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -101,7 +101,7 @@
 		function index()
 		{
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -298,8 +298,19 @@
 			$result_count = 0;
 
 			$values = $this->bo->read($params);
+			foreach ($values as &$entry)
+			{
+				$entry['url']	= "{$entry['name']}&data=" . urlencode(urlencode($entry['data']));
+				$data_set = unserialize($entry['data']);
+				$method_data=array();
+				foreach ($data_set as $key => $value)
+				{
+					$method_data[] = "{$key}={$value}";
+				}
+				$entry['data']	= @implode (',',$method_data);
+			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -313,7 +324,7 @@
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -322,7 +333,7 @@
 			$values = phpgw::get_var('values');
 
 
-			if($id)
+			if ($id)
 			{
 				$values['id'] = $id;
 				$action = 'edit';
@@ -337,16 +348,16 @@
 
 			$data = explode(",", $data);
 
-			if(is_array($data))
+			if (is_array($data))
 			{
-				foreach($data as $set)
+				foreach ($data as $set)
 				{
 					$set = explode("=", $set);
 					$data_set[$set[0]] = $set[1];
 				}
 			}
 
-			if($values['data'])
+			if ($values['data'])
 			{
 				$values['data'] = serialize($data_set);
 			}
@@ -358,9 +369,9 @@
 				$id = $receipt['id'];
 				$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 					$this->edit();
@@ -384,11 +395,11 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if($id)
+			if ($id)
 			{
 				$method = $this->bo->read_single($id);
 				$data_set = unserialize($method['data']);
-				while(is_array($data_set) && list($key, $value) = each($data_set))
+				while (is_array($data_set) && list($key, $value) = each($data_set))
 				{
 					$method_data[] = $key . '=' . $value;
 				}
@@ -456,7 +467,7 @@
 			$id = phpgw::get_var('id', 'int');
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($id);
 				return "id " . $id . " " . lang("has been deleted");

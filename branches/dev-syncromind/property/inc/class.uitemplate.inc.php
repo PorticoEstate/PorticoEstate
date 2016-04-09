@@ -109,7 +109,7 @@
 			);
 
 			$values_combo_box[1] = $this->bocommon->get_user_list('filter', $this->filter, $extra = false, $default = false, $start = -1, $sort = 'ASC', $order = 'account_lastname', $query = '', $offset = -1);
-			foreach($values_combo_box[1] as &$valor)
+			foreach ($values_combo_box[1] as &$valor)
 			{
 				$valor['id'] = $valor['user_id'];
 				unset($valor['user_id']);
@@ -129,7 +129,7 @@
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$lookup = phpgw::get_var('lookup', 'bool');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -193,12 +193,12 @@
 			);
 
 			$filters = $this->_get_Filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			if(!empty($lookup))
+			if (!empty($lookup))
 			{
 				$params2 = array(
 					'key' => 'template_id',
@@ -224,8 +224,7 @@
 			else
 			{
 				$data['datatable']['new_item']	= self::link(array(
-						'menuaction' => 'property.uitemplate.edit_template'	));
-
+						'menuaction' => 'property.uitemplate.edit_template'));
 			}
 
 			$parameters = array
@@ -252,7 +251,7 @@
 				)
 			);
 
-			if(!$lookup)
+			if (!$lookup)
 			{
 
 
@@ -351,7 +350,7 @@
 
 			$values = $this->bo->read($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -363,7 +362,7 @@
 			return $this->jquery_results($result_data);
 		}
 
-		public function query_hour($template_id)
+		public function query_hour( $template_id )
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -386,10 +385,10 @@
 //            
 			$i = 0;
 			$grouping_descr_old = '';
-			while(is_array($template_list) && list(, $template) = each($template_list))
+			while (is_array($template_list) && list(, $template) = each($template_list))
 			{
 
-				if($template['grouping_descr'] != $grouping_descr_old)
+				if ($template['grouping_descr'] != $grouping_descr_old)
 				{
 					$new_grouping = true;
 				}
@@ -400,7 +399,7 @@
 
 				$grouping_descr_old = $template['grouping_descr'];
 
-				if($template['activity_num'])
+				if ($template['activity_num'])
 				{
 					$code = $template['activity_num'];
 				}
@@ -430,7 +429,7 @@
 			}
 //            
 //            echo '<pre>'; print_r($content); echo '</pre>';exit('hour');
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $content;
 			}
@@ -449,7 +448,7 @@
 
 			$template_id = phpgw::get_var('template_id', 'int');
 
-			if($delete && $hour_id)
+			if ($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete_hour($hour_id, $template_id);
 				return "hour " . $hour_id . " " . lang("has been deleted");
@@ -460,7 +459,7 @@
 			}
 
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_hour($template_id);
 			}
@@ -551,18 +550,17 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		function edit_template()
+		function edit_template($values = array())
 		{
-			$template_id = phpgw::get_var('template_id', 'int');
-			$values = phpgw::get_var('values');
-			$receipt = array();
+			$template_id = isset($values['template_id']) && $values['template_id'] ? $values['template_id'] : (int)phpgw::get_var('template_id', 'int');
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if($template_id)
+			if ($template_id)
 			{
 				$values = $this->bo->read_single_template($template_id);
 				$function_msg = lang('Edit template');
@@ -578,11 +576,9 @@
 				'template_id' => $template_id
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitemplate.index',
 					'template_id' => $template_id)),
@@ -624,7 +620,7 @@
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit_template();
 			}
@@ -633,17 +629,16 @@
 			$receipt = array();
 
 			$values['template_id'] = $template_id;
-			if(!isset($receipt['error']) || !$receipt['error'])
+			if (!isset($receipt['error']) || !$receipt['error'])
 			{
 				try
 				{
 					$receipt = $this->bo->save_template($values);
 					$template_id = $receipt['template_id'];
-					$msgbox_data = $this->bocommon->msgbox_data($receipt);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit_template($values);
@@ -651,15 +646,14 @@
 					}
 				}
 
-				$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
+				self::message_set($receipt);
 				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitemplate.edit_template',
 					'template_id' => $template_id));
 			}
 			else
 			{
-				$this->edit_template();
+				$this->edit_template($values);
 			}
 		}
 
@@ -682,28 +676,28 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
-				if(isset($values['copy_hour']) && $values['copy_hour'])
+				if (isset($values['copy_hour']) && $values['copy_hour'])
 				{
 					unset($hour_id);
 				}
 
 				$values['hour_id'] = $hour_id;
-				if(!isset($values['ns3420_descr']) || !$values['ns3420_descr'])
+				if (!isset($values['ns3420_descr']) || !$values['ns3420_descr'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a description!'));
 					$error_id = true;
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_hour($values, $template_id);
 					$hour_id = $receipt['hour_id'];
 				}
 			}
 
-			if($hour_id)
+			if ($hour_id)
 			{
 				$values = $this->bo->read_single_hour($hour_id);
 				$function_msg = lang('Edit hour');
@@ -715,7 +709,7 @@
 
 			$template = $this->bo->read_single_template($template_id);
 
-			if($error_id)
+			if ($error_id)
 			{
 				unset($values['hour_id']);
 			}
@@ -733,7 +727,7 @@
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
 
-			if($filter_key = array_search('.project', $filter_buildingpart))
+			if ($filter_key = array_search('.project', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
@@ -827,7 +821,7 @@
 		{
 			$id = (int)phpgw::get_var('id');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($id);
 				return "id " . $id . " " . lang("has been deleted");

@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorFromDescription converts a string to a validator.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorFromDescription extends sfValidatorDecorator
-{
+	class sfValidatorFromDescription extends sfValidatorDecorator
+	{
+
   protected
     $tokens = array(),
     $string = '';
@@ -25,7 +25,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   /**
    * @see sfValidatorBase
    */
-  public function __construct($string, $options = array(), $messages = array())
+		public function __construct( $string, $options = array(), $messages = array() )
   {
     $this->string = $string;
     $this->tokens = $this->tokenize($string);
@@ -67,7 +67,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    *
    * @return array  An array of tokens
    */
-  protected function tokenize($string)
+		protected function tokenize( $string )
   {
     $tokens = array();
     $len = strlen($string);
@@ -94,7 +94,8 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         $i += strlen($match[0]);
         $rightField = $match[1];
 
-        $tokens[] = new sfValidatorFDToken('sfValidatorSchemaCompare', array($leftField, $operator, $rightField, $arguments[0], isset($arguments[1]) ? $arguments[1] : array()));
+					$tokens[] = new sfValidatorFDToken('sfValidatorSchemaCompare', array($leftField,
+						$operator, $rightField, $arguments[0], isset($arguments[1]) ? $arguments[1] : array()));
       }
       else if (preg_match('/^(and|or)/i', substr($string, $i), $match))
       {
@@ -111,7 +112,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         // single validator (optionally filtered)
         $i += strlen($match[0]);
 
-        $class = 'sfValidator'.$match[2];
+					$class = 'sfValidator' . $match[2];
         $arguments = $this->parseArguments($string, $i);
         $token = new sfValidatorFDToken($class, array($arguments[0], isset($arguments[1]) ? $arguments[1] : array()));
         if ($match[1])
@@ -152,7 +153,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    *
    * @return array   An array of parameters
    */
-  protected function parseArguments($string, &$i)
+		protected function parseArguments( $string, &$i )
   {
     $len = strlen($string);
 
@@ -186,7 +187,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
 
     ++$i;
 
-    return sfYamlInline::load('['.(!$args ? '{}' : $args).']');
+			return sfYamlInline::load('[' . (!$args ? '{}' : $args) . ']');
   }
 
   /**
@@ -196,7 +197,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    *
    * @return array An array of token in RPN
    */
-  protected function convertInfixToRpn($tokens)
+		protected function convertInfixToRpn( $tokens )
   {
     $outputStack = array();
     $operatorStack = array();
@@ -254,7 +255,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    *
    * @return mixed  A single validator representation
    */
-  protected function reduceTokens($tokens, $method)
+		protected function reduceTokens( $tokens, $method )
   {
     if (1 == count($tokens))
     {
@@ -278,15 +279,16 @@ class sfValidatorFromDescription extends sfValidatorDecorator
 
     return $tokens[0];
   }
-}
+	}
 
-class sfValidatorFDToken
-{
+	class sfValidatorFDToken
+	{
+
   protected
     $class,
     $arguments;
 
-  public function __construct($class, $arguments = array())
+		public function __construct( $class, $arguments = array() )
   {
     $this->class = $class;
     $this->arguments = $arguments;
@@ -303,15 +305,16 @@ class sfValidatorFDToken
 
     return $reflection->newInstanceArgs($this->arguments);
   }
-}
+	}
 
-class sfValidatorFDTokenFilter
-{
+	class sfValidatorFDTokenFilter
+	{
+
   protected
     $field,
     $token;
 
-  public function __construct($field, sfValidatorFDToken $token)
+		public function __construct( $field, sfValidatorFDToken $token )
   {
     $this->field = $field;
     $this->token = $token;
@@ -326,16 +329,17 @@ class sfValidatorFDTokenFilter
   {
     return new sfValidatorSchemaFilter($this->field, $this->token->getValidator());
   }
-}
+	}
 
-class sfValidatorFDTokenOperator
-{
+	class sfValidatorFDTokenOperator
+	{
+
   protected
     $class,
     $operator,
     $token;
 
-  public function __construct($operator, $arguments = array())
+		public function __construct( $operator, $arguments = array() )
   {
     $this->operator = $operator;
     $this->arguments = $arguments;
@@ -347,17 +351,15 @@ class sfValidatorFDTokenOperator
     return $this->operator;
   }
 
-  public function asPhp($tokenLeft, $tokenRight)
+		public function asPhp( $tokenLeft, $tokenRight )
   {
-    return sprintf('new %s(array(%s, %s), %s)',
-      $this->class,
-      in_array(get_class($tokenLeft), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenLeft->asPhp() : $tokenLeft,
-      in_array(get_class($tokenRight), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenRight->asPhp() : $tokenRight,
-      implode(', ', array_map(create_function('$a', 'return var_export($a, true);'), $this->arguments))
+			return sprintf('new %s(array(%s, %s), %s)', $this->class, in_array(get_class($tokenLeft), array(
+					'sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenLeft->asPhp() : $tokenLeft, in_array(get_class($tokenRight), array(
+					'sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenRight->asPhp() : $tokenRight, implode(', ', array_map(create_function('$a', 'return var_export($a, true);'), $this->arguments))
     );
   }
 
-  public function getValidator($tokenLeft, $tokenRight)
+		public function getValidator( $tokenLeft, $tokenRight )
   {
     $reflection = new ReflectionClass($this->class);
 
@@ -368,20 +370,22 @@ class sfValidatorFDTokenOperator
 
     return $reflection->newInstanceArgs(array_merge(array($validators), $this->arguments));
   }
-}
+	}
 
-class sfValidatorFDTokenLeftBracket
-{
+	class sfValidatorFDTokenLeftBracket
+	{
+
   public function __toString()
   {
     return '(';
   }
-}
+	}
 
-class sfValidatorFDTokenRightBracket
-{
+	class sfValidatorFDTokenRightBracket
+	{
+
   public function __toString()
   {
     return ')';
   }
-}
+	}

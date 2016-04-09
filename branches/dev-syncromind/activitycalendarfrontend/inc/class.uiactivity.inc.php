@@ -25,7 +25,8 @@
 			'get_organization_groups'		 => true,
 			'get_address_search'			 => true,
 			'edit_organization_values'		 => true,
-			'get_organization_activities'	 => true
+			'get_organization_activities' => true,
+			'test_sql_injection' => true
 		);
 
 		public function __construct()
@@ -35,6 +36,27 @@
 //        $this->so_activity = activitycalendar_soactivity::get_instance();
 		}
 
+		public function test_sql_injection()
+		{
+			$c = createobject('phpgwapi.config', 'activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+
+			$allow_test = $c->config_data['allow_test'];
+			if($allow_test != 1)
+			{
+				echo "<H1>Test not activated in config</H>";
+				exit;
+			}
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$district_id = phpgw::get_var('district_id');
+
+			$district = $this->so_activity->get_district( $district_id );
+			print_r($district);
+		}
+	
 		/**
 		 * Public method. Add new activity.
 		 */
@@ -63,7 +85,7 @@
 			$o_id_new	 = phpgw::get_var('organization_id_hidden');
 
 			$organization_options = Array();
-			foreach($organizations as $o)
+			foreach ($organizations as $o)
 			{
 				$organization_options[] = array(
 					'id'	 => $o->get_id(),
@@ -72,7 +94,7 @@
 			}
 
 			$category_options = Array();
-			foreach($categories as $c)
+			foreach ($categories as $c)
 			{
 				$category_options['list'][] = array(
 					'id'	 => $c->get_id(),
@@ -81,7 +103,7 @@
 			}
 
 			$arena_options = Array();
-			foreach($arenas as $a)
+			foreach ($arenas as $a)
 			{
 				$arena_options[] = array(
 					'id'	 => $a->get_id(),
@@ -90,7 +112,7 @@
 			}
 
 			$building_options = Array();
-			foreach($buildings as $building_id => $building_name)
+			foreach ($buildings as $building_id => $building_name)
 			{
 				$building_options[] = array(
 					'id'	 => $building_id,
@@ -99,7 +121,7 @@
 			}
 
 			$office_options = Array();
-			foreach($offices as $o)
+			foreach ($offices as $o)
 			{
 				$office_options['list'][] = array(
 					'id'	 => $o['id'],
@@ -110,15 +132,15 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'));
 
-			if(isset($_POST['step_1']))
+			if (isset($_POST['step_1']))
 			{ //activity shall be registred on a new organization
 				self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_new.js');
 
-				if($o_id_new == "new_org")
+				if ($o_id_new == "new_org")
 				{
 					//add new organization to internal activitycalendar organization register
 					$org_homepage = phpgw::get_var('homepage');
-					if($org_homepage == 'http://')
+					if ($org_homepage == 'http://')
 					{
 						$org_homepage = "";
 					}
@@ -142,7 +164,7 @@
 					$this->so_activity->add_contact_person_local($contact1);
 
 					$person_arr = $this->so_contact->get_local_contact_persons($o_id);
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -154,7 +176,7 @@
 
 					$organization	 = $this->so_organization->get_organization_local($o_id);
 					$person_arr		 = $this->so_organization->get_contacts_local_as_objects($o_id);
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -167,7 +189,7 @@
 					$organization	 = $this->so_organization->get_single($o_id);
 					$person_arr		 = $this->so_contact->get(null, null, null, null, null, null, array(
 						'organization_id' => $o_id));
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -189,7 +211,7 @@
 				$current_target_ids		 = $activity->get_target();
 				$current_target_id_array = explode(",", $current_target_ids);
 				$target_options			 = Array();
-				foreach($targets as $t)
+				foreach ($targets as $t)
 				{
 					$checked			 = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
 					$target_options[]	 = array(
@@ -219,17 +241,17 @@
 				)
 				);
 			}
-			else if(isset($_POST['save_activity']))
+			else if (isset($_POST['save_activity']))
 			{
 				$get_org_from_local	 = false;
 				$new_org_group		 = false;
 				$new_org			 = phpgw::get_var('new_organization');
-				if($new_org != null && $new_org == 'yes')
+				if ($new_org != null && $new_org == 'yes')
 				{
 					$get_org_from_local = true;
 				}
 
-				if($get_org_from_local)
+				if ($get_org_from_local)
 				{
 					$activity->set_new_org(true);
 					//$person_arr = $this->so_contact->get_local_contact_persons($o_id);
@@ -259,7 +281,7 @@
 					$this->so_activity->add_contact_person_local($contact1);
 
 					$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -268,7 +290,7 @@
 					$person_ids	 = $this->so_group->get_contacts_local($g_id);
 					$new_group	 = true;
 				}
-				else if(is_numeric($o_id) && $o_id > 0)
+				else if (is_numeric($o_id) && $o_id > 0)
 				{
 					$group_info['name']				 = phpgw::get_var('title');
 					$group_info['organization_id']	 = $o_id;
@@ -286,7 +308,7 @@
 					$this->so_activity->add_contact_person_local($contact1);
 
 					$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -297,14 +319,14 @@
 					$new_group		 = true;
 				}
 
-				if(strlen($desc) > 254)
+				if (strlen($desc) > 254)
 				{
 					$desc = substr($desc, 0, 254);
 				}
 
 				$arena_id	 = phpgw::get_var('internal_arena_id');
 				$new_arena	 = phpgw::get_var('new_arena_hidden');
-				if($new_arena != null && $new_arena == 'new_arena')
+				if ($new_arena != null && $new_arena == 'new_arena')
 				{
 					$arena				 = new activitycalendar_arena();
 					$arena_name			 = phpgw::get_var('arena_name');
@@ -321,7 +343,7 @@
 					$arena->set_active(true);
 
 					// All is good, store arena
-					if($this->so_arena->store($arena))
+					if ($this->so_arena->store($arena))
 					{
 						$arena_id = $arena->get_id();
 						$activity->set_arena($arena_id);
@@ -330,7 +352,7 @@
 				else
 				{
 					$arena_arr = explode("_", $arena_id);
-					if($arena_arr[0] == 'i')
+					if ($arena_arr[0] == 'i')
 					{
 						$activity->set_internal_arena($arena_arr[1]);
 					}
@@ -362,24 +384,24 @@
 				$target_ok		 = false;
 				$district_ok	 = false;
 
-				if($get_org_from_local)
+				if ($get_org_from_local)
 				{
 					//update new organization with district-id from activity.
 					$this->so_organization->update_org_district_local($organization->get_id(), $activity->get_district());
 				}
 
-				if($activity->get_target() && $activity->get_target() != '')
+				if ($activity->get_target() && $activity->get_target() != '')
 				{
 					$target_ok = true;
 				}
-				if($activity->get_district() && $activity->get_district() != '')
+				if ($activity->get_district() && $activity->get_district() != '')
 				{
 					$district_ok = true;
 				}
 
-				if($target_ok && $district_ok)
+				if ($target_ok && $district_ok)
 				{
-					if($this->so_activity->store($activity))
+					if ($this->so_activity->store($activity))
 					{ // ... and then try to store the object
 						$message = lang('messages_saved_form');
 					}
@@ -410,21 +432,21 @@
 					$activity_options['contact1_mail']		 = (isset($persons[0])) ? $persons[0]->get_email() : "";
 					$activity_options['office']				 = ($activity->get_office()) ? $this->so_activity->get_office_name($activity->get_office()) : "";
 
-					if($activity->get_target())
+					if ($activity->get_target())
 					{
 						$current_target_ids		 = $activity->get_target();
 						$current_target_id_array = explode(",", $current_target_ids);
-						foreach($current_target_id_array as $ct)
+						foreach ($current_target_id_array as $ct)
 						{
 							$activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
 						}
 					}
 
-					if($activity->get_district())
+					if ($activity->get_district())
 					{
 						$current_district_ids		 = $activity->get_district();
 						$current_district_id_array	 = explode(",", $current_district_ids);
-						foreach($current_district_id_array as $cd)
+						foreach ($current_district_id_array as $cd)
 						{
 							$activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
 						}
@@ -458,11 +480,11 @@
 				}
 				else
 				{
-					if(!$target_ok)
+					if (!$target_ok)
 					{
 						$error .= "<br/>" . lang('target_not_selected');
 					}
-					if(!$district_ok)
+					if (!$district_ok)
 					{
 						$error .= "<br/>" . lang('district_not_selected');
 					}
@@ -479,7 +501,7 @@
 					$current_target_ids		 = $activity->get_target();
 					$current_target_id_array = explode(",", $current_target_ids);
 					$target_options			 = Array();
-					foreach($targets as $t)
+					foreach ($targets as $t)
 					{
 						$checked			 = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
 						$target_options[]	 = array(
@@ -531,7 +553,7 @@
 			$infoMsgs	 = array();
 			$activity	 = $this->so_activity->get_single((int)phpgw::get_var('id'));
 
-			if($activity == null)
+			if ($activity == null)
 			{ // Not found
 				$errorMsgs[] = lang('Could not find specified activity.');
 			}
@@ -571,21 +593,21 @@
 			$activity_options['contact1_phone']	 = $person->get_phone();
 			$activity_options['contact1_mail']	 = $person->get_email();
 
-			if($activity->get_target())
+			if ($activity->get_target())
 			{
 				$current_target_ids		 = $activity->get_target();
 				$current_target_id_array = explode(",", $current_target_ids);
-				foreach($current_target_id_array as $ct)
+				foreach ($current_target_id_array as $ct)
 				{
 					$activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
 				}
 			}
 
-			if($activity->get_district())
+			if ($activity->get_district())
 			{
 				$current_district_ids		 = $activity->get_district();
 				$current_district_id_array	 = explode(",", $current_district_ids);
-				foreach($current_district_id_array as $cd)
+				foreach ($current_district_id_array as $cd)
 				{
 					$activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
 				}
@@ -625,7 +647,7 @@
 			$arenas		 = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
 
 			$category_options = array();
-			foreach($categories as $c)
+			foreach ($categories as $c)
 			{
 				$category_options['list'][] = array(
 					'id'	 => $c->get_id(),
@@ -634,7 +656,7 @@
 			}
 
 			$building_options = array();
-			foreach($buildings as $building_id => $building_name)
+			foreach ($buildings as $building_id => $building_name)
 			{
 				$building_options['list'][] = array(
 					'id'	 => $building_id,
@@ -643,7 +665,7 @@
 			}
 
 			$arena_options = array();
-			foreach($arenas as $a)
+			foreach ($arenas as $a)
 			{
 				$arena_options['list'][] = array(
 					'id'	 => $a->get_id(),
@@ -652,7 +674,7 @@
 			}
 
 			$district_options = array();
-			foreach($districts as $d)
+			foreach ($districts as $d)
 			{
 				$district_options['list'][] = array(
 					'part_of_town_id'	 => $d['part_of_town_id'],
@@ -661,7 +683,7 @@
 			}
 
 			$office_options = array();
-			foreach($offices as $o)
+			foreach ($offices as $o)
 			{
 				$office_options['list'][] = array(
 					'id'	 => $o['id'],
@@ -672,7 +694,7 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'));
 
-			if(isset($_POST['step_1']))
+			if (isset($_POST['step_1']))
 			{ //change_request
 				$activity_id = phpgw::get_var('activity_id');
 				$activity	 = $this->so_activity->get_single($activity_id);
@@ -697,7 +719,7 @@
 			else
 			{
 				$secret_param = phpgw::get_var('secret', 'GET');
-				if(!isset($id) || $id == '')
+				if (!isset($id) || $id == '')
 				{
 					//select activity to edit
 					$activities				 = $this->so_activity->get(null, null, 'title', true, null, null, array(
@@ -705,7 +727,7 @@
 					$organizations			 = $this->so_organization->get(null, null, 'org.name', true, null, null, array(
 						'edit_from_frontend' => 'yes'));
 					$organization_options	 = Array();
-					foreach($organizations as $o)
+					foreach ($organizations as $o)
 					{
 						$organization_options[] = array(
 							'id'	 => $o->get_id(),
@@ -722,7 +744,7 @@
 					)
 					);
 				}
-				if(!isset($secret_param) || $secret_param == '')
+				if (!isset($secret_param) || $secret_param == '')
 				{
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
@@ -740,7 +762,7 @@
 				else
 				{
 					// Retrieve the activity object or create a new one
-					if(isset($id) && $id > 0)
+					if (isset($id) && $id > 0)
 					{
 						$activity = $this->so_activity->get_single($id);
 					}
@@ -759,7 +781,7 @@
 						);
 					}
 
-					if($activity->get_secret() != phpgw::get_var('secret', 'GET'))
+					if ($activity->get_secret() != phpgw::get_var('secret', 'GET'))
 					{
 						//select activity to edit
 						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
@@ -775,10 +797,10 @@
 						);
 					}
 
-					if($activity->get_group_id())
+					if ($activity->get_group_id())
 					{
 						$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
-						foreach($person_arr as $p)
+						foreach ($person_arr as $p)
 						{
 							$persons_array[] = $p;
 						}
@@ -786,17 +808,17 @@
 						$group		 = $this->so_group->get_single($activity->get_group_id());
 						$person_ids	 = $this->so_group->get_contacts($activity->get_group_id());
 					}
-					else if($activity->get_organization_id())
+					else if ($activity->get_organization_id())
 					{
 						$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_organization_id());
-						foreach($person_arr as $p)
+						foreach ($person_arr as $p)
 						{
 							$persons_array[] = $p;
 						}
 						$desc		 = $this->so_organization->get_description($activity->get_organization_id());
 						$person_ids	 = $this->so_organization->get_contacts($activity->get_organization_id());
 					}
-					if(strlen($desc) > 254)
+					if (strlen($desc) > 254)
 					{
 						$desc = substr($desc, 0, 254);
 					}
@@ -830,7 +852,7 @@
 					$current_target_ids		 = $activity->get_target();
 					$current_target_id_array = explode(",", $current_target_ids);
 					$target_options			 = array();
-					foreach($targets as $t)
+					foreach ($targets as $t)
 					{
 						$checked			 = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
 						$target_options[]	 = array(
@@ -840,21 +862,21 @@
 						);
 					}
 
-					if($activity->get_target())
+					if ($activity->get_target())
 					{
 						$current_target_ids		 = $activity->get_target();
 						$current_target_id_array = explode(",", $current_target_ids);
-						foreach($current_target_id_array as $ct)
+						foreach ($current_target_id_array as $ct)
 						{
 							$activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
 						}
 					}
 
-					if($activity->get_district())
+					if ($activity->get_district())
 					{
 						$current_district_ids		 = $activity->get_district();
 						$current_district_id_array	 = explode(",", $current_district_ids);
-						foreach($current_district_id_array as $cd)
+						foreach ($current_district_id_array as $cd)
 						{
 							$activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
 						}
@@ -866,9 +888,9 @@
 					$organization_options['name']	 = $organization->get_name();
 
 					$change_activity_request = false;
-					if(isset($_POST['save_activity']))
+					if (isset($_POST['save_activity']))
 					{ // The user has pressed the save button
-						if(isset($activity))
+						if (isset($activity))
 						{ // If an activity object is created
 							$act_description = phpgw::get_var('description');
 							$old_state		 = $activity->get_state();
@@ -878,7 +900,7 @@
 							$activity->set_title(phpgw::get_var('title'));
 							$arena_id		 = phpgw::get_var('internal_arena_id');
 							$arena_arr		 = explode("_", $arena_id);
-							if($arena_arr[0] == 'i')
+							if ($arena_arr[0] == 'i')
 							{
 								$activity->set_internal_arena($arena_arr[1]);
 								$activity->set_arena(0);
@@ -912,11 +934,11 @@
 
 							$target_ok	 = false;
 							$district_ok = false;
-							if($activity->get_target() && $activity->get_target() != '')
+							if ($activity->get_target() && $activity->get_target() != '')
 							{
 								$target_ok = true;
 							}
-							if($activity->get_district() && $activity->get_district() != '')
+							if ($activity->get_district() && $activity->get_district() != '')
 							{
 								$district_ok = true;
 							}
@@ -950,7 +972,7 @@
 							$current_target_ids		 = $activity->get_target();
 							$current_target_id_array = explode(",", $current_target_ids);
 							$target_options			 = array();
-							foreach($targets as $t)
+							foreach ($targets as $t)
 							{
 								$checked			 = (in_array($t->get_id(), $current_target_id_array)) ? "checked" : "";
 								$target_options[]	 = array(
@@ -960,21 +982,21 @@
 								);
 							}
 
-							if($activity->get_target())
+							if ($activity->get_target())
 							{
 								$current_target_ids		 = $activity->get_target();
 								$current_target_id_array = explode(",", $current_target_ids);
-								foreach($current_target_id_array as $ct)
+								foreach ($current_target_id_array as $ct)
 								{
 									$activity_options['targets'] .= $this->so_activity->get_target_name($ct) . "<br />";
 								}
 							}
 
-							if($activity->get_district())
+							if ($activity->get_district())
 							{
 								$current_district_ids		 = $activity->get_district();
 								$current_district_id_array	 = explode(",", $current_district_ids);
-								foreach($current_district_id_array as $cd)
+								foreach ($current_district_id_array as $cd)
 								{
 									$activity_options['districts'] .= $this->so_activity->get_district_name($cd) . "<br />";
 								}
@@ -985,20 +1007,20 @@
 							$organization_options['id']		 = $organization->get_id();
 							$organization_options['name']	 = $organization->get_name();
 
-							if($target_ok && $district_ok)
+							if ($target_ok && $district_ok)
 							{
 
-								if($this->so_activity->store($activity))
+								if ($this->so_activity->store($activity))
 								{ // ... and then try to store the object
 									$message = lang('messages_saved_form');
 									//update group description
-									if($activity->get_group_id())
+									if ($activity->get_group_id())
 									{
 										$this->so_group->update_group_description($activity->get_group_id(), $act_description);
 										$this->so_group->update_group_contact($contact_person);
 
 										$person_arr_tmp = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
-										foreach($person_arr_tmp as $p_t)
+										foreach ($person_arr_tmp as $p_t)
 										{
 											$persons_array_tmp[] = $p_t;
 										}
@@ -1032,11 +1054,11 @@
 							}
 							else
 							{
-								if(!$target_ok)
+								if (!$target_ok)
 								{
 									$error .= "<br/>" . lang('target_not_selected');
 								}
-								if(!$district_ok)
+								if (!$district_ok)
 								{
 									$error .= "<br/>" . lang('district_not_selected');
 								}
@@ -1067,7 +1089,7 @@
 							}
 						}
 					}
-					else if(isset($_POST['change_request']))
+					else if (isset($_POST['change_request']))
 					{
 						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
@@ -1093,13 +1115,13 @@
 						)
 						);
 					}
-					else if(isset($_POST['activity_ok']))
+					else if (isset($_POST['activity_ok']))
 					{ // The user has pressed the save button
-						if(isset($activity))
+						if (isset($activity))
 						{ // If an activity object is created
 							$activity->set_frontend(true);
 
-							if($this->so_activity->save_with_no_changes($activity))
+							if ($this->so_activity->save_with_no_changes($activity))
 							{ // ... and then try to store the object
 								$message = lang('activity_ok_message');
 							}
@@ -1168,21 +1190,21 @@
 			$org_id		 = phpgw::get_var('orgid');
 			$group_id	 = phpgw::get_var('groupid');
 			$returnHTML	 = "<option value='0'>Ingen gruppe valgt</option>";
-			if($org_id)
+			if ($org_id)
 			{
 				$group_html[]	 = "<option value='new_group'>Ny gruppe</option>";
 				$groups			 = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
 					'org_id' => $org_id));
-				foreach($groups as $group)
+				foreach ($groups as $group)
 				{
-					if(isset($group))
+					if (isset($group))
 					{
 						//$res_g = $group->serialize();
 						$selected = "";
-						if($group_id && $group_id > 0)
+						if ($group_id && $group_id > 0)
 						{
 							$gr_id = (int)$group_id;
-							if($gr_id == (int)$group->get_id())
+							if ($gr_id == (int)$group->get_id())
 							{
 								$selected_group = " selected";
 							}
@@ -1212,7 +1234,7 @@
 		function edit_organization_values()
 		{
 			$org_id = phpgw::get_var('organization_id');
-			if(isset($org_id))
+			if (isset($org_id))
 			{
 
 				$helpImg = $GLOBALS['phpgw']->common->image('activitycalendarfrontend', 'hjelp.gif');
@@ -1220,12 +1242,12 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
 
-				if(isset($_POST['save_org']))
+				if (isset($_POST['save_org']))
 				{ //save updated organization info
 					$organization = $this->so_organization->get_single($org_id);
 
 					$org_homepage = phpgw::get_var('homepage');
-					if($org_homepage == 'http://')
+					if ($org_homepage == 'http://')
 					{
 						$org_homepage = "";
 					}
@@ -1270,7 +1292,7 @@
 					$organization	 = $this->so_organization->get_single($org_id);
 					$person_arr		 = $this->so_contact->get(null, null, null, null, null, null, array(
 						'organization_id' => $org_id));
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -1308,9 +1330,9 @@
 		function edit_group_values()
 		{
 			$group_id = phpgw::get_var('group_id');
-			if(isset($group_id))
+			if (isset($group_id))
 			{
-				if(isset($_POST['save_group']))
+				if (isset($_POST['save_group']))
 				{ //save updated organization info
 					$group = $this->so_group->get_single($group_id);
 
@@ -1352,7 +1374,7 @@
 					$group		 = $this->so_group->get_single($group_id);
 					$person_arr	 = $this->so_contact->get(null, null, null, null, null, null, array(
 						'group_id' => $group_id));
-					foreach($person_arr as $p)
+					foreach ($person_arr as $p)
 					{
 						$persons[] = $p;
 					}
@@ -1379,13 +1401,13 @@
 
 			$org_id		 = phpgw::get_var('orgid');
 			$returnHTML	 = "<option value='0'>Ingen aktivitet valgt</option>";
-			if($org_id)
+			if ($org_id)
 			{
 				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
 					'activity_state' => 3, 'activity_org' => $org_id));
-				foreach($activities as $act)
+				foreach ($activities as $act)
 				{
-					if(isset($act))
+					if (isset($act))
 					{
 						//$res_g = $group->serialize();
 						$activity_html[] = "<option value='" . $act->get_id() . "'>" . $act->get_title() . "</option>";

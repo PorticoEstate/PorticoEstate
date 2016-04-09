@@ -42,12 +42,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -62,7 +62,7 @@
 			return $this->location_code;
 		}
 
-		public function set_location_code($location_code)
+		public function set_location_code( $location_code )
 		{
 			$this->location_code = $location_code;
 		}
@@ -72,7 +72,7 @@
 			return (int)$this->control_id;
 		}
 
-		public function set_control_id($control_id)
+		public function set_control_id( $control_id )
 		{
 			$this->control_id = (int)$control_id;
 		}

@@ -63,7 +63,7 @@
 			$types		 = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$party_types = array();
 			array_unshift($party_types, array('id' => 'all', 'name' => lang('all')));
-			foreach($types as $id => $label)
+			foreach ($types as $id => $label)
 			{
 				$party_types[] = array('id' => $id, 'name' => lang($label));
 			}
@@ -98,7 +98,7 @@
 		 */
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -129,14 +129,14 @@
 			$result_objects	 = array();
 			$result_count	 = 0;
 
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
-			if(isset($contract_id))
+			if (isset($contract_id))
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 			}
@@ -147,7 +147,7 @@
 			$config			 = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 			$use_fellesdata	 = $config->config_data['use_fellesdata'];
-			switch($type)
+			switch ($type)
 			{
 				case 'included_parties': // ... get all parties incolved in the contract
 					$filters = array('contract_id' => $contract_id);
@@ -160,7 +160,7 @@
 				case 'sync_parties_identifier':
 				case 'sync_parties_org_unit':
 					$filters = array('sync' => $type, 'party_type' => $party_type, 'active' => $active);
-					if($use_fellesdata)
+					if ($use_fellesdata)
 					{
 						$bofelles = rental_bofellesdata::get_instance();
 					}
@@ -179,37 +179,37 @@
 
 			// Create an empty row set
 			$rows = array();
-			foreach($result_objects as $party)
+			foreach ($result_objects as $party)
 			{
-				if(isset($party))
+				if (isset($party))
 				{
 					$serialized = $party->serialize($contract);
-					if($use_fellesdata)
+					if ($use_fellesdata)
 					{
 						$sync_data = $party->get_sync_data();
-						if($type == 'sync_parties')
+						if ($type == 'sync_parties')
 						{
 							$unit_name_and_id = $bofelles->responsibility_id_exist($sync_data['responsibility_id']);
 						}
-						else if($type == 'sync_parties_res_unit')
+						else if ($type == 'sync_parties_res_unit')
 						{
 							$unit_name_and_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
 						}
-						else if($type == 'sync_parties_identifier')
+						else if ($type == 'sync_parties_identifier')
 						{
 							$unit_name_and_id = $bofelles->result_unit_exist($party->get_identifier());
 						}
-						else if($type == 'sync_parties_org_unit')
+						else if ($type == 'sync_parties_org_unit')
 						{
 							$unit_name_and_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
 						}
 
-						if(isset($unit_name_and_id) && $unit_name_and_id)
+						if (isset($unit_name_and_id) && $unit_name_and_id)
 						{
 							$unit_id	 = $unit_name_and_id['UNIT_ID'];
 							$unit_name	 = $unit_name_and_id['UNIT_NAME'];
 
-							if(isset($unit_id) && is_numeric($unit_id))
+							if (isset($unit_id) && is_numeric($unit_id))
 							{
 								$serialized['org_unit_name'] = isset($unit_name) ? $unit_name : lang('no_name');
 								$serialized['org_unit_id']	 = $unit_id;
@@ -238,7 +238,7 @@
 					$party_in_contract				 = rental_soparty::get_instance()->has_contract($party->get_id());
 					$serialized['party_in_contract'] = $party_in_contract ? true : false;
 
-					if(!$export)
+					if (!$export)
 					{
 						$serialized['other_operations'] = $this->get_actions($serialized, array(// Parameters (non-object pointers)
 							$contract_id, // [1] The contract id
@@ -253,7 +253,7 @@
 				}
 			}
 
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}
@@ -277,7 +277,7 @@
 			$config->read();
 
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			if(!$use_fellesdata)
+			if (!$use_fellesdata)
 			{
 				return;
 			}
@@ -288,24 +288,24 @@
 
 			echo "Total number of parties: {$result_count}";
 
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$count						 = 0;
 				$count_result_unit_number	 = 0;
 				$count_identifier			 = 0;
 				$count_responsibility		 = 0;
 
-				foreach($parties as $party)
+				foreach ($parties as $party)
 				{
 					$unit_found	 = false;
 					$fellesdata	 = NULL;
 
-					if(isset($party))
+					if (isset($party))
 					{
 						$sync_data = $party->get_sync_data();
 
 						$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'], 4);
-						if($fellesdata)
+						if ($fellesdata)
 						{
 							echo "Unit id found {$fellesdata['UNIT_ID']} by result unit number check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 							$count_result_unit_number++;
@@ -313,7 +313,7 @@
 						else
 						{
 							$fellesdata = $bofelles->result_unit_exist($party->get_identifier(), 4);
-							if($fellesdata)
+							if ($fellesdata)
 							{
 								echo "Unit id found {$fellesdata['UNIT_ID']} by identifier check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 								$count_identifier++;
@@ -321,7 +321,7 @@
 							else
 							{
 								$fellesdata = $bofelles->responsibility_id_exist($sync_data['responsibility_id']);
-								if($fellesdata)
+								if ($fellesdata)
 								{
 									echo "Unit id found {$fellesdata['UNIT_ID']} by responsibility id check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 									$count_responsibility++;
@@ -329,7 +329,7 @@
 							}
 						}
 
-						if($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID']))
+						if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID']))
 						{
 							// We found a match, so store the new connection
 							$party->set_org_enhet_id($fellesdata['UNIT_ID']);
@@ -357,7 +357,7 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, contract editable]
 		 */
-		public function get_actions($value, $params)
+		public function get_actions( $value, $params )
 		{
 			// Get parameters
 			$contract_id		 = $params[0];
@@ -367,12 +367,12 @@
 			$user_is			 = $params[4];
 			$actions			 = array();
 
-			switch($type)
+			switch ($type)
 			{
 				case 'included_parties':
-					if($editable)
+					if ($editable)
 					{
-						if($value['id'] != $serialized_contract['payer_id'])
+						if ($value['id'] != $serialized_contract['payer_id'])
 						{
 							$url		 = html_entity_decode(self::link(array('menuaction'		 => 'rental.uicontract.set_payer',
 								'party_id'			 => $value['id'], 'contract_id'		 => $params[0], 'phpgw_return_as'	 => 'json')));
@@ -384,16 +384,16 @@
 					break;
 				default:
 
-					if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
+					if ($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 					{
-						if((isset($value['party_in_contract']) && $value['party_in_contract'] == false) && (!isset($value['org_enhet_id']) || $value['org_enhet_id'] == ''))
+						if ((isset($value['party_in_contract']) && $value['party_in_contract'] == false) && (!isset($value['org_enhet_id']) || $value['org_enhet_id'] == ''))
 						{
 							$url1		 = html_entity_decode(self::link(array('menuaction'		 => 'rental.uiparty.delete_party',
 								'id'				 => $value['id'], 'phpgw_return_as'	 => 'json')));
 							$actions[]	 = '<a onclick="onDelete_party(\'' . $url1 . '\')">' . lang('delete') . '</a>';
 						}
 
-						if(isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
+						if (isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
 						{
 							$url2		 = html_entity_decode(self::link(array('menuaction'	 => 'frontend.uihelpdesk.index',
 								'org_enhet_id'	 => $value['org_enhet_id'])));
@@ -414,7 +414,7 @@
 		 */
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -486,7 +486,7 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -511,6 +511,7 @@
 				'my_name'		 => 'download_agresso',
 				'text'			 => lang('Download Agresso import file'),
 				'type'			 => 'custom',
+				'className'	=> 'download', // If there is a className - the button is not per record, but global for the table
 				'custom_code'	 => "
 					var oArgs = " . json_encode(array(
 					'menuaction' => 'rental.uiparty.download_agresso',
@@ -531,7 +532,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
+			if ($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -577,7 +578,7 @@ JS;
 		{
 			$party_id = (int)phpgw::get_var('id');
 
-			if(isset($party_id) && $party_id > 0)
+			if (isset($party_id) && $party_id > 0)
 			{
 				$party = rental_soparty::get_instance()->get_single($party_id);
 			}
@@ -586,7 +587,7 @@ JS;
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('invalid_request'));
 			}
 
-			if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
+			if (isset($party) && $party->has_permission(PHPGW_ACL_READ))
 			{
 				$this->edit(array(), $mode = 'view');
 			}
@@ -600,22 +601,22 @@ JS;
 		 * Public method. Called when user wants to edit a contract party.
 		 * @param HTTP::id	the party ID
 		 */
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
 			$party_id = (int)phpgw::get_var('id');
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
 				// Retrieve the party object or create a new one if correct permissions
-				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 				}
 			}
 
-			if(isset($party_id) && $party_id > 0)
+			if (isset($party_id) && $party_id > 0)
 			{
 				$party = rental_soparty::get_instance()->get_single($party_id);
 			}
@@ -645,7 +646,7 @@ JS;
 			$tabs['details'] = array('label' => lang('Details'), 'link' => '#details');
 			$active_tab		 = 'details';
 
-			if($party_id)
+			if ($party_id)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('status_date');
 
@@ -768,7 +769,7 @@ JS;
 				$field_of_responsibility		 = rental_socontract::get_instance()->get_fields_of_responsibility();
 				$field_of_responsibility_options = array();
 				array_unshift($field_of_responsibility_options, array('id' => 'all', 'name' => lang('all')));
-				foreach($field_of_responsibility as $id => $label)
+				foreach ($field_of_responsibility as $id => $label)
 				{
 					$field_of_responsibility_options[] = array('id' => $id, 'name' => lang($label));
 				}
@@ -779,7 +780,7 @@ JS;
 				/*				 * ***************************** document filters */
 				$document_types			 = rental_sodocument::get_instance()->get_document_types();
 				$document_types_options	 = array();
-				foreach($document_types as $id => $label)
+				foreach ($document_types as $id => $label)
 				{
 					$document_types_options[] = array('id' => $id, 'name' => lang($label));
 				}
@@ -794,9 +795,9 @@ JS;
 			$valid_email			 = 0;
 			$organization_options	 = array();
 
-			if($mode == 'view')
+			if ($mode == 'view')
 			{
-				if(!empty($party_org_enhet_id))
+				if (!empty($party_org_enhet_id))
 				{
 					$result_unit		 = rental_bofellesdata::get_instance()->get_result_unit($party_org_enhet_id);
 					$organization_name	 = $result_unit['ORG_NAME'];
@@ -811,7 +812,7 @@ JS;
 				$result_units			 = rental_bofellesdata::get_instance()->get_result_units();
 				$organization_options[]	 = array('id'		 => '', 'name'		 => lang('no_party_location'),
 					'selected'	 => 0);
-				foreach($result_units as $result_unit)
+				foreach ($result_units as $result_unit)
 				{
 					$selected				 = ($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id) ? 1 : 0;
 					$organization_options[]	 = array('id'		 => $result_unit['ORG_UNIT_ID'], 'name'		 => $result_unit['UNIT_ID'] . ' - ' . $result_unit['ORG_UNIT_NAME'],
@@ -820,7 +821,7 @@ JS;
 
 				$email			 = $party->get_email();
 				$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
-				if($email_validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
+				if ($email_validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
 				{
 					$valid_email		 = 1;
 					$link_create_user	 = array
@@ -896,14 +897,14 @@ JS;
 
 		public function save()
 		{
-			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 			}
 
 			$party_id = (int)phpgw::get_var('id');
 
-			if(isset($party_id) && $party_id > 0)
+			if (isset($party_id) && $party_id > 0)
 			{
 				$party = rental_soparty::get_instance()->get_single($party_id);
 			}
@@ -912,7 +913,7 @@ JS;
 				$party = new rental_party();
 			}
 
-			if(isset($party)) // If a party object is created
+			if (isset($party)) // If a party object is created
 			{
 				// ... set all parameters
 				$party->set_identifier(phpgw::get_var('identifier'));
@@ -938,7 +939,7 @@ JS;
 				$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
 				$party->set_unit_leader(phpgw::get_var('unit_leader'));
 
-				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
+				if (rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 					$party_id = $party->get_id();
@@ -959,11 +960,11 @@ JS;
 
 			$keys = array();
 
-			if(count($list[0]) > 0)
+			if (count($list[0]) > 0)
 			{
-				foreach($list[0] as $key => $value)
+				foreach ($list[0] as $key => $value)
 				{
-					if(!is_array($value))
+					if (!is_array($value))
 					{
 						array_push($keys, $key);
 					}
@@ -972,9 +973,9 @@ JS;
 
 			// Remove newlines from output
 			$count = count($list);
-			for($i = 0; $i < $count; $i++)
+			for ($i = 0; $i < $count; $i++)
 			{
-				foreach($list[$i] as $key => &$data)
+				foreach ($list[$i] as $key => &$data)
 				{
 					$data = str_replace(array("\n", "\r\n", "<br>"), '', $data);
 				}
@@ -983,7 +984,7 @@ JS;
 			// Use keys as headings
 			$headings	 = array();
 			$count_keys	 = count($keys);
-			for($j = 0; $j < $count_keys; $j++)
+			for ($j = 0; $j < $count_keys; $j++)
 			{
 				array_push($headings, lang($keys[$j]));
 			}
@@ -1001,7 +1002,7 @@ JS;
 
 		public function sync()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -1011,7 +1012,7 @@ JS;
 			$contract_id = phpgw::get_var('contract_id');
 			$user_is	 = $this->type_of_user;
 
-			switch($sync_job)
+			switch ($sync_job)
 			{
 				case 'resp_and_service':
 					self::set_active_menu('rental::parties::sync::sync_resp_and_service');
@@ -1127,12 +1128,12 @@ JS;
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			foreach($extra_cols as $col)
+			foreach ($extra_cols as $col)
 			{
 				array_push($data['datatable']['field'], $col);
 			}
@@ -1173,7 +1174,7 @@ JS;
 				'parameters' => json_encode($parameters)
 			);
 
-			if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
+			if ($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -1205,18 +1206,18 @@ JS;
 
 		public function syncronize_party()
 		{
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$party_id	 = phpgw::get_var('party_id');
 				$org_unit_id = phpgw::get_var('org_enhet_id');
 
-				if(isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
+				if (isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
 				{
 					$config = CreateObject('phpgwapi.config', 'rental');
 					$config->read();
 
 					$use_fellesdata = $config->config_data['use_fellesdata'];
-					if(!$use_fellesdata)
+					if (!$use_fellesdata)
 					{
 						return;
 					}
@@ -1233,19 +1234,19 @@ JS;
 
 					$party = rental_soparty::get_instance()->get_single($party_id);
 
-					if(!empty($dep_org_name) & $dep_org_name != '')
+					if (!empty($dep_org_name) & $dep_org_name != '')
 						$party->set_department($dep_org_name);
 
-					if(!empty($unit_leader_fullname) & $unit_leader_fullname != '')
+					if (!empty($unit_leader_fullname) & $unit_leader_fullname != '')
 						$party->set_unit_leader($unit_leader_fullname);
 
-					if(!empty($org_name) & $org_name != '')
+					if (!empty($org_name) & $org_name != '')
 						$party->set_company_name($org_name);
 
-					if(!empty($org_email) & $org_email != '')
+					if (!empty($org_email) & $org_email != '')
 						$party->set_email($org_email);
 
-					if(!empty($org_unit_id) & $org_unit_id != '')
+					if (!empty($org_unit_id) & $org_unit_id != '')
 						$party->set_org_enhet_id($org_unit_id);
 
 					rental_soparty::get_instance()->store($party);
@@ -1261,17 +1262,17 @@ JS;
 		 */
 		public function get_synchronize_party_info()
 		{
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$org_unit_id = phpgw::get_var("org_enhet_id");
 
-				if(isset($org_unit_id) && $org_unit_id > 0)
+				if (isset($org_unit_id) && $org_unit_id > 0)
 				{
 					$config = CreateObject('phpgwapi.config', 'rental');
 					$config->read();
 
 					$use_fellesdata = $config->config_data['use_fellesdata'];
-					if(!$use_fellesdata)
+					if (!$use_fellesdata)
 					{
 						return;
 					}
@@ -1304,9 +1305,9 @@ JS;
 			$party_id = phpgw::get_var('id');
 
 			//Access control: only executive officers and administrators can create such accounts
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				if(isset($party_id) && $party_id > 0)
+				if (isset($party_id) && $party_id > 0)
 				{
 					//Load the party from the database
 					$party	 = rental_soparty::get_instance()->get_single($party_id);
@@ -1314,13 +1315,13 @@ JS;
 
 					//Validate the email
 					$validator = CreateObject('phpgwapi.EmailAddressValidator');
-					if(!$validator->check_email_address($email))
+					if (!$validator->check_email_address($email))
 					{
 						phpgwapi_cache::message_set(lang('error_create_user_based_on_email_not_valid_address'), 'error');
 						$this->edit();
 						return;
 					}
-					if($GLOBALS['phpgw']->accounts->exists($email))
+					if ($GLOBALS['phpgw']->accounts->exists($email))
 					{
 						phpgwapi_cache::message_set(lang('error_create_user_based_on_email_account_exist'), 'error');
 						$this->edit();
@@ -1368,7 +1369,7 @@ JS;
 						$preferences->add('common', 'default_app', 'frontend');
 						$preferences->save_repository();
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
 
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
@@ -1376,9 +1377,9 @@ JS;
 						return;
 					}
 
-					if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
-						if(!is_object($GLOBALS['phpgw']->send))
+						if (!is_object($GLOBALS['phpgw']->send))
 						{
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
@@ -1395,7 +1396,7 @@ JS;
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $email, $title, stripslashes(nl2br($message)), '', '', '', $from, 'System message', 'html', '', array(), false);
 
 						//Redirect with sucess message if receipt is ok
-						if($rcpt)
+						if ($rcpt)
 						{
 							phpgwapi_cache::message_set(lang('success_create_user_based_on_email'), 'message');
 							$this->edit();
@@ -1414,11 +1415,11 @@ JS;
 		{
 			$receipt	 = array();
 			$party_id	 = phpgw::get_var('id');
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				if(isset($party_id) && $party_id > 0)
+				if (isset($party_id) && $party_id > 0)
 				{
-					if(rental_soparty::get_instance()->delete_party($party_id)) // ... delete the party
+					if (rental_soparty::get_instance()->delete_party($party_id)) // ... delete the party
 					{
 						$message				 = lang('messages_saved_form');
 						$receipt['message'][]	 = array('msg' => $message);
@@ -1429,7 +1430,7 @@ JS;
 						$receipt['error'][]	 = array('msg' => $error);
 					}
 
-					if(phpgw::get_var('phpgw_return_as') == 'json')
+					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
 						return $receipt;
 					}

@@ -531,7 +531,7 @@
 		$GLOBALS['type'] = 'user';
 	}
 
-	$show_help = true;
+	$show_help = false;
 	if ( isset($session_data['show_help']) 
 		&& $session_data['show_help'] != '' 
 		&& $session_data['appname'] == $appname )
@@ -670,12 +670,16 @@
 		));
 		//echo "notifys:<pre>"; print_r($notifys); echo "</pre>\n";
 	}
-	if (is_admin())
-	{
+
+	$tabs = array();
+
 		$tabs['user'] = array(
 			'label' => lang('Your preferences'),
 			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'user'))
 		);
+
+	if (is_admin())
+	{
 		$tabs['default'] = array(
 			'label' => lang('Default preferences'),
 			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'default'))
@@ -754,12 +758,16 @@
 				break;
 
 		}
+	}
+	else
+	{
+		$pre_div = '<div id="user">';
+		$post_div ='</div><div id="default"></div><div id="forced"></div>';
+	}
 		$t->set_var('pre_div',$pre_div);
 		$t->set_var('post_div',$post_div);
 
 		$t->set_var('tabs',$GLOBALS['phpgw']->common->create_tabs($tabs,$GLOBALS['type']));
-
-	}
 	$t->set_var('lang_submit', lang('save'));
 	$t->set_var('lang_cancel', lang('cancel'));
 	$t->set_var('show_help',intval($show_help));
@@ -772,7 +780,21 @@
 	}
 
 	$GLOBALS['phpgw']->common->phpgw_header(true);
+	//preferences/templates/base/css/base.css
 
+	$css = <<<CSS
+		<style type="text/css" scoped="scoped">
+		.pure-control-group {
+			border-bottom: 1px solid;
+		}
+		.pure-control-group label {
+			text-align: left;
+			width: 35em;
+		}
+		</style>
+
+CSS;
+	echo $css;
 	$t->pfp('phpgw_body','preferences');
 	
 	//echo '<pre style="text-align: left;">'; print_r($GLOBALS['phpgw']->preferences->data); echo "</pre>\n";

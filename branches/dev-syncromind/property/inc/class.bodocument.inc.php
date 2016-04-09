@@ -55,7 +55,7 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.sodocument');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -66,7 +66,7 @@
 			$this->cats = & $this->so->cats;
 			$this->bofiles = CreateObject('property.bofiles');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -99,9 +99,9 @@
 			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'document', $data);
 			}
@@ -124,9 +124,9 @@
 			$this->query_location = $data['query_location'];
 		}
 
-		function select_status_list($format = '', $selected = '')
+		function select_status_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
@@ -140,42 +140,51 @@
 			return $this->bocommon->select_list($selected, $status_entries);
 		}
 
-		function select_branch_list($selected = '')
+		function select_branch_list( $selected = '' )
 		{
 			$branch_entries = $this->so->select_branch_list();
 			return $this->bocommon->select_list($selected, $branch_entries);
 		}
 
-		function read()
+		function read( $data = array() )
 		{
-			$documents = $this->so->read(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'entity_id' => $this->entity_id,
-				'doc_type' => $this->doc_type));
+			$documents = $this->so->read(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'results' => $data['results'],
+				'status_id' => $this->status_id,
+				'cat_id' => $this->cat_id,
+				'entity_id' => $this->entity_id,
+				'doc_type' => $this->doc_type,
+				'dry_run' => $data['dry_run'])
+			);
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;
 			$cols_extra = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach($documents as &$document)
+			foreach ($documents as &$document)
 			{
 				$location_data = $this->solocation->read_single($document['location_code']);
 
-				if(isset($location_data['street_name']) && $location_data['street_name'])
+				if (isset($location_data['street_name']) && $location_data['street_name'])
 				{
 					$document['address'] = "{$location_data['street_name']} {$location_data['street_number']}";
 				}
-				elseif($location_data['loc2_name'])
+				elseif ($location_data['loc2_name'])
 				{
 					$document['address'] = $location_data['loc2_name'];
 				}
-				elseif($location_data['loc1_name'])
+				elseif ($location_data['loc1_name'])
 				{
 					$document['address'] = $location_data['loc1_name'];
 				}
 
-				for($j = 0; $j < count($cols_extra); $j++)
+				for ($j = 0; $j < count($cols_extra); $j++)
 				{
 					$document[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 				}
@@ -184,7 +193,7 @@
 			return $documents;
 		}
 
-		function read2($data)
+		function read2( $data )
 		{
 			$documents = $this->so->read2($data);
 			$this->total_records = $this->so->total_records;
@@ -193,24 +202,24 @@
 			$cols_extra = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach($documents as &$document)
+			foreach ($documents as &$document)
 			{
 				$location_data = $this->solocation->read_single($document['location_code']);
 
-				if(isset($location_data['street_name']) && $location_data['street_name'])
+				if (isset($location_data['street_name']) && $location_data['street_name'])
 				{
 					$document['address'] = "{$location_data['street_name']} {$location_data['street_number']}";
 				}
-				elseif($location_data['loc2_name'])
+				elseif ($location_data['loc2_name'])
 				{
 					$document['address'] = $location_data['loc2_name'];
 				}
-				elseif($location_data['loc1_name'])
+				elseif ($location_data['loc1_name'])
 				{
 					$document['address'] = $location_data['loc1_name'];
 				}
 
-				for($j = 0; $j < count($cols_extra); $j++)
+				for ($j = 0; $j < count($cols_extra); $j++)
 				{
 					$document[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 				}
@@ -219,35 +228,44 @@
 			return $documents;
 		}
 
-		function get_files_at_location($data)
+		function get_files_at_location( $data )
 		{
 			return $this->so->get_files_at_location($data);
 		}
 
-		function read_at_location($location_code = '')
+		function read_at_location( $data = array() )
 		{
 			$use_svn = false;
-			if(preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
+			if (preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
 				//		$use_svn = true;
 			}
 
-
-			$document = $this->so->read_at_location(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'filter' => $this->filter, 'p_num' => $this->p_num, 'cat_id' => $this->cat_id,
+			$document = $this->so->read_at_location(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => $data['allrows'],
+				'results' => $data['results'],
+				'location_code' => $data['location_code'],
+				'status_id' => $this->status_id,
+				'p_num' => $this->p_num,
+				'cat_id' => $this->cat_id,
 				'entity_id' => $this->entity_id,
-				'location_code' => $location_code, 'doc_type' => $this->doc_type, 'allrows' => $this->allrows));
+				'doc_type' => $this->doc_type,
+				)
+			);
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			foreach($document as & $entry)
+			foreach ($document as & $entry)
 			{
 				$entry['user'] = $GLOBALS['phpgw']->accounts->id2name($entry['user_id']);
 				$entry['document_date'] = $GLOBALS['phpgw']->common->show_date($entry['document_date'], $dateformat);
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
-				if($use_svn)
+				if ($use_svn)
 				{
 					$entry['journal'] = $this->get_file($entry['document_id'], true);
 				}
@@ -256,25 +274,25 @@
 			return $document;
 		}
 
-		function read_single($document_id)
+		function read_single( $document_id )
 		{
 			$document = $this->so->read_single($document_id);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date'] = $GLOBALS['phpgw']->common->show_date($document['document_date'], $dateformat);
 
-			if(preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
+			if (preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
 				$document['journal'] = $this->get_file($document_id, true, $document);
 			}
 
-			if(isset($document['vendor_id']) && $document['vendor_id'])
+			if (isset($document['vendor_id']) && $document['vendor_id'])
 			{
 				$custom = createObject('property.custom_fields');
 				$vendor['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 				$vendor = $this->contacts->read_single(array('id' => $document['vendor_id']), $vendor);
-				foreach($vendor['attributes'] as $attribute)
+				foreach ($vendor['attributes'] as $attribute)
 				{
-					if($attribute['name'] == 'org_name')
+					if ($attribute['name'] == 'org_name')
 					{
 						$document['vendor_name'] = $attribute['value'];
 						break;
@@ -282,12 +300,12 @@
 				}
 			}
 
-			if($document['location_code'])
+			if ($document['location_code'])
 			{
 				$document['location_data'] = $this->solocation->read_single($document['location_code']);
 			}
 
-			if($document['p_num'])
+			if ($document['p_num'])
 			{
 				$soadmin_entity = CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($document['p_entity_id'], $document['p_cat_id']);
@@ -300,14 +318,14 @@
 			return $document;
 		}
 
-		function read_location_data($location_code)
+		function read_location_data( $location_code )
 		{
 			$location_data = $this->solocation->read_single($location_code);
 
 			return $location_data;
 		}
 
-		function select_category_list($format = '', $selected = '')
+		function select_category_list( $format = '', $selected = '' )
 		{
 			$soadmin_entity = CreateObject('property.soadmin_entity');
 			$categories = $soadmin_entity->read_category(array('allrows' => true, 'entity_id' => $this->entity_id));
@@ -317,17 +335,17 @@
 			return $category_list;
 		}
 
-		function read_record_history($id)
+		function read_record_history( $id )
 		{
 			$history_array = $this->historylog->return_array(array('O'), array(), '', '', $id);
 			$i = 0;
-			while(is_array($history_array) && list(, $value) = each($history_array))
+			while (is_array($history_array) && list(, $value) = each($history_array))
 			{
 
 				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user'] = $value['owner'];
 
-				switch($value['status'])
+				switch ($value['status'])
 				{
 					case 'R': $type = lang('Re-opened');
 						break;
@@ -362,11 +380,11 @@
 					default: break;
 				}
 
-				if($value['new_value'] == 'O')
+				if ($value['new_value'] == 'O')
 				{
 					$value['new_value'] = lang('Opened');
 				}
-				if($value['new_value'] == 'X')
+				if ($value['new_value'] == 'X')
 				{
 					$value['new_value'] = lang('Closed');
 				}
@@ -375,9 +393,9 @@
 				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
-				if($value['status'] == 'A')
+				if ($value['status'] == 'A')
 				{
-					if(!$value['new_value'])
+					if (!$value['new_value'])
 					{
 						$record_history[$i]['value_new_value'] = lang('None');
 					}
@@ -386,21 +404,21 @@
 						$record_history[$i]['value_new_value'] = $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
 				}
-				else if($value['status'] == 'C' || $value['status'] == 'CO')
+				else if ($value['status'] == 'C' || $value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value'] = $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 				}
-				else if($value['status'] == 'T' || $value['status'] == 'TO')
+				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category = $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value'] = $category[0]['name'];
-					if($value['old_value'])
+					if ($value['old_value'])
 					{
 						$category = $this->cats->return_single($value['old_value']);
 						$record_history[$i]['value_old_value'] = $category[0]['name'];
 					}
 				}
-				else if($value['status'] != 'O' && $value['new_value'])
+				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value'] = $value['new_value'];
 				}
@@ -415,14 +433,14 @@
 			return $record_history;
 		}
 
-		function get_file($document_id, $get_journal = false, $values = array())
+		function get_file( $document_id, $get_journal = false, $values = array() )
 		{
-			if(!$values)
+			if (!$values)
 			{
 				$values = $this->read_single($document_id);
 			}
 
-			if($values['p_num'])
+			if ($values['p_num'])
 			{
 				$file = "{$this->bofiles->fakebase}/document/entity_{$values['p_entity_id']}_{$values['p_cat_id']}/{$values['p_num']}/{$values['doc_type']}/{$values['document_name']}";
 			}
@@ -431,13 +449,13 @@
 				$file = "{$this->bofiles->fakebase}/document/{$values['location_code']}/{$values['doc_type']}/{$values['document_name']}";
 			}
 
-			if($this->bofiles->vfs->file_exists(array(
+			if ($this->bofiles->vfs->file_exists(array(
 				'string' => $file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
 
-				if($get_journal)
+				if ($get_journal)
 				{
 					return $this->bofiles->vfs->get_journal(array(
 						'string' => $file,
@@ -452,16 +470,16 @@
 			return false;
 		}
 
-		function save($values)
+		function save( $values )
 		{
 
 			$document_date = phpgwapi_datetime::date_array($values['document_date']);
 			$values['document_date'] = mktime(2, 0, 0, $document_date['month'], $document_date['day'], $document_date['year']);
 
 			//_debug_array($values);
-			if($values['document_id'])
+			if ($values['document_id'])
 			{
-				if($values['document_id'] != 0)
+				if ($values['document_id'] != 0)
 				{
 					$receipt = $this->so->edit($values);
 				}
@@ -473,7 +491,7 @@
 			return $receipt;
 		}
 
-		function delete($document_id)
+		function delete( $document_id )
 		{
 			$this->so->delete($document_id);
 		}

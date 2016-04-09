@@ -9,7 +9,7 @@
 		protected $date_str;
 		protected $lines;
 
-		public function __construct($billing_job)
+		public function __construct( $billing_job )
 		{
 			$this->billing_job	 = $billing_job;
 			$this->date_str		 = date('Ymd', $billing_job->get_timestamp_stop());
@@ -32,18 +32,18 @@
 		public function get_contents()
 		{
 			$contents = '';
-			if($this->lines == null) // Data hasn't been created yet
+			if ($this->lines == null) // Data hasn't been created yet
 			{
 				$this->run();
 			}
-			foreach($this->lines as $line)
+			foreach ($this->lines as $line)
 			{
 				$contents .= "{$line}\n";
 			}
 			return $contents;
 		}
 
-		public function get_missing_billing_info($contract)
+		public function get_missing_billing_info( $contract )
 		{
 
 			//FIXME: Might have to check for this one...
@@ -63,24 +63,24 @@
 			$missing_billing_info = array();
 
 			$payer_id	 = $contract->get_payer_id();
-			if($payer_id == null || $payer_id	 = 0)
+			if ($payer_id == null || $payer_id = 0)
 			{
 				$missing_billing_info[] = 'Missing payer id.';
 			}
 
 
 			$contract_parties = $contract->get_parties();
-			if($contract_parties == null || count($contract_parties) < 1)
+			if ($contract_parties == null || count($contract_parties) < 1)
 			{
 				$missing_billing_info[] = 'Missing contract party.';
 			}
 			$account_in = $contract->get_account_in();
-			if($account_in == null || $account_in == '')
+			if ($account_in == null || $account_in == '')
 			{
 				$missing_billing_info[] = 'Missing account in.';
 			}
 			$account_out = $contract->get_account_out();
-			if($account_out == null || $account_out == '')
+			if ($account_out == null || $account_out == '')
 			{
 				$missing_billing_info[] = 'Missing account out.';
 			}
@@ -94,30 +94,30 @@
 			  $missing_billing_info[] = 'System setting for responsibility id for the current user must be 6 characters.';
 			  } */
 			$responsibility_id_out = $contract->get_responsibility_id();
-			if($responsibility_id_out == null || $responsibility_id_out == '')
+			if ($responsibility_id_out == null || $responsibility_id_out == '')
 			{
 				$missing_billing_info[] = 'Missing responsibility id.';
 			}
-			else if(strlen($responsibility_id_out) != 6)
+			else if (strlen($responsibility_id_out) != 6)
 			{
 				$missing_billing_info[] = 'Responsibility id must be 6 characters.';
 			}
 			$service_id = $contract->get_service_id();
-			if($service_id == null || $service_id == '')
+			if ($service_id == null || $service_id == '')
 			{
 				$missing_billing_info[] = 'Missing service id.';
 			}
-			else if(strlen($service_id) != 5)
+			else if (strlen($service_id) != 5)
 			{
 				$missing_billing_info[] = 'Service id must be 5 characters.';
 			}
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($contract->get_id());
-			if($building_location_code == null || $building_location_code == '')
+			if ($building_location_code == null || $building_location_code == '')
 			{
 				$missing_billing_info[] = 'Unable to get a location code for the building.';
 			}
-			else if(strlen($building_location_code) != 6)
+			else if (strlen($building_location_code) != 6)
 			{
 				$missing_billing_info[] = 'Invalid location code for the building.';
 			}
@@ -131,25 +131,25 @@
 			  $missing_billing_info[] = 'System setting for project id can not be more than 6 characters.';
 			  } */
 			$project_id_out = $contract->get_project_id();
-			if($project_id_out == null || $project_id_out == '')
+			if ($project_id_out == null || $project_id_out == '')
 			{
 				$missing_billing_info[] = 'Missing project id.';
 			}
-			else if(strlen($project_id_out) > 6)
+			else if (strlen($project_id_out) > 6)
 			{
 				$missing_billing_info[] = 'Project id can not be more than 6 characters.';
 			}
 			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
 				'contract_id' => $contract->get_id()));
-			foreach($price_items as $price_item) // Runs through all items
+			foreach ($price_items as $price_item) // Runs through all items
 			{
 				$agresso_id = $price_item->get_agresso_id();
-				if($agresso_id == null || $agresso_id == '')
+				if ($agresso_id == null || $agresso_id == '')
 				{
 					$missing_billing_info[] = 'One or more price items are missing Agresso ids.';
 					break; // We only need one error message
 				}
-				else if(!preg_match("([A-Z]{1}[0-9]{3})", $agresso_id))
+				else if (!preg_match("([A-Z]{1}[0-9]{3})", $agresso_id))
 				{
 					$missing_billing_info[] = 'One or more price items have an invalid Agresso id. Id must consist of one capital letter and three digits.';
 					break; // We only need one error message
@@ -170,7 +170,7 @@
 			// We need all invoices for this billing
 			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
 				'billing_id' => $this->billing_job->get_id()));
-			foreach($invoices as $invoice) // Runs through all invoices
+			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
 				$price_items			 = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
@@ -183,7 +183,7 @@
 				$project_id_in		 = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'] : '9';
 
 				// The income side
-				foreach($price_items as $price_item) // Runs through all items
+				foreach ($price_items as $price_item) // Runs through all items
 				{
 					$this->lines[] = $this->get_line($invoice->get_account_in(), $responsibility_in, $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
 				}
@@ -208,7 +208,7 @@
 		 * @param $bill_month
 		 * @return unknown_type
 		 */
-		protected function get_line($account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month)
+		protected function get_line( $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month )
 		{
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$line = sprintf("%-25.25s", "PE{$this->date_str}")  //  1	batch_id
@@ -281,10 +281,10 @@
 			return str_replace(array("\n", "\r"), '', $line);
 		}
 
-		protected function get_formatted_amount($amount)
+		protected function get_formatted_amount( $amount )
 		{
 			$amount = round($amount, 2) * 100;
-			if($amount <= 0) // Negative number , extra check for '-0' which proved to be a problem
+			if ($amount <= 0) // Negative number , extra check for '-0' which proved to be a problem
 			{
 				return '-' . sprintf("%019.19s", abs($amount)); // We have to have the sign at the start of the string
 			}

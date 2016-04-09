@@ -1,6 +1,6 @@
 <?php
 
-/**
+	/**
  * sfValidatorEmail validates norwegian style Social Security Numbers (fødselsnummer).
  *
  * Oppbygning (http://no.wikipedia.org/wiki/F%C3%B8dselsnummer)
@@ -29,11 +29,12 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorNorwegianSSN extends sfValidatorString
-{
-	public function __construct($options = array(), $messages = array())
+	class sfValidatorNorwegianSSN extends sfValidatorString
+	{
+
+		public function __construct( $options = array(), $messages = array() )
 	{
 		parent::__construct($options, $messages);
 	}
@@ -43,7 +44,7 @@ class sfValidatorNorwegianSSN extends sfValidatorString
    *
    * @see sfValidatorRegex
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {	
 	$this->addOption('full_required', true);
     $this->addMessage('invalid', '%field% contains an invalid Norwegian social security number (11 digits)');
@@ -54,18 +55,18 @@ class sfValidatorNorwegianSSN extends sfValidatorString
   /**
    * @see sfValidatorString
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     $clean = parent::doClean($value);
 
-	if($this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/', $clean))
+			if ($this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/', $clean))
 	{
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
 	}
-	if(!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
+			if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
 	{
       throw new sfValidatorError($this, 'invalid2', array('value' => $value));
 	}
     return $clean;
   }
-}
+	}

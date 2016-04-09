@@ -180,7 +180,7 @@
 			$combos = array();
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->appname, false, false, true);
-			foreach($locations as $loc_id => $loc_descr)
+			foreach ($locations as $loc_id => $loc_descr)
 			{
 				$values_combo_box[0][] = array
 					(
@@ -206,7 +206,7 @@
 
 			$bocommon = CreateObject('property.bocommon');
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->no_access();
 				return;
@@ -214,13 +214,13 @@
 
 			$lookup = phpgw::get_var('lookup', 'bool');
 
-			if($lookup)
+			if ($lookup)
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				$GLOBALS['phpgw_info']['flags']['headonly'] = true;
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -318,12 +318,12 @@
 			);
 
 			$filters = $this->_get_Filter();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			if(!$lookup)
+			if (!$lookup)
 			{
 				$parameters = array
 					(
@@ -371,7 +371,7 @@
 					)
 				);
 
-				if($this->acl_edit)
+				if ($this->acl_edit)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -387,7 +387,7 @@
 					);
 				}
 
-				if($this->acl_delete)
+				if ($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -403,7 +403,7 @@
 					);
 				}
 
-				if($this->acl_add)
+				if ($this->acl_add)
 				{
 					$data['datatable']['actions'][] = array
 						(
@@ -421,7 +421,7 @@
 				unset($parameters);
 			}
 
-			if($lookup)
+			if ($lookup)
 			{
 
 				$function_exchange_values = '';
@@ -465,7 +465,7 @@
 
 			$values = $this->bo->read_type($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -479,7 +479,7 @@
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -488,24 +488,24 @@
 			$location = phpgw::get_var('location', 'string');
 			$values = phpgw::get_var('values');
 
-			if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if($GLOBALS['phpgw']->session->is_repost())
+				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-				if(!isset($values['location']) || !$values['location'])
+				if (!isset($values['location']) || !$values['location'])
 				{
 //					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
 				}
 
-				if(!isset($values['name']) || !$values['name'])
+				if (!isset($values['name']) || !$values['name'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a name!'));
 				}
 
-				if($id)
+				if ($id)
 				{
 					$values['id'] = $id;
 				}
@@ -514,36 +514,33 @@
 					$id = $values['id'];
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					try
 					{
 
 						$receipt = $this->bo->save_type($values);
 						$id = $receipt['id'];
-						$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiresponsible.index',
 								'appname' => $this->appname));
 						}
 					}
-					catch(Exception $e)
+					catch (Exception $e)
 					{
 
-						if($e)
+						if ($e)
 						{
 							phpgwapi_cache::message_set($e->getMessage(), 'error');
 							$this->edit();
 							return;
 						}
 					}
+					self::message_set($receipt);
 
-					$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
-					phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiresponsible.edit',
 						'appname' => $this->appname, 'id' => $id));
 				}
@@ -560,7 +557,7 @@
 
 		function edit()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -574,13 +571,13 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if(isset($values['cancel']) && $values['cancel'])
+			if (isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiresponsible.index',
 					'appname' => $this->appname));
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit responsible');
@@ -610,14 +607,14 @@
 			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->appname, false, false, true);
 
 			$selected_location = $location ? $location : $values['location'];
-			if(isset($values['location_id']) && $values['location_id'] && !$selected_location)
+			if (isset($values['location_id']) && $values['location_id'] && !$selected_location)
 			{
 				$locations_info = $GLOBALS['phpgw']->locations->get_name($values['location_id']);
 				$selected_location = $locations_info['location'];
 			}
 
 			$location_list = array();
-			foreach($locations as $_location => $descr)
+			foreach ($locations as $_location => $descr)
 			{
 				$location_list[] = array
 					(
@@ -629,7 +626,7 @@
 
 			$responsibility_module = isset($values['module']) && $values['module'] ? $values['module'] : array();
 
-			foreach($responsibility_module as &$module)
+			foreach ($responsibility_module as &$module)
 			{
 				$_location_info = $GLOBALS['phpgw']->locations->get_name($module['location_id']);
 				$module['appname'] = $_location_info['appname'];
@@ -637,7 +634,7 @@
 				$category = $this->cats->return_single($module['cat_id']);
 				$module['category'] = $category[0]['name'];
 
-				if($this->acl->check('admin', PHPGW_ACL_EDIT, $module['appname']))
+				if ($this->acl->check('admin', PHPGW_ACL_EDIT, $module['appname']))
 				{
 					$_checked = $module['active'] ? 'checked = "checked"' : '';
 					$module['active'] = "<input type='checkbox' name='values[set_active][]' {$_checked} value='{$module['location_id']}_{$module['cat_id']}' title='" . lang('Check to set active') . "'>";
@@ -706,7 +703,7 @@
 
 		function edit_role()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -716,24 +713,24 @@
 			$location = phpgw::get_var('location', 'string');
 			$values = phpgw::get_var('values');
 
-			if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if($GLOBALS['phpgw']->session->is_repost())
+				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-				if(!isset($values['location']) || !$values['location'])
+				if (!isset($values['location']) || !$values['location'])
 				{
 					//				$receipt['error'][]=array('msg'=>lang('Please select a location!'));
 				}
 
-				if(!isset($values['name']) || !$values['name'])
+				if (!isset($values['name']) || !$values['name'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a name!'));
 				}
 
-				if($id)
+				if ($id)
 				{
 					$values['id'] = $id;
 				}
@@ -742,12 +739,12 @@
 					$id = $values['id'];
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_role($values);
 					$id = $receipt['id'];
 
-					if(isset($values['save']) && $values['save'])
+					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt', $receipt);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric.index',
@@ -756,13 +753,13 @@
 				}
 			}
 
-			if(isset($values['cancel']) && $values['cancel'])
+			if (isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric.index',
 					'type' => 'responsibility_role', 'appname' => $this->appname));
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single_role($id);
 				$function_msg = lang('edit role');
@@ -794,7 +791,7 @@
 
 			$levels = isset($values['location_level']) && $values['location_level'] ? $values['location_level'] : array();
 			$level_list = array();
-			foreach($location_types as $location_type)
+			foreach ($location_types as $location_type)
 			{
 				$level_list[] = array
 					(
@@ -839,7 +836,7 @@
 		 */
 		public function contact()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$this->no_access();
 				return;
@@ -852,12 +849,12 @@
 			$responsible_info = $this->bo->read_contact($type_id);
 
 			$content = array();
-			foreach($responsible_info as $entry)
+			foreach ($responsible_info as $entry)
 			{
 				$link_edit = '';
 				$lang_edit_demo_text = '';
 				$text_edit = '';
-				if($this->acl_edit)
+				if ($this->acl_edit)
 				{
 					$link_edit = $GLOBALS['phpgw']->link('/index.php', array
 						(
@@ -961,7 +958,7 @@
 			//		'lang_delete'		=> $this->acl_delete ? lang('delete') : '',
 			);
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -1053,7 +1050,7 @@
 		 */
 		public function edit_contact()
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$this->no_access();
 				return;
@@ -1071,22 +1068,22 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
 
-			if(isset($values) && is_array($values))
+			if (isset($values) && is_array($values))
 			{
-				if(!$this->acl_edit)
+				if (!$this->acl_edit)
 				{
 					$this->no_access();
 					return;
 				}
 
-				if((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 					$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
 
-					if(isset($insert_record_entity) && is_array($insert_record_entity))
+					if (isset($insert_record_entity) && is_array($insert_record_entity))
 					{
-						foreach($insert_record_entity as $insert_record_entry)
+						foreach ($insert_record_entity as $insert_record_entry)
 						{
 							$insert_record['extra'][$insert_record_entry] = $insert_record_entry;
 						}
@@ -1094,56 +1091,56 @@
 
 					$values = $bocommon->collect_locationdata($values, $insert_record);
 
-					if($id)
+					if ($id)
 					{
 						$values['id'] = $id;
 					}
-					if($contact_id)
+					if ($contact_id)
 					{
 						$values['contact_id'] = $contact_id;
 					}
 
-					if($contact_name)
+					if ($contact_name)
 					{
 						$values['contact_name'] = $contact_name;
 					}
 
-					if($responsibility_id)
+					if ($responsibility_id)
 					{
 						$values['responsibility_id'] = $responsibility_id;
 					}
 
-					if($contact_name)
+					if ($contact_name)
 					{
 						$values['responsibility_name'] = $responsibility_name;
 					}
 
-					if(!isset($values['responsibility_id']))
+					if (!isset($values['responsibility_id']))
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a responsibility!'));
 					}
 
-					if(!isset($values['contact_id']))
+					if (!isset($values['contact_id']))
 					{
 						$receipt['error'][] = array('msg' => lang('Please select a contact!'));
 					}
 
-					if(!isset($values['location']['loc1']))
+					if (!isset($values['location']['loc1']))
 					{
 						//			$receipt['error'][]=array('msg'=>lang('Please select a location!'));
 					}
 
-					if($GLOBALS['phpgw']->session->is_repost())
+					if ($GLOBALS['phpgw']->session->is_repost())
 					{
 						$receipt['error'][] = array('msg' => lang('Hmm... looks like a repost!'));
 					}
 
-					if(!isset($receipt['error']) || !$receipt['error'])
+					if (!isset($receipt['error']) || !$receipt['error'])
 					{
 						$receipt = $this->bo->save_contact($values);
 						$id = $receipt['id'];
 
-						if(isset($values['save']) && $values['save'])
+						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_contact_receipt', $receipt);
 							$GLOBALS['phpgw']->redirect_link('/index.php', array
@@ -1154,7 +1151,7 @@
 								'type_id' => $type_id
 							));
 						}
-						else if(isset($values['apply']) && $values['apply'])
+						else if (isset($values['apply']) && $values['apply'])
 						{
 							$GLOBALS['phpgw']->redirect_link('/index.php', array
 								(
@@ -1168,12 +1165,12 @@
 					}
 					else
 					{
-						if(isset($values['location']) && $values['location'])
+						if (isset($values['location']) && $values['location'])
 						{
 							$location_code = implode("-", $values['location']);
 							$values['location_data'] = $bolocation->read_single($location_code, isset($values['extra']) ? $values['extra'] : false);
 						}
-						if(isset($values['extra']['p_num']) && $values['extra']['p_num'])
+						if (isset($values['extra']['p_num']) && $values['extra']['p_num'])
 						{
 							$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
 							$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
@@ -1195,7 +1192,7 @@
 			}
 
 
-			if($id)
+			if ($id)
 			{
 				$function_msg = lang('edit responsible type');
 				$values = $this->bo->read_single_contact($id);
@@ -1249,7 +1246,7 @@
 			. '//]]' . "\n"
 			. "</script>\n";
 
-			if(!isset($GLOBALS['phpgw_info']['flags']['java_script']))
+			if (!isset($GLOBALS['phpgw_info']['flags']['java_script']))
 			{
 				$GLOBALS['phpgw_info']['flags']['java_script'] = '';
 			}
@@ -1332,14 +1329,14 @@
 		 */
 		public function delete_type()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				return 'No access';
 			}
 
 			$id = phpgw::get_var('id', 'int');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete_type($id);
 				return lang('id %1 has been deleted', $id);

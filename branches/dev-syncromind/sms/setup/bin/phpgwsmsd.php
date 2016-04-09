@@ -1,24 +1,23 @@
 #!/usr/bin/php -q
 <?php
-
 // The path to directory of installed phpgwsms
-$PHPGWSMS_PATH = "/home/sn5607/public_html/phpgroupware/sms";
+	$PHPGWSMS_PATH = "/home/sn5607/public_html/phpgroupware/sms";
 
 // DO NOT CHANGE ANYTHING BELOW THE LINE
 // ------------------------------------------------------
 
-$DAEMON_PROCESS = true;
-chdir($PHPGWSMS_PATH);
-if (!function_exists("validatelogin"))
-{
+	$DAEMON_PROCESS = true;
+	chdir($PHPGWSMS_PATH);
+	if (!function_exists("validatelogin"))
+	{
     include_once("init.php");
     $sms = CreateObject('sms.sms');
-}
-$DAEMON_COUNTER = 0;
+	}
+	$DAEMON_COUNTER = 0;
 
 //while(true)
-while($DAEMON_COUNTER < 1)
-{
+	while ($DAEMON_COUNTER < 1)
+	{
     if (file_exists($PHPGWSMS_PATH))
     {
 	$DAEMON_COUNTER++;
@@ -29,6 +28,5 @@ while($DAEMON_COUNTER < 1)
     {
 	die("EXIT");
     }
-}
-
+	}
 ?>

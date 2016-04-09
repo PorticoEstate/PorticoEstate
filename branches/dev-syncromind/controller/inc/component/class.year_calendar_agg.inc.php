@@ -14,7 +14,7 @@
 		private $view;
 		private $calendar_array = array();
 
-		public function __construct($control, $year, $location_code, $view)
+		public function __construct( $control, $year, $location_code, $view )
 		{
 			$this->year			 = $year;
 			$this->control		 = $control;
@@ -29,13 +29,13 @@
 			$start_month_nr	 = $this->get_start_month_for_control($this->control, $this->year);
 			$end_month_nr	 = $this->get_end_month_for_control($this->control, $this->year);
 
-			for($month_nr = 1; $month_nr <= 12; $month_nr++)
+			for ($month_nr = 1; $month_nr <= 12; $month_nr++)
 			{
-				if(($month_nr < $start_month_nr) || ($month_nr > $end_month_nr))
+				if (($month_nr < $start_month_nr) || ($month_nr > $end_month_nr))
 				{
 					$this->calendar_array[$month_nr] = null;
 				}
-				else if(($month_nr < date("m")) && (date("Y", $this->control->get_start_date()) == $this->year))
+				else if (($month_nr < date("m")) && (date("Y", $this->control->get_start_date()) == $this->year))
 				{
 					$this->calendar_array[$month_nr]["status"] = "CONTROLS_NOT_DONE";
 					$this->calendar_array[$month_nr]["info"]	 = array("view" => $this->view, "control_id" => $this->control->get_id(),
@@ -50,9 +50,9 @@
 			}
 		}
 
-		public function build_calendar($agg_open_cases_pr_month_array)
+		public function build_calendar( $agg_open_cases_pr_month_array )
 		{
-			foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
+			foreach ($agg_open_cases_pr_month_array as $status_agg_month_info)
 			{
 				$status = "CONTROLS_DONE_WITH_ERRORS";
 
@@ -68,7 +68,7 @@
 
 			$heading_array = array();
 
-			for($i = 1; $i <= 12; $i++)
+			for ($i = 1; $i <= 12; $i++)
 			{
 				$heading_array[$i] = "$i";
 			}
@@ -76,10 +76,10 @@
 			return $heading_array;
 		}
 
-		function get_start_month_for_control($control, $year)
+		function get_start_month_for_control( $control, $year )
 		{
 			// Checks if control starts in the year that is displayed
-			if(date("Y", $control->get_start_date()) == $year)
+			if (date("Y", $control->get_start_date()) == $year)
 			{
 				$from_month = date("n", $control->get_start_date());
 			}
@@ -91,10 +91,10 @@
 			return $from_month;
 		}
 
-		function get_end_month_for_control($control, $year)
+		function get_end_month_for_control( $control, $year )
 		{
 			// Checks if control ends in the year that is displayed
-			if(date("Y", $control->get_end_date()) == $year)
+			if (date("Y", $control->get_end_date()) == $year)
 			{
 				$to_month = date("n", $control->get_end_date());
 			}
@@ -106,7 +106,7 @@
 			return $to_month;
 		}
 
-		public static function get_start_date_year_ts($year)
+		public static function get_start_date_year_ts( $year )
 		{
 			$start_date_year_ts = strtotime("01/01/$year");
 

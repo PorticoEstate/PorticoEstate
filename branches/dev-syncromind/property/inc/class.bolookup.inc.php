@@ -42,12 +42,12 @@
 		public $cat_id;
 		public $total_records = 0;
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.solookup');
 			$this->solocation = CreateObject('property.solocation');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -72,9 +72,9 @@
 			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'lookup', $data);
 			}
@@ -100,9 +100,9 @@
 		 *
 		 * @return array of contacts
 		 */
-		function read_addressbook($data = array())
+		function read_addressbook( $data = array() )
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -121,7 +121,7 @@
 				'contact_id',
 			);
 
-			if($this->cat_id && $this->cat_id != 0)
+			if ($this->cat_id && $this->cat_id != 0)
 			{
 				$category_filter = $this->cat_id;
 			}
@@ -142,9 +142,9 @@
 
 			$socommon = CreateObject('property.socommon');
 			$prefs = array();
-			foreach($accounts as $account)
+			foreach ($accounts as $account)
 			{
-				if(isset($account->person_id) && $account->person_id)
+				if (isset($account->person_id) && $account->person_id)
 				{
 					$user_contacts[] = $account->person_id;
 
@@ -153,18 +153,18 @@
 			}
 
 //_debug_array($prefs);die();
-			foreach($contacts as &$contact)
+			foreach ($contacts as &$contact)
 			{
 				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms = '', $simple = false);
 				$contact['contact_name'] = "{$contact['per_last_name']}, {$contact['per_first_name']}";
 
-				if(is_array($comms) && count($comms))
+				if (is_array($comms) && count($comms))
 				{
 					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) && $comms[$contact['contact_id']]['work email'] ? $comms[$contact['contact_id']]['work email'] : $prefs[$contact['contact_id']]['email'];
 					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) && $comms[$contact['contact_id']]['work phone'] ? $comms[$contact['contact_id']]['work phone'] : '';
 					$contact['mobile'] = isset($comms[$contact['contact_id']]['mobile (cell) phone']) && $comms[$contact['contact_id']]['mobile (cell) phone'] ? $comms[$contact['contact_id']]['mobile (cell) phone'] : $prefs[$contact['contact_id']]['cellphone'];
 				}
-				if(in_array($contact['contact_id'], $user_contacts))
+				if (in_array($contact['contact_id'], $user_contacts))
 				{
 					$contact['is_user'] = 'X';
 
@@ -182,9 +182,9 @@
 		 *
 		 * @return array of contacts
 		 */
-		function read_organisation($data = array())
+		function read_organisation( $data = array() )
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -201,7 +201,7 @@
 				'org_name'
 			);
 
-			if($this->cat_id && $this->cat_id != 0)
+			if ($this->cat_id && $this->cat_id != 0)
 			{
 				$category_filter = $this->cat_id;
 			}
@@ -221,10 +221,10 @@
 
 			$this->total_records = $addressbook->total;
 
-			foreach($orgs as &$contact)
+			foreach ($orgs as &$contact)
 			{
 				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms = '', $simple = false);
-				if(is_array($comms) && count($comms))
+				if (is_array($comms) && count($comms))
 				{
 					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
 					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ? $comms[$contact['contact_id']]['work phone'] : '';
@@ -234,7 +234,7 @@
 			return $orgs;
 		}
 
-		function read_vendor($data = array())
+		function read_vendor( $data = array() )
 		{
 			$sogeneric = CreateObject('property.sogeneric');
 
@@ -244,15 +244,15 @@
 			$data['sort'] = $data['sort'] ? $data['sort'] : 'ASC';
 
 			$filter = $data['filter'];
-			if(!$filter)
+			if (!$filter)
 			{
-				foreach($location_info['fields'] as $field)
+				foreach ($location_info['fields'] as $field)
 				{
-					if(isset($field['filter']) && $field['filter'])
+					if (isset($field['filter']) && $field['filter'])
 					{
-						if($field['name'] == 'member_of')
+						if ($field['name'] == 'member_of')
 						{
-							$filter[$field['name']] = phpgw::get_var('cat_id');
+							$filter[$field['name']] = $this->cat_id;
 						}
 						else
 						{
@@ -270,7 +270,7 @@
 			return $values;
 		}
 
-		function read_b_account($data)
+		function read_b_account( $data )
 		{
 			$b_account = $this->so->read_b_account(array('start' => $data['start'], 'query' => $data['query'],
 				'sort' => $data['sort'], 'order' => $data['order'],
@@ -281,14 +281,20 @@
 			return $b_account;
 		}
 
-		function read_phpgw_user($data = array())
+		function read_phpgw_user( $data = array() )
 		{
-			if($data['acl_app'] && $data['acl_location'] && $data['acl_required'])
+			if ($data['acl_app'] && $data['acl_location'] && $data['acl_required'])
 			{
 				$users = $GLOBALS['phpgw']->acl->get_user_list_right($data['acl_required'], $data['acl_location'], $data['acl_app']);
 				$user_list = array();
-				foreach($users as $user)
+				foreach ($users as $user)
 				{
+
+					if ($data['query'] && (!preg_match("/{$data['query']}/i", $user['account_lastname']) || !preg_match("/{$data['query']}/i", $user['account_lastname'])))
+					{
+						continue;
+					}
+
 					$user_list[] = array
 						(
 						'id' => $user['account_id'],
@@ -296,23 +302,49 @@
 						'first_name' => $user['account_firstname'],
 					);
 				}
-				$this->total_record = count($user_list);
-				return $user_list;
+				$this->total_records = count($user_list);
+
+				$allrows = $data['allrows'];
+				$start = $data['start'];
+				$total_records = $this->total_records;
+				$num_rows = $data['results'];
+
+				if ($allrows)
+				{
+					$out = $user_list;
 			}
+				else
+				{
+					if ($total_records > $num_rows)
+					{
+						$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+						$values_part = array_chunk($user_list, $num_rows);
+						$out = $values_part[$page];
+					}
+					else
+					{
+						$out = $user_list;
+					}
+				}
+				return $out;
+			}
+			else
+			{
 
 			$phpgw_user = $this->so->read_phpgw_user($data);
 			$this->total_records = $this->so->total_records;
 
 			return $phpgw_user;
 		}
+		}
 
-		function read_ecodimb($data = array())
+		function read_ecodimb( $data = array() )
 		{
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 
 			$custom_criteria = array();
-			if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+			if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 			{
 				$custom_criteria = array('dimb_role_user');
 			}

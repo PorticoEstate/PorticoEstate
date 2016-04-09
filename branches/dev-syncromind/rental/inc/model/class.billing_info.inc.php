@@ -14,7 +14,7 @@
 		protected $term_label;
 		public static $so;
 
-		public function __construct(int $id = null, int $billing_id = null, $location_id = null, int $billing_term = null, int $year = null, int $month = null)
+		public function __construct( int $id = null, int $billing_id = null, $location_id = null, int $billing_term = null, int $year = null, int $month = null )
 		{
 			$this->id			 = $id;
 			$this->billing_id	 = $billing_id;
@@ -29,7 +29,7 @@
 			return $this->id;
 		}
 
-		public function set_id(int $id)
+		public function set_id( int $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -39,7 +39,7 @@
 			return $this->billing_id;
 		}
 
-		public function set_billing_id(int $billing_id)
+		public function set_billing_id( int $billing_id )
 		{
 			$this->billing_id = (int)$billing_id;
 		}
@@ -49,7 +49,7 @@
 			return $this->term_id;
 		}
 
-		public function set_term_id(int $term_id)
+		public function set_term_id( int $term_id )
 		{
 			$this->term_id = (int)$term_id;
 		}
@@ -59,7 +59,7 @@
 			return $this->location_id;
 		}
 
-		public function set_location_id(int $location_id)
+		public function set_location_id( int $location_id )
 		{
 			$this->location_id = (int)$location_id;
 		}
@@ -69,7 +69,7 @@
 			return $this->year;
 		}
 
-		public function set_year($year)
+		public function set_year( $year )
 		{
 			$this->year = $year;
 		}
@@ -79,12 +79,12 @@
 			return $this->month;
 		}
 
-		public function set_month($month)
+		public function set_month( $month )
 		{
 			$this->month = $month;
 		}
 
-		public function set_deleted(boolean $deleted)
+		public function set_deleted( boolean $deleted )
 		{
 			$this->deleted = (boolean)$deleted;
 		}
@@ -110,7 +110,7 @@
 			return $this->term_label;
 		}
 
-		public function set_term_label($term_label)
+		public function set_term_label( $term_label )
 		{
 			$this->term_label = $term_label;
 		}

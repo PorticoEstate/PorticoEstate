@@ -7,9 +7,8 @@
 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -35,21 +34,21 @@
 	/**
 	* @global string $GLOBALS['sessionid']
 	*/
-	$GLOBALS['sessionid'] = isset($_REQUEST['sessionid'])? $_REQUEST['sessionid'] : '';
+	$GLOBALS['sessionid'] = isset($_REQUEST['sessionid']) ? $_REQUEST['sessionid'] : '';
 
 	$invalid_data = false;
 	// This is the preliminary menuaction driver for the new multi-layered design
 	if (isset($_GET['menuaction']) || isset($_POST['menuaction']))
 	{
-		if(isset($_GET['menuaction']))
+		if (isset($_GET['menuaction']))
 		{
-			list($app,$class,$method) = explode('.',$_GET['menuaction']);
+			list($app, $class, $method) = explode('.', $_GET['menuaction']);
 		}
 		else
 		{
-			list($app,$class,$method) = explode('.',$_POST['menuaction']);
+			list($app, $class, $method) = explode('.', $_POST['menuaction']);
 		}
-		if (! $app || ! $class || ! $method)
+		if (!$app || !$class || !$method)
 		{
 			$invalid_data = true;
 		}
@@ -82,7 +81,7 @@
 
 	require_once('../header.inc.php');
 
-	if ($app == 'home' && ! $api_requested)
+	if ($app == 'home' && !$api_requested)
 	{
 		$GLOBALS['phpgw']->redirect_link('/mobilefrontend/home.php');
 	}
@@ -92,7 +91,7 @@
 		$app = 'phpgwapi';
 	}
 
-	if(is_file(PHPGW_SERVER_ROOT. "/mobilefrontend/inc/class.{$class}.inc.php"))
+	if (is_file(PHPGW_SERVER_ROOT . "/mobilefrontend/inc/class.{$class}.inc.php"))
 	{
 		$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 	}
@@ -103,17 +102,11 @@
 		$GLOBALS[$class] = new $_class;
 	}
 
-	if ( !$invalid_data 
-		&& is_object($GLOBALS[$class])
-		&& isset($GLOBALS[$class]->public_functions) 
-		&& is_array($GLOBALS[$class]->public_functions) 
-		&& isset($GLOBALS[$class]->public_functions[$method])
-		&& $GLOBALS[$class]->public_functions[$method] )
-
+	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
-		if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+		if (phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
 			 // deprecated
-			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
 		{
 			// comply with RFC 4627
 			header('Content-Type: application/json'); 
@@ -122,11 +115,11 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			//If debug info is not triggered elsewhere.
-			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && DEBUG_TIMER && !phpgwapi_cache::session_get($app,'id_debug'))
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && DEBUG_TIMER && !phpgwapi_cache::session_get($app, 'id_debug'))
 			{
 				$debug_timer_stop = perfgetmicrotime();
 				//BTW: wil not destroy the json output - click on the 'Debug-link' to view message
-				_debug_array(lang('page prepared in %1 seconds.', $debug_timer_stop - $GLOBALS['debug_timer_start'] ));
+				_debug_array(lang('page prepared in %1 seconds.', $debug_timer_stop - $GLOBALS['debug_timer_start']));
 			}
 
 			$GLOBALS['phpgw']->common->phpgw_exit();
@@ -144,7 +137,7 @@
 	else
 	{
 		//FIXME make this handle invalid data better
-		if (! $app || ! $class || ! $method)
+		if (!$app || !$class || !$method)
 		{
 			$GLOBALS['phpgw']->log->message(array(
 				'text' => 'W-BadmenuactionVariable, menuaction missing or corrupt: %1',
@@ -154,11 +147,7 @@
 			));
 		}
 
-		if ( ( !isset($GLOBALS[$class]->public_functions)
-			|| !is_array($GLOBALS[$class]->public_functions)
-			|| !isset($GLOBALS[$class]->public_functions[$method])
-			|| !$GLOBALS[$class]->public_functions[$method] )
-			&& $method)
+		if ((!isset($GLOBALS[$class]->public_functions) || !is_array($GLOBALS[$class]->public_functions) || !isset($GLOBALS[$class]->public_functions[$method]) || !$GLOBALS[$class]->public_functions[$method] ) && $method)
 		{
 			$GLOBALS['phpgw']->log->message(array(
 				'text' => 'W-BadmenuactionVariable, attempted to access private method: %1',

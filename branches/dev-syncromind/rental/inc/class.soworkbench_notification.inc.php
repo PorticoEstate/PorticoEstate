@@ -12,7 +12,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.soworkbench_notification');
 			}
@@ -24,7 +24,7 @@
 			return 'id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -35,12 +35,12 @@
 			$dir	 = $ascending ? 'ASC' : 'DESC';
 			$order	 = $sort_field ? "ORDER BY $sort_field $dir" : 'ORDER BY rnw.date ASC';
 
-			if(isset($filters['account_id']))
+			if (isset($filters['account_id']))
 			{
 				$account_id = $this->marshal($filters['account_id'], 'int');
 			}
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols	 = 'COUNT(DISTINCT(rnw.id)) AS count';
 				$order	 = '';
@@ -72,10 +72,10 @@
 			return $sql;
 		}
 
-		protected function populate(int $notification_id, &$notification)
+		protected function populate( int $notification_id, &$notification )
 		{
 			$message = $this->unmarshal($this->db->f('message', true), 'text');
-			if(!isset($message) || $message == '')
+			if (!isset($message) || $message == '')
 			{
 				$message = lang($this->unmarshal($this->db->f('workbench_message', true), 'text'));
 			}
@@ -86,7 +86,7 @@
 			return $notification;
 		}
 
-		function add(&$notification)
+		function add( &$notification )
 		{
 			$account_id			 = $this->marshal($notification->get_account_id(), 'int');
 			$date				 = $this->marshal($notification->get_date(), 'int');
@@ -96,13 +96,17 @@
 			$sql	 = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,workbench_message,dismissed) VALUES ({$account_id},{$date},{$notification_id},{$workbench_message},'FALSE')";
 			$result	 = $this->db->query($sql);
 
-			if($result)
-			{ return true;}
+			if ($result)
+			{
+				return true;
+			}
 			else
-			{ return false;}
+			{
+				return false;
+			}
 		}
 
-		function update($notification)
+		function update( $notification )
 		{
 
 		}
@@ -113,15 +117,19 @@
 		 * @param $ts_dismissed	the timestamp of dismissal
 		 * @return true on successful query execution / false otherwise
 		 */
-		public function dismiss_notification($id)
+		public function dismiss_notification( $id )
 		{
 			$sql	 = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = {$id}";
 			$result	 = $this->db->query($sql);
 
-			if($result)
-			{ return true;}
+			if ($result)
+			{
+				return true;
+			}
 			else
-			{ return false;}
+			{
+				return false;
+			}
 		}
 
 		/**
@@ -129,14 +137,18 @@
 		 * @param $id the notification id all workbench notifications originated from
 		 * @return true on successful query execution / false otherwise
 		 */
-		public function dismiss_notification_for_all($id)
+		public function dismiss_notification_for_all( $id )
 		{
 			$sql	 = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = {$id}";
 			$result	 = $this->db->query($sql);
 
-			if($result)
-			{ return true;}
+			if ($result)
+			{
+				return true;
+			}
 			else
-			{ return false;}
+			{
+				return false;
+			}
 		}
 	}

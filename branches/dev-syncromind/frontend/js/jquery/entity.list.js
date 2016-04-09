@@ -1,45 +1,56 @@
 
-var addEntity = function(oArgs, parameters) {
+var addEntity = function (oArgs, parameters)
+{
 	
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe:sUrl, boxid:'frameless',width:650,height:500,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 500, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 	close: true,
-	closejs:function(){refresh_entity();}
+		closejs: function ()
+		{
+			refresh_entity();
+		}
 	});
 };
 
-var startTicket = function(oArgs, parameters) {
+var startTicket = function (oArgs, parameters)
+{
 	
-	var api =$( '#datatable-container_0' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_0').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 
-	if (selected.length == 0){
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
 		
 	var n = 0;
-	$.each(parameters.parameter, function( i, val ) {
+	$.each(parameters.parameter, function (i, val)
+	{
 		oArgs[val.name] = selected[n][val.source];
 	});		
 	
 	var sUrl = phpGWLink('index.php', oArgs);
 	
-	TINY.box.show({iframe:sUrl, boxid:'frameless',width:650,height:500,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 500, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 	close: true,
-	closejs:function(){refresh_entity();}
+		closejs: function ()
+		{
+			refresh_entity();
+		}
 	});
 };
 
-refresh_entity = function()
+refresh_entity = function ()
 {
 	oTable0.fnDraw();
 };
 
-var download = function(oArgs){
+var download = function (oArgs)
+{
 
-	if(!confirm("This will take some time..."))
+	if (!confirm("This will take some time..."))
 	{
 		return false;
 	}
@@ -48,7 +59,7 @@ var download = function(oArgs){
 	
 	if (filters.length > 0) 
 	{
-		filters.each(function(i, obj) 
+		filters.each(function (i, obj)
 		{
 			if (obj.value !== '') 
 			{
@@ -61,5 +72,5 @@ var download = function(oArgs){
 
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	window.open(requestUrl,'_self');
+	window.open(requestUrl, '_self');
 };

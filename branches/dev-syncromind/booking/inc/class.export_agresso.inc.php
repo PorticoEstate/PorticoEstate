@@ -22,7 +22,7 @@
 			$this->config->read_repository();
 		}
 
-		public function do_your_magic($buffer, $id)
+		public function do_your_magic( $buffer, $id )
 		{
 			// Viktig: må kunne rulle tilbake dersom noe feiler.
 			$this->db->transaction_begin();
@@ -36,21 +36,21 @@
 			$fp = fopen($filnavn, "wb");
 			fwrite($fp, $buffer);
 
-			if(fclose($fp))
+			if (fclose($fp))
 			{
 				$file_written = true;
 			}
 
-			if($file_written && $this->config->config_data['invoice_export_method'] != 'ftp')
+			if ($file_written && $this->config->config_data['invoice_export_method'] != 'ftp')
 			{
 				$transfer_ok = true;
 			}
-			else if($file_written)
+			else if ($file_written)
 			{
 				$transfer_ok = $this->transfer($filnavn);
 			}
 
-			if($transfer_ok)
+			if ($transfer_ok)
 			{
 				$this->db->transaction_commit();
 				$this->config->config_data['invoice_last_id']	 = $id;
@@ -75,23 +75,23 @@
 				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s", $i) . '.TXT';
 
 				//Sjekk om filen eksisterer
-				If(!file_exists($filnavn))
+				If (!file_exists($filnavn))
 				{
 					return $filnavn;
 				}
 
 				$i++;
 			}
-			while($continue);
+			while ($continue);
 
 			//Ingen løpenr er ledige, gi feilmelding
 			return false;
 		}
 
-		protected function transfer($filnavn)
+		protected function transfer( $filnavn )
 		{
 
-			if($this->config->config_data['invoice_export_method'] == 'ftp')
+			if ($this->config->config_data['invoice_export_method'] == 'ftp')
 			{
 
 				$transfer_ok = false;
@@ -99,7 +99,7 @@
 				$basedir	 = $this->config->config_data['invoice_ftp_basedir'];
 
 
-				if($basedir)
+				if ($basedir)
 				{
 					$newfile = $basedir . '/' . basename($filnavn);
 				}
@@ -108,7 +108,7 @@
 					$newfile = basename($filnavn);
 				}
 
-				if(ftp_put($ftp, $newfile, $filnavn, FTP_BINARY))
+				if (ftp_put($ftp, $newfile, $filnavn, FTP_BINARY))
 				{
 					//log_transaction_ok
 					$transfer_ok = True;
@@ -131,9 +131,9 @@
 			$pass	 = $this->config->config_data['invoice_ftp_password'];
 
 			$ftp = ftp_connect($host);
-			if($ftp)
+			if ($ftp)
 			{
-				if($lres = ftp_login($ftp, $user, $pass))
+				if ($lres = ftp_login($ftp, $user, $pass))
 				{
 					return $ftp;
 				}

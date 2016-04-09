@@ -19,7 +19,8 @@ function formatterArea(key, oData)
 function formatterPayer(key, oData)
 {
 	var value = oData[key];
-	if (value == '') {
+	if (value == '')
+	{
 		value = oData['other_operations'];
 	}
 	;
@@ -38,7 +39,8 @@ function changeDate_price_item(param, value)
 
 	var requestUrl = phpGWLink('index.php', oArgs_request, true);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(5, result);
 
@@ -54,7 +56,7 @@ function changeOne_time_price_item(param, value)
 	var data = {};
 	data['id'] = arr[1];
 	data['field_name'] = arr[0];
-	if(value == "false")
+	if (value == "false")
 	{
 		data['value'] = true;
 	}
@@ -65,7 +67,8 @@ function changeOne_time_price_item(param, value)
 
 	var requestUrl = phpGWLink('index.php', oArgs_request, true);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		var message = result.message[0]['msg'];
 		alert(message);
@@ -176,7 +179,8 @@ function formatterIs_one_time(key, oData)
 
 $(document).ready(function ()
 {
-	$("#date_start").change(function () {
+	$("#date_start").change(function ()
+	{
 
 		var date_start = $("#date_start").val();
 		var billing_start = $("#billing_start_date").val();
@@ -186,7 +190,8 @@ $(document).ready(function ()
 		}
 	});
 
-	$("#date_end").change(function () {
+	$("#date_end").change(function ()
+	{
 
 		var date_end = $("#date_end").val();
 		var billing_end_date = $("#billing_end_date").val();
@@ -350,11 +355,13 @@ $(document).ready(function ()
 	$('#upload_button').on('click', function ()
 	{
 
-		if ($('#ctrl_upoad_path').val() === '') {
+		if ($('#ctrl_upoad_path').val() === '')
+		{
 			alert('no file selected');
 			return false;
 		}
-		if ($.trim($('#document_title').val()) === '') {
+		if ($.trim($('#document_title').val()) === '')
+		{
 			alert('enter document title');
 			return false;
 		}
@@ -374,7 +381,8 @@ $(document).ready(function ()
 			processData: false,
 			data: form_data,
 			type: 'post',
-			success: function (result) {
+			success: function (result)
+			{
 				JqueryPortico.show_message(nTable, result);
 				$('#document_type')[0].selectedIndex = 0;
 				$('#document_title').val('');
@@ -407,18 +415,21 @@ function filterDataDocument(param, value)
 
 /******************************************************************************/
 
-getRequestData = function (dataSelected, parameters) {
+getRequestData = function (dataSelected, parameters)
+{
 
 	var data = {};
 
-	$.each(parameters.parameter, function (i, val) {
+	$.each(parameters.parameter, function (i, val)
+	{
 		data[val.name] = {};
 	});
 
 	var n = 0;
 	for (var n = 0; n < dataSelected.length; ++n)
 	{
-		$.each(parameters.parameter, function (i, val) {
+		$.each(parameters.parameter, function (i, val)
+		{
 			data[val.name][n] = dataSelected[n][val.source];
 		});
 	}
@@ -426,13 +437,15 @@ getRequestData = function (dataSelected, parameters) {
 	return data;
 };
 
-addComposite = function (oArgs, parameters) {
+addComposite = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_2' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_2').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 1;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -440,7 +453,8 @@ addComposite = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -450,13 +464,15 @@ addComposite = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-removeComposite = function (oArgs, parameters) {
+removeComposite = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_1' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_1').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 1;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -464,7 +480,8 @@ removeComposite = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -474,7 +491,8 @@ removeComposite = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-downloadComposite = function (oArgs) {
+downloadComposite = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{
@@ -492,14 +510,16 @@ downloadComposite = function (oArgs) {
 	window.open(requestUrl, '_self');
 };
 
-addParty = function (oArgs, parameters) {
+addParty = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_4' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_4').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 
 	var nTable = 3;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -507,7 +527,8 @@ addParty = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -517,13 +538,15 @@ addParty = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-removeParty = function (oArgs, parameters) {
+removeParty = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_3' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_3').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 3;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -531,7 +554,8 @@ removeParty = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -543,7 +567,8 @@ removeParty = function (oArgs, parameters) {
 
 setPayer = function (requestUrl)
 {
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(3, result);
 		oTable3.fnDraw();
@@ -551,7 +576,8 @@ setPayer = function (requestUrl)
 	}, '', "POST", "JSON");
 };
 
-downloadParties = function (oArgs) {
+downloadParties = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{
@@ -569,13 +595,15 @@ downloadParties = function (oArgs) {
 };
 
 
-addPrice = function (oArgs, parameters) {
+addPrice = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_6' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_6').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 5;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -583,7 +611,8 @@ addPrice = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -594,13 +623,15 @@ addPrice = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-removePrice = function (oArgs, parameters) {
+removePrice = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_5' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_5').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 5;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -608,7 +639,8 @@ removePrice = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 
@@ -618,7 +650,8 @@ removePrice = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-downloadInvoice = function (oArgs) {
+downloadInvoice = function (oArgs)
+{
 
 	if (!confirm("This will take some time..."))
 	{
@@ -631,13 +664,15 @@ downloadInvoice = function (oArgs) {
 	window.open(requestUrl, '_self');
 };
 
-removeDocument = function (oArgs, parameters) {
+removeDocument = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_8' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_8').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var nTable = 8;
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -645,7 +680,8 @@ removeDocument = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		JqueryPortico.show_message(nTable, result);
 		oTable8.fnDraw();
@@ -653,12 +689,14 @@ removeDocument = function (oArgs, parameters) {
 	}, data, 'POST', 'JSON');
 };
 
-deleteNotification = function (oArgs, parameters) {
+deleteNotification = function (oArgs, parameters)
+{
 
-	var api =$( '#datatable-container_9' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container_9').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 
-	if (selected.length == 0) {
+	if (selected.length == 0)
+	{
 		alert('None selected');
 		return false;
 	}
@@ -666,7 +704,8 @@ deleteNotification = function (oArgs, parameters) {
 	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		oTable9.fnDraw();
 
@@ -694,7 +733,8 @@ addNotification = function ()
 	var oArgs = {"menuaction": "rental.uicontract.add_notification", "phpgw_return_as": "json"};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		$('#notification_recurrence')[0].selectedIndex = 0;
 		$('#notification_message').val('');
@@ -707,3 +747,7 @@ addNotification = function ()
 
 	}, data, 'POST', 'JSON');
 };
+this.local_OnEditedCallback_datatable_container_5 = function (oTable)
+{
+	oTable0.fnDraw();
+}

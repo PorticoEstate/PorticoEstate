@@ -6,11 +6,14 @@ function get_address_search()
 	var div_address = $('#address_container');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'address'}, {name: 'id', value: 'address'}, {name: 'size', value: '5'}];
+	var attr = [
+		{name: 'name', value: 'address'}, {name: 'id', value: 'address'}, {name: 'size', value: '5'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_address) {
+	if (address && address != current_address)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address = address;

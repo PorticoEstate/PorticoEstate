@@ -49,7 +49,7 @@
 			'addfiles' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.socondition_survey');
 			$this->custom = & $this->so->custom;
@@ -68,7 +68,7 @@
 			$allrows = phpgw::get_var('allrows', 'bool');
 			$appname = phpgw::get_var('appname', 'string');
 
-			if($appname)
+			if ($appname)
 			{
 				$this->appname = $appname;
 				$this->so->appname = $appname;
@@ -79,7 +79,7 @@
 			$this->type = $type;
 			$this->type_id = $type_id;
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata($type);
 				$this->use_session = true;
@@ -94,15 +94,15 @@
 			$this->allrows = isset($allrows) ? $allrows : false;
 		}
 
-		public function save_sessiondata($data)
+		public function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', $this->acl_location, $data);
 			}
 		}
 
-		function read_sessiondata($type)
+		function read_sessiondata( $type )
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', $this->acl_location);
 
@@ -117,9 +117,9 @@
 			$this->allrows = $data['allrows'];
 		}
 
-		function column_list($selected = '', $allrows = '')
+		function column_list( $selected = '', $allrows = '' )
 		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']["columns_{$this->acl_location}"];
 			}
@@ -144,21 +144,21 @@
 			$check = phpgw::get_var('check', 'bool');
 			$fileuploader = CreateObject('property.fileuploader');
 
-			if(!$acl_add && !$acl_edit)
+			if (!$acl_add && !$acl_edit)
 			{
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if(!$id)
+			if (!$id)
 			{
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
 			$test = false;
 
-			if($test)
+			if ($test)
 			{
-				if(!empty($_FILES))
+				if (!empty($_FILES))
 				{
 					$tempFile = $_FILES['Filedata']['tmp_name'];
 					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
@@ -169,7 +169,7 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if($check)
+			if ($check)
 			{
 				$fileuploader->check("condition_survey/{$id}");
 			}
@@ -179,10 +179,10 @@
 			}
 		}
 
-		public function read($data = array())
+		public function read( $data = array() )
 		{
 			$values = $this->so->read($data);
-			foreach($values as & $entry)
+			foreach ($values as & $entry)
 			{
 				$entry['year'] = date('Y', $entry['entry_date']);
 			}
@@ -191,28 +191,28 @@
 			return $values;
 		}
 
-		public function read_single($data = array())
+		public function read_single( $data = array() )
 		{
 			$custom_fields = false;
-			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
+			if ($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
 			{
 				$custom_fields = true;
 				$data['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			$values = array();
-			if(isset($data['id']) && $data['id'])
+			if (isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single($data);
 			}
-			if($custom_fields)
+			if ($custom_fields)
 			{
 				$values = $this->custom->prepare($values, 'property', $this->acl_location, $data['view']);
 			}
 
 			$values['report_date'] = $GLOBALS['phpgw']->common->show_date($values['report_date'], $this->dateformat);
 
-			if(isset($values['vendor_id']) && $values['vendor_id'] && !$values['vendor_name'])
+			if (isset($values['vendor_id']) && $values['vendor_id'] && !$values['vendor_name'])
 			{
 				$contacts = CreateObject('property.sogeneric');
 				$contacts->get_location_info('vendor', false);
@@ -221,11 +221,11 @@
 				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data = $contacts->read_single(array('id' => $values['vendor_id']), $vendor_data);
-				if(is_array($vendor_data))
+				if (is_array($vendor_data))
 				{
-					foreach($vendor_data['attributes'] as $attribute)
+					foreach ($vendor_data['attributes'] as $attribute)
 					{
-						if($attribute['name'] == 'org_name')
+						if ($attribute['name'] == 'org_name')
 						{
 							$values['vendor_name'] = $attribute['value'];
 							break;
@@ -235,23 +235,23 @@
 				unset($contacts);
 			}
 
-			if($values['coordinator_id'])
+			if ($values['coordinator_id'])
 			{
 				$values['coordinator_name'] = $GLOBALS['phpgw']->accounts->get($values['coordinator_id'])->__toString();
 			}
 			return $values;
 		}
 
-		public function save($data = array())
+		public function save( $data = array() )
 		{
-			if(isset($data['attributes']) && is_array($data['attributes']))
+			if (isset($data['attributes']) && is_array($data['attributes']))
 			{
 				$data['attributes'] = $this->custom->convert_attribute_save($data['attributes']);
 			}
 
 			try
 			{
-				if(isset($data['id']) && $data['id'])
+				if (isset($data['id']) && $data['id'])
 				{
 					$id = $this->so->edit($data);
 				}
@@ -260,9 +260,9 @@
 					$id = $this->so->add($data);
 				}
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
@@ -271,46 +271,46 @@
 			return $id;
 		}
 
-		public function edit_title($data)
+		public function edit_title( $data )
 		{
 			try
 			{
 				$this->so->edit_title($data);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
 			}
 		}
 
-		public function import($survey, $import_data)
+		public function import( $survey, $import_data )
 		{
 			try
 			{
 				$this->so->import($survey, $import_data);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
 			}
 		}
 
-		public function get_summation($id, $year = 0)
+		public function get_summation( $id, $year = 0 )
 		{
 			$year = $year ? (int)$year : date('Y');
 
 			$surveys = array();
 
-			if($id == -1)
+			if ($id == -1)
 			{
 				$values = $this->so->read(array('allrows' => true));
-				foreach($values as $survey)
+				foreach ($values as $survey)
 				{
 					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
 				}
@@ -326,7 +326,7 @@
 //_debug_array($data);
 			$values = array();
 			$i = 0;
-			foreach($data as $entry)
+			foreach ($data as $entry)
 			{
 				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
 				$i = "{$entry['building_part']}_{$entry['category']}";
@@ -335,7 +335,7 @@
 				$values[$entry['condition_survey_id']][$i]['category'] = $entry['category'];
 
 				$diff = $entry['year'] - $year;
-				if($diff < 0)
+				if ($diff < 0)
 				{
 					$period = 1;
 				}
@@ -345,11 +345,11 @@
 					$period = $period < 6 ? $period : 6;
 				}
 
-				for($j = 1; $j < 7; $j++)
+				for ($j = 1; $j < 7; $j++)
 				{
 					$values[$entry['condition_survey_id']][$i]["period_{$j}"] += 0;
 					$values[$entry['condition_survey_id']][$i]['sum'] += 0;
-					if($j == $period)
+					if ($j == $period)
 					{
 						$values[$entry['condition_survey_id']][$i]["period_{$j}"] += $entry['amount'];
 						$values[$entry['condition_survey_id']][$i]['sum'] += $entry['amount'];
@@ -361,9 +361,9 @@
 			$ret = array();
 
 			$_values = array();
-			foreach($values as $condition_survey_id => $entry)
+			foreach ($values as $condition_survey_id => $entry)
 			{
-				foreach($entry as $type => $_entry)
+				foreach ($entry as $type => $_entry)
 				{
 					$_values[$type]['building_part'] = $_entry['building_part'];
 					$_values[$type]['category'] = $_entry['category'];
@@ -379,12 +379,12 @@
 			unset($_entry);
 			unset($entry);
 
-			foreach($_values as $entry)
+			foreach ($_values as $entry)
 			{
 				$ret[] = $entry;
 			}
 
-			foreach($ret as $key => $row)
+			foreach ($ret as $key => $row)
 			{
 				$building_part[$key] = $row['building_part'];
 				$category[$key] = $row['category'];
@@ -392,7 +392,7 @@
 
 			// Sort the data with account_lastname ascending, account_firstname ascending
 			// Add $data as the last parameter, to sort by the common key
-			if($ret)
+			if ($ret)
 			{
 				array_multisort($building_part, SORT_ASC, $category, SORT_ASC, $ret);
 			}
@@ -400,11 +400,11 @@
 			return $ret;
 		}
 
-		function get_category_name($cat_id)
+		function get_category_name( $cat_id )
 		{
 			static $category_name = array();
 
-			if(!isset($category_name[$cat_id]))
+			if (!isset($category_name[$cat_id]))
 			{
 				$category = $this->cats->return_single($cat_id);
 				$category_name[$cat_id] = $category[0]['name'];
@@ -412,30 +412,30 @@
 			return $category_name[$cat_id];
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
 			try
 			{
 				$this->so->delete($id);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}
 			}
 		}
 
-		public function delete_imported_records($id)
+		public function delete_imported_records( $id )
 		{
 			try
 			{
 				$this->so->delete_imported_records($id);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($e)
+				if ($e)
 				{
 					throw $e;
 				}

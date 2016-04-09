@@ -6,7 +6,9 @@
 	    </xsl:when>
    </xsl:choose>
    
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 	
 	<div class="frontend_body">
 		<div class="pure-form pure-form-aligned">
@@ -21,26 +23,38 @@
 									<select name="contract_filter" onchange="this.form.submit()">
 										 <xsl:choose>
 											 <xsl:when test="//contract_filter = 'active'">
-												 <option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
+												<option value="active" selected="selected">
+													<xsl:value-of select="php:function('lang', 'active')"/>
+												</option>
 											 </xsl:when>
 											 <xsl:otherwise>
-												 <option value="active"><xsl:value-of select="php:function('lang', 'active')"/></option>
+												<option value="active">
+													<xsl:value-of select="php:function('lang', 'active')"/>
+												</option>
 											 </xsl:otherwise>
 										 </xsl:choose>
 										 <xsl:choose>
 											 <xsl:when test="//contract_filter = 'not_active'">
-												 <option value="not_active" selected="selected"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+												<option value="not_active" selected="selected">
+													<xsl:value-of select="php:function('lang', 'not_active')"/>
+												</option>
 											 </xsl:when>
 											 <xsl:otherwise>
-												 <option value="not_active"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+												<option value="not_active">
+													<xsl:value-of select="php:function('lang', 'not_active')"/>
+												</option>
 											 </xsl:otherwise>
 										 </xsl:choose>
 										 <xsl:choose>
 											 <xsl:when test="//contract_filter = 'all'">
-												 <option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all')"/></option>
+												<option value="all" selected="selected">
+													<xsl:value-of select="php:function('lang', 'all')"/>
+												</option>
 											 </xsl:when>
 											 <xsl:otherwise>
-												 <option value="all"><xsl:value-of select="php:function('lang', 'all')"/></option>
+												<option value="all">
+													<xsl:value-of select="php:function('lang', 'all')"/>
+												</option>
 											 </xsl:otherwise>
 										 </xsl:choose>
 									</select>
@@ -64,7 +78,8 @@
 													   <input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();" style="margin-left: 1em;"></input>
 												   </xsl:otherwise>
 											   </xsl:choose>
-											   <label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
+												<label style="margin-right: 1em; padding-left: 5px;">
+													<xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
 										   </xsl:for-each>
 										</form>
 									</div>

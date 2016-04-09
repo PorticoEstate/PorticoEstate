@@ -15,45 +15,45 @@
      </tr>
     </table>
 
-   </td>
-  </tr>
+</td>
+</tr>
 
 {from}
 {to}
 {date}
 {status}
 
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td>{lang_subject}</td>
    <td>{value_subject}&nbsp;</td>
-  </tr>
+</tr>
 
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td colspan="2" align="left">{value_content}&nbsp;</td>
-  </tr>
+</tr>
 
 {buttons}
 
- </table>
+</table>
 </form>
 <!-- END form -->
 
 <!-- BEGIN form_date -->
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td>{lang_date}</td>
    <td>{value_date}&nbsp;</td>
-  </tr>
+</tr>
 <!-- END form_date -->
 
 <!-- BEGIN form_from -->
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td>{lang_from}&nbsp;</td>
    <td>{value_from}&nbsp;&nbsp;&nbsp;<b>{value_status}</b></td>
-  </tr>
+</tr>
 <!-- END form_from -->
 
 <!-- BEGIN form_to -->
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td>{lang_to}</td>
    <td>
    	<select name="message[to]">
@@ -62,15 +62,15 @@
    		<!-- END select_to -->
    	</select>
    </td>
-  </tr>
+</tr>
 <!-- END form_to -->
 <!-- BEGIN form_reply_to -->
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td>{lang_to}</td>
    <td>
 		{value_to}
    </td>
-  </tr>
+</tr>
 <!-- END form_reply_to -->
 
 <!-- BEGIN form_read_buttons -->
@@ -82,7 +82,7 @@
 <!-- END form_read_buttons_for_global -->
 
 <!-- BEGIN form_buttons -->
-  <tr bgcolor="{row_off}">
+<tr bgcolor="{row_off}">
    <td colspan="2" align="right">{button_cancel}&nbsp;{button_delete}&nbsp;{button_reply}&nbsp;{button_send}&nbsp;</td>
-  </tr>
+</tr>
 <!-- END form_buttons -->

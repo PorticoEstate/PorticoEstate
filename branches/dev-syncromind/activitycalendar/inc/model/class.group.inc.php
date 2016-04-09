@@ -21,12 +21,12 @@
 		 * 
 		 * @param int $id the id of this organization
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -36,7 +36,7 @@
 			return $this->id;
 		}
 
-		public function set_name($name)
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
@@ -46,7 +46,7 @@
 			return $this->name;
 		}
 
-		public function set_change_type($change_type)
+		public function set_change_type( $change_type )
 		{
 			$this->change_type = $change_type;
 		}
@@ -56,7 +56,7 @@
 			return $this->change_type;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -66,7 +66,7 @@
 			return $this->description;
 		}
 
-		public function set_organization_id($organization_id)
+		public function set_organization_id( $organization_id )
 		{
 			$this->organization_id = $organization_id;
 		}
@@ -76,7 +76,7 @@
 			return $this->organization_id;
 		}
 
-		public function set_show_in_portal($show_in_portal)
+		public function set_show_in_portal( $show_in_portal )
 		{
 			$this->show_in_portal = $show_in_portal;
 		}
@@ -86,7 +86,7 @@
 			return $this->show_in_portal;
 		}
 
-		public function set_shortname($shortname)
+		public function set_shortname( $shortname )
 		{
 			$this->shortname = $shortname;
 		}
@@ -96,7 +96,7 @@
 			return $this->shortname;
 		}
 
-		public function set_transferred($transferred)
+		public function set_transferred( $transferred )
 		{
 			$this->transferred = $transferred;
 		}
@@ -106,7 +106,7 @@
 			return $this->transferred;
 		}
 
-		public function set_original_group_id($original_group_id)
+		public function set_original_group_id( $original_group_id )
 		{
 			$this->original_group_id = $original_group_id;
 		}

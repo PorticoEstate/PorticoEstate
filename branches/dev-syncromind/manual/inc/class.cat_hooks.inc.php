@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage entity
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
@@ -33,6 +33,7 @@
 	*/
 	class manual_cat_hooks
 	{
+
 		private $basedir;
 		private $fakebase;
 
@@ -44,7 +45,7 @@
 			$this->fakebase = $fakebase;
 			$this->vfs->fakebase = $this->fakebase;
 
-			if(!$this->vfs->file_exists(array(
+			if (!$this->vfs->file_exists(array(
 				'string' => $this->fakebase,
 				'relatives' => array(RELATIVE_NONE)
 			)))
@@ -56,17 +57,16 @@
 			}
 		}
 
-
 		/**
 		 * Handle a new category being added, create location to hold ACL-data
 		 */
-		function cat_add($data)
+		function cat_add( $data )
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$dir = "{$this->fakebase}/{$data['cat_id']}";
 				if (!$this->create_document_dir($dir))
@@ -79,30 +79,30 @@
 		/**
 		 * Handle a category being deleted, remove the location 
 		 */
-		function cat_delete($data)
+		function cat_delete( $data )
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$dir = "{$this->fakebase}/{$data['cat_id']}";
 
 				$this->vfs->override_acl = 1;
-				if(!$this->vfs->rm(array(
+				if (!$this->vfs->rm(array(
 					'string' => $dir,
 					'relatives' => array(
 						RELATIVE_NONE
 					)
 				)))
 				{
-					$message = lang('failed to remove directory') . ' :'. $dir;
+					$message = lang('failed to remove directory') . ' :' . $dir;
 					phpgwapi_cache::message_set($message, 'error');
 				}
 				else
 				{
-					$message = lang('directory deleted') . ' :'. $dir;
+					$message = lang('directory deleted') . ' :' . $dir;
 					phpgwapi_cache::message_set($message, 'message');
 				}
 				$this->vfs->override_acl = 0;
@@ -112,18 +112,18 @@
 		/**
 		 * Handle a category being edited, update the location info
 		 */
-		function cat_edit($data)
+		function cat_edit( $data )
 		{
-			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
+			if (isset($data['cat_owner']) && $data['cat_owner'] != -1)
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
 
 //_debug_array($data);die();
-			if($data['location_id'])
+			if ($data['location_id'])
 			{
 				$dir = "{$this->fakebase}/{$data['cat_id']}";
-				if(!$this->vfs->file_exists(array(
+				if (!$this->vfs->file_exists(array(
 					'string' => $dir,
 					'relatives' => array(RELATIVE_NONE)
 				)))
@@ -143,24 +143,23 @@
 		 *
 		 * @return bool true on success.
 		 */
-
-		private function create_document_dir($dir)
+		private function create_document_dir( $dir )
 		{
 			$ok = false;
 			$this->vfs->override_acl = 1;
-			if(!$this->vfs->mkdir(array(
+			if (!$this->vfs->mkdir(array(
 				'string' => $dir,
 				'relatives' => array(
 					RELATIVE_NONE
 				)
 			)))
 			{
-				$message = lang('failed to create directory') . ' :'. $dir;
+				$message = lang('failed to create directory') . ' :' . $dir;
 				phpgwapi_cache::message_set($message, 'error');
 			}
 			else
 			{
-				$message = lang('directory created') . ' :'. $dir;
+				$message = lang('directory created') . ' :' . $dir;
 				phpgwapi_cache::message_set($message, 'message');
 				$ok = true;
 			}

@@ -32,12 +32,12 @@
 
 			$types		 = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$party_types = array();
-			foreach($types as $id => $label)
+			foreach ($types as $id => $label)
 			{
 				$names = $this->locations->get_name($id);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 					{
 						$party_types[] = array('id' => $id, 'name' => lang($label));
 					}
@@ -56,7 +56,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -165,7 +165,7 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -236,7 +236,7 @@ JS;
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -257,13 +257,13 @@ JS;
 			$search_for		 = '';
 			$search_type	 = '';
 
-			if($sort_field == 'responsibility_title')
+			if ($sort_field == 'responsibility_title')
 			{
 				$sort_field = "responsibility_id";
 			}
 
 			$type = phpgw::get_var('type');
-			switch($type)
+			switch ($type)
 			{
 				case 'manual_adjustments':
 					$filters = array('manual_adjustment' => 'true');
@@ -278,9 +278,9 @@ JS;
 
 			//Serialize the contracts found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
@@ -301,10 +301,10 @@ JS;
 			$message = null;
 			$error	 = null;
 
-			if(isset($adjustment_id) && $adjustment_id > 0)
+			if (isset($adjustment_id) && $adjustment_id > 0)
 			{
 				$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
-				if(!$adjustment->has_permission(PHPGW_ACL_EDIT))
+				if (!$adjustment->has_permission(PHPGW_ACL_EDIT))
 				{
 					unset($adjustment);
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_adjustment'));
@@ -312,7 +312,7 @@ JS;
 			}
 			else
 			{
-				if(isset($responsibility_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (isset($responsibility_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					$adjustment = new rental_adjustment();
 					//$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -322,12 +322,12 @@ JS;
 
 			$adjustment_date = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('adjustment_date'));
 
-			if(isset($adjustment))
+			if (isset($adjustment))
 			{
 				$adjustment->set_year(phpgw::get_var('adjustment_year'));
 				$adjustment->set_adjustment_date($adjustment_date);
 				$adjustment->set_price_item_id(0);
-				if(isset($responsibility_id) && $responsibility_id > 0)
+				if (isset($responsibility_id) && $responsibility_id > 0)
 				{
 					$adjustment->set_responsibility_id($responsibility_id); // only present when new contract
 				}
@@ -339,7 +339,7 @@ JS;
 				$adjustment->set_extra_adjustment(phpgw::get_var('extra_adjustment') == 'on' ? true : false);
 
 				$so_adjustment = rental_soadjustment::get_instance();
-				if($so_adjustment->store($adjustment))
+				if ($so_adjustment->store($adjustment))
 				{
 					$message		 = lang('messages_saved_form');
 					$adjustment_id	 = $adjustment->get_id();
@@ -350,11 +350,11 @@ JS;
 				}
 			}
 
-			if(!empty($error))
+			if (!empty($error))
 			{
 				phpgwapi_cache::message_set($error, 'error');
 			}
-			if(!empty($message))
+			if (!empty($message))
 			{
 				phpgwapi_cache::message_set($message, 'message');
 			}
@@ -369,35 +369,35 @@ JS;
 		public function add()
 		{
 			$responsibility_id = phpgw::get_var('responsibility_id');
-			if(isset($responsibility_id) && $responsibility_id > 0)
+			if (isset($responsibility_id) && $responsibility_id > 0)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'		 => 'rental.uiadjustment.edit',
 					'responsibility_id'	 => $responsibility_id));
 			}
 		}
 
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$adjustment_id		 = (int)phpgw::get_var('id');
 			$responsibility_id	 = (int)phpgw::get_var('responsibility_id');
 
-			if($values['adjustment_id'])
+			if ($values['adjustment_id'])
 			{
 				$adjustment_id = $values['adjustment_id'];
 			}
 
-			if(!empty($adjustment_id))
+			if (!empty($adjustment_id))
 			{
 				$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
 
-				if(!($adjustment && $adjustment->has_permission(PHPGW_ACL_EDIT)))
+				if (!($adjustment && $adjustment->has_permission(PHPGW_ACL_EDIT)))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit_adjustment'));
 				}
 			}
 			else
 			{
-				if($this->isAdministrator() || $this->isExecutiveOfficer())
+				if ($this->isAdministrator() || $this->isExecutiveOfficer())
 				{
 					$adjustment = new rental_adjustment();
 					//$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -427,7 +427,7 @@ JS;
 			$adjustment_year = $adjustment->get_year();
 			$years			 = rental_contract::get_year_range();
 			$years_options	 = array();
-			foreach($years as $year)
+			foreach ($years as $year)
 			{
 				$years_options[] = array('id' => $year, 'name' => $year, 'selected' => (($adjustment_year == $year) ? 1 : 0));
 			}
@@ -481,12 +481,12 @@ JS;
 			$list_adjustment_id	 = phpgw::get_var('id');
 			$message			 = array();
 
-			if(is_array($list_adjustment_id))
+			if (is_array($list_adjustment_id))
 			{
-				foreach($list_adjustment_id as $adjustment_id)
+				foreach ($list_adjustment_id as $adjustment_id)
 				{
 					$result = rental_soadjustment::get_instance()->delete($adjustment_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => lang('id %1 has been deleted', $adjustment_id));
 					}
@@ -499,7 +499,7 @@ JS;
 			else
 			{
 				$result = rental_soadjustment::get_instance()->delete($list_adjustment_id);
-				if($result)
+				if ($result)
 				{
 					$message = lang('adjustment_deleted');
 				}
@@ -519,9 +519,9 @@ JS;
 
 			//if there exist another regulation that has been exectued after current regulation with the same filters, the affected list will be out of date.
 			$show_affected_list = true;
-			if($adjustment->is_executed())
+			if ($adjustment->is_executed())
 			{
-				if(rental_soadjustment::get_instance()->newer_executed_regulation_exists($adjustment))
+				if (rental_soadjustment::get_instance()->newer_executed_regulation_exists($adjustment))
 				{
 					$show_affected_list = false;
 				}
@@ -533,7 +533,7 @@ JS;
 			$tabs['details'] = array('label' => lang('contracts_for_regulation'), 'link' => '#details');
 			$active_tab		 = 'details';
 
-			if($adjustment_id)
+			if ($adjustment_id)
 			{
 				$tabletools_contracts[] = array
 					(

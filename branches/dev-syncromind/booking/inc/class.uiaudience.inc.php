@@ -33,7 +33,7 @@
 
 		public function active()
 		{
-			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			if (isset($_SESSION['showall']) && !empty($_SESSION['showall']))
 			{
 				$this->bo->unset_show_all_objects();
 			}
@@ -44,10 +44,10 @@
 			$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
 		}
 
-		function treeitem($children, $parent_id)
+		function treeitem( $children, $parent_id )
 		{
 			$nodes = array();
-			foreach($children[$parent_id] as $activity)
+			foreach ($children[$parent_id] as $activity)
 			{
 				$nodes[] = array("type" => "text", "label" => $activity['name'], 'children' => $this->treeitem($children, $activity['id']));
 			}
@@ -56,18 +56,18 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-			if(extract_values($_GET, array('sessionShowAll')) &&
+			if (extract_values($_GET, array('sessionShowAll')) &&
 			!$_SESSION['ActiveSession'])
 			{
 				$this->bo->set_active_session();
 			}
 
-			if(extract_values($_GET, array('unsetShowAll')) &&
+			if (extract_values($_GET, array('unsetShowAll')) &&
 			$_SESSION['ActiveSession'])
 			{
 				$this->bo->actUnSet();
@@ -115,12 +115,12 @@
 			);
 
 			$data['datatable']['actions'][] = array();
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= self::link(array('menuaction' => 'booking.uiaudience.add'));
 			}
 
-			if(!$this->bo->allow_write())
+			if (!$this->bo->allow_write())
 			{
 				//Remove link to edit
 				unset($data['datatable']['field'][0]['formatter']);
@@ -136,7 +136,7 @@
 
 			$groups = $this->bo->read();
 
-			foreach($groups['results'] as &$audience)
+			foreach ($groups['results'] as &$audience)
 			{
 				$audience['link'] = $this->link(array('menuaction' => 'booking.uiaudience.edit',
 					'id' => $audience['id']));
@@ -145,19 +145,18 @@
 			return $this->jquery_results($groups);
 		}
 
-
 		public function add()
 		{
 			$errors		 = array();
 			$audience	 = array();
 			$activity_id = phpgw::get_var('activity_id', 'int', 'POST');
 			$activities	 = $this->activity_bo->get_top_level($activity_id);
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$audience			 = extract_values($_POST, array('activity_id', 'name', 'sort', 'description'));
 				$audience['active']	 = 1;
 				$errors				 = $this->bo->validate($audience);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($audience);
 					$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
@@ -190,12 +189,12 @@
 			$audience['audience_link']	 = self::link(array('menuaction' => 'booking.uiaudience.index'));
 			$audience['building_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$errors						 = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$audience	 = array_merge($audience, extract_values($_POST, array('name', 'sort',
 					'description', 'active')));
 				$errors		 = $this->bo->validate($audience);
-				if(!$errors)
+				if (!$errors)
 				{
 					$audience = $this->bo->update($audience);
 					$this->redirect(array('menuaction' => 'booking.uiaudience.index', 'id' => $audience['id']));

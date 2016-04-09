@@ -56,13 +56,13 @@
 		 * 
 		 * @param int $id the id of this procedure
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id		 = (int)$id;
 			$this->documents = array();
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -72,7 +72,7 @@
 			return $this->id;
 		}
 
-		public function set_title($title)
+		public function set_title( $title )
 		{
 			$this->title = $title;
 		}
@@ -82,7 +82,7 @@
 			return $this->title;
 		}
 
-		public function set_purpose($purpose)
+		public function set_purpose( $purpose )
 		{
 			$this->purpose = $purpose;
 		}
@@ -92,7 +92,7 @@
 			return $this->purpose;
 		}
 
-		public function set_responsibility($responsibility)
+		public function set_responsibility( $responsibility )
 		{
 			$this->responsibility = $responsibility;
 		}
@@ -102,7 +102,7 @@
 			return $this->responsibility;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -112,7 +112,7 @@
 			return $this->description;
 		}
 
-		public function set_reference($reference)
+		public function set_reference( $reference )
 		{
 			$this->reference = $reference;
 		}
@@ -122,7 +122,7 @@
 			return $this->reference;
 		}
 
-		public function set_attachment($attachment)
+		public function set_attachment( $attachment )
 		{
 			$this->attachment = $attachment;
 		}
@@ -132,7 +132,7 @@
 			return $this->attachment;
 		}
 
-		public function set_start_date($start_date)
+		public function set_start_date( $start_date )
 		{
 			$this->start_date = $start_date;
 		}
@@ -142,7 +142,7 @@
 			return $this->start_date;
 		}
 
-		public function set_end_date($end_date)
+		public function set_end_date( $end_date )
 		{
 			$this->end_date = $end_date;
 		}
@@ -152,7 +152,7 @@
 			return $this->end_date;
 		}
 
-		public function set_procedure_id($procedure_id)
+		public function set_procedure_id( $procedure_id )
 		{
 			$this->procedure_id = $procedure_id;
 		}
@@ -162,7 +162,7 @@
 			return $this->procedure_id;
 		}
 
-		public function set_revision_no($revision_no)
+		public function set_revision_no( $revision_no )
 		{
 			$this->revision_no = $revision_no;
 		}
@@ -172,7 +172,7 @@
 			return $this->revision_no;
 		}
 
-		public function set_revision_date($revision_date)
+		public function set_revision_date( $revision_date )
 		{
 			$this->revision_date = $revision_date;
 		}
@@ -182,7 +182,7 @@
 			return $this->revision_date;
 		}
 
-		public function set_control_area_id($control_area_id)
+		public function set_control_area_id( $control_area_id )
 		{
 			$this->control_area_id = $control_area_id;
 		}
@@ -192,7 +192,7 @@
 			return $this->control_area_id;
 		}
 
-		public function set_control_area_name($control_area_name)
+		public function set_control_area_name( $control_area_name )
 		{
 			$this->control_area_name = $control_area_name;
 		}
@@ -209,7 +209,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.soprocedure');
 			}
@@ -246,7 +246,7 @@
 			return $this->documents;
 		}
 
-		public function set_documents($documents)
+		public function set_documents( $documents )
 		{
 			$this->documents = $documents;
 		}
@@ -257,10 +257,10 @@
 		 * 
 		 * @param $new_document
 		 */
-		public function add_document(controller_document $new_document)
+		public function add_document( controller_document $new_document )
 		{
 			$new_document_id = $new_document->get_id();
-			if(!in_array($new_document_id, $this->documents))
+			if (!in_array($new_document_id, $this->documents))
 			{
 				$this->documents[$new_document_id] = $new_document;
 			}

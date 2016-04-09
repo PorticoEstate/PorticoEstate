@@ -29,13 +29,13 @@
 			$errors	 = array();
 			$step	 = 1;
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step			 = phpgw::get_var('step', 'int');
 				$step++;
 				$building_id	 = phpgw::get_var('building_id', 'int');
 				$building_name	 = phpgw::get_var('building_name', 'string');
-				if(is_array(phpgw::get_var('seasons')))
+				if (is_array(phpgw::get_var('seasons')))
 				{
 					$season = implode(',', phpgw::get_var('seasons'));
 				}
@@ -47,9 +47,9 @@
 				$mailbody	 = phpgw::get_var('mailbody', 'string');
 				$contacts	 = null;
 
-				if($step == 1)
+				if ($step == 1)
 				{
-					if($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
+					if ($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
 					{
 						$errors['incomplete form'] = lang('All fields are required');
 					}
@@ -59,12 +59,12 @@
 						$step++;
 					}
 				}
-				elseif($step == 2)
+				elseif ($step == 2)
 				{
 					$contacts = $this->get_email_addresses($building_id, $season);
 					$step++;
 				}
-				elseif($step == 3)
+				elseif ($step == 3)
 				{
 					$contacts	 = $this->get_email_addresses($building_id, $season);
 					$result		 = $this->send_emails($contacts, $mailsubject, $mailbody);
@@ -89,14 +89,14 @@
 			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
-			if($step == 1)
+			if ($step == 1)
 				self::render_template_xsl('email_index', array('building'		 => $building,
 					'season'		 => $season,
 					'mailsubject'	 => $mailsubject,
 					'mailbody'		 => $mailbody,
 					'step'			 => $step));
 
-			if($step == 2)
+			if ($step == 2)
 				self::render_template_xsl('email_preview', array('building'		 => $building,
 					'building_id'	 => $building_id,
 					'season'		 => $season,
@@ -113,7 +113,7 @@
 			self::render_template('email_receipt', array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}
 
-		private function send_emails($contacts, $subject, $body)
+		private function send_emails( $contacts, $subject, $body )
 		{
 			$config	 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -122,14 +122,14 @@
 			$send	 = CreateObject('phpgwapi.send');
 			$result	 = array();
 
-			foreach($contacts as $contact)
+			foreach ($contacts as $contact)
 			{
 				try
 				{
 					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
 					$result['ok'][] = $contact;
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					$result['failed'][] = $contact;
 				}
@@ -137,7 +137,7 @@
 			return $result;
 		}
 
-		private function get_email_addresses($building_id, $season_id)
+		private function get_email_addresses( $building_id, $season_id )
 		{
 			$contacts	 = array();
 			$db			 = & $GLOBALS['phpgw']->db;
@@ -164,7 +164,7 @@
 			$db->query($sql);
 
 			$result = $db->resultSet;
-			foreach($result as $c)
+			foreach ($result as $c)
 			{
 				$contacts[] = array('email' => $c['email'], 'name' => $c['name']);
 			}

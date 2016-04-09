@@ -103,7 +103,7 @@
 
 		function view_file()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => PHPGW_ACL_READ, 'acl_location' => $this->acl_location));
@@ -156,20 +156,20 @@
 			return $combos;
 		}
 
-		function index($project_id = '')
+		function index( $project_id = '' )
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
 				'receipt',
 				'search_field',
 				'nextmatchs'));
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => PHPGW_ACL_READ, 'acl_location' => $this->acl_location));
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query(array('project_id' => $project_id));
 			}
@@ -274,7 +274,7 @@
 			);
 
 			$filters = $this->_get_filter_tenant();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -303,7 +303,7 @@
 				)
 			);
 
-			if($this->acl_read)
+			if ($this->acl_read)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -319,7 +319,7 @@
 				);
 			}
 
-			if($this->acl_edit)
+			if ($this->acl_edit)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -337,7 +337,7 @@
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
-			foreach($jasper as $report)
+			foreach ($jasper as $report)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -353,7 +353,7 @@
 				);
 			}
 
-			if($this->acl_delete)
+			if ($this->acl_delete)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -375,7 +375,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query($data = array())
+		public function query( $data = array() )
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -402,7 +402,7 @@
 			$result_count = 0;
 			//
 			$values = $this->bo->read($params);
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -434,7 +434,7 @@
 			$claim = $this->bo->check_claim_project($project_id);
 			$total_records = $this->bo->total_records;
 
-			if($total_records > 0)
+			if ($total_records > 0)
 			{
 				$receipt['message'][] = array('msg' => lang('%1 claim is already registered for this project', $total_records));
 				$GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim_receipt', $receipt);
@@ -450,9 +450,9 @@
 			return;
 		}
 
-		function edit($project_id = '')
+		function edit( $project_id = '' )
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -473,7 +473,7 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if($project_id)
+			if ($project_id)
 			{
 				$values['project_id'] = $project_id;
 			}
@@ -482,24 +482,24 @@
 
 //			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim','files'));
 
-			if($values['save'] || $values['apply'])
+			if ($values['save'] || $values['apply'])
 			{
-				if(!$values['cat_id'])
+				if (!$values['cat_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a category !'));
 				}
 
-				if(!$values['b_account_id'])
+				if (!$values['b_account_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a budget account !'));
 				}
 
-				if(!$values['workorder'])
+				if (!$values['workorder'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a workorder !'));
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$values['claim_id'] = $claim_id;
 					$receipt = $this->bo->save($values);
@@ -508,18 +508,18 @@
 
 					//----------files
 					$bofiles = CreateObject('property.bofiles');
-					if(isset($values['file_action']) && is_array($values['file_action']))
+					if (isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles->delete_file("/tenant_claim/{$claim_id}/", $values);
 					}
 
 					$file_name = @str_replace(' ', '_', $_FILES['file']['name']);
 
-					if($file_name)
+					if ($file_name)
 					{
 						$to_file = "{$bofiles->fakebase}/tenant_claim/{$claim_id}/{$file_name}";
 
-						if($bofiles->vfs->file_exists(array(
+						if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
 							'relatives' => Array(RELATIVE_NONE)
 						)))
@@ -531,7 +531,7 @@
 							$bofiles->create_document_dir("tenant_claim/$claim_id");
 							$bofiles->vfs->override_acl = 1;
 
-							if(!$bofiles->vfs->cp(array(
+							if (!$bofiles->vfs->cp(array(
 								'from' => $_FILES['file']['tmp_name'],
 								'to' => $to_file,
 								'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -542,22 +542,26 @@
 						}
 					}
 					//-----------
+					self::message_set($receipt);
 
-					if($values['save'])
+					if ($values['save'])
 					{
-						$GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim_receipt', $receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitenant_claim.index'));
+						self::redirect(array('menuaction' => 'property.uitenant_claim.index'));
+					}
+					else
+					{
+						self::redirect(array('menuaction' => 'property.uitenant_claim.edit', 'claim_id' => $claim_id));
 					}
 				}
 			}
 
-			if($values['cancel'])
+			if ($values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitenant_claim.index'));
 			}
 
 
-			if($claim_id)
+			if ($claim_id)
 			{
 				$values = $this->bo->read_single($claim_id);
 			}
@@ -569,19 +573,19 @@
 			//_debug_array($project_values);die();
 			$soinvoice = CreateObject('property.soinvoice');
 
-			foreach($project_values['workorder_budget'] as &$workorder)
+			foreach ($project_values['workorder_budget'] as &$workorder)
 			{
 				$_vouchers = array();
 				$vouchers = $soinvoice->read_invoice(array('paid' => '1', 'workorder_id' => $workorder['workorder_id'],
 					'user_lid' => 'all'));
-				foreach($vouchers as $entry)
+				foreach ($vouchers as $entry)
 				{
 					$_vouchers[] = $entry['voucher_id'];
 				}
 				$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'],
 					'user_lid' => 'all'));
 				unset($entry);
-				foreach($vouchers as $entry)
+				foreach ($vouchers as $entry)
 				{
 					$_vouchers[] = $entry['voucher_id'];
 				}
@@ -617,11 +621,11 @@
 				'entity_data' => $project_values['p']
 			));
 
-			if($project_values['contact_phone'])
+			if ($project_values['contact_phone'])
 			{
-				for($i = 0; $i < count($location_data['location']); $i++)
+				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
+					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
 					{
 						unset($location_data['location'][$i]['value']);
 					}
@@ -629,13 +633,13 @@
 			}
 
 
-			if($project_values['location_data']['tenant_id'] && !$values['tenant_id'])
+			if ($project_values['location_data']['tenant_id'] && !$values['tenant_id'])
 			{
 				$values['tenant_id'] = $project_values['location_data']['tenant_id'];
 				$values['last_name'] = $project_values['location_data']['last_name'];
 				$values['first_name'] = $project_values['location_data']['first_name'];
 			}
-			else if($values['tenant_id'])
+			else if ($values['tenant_id'])
 			{
 				$tenant = $this->bocommon->read_single_tenant($values['tenant_id']);
 				$values['last_name'] = $tenant['last_name'];
@@ -663,14 +667,14 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 
-			for($d = 0; $d < count($project_values['workorder_budget']); $d++)
+			for ($d = 0; $d < count($project_values['workorder_budget']); $d++)
 			{
-				if($project_values['workorder_budget'][$d]['charge_tenant'] == 1)
+				if ($project_values['workorder_budget'][$d]['charge_tenant'] == 1)
 				{
 					$project_values['workorder_budget'][$d]['charge_tenant'] = 'x';
 				}
 
-				if($project_values['workorder_budget'][$d]['selected'] == 1)
+				if ($project_values['workorder_budget'][$d]['selected'] == 1)
 				{
 
 					$project_values['workorder_budget'][$d]['budget_hidden'] = $project_values['workorder_budget'][$d]['budget'];
@@ -687,7 +691,7 @@
 				}
 //				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
 
-				if($project_values['workorder_budget'][$d]['claim_issued'] == 1)
+				if ($project_values['workorder_budget'][$d]['claim_issued'] == 1)
 				{
 
 					$sumaBudget += $project_values['workorder_budget'][$d]['budget_hidden'];
@@ -731,7 +735,7 @@
 				)
 			);
 
-			if($claim_id)
+			if ($claim_id)
 			{
 				$record_history = $this->bo->read_record_history($claim_id);
 			}
@@ -757,9 +761,9 @@
 			$lang_delete_file = lang('Check to delete file');
 			$z = 0;
 			$content_files = array();
-			foreach($_files as $_file)
+			foreach ($_files as $_file)
 			{
-				if($link_to_files)
+				if ($link_to_files)
 				{
 					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
 				}
@@ -921,7 +925,7 @@
 		function delete()
 		{
 
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 8, 'acl_location' => $this->acl_location));
@@ -931,7 +935,7 @@
 			$delete = phpgw::get_var('delete', 'bool', 'POST');
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($claim_id);
 				return "claim_id " . $claim_id . " " . lang("has been deleted");
@@ -966,7 +970,7 @@
 
 		function view()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -1007,11 +1011,11 @@
 				'entity_data' => $project_values['p']
 			));
 
-			if($project_values['contact_phone'])
+			if ($project_values['contact_phone'])
 			{
-				for($i = 0; $i < count($location_data['location']); $i++)
+				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
+					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
 					{
 						unset($location_data['location'][$i]['value']);
 					}
@@ -1019,13 +1023,13 @@
 			}
 
 
-			if($project_values['location_data']['tenant_id'] && !$values['tenant_id'])
+			if ($project_values['location_data']['tenant_id'] && !$values['tenant_id'])
 			{
 				$values['tenant_id'] = $project_values['location_data']['tenant_id'];
 				$values['last_name'] = $project_values['location_data']['last_name'];
 				$values['first_name'] = $project_values['location_data']['first_name'];
 			}
-			else if($values['tenant_id'])
+			else if ($values['tenant_id'])
 			{
 				$tenant = $this->bocommon->read_single_tenant($values['tenant_id']);
 				$values['last_name'] = $tenant['last_name'];
@@ -1033,13 +1037,13 @@
 			}
 
 
-			if($values['workorder'] && $project_values['workorder_budget'])
+			if ($values['workorder'] && $project_values['workorder_budget'])
 			{
-				foreach($values['workorder'] as $workorder_id)
+				foreach ($values['workorder'] as $workorder_id)
 				{
-					for($i = 0; $i < count($project_values['workorder_budget']); $i++)
+					for ($i = 0; $i < count($project_values['workorder_budget']); $i++)
 					{
-						if($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
+						if ($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
 						{
 							$project_values['workorder_budget'][$i]['selected'] = true;
 						}

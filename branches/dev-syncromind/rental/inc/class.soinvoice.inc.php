@@ -13,7 +13,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.soinvoice');
 			}
@@ -25,23 +25,23 @@
 			return 'id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "{$this->marshal($this->get_id_field_name(), 'field')} = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			if(isset($filters['contract_id']))
+			if (isset($filters['contract_id']))
 			{
 				$filter_clauses[]	 = "rental_invoice.contract_id = {$this->marshal($filters['contract_id'], 'int')}";
 				$filter_clauses[]	 = "rental_billing.deleted IS FALSE";
 			}
-			if(isset($filters['billing_id']))
+			if (isset($filters['billing_id']))
 			{
 				$filter_clauses[] = "rental_invoice.billing_id = {$this->marshal($filters['billing_id'], 'int')}";
 			}
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -56,7 +56,7 @@
 			$joins .= " {$this->left_join} rental_billing ON (rental_billing.id = rental_invoice.billing_id)";
 			$joins .= " {$this->left_join} rental_billing_info ON (rental_billing_info.billing_id = rental_billing.id AND rental_billing_info.term_id=contract.term_id)";
 			$order	 = '';
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(rental_invoice.id)) AS count';
 			}
@@ -64,12 +64,12 @@
 			{
 				$cols	 = 'rental_invoice.id, rental_invoice.contract_id, rental_invoice.billing_id, rental_invoice.party_id, timestamp_created, rental_invoice.timestamp_start, timestamp_end, rental_invoice.total_sum, total_area, header, rental_invoice.account_in, rental_invoice.account_out, rental_invoice.service_id, rental_invoice.responsibility_id, rental_invoice.project_id, rental_invoice.serial_number, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active, contract.old_contract_id, rental_billing.title as billing_title, rental_billing_info.term_id, rental_billing_info.month, contract.reference';
 				$dir	 = $ascending ? 'ASC' : 'DESC';
-				if($sort_field == null || $sort_field == '') // Sort field not set
+				if ($sort_field == null || $sort_field == '') // Sort field not set
 				{
 					$sort_field = 'rental_invoice.id'; // Set to default
 				}
 				$sort_field = $this->marshal($sort_field, 'field');
-				if($sort_field == 'party_name')
+				if ($sort_field == 'party_name')
 				{
 					$order = "ORDER BY party.last_name {$dir}, party.first_name {$dir}, party.company_name {$dir}";
 				}
@@ -82,9 +82,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $invoice_id, &$invoice)
+		protected function populate( int $invoice_id, &$invoice )
 		{
-			if($invoice == null)
+			if ($invoice == null)
 			{
 				$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true), $this->db->f('total_area', true), $this->db->f('header', true), $this->db->f('account_in', true), $this->db->f('account_out', true), $this->db->f('service_id', true), $this->db->f('responsibility_id', true), $this->db->f('project_id', true));
 				$invoice->set_party_id($this->unmarshal($this->db->f('party_id'), 'int'));
@@ -117,13 +117,13 @@
 				$party->set_url($this->unmarshal($this->db->f('party_url'), 'string'));
 				$invoice->set_party($party);
 
-				if($invoice->get_term_id() == 2)
+				if ($invoice->get_term_id() == 2)
 				{ // yearly
 					$invoice->set_term_label(lang('annually'));
 				}
-				else if($invoice->get_term_id() == 3)
+				else if ($invoice->get_term_id() == 3)
 				{ // half year
-					if($invoice->get_month() == 6)
+					if ($invoice->get_month() == 6)
 					{
 						$invoice->set_term_label(lang('first_half'));
 					}
@@ -132,17 +132,17 @@
 						$invoice->set_term_label(lang('second_half'));
 					}
 				}
-				else if($invoice->get_term_id() == 4)
+				else if ($invoice->get_term_id() == 4)
 				{ // quarterly
-					if($invoice->get_month() == 3)
+					if ($invoice->get_month() == 3)
 					{
 						$invoice->set_term_label(lang('first_quarter'));
 					}
-					else if($invoice->get_month() == 6)
+					else if ($invoice->get_month() == 6)
 					{
 						$invoice->set_term_label(lang('second_quarter'));
 					}
-					else if($invoice->get_month() == 9)
+					else if ($invoice->get_month() == 9)
 					{
 						$invoice->set_term_label(lang('third_quarter'));
 					}
@@ -161,7 +161,7 @@
 			return $invoice;
 		}
 
-		public function add(&$invoice)
+		public function add( &$invoice )
 		{
 			$values	 = array
 				(
@@ -182,7 +182,7 @@
 			);
 			$query	 = "INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id) VALUES (" . join(',', $values) . ")";
 			$receipt = null;
-			if($this->db->query($query))
+			if ($this->db->query($query))
 			{
 				$receipt		 = array();
 				$receipt['id']	 = $this->db->get_last_insert_id('rental_invoice', 'id');
@@ -191,7 +191,7 @@
 			return $receipt;
 		}
 
-		public function update($invoice)
+		public function update( $invoice )
 		{
 			$values	 = array(
 				'contract_id = ' . $this->marshal($invoice->get_contract_id(), 'int'),
@@ -213,22 +213,22 @@
 			$result	 = $this->db->query('UPDATE rental_invoice SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__, __FILE__);
 		}
 
-		public function get_max_serial_number_used($serial_config_start, $serial_config_stop)
+		public function get_max_serial_number_used( $serial_config_start, $serial_config_stop )
 		{
 			$query = "SELECT MAX(serial_number) AS max_serial FROM rental_invoice WHERE serial_number > ({$serial_config_start} - 1) AND serial_number < ({$serial_config_stop} + 1)";
 			$this->db->query($query);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return $this->unmarshal($this->db->f('max_serial', true), 'int');
 			}
 			return false;
 		}
 
-		public function number_of_open_and_exported_rental_billings($location_id)
+		public function number_of_open_and_exported_rental_billings( $location_id )
 		{
 			$query = "SELECT COUNT(id) AS open_and_exported FROM rental_billing WHERE export_data IS NOT NULL AND timestamp_commit IS NULL AND deleted IS FALSE AND location_id = {$location_id}";
 			$this->db->query($query);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return $this->unmarshal($this->db->f('open_and_exported', true), 'int');
 			}

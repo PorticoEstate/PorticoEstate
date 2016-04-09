@@ -17,7 +17,7 @@
 		private $calendar_array		 = array();
 		private $control_relation	 = array();
 
-		public function __construct($control, $year, $component, $location_code, $type, $control_relation = array())
+		public function __construct( $control, $year, $component, $location_code, $type, $control_relation = array() )
 		{
 			$this->year				 = $year;
 			$this->control			 = $control;
@@ -35,12 +35,12 @@
 		function init_calendar()
 		{
 			// Sets null values for twelve months in calendar array
-			for($i = 1; $i <= 12; $i++)
+			for ($i = 1; $i <= 12; $i++)
 			{
 				$this->calendar_array[$i] = null;
 			}
 
-			if($this->control_relation && !$this->control_relation['serie_enabled'])
+			if ($this->control_relation && !$this->control_relation['serie_enabled'])
 			{
 				return;
 			}
@@ -57,14 +57,14 @@
 			$dates_array	 = $date_generator->get_dates();
 
 			// Set status for control on each date to NOT DONE or REGISTERED
-			foreach($dates_array as $date_ts)
+			foreach ($dates_array as $date_ts)
 			{
 				$check_list = new controller_check_list();
 				$check_list->set_deadline($date_ts);
 				$check_list->set_control_id($this->control->get_id());
 				$check_list->set_assigned_to($this->control_relation['assigned_to']);
 
-				if($this->type == "component")
+				if ($this->type == "component")
 				{
 					$check_list->set_component_id($this->component->get_id());
 					$check_list->set_location_id($this->component->get_location_id());
@@ -82,7 +82,7 @@
 
 				$this->calendar_array[$month_nr]["status"] = $check_list_status_info->get_status();
 				$this->calendar_array[$month_nr]["info"]	 = $check_list_status_info->serialize();
-				if(!$this->calendar_array[$month_nr]["info"]['serie_id'])
+				if (!$this->calendar_array[$month_nr]["info"]['serie_id'])
 				{
 					$this->calendar_array[$month_nr]["info"]['serie_id'] = $this->control_relation['serie_id'];
 				}
@@ -91,11 +91,11 @@
 			}
 		}
 
-		public function build_calendar($check_lists_array)
+		public function build_calendar( $check_lists_array )
 		{
-			foreach($check_lists_array as $check_list)
+			foreach ($check_lists_array as $check_list)
 			{
-				if(isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
+				if (isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
 				{
 					continue;
 				}
@@ -117,10 +117,10 @@
 			return $this->calendar_array;
 		}
 
-		public function build_agg_month_calendar($agg_open_cases_pr_month_array)
+		public function build_agg_month_calendar( $agg_open_cases_pr_month_array )
 		{
 
-			foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
+			foreach ($agg_open_cases_pr_month_array as $status_agg_month_info)
 			{
 				$status = "CONTROLS_DONE_WITH_ERRORS";
 
@@ -136,7 +136,7 @@
 
 			$heading_array = array();
 
-			for($i = 1; $i <= 12; $i++)
+			for ($i = 1; $i <= 12; $i++)
 			{
 				$heading_array[$i] = "$i";
 			}
@@ -144,7 +144,7 @@
 			return $heading_array;
 		}
 
-		public static function get_start_date_year_ts($year)
+		public static function get_start_date_year_ts( $year )
 		{
 			$start_date_year_ts = strtotime("01/01/$year");
 

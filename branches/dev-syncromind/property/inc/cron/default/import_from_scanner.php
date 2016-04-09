@@ -57,21 +57,21 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 		}
 
-		function pre_run($data = '')
+		function pre_run( $data = '' )
 		{
 			$cron = false;
 			$dry_run = false;
 
-			if(isset($data['enabled']) && $data['enabled'] == 1)
+			if (isset($data['enabled']) && $data['enabled'] == 1)
 			{
 				$confirm = true;
 				$execute = true;
 				$cron = true;
-				if($data['suffix'])
+				if ($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
 				}
-				if($data['dir'])
+				if ($data['dir'])
 				{
 					$this->dir = $data['dir'];
 				}
@@ -80,22 +80,22 @@
 			{
 				$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 				$execute = true;//phpgw::get_var('execute', 'bool', 'GET');
-				if(phpgw::get_var('dir', 'string', 'GET'))
+				if (phpgw::get_var('dir', 'string', 'GET'))
 				{
 					$this->dir = urldecode(phpgw::get_var('dir', 'string', 'GET'));
 				}
-				if(phpgw::get_var('suffix', 'string', 'GET'))
+				if (phpgw::get_var('suffix', 'string', 'GET'))
 				{
 					$this->suffix = phpgw::get_var('suffix', 'string', 'GET');
 				}
 			}
 
-			if(!$execute)
+			if (!$execute)
 			{
 				$dry_run = true;
 			}
 
-			if($confirm)
+			if ($confirm)
 			{
 				$this->execute($dry_run, $cron);
 			}
@@ -105,7 +105,7 @@
 			}
 		}
 
-		function confirm($execute = '', $done = '')
+		function confirm( $execute = '', $done = '' )
 		{
 			$link_data = array
 				(
@@ -116,9 +116,9 @@
 				'suffix' => $this->suffix,
 			);
 
-			if(!$done)
+			if (!$done)
 			{
-				if(!$execute)
+				if (!$execute)
 				{
 					$lang_confirm_msg = 'Ga videre for aa se hva som blir lagt til';
 				}
@@ -155,29 +155,29 @@
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($dry_run = '', $cron = '')
+		function execute( $dry_run = '', $cron = '' )
 		{
 			$file_list = $this->get_files();
 
-			if($dry_run)
+			if ($dry_run)
 			{
 				_debug_array($file_list);
 				$this->confirm($execute = true);
 			}
 			else
 			{
-				if(isset($file_list) && is_array($file_list))
+				if (isset($file_list) && is_array($file_list))
 				{
 					$this->botts = CreateObject('property.botts');
 					$this->bolocation = CreateObject('property.bolocation');
 					$send = CreateObject('phpgwapi.send');
-					foreach($file_list as $file_entry)
+					foreach ($file_list as $file_entry)
 					{
 						$file_entry['user_id'] = $this->get_user_id($file_entry['user']);
 
-						if($file_entry['type'] == 'Dokumentasjon')
+						if ($file_entry['type'] == 'Dokumentasjon')
 						{
-							if($values['location_code'] = $this->get_location_code($file_entry['target']))
+							if ($values['location_code'] = $this->get_location_code($file_entry['target']))
 							{
 								$this->bolocation->initiate_ui_location(array('type_id' => -1, 'tenant' => true));
 
@@ -185,9 +185,9 @@
 
 								$values = $this->bolocation->read_single($values['location_code'], array(
 									'tenant_id' => 'lookup'));
-								for($i = 0; $i < count($insert_record['location']); $i++)
+								for ($i = 0; $i < count($insert_record['location']); $i++)
 								{
-									if($values[$insert_record['location'][$i]])
+									if ($values[$insert_record['location'][$i]])
 									{
 										$values['location'][$insert_record['location'][$i]] = $values[$insert_record['location'][$i]];
 									}
@@ -208,15 +208,15 @@
 							}
 						}
 
-						if($file_entry['type'] == 'Reklamasjon')
+						if ($file_entry['type'] == 'Reklamasjon')
 						{
-							if($file_entry['target'] && $this->find_ticket($file_entry['target']))
+							if ($file_entry['target'] && $this->find_ticket($file_entry['target']))
 							{
 								$this->add_file_to_ticket($file_entry['target'], $file_entry['file_name']);
 							}
 							else
 							{
-								if($values['location_code'] = $this->get_location_code($file_entry['target']))
+								if ($values['location_code'] = $this->get_location_code($file_entry['target']))
 								{
 									$this->bolocation->initiate_ui_location(array('type_id' => -1, 'tenant' => true));
 
@@ -224,9 +224,9 @@
 
 									$values = $this->bolocation->read_single($values['location_code'], array(
 										'tenant_id' => 'lookup'));
-									for($i = 0; $i < count($insert_record['location']); $i++)
+									for ($i = 0; $i < count($insert_record['location']); $i++)
 									{
-										if($values[$insert_record['location'][$i]])
+										if ($values[$insert_record['location'][$i]])
 										{
 											$values['location'][$insert_record['location'][$i]] = $values[$insert_record['location'][$i]];
 										}
@@ -249,10 +249,10 @@
 							}
 						}
 
-						if($this->mail_receipt)
+						if ($this->mail_receipt)
 						{
 							$prefs = $this->bocommon->create_preferences('property', $file_entry['user_id']);
-							if(strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
+							if (strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
 							{
 								$subject = 'Resultat fra scanner';
 								$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -290,7 +290,7 @@
 					}
 				}
 
-				if(!$cron)
+				if (!$cron)
 				{
 					$this->confirm($execute = false, $done = true);
 				}
@@ -302,9 +302,9 @@
 			$dir_handle = @opendir($this->dir);
 
 			$myfilearray = array();
-			while($file = @readdir($dir_handle))
+			while ($file = @readdir($dir_handle))
 			{
-				if((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file("{$this->dir}/{$file}"))
+				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file("{$this->dir}/{$file}"))
 				{
 					$myfilearray[] = $file;
 				}
@@ -313,7 +313,7 @@
 			@closedir($dir_handle);
 			@sort($myfilearray);
 
-			for($i = 0; $i < count($myfilearray); $i++)
+			for ($i = 0; $i < count($myfilearray); $i++)
 			{
 				$fname = $myfilearray[$i];
 				$file_list[$i]['file_name'] = substr($fname, 0, strlen($fname) - strlen($this->meta_suffix));
@@ -321,14 +321,14 @@
 				$fp = fopen("{$this->dir}/{$fname}", 'rb');
 
 				$row = 1;
-				while($data = fgetcsv($fp, 8000, $this->delimiter))
+				while ($data = fgetcsv($fp, 8000, $this->delimiter))
 				{
-					if($row == 2) // Ther first row is headerinfo
+					if ($row == 2) // Ther first row is headerinfo
 					{
 						$num = count($this->header);
 
 						$this->currentrecord = array();
-						for($c = 0; $c < $num; $c++)
+						for ($c = 0; $c < $num; $c++)
 						{
 							$value = $data[$c];
 							$name = $this->header[$c];
@@ -343,11 +343,11 @@
 			return $file_list;
 		}
 
-		function add_file_to_ticket($id, $file_name)
+		function add_file_to_ticket( $id, $file_name )
 		{
 			$to_file = "{$this->bofiles->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
 
-			if($this->bofiles->vfs->file_exists(array(
+			if ($this->bofiles->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
@@ -359,7 +359,7 @@
 				$this->bofiles->create_document_dir("fmticket/{$id}");
 				$this->bofiles->vfs->override_acl = 1;
 
-				if(!$this->bofiles->vfs->cp(array(
+				if (!$this->bofiles->vfs->cp(array(
 					'from' => $this->dir . '/' . $file_name . $this->suffix,
 					'to' => $to_file,
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -374,9 +374,9 @@
 			}
 		}
 
-		function find_ticket($id = '')
+		function find_ticket( $id = '' )
 		{
-			if(!ctype_digit($id))
+			if (!ctype_digit($id))
 			{
 				return false;
 			}
@@ -385,21 +385,21 @@
 				$sql = "SELECT count(*) as cnt FROM fm_tts_tickets WHERE id='$id'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				if($this->db->f('cnt'))
+				if ($this->db->f('cnt'))
 				{
 					return true;
 				}
 			}
 		}
 
-		function get_user_id($account_lastname = '')
+		function get_user_id( $account_lastname = '' )
 		{
 			$account_lastname = $account_lastname ? $account_lastname : $this->default_user_last_name;
 			$sql = "SELECT account_id FROM phpgw_accounts WHERE account_lastname='$account_lastname'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			if($this->db->f('account_id'))
+			if ($this->db->f('account_id'))
 			{
 				return $this->db->f('account_id');
 			}
@@ -409,9 +409,9 @@
 			}
 		}
 
-		function get_location_code($target = '')
+		function get_location_code( $target = '' )
 		{
-			if(strpos($target, '.'))
+			if (strpos($target, '.'))
 			{
 				$location = explode('.', $target);
 				$sql = "SELECT location_code FROM fm_location4 WHERE loc1= '{$location[0]}' AND loc4= '{$location[1]}'";
@@ -428,13 +428,13 @@
 			return $this->db->f('location_code');
 		}
 
-		function copy_files($values)
+		function copy_files( $values )
 		{
 			$to_file = "{$bofiles->fakebase}/document/{$values['loc1']}/{$values['file_name']}{$this->suffix}";
 			$from_file = "{$this->dir}/{$values['file_name']}{$this->suffix}";
 			$this->bofiles->vfs->override_acl = 1;
 
-			if($this->bofiles->vfs->file_exists(array(
+			if ($this->bofiles->vfs->file_exists(array(
 				'string' => $to_file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
@@ -444,7 +444,7 @@
 			else
 			{
 
-				if(!$this->bofiles->vfs->cp(array(
+				if (!$this->bofiles->vfs->cp(array(
 					'from' => $from_file,
 					'to' => $to_file,
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
@@ -453,12 +453,12 @@
 				}
 				else
 				{
-					if($ticket['street_name'])
+					if ($ticket['street_name'])
 					{
 						$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
 					}
 
-					if(!$address)
+					if (!$address)
 					{
 						$address = $this->db->db_addslashes($values['location_name']);
 					}

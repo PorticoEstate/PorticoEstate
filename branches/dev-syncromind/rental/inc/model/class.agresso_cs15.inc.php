@@ -7,7 +7,7 @@
 		protected $parties;
 		protected $lines;
 
-		public function __construct(&$parties)
+		public function __construct( &$parties )
 		{
 			$this->parties	 = $parties;
 			$this->lines	 = null;
@@ -29,18 +29,18 @@
 		public function get_contents()
 		{
 			$contents = '';
-			if($this->lines == null) // Data hasn't been created yet
+			if ($this->lines == null) // Data hasn't been created yet
 			{
 				$this->run();
 			}
-			foreach($this->lines as $line)
+			foreach ($this->lines as $line)
 			{
 				$contents .= "{$line}\n";
 			}
 			return $contents;
 		}
 
-		public function get_missing_billing_info($contract)
+		public function get_missing_billing_info( $contract )
 		{
 			$missing_billing_info = array();
 			return $missing_billing_info;
@@ -50,17 +50,17 @@
 		{
 			$this->lines = array();
 			$counter	 = 1; // set to 1 initially to satisfy agresso requirements
-			foreach($this->parties as $party) // Runs through all parties
+			foreach ($this->parties as $party) // Runs through all parties
 			{
 				$country_code	 = strtoupper($party->get_postal_country_code());
 				$place			 = '';
 				// TODO: Which standard for the country codes does Agresso follow?
-				if($country_code != 'NO' && $country_code != 'SV' && $country_code != 'IS') // Shouldn't get postal place for Norway, Sweden and Iceland
+				if ($country_code != 'NO' && $country_code != 'SV' && $country_code != 'IS') // Shouldn't get postal place for Norway, Sweden and Iceland
 				{
 					$party->get_postal_place();
 				}
 				$phone = $party->get_phone();
-				if($phone == null || $phone == '') // Phone not set..
+				if ($phone == null || $phone == '') // Phone not set..
 				{
 					$phone = $party->get_mobile_phone(); // ..so we try mobile phone
 				}
@@ -74,7 +74,7 @@
 
 		 * @return string
 		 */
-		protected function get_line($name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code, $counter)
+		protected function get_line( $name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code, $counter )
 		{
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$line = '1'	 //  1	full_record

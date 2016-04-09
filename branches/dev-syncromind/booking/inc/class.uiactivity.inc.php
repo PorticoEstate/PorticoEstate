@@ -24,14 +24,14 @@
 			self::set_active_menu('booking::settings::activity');
 		}
 
-		function treeitem($children, $parent_id, $show_all)
+		function treeitem( $children, $parent_id, $show_all )
 		{
 			$nodes = array();
-			if(is_array($children[$parent_id]))
+			if (is_array($children[$parent_id]))
 			{
-				foreach($children[$parent_id] as $activity)
+				foreach ($children[$parent_id] as $activity)
 				{
-					if($activity['active'] == false && $show_all == false)
+					if ($activity['active'] == false && $show_all == false)
 					{
 						continue;
 					}
@@ -43,7 +43,7 @@
 						'text'		 => $activity['name'],
 						'children'	 => $this->treeitem($children, $activity['id'], $show_all)
 					);
-					if(!$this->bo->allow_write($activity))
+					if (!$this->bo->allow_write($activity))
 					{
 						unset($node['href']);
 					}
@@ -64,13 +64,13 @@
 			$show_all	 = phpgw::get_var('show_all') || false;
 			$activities	 = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC'));
 			$children	 = array();
-			foreach($activities['results'] as $activity)
+			foreach ($activities['results'] as $activity)
 			{
-				if(!array_key_exists($activity['id'], $children))
+				if (!array_key_exists($activity['id'], $children))
 				{
 					$children[$activity['id']] = array();
 				}
-				if(!array_key_exists($activity['parent_id'], $children))
+				if (!array_key_exists($activity['parent_id'], $children))
 				{
 					$children[$activity['parent_id']] = array();
 				}
@@ -90,7 +90,7 @@
 			$active_tab		 = 'generic';
 			$tabs			 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$links['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
 			}
@@ -101,16 +101,16 @@
 		public function add()
 		{
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if($_POST['parent_id'] == '0')
+				if ($_POST['parent_id'] == '0')
 				{
 					$_POST['parent_id'] = null;
 				}
 				$activity			 = extract_values($_POST, array('name', 'description', 'parent_id'));
 				$activity['active']	 = '1';
 				$errors				 = $this->bo->validate($activity);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($activity);
 					//Add locations for application and resources
@@ -146,16 +146,16 @@
 			$activity['activities_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
 			$activity['building_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$errors						 = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if($_POST['parent_id'] == '0')
+				if ($_POST['parent_id'] == '0')
 				{
 					$_POST['parent_id'] = null;
 				}
 				$activity	 = array_merge($activity, extract_values($_POST, array('name', 'active',
 					'description', 'parent_id')));
 				$errors		 = $this->bo->validate($activity);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($activity);
 					//Edit locations for application and resources

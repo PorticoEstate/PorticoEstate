@@ -1,17 +1,20 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&',
 			'field_building_name', 'field_building_id', 'building_container');
 
 	$("#field_schema_activity_id").val($("#field_activity_id").val());
 
-	get_custom_fields($("#field_activity_id").val(),default_schema);
+	get_custom_fields($("#field_activity_id").val(), default_schema);
 
-	$("#field_activity_id").change(function () {
+	$("#field_activity_id").change(function ()
+	{
 		get_custom_fields($(this).val());
 	});
 });
 
-get_custom_fields = function (schema_activity_id, schema) {
+get_custom_fields = function (schema_activity_id, schema)
+{
 	$("#field_schema_activity_id").val(schema_activity_id);
 	var oArgs = {menuaction: 'booking.uiresource.get_custom', resource_id: resource_id};
 	var requestUrl = phpGWLink('index.php', oArgs);
@@ -23,7 +26,8 @@ get_custom_fields = function (schema_activity_id, schema) {
 		data: {schema_activity_id: schema_activity_id, type: schema_type},
 		dataType: 'html',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				var custom_fields = data;
@@ -34,7 +38,8 @@ get_custom_fields = function (schema_activity_id, schema) {
 	});
 };
 
-addBuilding = function () {
+addBuilding = function ()
+{
 	var oArgs = {menuaction: 'booking.uiresource.add_building'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var building_id = $("#field_building_id").val();
@@ -43,7 +48,8 @@ addBuilding = function () {
 		data: {building_id: building_id, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data.ok == true)
 			{
 				oTable0.fnDraw();
@@ -58,7 +64,8 @@ addBuilding = function () {
 	});
 };
 
-removeBuilding = function () {
+removeBuilding = function ()
+{
 	var oArgs = {menuaction: 'booking.uiresource.remove_building'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var building_id = $("#field_building_id").val();
@@ -67,7 +74,8 @@ removeBuilding = function () {
 		data: {building_id: building_id, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data.ok == true)
 			{
 				oTable0.fnDraw();
@@ -90,7 +98,8 @@ ChangeSchema = function (key, oData)
 	if (resource_id > 0)
 	{
 		return '<a class="button" onclick="get_custom_fields(' + schema_activity_id + ",'" + activity_name + "'" + ')">' + activity_name + '</a>';
-	} else
+	}
+	else
 	{
 		return oData[key];
 	}

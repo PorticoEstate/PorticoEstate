@@ -40,12 +40,12 @@
 		 *
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -55,7 +55,7 @@
 			return $this->id;
 		}
 
-		public function set_title($title)
+		public function set_title( $title )
 		{
 			$this->title = $title;
 		}
@@ -65,7 +65,7 @@
 			return $this->title;
 		}
 
-		public function set_organization_id($organization_id)
+		public function set_organization_id( $organization_id )
 		{
 			$this->organization_id = $organization_id;
 		}
@@ -75,7 +75,7 @@
 			return $this->organization_id;
 		}
 
-		public function set_group_id($group_id)
+		public function set_group_id( $group_id )
 		{
 			$this->group_id = $group_id;
 		}
@@ -85,7 +85,7 @@
 			return $this->group_id;
 		}
 
-		public function set_district($district)
+		public function set_district( $district )
 		{
 			$this->district = $district;
 		}
@@ -95,7 +95,7 @@
 			return $this->district;
 		}
 
-		public function set_office($office)
+		public function set_office( $office )
 		{
 			$this->office = $office;
 		}
@@ -105,7 +105,7 @@
 			return $this->office;
 		}
 
-		public function set_target($target)
+		public function set_target( $target )
 		{
 			$this->target = $target;
 		}
@@ -115,7 +115,7 @@
 			return $this->target;
 		}
 
-		public function set_category($category)
+		public function set_category( $category )
 		{
 			$this->category = $category;
 		}
@@ -125,7 +125,7 @@
 			return $this->category;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -135,7 +135,7 @@
 			return $this->description;
 		}
 
-		public function set_state($state)
+		public function set_state( $state )
 		{
 			$this->state = $state;
 		}
@@ -145,7 +145,7 @@
 			return $this->state;
 		}
 
-		public function set_arena($arena)
+		public function set_arena( $arena )
 		{
 			$this->arena = $arena;
 		}
@@ -155,7 +155,7 @@
 			return $this->arena;
 		}
 
-		public function set_time($time)
+		public function set_time( $time )
 		{
 			$this->time = $time;
 		}
@@ -171,7 +171,7 @@
 
 		  public function get_date_end() { return $this->date_end; } */
 
-		public function set_create_date($create_date)
+		public function set_create_date( $create_date )
 		{
 			$this->create_date = $create_date;
 		}
@@ -186,17 +186,17 @@
 			return $this->last_change_date;
 		}
 
-		public function set_last_change_date($last_change_date)
+		public function set_last_change_date( $last_change_date )
 		{
 			$this->last_change_date = $last_change_date;
 		}
 
-		public function set_contact_persons($persons)
+		public function set_contact_persons( $persons )
 		{
 			$count = 0;
-			foreach($persons as $person)
+			foreach ($persons as $person)
 			{
-				if($count == 0)
+				if ($count == 0)
 				{
 					$this->set_contact_person_1($persons[0]);
 				}
@@ -208,7 +208,7 @@
 			}
 		}
 
-		public function set_contact_person_1($contact_person_1)
+		public function set_contact_person_1( $contact_person_1 )
 		{
 			$this->contact_person_1 = $contact_person_1;
 		}
@@ -218,7 +218,7 @@
 			return $this->contact_person_1;
 		}
 
-		public function set_contact_person_2($contact_person_2)
+		public function set_contact_person_2( $contact_person_2 )
 		{
 			$this->contact_person_2 = $contact_person_2;
 		}
@@ -228,7 +228,7 @@
 			return $this->contact_person_2;
 		}
 
-		public function set_contact_person_2_address($contact_person_2_address)
+		public function set_contact_person_2_address( $contact_person_2_address )
 		{
 			$this->contact_person_2_address = $contact_person_2_address;
 		}
@@ -238,7 +238,7 @@
 			return $this->contact_person_2_address;
 		}
 
-		public function set_contact_person_2_zip($contact_person_2_zip)
+		public function set_contact_person_2_zip( $contact_person_2_zip )
 		{
 			$this->contact_person_2_zip = $contact_person_2_zip;
 		}
@@ -248,7 +248,7 @@
 			return $this->contact_person_2_zip;
 		}
 
-		public function set_special_adaptation($special_adaptation)
+		public function set_special_adaptation( $special_adaptation )
 		{
 			$this->special_adaptation = $special_adaptation;
 		}
@@ -258,7 +258,7 @@
 			return $this->special_adaptation;
 		}
 
-		public function set_secret($secret)
+		public function set_secret( $secret )
 		{
 			$this->secret = $secret;
 		}
@@ -268,7 +268,7 @@
 			return $this->secret;
 		}
 
-		public function set_internal_arena($internal_arena)
+		public function set_internal_arena( $internal_arena )
 		{
 			$this->internal_arena = $internal_arena;
 		}
@@ -278,7 +278,7 @@
 			return $this->internal_arena;
 		}
 
-		public function set_frontend(bool $frontend)
+		public function set_frontend( bool $frontend )
 		{
 			$this->frontend = (bool)$frontend;
 		}
@@ -288,7 +288,7 @@
 			return $this->frontend;
 		}
 
-		public function set_new_org(bool $new_org)
+		public function set_new_org( bool $new_org )
 		{
 			$this->new_org = (bool)$new_org;
 		}
@@ -298,7 +298,7 @@
 			return $this->new_org;
 		}
 
-		public function set_new_group(bool $new_group)
+		public function set_new_group( bool $new_group )
 		{
 			$this->new_group = (bool)$new_group;
 		}
@@ -315,7 +315,7 @@
 		 */
 		public static function get_so()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('activitycalendar.soactivity');
 			}
@@ -327,14 +327,14 @@
 		{
 			$so_org		 = activitycalendar_soorganization::get_instance();
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($this->group_id) && $this->get_group_id() > 0)
+			if (isset($this->group_id) && $this->get_group_id() > 0)
 			{
-				if($this->get_new_group())
+				if ($this->get_new_group())
 				{
 					$group_name	 = activitycalendar_sogroup::get_instance()->get_group_name_local($this->get_group_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_group_id(), true));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_2()->get_id());
 					}
@@ -349,7 +349,7 @@
 					$group_name	 = activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_group_id(), true));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2()->get_id());
 					}
@@ -360,7 +360,7 @@
 					$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
 				}
 				$o_id = $this->get_organization_id();
-				if($this->get_new_org())
+				if ($this->get_new_org())
 				{
 					$org_name = $so_org->get_organization_name_local($o_id);
 				}
@@ -369,14 +369,14 @@
 					$org_name = $so_org->get_organization_name($o_id);
 				}
 			}
-			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
+			else if (isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
-				if($this->get_new_org())
+				if ($this->get_new_org())
 				{
 					$org_name	 = activitycalendar_soorganization::get_instance()->get_organization_name_local($this->get_organization_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_organization_id()));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2()->get_id());
 					}
@@ -391,7 +391,7 @@
 					$org_name	 = activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_organization_id()));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2()->get_id());
 					}
@@ -408,7 +408,7 @@
 				$contact_2	 = "";
 			}
 
-			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
+			if ($this->get_internal_arena() && $this->get_internal_arena() > 0)
 			{
 				$arena_name = activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena());
 			}
@@ -443,14 +443,14 @@
 		{
 			$so_org		 = activitycalendar_soorganization::get_instance();
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($this->group_id) && $this->get_group_id() > 0)
+			if (isset($this->group_id) && $this->get_group_id() > 0)
 			{
-				if($this->get_new_group())
+				if ($this->get_new_group())
 				{
 					$group_name	 = activitycalendar_sogroup::get_instance()->get_group_name_local($this->get_group_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_group_id(), true));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_2()->get_id());
 					}
@@ -465,7 +465,7 @@
 					$group_name	 = activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_group_id(), true));
 					$contact_1	 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2()->get_id());
 					}
@@ -476,7 +476,7 @@
 					$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
 				}
 				$o_id = $this->get_organization_id();
-				if($this->get_new_org())
+				if ($this->get_new_org())
 				{
 					$org_name		 = $so_org->get_organization_name_local($o_id);
 					$org_homepage	 = $so_org->get_organization_homepage_local($o_id);
@@ -487,15 +487,15 @@
 					$org_homepage	 = $so_org->get_organization_homepage($o_id);
 				}
 			}
-			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
+			else if (isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
-				if($this->get_new_org())
+				if ($this->get_new_org())
 				{
 					$org_name		 = activitycalendar_soorganization::get_instance()->get_organization_name_local($this->get_organization_id());
 					$org_homepage	 = $so_org->get_organization_homepage_local($this->get_organization_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_organization_id()));
 					$contact_1		 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2()->get_id());
 					}
@@ -511,7 +511,7 @@
 					$org_homepage	 = $so_org->get_organization_homepage($this->get_organization_id());
 					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_organization_id()));
 					$contact_1		 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1()->get_id());
-					if($this->get_contact_person_2())
+					if ($this->get_contact_person_2())
 					{
 						$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2()->get_id());
 					}
@@ -528,7 +528,7 @@
 				$contact_2	 = "";
 			}
 
-			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
+			if ($this->get_internal_arena() && $this->get_internal_arena() > 0)
 			{
 				$arena_name = activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena());
 			}

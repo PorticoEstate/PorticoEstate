@@ -39,7 +39,7 @@
 			$criteria = phpgw::get_var('criteria');
 //			_debug_array($criteria);die();
 
-			if($config->config_data['frontpagetext'] != '')
+			if ($config->config_data['frontpagetext'] != '')
 			{
 				$frontpagetext = $config->config_data['frontpagetext'];
 			}
@@ -65,7 +65,7 @@
 
 			$top_levels = array();
 			$filter_tree = array();
-			foreach($activities as $activity)
+			foreach ($activities as $activity)
 			{
 				$top_levels[] = array(
 					'id'		=>	$activity['id'],
@@ -79,7 +79,7 @@
 					'filter_part_of_town'	 => $imploded_filter_part_of_town));
 
 				$organized_fields	 = $GLOBALS['phpgw']->custom_fields->get_attribute_tree('booking', ".resource.{$activity['id']}", 0,  $activity['id']);
-				if(!$organized_fields)
+				if (!$organized_fields)
 				{
 					continue;
 				}
@@ -105,9 +105,10 @@
 			}
 //_debug_array($filter_tree);
 //die();
-			$params['part_of_towns'] = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
+//			$params['part_of_towns'] = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
+			$params['part_of_towns'] = execMethod('property.solocation.get_booking_part_of_towns');
 
-			foreach($params['part_of_towns'] as &$part_of_town)
+			foreach ($params['part_of_towns'] as &$part_of_town)
 			{
 				$part_of_town['checked'] = in_array($part_of_town['id'], $filter_part_of_town);
 			}
@@ -127,9 +128,9 @@
 			$_filter_part_of_town			 = explode(',', phpgw::get_var('filter_part_of_town', 'string'));
 
 			$filter_part_of_town = array();
-			foreach($_filter_part_of_town as $key => $value)
+			foreach ($_filter_part_of_town as $key => $value)
 			{
-				if($value)
+				if ($value)
 				{
 					$filter_part_of_town[] = $value;
 				}
@@ -138,19 +139,19 @@
 			$_filter_top_level			 = explode(',', phpgw::get_var('filter_top_level', 'string'));
 
 			$filter_top_level = array();
-			foreach($_filter_top_level as $key => $value)
+			foreach ($_filter_top_level as $key => $value)
 			{
-				if($value)
+				if ($value)
 				{
 					$filter_top_level[] = $value;
 				}
 			}
 			unset($value);
 
-			if(!$filter_top_level)
+			if (!$filter_top_level)
 			{
 				$activities = ExecMethod('booking.boactivity.get_top_level');
-				foreach($activities as $activity)
+				foreach ($activities as $activity)
 				{
 					$filter_top_level[] = $activity['id'];
 				}
@@ -158,21 +159,21 @@
 
 			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
 			$activity_criteria = array();
-			foreach($criteria as $entry)
+			foreach ($criteria as $entry)
 			{
-				if(isset($entry['activity_top_level']) && !in_array($entry['activity_top_level'],$filter_top_level))
+				if (isset($entry['activity_top_level']) && !in_array($entry['activity_top_level'], $filter_top_level))
 				{
 					continue;
 				}
-				if(isset($entry['activity_top_level']) && $entry['activity_top_level'])
+				if (isset($entry['activity_top_level']) && $entry['activity_top_level'])
 				{
 					$activity_criteria[$entry['activity_top_level']]['activity_top_level'] =  $entry['activity_top_level'];
 				}
-				if(isset($entry['cat_id']) && !in_array($entry['cat_id'],$filter_top_level))
+				if (isset($entry['cat_id']) && !in_array($entry['cat_id'], $filter_top_level))
 				{
 					continue;
 				}
-				if(isset($entry['choice_id']) && isset($entry['cat_id']))
+				if (isset($entry['choice_id']) && isset($entry['cat_id']))
 				{
 					$activity_criteria[$entry['cat_id']]['activity_top_level'] =  $entry['cat_id'];
 					$activity_criteria[$entry['cat_id']]['choice'][] =  $entry;
@@ -184,10 +185,10 @@
 //			_debug_array($activity_criteria);
 //			_debug_array($criteria);
 //			die();
-			if($searchterm || $building_id || $activity_criteria || $filter_part_of_town || $filter_top_level ||phpgw::get_var('filter_search_type'))
+			if ($searchterm || $building_id || $activity_criteria || $filter_part_of_town || $filter_top_level || phpgw::get_var('filter_search_type'))
 			{
 				$data = array(
-					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town,$filter_top_level, $activity_criteria)
+					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria)
 				);
 			}
 			self::render_template_xsl('search_details', $data);

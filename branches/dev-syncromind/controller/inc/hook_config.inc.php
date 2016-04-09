@@ -31,17 +31,17 @@
 	 * @param $config
 	 * @return string options for selectbox
 	 */
-	function document_cat($config)
+	function document_cat( $config )
 	{
 		$cats						 = CreateObject('phpgwapi.categories', -1, 'property', '.document');
 		$cats->supress_info			 = true;
 		$values						 = $cats->return_sorted_array(0, false, '', '', '', $globals					 = true, '', $use_acl					 = false);
 		$tts_frontend_cat_selected	 = isset($config['document_cat']) ? $config['document_cat'] : array();
 		$out						 = '';
-		foreach($values as $entry)
+		foreach ($values as $entry)
 		{
 			$checked = '';
-			if(in_array($entry['id'], $tts_frontend_cat_selected))
+			if (in_array($entry['id'], $tts_frontend_cat_selected))
 			{
 				$checked = ' checked';
 			}

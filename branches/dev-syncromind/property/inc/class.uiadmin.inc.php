@@ -105,7 +105,7 @@
 
 		function aclprefs()
 		{
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$this->bocommon->no_access();
 				return;
@@ -119,21 +119,21 @@
 			//		$acl_app			= get_var('acl_app',array('GET'));
 			$set_permission = phpgw::get_var('set_permission', 'bool');
 
-			if($set_permission)
+			if ($set_permission)
 			{
 				$receipt = $this->bo->set_permission($values, $r_processed, true);
 			}
 
-			if($this->location)
+			if ($this->location)
 			{
-				if(!$this->cat_id || $this->cat_id == 'accounts')
+				if (!$this->cat_id || $this->cat_id == 'accounts')
 				{
 					$user_list = $this->bo->get_user_list('accounts', true);
 				}
 
-				if(isset($user_list) && is_array($user_list))
+				if (isset($user_list) && is_array($user_list))
 				{
-					while(is_array($user_list) && list(, $user) = each($user_list))
+					while (is_array($user_list) && list(, $user) = each($user_list))
 					{
 						$processed[] = $user['account_id'];
 						$users[] = array
@@ -165,15 +165,15 @@
 					}
 				}
 
-				if(!$this->cat_id || $this->cat_id == 'groups')
+				if (!$this->cat_id || $this->cat_id == 'groups')
 				{
 					$group_list = $this->bo->get_user_list('groups', true);
 				}
 
 
-				if(isset($group_list) && is_array($group_list))
+				if (isset($group_list) && is_array($group_list))
 				{
-					while(is_array($group_list) && list(, $group) = each($group_list))
+					while (is_array($group_list) && list(, $group) = each($group_list))
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array
@@ -231,7 +231,7 @@
 				'acl_app' => $acl_app
 			);
 
-			if(!$this->location)
+			if (!$this->location)
 			{
 				$receipt['error'][] = array('msg' => lang('select a location!'));
 			}
@@ -239,11 +239,11 @@
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
 
 			$num_records = 0;
-			if(isset($user_list) && is_array($user_list))
+			if (isset($user_list) && is_array($user_list))
 			{
 				$num_records = count($user_list);
 			}
-			if(isset($group_list) && is_array($group_list))
+			if (isset($group_list) && is_array($group_list))
 			{
 				$num_records = $num_records + count($group_list);
 			}
@@ -307,7 +307,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::permissions';
 
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin'])) //this one is different
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin'])) //this one is different
 			{
 				$this->bocommon->no_access();
 				return;
@@ -322,23 +322,23 @@
 
 			$set_permission = phpgw::get_var('set_permission', 'bool');
 
-			if($set_permission)
+			if ($set_permission)
 			{
 				$receipt = $this->bo->set_permission($values, $r_processed, false, $initials);
 			}
 
 			$num_records = 0;
-			if($this->location)
+			if ($this->location)
 			{
-				if($this->cat_id == 'accounts')
+				if ($this->cat_id == 'accounts')
 				{
 					$user_list = $this->bo->get_user_list('accounts');
 				}
 
-				if(isSet($user_list) AND is_array($user_list))
+				if (isSet($user_list) AND is_array($user_list))
 				{
 					$num_records = count($user_list);
-					foreach($user_list as $user)
+					foreach ($user_list as $user)
 					{
 						$processed[] = $user['account_id'];
 						$users[] = array
@@ -388,15 +388,15 @@
 					}
 				}
 
-				if($this->cat_id == 'groups')
+				if ($this->cat_id == 'groups')
 				{
 					$group_list = $this->bo->get_user_list('groups');
 				}
 
-				if(isSet($group_list) AND is_array($group_list))
+				if (isSet($group_list) AND is_array($group_list))
 				{
 					$num_records = count($group_list);
-					foreach($group_list as $group)
+					foreach ($group_list as $group)
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array
@@ -500,12 +500,12 @@
 				'module' => $this->location
 			);
 
-			if(!$this->location)
+			if (!$this->location)
 			{
 				$receipt['error'][] = array('msg' => lang('select a location!'));
 			}
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -571,7 +571,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::id_control';
 
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -581,7 +581,7 @@
 
 			$values = phpgw::get_var('values');
 
-			if($values['select'])
+			if ($values['select'])
 			{
 				$receipt = $this->bo->edit_id($values);
 			}
@@ -590,7 +590,7 @@
 
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach($content as $i => & $entry)
+			foreach ($content as $i => & $entry)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener("date_{$entry['name']}");
 				$entry['key_id'] = $i;
@@ -624,7 +624,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::user_contact';
 
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				$this->bocommon->no_access();
 				return;
@@ -636,41 +636,41 @@
 
 			$values = phpgw::get_var('values');
 
-			if($values['save'])
+			if ($values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
 
-				if($values['old_email'] != $values['email'])
+				if ($values['old_email'] != $values['email'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "email", $values['email'], 'user');
 					$receipt['message'][] = array('msg' => lang('Users email is updated'));
 				}
-				if($values['old_phone'] != $values['phone'])
+				if ($values['old_phone'] != $values['phone'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "cellphone", $values['phone'], 'user');
 					$receipt['message'][] = array('msg' => lang('Users phone is updated'));
 				}
-				if($values['old_approval_from'] != $values['approval_from'])
+				if ($values['old_approval_from'] != $values['approval_from'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "approval_from", $values['approval_from'], 'user');
 					$receipt['message'][] = array('msg' => lang('Approval from is updated'));
 				}
-				if($values['old_default_vendor_category'] != $values['default_vendor_category'])
+				if ($values['old_default_vendor_category'] != $values['default_vendor_category'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "default_vendor_category", $values['default_vendor_category'], 'user');
 					$receipt['message'][] = array('msg' => lang('default vendor category is updated'));
 				}
-				if($values['old_default_tts_category'] != $values['default_tts_category'])
+				if ($values['old_default_tts_category'] != $values['default_tts_category'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "tts_category", $values['default_tts_category'], 'user');
 					$receipt['message'][] = array('msg' => lang('default ticket category is updated'));
 				}
-				if($values['old_assigntodefault'] != $values['assigntodefault'])
+				if ($values['old_assigntodefault'] != $values['assigntodefault'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "assigntodefault", $values['assigntodefault'], 'user');
 					$receipt['message'][] = array('msg' => lang('default ticket assigned to is updated'));
 				}
-				if($values['old_groupdefault'] != $values['groupdefault'])
+				if ($values['old_groupdefault'] != $values['groupdefault'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "groupdefault", $values['groupdefault'], 'user');
 					$receipt['message'][] = array('msg' => lang('default ticket group is updated'));
@@ -678,7 +678,7 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 
-			if($user_id)
+			if ($user_id)
 			{
 				$prefs = $this->bocommon->create_preferences('property', $user_id);
 			}
@@ -695,7 +695,7 @@
 
 			$acc = & $GLOBALS['phpgw']->accounts;
 			$group_list = $acc->get_list('groups', -1, 'ASC');
-			foreach($group_list as $entry)
+			foreach ($group_list as $entry)
 			{
 				$groups_tts[] = array
 					(
@@ -707,9 +707,9 @@
 
 			$account_list = $acc->get_list('accounts', -1, 'ASC', 'account_lastname');
 
-			foreach($account_list as $entry)
+			foreach ($account_list as $entry)
 			{
-				if($entry->enabled == true)
+				if ($entry->enabled == true)
 				{
 					$accounts_tts[] = array
 						(

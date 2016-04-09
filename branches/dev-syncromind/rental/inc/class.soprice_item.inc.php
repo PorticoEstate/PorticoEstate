@@ -16,7 +16,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.soprice_item');
 			}
@@ -29,7 +29,7 @@
 		 * @param	$id	id of the price item to return
 		 * @return a rental_price_item
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id = (int)$id;
 
@@ -60,14 +60,14 @@
 		 * @param string $title
 		 * @return rental_price_item
 		 */
-		function get_single_with_title($title)
+		function get_single_with_title( $title )
 		{
 			$title = (string)$title;
 
 			$sql = "SELECT rpi.*, type.title AS resp_title FROM rental_price_item left join rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id) WHERE rpi.title LIKE '" . $title . "'";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$price_item		 = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -93,13 +93,13 @@
 		 * @param string $id
 		 * @return rental_price_item
 		 */
-		function get_single_with_id($id)
+		function get_single_with_id( $id )
 		{
 			$id	 = (string)$id;
 			$sql = "SELECT * FROM rental_price_item WHERE agresso_id LIKE '" . $id . "'";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$price_item		 = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -131,7 +131,7 @@
 		 * @param $filters array of custom filters
 		 * @return list of rental_composite objects
 		 */
-		function get_price_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		function get_price_item_array( $start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
 		{
 			$results = array();
 
@@ -141,7 +141,7 @@
 			$sql = "SELECT * FROM rental_price_item WHERE $condition $order";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$price_item		 = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -162,15 +162,15 @@
 			return $results;
 		}
 
-		protected function get_conditions($query, $filters, $search_option)
+		protected function get_conditions( $query, $filters, $search_option )
 		{
 			$clauses = array('1=1');
-			if($query)
+			if ($query)
 			{
 
 				$like_pattern	 = "'%" . $this->db->db_addslashes($query) . "%'";
 				$like_clauses	 = array();
-				switch($search_option)
+				switch ($search_option)
 				{
 					case "id":
 						$like_clauses[]	 = "rental_price_item.id = $query";
@@ -188,14 +188,14 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
 			$filter_clauses = array();
-			switch($filters['is_area'])
+			switch ($filters['is_area'])
 			{
 				case "true":
 					$filter_clauses[]	 = "rental_price_item.is_area = TRUE";
@@ -207,12 +207,12 @@
 					break;
 			}
 
-			if(isset($filters['type']) && $filters['type'])
+			if (isset($filters['type']) && $filters['type'])
 			{
 				$filter_clauses[] = 'rental_price_item.type = ' . (int)$filters['type'];
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -226,7 +226,7 @@
 		 * @param $price_item the price_item to be added
 		 * @return result receipt from the db operation
 		 */
-		function add(&$price_item)
+		function add( &$price_item )
 		{
 			$price	 = $price_item->get_price() ? $price_item->get_price() : 0;
 			// Build a db-friendly array of the composite object
@@ -261,7 +261,7 @@
 		 * @param $price_item the price item to be updated
 		 * @return result receipt from the db operation
 		 */
-		function update($price_item)
+		function update( $price_item )
 		{
 			$id = intval($price_item->get_id());
 
@@ -290,7 +290,7 @@
 		 * @param $price_item the contract price item to be updated
 		 * @return result receipt from the db operation
 		 */
-		function update_contract_price_item(rental_contract_price_item $price_item)
+		function update_contract_price_item( rental_contract_price_item $price_item )
 		{
 			$id			 = intval($price_item->get_id());
 			$one_time	 = $price_item->get_is_one_time();
@@ -307,7 +307,7 @@
 				'price = ' . str_replace(',', '.', $price_item->get_price())
 			);
 
-			if($price_item->is_area())
+			if ($price_item->is_area())
 			{
 //			var_dump('total_price = '.$price_item->get_area().'*'.$price_item->get_price());
 				$values[] = 'total_price = ' . str_replace(',', '.', ($price_item->get_area() * $price_item->get_price()));
@@ -318,12 +318,12 @@
 				$values[] = 'total_price = ' . str_replace(',', '.', ($price_item->get_count() * $price_item->get_price()));
 			}
 
-			if($price_item->get_date_start())
+			if ($price_item->get_date_start())
 			{
 				$values[] = 'date_start = ' . $this->marshal($price_item->get_date_start(), 'int');
 			}
 
-			if($price_item->get_date_end())
+			if ($price_item->get_date_end())
 			{
 				$values[] = 'date_end = ' . $this->marshal($price_item->get_date_end(), 'int');
 			}
@@ -343,11 +343,11 @@
 		 * @param $price_item	the price item to remove
 		 * @return true if successful, false otherwise
 		 */
-		function remove_price_item($contract_id, $price_item_id)
+		function remove_price_item( $contract_id, $price_item_id )
 		{
 			$q		 = "DELETE FROM rental_contract_price_item WHERE id = {$price_item_id} AND contract_id = {$contract_id}";
 			$result	 = $this->db->query($q);
-			if($result)
+			if ($result)
 			{
 				rental_socontract::get_instance()->last_updated($contract_id);
 				rental_socontract::get_instance()->last_edited_by($contract_id);
@@ -363,24 +363,24 @@
 		 * @param $price_item	the price item to add
 		 * @return true if successful, false otherwise
 		 */
-		function add_price_item($contract_id, $price_item_id, $factor)
+		function add_price_item( $contract_id, $price_item_id, $factor )
 		{
 			$factor		 = $factor ? (float)$factor : 1;
 			$price_item	 = $this->get_single($price_item_id);
 			$contract	 = rental_socontract::get_instance()->get_single($contract_id);
 			$rented_area = 0;
 			$total_price = 0;
-			if($price_item->is_area())
+			if ($price_item->is_area())
 			{
 				$rented_area = $contract->get_rented_area();
-				if($rented_area == '')
+				if ($rented_area == '')
 				{
 					$rented_area = 0;
 				}
 				$total_price = ($rented_area * $price_item->get_price() * $factor);
 				//var_dump($total_price, $rented_area, $price_item->get_price());
 			}
-			if($price_item)
+			if ($price_item)
 			{
 				$values				 = array(
 					$price_item_id,
@@ -395,12 +395,12 @@
 				$start_date_field	 = '';
 				$end_date_field		 = '';
 
-				if($start_date = $contract->get_billing_start_date())
+				if ($start_date = $contract->get_billing_start_date())
 				{
 					$values[]			 = $start_date;
 					$start_date_field	 = ", date_start";
 				}
-				if($end_date = $contract->get_billing_end_date())
+				if ($end_date = $contract->get_billing_end_date())
 				{
 					$values[]		 = $end_date;
 					$end_date_field	 = ", date_end";
@@ -409,7 +409,7 @@
 				$q		 = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price {$start_date_field} {$end_date_field}) VALUES (" . join(',', $values) . ")";
 				//var_dump($q);
 				$result	 = $this->db->query($q);
-				if($result)
+				if ($result)
 				{
 					rental_socontract::get_instance()->last_updated($contract_id);
 					rental_socontract::get_instance()->last_edited_by($contract_id);
@@ -419,7 +419,7 @@
 			return false;
 		}
 
-		function reset_contract_price_item($contract_id, $price_item_id)
+		function reset_contract_price_item( $contract_id, $price_item_id )
 		{
 			//TODO: implement reset function
 		}
@@ -429,7 +429,7 @@
 			return 'id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -437,7 +437,7 @@
 			$columns = array();
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			if($sort_field == 'responsibility_title')
+			if ($sort_field == 'responsibility_title')
 			{
 				$sort_field = 'responsibility_id';
 			}
@@ -446,32 +446,32 @@
 			$filter_clauses		 = array();
 			$filter_clauses[]	 = "rpi.title != 'UNKNOWN'";
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "{$this->get_id_field_name()} = {$id}";
 			}
-			if(isset($filters['price_item_status']))
+			if (isset($filters['price_item_status']))
 			{
 				$filter_clauses[] = "NOT is_inactive";
 			}
-			if(isset($filters['responsibility_id']))
+			if (isset($filters['responsibility_id']))
 			{
 				$filter_clauses[] = "responsibility_id=" . $filters['responsibility_id'];
 			}
-			if(isset($filters['is_adjustable']))
+			if (isset($filters['is_adjustable']))
 			{
 				$filter_clauses[] = "NOT is_adjustable";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols	 = 'COUNT(DISTINCT(rpi.id)) AS count';
 				$order	 = '';
@@ -488,9 +488,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $price_item_id, &$price_item)
+		protected function populate( int $price_item_id, &$price_item )
 		{
-			if($price_item == null)
+			if ($price_item == null)
 			{
 				$price_item		 = new rental_price_item($this->unmarshal($this->db->f('id'), 'int'));
 				$price_item->set_title($this->unmarshal($this->db->f('title'), 'string'));
@@ -509,12 +509,12 @@
 			return $price_item;
 		}
 
-		function has_active_contract(int $price_item_id)
+		function has_active_contract( int $price_item_id )
 		{
 			$ts_query	 = strtotime(date('Y-m-d')); // timestamp for query (today)
 			$q			 = "SELECT rpi.* FROM rental_price_item rpi, rental_contract_price_item rcpi, rental_contract rc WHERE rpi.id = {$price_item_id} AND rcpi.price_item_id = rpi.id AND rc.id = rcpi.contract_id AND rc.date_start <= {$ts_query} AND (rc.date_end >= {$ts_query} OR rc.date_end IS NULL)";
 			$this->db->query($q);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return true;
 			}
@@ -525,7 +525,7 @@
 		{
 			$query = "SELECT id, agresso_id, title, price FROM rental_price_item WHERE NOT is_inactive AND NOT is_adjustable ORDER BY id ASC";
 			$this->db->query($query);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$id				 = $this->db->f('id', true);
 				$label			 = $this->db->f('agresso_id', true) . ' - ' . $this->db->f('title', true) . ' ; ' . lang('price') . ': ' . $this->db->f('price', true);
@@ -534,19 +534,19 @@
 			return $results;
 		}
 
-		function adjust_contract_price_items(int $price_item_id, $new_price)
+		function adjust_contract_price_items( int $price_item_id, $new_price )
 		{
 			$this->db->transaction_begin();
 			$number_affected		 = 0;
 			$db2					 = clone($this->db);
 			$q_contract_price_items	 = "SELECT * FROM rental_contract_price_item WHERE price_item_id={$price_item_id}";
 			$this->db->query($q_contract_price_items);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$total_price = 0.00;
 				$curr_id	 = $this->db->f('id');
 				$is_area	 = $this->unmarshal($this->db->f('is_area'), 'bool');
-				if($is_area)
+				if ($is_area)
 				{
 					$area		 = $this->unmarshal($this->db->f('area'), 'float');
 					$total_price = $area * $new_price;
@@ -562,7 +562,7 @@
 				$number_affected ++;
 			}
 
-			if($this->db->transaction_commit())
+			if ($this->db->transaction_commit())
 			{
 				return $number_affected;
 			}

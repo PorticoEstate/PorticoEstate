@@ -25,12 +25,13 @@
 	/* Dependencies for this app to work */
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'phpgwapi',
-		'versions' => array('0.9.17', '0.9.18','0.9.19')
+		'versions' => array('0.9.17', '0.9.18', '0.9.19')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'booking',
-		'versions' => array('0.2.20','0.2.21','0.2.22','0.2.23','0.2.24','0.2.25','0.2.26','0.2.27')
+		'versions' => array('0.2.20', '0.2.21', '0.2.22', '0.2.23', '0.2.24', '0.2.25',
+			'0.2.26', '0.2.27')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(

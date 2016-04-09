@@ -402,7 +402,9 @@
 							<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 								<div class="heading">
 									<legend>
-										<h3><xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" /></h3>
+										<h3>
+											<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+										</h3>
 									</legend>
 								</div>
 								<xsl:for-each select="cost_history[author]">

@@ -68,10 +68,10 @@
 			$type_id = count(explode('-', $q));
 			$so		 = CreateObject('property.solocation');
 			$ret	 = $so->read(array('type_id' => $type_id, 'location_code' => $q));
-			foreach($ret as &$r)
+			foreach ($ret as &$r)
 			{
 				$name		 = array();
-				for($i = 1; $i <= $type_id; $i++)
+				for ($i = 1; $i <= $type_id; $i++)
 					$name[]		 = $r['loc' . $i . '_name'];
 				$r['name']	 = $r['location_code'] . ' (' . join(', ', $name) . ')';
 				$r['id']	 = $r['location_code'];
@@ -82,12 +82,12 @@
 
 		public function find_buildings_used_by()
 		{
-			if(!phpgw::get_var('phpgw_return_as') == 'json')
+			if (!phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return;
 			}
 
-			if(($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null)))
+			if (($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null)))
 			{
 				$buildings = $this->bo->find_buildings_used_by($organization_id);
 				array_walk($buildings["results"], array($this, "_add_links"), "bookingfrontend.uibuilding.show");
@@ -99,7 +99,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -160,7 +160,7 @@
 			);
 
 			$data['datatable']['actions'][] = array();
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
@@ -172,12 +172,12 @@
 		{
 
 			$filter_part_of_town_id = phpgw::get_var(filter_part_of_town_id);
-			if(preg_match("/,/", $filter_part_of_town_id))
+			if (preg_match("/,/", $filter_part_of_town_id))
 			{
 				$_REQUEST['filter_part_of_town_id'] = explode(',', $filter_part_of_town_id);
 			}
 			$buildings = $this->bo->read();
-			foreach($buildings['results'] as &$building)
+			foreach ($buildings['results'] as &$building)
 			{
 				$building['link'] = $this->link(array('menuaction' => $this->module . '.uibuilding.show',
 					'id' => $building['id']));
@@ -189,12 +189,12 @@
 		public function add()
 		{
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building			 = extract_values($_POST, $this->fields);
 				$building['active']	 = '1';
 				$errors				 = $this->bo->validate($building);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($building);
 					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
@@ -206,7 +206,7 @@
 			$activity_data			 = $this->activity_bo->get_top_level();
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
@@ -216,7 +216,8 @@
 			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 				'date', 'security', 'file'));
 
-			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data, 'new_form' => true));
+			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data,
+				'new_form' => true));
 		}
 
 		public function edit()
@@ -231,7 +232,7 @@
 			$config								 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			if($config->config_data['extra_schedule'] == 'yes')
+			if ($config->config_data['extra_schedule'] == 'yes')
 			{
 				$building['extra'] = 1;
 			}
@@ -241,19 +242,19 @@
 			}
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = array_merge($building, extract_values($_POST, $this->fields));
 
 				$errors = $this->bo->validate($building);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($building);
 					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
 			$activity_data			 = $this->activity_bo->get_top_level();
-			foreach($activity_data as $acKey => $acValue)
+			foreach ($activity_data as $acKey => $acValue)
 			{
 				$activity_data[$acKey]['activity_id'] = $building['activity_id'];
 			}
@@ -261,7 +262,7 @@
 			$this->flash_form_errors($errors);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
@@ -289,7 +290,7 @@
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
 			$building['location_link']		 = self::link(array('menuaction' => 'property.uilocation.view',
 				'location_code' => $building['location_code']));
-			if(trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])))
+			if (trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])))
 			{
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}

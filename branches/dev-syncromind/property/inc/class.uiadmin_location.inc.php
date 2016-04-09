@@ -100,7 +100,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -110,7 +110,7 @@
 
 			$this->bocommon->reset_fm_cache();
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query(array
 					(
@@ -287,7 +287,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query($data = array())
+		public function query( $data = array() )
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -295,7 +295,7 @@
 			$columns = phpgw::get_var('columns');
 			$type_id = phpgw::get_var('type_id', 'int');
 
-			switch($data['method'])
+			switch ($data['method'])
 			{
 				case 'list_attribute':
 					$id_type = $type_id;
@@ -320,7 +320,7 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			switch($data['method'])
+			switch ($data['method'])
 			{
 				case 'list_attribute':
 					$values = $this->bo->read_attrib($params);
@@ -331,19 +331,19 @@
 					break;
 				default:
 					$values = $this->bo->read($params);
-					foreach($values as &$entry)
+					foreach ($values as &$entry)
 					{
 						$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$entry['id']}");
 					}
 					break;
 			}
 			$new_values = array();
-			foreach($values as $value)
+			foreach ($values as $value)
 			{
 				$new_values[] = $value;
 			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $new_values;
 			}
@@ -351,7 +351,7 @@
 			$result_data = array('results' => $new_values);
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
-			switch($data['method'])
+			switch ($data['method'])
 			{
 				case 'list_attribute':
 					$variable = array(
@@ -375,7 +375,7 @@
 
 		public function save()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit();
 			}
@@ -383,16 +383,16 @@
 			$id = (int)phpgw::get_var('id');
 			$values = phpgw::get_var('values');
 
-			if(!isset($values['name']) || !$values['name'])
+			if (!isset($values['name']) || !$values['name'])
 			{
 				$receipt['error'][] = array('msg' => lang('Name not entered!'));
 			}
-			if($id)
+			if ($id)
 			{
 				$values['id'] = $id;
 			}
 
-			if(!isset($receipt['error']))
+			if (!isset($receipt['error']))
 			{
 				try
 				{
@@ -400,10 +400,10 @@
 					$id = $receipt['id'];
 					$msgbox_data = $this->bocommon->msgbox_data($receipt);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 
-					if($e)
+					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit($values);
@@ -424,7 +424,7 @@
 
 		function edit()
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -439,7 +439,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit standard');
@@ -498,7 +498,7 @@
 
 		function delete()
 		{
-			if(!$this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 8, 'acl_location' => $this->acl_location));
@@ -510,12 +510,12 @@
 			$id = phpgw::get_var('id', 'int');
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$receipt = $this->bo->delete($type_id, $id, $attrib, $group_id);
 
 				//FIXME
-				if(isset($receipt['message']))
+				if (isset($receipt['message']))
 				{
 					return $receipt['message'][0]['msg'];
 				}
@@ -525,7 +525,7 @@
 				}
 			}
 
-			if($attrib)
+			if ($attrib)
 			{
 				$function = 'list_attribute';
 			}
@@ -563,7 +563,7 @@
 
 		function list_attribute_group()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -575,7 +575,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
-			if($resort)
+			if ($resort)
 			{
 				$this->bo->resort_attrib_group(array('resort' => $resort, 'type_id' => $type_id,
 					'id' => $id));
@@ -583,7 +583,7 @@
 
 			$type = $this->bo->read_single($type_id);
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query(array
 					(
@@ -728,7 +728,7 @@
 
 		function edit_attrib_group()
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -744,16 +744,16 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if(!$values)
+			if (!$values)
 			{
 				$values = array();
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
-				if($id)
+				if ($id)
 				{
 					$values['id'] = $id;
 					$action = 'edit';
@@ -761,27 +761,27 @@
 
 				$values['location'] = $location;
 
-				if(!$values['group_name'])
+				if (!$values['group_name'])
 				{
 					$receipt['error'][] = array('msg' => lang('group name not entered!'));
 				}
 
-				if(!$values['descr'])
+				if (!$values['descr'])
 				{
 					$receipt['error'][] = array('msg' => lang('description not entered!'));
 				}
 
-				if(!$location)
+				if (!$location)
 				{
 					$receipt['error'][] = array('msg' => lang('location not chosen!'));
 				}
 
 
-				if(!isset($receipt['error']))
+				if (!isset($receipt['error']))
 				{
 					$receipt = $this->bo->save_attrib_group($values, $action);
 
-					if(!$id)
+					if (!$id)
 					{
 						$id = $receipt['id'];
 					}
@@ -792,7 +792,7 @@
 				}
 			}
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single_attrib_group($location, $id);
 				$type_name = $values['type_name'];
@@ -855,7 +855,7 @@
 
 		function list_attribute()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -867,14 +867,14 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
-			if($resort)
+			if ($resort)
 			{
 				$this->bo->resort_attrib(array('resort' => $resort, 'type_id' => $type_id, 'id' => $id));
 			}
 
 			$type = $this->bo->read_single($type_id);
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query(array
 					(
@@ -1017,7 +1017,7 @@
 
 		public function save_attrib()
 		{
-			if(!$_POST)
+			if (!$_POST)
 			{
 				return	$this->edit_attrib();
 			}
@@ -1026,71 +1026,71 @@
 			$id = (int)phpgw::get_var('id');
 			$values = phpgw::get_var('values');
 
-			if($id)
+			if ($id)
 			{
 				$values['id'] = $id;
 				$action = 'edit';
 			}
 			$type_id = $values['type_id'];
 
-			if(!$values['column_name'])
+			if (!$values['column_name'])
 			{
 				$receipt['error'][] = array('msg' => lang('Column name not entered!'));
 			}
 
-			if(!preg_match('/^[a-z0-9_]+$/i', $values['column_name']))
+			if (!preg_match('/^[a-z0-9_]+$/i', $values['column_name']))
 			{
 				$receipt['error'][] = array('msg' => lang('Column name %1 contains illegal character', $values['column_name']));
 			}
 
-			if(!$values['input_text'])
+			if (!$values['input_text'])
 			{
 				$receipt['error'][] = array('msg' => lang('Input text not entered!'));
 			}
-			if(!$values['statustext'])
+			if (!$values['statustext'])
 			{
 				$receipt['error'][] = array('msg' => lang('Statustext not entered!'));
 			}
 
-			if(!$values['type_id'])
+			if (!$values['type_id'])
 			{
 				$receipt['error'][] = array('msg' => lang('Location type not chosen!'));
 			}
 
-			if(!$values['column_info']['type'])
+			if (!$values['column_info']['type'])
 			{
 				$receipt['error'][] = array('msg' => lang('Datatype type not chosen!'));
 			}
 
-			if(!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
+			if (!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
 			{
 				$receipt['error'][] = array('msg' => lang('Please enter precision as integer !'));
 				unset($values['column_info']['precision']);
 			}
 
-			if($values['column_info']['scale'] && !ctype_digit($values['column_info']['scale']))
+			if ($values['column_info']['scale'] && !ctype_digit($values['column_info']['scale']))
 			{
 				$receipt['error'][] = array('msg' => lang('Please enter scale as integer !'));
 				unset($values['column_info']['scale']);
 			}
 
-			if(!$values['column_info']['nullable'])
+			if (!$values['column_info']['nullable'])
 			{
 				$receipt['error'][] = array('msg' => lang('Nullable not chosen!'));
 			}
 
-			if(!$receipt['error'])
+			if (!$receipt['error'])
 			{
 				try
 				{
 					$receipt = $this->bo->save_attrib($values, $action);
-					if(!$id)
+					if (!$id)
 					{
 						$id = $receipt['id'];
 					}
 					$msgbox_data = $this->bocommon->msgbox_data($receipt);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 					$this->edit_attrib($values);
@@ -1111,7 +1111,7 @@
 
 		function edit_attrib()
 		{
-			if(!$this->acl_add)
+			if (!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -1127,7 +1127,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
-			if(!$values)
+			if (!$values)
 			{
 				$values = array();
 			}
@@ -1135,7 +1135,7 @@
 			//_debug_array($values);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
-			if($id)
+			if ($id)
 			{
 				$values = $this->bo->read_single_attrib($type_id, $id);
 				$function_msg = lang('edit attribute') . ' ' . $values['input_text'];
@@ -1156,7 +1156,7 @@
 			//_debug_array($values);
 
 			$multiple_choice = '';
-			if($values['column_info']['type'] == 'R' || $values['column_info']['type'] == 'CH' || $values['column_info']['type'] == 'LB')
+			if ($values['column_info']['type'] == 'R' || $values['column_info']['type'] == 'CH' || $values['column_info']['type'] == 'LB')
 			{
 				$multiple_choice = true;
 			}
@@ -1223,7 +1223,7 @@
 
 		function config()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1238,7 +1238,7 @@
 
 			$standard_list = $this->bo->read_config();
 
-			while(is_array($standard_list) && list(, $standard) = each($standard_list))
+			while (is_array($standard_list) && list(, $standard) = each($standard_list))
 			{
 				$content[] = array
 					(
@@ -1315,7 +1315,7 @@
 
 		function edit_config()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1328,7 +1328,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
 				$receipt = $this->bo->save_config($values, $column_name);
 			}

@@ -28,7 +28,7 @@
 			);
 
 
-			if(
+			if (
 			$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_IN, PHPGW_ACL_ADD, 'rental') ||
 			$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_OUT, PHPGW_ACL_ADD, 'rental') ||
 			$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_INTERNAL, PHPGW_ACL_ADD, 'rental')
@@ -139,7 +139,7 @@
 				)
 			);
 
-			if($use_fellesdata)
+			if ($use_fellesdata)
 			{
 				$menus['navigation']['parties']['children'] = $sub_parties;
 			}

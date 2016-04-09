@@ -7,9 +7,8 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package messenger
 	* @subpackage ???
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -29,9 +28,9 @@
 	 * Description
 	 * @package messenger
 	 */
-
 	class messenger_menu
 	{
+
 		/**
 		 * Get the menus for the messenger
 		 *
@@ -50,7 +49,7 @@
 				'messenger' => array
 				(
 					'text'	=> lang('messenger'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.uimessenger.inbox") ),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.uimessenger.inbox")),
 					'image'	=> array('messenger', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -58,36 +57,40 @@
 			);
 
 			$menus['toolbar'] = array();
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 				$menus['admin'] = array
 				(
 					'index'	=> array
 					(
 						'text'	=> lang('Configuration'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'messenger') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname' => 'messenger'))
 					),
 					'acl'	=> array
 					(
 						'text'	=> lang('Configure Access Permissions'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'messenger') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
+							'acl_app' => 'messenger'))
 					)
 				);
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
 			{
 				$menus['preferences'] = array
 				(
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'messenger', 'type'=> 'user') )
+						'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'messenger',
+							'type' => 'user'))
 					),
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'messenger') )
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs',
+							'acl_app' => 'messenger'))
 					)
 				);
 

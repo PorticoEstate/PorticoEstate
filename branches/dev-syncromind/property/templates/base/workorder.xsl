@@ -269,7 +269,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_branch"/>
 						</label>
-						<xsl:for-each select="branch_list[selected='selected']">
+						<xsl:for-each select="branch_list[selected='selected' or selected = 1]">
 							<xsl:value-of select="name"/>
 							<xsl:if test="position() != last()">, </xsl:if>
 						</xsl:for-each>
@@ -623,10 +623,13 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'contract sum')"/>
 						</label>
-						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[contract_sum]" value="{value_contract_sum}">
-							<xsl:attribute name="data-validation-optional">
-								<xsl:text>true</xsl:text>
+						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" id="field_contract_sum" name="values[contract_sum]" value="{value_contract_sum}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>budget</xsl:text>
 							</xsl:attribute>
+							<!--xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute-->
 						</input>
 						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 					</div>
@@ -648,13 +651,17 @@
 						<label for="name">
 							<xsl:value-of select="lang_budget"/>
 						</label>
-						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[budget]" value="{value_budget}">
+						<input type="text" data-validation="number"  data-validation-decimal-separator="{$decimal_separator}" id='field_budget' name="values[budget]" value="{value_budget}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_budget_statustext"/>
 							</xsl:attribute>
-							<xsl:attribute name="data-validation-optional">
-								<xsl:text>true</xsl:text>
+							<xsl:attribute name="data-validation">
+								<xsl:text>budget</xsl:text>
 							</xsl:attribute>
+
+							<!--xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute-->
 						</input>
 						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 					</div>
@@ -938,8 +945,10 @@
 				</xsl:when>
 			</xsl:choose>
 			<script type="text/javascript">
+				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum')"/>;
+				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
-				var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+				var location_item_id = '<xsl:value-of select="location_item_id"/>';
 			</script>
 		</div>
 		<div class="proplist-col">
@@ -1262,7 +1271,7 @@
 <!-- New template-->
 <xsl:template match="options_lid">
 	<option value="{lid}">
-		<xsl:if test="selected = 'selected'">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected"/>
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="lastname"/>

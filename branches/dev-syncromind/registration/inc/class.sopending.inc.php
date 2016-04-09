@@ -30,7 +30,6 @@
 	 * Description
 	 * @package registration
 	 */
-
 	class registration_sopending
 	{
 
@@ -47,7 +46,7 @@
 			$this->like			= & $this->db->like;
 		}
 
-		public function read($data)
+		public function read( $data )
 		{
 			$start					= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter					= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
@@ -61,22 +60,22 @@
 			$ordermethod = " ORDER BY {$order} {$sort}";
 
 			$filtermethod = 'WHERE reg_info IS NOT NULL';
-			$where= 'AND';
+			$where = 'AND';
 			switch ($status_id)
 			{
 				case '1':
 					$filtermethod .= " $where reg_approved = 1";
-					$where= 'AND';
+					$where = 'AND';
 					break;
 				case '2':
 					$filtermethod .= " $where reg_approved IS NULL";
-					$where= 'AND';
+					$where = 'AND';
 					break;
 				default:
 					// nothing
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = "{$where} reg_lid {$this->like} '%$query%'";
@@ -86,17 +85,17 @@
 			_debug_array($sql);
 
 			$values = array();
-			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' FROM')),__LINE__,__FILE__);
+			$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' FROM')), __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
-			if(!$allrows)
+			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				if($this->total_records > 200)
+				if ($this->total_records > 200)
 				{
 					$_fetch_single = true;
 				}
@@ -104,11 +103,11 @@
 				{
 					$_fetch_single = false;
 				}
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__, false, $_fetch_single);
 				unset($_fetch_single);
 			}
 
-			$j=0;
+			$j = 0;
 
 			$values = array();
 
@@ -122,26 +121,25 @@
 					'reg_dla'		=> $this->db->f('reg_dla'),
 					'reg_approved'	=> $this->db->f('reg_approved')
 				); 
-
 			}
 			return $values;
 		}
 
-		public function approve_users($data)
+		public function approve_users( $data )
 		{
 			$delete_approval = array();
 			$add_approval = array();
-			foreach($data['pending_users_orig'] as $id)
+			foreach ($data['pending_users_orig'] as $id)
 			{
-				if(!in_array($id, $data['pending_users']))
+				if (!in_array($id, $data['pending_users']))
 				{
 					$delete_approval[] = $id;
 				}
 			}
 
-			foreach($data['pending_users'] as $id)
+			foreach ($data['pending_users'] as $id)
 			{
-				if(!in_array($id, $data['pending_users_orig']))
+				if (!in_array($id, $data['pending_users_orig']))
 				{
 					$add_approval[] = $id;
 				}
@@ -150,20 +148,20 @@
 			$this->db->transaction_begin();
 			foreach ($delete_approval as $reg_id)
 			{
-				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = NULL WHERE reg_id = '{$reg_id}'",__LINE__,__FILE__);			
+				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = NULL WHERE reg_id = '{$reg_id}'", __LINE__, __FILE__);
 			}
 
 			foreach ($add_approval as $reg_id)
 			{
-				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = 1 WHERE reg_id = '{$reg_id}'",__LINE__,__FILE__);			
+				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = 1 WHERE reg_id = '{$reg_id}'", __LINE__, __FILE__);
 			}
 
 			return $this->db->transaction_commit();
 		}
 
-		public function update_pending_user($values)
+		public function update_pending_user( $values )
 		{
-			if(!isset($values['id']) || !$values['id'])
+			if (!isset($values['id']) || !$values['id'])
 			{
 				throw new Exception("registration_sopending::update_pending_user() - missing 'id' in valueset");
 			}
@@ -171,34 +169,32 @@
 			$this->db->transaction_begin();
 //			if (isset($values['location']) && $values['location'])
 			{
-				$this->db->query("SELECT reg_info FROM phpgw_reg_accounts WHERE reg_id = '{$values['id']}'",__LINE__,__FILE__);
+				$this->db->query("SELECT reg_info FROM phpgw_reg_accounts WHERE reg_id = '{$values['id']}'", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
 					$reg_info = unserialize(base64_decode($this->db->f('reg_info')));
 					$reg_info['location_code'] = implode('-', $values['location']);
 					
-					if($values['account_permissions'] && is_array($values['account_permissions']))
+					if ($values['account_permissions'] && is_array($values['account_permissions']))
 					{
 						foreach ($values['account_permissions'] as $_app => $_selected)
 						{
-							if($_selected)
+							if ($_selected)
 							{
 								$reg_info['account_permissions'][] =  $_app;
 							}
-						
 						}
 						unset($_app);
 						unset($_selected);
 					}
-					if($values['account_permissions_admin'] && is_array($values['account_permissions_admin']))
+					if ($values['account_permissions_admin'] && is_array($values['account_permissions_admin']))
 					{
 						foreach ($values['account_permissions_admin'] as $_app => $_selected)
 						{
-							if($_selected)
+							if ($_selected)
 							{
 								$reg_info['account_permissions_admin'][] =  $_app;
 							}
-						
 						}
 						unset($_app);
 						unset($_selected);
@@ -206,20 +202,20 @@
 					
 					$reg_info['account_groups'] = $values['account_groups'] ? $values['account_groups'] : array();
 
-					$this->db->query("UPDATE phpgw_reg_accounts SET reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
+					$this->db->query("UPDATE phpgw_reg_accounts SET reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'", __LINE__, __FILE__);
 				}
 			}
 
 			$value_set['reg_approved']	= $values['approve'];
 			$value_set					= $this->db->validate_update($value_set);
-			$ret = $this->db->query("UPDATE phpgw_reg_accounts SET $value_set WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
+			$ret = $this->db->query("UPDATE phpgw_reg_accounts SET $value_set WHERE reg_id='{$values['id']}'", __LINE__, __FILE__);
 
 			$this->db->transaction_commit();
 			return $ret;
 		}
 
-		public function delete($id)
+		public function delete( $id )
 		{
-			$this->db->query("DELETE FROM phpgw_reg_accounts WHERE reg_id = '{$id}'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_reg_accounts WHERE reg_id = '{$id}'", __LINE__, __FILE__);
 		}
 	}

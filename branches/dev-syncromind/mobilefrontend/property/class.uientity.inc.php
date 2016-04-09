@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -27,11 +26,11 @@
 	 * @subpackage tts
 	 * @version $Id: class.uitts.inc.php 11511 2013-12-08 20:57:07Z sigurdne $
 	 */
-
   	phpgw::import_class('property.uientity');
 
 	class mobilefrontend_uientity extends property_uientity
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

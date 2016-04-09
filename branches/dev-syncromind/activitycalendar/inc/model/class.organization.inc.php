@@ -28,12 +28,12 @@
 		 * 
 		 * @param int $id the id of this organization
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -43,7 +43,7 @@
 			return $this->id;
 		}
 
-		public function set_name($name)
+		public function set_name( $name )
 		{
 			$this->name = $name;
 		}
@@ -53,7 +53,7 @@
 			return $this->name;
 		}
 
-		public function set_homepage($homepage)
+		public function set_homepage( $homepage )
 		{
 			$this->homepage = $homepage;
 		}
@@ -63,7 +63,7 @@
 			return $this->homepage;
 		}
 
-		public function set_change_type($change_type)
+		public function set_change_type( $change_type )
 		{
 			$this->change_type = $change_type;
 		}
@@ -73,7 +73,7 @@
 			return $this->change_type;
 		}
 
-		public function set_email($email)
+		public function set_email( $email )
 		{
 			$this->email = $email;
 		}
@@ -83,7 +83,7 @@
 			return $this->email;
 		}
 
-		public function set_phone($phone)
+		public function set_phone( $phone )
 		{
 			$this->phone = $phone;
 		}
@@ -93,7 +93,7 @@
 			return $this->phone;
 		}
 
-		public function set_address($address)
+		public function set_address( $address )
 		{
 			$this->address = $address;
 		}
@@ -103,7 +103,7 @@
 			return $this->address;
 		}
 
-		public function set_description($description)
+		public function set_description( $description )
 		{
 			$this->description = $description;
 		}
@@ -113,7 +113,7 @@
 			return $this->description;
 		}
 
-		public function set_organization_number($organization_number)
+		public function set_organization_number( $organization_number )
 		{
 			$this->organization_number = $organization_number;
 		}
@@ -123,7 +123,7 @@
 			return $this->organization_number;
 		}
 
-		public function set_show_in_portal($show_in_portal)
+		public function set_show_in_portal( $show_in_portal )
 		{
 			$this->show_in_portal = $show_in_portal;
 		}
@@ -133,7 +133,7 @@
 			return $this->show_in_portal;
 		}
 
-		public function set_district($district)
+		public function set_district( $district )
 		{
 			$this->district = $district;
 		}
@@ -143,7 +143,7 @@
 			return $this->district;
 		}
 
-		public function set_transferred($transferred)
+		public function set_transferred( $transferred )
 		{
 			$this->transferred = $transferred;
 		}
@@ -153,7 +153,7 @@
 			return $this->transferred;
 		}
 
-		public function set_original_org_id($original_org_id)
+		public function set_original_org_id( $original_org_id )
 		{
 			$this->original_org_id = $original_org_id;
 		}
@@ -163,7 +163,7 @@
 			return $this->original_org_id;
 		}
 
-		public function set_addressnumber($addressnumber)
+		public function set_addressnumber( $addressnumber )
 		{
 			$this->addressnumber = $addressnumber;
 		}
@@ -173,7 +173,7 @@
 			return $this->addressnumber;
 		}
 
-		public function set_zip_code($zip_code)
+		public function set_zip_code( $zip_code )
 		{
 			$this->zip_code = $zip_code;
 		}
@@ -183,7 +183,7 @@
 			return $this->zip_code;
 		}
 
-		public function set_city($city)
+		public function set_city( $city )
 		{
 			$this->city = $city;
 		}

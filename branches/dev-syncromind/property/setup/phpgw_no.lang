@@ -1260,7 +1260,7 @@ please either select generate id or type a equipment id !	property	no	enten valg
 please enter a apartment id !	property	no	angi leilighet ID
 please enter a building id !	property	no	angi bygg ID
 please enter a invoice num!	property	no	Angi Fakturanummer
-please enter a description!	property	no	angi en beskrivelse!
+please enter a description!	property	no	Angi en beskrivelse!
 please enter a entrance id !	property	no	angi inngang ID
 please enter a index !	property	no	Angi en indeks
 Please enter a title !	property	no	Angi en overskrift
@@ -1417,7 +1417,7 @@ request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
 request id	property	no	Behov ID
 request start date	property	no	Behov startdato
-request status	property	no	Status
+request status	property	no	Status for behov
 request title	property	no	Tiltak tittel
 request description	property	no	Tilstandbeskrivelse
 requirement	property	no	Behov/pålegg
@@ -1735,7 +1735,7 @@ status has not been saved	property	no	Status er IKKE lagret!
 status id	property	no	Status ID
 statustext	property	no	Statustekst
 statustext not entered!	property	no	Statustekst er ikke angitt!
-street name	property	no	gate navn
+street name	property	no	gatenavn
 street number	property	no	gate nr
 subject	property	no	Overskrift
 subject changed	property	no	Emne er endret
@@ -1888,7 +1888,7 @@ vendor global categories	property	no	Globale leverandør kategorier
 vendor has been added	property	no	Leverandør er lagt til
 vendor id	property	no	Lev ID
 vendor is not defined in order %1	property	no	Leverandør er ikke definert i ordre %1
-vendor name	property	no	Leverandør navn
+vendor name	property	no	Leverandørnavn
 vendor reminder	property	no	Leverandør purringer
 version	property	no	versjon
 view apartment	property	no	vis leilighet
@@ -2052,3 +2052,6 @@ enable bulk	common	no	Aktiver bulk
 enable controller	common	no	Aktiver Kontroll
 entity group	common	no	RegisterGruppe
 modified on	common	no	Oppdatert
+property type	property	no	Type
+hjemmel	common	no	Hjemmel
+record has been edited	common	no	data er editert

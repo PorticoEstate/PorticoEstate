@@ -27,7 +27,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -58,7 +58,7 @@
 
 			$result_count = $bofelles->get_result_units_count($search_for, $search_type);
 
-			foreach($result_units as &$unit)
+			foreach ($result_units as &$unit)
 			{
 				$unit['UNIT_NO_OF_DELEGATES'] = count(frontend_bofrontend::get_delegates($unit['ORG_UNIT_ID']));
 			}
@@ -75,7 +75,7 @@
 		 */
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -201,7 +201,7 @@
 			);
 
 			$tabletools = array();
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
 			{
 				$tabletools[] = array
 					(
@@ -271,14 +271,14 @@
 		{
 			$username	 = phpgw::get_var('username');
 			$result		 = array();
-			if(!isset($username))
+			if (!isset($username))
 			{
 				$result['error']['msg'] = lang('lacking_username');
 			}
 			else
 			{
 				$account_id = frontend_bofrontend::delegate_exist($username);
-				if($account_id)
+				if ($account_id)
 				{
 					$search_result	 = frontend_bofrontend::get_account_info($account_id);
 					$msg			 = lang('user_found_in_PE');
@@ -289,7 +289,7 @@
 					$msg			 = lang('user_found_in_Fellesdata');
 				}
 
-				if($search_result)
+				if ($search_result)
 				{
 					$result['message']['msg']	 = $msg;
 					$result['data']				 = $search_result;
@@ -313,10 +313,10 @@
 			$unit		 = $bofelles->get_result_unit($unit_id, $unit_level);
 
 			$result = array();
-			if($account_id)
+			if ($account_id)
 			{
 				$res = $this->add_delegate($account_id, $unit['ORG_UNIT_ID'], $unit['ORG_NAME']);
-				switch($res)
+				switch ($res)
 				{
 					case 1:
 						$result['message']['msg']	 = lang('delegation_successful');
@@ -337,12 +337,12 @@
 			return $result;
 		}
 
-		public function add_delegate(int $account_id, $org_unit_id, $org_name)
+		public function add_delegate( int $account_id, $org_unit_id, $org_name )
 		{
 			$config			 = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 			$use_fellesdata	 = $config->config_data['use_fellesdata'];
-			if(!isset($account_id) || $account_id == '' && $use_fellesdata)
+			if (!isset($account_id) || $account_id == '' && $use_fellesdata)
 			{
 				//User is only registered in Fellesdata
 				$username	 = phpgw::get_var('username');
@@ -352,7 +352,7 @@
 
 				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
 
-				if(isset($account_id) && !is_numeric($account_id))
+				if (isset($account_id) && !is_numeric($account_id))
 				{
 					return false;
 				}
@@ -360,7 +360,7 @@
 
 			$success = frontend_bofrontend::add_delegate($account_id, null, $org_unit_id, $org_name);
 			$ret	 = 0;
-			if($success)
+			if ($success)
 			{
 				$ret			 = 1;
 				//Retrieve the usernames
@@ -371,16 +371,16 @@
 				$org_name_string = $org_name;
 
 				//If the usernames are set retrieve account data from Fellesdata
-				if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '' && $use_fellesdata)
+				if (isset($user_name) && $user_name != '' && $owner_name && $owner_name != '' && $use_fellesdata)
 				{
 					$fellesdata_user	 = frontend_bofellesdata::get_instance()->get_user($user_name);
 					$fellesdata_owner	 = frontend_bofellesdata::get_instance()->get_user($owner_name);
 
-					if($fellesdata_user && $fellesdata_owner)
+					if ($fellesdata_user && $fellesdata_owner)
 					{
 						//Send email notification to delegate
 						$email = $fellesdata_user['email'];
-						if(isset($email) && $email != '')
+						if (isset($email) && $email != '')
 						{
 
 							$title	 = lang('email_add_delegate_title');
@@ -400,10 +400,10 @@
 			$list_account_id = phpgw::get_var('account_id');
 
 			$message = array();
-			foreach($list_account_id as $account_id)
+			foreach ($list_account_id as $account_id)
 			{
 				$result = frontend_bofrontend::remove_delegate($account_id, null, $unit_id);
-				if($result)
+				if ($result)
 				{
 					$message['message'][] = array('msg' => lang('delegate_removed'));
 				}

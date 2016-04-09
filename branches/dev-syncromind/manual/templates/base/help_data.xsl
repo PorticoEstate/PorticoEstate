@@ -1,10 +1,10 @@
 <!-- $Id$ -->
 
-	<xsl:template name="help_data">
+<xsl:template name="help_data">
 		<xsl:apply-templates select="xhelp"/>
-	</xsl:template>
+</xsl:template>
 
-	<xsl:template match="xhelp">
+<xsl:template match="xhelp">
 		<table>
 			<tr>
 				<td>
@@ -17,4 +17,4 @@
 				</td>
 			</tr>
 		</table>
-	</xsl:template>
+</xsl:template>

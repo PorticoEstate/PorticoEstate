@@ -55,7 +55,7 @@
 			$status = array();
 			$this->db->query("SELECT id, descr FROM fm_document_status ORDER BY id ");
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$status[] = array
 					(
@@ -71,7 +71,7 @@
 			$branch = array();
 			$this->db->query("SELECT id, descr FROM fm_branch ORDER BY id ");
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$branch[] = array
 					(
@@ -82,22 +82,22 @@
 			return $branch;
 		}
 
-		function read2($data)
+		function read2( $data )
 		{
 			$columns = $data['columns'];
 			$params = $data['params'];
 			$ordermethod_arr = array();
 
-			if(isset($params['order']) && is_array($params['order']))
+			if (isset($params['order']) && is_array($params['order']))
 			{
-				foreach($params['order'] as &$order)
+				foreach ($params['order'] as &$order)
 				{
 					//				$ordermethod_arr[] = "{$columns[$order['column']]['key']} {$order['dir']}";
 				}
 			}
 
 			$ordermethod = ' ';
-			if($ordermethod_arr)
+			if ($ordermethod_arr)
 			{
 				$ordermethod = 'ORDER BY ' . implode(',', $ordermethod_arr);
 			}
@@ -117,12 +117,13 @@
 			return $values;
 		}
 
-		function read($data)
+		function read( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : '';
+				$results = isset($data['results']) && $data['results'] ? $data['results'] : 0;
+				$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : '';
 				$query = isset($data['query']) ? $data['query'] : '';
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
@@ -131,25 +132,30 @@
 				$entity_id = isset($data['entity_id']) ? $data['entity_id'] : '';
 				$doc_type = isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type'] : 0;
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+				$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
-
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
-			if(!$sql)
+			if (!$sql)
 			{
-
 				$document_table = 'fm_document';
-
-				$cols = $document_table . '.location_code';
-				$cols_return[] = 'location_code';
-
 				$uicols = array();
 				$joinmethod = '';
 				$paranthesis = '';
 
-				if($entity_id)
+				$cols = $document_table . '.location_code';
+				$cols_return[] = 'location_code';
+				$cols .= ", {$document_table}.category AS doc_type";
+				$cols_return[] = 'doc_type';
+
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'location_code';
+				$uicols['descr'][] = lang('location code');
+				$uicols['statustext'][] = lang('location_code');
+
+				if ($entity_id)
 				{
 					$cols .= ",$document_table.p_num as p_num";
 					$cols_return[] = 'p_num';
@@ -182,6 +188,7 @@
 					'joinmethod' => $joinmethod,
 					'paranthesis' => $paranthesis,
 					'query' => $query,
+					'location_level' => 2,
 					'force_location' => true,
 					'no_address' => false,
 				));
@@ -207,9 +214,9 @@
 				$this->cols_extra = $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 //_debug_array($this->uicols);
-			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name";
+			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name, fm_location1.category";
 
-			if($entity_id)
+			if ($entity_id)
 			{
 
 				$groupmethod.= " ,fm_document.p_entity_id,fm_entity_category.name,fm_document.p_num,fm_document.p_cat_id";
@@ -218,11 +225,11 @@
 			//FIXME
 			$groupmethod = '';
 
-			if(!$ordermethod && $order)
+			if (!$ordermethod && $order)
 			{
 				$ordermethod = " order by fm_document.$order $sort";
 			}
-			else if(!$ordermethod)
+			else if (!$ordermethod)
 			{
 				$ordermethod = ' order by fm_document.location_code ASC';
 			}
@@ -232,38 +239,39 @@
 			$filtermethod = '';
 
 			$GLOBALS['phpgw']->config->read();
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			if (isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE fm_document.loc1 in ('" . implode("','", $access_location) . "')";
 				$where = 'AND';
 			}
 
-			if(!$entity_id)
+			if (!$entity_id)
 			{
 				$filtermethod .= " $where ( fm_document.p_num is NULL OR fm_document.p_num='') ";
 				$where = 'AND';
 			}
 
-			if($cat_id)
+			if ($cat_id)
 			{
 				$filtermethod .= " $where fm_document.p_cat_id=$cat_id ";
 				$where = 'AND';
 			}
 
-			if($doc_types && is_array($doc_types))
+			if ($doc_types && is_array($doc_types))
 			{
 				$filtermethod .= " $where fm_document.category IN (" . implode(',', $doc_types) . ')';
 				$where = 'AND';
 			}
 
-			if($filter != 'all' && $filter)
+			if ($status_id)
 			{
-				$filtermethod .= " $where fm_document.user_id='$filter' ";
+				$filtermethod .= "  $where fm_document.status='$status_id' ";
+				$where = 'AND';
 			}
 
 			$querymethod = '';
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_document.address $this->like '%$query%' or fm_document.location_code $this->like '$query%')";
@@ -276,9 +284,9 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -288,16 +296,16 @@
 
 			$document_list = array();
 			$j = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
-				for($i = 0; $i < count($cols_return); $i++)
+				for ($i = 0; $i < count($cols_return); $i++)
 				{
 					$document_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
 				}
 
 				$location_code = $this->db->f('location_code');
 				$location = explode('-', $location_code);
-				for($m = 0; $m < count($location); $m++)
+				for ($m = 0; $m < count($location); $m++)
 				{
 					$document_list[$j]['loc' . ($m + 1)] = $location[$m];
 					$document_list[$j]['query_location']['loc' . ($m + 1)] = implode("-", array_slice($location, 0, ($m + 1)));
@@ -311,15 +319,15 @@
 			return $document_list;
 		}
 
-		function read_at_location($data)
+		function read_at_location( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query = isset($data['query']) ? $data['query'] : '';
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
-				$filter = isset($data['filter']) && $data['filter'] ? (int)$data['filter'] : 0;
+				$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : '';
 				$entity_id = isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id'] : 0;
 				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 				$p_num = isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : 0;
@@ -329,14 +337,14 @@
 				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
-			if(!$location_code && !($entity_id && $cat_id && $p_num))
+			if (!$location_code && !($entity_id && $cat_id && $p_num))
 			{
 				return array();
 			}
 
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -347,30 +355,30 @@
 
 			$where = 'WHERE';
 			$filtermethod = '';
-			if($location_code)
+			if ($location_code)
 			{
 				$filtermethod = " $where fm_document.location_code $this->like '$location_code%'";
 				$where = 'AND';
 			}
 
-			if($doc_types && is_array($doc_types))
+			if ($doc_types && is_array($doc_types))
 			{
 				$filtermethod .= " $where fm_document.category IN (" . implode(',', $doc_types) . ')';
 				$where = 'AND';
 			}
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_document.p_cat_id={$cat_id} AND fm_document.p_entity_id={$entity_id} AND p_num = '{$p_num}'";
 				$where = 'AND';
 			}
 
-			if($filter > 0)
+			if ($status_id)
 			{
-				$filtermethod .= "  $where fm_document.user_id='$filter' ";
+				$filtermethod .= "  $where fm_document.status='$status_id' ";
 				$where = 'AND';
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_document.title $this->like '%$query%' OR fm_document.document_name"
@@ -384,7 +392,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -394,7 +402,7 @@
 			}
 
 			$document_list = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$document_list[] = array
 					(
@@ -411,13 +419,13 @@
 			return $document_list;
 		}
 
-		function read_single($document_id)
+		function read_single( $document_id )
 		{
 			$sql = "SELECT * from fm_document where id='$document_id'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$document['document_id'] = $this->db->f('id');
 				$document['title'] = $this->db->f('title', true);
@@ -444,45 +452,45 @@
 			return $document;
 		}
 
-		function add($document)
+		function add( $document )
 		{
-			if(isset($document['link']) && $document['link'])
+			if (isset($document['link']) && $document['link'])
 			{
 				$document['link'] = str_replace('\\', '/', $document['link']);
 			}
 
-			while(is_array($document['location']) && list($input_name, $value) = each($document['location']))
+			while (is_array($document['location']) && list($input_name, $value) = each($document['location']))
 			{
-				if($value)
+				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
 			}
 
-			while(is_array($document['extra']) && list($input_name, $value) = each($document['extra']))
+			while (is_array($document['extra']) && list($input_name, $value) = each($document['extra']))
 			{
-				if($value)
+				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
 			}
 
-			if($cols)
+			if ($cols)
 			{
 				$cols = "," . implode(",", $cols);
 				$vals = ",'" . implode("','", $vals) . "'";
 			}
 
-			if($document['street_name'])
+			if ($document['street_name'])
 			{
 				$address[] = $document['street_name'];
 				$address[] = $document['street_number'];
 				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if(!$address)
+			if (!$address)
 			{
 				$address = $this->db->db_addslashes($document['location_name']);
 			}
@@ -519,15 +527,15 @@
 
 			$this->historylog->add('SO', $receipt['document_id'], $document['status']);
 			$this->historylog->add('TO', $receipt['document_id'], $document['doc_type']);
-			if($document['coordinator'])
+			if ($document['coordinator'])
 			{
 				$this->historylog->add('CO', $receipt['document_id'], $document['coordinator']);
 			}
-			if($document['document_name'])
+			if ($document['document_name'])
 			{
 				$this->historylog->add('FO', $receipt['document_id'], $document['coodocument_name']);
 			}
-			if($document['link'])
+			if ($document['link'])
 			{
 				$this->historylog->add('LO', $receipt['document_id'], $document['link']);
 			}
@@ -536,40 +544,40 @@
 			return $receipt;
 		}
 
-		function edit($document)
+		function edit( $document )
 		{
 
-			if(isset($document['link']) && $document['link'])
+			if (isset($document['link']) && $document['link'])
 			{
 				$document['link'] = str_replace('\\', '/', $document['link']);
 			}
 
 			$receipt = array();
 			$value_set = array();
-			if(isset($document['location']) && is_array($document['location']))
+			if (isset($document['location']) && is_array($document['location']))
 			{
-				foreach($document['location'] as $input_name => $value)
+				foreach ($document['location'] as $input_name => $value)
 				{
 					$value_set[$input_name] = $value;
 				}
 			}
 
-			if(isset($document['extra']) && is_array($document['extra']))
+			if (isset($document['extra']) && is_array($document['extra']))
 			{
-				foreach($document['extra'] as $input_name => $value)
+				foreach ($document['extra'] as $input_name => $value)
 				{
 					$value_set[$input_name] = $value;
 				}
 			}
 
-			if($document['street_name'])
+			if ($document['street_name'])
 			{
 				$address[] = $document['street_name'];
 				$address[] = $document['street_number'];
 				$address = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if(!$address)
+			if (!$address)
 			{
 				$address = $this->db->db_addslashes($document['location_name']);
 			}
@@ -589,45 +597,45 @@
 
 			$move_file = false;
 
-			if($old_location_code != $document['location_code'])
+			if ($old_location_code != $document['location_code'])
 			{
 				$move_file = true;
 			}
 
-			if("{$old_p_entity_id}_{$old_p_cat_id}" != "{$document['extra']['p_entity_id']}_{$document['extra']['p_cat_id']}")
+			if ("{$old_p_entity_id}_{$old_p_cat_id}" != "{$document['extra']['p_entity_id']}_{$document['extra']['p_cat_id']}")
 			{
 				$move_file = true;
 			}
 
-			if($old_status != $document['status'])
+			if ($old_status != $document['status'])
 			{
 				$this->historylog->add('S', $document['document_id'], $document['status'], $old_status);
 			}
-			if($old_doc_type != $document['doc_type'])
+			if ($old_doc_type != $document['doc_type'])
 			{
 				$this->historylog->add('T', $document['document_id'], $document['doc_type'], $old_doc_type);
 				$move_file = true;
 			}
-			if((int)$old_coordinator != (int)$document['coordinator'])
+			if ((int)$old_coordinator != (int)$document['coordinator'])
 			{
 				$this->historylog->add('C', $document['document_id'], $document['coordinator'], $old_coordinator);
 			}
 
-			if($document['document_name_orig'] && !$document['document_name'])
+			if ($document['document_name_orig'] && !$document['document_name'])
 			{
 				$document['document_name'] = $document['document_name_orig'];
 			}
 
-			if($old_link != $document['link'])
+			if ($old_link != $document['link'])
 			{
 				$this->historylog->add('L', $document['document_id'], $this->db->db_addslashes($document['link']), $old_link);
 				$alter_link = true;
 			}
 
 
-			if($old_document_name && ($old_document_name != $document['document_name'] || $move_file = true))
+			if ($old_document_name && ($old_document_name != $document['document_name'] || $move_file = true))
 			{
-				if($document['link'] && !$alter_link)
+				if ($document['link'] && !$alter_link)
 				{
 					$this->historylog->add('L', $document['document_id'], $document['link'], $old_document_name);
 				}
@@ -650,7 +658,7 @@
 				 */
 			}
 
-			if($document['link'])
+			if ($document['link'])
 			{
 				$document['document_name'] = '';
 			}
@@ -684,14 +692,14 @@
 		 * @param int $doc_type the parent doc-type
 		 * @return array parent and children
 		 */
-		function get_sub_doc_types($doc_type = 0)
+		function get_sub_doc_types( $doc_type = 0 )
 		{
 			$doc_types = array();
-			if($doc_type)
+			if ($doc_type)
 			{
 				$doc_types[] = $doc_type;
 				$cat_sub = $this->cats->return_sorted_array($start = 0, $limit = false, $query = '', $sort = '', $order = '', $globals = False, $parent_id = $doc_type);
-				foreach($cat_sub as $doc_type)
+				foreach ($cat_sub as $doc_type)
 				{
 					$doc_types[] = $doc_type['id'];
 				}
@@ -706,23 +714,23 @@
 		 * @param string $location_code location_code in the (physical) location-hierarchy
 		 * @return array parent and children
 		 */
-		function get_files_at_location($data)
+		function get_files_at_location( $data )
 		{
 			$location_code = isset($data['location_code']) ? $data['location_code'] : '';
 			$entity_id = (int)$data['entity_id'];
 			$cat_id = (int)$data['cat_id'];
 			$num = $data['num'];
 
-			if(!$location_code)
+			if (!$location_code)
 			{
-				if(!$entity_id || !$cat_id || !$num)
+				if (!$entity_id || !$cat_id || !$num)
 				{
 					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
 				}
 			}
-			else if(!$entity_id || !$cat_id || !$num)
+			else if (!$entity_id || !$cat_id || !$num)
 			{
-				if(!$location_code)
+				if (!$location_code)
 				{
 					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
 				}
@@ -730,7 +738,7 @@
 
 			$acl_add = $GLOBALS['phpgw']->acl->check('.document', PHPGW_ACL_ADD, 'property');
 			$documents = array();
-			if($location_code)
+			if ($location_code)
 			{
 				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code {$this->like} '$location_code%' AND p_num IS NULL";
 			}
@@ -739,7 +747,7 @@
 				$sql = "SELECT count(*) as hits FROM fm_document WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$hits = (int)$this->db->f('hits');
 
@@ -767,7 +775,7 @@
 
 			$location_filter = 'WHERE 1=1';
 
-			if($location_code)
+			if ($location_code)
 			{
 				$location_filter = "WHERE location_code {$this->like} '{$location_code}%' AND p_num IS NULL";
 			}
@@ -776,7 +784,7 @@
 				$location_filter = "WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
 			}
 
-			foreach($categories as $category)
+			foreach ($categories as $category)
 			{
 				$doc_types = $this->get_sub_doc_types($category['id']);
 
@@ -786,22 +794,22 @@
 				$hits = (int)$this->db->f('hits');
 
 				$level = $category['level'] + 1;
-				if($level == $y)
+				if ($level == $y)
 				{
 					$x++;
 				}
-				else if($level < $y)
+				else if ($level < $y)
 				{
 					$x = $cache_x_at_y[$level] + 1;
 				}
-				else if($level > $y)
+				else if ($level > $y)
 				{
 					$x = 0;
 				}
 				$y = $level;
 
 				$map = '$documents';
-				for($i = 0; $i < $level; $i++)
+				for ($i = 0; $i < $level; $i++)
 				{
 
 					$map .= '[' . $cache_x_at_y[$i] . "]['children']";
@@ -825,25 +833,25 @@
 
 //--add node
 
-				if($acl_add && count($doc_types) == 1) // node
+				if ($acl_add && count($doc_types) == 1) // node
 				{
 					$level = $level + 1;
-					if($level == $y)
+					if ($level == $y)
 					{
 						$x++;
 					}
-					else if($level < $y)
+					else if ($level < $y)
 					{
 						$x = $cache_x_at_y[$level] + 1;
 					}
-					else if($level > $y)
+					else if ($level > $y)
 					{
 						$x = 0;
 					}
 					$y = $level;
 
 					$map = '$documents';
-					for($i = 0; $i < $level; $i++)
+					for ($i = 0; $i < $level; $i++)
 					{
 						$map .= '[' . $cache_x_at_y[$i] . "]['children']";
 					}
@@ -868,17 +876,17 @@
 			return $documents;
 		}
 
-		function delete_file($file)
+		function delete_file( $file )
 		{
 			$receipt = array();
-			if($this->vfs->file_exists(array(
+			if ($this->vfs->file_exists(array(
 				'string' => $file,
 				'relatives' => Array(RELATIVE_NONE)
 			)))
 			{
 				$this->vfs->override_acl = 1;
 
-				if(!$this->vfs->rm(array(
+				if (!$this->vfs->rm(array(
 					'string' => $file,
 					'relatives' => array(
 						RELATIVE_NONE
@@ -896,7 +904,7 @@
 			return $receipt;
 		}
 
-		function delete($document_id)
+		function delete( $document_id )
 		{
 			$receipt = array();
 			$document_id = (int)$document_id;
@@ -909,9 +917,9 @@
 			$p_num = $this->db->f('p_num');
 			$category = $this->db->f('category');
 
-			if($document_name)
+			if ($document_name)
 			{
-				if($p_cat_id > 0)
+				if ($p_cat_id > 0)
 				{
 					$file = "{$this->fakebase}/document/entity_{$p_entity_id}_{$p_cat_id}/{$p_num}/{$category}/$document_name";
 				}
@@ -922,7 +930,7 @@
 
 				$receipt = $this->delete_file($file);
 			}
-			if(!isset($receipt['error']))
+			if (!isset($receipt['error']))
 			{
 				$this->db->transaction_begin();
 				$this->db->query("DELETE FROM fm_document WHERE id={$document_id}", __LINE__, __FILE__);
@@ -943,21 +951,21 @@
 		 * @param string $menuaction is used to make an url to the item
 		 * @return array $child Children
 		 */
-		protected function get_children($dirname, $level, $maks_level = 0, $filter_level = 1, $filter = 'hei', $menuaction)
+		protected function get_children( $dirname, $level, $maks_level = 0, $filter_level = 1, $filter = 'hei', $menuaction )
 		{
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 			$children = array();
 
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if(($file->isDot() || !$file->isReadable()) || ($level == $filter_level && !preg_match("/{$filter}/i", $file->getFilename()))
+					if (($file->isDot() || !$file->isReadable()) || ($level == $filter_level && !preg_match("/{$filter}/i", $file->getFilename()))
 					)
 					{
 						continue;
@@ -973,11 +981,11 @@
 				}
 			}
 
-			foreach($children as &$child)
+			foreach ($children as &$child)
 			{
-				if($child['is_dir'] && $child['level'] < ($maks_level))
+				if ($child['is_dir'] && $child['level'] < ($maks_level))
 				{
-					if($_children = $this->get_children($child['path'], ($child['level'] + 1), $maks_level, $menuaction))
+					if ($_children = $this->get_children($child['path'], ($child['level'] + 1), $maks_level, $menuaction))
 					{
 						$child['children'] = $_children;
 					}
@@ -996,22 +1004,22 @@
 		 * @param string $menuaction is used to make an url to the item
 		 * @return array $child Children
 		 */
-		public function read_file_tree($dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '')
+		public function read_file_tree( $dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '' )
 		{
 			$dirname = $dirname ? $dirname : $GLOBALS['phpgw_info']['server']['temp_dir'];
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isReadable()
+					if ($file->isDot() || !$file->isReadable()
 					)
 					{
 						continue;
@@ -1027,11 +1035,11 @@
 				}
 			}
 
-			foreach($file_list as &$file)
+			foreach ($file_list as &$file)
 			{
-				if($file['is_dir'])
+				if ($file['is_dir'])
 				{
-					if($children = $this->get_children($file['path'], 1, $maks_level, $filter_level, $filter, $menuaction))
+					if ($children = $this->get_children($file['path'], 1, $maks_level, $filter_level, $filter, $menuaction))
 					{
 						$file['children'] = $children;
 					}

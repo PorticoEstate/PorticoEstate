@@ -47,7 +47,7 @@
 			$this->_like = & $this->_db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
@@ -60,9 +60,9 @@
 			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
-			if($order)
+			if ($order)
 			{
-				switch($order)
+				switch ($order)
 				{
 					case 'id':
 						$_order = 'fm_event.id';
@@ -83,13 +83,13 @@
 
 			$filtermethod = " WHERE location_id = {$location_id}";
 
-			if($user_id)
+			if ($user_id)
 			{
 				$user = $GLOBALS['phpgw']->accounts->get($user_id);
 				$filtermethod .= " AND fm_event.responsible_id =" . (int)$user->person_id;
 			}
 
-			switch($status_id)
+			switch ($status_id)
 			{
 				case 'all':
 					break;
@@ -106,7 +106,7 @@
 			}
 
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
@@ -127,9 +127,9 @@
 			$this->total_records = $this->_db->num_rows();
 
 			$events = array();
-			if(!$dry_run)
+			if (!$dry_run)
 			{
-				if(!$allrows)
+				if (!$allrows)
 				{
 					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 				}
@@ -138,7 +138,7 @@
 					$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 				}
 
-				while($this->_db->next_record())
+				while ($this->_db->next_record())
 				{
 					$events[] = array
 						(
@@ -160,7 +160,7 @@
 			return $events;
 		}
 
-		function read_single2($id)
+		function read_single2( $id )
 		{
 			$id = (int)$id;
 			$ordermethod = ' ORDER BY schedule_time ASC';
@@ -179,7 +179,7 @@
 
 			$event = array();
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$event[] = array
 					(
@@ -208,7 +208,7 @@
 
 			$locations = array();
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$locations[] = array
 					(
@@ -218,11 +218,11 @@
 			return $locations;
 		}
 
-		function read_at_location($data)
+		function read_at_location( $data )
 		{
-			if(!isset($data['location_id']) || !$data['location_id'])
+			if (!isset($data['location_id']) || !$data['location_id'])
 			{
-				if(!isset($data['appname']) || !$data['appname'] || !isset($data['location']) || !$data['location'])
+				if (!isset($data['appname']) || !$data['appname'] || !isset($data['location']) || !$data['location'])
 				{
 					throw new Exception("property_soevent::read - Missing location info in input");
 				}
@@ -240,7 +240,7 @@
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 
-			if(!isset($data['location_item_id']) || !$data['location_item_id'])
+			if (!isset($data['location_item_id']) || !$data['location_item_id'])
 			{
 				throw new Exception("property_soevent::read - Missing location_item_id in input");
 			}
@@ -253,12 +253,12 @@
 
 			$filtermethod = "WHERE location_id = {$location_id}";
 
-			if($location_item_id)
+			if ($location_item_id)
 			{
 				$filtermethod .= " AND location_item_id = {$location_item_id}";
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
@@ -270,7 +270,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->_db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -279,7 +279,7 @@
 				$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$events[] = array
 					(
@@ -290,7 +290,7 @@
 			return $events;
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			$values = array();
 
@@ -300,7 +300,7 @@
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			if($this->_db->next_record())
+			if ($this->_db->next_record())
 			{
 				$start_date = $this->_db->f('start_date');
 				$end_date = $this->_db->f('end_date');
@@ -346,7 +346,7 @@
 				$sql = "SELECT * FROM fm_event_schedule WHERE event_id ='{$id}' ORDER BY schedule_time";
 
 				$this->_db->query($sql, __LINE__, __FILE__);
-				while($this->_db->next_record())
+				while ($this->_db->next_record())
 				{
 					$values['event_schedule'][] = $this->_db->f('schedule_time');
 				}
@@ -354,7 +354,7 @@
 				$sql = "SELECT * FROM fm_event_receipt WHERE event_id ='{$id}' ORDER BY receipt_time";
 
 				$this->_db->query($sql, __LINE__, __FILE__);
-				while($this->_db->next_record())
+				while ($this->_db->next_record())
 				{
 					$values['event_receipt'][] = $this->_db->f('receipt_time');
 				}
@@ -362,7 +362,7 @@
 				$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$id}' ORDER BY exception_time";
 
 				$this->_db->query($sql, __LINE__, __FILE__);
-				while($this->_db->next_record())
+				while ($this->_db->next_record())
 				{
 					$values['repeat_exception'][] = $this->_db->f('exception_time');
 				}
@@ -371,7 +371,7 @@
 			return $values;
 		}
 
-		function add($data)
+		function add( $data )
 		{
 			$receipt = array();
 			$table = 'fm_event';
@@ -397,9 +397,9 @@
 			);
 
 			$repeat_day = 0;
-			if(isset($data['repeat_day']) && is_array($data['repeat_day']))
+			if (isset($data['repeat_day']) && is_array($data['repeat_day']))
 			{
-				foreach($data['repeat_day'] as $day)
+				foreach ($data['repeat_day'] as $day)
 				{
 					$repeat_day |= $day;
 				}
@@ -434,7 +434,7 @@
 
 			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})", __LINE__, __FILE__);
 
-			if($this->_db->transaction_commit())
+			if ($this->_db->transaction_commit())
 			{
 				$receipt['id'] = $id;
 				$receipt['message'][] = array('msg' => lang('event has been saved'));
@@ -446,15 +446,15 @@
 			return $receipt;
 		}
 
-		function edit($data)
+		function edit( $data )
 		{
 			$receipt = array();
 			$table = 'fm_event';
 
 			$repeat_day = 0;
-			if(isset($data['repeat_day']) && is_array($data['repeat_day']))
+			if (isset($data['repeat_day']) && is_array($data['repeat_day']))
 			{
-				foreach($data['repeat_day'] as $day)
+				foreach ($data['repeat_day'] as $day)
 				{
 					$repeat_day |= $day;
 				}
@@ -481,7 +481,7 @@
 			$this->_db->query("UPDATE $table SET {$value_set} WHERE id='" . $data['id'] . "'", __LINE__, __FILE__);
 
 			$receipt['id'] = $data['id'];
-			if($this->_db->transaction_commit())
+			if ($this->_db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('event has been updated'));
 			}
@@ -492,7 +492,7 @@
 			return $receipt;
 		}
 
-		function check_event_exception($event_id, $time)
+		function check_event_exception( $event_id, $time )
 		{
 			$event_id = (int)$event_id;
 			$time = (int)$time;
@@ -502,7 +502,7 @@
 			return !!$this->_db->f('id');
 		}
 
-		function cron_log($data)
+		function cron_log( $data )
 		{
 			$insert_values = array(
 				!!$data['cron'], // or manual...
@@ -518,7 +518,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 		}
 
-		function delete($id)
+		function delete( $id )
 		{
 			$id = (int)$id;
 			$receipt = array();
@@ -527,7 +527,7 @@
 			$this->_db->query("DELETE FROM fm_event_exception WHERE event_id ='{$id}'", __LINE__, __FILE__);
 			$this->_db->query("DELETE FROM fm_event WHERE id='{$id}'", __LINE__, __FILE__);
 
-			if($this->_db->transaction_commit())
+			if ($this->_db->transaction_commit())
 			{
 				return true;
 			}
@@ -535,7 +535,7 @@
 		}
 
 		//FIXME adapt from calendar	
-		function list_events($data = array())
+		function list_events( $data = array() )
 		{
 			$startYear = $data['syear'];
 			$startMonth = $data['smonth'];
@@ -549,7 +549,7 @@
 			$location_id = (int)$data['location_id'];
 			$location_item_id = $data['location_item_id'];
 
-			if(!$startYear || !$startMonth || !$startDay || !$location_id || !$location_item_id)
+			if (!$startYear || !$startMonth || !$startDay || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_events - Missing start date info");
 			}
@@ -557,7 +557,7 @@
 			//			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
 			$datetime = mktime(13, 0, 0, $startMonth, $startDay, $startYear);
 			$sql = ' WHERE (fm_event.user_id in (';
-			if($owner_id)
+			if ($owner_id)
 			{
 				$sql .= implode(',', $owner_id);
 			}
@@ -567,7 +567,7 @@
 			}
 			$member_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
 			@reset($member_groups);
-			foreach($member_groups as $key => $group_info)
+			foreach ($member_groups as $key => $group_info)
 			{
 				$member[] = $group_info->id;
 			}
@@ -578,7 +578,7 @@
 
 			$sql .= 'AND ( ( (fm_event.start_date >= ' . $datetime . ') ';
 
-			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
+			if ($endYear != 0 && $endMonth != 0 && $endDay != 0)
 			{
 				//				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
 				$edatetime = mktime(13, 0, 0, intval($endMonth), intval($endDay), intval($endYear));
@@ -599,7 +599,7 @@
 			return $this->get_event_ids(False, $sql . $extra . $order_by);
 		}
 
-		function list_repeated_events($data = array())
+		function list_repeated_events( $data = array() )
 		{
 			$syear = $data['syear'];
 			$smonth = $data['smonth'];
@@ -610,7 +610,7 @@
 			$owner_id = $data['owner_id'] ? $data['owner_id'] : 0;
 			$location_id = (int)$data['location_id'];
 			$location_item_id = $data['location_item_id'];
-			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || !$location_id || !$location_item_id)
+			if (!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_repeated_events - Missing date info");
 			}
@@ -626,11 +626,11 @@
 			return $this->get_event_ids(true, $sql);
 		}
 
-		function get_event_ids($search_repeats = false, $extra = '')
+		function get_event_ids( $search_repeats = false, $extra = '' )
 		{
 			//		$where = 'WHERE';
 			$repeat = '';
-			if($search_repeats)
+			if ($search_repeats)
 			{
 				$repeat = 'WHERE (fm_event.repeat_type > 0) ';
 				$where = 'AND';
@@ -643,37 +643,37 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$retval = array();
-			if($this->_db->num_rows() == 0)
+			if ($this->_db->num_rows() == 0)
 			{
 				return $retval;
 			}
 
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$retval[] = intval($this->_db->f('id'));
 			}
-			if($this->debug)
+			if ($this->debug)
 			{
 				echo "Records found!<br />\n";
 			}
 			return $retval;
 		}
 
-		public function set_exceptions($data = array())
+		public function set_exceptions( $data = array() )
 		{
-			if(!isset($data['event_id']) || !$data['event_id'])
+			if (!isset($data['event_id']) || !$data['event_id'])
 			{
 				throw new Exception("property_soevent::set_exceptions - Missing event_id in input");
 			}
 
-			foreach($data['alarm'] as $alarm_id)
+			foreach ($data['alarm'] as $alarm_id)
 			{
 				$schedule_time = mktime(13, 0, 0, intval(substr($alarm_id, 4, 2)), intval(substr($alarm_id, 6, 2)), intval(substr($alarm_id, 0, 4)));
-				if($data['set_exception'])
+				if ($data['set_exception'])
 				{
 					$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$schedule_time}";
 					$this->_db->query($sql, __LINE__, __FILE__);
-					if($this->_db->next_record())
+					if ($this->_db->next_record())
 					{
 						continue;
 					}
@@ -690,16 +690,16 @@
 						$this->_db->query("INSERT INTO fm_event_exception (event_id, exception_time, user_id, entry_date) VALUES ({$vals})", __LINE__, __FILE__);
 					}
 				}
-				else if($data['enable_alarm'])
+				else if ($data['enable_alarm'])
 				{
 					$sql = "DELETE FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$schedule_time}";
 					$this->_db->query($sql, __LINE__, __FILE__);
 				}
-				else if($data['set_receipt'])
+				else if ($data['set_receipt'])
 				{
 					$sql = "SELECT * FROM fm_event_receipt WHERE event_id ='{$data['event_id']}' AND receipt_time = {$schedule_time}";
 					$this->_db->query($sql, __LINE__, __FILE__);
-					if($this->_db->next_record())
+					if ($this->_db->next_record())
 					{
 						continue;
 					}
@@ -716,7 +716,7 @@
 						$this->_db->query("INSERT INTO fm_event_receipt (event_id, receipt_time, user_id, entry_date) VALUES ({$vals})", __LINE__, __FILE__);
 					}
 				}
-				else if($data['delete_receipt'])
+				else if ($data['delete_receipt'])
 				{
 					$sql = "DELETE FROM fm_event_receipt WHERE event_id ='{$data['event_id']}' AND receipt_time = {$schedule_time}";
 					$this->_db->query($sql, __LINE__, __FILE__);
@@ -724,9 +724,9 @@
 			}
 		}
 
-		public function create_schedule($data = array())
+		public function create_schedule( $data = array() )
 		{
-			if(!isset($data['event_id']) || !$data['event_id'])
+			if (!isset($data['event_id']) || !$data['event_id'])
 			{
 				throw new Exception("property_soevent::create_schedule - Missing event_id in input");
 			}
@@ -736,7 +736,7 @@
 			$this->_db->query("DELETE FROM fm_event_schedule WHERE event_id ='{$data['event_id']}'", __LINE__, __FILE__);
 			$entry_date = phpgwapi_datetime::user_localtime();
 
-			foreach($data['schedule'] as $schedule_id => $values)
+			foreach ($data['schedule'] as $schedule_id => $values)
 			{
 				$schedule_time = mktime(13, 0, 0, intval(substr($schedule_id, 4, 2)), intval(substr($schedule_id, 6, 2)), intval(substr($schedule_id, 0, 4)));
 
@@ -754,26 +754,26 @@
 			$this->_db->transaction_commit();
 		}
 
-		public function update_receipt($data)
+		public function update_receipt( $data )
 		{
 			$add_receipt = array();
 			$delete_receipt = array();
-			if($data['events_orig'])
+			if ($data['events_orig'])
 			{
-				foreach($data['events_orig'] as $schedule_time_id => $event_id)
+				foreach ($data['events_orig'] as $schedule_time_id => $event_id)
 				{
-					if(!$data['events'][$schedule_time_id])
+					if (!$data['events'][$schedule_time_id])
 					{
 						$delete_receipt[$schedule_time_id] = $event_id;
 					}
 				}
 			}
 
-			if($data['events'])
+			if ($data['events'])
 			{
-				foreach($data['events'] as $schedule_time_id => $event_id)
+				foreach ($data['events'] as $schedule_time_id => $event_id)
 				{
-					if(!$data['events_orig'][$schedule_time_id])
+					if (!$data['events_orig'][$schedule_time_id])
 					{
 
 						$add_receipt[$schedule_time_id] = $event_id;
@@ -783,7 +783,7 @@
 
 			$this->_db->transaction_begin();
 
-			foreach($delete_receipt as $schedule_time_id => $event_id)
+			foreach ($delete_receipt as $schedule_time_id => $event_id)
 			{
 				$schedule = explode('_', $schedule_time_id);
 				$schedule_time = $schedule[1];
@@ -794,7 +794,7 @@
 
 			$entry_date = phpgwapi_datetime::user_localtime();
 
-			foreach($add_receipt as $schedule_time_id => $event_id)
+			foreach ($add_receipt as $schedule_time_id => $event_id)
 			{
 				$schedule = explode('_', $schedule_time_id);
 				$schedule_time = $schedule[1];

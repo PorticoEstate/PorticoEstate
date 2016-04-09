@@ -38,7 +38,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 
-		public function __construct(int $id)
+		public function __construct( int $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -48,7 +48,7 @@
 			return $this->id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -60,7 +60,7 @@
 		 * @param $field the name of the class attribute to get
 		 * @return mixed the value of the attribute
 		 */
-		public function get_field($field)
+		public function get_field( $field )
 		{
 			return $this->{"$field"};
 		}
@@ -72,7 +72,7 @@
 		 * @param $field the name of the class attribute to set
 		 * @param $value the value to set
 		 */
-		public function set_field($field, $value)
+		public function set_field( $field, $value )
 		{
 			$this->{"$field"} = $value;
 		}
@@ -104,9 +104,9 @@
 
 			$class_methods		 = get_class_methods($this);
 			$control_item_arr	 = array();
-			foreach($class_methods as $class_method)
+			foreach ($class_methods as $class_method)
 			{
-				if(stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
+				if (stripos($class_method, 'get_') === 0 && !in_array($class_method, $exclude))
 				{
 					$_class_method_part							 = explode('get_', $class_method);
 					$control_item_arr[$_class_method_part[1]]	 = $this->$class_method();

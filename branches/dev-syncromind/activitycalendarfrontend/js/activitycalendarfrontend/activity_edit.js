@@ -26,11 +26,14 @@ function get_available_groups()
 		document.getElementById('new_org_fields').style.display = "none";
 		document.getElementById('change_org_fields').style.display = "none";
 
-		var attr = [{name: 'name', value: 'group_id'}, {name: 'id', value: 'group_id'}, {name: 'onchange', value: 'javascript:checkNewGroup()'}];
+		var attr = [
+			{name: 'name', value: 'group_id'}, {name: 'id', value: 'group_id'}, {name: 'onchange', value: 'javascript:checkNewGroup()'}
+		];
 
 		div_select.hide();
 
-		if (org_id && org_id != current_org_id) {
+		if (org_id && org_id != current_org_id)
+		{
 			div_select.show();
 			populateSelect_activityCalendar(availableGroupsURL, div_select, attr);
 			current_org_id = org_id;
@@ -38,8 +41,10 @@ function get_available_groups()
 	}
 }
 
-$(document).ready(function () {
-	if ($('#organization_id').length) {
+$(document).ready(function ()
+{
+	if ($('#organization_id').length)
+	{
 		get_available_groups();
 	}
 });
@@ -68,7 +73,8 @@ function get_address_search()
 
 	div_address.hide();
 
-	if (address && address != current_address) {
+	if (address && address != current_address)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address = address;
@@ -83,11 +89,14 @@ function get_address_search_cp2()
 	var div_address = $('#contact2_address_container');
 
 	var url = phpGWLink('activitycalendarfrontend/', {menuaction: 'activitycalendarfrontend.uiactivity.get_address_search', search: address}, true);
-	var attr = [{name: 'name', value: 'contact2_address_select'}, {name: 'id', value: 'address_cp2'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}];
+	var attr = [
+		{name: 'name', value: 'contact2_address_select'}, {name: 'id', value: 'address_cp2'}, {name: 'size', value: '5'}, {name: 'onChange', value: 'setAddressValue(this)'}
+	];
 
 	div_address.hide();
 
-	if (address && address != current_address_search_cp2) {
+	if (address && address != current_address_search_cp2)
+	{
 		div_address.show();
 		populateSelect_activityCalendar(url, div_address, attr);
 		current_address_search_cp2 = address;
@@ -186,13 +195,16 @@ function allOK()
 }
 
 
-if ($.formUtils) {
+if ($.formUtils)
+{
 	$.formUtils.addValidator({
 		name: 'description',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var description = $('#description').val();
 			var v = true;
-			if (description == null || description == "") {
+			if (description == null || description == "")
+			{
 				v = false;
 			}
 			return v;
@@ -202,10 +214,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'description_length',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var description = $('#description').val();
 			var v = true;
-			if (description.length > 254) {
+			if (description.length > 254)
+			{
 				v = false;
 			}
 			return v;
@@ -215,10 +229,13 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'target',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var n = 0;
-			$('input[name="target[]"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('input[name="target[]"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -230,10 +247,13 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'district',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var n = 0;
-			$('input[name="district"]').each(function () {
-				if ($(this).is(':checked')) {
+			$('input[name="district"]').each(function ()
+			{
+				if ($(this).is(':checked'))
+				{
 					n++;
 				}
 			});
@@ -245,10 +265,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_phone',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_phone = $('#contact_phone').val();
 			var v = true;
-			if (contact_phone == null || contact_phone == '') {
+			if (contact_phone == null || contact_phone == '')
+			{
 				v = false;
 			}
 			return v;
@@ -258,10 +280,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_phone_length',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_phone = $('#contact_phone').val();
 			var v = true;
-			if ((contact_phone != null || contact_phone != '') && contact_phone.length < 8) {
+			if ((contact_phone != null || contact_phone != '') && contact_phone.length < 8)
+			{
 				v = false;
 			}
 			return v;
@@ -271,10 +295,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail = $('#contact_mail').val();
 			var v = true;
-			if (contact_mail == null || contact_mail == '') {
+			if (contact_mail == null || contact_mail == '')
+			{
 				v = false;
 			}
 			return v;
@@ -284,10 +310,12 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail2',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail2 = $('#contact_mail2').val();
 			var v = true;
-			if (contact_mail2 == null || contact_mail2 == '') {
+			if (contact_mail2 == null || contact_mail2 == '')
+			{
 				v = false;
 			}
 			return v;
@@ -297,12 +325,15 @@ if ($.formUtils) {
 	});
 	$.formUtils.addValidator({
 		name: 'contact_mail2_confirm',
-		validatorFunction: function () {
+		validatorFunction: function ()
+		{
 			var contact_mail1 = $('#contact_mail').val();
 			var contact_mail2 = $('#contact_mail2').val();
 			var v = true;
-			if (contact_mail2 != null || contact_mail2 != '') {
-				if (contact_mail1 != contact_mail2) {
+			if (contact_mail2 != null || contact_mail2 != '')
+			{
+				if (contact_mail1 != contact_mail2)
+				{
 					v = false;
 				}
 			}

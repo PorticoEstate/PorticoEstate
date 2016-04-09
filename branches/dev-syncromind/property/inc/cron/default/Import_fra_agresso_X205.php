@@ -75,7 +75,7 @@
 			$now_hour = date('G', $now);
 			$now_day = date('N', $now);
 
-			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
+			if (($now_hour < 6 || $now_hour > 17) || $now_day > 5)
 			{
 
 				$this->skip_email = true;
@@ -84,7 +84,7 @@
 
 		public function execute()
 		{
-			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
+			if (isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
 			{
 				$this->check_archive();
 			}
@@ -92,18 +92,18 @@
 			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
 					{
 						continue;
 					}
@@ -112,33 +112,33 @@
 				}
 			}
 
-			if(is_writable("{$dirname}/archive"))
+			if (is_writable("{$dirname}/archive"))
 			{
-				foreach($file_list as $file)
+				foreach ($file_list as $file)
 				{
 					$this->skip_update_voucher_id = false;
 					$this->db->transaction_begin();
 					$bilagsnr = $this->import($file);
-					if($this->debug)
+					if ($this->debug)
 					{
 						_debug_array("Behandler fil: {$file}");
 						_debug_array("Bilagsnr: {$bilagsnr}");
 					}
 
-					if($bilagsnr)
+					if ($bilagsnr)
 					{
 						// move file
 						$_file = basename($file);
 						$movefrom = "{$dirname}/{$_file}";
 						$moveto = "{$dirname}/archive/{$_file}";
 
-						if(is_file($moveto))
+						if (is_file($moveto))
 						{
 							@unlink($moveto);//in case of duplicates
 						}
 
 						$ok = @rename($movefrom, $moveto);
-						if(!$ok) // Should never happen.
+						if (!$ok) // Should never happen.
 						{
 							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
@@ -166,7 +166,7 @@
 		{
 			$dirname = $this->config->config_data['import']['local_path'];
 
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
@@ -174,11 +174,11 @@
 			$archive = "{$dirname}/archive";
 			$file_list = array();
 			$dir = new DirectoryIterator($archive);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
 					{
 						continue;
 					}
@@ -187,7 +187,7 @@
 				}
 			}
 
-			foreach($file_list as $file)
+			foreach ($file_list as $file)
 			{
 				$file_parts = explode('_', basename($file, '.xml'));
 				$external_voucher_id = $file_parts[2];
@@ -195,19 +195,19 @@
 				$duplicate = false;
 				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$duplicate = true;
 				}
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$duplicate = true;
 				}
 
-				if(!$duplicate)
+				if (!$duplicate)
 				{
 					rename("{$archive}/{$file}", "{$dirname}/{$file}");
 					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_voucher_id}");
@@ -217,36 +217,36 @@
 
 		protected function remind()
 		{
-			if(!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				return;
 			}
 
-			if($this->skip_email || $this->debug)
+			if ($this->skip_email || $this->debug)
 			{
 				return;
 			}
 
 			// max. one mail each day
-			if((int)$GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)))
+			if ((int)$GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)))
 			{
 				$toarray = array();
 				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsigndato IS NULL AND oppsynsmannid IS NOT NULL AND saksigndato IS NULL';
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$toarray[$this->db->f('responsible')] = true;
 				}
 				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksigndato IS NULL AND saksbehandlerid IS NOT NULL AND oppsynsigndato IS NULL';
 				$this->db->query($sql, __LINE__, __FILE__);
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$toarray[$this->db->f('responsible')] = true;
 				}
 				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE saksigndato IS NOT NULL AND budsjettsigndato IS NULL AND budsjettansvarligid IS NOT NULL';
 				$this->db->query($sql, __LINE__, __FILE__);
 
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$toarray[$this->db->f('responsible')] = true;
 				}
@@ -256,10 +256,10 @@
 
 				$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
-				foreach($toarray as $lid => $dummy)
+				foreach ($toarray as $lid => $dummy)
 				{
 					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
-					if(isset($prefs['email']) && $prefs['email'])
+					if (isset($prefs['email']) && $prefs['email'])
 					{
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
 							'voucher_id' => $bilagsnr, 'user_lid' => $lid), false, true) . '">Link til fakturabehandling</a>';
@@ -267,7 +267,7 @@
 						{
 							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
 						}
-						catch(phpmailerException $e)
+						catch (phpmailerException $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
@@ -290,18 +290,18 @@
 			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
 			$port = 22;
 
-			if(!function_exists("ssh2_connect"))
+			if (!function_exists("ssh2_connect"))
 			{
 				die("function ssh2_connect doesn't exist");
 			}
-			if(!($connection = ssh2_connect($server, $port)))
+			if (!($connection = ssh2_connect($server, $port)))
 			{
 				echo "fail: unable to establish connection\n";
 			}
 			else
 			{
 				// try to authenticate with username root, password secretpassword
-				if(!ssh2_auth_password($connection, $user, $password))
+				if (!ssh2_auth_password($connection, $user, $password))
 				{
 					echo "fail: unable to authenticate\n";
 				}
@@ -318,9 +318,9 @@
 					echo "Scanning {$directory_remote}<br/>";
 					$dir = "ssh2.sftp://$sftp$directory_remote";
 					$handle = opendir($dir);
-					while(false !== ($file = readdir($handle)))
+					while (false !== ($file = readdir($handle)))
 					{
-						if(is_dir($file))
+						if (is_dir($file))
 						{
 							echo "Directory: $file<br/>";
 							continue;
@@ -340,15 +340,15 @@
 						$files[] = $file;
 					}
 
-					if($this->debug)
+					if ($this->debug)
 					{
 						_debug_array($files);
 					}
 					else
 					{
-						foreach($files as $file_name)
+						foreach ($files as $file_name)
 						{
-							if(stripos($file_name, 'Px205') === 0)
+							if (stripos($file_name, 'Px205') === 0)
 							{
 								//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";
@@ -361,21 +361,21 @@
 								$fp = fopen($file_local, "wb");
 								fwrite($fp, $contents);
 
-								if(fclose($fp))
+								if (fclose($fp))
 								{
 									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-									if(ssh2_sftp_unlink($sftp, "{$directory_remote}/archive/{$file_name}"))
+									if (ssh2_sftp_unlink($sftp, "{$directory_remote}/archive/{$file_name}"))
 									{
 										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
 									}
-									if(ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}"))
+									if (ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}"))
 									{
 										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
 									}
 									else
 									{
 										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
-										if(unlink($file_local))
+										if (unlink($file_local))
 										{
 											echo "Lokal file was deleted: {$file_local}<br/>";
 										}
@@ -388,7 +388,7 @@
 			}
 		}
 
-		protected function import($file)
+		protected function import( $file )
 		{
 //			$valid_data= False;
 
@@ -401,7 +401,7 @@
 
 			set_time_limit(300);
 
-			if(isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
+			if (isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
 			{
 				$regtid = date($this->datetimeformat);
 
@@ -430,13 +430,13 @@
 				$periode = '';
 				$belop = $_data['AMOUNT'] / 100;
 
-				if(!abs($belop) > 0)
+				if (!abs($belop) > 0)
 				{
 					$this->receipt['message'][] = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
 					$belop = (float)0.0001; // imported as 0.00
 				}
 
-				if($belop < 0)
+				if ($belop < 0)
 				{
 					$buffer[$i]['artid'] = 2;
 				}
@@ -454,17 +454,17 @@
 
 				$order_info = $this->get_order_info($_order_id); // henter default verdier selv om  $_order_id ikke er gyldig.
 
-				if(!$_order_id)
+				if (!$_order_id)
 				{
 					$merknad = 'Mangler bestillingsnummer';
 					$this->receipt['error'][] = array('msg' => $merknad);
 				}
-				else if(!ctype_digit($_order_id))
+				else if (!ctype_digit($_order_id))
 				{
 					$merknad = "bestillingsnummeret er på feil format: {$_order_id}";
 					$this->receipt['error'][] = array('msg' => $merknad);
 				}
-				else if(!$order_info['order_exist'])
+				else if (!$order_info['order_exist'])
 				{
 					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
 					$this->receipt['error'][] = array('msg' => "{$merknad}, fil: {$file}");
@@ -498,11 +498,11 @@
 
 				$buffer[$i]['mvakode'] = $this->mvakode;
 
-				if($buffer[$i]['loc1'] && $this->auto_tax)
+				if ($buffer[$i]['loc1'] && $this->auto_tax)
 				{
 					$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
 
-					if($mvakode)
+					if ($mvakode)
 					{
 						$buffer[$i]['mvakode'] = $mvakode;
 					}
@@ -511,7 +511,7 @@
 				$update_voucher = false;
 				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
@@ -526,7 +526,7 @@
 
 				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
+				if ($this->db->next_record())
 				{
 					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
@@ -537,7 +537,7 @@
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
 					$buffer[$i]['bilagsnr_ut'] = $_bilagsnr_ut;
 
-					if($_bilagsnr_ut)
+					if ($_bilagsnr_ut)
 					{
 						$receipt = $this->export->RullTilbake(false, false, $_bilagsnr_ut);
 					}
@@ -546,7 +546,7 @@
 						$receipt = $this->export->RullTilbake(false, false, false, $bilagsnr);
 					}
 
-					if(isset($receipt['message']))
+					if (isset($receipt['message']))
 					{
 						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$__bilagsnr}");
 					}
@@ -562,19 +562,19 @@
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int)$vendor_id;
 				$this->db->query($sql, __LINE__, __FILE__);
 
-				if(!$_data['SUPPLIER.CODE'])
+				if (!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
 					$this->skip_import = true;
 				}
-				else if(!$this->db->next_record())
+				else if (!$this->db->next_record())
 				{
 					$this->receipt['error'][] = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
 					$this->skip_import = true;
 
 					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
 
-					if($to && !$this->skip_email)
+					if ($to && !$this->skip_email)
 					{
 						$from = "Ikke svar<IkkeSvar@nlsh.no>";
 						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
@@ -584,23 +584,23 @@
 						try
 						{
 							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '', $from, '', 'html');
-							if($rc)
+							if ($rc)
 							{
 								$this->receipt['message'][] = array('msg' => "epost sendt til {$to}");
 							}
 						}
-						catch(phpmailerException $e)
+						catch (phpmailerException $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
 					}
 				}
-				else if($order_info['vendor_id'] != $vendor_id)
+				else if ($order_info['vendor_id'] != $vendor_id)
 				{
 					$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 				}
 
-				if($this->auto_tax)
+				if ($this->auto_tax)
 				{
 					$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
 					$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
@@ -617,17 +617,17 @@
 
 				$buffer[$i]['spvend_code'] = $vendor_id;
 
-				if(isset($order_info['janitor']) && $order_info['janitor'])
+				if (isset($order_info['janitor']) && $order_info['janitor'])
 				{
 					$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
 				}
 
-				if(isset($order_info['supervisor']) && $order_info['supervisor'])
+				if (isset($order_info['supervisor']) && $order_info['supervisor'])
 				{
 					$buffer[$i]['saksbehandlerid'] = $order_info['supervisor'];
 				}
 
-				if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
+				if (isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
 				{
 					$buffer[$i]['budsjettansvarligid'] = $order_info['budget_responsible'];
 				}
@@ -636,41 +636,41 @@
 //_debug_array($buffer);
 //_debug_array($this->receipt);
 //_debug_array($order_info['toarray']);
-			if($this->debug && $this->skip_import)
+			if ($this->debug && $this->skip_import)
 			{
 				_debug_array("Skip import - file: {$file}");
 			}
 
-			if($this->skip_import)
+			if ($this->skip_import)
 			{
 				$this->skip_import = false;
 				return false;
 			}
 			else
 			{
-				if($update_voucher && $bilagsnr)
+				if ($update_voucher && $bilagsnr)
 				{
 					$this->db->query("DELETE FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'", __LINE__, __FILE__);
 				}
 
-				if(!$bilagsnr)
+				if (!$bilagsnr)
 				{
 					$bilagsnr = $this->invoice->next_bilagsnr();
 
-					foreach($buffer as &$entry)
+					foreach ($buffer as &$entry)
 					{
 						$entry['bilagsnr'] = $bilagsnr;
 					}
 				}
 
-				if($order_info['toarray'] && (!$this->skip_email || !$this->debug))
+				if ($order_info['toarray'] && (!$this->skip_email || !$this->debug))
 				{
 
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 					$to = implode(';', $order_info['toarray']);
 
-					if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
 						$subject = 'Ny faktura venter på behandling';
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
@@ -680,7 +680,7 @@
 						{
 							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $from, '', 'html');
 						}
-						catch(phpmailerException $e)
+						catch (phpmailerException $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
@@ -697,9 +697,9 @@
 				{
 					$bilagsnr = $this->import_end_file($buffer);
 				}
-				catch(Exception $e)
+				catch (Exception $e)
 				{
-					if($e)
+					if ($e)
 					{
 						$GLOBALS['phpgw']->log->error(array(
 							'text' => 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
@@ -718,7 +718,7 @@
 			}
 		}
 
-		function get_order_info($order_id = '')
+		function get_order_info( $order_id = '' )
 		{
 			$order_info = array();
 			$toarray = array();
@@ -726,11 +726,11 @@
 			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_project.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$order_info['order_exist'] = true;
 			}
-			if($this->db->f('location_code'))
+			if ($this->db->f('location_code'))
 			{
 				$parts = explode('-', $this->db->f('location_code'));
 				$order_info['dima'] = implode('', $parts);
@@ -746,18 +746,18 @@
 			$janitor_user_id = $this->db->f('user_id');
 			$order_info['janitor'] = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
 			$supervisor_user_id = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
-			if($supervisor_user_id)
+			if ($supervisor_user_id)
 			{
 				$order_info['supervisor'] = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 			}
 
 			$budget_responsible_user_id = $this->invoice->get_default_dimb_role_user(3, $order_info['dimb']);
-			if($budget_responsible_user_id)
+			if ($budget_responsible_user_id)
 			{
 				$order_info['budget_responsible'] = $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
 			}
 
-			if(!$order_info['budget_responsible'])
+			if (!$order_info['budget_responsible'])
 			{
 				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
@@ -766,10 +766,10 @@
 			return $order_info;
 		}
 
-		function import_end_file($buffer)
+		function import_end_file( $buffer )
 		{
 			$num = $this->soXport->add($buffer, $this->skip_update_voucher_id);
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array("import_end_file() ");
 				echo 'buffer: ';
@@ -777,7 +777,7 @@
 				_debug_array("num: {$num}");
 			}
 
-			if($num > 0)
+			if ($num > 0)
 			{
 				$this->receipt['message'][] = array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, SCANNINGNO: {$buffer[0]['external_ref']}, KEY: {$buffer[0]['external_voucher_id']}");
 				return $buffer[0]['bilagsnr'];

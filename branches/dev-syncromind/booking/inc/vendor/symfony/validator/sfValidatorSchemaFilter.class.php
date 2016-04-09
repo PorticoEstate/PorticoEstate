@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorSchemaFilter executes non schema validator on a schema input value.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorSchemaFilter extends sfValidatorSchema
-{
+	class sfValidatorSchemaFilter extends sfValidatorSchema
+	{
+
   /**
    * Constructor.
    *
@@ -28,7 +28,7 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
    *
    * @see sfValidatorBase
    */
-  public function __construct($field, sfValidatorBase $validator, $options = array(), $messages = array())
+		public function __construct( $field, sfValidatorBase $validator, $options = array(), $messages = array() )
   {
     $this->addOption('field', $field);
     $this->addOption('validator', $validator);
@@ -39,7 +39,7 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($values)
+		protected function doClean( $values )
   {
     if (is_null($values))
     {
@@ -68,8 +68,8 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   /**
    * @see sfValidatorBase
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     return sprintf('%s%s:%s', str_repeat(' ', $indent), $this->getOption('field'), $this->getOption('validator')->asString(0));
   }
-}
+	}

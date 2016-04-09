@@ -281,8 +281,7 @@
 					</div>
 				</div>
 				<div id="request">
-					<dl class="proplist-col">
-						<dt>
+					<div class="pure-control-group">
 							<label>
 								<a href="javascript:show_related_requests();">
 									<xsl:attribute name="title">
@@ -291,8 +290,8 @@
 									<xsl:value-of select="php:function('lang', 'details')"/>
 								</a>
 							</label>
-						</dt>
-						<dt>
+					</div>
+					<div class="pure-control-group">
 							<label>
 								<xsl:variable name="lang_new_request">
 									<xsl:value-of select="php:function('lang', 'new record')" />
@@ -304,15 +303,13 @@
 									<xsl:value-of select="$lang_new_request"/>
 								</a>
 							</label>
-						</dt>
+					</div>
+					<div class="pure-control-group">
 
-						<dt>
 							<label>
 								<xsl:value-of select="php:function('lang', 'request')"/>
 							</label>
-						</dt>
-						<dd>
-							<!--div style="clear:both;" id="datatable-container_1"></div-->
+					</div>
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_1'">
 									<xsl:call-template name="table_setup">
@@ -324,18 +321,13 @@
 									</xsl:call-template>
 								</xsl:if>
 							</xsl:for-each>
-
-						</dd>
-					</dl>
 				</div>
 				<div id="summation">
-					<dl class="proplist-col">
-						<dt>
+					<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'summation')"/>
 							</label>
-						</dt>
-						<dd>
+					</div>
 							<!--div style="clear:both;" id="datatable-container_2"></div-->
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_2'">
@@ -349,8 +341,6 @@
 								</xsl:if>
 							</xsl:for-each>
 
-						</dd>
-					</dl>
 				</div>
 				<div id="import">
 					<xsl:choose>

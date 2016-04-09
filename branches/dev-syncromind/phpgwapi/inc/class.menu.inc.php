@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * phpGroupWare menu handler class
 	 *
@@ -9,7 +10,6 @@
 	 * @subpackage phpgwapi
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 	 */
 	class phpgwapi_menu
 	{
+
 		var $public_functions = array
 		(
 			'get_local_menu_ajax'	=> true,
@@ -63,18 +64,18 @@
 
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			if ( !$menu )
+			if(!$menu)
 			{
-				$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id,true,true);
+				$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id, true, true);
 			}
 
-			if ( !$menu )
+			if(!$menu)
 			{
 				$menu = self::load();
-				phpgwapi_cache::user_set('phpgwapi', 'menu', $menu, $account_id,true,true);
+				phpgwapi_cache::user_set('phpgwapi', 'menu', $menu, $account_id, true, true);
 			}
 
-			if ( !is_null($mtype) && isset($menu[$mtype]) )
+			if(!is_null($mtype) && isset($menu[$mtype]))
 			{
 				return $menu[$mtype];
 			}
@@ -106,29 +107,29 @@
 			$menus = array();
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
 
-			foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info )
+			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info)
 		//	foreach ( $raw_menus as $app => $raw_menu )
 			{
 				$raw_menu = $raw_menus[$app];
 				// Ignore invalid entries
-				if ( !is_array($raw_menu) )
+				if(!is_array($raw_menu))
 				{
 					continue;
 				}
-				foreach ( $raw_menu as $mtype => $menu )
+				foreach($raw_menu as $mtype => $menu)
 				{
 					 //no point in adding empty items
-					if ( !count($menu) )
+					if(!count($menu))
 					{
 						continue;
 					}
 
-					if ( !isset($menus[$mtype]) )
+					if(!isset($menus[$mtype]))
 					{
 						$menus[$mtype] = array();
 					}
 
-					switch ( $mtype )
+					switch($mtype)
 					{
 						case 'navbar':
 							$menus[$mtype] = array_merge($menus[$mtype], $menu);
@@ -138,8 +139,8 @@
 							$menus['navigation']['admin'][$app] = array
 							(
 								'text'	=> $GLOBALS['phpgw']->translation->translate($app, array(), true),
-								'url'	=> $GLOBALS['phpgw']->link('/index.php',
-											array('menuaction' => 'admin.uiconfig.index', 'appname' => $app)),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+									'appname' => $app)),
 								'image'	=> $raw_menu['navbar'][$app]['image'],
 								'children'	=> $menu
 							);
@@ -182,15 +183,15 @@ HTML;
 		 * @param string $children     rendered sub menu
 		 * @param bool   $show_appname show appname as top level
 		 */
-		protected static function _render_item($item, $id='', $children='', $show_appname = false)
+		protected static function _render_item($item, $id = '', $children = '', $show_appname = false)
 		{
 			$current_class = '';
-			if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
+			if($id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}")
 			{
 				$current_class = 'current';
 			}
 
-			$link_class =" class=\"{$current_class}\"";
+			$link_class = " class=\"{$current_class}\"";
 
 			if(isset($item['group']) && $show_appname) // at application
 			{
@@ -207,7 +208,7 @@ HTML;
 				{$children}
 HTML;
 			}
-			else if (isset($item['url']))
+			else if(isset($item['url']))
 			{
 				return <<<HTML
 				<li>
@@ -230,7 +231,7 @@ HTML;
 		protected static function _render_submenu($parent, $menu, $show_appname = false)
 		{
 			$out = '';
-			foreach ( $menu as $key => $item )
+			foreach($menu as $key => $item)
 			{
 				$children = isset($item['children']) ? self::_render_submenu("{$parent}::{$key}", $item['children'], $show_appname) : '';
 				$out .= self::_render_item($item, "navbar::{$parent}::{$key}", $children, $show_appname);
@@ -244,7 +245,6 @@ HTML;
 HTML;
 			return $out;
 		}
-
 
 		/**
 		 * Render a horisontal menu for an application
@@ -260,15 +260,15 @@ HTML;
 						<table>
 							<tr>
 HTML;
-			foreach ($menu as &$item)
+			foreach($menu as &$item)
 			{
 				$current_class = '';
-				if ( $item['this'] )
+				if($item['this'])
 				{
 					$current_class = 'current';
 					$item['text'] = "[<b>{$item['text']}</b>]";
 				}
-				$link_class =" class=\"{$current_class}\"";
+				$link_class = " class=\"{$current_class}\"";
 				$html .= <<<HTML
 					<td>
 						<a href="{$item['url']}"{$link_class} id="{$id}">
@@ -277,7 +277,7 @@ HTML;
 					</td>
 HTML;
 
-				if ( $item['children'] )
+				if($item['children'])
 				{
 					$children  = $item['children'];
 				}
@@ -310,15 +310,15 @@ HTML;
 							<tr>				
 HTML;
 
-			foreach ($menu as &$item)
+			foreach($menu as &$item)
 			{
 				$current_class = '';
-				if ( $item['this'] )
+				if($item['this'])
 				{
 					$current_class = 'current';
 					$item['text'] = "[<b>{$item['text']}</b>]";
 				}
-				$link_class =" class=\"{$current_class}\"";
+				$link_class = " class=\"{$current_class}\"";
 				$html .= <<<HTML
 					<td>
 						<a href="{$item['url']}"{$link_class} id="{$id}">
@@ -327,7 +327,7 @@ HTML;
 					</td>
 HTML;
 
-				if ( $item['children'] )
+				if($item['children'])
 				{
 					$children  = $item['children'];
 				}
@@ -345,11 +345,10 @@ HTML;
 			return $html;
 		}
 
-
 		public function get_local_menu($app = '')
 		{
 			$app = $app ? $app : $GLOBALS['phpgw_info']['flags']['currentapp'];
-			switch ( $app )
+			switch($app)
 			{
 				case 'home':
 				case 'login':
@@ -360,10 +359,10 @@ HTML;
 
 			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
-				$menu_gross = execMethod("{$app}.menu.get_menu",'horisontal');
-				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
-				$level=0;
-				$menu = self::_get_sub_menu($menu_gross['navigation'],$selection,$level);
+				$menu_gross = execMethod("{$app}.menu.get_menu", 'horisontal');
+				$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level = 0;
+				$menu = self::_get_sub_menu($menu_gross['navigation'], $selection, $level);
 				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'menu_missing_selection', "menu_{$app}", $menu);
 				unset($menu_gross);
 			}
@@ -375,9 +374,9 @@ HTML;
 			$navbar = $this->get('navbar');
 			$exclude = array('logout', 'about', 'preferences');
 			$top_level_menu = array();
-			foreach ( $navbar as $app => $app_data )
+			foreach($navbar as $app => $app_data)
 			{
-				if ( in_array($app, $exclude) )
+				if(in_array($app, $exclude))
 				{
 					continue;
 				}
@@ -386,14 +385,14 @@ HTML;
 				(
 					'app'	=> $app,
 					'text' => $app_data['text'],
-					'url'	=> str_replace('&amp;','&', $app_data['url']),
+					'url' => str_replace('&amp;', '&', $app_data['url']),
 					'children'	=> true
 				);
-
 			}
 			
 			return $top_level_menu;
 		}
+
 		public function get_local_menu_ajax()
 		{
 			$node		= phpgw::get_var('node');
@@ -402,7 +401,7 @@ HTML;
 				return $this->get_top_level_menu_ajax();
 			}
 
-			$selection = explode('|',$node);
+			$selection = explode('|', $node);
 			$app = $selection[0];
 
 			if(!isset($GLOBALS['phpgw_info']['user']['apps'][$app]))
@@ -414,20 +413,22 @@ HTML;
 			$parent_node = array();
 			if(isset($selection[1]))
 			{
-				for ($i=1;$i<count($selection);$i++)
+				for($i = 1; $i < count($selection); $i++)
 				{
 					$parent_node[] =  $selection[$i];
 				}
 			}
 
 			$_section = 'navigation';
+			$admin = false;
 			if($app == 'admin')
 			{
+				$admin = true;
 				if(!isset($selection[1]))
 				{
 					$navigation = $this->get('admin');
 
-					foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $_app => $app_info )
+					foreach($GLOBALS['phpgw_info']['user']['apps'] as $_app => $app_info)
 					{
 						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navigation[$_app]))
 						{
@@ -438,9 +439,8 @@ HTML;
 								'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
 								'children'	=> count($navigation[$_app]) > 1 ? true : false,
 								'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
-								'url'		=> str_replace('&amp;','&', $GLOBALS['phpgw']->link('/index.php',
-												array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app)))
-
+								'url' => str_replace('&amp;', '&', $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction' => 'admin.uiconfig.index', 'appname' => $_app)))
 							);
 						}
 					}
@@ -459,7 +459,7 @@ HTML;
 			if(!$menu_gross = phpgwapi_cache::session_get('phpgwapi', "menu_{$app}"))
 			{
 				$menu_gross = execMethod("{$app}.menu.get_menu");
-				phpgwapi_cache::session_set('phpgwapi', "menu_{$app}",$menu_gross);
+				phpgwapi_cache::session_set('phpgwapi', "menu_{$app}", $menu_gross);
 			}
 
 			$menu_gross = $menu_gross[$_section];
@@ -467,13 +467,13 @@ HTML;
 			$count_selection = count($selection);
 			if($count_selection > 1)
 			{
-				for ($i=1;$i<count($selection);$i++)
+				for($i = 1; $i < count($selection); $i++)
 				{
 					if(isset($menu_gross[$selection[$i]]))
 					{
 						$menu_gross = $menu_gross[$selection[$i]];
 					}
-					else if (isset($menu_gross['children'][$selection[$i]]))
+					else if(isset($menu_gross['children'][$selection[$i]]))
 					{
 						$menu_gross = $menu_gross['children'][$selection[$i]];
 					}
@@ -489,13 +489,13 @@ HTML;
 				$children = $menu_gross;
 			}
 
-			$i=0;
+			$i = 0;
 			foreach($children as $key => $vals)
 			{
-				$vals['url'] = str_replace('&amp;','&', $vals['url']);
+				$vals['url'] = str_replace('&amp;', '&', $vals['url']);
 				$menu[$i] = $vals;
-				$menu[$i]['app'] = $app;
-				$menu[$i]['key'] = implode('|', array_merge($parent_node,array($key)));
+				$menu[$i]['app'] = $admin ? 'admin' : $app;
+				$menu[$i]['key'] = implode('|', array_merge($parent_node, array($key)));
 				if(isset($menu[$i]['children']))
 				{
 					$menu[$i]['is_leaf'] = false;
@@ -512,10 +512,10 @@ HTML;
 			return $menu;
 		}
 
-		protected static function _get_sub_menu($children = array(), $selection=array(),$level=0)
+		protected static function _get_sub_menu($children = array(), $selection = array(), $level = 0)
 		{
 			$level++;
-			$i=0;
+			$i = 0;
 			$menu = array();
 			foreach($children as $key => $vals)
 			{
@@ -528,7 +528,7 @@ HTML;
 					$menu[$i]['this'] = true;
 					if(isset($menu[$i]['children']))
 					{
-						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'],$selection,$level);
+						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'], $selection, $level);
 						$menu[$i]['is_leaf'] = false;
 					}
 				}
@@ -559,7 +559,7 @@ HTML;
 			}
 			else
 			{
-				if(! is_array($bookmarks))
+				if(!is_array($bookmarks))
 				{
 					$bookmarks = array();
 				}
@@ -575,5 +575,4 @@ HTML;
 				'status' => $status
 			);
 		}
-
 	}

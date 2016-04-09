@@ -43,7 +43,7 @@
 			$this->like = & $this->db->like;
 		}
 
-		function add_activity_first_prize($m_cost, $w_cost, $total_cost, $activity_id, $agreement_id, $date)
+		function add_activity_first_prize( $m_cost, $w_cost, $total_cost, $activity_id, $agreement_id, $date )
 		{
 			$this->db->query("update fm_activity_price_index  set index_count='1',this_index='1', m_cost='$m_cost',w_cost='$w_cost',total_cost='$total_cost',index_date='$date',current_index='1' where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '1'", __LINE__, __FILE__);
 
@@ -52,9 +52,9 @@
 			return $receipt;
 		}
 
-		function update_pricebook($update)
+		function update_pricebook( $update )
 		{
-			for($i = 0; $i < count($update); $i++)
+			for ($i = 0; $i < count($update); $i++)
 			{
 				$this->db->query("select max(index_count) as max_index_count from fm_activity_price_index Where activity_id='" . $update[$i]['activity_id'] . "' and agreement_id='" . $update[$i]['agreement_id'] . "'", __LINE__, __FILE__);
 				$this->db->next_record();
@@ -87,10 +87,10 @@
 			. " WHERE fm_agreement.status='active'"
 			. " GROUP by fm_vendor.org_name ,vendor_id "
 			. " ORDER BY fm_vendor.org_name ", __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				//--------->fix this------->
-				if($this->db->f('vendor_id'))
+				if ($this->db->f('vendor_id'))
 				{
 					$vendor_list[] = array
 						(
@@ -105,7 +105,7 @@
 		function get_agreement_group_list()
 		{
 			$this->db->query("SELECT * FROM fm_agreement_group ORDER BY descr asc");
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$agreement_group_list[] = array
 					(
@@ -119,7 +119,7 @@
 		function get_dim_d_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecodimd ORDER BY descr asc");
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$dim_d_list[] = array
 					(
@@ -133,7 +133,7 @@
 		function get_unit_list()
 		{
 			$this->db->query("SELECT * FROM fm_standard_unit ORDER BY descr asc");
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$unit_list[] = array
 					(
@@ -147,7 +147,7 @@
 		function get_branch_list()
 		{
 			$this->db->query("SELECT * FROM fm_branch ORDER BY descr asc");
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$branch_list[] = array
 					(
@@ -158,35 +158,35 @@
 			return $branch_list;
 		}
 
-		function check_activity_num($num = '', $agreement_group_id = '')
+		function check_activity_num( $num = '', $agreement_group_id = '' )
 		{
 			$this->db->query("SELECT count(*) as cnt FROM fm_activities where num='$num' and agreement_group_id ='$agreement_group_id'");
 
 			$this->db->next_record();
 
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				return true;
 			}
 		}
 
-		function check_agreement_group_num($num = '')
+		function check_agreement_group_num( $num = '' )
 		{
 			$this->db->query("SELECT count(*) as cnt FROM fm_agreement_group where num='$num'");
 
 			$this->db->next_record();
 
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				return true;
 			}
 		}
 
-		function read($data)
+		function read( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
-				if($data['start'])
+				if ($data['start'])
 				{
 					$start = $data['start'];
 				}
@@ -203,7 +203,7 @@
 			}
 
 			//_debug_array($data);
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -212,7 +212,7 @@
 				$ordermethod = ' order by activity_id';
 			}
 
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " AND cat_id='$cat_id' ";
 				$vendor_condition = "= $cat_id";
@@ -222,7 +222,7 @@
 				$vendor_condition = " IS NULL";
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -249,7 +249,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -258,7 +258,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$pricebook[] = array
 					(
@@ -284,12 +284,12 @@
 			return $pricebook;
 		}
 
-		function read_agreement_group($data)
+		function read_agreement_group( $data )
 		{
 
-			if(is_array($data))
+			if (is_array($data))
 			{
-				if($data['start'])
+				if ($data['start'])
 				{
 					$start = $data['start'];
 				}
@@ -305,7 +305,7 @@
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -316,13 +316,13 @@
 
 			$where = 'WHERE';
 
-			if($cat_id)
+			if ($cat_id)
 			{
 				$filtermethod .= " $where status='$cat_id' ";
 				$where = 'AND';
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -334,7 +334,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -343,7 +343,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$agreement_group[] = array
 					(
@@ -362,7 +362,7 @@
 			$this->db->query("SELECT id, descr FROM fm_agreement_status ORDER BY id ");
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$status_entries[$i]['id'] = $this->db->f('id');
 				$status_entries[$i]['name'] = stripslashes($this->db->f('descr'));
@@ -371,9 +371,9 @@
 			return $status_entries;
 		}
 
-		function read_activity_prize($data)
+		function read_activity_prize( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter = isset($data['filter']) ? $data['filter'] : 'none';
@@ -386,7 +386,7 @@
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -395,12 +395,12 @@
 				$ordermethod = ' order by index_count';
 			}
 
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " AND cat_id='$cat_id' ";
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -414,7 +414,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -423,7 +423,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$pricebook[] = array
 					(
@@ -440,11 +440,11 @@
 			return $pricebook;
 		}
 
-		function read_activities_pr_agreement_group($data)
+		function read_activities_pr_agreement_group( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
-				if($data['start'])
+				if ($data['start'])
 				{
 					$start = $data['start'];
 				}
@@ -460,7 +460,7 @@
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -469,7 +469,7 @@
 				$ordermethod = " order by activity_id asc";
 			}
 
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " Where agreement_group_id='$cat_id' ";
 			}
@@ -477,7 +477,7 @@
 			{
 				$filtermethod = " Where agreement_group_id IS NULL";
 			}
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
@@ -495,7 +495,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -504,7 +504,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$pricebook[] = array
 					(
@@ -523,9 +523,9 @@
 			return $pricebook;
 		}
 
-		function read_vendor_pr_activity($data)
+		function read_vendor_pr_activity( $data )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
@@ -537,7 +537,7 @@
 				$activity_id = isset($data['activity_id']) ? $data['activity_id'] : '';
 			}
 
-			if($order)
+			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
 			}
@@ -546,7 +546,7 @@
 				$ordermethod = " order by fm_vendor.org_name asc";
 			}
 
-			if($cat_id > 0)
+			if ($cat_id > 0)
 			{
 				$filtermethod .= " Where agreement_group_id='$cat_id' ";
 			}
@@ -554,7 +554,7 @@
 			{
 				$filtermethod = " Where agreement_group_id = ''";
 			}
-			if($query)
+			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
@@ -572,7 +572,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if(!$allrows)
+			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 			}
@@ -582,7 +582,7 @@
 			}
 
 			$pricebook = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$pricebook[] = array
 					(
@@ -597,13 +597,13 @@
 			return $pricebook;
 		}
 
-		function read_single_activity($id)
+		function read_single_activity( $id )
 		{
 			$sql = "SELECT * FROM fm_activities where id='$id'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$activity['activity_id'] = $id;
 				$activity['num'] = $this->db->f('num');
@@ -619,13 +619,13 @@
 			}
 		}
 
-		function read_single_agreement_group($id)
+		function read_single_agreement_group( $id )
 		{
 			$sql = "SELECT * FROM fm_agreement_group where id='$id'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$agreement_group['agreement_group_id'] = $id;
 				$agreement_group['num'] = $this->db->f('num');
@@ -636,7 +636,7 @@
 			}
 		}
 
-		function add_activity($values)
+		function add_activity( $values )
 		{
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 			$values['base_descr'] = $this->db->db_addslashes($values['base_descr']);
@@ -665,7 +665,7 @@
 			return $receipt;
 		}
 
-		function edit_activity($values)
+		function edit_activity( $values )
 		{
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 			$values['base_descr'] = $this->db->db_addslashes($values['base_descr']);
@@ -691,7 +691,7 @@
 			return $receipt;
 		}
 
-		function add_agreement_group($values)
+		function add_agreement_group( $values )
 		{
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
@@ -712,7 +712,7 @@
 			return $receipt;
 		}
 
-		function edit_agreement_group($values)
+		function edit_agreement_group( $values )
 		{
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
@@ -733,20 +733,20 @@
 			return $receipt;
 		}
 
-		function delete_activity_vendor($activity_id, $agreement_id)
+		function delete_activity_vendor( $activity_id, $agreement_id )
 		{
 			$this->db->query("DELETE FROM fm_activity_price_index WHERE activity_id='$activity_id' and agreement_id='$agreement_id'", __LINE__, __FILE__);
 		}
 
-		function delete_activity($activity_id)
+		function delete_activity( $activity_id )
 		{
 			$this->db->query("DELETE FROM fm_activities WHERE id='$activity_id'", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_activity_price_index WHERE activity_id='$activity_id'", __LINE__, __FILE__);
 		}
 
-		function delete_prize_index($activity_id, $agreement_id, $index_count)
+		function delete_prize_index( $activity_id, $agreement_id, $index_count )
 		{
-			if($index_count == 1)
+			if ($index_count == 1)
 			{
 				$this->db->query("update fm_activity_price_index set index_count = '1', current_index = '0', this_index=Null, m_cost=Null,w_cost=Null,total_cost=Null,index_date=Null  where activity_id='$activity_id' and agreement_id= '$agreement_id' and index_count= '1'", __LINE__, __FILE__);
 			}
@@ -760,7 +760,7 @@
 			}
 		}
 
-		function delete_agreement_group($agreement_group_id)
+		function delete_agreement_group( $agreement_group_id )
 		{
 			$this->db->query("DELETE FROM fm_agreement_group WHERE id='$agreement_group_id'", __LINE__, __FILE__);
 			//how to handle the activities and vendors ...?
@@ -769,13 +769,13 @@
 		/**
 		 * @todo remove or alter this function
 		 */
-		function add_activity_vendor($values)
+		function add_activity_vendor( $values )
 		{
 			$this->db->query("SELECT count(*) as cnt FROM fm_activity_price_index WHERE activity_id='" . $values['activity_id'] . "' and agreement_id='" . $values['agreement_id'] . "'", __LINE__, __FILE__);
 
 			$this->db->next_record();
 
-			if($this->db->f('cnt'))
+			if ($this->db->f('cnt'))
 			{
 				$receipt['error'][] = array('msg' => lang('This Vendor is already registered for this activity'));
 			}

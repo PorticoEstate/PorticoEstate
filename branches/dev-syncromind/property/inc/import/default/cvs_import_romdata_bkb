@@ -17,10 +17,10 @@
 			$this->solocation = CreateObject('property.solocation');
 		}
 
-		public function add($data)
+		public function add( $data )
 		{
 			$location_code = $this->decode($data[0]);
-			if(!$location_code)
+			if (!$location_code)
 			{
 				$this->errors[] = "Mangler objekt, hopper over: {$data[1]}";
 				return false;
@@ -31,21 +31,21 @@
 			$_test_zone = "{$location_arr[0]}-{$location_arr[1]}-{$location_arr[2]}-{$location_arr[3]}";
 
 			$ok = true;
-			if(!$this->solocation->check_location($_test_floor))
+			if (!$this->solocation->check_location($_test_floor))
 			{
 				$_ok = $this->add_location(array('location_code' => $_test_floor, 'name' => "etasje {{$location_arr[2]}}",
 					'area' => 0));
 				$ok = $_ok ? $_ok : false;
 			}
 
-			if(!$this->solocation->check_location($_test_zone))
+			if (!$this->solocation->check_location($_test_zone))
 			{
 				$_ok = $this->add_location(array('location_code' => $_test_zone, 'name' => "sone {{$location_arr[3]}}",
 					'area' => 0));
 				$ok = $_ok && $ok ? $_ok : false;
 			}
 
-			if(!$this->solocation->check_location($location_code))
+			if (!$this->solocation->check_location($location_code))
 			{
 				$_ok = $this->add_location(array('location_code' => $location_code, 'name' => $this->decode($data[6]),
 					'area' => $this->decode($data[7])));
@@ -62,7 +62,7 @@
 			return $ok;
 		}
 
-		protected function add_location($data)
+		protected function add_location( $data )
 		{
 			$debug = $this->debug;
 			$error = false;
@@ -82,7 +82,7 @@
 			);
 
 			$value_set['location_code'] = $data['location_code'];
-			foreach($location_arr as $_key => $_loc)
+			foreach ($location_arr as $_key => $_loc)
 			{
 				$i = $_key + 1;
 				$value_set["loc{$i}"] = sprintf($formatting[$_key], $location_arr[$_key]);
@@ -104,7 +104,7 @@
 
 			$sql2 = "INSERT INTO fm_locations (level, location_code) VALUES ({$type_id}, '{$data['location_code']}')";
 
-			if($debug)
+			if ($debug)
 			{
 				_debug_array($sql);
 			}
@@ -116,7 +116,7 @@
 				$ok = $_ok ? $_ok : false;
 			}
 
-			if(!$error && $ok)
+			if (!$error && $ok)
 			{
 				$this->messages[] = "Successfully imported location: {$data['location_code']}";
 			}
@@ -127,7 +127,7 @@
 			return $ok;
 		}
 
-		protected function update_location($data)
+		protected function update_location( $data )
 		{
 			$debug = $this->debug;
 			$ok = false;
@@ -146,7 +146,7 @@
 			$merknader = $this->db->f('merknader', true);
 
 			$value_set['merknader'] = '';
-			if($merknader)
+			if ($merknader)
 			{
 				$value_set['merknader'] = "{$merknader}\n";
 			}
@@ -155,7 +155,7 @@
 			$value_set = $this->db->validate_update($value_set);
 			$sql = "UPDATE {$table} SET {$value_set} WHERE location_code = '{$data['location_code']}'";
 
-			if($debug)
+			if ($debug)
 			{
 				_debug_array($sql);
 				$ok = true;
@@ -165,7 +165,7 @@
 				$ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			if($ok)
+			if ($ok)
 			{
 				$this->messages[] = "Successfully updated location: {$data['location_code']}";
 			}
@@ -182,10 +182,10 @@
 		 * @param string $value The value to convert
 		 * @return string
 		 */
-		protected function decode($value)
+		protected function decode( $value )
 		{
 			$converted = $value;// mb_convert_encoding($value, 'UTF-8');
-			if($this->is_null(trim($converted)))
+			if ($this->is_null(trim($converted)))
 			{
 				return null;
 			}
@@ -199,7 +199,7 @@
 		 * @param string $value The value to test
 		 * @return bool
 		 */
-		protected function is_null($value)
+		protected function is_null( $value )
 		{
 			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
 		}

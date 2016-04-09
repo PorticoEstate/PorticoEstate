@@ -43,7 +43,7 @@
 		public function get_user_org_id()
 		{
 			$headers = getallheaders();
-			if(isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
 			{
 				$this->debug = true;
 				echo 'headers:<br>';
@@ -52,7 +52,7 @@
 
 			$fodsels_nr = $headers['uid'];
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				echo 'fødselsnr:<br>';
 				_debug_array($fodsels_nr);
@@ -92,9 +92,9 @@
 
 				$orgs			 = array();
 				$orgs_validate	 = array();
-				while($reader->read())
+				while ($reader->read())
 				{
-					if($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
+					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'return')
 					{
 						$xml				 = new DOMDocument('1.0', 'utf-8');
 						$xml->formatOutput	 = true;
@@ -111,7 +111,7 @@
 					}
 				}
 			}
-			catch(SoapFault $exception)
+			catch (SoapFault $exception)
 			{
 				echo "Dette gikk ikke så bra.";
 				var_dump(get_class($exception));
@@ -121,15 +121,15 @@
 			$stage	 = phpgw::get_var('stage');
 			$org_id	 = phpgw::get_var('org_id');
 
-			if($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
+			if ($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
 			{
 				try
 				{
 					return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($org_id);
 				}
-				catch(sfValidatorError $e)
+				catch (sfValidatorError $e)
 				{
-					if($this->debug)
+					if ($this->debug)
 					{
 						echo $e->getMessage();
 						die();
@@ -138,10 +138,10 @@
 				}
 			}
 
-			foreach($orgs as $org)
+			foreach ($orgs as $org)
 			{
 				$selected = '';
-				if($org_id == $org['id'])
+				if ($org_id == $org['id'])
 				{
 					$selected = 'selected = "selected"';
 				}
@@ -152,7 +152,7 @@
 HTML;
 			}
 
-			if($orgs)
+			if ($orgs)
 			{
 				$action	 = $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
 				$message = 'Velg organisasjon';

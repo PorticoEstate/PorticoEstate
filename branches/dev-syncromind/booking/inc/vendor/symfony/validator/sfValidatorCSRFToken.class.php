@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,20 +7,21 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorCSRFToken checks that the token is valid.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorCSRFToken extends sfValidatorBase
-{
+	class sfValidatorCSRFToken extends sfValidatorBase
+	{
+
   /**
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addRequiredOption('token');
 
@@ -33,7 +33,7 @@ class sfValidatorCSRFToken extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     if ($value != $this->getOption('token'))
     {
@@ -42,4 +42,4 @@ class sfValidatorCSRFToken extends sfValidatorBase
 
     return $value;
   }
-}
+	}

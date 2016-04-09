@@ -22,19 +22,19 @@
 			$this->module		 = 'booking';
 		}
 
-		public function link_to($action, $params = array())
+		public function link_to( $action, $params = array() )
 		{
 			return $this->link($this->link_to_params($action, $params));
 		}
 
-		public function redirect_to($action, $params = array())
+		public function redirect_to( $action, $params = array() )
 		{
 			return $this->redirect($this->link_to_params($action, $params));
 		}
 
-		public function link_to_params($action, $params = array())
+		public function link_to_params( $action, $params = array() )
 		{
-			if(isset($params['ui']))
+			if (isset($params['ui']))
 			{
 				$ui = $params['ui'];
 				unset($params['ui']);
@@ -50,7 +50,7 @@
 
 		public function download()
 		{
-			if($id = phpgw::get_var('id', 'string'))
+			if ($id = phpgw::get_var('id', 'string'))
 			{
 				$document = $this->bo->read_single(urldecode($id));
 				self::send_file($document['filename'], array('filename' => $document['name']));
@@ -59,7 +59,7 @@
 
 		public function regulations()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -101,10 +101,10 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public static function sort_by_params($a, $b)
+		public static function sort_by_params( $a, $b )
 		{
 			static $dir, $key;
-			if(!isset($dir))
+			if (!isset($dir))
 			{
 				!($dir	 = phpgw::get_var('dir', 'string', null)) AND $dir	 = 'asc';
 				!($sort	 = phpgw::get_var('sort', 'string', null)) AND $sort	 = 'name';
@@ -118,7 +118,7 @@
 		{
 			$documents = $this->bo->read_regulations();
 
-			foreach($documents['results'] as &$document)
+			foreach ($documents['results'] as &$document)
 			{
 				$document['link']	 = $this->link_to('download', array('id' => $document['id']));
 				$document['name']	 = isset($document['description']) && strlen(trim($document['description'])) > 0 ?

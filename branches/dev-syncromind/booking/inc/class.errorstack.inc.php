@@ -7,11 +7,11 @@
 		{
 			$flash_msgs = array();
 
-			foreach($this as $key => $value)
+			foreach ($this as $key => $value)
 			{
-				if(is_array($value) || $value instanceof ArrayAccess)
+				if (is_array($value) || $value instanceof ArrayAccess)
 				{
-					foreach($value as $msg)
+					foreach ($value as $msg)
 						$flash_msgs[$msg] = false;
 				}
 				else
@@ -23,9 +23,9 @@
 			return $flash_msgs;
 		}
 
-		public function offsetSet($field, $error)
+		public function offsetSet( $field, $error )
 		{
-			if(!isset($this[$field]))
+			if (!isset($this[$field]))
 			{
 				parent::offsetSet($field, array($error));
 			}

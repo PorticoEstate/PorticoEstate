@@ -4,8 +4,8 @@
 		<tr class="th">
 			<td colspan="2">&nbsp;<b>{title}</b></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -16,7 +16,7 @@
 			<td>{lang_tab_sorting}:</td>
 			<td>
 			 <table>
-{hook_tab_sorting}
+					{hook_tab_sorting}
 			 </table>
 			</td>
 		</tr>
@@ -33,7 +33,7 @@
 			<td>{lang_frontend_default_group}:</td>
 			<td>
 			 <select name="newsettings[frontend_default_group]">
-{hook_frontend_default_group}
+					{hook_frontend_default_group}
 			 </select>
 			</td>
 		</tr>
@@ -41,7 +41,7 @@
 			<td>{lang_ticket_default_group}:</td>
 			<td>
 			 <select name="newsettings[tts_default_group]">
-{hook_tts_default_group}
+					{hook_tts_default_group}
 			 </select>
 			</td>
 		</tr>
@@ -51,7 +51,7 @@
 	    	<!--to be able to blank the setting - need an empty value-->
 	    	<input type = 'hidden' name="newsettings[tts_frontend_cat][]" value="">
 		     <table>
-{hook_tts_frontend_cat}
+					{hook_tts_frontend_cat}
 			 </table>
 			</td>
 		</tr>
@@ -59,7 +59,7 @@
 			<td>{lang_ticket_default_category}:</td>
 			<td>
 				<select name="newsettings[tts_default_cat]">
-{hook_tts_default_cat}
+					{hook_tts_default_cat}
 				</select>
 			</td>
 		</tr>
@@ -67,7 +67,7 @@
 			<td>{lang_document_category_for_building_picture}:</td>
 			<td>
 				<select name="newsettings[picture_building_cat]">
-{hook_picture_building_cat}
+					{hook_picture_building_cat}
 				</select>
 			</td>
 		</tr>
@@ -77,7 +77,7 @@
 	    	<!--to be able to blank the setting - need an empty value-->
 	    	<input type = 'hidden' name="newsettings[document_frontend_cat][]" value="">
 		     <table>
-{hook_document_frontend_cat}
+					{hook_document_frontend_cat}
 			 </table>
 			</td>
 		</tr>
@@ -87,7 +87,7 @@
 	    	<!--to be able to blank the setting - need an empty value-->
 	    	<input type = 'hidden' name="newsettings[entity_frontend][]" value="">
 		     <table>
-{hook_entity_frontend}
+					{hook_entity_frontend}
 			 </table>
 			</td>
 		</tr>
@@ -168,11 +168,11 @@
 			<td>{lang_logo_contract_messages}:</td>
 			<td><input name="newsettings[logo_path]" value="{value_logo_path}"></td>
 		</tr>
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="th">
 			<td colspan="2">
-&nbsp;
+				&nbsp;
 			</td>
 		</tr>
 		<tr>

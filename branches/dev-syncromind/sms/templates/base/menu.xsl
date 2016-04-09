@@ -9,10 +9,18 @@
 						<xsl:text>  </xsl:text>
 						<xsl:choose>
 							<xsl:when test="this=1">
-								<a href="{url}"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
+							<a href="{url}">
+								<b>
+									<xsl:text>[</xsl:text>
+									<xsl:value-of select="text"/>
+									<xsl:text>]</xsl:text>
+								</b>
+							</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{url}"><xsl:value-of select="text"/></a>
+							<a href="{url}">
+								<xsl:value-of select="text"/>
+							</a>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each>
@@ -30,10 +38,18 @@
 									<xsl:text>  </xsl:text>
 									<xsl:choose>
 										<xsl:when test="this=1">
-											<a href="{url}"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
+										<a href="{url}">
+											<b>
+												<xsl:text>[</xsl:text>
+												<xsl:value-of select="text"/>
+												<xsl:text>]</xsl:text>
+											</b>
+										</a>
 										</xsl:when>
 										<xsl:otherwise>
-											<a href="{url}"><xsl:value-of select="text"/></a>
+										<a href="{url}">
+											<xsl:value-of select="text"/>
+										</a>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:for-each>
@@ -51,10 +67,18 @@
 												<xsl:text>  </xsl:text>
 												<xsl:choose>
 													<xsl:when test="this=1">
-														<a href="{url}"><b><xsl:text>[</xsl:text><xsl:value-of select="text"/><xsl:text>]</xsl:text></b></a>
+													<a href="{url}">
+														<b>
+															<xsl:text>[</xsl:text>
+															<xsl:value-of select="text"/>
+															<xsl:text>]</xsl:text>
+														</b>
+													</a>
 													</xsl:when>
 													<xsl:otherwise>
-														<a href="{url}"><xsl:value-of select="text"/></a>
+													<a href="{url}">
+														<xsl:value-of select="text"/>
+													</a>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:for-each>
@@ -67,4 +91,4 @@
 				</xsl:choose>
 			</xsl:for-each>
 		</table>
-	</xsl:template>
+</xsl:template>

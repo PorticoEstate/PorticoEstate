@@ -18,7 +18,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -46,7 +46,7 @@
 
 			$property_bolocation = new property_bolocation();
 
-			if($search_type == 'gab')
+			if ($search_type == 'gab')
 			{
 				$query			 = explode('/', $search_for);
 				//GAB search
@@ -60,7 +60,7 @@
 
 				$rows_total	 = count($gabinfo);
 				$gab_list	 = array_slice($gabinfo, $start_index, $num_of_objects);
-				foreach($gab_list as $gabelement)
+				foreach ($gab_list as $gabelement)
 				{
 					$row		 = $property_bolocation->read_single($gabelement['location_code']);
 					$row['gab']	 = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);
@@ -69,7 +69,7 @@
 			}
 			else
 			{
-				if(!isset($type_id) || $type_id < 1)
+				if (!isset($type_id) || $type_id < 1)
 				{
 					$type_id = 2;
 				}

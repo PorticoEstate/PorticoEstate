@@ -10,7 +10,7 @@
 			self::set_active_menu('booking::buildings::seasons::permissions');
 		}
 
-		protected function get_parent_pathway(array $forDocumentData)
+		protected function get_parent_pathway( array $forDocumentData )
 		{
 			return array(
 				array('text' => 'objects_plural_name', 'href' => 'objects_plural_href'),

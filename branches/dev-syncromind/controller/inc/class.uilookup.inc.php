@@ -55,7 +55,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app']		 = true;
 
 
-			if(!isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css))
+			if (!isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css))
 			{
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
@@ -102,7 +102,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key'		 => $uicols['name'][$k],

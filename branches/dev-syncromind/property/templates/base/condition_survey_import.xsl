@@ -3,31 +3,16 @@
 <!-- import -->
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 
-	<div class="yui-navset yui-navset-top" id="survey_edit_tabview">
-	
-		<h1>
+	<h2>
 			<xsl:value-of select="php:function('lang', 'condition survey import')" />
-		</h1>
+	</h2>
 
-
-		<xsl:variable name="action_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.import')" />
-		</xsl:variable>
-
-		<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
-			<dl>
-				<dt>
+	<div class="pure-control-group" >
 					<label>
 						<xsl:value-of select="php:function('lang', 'id')" />
 					</label>
-				</dt>
-				<dd>
 					<xsl:value-of select="survey/id"/>
-					<input type="hidden" name="id" value="{survey/id}"/>
-					<input type="hidden" name="step" value="{step}"/>
-					<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
-					<input type="hidden" name="start_line" value="{start_line}"/>
-				</dd>
+	</div>
 
 				<xsl:choose>
 					<xsl:when test="location_data2!=''">
@@ -35,26 +20,29 @@
 					</xsl:when>
 				</xsl:choose>
 
-				<dt>
+	<div class="pure-control-group" >
 					<label for="name">
 						<xsl:value-of select="php:function('lang', 'name')" />
 					</label>
-				</dt>
-				<dd>
 					<xsl:value-of select="survey/title" />
-				</dd>
+	</div>
 
-				<dt>
+	<div class="pure-control-group" >
 					<label>
 						<xsl:value-of select="php:function('lang', 'date')" />
 					</label>
-				</dt>
-				<dd>
 					<xsl:value-of select="survey/report_date"/>
-				</dd>
-			</dl>
+	</div>
+	<xsl:variable name="action_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.import')" />
+	</xsl:variable>
+	<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data" class="pure-form pure-form-aligned">
+		<input type="hidden" name="id" value="{survey/id}"/>
+		<input type="hidden" name="step" value="{step}"/>
+		<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
+		<input type="hidden" name="start_line" value="{start_line}"/>
+		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div class="yui-content">
 				<xsl:choose>
 					<xsl:when test="step=1">
 						<xsl:call-template name="import_step_1"/>
@@ -97,7 +85,6 @@
 				</div>
 			</dl>
 		</form>
-	</div>
 
 	<xsl:variable name="cancel_params">
 		<xsl:text>menuaction:property.uicondition_survey.view, id:</xsl:text>
@@ -130,96 +117,97 @@
 
 
 <xsl:template name="import_step_1" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-	<dl class="proplist-col">
-		<dt>
-			<label>
+	<div id="step_1">
+		<div class="pure-control-group" >
+			<label for="name">
 				<xsl:value-of select="php:function('lang', 'upload file')"/>
 			</label>
-		</dt>
-		<dd>
 			<input type="file" name="import_file" size="40">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
 				</xsl:attribute>
+				<xsl:attribute name="data-validation">
+					<xsl:text>required extension</xsl:text>
+				</xsl:attribute>
+				<xsl:attribute name="data-validation-allowing">
+					<xsl:text>xls xlsx</xsl:text>
+				</xsl:attribute>
 			</input>
-		</dd>
-	</dl>
+		</div>
+	</div>
+	<div id="step_2"></div>
+	<div id="step_3"></div>
+	<div id="step_4"></div>
 </xsl:template>
 
 
 <xsl:template name="import_step_2" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-	<dl class="proplist-col">
-		<dt>
-			<label for="status">
+	<div id="step_1"></div>
+	<div id="step_2">
+		<div class="pure-control-group" >
+			<label>
 				<xsl:value-of select="php:function('lang', 'sheet')" />
 			</label>
-		</dt>
-		<dd>
 			<select id="sheet_id" name="sheet_id">
 				<xsl:apply-templates select="sheets/options"/>
 			</select>
-		</dd>
-	</dl>
+		</div>
+	</div>
+	<div id="step_3"></div>
+	<div id="step_4"></div>
+
 </xsl:template>
 
 <xsl:template name="import_step_3" xmlns:php="http://php.net/xsl">
-	<dl class="proplist-col">
+	<div id="step_1"></div>
+	<div id="step_2"></div>
+	<div id="step_3">
+		<div class="pure-control-group" >
 
-		<dt>
 			<label for="status">
 				<xsl:value-of select="php:function('lang', 'sheet')" />
 			</label>
-		</dt>
-		<dd>
 			<xsl:for-each select="sheets/options">
 				<xsl:if test="selected = 'selected' or selected = 1">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</xsl:if>
 			</xsl:for-each>
-		</dd>
-
-		<dt>
-			<label for="status">
-				<xsl:value-of select="php:function('lang', 'table')" />
-			</label>
-		</dt>
-		<dd>
+		</div>
+		<div class="pure-control-group" >
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
-		</dd>
-	</dl>
+		</div>
+	</div>
+	<div id="step_4"></div>
 </xsl:template>
 
 <xsl:template name="import_step_4" xmlns:php="http://php.net/xsl">
-	<dl class="proplist-col">
-		<dt>
+	<div id="step_1"></div>
+	<div id="step_2"></div>
+	<div id="step_3"></div>
+	<div id="step_4">
+		<div class="pure-control-group" >
 			<label>
 				<xsl:value-of select="php:function('lang', 'sheet')" />
 			</label>
-		</dt>
-		<dd>
 			<xsl:for-each select="sheets/options">
 				<xsl:if test="selected = 'selected' or selected = 1">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</xsl:if>
 			</xsl:for-each>
-		</dd>
-		<dt>
+		</div>
+		<div class="pure-control-group" >
 			<label>
 				<xsl:value-of select="php:function('lang', 'line')" />
 			</label>
-		</dt>
-		<dd>
 			<xsl:value-of select="start_line"/>
-		</dd>
-		<dt>
+		</div>
+		<div class="pure-control-group" >
 			<label>
 				<xsl:value-of select="php:function('lang', 'columns')" />
 			</label>
-		</dt>
-		<dd>
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
-		</dd>
-	</dl>
+		</div>
+	</div>
 </xsl:template>
 
 

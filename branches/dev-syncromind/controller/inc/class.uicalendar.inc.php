@@ -89,12 +89,12 @@
 
 			self::set_active_menu('controller::location_check_list');
 
-			if(phpgw::get_var('noframework', 'bool'))
+			if (phpgw::get_var('noframework', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				phpgwapi_cache::session_set('controller', 'noframework', true);
 			}
-			else if(phpgwapi_cache::session_get('controller', 'noframework'))
+			else if (phpgwapi_cache::session_get('controller', 'noframework'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
@@ -129,7 +129,7 @@
 			// Validates location_code. If not set, first location among assigned locations
 			$location_code = $this->validate_location_code($location_code);
 
-			if($location_code != null && $location_code != "")
+			if ($location_code != null && $location_code != "")
 			{
 				$level = $this->location_finder->get_location_level($location_code);
 
@@ -141,7 +141,7 @@
 				// Fetches controls for location within specified time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 
-				if($level == 1)
+				if ($level == 1)
 				{
 					// Fetches all controls for the components for a location within time period
 //					$filter = "bim_item.location_code = '$location_code' ";
@@ -162,7 +162,7 @@
 				$controls_with_check_list_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 
 				$controls_calendar_array = array();
-				foreach($controls_with_check_list_array as $control)
+				foreach ($controls_with_check_list_array as $control)
 				{
 					$month_calendar	 = new month_calendar($control, $year, $month, null, $location_code, "location");
 					$calendar_array	 = $month_calendar->build_calendar($control->get_check_lists_array());
@@ -171,7 +171,7 @@
 				}
 
 				// COMPONENTS
-				foreach($components_with_controls_array as $component)
+				foreach ($components_with_controls_array as $component)
 				{
 					$location_id	 = $component->get_location_id();
 					$component_id	 = $component->get_id();
@@ -183,7 +183,7 @@
 					$controls_for_component_array		 = $component->get_controls_array();
 					$controls_components_calendar_array	 = array();
 
-					foreach($controls_for_component_array as $control)
+					foreach ($controls_for_component_array as $control)
 					{
 						// Fetches control ids with check lists for specified time period
 						$control_id_with_check_list_array	 = $this->so->get_check_lists_for_component($component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type						 = ">=0");
@@ -287,7 +287,7 @@
 			// Validates location_code. If not set, first location among assigned locations
 			$location_code = $this->validate_location_code($location_code);
 
-			if($location_code != null && $location_code != "")
+			if ($location_code != null && $location_code != "")
 			{
 				$level = $this->location_finder->get_location_level($location_code);
 
@@ -299,7 +299,7 @@
 				// Fetches all controls for the location within time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 
-				if($level == 1)
+				if ($level == 1)
 				{
 					// Fetches all controls for the components for a location within time period
 //					$filter = "bim_item.location_code = '$location_code' ";
@@ -315,9 +315,9 @@
 
 				// Loops through controls with repeat type day or week
 				// and populates array that contains aggregated open cases pr month.
-				foreach($controls_for_location_array as $control)
+				foreach ($controls_for_location_array as $control)
 				{
-					if($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
+					if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
 					{
 						$cl_criteria = new controller_check_list();
 						$cl_criteria->set_control_id($control->get_id());
@@ -343,9 +343,9 @@
 				// Loops through all controls for location and populates controls with check lists
 				$controls_for_location_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 
-				foreach($controls_for_location_array as $control)
+				foreach ($controls_for_location_array as $control)
 				{
-					if($control->get_repeat_type() == controller_control::REPEAT_TYPE_MONTH | $control->get_repeat_type() == controller_control::REPEAT_TYPE_YEAR)
+					if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_MONTH | $control->get_repeat_type() == controller_control::REPEAT_TYPE_YEAR)
 					{
 						$year_calendar	 = new year_calendar($control, $year, null, $location_code, "location");
 						$calendar_array	 = $year_calendar->build_calendar($control->get_check_lists_array());
@@ -355,7 +355,7 @@
 				}
 
 				// COMPONENTS
-				foreach($components_with_controls_array as $component)
+				foreach ($components_with_controls_array as $component)
 				{
 					$location_id = $component->get_location_id();
 					$id			 = $component->get_id();
@@ -368,9 +368,9 @@
 					$controls_components_calendar_array	 = array();
 
 					// AGGREGATED VALUES PR MONTH: Puts aggregated number of open cases for days and weeks in calendar array
-					foreach($controls_for_component_array as $control)
+					foreach ($controls_for_component_array as $control)
 					{
-						if($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
+						if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
 						{
 							$cl_criteria = new controller_check_list();
 							$cl_criteria->set_control_id($control->get_id());
@@ -475,23 +475,23 @@
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
-			if(is_array($bookmarks))
+			if (is_array($bookmarks))
 			{
 				$bookmark_locations = array_keys($bookmarks);
 			}
 
-			if($location_code = phpgw::get_var('location_code'))
+			if ($location_code = phpgw::get_var('location_code'))
 			{
 				$bookmark_locations[] = $location_code;
 			}
 
 			$locations_list = array();
 
-			if(is_numeric($control_id) & $control_id > 0)
+			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array	 = $this->so_control->get_locations_for_control($control_id);
 				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id, $serie_id);
-				foreach($locations_for_control_array as $location)
+				foreach ($locations_for_control_array as $location)
 				{
 					$locations_list[] = array
 						(
@@ -518,13 +518,13 @@
 
 
 			// LOCATIONS: Process aggregated values for controls with repeat type day or week
-			if($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK)
+			if ($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK)
 			{
-				foreach($locations_for_control_array as $location)
+				foreach ($locations_for_control_array as $location)
 				{
 					$curr_location_code = $location['location_code'];
 
-					if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+					if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 					{
 						continue;
 					}
@@ -551,17 +551,17 @@
 				}
 
 				// COMPONENTS: Process aggregated values for controls with repeat type day or week
-				foreach($components_for_control_array as $component)
+				foreach ($components_for_control_array as $component)
 				{
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
 						'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
-					if(!isset($_location_name[$component->get_location_code()]))
+					if (!isset($_location_name[$component->get_location_code()]))
 					{
 						$_location		 = execMethod('property.solocation.read_single', $component->get_location_code());
 						$location_arr	 = explode('-', $component->get_location_code());
 						$i				 = 1;
 						$name_arr		 = array();
-						foreach($location_arr as $_dummy)
+						foreach ($location_arr as $_dummy)
 						{
 							$name_arr[] = $_location["loc{$i}_name"];
 							$i++;
@@ -595,13 +595,13 @@
 				}
 			}
 			// Process values for controls with repeat type month or year
-			else if($control->get_repeat_type() > controller_control::REPEAT_TYPE_WEEK)
+			else if ($control->get_repeat_type() > controller_control::REPEAT_TYPE_WEEK)
 			{
-				foreach($locations_for_control_array as $location)
+				foreach ($locations_for_control_array as $location)
 				{
 					$curr_location_code = $location['location_code'];
 
-					if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+					if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 					{
 						continue;
 					}
@@ -620,7 +620,7 @@
 					);
 				}
 
-				foreach($components_for_control_array as $component)
+				foreach ($components_for_control_array as $component)
 				{
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
 						'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
@@ -628,13 +628,13 @@
 					//FIXME - make generic
 
 					/* => */
-					if(!isset($_location_name[$component->get_location_code()]))
+					if (!isset($_location_name[$component->get_location_code()]))
 					{
 						$_location		 = execMethod('property.solocation.read_single', $component->get_location_code());
 						$location_arr	 = explode('-', $component->get_location_code());
 						$i				 = 1;
 						$name_arr		 = array();
-						foreach($location_arr as $_dummy)
+						foreach ($location_arr as $_dummy)
 						{
 							$name_arr[] = $_location["loc{$i}_name"];
 							$i++;
@@ -657,20 +657,20 @@
 					 * start override control with data from serie
 					 */
 					$control_relation = $component->get_control_relation();
-					if(isset($control_relation['start_date']) && $control_relation['start_date'])
+					if (isset($control_relation['start_date']) && $control_relation['start_date'])
 					{
 						$control->set_start_date($control_relation['start_date']);
 					}
 
-					if(isset($control_relation['end_date']) && $control_relation['end_date'])
+					if (isset($control_relation['end_date']) && $control_relation['end_date'])
 					{
 						$control->set_end_date($control_relation['end_date']);
 					}
-					if(isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
+					if (isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
 					{
 						$control->set_repeat_type($control_relation['repeat_type']);
 					}
-					if(isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
+					if (isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
 					{
 						$control->set_repeat_interval($control_relation['repeat_interval']);
 					}
@@ -717,11 +717,11 @@
 			static $_location_name	 = array();
 			$control_id				 = phpgw::get_var('control_id', 'int');
 			$control				 = $this->so_control->get_single($control_id);
-			if(!$year					 = intval(phpgw::get_var('year')))
+			if (!$year = intval(phpgw::get_var('year')))
 			{
 				$year = date('Y');
 			}
-			if(!$month = intval(phpgw::get_var('month')))
+			if (!$month = intval(phpgw::get_var('month')))
 			{
 				$month = date('m');
 			}
@@ -735,21 +735,21 @@
 
 			$bookmark_locations	 = array();
 			$bookmarks			 = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
-			if(is_array($bookmarks))
+			if (is_array($bookmarks))
 			{
 				$bookmark_locations = array_keys($bookmarks);
 			}
 
-			if($location_code = phpgw::get_var('location_code'))
+			if ($location_code = phpgw::get_var('location_code'))
 			{
 				$bookmark_locations[] = $location_code;
 			}
 
-			if(is_numeric($control_id) & $control_id > 0)
+			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array	 = $this->so_control->get_locations_for_control($control_id);
 				$components_for_control_array	 = $this->so_control->get_components_for_control($control_id, $location_id, $component_id, $serie_id);
-				foreach($locations_for_control_array as $location)
+				foreach ($locations_for_control_array as $location)
 				{
 					$locations_list[] = array
 						(
@@ -777,11 +777,11 @@
 
 			$locations_with_calendar_array = array();
 
-			foreach($locations_for_control_array as $location)
+			foreach ($locations_for_control_array as $location)
 			{
 				$curr_location_code = $location['location_code'];
 
-				if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+				if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 				{
 					continue;
 				}
@@ -800,17 +800,17 @@
 				);
 			}
 
-			foreach($components_for_control_array as $component)
+			foreach ($components_for_control_array as $component)
 			{
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array(
 					'location_id'	 => $component->get_location_id(), 'id'			 => $component->get_id()));
-				if(!isset($_location_name[$component->get_location_code()]))
+				if (!isset($_location_name[$component->get_location_code()]))
 				{
 					$_location		 = execMethod('property.solocation.read_single', $component->get_location_code());
 					$location_arr	 = explode('-', $component->get_location_code());
 					$i				 = 1;
 					$name_arr		 = array();
-					foreach($location_arr as $_dummy)
+					foreach ($location_arr as $_dummy)
 					{
 						$name_arr[] = $_location["loc{$i}_name"];
 						$i++;
@@ -833,20 +833,20 @@
 				 */
 
 				$control_relation = $component->get_control_relation();
-				if(isset($control_relation['start_date']) && $control_relation['start_date'])
+				if (isset($control_relation['start_date']) && $control_relation['start_date'])
 				{
 					$control->set_start_date($control_relation['start_date']);
 				}
 
-				if(isset($control_relation['end_date']) && $control_relation['end_date'])
+				if (isset($control_relation['end_date']) && $control_relation['end_date'])
 				{
 					$control->set_end_date($control_relation['end_date']);
 				}
-				if(isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
+				if (isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
 				{
 					$control->set_repeat_type($control_relation['repeat_type']);
 				}
-				if(isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
+				if (isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
 				{
 					$control->set_repeat_interval($control_relation['repeat_interval']);
 				}
@@ -892,15 +892,15 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 
-		public function populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array)
+		public function populate_controls_with_check_lists( $controls_for_location_array, $control_id_with_check_list_array )
 		{
 			$controls_with_check_list = array();
 
-			foreach($controls_for_location_array as $control)
+			foreach ($controls_for_location_array as $control)
 			{
-				foreach($control_id_with_check_list_array as $control_id)
+				foreach ($control_id_with_check_list_array as $control_id)
 				{
-					if($control->get_id() == $control_id->get_id())
+					if ($control->get_id() == $control_id->get_id())
 					{
 						$control->set_check_lists_array($control_id->get_check_lists_array());
 					}
@@ -913,13 +913,13 @@
 		}
 
 		// Generates array of aggregated number of open cases for each month in time period
-		function build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month)
+		function build_agg_open_cases_pr_month_array( $cl_criteria, $year, $from_month, $to_month )
 		{
 
 			$agg_open_cases_pr_month_array = array();
 
 			// Fetches aggregate value for open cases in each month in time period
-			for($from_month; $from_month <= $to_month; $from_month++)
+			for ($from_month; $from_month <= $to_month; $from_month++)
 			{
 				$month_start_ts	 = $this->get_month_start_ts($year, $from_month);
 				$month_end_ts	 = $this->get_month_start_ts($year, $from_month + 1);
@@ -930,7 +930,7 @@
 				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control($cl_criteria, $month_start_ts, $month_end_ts);
 
 				// If there is a aggregated value for the month, add aggregated status object to agg_open_cases_pr_month_array
-				if(!empty($num_open_cases_for_control_array))
+				if (!empty($num_open_cases_for_control_array))
 				{
 					$status_agg_month_info			 = new status_agg_month_info();
 					$status_agg_month_info->set_month_nr($from_month);
@@ -942,10 +942,10 @@
 			return $agg_open_cases_pr_month_array;
 		}
 
-		function get_start_month_for_control($control)
+		function get_start_month_for_control( $control )
 		{
 			// Checks if control starts in the year that is displayed
-			if(date("Y", $control->get_start_date()) == $year)
+			if (date("Y", $control->get_start_date()) == $year)
 			{
 				$from_month = date("n", $control->get_start_date());
 			}
@@ -957,10 +957,10 @@
 			return $from_month;
 		}
 
-		function get_end_month_for_control($control)
+		function get_end_month_for_control( $control )
 		{
 			// Checks if control ends in the year that is displayed
-			if(date("Y", $control->get_end_date()) == $year)
+			if (date("Y", $control->get_end_date()) == $year)
 			{
 				$to_month = date("n", $control->get_end_date());
 			}
@@ -972,7 +972,7 @@
 			return $to_month;
 		}
 
-		function validate_location_code($location_code)
+		function validate_location_code( $location_code )
 		{
 			$criteria = array
 				(
@@ -982,10 +982,10 @@
 				'allrows'	 => false
 			);
 
-			if(empty($location_code))
+			if (empty($location_code))
 			{
 				$my_locations = $this->location_finder->get_responsibilities($criteria);
-				if(count($my_locations) > 0)
+				if (count($my_locations) > 0)
 				{
 					$location_code = $my_locations[0]["location_code"];
 				}
@@ -994,7 +994,7 @@
 			return $location_code;
 		}
 
-		function get_my_assigned_locations($current_location_code)
+		function get_my_assigned_locations( $current_location_code )
 		{
 			$criteria = array
 				(
@@ -1008,9 +1008,9 @@
 
 			$my_washed_locations = array();
 
-			foreach($my_locations as $location)
+			foreach ($my_locations as $location)
 			{
-				if($location['location_code'] != $current_location_code)
+				if ($location['location_code'] != $current_location_code)
 				{
 					$my_washed_locations[] = $location;
 				}
@@ -1019,9 +1019,9 @@
 			return $my_washed_locations;
 		}
 
-		function get_month_start_ts($year, $month)
+		function get_month_start_ts( $year, $month )
 		{
-			if($month > 12)
+			if ($month > 12)
 			{
 				$year	 = $year + 1;
 				$month	 = $month % 12;
@@ -1030,12 +1030,12 @@
 			return strtotime("$month/01/$year");
 		}
 
-		function get_start_date_year_ts($year)
+		function get_start_date_year_ts( $year )
 		{
 			return strtotime("01/01/$year");
 		}
 
-		function get_end_date_year_ts($year)
+		function get_end_date_year_ts( $year )
 		{
 			$to_year			 = $year + 1;
 			$end_date_year_ts	 = strtotime("01/01/$to_year");
@@ -1043,9 +1043,9 @@
 			return $end_date_year_ts;
 		}
 
-		function validate_year($validate_year)
+		function validate_year( $validate_year )
 		{
-			if(empty($validate_year))
+			if (empty($validate_year))
 			{
 				$validate_year = date("Y");
 			}
@@ -1055,9 +1055,9 @@
 			return $validate_year;
 		}
 
-		function validate_repeat_type($validate_repeat_type)
+		function validate_repeat_type( $validate_repeat_type )
 		{
-			if($validate_repeat_type != 0 & (empty($validate_repeat_type) | ($validate_repeat_type > 3)))
+			if ($validate_repeat_type != 0 & (empty($validate_repeat_type) | ($validate_repeat_type > 3)))
 			{
 				$validate_repeat_type = '';
 			}
@@ -1065,9 +1065,9 @@
 			return $validate_repeat_type;
 		}
 
-		function validate_role($validate_role)
+		function validate_role( $validate_role )
 		{
-			if(empty($validate_role) | (!is_numeric($validate_role)) | ($validate_role < 1))
+			if (empty($validate_role) | (!is_numeric($validate_role)) | ($validate_role < 1))
 			{
 				$validate_role = '';
 			}
@@ -1075,9 +1075,9 @@
 			return $validate_role;
 		}
 
-		function validate_month($month)
+		function validate_month( $month )
 		{
-			if(empty($month))
+			if (empty($month))
 			{
 				$month = date("n");
 			}
@@ -1098,14 +1098,14 @@
 			$user_id		 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
-			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$location_code]))
+			if ($bookmarks && is_array($bookmarks) && isset($bookmarks[$location_code]))
 			{
 				unset($bookmarks[$location_code]);
 				$status = lang('deleted');
 			}
 			else
 			{
-				if(!is_array($bookmarks))
+				if (!is_array($bookmarks))
 				{
 					$bookmarks = array();
 				}

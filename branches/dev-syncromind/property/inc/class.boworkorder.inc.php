@@ -53,7 +53,7 @@
 			'get_category' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.soworkorder');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -63,7 +63,7 @@
 
 			$obligation = phpgw::get_var('obligation', 'bool');
 
-			if($session && !$obligation)
+			if ($session && !$obligation)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -71,10 +71,10 @@
 
 			$default_filter_year = 'all';
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']))
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']))
 			{
 				$_last_year = date('Y') - 1;
-				switch($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'])
+				switch ($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'])
 				{
 					case 'current_year':
 						$default_filter_year = date('Y');
@@ -111,7 +111,7 @@
 			$this->start = $start ? $start : 0;
 			$this->filter_year = $filter_year;
 
-			if(array_key_exists('district_id', $_POST) || array_key_exists('district_id', $_GET))
+			if (array_key_exists('district_id', $_POST) || array_key_exists('district_id', $_GET))
 			{
 				$this->district_id = $district_id;
 			}
@@ -122,43 +122,43 @@
 			$this->ecodimb = $ecodimb;
 			$this->b_account = $b_account;
 
-			if(array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
+			if (array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
 			{
 				$this->query = $query;
 			}
-			if(array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
+			if (array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
+			if (array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if(array_key_exists('criteria_id', $_POST) || array_key_exists('criteria_id', $_GET))
+			if (array_key_exists('criteria_id', $_POST) || array_key_exists('criteria_id', $_GET))
 			{
 				$this->criteria_id = $criteria_id;
 			}
-			if(array_key_exists('status_id', $_POST) || array_key_exists('status_id', $_GET))
+			if (array_key_exists('status_id', $_POST) || array_key_exists('status_id', $_GET))
 			{
 				$this->status_id = $status_id;
 			}
-			if(array_key_exists('wo_hour_cat_id', $_POST) || array_key_exists('wo_hour_cat_id', $_GET))
+			if (array_key_exists('wo_hour_cat_id', $_POST) || array_key_exists('wo_hour_cat_id', $_GET))
 			{
 				$this->wo_hour_cat_id = $wo_hour_cat_id;
 			}
-			if(array_key_exists('start_date', $_POST) || array_key_exists('start_date', $_GET))
+			if (array_key_exists('start_date', $_POST) || array_key_exists('start_date', $_GET))
 			{
 				$this->start_date = $start_date;
 			}
-			if(array_key_exists('end_date', $_POST) || array_key_exists('end_date', $_GET))
+			if (array_key_exists('end_date', $_POST) || array_key_exists('end_date', $_GET))
 			{
 				$this->end_date = $end_date;
 			}
@@ -185,9 +185,9 @@
 			$this->criteria_id = isset($data['criteria_id']) ? $data['criteria_id'] : '';
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'workorder', $data);
 			}
@@ -200,9 +200,9 @@
 			return $category[0];
 		}
 
-		function column_list($selected = array())
+		function column_list( $selected = array() )
 		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : '';
 			}
@@ -310,9 +310,9 @@
 			return $this->so->next_id();
 		}
 
-		function select_status_list($format = '', $selected = '')
+		function select_status_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
@@ -327,26 +327,26 @@
 			return $this->bocommon->select_list($selected, $status_entries);
 		}
 
-		function select_branch_list($selected = '')
+		function select_branch_list( $selected = '' )
 		{
 			$branch_entries = $this->so->select_branch_list();
 			return $this->bocommon->select_list($selected, $branch_entries);
 		}
 
-		function select_branch_p_list($project_id = '')
+		function select_branch_p_list( $project_id = '' )
 		{
 			$selected = $this->so->branch_p_list($project_id);
 			$branch_entries = $this->so->select_branch_list();
 
 			$j = 0;
-			while(is_array($branch_entries) && list(, $branch) = each($branch_entries))
+			while (is_array($branch_entries) && list(, $branch) = each($branch_entries))
 			{
 				$branch_list[$j]['id'] = $branch['id'];
 				$branch_list[$j]['name'] = $branch['name'];
 
-				for($i = 0; $i < count($selected); $i++)
+				for ($i = 0; $i < count($selected); $i++)
 				{
-					if($selected[$i]['branch_id'] == $branch['id'])
+					if ($selected[$i]['branch_id'] == $branch['id'])
 					{
 						$branch_list[$j]['selected'] = 'selected';
 					}
@@ -357,13 +357,13 @@
 			return $branch_list;
 		}
 
-		function select_key_location_list($selected = '')
+		function select_key_location_list( $selected = '' )
 		{
 			$key_location_entries = $this->so->select_key_location_list();
 			return $this->bocommon->select_list($selected, $key_location_entries);
 		}
 
-		function get_criteria_list($selected = '')
+		function get_criteria_list( $selected = '' )
 		{
 			$criteria = array
 				(
@@ -421,7 +421,7 @@
 			return $this->bocommon->select_list($selected, $criteria);
 		}
 
-		function get_criteria($id = '')
+		function get_criteria( $id = '' )
 		{
 			$criteria = array();
 			$criteria[1] = array
@@ -505,7 +505,7 @@
 				'back' => ''
 			);
 
-			if($id)
+			if ($id)
 			{
 				return array($criteria[$id]);
 			}
@@ -515,24 +515,16 @@
 			}
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 
 			$start_date = $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date = $this->bocommon->date_to_timestamp($data['end_date']);
 
-			if(isset($this->allrows) && $this->allrows)
+			if (isset($this->allrows) && $this->allrows)
 			{
 				$data['allrows'] = true;
 			}
-
-			/* $workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
-			  'wo_hour_cat_id' => $this->wo_hour_cat_id,
-			  'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
-			  'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
-			  'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id),
-			  'obligation' => $this->obligation, 'filter_year' => $this->filter_year) ); */
 			$workorder = $this->so->read(array(
 				'start' => $data['start'],
 				'query' => $data['query'],
@@ -551,6 +543,7 @@
 				'b_account' => $this->b_account,
 				'district_id' => $this->district_id,
 				'dry_run' => $data['dry_run'],
+				'results' => $data['results'],
 				'criteria' => $this->get_criteria($this->criteria_id),
 				'obligation' => $this->obligation,
 				'filter_year' => $this->filter_year
@@ -565,7 +558,7 @@
 
 			$column_list = $this->get_column_list();
 
-			foreach($custom_cols as $col_id)
+			foreach ($custom_cols as $col_id)
 			{
 				$this->uicols['input_type'][] = 'text';
 				$this->uicols['name'][] = $col_id;
@@ -577,7 +570,7 @@
 				$this->uicols['sortable'][] = $column_list[$col_id]['sortable'];
 			}
 
-			foreach($workorder as &$entry)
+			foreach ($workorder as &$entry)
 			{
 				$entry['tender_delay'] = phpgwapi_datetime::get_working_days($entry['tender_deadline'], $entry['tender_received']);
 				$entry['end_date_delay'] = phpgwapi_datetime::get_working_days($entry['end_date'], $entry['inspection_on_completion']);
@@ -594,9 +587,9 @@
 			return $workorder;
 		}
 
-		function read_single($workorder_id)
+		function read_single( $workorder_id )
 		{
-			if(!$workorder_id)
+			if (!$workorder_id)
 			{
 				return array();
 			}
@@ -615,18 +608,18 @@
 			$workorder['tender_received'] = $GLOBALS['phpgw']->common->show_date($workorder['tender_received'], $dateformat);
 			$workorder['inspection_on_completion'] = $GLOBALS['phpgw']->common->show_date($workorder['inspection_on_completion'], $dateformat);
 
-			if(isset($workorder['vendor_id']) && $workorder['vendor_id'])
+			if (isset($workorder['vendor_id']) && $workorder['vendor_id'])
 			{
 				$custom = createObject('property.custom_fields');
 				$vendor['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 				$vendor = $contacts->read_single(array('id' => $workorder['vendor_id']), $vendor);
-				foreach($vendor['attributes'] as $attribute)
+				foreach ($vendor['attributes'] as $attribute)
 				{
-					if($attribute['name'] == 'org_name')
+					if ($attribute['name'] == 'org_name')
 					{
 						$workorder['vendor_name'] = $attribute['value'];
 					}
-					if($attribute['name'] == 'email')
+					if ($attribute['name'] == 'email')
 					{
 						$workorder['vendor_email'] = $attribute['value'];
 					}
@@ -651,7 +644,7 @@
 			$vfs->override_acl = 0;
 
 			$j = count($workorder['files']);
-			for($i = 0; $i < $j; $i++)
+			for ($i = 0; $i < $j; $i++)
 			{
 				$workorder['files'][$i]['file_name'] = urlencode($workorder['files'][$i]['name']);
 			}
@@ -659,13 +652,13 @@
 			$workorder['origin'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
 			$workorder['target'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'target');
 
-			if($workorder['location_code'])
+			if ($workorder['location_code'])
 			{
 				$solocation = CreateObject('property.solocation', $this->bocommon);
 				$workorder['location_data'] = $solocation->read_single($workorder['location_code']);
 			}
 
-			if($workorder['tenant_id'] > 0)
+			if ($workorder['tenant_id'] > 0)
 			{
 				$tenant_data = $this->bocommon->read_single_tenant($workorder['tenant_id']);
 				$workorder['location_data']['tenant_id'] = $workorder['tenant_id'];
@@ -681,7 +674,7 @@
 				unset($workorder['location_data']['first_name']);
 			}
 
-			if($workorder['p_num'])
+			if ($workorder['p_num'])
 			{
 				$soadmin_entity = CreateObject('property.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($workorder['p_entity_id'], $workorder['p_cat_id']);
@@ -705,26 +698,26 @@
 			return $workorder;
 		}
 
-		function read_record_history($id)
+		function read_record_history( $id )
 		{
 			$historylog = CreateObject('property.historylog', 'workorder');
 			$history_array = $historylog->return_array(array('O'), array(), '', '', $id);
 
 			$_status_list = $this->so->select_status_list();
 			$status_text = array();
-			foreach($_status_list as $_status_entry)
+			foreach ($_status_list as $_status_entry)
 			{
 				$status_text[$_status_entry['id']] = $_status_entry['name'];
 			}
 
 			$i = 0;
-			foreach($history_array as $value)
+			foreach ($history_array as $value)
 			{
 
 				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user'] = $value['owner'];
 
-				switch($value['status'])
+				switch ($value['status'])
 				{
 					case 'R': $type = lang('Re-opened');
 						break;
@@ -778,11 +771,11 @@
 					default:
 				}
 
-				if($value['new_value'] == 'O')
+				if ($value['new_value'] == 'O')
 				{
 					$value['new_value'] = lang('Opened');
 				}
-				if($value['new_value'] == 'X')
+				if ($value['new_value'] == 'X')
 				{
 					$value['new_value'] = lang('Closed');
 				}
@@ -790,9 +783,9 @@
 				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
-				if($value['status'] == 'A')
+				if ($value['status'] == 'A')
 				{
-					if(!$value['new_value'])
+					if (!$value['new_value'])
 					{
 						$record_history[$i]['value_new_value'] = lang('None');
 					}
@@ -800,7 +793,7 @@
 					{
 						$record_history[$i]['value_new_value'] = $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
-					if(!$value['old_value'])
+					if (!$value['old_value'])
 					{
 						$record_history[$i]['value_old_value'] = '';
 					}
@@ -809,10 +802,10 @@
 						$record_history[$i]['value_old_value'] = $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
 					}
 				}
-				else if($value['status'] == 'C' || $value['status'] == 'CO')
+				else if ($value['status'] == 'C' || $value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value'] = $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
-					if(!$value['old_value'])
+					if (!$value['old_value'])
 					{
 						$record_history[$i]['value_old_value'] = '';
 					}
@@ -821,27 +814,27 @@
 						$record_history[$i]['value_old_value'] = $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
 					}
 				}
-				else if($value['status'] == 'T' || $value['status'] == 'TO')
+				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category = $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value'] = $category[0]['name'];
-					if($value['old_value'])
+					if ($value['old_value'])
 					{
 						$category = $this->cats->return_single($value['old_value']);
 						$record_history[$i]['value_old_value'] = $category[0]['name'];
 					}
 				}
-				else if($value['status'] == 'S' || $value['status'] == 'SO' || $value['status'] == 'R' || $value['status'] == 'X')
+				else if ($value['status'] == 'S' || $value['status'] == 'SO' || $value['status'] == 'R' || $value['status'] == 'X')
 				{
 					$record_history[$i]['value_new_value'] = $status_text[$value['new_value']];
 					$record_history[$i]['value_old_value'] = $status_text[$value['old_value']];
 				}
-				else if($value['status'] != 'O' && $value['new_value'])
+				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value'] = $value['new_value'];
 					$record_history[$i]['value_old_value'] = $value['old_value'];
 				}
-				else if($value['status'] != 'B' && $value['new_value'])
+				else if ($value['status'] != 'B' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value'] = number_format($value['new_value'], 0, ',', ' ');
 					$record_history[$i]['value_old_value'] = number_format($value['old_value'], 0, ',', ' ');
@@ -857,7 +850,7 @@
 			return $record_history;
 		}
 
-		function save($workorder, $action = '')
+		function save( $workorder, $action = '' )
 		{
 			$workorder['start_date'] = $this->bocommon->date_to_timestamp($workorder['start_date']);
 			$workorder['end_date'] = $this->bocommon->date_to_timestamp($workorder['end_date']);
@@ -866,7 +859,7 @@
 			$workorder['inspection_on_completion'] = $this->bocommon->date_to_timestamp($workorder['inspection_on_completion']);
 			$workorder['location_code'] = isset($workorder['location']) && $workorder['location'] ? implode('-', $workorder['location']) : '';
 
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
 				$receipt = $this->so->edit($workorder);
 			}
@@ -876,9 +869,9 @@
 				$workorder['id'] = $receipt['id'];
 			}
 
-			if(isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
+			if (isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
 			{
-				if(!$_tenant_id = $workorder['extra']['tenant_id'])
+				if (!$_tenant_id = $workorder['extra']['tenant_id'])
 				{
 					$project = execMethod('property.soproject.read_single', $workorder['project_id']);
 					$_tenant_id = $project['tenant_id'];
@@ -894,11 +887,11 @@
 
 				$claim = $boclaim->read(array('project_id' => $workorder['project_id']));
 				$target = array();
-				if($claim)
+				if ($claim)
 				{
 					$value_set['claim_id'] = $claim[0]['claim_id'];
 					$claim_old = $boclaim->read_single($claim[0]['claim_id']);
-					if(isset($claim_old['workorder']) && $claim_old['workorder'])
+					if (isset($claim_old['workorder']) && $claim_old['workorder'])
 					{
 						$target = $claim_old['workorder'];
 					}
@@ -919,14 +912,14 @@
 					$value_set['remark'] = '';
 				}
 
-				if(!in_array($workorder['id'], $target))
+				if (!in_array($workorder['id'], $target))
 				{
 					$target[] = $workorder['id'];
 				}
 
 				$value_set['workorder'] = $target;
 
-				if(!$value_set['tenant_id'])
+				if (!$value_set['tenant_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('tenant is not defined, claim not issued'));
 				}
@@ -938,7 +931,7 @@
 					$receipt['message'] = array_merge($receipt['message'], $receipt_claim['message']);
 				}
 			}
-			if($workorder['id'])
+			if ($workorder['id'])
 			{
 				//temporary
 				execMethod('property.soXport.update_actual_cost_from_archive', array($workorder['id'] => true));
@@ -947,22 +940,22 @@
 			return $receipt;
 		}
 
-		function delete($workorder_id)
+		function delete( $workorder_id )
 		{
 			$this->so->delete($workorder_id);
 		}
 
-		public function get_user_list($selected = 0)
+		public function get_user_list( $selected = 0 )
 		{
 			$ser_list = $this->so->get_user_list();
-			foreach($ser_list as &$user)
+			foreach ($ser_list as &$user)
 			{
 				$user['selected'] = $user['id'] == $selected ? true : false;
 			}
 			return $ser_list;
 		}
 
-		public function get_budget($order_id)
+		public function get_budget( $order_id )
 		{
 			return $this->so->get_budget($order_id);
 		}
@@ -981,17 +974,17 @@
 		 * Check the consumption  on an order - and notify the coordinator
 		 * @param integer $order_id
 		 */
-		function notify_coordinator_on_consumption($order_id)
+		function notify_coordinator_on_consumption( $order_id )
 		{
 			$notify_coordinator = true;
-			if(!$notify_coordinator)
+			if (!$notify_coordinator)
 			{
 				return false;
 			}
 			$toarray = array();
 			$workorder = $this->so->read_single($order_id);
 
-			if(!$workorder['continuous'])
+			if (!$workorder['continuous'])
 			{
 				return false;
 			}
@@ -999,21 +992,21 @@
 			$project = ExecMethod('property.boproject.read_single_mini', $workorder['project_id']);
 			$coordinator = $project['coordinator'];
 			$prefs_coordinator = $this->bocommon->create_preferences('property', $coordinator);
-			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+			if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 			{
 				$toarray[] = $prefs_coordinator['email'];
 			}
 
-			if($toarray)
+			if ($toarray)
 			{
 				$budget_info = $this->so->get_order_budget_percent($order_id);
 
-				if($budget_info['percent'] < 90)
+				if ($budget_info['percent'] < 90)
 				{
 					return false;
 				}
 
-				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
 				{
 					$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$from_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
@@ -1082,7 +1075,7 @@
 				</table>
 HTML;
 
-				if(!is_object($GLOBALS['phpgw']->send))
+				if (!is_object($GLOBALS['phpgw']->send))
 				{
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 				}
@@ -1091,12 +1084,12 @@ HTML;
 				{
 					$ok = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, $cc, $bcc, $from_email, $from_name, 'html');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 				}
 
-				if($ok)
+				if ($ok)
 				{
 					$historylog = CreateObject('property.historylog', 'workorder');
 					$historylog->add('ON', $order_id, lang('%1 is notified', $to));

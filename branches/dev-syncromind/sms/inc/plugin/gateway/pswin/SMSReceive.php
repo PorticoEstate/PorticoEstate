@@ -11,7 +11,6 @@
 	* @category core
  	* @version $Id: SMSReceive.php 4237 2009-11-27 23:17:21Z sigurd $
 	*/
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -40,11 +39,13 @@
 	 */
 	class ReceiveSMSMessage
 	{
+
 		/**
 		 * @access public
 		 * @var IncomingSMSMessage
 		 */
 		public $m;
+
 	}
 	
 	/**
@@ -52,36 +53,43 @@
 	 */
 	class IncomingSMSMessage
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ReceiverNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SenderNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Text;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Network;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Address;
+
 		/**
 		 * @access public
 		 * @var GSMPosition
 		 */
 		public $Position;
+
 	}
 	
 	/**
@@ -89,56 +97,67 @@
 	 */
 	class GSMPosition
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Longitude;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Lattitude;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Radius;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $County;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Council;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $CouncilNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Place;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SubPlace;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ZipCode;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $City;
+
 	}
 	
 	/**
@@ -146,11 +165,13 @@
 	 */
 	class ReceiveSMSMessageResponse
 	{
+
 		/**
 		 * @access public
 		 * @var ReturnValue
 		 */
 		public $ReceiveSMSMessageResult;
+
 	}
 	
 	/**
@@ -158,21 +179,25 @@
 	 */
 	class ReturnValue
 	{
+
 		/**
 		 * @access public
 		 * @var sint
 		 */
 		public $Code;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Description;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Reference;
+
 	}
 	
 	/**
@@ -180,11 +205,13 @@
 	 */
 	class ReceiveDeliveryReport
 	{
+
 		/**
 		 * @access public
 		 * @var DeliveryReport
 		 */
 		public $dr;
+
 	}
 	
 	/**
@@ -192,26 +219,31 @@
 	 */
 	class DeliveryReport
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $State;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ReceiverNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $DeliveryTime;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Reference;
+
 	}
 	
 	/**
@@ -219,11 +251,13 @@
 	 */
 	class ReceiveDeliveryReportResponse
 	{
+
 		/**
 		 * @access public
 		 * @var ReturnValue
 		 */
 		public $ReceiveDeliveryReportResult;
+
 	}
 	
 	/**
@@ -231,11 +265,13 @@
 	 */
 	class ReceiveMMSMessage
 	{
+
 		/**
 		 * @access public
 		 * @var IncomingMMSMessage
 		 */
 		public $m;
+
 	}
 	
 	/**
@@ -243,41 +279,49 @@
 	 */
 	class IncomingMMSMessage
 	{
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $ReceiverNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $SenderNumber;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Subject;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Network;
+
 		/**
 		 * @access public
 		 * @var sstring
 		 */
 		public $Address;
+
 		/**
 		 * @access public
 		 * @var GSMPosition
 		 */
 		public $Position;
+
 		/**
 		 * @access public
 		 * @var sbase64Binary
 		 */
 		public $Data;
+
 	}
 	
 	/**
@@ -285,11 +329,13 @@
 	 */
 	class ReceiveMMSMessageResponse
 	{
+
 		/**
 		 * @access public
 		 * @var ReturnValue
 		 */
 		public $ReceiveMMSMessageResult;
+
 	}
 	
 	/**
@@ -298,6 +344,7 @@
 	 */
 	class SMSReceive extends SoapClient
 	{
+
 		/**
 		 * Default class map for wsdl=>php
 		 * @access private
@@ -322,11 +369,11 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl='', $options=array())
+		public function __construct( $wsdl = '', $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName)
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
 			{
-			    if(!isset($options['classmap'][$wsdlClassName]))
+				if (!isset($options['classmap'][$wsdlClassName]))
 			    {
 			        $options['classmap'][$wsdlClassName] = $phpClassName;
 			    }
@@ -341,18 +388,21 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
-			foreach ($arguments as $arg) {
+			foreach ($arguments as $arg)
+			{
 			    $type = gettype($arg);
-			    if ($type == "object") {
+				if ($type == "object")
+				{
 			        $type = get_class($arg);
 			    }
-			    $variables .= "(".$type.")";
+				$variables .= "(" . $type . ")";
 			}
-			if (!in_array($variables, $validParameters)) {
-			    throw new Exception("Invalid parameter types: ".str_replace(")(", ", ", $variables));
+			if (!in_array($variables, $validParameters))
+			{
+				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
 			return true;
 		}
@@ -366,7 +416,7 @@
 		 * @return ReceiveSMSMessageResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function ReceiveSMSMessage($mixed = null)
+		public function ReceiveSMSMessage( $mixed = null )
 		{
 			$validParameters = array(
 				"(ReceiveSMSMessage)",
@@ -376,14 +426,13 @@
 			$this->_checkArguments($args, $validParameters);
 			$result =  $this->__soapCall("ReceiveSMSMessage", $args);
 
-			echo("<H1>Dumping request headers:</H1></br>" .$this->__getLastRequestHeaders());
-			echo("</br><H1>Dumping request:</H1></br>".$this->__getLastRequest());
-			echo("</br><H1>Dumping response headers:</H1></br>"	.$this->__getLastResponseHeaders());
-			echo("</br><H1>Dumping response:</H1></br>".$this->__getLastResponse());
+			echo("<H1>Dumping request headers:</H1></br>" . $this->__getLastRequestHeaders());
+			echo("</br><H1>Dumping request:</H1></br>" . $this->__getLastRequest());
+			echo("</br><H1>Dumping response headers:</H1></br>" . $this->__getLastResponseHeaders());
+			echo("</br><H1>Dumping response:</H1></br>" . $this->__getLastResponse());
 
 			return $result;
 		}
-	
 	
 		/**
 		 * Service Call: ReceiveDeliveryReport
@@ -394,7 +443,7 @@
 		 * @return ReceiveDeliveryReportResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function ReceiveDeliveryReport($mixed = null)
+		public function ReceiveDeliveryReport( $mixed = null )
 		{
 			$validParameters = array(
 				"(ReceiveDeliveryReport)",
@@ -405,7 +454,6 @@
 			return $this->__soapCall("ReceiveDeliveryReport", $args);
 		}
 	
-	
 		/**
 		 * Service Call: ReceiveMMSMessage
 		 * Parameter options:
@@ -415,7 +463,7 @@
 		 * @return ReceiveMMSMessageResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function ReceiveMMSMessage($mixed = null)
+		public function ReceiveMMSMessage( $mixed = null )
 		{
 			$validParameters = array(
 				"(ReceiveMMSMessage)",

@@ -20,7 +20,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -59,7 +59,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'notifications':
 					$filters		 = array('contract_id' => $contract_id);
@@ -76,9 +76,9 @@
 
 			//Serialize the contracts found
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
 					$rows[] = $result->serialize();
 				}
@@ -98,7 +98,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			$value['ajax']		 = array();
 			$value['actions']	 = array();
@@ -107,10 +107,10 @@
 			$type		 = $params[0];
 			$editable	 = $params[1];
 
-			switch($type)
+			switch ($type)
 			{
 				case 'notifications':
-					if($editable)
+					if ($editable)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'rental.uinotification.delete_notification',
@@ -151,14 +151,14 @@
 
 			$contract	 = rental_socontract::get_instance()->get_single($contract_id);
 			$message	 = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				//rental_sonotification::get_instance()->delete_notification($notification_id);
 				//return true;
-				foreach($list_notification_id as $notification_id)
+				foreach ($list_notification_id as $notification_id)
 				{
 					$result = rental_sonotification::get_instance()->delete_notification($notification_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'notification ' . $notification_id . ' ' . lang('has been removed'));
 					}
@@ -182,10 +182,10 @@
 			//$notification_id = (int)phpgw::get_var('id');
 			//$result = rental_soworkbench_notification::get_instance()->dismiss_notification($notification_id,strtotime('now'));
 			$message				 = array();
-			foreach($list_notification_id as $notification_id)
+			foreach ($list_notification_id as $notification_id)
 			{
 				$result = rental_soworkbench_notification::get_instance()->dismiss_notification($notification_id, strtotime('now'));
-				if($result)
+				if ($result)
 				{
 					$message['message'][] = array('msg' => 'notification ' . $notification_id . ' ' . lang('has been removed'));
 				}
@@ -215,13 +215,13 @@
 			$contract				 = rental_socontract::get_instance()->get_single($list_contract_id[0]);
 
 			$message = array();
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if ($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				//$result = rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
-				foreach($list_notification_id as $notification_id)
+				foreach ($list_notification_id as $notification_id)
 				{
 					$result = rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
-					if($result)
+					if ($result)
 					{
 						$message['message'][] = array('msg' => 'notification ' . $notification_id . ' ' . lang('has been removed'));
 					}

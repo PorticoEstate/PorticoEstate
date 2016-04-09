@@ -45,25 +45,25 @@
 	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
 	$status_list_project = execMethod('property.soproject.select_status_list');
 
-	if($status_list_tts)
+	if ($status_list_tts)
 	{
-		foreach($status_list_tts as $entry)
+		foreach ($status_list_tts as $entry)
 		{
 			$_status_tts[$entry['id']] = $entry['name'];
 		}
 	}
 
-	if($status_list_workorder)
+	if ($status_list_workorder)
 	{
-		foreach($status_list_workorder as $entry)
+		foreach ($status_list_workorder as $entry)
 		{
 			$_status_workorder[$entry['id']] = $entry['name'];
 		}
 	}
 
-	if($status_list_project)
+	if ($status_list_project)
 	{
-		foreach($status_list_project as $entry)
+		foreach ($status_list_project as $entry)
 		{
 			$_status_project[$entry['id']] = $entry['name'];
 		}
@@ -117,7 +117,7 @@
 
 	$acc = & $GLOBALS['phpgw']->accounts;
 	$group_list = $acc->get_list('groups');
-	foreach($group_list as $entry)
+	foreach ($group_list as $entry)
 	{
 		$_groups[$entry->id] = $entry->lid;
 	}
@@ -125,9 +125,9 @@
 
 	$account_list = $acc->get_list('accounts', -1, 'ASC', 'account_lastname');
 
-	foreach($account_list as $entry)
+	foreach ($account_list as $entry)
 	{
-		if($entry->enabled == true)
+		if ($entry->enabled == true)
 		{
 			$_accounts[$entry->id] = $entry->__toString();
 		}
@@ -136,9 +136,9 @@
 
 	$priority_list_tts = execMethod('property.botts.get_priority_list');
 
-	if($priority_list_tts)
+	if ($priority_list_tts)
 	{
-		foreach($priority_list_tts as $entry)
+		foreach ($priority_list_tts as $entry)
 		{
 			$_priority_tts[$entry['id']] = $entry['name'];
 		}
@@ -151,9 +151,9 @@
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_tts[$entry['cat_id']] = $entry['name'];
 		}
@@ -175,7 +175,7 @@
 	$degree_comment[1] = ' - ' . lang('Minor');
 	$degree_comment[2] = ' - ' . lang('Medium');
 	$degree_comment[3] = ' - ' . lang('Serious');
-	for($i = 0; $i <= 3; $i++)
+	for ($i = 0; $i <= 3; $i++)
 	{
 		$degree[$i] = $i . $degree_comment[$i];
 	}
@@ -218,17 +218,17 @@
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_project[$entry['cat_id']] = $entry['name'];
 		}
 	}
 
-	if($district_list)
+	if ($district_list)
 	{
-		foreach($district_list as $entry)
+		foreach ($district_list as $entry)
 		{
 			$_districts[$entry['id']] = $entry['name'];
 		}
@@ -267,7 +267,7 @@
 	$ecodimb->get_location_info('dimb', false);
 	$values_dimb = $ecodimb->read(array('sort' => 'ASC', 'order' => 'id', 'allrows' => true));
 
-	foreach($values_dimb as $entry)
+	foreach ($values_dimb as $entry)
 	{
 		$_dimb[$entry['id']] = "{$entry['id']} - {$entry['descr']}";
 	}
@@ -293,9 +293,9 @@
 	$cat_data = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list = $cat_data['cat_list'];
 
-	if(is_array($cat_list))
+	if (is_array($cat_list))
 	{
-		foreach($cat_list as $entry)
+		foreach ($cat_list as $entry)
 		{
 			$_categories_vendor[$entry['cat_id']] = $entry['name'];
 		}

@@ -49,7 +49,7 @@
 			$this->like = $this->db->like;
 			$this->left_join = " LEFT JOIN ";
 
-			if(isset($this->db->adodb) && $this->db->adodb)
+			if (isset($this->db->adodb) && $this->db->adodb)
 			{
 				$this->db_boei = CreateObject('phpgwapi.db', false, $GLOBALS['external_db']['boei']['db_type']);
 				$this->db_boei->Host = $GLOBALS['external_db']['boei']['db_host'];
@@ -103,7 +103,7 @@
 			$this->receipt['message'][] = array('msg' => $msg);
 		}
 
-		function cron_log($receipt = '')
+		function cron_log( $receipt = '' )
 		{
 
 			$insert_values = array(
@@ -148,7 +148,7 @@
 //_debug_array($metadata);
 			$metadata = $this->db->metadata('boei_eier');
 //_debug_array($metadata);
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_eier
@@ -169,7 +169,7 @@ SQL;
 			. ' VALUES(?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -201,7 +201,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_gateadresse');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_gateadresse
@@ -222,7 +222,7 @@ SQL;
 			. ' VALUES(?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -254,7 +254,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_objekt');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_objekt
@@ -279,7 +279,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -331,7 +331,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_bygg');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_bygg
@@ -354,7 +354,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -396,7 +396,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_seksjon');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_seksjon
@@ -418,7 +418,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -455,7 +455,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_leieobjekt');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_leieobjekt
@@ -491,7 +491,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -593,7 +593,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_leietaker');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_leietaker
@@ -620,7 +620,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -681,7 +681,7 @@ SQL;
 			$metadata = $this->db->metadata('boei_reskontro');
 //_debug_array($metadata);
 //die();
-			if(!$metadata)
+			if (!$metadata)
 			{
 				$sql_table = <<<SQL
 				CREATE TABLE boei_reskontro
@@ -704,7 +704,7 @@ SQL;
 			. ' VALUES(?, ?, ?, ?, ?)';
 			$valueset = array();
 
-			while($this->db_boei->next_record())
+			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
@@ -746,7 +746,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$owners = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$category = $this->db->f('category');
 				$owners[] = array
@@ -757,7 +757,7 @@ SQL;
 			}
 			$this->db->transaction_begin();
 
-			foreach($owners as $owner)
+			foreach ($owners as $owner)
 			{
 				$sql2 = "UPDATE fm_owner set category = '{$owner['category']}' WHERE id = '{$owner['id']}'";
 
@@ -772,7 +772,7 @@ SQL;
 			. " WHERE (fm_owner.id IS NULL)";
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$category = $this->db->f('category');
 
@@ -787,7 +787,7 @@ SQL;
 				);
 			}
 
-			foreach($owners as $owner)
+			foreach ($owners as $owner)
 			{
 
 				$sql2 = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
@@ -814,7 +814,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$gater = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$gater[] = array
 					(
@@ -824,7 +824,7 @@ SQL;
 			}
 			$this->db->transaction_begin();
 
-			foreach($gater as $gate)
+			foreach ($gater as $gate)
 			{
 				$sql2 = "INSERT INTO fm_streetaddress (id,descr)"
 				. " VALUES ({$gate['id']}, '{$gate['descr']}')";
@@ -843,7 +843,7 @@ SQL;
 			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
 
 			$gate = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$gate[] = array
 					(
@@ -852,7 +852,7 @@ SQL;
 				);
 			}
 
-			foreach($gate as $gate_info)
+			foreach ($gate as $gate_info)
 			{
 				$sql_utf = "UPDATE fm_streetaddress SET descr = '{$gate_info['descr']}' WHERE id = " . (int)$gate_info['id'];
 				$this->db->query($sql_utf, __LINE__, __FILE__);
@@ -873,7 +873,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$objekt_latin = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$objekt_latin[] = array
 					(
@@ -889,7 +889,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			foreach($objekt_latin as $objekt)
+			foreach ($objekt_latin as $objekt)
 			{
 
 				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
@@ -917,7 +917,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$bygg_latin = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$bygg_latin[] = array
 					(
@@ -931,7 +931,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			foreach($bygg_latin as $bygg)
+			foreach ($bygg_latin as $bygg)
 			{
 
 				$sql2 = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
@@ -962,7 +962,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$seksjon_latin = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$seksjon_latin[] = array(
 					'location_code' => $this->db->f('location_code'),
@@ -976,7 +976,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			foreach($seksjon_latin as $seksjon)
+			foreach ($seksjon_latin as $seksjon)
 			{
 				$sql2 = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, category) "
 				. "VALUES (" . $this->db->validate_insert($seksjon) . ")";
@@ -1010,7 +1010,7 @@ SQL;
 
 			$leieobjekt_latin = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$leieobjekt_latin[] = array
 					(
@@ -1036,7 +1036,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			foreach($leieobjekt_latin as $leieobjekt)
+			foreach ($leieobjekt_latin as $leieobjekt)
 			{
 				$sql2 = "INSERT INTO fm_location4 (location_code, loc1, loc4, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
@@ -1067,7 +1067,7 @@ SQL;
 
 			$leietakere = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$leietakere[] = array
 					(
@@ -1085,7 +1085,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			foreach($leietakere as $leietaker)
+			foreach ($leietakere as $leietaker)
 			{
 				$sql2 = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift, obskode, entry_date,owner_id)"
 				. "VALUES (" . $this->db->validate_insert($leietaker) . ")";
@@ -1110,7 +1110,7 @@ SQL;
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = "UPDATE fm_tenant SET"
 				. " first_name = '" . $this->db->f('fornavn') . "',"
@@ -1137,7 +1137,7 @@ SQL;
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$obskoder = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$obskoder[] = array
 					(
@@ -1145,7 +1145,7 @@ SQL;
 					'obskode' => $this->db->f('obskode')
 				);
 			}
-			foreach($obskoder as $entry)
+			foreach ($obskoder as $entry)
 			{
 				$sql2 = "UPDATE fm_location4 SET obskode = '{$entry['obskode']}'"
 				. " WHERE tenant_id = {$entry['tenant_id']}";
@@ -1170,7 +1170,7 @@ SQL;
 
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = " UPDATE  fm_location4 SET "
 				. " tenant_id = '" . $this->db->f('leietaker_id') . "',"
@@ -1205,7 +1205,7 @@ SQL;
 			. " OR  boei_objekt.tjenestested != fm_location1.kostra_id";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = " UPDATE fm_location1 SET "
 				. " loc1_name = '" . $this->db->f('navn') . "',"
@@ -1227,7 +1227,7 @@ SQL;
 			//	$this->db->transaction_begin();
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = " UPDATE fm_location1 SET "
 				. " sum_boa = '" . $this->db->f('sum_boa') . "',"
@@ -1256,7 +1256,7 @@ SQL;
 			//	$this->db->transaction_begin();
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = " UPDATE fm_location2 SET "
 				. " loc2_name = '" . $this->db->f('byggnavn') . "',"
@@ -1290,7 +1290,7 @@ SQL;
 
 			//	$this->db->transaction_begin();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = "UPDATE fm_location3 SET "
 				. " loc3_name = '" . $this->db->f('beskrivelse') . "',"
@@ -1320,7 +1320,7 @@ SQL;
 
 			//		$this->db->transaction_begin();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = "UPDATE fm_tenant SET "
 				. " oppsagtdato = '" . $this->db->f('oppsagtdato') . "'"
@@ -1368,12 +1368,12 @@ SQL;
 
 			$this->db->transaction_begin();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$leietaker[] = (int)$this->db->f('id');
 			}
 
-			for($i = 0; $i < count($leietaker); $i++)
+			for ($i = 0; $i < count($leietaker); $i++)
 			{
 				$sql = "SELECT namssakstatusokonomi_id, namssakstatusdrift_id"
 				. " FROM  boei_leietaker"
@@ -1389,7 +1389,7 @@ SQL;
 				);
 			}
 
-			for($i = 0; $i < count($leietaker_oppdatert); $i++)
+			for ($i = 0; $i < count($leietaker_oppdatert); $i++)
 			{
 				$sql = " UPDATE fm_tenant SET "
 				. " status_eco = '" . $leietaker_oppdatert[$i]['status_eco'] . "',"

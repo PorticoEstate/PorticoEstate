@@ -7,11 +7,12 @@ var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uievent.upd
 
 function onSave()
 {
-	var api =$( '#datatable-container' ).dataTable().api();
-	var selected = api.rows( { selected: true } ).data();
+	var api = $('#datatable-container').dataTable().api();
+	var selected = api.rows({selected: true}).data();
 	var numSelected = selected.length;
 
-	if (numSelected == '0') {
+	if (numSelected == '0')
+	{
 		alert('None selected');
 		return false;
 	}
@@ -30,19 +31,22 @@ function onSave()
 		dataType: 'json',
 		url: "" + sUrl_agreement + "&phpgw_return_as=json",
 		data: {ids: ids, mckec: mckec},
-		success: function (result) {
+		success: function (result)
+		{
 			document.getElementById("message").innerHTML = '';
 
 			if (typeof (result.message) !== 'undefined')
 			{
-				$.each(result.message, function (k, v) {
+				$.each(result.message, function (k, v)
+				{
 					document.getElementById("message").innerHTML += v.msg + "<br/>";
 				});
 			}
 
 			if (typeof (result.error) !== 'undefined')
 			{
-				$.each(result.error, function (k, v) {
+				$.each(result.error, function (k, v)
+				{
 					document.getElementById("message").innerHTML += v.msg + "<br/>";
 				});
 			}

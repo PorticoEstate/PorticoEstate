@@ -50,12 +50,12 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->solocation = CreateObject('property.solocation');
 			$this->so = CreateObject('property.sogab');
 			$this->gab_insert_level = $this->so->gab_insert_level;
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -69,7 +69,7 @@
 			$cat_id = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -78,35 +78,35 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
+			if (isset($query))
 			{
 				$this->query = $query;
 			}
-			if(!empty($filter))
+			if (!empty($filter))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id))
+			if (isset($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if(isset($allrows))
+			if (isset($allrows))
 			{
 				$this->allrows = $allrows;
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'gab', $data);
 			}
@@ -127,9 +127,9 @@
 			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
-		function read($data)
+		function read( $data )
 		{
-			if($allrows)
+			if ($allrows)
 			{
 				$this->allrows = true;
 			}
@@ -180,7 +180,7 @@
 		}
 
 		//nguerra@ccfirst.com $allrows - variable to display all records
-		function read_detail($data = '', $allrows = 0)
+		function read_detail( $data = '', $allrows = 0 )
 		{
 			$gab = $this->so->read_detail(array(
 				'start' => $data['start'],
@@ -197,11 +197,11 @@
 			$cols_extra = $this->so->cols_extra;
 
 
-			for($i = 0; $i < count($gab); $i++)
+			for ($i = 0; $i < count($gab); $i++)
 			{
 				$location_data = $this->solocation->read_single($gab[$i]['location_code']);
 
-				for($j = 0; $j < count($cols_extra); $j++)
+				for ($j = 0; $j < count($cols_extra); $j++)
 				{
 					$gab[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 				}
@@ -210,11 +210,11 @@
 			return $gab;
 		}
 
-		function read_single($gab_id = '', $location_code = '')
+		function read_single( $gab_id = '', $location_code = '' )
 		{
 			$gab = $this->so->read_single($gab_id, $location_code);
 
-			if($gab['location_code'])
+			if ($gab['location_code'])
 			{
 				$gab['location_data'] = $this->solocation->read_single($gab['location_code']);
 			}
@@ -222,13 +222,13 @@
 			return $gab;
 		}
 
-		function save($values)
+		function save( $values )
 		{
-			if(!$values['location_code'])
+			if (!$values['location_code'])
 			{
-				while(is_array($values['location']) && list(, $value) = each($values['location']))
+				while (is_array($values['location']) && list(, $value) = each($values['location']))
 				{
-					if($value)
+					if ($value)
 					{
 						$location[] = $value;
 					}
@@ -237,7 +237,7 @@
 				$values['location_code'] = implode("-", $location);
 			}
 
-			if($values['action'] == 'edit')
+			if ($values['action'] == 'edit')
 			{
 				$receipt = $this->so->edit($values);
 			}
@@ -250,7 +250,7 @@
 			return $receipt;
 		}
 
-		function delete($gab_id = '', $location_code = '')
+		function delete( $gab_id = '', $location_code = '' )
 		{
 			$this->so->delete($gab_id, $location_code);
 		}

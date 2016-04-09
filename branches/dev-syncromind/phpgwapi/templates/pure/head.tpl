@@ -1,8 +1,9 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <!-- BEGIN head -->
 <html>
 	<head>
 		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
 		<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
 		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
@@ -14,24 +15,6 @@
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
 		{menu_stylesheet_widescreen}
-
-		
-		<style>
-			.priority1
-			{
-				background-color: #da7a7a !important;
-			}
-
-			.priority2
-			{
-				background-color: #dababa !important;
-			}
-
-			.priority3
-			{
-				background-color: #dadada !important;
-			}
-		</style>
 
 		<script type="text/javascript">
 		<!--

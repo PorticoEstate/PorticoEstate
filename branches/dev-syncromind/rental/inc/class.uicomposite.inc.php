@@ -54,12 +54,12 @@
 				'list'	 => $search_option
 			);
 
-			if(isset($this->config->config_data['contract_furnished_status']) && $this->config->config_data['contract_furnished_status'])
+			if (isset($this->config->config_data['contract_furnished_status']) && $this->config->config_data['contract_furnished_status'])
 			{
 				$furnish_types_arr	 = rental_composite::get_furnish_types();
 				$furnish_types		 = array();
 				array_unshift($furnish_types, array('id' => '4', 'name' => lang('Alle')));
-				foreach($furnish_types_arr as $id => $title)
+				foreach ($furnish_types_arr as $id => $title)
 				{
 					$furnish_types[] = array('id' => $id, 'name' => $title);
 				}
@@ -75,7 +75,7 @@
 			$districts_arr	 = execMethod('property.sogeneric.get_list', array('type' => 'district'));
 			$districts		 = array();
 			array_unshift($districts, array('id' => '', 'name' => lang('select')));
-			foreach($districts_arr as $district)
+			foreach ($districts_arr as $district)
 			{
 				$districts[] = array('id' => $district['id'], 'name' => $district['name']);
 			}
@@ -120,7 +120,7 @@
 
 		public function query()
 		{
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -152,7 +152,7 @@
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
 
-			if($export)
+			if ($export)
 			{
 				$num_of_objects = null;
 			}
@@ -160,7 +160,7 @@
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
 
-			switch($query_type)
+			switch ($query_type)
 			{
 				case 'available_composites': // ... get all vacant composites
 					$filters		 = array('is_vacant' => 'vacant');
@@ -205,11 +205,11 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result)
+			foreach ($result_objects as $result)
 			{
-				if(isset($result))
+				if (isset($result))
 				{
-					if(!$result->is_active())
+					if (!$result->is_active())
 					{
 						$result->set_status('Ikke i drift');
 					}
@@ -269,7 +269,7 @@
 			  )
 			  );
 			  } */
-			if($export)
+			if ($export)
 			{
 				return $rows;
 			}
@@ -288,7 +288,7 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		public function add_actions( &$value, $key, $params )
 		{
 			//Defining new columns
 			$value['ajax']		 = array();
@@ -302,14 +302,14 @@
 			$create_types	 = $params[3];
 
 			// Depending on the type of query: set an ajax flag and define the action and label for each row
-			switch($type)
+			switch ($type)
 			{
 				case 'included_composites':
 					$value['ajax'][]	 = false;
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view',
 						'id'		 => $value['id'])));
 					$value['labels'][]	 = lang('show');
-					if($editable == true)
+					if ($editable == true)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'rental.uicontract.remove_composite',
@@ -332,7 +332,7 @@
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'property.uilocation.view',
 						'location_code'	 => $value['location_code'])));
 					$value['labels'][]	 = lang('show');
-					if($editable == true)
+					if ($editable == true)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'rental.uicomposite.remove_unit',
@@ -345,7 +345,7 @@
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'property.uilocation.view',
 						'location_code'	 => $value['location_code'])));
 					$value['labels'][]	 = lang('show');
-					if($editable == true)
+					if ($editable == true)
 					{
 						$value['ajax'][]	 = true;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'	 => 'rental.uicomposite.add_unit',
@@ -358,7 +358,7 @@
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view',
 						'id'		 => $value['id'])));
 					$value['labels'][]	 = lang('show');
-					if($editable == true)
+					if ($editable == true)
 					{
 						$value['ajax'][]					 = false;
 						$value['actions']['edit_contract']	 = html_entity_decode(self::link(array(
@@ -375,7 +375,7 @@
 					$value['actions'][]	 = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit',
 						'id'		 => $value['id'])));
 					$value['labels'][]	 = lang('edit');
-					foreach($create_types as $create_type)
+					foreach ($create_types as $create_type)
 					{
 						$value['ajax'][]	 = false;
 						$value['actions'][]	 = html_entity_decode(self::link(array('menuaction'		 => 'rental.uicontract.add_from_composite',
@@ -390,7 +390,7 @@
 		 */
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -456,14 +456,14 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
 			$uicols = rental_socomposite::get_instance()->get_uicols();
 
-			for($k = 0; $k < count($uicols['name']); $k++)
+			for ($k = 0; $k < count($uicols['name']); $k++)
 			{
 				$params = array(
 					'key'		 => $uicols['name'][$k],
@@ -474,12 +474,12 @@
 
 				array_push($data['datatable']['field'], $params);
 			}
-			if(!empty($this->config->config_data['contract_future_info']))
+			if (!empty($this->config->config_data['contract_future_info']))
 			{
 				array_push($data['datatable']['field'], array("key"		 => "contracts", "label"		 => lang('contract_future_info'),
 					"sortable"	 => false, "hidden"	 => false));
 			}
-			if(!empty($this->config->config_data['contract_furnished_status']))
+			if (!empty($this->config->config_data['contract_furnished_status']))
 			{
 				array_push($data['datatable']['field'], array("key"		 => "furnished_status",
 					"label"		 => lang('furnish_type'),
@@ -529,11 +529,11 @@
 			/* $config	= CreateObject('phpgwapi.config','rental');
 			  $config->read(); */
 			$valid_contract_types	 = array();
-			if(isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
+			if (isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
 			{
-				foreach($this->config->config_data['contract_types'] as $_key => $_value)
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
 				{
-					if($_value)
+					if ($_value)
 					{
 						$valid_contract_types[] = $_value;
 					}
@@ -541,17 +541,17 @@
 			}
 
 			$create_types = array();
-			foreach($contract_types as $id => $label)
+			foreach ($contract_types as $id => $label)
 			{
-				if($valid_contract_types && !in_array($id, $valid_contract_types))
+				if ($valid_contract_types && !in_array($id, $valid_contract_types))
 				{
 					continue;
 				}
 
 				$names = $this->locations->get_name($id);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					if($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
 					{
 						// adding allowed contract_types for context menu creation
 						$create_types[] = array($id, $label);
@@ -559,7 +559,7 @@
 				}
 			}
 
-			foreach($create_types as $create_type)
+			foreach ($create_types as $create_type)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -594,7 +594,7 @@
 		{
 			$composite_id = (int)phpgw::get_var('id');
 
-			if(isset($composite_id) && $composite_id > 0)
+			if (isset($composite_id) && $composite_id > 0)
 			{
 				$composite = rental_socomposite::get_instance()->get_single($composite_id);
 			}
@@ -603,7 +603,7 @@
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('invalid_request'));
 			}
 
-			if(isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
+			if (isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
 			{
 				$this->edit(array(), $mode = 'view');
 			}
@@ -617,21 +617,21 @@
 		 * Public method. Called when user wants to edit a composite.
 		 * @param HTTP::id	the composite ID
 		 */
-		public function edit($values = array(), $mode = 'edit')
+		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
 			$composite_id = (int)phpgw::get_var('id');
 
-			if($mode == 'edit')
+			if ($mode == 'edit')
 			{
-				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+				if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 				{
 					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 				}
 			}
 
-			if(isset($composite_id) && $composite_id > 0)
+			if (isset($composite_id) && $composite_id > 0)
 			{
 				$composite = rental_socomposite::get_instance()->get_single($composite_id);
 			}
@@ -644,7 +644,7 @@
 			$tabs['details'] = array('label' => lang('Details'), 'link' => '#details');
 			$active_tab		 = 'details';
 
-			if($composite_id)
+			if ($composite_id)
 			{
 				$tabs['units']		 = array('label' => lang('Units'), 'link' => '#units');
 				$tabs['contracts']	 = array('label' => lang('Contracts'), 'link' => '#contracts');
@@ -660,7 +660,7 @@
 								'source' => 'location_code'))))
 				);
 
-				if($mode == 'edit')
+				if ($mode == 'edit')
 				{
 					$tabletools1[] = array
 						(
@@ -703,7 +703,7 @@
 					)
 				);
 
-				if($mode == 'edit')
+				if ($mode == 'edit')
 				{
 					$tabletools2[] = array
 						(
@@ -839,7 +839,7 @@
 					)
 				);
 
-				if($mode == 'edit')
+				if ($mode == 'edit')
 				{
 					$search_options[]	 = array('id'		 => 'objno_name_address', 'name'		 => lang('objno_name_address'),
 						'selected'	 => 1);
@@ -876,7 +876,7 @@
 				$fields_of_responsibility_options[]	 = array('id'		 => 'all', 'name'		 => lang('all'),
 					'selected'	 => 0);
 				$types								 = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($types as $id => $label)
+				foreach ($types as $id => $label)
 				{
 					$fields_of_responsibility_options[] = array('id'		 => $id, 'name'		 => lang($label),
 						'selected'	 => 0);
@@ -897,10 +897,10 @@
 			$cur_standard_id			 = $composite->get_standard_id();
 			$composite_standard_arr		 = $composite->get_standards($cur_standard_id);
 			$composite_standard_options	 = array();
-			foreach($composite_standard_arr as $composite_standard)
+			foreach ($composite_standard_arr as $composite_standard)
 			{
 				$selected = ($composite_standard['selected']) ? 1 : 0;
-				if($selected)
+				if ($selected)
 				{
 					$composite_standard_name = $composite_standard['name'];
 				}
@@ -912,10 +912,10 @@
 			$furnish_types_arr		 = $composite->get_furnish_types();
 			$cur_furnish_type_id	 = $composite->get_furnish_type_id();
 			$furnish_types_options	 = array();
-			foreach($furnish_types_arr as $id => $title)
+			foreach ($furnish_types_arr as $id => $title)
 			{
 				$selected = ($cur_furnish_type_id == $id) ? 1 : 0;
-				if($selected)
+				if ($selected)
 				{
 					$furnish_type_name = $title;
 				}
@@ -973,14 +973,14 @@ JS;
 
 		public function save()
 		{
-			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_edit'));
 			}
 
 			$composite_id = (int)phpgw::get_var('id');
 
-			if($composite_id)
+			if ($composite_id)
 			{
 				$composite = rental_socomposite::get_instance()->get_single($composite_id);
 			}
@@ -989,7 +989,7 @@ JS;
 				$composite = new rental_composite();
 			}
 
-			if(isset($composite))
+			if (isset($composite))
 			{
 				$composite->set_name(phpgw::get_var('name'));
 				$composite->set_custom_address_1(phpgw::get_var('address_1'));
@@ -1003,7 +1003,7 @@ JS;
 				$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
 				$composite->set_standard_id(phpgw::get_var('composite_standard_id', 'int'));
 
-				if(rental_socomposite::get_instance()->store($composite))
+				if (rental_socomposite::get_instance()->store($composite))
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 					$composite_id = $composite->get_id();
@@ -1026,7 +1026,7 @@ JS;
 		 */
 		function add_unit()
 		{
-			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied'));
 			}
@@ -1036,14 +1036,14 @@ JS;
 			$level			 = (int)phpgw::get_var('level');
 
 			$result = array();
-			if(isset($composite_id) && $composite_id > 0)
+			if (isset($composite_id) && $composite_id > 0)
 			{
-				foreach($location_code as $code)
+				foreach ($location_code as $code)
 				{
 					$property_location	 = new rental_property_location($code, '', $level);
 					$unit				 = new rental_unit(0, $composite_id, $property_location);
 					$resp				 = rental_sounit::get_instance()->store($unit);
-					if($resp)
+					if ($resp)
 					{
 						$result['message'][] = array('msg' => $code . ' ' . lang('has been added'));
 					}
@@ -1063,19 +1063,19 @@ JS;
 		 */
 		function remove_unit()
 		{
-			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied'));
 			}
 			$unit_ids = phpgw::get_var('ids');
 
 			$result = array();
-			if(count($unit_ids) > 0)
+			if (count($unit_ids) > 0)
 			{
-				foreach($unit_ids as $id)
+				foreach ($unit_ids as $id)
 				{
 					$resp = rental_sounit::get_instance()->delete($id);
-					if($resp)
+					if ($resp)
 					{
 						$result['message'][] = array('msg' => 'id ' . $id . ' ' . lang('has been deleted'));
 					}
@@ -1097,7 +1097,7 @@ JS;
 		function columns()
 		{
 			$values = phpgw::get_var('values');
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
 				$GLOBALS['phpgw']->preferences->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 				$GLOBALS['phpgw']->preferences->read();

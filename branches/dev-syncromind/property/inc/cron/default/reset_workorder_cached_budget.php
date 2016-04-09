@@ -54,12 +54,12 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$_order_budget = array();
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$orders[] = $this->db->f('order_id');
 			}
 
-			foreach($orders as $order_id)
+			foreach ($orders as $order_id)
 			{
 				phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
 				execMethod('property.soworkorder.get_budget', $order_id);

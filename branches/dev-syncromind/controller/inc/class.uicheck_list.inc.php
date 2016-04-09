@@ -97,12 +97,12 @@
 
 			self::set_active_menu('controller::control::check_list');
 
-			if(phpgw::get_var('noframework', 'bool'))
+			if (phpgw::get_var('noframework', 'bool'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				phpgwapi_cache::session_set('controller', 'noframework', true);
 			}
-			else if(phpgwapi_cache::session_get('controller', 'noframework'))
+			else if (phpgwapi_cache::session_get('controller', 'noframework'))
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
@@ -117,7 +117,7 @@
 		 */
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -212,9 +212,9 @@
 		 * @param HTTP:: location code, control id, date
 		 * @return data array
 		 */
-		function add_check_list($check_list = null)
+		function add_check_list( $check_list = null )
 		{
-			if($check_list == null)
+			if ($check_list == null)
 			{
 				$type				 = phpgw::get_var('type');
 				$control_id			 = phpgw::get_var('control_id');
@@ -222,7 +222,7 @@
 				$deadline_current	 = phpgw::get_var('deadline_current', 'bool');
 				$serie_id			 = phpgw::get_var('serie_id', 'int');
 
-				if($deadline_current)
+				if ($deadline_current)
 				{
 					$year		 = date('Y');
 					$month		 = date('m');
@@ -235,7 +235,7 @@
 					/* look for checklist with $deadline_ts = $deadline_current */
 
 					$check_list_id = $this->so_control->get_check_list_id_for_deadline($serie_id, $deadline_ts);
-					if($check_list_id)
+					if ($check_list_id)
 					{
 						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 							'check_list_id' => $check_list_id));
@@ -248,7 +248,7 @@
 			}
 			else
 			{
-				if($check_list->get_component_id() > 0)
+				if ($check_list->get_component_id() > 0)
 				{
 					$type = "component";
 				}
@@ -258,7 +258,7 @@
 				}
 			}
 
-			if(!$location_code = $check_list->get_location_code())
+			if (!$location_code = $check_list->get_location_code())
 			{
 				$location_code	 = phpgw::get_var('location_code');
 				$check_list->set_location_code($location_code);
@@ -267,9 +267,9 @@
 			}
 
 
-			if($type == "component")
+			if ($type == "component")
 			{
-				if($check_list != null)
+				if ($check_list != null)
 				{
 					$location_id	 = phpgw::get_var('location_id');
 					$check_list->set_location_id($location_id);
@@ -308,7 +308,7 @@
 			}
 
 			$repeat_descr	 = '';
-			if($serie			 = $this->so_control->get_serie($serie_id))
+			if ($serie = $this->so_control->get_serie($serie_id))
 			{
 				$repeat_type_array	 = array
 					(
@@ -322,13 +322,13 @@
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
-			if($repeat_descr)
+			if ($repeat_descr)
 			{
 				$repeat_descr .= " :: " . $control->get_title();
 				$control->set_title($repeat_descr);
 			}
 
-			if(!$responsible_user_id = phpgw::get_var('assigned_to', 'int'))
+			if (!$responsible_user_id = phpgw::get_var('assigned_to', 'int'))
 			{
 				$responsible_user_id = execMethod('property.soresponsible.get_responsible_user_id', array
 					(
@@ -350,7 +350,7 @@
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
 
 			$user_list_options = array();
-			foreach($users as $user)
+			foreach ($users as $user)
 			{
 				$user_list_options[] = array
 					(
@@ -403,16 +403,16 @@
 		 * @param HTTP:: check list id
 		 * @return data array
 		 */
-		function edit_check_list($check_list = null)
+		function edit_check_list( $check_list = null )
 		{
-			if($check_list == null)
+			if ($check_list == null)
 			{
 				$check_list_id	 = phpgw::get_var('check_list_id');
 				$check_list		 = $this->so->get_single($check_list_id);
 			}
 
 			$repeat_descr	 = '';
-			if($serie			 = $this->so_control->get_serie($check_list->get_serie_id()))
+			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()))
 			{
 				$repeat_type_array	 = array
 					(
@@ -426,7 +426,7 @@
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
-			if($repeat_descr)
+			if ($repeat_descr)
 			{
 				$repeat_descr .= " :: " . $control->get_title();
 				$control->set_title($repeat_descr);
@@ -434,7 +434,7 @@
 
 			$component_id = $check_list->get_component_id();
 
-			if($component_id > 0)
+			if ($component_id > 0)
 			{
 				$location_id	 = $check_list->get_location_id();
 				$component_id	 = $check_list->get_component_id();
@@ -478,7 +478,7 @@
 			$responsible_user_id = $check_list->get_assigned_to();
 
 			$user_list_options = array();
-			foreach($users as $user)
+			foreach ($users as $user)
 			{
 				$user_list_options[] = array
 					(
@@ -531,9 +531,9 @@
 		 * @param array $component_arr
 		 * @return array integration info
 		 */
-		private function _get_component_integration($location_id, $_component_arr = array())
+		private function _get_component_integration( $location_id, $_component_arr = array() )
 		{
-			if(isset($_component_arr['id']) && $_component_arr['id'])
+			if (isset($_component_arr['id']) && $_component_arr['id'])
 			{
 				$component_id = $_component_arr['id'];
 			}
@@ -550,11 +550,11 @@
 			$_config		 = isset($_custom_config->config_data) && $_custom_config->config_data ? $_custom_config->config_data : array();
 
 			$integration = array();
-			foreach($_config as $_config_section => $_config_section_data)
+			foreach ($_config as $_config_section => $_config_section_data)
 			{
-				if(isset($_config_section_data['tab']) && $component_arr['id'])
+				if (isset($_config_section_data['tab']) && $component_arr['id'])
 				{
-					if(!isset($_config_section_data['url']))
+					if (!isset($_config_section_data['url']))
 					{
 						phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
 						break;
@@ -574,7 +574,7 @@
 						),
 					);
 
-					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					if (isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
 					{
 						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
 					}
@@ -587,17 +587,17 @@
 
 					parse_str($_config_section_data['parametres'], $output);
 
-					foreach($output as $_dummy => $_substitute)
+					foreach ($output as $_dummy => $_substitute)
 					{
 						$_keys[] = $_substitute;
 
 						$__value = false;
-						if(!$__value = urlencode($component_arr[str_replace(array('__', '*'), array(
+						if (!$__value = urlencode($component_arr[str_replace(array('__', '*'), array(
 							'', ''), $_substitute)]))
 						{
-							foreach($component_arr['attributes'] as $_attribute)
+							foreach ($component_arr['attributes'] as $_attribute)
 							{
-								if(str_replace(array('__', '*'), array('', ''), $_substitute) == $_attribute['name'])
+								if (str_replace(array('__', '*'), array('', ''), $_substitute) == $_attribute['name'])
 								{
 									$__value = urlencode($_attribute['value']);
 									break;
@@ -605,7 +605,7 @@
 							}
 						}
 
-						if($__value)
+						if ($__value)
 						{
 							$_values[] = $__value;
 						}
@@ -614,7 +614,7 @@
 					unset($output);
 					unset($__value);
 					$_sep = '?';
-					if(stripos($_config_section_data['url'], '?'))
+					if (stripos($_config_section_data['url'], '?'))
 					{
 						$_sep = '&';
 					}
@@ -622,21 +622,21 @@
 					unset($_keys);
 					unset($_values);
 					$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
-					if($_config_section_data['action'])
+					if ($_config_section_data['action'])
 					{
 						$_sep = '?';
-						if(stripos($integration_src, '?'))
+						if (stripos($integration_src, '?'))
 						{
 							$_sep = '&';
 						}
 						$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
 					}
 
-					if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+					if (isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
 					{
 						$_config_section_data['location_data'] = htmlspecialchars_decode($_config_section_data['location_data']);
 						parse_str($_config_section_data['location_data'], $output);
-						foreach($output as $_dummy => $_substitute)
+						foreach ($output as $_dummy => $_substitute)
 						{
 							$_keys[]	 = $_substitute;
 							$_values[]	 = urlencode($component_arr['location_data'][trim($_substitute, '_')]);
@@ -666,7 +666,7 @@
 		function save_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
 				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
@@ -688,7 +688,7 @@
 
 			$error = false;
 
-			if($planned_date != '')
+			if ($planned_date != '')
 			{
 				$planned_date_ts = date_converter::date_to_timestamp($planned_date);
 			}
@@ -697,7 +697,7 @@
 				$planned_date_ts = $deadline_date_ts;
 			}
 
-			if($completed_date != '')
+			if ($completed_date != '')
 			{
 				$completed_date_ts	 = phpgwapi_datetime::date_to_timestamp($completed_date);
 				$status				 = controller_check_list::STATUS_DONE;
@@ -707,13 +707,13 @@
 				$completed_date_ts = 0;
 			}
 
-			if($check_list_id > 0)
+			if ($check_list_id > 0)
 			{
 				$check_list = $this->so->get_single($check_list_id);
 
-				if($status == controller_check_list::STATUS_DONE)
+				if ($status == controller_check_list::STATUS_DONE)
 				{
-					if(!$this->_check_for_required($check_list))
+					if (!$this->_check_for_required($check_list))
 					{
 						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 							'check_list_id' => $check_list_id));
@@ -722,7 +722,7 @@
 			}
 			else
 			{
-				if($status == controller_check_list::STATUS_DONE)
+				if ($status == controller_check_list::STATUS_DONE)
 				{
 					$status				 = controller_check_list::STATUS_NOT_DONE;
 					$completed_date_ts	 = 0;
@@ -738,7 +738,7 @@
 				$check_list->set_serie_id($serie_id);
 
 
-				if($type == "component")
+				if ($type == "component")
 				{
 					$location_id	 = phpgw::get_var('location_id');
 					$component_id	 = phpgw::get_var('component_id');
@@ -761,7 +761,7 @@
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
 
-			if($status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0 && !$billable_hours)
+			if ($status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0 && !$billable_hours)
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$error = true;
@@ -770,16 +770,16 @@
 			{
 				$check_list->set_delta_billable_hours($billable_hours);
 			}
-			if($status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
+			if ($status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
 			{
 				$check_list->set_status($status);
 			}
-			else if($status == controller_check_list::STATUS_CANCELED && !$error)
+			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
 			{
 				$check_list->set_status($status);
 			}
 
-			if(!$error && $check_list->validate())
+			if (!$error && $check_list->validate())
 			{
 				$check_list_id	 = $this->so->store($check_list);
 				$serie			 = $this->so_control->get_serie($check_list->get_serie_id());
@@ -787,7 +787,7 @@
 				/**
 				 * Add an iCal-event if there is a serie - and the checklist is visited the first time - or assigned is changed
 				 */
-				if(($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to))
+				if (($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to))
 				{
 					$bocommon			 = CreateObject('property.bocommon');
 					$current_prefs_user	 = $bocommon->create_preferences('property', $GLOBALS['phpgw_info']['user']['account_id']);
@@ -798,7 +798,7 @@
 					$prefs_target	 = $bocommon->create_preferences('property', $assigned_to);
 					$to_address		 = $prefs_target['email'];
 
-					if(!$start_date = $check_list->get_planned_date())
+					if (!$start_date = $check_list->get_planned_date())
 					{
 						$start_date = $check_list->get_deadline();
 					}
@@ -806,7 +806,7 @@
 
 					$endTime = $startTime + ( (float)$serie['service_time'] * 3600 ) + ( (float)$serie['controle_time'] * 3600 );
 
-					if($check_list->get_component_id() > 0)
+					if ($check_list->get_component_id() > 0)
 					{
 						$component_arr	 = execMethod('property.soentity.read_single_eav', array('location_id' => $check_list->get_location_id(),
 							'id' => $check_list->get_component_id()));
@@ -855,7 +855,7 @@
 					$_serie_id			 = $check_list->get_serie_id();
 					$text_description	 = str_replace('&amp;', '&', "Serie#{$_serie_id}::Mobilefrontend:\\n{$link_mobilefrontend}\\n\\nSerie#{$_serie_id}::Backend:\\n{$link_backend}");
 
-					if($from_address && $to_address)
+					if ($from_address && $to_address)
 					{
 						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description, $text_description, $location);
 					}
@@ -865,7 +865,7 @@
 					}
 				}
 
-				if($check_list_id > 0)
+				if ($check_list_id > 0)
 				{
 					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 						'check_list_id' => $check_list_id));
@@ -877,7 +877,7 @@
 			}
 			else
 			{
-				if($check_list->get_id() > 0)
+				if ($check_list->get_id() > 0)
 				{
 					$this->edit_check_list($check_list);
 				}
@@ -898,7 +898,7 @@
 			}
 		}
 
-		function get_files2($location_id, $data)
+		function get_files2( $location_id, $data )
 		{
 			$config		 = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
@@ -907,7 +907,7 @@
 
 			$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($location_id);
 			$type_arr	 = explode('.', $loc_arr['location']);
-			if(count($type_arr) != 4)
+			if (count($type_arr) != 4)
 			{
 				return array();
 			}
@@ -917,9 +917,9 @@
 			$cat_id		 = $type_arr[3];
 
 			$document_list = array();
-			foreach($doc_types as $doc_type)
+			foreach ($doc_types as $doc_type)
 			{
-				if($doc_type)
+				if ($doc_type)
 				{
 					$document_list = array_merge($document_list, $sodocument->read_at_location(array(
 						'entity_id'	 => $entity_id, 'cat_id'	 => $cat_id, 'p_num'		 => $data['id'],
@@ -933,7 +933,7 @@
 //			if($valid_types)
 			{
 				$lang_view = lang('click to view file');
-				foreach($document_list as $entry)
+				foreach ($document_list as $entry)
 				{
 //					if ( !preg_match("/({$valid_types})$/i", $entry['document_name']) )
 //					{
@@ -963,7 +963,7 @@
 			return $values;
 		}
 
-		function get_files($location_id, $data)
+		function get_files( $location_id, $data )
 		{
 			$vfs				 = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl	 = 1;
@@ -975,7 +975,7 @@
 
 			$type_arr = explode('.', $loc_arr['location']);
 
-			if(count($type_arr) != 4)
+			if (count($type_arr) != 4)
 			{
 				return array();
 			}
@@ -992,7 +992,7 @@
 			$vfs->override_acl = 0;
 
 			$values = array();
-			foreach($files as $file)
+			foreach ($files as $file)
 			{
 				$values[] = array
 					(
@@ -1013,7 +1013,7 @@
 				'type'		 => $type
 			);
 
-			foreach($values as &$_entry)
+			foreach ($values as &$_entry)
 			{
 				$_entry['file_name'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . '&amp;file_name=' . urlencode($_entry['name']) . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>';
 			}
@@ -1030,7 +1030,7 @@
 
 			$component_id = $check_list->get_component_id();
 
-			if($component_id > 0)
+			if ($component_id > 0)
 			{
 				$location_id	 = $check_list->get_location_id();
 				$component_id	 = $check_list->get_component_id();
@@ -1105,7 +1105,7 @@
 			$component_id	 = $check_list->get_component_id();
 			$files			 = array();
 
-			if($component_id > 0)
+			if ($component_id > 0)
 			{
 				$location_id	 = $check_list->get_location_id();
 				$component_arr	 = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
@@ -1133,7 +1133,7 @@
 			$saved_groups_with_items_array = array();
 
 			//Populating array with saved control items for each group
-			foreach($control_groups as $control_group)
+			foreach ($control_groups as $control_group)
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 
@@ -1168,7 +1168,7 @@
 			$saved_groups_with_items_array = array();
 
 			//Populating array with saved control items for each group
-			foreach($control_groups as $control_group)
+			foreach ($control_groups as $control_group)
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 
@@ -1216,7 +1216,7 @@
 		 */
 		public function update_status()
 		{
-			if(!$this->add && !$this->edit)
+			if (!$this->add && !$this->edit)
 			{
 				return json_encode(array("status" => 'not_saved', 'message' => ''));
 			}
@@ -1231,22 +1231,22 @@
 			$ok		 = true;
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
-			if($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			if ($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$ok = false;
 			}
 //
-			if(!$this->_check_for_required($check_list) || !$ok)
+			if (!$this->_check_for_required($check_list) || !$ok)
 			{
 				$messages	 = phpgwapi_cache::message_get(true);
 				$message	 = '';
-				foreach($messages as $_type => $_message)
+				foreach ($messages as $_type => $_message)
 				{
-					if($_type == 'error')
+					if ($_type == 'error')
 					{
 						$i = 1;
-						foreach($_message as $__message)
+						foreach ($_message as $__message)
 						{
 							$message.= "#{$i}: " . preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']) . "\n";
 							$i++;
@@ -1256,7 +1256,7 @@
 				return json_encode(array("status" => 'not_saved', 'message' => $message));
 			}
 
-			if($check_list_status == controller_check_list::STATUS_DONE)
+			if ($check_list_status == controller_check_list::STATUS_DONE)
 			{
 				$check_list->set_completed_date(time());
 			}
@@ -1268,7 +1268,7 @@
 
 			$check_list->set_status($check_list_status);
 
-			if($this->so->store($check_list))
+			if ($this->so->store($check_list))
 			{
 				return json_encode(array('status' => $check_list_status));
 			}
@@ -1288,7 +1288,7 @@
 		 * @param object $check_list
 		 * @return bool
 		 * */
-		private function _check_for_required($check_list)
+		private function _check_for_required( $check_list )
 		{
 			$ok		 = true;
 			$control = $this->so_control->get_single($check_list->get_control_id());
@@ -1296,15 +1296,15 @@
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
 
 			$required_control_items = array();
-			foreach($saved_control_groups as $control_group)
+			foreach ($saved_control_groups as $control_group)
 			{
 				$control_items			 = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
 				$component_location_id	 = $control_group->get_component_location_id();
 				$component_criteria		 = $control_group->get_component_criteria();
 
-				foreach($control_items as $control_item)
+				foreach ($control_items as $control_item)
 				{
-					if($control_item['required'])
+					if ($control_item['required'])
 					{
 						$control_item['component_location_id']	 = $component_location_id;
 						$control_item['component_criteria']		 = $component_criteria;
@@ -1318,15 +1318,15 @@
 
 			$component_id = $check_list->get_component_id();
 
-			if($component_id > 0)
+			if ($component_id > 0)
 			{
 				$location_id	 = $check_list->get_location_id();
 				$component_id	 = $check_list->get_component_id();
 
-				foreach($required_control_items as $required_control_item)
+				foreach ($required_control_items as $required_control_item)
 				{
 					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id'], $check_list->get_id());
-					if(!$_ok)
+					if (!$_ok)
 					{
 						$error_message	 = lang('missing value for required') . "</br>";
 						$error_message .= "\"{$required_control_item['title']}\"</br>";
@@ -1345,7 +1345,7 @@
 				$location_code_search_components = $location_code;
 				$type							 = 'location';
 
-				foreach($required_control_items as $required_control_item)
+				foreach ($required_control_items as $required_control_item)
 				{
 					$criterias_array = array();
 
@@ -1357,9 +1357,9 @@
 					$component_criteria = $required_control_item['component_criteria'];
 
 					$conditions = array();
-					foreach($component_criteria as $attribute_id => $condition)
+					foreach ($component_criteria as $attribute_id => $condition)
 					{
-						if($condition['value'])
+						if ($condition['value'])
 						{
 							eval('$condition_value = ' . "{$condition['value']};");
 							$conditions[] = array
@@ -1373,19 +1373,19 @@
 
 					$criterias_array['conditions'] = $conditions;
 
-					if(!isset($components_at_location[$component_location_id][$location_code_search_components]) || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
+					if (!isset($components_at_location[$component_location_id][$location_code_search_components]) || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
 					{
 						$_components_at_location															 = execMethod('property.soentity.get_eav_list', $criterias_array);
 						$components_at_location[$component_location_id][$location_code_search_components]	 = $_components_at_location;
 					}
 
-					if($_components_at_location)
+					if ($_components_at_location)
 					{
-						foreach($_components_at_location as &$_component_at_location)
+						foreach ($_components_at_location as &$_component_at_location)
 						{
 							$_ok = $this->so_case->get_cases_by_component($_component_at_location['location_id'], $_component_at_location['id'], $required_control_item['id'], $check_list->get_id());
 
-							if(!$_ok)
+							if (!$_ok)
 							{
 								$error_message	 = "mangler registrering for required</br>";
 								$error_message .= "{$required_control_item['title']}</br>";
@@ -1405,7 +1405,7 @@
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
 
-			if($check_list->get_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			if ($check_list->get_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$ok = false;
@@ -1428,7 +1428,7 @@
 		 * @param string $location
 		 * @return type
 		 */
-		function sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description, $text_description, $location)
+		function sendIcalEvent( $from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description, $text_description, $location )
 		{
 //			https://www.exchangecore.com/blog/sending-outlookemail-calendar-events-php/
 
@@ -1536,7 +1536,7 @@ HTML;
 			$from		 = str_replace(array('[', ']'), array('<', '>'), $from_address);
 			$from_array	 = explode('<', $from);
 			unset($from);
-			if(count($from_array) == 2)
+			if (count($from_array) == 2)
 			{
 				$mail->From		 = trim($from_array[1], '>');
 				$mail->FromName	 = $from_array[0];
@@ -1551,21 +1551,21 @@ HTML;
 			{
 				$mail->Send();
 			}
-			catch(phpmailerException $e)
+			catch (phpmailerException $e)
 			{
 				phpgwapi_cache::message_set($e->getMessage(), 'error');
 			}
 			return;
 //test
 			$rc = false;
-			if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				$send = CreateObject('phpgwapi.send');
 				try
 				{
 					$rc		 = $send->msg('email', $to_address, $subject, $message, $msgtype = 'Ical', $cc		 = '', $bcc	 = '', $from_address, $from_name, 'html', $mime_boundary);//, array($attachment));
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 				}

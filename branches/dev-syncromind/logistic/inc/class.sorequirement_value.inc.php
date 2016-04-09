@@ -1,5 +1,5 @@
 <?php
-/**
+	/**
 	* phpGroupWare - logistic: a part of a Facilities Management System.
 	*
 	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
@@ -24,18 +24,18 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	phpgw::import_class('logistic.socommon');
 
 	include_class('logistic', 'requirement_value', '/inc/model/');
 
 	class logistic_sorequirement_value extends logistic_socommon
 	{
+
 		protected static $so;
 
-		protected function add(&$requirement_value)
+		protected function add( &$requirement_value )
 		{
 			$cols = array(
 				'requirement_id',
@@ -57,9 +57,9 @@
 
 			$sql = 'INSERT INTO lg_requirement_value (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 
-			$result = $this->db->query($sql, __LINE__,__FILE__);
+			$result = $this->db->query($sql, __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				return $this->db->get_last_insert_id('lg_requirement_value', 'id');
 			}
@@ -69,7 +69,7 @@
 			}
 		}
 
-		protected function update($requirement_value)
+		protected function update( $requirement_value )
 		{
 			$id = intval($requirement_value->get_id());
 			
@@ -80,9 +80,9 @@
 				'cust_attribute_id=' . $this->marshal($requirement_value->get_cust_attribute_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_requirement_value SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_requirement_value SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				return $id;
 			}
@@ -94,7 +94,7 @@
 
 		protected function get_id_field_name()
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'id';
 			}
@@ -111,37 +111,37 @@
 			return $ret;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
-			if($search_for)
+			if ($search_for)
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					default:
 						$like_clauses[] = "requirement_value.value $this->like $like_pattern";
 						break;
 				}
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
 
 			$filter_clauses = array();
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "requirement_value.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "requirement_value.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-			else if(isset($filters['requirement_id']))
+			else if (isset($filters['requirement_id']))
 			{
 				$filter_clauses[] = "lg_requirement_value.requirement_id = {$this->marshal($filters['requirement_id'], 'int')}";
 			}
 			
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
@@ -150,7 +150,7 @@
 
 			$tables = "lg_requirement_value";
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(requirement.id)) AS count';
 			}
@@ -160,16 +160,16 @@
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $id, &$requirement_value)
+		protected function populate( int $id, &$requirement_value )
 		{
-			if($requirement_value == null)
+			if ($requirement_value == null)
 			{
-				$requirement_value = new logistic_requirement_value((int) $id);
+				$requirement_value = new logistic_requirement_value((int)$id);
 		
 				$requirement_value->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
 				$requirement_value->set_value($this->unmarshal($this->db->f('value'), 'string'));
@@ -180,12 +180,12 @@
 			return $requirement_value;
 		}
 		
-		public function delete_values($requirement_id)
+		public function delete_values( $requirement_id )
 		{
-			$requirement_id = (int) $requirement_id;
+			$requirement_id = (int)$requirement_id;
 			$status = $this->db->query("DELETE FROM lg_requirement_value WHERE requirement_id = $requirement_id");
 					
-			if( $status )
+			if ($status)
 			{
 				return true;
 			}

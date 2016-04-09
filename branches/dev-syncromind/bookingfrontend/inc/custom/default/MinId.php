@@ -54,9 +54,9 @@
 		public $debug = false;
 		public $orgs = array();
 
-		public function __construct($wsdl, $options, $userid, $debug = false)
+		public function __construct( $wsdl, $options, $userid, $debug = false )
 		{
-			if($debug)
+			if ($debug)
 			{
 				$this->debug = true;
 			}
@@ -64,9 +64,9 @@
 			{
 				$BrukerService = new BrukerService($wsdl, $options);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				if($this->debug)
+				if ($this->debug)
 				{
 					echo $e->getMessage();
 					echo '<br>wsdl: ' . $wsdl;
@@ -75,7 +75,7 @@
 				}
 			}
 
-			if(isset($BrukerService) && $BrukerService)
+			if (isset($BrukerService) && $BrukerService)
 			{
 				$ctx = new UserContext();
 
@@ -246,11 +246,11 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl = '', $options = array())
+		public function __construct( $wsdl = '', $options = array() )
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName)
+			foreach (self::$classmap as $wsdlClassName => $phpClassName)
 			{
-				if(!isset($options['classmap'][$wsdlClassName]))
+				if (!isset($options['classmap'][$wsdlClassName]))
 				{
 					$options['classmap'][$wsdlClassName] = $phpClassName;
 				}
@@ -265,19 +265,19 @@
 		 * @return boolean true if arguments match against validParameters
 		 * @throws Exception invalid function signature message
 		 */
-		public function _checkArguments($arguments, $validParameters)
+		public function _checkArguments( $arguments, $validParameters )
 		{
 			$variables = "";
-			foreach($arguments as $arg)
+			foreach ($arguments as $arg)
 			{
 				$type = gettype($arg);
-				if($type == "object")
+				if ($type == "object")
 				{
 					$type = get_class($arg);
 				}
 				$variables .= "(" . $type . ")";
 			}
-			if(!in_array($variables, $validParameters))
+			if (!in_array($variables, $validParameters))
 			{
 				throw new Exception("Invalid parameter types: " . str_replace(")(", ", ", $variables));
 			}
@@ -292,7 +292,7 @@
 		 * @return retrieveBrukerResponse
 		 * @throws Exception invalid function signature message
 		 */
-		public function retrieveBruker($mixed = null)
+		public function retrieveBruker( $mixed = null )
 		{
 			$validParameters = array(
 				"(retrieveBruker)",

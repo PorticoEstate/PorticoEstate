@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,20 +7,21 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorPass is an identity validator. It simply returns the value unmodified. 
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorPass extends sfValidatorBase
-{
+	class sfValidatorPass extends sfValidatorBase
+	{
+
   /**
    * @see sfValidatorBase
    */
-  public function clean($value)
+		public function clean( $value )
   {
     return $this->doClean($value);
   }
@@ -29,8 +29,8 @@ class sfValidatorPass extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     return $value;
   }
-}
+	}

@@ -221,7 +221,7 @@
 					)
 				),
 			);
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 				$menus['navigation']['settings'] = array
 					(
@@ -331,7 +331,7 @@
 						),
 					)
 				);
-				if($manual !== null)
+				if ($manual !== null)
 				{
 					$menus['navigation']['documentation'] = array
 						(
@@ -342,7 +342,7 @@
 				}
 			}
 
-			if($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
 			{
 				$menus['admin'] = array
 					(

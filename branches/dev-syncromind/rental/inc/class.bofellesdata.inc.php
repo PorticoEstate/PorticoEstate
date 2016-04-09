@@ -44,7 +44,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$bo == null)
+			if (self::$bo == null)
 			{
 				self::$bo = CreateObject('rental.bofellesdata');
 			}
@@ -58,9 +58,9 @@
 		 *
 		 * @return mixed the value of the variable sought - null if not found
 		 */
-		public function __get($varname)
+		public function __get( $varname )
 		{
-			switch($varname)
+			switch ($varname)
 			{
 				case 'unit_ids':
 					return $this->unit_ids;
@@ -71,7 +71,7 @@
 		}
 		/* our simple php ping function */
 
-		function ping($host)
+		function ping( $host )
 		{
 			exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
 			return $rval === 0;
@@ -79,7 +79,7 @@
 
 		public function get_db()
 		{
-			if($this->db && is_object($this->db))
+			if ($this->db && is_object($this->db))
 			{
 				return $this->db;
 			}
@@ -87,7 +87,7 @@
 			$config = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 
-			if(!$config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			if (!$config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
 			{
 				$message = "Database server {$config->config_data['external_db_host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
@@ -109,7 +109,7 @@
 				$db->connect();
 				$this->connected = true;
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$status = lang('unable_to_connect_to_database');
 			}
@@ -118,29 +118,29 @@
 			return $db;
 		}
 
-		public function responsibility_id_exist($responsibility_id)
+		public function responsibility_id_exist( $responsibility_id )
 		{
 			$this->log(__class__, __function__);
 
-			if(isset($responsibility_id))
+			if (isset($responsibility_id))
 			{
 				$column	 = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table	 = "V_ORG_ENHET";
 				$joins	 = "LEFT JOIN V_ANSVAR ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
-				if(!$db		 = $this->get_db())
+				if (!$db = $this->get_db())
 				{
 					return;
 				}
 
 				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id' AND V_ORG_ENHET.ORG_NIVAA = 4";
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$sql = strtolower($sql);
 				}
 				$db->query($sql, __LINE__, __FILE__);
-				if($db->next_record())
+				if ($db->next_record())
 				{
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						return array(
 							'UNIT_ID'	 => $db->f('org_enhet_id'),
@@ -159,32 +159,32 @@
 			return false;
 		}
 
-		public function result_unit_exist($result_unit, $level)
+		public function result_unit_exist( $result_unit, $level )
 		{
 			$this->log(__class__, __function__);
 
-			if(isset($result_unit) && is_numeric($result_unit))
+			if (isset($result_unit) && is_numeric($result_unit))
 			{
 				$column	 = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table	 = "V_ORG_ENHET";
-				if(!$db		 = $this->get_db())
+				if (!$db = $this->get_db())
 				{
 					return;
 				}
 
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
-				if($level)
+				if ($level)
 				{
 					$sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				}
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$sql = strtolower($sql);
 				}
 				$db->query($sql, __LINE__, __FILE__);
-				if($db->next_record())
+				if ($db->next_record())
 				{
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						return array(
 							'UNIT_ID'	 => $db->f('org_enhet_id'),
@@ -203,33 +203,33 @@
 			return false;
 		}
 
-		public function org_unit_exist($org_unit_id, $level)
+		public function org_unit_exist( $org_unit_id, $level )
 		{
 			$this->log(__class__, __function__);
 
-			if(isset($org_unit_id) && is_numeric($org_unit_id))
+			if (isset($org_unit_id) && is_numeric($org_unit_id))
 			{
 				$column	 = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table	 = "V_ORG_ENHET";
-				if(!$db		 = $this->get_db())
+				if (!$db = $this->get_db())
 				{
 					return;
 				}
 
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
-				if($level)
+				if ($level)
 				{
 					$sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				}
 
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$sql = strtolower($sql);
 				}
 				$db->query($sql, __LINE__, __FILE__);
-				if($db->next_record())
+				if ($db->next_record())
 				{
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						return array(
 							'UNIT_ID'	 => $db->f('org_enhet_id'),
@@ -248,7 +248,7 @@
 			return false;
 		}
 
-		public function get_result_unit($org_unit_id, $org_level = 4)
+		public function get_result_unit( $org_unit_id, $org_level = 4 )
 		{
 			$this->log(__class__, __function__);
 
@@ -258,21 +258,21 @@
 			$joins	 = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 			//$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_KNYTNING.ORG_ENHET_ID = {$org_unit_id}";
 			$sql	 = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = {$org_level} AND V_ORG_KNYTNING.ORG_ENHET_ID = {$org_unit_id}";
-			if(!$db		 = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 
 			$db->query($sql, __LINE__, __FILE__);
 
-			if($db->next_record())
+			if ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					return array(
 						"ORG_UNIT_ID"	 => (int)$db->f('org_enhet_id'),
@@ -293,7 +293,7 @@
 
 		public function get_all_org_units_autocomplete()
 		{
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
@@ -304,7 +304,7 @@
 			$tables	 = "V_ORG_ENHET";
 			$sql	 = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) {$db->like} '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
@@ -316,7 +316,7 @@
 			$level_field	 = $db->Type == 'postgres' ? 'org_nivaa' : 'ORG_NIVAA';
 
 			$result_units = array();
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$result_units[] = array
 					(
@@ -329,20 +329,20 @@
 			return array('ResultSet' => array('Result' => $result_units));
 		}
 
-		public function get_org_unit_name($id = 0)
+		public function get_org_unit_name( $id = 0 )
 		{
 			$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE ORG_ENHET_ID =" . (int)$id;
-			if(!$db	 = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 			$db->query($sql, __LINE__, __FILE__);
 			$db->next_record();
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				return $db->f('org_navn', true);
 			}
@@ -359,21 +359,21 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 			$tables	 = "V_ORG_ENHET";
 			$sql	 = "SELECT $columns FROM $tables WHERE V_ORG_ENHET.ORG_NIVAA = 4 ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
-			if(!$db		 = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 			$db->query($sql, __LINE__, __FILE__);
 
 			$result_units = array();
-			while($db->next_record())
+			while ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$result_units[] = array(
 						"ORG_UNIT_ID"	 => (int)$db->f('org_enhet_id'),
@@ -403,7 +403,7 @@
 		{
 			$result_units	 = $this->get_result_units();
 			$values			 = array();
-			foreach($result_units as $result_unit)
+			foreach ($result_units as $result_unit)
 			{
 				$values[] = array
 					(
@@ -420,7 +420,7 @@
 		 *
 		 * @return array values prepared for standardized select/filter
 		 */
-		public function get_org_units($level = 1)
+		public function get_org_units( $level = 1 )
 		{
 			$this->log(__class__, __function__);
 
@@ -428,21 +428,21 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 			$tables	 = "V_ORG_ENHET";
 			$sql	 = "SELECT {$columns} FROM {$tables} WHERE V_ORG_ENHET.ORG_NIVAA = {$level} ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
-			if(!$db		 = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 			$db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while($db->next_record())
+			while ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$values[] = array
 						(
@@ -463,7 +463,7 @@
 			return $values;
 		}
 
-		public function get_result_unit_with_leader($org_unit_id, $org_level = 4)
+		public function get_result_unit_with_leader( $org_unit_id, $org_level = 4 )
 		{
 			$this->log(__class__, __function__);
 
@@ -474,21 +474,21 @@
 
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = {$org_level} AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
 			//$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
-			if(!$db	 = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 
 			$db->query($sql, __LINE__, __FILE__);
 
-			if($db->next_record())
+			if ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$full_name = $db->f('fornavn') . " " . $db->f('etternavn');
 
@@ -519,7 +519,7 @@
 			}
 		}
 
-		public function get_department_for_org_unit($org_unit_id)
+		public function get_department_for_org_unit( $org_unit_id )
 		{
 			$this->log(__class__, __function__);
 
@@ -530,21 +530,21 @@
 
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
 
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$sql = strtolower($sql);
 			}
 
 			$db->query($sql, __LINE__, __FILE__);
 
-			if($db->next_record())
+			if ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					return array(
 						"DEP_ORG_ID"	 => (int)$db->f('org_enhet_id'),
@@ -561,11 +561,11 @@
 			}
 		}
 
-		public function get_result_units_with_leader($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type)
+		public function get_result_units_with_leader( $start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type )
 		{
 			$this->log(__class__, __function__);
 
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
@@ -575,19 +575,19 @@
 			$joins	 = "LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) " .
 			"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
 			$sql	 = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA > 1";
-			if($search_for)
+			if ($search_for)
 			{
 				$search_for	 = strtoupper($search_for);
 				$selector	 = "";
-				switch($search_type)
+				switch ($search_type)
 				{
 					case 'unit_leader':
 						$search_words	 = explode(' ', $search_for);
 						$count			 = 0;
 						$selector		 = "(";
-						foreach($search_words as $search_word)
+						foreach ($search_words as $search_word)
 						{
-							if($db->Type == "postgres")
+							if ($db->Type == "postgres")
 							{
 								$selector = $selector . " (upper(fornavn) ILIKE '%$search_word%' OR " .
 								"upper(etternavn) ILIKE '%$search_word%' OR " .
@@ -599,7 +599,7 @@
 								"upper(ETTERNAVN) LIKE '%$search_word%' OR " .
 								"upper(BRUKERNAVN) LIKE '%$search_word%')";
 							}
-							if($count < (count($search_words) - 1))
+							if ($count < (count($search_words) - 1))
 							{
 								$selector = $selector . " OR ";
 							}
@@ -609,7 +609,7 @@
 
 						break;
 					default:
-						if($db->Type == "postgres")
+						if ($db->Type == "postgres")
 						{
 							$selector = "upper(org_navn) ILIKE '%" . $search_for . "%'";
 						}
@@ -624,10 +624,10 @@
 
 			$dir = $sort_ascending ? 'ASC' : 'DESC';
 
-			switch($sort_field)
+			switch ($sort_field)
 			{
 				case "ORG_UNIT_ID":
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						$order_by = "ORDER BY V_ORG_ENHET.org_enhet_id $dir";
 					}
@@ -637,7 +637,7 @@
 					}
 					break;
 				case "ORG_UNIT_NAME":
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						$order_by = "ORDER BY V_ORG_ENHET.org_navn $dir";
 					}
@@ -647,7 +647,7 @@
 					}
 					break;
 				case "LEADER_FULLNAME":
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						$order_by = "ORDER BY V_ORG_PERSON.fornavn $dir, V_ORG_PERSON.etternavn $dir";
 					}
@@ -657,7 +657,7 @@
 					}
 					break;
 				default:
-					if($db->Type == "postgres")
+					if ($db->Type == "postgres")
 					{
 						$order_by = "ORDER BY V_ORG_ENHET.org_enhet_id $dir";
 					}
@@ -673,9 +673,9 @@
 			$db->limit_query($sql, $start_index, __LINE__, __FILE__, $num_of_objects);
 
 			$result_units = array();
-			while($db->next_record())
+			while ($db->next_record())
 			{
-				if($db->Type == "postgres")
+				if ($db->Type == "postgres")
 				{
 					$full_name = $db->f('fornavn') . " " . $db->f('etternavn');
 
@@ -707,16 +707,16 @@
 			return $result_units;
 		}
 
-		public function get_result_units_count($search_for, $search_type)
+		public function get_result_units_count( $search_for, $search_type )
 		{
 			$this->log(__class__, __function__);
 
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$columns = "count(*) as cnt";
 				$ret	 = 'cnt';
@@ -730,19 +730,19 @@
 			$joins	 = "LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) " .
 			"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
 			$sql	 = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4";
-			if($search_for)
+			if ($search_for)
 			{
 				$search_for	 = strtoupper($search_for);
 				$selector	 = "";
-				switch($search_type)
+				switch ($search_type)
 				{
 					case 'unit_leader':
 						$search_words	 = explode(' ', $search_for);
 						$count			 = 0;
 						$selector		 = "(";
-						foreach($search_words as $search_word)
+						foreach ($search_words as $search_word)
 						{
-							if($db->Type == "postgres")
+							if ($db->Type == "postgres")
 							{
 								$selector = $selector . " (upper(fornavn) ILIKE '%$search_word%' OR " .
 								"upper(etternavn) ILIKE '%$search_word%' OR " .
@@ -754,7 +754,7 @@
 								"upper(ETTERNAVN) LIKE '%$search_word%' OR " .
 								"upper(BRUKERNAVN) LIKE '%$search_word%')";
 							}
-							if($count < (count($search_words) - 1))
+							if ($count < (count($search_words) - 1))
 							{
 								$selector = $selector . " OR ";
 							}
@@ -764,7 +764,7 @@
 
 						break;
 					default:
-						if($db->Type == "postgres")
+						if ($db->Type == "postgres")
 						{
 							$selector = "upper(org_navn) ILIKE '%" . $search_for . "%'";
 						}
@@ -779,16 +779,16 @@
 
 			$db->query($sql);
 
-			if($db->next_record())
+			if ($db->next_record())
 			{
 				return $db->f($ret);
 			}
 			return 0;
 		}
 
-		function org_unit_is_top_level($org_unit_id)
+		function org_unit_is_top_level( $org_unit_id )
 		{
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
@@ -797,7 +797,7 @@
 
 			$result = $this->db->query($q);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return true;
 			}
@@ -807,14 +807,14 @@
 			}
 		}
 
-		function get_org_unit_ids_from_top($org_unit_id)
+		function get_org_unit_ids_from_top( $org_unit_id )
 		{
-			if(!$db = $this->get_db())
+			if (!$db = $this->get_db())
 			{
 				return;
 			}
 
-			if(!$org_unit_id)
+			if (!$org_unit_id)
 			{
 				return array();
 			}
@@ -824,7 +824,7 @@
 			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER FROM V_ORG_KNYTNING"
 			. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$q = strtolower($q);
 			}
@@ -833,12 +833,12 @@
 			$org_enhet_field = $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
 			$check_subs		 = $db->Type == 'postgres' ? 'ant_enheter_under' : 'ANT_ENHETER_UNDER';
 
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$child_org_unit_id	 = $db->f($org_enhet_field);
 				$this->unit_ids[]	 = $child_org_unit_id;
 
-				if($db->f($check_subs))
+				if ($db->f($check_subs))
 				{
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}
@@ -847,7 +847,7 @@
 			return $this->unit_ids;
 		}
 
-		function get_org_unit_ids_children($org_unit_id)
+		function get_org_unit_ids_children( $org_unit_id )
 		{
 			$org_unit_id = (int)$org_unit_id;
 			$db			 = clone($this->db);
@@ -855,7 +855,7 @@
 			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER FROM V_ORG_KNYTNING"
 			. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
 
-			if($db->Type == "postgres")
+			if ($db->Type == "postgres")
 			{
 				$q = strtolower($q);
 			}
@@ -864,20 +864,20 @@
 			$org_enhet_field = $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
 			$check_subs		 = $db->Type == 'postgres' ? 'ant_enheter_under' : 'ANT_ENHETER_UNDER';
 
-			while($db->next_record())
+			while ($db->next_record())
 			{
 				$child_org_unit_id	 = $db->f($org_enhet_field);
 				$this->unit_ids[]	 = $child_org_unit_id;
-				if($db->f($check_subs))
+				if ($db->f($check_subs))
 				{
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}
 			}
 		}
 
-		protected function log($class, $function)
+		protected function log( $class, $function )
 		{
-			if(isset($GLOBALS['phpgw_info']['server']['log_levels']['module']['rental']) && $GLOBALS['phpgw_info']['server']['log_levels']['module']['rental'])
+			if (isset($GLOBALS['phpgw_info']['server']['log_levels']['module']['rental']) && $GLOBALS['phpgw_info']['server']['log_levels']['module']['rental'])
 			{
 				$bt = debug_backtrace();
 				$GLOBALS['phpgw']->log->debug(array(

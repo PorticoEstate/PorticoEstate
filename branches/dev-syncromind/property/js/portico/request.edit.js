@@ -19,11 +19,12 @@ this.local_DrawCallback2 = function ()
 	{
 		data = api.column(col, {page: 'current'}).data();
 		pageTotal = data.length ?
-				data.reduce(function (a, b) {
+			data.reduce(function (a, b)
+			{
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
 	});
 
 };

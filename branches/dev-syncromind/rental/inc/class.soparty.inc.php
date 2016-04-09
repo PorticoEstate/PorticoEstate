@@ -47,7 +47,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.soparty');
 			}
@@ -68,24 +68,24 @@
 		 * @param boolean $return_count
 		 * @return string SQL
 		 */
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
 			//Add columns to this array to include them in the query
 			$columns = array();
 
-			if($sort_field != null)
+			if ($sort_field != null)
 			{
 				$dir = $ascending ? 'ASC' : 'DESC';
-				if($sort_field == 'name')
+				if ($sort_field == 'name')
 				{
 					$order				 = "ORDER BY party.last_name {$dir}, party.first_name {$dir}";
 					$this->sort_field	 = array('party.last_name', 'party.first_name');
 				}
 				else
 				{
-					if($sort_field == 'address')
+					if ($sort_field == 'address')
 					{
 						$sort_field			 = 'party.address_1';
 						$this->sort_field	 = array('party.address_1');
@@ -93,12 +93,12 @@
 					$order = "ORDER BY {$this->marshal($sort_field, 'field')} $dir";
 				}
 			}
-			if($search_for)
+			if ($search_for)
 			{
 				$query			 = $this->marshal($search_for, 'string');
 				$like_pattern	 = "'%" . $search_for . "%'";
 				$like_clauses	 = array();
-				switch($search_type)
+				switch ($search_type)
 				{
 					case "name":
 						$like_clauses[]	 = "party.first_name $this->like $like_pattern";
@@ -135,7 +135,7 @@
 				}
 
 
-				if(count($like_clauses))
+				if (count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
@@ -143,60 +143,60 @@
 
 			$filter_clauses = array();
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "party.id = {$id}";
 			}
 
 			// All parties with contracts of type X
-			if(isset($filters['party_type']))
+			if (isset($filters['party_type']))
 			{
 				$party_type = $this->marshal($filters['party_type'], 'int');
-				if(isset($party_type) && $party_type > 0)
+				if (isset($party_type) && $party_type > 0)
 				{
 					$filter_clauses[] = "contract.location_id = {$party_type}";
 				}
 			}
 
-			if(isset($filters['active']))
+			if (isset($filters['active']))
 			{
-				if($filters['active'] == 'active')
+				if ($filters['active'] == 'active')
 				{
 					$filter_clauses[] = "NOT party.is_inactive";
 				}
-				else if($filters['active'] == 'inactive')
+				else if ($filters['active'] == 'inactive')
 				{
 					$filter_clauses[] = "party.is_inactive = TRUE";
 				}
 			}
 
-			if(isset($filters['contract_id']))
+			if (isset($filters['contract_id']))
 			{
 				$contract_id = $this->marshal($filters['contract_id'], 'int');
-				if(isset($contract_id) && $contract_id > 0)
+				if (isset($contract_id) && $contract_id > 0)
 				{
 					$filter_clauses[] = "c_p.contract_id = {$contract_id}";
 				}
 			}
 
-			if(isset($filters['not_contract_id']))
+			if (isset($filters['not_contract_id']))
 			{
 				$contract_id = $this->marshal($filters['not_contract_id'], 'int');
-				if(isset($contract_id) && $contract_id > 0)
+				if (isset($contract_id) && $contract_id > 0)
 				{
 					$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id} OR contract_id IS NULL) AND NOT party.is_inactive";
 				}
 			}
 
-			if(isset($filters['org_unit_id']))
+			if (isset($filters['org_unit_id']))
 			{
 				$bofelles	 = rental_bofellesdata::get_instance();
 				$org_unit_id = $this->marshal($filters['org_unit_id'], 'string');
-				if(isset($org_unit_id))
+				if (isset($org_unit_id))
 				{
 					//check if org_unit is on top level
-					if($bofelles->org_unit_is_top_level($org_unit_id))
+					if ($bofelles->org_unit_is_top_level($org_unit_id))
 					{
 						//get connected units on level 4
 						$org_unit_ids_tmp	 = $bofelles->get_org_unit_ids_from_top($org_unit_id);
@@ -210,20 +210,20 @@
 				}
 			}
 
-			if(isset($filters['email']))
+			if (isset($filters['email']))
 			{
 				$email = $this->marshal($filters['email'], 'string');
-				if(isset($email))
+				if (isset($email))
 				{
 					$filter_clauses[] = "party.email = {$email}";
 				}
 			}
 
-			if(isset($filters['sync']))
+			if (isset($filters['sync']))
 			{
 				$filter_clauses[] = "NOT party.is_inactive";
 
-				if($filters['sync'] == 'sync_parties')
+				if ($filters['sync'] == 'sync_parties')
 				{
 					// involved in contract with service- and responsibility identifiers
 					$filter_clauses[]	 = "NOT contract.responsibility_id IS NULL";
@@ -232,7 +232,7 @@
 					$ts_query			 = strtotime(date('Y-m-d')); // timestamp for query (today)
 					$filter_clauses[]	 = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
 				}
-				else if($filters['sync'] == 'sync_parties_res_unit')
+				else if ($filters['sync'] == 'sync_parties_res_unit')
 				{
 					$filter_clauses[]	 = "NOT party.result_unit_number IS NULL";
 					$filter_clauses[]	 = "party.result_unit_number LIKE '____'";
@@ -240,11 +240,11 @@
 					$filter_clauses[]	 = "contract.service_id IS NULL";
 					$filter_clauses[]	 = "contract.responsibility_id IS NULL";
 				}
-				else if($filters['sync'] == 'sync_parties_org_unit')
+				else if ($filters['sync'] == 'sync_parties_org_unit')
 				{
 					$filter_clauses[] = "NOT party.org_enhet_id IS NULL";
 				}
-				else if($filters['sync'] == 'sync_parties_identifier')
+				else if ($filters['sync'] == 'sync_parties_identifier')
 				{
 					$filter_clauses[]	 = "NOT party.identifier IS NULL";
 					$filter_clauses[]	 = "party.identifier LIKE '____'";
@@ -255,14 +255,14 @@
 				}
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols = 'COUNT(DISTINCT(party.id)) AS count';
 			}
@@ -313,13 +313,13 @@
 		 * @param rental_party $party the party to be added
 		 * @return bool true if successful, false otherwise
 		 */
-		function add(&$party)
+		function add( &$party )
 		{
 			// Insert a new party
 			$q		 = "INSERT INTO rental_party (is_inactive) VALUES (false)";
 			$result	 = $this->db->query($q);
 
-			if(isset($result))
+			if (isset($result))
 			{
 				// Set the new party ID
 				$party->set_id($this->db->get_last_insert_id('rental_party', 'id'));
@@ -338,14 +338,14 @@
 		 * @param $party the party to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($party)
+		function update( $party )
 		{
 			$id = intval($party->get_id());
 
 
 			$location_id = $this->marshal($party->get_location_id(), 'int');
 
-			if($location_id)
+			if ($location_id)
 			{
 				$loc				 = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$name				 = $loc['location'];
@@ -385,9 +385,9 @@
 			return isset($result);
 		}
 
-		public function get_id_field_name($extended_info = false)
+		public function get_id_field_name( $extended_info = false )
 		{
-			if(!$extended_info)
+			if (!$extended_info)
 			{
 				$ret = 'party_id';
 			}
@@ -403,10 +403,10 @@
 			return $ret;
 		}
 
-		protected function populate(int $party_id, &$party)
+		protected function populate( int $party_id, &$party )
 		{
 
-			if($party == null)
+			if ($party == null)
 			{
 				$party = new rental_party((int)$party_id);
 
@@ -438,7 +438,7 @@
 					'result_unit_number' => $this->unmarshal($this->db->f('result_unit_number'), 'string'),
 				)
 				);
-				if(isset($sync_message) && $sync_message != '')
+				if (isset($sync_message) && $sync_message != '')
 				{
 					$party->add_sync_problem($sync_message);
 				}
@@ -462,11 +462,11 @@
 			return (int)$this->db->f('count', true);
 		}
 
-		public function has_contract($party_id)
+		public function has_contract( $party_id )
 		{
 			$sql	 = "SELECT * FROM rental_contract_party WHERE party_id={$party_id}";
 			$result	 = $this->db->query($sql);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				return true;
 			}
@@ -476,9 +476,9 @@
 			}
 		}
 
-		public function delete_party($party_id)
+		public function delete_party( $party_id )
 		{
-			if($party_id)
+			if ($party_id)
 			{
 				$sql = "DELETE FROM rental_party WHERE id={$party_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -522,7 +522,7 @@
 			$config->read();
 
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			if(!$use_fellesdata)
+			if (!$use_fellesdata)
 			{
 				return;
 			}
@@ -534,30 +534,30 @@
 
 			$updated_parties[] = "Total number of parties: {$result_count}";
 
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$count						 = 0;
 				$count_result_unit_number	 = 0;
 				$count_identifier			 = 0;
 				$count_responsibility		 = 0;
 
-				foreach($parties as $party)
+				foreach ($parties as $party)
 				{
 					$unit_found	 = false;
 					$fellesdata	 = NULL;
 
-					if(isset($party))
+					if (isset($party))
 					{
 						$sync_data = $party->get_sync_data();
 
 						$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'], 4);
-						if($fellesdata)
+						if ($fellesdata)
 						{
 							$updated_parties[] = "Unit id found {$fellesdata['UNIT_ID']} by result unit number check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 							$count_result_unit_number++;
 						}
 
-						if($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID']))
+						if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID']))
 						{
 							// We found a match, so store the new connection
 							$party->set_org_enhet_id($fellesdata['UNIT_ID']);
@@ -581,7 +581,7 @@
 			}
 		}
 
-		private function log_sync_messages($messages)
+		private function log_sync_messages( $messages )
 		{
 			$msgs = array_merge(
 			array('---------------Messages-------------------'), $messages

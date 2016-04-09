@@ -22,7 +22,8 @@ function get_available_groups()
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		div_group_id.innerHTML = "<select name=\"group_id\" id=\"group_id\">" + JSON.parse(result) + "</select>";
 

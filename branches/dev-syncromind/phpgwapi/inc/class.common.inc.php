@@ -509,13 +509,7 @@ HTML;
 				}
 			}
 
-			$html = phpgwapi_jquery::tabview_generate($tabs, $selection);
-			$output = <<<HTML
-
-			{$html}
-
-HTML;
-			return $output;
+			return  phpgwapi_jquery::tabview_generate($tabs, $selection);
 		}
 
 		/**

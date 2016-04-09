@@ -21,11 +21,12 @@ var addFooterDatatable = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pagetotal = data.length ?
-					data.reduce(function (a, b) {
+				data.reduce(function (a, b)
+				{
 						return intVal(a) + intVal(b)
 					}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}
@@ -34,11 +35,12 @@ var addFooterDatatable = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pagetotal = data.length ?
-					data.reduce(function (a, b) {
+				data.reduce(function (a, b)
+				{
 						return intVal(a) + intVal(b)
 					}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}
@@ -47,11 +49,12 @@ var addFooterDatatable = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pagetotal = data.length ?
-					data.reduce(function (a, b) {
+				data.reduce(function (a, b)
+				{
 						return intVal(a) + intVal(b)
 					}) : 0;
 
-			var amount = $.number(pagetotal, 0, ',', ' ');
+			var amount = $.number(pagetotal, 0, ',', '.');
 
 			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 		}
@@ -59,21 +62,25 @@ var addFooterDatatable = function (oTable)
 };
 
 
-onclikUpdateinvestment = function () {
+onclikUpdateinvestment = function ()
+{
 
 	var oDate = $('#filter_start_date').val();
 	var oIndex = $('#txt_index').val();
 	var select_check = $('.select_check');
 
-	if (select_check.length == '0') {
+	if (select_check.length == '0')
+	{
 		alert('None selected');
 		return false;
 	}
-	if (oIndex == '') {
+	if (oIndex == '')
+	{
 		alert('None index');
 		return false;
 	}
-	if (oDate == '') {
+	if (oDate == '')
+	{
 		alert('None Date');
 		return false;
 	}
@@ -97,7 +104,8 @@ onclikUpdateinvestment = function () {
 		values['value'][d.counter] = d.value;
 	});
 
-	select_check.each(function (i, obj) {
+	select_check.each(function (i, obj)
+	{
 		if (obj.checked)
 		{
 			values['update'][obj.value] = obj.value;
@@ -106,7 +114,8 @@ onclikUpdateinvestment = function () {
 
 	var requestUrl = api.ajax.url();
 	var data = {"values": values};
-	JqueryPortico.execute_ajax(requestUrl, function (result) {
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
 
 		$('#filter_start_date').val('');
 		$('#txt_index').val('');
@@ -114,14 +123,16 @@ onclikUpdateinvestment = function () {
 
 		if (typeof (result.message) !== 'undefined')
 		{
-			$.each(result.message, function (k, v) {
+			$.each(result.message, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 			});
 		}
 
 		if (typeof (result.error) !== 'undefined')
 		{
-			$.each(result.error, function (k, v) {
+			$.each(result.error, function (k, v)
+			{
 				document.getElementById("message").innerHTML += v.msg + "<br/>";
 			});
 		}

@@ -26,7 +26,8 @@
           <input id="search" type="text" name="searchterm" value="Søk hall, klubb eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
+			<xsl:text> </xsl:text>
+			<input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
         F.eks. "<i>Bildøyhallen</i>", "<i>svømmehall</i>", "<i>idrett</i>" eller "<i>kor</i>".
       </div>
@@ -34,12 +35,15 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div class="frontpagetext"><xsl:value-of select="frontpagetext"/></div>
+				<div class="frontpagetext">
+					<xsl:value-of select="frontpagetext"/>
+				</div>
 		
 		</div>
 		<div style="text-align:center;">
 			<img alt="" >
-				<xsl:attribute name="src"><xsl:value-of select="baseurl"/>/phpgwapi/templates/stavanger/images/newlayout/forsidebilde.jpg</xsl:attribute>
+					<xsl:attribute name="src">
+						<xsl:value-of select="baseurl"/>/phpgwapi/templates/stavanger/images/newlayout/forsidebilde.jpg</xsl:attribute>
 			</img>
 		</div>	
 
@@ -48,7 +52,11 @@
 	<xsl:if test="search">	
  	   <div id="result">
 	      <h5>
-	        <u><strong><xsl:value-of select="php:function('lang', 'Found %1 results', search/results/total_records_sum)" /></strong></u>
+					<u>
+						<strong>
+							<xsl:value-of select="php:function('lang', 'Found %1 results', search/results/total_records_sum)" />
+						</strong>
+					</u>
 	      </h5>
 	      <br />
 	      <br />
@@ -57,13 +65,22 @@
 	          <xsl:for-each select="search/results/results">
 	            <li>
 	              <div class="header">
-	                <a class="bui_single_view_link"><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute><xsl:value-of select="name"/></a>
+									<a class="bui_single_view_link">
+										<xsl:attribute name="href">
+											<xsl:value-of select="link"/>
+										</xsl:attribute>
+										<xsl:value-of select="name"/>
+									</a>
 	                (<xsl:value-of select="php:function('lang', string(type))"/>)
 	              </div>
 	              <div class="details">
 	                <div>
 	                  <dl>
-	                    <dt><h4><xsl:value-of select="php:function('lang', 'Description')" /></h4></dt>
+											<dt>
+												<h4>
+													<xsl:value-of select="php:function('lang', 'Description')" />
+												</h4>
+											</dt>
 	                    <dd class="description">
 							<xsl:variable name="tag_stripped_description">
 								<xsl:call-template name="strip-tags">
@@ -95,9 +112,18 @@
 
 	                    </dd>
 	                    <xsl:if test="string-length(homepage) &gt; 1">
-	                      <dt><h4><xsl:value-of select="php:function('lang', 'Homepage')" /></h4></dt>
+												<dt>
+													<h4>
+														<xsl:value-of select="php:function('lang', 'Homepage')" />
+													</h4>
+												</dt>
 	                      <dd class="description">
-	                        <a><xsl:attribute name="href"><xsl:value-of select="homepage"/></xsl:attribute><xsl:value-of select="homepage"/></a>
+													<a>
+														<xsl:attribute name="href">
+															<xsl:value-of select="homepage"/>
+														</xsl:attribute>
+														<xsl:value-of select="homepage"/>
+													</a>
 	                      </dd>
 	                    </xsl:if>
 	                  </dl>

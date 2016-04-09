@@ -25,7 +25,8 @@ this.local_DrawCallback1 = function (oTable)
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pageTotal = data.length ?
-					data.reduce(function (a, b) {
+				data.reduce(function (a, b)
+				{
 						return intVal(a) + intVal(b);
 					}) : 0;
 

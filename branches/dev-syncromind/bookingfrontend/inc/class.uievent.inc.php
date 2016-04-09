@@ -35,7 +35,7 @@
 			$errors					 = array();
 			$customer				 = array();
 
-			if($event['customer_identifier_type'])
+			if ($event['customer_identifier_type'])
 			{
 				$customer['customer_identifier_type']		 = $event['customer_identifier_type'];
 				$customer['customer_ssn']					 = $event['customer_ssn'];
@@ -55,7 +55,7 @@
 				$customer['customer_organization_number']	 = $organization['organization_number'];
 				$customer['customer_internal']				 = $organization['customer_internal'];
 			}
-			if($config->config_data['split_pool'] == 'yes')
+			if ($config->config_data['split_pool'] == 'yes')
 			{
 				$split = 1;
 			}
@@ -67,7 +67,7 @@
 			$activity		 = $this->organization_bo->so->get_resource_activity($resources);
 			$mailadresses	 = $this->building_users($event['building_id'], $split, $activity);
 
-			if(!$bouser->is_organization_admin($customer['customer_organization_id']))
+			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
 			{
 				$date = substr($event['from_'], 0, 10);
 				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
@@ -78,7 +78,7 @@
 
 			list($event, $errors) = $this->extract_and_validate($event);
 
-			if($event['customer_organization_number'])
+			if ($event['customer_organization_number'])
 			{
 				$orginfo							 = $this->bo->so->get_org($event['customer_organization_number']);
 				$event['customer_organization_id']	 = $orginfo['id'];
@@ -86,16 +86,16 @@
 			}
 
 			$orgdate = array();
-			foreach($event['dates'] as $odate)
+			foreach ($event['dates'] as $odate)
 			{
-				if(substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
+				if (substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
 				{
 					$orgdate['from'] = $odate['from_'];
 					$orgdate['to']	 = $odate['to_'];
 				}
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$test = $this->bo->read_single($event['id']);
 
@@ -106,20 +106,20 @@
 				$event['to_']	 = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
 				array_set_default($_POST, 'resources', array());
 
-				if($event['from_'] < $test['from_'] || $event['to_'] > $test['to_'])
+				if ($event['from_'] < $test['from_'] || $event['to_'] > $test['to_'])
 				{
 					$errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
 				}
 
-				if(sizeof($currres) != sizeof($_POST['resources']))
+				if (sizeof($currres) != sizeof($_POST['resources']))
 				{
 					$errors['resource_number'] = lang("You can't change resources to the event, for that contact administrator");
 				}
 
-				if(!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['out_of_range'])
+				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['out_of_range'])
 				{
 
-					if($event['from_'] > $test['from_'] || $event['to_'] < $test['to_'])
+					if ($event['from_'] > $test['from_'] || $event['to_'] < $test['to_'])
 					{
 
 						$this->bo->send_notification(true, $event, $mailadresses, $orgdate);
@@ -134,7 +134,7 @@
 			}
 
 			$this->flash_form_errors($errors);
-			if($customer['customer_identifier_type'])
+			if ($customer['customer_identifier_type'])
 			{
 				$event['customer_identifier_type']		 = $customer['customer_identifier_type'];
 				$event['customer_ssn']					 = $customer['customer_ssn'];
@@ -189,7 +189,7 @@
 			date_default_timezone_set("Europe/Oslo");
 			$currdate	 = new DateTime(phpgw::get_var('date'));
 			$cdate		 = $currdate->format('Y-m-d H:m:s');
-			if($config->config_data['user_can_delete_events'] != 'yes')
+			if ($config->config_data['user_can_delete_events'] != 'yes')
 			{
 				$can_delete_events = 0;
 			}
@@ -197,14 +197,14 @@
 			{
 				$can_delete_events = 1;
 			}
-			if($event['customer_organization_number'])
+			if ($event['customer_organization_number'])
 			{
 				$orginfo							 = $this->bo->so->get_org($event['customer_organization_number']);
 				$event['customer_organization_id']	 = $orginfo['id'];
 				$event['customer_organization_name'] = $orginfo['name'];
 			}
 
-			if($config->config_data['split_pool'] == 'yes')
+			if ($config->config_data['split_pool'] == 'yes')
 			{
 				$split = 1;
 			}
@@ -219,15 +219,15 @@
 			$extra_mailadresses	 = $this->resource_users($resources);
 			$mailadresses		 = array_merge($mailadresses, $extra_mailadresses);
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if($cdate < $event['to_'])
+				if ($cdate < $event['to_'])
 				{
-					if($bouser->is_organization_admin($event['customer_organization_id']))
+					if ($bouser->is_organization_admin($event['customer_organization_id']))
 					{
 						$this->bo->send_notification(false, $event, $mailadresses);
 						$this->bo->send_admin_notification(false, $event, $_POST['message']);
-						if($can_delete_events)
+						if ($can_delete_events)
 						{
 							$this->bo->so->delete_event($event['id']);
 						}
@@ -264,43 +264,43 @@
 			$event['from_']	 = pretty_timestamp($event['from_']);
 			$event['to_']	 = pretty_timestamp($event['to_']);
 
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 
 			self::render_template_xsl('event_delete', array('event' => $event, 'activities' => $activities,
 				'can_delete_events' => $can_delete_events));
 		}
 
-		public function building_users($building_id, $type = false, $activities = array())
+		public function building_users( $building_id, $type = false, $activities = array() )
 		{
 			$contacts		 = array();
 			$organizations	 = $this->organization_bo->find_building_users($building_id, $type, $activities);
-			foreach($organizations['results'] as $key => $org)
+			foreach ($organizations['results'] as $key => $org)
 			{
-				if($org['email'] != '' && strstr($org['email'], '@'))
+				if ($org['email'] != '' && strstr($org['email'], '@'))
 				{
-					if(!in_array($org['email'], $contacts))
+					if (!in_array($org['email'], $contacts))
 					{
 						$contacts[] = $org['email'];
 					}
 				}
-				if($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
+				if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
 				{
-					if(!in_array($org['contacts'][0]['email'], $contacts))
+					if (!in_array($org['contacts'][0]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][0]['email'];
 					}
 				}
-				if($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
+				if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
 				{
-					if(!in_array($org['contacts'][1]['email'], $contacts))
+					if (!in_array($org['contacts'][1]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][1]['email'];
 					}
 				}
 				$grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
-				foreach($grp_con as $grp)
+				foreach ($grp_con as $grp)
 				{
-					if(!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
+					if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
 					{
 						$contacts[] = $grp['email'];
 					}
@@ -309,14 +309,14 @@
 			return $contacts;
 		}
 
-		public function resource_users($resources)
+		public function resource_users( $resources )
 		{
 			$contacts	 = array();
 			$orglist	 = array();
-			foreach($resources as $res)
+			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);
-				if($cres['organizations_ids'] != '')
+				if ($cres['organizations_ids'] != '')
 				{
 					$orglist .= $cres['organizations_ids'] . ',';
 				}
@@ -324,33 +324,33 @@
 			$orgs			 = explode(",", rtrim($orglist, ","));
 			$organizations	 = $this->organization_bo->so->read(array('filters' => array('id' => $orgs),
 				'sort' => 'name'));
-			foreach($organizations['results'] as $key => $org)
+			foreach ($organizations['results'] as $key => $org)
 			{
-				if($org['email'] != '' && strstr($org['email'], '@'))
+				if ($org['email'] != '' && strstr($org['email'], '@'))
 				{
-					if(!in_array($org['email'], $contacts))
+					if (!in_array($org['email'], $contacts))
 					{
 						$contacts[] = $org['email'];
 					}
 				}
-				if($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
+				if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
 				{
-					if(!in_array($org['contacts'][0]['email'], $contacts))
+					if (!in_array($org['contacts'][0]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][0]['email'];
 					}
 				}
-				if($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
+				if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
 				{
-					if(!in_array($org['contacts'][1]['email'], $contacts))
+					if (!in_array($org['contacts'][1]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][1]['email'];
 					}
 				}
 				$grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
-				foreach($grp_con as $grp)
+				foreach ($grp_con as $grp)
 				{
-					if(!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
+					if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
 					{
 						$contacts[] = $grp['email'];
 					}
@@ -363,7 +363,7 @@
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
-			if($config->config_data['user_can_delete_bookings'] != 'yes')
+			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
 				$user_can_delete_bookings = 0;
 			}
@@ -375,10 +375,10 @@
 			unset($event['comments']);
 			$resources	 = $this->resource_bo->so->read(array('filters' => array('id' => $event['resources']),
 				'sort' => 'name'));
-			if($event['customer_organization_number'] != '')
+			if ($event['customer_organization_number'] != '')
 			{
 				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
-				if($orginfo != array())
+				if ($orginfo != array())
 				{
 					$event['customer_organization_id']	 = $orginfo['id'];
 					$event['customer_organization_name'] = $orginfo['name'];
@@ -393,7 +393,7 @@
 
 			$event['resources']	 = $resources['results'];
 			$res_names			 = array();
-			foreach($event['resources'] as $res)
+			foreach ($event['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
 			}
@@ -402,7 +402,7 @@
 				'id' => $event['resources'][0]['building_id']));
 			$event['when']			 = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
 			$bouser					 = CreateObject('bookingfrontend.bouser');
-			if($bouser->is_organization_admin($event['customer_organization_id']))
+			if ($bouser->is_organization_admin($event['customer_organization_id']))
 			{
 				$event['edit_link']		 = self::link(array('menuaction' => 'bookingfrontend.uievent.edit',
 					'id' => $event['id']));
@@ -430,7 +430,7 @@
 			$building_info	 = $this->bo->so->get_building_info($id);
 			$building		 = $this->building_bo->read_single($building_info['id']);
 
-			if($event['secret'] != phpgw::get_var('secret', 'string'))
+			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
 				self::render_template_xsl('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups,
@@ -438,15 +438,15 @@
 				return false;
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				//reformatting the post variable to fit the booking object
 				$temp_agegroup	 = array();
 				$sexes			 = array('male', 'female');
-				foreach($sexes as $sex)
+				foreach ($sexes as $sex)
 				{
 					$i = 0;
-					foreach(phpgw::get_var($sex) as $agegroup_id => $value)
+					foreach (phpgw::get_var($sex) as $agegroup_id => $value)
 					{
 						$temp_agegroup[$i]['agegroup_id']	 = $agegroup_id;
 						$temp_agegroup[$i][$sex]			 = $value;
@@ -457,7 +457,7 @@
 				$event['agegroups']	 = $temp_agegroup;
 				$event['reminder']	 = 2; // status set to delivered
 				$errors				 = $this->bo->validate($event);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($event);
 					$step++;

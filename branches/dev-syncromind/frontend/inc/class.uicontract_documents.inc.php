@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -34,7 +33,6 @@
 	 *
 	 * @package Frontend
 	 */
-
     class frontend_uicontract_documents extends frontend_uicommon
     {
 
@@ -49,8 +47,9 @@
 			
 		    $this->contract_state_identifier_doc = "contract_state_in";
 		    $this->contracts_per_location_identifier_doc = "contracts_in_per_location";
-		    $this->form_url_doc = $GLOBALS['phpgw']->link('/',array('menuaction' => 'frontend.uicontract_documents.index', 'location_id' => $this->location_id));
-			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.document.contracts'));
+			$this->form_url_doc = $GLOBALS['phpgw']->link('/', array('menuaction' => 'frontend.uicontract_documents.index',
+				'location_id' => $this->location_id));
+			phpgwapi_cache::session_set('frontend', 'tab', $GLOBALS['phpgw']->locations->get_id('frontend', '.document.contracts'));
 			
 			$this->location_code = $this->header_state['selected_location'];
 //			$this->location_code = '1102-01';
@@ -64,13 +63,13 @@
 		    
     		$filter = phpgw::get_var('contract_filter');
     		// The user wants to change the contract status filter
-    		if(isset($filter)) 
+			if (isset($filter))
     		{
     				$this->contract_filter_doc = $filter;
     				phpgwapi_cache::session_set('frontend', 'contract_filter_doc', $filter);				
     
     				// ... if the user changes filter that may cause the
-    				if($filter == 'active' || $filter == 'not_active')
+				if ($filter == 'active' || $filter == 'not_active')
     				{
     					$change_contract = true;
     				}	
@@ -90,9 +89,9 @@
     		$contracts_for_selection = array();
     		$number_of_valid_contracts = 0;
             $contracts_per_location = $contracts_per_location_all[$org_unit];
-    		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
+			foreach ($contracts_per_location[$this->header_state['selected_location']] as $contract)
     		{
-    			if(	($this->contract_filter_doc == 'active' && $contract->is_active()) ||
+				if (($this->contract_filter_doc == 'active' && $contract->is_active()) ||
     				($this->contract_filter_doc == 'not_active' && !$contract->is_active()) ||
     				$this->contract_filter_doc == 'all'
     			)
@@ -103,27 +102,26 @@
     					'id' 				=> $contract->get_id(),
     					'old_contract_id' 	=> $contract->get_old_contract_id(),
     					'contract_status' 	=> $contract->get_contract_status()
-    					
     				);
 
-    				if($change_contract || $new_contract == $contract->get_id() || !isset($this->contract_state_doc['contract']))
+					if ($change_contract || $new_contract == $contract->get_id() || !isset($this->contract_state_doc['contract']))
     				{
     					$this->contract_state_doc['selected'] = $contract->get_id();
     					$this->contract_state_doc['contract'] = $contract;
     					//$this->contract = rental_socontract::get_instance()->get_single($new_contract);
-    					phpgwapi_cache::session_set('frontend', $this->contract_state_identifier_doc , $this->contract_state_doc);
+						phpgwapi_cache::session_set('frontend', $this->contract_state_identifier_doc, $this->contract_state_doc);
     					$change_contract = false;
     				}
     			}			
     		}
     		
-    		if($number_of_valid_contracts == 0)
+			if ($number_of_valid_contracts == 0)
     		{
     			$this->contract_state_doc['selected'] = '';
     			$this->contract_state_doc['contract'] = null;
     		}
 		    
-			$config	= CreateObject('phpgwapi.config','frontend');
+			$config = CreateObject('phpgwapi.config', 'frontend');
 			$config->read();
 			//$doc_types = isset($config->config_data['document_frontend_cat']) && $config->config_data['document_frontend_cat'] ? $config->config_data['document_frontend_cat'] : array();	
 			$doc_types = array('type' => 1);
@@ -133,29 +131,30 @@
             $filters = array('contract_id' => $this->contract_state_doc['selected'], 'document_type' => 1);
 			$document_list = array();
 			$total_records = 0;
-			if( $this->location_code )
+			if ($this->location_code)
 			{
 				foreach ($doc_types as $doc_type)
 				{
-					if($doc_type)
+					if ($doc_type)
 					{
 						$document_list = array_merge($document_list, $sodocument->get($start_index, $num_of_objects, 'id', true, $search_for, $search_type, $filters));
 					}
 
-					$total_records = $total_records + $sodocument->get_count($search_for, $search_type, $filters);;
+					$total_records = $total_records + $sodocument->get_count($search_for, $search_type, $filters);
+					;
 				}
 			}
 			
 			//----------------------------------------------datatable settings--------
 
-			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace ( ',' , '|' , $config->config_data['document_valid_types'] ) : '';
+			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace(',', '|', $config->config_data['document_valid_types']) : '';
 
 			$content = array();
-			if($valid_types)
+			if ($valid_types)
 			{
-				foreach($document_list as $entry)
+				foreach ($document_list as $entry)
 				{
-					if ( !preg_match("/({$valid_types})$/i", $entry->get_name()) )
+					if (!preg_match("/({$valid_types})$/i", $entry->get_name()))
 					{
 						continue;
 					}
@@ -164,7 +163,8 @@
 					(
 						'document_id'			=> $entry->get_id(),
 						'document_name'			=> $entry->get_name(),
-						'link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'rental.uidocument.view', 'id' => $entry->get_id())),
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uidocument.view',
+							'id' => $entry->get_id())),
 						'title'					=> $entry->get_title(),
 					    'description'			=> $entry->get_description(),
 						'doc_type'				=> lang($entry->get_type()),
@@ -176,18 +176,20 @@
 				(
 				'container'	 => 'datatable-container_0',
 				'requestUrl' => "''",
-				'ColumnDefs' => array(array('key'=>'document_name', 'label'=>lang('filename'), 'sortable'=>true, 'formatter'=>'JqueryPortico.formatLink'),
-											array('key'=>'document_id', 'label'=>lang('filename'), 'sortable'=>false, 'hidden'=>true),
-											array('key'=>'title', 'label'=>lang('name'),'sortable'=>true),
-											array('key'=>'description', 'label'=>lang('description'), 'sortable'=>true),
-											array('key'=>'doc_type', 'label'=>'Type', 'sortable'=>true)),
+				'ColumnDefs' => array(array('key' => 'document_name', 'label' => lang('filename'),
+						'sortable' => true, 'formatter' => 'JqueryPortico.formatLink'),
+					array('key' => 'document_id', 'label' => lang('filename'), 'sortable' => false,
+						'hidden' => true),
+					array('key' => 'title', 'label' => lang('name'), 'sortable' => true),
+					array('key' => 'description', 'label' => lang('description'), 'sortable' => true),
+					array('key' => 'doc_type', 'label' => 'Type', 'sortable' => true)),
 				'data'		 => json_encode($content)				
 			);
 
 			$data = array
 			(
 				'header'				=> $this->header_state,
-    			'section' => 	array (
+				'section' => array(
 					'datatable_def'			=> $datatable_def, 
 					'tabs'					=> $this->tabs, 
 					'tabs_content'			=> $this->tabs_content,
@@ -203,5 +205,8 @@
 			self::render_template_xsl(array('document', 'datatable_inline', 'frontend'), $data);
 		}
 		
-		public function query() {}
+		public function query()
+		{
+
+		}
     }

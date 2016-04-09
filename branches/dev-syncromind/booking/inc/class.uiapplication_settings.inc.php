@@ -21,11 +21,11 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				foreach($_POST as $dim => $value)
+				foreach ($_POST as $dim => $value)
 				{
-					if(strlen(trim($value)) > 0)
+					if (strlen(trim($value)) > 0)
 					{
 						$config->value($dim, phpgw::clean_value($value));
 					}
@@ -43,7 +43,7 @@
 
 			$settings			 = array();
 			$settings['tabs']	 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 			self::render_template_xsl('application_settings', array('config_data' => $config->config_data,
 				'data' => $settings));
 		}

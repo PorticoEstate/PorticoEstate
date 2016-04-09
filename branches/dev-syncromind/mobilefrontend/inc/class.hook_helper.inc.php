@@ -8,7 +8,6 @@
 	 * @package controller
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -24,7 +23,6 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-
 	/**
 	 * Hook helper
 	 *
@@ -32,6 +30,7 @@
 	 */
 	class mobilefrontend_hook_helper
 	{
+
 		/**
 		 * set auth_type for custom login - called from login
 		 *
@@ -41,10 +40,10 @@
 		{
 			//get from local config
 
-			$config		= CreateObject('phpgwapi.config','mobilefrontend');
+			$config = CreateObject('phpgwapi.config', 'mobilefrontend');
 			$config->read();
 			
-			if(isset($config->config_data['auth_type']) && $config->config_data['auth_type'])
+			if (isset($config->config_data['auth_type']) && $config->config_data['auth_type'])
 			{
 				$GLOBALS['phpgw_info']['server']['auth_type'] = $config->config_data['auth_type'];
 			}

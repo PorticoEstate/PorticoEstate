@@ -30,7 +30,7 @@
 			$this->bim_type_id = $this->db->f('id');
 		}
 
-		public function add($data)
+		public function add( $data )
 		{
 			/*
 			  [0] => Identifikasjonsnr
@@ -51,7 +51,7 @@
 
 			$plassering = explode('.', $data[3]);
 			$byggid = $plassering[1];
-			if(!$byggid)
+			if (!$byggid)
 			{
 				$this->errors[] = "Mangler objekt, hopper over: {$data[3]}";
 				return true;
@@ -59,9 +59,9 @@
 
 			$plassering_descr_arr = array();
 			$count_plassering = count($plassering);
-			for($i = 3; $i < $count_plassering; $i++)
+			for ($i = 3; $i < $count_plassering; $i++)
 			{
-				if($plassering[$i])
+				if ($plassering[$i])
 				{
 					$plassering_descr_arr[] = $plassering[$i];
 				}
@@ -81,7 +81,7 @@
 //_debug_array($location_code);
 
 			$location_data = execMethod('property.solocation.read_single', $location_code);
-			if(!$location_data['loc1'])
+			if (!$location_data['loc1'])
 			{
 				$this->errors[] = "Error importing location: {$location_code}";
 				$error = true;
@@ -89,7 +89,7 @@
 			}
 
 
-			if($location_data['street_name'])
+			if ($location_data['street_name'])
 			{
 				$address[] = $location_data['street_name'];
 				$address[] = $location_data['street_number'];
@@ -100,23 +100,23 @@
 			$loc3_data2 = explode('.........', $data[3]);
 			$loc3_data3 = explode('.', $loc3_data2[1]);
 
-			if(ctype_digit(rtrim($loc3_data[2], '00')))
+			if (ctype_digit(rtrim($loc3_data[2], '00')))
 			{
 				$location_code .= '-' . sprintf("%02s", rtrim($loc3_data[2], '00'));
 			}
-			else if(ctype_digit($loc3_data3[0]))
+			else if (ctype_digit($loc3_data3[0]))
 			{
 				$location_code .= '-' . sprintf("%02s", $loc3_data3[0]);
 			}
 
 			$_location_data = execMethod('property.solocation.read_single', $location_code);
 
-			if(!$_location_data['loc1'])
+			if (!$_location_data['loc1'])
 			{
 				$location_code = substr($byggid, 0, 4) . '-0' . substr($byggid, -1);
 			}
 
-			if(!$address)
+			if (!$address)
 			{
 				$address = $this->db->db_addslashes($location_data['loc1_name']);
 			}
@@ -169,7 +169,7 @@
 			 *    [11] => Historikk
 			 *    [12] => Tilstand
 			 */
-			if($this->is_eav)
+			if ($this->is_eav)
 			{
 				$ok = $this->_add_eav($id, $value_set);
 			}
@@ -181,7 +181,7 @@
 			return true;
 		}
 
-		private function _add_eav($id, $data)
+		private function _add_eav( $id, $data )
 		{
 			$location_id = (int)$this->location_id;
 			$sql = "SELECT fm_bim_item.id FROM fm_bim_item WHERE fm_bim_item.type = {$this->bim_type_id} AND fm_bim_item.id = {$id}";
@@ -194,7 +194,7 @@
 
 			$location_name = '_entity_4_1';
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 
@@ -255,7 +255,7 @@
 
 				$xml = $doc->saveXML();
 
-				if(function_exists('com_create_guid') === true)
+				if (function_exists('com_create_guid') === true)
 				{
 					$guid = trim(com_create_guid(), '{}');
 				}
@@ -284,7 +284,7 @@
 				. $this->db->validate_insert(array_values($values_insert)) . ')';
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array($sql);
 			}
@@ -293,7 +293,7 @@
 				$request_ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			if(!$request_ok)
+			if (!$request_ok)
 			{
 				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
 				$ok = true;
@@ -306,13 +306,13 @@
 			return $ok;
 		}
 
-		private function _add_sql($id, $value_set)
+		private function _add_sql( $id, $value_set )
 		{
 			$request_ok = false;
 			$table = 'fm_entity_4_1';
 
 			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}", __LINE__, __FILE__);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 				$value_set = $this->db->validate_update($value_set);
@@ -328,7 +328,7 @@
 				$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
 			}
 
-			if($this->debug)
+			if ($this->debug)
 			{
 				_debug_array($sql);
 			}
@@ -337,7 +337,7 @@
 				$request_ok = $this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			if(!$request_ok)
+			if (!$request_ok)
 			{
 				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
 				$ok = true;

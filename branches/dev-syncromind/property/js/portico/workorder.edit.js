@@ -1,8 +1,10 @@
 
 var vendor_id;
 
-$(document).ready(function () {
-	$('form[name=form]').submit(function (e) {
+$(document).ready(function ()
+{
+	$('form[name=form]').submit(function (e)
+	{
 		e.preventDefault();
 
 		if (!validate_form())
@@ -11,6 +13,25 @@ $(document).ready(function () {
 		}
 		check_and_submit_valid_session();
 	});
+
+	$.formUtils.addValidator({
+		name: 'budget',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			//check_for_budget is defined in xsl-template
+			var v = false;
+			var budget = $('#field_budget').val();
+			var contract_sum = $('#field_contract_sum').val();
+			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['please enter either a budget or contrakt sum'],
+		errorMessageKey: ''
+	});
+
 });
 
 function check_and_submit_valid_session()
@@ -22,14 +43,16 @@ function check_and_submit_valid_session()
 		type: 'POST',
 		dataType: 'json',
 		url: strURL,
-		success: function (data) {
+		success: function (data)
+		{
 			if (data != null)
 			{
 				if (data['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
 					JqueryPortico.lightboxlogin();//defined in common.js
-				} else
+				}
+				else
 				{
 					document.form.submit();
 				}
@@ -132,13 +155,15 @@ window.addEventListener("load", function ()
 		if (d.attachEvent)
 		{
 			d.attachEvent('onpropertychange', onDOMAttrModified, false);
-		} else
+		}
+		else
 		{
 			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
 		}
 	}
 });
 
-JqueryPortico.FormatterActive = function (key, oData) {
+JqueryPortico.FormatterActive = function (key, oData)
+{
 	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
 };

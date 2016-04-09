@@ -359,41 +359,40 @@
 <!-- add / edit -->
 <xsl:template match="edit">
 	<div align="left">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		<dl>
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
+					<dt>
 							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
+					</dt>
 				</xsl:when>
 			</xsl:choose>
+		</dl>
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="general">
+					<fieldset>
+
 				<xsl:choose>
 					<xsl:when test="value_document_name!=''">
-						<tr>
-							<td valign="top">
+								<div class="pure-control-group">
+									<label>
 								<xsl:value-of select="lang_document_name"/>
 								<input type="hidden" name="values[document_name_orig]" value="{value_document_name}"/>
 								<input type="hidden" name="values[location_code]" value="{value_location_code}"/>
-							</td>
-							<td>
+									</label>
 								<xsl:value-of select="value_document_name"/>
-							</td>
-						</tr>
+								</div>
 					</xsl:when>
 				</xsl:choose>
-				<tr>
-				</tr>
-				<tr>
-					<td valign="top">
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_update_file"/>
-					</td>
-					<td>
+							</label>
 						<input type="file" size="50" name="document_file" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -401,13 +400,11 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_version"/>
-					</td>
-					<td>
+							</label>
 						<input type="text" name="values[version]" value="{value_version}" size="12" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -415,13 +412,11 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_link"/>
-					</td>
-					<td>
+							</label>
 						<input type="text" name="values[link]" value="{value_link}" size="50" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -429,13 +424,11 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_title"/>
-					</td>
-					<td>
+							</label>
 						<input type="text" name="values[title]" value="{value_title}" size="50" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -443,13 +436,11 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_descr"/>
-					</td>
-					<td>
+							</label>
 						<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -458,17 +449,17 @@
 							</xsl:attribute>
 							<xsl:value-of select="value_descr"/>
 						</textarea>
-					</td>
-				</tr>
+						</div>
+						<div class="pure-control-group">
+					
 				<xsl:call-template name="vendor_form"/>
-				<tr>
-					<td>
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_category"/>
-					</td>
-					<td>
+							</label>
 						<xsl:call-template name="categories"/>
-					</td>
-				</tr>
+						</div>
 				<xsl:choose>
 					<xsl:when test="location_type='form'">
 						<xsl:call-template name="location_form"/>
@@ -477,27 +468,22 @@
 						<xsl:call-template name="location_view"/>
 					</xsl:otherwise>
 				</xsl:choose>
-				<tr>
-					<td>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_coordinator"/>
-					</td>
-					<td>
+							</label>
 						<xsl:call-template name="user_id_select"/>
-					</td>
-				</tr>
-				<tr>
-					<td>
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_status"/>
-					</td>
-					<td>
+							</label>
 						<xsl:call-template name="status_select"/>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_document_date"/>
-					</td>
-					<td>
+							</label>
 						<input type="text" id="values_document_date" name="values[document_date]" size="10" value="{value_document_date}" readonly="readonly" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
@@ -505,13 +491,11 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
-				<tr>
-					<td>
+						</div>
+						<div class="pure-control-group">
+							<label>
 						<xsl:value-of select="lang_branch"/>
-					</td>
-					<td>
+							</label>
 						<xsl:variable name="lang_branch_statustext">
 							<xsl:value-of select="lang_branch_statustext"/>
 						</xsl:variable>
@@ -521,10 +505,8 @@
 							</option>
 							<xsl:apply-templates select="branch_list"/>
 						</select>
-					</td>
-				</tr>
-				<tr height="50">
-					<td>
+						</div>
+						<div class="pure-control-group">
 						<xsl:variable name="lang_save">
 							<xsl:value-of select="lang_save"/>
 						</xsl:variable>
@@ -535,8 +517,10 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-					</td>
-				</tr>
+						</div>
+					</fieldset>
+				</div>
+			</div>
 			</form>
 			<tr>
 				<td>
@@ -557,7 +541,6 @@
 					</form>
 				</td>
 			</tr>
-		</table>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -578,8 +561,17 @@
 					<!--  <xsl:apply-templates select="table_header_history"/><xsl:apply-templates select="record_history"/> -->
 					<tr>
 						<td class="th_text" colspan="3">
-							<div id="paging_0"/>
-							<div id="datatable-container_0"/>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
 						</td>
 					</tr>
 				</xsl:otherwise>
@@ -587,27 +579,6 @@
 		</table>
 	</div>
 	<hr noshade="noshade" width="100%" align="center" size="1"/>
-	<!--  DATATABLE DEFINITIONS-->
-	<script type="text/javascript">
-		var property_js = <xsl:value-of select="property_js"/>;
-		var datatable = new Array();
-		var myColumnDefs = new Array();
-
-		<xsl:for-each select="datatable">
-			datatable[<xsl:value-of select="name"/>] = [
-			{
-			values:<xsl:value-of select="values"/>,
-			total_records: <xsl:value-of select="total_records"/>,
-			is_paginator:  <xsl:value-of select="is_paginator"/>,
-			footer:<xsl:value-of select="footer"/>
-			}
-			]
-		</xsl:for-each>
-
-		<xsl:for-each select="myColumnDefs">
-			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-		</xsl:for-each>
-	</script>
 </xsl:template>
 
 <!-- New template-->
@@ -723,7 +694,7 @@
 				</td>
 				<xsl:for-each select="cat_list">
 					<xsl:choose>
-						<xsl:when test="selected='selected'">
+						<xsl:when test="selected='selected' or selected = 1">
 							<td>
 								<xsl:value-of select="name"/>
 							</td>
@@ -817,27 +788,17 @@
 				</td>
 			</tr>
 		</table>
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="record_history=''">
-					<tr>
-						<td class="th_text" align="center">
-							<xsl:value-of select="lang_no_history"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
-					<tr>
-						<td class="th_text" align="left">
-							<xsl:value-of select="lang_history"/>
-						</td>
-					</tr>
-					<xsl:apply-templates select="table_header_history"/>
-					<xsl:apply-templates select="record_history"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</table>
+		<xsl:for-each select="datatable_def">
+			<xsl:if test="container = 'datatable-container_0'">
+				<xsl:call-template name="table_setup">
+					<xsl:with-param name="container" select ='container'/>
+					<xsl:with-param name="requestUrl" select ='requestUrl'/>
+					<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+					<xsl:with-param name="data" select ='data'/>
+					<xsl:with-param name="config" select ='config'/>
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:for-each>
 	</div>
 	<hr noshade="noshade" width="100%" align="center" size="1"/>
 </xsl:template>

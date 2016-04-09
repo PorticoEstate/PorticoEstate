@@ -43,7 +43,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -124,7 +124,7 @@
 
 		public function query()
 		{
-			if(isset($_SESSION['showall']))
+			if (isset($_SESSION['showall']))
 			{
 				unset($filters['building_name']);
 				unset($filters['activity_id']);
@@ -132,7 +132,7 @@
 			else
 			{
 				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
+				if ($testdata != 0)
 				{
 					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
 				}
@@ -141,7 +141,7 @@
 					unset($filters['building_name']);
 				}
 				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
+				if ($testdata2 != 0)
 				{
 					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
 				}
@@ -168,7 +168,7 @@
 
 			$events = $this->bo->so->read($params);
 
-			foreach($events['results'] as &$event)
+			foreach ($events['results'] as &$event)
 			{
 				$event['from_']	 = pretty_timestamp($event['from_']);
 				$event['to_']	 = pretty_timestamp($event['to_']);
@@ -178,7 +178,7 @@
 			return $this->jquery_results($events);
 		}
 
-		private function _combine_dates($from_, $to_)
+		private function _combine_dates( $from_, $to_ )
 		{
 			return array('from_' => $from_, 'to_' => $to_);
 		}
@@ -188,28 +188,28 @@
 			return $this->customer_id;
 		}
 
-		protected function extract_customer_identifier(&$data)
+		protected function extract_customer_identifier( &$data )
 		{
 			$this->get_customer_identifier()->extract_form_data($data);
 		}
 
-		protected function validate_customer_identifier(&$data)
+		protected function validate_customer_identifier( &$data )
 		{
 			return $this->get_customer_identifier()->validate($data);
 		}
 
-		protected function install_customer_identifier_ui(&$entity)
+		protected function install_customer_identifier_ui( &$entity )
 		{
 			$this->get_customer_identifier()->install($this, $entity);
 		}
 
-		protected function validate(&$entity)
+		protected function validate( &$entity )
 		{
 			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
 			return $errors;
 		}
 
-		protected function extract_form_data($defaults = array())
+		protected function extract_form_data( $defaults = array() )
 		{
 			$entity = array_merge($defaults, extract_values($_POST, $this->fields));
 			$this->agegroup_bo->extract_form_data($entity);
@@ -217,14 +217,14 @@
 			return $entity;
 		}
 
-		protected function extract_and_validate($defaults = array())
+		protected function extract_and_validate( $defaults = array() )
 		{
 			$entity	 = $this->extract_form_data($defaults);
 			$errors	 = $this->validate($entity);
 			return array($entity, $errors);
 		}
 
-		protected function add_comment(&$event, $comment, $type = 'comment')
+		protected function add_comment( &$event, $comment, $type = 'comment' )
 		{
 			$event['comments'][] = array(
 				'time'		 => 'now',
@@ -234,9 +234,9 @@
 			);
 		}
 
-		protected function add_cost_history(&$event, $comment = '', $cost = '0.00')
+		protected function add_cost_history( &$event, $comment = '', $cost = '0.00' )
 		{
-			if(!$comment)
+			if (!$comment)
 			{
 				$comment = lang('cost is set');
 			}
@@ -249,13 +249,13 @@
 			);
 		}
 
-		protected function create_sendt_mail_notification_comment_text($event, $errors)
+		protected function create_sendt_mail_notification_comment_text( $event, $errors )
 		{
 			$data = array();
 
-			foreach($errors['allocation'][0] as $e)
+			foreach ($errors['allocation'][0] as $e)
 			{
-				foreach($event['resources'] as $res)
+				foreach ($event['resources'] as $res)
 				{
 					$time = $this->bo->so->get_overlap_time_info($res, $e, 'allocation');
 
@@ -265,14 +265,14 @@
 					$start	 = $from_->format('H:i');
 					$end	 = $to_->format('H:i');
 
-					if($start == $end)
+					if ($start == $end)
 						continue;
 
 					$resource	 = $this->bo->so->get_resource_info($res);
 					$_mymail	 = $this->bo->so->get_contact_mail($e, 'allocation');
 
 					$a = $_mymail[0];
-					if(array_key_exists($a, $data))
+					if (array_key_exists($a, $data))
 					{
 						$data[$a][] = array('date' => $date, 'building' => $event['building_name'],
 							'resource' => $resource['name'], 'start' => $start, 'end' => $end);
@@ -282,10 +282,10 @@
 						$data[$a] = array(array('date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end));
 					}
-					if($_mymail[1])
+					if ($_mymail[1])
 					{
 						$b = $_mymail[1];
-						if(array_key_exists($a, $data))
+						if (array_key_exists($a, $data))
 						{
 							$data[$b][] = array('date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
@@ -299,9 +299,9 @@
 				}
 			}
 
-			foreach($errors['booking'][0] as $e)
+			foreach ($errors['booking'][0] as $e)
 			{
-				foreach($event['resources'] as $res)
+				foreach ($event['resources'] as $res)
 				{
 					$time = $this->bo->so->get_overlap_time_info($res, $e, 'booking');
 
@@ -311,14 +311,14 @@
 					$start	 = $from_->format('H:i');
 					$end	 = $to_->format('H:i');
 
-					if($start == $end)
+					if ($start == $end)
 						continue;
 
 					$resource	 = $this->bo->so->get_resource_info($res);
 					$_mymail	 = $this->bo->so->get_contact_mail($e, 'booking');
 
 					$a = $_mymail[0];
-					if(array_key_exists($a, $data))
+					if (array_key_exists($a, $data))
 					{
 						$data[$a][] = array('date' => $date, 'building' => $event['building_name'],
 							'resource' => $resource['name'], 'start' => $start, 'end' => $end);
@@ -328,10 +328,10 @@
 						$data[$a] = array(array('date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end));
 					}
-					if($_mymail[1])
+					if ($_mymail[1])
 					{
 						$b = $_mymail[1];
-						if(array_key_exists($a, $data))
+						if (array_key_exists($a, $data))
 						{
 							$data[$b][] = array('date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
@@ -351,17 +351,17 @@
 		{
 			$errors	 = array();
 			$event	 = array('customer_internal' => 0);
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
-				foreach($_POST['from_'] as &$from)
+				foreach ($_POST['from_'] as &$from)
 				{
 					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
-				foreach($_POST['to_'] as &$to)
+				foreach ($_POST['to_'] as &$to)
 				{
 					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
@@ -378,9 +378,9 @@
 				$event['is_public']		 = 1;
 				$event['building_name']	 = $_POST['building_name'];
 
-				if($_POST['organization_name'] || $_POST['org_id2'])
+				if ($_POST['organization_name'] || $_POST['org_id2'])
 				{
-					if($_POST['organization_name'])
+					if ($_POST['organization_name'])
 					{
 						$event['customer_organization_name'] = $_POST['organization_name'];
 						$event['customer_organization_id']	 = $_POST['organization_id'];
@@ -395,11 +395,11 @@
 						$organization						 = $this->organization_bo->read_single(intval($orgid['id']));
 					}
 
-					if($organization['customer_internal'] == 0)
+					if ($organization['customer_internal'] == 0)
 					{
 						$_POST['customer_identifier_type']	 = $organization['customer_identifier_type'];
 						$_POST['customer_internal']			 = $organization['customer_internal'];
-						if(strlen($organization['customer_organization_number']) == 9)
+						if (strlen($organization['customer_organization_number']) == 9)
 						{
 							$_POST['customer_organization_number'] = $organization['customer_organization_number'];
 						}
@@ -412,7 +412,7 @@
 					{
 						$_POST['customer_identifier_type']	 = 'organization_number';
 						$_POST['customer_internal']			 = $organization['customer_internal'];
-						if((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5))
+						if ((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5))
 						{
 							$_POST['customer_organization_number'] = $organization['customer_number'];
 						}
@@ -421,7 +421,7 @@
 							$errors['resource_number'] = lang('The resource number is wrong or not present');
 						}
 					}
-					if($organization['contacts'][0]['name'] != '')
+					if ($organization['contacts'][0]['name'] != '')
 					{
 						$_POST['contact_name']	 = $organization['contacts'][0]['name'];
 						$_POST['contact_email']	 = $organization['contacts'][0]['email'];
@@ -434,10 +434,10 @@
 						$_POST['contact_phone']	 = $organization['contacts'][1]['phone'];
 					}
 				}
-				if(is_array($event['dates']))//(!$_POST['application_id'])
+				if (is_array($event['dates']))//(!$_POST['application_id'])
 				{
 					$temp_errors = array();
-					foreach($event['dates'] as $checkdate)
+					foreach ($event['dates'] as $checkdate)
 					{
 						$event['from_']	 = $checkdate['from_'];
 						$_POST['from_']	 = $checkdate['from_'];
@@ -446,14 +446,14 @@
 						list($event, $errors) = $this->extract_and_validate($event);
 						$time_from		 = explode(" ", $_POST['from_']);
 						$time_to		 = explode(" ", $_POST['to_']);
-						if($time_from[0] == $time_to[0])
+						if ($time_from[0] == $time_to[0])
 						{
-							if($time_from[1] >= $time_to[1])
+							if ($time_from[1] >= $time_to[1])
 							{
 								$errors['time'] = lang('Time is set wrong');
 							}
 						}
-						if($errors != array())
+						if ($errors != array())
 						{
 							$temp_errors = $errors;
 						}
@@ -465,39 +465,39 @@
 					list($event, $errors) = $this->extract_and_validate($event);
 					$time_from	 = explode(" ", $_POST['from_']);
 					$time_to	 = explode(" ", $_POST['to_']);
-					if($time_from[0] == $time_to[0])
+					if ($time_from[0] == $time_to[0])
 					{
-						if($time_from[1] >= $time_to[1])
+						if ($time_from[1] >= $time_to[1])
 						{
 							$errors['time'] = lang('Time is set wrong');
 						}
 					}
 				}
 
-				if($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
+				if ($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
 				{
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				}
-				if($_POST['cost'] != 0)
+				if ($_POST['cost'] != 0)
 				{
-					$this->add_cost_history($event, lang('cost is set'), phpgw::get_var('cost','float'));
+					$this->add_cost_history($event, lang('cost is set'), phpgw::get_var('cost', 'float'));
 				}
-				if(($_POST['organization_name'] != '' or $_POST['org_id2'] != '') and isset($errors['contact_name']))
+				if (($_POST['organization_name'] != '' or $_POST['org_id2'] != '') and isset($errors['contact_name']))
 				{
 					$errors['contact_name'] = lang('Organization is missing booking charge');
 				}
-				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'] && !$errors['activity_id'])
+				if (!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'] && !$errors['activity_id'])
 				{
-					if(!$_POST['application_id'])
+					if (!$_POST['application_id'])
 					{
 						$allids = array();
-						foreach($event['dates'] as $checkdate)
+						foreach ($event['dates'] as $checkdate)
 						{
 							$event['from_']	 = $checkdate['from_'];
 							$event['to_']	 = $checkdate['to_'];
 
 							unset($event['comments']);
-							if(count($event['dates']) < 2)
+							if (count($event['dates']) < 2)
 							{
 								$this->add_comment($event, lang('Event was created'));
 								$receipt = $this->bo->add($event);
@@ -509,7 +509,7 @@
 								$allids[]	 = array($receipt['id']);
 							}
 						}
-						if($allids)
+						if ($allids)
 						{
 							$this->bo->so->update_comment($allids);
 							$this->bo->so->update_id_string();
@@ -525,14 +525,14 @@
 						'secret' => $event['secret'], 'warnings' => $errors));
 				}
 			}
-			if($errors['event'])
+			if ($errors['event'])
 			{
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
 			$default_dates = array_map(array(self, '_combine_dates'), '', '');
 			array_set_default($event, 'dates', $default_dates);
 
-			if(!phpgw::get_var('from_report', 'POST'))
+			if (!phpgw::get_var('from_report', 'POST'))
 			{
 				$this->flash_form_errors($errors);
 			}
@@ -555,7 +555,7 @@
 
 			$this->install_customer_identifier_ui($event);
 
-			foreach($event['dates'] as &$date)
+			foreach ($event['dates'] as &$date)
 			{
 				$date['from_']	 = pretty_timestamp($date['from_']);
 				$date['to_']	 = pretty_timestamp($date['to_']);
@@ -578,7 +578,7 @@
 				'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-		private function send_mailnotification($receiver, $subject, $body)
+		private function send_mailnotification( $receiver, $subject, $body )
 		{
 			$send = CreateObject('phpgwapi.send');
 
@@ -586,18 +586,18 @@
 			$config->read();
 			$from	 = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
-			if(strlen(trim($body)) == 0)
+			if (strlen(trim($body)) == 0)
 			{
 				return false;
 			}
 
-			if(strlen($receiver) > 0)
+			if (strlen($receiver) > 0)
 			{
 				try
 				{
 					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'plain');
 				}
-				catch(phpmailerException $e)
+				catch (phpmailerException $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -627,7 +627,7 @@
 			$errors					 = array();
 			$customer				 = array();
 
-			if($event['customer_identifier_type'])
+			if ($event['customer_identifier_type'])
 			{
 				$customer['customer_identifier_type']		 = $event['customer_identifier_type'];
 				$customer['customer_ssn']					 = $event['customer_ssn'];
@@ -648,7 +648,7 @@
 				$customer['customer_internal']				 = $organization['customer_internal'];
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$_POST['from_']	 = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 				$_POST['to_']	 = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
@@ -656,16 +656,16 @@
 
 			list($event, $errors) = $this->extract_and_validate($event);
 
-			if($event['customer_organization_number'])
+			if ($event['customer_organization_number'])
 			{
 				$orginfo							 = $this->bo->so->get_org($event['customer_organization_number']);
 				$event['customer_organization_id']	 = $orginfo['id'];
 				$event['customer_organization_name'] = $orginfo['name'];
 			}
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if(!$_POST['organization_name'])
+				if (!$_POST['organization_name'])
 				{
 					$event['customer_organization_name'] = Null;
 					$event['customer_organization_id']	 = Null;
@@ -677,17 +677,17 @@
 //                        $event['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['from_']));
 //                        $event['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['to_']));
 
-				if($_POST['organization_name'])
+				if ($_POST['organization_name'])
 				{
 					$event['customer_organization_name'] = $_POST['organization_name'];
 					$event['customer_organization_id']	 = $_POST['organization_id'];
 					$organization						 = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int')));
 
-					if($organization['customer_internal'] == 0)
+					if ($organization['customer_internal'] == 0)
 					{
 						$event['customer_identifier_type']	 = $organization['customer_identifier_type'];
 						$event['customer_internal']			 = $organization['customer_internal'];
-						if(strlen($organization['customer_organization_number']) == 9)
+						if (strlen($organization['customer_organization_number']) == 9)
 						{
 							$event['customer_organization_number'] = $organization['customer_organization_number'];
 						}
@@ -700,7 +700,7 @@
 					{
 						$event['customer_identifier_type']	 = 'organization_number';
 						$event['customer_internal']			 = $organization['customer_internal'];
-						if((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5))
+						if ((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5))
 						{
 							$event['customer_organization_number'] = $organization['customer_number'];
 						}
@@ -710,42 +710,42 @@
 						}
 					}
 				}
-				elseif($_POST['customer_identifier_type'] == 'ssn')
+				elseif ($_POST['customer_identifier_type'] == 'ssn')
 				{
 					$event['customer_identifier_type']	 = 'ssn';
 					$event['customer_ssn']				 = $_POST['customer_ssn'];
 				}
-				elseif($_POST['customer_identifier_type'] == 'organization_number')
+				elseif ($_POST['customer_identifier_type'] == 'organization_number')
 				{
 					$event['customer_identifier_type']		 = 'organization_number';
 					$event['customer_organization_number']	 = $_POST['customer_organization_number'];
 				}
 
-				if($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
+				if ($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
 				{
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				}
 
-				if($_POST['cost'] != $_POST['cost_orig'])
+				if ($_POST['cost'] != $_POST['cost_orig'])
 				{
-					$this->add_cost_history($event, phpgw::get_var('cost_comment'), phpgw::get_var('cost','float'));
+					$this->add_cost_history($event, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 
-				if(!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
+				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if(( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
+					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
 					{
 
-						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
+						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
-							if(phpgw::get_var('sendtocollision', 'POST'))
+							if (phpgw::get_var('sendtocollision', 'POST'))
 							{
 								$comment_text_log	 = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
 								$res				 = array();
 								$resname			 = '';
-								foreach($event['resources'] as $resid)
+								foreach ($event['resources'] as $resid)
 								{
 									$res = $this->bo->so->get_resource_info($resid);
 									$resname .= $res['name'] . ', ';
@@ -753,7 +753,7 @@
 								$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
 								$this->add_comment($event, $comment_text_log);
 							}
-							if(phpgw::get_var('sendtocollision', 'POST'))
+							if (phpgw::get_var('sendtocollision', 'POST'))
 							{
 
 								$subject		 = $config->config_data['event_conflict_mail_subject'];
@@ -761,9 +761,9 @@
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 								$mail_sendt_to	 = '';
-								foreach(array_keys($maildata) as $mail)
+								foreach (array_keys($maildata) as $mail)
 								{
-									if($mail == '')
+									if ($mail == '')
 										continue;
 									usort($maildata[$mail], function($a, $b)
 									{
@@ -777,20 +777,20 @@
 									$mailbody			 = '';
 									$comment_text_log	 = "Reserverasjoner som har blitt overskrevet: \n";
 									$mail_sendt_to		 = $mail_sendt_to . ' ' . $mail;
-									foreach($maildata[$mail] as $data)
+									foreach ($maildata[$mail] as $data)
 									{
 										$comment_text_log .= $data['date'] . ', ' . $data['building'] . ', ' . $data['resource'] . ', Kl. ' . $data['start'] . ' - ' . $data['end'] . " \n";
 									}
 									$mailbody .= $body . "<pre>" . $comment_text_log . "</pre>";
 									$this->send_mailnotification($mail, $subject, $mailbody);
 								}
-								if(strpos($mail_sendt_to, '@') !== False)
+								if (strpos($mail_sendt_to, '@') !== False)
 								{
 									$comment = "<p>Melding om konflikt er sendt til" . $mail_sendt_to . "<br />\n" . phpgw::get_var('mail', 'POST') . "</p>";
 									$this->add_comment($event, $comment);
 								}
 							}
-							if(phpgw::get_var('sendtocontact', 'POST'))
+							if (phpgw::get_var('sendtocontact', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
 								$body	 = "<p>" . $config->config_data['event_change_mail'] . "\n" . phpgw::get_var('mail', 'POST');
@@ -799,14 +799,14 @@
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'];
 								$this->add_comment($event, $comment);
 							}
-							if(phpgw::get_var('sendtorbuilding', 'POST'))
+							if (phpgw::get_var('sendtorbuilding', 'POST'))
 							{
 
 								$subject = $config->config_data['event_mail_building_subject'];
 
 								$body = "<p>" . $config->config_data['event_mail_building'] . "<br />\n" . phpgw::get_var('mail', 'POST') . "</p>";
 
-								if($event['customer_organization_name'])
+								if ($event['customer_organization_name'])
 								{
 									$username = $event['customer_organization_name'];
 								}
@@ -816,7 +816,7 @@
 								}
 								$res	 = array();
 								$resname = '';
-								foreach($event['resources'] as $resid)
+								foreach ($event['resources'] as $resid)
 								{
 									$res = $this->bo->so->get_resource_info($resid);
 									$resname .= $res['name'] . ', ';
@@ -829,43 +829,43 @@
 
 								$sendt			 = 0;
 								$mail_sendt_to	 = '';
-								if($event['contact_email'])
+								if ($event['contact_email'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $event['contact_email'];
 									$this->send_mailnotification($event['contact_email'], $subject, $body);
 								}
-								if($building_info['email'])
+								if ($building_info['email'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['email'];
 									$this->send_mailnotification($building_info['email'], $subject, $body);
 								}
-								if($building_info['tilsyn_email'])
+								if ($building_info['tilsyn_email'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email'];
 									$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 								}
-								if($building_info['tilsyn_email2'])
+								if ($building_info['tilsyn_email2'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email2'];
 									$this->send_mailnotification($building_info['sendtorbuilding_email2'], $subject, $body);
 								}
-								if($_POST['sendtorbuilding_email1'])
+								if ($_POST['sendtorbuilding_email1'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email1'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 								}
-								if($_POST['sendtorbuilding_email2'])
+								if ($_POST['sendtorbuilding_email2'])
 								{
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email2'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
 								}
-								if($sendt <= 0)
+								if ($sendt <= 0)
 								{
 									$errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
 								}
@@ -877,13 +877,13 @@
 								}
 							}
 						}
-						if(!phpgw::get_var('active', 'POST'))
+						if (!phpgw::get_var('active', 'POST'))
 						{
 
 							$subject = $config->config_data['event_canceled_mail_subject'];
 							$body	 = $config->config_data['event_canceled_mail'] . "\n" . phpgw::get_var('mail', 'POST');
 
-							if($event['customer_organization_name'])
+							if ($event['customer_organization_name'])
 							{
 								$comment_text_log = $event['customer_organization_name'];
 							}
@@ -898,37 +898,37 @@
 
 							$sendt			 = 0;
 							$mail_sendt_to	 = '';
-							if($building_info['email'])
+							if ($building_info['email'])
 							{
 								$sendt++;
 								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['email'];
 								$this->send_mailnotification($building_info['email'], $subject, $body);
 							}
-							if($building_info['tilsyn_email'])
+							if ($building_info['tilsyn_email'])
 							{
 								$sendt++;
 								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email'];
 								$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 							}
-							if($building_info['tilsyn_email2'])
+							if ($building_info['tilsyn_email2'])
 							{
 								$sendt++;
 								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email2'];
 								$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
 							}
-							if($_POST['sendtorbuilding_email1'])
+							if ($_POST['sendtorbuilding_email1'])
 							{
 								$sendt++;
 								$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email1'];
 								$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 							}
-							if($_POST['sendtorbuilding_email2'])
+							if ($_POST['sendtorbuilding_email2'])
 							{
 								$sendt++;
 								$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email2'];
 								$this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
 							}
-							if($sendt <= 0)
+							if ($sendt <= 0)
 							{
 								$errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
 							}
@@ -946,16 +946,16 @@
 				}
 			}
 
-			if($errors['allocation'])
+			if ($errors['allocation'])
 			{
 				$errors['allocation'] = lang('Event created, Overlaps with existing allocation, Remember to send a notification');
 			}
-			elseif($errors['booking'])
+			elseif ($errors['booking'])
 			{
 				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
 			}
 			$this->flash_form_errors($errors);
-			if($customer['customer_identifier_type'])
+			if ($customer['customer_identifier_type'])
 			{
 				$event['customer_identifier_type']		 = $customer['customer_identifier_type'];
 				$event['customer_ssn']					 = $customer['customer_ssn'];
@@ -997,7 +997,8 @@
 			$event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //              echo '<pre>'; print_r($event);echo '</pre>';
 			self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments, 'cost_history' => $cost_history));
+				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments,
+				'cost_history' => $cost_history));
 		}
 
 		public function delete()
@@ -1005,11 +1006,11 @@
 			$event_id		 = phpgw::get_var('event_id', 'int');
 			$application_id	 = phpgw::get_var('application_id', 'int');
 
-			if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
 			{
 				$this->bo->so->delete_event($event_id);
 			}
-			if(isset($application_id))
+			if (isset($application_id))
 			{
 				$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 			}
@@ -1026,7 +1027,7 @@
 				'sort' => 'name'));
 			$event['resources']	 = $resources['results'];
 			$res_names			 = array();
-			foreach($event['resources'] as $res)
+			foreach ($event['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
 			}

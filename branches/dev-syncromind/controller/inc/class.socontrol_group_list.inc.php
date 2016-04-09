@@ -44,7 +44,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('controller.socontrol_group_list');
 			}
@@ -57,7 +57,7 @@
 		 * @param $control_group_list the control_group_list group to be added
 		 * @return int id of the new control_group_list object
 		 */
-		function add(&$control_group_list)
+		function add( &$control_group_list )
 		{
 			$cols = array(
 				'control_id',
@@ -73,7 +73,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_group_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
 
-			if($result)
+			if ($result)
 			{
 				// Get the new control group ID and return it
 				return $this->db->get_last_insert_id('controller_control_group_list', 'id');
@@ -90,7 +90,7 @@
 		 * @param $control_group_list the control_group_list to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
-		function update($control_group_list)
+		function update( $control_group_list )
 		{
 			$id = intval($control_group_list->get_id());
 
@@ -112,14 +112,14 @@
 		 * @param	$id	id of the control_group_list to return
 		 * @return a control_group_list
 		 */
-		function get_single($id)
+		function get_single( $id )
 		{
 			$id = (int)$id;
 
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.id = " . $id;
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -141,7 +141,7 @@
 		 * @param	$control group id control group id
 		 * @return a control_group_list
 		 */
-		function get_group_list_by_control_and_group($control_id, $control_group_id)
+		function get_group_list_by_control_and_group( $control_id, $control_group_id )
 		{
 			$control_id			 = (int)$control_id;
 			$control_group_id	 = (int)$control_group_id;
@@ -149,7 +149,7 @@
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id={$control_id} AND p.control_group_id={$control_group_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -171,7 +171,7 @@
 		 * @param	$control group id control group id
 		 * @return a control_group_list
 		 */
-		function delete($control_id, $control_group_id)
+		function delete( $control_id, $control_group_id )
 		{
 			$control_id			 = (int)$control_id;
 			$control_group_id	 = (int)$control_group_id;
@@ -187,7 +187,7 @@
 		 * @param	$control_id control id
 		 * @return a control_group_list
 		 */
-		function delete_control_groups($control_id)
+		function delete_control_groups( $control_id )
 		{
 			$control_id	 = (int)$control_id;
 			$result		 = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id");
@@ -202,7 +202,7 @@
 		 * @param	$returnType representation of returned control grups, as objects or as arrays  
 		 * @return a control_group_list
 		 */
-		function get_control_groups_by_control($control_id, $returnType = "object")
+		function get_control_groups_by_control( $control_id, $returnType = "object" )
 		{
 			$control_id	 = (int)$control_id;
 			$sql		 = "SELECT cg.*, cgl.order_nr ";
@@ -215,7 +215,7 @@
 
 			$control_group_list = array();
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
@@ -227,7 +227,7 @@
 				$component_criteria = $this->db->f('component_criteria') ? unserialize($this->db->f('component_criteria', true)) : array();
 				$control_group->set_component_criteria($component_criteria);
 
-				if($returnType == "array")
+				if ($returnType == "array")
 				{
 					$control_group_list[] = $control_group->toArray();
 				}
@@ -240,17 +240,17 @@
 			return $control_group_list;
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 
 		}
 
-		function get_id_field_name($extended_info = false)
+		function get_id_field_name( $extended_info = false )
 		{
 
 		}
 
-		function populate(int $control_group_id, &$control_group)
+		function populate( int $control_group_id, &$control_group )
 		{
 
 		}

@@ -53,13 +53,13 @@
 			'check_perms' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->so = CreateObject('property.soadmin_location');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom = createObject('property.custom_fields');
 
-			if($session)
+			if ($session)
 			{
 				//		$this->read_sessiondata();
 				$this->use_session = true;
@@ -78,9 +78,9 @@
 			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'standard_e', $data);
 			}
@@ -96,7 +96,7 @@
 			$this->order = $data['order'];
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			# $data = array()
 			#array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order)
@@ -115,19 +115,19 @@
 			return $standard;
 		}
 
-		function read_config_single($column_name)
+		function read_config_single( $column_name )
 		{
 			return $this->so->read_config_single($column_name);
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			return $this->so->read_single($id);
 		}
 
-		function save($standard)
+		function save( $standard )
 		{
-			if(isset($standard['id']) && $standard['id'])
+			if (isset($standard['id']) && $standard['id'])
 			{
 				$receipt = $this->so->edit($standard);
 			}
@@ -138,26 +138,26 @@
 			return $receipt;
 		}
 
-		function delete($type_id, $id, $attrib = '', $group_id)
+		function delete( $type_id, $id, $attrib = '', $group_id )
 		{
-			if($id && !$attrib)
+			if ($id && !$attrib)
 			{
 				$receipt = $this->so->delete($id);
 			}
-			else if($type_id && $id && $attrib)
+			else if ($type_id && $id && $attrib)
 			{
 				$ok = 0;
 				$receipt = array();
 
-				if($this->custom->delete('property', ".location.{$type_id}", $id, "fm_location{$type_id}_history", true))
+				if ($this->custom->delete('property', ".location.{$type_id}", $id, "fm_location{$type_id}_history", true))
 				{
 					$ok++;
 				}
-				if($this->custom->delete('property', ".location.{$type_id}", $id, "fm_location{$type_id}"))
+				if ($this->custom->delete('property', ".location.{$type_id}", $id, "fm_location{$type_id}"))
 				{
 					$ok++;
 				}
-				if($ok == 2)
+				if ($ok == 2)
 				{
 					$receipt['message'][] = array('msg' => lang('attibute has been deleted'));
 				}
@@ -166,9 +166,9 @@
 					$receipt['error'][] = array('msg' => lang('something went wrong'));
 				}
 			}
-			else if($type_id && $group_id)
+			else if ($type_id && $group_id)
 			{
-				if($this->custom->delete_group('property', ".location.{$type_id}", $group_id))
+				if ($this->custom->delete_group('property', ".location.{$type_id}", $group_id))
 				{
 					$receipt['message'][] = array('msg' => lang('attibute group %1 has been deleted', $group_id));
 				}
@@ -181,14 +181,22 @@
 			return $receipt;
 		}
 
-		function get_attrib_group_list($type_id, $selected)
+		function get_attrib_group_list( $type_id, $selected )
 		{
-			$location = ".location.{$type_id}";
-			$group_list = $this->read_attrib_group($location, true);
+			$params = array(
+				'start' => 0,
+				'query' => '',
+				'sort' => 'ASC',
+				'order' => 'group_sort',
+				'allrows' => true,
+				'type_id' => $type_id
+			);
 
-			foreach($group_list as &$group)
+			$group_list = $this->read_attrib_group($params);
+
+			foreach ($group_list as &$group)
 			{
-				if($group['id'] == $selected)
+				if ($group['id'] == $selected)
 				{
 					$group['selected'] = true;
 				}
@@ -196,9 +204,9 @@
 			return $group_list;
 		}
 
-		function read_attrib_group($data = array())
+		function read_attrib_group( $data = array() )
 		{
-			if($data['allrows'] || phpgw::get_var('allrows') == 1)
+			if ($data['allrows'] || phpgw::get_var('allrows') == 1)
 			{
 				$data['allrows'] = true;
 			}
@@ -209,18 +217,18 @@
 			return $attrib;
 		}
 
-		function read_single_attrib_group($location, $id)
+		function read_single_attrib_group( $location, $id )
 		{
 			return $this->custom->get_group('property', $location, $id, true);
 		}
 
-		function resort_attrib_group($data)
+		function resort_attrib_group( $data )
 		{
 			$resort = isset($data['resort']) ? $data['resort'] : 'up';
 			$type_id = isset($data['type_id']) ? $data['type_id'] : '';
 			$id = (isset($data['id']) ? $data['id'] : '');
 
-			if(!$type_id || !$id)
+			if (!$type_id || !$id)
 			{
 				return;
 			}
@@ -228,13 +236,13 @@
 			$this->custom->resort_group($id, $resort, 'property', '.location.' . $type_id);
 		}
 
-		public function save_attrib_group($group, $action = '')
+		public function save_attrib_group( $group, $action = '' )
 		{
 			$group['appname'] = 'property';
 
-			if($action == 'edit' && $group['id'])
+			if ($action == 'edit' && $group['id'])
 			{
-				if($this->custom->edit_group($group))
+				if ($this->custom->edit_group($group))
 				{
 					return array
 						(
@@ -247,11 +255,11 @@
 			else
 			{
 				$id = $this->custom->add_group($group);
-				if($id <= 0)
+				if ($id <= 0)
 				{
 					return array('error' => lang('Unable to add group'));
 				}
-				else if($id == -1)
+				else if ($id == -1)
 				{
 					return array
 						(
@@ -272,9 +280,9 @@
 			}
 		}
 
-		function read_attrib($data = array())
+		function read_attrib( $data = array() )
 		{
-			if($data['allrows'] || phpgw::get_var('allrows') == 1)
+			if ($data['allrows'] || phpgw::get_var('allrows') == 1)
 			{
 				$data['allrows'] = true;
 			}
@@ -287,9 +295,9 @@
 			return $attrib;
 		}
 
-		function read_attrib_old($type_id, $allrows = '')
+		function read_attrib_old( $type_id, $allrows = '' )
 		{
-			if($allrows || phpgw::get_var('allrows') == 1)
+			if ($allrows || phpgw::get_var('allrows') == 1)
 			{
 				$this->allrows = true;
 			}
@@ -301,18 +309,18 @@
 			return $attrib;
 		}
 
-		function read_single_attrib($type_id, $id)
+		function read_single_attrib( $type_id, $id )
 		{
 			return $this->custom->get('property', ".location.{$type_id}", $id, true);
 		}
 
-		function resort_attrib($data = array())
+		function resort_attrib( $data = array() )
 		{
 			$resort = isset($data['resort']) ? $data['resort'] : 'up';
 			$type_id = isset($data['type_id']) ? $data['type_id'] : '';
 			$id = (isset($data['id']) ? $data['id'] : '');
 
-			if(!$type_id || !$id)
+			if (!$type_id || !$id)
 			{
 				return;
 			}
@@ -320,16 +328,16 @@
 			$this->custom->resort($id, $resort, 'property', '.location.' . $type_id);
 		}
 
-		public function save_attrib($attrib, $action = '')
+		public function save_attrib( $attrib, $action = '' )
 		{
 			$attrib['appname'] = 'property';
 			$attrib['location'] = '.location.' . $attrib['type_id'];
 			$primary_table = 'fm_location' . $attrib['type_id'];
 			$history_table = $primary_table . '_history';
 
-			if($action == 'edit' && $attrib['id'])
+			if ($action == 'edit' && $attrib['id'])
 			{
-				if($this->custom->edit($attrib, $history_table, true))
+				if ($this->custom->edit($attrib, $history_table, true))
 				{
 					$this->custom->edit($attrib, $primary_table);
 					return array
@@ -344,11 +352,11 @@
 			{
 				$id = $this->custom->add($attrib, $primary_table);
 				$this->custom->add($attrib, $history_table, true);
-				if($id <= 0)
+				if ($id <= 0)
 				{
 					return array('error' => lang('Unable to add field'));
 				}
-				else if($id == -1)
+				else if ($id == -1)
 				{
 					return array
 						(
@@ -369,18 +377,18 @@
 			}
 		}
 
-		function save_config($values = '', $column_name = '')
+		function save_config( $values = '', $column_name = '' )
 		{
 			return $this->so->save_config($values, $column_name);
 		}
 
-		function select_location_type($selected = '')
+		function select_location_type( $selected = '' )
 		{
 			$location_types = $this->so->select_location_type();
 			return $this->bocommon->select_list($selected, $location_types);
 		}
 
-		function select_nullable($selected = '')
+		function select_nullable( $selected = '' )
 		{
 			$nullable[0]['id'] = 'true';
 			$nullable[0]['name'] = lang('true');
@@ -390,17 +398,17 @@
 			return $this->bocommon->select_list($selected, $nullable);
 		}
 
-		function get_list_info($type_id = '', $selected = '')
+		function get_list_info( $type_id = '', $selected = '' )
 		{
-			if($type_id)
+			if ($type_id)
 			{
 				$location_types = $this->so->select_location_type();
 
-				for($i = 0; $i < ($type_id); $i++)
+				for ($i = 0; $i < ($type_id); $i++)
 				{
 					$location[$i] = $location_types[$i];
 					unset($location[$i]['list_info']);
-					if(isset($selected[($i + 1)]) && $selected[($i + 1)])
+					if (isset($selected[($i + 1)]) && $selected[($i + 1)])
 					{
 						$location[$i]['selected'] = 'selected';
 					}

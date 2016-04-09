@@ -1,5 +1,5 @@
 <?php
-	/**************************************************************************\
+	/*	 * ************************************************************************\
 	* phpGroupWare - Registration                                              *
 	* http://www.phpgroupware.org                                              *
 	* This application written by Joseph Engo <jengo@phpgroupware.org>         *
@@ -10,14 +10,14 @@
 	*  under the terms of the GNU General Public License as published by the   *
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
-	\**************************************************************************/
+	  \************************************************************************* */
 
 	/* $Id$ */
 
 	/*
-	** This program is non-standard, we will create and manage our sessions manually.
-	** We don't want users to be kicked out half way through, and we really don't need a true
-	** session for it.
+	 * * This program is non-standard, we will create and manage our sessions manually.
+	 * * We don't want users to be kicked out half way through, and we really don't need a true
+	 * * session for it.
 	*/
 
 	// Note: This is current not a drop in install, it requires some manual installation
@@ -71,7 +71,7 @@
 	$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
 	$GLOBALS['_phpgw_domain'] = $GLOBALS['phpgw_domain'];
 
-	if(!$_domain_info)
+	if (!$_domain_info)
 	{
 		echo "not a valid domain\n";
 		die();
@@ -82,10 +82,10 @@
 		$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
 	}
 
-	include(PHPGW_API_INC.'/functions.inc.php');
+	include(PHPGW_API_INC . '/functions.inc.php');
 
 
-	$c = createobject('phpgwapi.config','registration');
+	$c = createobject('phpgwapi.config', 'registration');
 	$c->read();
 	$config = $c->config_data;
 
@@ -100,10 +100,10 @@
 		$_POST['submitit'] = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
-		if(!$GLOBALS['sessionid'])
+		if (!$GLOBALS['sessionid'])
 		{
 			$lang_denied = lang('Anonymous access not correctly configured');
-			if($GLOBALS['phpgw']->session->reason)
+			if ($GLOBALS['phpgw']->session->reason)
 			{
 	//			$lang_denied = $GLOBALS['phpgw']->session->reason;
 			}
@@ -119,7 +119,7 @@ HTML;
 // BEGIN Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
+	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] != 'en')
 		{
 			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
 		}
@@ -134,23 +134,23 @@ HTML;
 		define('PHPGW_IMAGES', ExecMethod('phpgwapi.phpgw.common.get_image_path'));
 		define('PHPGW_APP_IMAGES_DIR', ExecMethod('phpgwapi.phpgw.common.get_image_dir'));
 
-	/************************************************************************\
+	/*	 * **********************************************************************\
 	* Load the menuaction                                                    *
-	\************************************************************************/
+	  \*********************************************************************** */
 		$GLOBALS['phpgw_info']['menuaction'] = phpgw::get_var('menuaction');
-		if(!$GLOBALS['phpgw_info']['menuaction'])
+	if (!$GLOBALS['phpgw_info']['menuaction'])
 		{
 			unset($GLOBALS['phpgw_info']['menuaction']);
 		}
 
-		/********* This sets the user variables *********/
+	/*	 * ******* This sets the user variables ******** */
 		$GLOBALS['phpgw_info']['user']['private_dir'] = $GLOBALS['phpgw_info']['server']['files_dir']
-			. '/users/'.$GLOBALS['phpgw_info']['user']['userid'];
+		. '/users/' . $GLOBALS['phpgw_info']['user']['userid'];
 
 		/* This will make sure that a user has the basic default prefs. If not it will add them */
 		$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
-		/********* Optional classes, which can be disabled for performance increases *********/
+	/*	 * ******* Optional classes, which can be disabled for performance increases ******** */
 		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
 		{
 			if (preg_match('/enable_/', $phpgw_class_name[0]))
@@ -163,25 +163,25 @@ HTML;
 		unset($enable_class);
 		reset($GLOBALS['phpgw_info']['flags']);
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* These lines load up the templates class                                 *
-		\*************************************************************************/
-		if ( !isset($GLOBALS['phpgw_info']['flags']['disable_Template_class'])
-			|| !$GLOBALS['phpgw_info']['flags']['disable_Template_class'] )
+	  \************************************************************************ */
+	if (!isset($GLOBALS['phpgw_info']['flags']['disable_Template_class']) || !$GLOBALS['phpgw_info']['flags']['disable_Template_class'])
 		{
-			$GLOBALS['phpgw']->template = createObject('phpgwapi.Template',PHPGW_APP_TPL);
-			$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates',PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->template = createObject('phpgwapi.Template', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
 		}
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Verify that the users session is still active otherwise kick them out   *
-		\*************************************************************************/
+	  \************************************************************************ */
 		if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
 		{
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
 				$GLOBALS['phpgw']->common->phpgw_header(true);
-				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
+			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
+				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 
 				$lang_denied = lang('Access not permitted');
 				echo <<<HTML
@@ -195,21 +195,21 @@ HTML;
 	//  Already called from sessions::verify
 	//	$GLOBALS['phpgw']->applications->read_installed_apps();	// to get translated app-titles
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Load the header unless the developer turns it off                       *
-		\*************************************************************************/
-		if ( !isset($GLOBALS['phpgw_info']['flags']['noheader']) || !$GLOBALS['phpgw_info']['flags']['noheader'] )
+	  \************************************************************************ */
+	if (!isset($GLOBALS['phpgw_info']['flags']['noheader']) || !$GLOBALS['phpgw_info']['flags']['noheader'])
 		{
 			$inc_navbar = !isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'];
 			$GLOBALS['phpgw']->common->phpgw_header($inc_navbar);
 			unset($inc_navbar);
 		}
 
-		/*************************************************************************\
+	/*	 * ***********************************************************************\
 		* Load the app include files if the exists                                *
-		\*************************************************************************/
+	  \************************************************************************ */
 		/* Then the include file */
-		if (! preg_match ("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
+	if (!preg_match("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
 		{
 			include_once(PHPGW_APP_INC . '/functions.inc.php');
 		}
@@ -226,12 +226,12 @@ HTML;
 
 	if (isset($_GET['menuaction']))
 	{
-		list($app,$class,$method) = explode('.',$_GET['menuaction']);
+		list($app, $class, $method) = explode('.', $_GET['menuaction']);
 	}
 	else
 	{
 		$app = 'registration';
-		if($config['username_is'] != 'email')
+		if ($config['username_is'] != 'email')
 		{
 			$class = 'uireg';
 			$method = 'step1';
@@ -246,7 +246,7 @@ HTML;
 
 	$invalid_data = false;
 
-	if(!isset($legal_anonymous_access[$app][$class][$method]))
+	if (!isset($legal_anonymous_access[$app][$class][$method]))
 	{
 		$invalid_data = true;
 
@@ -257,20 +257,13 @@ HTML;
 		));
 		$GLOBALS['phpgw']->log->commit();
 		echo "This method is not alloved from this application as anonymous: {$app}.{$class}.{$method}";
-
 	}
 
-	if ( !$invalid_data 
-		&& is_object($GLOBALS[$class])
-		&& isset($GLOBALS[$class]->public_functions) 
-		&& is_array($GLOBALS[$class]->public_functions) 
-		&& isset($GLOBALS[$class]->public_functions[$method])
-		&& $GLOBALS[$class]->public_functions[$method] )
-
+	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
-		if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+		if (phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
 			 // deprecated
-			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
 		{
 			// comply with RFC 4627
 			header('Content-Type: application/json'); 

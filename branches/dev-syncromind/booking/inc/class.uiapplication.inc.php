@@ -62,9 +62,9 @@
 			$locations			 = $GLOBALS['phpgw']->locations->get_locations($grant				 = false, 'booking', $allow_c_attrib		 = true, $allow_c_functions	 = false);
 			echo "Available locations within Booking:</br>";
 
-			foreach($locations as $location => $name)
+			foreach ($locations as $location => $name)
 			{
-				if(!preg_match('/(^.application|^.resource)/i', $location))
+				if (!preg_match('/(^.application|^.resource)/i', $location))
 				{
 					continue;
 				}
@@ -82,7 +82,7 @@
 				$url_fields	 = self::link(array('menuaction' => 'admin.ui_custom.list_attribute',
 					'appname' => 'booking', 'location' => $location, 'menu_selection' => 'booking::settings::custom_field_groups'));
 
-				if(count($organized_fields) > 1)
+				if (count($organized_fields) > 1)
 				{
 					_debug_array($organized_fields);
 					echo "<a href='{$url_groups}'>Make more groups here</a></br>";
@@ -103,7 +103,7 @@
 		 * @param type $location
 		 * @return  array the grouped attributes
 		 */
-		private function get_attributes($location)
+		private function get_attributes( $location )
 		{
 			$appname	 = 'booking';
 			$attributes	 = $GLOBALS['phpgw']->custom_fields->find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
@@ -118,14 +118,14 @@
 		 *
 		 * @return array the grouped attributes
 		 */
-		private function get_attribute_groups($appname, $location, $attributes = array())
+		private function get_attribute_groups( $appname, $location, $attributes = array() )
 		{
 			return $GLOBALS['phpgw']->custom_fields->get_attribute_groups($appname, $location, $attributes);
 		}
 
 		// --- END EXAMPLE -- //
 
-		protected function set_module($module = null)
+		protected function set_module( $module = null )
 		{
 			$this->module = is_string($module) ? $module : $this->default_module;
 		}
@@ -135,17 +135,19 @@
 			return $this->module;
 		}
 
-		protected function is_assigned_to_current_user(&$application)
+		protected function is_assigned_to_current_user( &$application )
 		{
-			$current_account_id = 7;
-			if(empty($current_account_id) || !isset($application['case_officer_id']))
-			{ return false;}
+			$current_account_id = $this->current_account_id();
+			if (empty($current_account_id) || !isset($application['case_officer_id']))
+			{
+				return false;
+			}
 			return $application['case_officer_id'] == $current_account_id;
 		}
 
-		protected function check_application_assigned_to_current_user(&$application)
+		protected function check_application_assigned_to_current_user( &$application )
 		{
-			if(!$this->is_assigned_to_current_user($application))
+			if (!$this->is_assigned_to_current_user($application))
 			{
 				throw new booking_unauthorized_exception('write', 'current user is not assigned to application');
 			}
@@ -153,11 +155,11 @@
 			return true;
 		}
 
-		protected function assign_to_current_user(&$application)
+		protected function assign_to_current_user( &$application )
 		{
-			$current_account_id = 7;
+			$current_account_id = $this->current_account_id();
 
-			if(!empty($current_account_id) && is_array($application) &&
+			if (!empty($current_account_id) && is_array($application) &&
 			!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id)
 			{
 				$application['case_officer_id'] = $current_account_id;
@@ -168,11 +170,11 @@
 			return false;
 		}
 
-		protected function unassign_current_user(&$application)
+		protected function unassign_current_user( &$application )
 		{
 			$current_account_id = $this->current_account_id();
 
-			if(!empty($current_account_id) && is_array($application) && array_key_exists('case_officer_id', $application) && $application['case_officer_id'] == $current_account_id)
+			if (!empty($current_account_id) && is_array($application) && array_key_exists('case_officer_id', $application) && $application['case_officer_id'] == $current_account_id)
 			{
 				$application['case_officer_id'] = null;
 				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was unassigned"), $this->current_account_fullname()));
@@ -182,15 +184,17 @@
 			return false;
 		}
 
-		protected function set_display_in_dashboard(&$application, $bool, $options = array())
+		protected function set_display_in_dashboard( &$application, $bool, $options = array() )
 		{
-			if(!is_bool($bool) || $application['display_in_dashboard'] === $bool)
-			{ return false;}
+			if (!is_bool($bool) || $application['display_in_dashboard'] === $bool)
+		{
+				return false;
+			}
 			$options = array_merge(
 			array('force' => false), $options
 			);
 
-			if($options['force'] === false &&
+			if ($options['force'] === false &&
 			(!isset($application['case_officer_id']) || $application['case_officer_id'] != $this->current_account_id())
 			)
 			{
@@ -201,7 +205,7 @@
 			return true;
 		}
 
-		protected function add_comment(&$application, $comment, $type = 'comment')
+		protected function add_comment( &$application, $comment, $type = 'comment' )
 		{
 			$application['comments'][] = array(
 				'time'		 => 'now',
@@ -211,7 +215,7 @@
 			);
 		}
 
-		protected function add_ownership_change_comment(&$application, $comment)
+		protected function add_ownership_change_comment( &$application, $comment )
 		{
 			$this->add_comment($application, $comment, self::COMMENT_TYPE_OWNERSHIP);
 		}
@@ -221,17 +225,17 @@
 		 * 
 		 *
 		 */
-		protected function filter_application_comments(array &$application, array $types)
+		protected function filter_application_comments( array &$application, array $types )
 		{
 			$types = array_fill_keys($types, true); //Convert to associative array with types as keys and values as true
 
-			if(count($types) == 0 || !array_key_exists('comments', $application) || !is_array($application['comments']))
+			if (count($types) == 0 || !array_key_exists('comments', $application) || !is_array($application['comments']))
 			{
 				return;
 			}
 
 			$filtered_comments = array();
-			foreach($application['comments'] as &$comment)
+			foreach ($application['comments'] as &$comment)
 			{
 				isset($types[$comment['type']]) AND $filtered_comments[] = $comment;
 			}
@@ -240,12 +244,14 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
+				'datatable_name' => lang('application'),
 				'form'		 => array(
 					'toolbar' => array(
 						'item' => array(
@@ -276,28 +282,36 @@
 									)
 								)
 							),
-							array('type'	 => 'filter',
+/*							array('type' => 'filter',
 								'name'	 => 'buildings',
 								'text'	 => lang('Building') . ':',
 								'list'	 => $this->bo->so->get_buildings(),
+							),
+*/
+							array('type' => 'autocomplete',
+								'name' => 'building',
+								'ui' => 'building',
+								'text' => lang('Building') . ':',
+								'onItemSelect' => 'updateBuildingFilter',
+								'onClearSelection' => 'clearBuildingFilter'
 							),
 							array('type'	 => 'filter',
 								'name'	 => 'activities',
 								'text'	 => lang('Activity') . ':',
 								'list'	 => $this->bo->so->get_activities_main_level(),
 							),
-							array(
+						/*	array(
 								'type'	 => 'link',
 								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+							),*/
 						),
 					),
 				),
 				'datatable'	 => array(
 					'source'	 => self::link(array('menuaction' => 'booking.uiapplication.index',
 						'phpgw_return_as' => 'json')),
-					'sorted_by'	 => array('key' => 'created', 'dir' => 'asc'),
+					'sorted_by' => array('key' => 4, 'dir' => 'asc'),//created
 					'field'		 => array(
 						array(
 							'key'		 => 'id',
@@ -355,69 +369,46 @@
 
 		public function query()
 		{
-
+			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-			!$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
-			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
-			}
-			$filters['status'] = 'NEW';
-			if(isset($_SESSION['showall']))
-			{
-				$filters['status']	 = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				$testdata			 = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
 				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
+				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
 				}
-				else
+			else if($building_id)
 				{
-					unset($filters['building_name']);
+				$filters['id'] = $this->bo->accessable_applications(null, $building_id);
 				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
+
+			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
+			if ($activity_id)
 				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
+				$filters['activity_id'] = $this->bo->so->get_activities($activity_id);
 				}
 				else
 				{
 					unset($filters['activity_id']);
 				}
+			$filters['status'] = 'NEW';
+			if (isset($_SESSION['showall']))
+			{
+				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
 			}
 			else
 			{
 				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
-				if(phpgw::get_var('status') == 'none')
+				if (phpgw::get_var('status') == 'none')
 				{
 					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
 				}
-				elseif(isset($test))
+				elseif (isset($test))
 				{
-					$filters['status'] = phpgw::get_var('status');
+					$filters['status'] = $test;
 				}
 				else
 				{
 					$filters['status'] = 'NEW';
-				}
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
 				}
 			}
 
@@ -438,9 +429,9 @@
 //                        var_dump($params);
 //                        exit();
 
-			foreach($applications['results'] as &$application)
+			foreach ($applications['results'] as &$application)
 			{
-				if(strstr($application['building_name'], "%"))
+				if (strstr($application['building_name'], "%"))
 				{
 					$search							 = array('%2C', '%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86',
 						'%C3%A6');
@@ -449,7 +440,7 @@
 				}
 
 				$dates = array();
-				foreach($application['dates'] as $data)
+				foreach ($application['dates'] as $data)
 				{
 					$dates[] = $data['from_'];
 					break;
@@ -463,10 +454,10 @@
 				$application['resources']			 = $this->resource_bo->so->read(array('filters' => array(
 						'id' => $application['resources'])));
 				$application['resources']			 = $application['resources']['results'];
-				if($application['resources'])
+				if ($application['resources'])
 				{
 					$names = array();
-					foreach($application['resources'] as $res)
+					foreach ($application['resources'] as $res)
 					{
 						$names[] = $res['name'];
 					}
@@ -478,127 +469,10 @@
 			return $this->jquery_results($applications);
 		}
 
-		public function index_json()
-		{
-			// users with the booking role admin should have access to all buildings
-			// admin users should have access to all buildings
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-			!$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
-			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
-			}
-			$filters['status'] = 'NEW';
-			if(isset($_SESSION['showall']))
-			{
-				$filters['status']	 = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				$testdata			 = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
-			}
-			else
-			{
-				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
-				if(phpgw::get_var('status') == 'none')
-				{
-					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				}
-				elseif(isset($test))
-				{
-					$filters['status'] = phpgw::get_var('status');
-				}
-				else
-				{
-					$filters['status'] = 'NEW';
-				}
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
-			}
-
-			$params = array(
-				'start'		 => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results'	 => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'		 => phpgw::get_var('query'),
-				'sort'		 => phpgw::get_var('sort'),
-				'dir'		 => phpgw::get_var('dir'),
-				'filters'	 => $filters
-			);
-
-			$applications = $this->bo->so->read($params);
-
-			foreach($applications['results'] as &$application)
-			{
-				if(strstr($application['building_name'], "%"))
-				{
-					$search							 = array('%2C', '%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86',
-						'%C3%A6');
-					$replace						 = array(',', 'Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
-					$application['building_name']	 = str_replace($search, $replace, $application['building_name']);
-				}
-
-				$dates = array();
-				foreach($application['dates'] as $data)
-				{
-					$dates[] = $data['from_'];
-					break;
-				}
-				$fromdate							 = implode(',', $dates);
-				$application['from_']				 = pretty_timestamp($fromdate);
-				$application['status']				 = lang($application['status']);
-				$application['created']				 = pretty_timestamp($application['created']);
-				$application['modified']			 = pretty_timestamp($application['modified']);
-				$application['frontend_modified']	 = pretty_timestamp($application['frontend_modified']);
-				$application['resources']			 = $this->resource_bo->so->read(array('filters' => array(
-						'id' => $application['resources'])));
-				$application['resources']			 = $application['resources']['results'];
-				if($application['resources'])
-				{
-					$names = array();
-					foreach($application['resources'] as $res)
-					{
-						$names[] = $res['name'];
-					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
-				}
-			}
-			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
-			return $this->yui_results($applications);
-		}
-
 		public function associated()
 		{
 			$associations = $this->assoc_bo->read();
-			foreach($associations['results'] as &$association)
+			foreach ($associations['results'] as &$association)
 			{
 				$association['from_']	 = pretty_timestamp($association['from_']);
 				$association['to_']		 = pretty_timestamp($association['to_']);
@@ -611,7 +485,7 @@
 			return $associations;
 		}
 
-		private function _combine_dates($from_, $to_)
+		private function _combine_dates( $from_, $to_ )
 		{
 			return array('from_' => $from_, 'to_' => $to_);
 		}
@@ -621,44 +495,44 @@
 			return $this->customer_id;
 		}
 
-		protected function extract_customer_identifier(&$data)
+		protected function extract_customer_identifier( &$data )
 		{
 			$this->get_customer_identifier()->extract_form_data($data);
 		}
 
-		protected function validate_customer_identifier(&$data)
+		protected function validate_customer_identifier( &$data )
 		{
 			return $this->get_customer_identifier()->validate($data);
 		}
 
-		protected function install_customer_identifier_ui(&$entity)
+		protected function install_customer_identifier_ui( &$entity )
 		{
 			$this->get_customer_identifier()->install($this, $entity);
 		}
 
-		protected function validate(&$entity)
+		protected function validate( &$entity )
 		{
 			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
 			return $errors;
 		}
 
-		protected function set_case_officer(&$application)
+		protected function set_case_officer( &$application )
 		{
-			if(!empty($application['case_officer_id']))
+			if (!empty($application['case_officer_id']))
 			{
 				$application['case_officer'] = array(
 					'id'	 => $application['case_officer_id'],
 					'name'	 => $application['case_officer_name'],
 				);
 
-				if($application['case_officer_id'] == 7)
+				if ($application['case_officer_id'] == $this->current_account_id())
 				{
 					$application['case_officer']['is_current_user'] = true;
 				}
 			}
 		}
 
-		protected function extract_form_data($defaults = array())
+		protected function extract_form_data( $defaults = array() )
 		{
 			$entity				 = array_merge($defaults, extract_values($_POST, $this->fields));
 			$entity['agegroups'] = array();
@@ -667,14 +541,14 @@
 			return $entity;
 		}
 
-		protected function create_accepted_documents_comment_text($application)
+		protected function create_accepted_documents_comment_text( $application )
 		{
-			if(count($application['accepted_documents']) < 1)
+			if (count($application['accepted_documents']) < 1)
 			{
 				return null;
 			}
 			$comment_text = lang('The user has accepted the following documents') . ': ';
-			foreach($application['accepted_documents'] as $doc)
+			foreach ($application['accepted_documents'] as $doc)
 			{
 				$doc_id		 = substr($doc, strrpos($doc, ':') + 1); // finding the document_building.id
 				$document	 = $this->document_bo->read_single($doc_id);
@@ -694,7 +568,7 @@
 
 			$errors = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'int'))));
 
@@ -705,11 +579,11 @@
 
 				$application = $this->extract_form_data();
 
-				foreach($_POST['from_'] as &$from)
+				foreach ($_POST['from_'] as &$from)
 				{
 					$from = ($from) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from)) : "";
 				}
-				foreach($_POST['to_'] as &$to)
+				foreach ($_POST['to_'] as &$to)
 				{
 					$to = ($to) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to)) : "";
 				}
@@ -724,7 +598,7 @@
 
 				$errors = $this->validate($application);
 
-				if($_POST['contact_email'] != $_POST['contact_email2'])
+				if ($_POST['contact_email'] != $_POST['contact_email2'])
 				{
 					$errors['email']				 = lang('The e-mail addresses you entered do not match');
 					$application['contact_email2']	 = $_POST['contact_email2'];
@@ -734,23 +608,23 @@
 					$application['contact_email2'] = $_POST['contact_email2'];
 				}
 
-				foreach($application['agegroups'] as $ag)
+				foreach ($application['agegroups'] as $ag)
 				{
-					if($ag['male'] > 9999 || $ag['female'] > 9999)
+					if ($ag['male'] > 9999 || $ag['female'] > 9999)
 					{
 						$errors['agegroups'] = lang('Agegroups can not be larger than 9999 peoples');
 					}
 				}
-				if($building['results'][0]['deactivate_application'])
+				if ($building['results'][0]['deactivate_application'])
 				{
 					$errors['application_deactivated'] = lang('Application on this building is not possible.');
 				}
 
 
-				if(!$errors)
+				if (!$errors)
 				{
 					$comment_text = $this->create_accepted_documents_comment_text($application);
-					if($comment_text)
+					if ($comment_text)
 					{
 						$this->add_comment($application, $comment_text);
 					}
@@ -759,7 +633,7 @@
 					$application['id']	 = $receipt['id'];
 
 
-					/** Start attachment **/
+					/** Start attachment * */
 					$document_application = createObject('booking.uidocument_application');
 
 					$document = array(
@@ -769,21 +643,20 @@
 					);
 					$document_errors = $document_application->bo->validate($document);
 
-					if(!$document_errors)
+					if (!$document_errors)
 					{
 						try
 						{
 							booking_bocommon_authorized::disable_authorization();
 							$document_receipt = $document_application->bo->add($document);
 						}
-						catch(booking_unauthorized_exception $e)
+						catch (booking_unauthorized_exception $e)
 						{
 							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
 						}
 					}
 
-					/** End attachment **/
-
+					/** End attachment * */
 					$this->bo->send_notification($application, true);
 					$this->bo->so->update_id_string();
 					phpgwapi_cache::message_set(lang("Your application has now been registered and a confirmation email has been sent to you.") . "<br />" .
@@ -797,14 +670,14 @@
 						'secret' => $application['secret']));
 				}
 			}
-			if(phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))
+			if (phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))
 			{
 				array_set_default($application, 'resources', array());
 			}
 			else
 			{
 				$resources = explode(",", phpgw::get_var('resource'));
-				if($resources)
+				if ($resources)
 				{
 					$resources_id	 = $resources[0];
 					$resource		 = $this->resource_bo->read_single($resources_id);
@@ -817,14 +690,14 @@
 
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'string'));
 
-			if(strstr($application['building_name'], "%"))
+			if (strstr($application['building_name'], "%"))
 			{
 				$search							 = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
 				$replace						 = array('Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
 				$application['building_name']	 = str_replace($search, $replace, $application['building_name']);
 			}
 
-			if(phpgw::get_var('from_', 'string'))
+			if (phpgw::get_var('from_', 'string'))
 			{
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
@@ -838,27 +711,27 @@
 			$application['resources_json']			 = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json']	 = json_encode($application['accepted_documents']);
 			$top_level_activity = false;
-			if(!$activity_id)
+			if (!$activity_id)
 			{
 				$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
 				$activity_id	 = $_building['activity_id'];
 				$top_level_activity	 = $activity_id;
 			}
-			if(!$activity_id)
+			if (!$activity_id)
 			{
 				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			}
-			if(!$top_level_activity)
+			if (!$top_level_activity)
 			{
 				$activity_path		 = $this->activity_bo->get_path($activity_id);
 				$top_level_activity	 = $activity_path ? $activity_path[0]['id'] : -1;
 			}
 			$filter_activity_top = 0;
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			}
-			else if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$application['cancel_link']	 = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
 					'id' => phpgw::get_var('building_id', 'int')));
@@ -877,13 +750,13 @@
 			$this->install_customer_identifier_ui($application);
 
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-			if($orgnr)
+			if ($orgnr)
 			{
 				$application['customer_identifier_type']	 = 'organization_number';
 				$application['customer_organization_number'] = $orgnr;
 				$orgid										 = $this->organization_bo->so->get_orgid($orgnr);
 				$organization								 = $this->organization_bo->read_single($orgid);
-				if($organization['contacts'][0]['name'] != '')
+				if ($organization['contacts'][0]['name'] != '')
 				{
 					$application['contact_name']	 = $organization['contacts'][0]['name'];
 					$application['contact_email']	 = $organization['contacts'][0]['email'];
@@ -897,7 +770,7 @@
 				}
 			}
 
-			foreach($application['dates'] as &$date)
+			foreach ($application['dates'] as &$date)
 			{
 				$date['from_']	 = pretty_timestamp($date['from_']);
 				$date['to_']	 = pretty_timestamp($date['to_']);
@@ -906,7 +779,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
 				$tabs				 = array();
 				$tabs['generic']	 = array('label' => lang('Application Add'), 'link' => '#application_add');
@@ -944,7 +817,7 @@
 			$application['building_name']	 = $building_info['name'];
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
@@ -954,26 +827,25 @@
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
 
-				if($application['frontend_modified'] == '')
+				if ($application['frontend_modified'] == '')
 				{
 					unset($application['frontend_modified']);
 				}
 
-				$errors = $this->validate($application);
-
-				foreach($_POST['from_'] as &$from)
+				foreach ($_POST['from_'] as &$from)
 				{
 					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
-				foreach($_POST['to_'] as &$to)
+				foreach ($_POST['to_'] as &$to)
 				{
 					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
+				$errors = $this->validate($application);
 
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->update($application);
 					$this->bo->send_notification($application);
@@ -981,7 +853,7 @@
 				}
 			}
 
-			foreach($application['dates'] as &$date)
+			foreach ($application['dates'] as &$date)
 			{
 				$date['from_']	 = pretty_timestamp($date['from_']);
 				$date['to_']	 = pretty_timestamp($date['to_']);
@@ -1011,7 +883,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
 				$tabs				 = array();
 				$tabs['generic']	 = array('label' => lang('Application Edit'), 'link' => '#application_edit');
@@ -1031,9 +903,9 @@
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-		private function check_date_availability(&$allocation)
+		private function check_date_availability( &$allocation )
 		{
-			foreach($allocation['dates'] as &$date)
+			foreach ($allocation['dates'] as &$date)
 			{
 				$available					 = $this->bo->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
 				$date['status']				 = intval($available);
@@ -1043,11 +915,11 @@
 			}
 		}
 
-		private function event_for_date($application, $date_id)
+		private function event_for_date( $application, $date_id )
 		{
-			foreach($application['dates'] as $d)
+			foreach ($application['dates'] as $d)
 			{
-				if($d['id'] == $date_id)
+				if ($d['id'] == $date_id)
 				{
 					$date = $d;
 					break;
@@ -1064,20 +936,20 @@
 				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
 				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
 			);
-			foreach($copy as $f)
+			foreach ($copy as $f)
 			{
 				$event[] = array($f, htmlentities($application[$f]));
 			}
-			foreach($application['agegroups'] as $ag)
+			foreach ($application['agegroups'] as $ag)
 			{
 				$event[] = array('male[' . $ag['agegroup_id'] . ']', $ag['male']);
 				$event[] = array('female[' . $ag['agegroup_id'] . ']', $ag['female']);
 			}
-			foreach($application['audience'] as $a)
+			foreach ($application['audience'] as $a)
 			{
 				$event[] = array('audience[]', $a);
 			}
-			foreach($application['resources'] as $r)
+			foreach ($application['resources'] as $r)
 			{
 				$event[] = array('resources[]', $r);
 			}
@@ -1087,9 +959,9 @@
 		protected function extract_display_in_dashboard_value()
 		{
 			$val = phpgw::get_var('display_in_dashboard', 'int', 'POST', 0);
-			if($val <= 0)
+			if ($val <= 0)
 				return false;
-			if($val >= 1)
+			if ($val >= 1)
 				return true;
 			return false; //Not that I think that it is necessary to return here too, but who knows, I might have overlooked something.
 		}
@@ -1108,9 +980,9 @@
 			$tabs['generic']	 = array('label' => lang('Application'), 'link' => '#application');
 			$active_tab			 = 'generic';
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if($_POST['create'])
+				if ($_POST['create'])
 				{
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 				}
@@ -1118,57 +990,57 @@
 				$update	 = false;
 				$notify	 = false;
 
-				if($application['frontend_modified'] == '')
+				if ($application['frontend_modified'] == '')
 				{
 					unset($application['frontend_modified']);
 				}
 
-				if(array_key_exists('assign_to_user', $_POST))
+				if (array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
-					if($application['status'] == 'NEW')
+					if ($application['status'] == 'NEW')
 					{
 						$application['status'] = 'PENDING';
 					}
 				}
-				elseif(isset($_POST['unassign_user']))
+				elseif (isset($_POST['unassign_user']))
 				{
-					if($this->unassign_current_user($application))
+					if ($this->unassign_current_user($application))
 					{
 						$this->set_display_in_dashboard($application, true, array('force' => true));
 						$update = true;
 					}
 				}
-				elseif(isset($_POST['display_in_dashboard']))
+				elseif (isset($_POST['display_in_dashboard']))
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
 				}
-				elseif($_POST['comment'])
+				elseif ($_POST['comment'])
 				{
 					$application['comment']	 = $_POST['comment'];
 					$this->add_comment($application, $_POST['comment']);
 					$update					 = true;
 					$notify					 = true;
 				}
-				elseif($_POST['status'])
+				elseif ($_POST['status'])
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$application['status'] = $_POST['status'];
 
-					if($application['status'] == 'REJECTED')
+					if ($application['status'] == 'REJECTED')
 					{
 						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
-						foreach($test['results'] as $app)
+						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_inactive($app['id'], $app['type']);
 						}
 					}
 
-					if($application['status'] == 'ACCEPTED')
+					if ($application['status'] == 'ACCEPTED')
 					{
 						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
-						foreach($test['results'] as $app)
+						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_active($app['id'], $app['type']);
 						}
@@ -1177,20 +1049,20 @@
 					$update	 = true;
 					$notify	 = true;
 				}
-				else if($_FILES)
+				else if ($_FILES)
 				{
-				/** Start attachment **/
+					/** Start attachment * */
 					$document_application = createObject('booking.uidocument_application');
 
-					$oldfiles = $document_application->bo->so->read(array('filters'=> array('owner_id' => $application['id'])));
+					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id'])));
 					$files = $this->get_files();
 					$file_exist = false;
 
-					if($oldfiles['results'])
+					if ($oldfiles['results'])
 					{
-						foreach($oldfiles['results'] as $old_file)
+						foreach ($oldfiles['results'] as $old_file)
 						{
-							if($old_file['name'] == $files['name']['name'])
+							if ($old_file['name'] == $files['name']['name'])
 							{
 								$file_exist = true;
 								phpgwapi_cache::message_set(lang('file exists'));
@@ -1206,20 +1078,20 @@
 					);
 					$document_errors = $document_application->bo->validate($document);
 
-					if(!$document_errors && !$file_exist)
+					if (!$document_errors && !$file_exist)
 					{
 						try
 						{
 							booking_bocommon_authorized::disable_authorization();
 							$document_receipt = $document_application->bo->add($document);
 						}
-						catch(booking_unauthorized_exception $e)
+						catch (booking_unauthorized_exception $e)
 						{
 							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
 						}
 					}
 
-					/** End attachment **/
+					/** End attachment * */
 				}
 
 				$update AND $receipt = $this->bo->update($application);
@@ -1247,11 +1119,11 @@
 			$application['schedule_link']	 = substr_replace($application['schedule_link'], 'bookingfrontend/', $pos + 1, 0);
 
 			$resource_ids = '';
-			foreach($application['resources'] as $res)
+			foreach ($application['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
-			if(count($application['resources']) == 0)
+			if (count($application['resources']) == 0)
 			{
 				unset($application['dates']);
 			}
@@ -1270,22 +1142,26 @@
 			$associations	 = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
 				'sort' => 'from_', 'dir' => 'asc'));
 			$from			 = array();
-			foreach($associations['results'] as $assoc)
+			foreach ($associations['results'] as $assoc)
 			{
 				$from[] = $assoc['from_'];
 			}
 			$from						 = array("data" => implode(',', $from));
 			$num_associations			 = $associations['total_records'];
-			if($this->is_assigned_to_current_user($application) && $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			if ($this->is_assigned_to_current_user($application) || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
 				$application['currentuser']	 = true;
+			}
 			else
+			{
 				$application['currentuser']	 = false;
+			}
 
 			$collision_dates = array();
-			foreach($application['dates'] as &$date)
+			foreach ($application['dates'] as &$date)
 			{
 				$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
-				if($collision)
+				if ($collision)
 				{
 					$collision_dates[] = $date['from_'];
 				}
@@ -1300,7 +1176,6 @@
 				'audience'			 => $audience, 'agegroups'			 => $agegroups,
 				'num_associations'	 => $num_associations, 'assoc'				 => $from, 'collision'			 => $collision_dates,
 				'comments'			 => $comments, 'config'			 => $application_text));
-
 		}
 
 		function get_activity_data()

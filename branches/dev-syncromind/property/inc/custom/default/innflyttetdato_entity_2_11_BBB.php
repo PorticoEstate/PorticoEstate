@@ -17,7 +17,7 @@
 	$innflyttetdato = $db->f('innflyttetdato');
 	$tenant_id = $db->f('tenant_id');
 
-	if($tenant_id == $values['extra']['tenant_id'] && !$innflyttetdato_old)
+	if ($tenant_id == $values['extra']['tenant_id'] && !$innflyttetdato_old)
 	{
 		$value_set['innflyttet'] = $innflyttetdato;
 		$value_set = $db->validate_update($value_set);

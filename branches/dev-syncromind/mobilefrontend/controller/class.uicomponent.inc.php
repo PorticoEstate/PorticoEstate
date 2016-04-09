@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - controller: a part of a Facilities Management System.
 	 *
@@ -28,11 +27,11 @@
 	 * @subpackage controller
 	 * @version $Id: class.uicalendar.inc.php 11511 2013-12-08 20:57:07Z sigurdne $
 	 */
-
   	phpgw::import_class('controller.uicomponent');
 
 	class mobilefrontend_uicomponent extends controller_uicomponent
 	{
+
 		public function __construct()
 		{
 			parent::__construct();

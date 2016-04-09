@@ -1,20 +1,23 @@
 <?php
-/**************************************************************************\
-* phpGroupWare -Messenger                                                  *
-* http://www.phpgroupware.org                                              *
-* This file written by Chris Weiss <cweiss@gmail.com>                      *
-* --------------------------------------------                             *
-*  This program is free software; you can redistribute it and/or modify it *
-*  under the terms of the GNU General Public License as published by the   *
-*  Free Software Foundation; either version 2 of the License, or (at your  *
-*  option) any later version.                                              *
-\**************************************************************************/
-class somessenger extends somessenger_
-{
+	/*	 * ************************************************************************\
+	 * phpGroupWare -Messenger                                                  *
+	 * http://www.phpgroupware.org                                              *
+	 * This file written by Chris Weiss <cweiss@gmail.com>                      *
+	 * --------------------------------------------                             *
+	 *  This program is free software; you can redistribute it and/or modify it *
+	 *  under the terms of the GNU General Public License as published by the   *
+	 *  Free Software Foundation; either version 2 of the License, or (at your  *
+	 *  option) any later version.                                              *
+	  \************************************************************************* */
+
+	class somessenger extends somessenger_
+	{
+
 	var $imap;
 	var $stat;
 	var $owner;
 	var $imap_host;
+
 	/**
 	 * @constructor
 	 */
@@ -29,17 +32,19 @@ class somessenger extends somessenger_
 		}
 		parent::__construct();
 	}
+
 	/**
 	 * Delete a message
 	 * 
 	 * @param int $message_id the message to be deleted
 	 */
-	function delete_message($message_id)
+		function delete_message( $message_id )
 	{
 		imap_delete($this->imap, $message_id, FT_UID);
 		imap_expunge($this->imap);
 	}
-	function read_inbox($params)
+
+		function read_inbox( $params )
 	{
 		$sort = $params['sort'] == 'DESC' ? 1 : 0;
 		switch ($params['order'])
@@ -59,17 +64,21 @@ class somessenger extends somessenger_
 		foreach ($idlist as $uid)
 		{
 			$msg = imap_headerinfo($this->imap, imap_msgno($this->imap, $uid));
-			$messages[] = array ('id' => $uid, 'from' => $msg->from[0]->mailbox, 'status' => $this->_msg_status($msg), 'date' => $msg->udate, 'subject' => $msg->Subject);
+				$messages[] = array('id' => $uid, 'from' => $msg->from[0]->mailbox, 'status' => $this->_msg_status($msg),
+					'date' => $msg->udate, 'subject' => $msg->Subject);
 		}
 		return $messages;
 	}
-	function read_message($message_id)
+
+		function read_message( $message_id )
 	{
 		$msg = imap_headerinfo($this->imap, imap_msgno($this->imap, $message_id));
-		$message = array ('id' => $message_id, 'from' => $msg->from[0]->mailbox, 'status' => $this->_msg_status($msg), 'date' => $msg->udate, 'subject' => $msg->Subject, 'content' => $this->_get_text_part($message_id));
+			$message = array('id' => $message_id, 'from' => $msg->from[0]->mailbox, 'status' => $this->_msg_status($msg),
+				'date' => $msg->udate, 'subject' => $msg->Subject, 'content' => $this->_get_text_part($message_id));
 		return $message;
 	}
-	function send_message($message, $global_message = false)
+
+		function send_message( $message, $global_message = false )
 	{
 		$contacts = CreateObject('phpgwapi.contacts');
 		$mailer = CreateObject('phpgwapi.mailer_smtp');
@@ -86,11 +95,13 @@ class somessenger extends somessenger_
 		$mailer->Send();
 		//imap_append($this->imap, '{localhost}Sent', $mailer->getHeader()."\r\n".$mailer->getBody());
 	}
-	function total_messages($extra_where_clause = '')
+
+		function total_messages( $extra_where_clause = '' )
 	{
 		return $this->stat->messages;
 	}
-	function update_message_status($status, $message_id)
+
+		function update_message_status( $status, $message_id )
 	{
 		$flags = "\\Seen";
 		switch ($status)
@@ -111,7 +122,7 @@ class somessenger extends somessenger_
 	 * @param int $partno the message part number
 	 * @return string the message body
 	 */
-	function _get_text_part($message_id, $structure = null, $partno = 0)
+		function _get_text_part( $message_id, $structure = null, $partno = 0 )
 	{
 		if (!is_object($structure))
 		{
@@ -122,8 +133,7 @@ class somessenger extends somessenger_
 			return lang('error: invalid message structure.  message contents can not be displayed');
 		}
 
-		if ( $structure->type == 0 /*text*/
-			&& strtolower($structure->subtype) == 'plain')
+			if ($structure->type == 0 /* text */ && strtolower($structure->subtype) == 'plain')
 		{
 			if (!$partno)
 			{
@@ -141,11 +151,11 @@ class somessenger extends somessenger_
 				$text = imap_qprint($text);
 			}
 			
-			if ( isset($structure->parameters) && count($structure->parameters) )
+				if (isset($structure->parameters) && count($structure->parameters))
 			{
-				foreach ( $structure->parameters as $key => $vals )
+					foreach ($structure->parameters as $key => $vals)
 				{
-					if ($vals['attribute'] == 'charset' && !( $vals['value'] == 'ascii' || $vals['value'] == 'utf-8' ) )
+						if ($vals['attribute'] == 'charset' && !( $vals['value'] == 'ascii' || $vals['value'] == 'utf-8' ))
 					{
 						$test = iconv($vals['value'], 'utf-8', $text);
 					}
@@ -163,7 +173,7 @@ class somessenger extends somessenger_
 			}
 			while (list ($index, $sub_structure) = each($structure->parts))
 			{
-				$body = $this->_get_text_part($message_id, $sub_structure, $prefix. ($index + 1) );
+					$body = $this->_get_text_part($message_id, $sub_structure, $prefix . ($index + 1));
 				if (strlen($body))
 				{
 					return $body;
@@ -172,13 +182,14 @@ class somessenger extends somessenger_
 		}
 		return lang('error: invalid message structure.  message contents can not be displayed');
 	}
+
 	/**
 	* Get the status of a message
 	* 
 	* @param object $msg php imap message object to be analysed
 	* @return char the message status code
 	*/
-	function _msg_status($msg)
+		function _msg_status( $msg )
 	{
 		/*
 		 * N - New
@@ -192,9 +203,10 @@ class somessenger extends somessenger_
 		elseif ($msg->Answered == 'A')
 		{
 			return 'R';
-		} else
+			}
+			else
 		{
 			return 'O';
 		}
 	}
-}
+	}

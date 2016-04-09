@@ -1,11 +1,13 @@
-$(document).ready(function(){
+$(document).ready(function ()
+{
 
-	 $("#location_id").change(function () {
+	$("#location_id").change(function ()
+	{
 
 		 var loc_id = $(this).val();
 		 var act_id = $("#activity_id").val();
 		 
-		 var oArgs = {menuaction:'logistic.uirequirement.get_custom_attributes', location_id: loc_id, activity_id: act_id };
+		var oArgs = {menuaction: 'logistic.uirequirement.get_custom_attributes', location_id: loc_id, activity_id: act_id};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		 var htmlString = "";
@@ -14,31 +16,34 @@ $(document).ready(function(){
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			success: function(data)
+			success: function (data)
 			{
-				if(data){
+				if (data)
+			{
 				  var jsonObjects = data;
 				  var htmlStr = "";
 				  
-	    		  $.each(jsonObjects, function(i) {
+					$.each(jsonObjects, function (i)
+					{
 					var input_type = jsonObjects[i].column_info.type;
 					var label = jsonObjects[i].input_text;
 					var input_name = jsonObjects[i].column_name;
 					
-					if(input_type == "T")
+						if (input_type == "T")
 					{
 						htmlStr += "<div class='attribute'><label>" + label + "</label><input type='text' name='" + input_name + "' value='' /></>";
 					}
-					else if(input_type == "V")
+						else if (input_type == "V")
 					{
 						htmlStr += "<div class='attribute'><label>" + label + "</label><input type='text' name='" + input_name + "' value='' /></div>";
 					}
-					else if(input_type == "LB")
+						else if (input_type == "LB")
 					{
 						htmlStr += "<div class='attribute'><label for='choises_'" + input_name + ">" + label + "</label><select name='" + input_name + "'>";
 						var choices = jsonObjects[i].choice;
 						
-						$.each(choices, function(j) {
+							$.each(choices, function (j)
+							{
 							var option_id = choices[j].id;
 							var option_value = choices[j].value;
 							htmlStr += "<option value='" + option_id + "'>" + option_value + "</option>";
@@ -54,12 +59,13 @@ $(document).ready(function(){
 		});
 	 });
 	 
-	 $(".attribute select.operator").change(function () {
+	$(".attribute select.operator").change(function ()
+	{
 		 var operator = $(this).val();
 		 
 		 var thisSelect = $(this).closest(".operator"); 
 		 
-		 if(operator == 'btw')
+		if (operator == 'btw')
 		 {
 			 $(thisSelect).prev().css("display", "inline-block");
 			 $(thisSelect).next().removeClass("attrib_info");
@@ -68,7 +74,7 @@ $(document).ready(function(){
 		 else
 		 {
 			 $(thisSelect).prev().css("display", "none");
-			 if( $(thisSelect).next().hasClass("constraint_2") )
+			if ($(thisSelect).next().hasClass("constraint_2"))
 			 {
 				 $(thisSelect).next().removeClass("constraint_2");
 				 $(thisSelect).next().addClass("attrib_info");
@@ -77,8 +83,9 @@ $(document).ready(function(){
 			 var attribute_row = $(thisSelect).closest(".attribute");
 			 var cust_attributes_arr = $(attribute_row).find(".cust_attributes");
 			 
-			 $.each(cust_attributes_arr, function() {
-				 if( $(this).hasClass("constraint_2") )
+			$.each(cust_attributes_arr, function ()
+			{
+				if ($(this).hasClass("constraint_2"))
 				 {
 					$(this).remove();
 				 }
@@ -86,22 +93,24 @@ $(document).ready(function(){
 		 }
 	 });
 	 
-	 $("#frm-requirement-values").submit(function (event) {
+	$("#frm-requirement-values").submit(function (event)
+	{
 		 
 		 $('#attributes .attribute').find('.input_error_msg').hide();
 		 
-		 $('#attributes .attribute').each(function(index) {
+		$('#attributes .attribute').each(function (index)
+		{
 			var operator = $(this).find('.operator').val();
 			var cust_attribute_id = $(this).find('.cust_attribute_id').val();
 			var attrib_value = $(this).find('.attrib_info').val();
 			 
-			if(attrib_value == "")
+			if (attrib_value == "")
 			{
 				$(this).find('.input_error_msg').show();
 				event.preventDefault();
 			}
 			 
-			if(operator == "btw")
+			if (operator == "btw")
 			{
 				var constraint_1 = $(this).find('.constraint_1').val();
 				var constraint_2 = $(this).find('.constraint_2').val();

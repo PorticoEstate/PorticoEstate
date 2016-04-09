@@ -32,7 +32,7 @@
 			self::set_active_menu('booking::settings::permissions');
 		}
 
-		protected function set_business_object(booking_bopermission_root $bo = null)
+		protected function set_business_object( booking_bopermission_root $bo = null )
 		{
 			$this->bo = is_null($bo) ? $this->create_business_object() : $bo;
 		}
@@ -42,20 +42,20 @@
 			return CreateObject('booking.bopermission_root');
 		}
 
-		public function generate_link_params($action, $params = array())
+		public function generate_link_params( $action, $params = array() )
 		{
 			$action = sprintf('booking.uipermission_root.%s', $action);
 			return array_merge(array('menuaction' => $action), $params);
 		}
 
-		public function generate_link($action, $params = array())
+		public function generate_link( $action, $params = array() )
 		{
 			return $this->link($this->generate_link_params($action, $params));
 		}
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -88,12 +88,12 @@
 				)
 			);
 
-			if(!$this->bo->allow_delete())
+			if (!$this->bo->allow_delete())
 			{
 				unset($data['datatable']['field'][2]); //Delete action
 			}
 
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= $this->generate_link('add');
 			}
@@ -104,10 +104,8 @@
 
 		public function query()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-
 			$permissions = $this->bo->read();
-			foreach($permissions['results'] as &$permission)
+			foreach ($permissions['results'] as &$permission)
 			{
 				$permission['link']		 = $this->generate_link('edit', array('id' => $permission['id']));
 				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
@@ -115,16 +113,14 @@
 					$this->generate_link('delete', array('id' => $permission['id'])),
 				);
 
-				$sql	 = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '" . $permission['subject_name'] . "'";
-				$this->db->query($sql);
-				while($record	 = array_shift($this->db->resultSet))
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($permission['subject_name']);
+				if($account_id)
 				{
-					$permission['subject_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
+					$permission['subject_name'] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 				}
 			}
 			return $this->jquery_results($permissions);
 		}
-
 
 		public function index_accounts()
 		{
@@ -134,12 +130,14 @@
 		protected function get_available_roles()
 		{
 			$roles = array();
-			foreach($this->bo->get_roles() as $role)
-			{ $roles[$role] = self::humanize($role);}
+			foreach ($this->bo->get_roles() as $role)
+			{
+				$roles[$role] = self::humanize($role);
+			}
 			return $roles;
 		}
 
-		protected function add_default_display_data(&$permission_data)
+		protected function add_default_display_data( &$permission_data )
 		{
 			$permission_data['available_roles']	 = $this->get_available_roles();
 			$permission_data['permissions_link'] = $this->generate_link('index');
@@ -159,11 +157,11 @@
 			$errors		 = array();
 			$permission	 = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$permission	 = extract_values($_POST, $this->fields);
 				$errors		 = $this->bo->validate($permission);
-				if(!$errors)
+				if (!$errors)
 				{
 					$receipt = $this->bo->add($permission);
 					$this->redirect($this->generate_link_params('index'));

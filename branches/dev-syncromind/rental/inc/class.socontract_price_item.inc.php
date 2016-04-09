@@ -13,7 +13,7 @@
 		 */
 		public static function get_instance()
 		{
-			if(self::$so == null)
+			if (self::$so == null)
 			{
 				self::$so = CreateObject('rental.socontract_price_item');
 			}
@@ -25,7 +25,7 @@
 			return 'id';
 		}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -37,26 +37,26 @@
 
 			$filter_clauses = array();
 
-			if(isset($filters[$this->get_id_field_name()]))
+			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "rental_contract_price_item.{$this->get_id_field_name()} = {$id}";
 			}
-			if(isset($filters['contract_id']))
+			if (isset($filters['contract_id']))
 			{
 				$id					 = $this->marshal($filters['contract_id'], 'int');
 				$filter_clauses[]	 = "contract_id = {$id}";
 			}
-			if(isset($filters['contract_ids_one_time']))
+			if (isset($filters['contract_ids_one_time']))
 			{
 				$billing_term_id = (int)$filters['billing_term_id'];
 				$sql			 = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
 				$result			 = $this->db->query($sql);
-				if(!$result)
+				if (!$result)
 				{
 					return;
 				}
-				if(!$this->db->next_record())
+				if (!$this->db->next_record())
 				{
 					return;
 				}
@@ -64,7 +64,7 @@
 				$year			 = (int)$filters['year'];
 				$months			 = $this->unmarshal($this->db->f('months', true), 'int');
 				$timestamp_end	 = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-				if($months == 1)
+				if ($months == 1)
 				{
 					$timestamp_start = $timestamp_end; // The first day of the period to bill for
 				}
@@ -79,15 +79,15 @@
 				$filter_clauses[]	 = "date_start < {$timestamp_end}";
 				$filter_clauses[]	 = "date_start >= {$timestamp_start}";
 			}
-			if(isset($filters['one_time']) && $filters['include_billed'])
+			if (isset($filters['one_time']) && $filters['include_billed'])
 			{
 				$filter_clauses[] = "is_one_time";
 			}
-			if(isset($filters['one_time']) && !$filters['include_billed'])
+			if (isset($filters['one_time']) && !$filters['include_billed'])
 			{
 				$filter_clauses[] = "is_one_time AND NOT is_billed";
 			}
-			else if($filters['include_billed'])
+			else if ($filters['include_billed'])
 			{
 				// Do not add filter on showing only price items that has not yet been billed
 			}
@@ -96,19 +96,19 @@
 				$filter_clauses[] = "NOT is_billed";
 			}
 
-			if(count($filter_clauses))
+			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
 
 			$condition = join(' AND ', $clauses);
 
-			if($return_count) // We should only return a count
+			if ($return_count) // We should only return a count
 			{
 				$cols	 = 'COUNT(DISTINCT(rental_contract_price_item.id)) AS count';
 				$order	 = "";
 			}
-			else if(isset($filters['export']))
+			else if (isset($filters['export']))
 			{
 				$cols = "rental_contract_price_item.id, rental_contract_price_item.price_item_id,"
 				. " rental_contract_price_item.contract_id, rental_contract_price_item.area, rental_contract_price_item.count,"
@@ -129,9 +129,9 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $price_item_id, &$price_item)
+		protected function populate( int $price_item_id, &$price_item )
 		{
-			if($price_item == null)
+			if ($price_item == null)
 			{
 				$price_item		 = new rental_contract_price_item($this->unmarshal($this->db->f('id'), 'int'));
 				$price_item->set_price_item_id($this->unmarshal($this->db->f('price_item_id'), 'int'));
@@ -160,7 +160,7 @@
 		 * @param $price_item the contract_price_item to be added
 		 * @return mixed receipt from the db operation
 		 */
-		public function import(&$price_item)
+		public function import( &$price_item )
 		{
 			$price		 = $price_item->get_price() ? $price_item->get_price() : 0;
 			$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
@@ -183,13 +183,13 @@
 			$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area',
 				'price', 'area', 'count', 'total_price', 'is_billed');
 
-			if($price_item->get_date_start())
+			if ($price_item->get_date_start())
 			{
 				$values[]	 = $this->marshal($price_item->get_date_start(), 'int');
 				$cols[]		 = 'date_start';
 			}
 
-			if($price_item->get_date_end())
+			if ($price_item->get_date_end())
 			{
 				$values[]	 = $this->marshal($price_item->get_date_end(), 'int');
 				$cols[]		 = 'date_end';
@@ -211,16 +211,16 @@
 		 * @param $price_item the contract_price_item to be added
 		 * @return mixed receipt from the db operation
 		 */
-		protected function add(&$price_item)
+		protected function add( &$price_item )
 		{
 			$price		 = $price_item->get_price() ? $price_item->get_price() : 0;
 			$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
 			$rented_area = $price_item->get_area();
 			$contract	 = rental_socontract::get_instance()->get_single($price_item->get_contract_id);
-			if($price_item->is_area())
+			if ($price_item->is_area())
 			{
 				$rented_area = $contract->get_rented_area();
-				if($rented_area == '')
+				if ($rented_area == '')
 				{
 					$rented_area = 0;
 				}
@@ -245,13 +245,13 @@
 			$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area',
 				'price', 'area', 'count', 'total_price', 'is_one_time', 'is_billed');
 
-			if($price_item->get_date_start())
+			if ($price_item->get_date_start())
 			{
 				$values[]	 = $this->marshal($price_item->get_date_start(), 'int');
 				$cols[]		 = 'date_start';
 			}
 
-			if($price_item->get_date_end())
+			if ($price_item->get_date_end())
 			{
 				$values[]	 = $this->marshal($price_item->get_date_end(), 'int');
 				$cols[]		 = 'date_end';
@@ -273,7 +273,7 @@
 		 * @param $price_item the contract price item to be updated
 		 * @return result receipt from the db operation
 		 */
-		protected function update($price_item)
+		protected function update( $price_item )
 		{
 			$id = intval($price_item->get_id());
 
@@ -282,7 +282,7 @@
 			//if($total_price == 0){
 			//}
 
-			if($price_item->is_area())
+			if ($price_item->is_area())
 			{
 				$total_price = $price_item->get_area() * $price_item->get_price();
 			}
@@ -320,13 +320,13 @@
 		 * @param $contract_id	the id of the contract to generate total price on
 		 * @return total_price	the total price
 		 */
-		public function get_total_price($contract_id)
+		public function get_total_price( $contract_id )
 		{
 			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 			//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
 //		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE NOT is_one_time AND contract_id={$contract_id}");
 			$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND (NOT is_one_time OR NOT is_billed)");
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$total_price = $this->db->f('sum_total');
 				return $total_price;
@@ -339,22 +339,22 @@
 		 * @param $contract_id	the id of the contract to generate total price on 
 		 * @return total_price	the total price
 		 */
-		public function get_total_price_invoice($contract_id, $billing_term, $month, $year)
+		public function get_total_price_invoice( $contract_id, $billing_term, $month, $year )
 		{
 			$billing_term_id = (int)$billing_term;
 			$sql			 = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
 			$result			 = $this->db->query($sql);
-			if(!$result)
+			if (!$result)
 			{
 				return;
 			}
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return;
 			}
 			$months			 = $this->unmarshal($this->db->f('months', true), 'int');
 			$timestamp_end	 = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-			if($months == 1)
+			if ($months == 1)
 			{
 				$timestamp_start = $timestamp_end; // The first day of the period to bill for
 			}
@@ -372,7 +372,7 @@
 			$q_total_price .= "AND ((NOT date_start IS NULL AND date_start < {$timestamp_end}) OR date_start IS NULL) ";
 			$q_total_price .= "AND ((NOT date_end IS NULL AND date_end >= {$timestamp_start}) OR date_end IS NULL)";
 			$this->db->query($q_total_price);
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$total_price = $this->db->f('sum_total');
 				return $total_price;
@@ -385,10 +385,10 @@
 		 * @param $contract_id	the id of the contract to generate total price on
 		 * @return max_area	the max area
 		 */
-		public function get_max_area($contract_id)
+		public function get_max_area( $contract_id )
 		{
 			$this->db->query("SELECT max(area) AS max_area FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area");
-			if($this->db->next_record())
+			if ($this->db->next_record())
 			{
 				$max_area = $this->db->f('max_area');
 				return $max_area;

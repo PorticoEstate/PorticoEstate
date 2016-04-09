@@ -41,12 +41,12 @@
 		var $order;
 		var $cat_id;
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->so = CreateObject('property.sotenant_claim');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -67,7 +67,7 @@
 
 			$this->project_id = $project_id;
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -76,27 +76,27 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
+			if (isset($query))
 			{
 				$this->query = $query;
 			}
-			if(!empty($user_id))
+			if (!empty($user_id))
 			{
 				$this->user_id = $user_id;
 			}
-			if(isset($status))
+			if (isset($status))
 			{
 				$this->status = $status;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id) && !empty($cat_id))
+			if (isset($cat_id) && !empty($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
@@ -104,15 +104,15 @@
 			{
 				unset($this->cat_id);
 			}
-			if(isset($allrows))
+			if (isset($allrows))
 			{
 				$this->allrows = $allrows;
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim', $data);
 			}
@@ -132,14 +132,14 @@
 			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
 		}
 
-		function check_perms($has, $needed)
+		function check_perms( $has, $needed )
 		{
 			return (!!($has & $needed) == true);
 		}
 
-		function get_status_list($data = 0)
+		function get_status_list( $data = 0 )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$format = (isset($data['format']) ? $data['format'] : '');
 				$selected = (isset($data['selected']) ? $data['selected'] : $data['default']);
@@ -155,7 +155,7 @@
 			$status[0]['name'] = lang('ready for processing claim');
 			$status[1]['id'] = 'closed';
 			$status[1]['name'] = lang('Closed');
-			if($format == "filter")
+			if ($format == "filter")
 			{
 				$status[2]['id'] = 'all';
 				$status[2]['name'] = lang('All');
@@ -169,12 +169,12 @@
 			return $this->bocommon->select_list($selected, $status);
 		}
 
-		function read_category_name($cat_id = '')
+		function read_category_name( $cat_id = '' )
 		{
 			return $this->so->read_category_name($cat_id);
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			#$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 			#$claims = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
@@ -184,7 +184,7 @@
 			$claims = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
-			foreach($claims as &$entry)
+			foreach ($claims as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['status'] = lang($entry['status']);
@@ -196,31 +196,31 @@
 			return $claims;
 		}
 
-		function check_claim_project($project_id)
+		function check_claim_project( $project_id )
 		{
 			$claim = $this->so->check_claim_project($project_id);
 			$this->total_records = $this->so->total_records;
 			return $claim;
 		}
 
-		function check_claim_workorder($workorder_id)
+		function check_claim_workorder( $workorder_id )
 		{
 			$claim = $this->so->check_claim_workorder($workorder_id);
 			$this->total_records = $this->so->total_records;
 			return $claim;
 		}
 
-		function read_single($claim_id)
+		function read_single( $claim_id )
 		{
 			return $this->so->read_single($claim_id);
 		}
 
-		function save($claim)
+		function save( $claim )
 		{
 
-			if($claim['claim_id'])
+			if ($claim['claim_id'])
 			{
-				if($claim['claim_id'] != 0)
+				if ($claim['claim_id'] != 0)
 				{
 					$claim_id = $claim['claim_id'];
 					$receipt = $this->so->edit($claim);
@@ -237,7 +237,7 @@
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 			$claim_notify_mails = $this->config->config_data['tenant_claim_notify_mails'];
-			if($claim_notify_mails)
+			if ($claim_notify_mails)
 			{
 				// notify via email
 				$current_user_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -246,13 +246,13 @@
 				$subject = lang("Tenant claim %1", $receipt['claim_id']) . ' ' . $action;
 				$body = lang('Reminder');
 
-				if(!is_object($GLOBALS['phpgw']->send))
+				if (!is_object($GLOBALS['phpgw']->send))
 				{
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 				}
 				$subject = $GLOBALS['phpgw']->send->encode_subject($subject);
 				$notify_mails = explode(',', $claim_notify_mails);
-				foreach($notify_mails as $to)
+				foreach ($notify_mails as $to)
 				{
 					$GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, '', '', '', $from, $from);
 				}
@@ -261,9 +261,9 @@
 			return $receipt;
 		}
 
-		function delete($params)
+		function delete( $params )
 		{
-			if(is_array($params))
+			if (is_array($params))
 			{
 				$this->so->delete($params[0]);
 			}
@@ -273,7 +273,7 @@
 			}
 		}
 
-		function read_record_history($id)
+		function read_record_history( $id )
 		{
 			$historylog = CreateObject('property.historylog', 'tenant_claim');
 			$history_array = $historylog->return_array(array('O'), array(), '', '', $id);
@@ -285,24 +285,24 @@
 			$status_text['closed'] = lang('closed');
 
 			$i = 0;
-			foreach($history_array as $value)
+			foreach ($history_array as $value)
 			{
 
 				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user'] = $value['owner'];
 
-				switch($value['status'])
+				switch ($value['status'])
 				{
 					case 'S': $type = lang('Status changed');
 						break;
 					default:
 				}
 
-				if($value['new_value'] == 'O')
+				if ($value['new_value'] == 'O')
 				{
 					$value['new_value'] = lang('Opened');
 				}
-				if($value['new_value'] == 'X')
+				if ($value['new_value'] == 'X')
 				{
 					$value['new_value'] = lang('Closed');
 				}
@@ -310,7 +310,7 @@
 				$record_history[$i]['value_action'] = $type ? $type : '';
 				unset($type);
 
-				if($value['status'] == 'S')
+				if ($value['status'] == 'S')
 				{
 					$record_history[$i]['value_new_value'] = $status_text[$value['new_value']];
 					$record_history[$i]['value_old_value'] = $status_text[$value['old_value']];
@@ -326,7 +326,7 @@
 			return $record_history;
 		}
 
-		public function get_files($id = 0)
+		public function get_files( $id = 0 )
 		{
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
@@ -338,7 +338,7 @@
 
 			$vfs->override_acl = 0;
 
-			foreach($files as & $file)
+			foreach ($files as & $file)
 			{
 				$file['file_name'] = urlencode($file['name']);
 			}

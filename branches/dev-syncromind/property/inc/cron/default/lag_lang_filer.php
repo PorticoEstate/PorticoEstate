@@ -43,9 +43,9 @@
 			$this->db = $this->bocommon->new_db();
 		}
 
-		function pre_run($data = '')
+		function pre_run( $data = '' )
 		{
-			if($data['enabled'] == 1)
+			if ($data['enabled'] == 1)
 			{
 				$confirm = true;
 				$cron = true;
@@ -55,7 +55,7 @@
 				$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 				$execute = phpgw::get_var('execute', 'bool', 'GET');
 			}
-			if($confirm)
+			if ($confirm)
 			{
 				$this->execute($cron);
 			}
@@ -65,7 +65,7 @@
 			}
 		}
 
-		function confirm($execute = '')
+		function confirm( $execute = '' )
 		{
 			$link_data = array
 				(
@@ -74,7 +74,7 @@
 				'execute' => $execute,
 			);
 
-			if(!$execute)
+			if (!$execute)
 			{
 				$lang_confirm_msg = lang('do you want to perform this action');
 			}
@@ -103,7 +103,7 @@
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($cron = '')
+		function execute( $cron = '' )
 		{
 
 			$sql = "SELECT * from phpgw_lang WHERE app_name = 'property' AND lang='no' ORDER BY message_id ASC";
@@ -111,7 +111,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$i = 0;
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$str.=$this->db->f('message_id') . "\t";
 				$str.=$this->db->f('app_name') . "\t";
@@ -133,7 +133,7 @@
 
 			$this->receipt['message'][] = array('msg' => $i . ' tekster lagt til');
 
-			if(!$cron)
+			if (!$cron)
 			{
 				$this->confirm($execute = false);
 			}

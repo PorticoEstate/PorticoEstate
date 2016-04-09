@@ -31,7 +31,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -147,19 +147,18 @@
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 
-//            $current_user = $this->current_account_id();
-			$current_user				 = 7;
+            $current_user = (int)$this->current_account_id();
 			$current_user_building_data	 = array();
-			$sql						 = "select object_id from bb_permission where subject_id=" . $current_user . " and role='case_officer';";
+			$sql = "SELECT object_id FROM bb_permission WHERE subject_id= {$current_user} AND role='case_officer';";
 			$this->db->query($sql);
-			while($record						 = array_shift($this->db->resultSet))
+			while ($record = array_shift($this->db->resultSet))
 			{
 				$current_user_building_data[] = $record['object_id'];
 			}
 
 			$filters['building_id'] = $current_user_building_data;
 
-			if(isset($_SESSION['showall']))
+			if (isset($_SESSION['showall']))
 			{
 				unset($filters['building_id']);
 			}
@@ -169,7 +168,7 @@
 			}
 
 			$testdata = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
-			if($testdata != 0)
+			if ($testdata != 0)
 			{
 				$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));
 			}
@@ -178,7 +177,7 @@
 				unset($filters['building_name']);
 			}
 			$testdata2 = phpgw::get_var('type', 'string', 'REQUEST');
-			if($testdata2 != '')
+			if ($testdata2 != '')
 			{
 				$filters['type'] = phpgw::get_var('type', 'string', 'REQUEST');
 			}
@@ -187,7 +186,7 @@
 				unset($filters['type']);
 			}
 			$testdata2 = phpgw::get_var('status', 'string', 'REQUEST');
-			if($testdata2 != '')
+			if ($testdata2 != '')
 			{
 				$filters['status'] = phpgw::get_var('status', 'string', 'REQUEST');
 			}
@@ -213,16 +212,19 @@
 			array_walk($system_messages["results"], array($this, "_add_links"), $this->module . ".uisystem_message.show");
 
 
-			foreach($system_messages['results'] as &$system_message)
+			foreach ($system_messages['results'] as &$system_message)
 			{
 				$building_case_officers_data = array();
 				$building_case_officers		 = array();
 				$sql						 = "SELECT account_id, account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id IN (SELECT subject_id FROM bb_permission WHERE object_id=" . $system_message['building_id'] . " AND role='case_officer')";
 				$this->db->query($sql);
-				while($record						 = array_shift($this->db->resultSet))
+				while ($record = array_shift($this->db->resultSet))
 				{
-					$building_case_officers_data[]	 = array('account_id' => $record['account_id'],
-						'account_lid' => $record['account_lid'], 'account_name' => $record['account_firstname'] . " " . $record['account_lastname']);
+					$building_case_officers_data[] = array(
+						'account_id' => $record['account_id'],
+						'account_lid' => $record['account_lid'],
+						'account_name' => $record['account_firstname'] . " " . $record['account_lastname']
+					);
 					$building_case_officers[]		 = $record['account_id'];
 				}
 
@@ -234,7 +236,7 @@
 				$system_message['contact_name']		 = $system_message['name'];
 				$system_message['case_officer_name'] = $for_case_officer_id;
 				$system_message['what']				 = $system_message['title'];
-				if(strstr($system_message['what'], "%"))
+				if (strstr($system_message['what'], "%"))
 				{
 					$search					 = array('%2C', '%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86',
 						'%C3%A6');
@@ -242,11 +244,13 @@
 					$system_message['what']	 = str_replace($search, $replace, $system_message['what']);
 				}
 
-				while($case_officer = array_shift($building_case_officers_data))
+				while ($case_officer = array_shift($building_case_officers_data))
 				{
-					if($system_message['case_officer_name'] = $case_officer['account_id'])
+					if ($system_message['case_officer_name'] = $case_officer['account_id'])
+				{
 						$system_message['case_officer_name'] = $case_officer['account_name'];
 				}
+			}
 			}
 			return $this->jquery_results($system_messages);
 		}
@@ -255,7 +259,7 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 
-			if($id)
+			if ($id)
 			{
 				$system_message					 = $this->bo->read_single($id);
 				$system_message['id']			 = $id;
@@ -274,23 +278,23 @@
 
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$system_message = array_merge($system_message, extract_values($_POST, array(
 					'name'		 => 'string', 'time'		 => 'string', 'title'		 => 'string', 'message'	 => 'html',
 					'phone'		 => 'string', 'email'		 => 'email')
 				));
-				if(!isset($system_message["Status"]))
+				if (!isset($system_message["Status"]))
 				{
 					$system_message['status'] = 'NEW';
 				}
-				if($system_message['message'] == '')
+				if ($system_message['message'] == '')
 				{
 					$errors['system_message'] = lang('No message');
 				}
-				if(!$errors)
+				if (!$errors)
 				{
-					if($id)
+					if ($id)
 					{
 						$receipt = $this->bo->update($system_message);
 					}
@@ -305,7 +309,7 @@
 			}
 			$this->flash_form_errors($errors);
 
-			phpgwapi_jquery::init_ckeditor('field-message');
+			self::rich_text_editor('field-message');
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
@@ -313,7 +317,7 @@
 
 			$system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			phpgwapi_jquery::init_ckeditor('field_description');
+			self::rich_text_editor('field_description');
 
 			self::render_template('system_message_edit', array('system_message' => $system_message,
 				'module' => $this->module));
@@ -329,10 +333,10 @@
 				'id' => $system_message['system_message_id']));
 			$system_message['back_link']			 = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$_POST['create'] = date("Y-m-d H.i:s", phpgwapi_datetime::date_to_timestamp($_POST['created']));
-				if($_POST['status'] == 'CLOSED')
+				if ($_POST['status'] == 'CLOSED')
 				{
 					$system_message['status']	 = 'CLOSED';
 					$receipt					 = $this->bo->update($system_message);

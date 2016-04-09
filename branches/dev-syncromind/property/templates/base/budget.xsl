@@ -949,7 +949,7 @@
 		<xsl:value-of select="id"/>
 	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 			<option value="{$id}" selected="selected">
 				<xsl:value-of disable-output-escaping="yes" select="id"/>
 			</option>
@@ -968,7 +968,7 @@
 		<xsl:value-of select="id"/>
 	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 			<option value="{$id}" selected="selected">
 				<xsl:value-of disable-output-escaping="yes" select="name"/>
 			</option>
@@ -987,7 +987,7 @@
 		<xsl:value-of select="id"/>
 	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="selected='selected'">
+			<xsl:when test="selected='selected' or selected = 1">
 			<option value="{$id}" selected="selected">
 				<xsl:value-of disable-output-escaping="yes" select="name"/>
 			</option>

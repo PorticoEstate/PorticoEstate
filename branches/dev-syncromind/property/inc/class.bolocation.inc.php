@@ -60,7 +60,7 @@
 			'get_locations_by_name' => true
 		);
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->soadmin_location = CreateObject('property.soadmin_location');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -69,7 +69,7 @@
 
 			$this->lookup = phpgw::get_var('lookup', 'bool');
 
-			if($session && !$this->lookup)
+			if ($session && !$this->lookup)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -89,7 +89,7 @@
 			$allrows = phpgw::get_var('allrows', 'bool');
 			$location_code = phpgw::get_var('location_code');
 
-			if($location_code && !$type_id)
+			if ($location_code && !$type_id)
 			{
 				$type_id = count(explode('-', $location_code));
 			}
@@ -108,7 +108,7 @@
 			$this->acl_location = '.location.' . $this->type_id;
 			$this->location_code = isset($location_code) && $location_code ? $location_code : '';
 
-			if(isset($_REQUEST['query']) && !$query && !isset($_REQUEST['block_query']))
+			if (isset($_REQUEST['query']) && !$query && !isset($_REQUEST['block_query']))
 			{
 				$this->location_code = '';
 			}
@@ -119,7 +119,7 @@
 			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
 			//cramirez@ccfirst.com validation evita NOTICE  for JSON
 			$referer_out = array();
-			if(isset($referer['query']) && is_array($referer['query']))
+			if (isset($referer['query']) && is_array($referer['query']))
 			{
 				parse_str($referer['query'], $referer_out);
 			}
@@ -137,14 +137,14 @@
 
 			$query_temp = explode('-', $query);
 
-			for($i = 0; $i < $type_id; $i++)
+			for ($i = 0; $i < $type_id; $i++)
 			{
-				if(isset($query_temp[$i]) && $query_temp[$i])
+				if (isset($query_temp[$i]) && $query_temp[$i])
 				{
 					$query_location[] = $query_temp[$i];
 				}
 			}
-			if(isset($query_location) && is_array($query_location))
+			if (isset($query_location) && is_array($query_location))
 			{
 				$this->query = implode('-', $query_location);
 			}
@@ -166,17 +166,17 @@
 			//	$this->allrows			= $data['allrows'];
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'location', $data);
 			}
 		}
 
-		function column_list($selected = array(), $type_id = '', $allrows = '')
+		function column_list( $selected = array(), $type_id = '', $allrows = '' )
 		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
 			}
@@ -186,9 +186,9 @@
 			return $column_list;
 		}
 
-		function select_status_list($format = '', $selected = '')
+		function select_status_list( $format = '', $selected = '' )
 		{
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
@@ -202,15 +202,15 @@
 			return $this->bocommon->select_list($selected, $list);
 		}
 
-		function read_entity_to_link($location_code, $exact = false)
+		function read_entity_to_link( $location_code, $exact = false )
 		{
 			return $this->so->read_entity_to_link($location_code, $exact);
 		}
 
-		function get_owner_list($format = '', $selected = '')
+		function get_owner_list( $format = '', $selected = '' )
 		{
 
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
@@ -225,10 +225,10 @@
 			return $this->bocommon->select_list($selected, $owners);
 		}
 
-		function get_owner_type_list($format = '', $selected = '')
+		function get_owner_type_list( $format = '', $selected = '' )
 		{
 
-			switch($format)
+			switch ($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
@@ -243,19 +243,19 @@
 			return $this->bocommon->select_list($selected, $owners);
 		}
 
-		function initiate_ui_location($data)
+		function initiate_ui_location( $data )
 		{
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			if(isset($config->config_data['suppress_tenant']) && $config->config_data['suppress_tenant'])
+			if (isset($config->config_data['suppress_tenant']) && $config->config_data['suppress_tenant'])
 			{
 				$data['tenant'] = false;
 			}
 			unset($config);
 
-			if(isset($data['lookup_type']))
+			if (isset($data['lookup_type']))
 			{
-				switch($data['lookup_type'])
+				switch ($data['lookup_type'])
 				{
 					case 'form':
 						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'), ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
@@ -287,11 +287,11 @@
 			$location_types = $this->soadmin_location->select_location_type();
 			$this->location_types = $location_types;
 
-			if(!$data['type_id'] === 0 || $data['type_id'] == -1)
+			if (!$data['type_id'] === 0 || $data['type_id'] == -1)
 			{
 				$data['type_id'] = count($location_types);
 			}
-			else if($data['type_id'] == -2)
+			else if ($data['type_id'] == -2)
 			{
 				$data['type_id'] = 0;
 			}
@@ -299,10 +299,10 @@
 			//_debug_array($data);die();
 			//_debug_array($location_types);
 			$fm_location_cols = array();
-			for($i = 1; $i < ($data['type_id'] + 1); $i++)
+			for ($i = 1; $i < ($data['type_id'] + 1); $i++)
 			{
 				$fm_location_cols_temp = $this->custom->find('property', '.location.' . $i, 0, '', '', '', true);
-				foreach($fm_location_cols_temp as & $entry)
+				foreach ($fm_location_cols_temp as & $entry)
 				{
 					$entry['location_type'] = $i;
 				}
@@ -312,7 +312,7 @@
 
 			//_debug_array($fm_location_cols);
 
-			for($i = 0; $i < $data['type_id']; $i++)
+			for ($i = 0; $i < $data['type_id']; $i++)
 			{
 				$location['location'][$i]['input_type'] = 'text';
 				$location['location'][$i]['input_name'] = 'loc' . ($i + 1);
@@ -334,7 +334,7 @@
 				$location['location'][$i]['lookup_function_call'] = 'lookup_loc' . ($i + 1) . '()';
 				$location['location'][$i]['readonly'] = true;
 
-				if(!isset($data['block_parent']) || $data['block_parent'] < ($i + 1))
+				if (!isset($data['block_parent']) || $data['block_parent'] < ($i + 1))
 				{
 					$location['location'][$i]['lookup_link'] = true;
 					$lookup_functions[] = array
@@ -343,11 +343,11 @@
 						'filter_level' => $i,
 						'link' => $location_link . ',type_id:' . ($i + 1) . ',lookup_name:' . $i,
 //							'action' 					=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-						'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+						'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 					);
 				}
 //_debug_array($data['no_link']);
-				if(isset($data['no_link']) && $data['no_link'] && $data['no_link'] >= ($i + 3))
+				if (isset($data['no_link']) && $data['no_link'] && $data['no_link'] >= ($i + 3))
 				{
 					$location['location'][$i]['lookup_link'] = false;
 					$location['location'][$i]['lookup_function_call'] = '';
@@ -355,13 +355,13 @@
 					$location['location'][$i]['lookup_link'] = false;
 					$lookup_functions[$i]['link'] = $location_link . ',type_id:' . ($data['no_link'] - 1) . ',lookup_name:' . ($data['no_link'] - 2);
 //					$lookup_functions[$i]['action'] 								= 'Window1=window.open(strURL,"Search","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$lookup_functions[$i]['action'] = 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+					$lookup_functions[$i]['action'] = 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$location['location'][$i]['statustext'] = lang('click this link to select') . ' ' . $location_types[($data['no_link'] - 2)]['name'];
 				}
 
-				if(isset($data['query_link']) && $i < ($data['type_id'] - 1))
+				if (isset($data['query_link']) && $i < ($data['type_id'] - 1))
 				{
-					for($j = 1; $j < $i + 2; $j++)
+					for ($j = 1; $j < $i + 2; $j++)
 					{
 						$temp_location[] = $data['values']['loc' . ($j)];
 					}
@@ -375,19 +375,19 @@
 			}
 
 			$location_cols_count = count($fm_location_cols);
-			for($j = 0; $j < $location_cols_count; $j++)
+			for ($j = 0; $j < $location_cols_count; $j++)
 			{
 				$_lookup_link = true;
-				if(isset($data['no_link']) && $data['no_link'])
+				if (isset($data['no_link']) && $data['no_link'])
 				{
 					$_lookup_link = false;
-					if($data['no_link'] < ($fm_location_cols[$j]['location_type'] + 2))
+					if ($data['no_link'] < ($fm_location_cols[$j]['location_type'] + 2))
 					{
 						$_lookup_link = true;
 					}
 				}
 
-				if($fm_location_cols[$j]['lookup_form'] && $fm_location_cols[$j]['location_type'] == $data['type_id'])
+				if ($fm_location_cols[$j]['lookup_form'] && $fm_location_cols[$j]['location_type'] == $data['type_id'])
 				{
 					$location['location'][$i]['input_type'] = 'text';
 					$location['location'][$i]['input_name'] = $fm_location_cols[$j]['column_name'];
@@ -409,20 +409,20 @@
 			}
 
 			$config_count = count($config);
-			for($j = 0; $j < $config_count; $j++)
+			for ($j = 0; $j < $config_count; $j++)
 			{
 				$_lookup_link = true;
-				if(isset($data['no_link']) && $data['no_link'])
+				if (isset($data['no_link']) && $data['no_link'])
 				{
 					$_lookup_link = false;
-					if($data['no_link'] < ($config[$j]['location_type'] + 2))
+					if ($data['no_link'] < ($config[$j]['location_type'] + 2))
 					{
 						$_lookup_link = true;
 					}
 				}
-				if($config[$j]['location_type'] <= $data['type_id'] && $config[$j]['lookup_form'])
+				if ($config[$j]['location_type'] <= $data['type_id'] && $config[$j]['lookup_form'])
 				{
-					if($config[$j]['column_name'] == 'street_id' && $location_types[($data['type_id'] - 1)]['list_address'] == 1)
+					if ($config[$j]['column_name'] == 'street_id' && $location_types[($data['type_id'] - 1)]['list_address'] == 1)
 					{
 						$location['location'][$i]['input_name'] = $config[$j]['column_name'];
 						$input_name[] = 'street_id';
@@ -449,7 +449,7 @@
 						$location['location'][$i]['extra'][1]['value'] = (isset($data['values']['street_number']) ? $data['values']['street_number'] : '');
 						$i++;
 					}
-					else if($config[$j]['column_name'] == 'tenant_id' && $data['tenant'])
+					else if ($config[$j]['column_name'] == 'tenant_id' && $data['tenant'])
 					{
 						$m++;
 						$lookup_functions[] = array
@@ -458,7 +458,7 @@
 							'filter_level' => $m,
 							'link' => $location_link . ',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
 //								'action' 					=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-							'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+							'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 						);
 
 						$location['location'][$i]['lookup_link'] = $_lookup_link;
@@ -500,7 +500,7 @@
 						$location['location'][$i]['statustext'] = lang('contact phone');
 						$i++;
 					}
-					else if($config[$j]['column_name'] != 'tenant_id' && $config[$j]['column_name'] != 'street_id')
+					else if ($config[$j]['column_name'] != 'tenant_id' && $config[$j]['column_name'] != 'street_id')
 					{
 						$location['location'][$i]['input_name'] = $config[$j]['column_name'];
 						$input_name[] = $location['location'][$i]['input_name'];
@@ -518,17 +518,17 @@
 				}
 			}
 
-			if(!isset($data['lookup_entity']) || !$data['lookup_entity'])
+			if (!isset($data['lookup_entity']) || !$data['lookup_entity'])
 			{
-				if(is_array($data['entity_data']))
+				if (is_array($data['entity_data']))
 				{
 					$soadmin_entity = CreateObject('property.soadmin_entity');
 					$soadmin_entity->type = 'entity';
 					$soadmin_entity->type_app = 'property';
 
-					foreach($data['entity_data'] as $_entity_id => $_entity_info)
+					foreach ($data['entity_data'] as $_entity_id => $_entity_info)
 					{
-						if(!$_entity_id)
+						if (!$_entity_id)
 						{
 							continue;
 						}
@@ -543,9 +543,9 @@
 			}
 
 			$input_name_entity = array();
-			if(isset($data['lookup_entity']) && is_array($data['lookup_entity']))
+			if (isset($data['lookup_entity']) && is_array($data['lookup_entity']))
 			{
-				foreach($data['lookup_entity'] as $entity)
+				foreach ($data['lookup_entity'] as $entity)
 				{
 					$m++;
 
@@ -556,7 +556,7 @@
 						'name' => 'lookup_entity_' . $entity['id'] . '()',
 						'link' => "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
 //							'action'			=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-						'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+						'action' => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 					);
 
 					$location['location'][$i]['input_type'] = 'text';
@@ -569,7 +569,7 @@
 					$location['location'][$i]['lookup_link'] = true;
 					$location['location'][$i]['name'] = $entity['name'];
 
-					if(is_array($data['entity_data']))
+					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['value'] = $data['entity_data'][$entity['id']]['p_num'];
 					}
@@ -582,7 +582,7 @@
 					$location['location'][$i]['extra'][0]['lookup_function_call'] = 'lookup_entity_' . $entity['id'] . '()';
 					$location['location'][$i]['extra'][0]['is_entity'] = true;
 
-					if(is_array($data['entity_data']))
+					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['extra'][0]['value'] = $data['entity_data'][$entity['id']]['p_cat_name'];
 					}
@@ -591,7 +591,7 @@
 					$location['location'][$i]['extra'][1]['input_name'] = 'entity_id_' . $entity['id'];
 					$input_name_entity[] = 'entity_id_' . $entity['id'];
 					$insert_record['extra']['entity_id_' . $entity['id']] = 'p_entity_id';
-					if(is_array($data['entity_data']))
+					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['extra'][1]['value'] = $data['entity_data'][$entity['id']]['p_entity_id'];
 					}
@@ -601,7 +601,7 @@
 					$input_name_entity[] = 'cat_id_' . $entity['id'];
 					$insert_record['extra']['cat_id_' . $entity['id']] = 'p_cat_id';
 
-					if(is_array($data['entity_data']))
+					if (is_array($data['entity_data']))
 					{
 						$location['location'][$i]['extra'][2]['value'] = $data['entity_data'][$entity['id']]['p_cat_id'];
 					}
@@ -613,11 +613,11 @@
 			phpgwapi_cache::session_set('property', 'lookup_fields', $input_name);
 			phpgwapi_cache::session_set('property', 'lookup_fields_entity', $input_name_entity);
 
-			if($input_name_entity && is_array($input_name_entity))
+			if ($input_name_entity && is_array($input_name_entity))
 			{
 				$function_blank_entity_values = "function blank_entity_values()\n{\n";
 
-				for($k = 0; $k < count($input_name_entity); $k++)
+				for ($k = 0; $k < count($input_name_entity); $k++)
 				{
 					$function_blank_entity_values .= "\tdocument.getElementsByName('{$input_name_entity[$k]}')[0].value = '';\n";
 				}
@@ -627,23 +627,23 @@
 			}
 
 
-			if(isset($insert_record))
+			if (isset($insert_record))
 			{
 				phpgwapi_cache::session_set('property', 'insert_record', $insert_record);
 			}
 
-			if(isset($lookup_functions) && is_array($lookup_functions))
+			if (isset($lookup_functions) && is_array($lookup_functions))
 			{
 				$_lookup_functions = "self.name='first_Window'\n";
 
 				$filter_level = 0;
-				for($j = 0; $j < count($lookup_functions); $j++)
+				for ($j = 0; $j < count($lookup_functions); $j++)
 				{
-					if(isset($lookup_functions[$j]['filter_level']) && $lookup_functions[$j]['filter_level'] > 0)
+					if (isset($lookup_functions[$j]['filter_level']) && $lookup_functions[$j]['filter_level'] > 0)
 					{
 						$lookup_functions[$j]['link'] .= ",block_query:block,location_code:filter";
 						$_filter = array();
-						for($i = 1; $i <= $lookup_functions[$j]['filter_level']; $i++)
+						for ($i = 1; $i <= $lookup_functions[$j]['filter_level']; $i++)
 						{
 							$_filter[] = "document.form.loc{$i}.value";
 						}
@@ -659,7 +659,7 @@
 						function {$lookup_functions[$j]['name']}
 						{
 JS;
-					if($filter_level)
+					if ($filter_level)
 					{
 						$_lookup_functions .= <<<JS
 
@@ -705,9 +705,9 @@ JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $_lookup_functions);
 
-			if(isset($location) && is_array($location))
+			if (isset($location) && is_array($location))
 			{
-				for($i = 0; $i < count($location['location']); $i++)
+				for ($i = 0; $i < count($location['location']); $i++)
 				{
 					$lookup_name[] = $location['location'][$i]['name'];
 				}
@@ -718,22 +718,10 @@ JS;
 			}
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 //_debug_array($data);
-			/* $type_id = isset($data['type_id']) && $data['type_id'] ? $data['type_id'] : $this->type_id;
-			  $allrows = isset($data['allrows']) && $data['allrows'] ? $data['allrows'] : $this->allrows;
-
-			  $locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $type_id,
-			  'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
-			  'district_id'=>$this->district_id,'allrows'=>$allrows,
-			  'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
-			  'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
-			  'results' => $data['results'],'control_registered' => $data['control_registered'],
-			  'control_id' => $data['control_id'])); */
-
-			if($data['lookup'] && $data['location_code'])
+			if ($data['lookup'] && $data['location_code'])
 			{
 				$data['query'] = $data['query'] ? $data['query'] : $data['location_code'];
 			}
@@ -765,12 +753,12 @@ JS;
 			return $locations;
 		}
 
-		function get_responsible($data = array())
+		function get_responsible( $data = array() )
 		{
 			$soresponsible = CreateObject('property.soresponsible');
 			$contacts = createObject('phpgwapi.contacts');
 
-			if($data['user_id'] < 0 && $data['role_id'])
+			if ($data['user_id'] < 0 && $data['role_id'])
 			{
 				$account = $GLOBALS['phpgw']->accounts->get(abs($data['user_id']));
 				$contact_id = $account->person_id;
@@ -779,7 +767,7 @@ JS;
 			}
 
 			$locations = $this->read($data);
-			foreach($locations as & $location)
+			foreach ($locations as & $location)
 			{
 				$responsible_item = $soresponsible->get_active_responsible_at_location($location['location_code'], $data['role_id']);
 				$location['responsible_item'] = $responsible_item['id'];
@@ -792,9 +780,9 @@ JS;
 			return $locations;
 		}
 
-		function read_single($data = '', $extra = array())
+		function read_single( $data = '', $extra = array() )
 		{
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$location_code = $data['location_code'];
 				$extra = $data['extra'];
@@ -807,12 +795,12 @@ JS;
 			$location_array = explode('-', $location_code);
 			$type_id = count($location_array);
 
-			if(!$type_id)
+			if (!$type_id)
 			{
 				return;
 			}
 
-			if(!isset($extra['noattrib']) || !$extra['noattrib'])
+			if (!isset($extra['noattrib']) || !$extra['noattrib'])
 			{
 				$values['attributes'] = $this->custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$values = $this->so->read_single($location_code, $values);
@@ -824,9 +812,9 @@ JS;
 			}
 
 
-			if(isset($extra['tenant_id']) && $extra['tenant_id'] != 'lookup')
+			if (isset($extra['tenant_id']) && $extra['tenant_id'] != 'lookup')
 			{
-				if($extra['tenant_id'] > 0)
+				if ($extra['tenant_id'] > 0)
 				{
 					$tenant_data = $this->bocommon->read_single_tenant($extra['tenant_id']);
 					$values['tenant_id'] = $extra['tenant_id'];
@@ -843,20 +831,20 @@ JS;
 				}
 			}
 
-			if(is_array($extra))
+			if (is_array($extra))
 			{
 				$values = $values + $extra;
 			}
 			return $values;
 		}
 
-		function read_single_old($location_code = '', $extra = '')
+		function read_single_old( $location_code = '', $extra = '' )
 		{
 			$location_data = $this->so->read_single($location_code);
 
-			if(isset($extra['tenant_id']) && $extra['tenant_id'] != 'lookup')
+			if (isset($extra['tenant_id']) && $extra['tenant_id'] != 'lookup')
 			{
-				if($extra['tenant_id'] > 0)
+				if ($extra['tenant_id'] > 0)
 				{
 					$tenant_data = $this->bocommon->read_single_tenant($extra['tenant_id']);
 					$location_data['tenant_id'] = $extra['tenant_id'];
@@ -873,14 +861,14 @@ JS;
 				}
 			}
 
-			if(is_array($extra))
+			if (is_array($extra))
 			{
 				$location_data = $location_data + $extra;
 			}
 			return $location_data;
 		}
 
-		function check_location($location_code = '', $type_id = '')
+		function check_location( $location_code = '', $type_id = '' )
 		{
 			return $this->so->check_location($location_code, $type_id);
 		}
@@ -893,21 +881,21 @@ JS;
 		 *
 		 * @return array the grouped attributes
 		 */
-		public function get_attribute_groups($location, $attributes = array())
+		public function get_attribute_groups( $location, $attributes = array() )
 		{
 			return $this->custom->get_attribute_groups('property', $location, $attributes);
 		}
 
-		function save($location, $values_attribute, $action = '', $type_id = '', $location_code_parent = '')
+		function save( $location, $values_attribute, $action = '', $type_id = '', $location_code_parent = '' )
 		{
-			if(is_array($values_attribute))
+			if (is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
-				if($this->so->check_location($location['location_code'], $type_id))
+				if ($this->so->check_location($location['location_code'], $type_id))
 				{
 					$receipt = $this->so->edit($location, $values_attribute, $type_id);
 				}
@@ -918,7 +906,7 @@ JS;
 			}
 			else
 			{
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->so->add($location, $values_attribute, $type_id);
 				}
@@ -933,16 +921,16 @@ JS;
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach($custom_functions as $entry)
+			foreach ($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if(preg_match('/\.\./', $entry['file_name']))
+				if (preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if($entry['active'] && is_file($file))
+				if ($entry['active'] && is_file($file))
 				{
 					require_once $file;
 				}
@@ -971,7 +959,7 @@ JS;
 			return $this->so->update_location();
 		}
 
-		function read_summary($data = array())
+		function read_summary( $data = array() )
 		{
 			$summary = $this->so->read_summary(array('filter' => $this->filter, 'type_id' => isset($data['type_id']) ? $data['type_id'] : '',
 				'district_id' => $this->district_id, 'part_of_town_id' => $this->part_of_town_id));
@@ -979,7 +967,7 @@ JS;
 			return $summary;
 		}
 
-		function select_change_type($selected = '')
+		function select_change_type( $selected = '' )
 		{
 			$change_type[0]['id'] = 1;
 			$change_type[0]['name'] = lang('Correct error');
@@ -989,19 +977,19 @@ JS;
 			return $this->bocommon->select_list($selected, $change_type);
 		}
 
-		function check_history($location_code)
+		function check_history( $location_code )
 		{
 			return $this->so->check_history($location_code);
 		}
 
-		function get_history($location_code, $dry_run = false)
+		function get_history( $location_code, $dry_run = false )
 		{
 			$history = $this->so->get_history($location_code, $dry_run);
 			$this->uicols = $this->so->uicols;
 			return $history;
 		}
 
-		function get_tenant_location($tenant_id = '')
+		function get_tenant_location( $tenant_id = '' )
 		{
 			return $this->so->get_tenant_location($tenant_id);
 		}
@@ -1013,7 +1001,7 @@ JS;
 		 *
 		 * @return array holding custom fields at this location
 		 */
-		function find_attribute($location)
+		function find_attribute( $location )
 		{
 			return $this->custom->find('property', $location, 0, '', 'ASC', 'attrib_sort', true, true);
 		}
@@ -1027,7 +1015,7 @@ JS;
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
-		function prepare_attribute($values, $location, $view_only = false)
+		function prepare_attribute( $values, $location, $view_only = false )
 		{
 			return $this->custom->prepare($values, 'property', $location, $view_only);
 		}
@@ -1053,11 +1041,11 @@ JS;
 		 *
 		 * @return string location name
 		 */
-		public function get_location_name($location_code)
+		public function get_location_name( $location_code )
 		{
 			static $locations = array();
 
-			if(!isset($locations[$location_code]))
+			if (!isset($locations[$location_code]))
 			{
 				$_location_info = $this->read_single(array
 					(
@@ -1068,7 +1056,7 @@ JS;
 
 				$_loc_name_arr = array();
 				$_level = count(explode('-', $location_code)) + 1;
-				for($i = 1; $i < $_level; $i++)
+				for ($i = 1; $i < $_level; $i++)
 				{
 					$_loc_name_arr[] = $_location_info["loc{$i}_name"];
 				}
@@ -1076,5 +1064,10 @@ JS;
 				$locations[$location_code] = implode(' | ', $_loc_name_arr);
 			}
 			return $locations[$location_code];
+		}
+
+		function get_item_id( $location_code )
+		{
+			return $this->so->get_item_id($location_code);
 		}
 	}

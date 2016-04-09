@@ -47,7 +47,7 @@
 			$this->_like = & $this->_db->like;
 		}
 
-		function read($data)
+		function read( $data )
 		{
 			$valid_locations_data = $this->get_gallery_location();
 
@@ -65,9 +65,9 @@
 			$valid_locations = isset($valid_locations_data) && $valid_locations_data ? $valid_locations_data : array();
 			$results = (isset($data['results']) ? $data['results'] : 0);
 
-			if($order)
+			if ($order)
 			{
-				switch($order)
+				switch ($order)
 				{
 					case 'id':
 						$_order = 'file_id';
@@ -92,24 +92,24 @@
 
 			$filtermethod .= " AND (phpgw_vfs.directory = 'This_one_is_to_block'";
 
-			foreach($valid_locations as $location)
+			foreach ($valid_locations as $location)
 			{
 				$filtermethod .= " OR phpgw_vfs.directory {$this->_like} '%{$location['id']}%'";
 			}
 
 			$filtermethod .= ')';
 
-			if($user_id)
+			if ($user_id)
 			{
 				$filtermethod .= " AND createdby_id = {$user_id}";
 			}
 
-			if($mime_type)
+			if ($mime_type)
 			{
 				$filtermethod .= " AND mime_type = '{$mime_type}'";
 			}
 
-			if($start_date)
+			if ($start_date)
 			{
 				$date_format = $this->_db->date_format();
 				$start_date = date($date_format, $start_date);
@@ -118,13 +118,13 @@
 			}
 
 
-			if($cat_id)
+			if ($cat_id)
 			{
 				$cat_id = $this->_db->db_addslashes($cat_id);
 				$filtermethod .= " AND phpgw_vfs.directory {$this->_like} '%{$cat_id}%'";
 			}
 
-			if($query)
+			if ($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
@@ -139,9 +139,9 @@
 			$this->total_records = $this->_db->num_rows();
 
 			$values = array();
-			if(!$dry_run)
+			if (!$dry_run)
 			{
-				if(!$allrows)
+				if (!$allrows)
 				{
 					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 				}
@@ -150,7 +150,7 @@
 					$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 				}
 
-				while($this->_db->next_record())
+				while ($this->_db->next_record())
 				{
 					$values[] = array
 						(
@@ -181,7 +181,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$values[] = $this->_db->f('mime_type', true);
 			}
@@ -195,7 +195,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			while($this->_db->next_record())
+			while ($this->_db->next_record())
 			{
 				$values[] = $this->_db->f('directory', true);
 			}

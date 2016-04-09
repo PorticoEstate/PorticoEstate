@@ -4,8 +4,8 @@
 		<tr class="th">
 			<td colspan="2">&nbsp;<b>{title}</b></td>
 		</tr>
-<!-- END header -->
-<!-- BEGIN body -->
+		<!-- END header -->
+		<!-- BEGIN body -->
 		<tr class="row_on">
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -16,7 +16,7 @@
 	    <td>{lang_remote_authentication}:</td>
 	    <td>
 	     <select name="newsettings[authentication_method]">
-{hook_authentication}
+					{hook_authentication}
 	     </select>
 	    </td>
 	   </tr>
@@ -100,11 +100,11 @@
 			<td><input name="newsettings[customtemplate]" value="{value_customtemplate}"/></td>
 		</tr>
 
-<!-- END body -->
-<!-- BEGIN footer -->
+		<!-- END body -->
+		<!-- BEGIN footer -->
 		<tr class="th">
 			<td colspan="2">
-&nbsp;
+				&nbsp;
 			</td>
 		</tr>
 		<tr>

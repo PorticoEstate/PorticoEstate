@@ -8,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -31,13 +30,8 @@
 	 *
 	 * @package Frontend
 	 */
-
 	class frontend_uifrontend extends frontend_uicommon
 	{
-		public $public_functions = array
-			(
-			'index'		=> true
-		);
 
 		public function __construct()
 		{
@@ -48,8 +42,12 @@
 		{
 			//Forward to helpdesk
 			$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket');
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'location_id' => $location_id));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index',
+				'location_id' => $location_id));
 		}
 
-		public function query() {}
+		public function query()
+		{
+
+		}
 	}

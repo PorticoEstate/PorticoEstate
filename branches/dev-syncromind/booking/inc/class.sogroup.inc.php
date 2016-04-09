@@ -49,10 +49,10 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function get_metainfo($id)
+		function get_metainfo( $id )
 		{
 			$this->db->limit_query("SELECT bg.name, bg.shortname, bo.name as organization, bo.district, bo.city, bg.description FROM bb_group as bg, bb_organization as bo where bg.organization_id=bo.id and bg.id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if(!$this->db->next_record())
+			if (!$this->db->next_record())
 			{
 				return False;
 			}
@@ -67,9 +67,9 @@
 		/**
 		 * Removes any extra contacts from entity if such exists (only two contacts allowed per group).
 		 */
-		protected function trim_contacts(&$entity)
+		protected function trim_contacts( &$entity )
 		{
-			if(isset($entity['contacts']) && is_array($entity['contacts']) && count($entity['contacts']) > 2)
+			if (isset($entity['contacts']) && is_array($entity['contacts']) && count($entity['contacts']) > 2)
 			{
 				$entity['contacts'] = array($entity['contacts'][0], $entity['contacts'][1]);
 			}
@@ -77,12 +77,12 @@
 			return $entity;
 		}
 
-		function add($entity)
+		function add( $entity )
 		{
 			return parent::add($this->trim_contacts($entity));
 		}
 
-		function update($entity)
+		function update( $entity )
 		{
 			return parent::update($this->trim_contacts($entity));
 		}

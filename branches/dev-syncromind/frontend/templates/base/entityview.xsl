@@ -35,7 +35,9 @@
 	    </xsl:when>
    </xsl:choose>
    
-	<xsl:variable name="tab_selected"><xsl:value-of select="tab_selected"/></xsl:variable>
+	<xsl:variable name="tab_selected">
+		<xsl:value-of select="tab_selected"/>
+	</xsl:variable>
 	
 	<div class="frontend_body">
 		<div>
@@ -45,9 +47,15 @@
 					<div class="ticket_content">
 						<div class="pure-control-group">
 							
-								<a class="pure-button" href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
-								<a class="pure-button" href="#" onclick="showlightbox_edit_entity({location_id},{id});"><xsl:value-of select="php:function('lang', 'edit')"/></a>
-								<a class="pure-button" href="#" onclick="showlightbox_start_ticket('{start_ticket}');"><xsl:value-of select="php:function('lang', 'add ticket')"/></a>
+							<a class="pure-button" href="{entitylist}"> &lt;&lt;
+								<xsl:value-of select="php:function('lang', 'show all entities')"/>
+							</a>
+							<a class="pure-button" href="#" onclick="showlightbox_edit_entity({location_id},{id});">
+								<xsl:value-of select="php:function('lang', 'edit')"/>
+							</a>
+							<a class="pure-button" href="#" onclick="showlightbox_start_ticket('{start_ticket}');">
+								<xsl:value-of select="php:function('lang', 'add ticket')"/>
+							</a>
 							
 						</div>						
 

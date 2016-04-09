@@ -36,7 +36,7 @@
 
 		public function __construct()
 		{
-			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				execMethod('property.bocommon.no_access');
@@ -69,13 +69,13 @@
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 
-			foreach($location_types as $location_type)
+			foreach ($location_types as $location_type)
 			{
 				$this->valid_tables["fm_location{$location_type['id']}"] = array('name' => "fm_location{$location_type['id']} ({$location_type['name']})",
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
 			}
 
-			if($this->table && !in_array($this->table, array_keys($this->valid_tables)))
+			if ($this->table && !in_array($this->table, array_keys($this->valid_tables)))
 			{
 				throw new Exception("Not a valid table: {$this->table}");
 			}
@@ -94,24 +94,24 @@
 
 			$check_method = 0;
 			$get_identificator = false;
-			if($this->conv_type = phpgw::get_var('conv_type'))
+			if ($this->conv_type = phpgw::get_var('conv_type'))
 			{
 				$check_method ++;
 				$get_identificator = true;
 			}
-			if($this->location_id = phpgw::get_var('location_id', 'int'))
-			{
-				$check_method ++;
-				$get_identificator = true;
-			}
-
-			if($table = phpgw::get_var('table'))
+			if ($this->location_id = phpgw::get_var('location_id', 'int'))
 			{
 				$check_method ++;
 				$get_identificator = true;
 			}
 
-			if($check_method > 1)
+			if ($table = phpgw::get_var('table'))
+			{
+				$check_method ++;
+				$get_identificator = true;
+			}
+
+			if ($check_method > 1)
 			{
 				phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.index'));
@@ -122,15 +122,15 @@
 
 			$download_template = phpgw::get_var('download_template');
 
-			if($download_template)
+			if ($download_template)
 			{
 				$this->get_template($this->location_id);
 			}
 
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
-			if(phpgw::get_var("importsubmit"))
+			if (phpgw::get_var("importsubmit"))
 			{
-				if($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
+				if ($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
 				{
 					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.index'));
@@ -142,16 +142,16 @@
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
-				if($this->conv_type)
+				if ($this->conv_type)
 				{
-					if(preg_match('/\.\./', $this->conv_type))
+					if (preg_match('/\.\./', $this->conv_type))
 					{
 						throw new Exception("Not a valid file: {$this->conv_type}");
 					}
 
 					$file = PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$this->conv_type}";
 
-					if(is_file($file))
+					if (is_file($file))
 					{
 						require_once $file;
 					}
@@ -168,7 +168,7 @@
 				// Get the path for user input or use a default path
 
 				$files = array();
-				if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+				if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
 				{
 					$files[] = array
 						(
@@ -182,16 +182,16 @@
 					$files = $this->get_files($path);
 				}
 
-				if(!$files)
+				if (!$files)
 				{
 					phpgwapi_cache::session_set('property', 'import_message', 'Ingen filer er valgt');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.index'));
 				}
 
-				foreach($files as $file)
+				foreach ($files as $file)
 				{
 					$valid_type = false;
-					switch($file['type'])
+					switch ($file['type'])
 					{
 						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 						case 'application/vnd.oasis.opendocument.spreadsheet':
@@ -208,7 +208,7 @@
 							throw new Exception("Not a valid filetype: {$file['type']}");
 					}
 
-					if($valid_type)
+					if ($valid_type)
 					{
 						$result = $this->import();
 						$this->messages = array_merge($this->messages, $this->import_conversion->messages);
@@ -226,10 +226,10 @@
 				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
-				if($this->errors)
+				if ($this->errors)
 				{
 					echo "<ul>";
-					foreach($this->errors as $error)
+					foreach ($this->errors as $error)
 					{
 						echo '<li class="error">Error: ' . $error . '</li>';
 					}
@@ -237,21 +237,21 @@
 					echo "</ul>";
 				}
 
-				if($this->warnings)
+				if ($this->warnings)
 				{
 					echo "<ul>";
-					foreach($this->warnings as $warning)
+					foreach ($this->warnings as $warning)
 					{
 						echo '<li class="warning">Warning: ' . $warning . '</li>';
 					}
 					echo "</ul>";
 				}
 
-				if($this->messages)
+				if ($this->messages)
 				{
 					echo "<ul>";
 
-					foreach($this->messages as $message)
+					foreach ($this->messages as $message)
 					{
 						echo '<li class="info">Message: ' . $message . '</li>';
 					}
@@ -269,10 +269,10 @@
 				$conv_list = $this->get_import_conv($import_settings['conv_type']);
 
 				$conv_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
-				foreach($conv_list as $conv)
+				foreach ($conv_list as $conv)
 				{
 					$selected = '';
-					if($conv['selected'])
+					if ($conv['selected'])
 					{
 						$selected = 'selected =  "selected"';
 					}
@@ -287,7 +287,7 @@ HTML;
 				ksort($tables);
 
 				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
-				foreach($tables as $table => $table_info)
+				foreach ($tables as $table => $table_info)
 				{
 					$selected = $import_settings['table'] == $table ? 'selected =  "selected"' : '';
 					$table_option .= <<<HTML
@@ -298,11 +298,11 @@ HTML;
 				$entity = CreateObject('property.soadmin_entity');
 				$entity_list = $entity->read(array('allrows' => true));
 				$category_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
-				foreach($entity_list as $entry)
+				foreach ($entity_list as $entry)
 				{
 					$category_list = $entity->read_category_tree2($entry['id']);
 
-					foreach($category_list as $category)
+					foreach ($category_list as $category)
 					{
 						$selected = $import_settings['location_id'] == $category['location_id'] ? 'selected =  "selected"' : '';
 						$category_option .= <<<HTML
@@ -392,23 +392,23 @@ HTML;
 			return $this->steps;
 		}
 
-		protected function get_template($location_id = 0)
+		protected function get_template( $location_id = 0 )
 		{
 			$_identificator = array();
 			$data = array();
 			$_fields = array();
-			if(!$location_id && $this->table)
+			if (!$location_id && $this->table)
 			{
 				$_permission = $this->valid_tables[$this->table]['permission'];
 
-				if(!($_permission & PHPGW_ACL_READ))
+				if (!($_permission & PHPGW_ACL_READ))
 				{
 					throw new Exception("No READ-right for {$this->table}");
 				}
 
 				$metadata = $this->db->metadata($this->table);
 
-				foreach($metadata as $field => $info)
+				foreach ($metadata as $field => $info)
 				{
 					$_fields[$field] = true;
 				}
@@ -416,16 +416,16 @@ HTML;
 				$sql = "SELECT * FROM {$this->table}";
 				$this->db->query($sql, __LINE__, __FILE__);
 
-				while($this->db->next_record())
+				while ($this->db->next_record())
 				{
 					$data[] = $this->db->Record;
 				}
 			}
-			else if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
+			else if ($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
 			{
 				throw new Exception("Not a valid location for {$location_id}");
 			}
-			else if($location_id)
+			else if ($location_id)
 			{
 				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$_identificator = array
@@ -438,15 +438,15 @@ HTML;
 				$entity_id = $category['entity_id'];
 				$cat_id = $category['id'];
 
-				if($category['is_eav'])
+				if ($category['is_eav'])
 				{
 					$this->table = 'fm_bim_item';
 
 					$metadata = $this->db->metadata($this->table);
 
-					foreach($metadata as $field => $info)
+					foreach ($metadata as $field => $info)
 					{
-						if($field == 'xml_representation' || $field == 'guid')
+						if ($field == 'xml_representation' || $field == 'guid')
 						{
 							continue;
 						}
@@ -460,10 +460,10 @@ HTML;
 					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id ORDER BY id ASC";
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					while($this->db->next_record())
+					while ($this->db->next_record())
 					{
 						$_row_data = array();
-						foreach($_fields as $_field => $dummy)
+						foreach ($_fields as $_field => $dummy)
 						{
 							$_row_data[$_field] = $this->db->f($_field, true);
 						}
@@ -472,7 +472,7 @@ HTML;
 						$xml = new DOMDocument('1.0', 'utf-8');
 						$xml->loadXML($xmldata);
 
-						foreach($attributes as $attribute)
+						foreach ($attributes as $attribute)
 						{
 							$_row_data[$attribute['column_name']] = $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
 						}
@@ -480,7 +480,7 @@ HTML;
 						$data[] = $_row_data;
 					}
 
-					foreach($attributes as $attribute)
+					foreach ($attributes as $attribute)
 					{
 						$_fields[$attribute['column_name']] = true;
 					}
@@ -489,7 +489,7 @@ HTML;
 				{
 					$this->table = "fm_entity_{$category['entity_id']}_{$category['id']}";
 					$metadata = $this->db->metadata($this->table);
-					foreach($metadata as $field => $info)
+					foreach ($metadata as $field => $info)
 					{
 						$_fields[$field] = true;
 					}
@@ -497,13 +497,13 @@ HTML;
 					$sql = "SELECT * FROM {$this->table} ORDER BY id ASC";
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					while($this->db->next_record())
+					while ($this->db->next_record())
 					{
 						$data[] = $this->db->Record;
 					}
 				}
 			}
-			if(!$_identificator && $this->table)
+			if (!$_identificator && $this->table)
 			{
 				$_identificator = array
 					(
@@ -511,21 +511,21 @@ HTML;
 				);
 				$filename = $this->table;
 			}
-			else if(!$_identificator && $this->conv_type)
+			else if (!$_identificator && $this->conv_type)
 			{
 				$_identificator = array
 					(
 					'identificator' => "conversion::{$this->conv_type}"
 				);
 
-				if(preg_match('/\.\./', $this->conv_type))
+				if (preg_match('/\.\./', $this->conv_type))
 				{
 					throw new Exception("Not a valid file: {$this->conv_type}");
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$this->conv_type}";
 
-				if(is_file($file))
+				if (is_file($file))
 				{
 					require_once $file;
 				}
@@ -536,7 +536,7 @@ HTML;
 
 			$fields = $fields ? $fields : array_keys($_fields);
 
-			if(phpgw::get_var('debug', 'bool'))
+			if (phpgw::get_var('debug', 'bool'))
 			{
 				_debug_array($fields);
 			}
@@ -550,39 +550,39 @@ HTML;
 
 		protected function import_data()
 		{
-			if(!$this->identificator)
+			if (!$this->identificator)
 			{
 				throw new Exception("Missing identificator in dataset");
 			}
 			$identificator_arr = explode("::", $this->identificator);
-			switch($identificator_arr[0])
+			switch ($identificator_arr[0])
 			{
 				case 'location':
-					if(!$this->location_id)
+					if (!$this->location_id)
 					{
 						throw new Exception("No valid location selected for : {$identificator_arr[2]}");
 					}
-					else if($GLOBALS['phpgw']->locations->get_id($identificator_arr[1], $identificator_arr[2]) != $this->location_id)
+					else if ($GLOBALS['phpgw']->locations->get_id($identificator_arr[1], $identificator_arr[2]) != $this->location_id)
 					{
 						throw new Exception("No valid location selected for : {$identificator_arr[2]}");
 					}
 					break;
 				case 'table':
-					if(!$this->table)
+					if (!$this->table)
 					{
 						throw new Exception("Table not selected");
 					}
-					else if($identificator_arr[1] != $this->table)
+					else if ($identificator_arr[1] != $this->table)
 					{
 						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->table}");
 					}
 					break;
 				case 'conversion':
-					if(!$this->conv_type)
+					if (!$this->conv_type)
 					{
 						throw new Exception("Conversion not selected");
 					}
-					else if($identificator_arr[1] != $this->conv_type)
+					else if ($identificator_arr[1] != $this->conv_type)
 					{
 						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->conv_type}");
 					}
@@ -592,25 +592,25 @@ HTML;
 			}
 
 			$metadata = array();
-			if($this->table && $this->fields)
+			if ($this->table && $this->fields)
 			{
 				$_permission = $this->valid_tables[$this->table]['permission'];
 
-				if(!($_permission & PHPGW_ACL_ADD))
+				if (!($_permission & PHPGW_ACL_ADD))
 				{
 					throw new Exception("No ADD-right for {$this->table}");
 				}
 
 				$metadata = $this->db->metadata($this->table);
 
-				if(phpgw::get_var('debug', 'bool'))
+				if (phpgw::get_var('debug', 'bool'))
 				{
 					_debug_array($metadata);
 				}
 
-				foreach($this->fields as $field)
+				foreach ($this->fields as $field)
 				{
-					if($field && !isset($metadata[$field]))
+					if ($field && !isset($metadata[$field]))
 					{
 						$this->messages[] = "Feltet '{$field}' finnes ikke i tabellen '{$this->table}'";
 					}
@@ -620,19 +620,19 @@ HTML;
 				$this->import_conversion->set_metadata($metadata);
 			}
 
-			if($this->fields)
+			if ($this->fields)
 			{
 				$found_field = false;
 
-				foreach($this->fields as $field)
+				foreach ($this->fields as $field)
 				{
-					if($field && !$found_field)
+					if ($field && !$found_field)
 					{
 						$found_field = true;
 					}
 				}
 
-				if(!$found_field)
+				if (!$found_field)
 				{
 					throw new Exception("Felter er ikke definert");
 				}
@@ -649,20 +649,20 @@ HTML;
 			$this->db->transaction_begin();
 
 			//Do your magic...
-			foreach($datalines as $data)
+			foreach ($datalines as $data)
 			{
 				$_ok = $this->import_conversion->add($data);
 
-				if(!$_ok)
+				if (!$_ok)
 				{
 					$ok = false;
 				}
 			}
 
-			if($ok)
+			if ($ok)
 			{
 				$this->messages[] = "Imported data. (" . (time() - $start_time) . " seconds)";
-				if($this->debug)
+				if ($this->debug)
 				{
 					$this->db->transaction_abort();
 					$this->messages[] = "Dry Run: transaction abortet";
@@ -681,12 +681,12 @@ HTML;
 			}
 		}
 
-		protected function getcsvdata($path, $get_identificator = true)
+		protected function getcsvdata( $path, $get_identificator = true )
 		{
 			// Open the csv file
 			$handle = fopen($path, "r");
 
-			if($get_identificator)
+			if ($get_identificator)
 			{
 				$_identificator_arr = $this->getcsv($handle);
 				$this->identificator = $_identificator_arr[0];
@@ -697,7 +697,7 @@ HTML;
 
 			$result = array();
 
-			while(($data = $this->getcsv($handle)) !== false)
+			while (($data = $this->getcsv($handle)) !== false)
 			{
 				$result[] = $data;
 			}
@@ -710,7 +710,7 @@ HTML;
 			return $result;
 		}
 
-		protected function getexceldata($path, $get_identificator = false)
+		protected function getexceldata( $path, $get_identificator = false )
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
 
@@ -727,28 +727,28 @@ HTML;
 
 			$start = $get_identificator ? 3 : 1; // Read the first line to get the headers out of the way
 
-			if($get_identificator)
+			if ($get_identificator)
 			{
 				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(0, 1)->getCalculatedValue();
-				for($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 2)->getCalculatedValue();
 				}
 			}
 			else
 			{
-				for($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 				}
 			}
 
 			$rows = $rows ? $rows + 1 : 0;
-			for($row = $start; $row < $rows; $row++)
+			for ($row = $start; $row < $rows; $row++)
 			{
 				$_result = array();
 
-				for($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 				}
@@ -769,12 +769,12 @@ HTML;
 		 * @param file-handle $handle
 		 * @return array of values from the parsed csv line
 		 */
-		protected function getcsv($handle)
+		protected function getcsv( $handle )
 		{
 			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
 		}
 
-		private function log_messages($step)
+		private function log_messages( $step )
 		{
 			//	sort($this->errors);
 			//	sort($this->warnings);
@@ -786,20 +786,20 @@ HTML;
 			);
 
 			$path = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			if(is_dir($path . '/logs') || mkdir($path . '/logs'))
+			if (is_dir($path . '/logs') || mkdir($path . '/logs'))
 			{
 				file_put_contents("$path/logs/$step.log", implode(PHP_EOL, $msgs));
 			}
 		}
 
-		protected function get_import_conv($selected = '')
+		protected function get_import_conv( $selected = '' )
 		{
 			$dir_handle = @opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
 			$i = 0;
 			$myfilearray = array();
-			while($file = readdir($dir_handle))
+			while ($file = readdir($dir_handle))
 			{
-				if((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}"))
+				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}"))
 				{
 					$myfilearray[$i] = $file;
 					$i++;
@@ -808,7 +808,7 @@ HTML;
 			closedir($dir_handle);
 			sort($myfilearray);
 
-			for($i = 0; $i < count($myfilearray); $i++)
+			for ($i = 0; $i < count($myfilearray); $i++)
 			{
 				$fname = preg_replace('/_/', ' ', $myfilearray[$i]);
 
@@ -823,10 +823,10 @@ HTML;
 			return $conv_list;
 		}
 
-		protected function get_files($dirname)
+		protected function get_files( $dirname )
 		{
 			// prevent path traversal
-			if(preg_match('/\./', $dirname) || !is_dir($dirname))
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
 				return array();
 			}
@@ -835,11 +835,11 @@ HTML;
 
 			$file_list = array();
 			$dir = new DirectoryIterator($dirname);
-			if(is_object($dir))
+			if (is_object($dir))
 			{
-				foreach($dir as $file)
+				foreach ($dir as $file)
 				{
-					if($file->isDot() || !$file->isFile() || !$file->isReadable())
+					if ($file->isDot() || !$file->isFile() || !$file->isReadable())
 //						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xls' ) != 0 )
 //						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'csv' ) != 0 ))
 					{

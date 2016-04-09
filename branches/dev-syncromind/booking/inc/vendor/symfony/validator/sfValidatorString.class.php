@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorString validates a string. It also converts the input value to a string.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorString extends sfValidatorBase
-{
+	class sfValidatorString extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -36,7 +36,7 @@ class sfValidatorString extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addMessage('max_length', '"%value%" is too long (%max_length% characters max).');
     $this->addMessage('min_length', '"%value%" is too short (%min_length% characters min).');
@@ -50,9 +50,9 @@ class sfValidatorString extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
-    $clean = (string) $value;
+			$clean = (string)$value;
 
     $length = function_exists('mb_strlen') ? mb_strlen($clean, $this->getCharset()) : strlen($clean);
 
@@ -68,4 +68,4 @@ class sfValidatorString extends sfValidatorBase
 
     return $clean;
   }
-}
+	}

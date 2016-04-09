@@ -26,11 +26,11 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				foreach($_POST as $dim => $value)
+				foreach ($_POST as $dim => $value)
 				{
-					if(strlen(trim($value)) > 0)
+					if (strlen(trim($value)) > 0)
 					{
 						$config->value($dim, phpgw::clean_value($value));
 					}

@@ -30,7 +30,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -88,7 +88,7 @@
 
 		public function query()
 		{
-			if($id = phpgw::get_var('id', 'int'))
+			if ($id = phpgw::get_var('id', 'int'))
 			{
 				$person = $this->bo->read_single($id);
 				return $this->jquery_results(array("totalResultsAvailable" => 1, "results" => $person));
@@ -115,7 +115,7 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
-			if($id)
+			if ($id)
 			{
 				$person							 = $this->bo->read_single($id);
 				$person['id']					 = $id;
@@ -130,13 +130,13 @@
 			}
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$person	 = array_merge($person, extract_values($_POST, $this->fields));
 				$errors	 = $this->bo->validate($person);
-				if(!$errors)
+				if (!$errors)
 				{
-					if($id)
+					if ($id)
 					{
 						$receipt = $this->bo->update($person);
 					}
@@ -149,7 +149,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			phpgwapi_jquery::init_ckeditor('contact-field-description');
+			self::rich_text_editor('contact-field-description');
 
 			self::add_template_file("contactperson_fields");
 			self::render_template_xsl('contactperson_edit', array('person' => $person,));

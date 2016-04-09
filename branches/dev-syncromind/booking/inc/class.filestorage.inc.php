@@ -8,18 +8,18 @@
 		$owner_id,
 		$use_include_path = false;
 
-		public function __construct($owner)
+		public function __construct( $owner )
 		{
 			$this->owner_id = get_class($owner);
 
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
 
-			if(!file_exists($server_files_dir) || !is_dir($server_files_dir))
+			if (!file_exists($server_files_dir) || !is_dir($server_files_dir))
 			{
 				throw new LogicException('The filestorage directory is not properly configured: ' . $server_files_dir);
 			}
 
-			if(!is_writable($server_files_dir))
+			if (!is_writable($server_files_dir))
 			{
 				throw new LogicException('The server\'s files directory is not writable');
 			}
@@ -32,24 +32,28 @@
 
 		protected function check_storage_dir()
 		{
-			if(is_dir($this->get_files_path()) && is_writable($this->get_files_path()) && is_readable($this->get_files_path())
+			if (is_dir($this->get_files_path()) && is_writable($this->get_files_path()) && is_readable($this->get_files_path())
 			)
-			{ return true;}
+			{
+				return true;
+			}
 
 			throw new Exception('Invalid file storage directory');
 		}
 
 		protected function create_storage_dir_if_not_exists()
 		{
-			if(is_dir($this->get_files_path()))
-			{ return false;}
+			if (is_dir($this->get_files_path()))
+			{
+				return false;
+			}
 			$this->create_storage_dir();
 		}
 
 		protected function create_storage_dir()
 		{
 			$dirMode = 0777;
-			if(!mkdir($this->get_files_path(), $dirMode, true))
+			if (!mkdir($this->get_files_path(), $dirMode, true))
 			{
 				// failed to create the directory
 				throw new Exception(sprintf('Failed to create file storage "%s".', $this->get_owner_id()));
@@ -75,27 +79,29 @@
 			return self::get_files_root() . DIRECTORY_SEPARATOR . $this->get_owner_id();
 		}
 
-		public function get_system_identifier(booking_storage_object $sto)
+		public function get_system_identifier( booking_storage_object $sto )
 		{
 			return $this->build_file_path($sto);
 		}
 
-		public function build_file_path(booking_storage_object $sto)
+		public function build_file_path( booking_storage_object $sto )
 		{
 			return self::join_paths($this->get_files_path(), $sto->get_identifier());
 		}
 
-		public function attach(booking_storage_object $sto)
+		public function attach( booking_storage_object $sto )
 		{
 			$sto->set_storage($this);
 			return $sto;
 		}
 
-		public function delete(booking_storage_object $sto)
+		public function delete( booking_storage_object $sto )
 		{
-			if(!$sto->exists())
-			{ return true;}
-			if(unlink($this->build_file_path($sto)) === false)
+			if (!$sto->exists())
+		{
+				return true;
+			}
+			if (unlink($this->build_file_path($sto)) === false)
 			{
 				throw new Exception(
 				sprintf('Unable to delete "%s" from storage "%s"', $sto->get_identifier(), $this->get_owner_id())
@@ -103,19 +109,19 @@
 			}
 		}
 
-		public function read_all(booking_storage_object $sto)
+		public function read_all( booking_storage_object $sto )
 		{
 			return file_get_contents($this->build_file_path($sto), $this->use_include_path);
 		}
 
-		public function persist(booking_storage_object $sto)
+		public function persist( booking_storage_object $sto )
 		{
 			$written = false;
-			if(($fh		 = fopen($this->build_file_path($sto), 'w+', $this->use_include_path)))
+			if (($fh = fopen($this->build_file_path($sto), 'w+', $this->use_include_path)))
 			{
 				$written = fwrite($fh, $sto->get_data());
 				fclose($fh);
-				if($written === false)
+				if ($written === false)
 				{
 					throw new LogicException('Unable to persist ' . $this->build_file_path($sto));
 				}
@@ -123,7 +129,7 @@
 			return $written;
 		}
 
-		public function exists(booking_storage_object $sto)
+		public function exists( booking_storage_object $sto )
 		{
 			return is_file($this->build_file_path($sto));
 		}
@@ -131,15 +137,15 @@
 		/**
 		 * @return booking_storage_object
 		 */
-		public function get($identifier)
+		public function get( $identifier )
 		{
-			if(!$identifier)
+			if (!$identifier)
 			{
 				throw new InvalidArgumentException('Invalid identifier');
 			}
 
 			$sto = $this->attach(new booking_storage_object($identifier));
-			if(!$sto->exists())
+			if (!$sto->exists())
 			{
 				throw new LogicException($identifier . ' does not exist');
 			}
@@ -149,19 +155,19 @@
 		public static function join_paths()
 		{
 			$path = '';
-			foreach(func_get_args() as $arg)
+			foreach (func_get_args() as $arg)
 			{
 				$path = self::_chomp_dir_sep($path) . DIRECTORY_SEPARATOR . ($arg[0] == DIRECTORY_SEPARATOR ? substr($arg, 1) : $arg);
 			}
 			return $path;
 		}
 
-		public function chomp_dir_sep($string)
+		public function chomp_dir_sep( $string )
 		{
 			return self::_chomp_dir_sep($string);
 		}
 
-		public static function _chomp_dir_sep($string)
+		public static function _chomp_dir_sep( $string )
 		{
 			$sep = DIRECTORY_SEPARATOR == '/' ? '\\/' : preg_quote(DIRECTORY_SEPARATOR);
 			return preg_replace('/(' . $sep . ')+$/', '', trim($string));
@@ -178,7 +184,7 @@
 		$is_data_retrieved = false,
 		$dirty			 = false;
 
-		function __construct($identifier)
+		function __construct( $identifier )
 		{
 			$this->identifier = $identifier;
 		}
@@ -193,7 +199,7 @@
 			return $this->identifier;
 		}
 
-		public function set_storage(booking_filestorage $storage)
+		public function set_storage( booking_filestorage $storage )
 		{
 			$this->storage = $storage;
 		}
@@ -205,7 +211,7 @@
 
 		protected function with_storage()
 		{
-			if(!$this->is_attached())
+			if (!$this->is_attached())
 				throw new booking_unattached_storage_object('Not attached to a storage');
 			return $this->storage;
 		}
@@ -237,7 +243,7 @@
 
 		public function refresh()
 		{
-			if($this->is_dirty())
+			if ($this->is_dirty())
 			{
 				$this->is_data_retrieved = false;
 				return true;
@@ -255,7 +261,7 @@
 
 		public function get_data()
 		{
-			if(!$this->is_data_retrieved() && !$this->is_dirty())
+			if (!$this->is_data_retrieved() && !$this->is_dirty())
 			{
 				$this->exists() AND $this->data				 = $this->get_storage_data();
 				$this->is_data_retrieved = true;
@@ -264,9 +270,9 @@
 			return $this->data;
 		}
 
-		public function set_data($data)
+		public function set_data( $data )
 		{
-			if(!is_string($data))
+			if (!is_string($data))
 			{
 				throw new InvalidArgumentException("Data must be a string value");
 			}

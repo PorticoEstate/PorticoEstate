@@ -37,17 +37,17 @@
 		public $allrows;
 		public $method_id;
 
-		function __construct($session = '')
+		function __construct( $session = '' )
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			if(!is_object($GLOBALS['phpgw']->asyncservice))
+			if (!is_object($GLOBALS['phpgw']->asyncservice))
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
 			$this->async = & $GLOBALS['phpgw']->asyncservice;
 			$this->so = CreateObject('property.soalarm');
 			$this->bocommon = CreateObject('property.bocommon');
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -62,7 +62,7 @@
 			$method_id = phpgw::get_var('method_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			if($start)
+			if ($start)
 			{
 				$this->start = $start;
 			}
@@ -71,23 +71,23 @@
 				$this->start = 0;
 			}
 
-			if(isset($query))
+			if (isset($query))
 			{
 				$this->query = $query;
 			}
-			if(!empty($filter))
+			if (!empty($filter))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if (isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if (isset($order))
 			{
 				$this->order = $order;
 			}
-			if(isset($method_id) && !empty($method_id))
+			if (isset($method_id) && !empty($method_id))
 			{
 				$this->method_id = $method_id;
 			}
@@ -95,15 +95,15 @@
 			{
 				$this->method_id = 0;
 			}
-			if(isset($allrows))
+			if (isset($allrows))
 			{
 				$this->allrows = $allrows;
 			}
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'owner', $data);
 			}
@@ -122,19 +122,19 @@
 			$this->method_id = $data['method_id'];
 		}
 
-		function select_method_list($selected = '')
+		function select_method_list( $selected = '' )
 		{
 			$list = $this->so->select_method_list();
 			$list = $this->bocommon->select_list($selected, $list);
 			return $list;
 		}
 
-		function read_single_method($id)
+		function read_single_method( $id )
 		{
 			return $this->so->read_single_method($id);
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 //			$jobs = $this->so->read(array('id'=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'allrows'=>$this->allrows));
@@ -149,13 +149,13 @@
 		  @note the alarm-id is a string of 'cal:'.$cal_id.':'.$alarm_nr, it is used as the job-id too
 		 */
 
-		function read_alarms($type = '', $input_id, $text = '')
+		function read_alarms( $type = '', $input_id, $text = '' )
 		{
 			$alarms = array();
 
-			if($jobs = $this->async->read($type . ':' . intval($input_id) . ':%'))
+			if ($jobs = $this->async->read($type . ':' . intval($input_id) . ':%'))
 			{
-				foreach($jobs as $id => $job)
+				foreach ($jobs as $id => $job)
 				{
 					$alarm = $job['data']; // text, enabled
 					$alarm['alarm_id'] = $id;
@@ -175,9 +175,9 @@
 		  @note the alarm-id is a string of 'cal:'.$cal_id.':'.$alarm_nr, it is used as the job-id too
 		 */
 
-		function read_alarm($alarm_type, $id)
+		function read_alarm( $alarm_type, $id )
 		{
-			if(!($jobs = $this->async->read($id)))
+			if (!($jobs = $this->async->read($id)))
 			{
 				return false;
 			}
@@ -200,27 +200,27 @@
 		  @note Not found alarms or insuficent perms stop the enableing of multiple alarms
 		 */
 
-		function enable_alarm($alarm_type, $alarms, $enable = true)
+		function enable_alarm( $alarm_type, $alarms, $enable = true )
 		{
 			$enabled = 0;
-			foreach($alarms as $id)
+			foreach ($alarms as $id)
 			{
 				$temp = explode(':', $id);
 				$alarm_type = $temp[0];
 
-				if(!($alarm = $this->read_alarm($alarm_type, $id)))
+				if (!($alarm = $this->read_alarm($alarm_type, $id)))
 				{
 					return 0; // alarm not found
 				}
 
-				if(!$alarm['enabled'] == !$enable)
+				if (!$alarm['enabled'] == !$enable)
 				{
 					continue; // nothing to do
 				}
 
 				$alarm['enabled'] = intval(!$alarm['enabled']);
 
-				if($this->save_alarm($alarm_type, $alarm['event_id'], $alarm, $alarm['method']))
+				if ($this->save_alarm($alarm_type, $alarm['event_id'], $alarm, $alarm['method']))
 				{
 					++$enabled;
 				}
@@ -257,15 +257,15 @@
 		 * @param string $method
 		 * @return string|boolean
 		 */
-		function save_alarm($alarm_type, $event_id, $alarm, $method = '')
+		function save_alarm( $alarm_type, $event_id, $alarm, $method = '' )
 		{
-			if(!$method)
+			if (!$method)
 			{
 				$method = 'property.boalarm.send_alarm';
 			}
 //			echo "<p>save_alarm(event_id=$event_id, alarm="; print_r($alarm); echo ")</p>\n";
 
-			if(!isset($alarm['id']) || !$alarm['id'])
+			if (!isset($alarm['id']) || !$alarm['id'])
 			{
 				$alarms = $this->read_alarms($alarm_type, $event_id); // find a free alarm#
 				$n = count($alarms);
@@ -274,13 +274,13 @@
 					$id = $alarm_type . ':' . intval($event_id) . ':' . $n;
 					++$n;
 				}
-				while(@isset($alarms[$id]));
+				while (@isset($alarms[$id]));
 
 				$alarm[$alarm_type . '_id'] = $event_id;  // we need the back-reference
 
 				$alarm['id'] = $id;
 
-				if(!$this->async->set_timer($alarm['times'], $id, $method, $alarm))
+				if (!$this->async->set_timer($alarm['times'], $id, $method, $alarm))
 				{
 					return false;
 				}
@@ -303,14 +303,14 @@
 		  @returns the alarm or false
 		 */
 
-		function add_alarm($alarm_type, &$event, $time, $owner)
+		function add_alarm( $alarm_type, &$event, $time, $owner )
 		{
 			/* 			if (!$this->check_perms(PHPGW_ACL_SETALARM,$owner) || !($cal_id = $event['id']))
 			  {
 			  return false;
 			  }
 			 */
-			if(!$owner > 0)
+			if (!$owner > 0)
 			{
 				$receipt['error'][] = array('msg' => lang('No user selected'));
 				return $receipt;
@@ -341,12 +341,12 @@
 		  @note Not found alarms or insuficent perms stop the deleting of multiple alarms
 		 */
 
-		function delete_alarm($alarm_type, $alarms)
+		function delete_alarm( $alarm_type, $alarms )
 		{
 			$deleted = 0;
-			foreach($alarms as $id)
+			foreach ($alarms as $id)
 			{
-				if(!($alarm = $this->read_alarm($alarm_type, $id)))
+				if (!($alarm = $this->read_alarm($alarm_type, $id)))
 				{
 					return 0; // alarm not found
 				}
@@ -355,7 +355,7 @@
 				  return -1;
 				  }
 				 */
-				if($this->async->cancel_timer($id))
+				if ($this->async->cancel_timer($id))
 				{
 					++$deleted;
 				}
@@ -363,28 +363,28 @@
 			return $deleted;
 		}
 
-		function test_cron($alarm)
+		function test_cron( $alarm )
 		{
 
 			$ids = array_values($alarm);
-			foreach($ids as $id)
+			foreach ($ids as $id)
 			{
 				$event = $this->async->read($id);
 			}
 
-			if(isset($event[$id]) && $event[$id] && $event[$id]['method'] && $event[$id]['data']['enabled'])
+			if (isset($event[$id]) && $event[$id] && $event[$id]['method'] && $event[$id]['data']['enabled'])
 			{
 				execMethod($event[$id]['method'], $event[$id]['data']);
 			}
 		}
 
-		function send_alarm($alarm)
+		function send_alarm( $alarm )
 		{
 
 //			echo "<p>boalarm::send_alarm("; print_r($alarm); echo ")</p>\n";
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->owner = $alarm['owner'];
 
-			if(!$alarm['enabled'] || !$alarm['owner'])
+			if (!$alarm['enabled'] || !$alarm['owner'])
 			{
 				return false; // event not found
 			}
@@ -425,7 +425,7 @@
 			$body .= lang('Name') . ': ' . $alarm['event_name'] . "\n";
 			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$info[0]}.edit",
 				'id' => $info[1]), false, true) . '">' . $alarm['event_name'] . "</a>\n";
-			if(!is_array($alarm['time']))
+			if (!is_array($alarm['time']))
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 				$body .= lang('Deadline') . ': ' . $GLOBALS['phpgw']->common->show_date(($alarm['time'] + $alarm['offset']), $dateformat) . "\n";
@@ -438,12 +438,12 @@
 			$error = Array();
 			$toarray = Array();
 			$i = 0;
-			for($i = 0; $i < count($members); $i++)
+			for ($i = 0; $i < count($members); $i++)
 			{
-				if($members[$i]['account_id'])
+				if ($members[$i]['account_id'])
 				{
 					$prefs = $this->bocommon->create_preferences('property', $members[$i]['account_id']);
-					if(strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
+					if (strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
 					{
 						$toarray[$prefs['email']] = $prefs['email'];
 					}
@@ -455,7 +455,7 @@
 				}
 			}
 
-			if(count($toarray) > 1)
+			if (count($toarray) > 1)
 			{
 				$to = implode(',', $toarray);
 			}
@@ -464,7 +464,7 @@
 				$to = current($toarray);
 			}
 
-			if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				$body = nl2br($body);
 				$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $current_user_address, $current_user_name, 'html');
@@ -475,7 +475,7 @@
 			}
 
 			//	$rc=1;
-			if(!$rc)
+			if (!$rc)
 			{
 				$receipt['error'][] = array('msg' => lang('Your message could not be sent by mail!'));
 				$receipt['error'][] = array('msg' => lang('The mail server returned'));

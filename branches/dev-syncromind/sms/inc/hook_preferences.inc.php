@@ -8,13 +8,14 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package SMS
 	* @subpackage core
- 	* @version $Id$
+	 * @version $Id$
 	*/
-
 	$title = $appname;
 	$file = Array(
-		'Preferences'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'user')),
-		'Grant Access'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> $appname))
+		'Preferences' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array(
+			'appname' => $appname, 'type' => 'user')),
+		'Grant Access' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs',
+			'acl_app' => $appname))
 	);
-	display_section($appname,$file);
+	display_section($appname, $file);
 

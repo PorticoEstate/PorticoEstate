@@ -176,15 +176,15 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$counter = $sum_initial_value = $sum_value = 0;
 
-			while(is_array($investment_list) && list(, $investment) = each($investment_list))
+			while (is_array($investment_list) && list(, $investment) = each($investment_list))
 			{
 				$link_history = $check = "";
-				if($this->admin_invoice)
+				if ($this->admin_invoice)
 				{
 					$link_history = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction' => 'property.uiinvestment.history', 'entity_id' => $investment['entity_id'],
 						'investment_id' => $investment['investment_id'], 'entity_type' => $this->cat_id)) . "\">" . lang('History') . "</a>";
-					if($investment['value'] != 0)
+					if ($investment['value'] != 0)
 					{
 						//$check = "<input counter=\"".$counter."\" type=\"hidden\" name=\"values[update][".$counter."]\" class=\"myValuesForPHP select_hidden\"  />";
 						$check = "<input type=\"checkbox\" name=\"values[update_tmp][" . $counter . "]\" value=\"" . $counter . "\" class=\"mychecks select_check\"  id=\"check\" />";
@@ -216,7 +216,7 @@
 				$counter++;
 			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $content;
 			}
@@ -232,7 +232,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -242,7 +242,7 @@
 			$values = phpgw::get_var('values');
 			$msgbox_data = "";
 
-			if($preserve)
+			if ($preserve)
 			{
 				$this->bo->read_sessiondata();
 
@@ -256,12 +256,12 @@
 				$this->allrows = $this->bo->allrows;
 			}
 
-			if($values && phpgw::get_var('phpgw_return_as') == 'json')
+			if ($values && phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->update_investment($values);
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -374,7 +374,7 @@
 			);
 
 			$filters = $this->_get_filters();
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -386,25 +386,25 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		function update_investment($values = '')
+		function update_investment( $values = '' )
 		{
 
 			$receipt = array();
 
-			if(!$values['date'])
+			if (!$values['date'])
 			{
 				$receipt['error'][] = array('msg' => lang('Please select a date !'));
 			}
-			if(!$values['new_index'])
+			if (!$values['new_index'])
 			{
 				$receipt['error'][] = array('msg' => lang('Please set a new index !'));
 			}
-			if(!$values['update'])
+			if (!$values['update'])
 			{
 				$receipt['error'][] = array('msg' => lang('Nothing to do!'));
 			}
 
-			if(!$receipt['error'])
+			if (!$receipt['error'])
 			{
 				$receipt = $this->bo->update_investment($values);
 			}
@@ -434,7 +434,7 @@
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$investment_id = phpgw::get_var('investment_id', 'int');
 			$values = phpgw::get_var('values');
-			if($values)
+			if ($values)
 			{
 				return $this->update_investment($values);
 			}
@@ -451,24 +451,24 @@
 
 			$uicols = $this->get_history_cols();
 			$values = array();
-			if(isset($investment_list) && is_array($investment_list))
+			if (isset($investment_list) && is_array($investment_list))
 			{
-				foreach($investment_list as $investment)
+				foreach ($investment_list as $investment)
 				{
-					for($i = 0; $i < count($uicols['name']); $i++)
+					for ($i = 0; $i < count($uicols['name']); $i++)
 					{
 						$json_row[$uicols['name'][$i]] = '';
-						if($uicols['name'][$i] == 'date')
+						if ($uicols['name'][$i] == 'date')
 						{
 							$json_row[$uicols['name'][$i]] = date($dateformat, strtotime($investment[$uicols['name'][$i]]));
 						}
-						else if($uicols['name'][$i] == 'is_admin')
+						else if ($uicols['name'][$i] == 'is_admin')
 						{
 							$json_row[$uicols['name'][$i]] = $this->admin_invoice;
 						}
 						else
 						{
-							if($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
+							if ($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
 							{
 								$json_row[$uicols['name'][$i]] = number_format($investment[$uicols['name'][$i]], 0, ',', '');
 							}
@@ -502,7 +502,7 @@
 
 			$column_def = array();
 			$count_uicols = count($uicols['name']);
-			for($k = 0; $k < $count_uicols; $k++)
+			for ($k = 0; $k < $count_uicols; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -615,7 +615,7 @@
 
 		function add()
 		{
-			if(!$this->acl_add && !$this->acl_edit)
+			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 2, 'acl_location' => $this->acl_location));
@@ -627,58 +627,58 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment'));
 
-			if(isset($values['save']) && $values['save'])
+			if (isset($values['save']) && $values['save'])
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
 
-				for($j = 0; $j < count($insert_record_entity); $j++)
+				for ($j = 0; $j < count($insert_record_entity); $j++)
 				{
 					$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
 				}
 
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-				if(!$values['type'])
+				if (!$values['type'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a type !'));
 				}
 
-				if(!$values['period'] && !$values['new_period'])
+				if (!$values['period'] && !$values['new_period'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a period for write off !'));
 				}
 
-				if(!$values['date'])
+				if (!$values['date'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a date !'));
 				}
 
-				if(!$values['initial_value'])
+				if (!$values['initial_value'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please set an initial value!'));
 				}
 
-				if(!$values['location']['loc1'] && !$values['extra']['p_num'])
+				if (!$values['location']['loc1'] && !$values['extra']['p_num'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a location - or an entity!'));
 				}
 
 				//_debug_array($values['extra']);
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_investment($values);
 					unset($values);
 				}
 				else
 				{
-					if($values['location'])
+					if ($values['location'])
 					{
 						$location_code = implode("-", $values['location']);
 						$values['location_data'] = $this->bolocation->read_single($location_code, $values['extra']);
 					}
 
-					if($values['extra']['p_num'])
+					if ($values['extra']['p_num'])
 					{
 						$values['p'][$values['extra']['p_entity_id']]['p_num'] = $values['extra']['p_num'];
 						$values['p'][$values['extra']['p_entity_id']]['p_entity_id'] = $values['extra']['p_entity_id'];
@@ -777,7 +777,7 @@
 				'entity_type' => $entity_type
 			);
 
-			if(phpgw::get_var('confirm', 'bool', 'POST'))
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 
 				$this->bo->delete($entity_id, $investment_id, $index_count);

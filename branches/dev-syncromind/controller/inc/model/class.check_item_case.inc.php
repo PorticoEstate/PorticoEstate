@@ -60,12 +60,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct(int $id = null)
+		public function __construct( int $id = null )
 		{
 			$this->id = (int)$id;
 		}
 
-		public function set_id($id)
+		public function set_id( $id )
 		{
 			$this->id = $id;
 		}
@@ -75,7 +75,7 @@
 			return $this->id;
 		}
 
-		public function set_check_item_id($check_item_id)
+		public function set_check_item_id( $check_item_id )
 		{
 			$this->check_item_id = $check_item_id;
 		}
@@ -85,7 +85,7 @@
 			return $this->check_item_id;
 		}
 
-		public function set_status($status)
+		public function set_status( $status )
 		{
 			$this->status = (int)$status;
 		}
@@ -100,7 +100,7 @@
 			return (int)$this->location_id;
 		}
 
-		public function set_location_id($location_id)
+		public function set_location_id( $location_id )
 		{
 			$this->location_id = $location_id;
 		}
@@ -110,7 +110,7 @@
 			return (int)$this->location_item_id;
 		}
 
-		public function set_location_item_id($location_item_id)
+		public function set_location_item_id( $location_item_id )
 		{
 			$this->location_item_id = $location_item_id;
 		}
@@ -120,7 +120,7 @@
 			return $this->descr;
 		}
 
-		public function set_descr($descr)
+		public function set_descr( $descr )
 		{
 			$this->descr = $descr;
 		}
@@ -130,7 +130,7 @@
 			return (int)$this->user_id;
 		}
 
-		public function set_user_id($user_id)
+		public function set_user_id( $user_id )
 		{
 			$this->user_id = $user_id;
 		}
@@ -140,7 +140,7 @@
 			return (int)$this->entry_date;
 		}
 
-		public function set_entry_date($entry_date)
+		public function set_entry_date( $entry_date )
 		{
 			$this->entry_date = $entry_date;
 		}
@@ -150,7 +150,7 @@
 			return (int)$this->modified_date;
 		}
 
-		public function set_modified_date($modified_date)
+		public function set_modified_date( $modified_date )
 		{
 			$this->modified_date = $modified_date;
 		}
@@ -160,7 +160,7 @@
 			return (int)$this->modified_by;
 		}
 
-		public function set_modified_by($modified_by)
+		public function set_modified_by( $modified_by )
 		{
 			$this->modified_by = $modified_by;
 		}
@@ -170,7 +170,7 @@
 			return $this->measurement;
 		}
 
-		public function set_measurement($measurement)
+		public function set_measurement( $measurement )
 		{
 			$this->measurement = $measurement;
 		}
@@ -180,7 +180,7 @@
 			return $this->location_code;
 		}
 
-		public function set_location_code($location_code)
+		public function set_location_code( $location_code )
 		{
 			$this->location_code = $location_code;
 		}
@@ -190,7 +190,7 @@
 			return $this->component_location_id;
 		}
 
-		public function set_component_location_id($component_location_id)
+		public function set_component_location_id( $component_location_id )
 		{
 			$this->component_location_id = $component_location_id;
 		}
@@ -200,7 +200,7 @@
 			return $this->component_id;
 		}
 
-		public function set_component_id($component_id)
+		public function set_component_id( $component_id )
 		{
 			$this->component_id = $component_id;
 		}
@@ -210,7 +210,7 @@
 			return $this->component_descr;
 		}
 
-		public function set_component_descr($component_descr)
+		public function set_component_descr( $component_descr )
 		{
 			$this->component_descr = $component_descr;
 		}
@@ -220,28 +220,28 @@
 			$status = true;
 
 			// Validate DESCRIPTION
-			if(empty($this->descr))
+			if (empty($this->descr))
 			{
 				$status							 = false;
 				$this->error_msg_array['descr']	 = "error_msg_1";
 			}
 
 			// Validate STATUS
-			if(empty($this->status) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)))
+			if (empty($this->status) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)))
 			{
 				$status							 = false;
 				$this->error_msg_array['status'] = "error_msg_1";
 			}
 
 			// Validate LOCATION CODE
-			if(empty($this->location_code))
+			if (empty($this->location_code))
 			{
 				$status									 = false;
 				$this->error_msg_array['location_code']	 = "error_msg_1";
 			}
 
 			// Validate CHECK ITEM ID
-			if(empty($this->check_item_id))
+			if (empty($this->check_item_id))
 			{
 				$status									 = false;
 				$this->error_msg_array['check_item_id']	 = "error_msg_4";

@@ -173,14 +173,14 @@
 			$pricebook_list = $this->bo->read($params);
 
 			$i = 0;
-			if(isSet($pricebook_list) AND is_array($pricebook_list))
+			if (isSet($pricebook_list) AND is_array($pricebook_list))
 			{
-				foreach($pricebook_list as $pricebook)
+				foreach ($pricebook_list as $pricebook)
 				{
 					$check = '';
-					if($this->acl_manage)
+					if ($this->acl_manage)
 					{
-						if(!empty($pricebook['total_cost']))
+						if (!empty($pricebook['total_cost']))
 						{
 							$check = "<input type='checkbox' name='values[update][" . $i . "]' value='" . $i . "' class='mychecks select_check' />";
 						}
@@ -206,7 +206,7 @@
 				}
 			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $content;
 			}
@@ -222,7 +222,7 @@
 		function index()
 		{
 
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 1, 'acl_location' => $this->acl_location));
@@ -230,12 +230,12 @@
 
 			$values = phpgw::get_var('values');
 
-			if($values['submit_update'] && phpgw::get_var('phpgw_return_as') == 'json')
+			if ($values['submit_update'] && phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->bo->update_pricebook($values);
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -346,7 +346,7 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -401,7 +401,7 @@
 				)
 			);
 
-			if($this->acl_manage)
+			if ($this->acl_manage)
 			{
 
 				$data['datatable']['actions'][] = array
@@ -463,7 +463,7 @@
 			$columns = phpgw::get_var('columns');
 			$cat_id = phpgw::get_var('cat_id');
 
-			switch($columns[$order[0]['column']]['data'])
+			switch ($columns[$order[0]['column']]['data'])
 			{
 				case 'agreement_group_id':
 					$order_field = 'id';
@@ -486,7 +486,7 @@
 
 			$values = $this->bo->read_agreement_group($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -500,7 +500,7 @@
 
 		function agreement_group()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -510,7 +510,7 @@
 
 			$GLOBALS['phpgw']->session->appsession('referer', 'property', '');
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_group();
 			}
@@ -572,7 +572,7 @@
 
 			$filters = $this->query_group_filter();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -757,7 +757,7 @@
 
 		function edit_agreement_group()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -771,45 +771,45 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook'));
 
-			if($values['save'])
+			if ($values['save'])
 			{
 				$values['agreement_group_id'] = $agreement_group_id;
 
-				if(!$values['num'])
+				if (!$values['num'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter an agreement group code !'));
 					$error_id = true;
 				}
-				if(!$values['status'])
+				if (!$values['status'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a status !'));
 				}
 
 
-				if($values['num'] && !$agreement_group_id)
+				if ($values['num'] && !$agreement_group_id)
 				{
-					if($this->bo->check_agreement_group_num($values['num']))
+					if ($this->bo->check_agreement_group_num($values['num']))
 					{
 						$receipt['error'][] = array('msg' => lang('This agreement group code is already registered!') . '[ ' . $values['num'] . ' ]');
 						$error_id = true;
 					}
 				}
 
-				if($agreement_group_id)
+				if ($agreement_group_id)
 				{
 					$action = 'edit';
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_agreement_group($values, $action);
-					if(!$agreement_group_id)
+					if (!$agreement_group_id)
 					{
 						$agreement_group_id = $receipt['agreement_group_id'];
 					}
 				}
 
-				if($agreement_group_id)
+				if ($agreement_group_id)
 				{
 					$values['agreement_group_id'] = $agreement_group_id;
 					$action = 'edit';
@@ -822,14 +822,14 @@
 			else
 			{
 				$values['agreement_group_id'] = $agreement_group_id;
-				if($agreement_group_id)
+				if ($agreement_group_id)
 				{
 					$values = $this->bo->read_single_agreement_group($agreement_group_id);
 				}
 			}
 
 			//_debug_array($values);
-			if($agreement_group_id)
+			if ($agreement_group_id)
 			{
 				$function_msg = lang('edit agreement group');
 			}
@@ -838,12 +838,12 @@
 				$function_msg = lang('add agreement group');
 			}
 
-			if($values['cat_id'] > 0)
+			if ($values['cat_id'] > 0)
 			{
 				$this->cat_id = $values['cat_id'];
 			}
 
-			if($error_id)
+			if ($error_id)
 			{
 				unset($values['num']);
 			}
@@ -891,7 +891,7 @@
 
 		function prizing()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -908,44 +908,44 @@
 			$values = phpgw::get_var('values');
 
 			$referer = $GLOBALS['phpgw']->session->appsession('referer', 'property');
-			if(!$referer)
+			if (!$referer)
 			{
 				$referer = phpgw::get_var('HTTP_REFERER', 'string', 'SERVER', phpgw::clean_value($GLOBALS['HTTP_REFERER']));
 				$referer .= '&cat_id=' . $cat_id;
 				$GLOBALS['phpgw']->session->appsession('referer', 'property', $referer);
 			}
 
-			if($values['submit_update'])
+			if ($values['submit_update'])
 			{
-				if(!$values['date'])
+				if (!$values['date'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a date !'));
 				}
 
-				if(!$values['new_index'])
+				if (!$values['new_index'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a new index for calculating next value(s)!'));
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->update_pricebook($values);
 				}
 			}
 
-			if($values['submit_add'])
+			if ($values['submit_add'])
 			{
-				if(!$values['date'])
+				if (!$values['date'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a date !'));
 				}
 
-				if(!$values['m_cost'] && !$values['w_cost'])
+				if (!$values['m_cost'] && !$values['w_cost'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter a value for either material cost, labour cost or both !'));
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->add_activity_first_prize($values);
 				}
@@ -956,12 +956,12 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			if(isSet($pricebook_list) AND is_array($pricebook_list))
+			if (isSet($pricebook_list) AND is_array($pricebook_list))
 			{
-				foreach($pricebook_list as $pricebook)
+				foreach ($pricebook_list as $pricebook)
 				{
 
-					if($pricebook['current_index'])
+					if ($pricebook['current_index'])
 					{
 						$link_delete = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.delete',
 							'method' => 'prize', 'activity_id' => $activity_id, 'agreement_id' => $agreement_id,
@@ -1030,7 +1030,7 @@
 				'agreement_id' => $agreement_id
 			);
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -1045,11 +1045,11 @@
 			$vendor_data = $this->contacts->read_single(array('id' => $vendor_id), array(
 				'attributes' => array(array('column_name' => 'org_name'))));
 
-			if(is_array($vendor_data))
+			if (is_array($vendor_data))
 			{
-				foreach($vendor_data['attributes'] as $attribute)
+				foreach ($vendor_data['attributes'] as $attribute)
 				{
-					if($attribute['name'] == 'org_name')
+					if ($attribute['name'] == 'org_name')
 					{
 						$value_vendor_name = $attribute['value'];
 						break;
@@ -1174,7 +1174,7 @@
 
 			$values = $this->bo->read_activities_pr_agreement_group($params);
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
@@ -1189,7 +1189,7 @@
 
 		function activity()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1197,7 +1197,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::activities';
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_Activity();
 			}
@@ -1240,7 +1240,7 @@
 
 			$filters = $this->_get_Filters_Activity();
 			krsort($filters);
-			foreach($filters as $filter)
+			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
@@ -1256,7 +1256,7 @@
 
 			$count_uicols_name = count($uicols['name']);
 
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key' => $uicols['name'][$k],
@@ -1350,7 +1350,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query_vendor($activity_id)
+		public function query_vendor( $activity_id )
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -1372,7 +1372,7 @@
 
 			$pricebook_list = $this->bo->read_vendor_pr_activity($params);
 
-			foreach($pricebook_list as $pricebook)
+			foreach ($pricebook_list as $pricebook)
 			{
 				$content[] = array
 					(
@@ -1384,7 +1384,7 @@
 				);
 			}
 
-			if(phpgw::get_var('export', 'bool'))
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $content;
 			}
@@ -1399,7 +1399,7 @@
 
 		function activity_vendor()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1413,9 +1413,9 @@
 			$values = phpgw::get_var('values');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 
-			if($values['add'])
+			if ($values['add'])
 			{
-				if(!$values['vendor_id'])
+				if (!$values['vendor_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please - select a vendor!'));
 				}
@@ -1425,7 +1425,7 @@
 				}
 			}
 
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query_vendor($activity_id);
 			}
@@ -1500,7 +1500,7 @@
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array('vendor_id' => ''));
 
 
-			if(!$this->allrows)
+			if (!$this->allrows)
 			{
 				$record_limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -1580,7 +1580,7 @@
 
 		function edit_activity()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1595,40 +1595,40 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
 
-			if(!$values['cat_id'])
+			if (!$values['cat_id'])
 			{
 				$values['cat_id'] = $agreement_group;
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook'));
 
-			if($values['save'])
+			if ($values['save'])
 			{
-				if(!$values['num'])
+				if (!$values['num'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please enter an activity code !'));
 					$error_id = true;
 				}
-				if(!$values['cat_id'])
+				if (!$values['cat_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select an agreement_group !'));
 				}
 
-				if(!$values['branch_id'])
+				if (!$values['branch_id'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a branch !'));
 				}
 
-				if($values['num'] && !$activity_id)
+				if ($values['num'] && !$activity_id)
 				{
-					if($this->bo->check_activity_num($values['num'], $values['cat_id']))
+					if ($this->bo->check_activity_num($values['num'], $values['cat_id']))
 					{
 						$receipt['error'][] = array('msg' => lang('This activity code is already registered!') . '[ ' . $values['num'] . ' ]');
 						$error_id = true;
 					}
 				}
 
-				if($activity_id)
+				if ($activity_id)
 				{
 					$values['activity_id'] = $activity_id;
 					$action = 'edit';
@@ -1638,7 +1638,7 @@
 					$activity_id = $values['activity_id'];
 				}
 
-				if(!$receipt['error'])
+				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_activity($values, $action);
 					$activity_id = $receipt['activity_id'];
@@ -1648,14 +1648,14 @@
 			else
 			{
 				$values['activity_id'] = $activity_id;
-				if($activity_id)
+				if ($activity_id)
 				{
 					$values = $this->bo->read_single_activity($activity_id);
 				}
 			}
 
 			//_debug_array($values);
-			if($activity_id)
+			if ($activity_id)
 			{
 				$function_msg = lang('edit activity');
 			}
@@ -1664,12 +1664,12 @@
 				$function_msg = lang('add activity');
 			}
 
-			if($values['cat_id'] > 0)
+			if ($values['cat_id'] > 0)
 			{
 				$this->cat_id = $values['cat_id'];
 			}
 
-			if($error_id)
+			if ($error_id)
 			{
 				unset($values['num']);
 			}
@@ -1745,7 +1745,7 @@
 
 		function delete()
 		{
-			if(!$this->acl_manage)
+			if (!$this->acl_manage)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => 16, 'acl_location' => $this->acl_location));
@@ -1758,7 +1758,7 @@
 			$agreement_group_id = phpgw::get_var('agreement_group_id', 'int');
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
-			if($method == 'activity_vendor')
+			if ($method == 'activity_vendor')
 			{
 				$link_data = array
 					(
@@ -1770,16 +1770,16 @@
 				$delete_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.delete',
 					'method' => $method, 'activity_id' => $activity_id, 'agreement_id' => $agreement_id));
 
-				if(phpgw::get_var('confirm', 'bool', 'POST'))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_activity_vendor($activity_id, $agreement_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 				}
 			}
-			elseif($method == 'activity')
+			elseif ($method == 'activity')
 			{
 				//delete with JSON
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					$function_msg = lang('delete activity');
 					$this->bo->delete_activity($activity_id);
@@ -1795,13 +1795,13 @@
 				$delete_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.delete',
 					'method' => $method, 'activity_id' => $activity_id));
 
-				if(phpgw::get_var('confirm', 'bool', 'POST'))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_activity($activity_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 				}
 			}
-			elseif($method == 'prize')
+			elseif ($method == 'prize')
 			{
 				$link_data = array
 					(
@@ -1815,17 +1815,17 @@
 					'method' => $method, 'activity_id' => $activity_id, 'agreement_id' => $agreement_id,
 					'index_count' => $index_count));
 
-				if(phpgw::get_var('confirm', 'bool', 'POST'))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_prize_index($activity_id, $agreement_id, $index_count);
 					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 				}
 			}
-			elseif($method == 'agreement_group')
+			elseif ($method == 'agreement_group')
 			{
 
 				//JsonCod for Delete
-				if(phpgw::get_var('phpgw_return_as') == 'json')
+				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					$function_msg = lang('Delete agreement group and all the activities associated with it!');
 					$this->bo->delete_agreement_group($agreement_group_id);
@@ -1842,7 +1842,7 @@
 				$delete_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.delete',
 					'method' => $method, 'agreement_group_id' => $agreement_group_id, 'start' => $this->start));
 
-				if(phpgw::get_var('confirm', 'bool', 'POST'))
+				if (phpgw::get_var('confirm', 'bool', 'POST'))
 				{
 					$this->bo->delete_agreement_group($agreement_group_id);
 					$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);

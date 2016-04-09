@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorBase is the base class for all validators.
  *
  * It also implements the required option for all validators.
@@ -16,15 +15,15 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-abstract class sfValidatorBase
-{
+	abstract class sfValidatorBase
+	{
+
   protected static
     $charset         = 'UTF-8',
     $invalidMessage  = 'Invalid.',
     $requiredMessage = 'Required.';
-
   protected
     $requiredOptions = array(),
     $defaultMessages = array(),
@@ -49,7 +48,7 @@ abstract class sfValidatorBase
    * @param array $options   An array of options
    * @param array $messages  An array of error messages
    */
-  public function __construct($options = array(), $messages = array())
+		public function __construct( $options = array(), $messages = array() )
   {
     $this->options  = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
     $this->messages = array_merge(array('required' => self::$requiredMessage, 'invalid' => self::$invalidMessage), $this->messages);
@@ -99,8 +98,9 @@ abstract class sfValidatorBase
    *
    * @see __construct()
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
+
   }
 
   /**
@@ -110,7 +110,7 @@ abstract class sfValidatorBase
    *
    * @return string The error message, or the empty string if the error code does not exist
    */
-  public function getMessage($name)
+		public function getMessage( $name )
   {
     return isset($this->messages[$name]) ? $this->messages[$name] : '';
   }
@@ -121,7 +121,7 @@ abstract class sfValidatorBase
    * @param string $name   The error code
    * @param string $value  The error message
    */
-  public function addMessage($name, $value)
+		public function addMessage( $name, $value )
   {
     $this->messages[$name] = $value;
   }
@@ -132,7 +132,7 @@ abstract class sfValidatorBase
    * @param string $name   The error code
    * @param string $value  The error message
    */
-  public function setMessage($name, $value)
+		public function setMessage( $name, $value )
   {
     if (!in_array($name, array_keys($this->messages)))
     {
@@ -157,7 +157,7 @@ abstract class sfValidatorBase
    *
    * @param array $values  An array of error messages
    */
-  public function setMessages($values)
+		public function setMessages( $values )
   {
     $this->messages = $values;
   }
@@ -169,7 +169,7 @@ abstract class sfValidatorBase
    *
    * @return mixed  The option value
    */
-  public function getOption($name)
+		public function getOption( $name )
   {
     return isset($this->options[$name]) ? $this->options[$name] : null;
   }
@@ -180,7 +180,7 @@ abstract class sfValidatorBase
    * @param string $name   The option name
    * @param mixed  $value  The default value
    */
-  public function addOption($name, $value = null)
+		public function addOption( $name, $value = null )
   {
     $this->options[$name] = $value;
   }
@@ -191,7 +191,7 @@ abstract class sfValidatorBase
    * @param string $name   The option name
    * @param mixed  $value  The value
    */
-  public function setOption($name, $value)
+		public function setOption( $name, $value )
   {
     if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
     {
@@ -208,7 +208,7 @@ abstract class sfValidatorBase
    *
    * @return bool true if the option exists, false otherwise
    */
-  public function hasOption($name)
+		public function hasOption( $name )
   {
     return isset($this->options[$name]);
   }
@@ -228,7 +228,7 @@ abstract class sfValidatorBase
    *
    * @param array $values  An array of options
    */
-  public function setOptions($values)
+		public function setOptions( $values )
   {
     $this->options = $values;
   }
@@ -238,7 +238,7 @@ abstract class sfValidatorBase
    *
    * @param string $name  The option name
    */
-  public function addRequiredOption($name)
+		public function addRequiredOption( $name )
   {
     $this->requiredOptions[] = $name;
   }
@@ -258,7 +258,7 @@ abstract class sfValidatorBase
    *
    * @param string $message
    */
-  static public function setInvalidMessage($message)
+		static public function setInvalidMessage( $message )
   {
     self::$invalidMessage = $message;
   }
@@ -268,7 +268,7 @@ abstract class sfValidatorBase
    *
    * @param string $message
    */
-  static public function setRequiredMessage($message)
+		static public function setRequiredMessage( $message )
   {
     self::$requiredMessage = $message;
   }
@@ -285,7 +285,7 @@ abstract class sfValidatorBase
    *
    * @throws sfValidatorError
    */
-  public function clean($value)
+		public function clean( $value )
   {
     $clean = $value;
 
@@ -320,14 +320,14 @@ abstract class sfValidatorBase
    *
    * @throws sfValidatorError
    */
-  abstract protected function doClean($value);
+		abstract protected function doClean( $value );
 
   /**
    * Sets the charset to use when validating strings.
    *
    * @param string $charset  The charset
    */
-  static public function setCharset($charset)
+		static public function setCharset( $charset )
   {
     self::$charset = $charset;
   }
@@ -349,7 +349,7 @@ abstract class sfValidatorBase
    *
    * @return bool true if the value is empty, false otherwise
    */
-  protected function isEmpty($value)
+		protected function isEmpty( $value )
   {
     return in_array($value, array(null, '', array()), true);
   }
@@ -391,7 +391,7 @@ abstract class sfValidatorBase
    *
    * @param array $messages  An array of default error codes and messages
    */
-  protected function setDefaultMessages($messages)
+		protected function setDefaultMessages( $messages )
   {
     $this->defaultMessages = $messages;
   }
@@ -411,7 +411,7 @@ abstract class sfValidatorBase
    *
    * @param array $options  An array of default option values
    */
-  protected function setDefaultOptions($options)
+		protected function setDefaultOptions( $options )
   {
     $this->defaultOptions = $options;
   }
@@ -423,16 +423,12 @@ abstract class sfValidatorBase
    *
    * @return string The string representation of the validator
    */
-  public function asString($indent = 0)
+		public function asString( $indent = 0 )
   {
     $options = $this->getOptionsWithoutDefaults();
     $messages = $this->getMessagesWithoutDefaults();
 
-    return sprintf('%s%s(%s%s)',
-      str_repeat(' ', $indent),
-      str_replace('sfValidator', '', get_class($this)),
-      $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
-      $messages ? ', '.sfYamlInline::dump($messages) : ''
+			return sprintf('%s%s(%s%s)', str_repeat(' ', $indent), str_replace('sfValidator', '', get_class($this)), $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
     );
   }
 
@@ -477,4 +473,4 @@ abstract class sfValidatorBase
 
     return $options;
   }
-}
+	}

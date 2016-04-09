@@ -48,9 +48,9 @@
 		 *
 		 * @internal this does not render the widget it only includes the header js files
 		 */
-		public static function load_widget($widget)
+		public static function load_widget( $widget )
 		{
-			if(preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
 			{
 				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
 			}
@@ -62,7 +62,7 @@
 			$_jquery_ui	 = 'jquery-ui-1.11.4';
 			$_type		 = '.min'; // save some download
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$theme = 'humanity';
 			}
@@ -71,7 +71,7 @@
 				$theme = 'ui-lightness';
 			}
 			$load = array();
-			switch($widget)
+			switch ($widget)
 			{
 				case 'core':
 					$load = array
@@ -165,30 +165,39 @@
 					);
 					break;
 
+				case 'contextMenu':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+						'contextMenu' => array("jquery.contextMenu{$_type}")
+					);
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
+					break;
+
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);
 					return '';
 			}
-			foreach($load as $key => $scripts)
+			foreach ($load as $key => $scripts)
 			{
 
 				$package = 'jquery';
 
-				if(!$key == intval($key))
+				if (!$key == intval($key))
 				{
 					$package = $key;
 				}
 
-				if(!is_array($scripts))
+				if (!is_array($scripts))
 				{
 					$scripts = array($scripts);
 				}
 
-				foreach($scripts as $script)
+				foreach ($scripts as $script)
 				{
 					$test = $GLOBALS['phpgw']->js->validate_file($package, $script);
-					if(!$test)
+					if (!$test)
 					{
 						$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
 						trigger_error(lang($err, $script, $widget), E_USER_WARNING);
@@ -199,7 +208,7 @@
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 
-		public static function formvalidator_generate($modules = array(), $form_id = 'form', $errorMessagePosition_id = '')
+		public static function formvalidator_generate( $modules = array(), $form_id = 'form', $errorMessagePosition_id = '' )
 		{
 			// keep track of number of times loaded per pageload
 			static $times_loaded = 0;
@@ -207,7 +216,7 @@
 			self::load_widget('validator');
 			$modules_js = '"' . implode(',', $modules) . '"';
 
-			if($errorMessagePosition_id)
+			if ($errorMessagePosition_id)
 			{
 				$errorMessagePosition = "$('#{$errorMessagePosition_id}')";
 			}
@@ -217,10 +226,10 @@
 			}
 
 			$translation = '';
-			if(!$times_loaded)//first time only
+			if (!$times_loaded)//first time only
 			{
 				//TODO: use translations from the package
-				if($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] == 'no')
+				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] == 'no')
 				{
 					$translation = <<<JS
 
@@ -339,7 +348,7 @@ JS;
 		 * @param string $tab_set indentificator of tabset
 		 * @return string HTML definition of the tabs
 		 */
-		public static function tabview_generate($tabs, $selection, $tab_set = 'tab-content')
+		public static function tabview_generate( $tabs, $selection, $tab_set = 'tab-content' )
 		{
 			self::load_widget('tabview');
 			$output		 = <<<HTML
@@ -348,25 +357,25 @@ HTML;
 			$disabled	 = array();
 			$tab_map	 = array();
 			$i			 = 0;
-			foreach($tabs as $id => $tab)
+			foreach ($tabs as $id => $tab)
 			{
 				$tab_map[$id] = $i;
 
 				$label		 = $tab['label'];
 				$_function	 = '';
-				if(isset($tab['function']))
+				if (isset($tab['function']))
 				{
 					$_function = " onclick=\"javascript: {$tab['function']};\"";
 				}
 
 				//Set disabled tabs
 				//if (empty($tab['link']) && empty($tab['function'])) {
-				if($tab['disable'] == 1)
+				if ($tab['disable'] == 1)
 				{
 					$disabled[] = $i;
 				}
 
-				if($tab['link'] && !preg_match('/(^#)/i', $tab['link']))
+				if ($tab['link'] && !preg_match('/(^#)/i', $tab['link']))
 				{
 					$_function	 = " onclick=\"javascript: window.location = '{$tab['link']}';\"";
 					$tab['link'] = "#{$id}";
@@ -420,13 +429,13 @@ JS;
 			return $output;
 		}
 
-		public static function init_ckeditor($target)
+		public static function init_ckeditor( $target )
 		{
 			self::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('ckeditor', 'ckeditor');
 			$GLOBALS['phpgw']->js->validate_file('ckeditor', 'adapters/jquery');
 			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang'] ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
 			{
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}

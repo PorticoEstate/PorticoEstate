@@ -36,7 +36,7 @@
 			$this->module = 'booking';
 		}
 
-		protected function set_business_object(booking_bodocument $bo = null)
+		protected function set_business_object( booking_bodocument $bo = null )
 		{
 			$this->bo = is_null($bo) ? $this->create_business_object() : $bo;
 		}
@@ -48,20 +48,20 @@
 
 		protected function get_document_owner_type()
 		{
-			if(!$this->documentOwnerType)
+			if (!$this->documentOwnerType)
 			{
 				$this->set_document_owner_type();
 			}
 			return $this->documentOwnerType;
 		}
 
-		protected function set_document_owner_type($type = null)
+		protected function set_document_owner_type( $type = null )
 		{
-			if(is_null($type))
+			if (is_null($type))
 			{
 				$class = get_class($this);
 				$r = new ReflectionObject($this);
-				while(__CLASS__ != ($current_class = $r->getParentClass()->getName()))
+				while (__CLASS__ != ($current_class = $r->getParentClass()->getName()))
 				{
 					$class = $current_class;
 					$r = $r->getParentClass();
@@ -81,7 +81,7 @@
 
 		public function redirect_to_parent_if_inline()
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$this->redirect($this->get_parent_url_link_params());
 			}
@@ -89,20 +89,20 @@
 			return false;
 		}
 
-		public function get_owner_typed_link_params($action, $params = array())
+		public function get_owner_typed_link_params( $action, $params = array() )
 		{
 			$action = sprintf($this->module . '.uidocument_%s.%s', $this->get_document_owner_type(), $action);
 			return array_merge(array('menuaction' => $action), $this->apply_inline_params($params));
 		}
 
-		public function get_owner_typed_link($action, $params = array())
+		public function get_owner_typed_link( $action, $params = array() )
 		{
 			return $this->link($this->get_owner_typed_link_params($action, $params));
 		}
 
-		public function apply_inline_params(&$params)
+		public function apply_inline_params( &$params )
 		{
-			if($this->is_inline())
+			if ($this->is_inline())
 			{
 				$params['filter_owner_id'] = intval(phpgw::get_var('filter_owner_id'));
 			}
@@ -130,7 +130,7 @@
 			return false != phpgw::get_var('filter_owner_id', 'int', 'REQUEST', false);
 		}
 
-		public static function generate_inline_link($documentOwnerType, $documentOwnerId, $action)
+		public static function generate_inline_link( $documentOwnerType, $documentOwnerId, $action )
 		{
 			return self::link(array('menuaction' => sprintf('booking.uidocument_%s.%s', $documentOwnerType, $action),
 				'filter_owner_id' => $documentOwnerId));
@@ -138,7 +138,7 @@
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
@@ -191,7 +191,7 @@
 			);
 
 			$data['datatable']['actions'][] = array();
-			if($this->bo->allow_create())
+			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item']	= $this->get_owner_typed_link('add');
 			}
@@ -202,7 +202,7 @@
 		public function query()
 		{
 			$documents = $this->bo->read();
-			foreach($documents['results'] as &$document)
+			foreach ($documents['results'] as &$document)
 			{
 				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
 				$document['category'] = lang(self::humanize($document['category']));
@@ -213,19 +213,19 @@
 //				
 //				$document['actions'] = $document_actions;
 
-				if($this->bo->allow_write($document))
+				if ($this->bo->allow_write($document))
 					$document['opcion_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
-				if($this->bo->allow_delete($document))
+				if ($this->bo->allow_delete($document))
 					$document['opcion_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
 			}
-			if(phpgw::get_var('no_images'))
+			if (phpgw::get_var('no_images'))
 			{
 				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
 				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
 				// reindexing the results array solves the problem
 				$doc_backup = $documents;
 				unset($documents['results']);
-				foreach($doc_backup['results'] as $doc)
+				foreach ($doc_backup['results'] as $doc)
 				{
 					$documents['results'][] = $doc;
 				}
@@ -234,7 +234,7 @@
 			return $this->jquery_results($documents);
 		}
 
-		private function is_image($document)
+		private function is_image( $document )
 		{
 			return $document['is_image'] == false;
 		}
@@ -243,7 +243,7 @@
 		{
 			$images = $this->bo->read_images();
 
-			foreach($images['results'] as &$image)
+			foreach ($images['results'] as &$image)
 			{
 				$image['src'] = $this->get_owner_typed_link('download', array('id' => $image['id']));
 			}
@@ -254,14 +254,14 @@
 		protected function get_document_categories()
 		{
 			$types = array();
-			foreach($this->bo->get_categories() as $type)
+			foreach ($this->bo->get_categories() as $type)
 			{
 				$types[$type] = self::humanize($type);
 			}
 			return $types;
 		}
 
-		protected function add_default_display_data(&$document_data)
+		protected function add_default_display_data( &$document_data )
 		{
 			$document_data['owner_pathway'] = $this->get_owner_pathway($document_data);
 			$document_data['owner_type'] = $this->get_document_owner_type();
@@ -285,12 +285,12 @@
 			$errors = array();
 			$document = array();
 
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document = extract_values($_POST, $this->fields);
 				$document['files'] = $this->get_files();
 				$errors = $this->bo->validate($document);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
@@ -299,7 +299,7 @@
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -311,7 +311,7 @@
 
 			$this->add_default_display_data($document);
 
-			if(is_array($parentData = $this->get_parent_if_inline()))
+			if (is_array($parentData = $this->get_parent_if_inline()))
 			{
 				$document['owner_id'] = $parentData['id'];
 				$document['owner_name'] = $parentData['name'];
@@ -336,11 +336,11 @@
 			$document = $this->bo->read_single($id);
 
 			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document = array_merge($document, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($document);
-				if(!$errors)
+				if (!$errors)
 				{
 					try
 					{
@@ -348,7 +348,7 @@
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));
 					}
-					catch(booking_unauthorized_exception $e)
+					catch (booking_unauthorized_exception $e)
 					{
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
 					}
@@ -398,7 +398,7 @@
 		 *
 		 * @return array of url(s) to owner(s) in order of hierarchy.
 		 */
-		protected function get_owner_pathway(array $forDocumentData)
+		protected function get_owner_pathway( array $forDocumentData )
 		{
 			return array();
 		}

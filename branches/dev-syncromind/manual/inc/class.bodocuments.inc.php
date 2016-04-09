@@ -24,16 +24,16 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+	 * @version $Id$
 	*/
 
 	/**
 	 * Description
 	 * @package manual
 	 */
-
 	class manual_bodocuments
 	{
+
 		var $start;
 		var $query;
 		var $filter;
@@ -44,7 +44,6 @@
 		var $appname;
 		var $allrows;
 		public $acl_location = '.documents';
-
 		var $public_functions = array
 		(
 			'addfiles'		=> true
@@ -68,12 +67,12 @@
 			$check			= phpgw::get_var('check', 'bool');
 			$fileuploader	= CreateObject('property.fileuploader');
 
-			if(!$acl_add && !$acl_edit)
+			if (!$acl_add && !$acl_edit)
 			{
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if(!$cat_id)
+			if (!$cat_id)
 			{
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -86,14 +85,14 @@
 				{
 					$tempFile = $_FILES['Filedata']['tmp_name'];
 					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
-					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
-					move_uploaded_file($tempFile,$targetFile);
-					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
+					$targetFile = str_replace('//', '/', $targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile, $targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'], '', $targetFile);
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 	
-			if($check)
+			if ($check)
 			{
 				$fileuploader->check($cat_id, '/manual');
 			}
@@ -102,5 +101,4 @@
 				$fileuploader->upload($cat_id, '/manual');
 			}
 		}
-
 	}

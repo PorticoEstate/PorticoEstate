@@ -90,12 +90,12 @@
 		);
 		var $type_app;
 
-		function __construct($session = false)
+		function __construct( $session = false )
 		{
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom = createObject('property.custom_fields');
 
-			if($session)
+			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -123,9 +123,9 @@
 			$this->type_app = $this->so->get_type_app();
 		}
 
-		function save_sessiondata($data)
+		function save_sessiondata( $data )
 		{
-			if($this->use_session)
+			if ($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'standard_e', $data);
 			}
@@ -144,14 +144,14 @@
 			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
-		function get_location_level_list($selected = '')
+		function get_location_level_list( $selected = '' )
 		{
 
 			$soadmin_location = CreateObject('property.soadmin_location');
 			$location_types = $soadmin_location->select_location_type();
 			$max_location_type = count($location_types);
 
-			for($i = 1; $i <= $max_location_type; $i++)
+			for ($i = 1; $i <= $max_location_type; $i++)
 			{
 				$location[$i]['id'] = $i;
 				$location[$i]['name'] = $i . '-' . $location_types[($i - 1)]['name'];
@@ -160,13 +160,13 @@
 			return $this->bocommon->select_list($selected, $location);
 		}
 
-		function get_entity_list($selected = '')
+		function get_entity_list( $selected = '' )
 		{
 			$list = $this->so->read(array('allrows' => true));
 			return $this->bocommon->select_multi_list($selected, $list);
 		}
 
-		function get_entity_list_2($selected = '')
+		function get_entity_list_2( $selected = '' )
 		{
 			$list[0]['id'] = 'project';
 			$list[0]['name'] = 'project';
@@ -183,7 +183,7 @@
 			return $this->bocommon->select_multi_list($selected, $list);
 		}
 
-		function get_entity_list_3($selected = '')
+		function get_entity_list_3( $selected = '' )
 		{
 			$list[0]['id'] = 'ticket';
 			$list[0]['name'] = 'ticket';
@@ -192,7 +192,7 @@
 			return $this->bocommon->select_multi_list($selected, $list);
 		}
 
-		function read($data = array())
+		function read( $data = array() )
 		{
 			#$entity = $this->so->read(array
 			#            (
@@ -207,7 +207,7 @@
 			return $entity;
 		}
 
-		function read_category($data = array())
+		function read_category( $data = array() )
 		{
 			/* $category = $this->so->read_category( array
 			  (
@@ -242,21 +242,21 @@
 			return $this->custom->find('property', ".entity.{$entity_id}.{$cat_id}", 0, '', '', '', true, true);
 		}
 
-		function read_single($id)
+		function read_single( $id )
 		{
 			return $this->so->read_single($id);
 		}
 
-		function read_single_category($entity_id, $cat_id)
+		function read_single_category( $entity_id, $cat_id )
 		{
 			return $this->so->read_single_category($entity_id, $cat_id);
 		}
 
-		function save($values, $action = '')
+		function save( $values, $action = '' )
 		{
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
-				if($values['id'] != '')
+				if ($values['id'] != '')
 				{
 					$receipt = $this->so->edit_entity($values);
 				}
@@ -269,11 +269,11 @@
 			return $receipt;
 		}
 
-		function save_category($values, $action = '')
+		function save_category( $values, $action = '' )
 		{
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
-				if($values['id'] != '')
+				if ($values['id'] != '')
 				{
 					$receipt = $this->so->edit_category($values);
 				}
@@ -282,7 +282,7 @@
 			{
 				$receipt = $this->so->add_category($values);
 				execMethod('phpgwapi.menu.clear');
-				if(isset($values['category_template']) && $values['category_template'] && isset($receipt['id']) && $receipt['id'])
+				if (isset($values['category_template']) && $values['category_template'] && isset($receipt['id']) && $receipt['id'])
 				{
 					$values2 = array
 						(
@@ -298,7 +298,7 @@
 			return $receipt;
 		}
 
-		protected function _add_attrib_from_template($values)
+		protected function _add_attrib_from_template( $values )
 		{
 			$template_info = explode('_', $values['category_template']);
 			$template_entity_id = $template_info[0];
@@ -307,7 +307,7 @@
 			$attrib_group_list = $this->read_attrib_group(array('entity_id' => $template_entity_id,
 				'cat_id' => $template_cat_id, 'allrows' => true));
 
-			foreach($attrib_group_list as $attrib_group)
+			foreach ($attrib_group_list as $attrib_group)
 			{
 				$group = array
 					(
@@ -324,30 +324,30 @@
 				'allrows' => true));
 
 			$template_attribs = array();
-			foreach($attrib_list as $attrib)
+			foreach ($attrib_list as $attrib)
 			{
-				if(in_array($attrib['id'], $values['selected']))
+				if (in_array($attrib['id'], $values['selected']))
 				{
 					$template_attribs[] = $this->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
 				}
 			}
 
-			foreach($template_attribs as $attrib)
+			foreach ($template_attribs as $attrib)
 			{
 				$attrib['appname'] = $this->type_app[$this->type];
 				$attrib['location'] = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
 
 				$choices = array();
-				if(isset($attrib['choice']) && $attrib['choice'])
+				if (isset($attrib['choice']) && $attrib['choice'])
 				{
 					$choices = $attrib['choice'];
 					unset($attrib['choice']);
 				}
 
 				$id = $this->custom->add($attrib);
-				if($choices)
+				if ($choices)
 				{
-					foreach($choices as $choice)
+					foreach ($choices as $choice)
 					{
 						$attrib['new_choice'] = $choice['value'];
 						$attrib['id'] = $id;
@@ -357,41 +357,41 @@
 			}
 		}
 
-		function delete($cat_id = '', $entity_id = '', $attrib_id = '', $acl_location = '', $custom_function_id = '', $group_id = '')
+		function delete( $cat_id = '', $entity_id = '', $attrib_id = '', $acl_location = '', $custom_function_id = '', $group_id = '' )
 		{
-			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id && !$group_id)
+			if (!$attrib_id && !$cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->so->delete_entity($entity_id);
 				execMethod('phpgwapi.menu.clear');
 			}
-			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
+			else if (!$attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->so->delete_category($entity_id, $cat_id);
 				execMethod('phpgwapi.menu.clear');
 			}
-			else if($group_id && $cat_id && $entity_id && !$custom_function_id && !$attrib_id)
+			else if ($group_id && $cat_id && $entity_id && !$custom_function_id && !$attrib_id)
 			{
 				$this->custom->delete_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $group_id);
 			}
-			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
+			else if ($attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->custom->delete($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id, $attrib_id);
 			}
-			else if($custom_function_id && $acl_location)
+			else if ($custom_function_id && $acl_location)
 			{
 				$GLOBALS['phpgw']->custom_functions->delete($this->type_app[$this->type], $acl_location, $custom_function_id);
 			}
 		}
 
-		function get_attrib_group_list($entity_id, $cat_id, $selected)
+		function get_attrib_group_list( $entity_id, $cat_id, $selected )
 		{
 			$group_list = $this->read_attrib_group(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
 				'allrows' => true));
 
-			foreach($group_list as &$group)
+			foreach ($group_list as &$group)
 			{
-				if($group['id'] == $selected)
+				if ($group['id'] == $selected)
 				{
 					$group['selected'] = true;
 				}
@@ -399,11 +399,11 @@
 			return $group_list;
 		}
 
-		function read_attrib_group($data = array())
+		function read_attrib_group( $data = array() )
 		{
 			$entity_id = $data['entity_id'];
 			$cat_id = $data['cat_id'];
-			if($data['allrows'])
+			if ($data['allrows'])
 			{
 				$this->allrows = $data['allrows'];
 			}
@@ -415,9 +415,9 @@
 			return $attrib;
 		}
 
-		function read_attrib($data = array())
+		function read_attrib( $data = array() )
 		{
-			if($data['allrows'])
+			if ($data['allrows'])
 			{
 				$this->allrows = $data['allrows'];
 			}
@@ -426,34 +426,34 @@
 			return $attrib;
 		}
 
-		function read_single_attrib($entity_id, $cat_id, $id)
+		function read_single_attrib( $entity_id, $cat_id, $id )
 		{
 			return $this->custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $id, true);
 		}
 
-		function read_single_attrib_group($entity_id, $cat_id, $id)
+		function read_single_attrib_group( $entity_id, $cat_id, $id )
 		{
 			return $this->custom->get_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $id, true);
 		}
 
-		function resort_attrib_group($id, $resort)
+		function resort_attrib_group( $id, $resort )
 		{
 			$this->custom->resort_group($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
 
-		function resort_attrib($id, $resort)
+		function resort_attrib( $id, $resort )
 		{
 			$this->custom->resort($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
 
-		public function save_attrib_group($group, $action = '')
+		public function save_attrib_group( $group, $action = '' )
 		{
 			$receipt = array();
 			$group['appname'] = $this->type_app[$this->type];
 			$group['location'] = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
-			if($action == 'edit' && $group['id'])
+			if ($action == 'edit' && $group['id'])
 			{
-				if($this->custom->edit_group($group))
+				if ($this->custom->edit_group($group))
 				{
 					$receipt['message'][] = array('msg' => lang('group has been updated'));
 					return $receipt;
@@ -465,12 +465,12 @@
 			else
 			{
 				$id = $this->custom->add_group($group);
-				if($id <= 0)
+				if ($id <= 0)
 				{
 					$receipt['error'][] = array('msg' => lang('unable to add group'));
 					return $receipt;
 				}
-				else if($id == -1)
+				else if ($id == -1)
 				{
 					$receipt['id'] = 0;
 					$receipt['error'][] = array('msg' => lang('group already exists, please choose another name'));
@@ -484,15 +484,15 @@
 			}
 		}
 
-		public function save_attrib($attrib, $action = '')
+		public function save_attrib( $attrib, $action = '' )
 		{
 			$receipt = array();
 			$attrib['appname'] = $this->type_app[$this->type];
 			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
 			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'], $attrib['location']);
-			if($action == 'edit' && $attrib['id'])
+			if ($action == 'edit' && $attrib['id'])
 			{
-				if($this->custom->edit($attrib))
+				if ($this->custom->edit($attrib))
 				{
 					$receipt = $this->custom->receipt;
 					$receipt['message'][] = array('msg' => lang('Field has been updated'));
@@ -504,12 +504,12 @@
 			else
 			{
 				$id = $this->custom->add($attrib, $attrib_table);
-				if($id <= 0)
+				if ($id <= 0)
 				{
 					$receipt['error'][] = array('msg' => lang('Unable to add field'));
 					return $receipt;
 				}
-				else if($id == -1)
+				else if ($id == -1)
 				{
 					$receipt['id'] = 0;
 					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
@@ -523,16 +523,16 @@
 			}
 		}
 
-		function read_custom_function($data = array())
+		function read_custom_function( $data = array() )
 		{
 
-			if(!$data['location'] && $data['entity_id'] && $data['cat_id'])
+			if (!$data['location'] && $data['entity_id'] && $data['cat_id'])
 			{
 				$data['location'] = ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}";
 			}
 
 			$data['appname'] = $this->type_app[$this->type];
-			switch($data['order'])
+			switch ($data['order'])
 			{
 				case'sorting';
 					$data['order'] = 'custom_sort';
@@ -546,28 +546,28 @@
 			return $values;
 		}
 
-		function resort_custom_function($id, $resort)
+		function resort_custom_function( $id, $resort )
 		{
 			$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 			return $GLOBALS['phpgw']->custom_functions->resort($id, $resort, $this->type_app[$this->type], $location);
 		}
 
-		function save_custom_function($custom_function, $action = '')
+		function save_custom_function( $custom_function, $action = '' )
 		{
 			$receipt = array();
 			$custom_function['appname'] = $this->type_app[$this->type];
-			if(!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
+			if (!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
 			{
 				$custom_function['location'] = ".{$this->type}.{$custom_function['entity_id']}.{$custom_function['cat_id']}";
 			}
 
-			if($action == 'edit')
+			if ($action == 'edit')
 			{
-				if($custom_function['id'] != '')
+				if ($custom_function['id'] != '')
 				{
 
 					$receipt['id'] = $custom_function['id'];
-					if($GLOBALS['phpgw']->custom_functions->edit($custom_function))
+					if ($GLOBALS['phpgw']->custom_functions->edit($custom_function))
 					{
 						$receipt['message'][] = array('msg' => 'OK');
 					}
@@ -579,7 +579,7 @@
 			}
 			else
 			{
-				if($receipt['id'] = $GLOBALS['phpgw']->custom_functions->add($custom_function))
+				if ($receipt['id'] = $GLOBALS['phpgw']->custom_functions->add($custom_function))
 				{
 					$receipt['message'][] = array('msg' => 'OK');
 				}
@@ -591,32 +591,32 @@
 			return $receipt;
 		}
 
-		function select_custom_function($selected = '')
+		function select_custom_function( $selected = '' )
 		{
 			$admin_custom = createObject('admin.bo_custom');
 			return $admin_custom->select_custom_function($selected, $this->type_app[$this->type]);
 		}
 
-		function read_single_custom_function($entity_id = '', $cat_id = '', $id, $location = '')
+		function read_single_custom_function( $entity_id = '', $cat_id = '', $id, $location = '' )
 		{
-			if(!$location && $entity_id && $cat_id)
+			if (!$location && $entity_id && $cat_id)
 			{
 				$location = ".{$this->type}.{$entity_id}.{$cat_id}";
 			}
 			return $GLOBALS['phpgw']->custom_functions->get($this->type_app[$this->type], $location, $id);
 		}
 
-		function get_path($entity_id, $node)
+		function get_path( $entity_id, $node )
 		{
 			return $this->so->get_path($entity_id, $node);
 		}
 
-		function read_category_tree2($entity_id, $table)
+		function read_category_tree2( $entity_id, $table )
 		{
 			return $this->so->read_category_tree2($entity_id, $table);
 		}
 
-		function get_children2($entity_id, $parent, $level, $reset = false, $table)
+		function get_children2( $entity_id, $parent, $level, $reset = false, $table )
 		{
 			return $this->so->get_children2($entity_id, $parent, $level, $reset, $table);
 		}

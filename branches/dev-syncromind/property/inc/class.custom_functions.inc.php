@@ -52,14 +52,14 @@
 		 * If $data is an array - then the process is run as cron - and will look for $data['function'] to
 		 * determine which custom class to load
 		 */
-		function index($data = '')
+		function index( $data = '' )
 		{
-			if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 			{
 				return;
 			}
 
-			if(is_array($data))
+			if (is_array($data))
 			{
 				$function = $data['function'];
 			}
@@ -68,7 +68,7 @@
 				$data = unserialize(urldecode(phpgw::get_var('data')));
 
 				$data = phpgw::clean_value($data);
-				if(!isset($data['function']))
+				if (!isset($data['function']))
 				{
 					$function = phpgw::get_var('function');
 				}
@@ -78,14 +78,14 @@
 				}
 			}
 			// prevent path traversal
-			if(preg_match('/\.\./', $function))
+			if (preg_match('/\.\./', $function))
 			{
 				return;
 			}
 
 			$file = PHPGW_SERVER_ROOT . "/property/inc/cron/{$GLOBALS['phpgw_info']['user']['domain']}/{$function}.php";
 
-			if(is_file($file))
+			if (is_file($file))
 			{
 				require_once $file;
 				$custom = new $function;

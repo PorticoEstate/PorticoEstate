@@ -1,6 +1,5 @@
 <?php
-
-/*
+	/*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
@@ -8,16 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
+	/**
  * sfValidatorDateRange validates a range of date. It also converts the input values to valid dates.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+	 * @version    SVN: $Id$
  */
-class sfValidatorDateRange extends sfValidatorBase
-{
+	class sfValidatorDateRange extends sfValidatorBase
+	{
+
   /**
    * Configures the current validator.
    *
@@ -31,7 +31,7 @@ class sfValidatorDateRange extends sfValidatorBase
    *
    * @see sfValidatorBase
    */
-  protected function configure($options = array(), $messages = array())
+		protected function configure( $options = array(), $messages = array() )
   {
     $this->addMessage('invalid', 'The begin date must be before the end date.');
 
@@ -42,17 +42,18 @@ class sfValidatorDateRange extends sfValidatorBase
   /**
    * @see sfValidatorBase
    */
-  protected function doClean($value)
+		protected function doClean( $value )
   {
     $value['from'] = $this->getOption('from_date')->clean(isset($value['from']) ? $value['from'] : null);
     $value['to']   = $this->getOption('to_date')->clean(isset($value['to']) ? $value['to'] : null);
 
     if ($value['from'] && $value['to'])
     {
-      $v = new sfValidatorSchemaCompare('from', sfValidatorSchemaCompare::LESS_THAN_EQUAL, 'to', array('throw_global_error' => true), array('invalid' => $this->getMessage('invalid')));
+				$v = new sfValidatorSchemaCompare('from', sfValidatorSchemaCompare::LESS_THAN_EQUAL, 'to', array(
+					'throw_global_error' => true), array('invalid' => $this->getMessage('invalid')));
       $v->clean($value);
     }
 
     return $value;
   }
-}
+	}

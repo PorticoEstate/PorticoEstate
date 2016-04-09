@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * Frontend : a simplified tool for end users.
 	 *
@@ -9,7 +8,6 @@
 	 * @package Frontend
 	 * @version $Id$
 	 */
-
 	/*
 	   This program is free software: you can redistribute it and/or modify
 	   it under the terms of the GNU General Public License as published by
@@ -32,7 +30,6 @@
 	 *
 	 * @package Frontend
 	 */
-
 	class frontend_uihelpdesk extends frontend_uicommon
 	{
 
@@ -46,7 +43,7 @@
 
 		public function __construct()
 		{
-			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'));
+			phpgwapi_cache::session_set('frontend', 'tab', $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket'));
 
 			parent::__construct();
 			
@@ -102,7 +99,7 @@
 			$count_uicols_name = count($uicols['name']);
 			
 			$uicols_helpdesk = array();
-			for($k = 0; $k < $count_uicols_name; $k++)
+			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				$params = array(
 					'key'		 => $uicols['name'][$k],
@@ -111,11 +108,11 @@
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if($uicols['name'][$k]=='id' || $uicols['name'][$k]=='user' || $uicols['name'][$k]=='entry_date')
+				if ($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'user' || $uicols['name'][$k] == 'entry_date')
 				{
 					$params['sortable']	= true;
 				}
-				if($uicols['name'][$k]=='id')
+				if ($uicols['name'][$k] == 'id')
 				{
 					$params['hidden'] = true;
 				}
@@ -139,7 +136,7 @@
 				(
 					'my_name'		=> 'view',
 					'text' 			=> lang('view'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'	=> 'frontend.uihelpdesk.view',
 						'location_id'	=> $this->location_id,
@@ -152,11 +149,12 @@
 					'my_name'		=> 'new_ticket',
 					'text' 			=> lang('new_ticket'),
 					'type'			=> 'custom',
+				'className' => 'new_ticket',//activate button
 					'custom_code'	=> "
-						var oArgs = ".json_encode(array(
+						var oArgs = " . json_encode(array(
 								'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
 								'noframework'	=> 1
-							)).";
+				)) . ";
 						newTicket(oArgs);
 					"
 				);
@@ -174,13 +172,13 @@
 				'tabletools' => $tabletools
 			);
 
-			/*$link =	$GLOBALS['phpgw']->link(
+			/* $link =	$GLOBALS['phpgw']->link(
 					'/index.php',
 					array('menuaction'	=> 'frontend.uihelpdesk.view'));
-			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";*/
+			  $datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;"; */
 			
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
-			phpgwapi_cache::session_clear('frontend','msgbox');
+			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 			
 			$data = array(
 				'header' 		=> $this->header_state,
@@ -201,7 +199,7 @@
 		
 		public function query()
 		{
-			phpgwapi_cache::session_clear('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 			
 			$bo	= CreateObject('property.botts');
 			
@@ -221,7 +219,7 @@
 				'status_id'	 => $status_id
 			);
 
-			if(isset($this->location_code) && $this->location_code != '')
+			if (isset($this->location_code) && $this->location_code != '')
 			{
 				$params['location_code'] = $this->location_code;
 				$ticket_list = $bo->read($params);
@@ -231,7 +229,7 @@
 				$ticket_list = null;
 			}
 
-			if(is_array($ticket_list))
+			if (is_array($ticket_list))
 			{
 				$status['X'] = array
 				(
@@ -245,7 +243,7 @@
 
 				$custom_status	= $bo->get_custom_status();
 
-				foreach($custom_status as $custom)
+				foreach ($custom_status as $custom)
 				{
 					$status["C{$custom['id']}"] = array
 					(
@@ -253,9 +251,9 @@
 					);
 				}
 			
-				foreach($ticket_list as &$ticket)
+				foreach ($ticket_list as &$ticket)
 				{
-					if(array_key_exists($ticket['status'], $status))
+					if (array_key_exists($ticket['status'], $status))
 					{
 						$ticket['status'] 	= $status[$ticket['status']]['status'];
 					}
@@ -270,7 +268,7 @@
 			return $this->jquery_results($result_data);
 		}
 		
-		private function cmp($a, $b)
+		private function cmp( $a, $b )
 		{
 			$timea = explode('/', $a['date']);
 			$timeb = explode('/', $b['date']);
@@ -282,14 +280,13 @@
 			$timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
 			$timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
 
-			if($timestamp_a < $timestamp_b)
+			if ($timestamp_a < $timestamp_b)
 			{
 				return 1;
 			}
 
 			return -1;
 		}
-
 
 		public function view()
 		{
@@ -299,44 +296,45 @@
 			$ticket = $bo->read_single($ticketid);
 
 			$assignedto = $ticket['assignedto'];
-			if(isset($assignedto) && $assignedto != '')
+			if (isset($assignedto) && $assignedto != '')
 			{
 				$assignedto_account = $GLOBALS['phpgw']->accounts->get($assignedto);
 				//var_dump($assignedto_account);
-				if($assignedto_account)
+				if ($assignedto_account)
 				{
 					$ticket['assigned_to_name'] = $assignedto_account->__toString();
 				}
 			}
 			
 			$contact_id = $ticket['contact_id'];
-			if(isset($contact_id) && $contact_id != '')
+			if (isset($contact_id) && $contact_id != '')
 			{
 				$contacts							= CreateObject('phpgwapi.contacts');
-				$contact_data						= $contacts->read_single_entry($contact_id, array('fn','tel_work','email'));
+				$contact_data = $contacts->read_single_entry($contact_id, array('fn', 'tel_work',
+					'email'));
 				$ticket['value_contact_name']		= $contact_data[0]['fn'];
 				$ticket['value_contact_email']		= $contact_data[0]['email'];
 				$ticket['value_contact_tel']		= $contact_data[0]['tel_work'];
 			}	
 				
 			$vendor_id = $ticket['vendor_id'];
-			if(isset($vendor_id) && $vendor_id != '')
+			if (isset($vendor_id) && $vendor_id != '')
 			{
 				$contacts	= CreateObject('property.sogeneric');
-				$contacts->get_location_info('vendor',false);
+				$contacts->get_location_info('vendor', false);
 
 				$custom 		= createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-				$vendor_data	= $contacts->read_single(array('id' => $vendor_id),$vendor_data);
+				$vendor_data = $contacts->read_single(array('id' => $vendor_id), $vendor_data);
 
-				if(is_array($vendor_data))
+				if (is_array($vendor_data))
 				{
-					foreach($vendor_data['attributes'] as $attribute)
+					foreach ($vendor_data['attributes'] as $attribute)
 					{
-						if($attribute['name']=='org_name')
+						if ($attribute['name'] == 'org_name')
 						{
-							$ticket['value_vendor_name']=$attribute['value'];
+							$ticket['value_vendor_name'] = $attribute['value'];
 							break;
 						}
 					}
@@ -348,9 +346,9 @@
 
 			$tickethistory = array();
 
-			foreach($notes as $note)
+			foreach ($notes as $note)
 			{
-				if($note['value_publish'])
+				if ($note['value_publish'])
 				{
 					$tickethistory[] = array(
 						'date' => $note['value_date'],
@@ -363,21 +361,20 @@
 			usort($tickethistory, array($this, "cmp"));
 
 
-			$i=0;
-			foreach($tickethistory as $foo)
+			$i = 0;
+			foreach ($tickethistory as $foo)
 			{
-				$tickethistory2['record'.$i] = $foo;
+				$tickethistory2['record' . $i] = $foo;
 				$i++;
 			}
 
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
-			phpgwapi_cache::session_clear('frontend','msgbox');
+			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 			
 			$data = array(
 				'header' 		=> $this->header_state,
 				'section'	=> array(
-					'helpdesklist'	=> $GLOBALS['phpgw']->link('/index.php',
-								array
+					'helpdesklist' => $GLOBALS['phpgw']->link('/index.php', array
 								(
 									'menuaction'		=> 'frontend.uihelpdesk.index',
 									'location_id'		=> $this->location_id
@@ -394,7 +391,6 @@
 			self::render_template_xsl(array('frontend', 'datatable_inline', 'ticketview'), $data);
 		}
 
-
 		public function add_ticket()
 		{
 			$values         = phpgw::get_var('values');
@@ -403,13 +399,14 @@
 			$p_num			= phpgw::get_var('p_num');
 			$origin			= phpgw::get_var('origin');
 
-			if($p_entity_id && $p_cat_id && $p_num)
+			if ($p_entity_id && $p_cat_id && $p_num)
 			{
-				$item = execMethod('property.boentity.read_single',(array('id' => $p_num, 'entity_id' => $p_entity_id, 'cat_id' => $p_cat_id, 'view' => true)));
+				$item = execMethod('property.boentity.read_single', (array('id' => $p_num, 'entity_id' => $p_entity_id,
+					'cat_id' => $p_cat_id, 'view' => true)));
 			}
 
-			$bo	= CreateObject('property.botts',true);
-			$boloc	= CreateObject('property.bolocation',true);
+			$bo = CreateObject('property.botts', true);
+			$boloc = CreateObject('property.bolocation', true);
 
 			$location_details = $boloc->read_single($this->location_code, array('noattrib' => true));
 
@@ -422,7 +419,7 @@
 			$config->read();
 			$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
 					
-			if(!$default_cat)
+			if (!$default_cat)
 			{
 				throw new Exception('Default category is not set in config');
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -430,30 +427,31 @@
 
 			$cat_id = isset($values['cat_id']) && $values['cat_id'] ? $values['cat_id'] : $default_cat;
 
- 			if(isset($values['save']))
+			if (isset($values['save']))
 			{
-				foreach($values as $key => $value)
+				foreach ($values as $key => $value)
 				{
-					if(empty($value) && $key !== 'file')
+					if (empty($value) && $key !== 'file')
 					{
 						$missingfields = true;
 					}
 				}
 
-				if(!$missingfields && !phpgw::get_var('added'))
+				if (!$missingfields && !phpgw::get_var('added'))
 				{
 					$location = array();
 					$_location_arr = explode('-', $this->location_code);
 					$i = 1;
-					foreach($_location_arr as $_loc)
+					foreach ($_location_arr as $_loc)
 					{
 						$location["loc{$i}"] = $_loc;
 						$i++;
 					}
 
-					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $cat_id));
+					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location,
+						'cat_id' => $cat_id));
 
-					if(!$assignedto)
+					if (!$assignedto)
 					{
 						$default_group = (int)$config->config_data['tts_default_group'];
 					}
@@ -472,7 +470,7 @@
 						'priority'			=> 3,
 						'status'			=> 'O', // O = Open
 						'subject'			=> $values['title'],
-						'details'			=> $values['locationdesc'].":\n\n".$values['description'],
+						'details' => $values['locationdesc'] . ":\n\n" . $values['description'],
 						'apply'				=> lang('Apply'),
 						'contact_id'		=> 0,
 						'location'			=> $location,
@@ -483,34 +481,34 @@
 					);
 
 					$result = $bo->add($ticket);
-					if($result['message'][0]['msg'] != null && $result['id'] > 0)
+					if ($result['message'][0]['msg'] != null && $result['id'] > 0)
 					{
 						$msglog['message'][] = array('msg' => lang('Ticket added'));
 						$noform = true;
 
 						// Files
-						$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
-						if($values['file_name'] && $result['id'])
+						$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
+						if ($values['file_name'] && $result['id'])
 						{
 							$bofiles = CreateObject('property.bofiles');
 							$to_file = $bofiles->fakebase . '/fmticket/' . $result['id'] . '/' . $values['file_name'];
 
-							if($bofiles->vfs->file_exists(array(
+							if ($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
 								'relatives' => array(RELATIVE_NONE)
 							)))
 							{
-								$msglog['error'][] = array('msg'=>lang('This file already exists !'));
+								$msglog['error'][] = array('msg' => lang('This file already exists !'));
 							}
 							else
 							{
 								$bofiles->create_document_dir("fmticket/{$result['id']}");
 								$bofiles->vfs->override_acl = 1;
 
-								if(!$bofiles->vfs->cp(array (
+								if (!$bofiles->vfs->cp(array(
 								'from'	=> $_FILES['file']['tmp_name'],
 								'to'	=> $to_file,
-								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+										'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 								{
 									$msglog['error'][] = array('msg' => lang('Failed to upload file!'));
 								}
@@ -525,7 +523,7 @@
 				}
 				else
 				{
-					$msglog['error'][] = array('msg'=>lang('Missing field(s)'));
+					$msglog['error'][] = array('msg' => lang('Missing field(s)'));
 				}
 			}
 
@@ -537,9 +535,9 @@
 			$categories = $cats->return_sorted_array(0, false, '', '', '', true, '', false);
 
 			$category_list = array();
-			foreach ( $categories as $category)
+			foreach ($categories as $category)
 			{
-				if ( in_array($category['id'], $tts_frontend_cat_selected))
+				if (in_array($category['id'], $tts_frontend_cat_selected))
 				{
 					$category_list[] = array
 					(
@@ -565,9 +563,10 @@
 			$active_tab = 'details';
 			
 			$data = array(
-				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
+				'redirect' => isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'frontend.uihelpdesk.index')) : null,
 				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$form_action_data),
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $form_action_data),
 				'title'         	=> $values['title'],
 				'locationdesc'  	=> $values['locationdesc'],
 				'description'   	=> $values['description'],
@@ -577,13 +576,12 @@
 				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
 			
 			/*
 			 * Note: not working for when you want a spesific target other than 'data'
 			 * self::render_template_xsl(array('frontend','helpdesk','attributes_view'), array('add_ticket' => $data));
 			 */
-
 		}
 	}
