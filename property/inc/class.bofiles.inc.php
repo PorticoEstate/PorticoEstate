@@ -157,6 +157,7 @@
 			foreach ($values['file_action'] as $file_name)
 			{
 				$file_name = html_entity_decode($file_name);
+				$file_name = $this->strip_entities_from_name($file_name);
 
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
@@ -203,6 +204,7 @@
 			if (!$file)
 			{
 				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
+				$file_name = $this->strip_entities_from_name($file_name);
 				$id = phpgw::get_var('id');
 				$file = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
@@ -273,6 +275,7 @@
 			$attachments = array();
 			foreach ($values as $file_name)
 			{
+				$file_name = $this->strip_entities_from_name($file_name);
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if ($this->vfs->file_exists(array(
@@ -290,5 +293,10 @@
 				}
 			}
 			return $attachments;
+		}
+
+		function strip_entities_from_name($file_name)
+		{
+			return str_replace(array('&#40;', '&#41;','&#8722;&#8722;'),array('(', ')', '--'), $file_name);
 		}
 	}

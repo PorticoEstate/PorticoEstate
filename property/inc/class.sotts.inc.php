@@ -967,29 +967,42 @@
 				$this->db->query("UPDATE fm_tenant SET contact_phone='{$ticket['extra']['contact_phone']}' WHERE id='{$ticket['extra']['tenant_id']}'", __LINE__, __FILE__);
 			}
 
-			if (isset($ticket['origin']) && is_array($ticket['origin']))
-			{
-				if ($ticket['origin'][0]['data'][0]['id'])
-				{
-					$ticket['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']);
-					$ticket['origin_item_id'] = $ticket['origin'][0]['data'][0]['id'];
-				}
-			}
+			$interlink = CreateObject('property.interlink');
 
-			if (isset($ticket['origin_id']) && $ticket['origin_id'] && isset($ticket['origin_item_id']) && $ticket['origin_item_id'])
+			if (isset($ticket['origin']) && $ticket['origin'] && isset($ticket['origin_id']) && $ticket['origin_id'] )
 			{
+				$ticket['origin_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin']);
+				$ticket['origin_item_id'] = $ticket['origin_id'];
+
 				$interlink_data = array
 					(
-					'location1_id' => $ticket['origin_id'],
+					'location1_id' => $ticket['origin_location_id'],
 					'location1_item_id' => $ticket['origin_item_id'],
 					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 					'location2_item_id' => $id,
 					'account_id' => $this->account
 				);
+
+				$interlink->add($interlink_data, $this->db);
+
+				if($ticket['origin']==".project.request")
+				{
+					$config = CreateObject('phpgwapi.config', 'property');
+					$config->read();
+					$request_ticket_hookup_status = isset($config->config_data['request_ticket_hookup_status']) && $config->config_data['request_ticket_hookup_status'] ? $config->config_data['request_ticket_hookup_status'] : false;
+
+					if ($request_ticket_hookup_status)
+					{
+						$this->db->query("UPDATE fm_request SET status='{$request_ticket_hookup_status}' WHERE id='" . (int) $ticket['origin_item_id'] . "'", __LINE__, __FILE__);
+					}
+
+					phpgwapi_cache::message_set(lang('request %1 has been edited', $ticket['origin_item_id']), 'message');
+				}
 			}
-			else if (isset($ticket['extra']) && is_array($ticket['extra']) && isset($ticket['extra']['p_num']) && $ticket['extra']['p_num'])
+
+			if (isset($ticket['extra']) && is_array($ticket['extra']) && isset($ticket['extra']['p_num']) && $ticket['extra']['p_num'])
 			{
-				$ticket['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$ticket['extra']['p_entity_id']}.{$ticket['extra']['p_cat_id']}");
+				$ticket['origin_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$ticket['extra']['p_entity_id']}.{$ticket['extra']['p_cat_id']}");
 
 				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = ' . (int)$ticket['extra']['p_entity_id'] . ' AND id = ' . (int)$ticket['extra']['p_cat_id']);
 				$this->db->next_record();
@@ -998,17 +1011,12 @@
 
 				$interlink_data = array
 					(
-					'location1_id' => $ticket['origin_id'],
+					'location1_id' => $ticket['origin_location_id'],
 					'location1_item_id' => $ticket['origin_item_id'],
 					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 					'location2_item_id' => $id,
 					'account_id' => $this->account
 				);
-			}
-
-			if ($interlink_data)
-			{
-				$interlink = CreateObject('property.interlink');
 				$interlink->add($interlink_data, $this->db);
 			}
 

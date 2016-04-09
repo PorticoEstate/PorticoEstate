@@ -1420,7 +1420,7 @@ JS;
 					array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'budget', 'label' => lang('budget'), 'sortable' => true, 'resizeable' => false,
-						'formatter' => 'FormatterRight')),
+						'formatter' => 'JqueryPortico.FormatterAmount0')),
 				'data' => json_encode($related),
 				'config' => array(
 					array('disableFilter' => true),
@@ -1599,6 +1599,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::add_javascript('property', 'portico', 'request.edit.js');
+			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('request', 'datatable_inline', 'files', 'attributes_form'), array(
 				'edit' => $data));
 		}
