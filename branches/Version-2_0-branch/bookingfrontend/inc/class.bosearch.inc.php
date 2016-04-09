@@ -53,9 +53,13 @@
 
 			$_filter_building['part_of_town_id'] = $filter_part_of_town;
 
+			$buildings = array();
 			if ($filter_top_level && !$building_id && !$searchterm)
 			{
 				$buildings = $this->sobuilding->get_buildings_from_activity($filter_top_level);
+			}
+			if ($buildings)
+			{
 				$_filter_building['id'] = $buildings;
 			}
 			if ($building_id)

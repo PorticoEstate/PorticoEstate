@@ -253,11 +253,35 @@ HTML;
 	 * Get HTML listbox with request status that are to be set when request is added to a project
 	 *
 	 * @param $config
-	 * @return string HTML checkboxes to be placed in a table
+	 * @return string HTML listbox to be placed in a table
 	 */
 	function request_project_hookup_status( $config )
 	{
 		$status_assigned = isset($config['request_project_hookup_status']) ? $config['request_project_hookup_status'] : '';
+		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
+			'selected' => $status_assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+	/**
+	 * Get HTML listbox with request status that are to be set when request is added to a ticket
+	 *
+	 * @param $config
+	 * @return string HTML listbox to be placed in a table
+	 */
+	function request_ticket_hookup_status( $config )
+	{
+		$status_assigned = isset($config['request_ticket_hookup_status']) ? $config['request_ticket_hookup_status'] : '';
 		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
 			'selected' => $status_assigned));
 
