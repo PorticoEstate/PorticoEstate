@@ -190,6 +190,30 @@
 		/**
 		 * View File - echo (or download) to browser.
 		 *
+		 * @param intenger $file_id
+		 *
+		 * @return null
+		 */
+		function get_file( $file_id )
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$this->vfs->override_acl = 1;
+
+			$document = $this->vfs->get($file_id);
+
+			$this->vfs->override_acl = 0;
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($document['name'], $document['mime_type'], $document['size']);
+			echo $document['content'];
+		}
+
+		/**
+		 * View File - echo (or download) to browser.
+		 *
 		 * @param string $type part of path where to look for files
 		 * @param string $file optional filename
 		 *
@@ -295,8 +319,9 @@
 			return $attachments;
 		}
 
-		function strip_entities_from_name($file_name)
+		function strip_entities_from_name( $file_name )
 		{
-			return str_replace(array('&#40;', '&#41;','&#8722;&#8722;'),array('(', ')', '--'), $file_name);
+			return str_replace(array('&#40;', '&#41;', '&#8722;&#8722;'), array('(', ')',
+				'--'), $file_name);
 		}
 	}
