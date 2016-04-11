@@ -209,8 +209,6 @@
 				$errorString = $errorString . "filename:$this->filename \n";
 				throw new InvalidArgumentException($errorString);
 			}
-			$file = array();
-			$file['file_action'][0] = $this->filename;
 			if($this->subModule)
 			{
 				$path = "/$this->subModule/";
@@ -219,7 +217,32 @@
 			{
 				$path = "/";
 			}
-			$recieve = $this->bofiles->delete_file($path, $file);
+
+			$file = "{$this->bofiles->fakebase}{$path}{$this->filename}";
+
+			if ($this->bofiles->vfs->file_exists(array(
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE)
+				)))
+			{
+				$this->bofiles->vfs->override_acl = 1;
+
+				if (!$this->bofiles->vfs->rm(array(
+						'string' => $file,
+						'relatives' => array(
+							RELATIVE_NONE
+						)
+					)))
+				{
+					$recieve['error'][] = array('msg' => lang('failed to delete file') . ' :' . $this->bofiles->fakebase . $path . $this->filename);
+				}
+				else
+				{
+					$recieve['message'][] = array('msg' => lang('file deleted') . ' :' . $this->bofiles->fakebase . $path . $this->filename);
+				}
+				$this->bofiles->vfs->override_acl = 0;
+			}
+
 			if($recieve['message'])
 			{
 				$result = $recieve['message'][0]["msg"];

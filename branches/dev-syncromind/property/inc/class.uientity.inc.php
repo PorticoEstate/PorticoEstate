@@ -277,13 +277,13 @@
 			$bofiles = CreateObject('property.bofiles');
 			if (isset($values['file_action']) && is_array($values['file_action']))
 			{
-				$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
+				$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/" ,$values);
 			}
 
 			if (isset($values['file_jasperaction']) && is_array($values['file_jasperaction']))
 			{
 				$values['file_action'] = $values['file_jasperaction'];
-				$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
+				$bofiles->delete_file("{$this->category_dir}/{$loc1}/{$id}/" ,$values);
 			}
 
 			$files = array();
@@ -953,8 +953,8 @@
 			{
 				$content_files[] = array
 					(
-					'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . '&amp;file_name=' . urlencode($_entry['name']) . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
-					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['name'] . '" title="' . lang('Check to delete file') . '">'
+					'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">'
 				);
 			}
 
@@ -1051,17 +1051,11 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$file_name = urldecode(phpgw::get_var('file_name'));
-			$loc1 = phpgw::get_var('loc1', 'string', 'REQUEST', 'dummy');
-			if ($this->type_app[$this->type] == 'catch')
-			{
-				$loc1 = 'dummy';
-			}
-			$id = phpgw::get_var('id', 'int');
+			$file_id = phpgw::get_var('file_id', 'int');
 			$jasper = phpgw::get_var('jasper', 'bool');
 
 			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file("{$this->category_dir}/{$loc1}", '', $jasper);
+			$bofiles->get_file($file_id, $jasper);
 		}
 
 		function index()

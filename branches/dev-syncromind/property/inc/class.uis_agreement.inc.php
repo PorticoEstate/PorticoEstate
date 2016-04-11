@@ -174,8 +174,7 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file('service_agreement');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		private function _get_Filters()
@@ -977,7 +976,6 @@
 			phpgwapi_jquery::load_widget('core');
 //			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
-			$config = CreateObject('phpgwapi.config', 'property');
 			$boalarm = CreateObject('property.boalarm');
 			$get_items = false;
 
@@ -1083,8 +1081,6 @@
 				'id' => $id
 			);
 
-			$config->read();
-			$link_to_files = $config->config_data['files_url'];
 
 			$j = count($values['files']);
 			for ($i = 0; $i < $j; $i++)
@@ -1302,15 +1298,8 @@
 
 			for ($z = 0; $z < count($values['files']); $z++)
 			{
-				if ($link_to_files != '')
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_to_files . '/' . $values['files'][$z]['directory'] . '/' . $values['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_name=' . $values['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
-				}
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['name'] . '" title="' . lang('Check to delete file') . '">';
+				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $values['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
 			}
 
 			$myColumnDefs2 = array
@@ -2247,7 +2236,6 @@
 			}
 
 			$s_agreement_id = phpgw::get_var('id'); // in case of bigint
-			$config = CreateObject('phpgwapi.config', 'property');
 
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
@@ -2325,10 +2313,6 @@
 				'menuaction' => 'property.uis_agreement.view_file',
 				'id' => $s_agreement_id
 			);
-
-
-			$config->read();
-			$link_to_files = $config->config_data['files_url'];
 
 			$j = count($s_agreement['files']);
 			for ($i = 0; $i < $j; $i++)
@@ -2450,14 +2434,7 @@
 
 			for ($z = 0; $z < count($s_agreement['files']); $z++)
 			{
-				if ($link_to_files != '')
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_to_files . '/' . $s_agreement['files'][$z]['directory'] . '/' . $s_agreement['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $s_agreement['files'][$z]['name'] . '</a>';
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_name=' . $s_agreement['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $s_agreement['files'][$z]['name'] . '</a>';
-				}
+				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $s_agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $s_agreement['files'][$z]['name'] . '</a>';
 			}
 
 			$myColumnDefs2 = array

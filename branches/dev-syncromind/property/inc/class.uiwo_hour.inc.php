@@ -1433,9 +1433,15 @@ HTML;
 					if (isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles = CreateObject('property.bofiles');
-						$attachments = $bofiles->get_attachments("/project/{$project['project_id']}/", $values['file_action']['project']);
-						$attachments = array_merge($attachments, $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']['workorder']));
-						$attachment_log = lang('attachments') . ': ' . implode(', ', $values['file_action']['project']) . ', ' . implode(', ', $values['file_action']['workorder']);
+						$attachments = $bofiles->get_attachments($values['file_action']['project']);
+						$attachments = array_merge($attachments, $bofiles->get_attachments($values['file_action']['workorder']));
+						$_attachment_log = array();
+						foreach ($attachments as $_attachment)
+						{
+							$_attachment_log[] = $_attachment['name'];
+						}
+
+						$attachment_log = lang('attachments') . ': ' . implode(', ', $_attachment_log);
 					}
 
 					if ($send_as_pdf)
@@ -1614,7 +1620,6 @@ HTML;
 			);
 
 			$content_files = array();
-			$link_to_files = (isset($this->config->config_data['files_url']) ? $this->config->config_data['files_url'] : '');
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 			
 			$files = $workorder['files'] ? $workorder['files'] : array();
@@ -1623,15 +1628,8 @@ HTML;
 
 			for ($z = 0; $z < count($files); $z++)
 			{
-				if ($link_to_files)
-				{
-					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = "<a href='{$link_view_file}&amp;file_name={$files[$z]['file_name']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				}
-				$content_files[$z]['select_file'] = "<input type='checkbox' name='values[file_action][workorder][]' value='{$files[$z]['name']}' title='{$lang_select_file}'>";
+				$content_files[$z]['file_name'] = "<a href='{$link_view_file}&amp;file_id={$files[$z]['file_id']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				$content_files[$z]['select_file'] = "<input type='checkbox' name='values[file_action][workorder][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
 			}
 
 			$project_link_file_data = array
@@ -1647,15 +1645,8 @@ HTML;
 			$i = $z;
 			for ($z = 0; $z < count($files); $z++)
 			{
-				if ($link_to_files)
-				{
-					$content_files[$i]['file_name'] = "<a href='{$link_to_files}/{$files[$z]['directory']}/{$files[$z]['file_name']} target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				}
-				else
-				{
-					$content_files[$i]['file_name'] = "<a href='{$link_view_file}&amp;file_name={$files[$z]['file_name']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				}
-				$content_files[$i]['select_file'] = "<input type='checkbox' name='values[file_action][project][]' value='{$files[$z]['name']}' title='{$lang_select_file}'>";
+				$content_files[$i]['file_name'] = "<a href='{$link_view_file}&amp;file_id={$files[$z]['file_id']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
+				$content_files[$i]['select_file'] = "<input type='checkbox' name='values[file_action][project][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
 				$i ++;
 			}
 

@@ -140,7 +140,7 @@
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uicondition_survey.download',
 						'export' => true, 'allrows' => true)),
-					'new_item'	=> self::link(array('menuaction' => 'property.uicondition_survey.add')),
+					'new_item' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 					'allrows' => true,
 					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
 					'field' => array(
@@ -438,7 +438,7 @@
 				(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files',
-					'id' => $id, 'phpgw_return_as' => 'json'))),
+						'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $file_def,
 				'config' => array(
 					array('disableFilter' => true),
@@ -472,7 +472,7 @@
 				(
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request',
-					'id' => $id, 'phpgw_return_as' => 'json'))),
+						'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def,
 				'config' => array(
 					array('allrows' => true),
@@ -503,7 +503,7 @@
 				(
 				'container' => 'datatable-container_2',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation',
-					'id' => $id, 'phpgw_return_as' => 'json'))),
+						'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $summation_def,
 				'config' => array(
 					array('disableFilter' => true),
@@ -562,7 +562,7 @@
 		{
 			if (!$_POST)
 			{
-				return	$this->edit();
+				return $this->edit();
 			}
 
 			$id = (int)phpgw::get_var('id');
@@ -681,8 +681,8 @@
 			{
 				$values[] = array
 					(
-					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
+					'file_name' => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['file_id']}' title='$lang_delete'>",
 				);
 			}
 
@@ -792,9 +792,7 @@
 			{
 				return lang('no access');
 			}
-
-			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file('condition_survey');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		/**
@@ -815,7 +813,7 @@
 
 			if (isset($_POST['file_action']) && is_array($_POST['file_action']))
 			{
-				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
+				$bofiles->delete_file("/condition_survey/{$id}/",array('file_action' => $_POST['file_action']));
 			}
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
@@ -829,9 +827,9 @@
 
 				$to_file = $bofiles->fakebase . '/condition_survey/' . $id . '/' . $file_name;
 				if ($bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
 				{
 					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
 				}
@@ -841,9 +839,9 @@
 					$bofiles->vfs->override_acl = 1;
 
 					if (!$bofiles->vfs->cp(array(
-						'from' => $_FILES['file']['tmp_name'],
-						'to' => $to_file,
-						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							'from' => $_FILES['file']['tmp_name'],
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
 						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
 					}
@@ -934,7 +932,7 @@
 					'relatives' => array(
 						RELATIVE_NONE
 					)
-				)
+					)
 				);
 
 				$bofiles->create_document_dir("condition_survey/{$id}");
@@ -1241,7 +1239,7 @@
 		 *
 		 * @param string  $query
 		 *
-		 * @return array 
+		 * @return array
 		 */
 		public function get_users()
 		{
@@ -1274,7 +1272,7 @@
 		 *
 		 * @param string  $query
 		 *
-		 * @return array 
+		 * @return array
 		 */
 		public function get_vendors()
 		{
@@ -1481,7 +1479,7 @@
 				(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation',
-					'id' => $id, 'phpgw_return_as' => 'json'))),
+						'id' => $id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $summation_def
 			);
 

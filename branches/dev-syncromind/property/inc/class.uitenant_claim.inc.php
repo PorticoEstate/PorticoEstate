@@ -108,8 +108,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
 					'perm' => PHPGW_ACL_READ, 'acl_location' => $this->acl_location));
 			}
-			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file('tenant_claim');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		private function _get_filter_tenant()
@@ -751,8 +750,6 @@
 				'id' => $claim_id
 			);
 
-			$link_to_files = (isset($config->config_data['files_url']) ? $config->config_data['files_url'] : '');
-
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
 			$_files = $this->bo->get_files($claim_id);
@@ -763,15 +760,8 @@
 			$content_files = array();
 			foreach ($_files as $_file)
 			{
-				if ($link_to_files)
-				{
-					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
-				}
-				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_id={$_file['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['file_id']}\" title=\"{$lang_delete_file}\">";
 				$z++;
 			}
 
