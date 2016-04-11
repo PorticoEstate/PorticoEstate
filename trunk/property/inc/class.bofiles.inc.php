@@ -150,16 +150,23 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each file
 		 */
-		function delete_file( $path, $values )
+		function delete_file($path, $values )
 		{
 			$receipt = array();
 
-			foreach ($values['file_action'] as $file_name)
+			foreach ($values['file_action'] as $file_id)
 			{
-				$file_name = html_entity_decode($file_name);
-				$file_name = $this->strip_entities_from_name($file_name);
+				$file_info = $this->vfs->get_info($file_id);
 
-				$file = "{$this->fakebase}{$path}{$file_name}";
+				$check_path = trim("{$this->fakebase}{$path}", "/");
+
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+
+				if($check_path != trim($file_info['directory'], "/"))
+				{
+					phpgwapi_cache::message_set( "deleting file from wrong location", 'error');
+					return false;
+				}
 
 				if ($this->vfs->file_exists(array(
 						'string' => $file,
@@ -175,11 +182,11 @@
 							)
 						)))
 					{
-						$receipt['error'][] = array('msg' => lang('failed to delete file') . ' :' . $this->fakebase . $path . $file_name);
+						phpgwapi_cache::message_set(lang('failed to delete file') . ' :' .$file, 'error');
 					}
 					else
 					{
-						$receipt['message'][] = array('msg' => lang('file deleted') . ' :' . $this->fakebase . $path . $file_name);
+						phpgwapi_cache::message_set(lang('file deleted') . ' :' . $file, 'message');
 					}
 					$this->vfs->override_acl = 0;
 				}
@@ -194,21 +201,43 @@
 		 *
 		 * @return null
 		 */
-		function get_file( $file_id )
+		function get_file( $file_id, $jasper = false )
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			$this->vfs->override_acl = 1;
 
-			$document = $this->vfs->get($file_id);
+			if (!$jasper)
+			{
+				$this->vfs->override_acl = 1;
 
-			$this->vfs->override_acl = 0;
+				$document = $this->vfs->get($file_id);
 
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($document['name'], $document['mime_type'], $document['size']);
-			echo $document['content'];
+				$this->vfs->override_acl = 0;
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($document['name'], $document['mime_type'], $document['size']);
+				echo $document['content'];
+			}
+			else //Execute the jasper report
+			{
+				$output_type = 'PDF';
+				$file_info = $this->vfs->get_info($file_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+
+				$report_source = "{$this->rootdir}{$file}";
+				$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
+				try
+				{
+					$jasper_wrapper->execute('', $output_type, $report_source);
+				}
+				catch (Exception $e)
+				{
+					$error = $e->getMessage();
+					//FIXME Do something clever with the error
+					echo "<H1>{$error}</H1>";
+				}
+			}
 		}
 
 		/**
@@ -293,28 +322,21 @@
 		 *
 		 * @return array Array with filecontent
 		 */
-		function get_attachments( $path, $values )
+		function get_attachments( $values )
 		{
-			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
-			foreach ($values as $file_name)
+			foreach ($values as $file_id)
 			{
-				$file_name = $this->strip_entities_from_name($file_name);
-				$file = "{$this->fakebase}{$path}{$file_name}";
+				$file_info = $this->vfs->get_info($file_id);
 
-				if ($this->vfs->file_exists(array(
-						'string' => $file,
-						'relatives' => array(RELATIVE_NONE))))
-				{
-					$mime = $mime_magic->filename2mime($file_name);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
 
-					$attachments[] = array
-						(
-						'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
-						'name' => $file_name,
-						'type' => $mime
-					);
-				}
+				$attachments[] = array
+					(
+					'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+					'name' => $file_info['name'],
+					'type' => $file_info['mime_type']
+				);
 			}
 			return $attachments;
 		}
