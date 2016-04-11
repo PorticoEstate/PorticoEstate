@@ -1480,8 +1480,8 @@
 				$content_files[] = array
 					(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
-					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['name'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['name'] . '" title="' . lang('Check to attach file') . '">'
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
 				);
 			}
 
@@ -2101,8 +2101,13 @@
 				if (isset($values['file_attach']) && is_array($values['file_attach']))
 				{
 					$bofiles = CreateObject('property.bofiles');
-					$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
-					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $values['file_attach']);
+					$attachments = $bofiles->get_attachments($values['file_attach']);
+					$_attachment_log = array();
+					foreach ($attachments as $_attachment)
+					{
+						$_attachment_log[] = $_attachment['name'];
+					}
+					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
 				}
 
 				if (isset($values['send_order_format']) && $values['send_order_format'] == 'pdf')
@@ -2344,8 +2349,8 @@
 			for ($z = 0; $z < count($ticket['files']); $z++)
 			{
 				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $ticket['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $ticket['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $ticket['files'][$z]['name'] . '" title="' . lang('Check to delete file') . '">';
-				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="' . $ticket['files'][$z]['name'] . '" title="' . lang('Check to attach file') . '">';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
+				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to attach file') . '">';
 			}
 
 

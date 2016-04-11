@@ -681,8 +681,8 @@
 			{
 				$values[] = array
 					(
-					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
+					'file_name' => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['file_id']}' title='$lang_delete'>",
 				);
 			}
 
@@ -792,9 +792,7 @@
 			{
 				return lang('no access');
 			}
-
-			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file('condition_survey');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		/**
@@ -815,7 +813,7 @@
 
 			if (isset($_POST['file_action']) && is_array($_POST['file_action']))
 			{
-				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
+				$bofiles->delete_file("/condition_survey/{$id}/",array('file_action' => $_POST['file_action']));
 			}
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 

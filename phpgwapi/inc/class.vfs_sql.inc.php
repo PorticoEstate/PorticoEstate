@@ -755,9 +755,11 @@
 		}
 
 		/*
-		 * get file by id
+		 * get file info by id
+		 *
+		 * @return Array of file information.
 		 */
-		function get($file_id)
+		function get_info( $file_id )
 		{
 			$file_id = (int) $file_id;
 			$query = $GLOBALS['phpgw']->db->query("SELECT directory, name FROM phpgw_vfs WHERE file_id={$file_id}", __LINE__, __FILE__);
@@ -773,19 +775,26 @@
 					'checksubdirs' => false,
 					'nofiles' => true
 				));
+			
+			return isset($ls_array[0]) && $ls_array[0] ? $ls_array[0] : array();
+		}
 
-			$content =  $this->read(array(
-					'string' => "{$directory}/$name",
+		/*
+		 * get file by id
+		 *
+		 * @return Array of file information and file content
+		 */
+		function get($file_id)
+		{
+			$file_info = $this->get_info( $file_id );
+
+			$file_info['content'] =  $this->read(array(
+					'string' => "{$file_info['directory']}/{$file_info['name']}",
 					'relatives' => array(RELATIVE_NONE)
 				)
 			);
 
-			return array(
-				'name'		=> $ls_array[0]['name'],
-				'mime_type' => $ls_array[0]['mime_type'],
-				'size'		=> $ls_array[0]['size'],
-				'content'	=> $content
-			);
+			return $file_info;
 		}
 		/*
 		 * See vfs_shared
