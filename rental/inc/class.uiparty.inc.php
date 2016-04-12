@@ -730,6 +730,36 @@ JS;
 				);
 
 				$tabs['documents'] = array('label' => lang('Documents'), 'link' => '#documents');
+				$tabletools_documents = array();
+				$tabletools_documents[] = array
+				(
+				'my_name' => 'view',
+				'text' => lang('show'),
+				'action' => self::link(array(
+					'menuaction' => 'rental.uidocument.view'
+				)),
+				'parameters' => json_encode(array('parameter' => array(array('name' => 'id',
+							'source' => 'id'))))
+				);
+				if ($mode == 'edit')
+				{
+					$tabletools_documents[] = array
+						(
+						'my_name' => 'delete',
+						'text' => lang('remove'),
+						'type' => 'custom',
+						'custom_code' => "
+							var oArgs = " . json_encode(array(
+							'menuaction' => 'rental.uidocument.delete',
+							'phpgw_return_as' => 'json'
+						)) . ";
+							var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
+									'source' => 'id')))) . ";
+							removeDocument(oArgs, parameters);
+						"
+					);
+				}
+
 				$datatable_def[] = array
 					(
 					'container' => 'datatable-container_1',
@@ -741,6 +771,7 @@ JS;
 						array('key' => 'type', 'label' => lang('type'), 'sortable' => true),
 						array('key' => 'name', 'label' => lang('name'), 'sortable' => true)
 					),
+					'tabletools' => $tabletools_documents,
 					'config' => array(
 						array('disableFilter' => true),
 						array('disablePagination' => true)
