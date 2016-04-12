@@ -658,6 +658,7 @@
 
 		private function _get_tableDef_document( $mode, $contract_id, $permission = false )
 		{
+			$tabletools_documents = array();
 			$tabletools_documents[] = array
 				(
 				'my_name' => 'view',
