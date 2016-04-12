@@ -1903,7 +1903,7 @@
 				if(isset($values['file_attach']) && is_array($values['file_attach']))
 				{
 //					$bofiles	= CreateObject('helpdesk.bofiles' '/helpdesk');
-					$attachments = $bofiles->get_attachments("/{$id}/", $values['file_attach']);
+					$attachments = $bofiles->get_attachments($values['file_attach']);
 					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
 				}
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -2090,22 +2090,13 @@
 				);	
 
 
-			$link_to_files = (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
-
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 
 			for($z=0; $z<count($ticket['files']); $z++)
 			{				
-				if ($link_to_files != '')
-				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$ticket['files'][$z]['name'].'</a>';
-				}				
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
-				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to attach file').'">';
+				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_id='.$ticket['files'][$z]['file_id'].'" target="_blank" title="'.lang('click to view file').'">'.$ticket['files'][$z]['name'].'</a>';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$ticket['files'][$z]['file_id'].'" title="'.lang('Check to delete file').'">';
+				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="'.$ticket['files'][$z]['file_id'].'" title="'.lang('Check to attach file').'">';
 			}							
 
 			$datavalues[2] = array
@@ -2301,8 +2292,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'helpdesk.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$bofiles	= CreateObject('property.bofiles','/helpdesk');
-			$bofiles->view_file('fmticket');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		protected function _generate_tabs($history='')

@@ -172,8 +172,7 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$bofiles = CreateObject('property.bofiles');
-			$bofiles->view_file('agreement');
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		private function _get_Filters()
@@ -1427,8 +1426,8 @@
 
 			for ($z = 0; $z < count($agreement['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_name=' . $agreement['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $agreement['files'][$z]['name'] . '" title="' . lang('Check to delete file') . '">';
+				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $agreement['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
 			}
 
 			$myColumnDefs2 = array
@@ -2232,14 +2231,7 @@
 
 			for ($z = 0; $z < count($agreement['files']); $z++)
 			{
-				if ($link_to_files != '')
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_to_files . '/' . $agreement['files'][$z]['directory'] . '/' . $agreement['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_name=' . $agreement['files'][$z]['file_name'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
-				}
+				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
 			}
 
 			$myColumnDefs2 = array
