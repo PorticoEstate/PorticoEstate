@@ -54,7 +54,7 @@ $(function ()
 		changeMonth: true,
 		changeYear: true,
 		firstDay: 1,
-		dateFormat: 'yy,mm,dd',
+		dateFormat: 'yy-mm-dd',
 		onSelect: function (a, e)
 		{
 			if (a != schedule.dateSelected)
