@@ -44,7 +44,7 @@
 						$like_clauses[] = "rental_composite.address_2 $this->like $like_pattern";
 						$like_clauses[] = "rental_composite.house_number $this->like $like_pattern";
 						break;
-					case "property_id":
+					case "location_code":
 						$like_clauses[] = "rental_unit.location_code $this->like $like_pattern";
 						break;
 					case "all":

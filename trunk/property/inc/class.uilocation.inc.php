@@ -1113,7 +1113,7 @@ JS;
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'rental.uicontract.index',
-							'search_type' => 'location_id',
+							'search_type' => 'location_code',
 							'contract_status' => 'all',
 							'populate_form' => 'yes'
 						)),
@@ -1127,7 +1127,7 @@ JS;
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'rental.uicomposite.index',
-							'search_type' => 'location_id',
+							'search_type' => 'location_code',
 							'populate_form' => 'yes'
 						)),
 						'parameters' => json_encode($parameters3)
