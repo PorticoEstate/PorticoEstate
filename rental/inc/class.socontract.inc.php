@@ -128,7 +128,7 @@
 					case "composite_address":
 						$composite_address = true;
 						break;
-					case "location_id":
+					case "location_code":
 						$like_clauses[] = "r_u.location_code like '{$search_for}%'";
 						break;
 					case "all":

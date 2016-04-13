@@ -44,8 +44,13 @@
 				array('id' => 'all', 'name' => lang('all')),
 				array('id' => 'name', 'name' => lang('name')),
 				array('id' => 'address', 'name' => lang('address')),
-				array('id' => 'property_id', 'name' => lang('object_number'))
+				array('id' => 'location_code', 'name' => lang('object_number'))
 			);
+			$search_type = phpgw::get_var('search_type');
+			foreach ($search_option as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $search_type ? 1 : 0;
+			}
 			$filters[] = array
 				(
 				'type' => 'filter',
@@ -423,14 +428,6 @@
 								'name' => 'availability_date_to',
 								'value' => '',
 								'text' => lang('to')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'rental.uicomposite.add'
-								)),
-								'class' => 'new_item'
 							)
 						)
 					)
@@ -448,6 +445,7 @@
 						'allrows' => true
 					)),
 					'allrows' => true,
+					'new_item' => self::link(array('menuaction' => 'rental.uicomposite.add')),
 					'editor_action' => '',
 					'field' => array(),
 					'query' => phpgw::get_var('search_for')
@@ -861,7 +859,7 @@
 					'selected' => 0);
 				$contracts_search_options[] = array('id' => 'composite_address', 'name' => lang('composite_address'),
 					'selected' => 0);
-				$contracts_search_options[] = array('id' => 'location_id', 'name' => lang('object_number'),
+				$contracts_search_options[] = array('id' => 'location_code', 'name' => lang('object_number'),
 					'selected' => 0);
 
 				$status_options[] = array('id' => 'all', 'name' => lang('all'), 'selected' => 1);

@@ -109,8 +109,13 @@
 				array('id' => 'party_name', 'name' => lang('party_name')),
 				array('id' => 'composite', 'name' => lang('composite_name')),
 				array('id' => 'composite_address', 'name' => lang('composite_address')),
-				array('id' => 'location_id', 'name' => lang('object_number'))
+				array('id' => 'location_code', 'name' => lang('object_number'))
 			);
+			$search_type = phpgw::get_var('search_type');
+			foreach ($search_option as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $search_type ? 1 : 0;
+			}
 			$filters[] = array
 				(
 				'type' => 'filter',
@@ -2024,7 +2029,7 @@ JS;
 					array('id' => 'all', 'name' => lang('all'), 'selected' => 1),
 					array('id' => 'name', 'name' => lang('name'), 'selected' => 0),
 					array('id' => 'address', 'name' => lang('address'), 'selected' => 0),
-					array('id' => 'property_id', 'name' => lang('object_number'), 'selected' => 0)
+					array('id' => 'location_code', 'name' => lang('object_number'), 'selected' => 0)
 				);
 
 				$furnish_types_options = array();
