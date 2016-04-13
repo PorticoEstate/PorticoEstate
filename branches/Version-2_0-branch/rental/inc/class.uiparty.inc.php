@@ -433,14 +433,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'rental.uiparty.add'
-								)),
-								'class' => 'new_item'
-							)
 						)
 					)
 				),
@@ -457,6 +449,7 @@
 						'allrows' => true
 					)),
 					'allrows' => true,
+					'new_item' => self::link(array('menuaction' => 'rental.uiparty.add')),
 					'editor_action' => '',
 					'field' => array(
 						array(
