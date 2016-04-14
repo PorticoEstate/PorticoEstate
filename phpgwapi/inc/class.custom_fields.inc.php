@@ -1170,7 +1170,8 @@
 					'get_single_function'		=> $this->_db->f('get_single_function'),
 					'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
 					'short_description'			=> $this->_db->f('short_description'),
-					'javascript_action'			=>$this->_db->f('javascript_action',true),
+					'javascript_action'			=> $this->_db->f('javascript_action',true),
+					'default_value'				=> $this->_db->f('default_value',true)
 				);
 			}
 
