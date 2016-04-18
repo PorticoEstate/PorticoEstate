@@ -975,7 +975,7 @@
 					var temp = {};
 					temp[menuaction] = {}
 					oControls.each(function() {
-						if ( $(this).attr('name') )
+						if ( $(this).attr('name') && $(this).val() != null)
 						{
 							sValue[ $(this).attr('name') ] = $(this).val().replace('"', '"');
 							temp[ $(this).attr('name') ] = $(this).val().replace('"', '"');
@@ -1045,7 +1045,8 @@
 //					console.log(oControls);
 					oControls.each(function()
 					{
-						if ( $(this).attr('name') )
+//						if ( $(this).attr('name') )
+						if ( $(this).attr('name') && $(this).val() != null)
 						{
 							value = $(this).val().replace('"', '"');
 							aoData[ $(this).attr('name') ] = value;
