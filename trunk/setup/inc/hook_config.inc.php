@@ -184,11 +184,11 @@
 	{
 		$hashes = array
 		(
+			'CRYPT'	=> lang('Salted Crypt - strong encryption'),
 			'SSHA'	=> lang('Salted SHA1 - strong encryption'),
 			'SMD5'	=> lang('Salted MD5'),
 			'SHA'	=> lang('SHA1'),
-			'MD5'	=> lang('MD5 - Vulnerable to dictionary attack'),
-			'CRYPT'	=> lang('Crypt - Weak encryption')
+			'MD5'	=> lang('MD5 - Vulnerable to dictionary attack')
 		);
 
 		if ( !isset($config['encryption_type']) )
