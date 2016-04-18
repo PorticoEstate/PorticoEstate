@@ -252,7 +252,7 @@
 
 			foreach ($data as $key => $original_value)
 			{
-				if ((!isset($values['attributes']) || !$values['attributes']) && $data[$key])
+				if ((!isset($values[$key]) || !$values[$key]) && $data[$key])
 				{
 					$values[$key] = $original_value;
 				}
