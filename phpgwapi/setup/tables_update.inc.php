@@ -3300,3 +3300,27 @@
 		}
 	}
 
+	$test[] = '0.9.17.548';
+	/**
+	* New password hash: salted crypt
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_548()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_accounts', 'account_pwd', array
+		(
+			'type'		=> 'varchar',
+			'precision' => 115,
+			'nullable'	=> false,
+			'default'	=> ''
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.549';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
