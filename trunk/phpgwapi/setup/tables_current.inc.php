@@ -54,7 +54,7 @@
 			'fd' => array(
 				'account_id' => array('type' => 'auto','nullable' => False),
 				'account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False),
-				'account_pwd' => array('type' => 'varchar','precision' => '40','nullable' => False),
+				'account_pwd' => array('type' => 'varchar','precision' => 115,'nullable' => False),
 				'account_firstname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'account_lastname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'account_permissions' => array('type' => 'text','nullable' => True),

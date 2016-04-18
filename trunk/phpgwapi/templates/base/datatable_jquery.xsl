@@ -663,7 +663,8 @@
 								oParams.columns = null;
 								oParams.start = null;
 								oParams.draw = null;
-								var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+					//			var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+								var addtional_filterdata = oTable.dataTableSettings[0]['oAjaxData'];
 								for (var attrname in addtional_filterdata)
 								{
 									oParams[attrname] = addtional_filterdata[attrname];
@@ -915,6 +916,11 @@
 				var sDom_def = '<"clear">lfrtip';
 			}
 
+			/*
+			 * Find and assign actions to filters
+			 */
+			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
+
 		$(document).ready(function() {
 
 			/*
@@ -941,11 +947,6 @@
 				menuaction += '_type_' + table_url.searchObject.type;
 			}
 
-			/*
-			 * Find and assign actions to filters
-			 */
-			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
-//console.log(oControls);
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				processing:		true,
