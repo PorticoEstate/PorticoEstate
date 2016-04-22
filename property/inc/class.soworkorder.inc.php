@@ -964,6 +964,10 @@
 					'actual_cost' => $this->db->f('actual_cost'),
 					'continuous' => $this->db->f('continuous'),
 					'fictive_periodization' => $this->db->f('fictive_periodization'),
+					'contract_id' =>	$this->db->f('contract_id'),
+					'tax_code' => $this->db->f('tax_code'),
+					'unspsc_code' => $this->db->f('unspsc_code'),
+					'service_id' => $this->db->f('service_id'),
 				);
 
 				$sql = "SELECT periodization_id,"
@@ -1254,6 +1258,10 @@
 				$workorder['approved'],
 				$workorder['continuous'],
 				$workorder['fictive_periodization'],
+				$workorder['contract_id'],
+				$workorder['tax_code'],
+				$workorder['unspsc_code'],
+				$workorder['service_id'],
 				isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : ''
 			);
 
@@ -1262,7 +1270,8 @@
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,tender_deadline,"
 				. "tender_received,inspection_on_completion,status,"
 				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,"
-				. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,fictive_periodization,mail_recipients  $cols) "
+				. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,fictive_periodization,"
+				. "contract_id, tax_code, unspsc_code, service_id, mail_recipients  $cols) "
 				. "VALUES ( {$values} {$vals})", __LINE__, __FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -1400,6 +1409,10 @@
 				'approved' => $workorder['approved'],
 				'continuous' => $workorder['continuous'],
 				'fictive_periodization' => $workorder['fictive_periodization'],
+				'contract_id' =>	$workorder['contract_id'],
+				'tax_code' => $workorder['tax_code'],
+				'unspsc_code' => $workorder['unspsc_code'],
+				'service_id' => $workorder['service_id'],
 				'mail_recipients' => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 

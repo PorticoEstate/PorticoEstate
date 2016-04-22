@@ -444,3 +444,7 @@ $(document).ready(function ()
 		check_and_submit_valid_session();
 	});
 });
+
+var oArgs = {menuaction: 'property.uiproject.get_external_project'};
+var strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'external_project_name', 'external_project_id', 'external_project_container');

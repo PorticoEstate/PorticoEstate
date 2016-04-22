@@ -182,7 +182,9 @@
 
 
 
+	create_select_box('Filter tickets on assigned to me', 'tts_assigned_to_me', $yes_and_no, '');
 	create_select_box('Notify me by mail when ticket is assigned or altered', 'tts_notify_me', $yes_and_no, '');
+
 	create_select_box('Send e-mail from TTS', 'tts_user_mailnotification', $yes_and_no, 'Send e-mail from TTS as default');
 	create_input_box('Refresh TTS every (seconds)', 'refreshinterval', 'The intervall for Helpdesk refresh - cheking for new tickets');
 

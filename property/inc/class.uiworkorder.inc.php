@@ -64,7 +64,12 @@
 			'columns' => true,
 			'add_invoice' => true,
 			'recalculate' => true,
-			'save' => true
+			'save' => true,
+			'get_vendor_contract'=> true,
+			'get_eco_service'=> true,
+			'get_ecodimb'	=> true,
+			'get_b_account'	=> true,
+			'get_unspsc_code'=> true
 		);
 
 		function __construct()
@@ -653,14 +658,10 @@
 			$boproject = CreateObject('property.boproject');
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-
 			$project_id = phpgw::get_var('project_id', 'int');
 			$values = phpgw::get_var('values');
-			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string');
-			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int');
-			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string');
 			$values['event_id'] = phpgw::get_var('event_id', 'int');
 			$origin = phpgw::get_var('origin');
 			$origin_id = phpgw::get_var('origin_id', 'int');
@@ -1771,7 +1772,7 @@
 					'amount' => $entry['amount'],
 					'approved_amount' => $entry['approved_amount'],
 					'vendor' => $entry['vendor'],
-					'project_group' => $entry['project_id'],
+					'external_project_id' => $entry['project_id'],
 					'currency' => $entry['currency'],
 					'budget_responsible' => $entry['budget_responsible'],
 					'budsjettsigndato' => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
@@ -2336,17 +2337,21 @@
 				'value_extra_mail_address' => $value_extra_mail_address,
 				'lean' => $_lean ? 1 : 0,
 				'decimal_separator' => $this->decimal_separator,
-				'validator' => phpgwapi_jquery::formvalidator_generate(array(
-					'location',
-					'date',
-					'security',
-					'file'))
+				'value_service_id' => $values['service_id'],
+				'value_service_name' => $this->_get_eco_service_name($values['service_id']),
+				'tax_code_list' => array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'tax', 'selected' => $values['tax_code'], 'order' => 'id',
+						'id_in_name' => 'num'))),
+				'contract_list' => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id']) ),
+				'value_unspsc_code' => $values['unspsc_code'],
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($values['unspsc_code']),
 			);
 
 			$appname = lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			phpgwapi_jquery::formvalidator_generate(array('date','security','file'));
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
@@ -2502,16 +2507,12 @@
 				{
 					$values['amount'] = str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'], '', $values['amount']);
 				}
-				$values['amount'] = str_replace(array(
-					' ',
-					','), array(
-					'',
-					'.'), $values['amount']);
+				$values['amount'] = str_replace(array(' ',','), array('','.'), $values['amount']);
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 				$values['b_account_id'] = phpgw::get_var('b_account_id');
-				$values['project_group'] = phpgw::get_var('project_group');
+				$values['external_project_id'] = phpgw::get_var('external_project_id');
 				$values['dimb'] = phpgw::get_var('ecodimb');
 				$values['vendor_id'] = phpgw::get_var('vendor_id');
 			}
@@ -2656,9 +2657,9 @@
 				)
 			);
 
-			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
-				'project_group' => $values['project_group'] ? $values['project_group'] : $project['project_group'],
-				'project_group_descr' => $values['project_group_descr']));
+			$external_project_data = $this->bocommon->initiate_external_project_lookup(array(
+				'external_project_id' => $values['external_project_id'] ? $values['external_project_id'] : $project['external_project_id'],
+				'external_project_name' => $values['external_project_name']));
 
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
@@ -2719,7 +2720,16 @@
 				'value_paid_date' => isset($values['paid_date']) ? $values['paid_date'] : '',
 				'vendor_data' => $vendor_data,
 				'ecodimb_data' => $ecodimb_data,
-				'project_group_data' => $project_group_data,
+				'external_project_data' => $external_project_data,
+				'value_service_id' => $values['service_id'],
+				'value_service_name' => $this->_get_eco_service_name($values['service_id']),
+				'tax_code_list' => array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'tax', 'selected' => $values['tax_code'], 'order' => 'id',
+						'id_in_name' => 'num'))),
+				'contract_list' => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id']) ),
+				'value_unspsc_code' => $values['unspsc_code'],
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($values['unspsc_code']),
+
 				'value_kidnr' => isset($values['kidnr']) ? $values['kidnr'] : '',
 				'value_invoice_id' => isset($values['invoice_id']) ? $values['invoice_id'] : '',
 				'value_voucher_out_id' => isset($values['voucher_out_id']) ? $values['voucher_out_id'] : '',
@@ -2802,6 +2812,134 @@
 				'delete' => $data));
 		}
 
+		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
+			if($selected)
+			{
+				foreach ($contract_list as &$contract)
+				{
+					$contract['selected'] = $selected == $contract['id'] ? 1 : 0;
+				}
+			}
+
+			return $contract_list;
+		}
+
+		/**
+		 * Gets vendor canidated to be used as vendor - called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
+		 * @return array
+		 */
+		public function get_eco_service()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+			$values = $sogeneric->read(array('query' => $query));
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_unspsc_code()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+			$values = $sogeneric->read(array('query' => $query, 'allrows' => true));
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_ecodimb()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'dimb');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_b_account()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+
+		private function _get_eco_service_name( $id )
+		{
+			$ret = '';
+			if($id = (int)$id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				$ret =  $sogeneric_data['name'];
+			}
+			return $ret;
+		}
+
+		private function _get_unspsc_code_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
+		}
+
 		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )
 		{
 			$tabs = array
@@ -2839,4 +2977,5 @@
 
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
+
 	}

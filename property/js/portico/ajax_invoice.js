@@ -38,7 +38,7 @@ $(document).ready(function ()
 		$("#line_text").val('');
 		$("#order_id").val('');
 		$("#order_id_orig").val('');
-		$("#project_group").val('');
+		$("#external_project_id").val('');
 		$("#invoice_id").html('');
 		$("#kid_nr").html('');
 		$("#vendor").html('');
@@ -315,7 +315,7 @@ function update_voucher_filter()
 			}
 			else
 			{
-				htmlString += "<option>Ingen bilag</option>"
+				htmlString += "<option>Ingen bilag</option>";
 				$("#voucher_id_filter").html(htmlString);
 			}
 		}
@@ -383,7 +383,7 @@ function update_form_values(line_id, voucher_id_orig)
 					$("#order_text").html('Bestilling');
 				}
 
-				$("#project_group").val(voucher[0].project_group);
+				$("#external_project_id").val(voucher[0].external_project_id);
 
 				if (update_image)
 				{
@@ -658,7 +658,7 @@ function update_form_values(line_id, voucher_id_orig)
 				$("#voucher_id_text").html('');
 				$("#order_id").val('');
 				$("#order_id_orig").val('');
-				$("#project_group").val('');
+				$("#external_project_id").val('');
 				$("#invoice_id").html('');
 				$("#kid_nr").html('');
 				$("#vendor").html('');

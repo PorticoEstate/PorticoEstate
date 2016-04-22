@@ -68,11 +68,11 @@
 			'date_search' => true,
 			'columns' => true,
 			'bulk_update_status' => true,
-			'project_group' => true,
 			'view_file' => true,
 			'get_orders' => true,
 			'get_vouchers' => true,
-			'check_missing_project_budget' => true
+			'check_missing_project_budget' => true,
+			'get_external_project'=> true,
 		);
 
 		function __construct()
@@ -730,7 +730,7 @@ JS;
 
 			$values = phpgw::get_var('values');
 			$values_attribute = phpgw::get_var('values_attribute');
-			$values['project_group'] = phpgw::get_var('project_group');
+//			$values['external_project_id'] = phpgw::get_var('external_project_id');
 			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
@@ -789,9 +789,9 @@ JS;
 				$sogeneric->get_location_info('b_account_category', false);
 				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
 
-				if (isset($status_data['project_group']) && $status_data['project_group'])//mandatory for this account group
+				if (isset($status_data['external_project']) && $status_data['external_project'])//mandatory for this account group
 				{
-					if (!isset($values['project_group']) || !$values['project_group'])
+					if (!isset($values['external_project_id']) || !$values['external_project_id'])
 					{
 						$this->receipt['error'][] = array('msg' => lang('Please select a project group!'));
 						$error_id = true;
@@ -1545,9 +1545,9 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
-			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
-				'project_group' => $values['project_group'],
-				'project_group_descr' => $values['project_group_descr']));
+			$external_project_data = $this->bocommon->initiate_external_project_lookup(array(
+				'external_project_id' => $values['external_project_id'],
+				'external_project_name' => $values['external_project_name']));
 
 
 			//---datatable settings---------------------------------------------------
@@ -2042,7 +2042,9 @@ JS;
 				'lang_name' => lang('Name'),
 				'lang_project_id' => lang('Project ID'),
 				'value_project_id' => isset($id) ? $id : '',
-				'project_group_data' => $project_group_data,
+//				'external_project_data' => $external_project_data,
+				'value_external_project_id' => $values['external_project_id'],
+				'value_external_project_name' => $this->_get_external_project_name($values['external_project_id']),
 				'value_name' => isset($values['name']) ? $values['name'] : '',
 				'lang_name_statustext' => lang('Enter Project Name'),
 				'lang_other_branch' => lang('Other branch'),
@@ -2143,6 +2145,7 @@ JS;
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			self::add_javascript('property', 'portico', 'project.edit.js');
 			self::render_template_xsl(array('project', 'datatable_inline', 'files', 'attributes_form'), array(
@@ -2240,7 +2243,7 @@ JS;
 					'amount' => $entry['amount'],
 					'approved_amount' => $entry['approved_amount'],
 					'vendor' => $entry['vendor'],
-					'project_group' => $entry['project_id'],
+					'external_project_id' => $entry['project_id'],
 					'currency' => $entry['currency'],
 					'budget_responsible' => $entry['budget_responsible'],
 					'budsjettsigndato' => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
@@ -2599,6 +2602,41 @@ JS;
 				return;
 			}
 			$this->edit(array(), $mode = 'view');
+		}
+
+		public function get_external_project()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'external_project');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		private function _get_external_project_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'external_project');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
 		}
 
 		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )

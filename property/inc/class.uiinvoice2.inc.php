@@ -496,8 +496,8 @@
 				),
 				array
 					(
-					'key' => 'project_group',
-					'label' => lang('project group'),
+					'key' => 'external_project_id',
+					'label' => lang('external project'),
 					'sortable' => false,
 					'formatter' => 'JqueryPortico.FormatterRight',
 				),

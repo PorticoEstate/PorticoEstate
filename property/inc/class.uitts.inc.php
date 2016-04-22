@@ -48,7 +48,13 @@
 			'edit_priority' => true,
 			'update_data' => true,
 			'_print' => true,
-			'columns' => true
+			'columns' => true,
+			'get_vendor_contract'=> true,
+			'get_eco_service'=> true,
+			'get_ecodimb'	=> true,
+			'get_b_account'	=> true,
+			'get_external_project'=> true,
+			'get_unspsc_code'=> true
 		);
 
 		/**
@@ -255,8 +261,42 @@
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
 
-			$this->bo->allrows = true;
-			$list = $this->bo->read($start_date, $end_date, $external, '', $download = true);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => 0,
+				'results' => -1,
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1 ? true : false,
+				'status_id' => $this->bo->status_id,
+				'user_id' => $this->bo->user_id,
+				'reported_by' => $this->bo->reported_by,
+				'cat_id' => $this->bo->cat_id,
+				'vendor_id' => $this->bo->vendor_id,
+				'district_id' => $this->bo->district_id,
+				'part_of_town_id' => $this->bo->part_of_town_id,
+				'allrows' => true,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'location_code' => $this->bo->location_code,
+				'p_num' => $this->bo->p_num,
+				'building_part' => $this->bo->building_part,
+				'b_account' => $this->bo->b_account,
+				'ecodimb' => $this->bo->ecodimb,
+				'branch_id' => phpgw::get_var('branch_id'),
+				'order_dim1' => phpgw::get_var('order_dim1'),
+				'external' => $external,
+				'download' => true
+			);
+//			_debug_array($params); die();
+			$list = $this->bo->read($params);
 
 			$custom_status = $this->bo->get_custom_status();
 
@@ -680,17 +720,19 @@
 					'list' => $values_combo_box[2]
 				);
 
+				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
+
 				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
-					'selected'	=> (int)$this->user_id <= 0 ? 1 : 0));
+					'selected'	=> ((int)$this->user_id < 0  || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
 				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
 				$combos[] = array('type' => 'filter',
 					'name' => 'user_id',
 					'extra' => '',
-					'text' => lang('user'),
+					'text' => lang('assigned to'),
 					'list' => $values_combo_box[4]
 				);
 
@@ -1431,8 +1473,7 @@
 			$function_msg = lang('add ticket');
 
 			self::add_javascript('property', 'portico', 'tts.add.js');
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
-				'file'));
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
@@ -1521,11 +1562,11 @@
 
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
-			$values['ecodimb'] = phpgw::get_var('ecodimb');
+//			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
-			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
+//			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
+//			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
 
 			$values_attribute = phpgw::get_var('values_attribute');
 
@@ -2527,7 +2568,7 @@
 				$my_groups[$group_id] = $group->firstname;
 			}
 
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security',
 				'file'));
 
 			$tabs = array();
@@ -2551,6 +2592,12 @@
 				'vendor_data' => $vendor_data,
 				'b_account_data' => $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
+				'value_service_id' => $ticket['service_id'],
+				'value_service_name' => $this->_get_eco_service_name($ticket['service_id']),
+				'value_external_project_id' => $ticket['external_project_id'],
+				'value_external_project_name' => $this->_get_external_project_name($ticket['external_project_id']),
+				'value_unspsc_code' => $ticket['unspsc_code'],
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($ticket['unspsc_code']),
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
@@ -2587,6 +2634,7 @@
 				'lang_priority_statustext' => lang('Select the priority the selection belongs to.'),
 				'select_priority_name' => 'values[priority]',
 				'priority_list' => array('options' => $this->bo->get_priority_list($ticket['priority'])),
+				'contract_list' => array('options' => $this->get_vendor_contract($ticket['vendor_id'], $ticket['contract_id']) ),
 				'lang_no_cat' => lang('no category'),
 				'value_cat_id' => $this->cat_id,
 				'cat_select' => $cat_select,
@@ -2632,6 +2680,9 @@
 				'order_dim1_list' => array('options' => $this->bocommon->select_category_list(array(
 						'type' => 'order_dim1', 'selected' => $ticket['order_dim1'], 'order' => 'id',
 						'id_in_name' => 'num'))),
+				'tax_code_list' => array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
+						'id_in_name' => 'num'))),
 				'branch_list' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list'] == 1 ? array(
 					'options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) : '',
 				'preview_html' => "javascript:preview_html($id)",
@@ -2640,6 +2691,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
@@ -2661,6 +2713,162 @@
 			}
 
 			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+		}
+
+		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
+			if($selected)
+			{
+				foreach ($contract_list as &$contract)
+				{
+					$contract['selected'] = $selected == $contract['id'] ? 1 : 0;
+				}
+			}
+
+			return $contract_list;
+		}
+
+		/**
+		 * Gets vendor canidated to be used as vendor - called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
+		 * @return array
+		 */
+		public function get_eco_service()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+			$values = $sogeneric->read(array('query' => $query));
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+		public function get_external_project()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'external_project');
+			$values = $sogeneric->read(array('query' => $query));
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_unspsc_code()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+			$values = $sogeneric->read(array('query' => $query, 'allrows' => true));
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_ecodimb()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'dimb');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_b_account()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+
+		private function _get_eco_service_name( $id )
+		{
+			$ret = '';
+			if($id = (int)$id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				$ret =  $sogeneric_data['name'];
+			}
+			return $ret;
+		}
+
+		private function _get_unspsc_code_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
+		}
+		private function _get_external_project_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'external_project');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
 		}
 
 		protected function _generate_tabs( $history = '' )

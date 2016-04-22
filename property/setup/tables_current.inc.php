@@ -518,7 +518,7 @@
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),
-				'project_group' => array('type' => 'int', 'precision' => '2', 'nullable' => True,
+				'external_project' => array('type' => 'int', 'precision' => '2', 'nullable' => True,
 					'default' => '0')
 			),
 			'pk' => array('id'),
@@ -589,6 +589,10 @@
 				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'continuous' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'fictive_periodization' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
+				'service_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
  			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -669,6 +673,7 @@
 				'group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => False),
 				'descr' => array('type' => 'text', 'nullable' => True),
 				'status' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
@@ -1129,6 +1134,11 @@
 				'contact_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_id' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'external_project_id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
+				'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
+				'service_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_descr' => array('type' => 'text', 'nullable' => True),
 				'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
 				'ecodimb' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -1200,6 +1210,17 @@
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
+		'fm_eco_service' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
+				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1703,7 +1724,7 @@
 				'key_deliver' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'other_branch' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'key_responsible' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
-				'project_group' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'external_project_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'planned_cost' => array('type' => 'int', 'precision' => '4', 'nullable' => True,
 					'default' => '0'),
 				'account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
@@ -1761,11 +1782,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_project_group' => array(
+		'fm_external_project' => array(
 			'fd' => array(
-				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+				'id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_unspsc_code' => array(
+			'fd' => array(
+				'id' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

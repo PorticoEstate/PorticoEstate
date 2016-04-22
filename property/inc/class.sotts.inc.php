@@ -125,7 +125,7 @@
 			$start_date = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$allrows = $results == -1 ? true : false;
-			$end_date = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
+			$end_date = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : time();
 			$external = isset($data['external']) ? $data['external'] : '';
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new = isset($data['new']) ? $data['new'] : '';
@@ -236,24 +236,24 @@
 				$where = 'AND';
 			}
 
+
+			$custom_status = $this->get_custom_status();
+			$closed_status = array('X');
+			foreach ($custom_status as $custom)
+			{
+				if ($custom['closed'])
+				{
+					$closed_status[] = "C{$custom['id']}";
+				}
+			}
+			reset($custom_status);
+			$filter_closed = " AND fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
+
+			//get variants of closed
 			if ($status_id == 'X')
 			{
-				$closed = '';
-				$this->db->query('SELECT * from fm_tts_status', __LINE__, __FILE__);
-
-				while ($this->db->next_record())
-				{
-					if ($this->db->f('closed'))
-					{
-						$closed .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
-					}
-				}
-
-				$filtermethod .= " $where ( (fm_tts_tickets.status='X'{$closed})";
+				$filtermethod .= " $where ( fm_tts_tickets.status IN ('" . implode("','", $closed_status) . "')";
 				$where = 'AND';
-
-//				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
-//				$where = 'AND';
 			}
 			else if ($status_id == 'O2') // explicite 'open'
 			{
@@ -263,13 +263,11 @@
 			else if ($status_id == 'O')
 			{
 				$open = '';
-				$this->db->query('SELECT * from fm_tts_status', __LINE__, __FILE__);
-
-				while ($this->db->next_record())
+				foreach ($custom_status as $custom)
 				{
-					if (!$this->db->f('closed'))
+					if (!$custom['closed'])
 					{
-						$open .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
+						$open .= " OR fm_tts_tickets.status = 'C{$custom['id']}'";
 					}
 				}
 
@@ -401,7 +399,7 @@
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 				$_end_date = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$_start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-//				$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
+				$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
 
 				if ($order_add || $order_edit)
 				{
@@ -587,12 +585,11 @@
 
 			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array(
 				'fm_district.descr', 'fm_tts_views.id'), $return_fields_plain);
-			$group_fields_union = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array(
-				'fm_district.descr', 'fm_tts_views.id'), $return_fields_union);
-			$sub_select = "({$union_budget} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset}) UNION ({$union_cost} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset})";
 
 			if ($union_select)
 			{
+				$group_fields_union = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array('fm_district.descr', 'fm_tts_views.id'), $return_fields_union);
+				$sub_select = "({$union_budget} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset}) UNION ({$union_cost} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset})";
 				$main_sql = "SELECT {$return_fields} FROM ({$sub_select} ) as t GROUP BY " . implode(',', array_keys($_return_field_array)) . " {$ordermethod}";
 			}
 			else
@@ -639,25 +636,13 @@
 				$this->db->next_record();
 				unset($sql2);
 
-				$cache_info = array
-					(
+				$cache_info = array(
 					'total_records' => $union_select ? ((int)$this->db->f('cnt') / 2) : $this->db->f('cnt'),
 					'sum_budget' => $this->db->f('sum_budget'),
 					'sum_actual_cost' => $this->db->f('sum_actual_cost'),
 					'sql_hash' => md5($sql_cnt)
 				);
 
-
-				$custom_status = $this->get_custom_status();
-				$closed_status = array('X');
-				foreach ($custom_status as $custom)
-				{
-					if ($custom['closed'])
-					{
-						$closed_status[] = "C{$custom['id']}";
-					}
-				}
-				$filter_closed = " AND fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
 				if ($union_select)
 				{
 					$sub_select = "({$union_budget} {$filtermethod} {$querymethod} {$filter_closed} GROUP BY {$group_fields_union}) UNION ({$union_cost} {$filtermethod} {$querymethod} {$filter_closed} GROUP BY {$group_fields_union})";
@@ -667,6 +652,7 @@
 				{
 					$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id) as t";
 				}
+//					_debug_array($sql2);
 
 				$this->db->query($sql2, __LINE__, __FILE__);
 				$this->db->next_record();
@@ -813,6 +799,11 @@
 				$ticket['contact_id'] = $this->db->f('contact_id');
 				$ticket['order_id'] = $this->db->f('order_id');
 				$ticket['vendor_id'] = $this->db->f('vendor_id');
+				$ticket['contract_id'] = $this->db->f('contract_id',true);
+				$ticket['service_id'] = $this->db->f('service_id',true);
+				$ticket['external_project_id'] = $this->db->f('external_project_id',true);
+				$ticket['unspsc_code'] = $this->db->f('unspsc_code',true);
+				$ticket['tax_code'] = $this->db->f('tax_code');
 				$ticket['b_account_id'] = $this->db->f('b_account_id');
 				$ticket['order_descr'] = $this->db->f('order_descr', true);
 				$ticket['ecodimb'] = $this->db->f('ecodimb');
@@ -1657,10 +1648,15 @@
 				  }
 				 */
 				$value_set['vendor_id'] = $ticket['vendor_id'];
+				$value_set['contract_id'] = $this->db->db_addslashes($ticket['contract_id']);
+				$value_set['service_id'] = $ticket['service_id'];
+				$value_set['external_project_id'] = $this->db->db_addslashes($ticket['external_project_id']);
+				$value_set['unspsc_code'] = $ticket['unspsc_code'];
 				$value_set['b_account_id'] = $ticket['b_account_id'];
 				$value_set['order_descr'] = $this->db->db_addslashes($ticket['order_descr']);
 				$value_set['ecodimb'] = $ticket['ecodimb'];
 				$value_set['branch_id'] = $ticket['branch_id'];
+				$value_set['tax_code'] = $ticket['tax_code'];
 			}
 
 			$value_set = $this->db->validate_update($value_set);
