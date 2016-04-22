@@ -589,7 +589,7 @@
 
 			$values['kostra_id'] = $soXport->get_kostra_id($values['loc1']);
 			$values['mvakode'] = (int)$values['tax_code'];
-			$values['project_id'] = $values['project_group'];
+			$values['project_id'] = $values['external_project_id'];
 
 			$values['oppsynsmannid'] = $values['janitor'];
 			$values['saksbehandlerid'] = $values['supervisor'];

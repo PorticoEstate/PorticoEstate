@@ -718,39 +718,39 @@
 			return $b_account;
 		}
 
-		function initiate_project_group_lookup( $data )
+		function initiate_external_project_lookup( $data )
 		{
-			$project_group = array();
+			$external_project = array();
 
 			if (isset($data['type']) && $data['type'] == 'view')
 			{
-				if (!isset($data['project_group']) || !$data['project_group'])
+				if (!isset($data['external_project_id']) || !$data['external_project_id'])
 				{
-					return $project_group;
+					return $external_project;
 				}
 
-				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_view'), $this->xsl_rootdir);
+				$GLOBALS['phpgw']->xslttpl->add_file(array('external_project_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_form'), $this->xsl_rootdir);
+				$GLOBALS['phpgw']->xslttpl->add_file(array('external_project_form'), $this->xsl_rootdir);
 			}
 
-			$project_group['value_project_group'] = $data['project_group'];
-			$project_group['value_project_group_descr'] = $data['project_group_descr'];
-			$project_group['project_group_url'] = $GLOBALS['phpgw']->link('/index.php', array(
-				'menuaction' => 'property.uilookup.project_group'));
-			$project_group['lang_select_project_group_help'] = lang('click to select project group');
-			$project_group['lang_project_group'] = lang('project group');
-			if ($data['project_group'] && (!isset($data['project_group_descr']) || !$data['project_group_descr']))
+			$external_project['value_external_project_id'] = $data['external_project_id'];
+			$external_project['value_external_project_name'] = $data['external_project_name'];
+			$external_project['external_project_url'] = $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction' => 'property.uilookup.external_project'));
+			$external_project['lang_select_external_project_help'] = lang('click to select external project');
+			$external_project['lang_external_project'] = lang('external project');
+			if ($data['external_project_id'] && (!isset($data['external_project_name']) || !$data['external_project_name']))
 			{
-				$project_group_object = CreateObject('property.sogeneric');
-				$project_group_object->get_location_info('project_group', false);
-				$project_group_data = $project_group_object->read_single(array('id' => $data['project_group']));
-				$project_group['value_project_group_descr'] = $project_group_data['descr'];
-				$project_group['value_project_group_budget'] = $project_group_data['budget'];
+				$external_project_object = CreateObject('property.sogeneric');
+				$external_project_object->get_location_info('external_project', false);
+				$external_project_data = $external_project_object->read_single(array('id' => $data['external_project_id']));
+				$external_project['value_external_project_name'] = $external_project_data['name'];
+				$external_project['value_external_project_budget'] = $external_project_data['budget'];
 			}
-			return $project_group;
+			return $external_project;
 		}
 
 		function initiate_ecodimb_lookup( $data )

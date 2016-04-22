@@ -330,7 +330,16 @@
 						</xsl:attribute>
 					</input>
 				</div>
-				<xsl:call-template name="project_group_form"/>
+				<!--xsl:call-template name="external_project_form"/-->
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'external project')"/>
+					</label>
+					<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
+					<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_id} {value_external_project_name}"/>
+					<div id="external_project_container"/>
+				</div>
+
 				<xsl:choose>
 					<xsl:when test="ecodimb_data!=''">
 						<xsl:call-template name="ecodimb_form"/>

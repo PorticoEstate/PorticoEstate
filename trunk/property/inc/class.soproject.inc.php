@@ -163,12 +163,12 @@
 				$uicols['classname'][] = '';
 				$uicols['sortable'][] = true;
 
-				$cols .= ", project_group";
-				$cols_return[] = 'project_group';
+				$cols .= ", external_project_id";
+				$cols_return[] = 'external_project_id';
 				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'project_group';
-				$uicols['descr'][] = lang('group');
-				$uicols['statustext'][] = lang('Project group');
+				$uicols['name'][] = 'external_project_id';
+				$uicols['descr'][] = lang('external project');
+				$uicols['statustext'][] = lang('external project');
 				$uicols['exchange'][] = false;
 				$uicols['align'][] = '';
 				$uicols['datatype'][] = '';
@@ -529,7 +529,7 @@
 			/*
 			  $group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.entry_date,fm_project.start_date,fm_project.end_date,'
 			  . 'fm_project.name,fm_project.ecodimb,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
-			  . 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
+			  . 'fm_project.budget,fm_project.reserve,planned_cost,external_project_id';
 			 */
 
 			if (is_array($this->grants))
@@ -893,7 +893,7 @@
 					'p_entity_id' => $this->db->f('p_entity_id'),
 					'p_cat_id' => $this->db->f('p_cat_id'),
 					'contact_phone' => $this->db->f('contact_phone'),
-					'project_group' => $this->db->f('project_group'),
+					'external_project_id' => $this->db->f('external_project_id'),
 					'ecodimb' => $this->db->f('ecodimb'),
 					'b_account_id' => $this->db->f('account_group'),
 					'contact_id' => $this->db->f('contact_id'),
@@ -1168,7 +1168,7 @@
 				(
 				$id,
 				$project['project_type_id'],
-				$project['project_group'],
+				$project['external_project_id'],
 				$project['name'],
 				'public',
 				$project['cat_id'],
@@ -1196,7 +1196,7 @@
 
 			$values = $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_project (id,project_type_id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
+			$this->db->query("INSERT INTO fm_project (id,project_type_id,external_project_id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location,periodization_id $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
@@ -1359,7 +1359,7 @@
 			$value_set = array
 				(
 				'project_type_id' => $project['project_type_id'],
-				'project_group' => $project['project_group'],
+				'external_project_id' => $project['external_project_id'],
 				'name' => $project['name'],
 				'status' => $project['status'],
 				'category' => $project['cat_id'],
@@ -1731,12 +1731,12 @@
 				}
 			}
 
-			if (isset($project['project_group']) && $project['project_group'])
+			if (isset($project['external_project_id']) && $project['external_project_id'])
 			{
 				reset($workorders);
 				foreach ($workorders as $workorder_id)
 				{
-					$this->db->query("UPDATE fm_ecobilag SET project_id = '{$project['project_group']}' WHERE pmwrkord_code = '{$workorder_id}' ", __LINE__, __FILE__);
+					$this->db->query("UPDATE fm_ecobilag SET project_id = '{$project['external_project_id']}' WHERE pmwrkord_code = '{$workorder_id}' ", __LINE__, __FILE__);
 				}
 			}
 

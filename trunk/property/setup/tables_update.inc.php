@@ -8838,3 +8838,155 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Add parametres for integration with e-commerse platforms
+	*/
+	$test[] = '0.9.17.696';
+
+	function property_upgrade0_9_17_696()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'contract_id', array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'service_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_eco_service', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'tax_code', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket.order');
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_tts_tickets' WHERE location_id = {$location_id}");
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_tts_tickets');
+		if(isset($metadata['agresso_prosjekt']))
+		{
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_tts_tickets', 'agresso_prosjekt', 'external_project_id');
+			$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name ='agresso_prosjekt'");
+		}
+		else
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'external_project_id', array(
+				'type' => 'varchar',
+				'precision' => 10,
+				'nullable' => True
+				)
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_external_project', array(
+				'fd' => array(
+					'id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+					'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_unspsc_code', array(
+				'fd' => array(
+					'id' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'unspsc_code', array(
+			'type' => 'varchar',
+			'precision' => 15,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_b_account_category', 'project_group', 'external_project');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_project", 'external_project_id', array(
+				'type' => 'varchar',
+				'precision' => 10,
+				'nullable' => True
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET external_project_id = project_group WHERE project_group IS NOT NULL");
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project', array(), 'project_group');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_project_group');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'contract_id', array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'service_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'unspsc_code', array(
+			'type' => 'varchar',
+			'precision' => 15,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'tax_code', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.697';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

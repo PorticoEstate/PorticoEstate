@@ -506,7 +506,7 @@
 					'charge_tenant' => $this->db->f('charge_tenant'),
 					'vendor' => $this->db->f('org_name', true),
 					//			'paid_percent'			=> $this->db->f('paid_percent'),
-					'project_group' => $this->db->f('project_id'),
+					'external_project_id' => $this->db->f('project_id'),
 					'external_ref' => $this->db->f('external_ref'),
 					'currency' => $this->db->f('currency'),
 					'budget_responsible' => $this->db->f('budsjettansvarligid'),
@@ -1031,7 +1031,7 @@
 
 				$value_set = array
 					(
-					//			'project_id'	=> $values['project_group'] ? $values['project_group'] : '',
+					//			'project_id'	=> $values['external_project_id'] ? $values['external_project_id'] : '',
 					'pmwrkord_code' => $values['order_id'],
 					//			'process_log'	=> $this->db->db_addslashes($values['process_log']),
 					//			'process_code'	=> $values['process_code'],
@@ -1090,7 +1090,7 @@
 			$value_set = array
 				(
 				'godkjentbelop' => $values['approved_amount'],
-				'project_id' => $values['project_group'] ? $values['project_group'] : '',
+				'project_id' => $values['external_project_id'] ? $values['external_project_id'] : '',
 				'pmwrkord_code' => $values['order_id'],
 				'process_log' => $this->db->db_addslashes($values['process_log']),
 				'process_code' => $values['process_code'],
@@ -1565,7 +1565,7 @@
 					'budget_responsible' => $this->db->f('budsjettansvarligid'),
 					'invoice_date' => $this->db->f('fakturadato'),
 					'project_id' => $this->db->f('project_id'),
-					'project_group' => $this->db->f('project_id'),
+					'external_project_id' => $this->db->f('project_id'),
 					'payment_date' => $this->db->f('forfallsdato'),
 					'merknad' => $this->db->f('merknad', true),
 					'line_text' => $this->db->f('line_text', true),
@@ -1997,13 +1997,13 @@
 			$sql = "SELECT "
 				. "dimb as kostnadssted,"
 				. "spbudact_code as art,"
-				. "project_group as prosjekt,"
+				. "external_project_id as prosjekt,"
 				. "sum(belop) as belop,"
 				. "currency"
 				. ' FROM fm_workorder'
 				. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
 				. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
-				. " GROUP BY art, kostnadssted, project_group, currency ORDER BY kostnadssted,project_group, art, currency ASC";
+				. " GROUP BY art, kostnadssted, external_project_id, currency ORDER BY kostnadssted,external_project_id, art, currency ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
@@ -2333,7 +2333,7 @@
 			$value_set_line['dima'] = $data['dim_a'];
 			$value_set_line['dime'] = $data['dim_e'];
 			$value_set_line['mvakode'] = $data['tax_code'];
-			$value_set_line['project_id'] = $data['project_group'];
+			$value_set_line['project_id'] = $data['external_project_id'];
 			$value_set_line['spbudact_code'] = $data['b_account_id'];
 			$value_set_line['line_text'] = $this->db->db_addslashes($data['line_text']);
 			$value_set_line['process_log'] = $process_log;

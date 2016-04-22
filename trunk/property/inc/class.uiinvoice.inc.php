@@ -246,7 +246,7 @@
 			$name = array
 				(
 				'workorder_id',
-				'project_group',
+				'external_project_id',
 				'status',
 				'voucher_id',
 				'invoice_id',
@@ -1508,7 +1508,7 @@ JS;
 					'key' => 'workorder', 'label' => lang('Workorder'), 'className' => 'center',
 					'sortable' => true, 'hidden' => false),
 				array(
-					'key' => 'project_group', 'label' => lang('project group'), 'className' => 'center',
+					'key' => 'external_project_id', 'label' => lang('external project'), 'className' => 'center',
 					'sortable' => false, 'hidden' => false),
 				array(
 					'key' => 'close_order', 'label' => lang('Close order'), 'className' => 'center',
@@ -1767,7 +1767,7 @@ JS;
 					'col_name' => 'workorder', 'label' => lang('Workorder'), 'className' => 'centerClasss',
 					'sortable' => true, 'sort_field' => 'pmwrkord_code', 'visible' => true),
 				array(
-					'col_name' => 'project_group', 'label' => lang('project group'), 'className' => 'centerClasss',
+					'col_name' => 'external_project_id', 'label' => lang('external project'), 'className' => 'centerClasss',
 					'sortable' => false, 'sort_field' => '', 'visible' => true),
 				array(
 					'col_name' => 'close_order', 'label' => lang('Close order'), 'className' => 'centerClasss',
@@ -1845,7 +1845,7 @@ JS;
 					}
 					else if (($i == 1))
 					{
-						$json_row[$uicols[$i]['col_name']] .= $invoices['project_group'];
+						$json_row[$uicols[$i]['col_name']] .= $invoices['external_project_id'];
 					}
 					else if (($i == 2))
 					{
@@ -2149,7 +2149,7 @@ JS;
 
 			if (isset($values['save']))
 			{
-				$values['project_group'] = phpgw::get_var('project_group', 'int', 'POST');
+				$values['external_project_id'] = phpgw::get_var('external_project_id', 'string', 'POST');
 				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					$this->receipt['error'][] = array('msg' => lang('repost'));
@@ -2276,9 +2276,9 @@ JS;
 				'type' => 'voucher_process_code',
 				'selected' => isset($values['process_code']) ? $values['process_code'] : $line['process_code']));
 
-			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
-				'project_group' => $values['project_group'] ? $values['project_group'] : $line['project_group'],
-				'project_group_descr' => $values['project_group_descr']));
+			$external_project_data = $this->bocommon->initiate_external_project_lookup(array(
+				'external_project_id' => $values['external_project_id'] ? $values['external_project_id'] : $line['external_project_id'],
+				'external_project_name' => $values['external_project_name']));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
@@ -2299,7 +2299,7 @@ JS;
 				'sign_orig' => $sign_orig,
 				'my_initials' => $my_initials,
 				'process_code_list' => $process_code_list,
-				'project_group_data' => $project_group_data,
+				'external_project_data' => $external_project_data,
 				'order_id' => $line['order_id'],
 				'value_amount' => $line['amount'],
 				'value_approved_amount' => $line['approved_amount'],
@@ -3591,7 +3591,7 @@ JS;
 				'approved_list' => $approved_list,
 				'sign_orig' => $sign_orig,
 				'my_initials' => $my_initials,
-				'project_group_data' => $project_group_data,
+				'external_project_data' => $external_project_data,
 				'orders' => $orders,
 				'value_amount' => $line['amount'],
 				'value_currency' => $line['currency'],

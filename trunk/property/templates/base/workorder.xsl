@@ -506,67 +506,175 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="mode='edit'">
-							<xsl:call-template name="event_form"/>
+							<!--xsl:call-template name="event_form"/-->
 							<xsl:call-template name="vendor_form"/>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'send order')"/>
-								</label>
-								<div class="pure-custom">
-									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_4'">
-											<xsl:call-template name="table_setup">
-												<xsl:with-param name="container" select ='container'/>
-												<xsl:with-param name="requestUrl" select ='requestUrl' />
-												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-												<xsl:with-param name="tabletools" select ='tabletools' />
-												<xsl:with-param name="data" select ='data' />
-												<xsl:with-param name="config" select ='config' />
-											</xsl:call-template>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</div>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'extra mail address')"/>
-								</label>
-								<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
-									</xsl:attribute>
-								</input>
-							</div>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:call-template name="event_view"/>
 							<xsl:call-template name="vendor_view"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:call-template name="ecodimb_form"/>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'contract')"/>
+						</label>
+						<select id="vendor_contract_id" name="values[contract_id]">
+							<xsl:if test="mode != 'edit'">
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="contract_list/options"/>
+						</select>
+					</div>
+
 					<div class="pure-control-group">
 						<label for="name">
-							<xsl:value-of select="b_group_data/lang_b_account"/>
+							<xsl:value-of select="php:function('lang', 'send order')"/>
 						</label>
-						<input type="text" size="9" value="{b_group_data/value_b_account_id}" readonly="readonly">
-							<xsl:attribute name="disabled">
-								<xsl:text>disabled</xsl:text>
+						<div class="pure-custom">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_4'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+					<div class="pure-control-group">
+						<label for="name">
+							<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+						</label>
+						<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
 							</xsl:attribute>
-						</input>
-						<input type="text" size="30" value="{b_group_data/value_b_account_name}" readonly="readonly">
-							<xsl:attribute name="disabled">
-								<xsl:text>disabled</xsl:text>
-							</xsl:attribute>
+							<xsl:if test="mode != 'edit'">
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 						</input>
 					</div>
-					<xsl:choose>
-						<xsl:when test="mode='edit'">
-							<xsl:call-template name="b_account_form"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="b_account_view"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_service">
+							<xsl:value-of select="php:function('lang', 'service')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_service"/>
+						</label>
+						<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
+						<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise test="mode='edit'">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_service"/>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+						</input>
+						<div id="service_container"/>
+					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_dimb">
+							<xsl:value-of select="php:function('lang', 'dimb')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_dimb"/>
+						</label>
+						<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
+						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise test="mode='edit'">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_dimb"/>
+									</xsl:attribute>
+
+								</xsl:otherwise>
+							</xsl:choose>
+						</input>
+						<div id="ecodimb_container"/>
+					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_budget_account">
+							<xsl:value-of select="php:function('lang', 'budget account')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_budget_account"/>
+						</label>
+						<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
+						<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_name}">
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise test="mode='edit'">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_budget_account"/>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+						</input>
+						<div id="b_account_container"/>
+					</div>
+					<!--xsl:call-template name="b_account_form"/-->
+					<div class="pure-control-group">
+						<xsl:variable name="lang_unspsc_code">
+							<xsl:value-of select="php:function('lang', 'unspsc code')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_unspsc_code"/>
+						</label>
+						<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
+						<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise test="mode='edit'">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_unspsc_code"/>
+									</xsl:attribute>
+
+								</xsl:otherwise>
+							</xsl:choose>
+						</input>
+						<div id="unspsc_code_container"/>
+					</div>
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_cat_sub"/>
@@ -1076,7 +1184,7 @@
 				<div id="invoice">
 					<xsl:call-template name="location_form"/>
 					<xsl:call-template name="b_account_form"/>
-					<xsl:call-template name="project_group_form"/>
+					<xsl:call-template name="external_project_form"/>
 					<xsl:call-template name="ecodimb_form"/>
 					<xsl:call-template name="vendor_form"/>
 					<div class="pure-control-group">

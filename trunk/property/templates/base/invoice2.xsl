@@ -437,7 +437,7 @@
 			<xsl:value-of select="php:function('lang', 'project group')" />
 		</td>
 		<td>
-			<input type="text" name="values[project_group]" id="project_group" value="{voucher_info/voucher/project_group}"/>
+			<input type="text" name="values[external_project_id]" id="external_project_id" value="{voucher_info/voucher/external_project_id}"/>
 		</td>
 	</tr>
 </xsl:template>

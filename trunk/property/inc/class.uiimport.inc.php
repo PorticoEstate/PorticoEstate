@@ -50,6 +50,9 @@
 
 			$this->valid_tables = array
 				(
+				'fm_unspsc_code' => array('name' => 'fm_unspsc_code (' . lang('unspsc code') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_external_project' => array('name' => 'fm_external_project (' . lang('external project') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_eco_service' => array('name' => 'fm_eco_service (' . lang('service') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_vendor' => array('name' => 'fm_vendor (' . lang('vendor') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_condition_survey' => array('name' => 'fm_condition_survey (' . lang('condition survey') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
@@ -57,7 +60,6 @@
 				'fm_budget' => array('name' => 'fm_budget (' . lang('budget') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_org_unit' => array('name' => 'fm_org_unit (' . lang('department') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'fm_project_group' => array('name' => 'fm_project_group', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_eco_periodization_outline' => array('name' => 'fm_eco_periodization_outline (' . lang('periodization outline') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_eco_periodization' => array('name' => 'fm_eco_periodization (' . lang('periodization') . ')',

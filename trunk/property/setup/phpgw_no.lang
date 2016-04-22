@@ -383,6 +383,7 @@ consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
 continue	property	no	Fortsett
 continuous	property	no	Løpende
+contract	property	no	Kontrakt
 line	property	no	Linje
 sheet	property	no	Ark
 choose file	property	no	Velg Fil
@@ -1680,7 +1681,7 @@ send this order by email	property	no	send denne ordren med e-post
 send workorder	property	no	Send ordre
 serious	property	no	Kraftig
 serious consequences	property	no	Store konsekvenser
-service	property	no	Service
+service	property	no	Tjeneste
 service agreement	property	no	serviceavtale
 service agreement attributes	property	no	Serviceavtale attributter
 service agreement categories	property	no	Serviceavtale kategorier
@@ -2055,3 +2056,5 @@ modified on	common	no	Oppdatert
 property type	property	no	Type
 hjemmel	common	no	Hjemmel
 record has been edited	common	no	data er editert
+external project	property	no	Eksternt prosjekt
+unspsc code	common	no	UNSPSC-kode

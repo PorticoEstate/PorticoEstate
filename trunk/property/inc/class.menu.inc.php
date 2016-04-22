@@ -191,11 +191,17 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'project_status'))
 					),
-					'project_group' => array
+					'external_project' => array
 						(
-						'text' => lang('project group'),
+						'text' => lang('external project'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'project_group'))
+							'type' => 'external_project'))
+					),
+					'unspsc_code' => array
+						(
+						'text' => lang('unspsc code'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'unspsc_code'))
 					),
 					'workorder_detail' => array
 						(
@@ -292,6 +298,12 @@
 						'text' => lang('budget account'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'budget_account'))
+					),
+					'eco_service' => array
+						(
+						'text' => lang('service'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'eco_service'))
 					),
 					'org_unit' => array
 						(
