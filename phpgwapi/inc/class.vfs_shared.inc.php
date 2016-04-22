@@ -1516,7 +1516,7 @@
 
 			if ($data['object'])
 			{
-				$robject =& new path_class;
+				$robject = new path_class;
 
 				reset ($rarray);
 				while (list ($key, $value) = each ($rarray))
