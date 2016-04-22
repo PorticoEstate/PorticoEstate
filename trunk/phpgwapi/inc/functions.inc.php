@@ -409,7 +409,7 @@ _debug_array($error_line);
 	 *
 	 * @param object $e the Exception that was thrown
 	 */
-	function phpgw_handle_exception(Exception $e)
+	function phpgw_handle_exception($e)
 	{
 		$help = 'Please contact your administrator for assistance';
 
