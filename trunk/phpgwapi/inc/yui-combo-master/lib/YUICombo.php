@@ -1,6 +1,6 @@
 <?php
-define(DOT, ".");
-define(EMPTY_STRING, "");
+define('DOT', ".");
+define('EMPTY_STRING', "");
 
 class YUICombo {
 	function __construct($modules, $config) {
