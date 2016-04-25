@@ -1,0 +1,19 @@
+access type	todo	nl	Toegangstype
+addsub	todo	nl	Subtaak toevoegen
+are you sure you want to delete this entry	todo	nl	Weet u zeker dat u deze invoer wilt verwijderen
+clear form	todo	nl	Formulier wissen
+completed	todo	nl	uitgevoerd
+created by	todo	nl	Gemaakt door
+date due	todo	nl	Datum gereed
+days datedue	todo	nl	Dagen tot deadline
+last updated	todo	nl	Laatst bijgewerkt
+project description	todo	nl	Projectomschrijving
+status	todo	nl	status
+todo	common	nl	Taken
+todo list	common	nl	Takenlijst
+to do list	common	nl	Takenlijst
+todo list - add	todo	nl	Takenlijst - toevoegen
+todo list - edit	todo	nl	Takenlijst - bewerken
+urgency	todo	nl	Prioriteit
+which groups	todo	nl	Welke groepen
+you have entered an invailed date	todo	nl	U hebt een ongeldige datum ingevoerd

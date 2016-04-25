@@ -1,0 +1,101 @@
+%1 already exists as a file	filemanager	en	%1 esiste gia' come file
+application	filemanager	en	Applicazione
+back to file manager	filemanager	en	Indietro al filemanager
+cannot create directory because it begins or ends in a space	filemanager	en	Non posso creare la cartella perche' inizia o finisce con uno spazio
+cannot replace %1 because it is a directory	filemanager	en	Non posso rimpiazzare %1 perche' e' una cartella
+command sucessfully run	filemanager	en	Comando eseguito con successo
+comment	filemanager	en	Commento
+comments cannot contain "%1"	filemanager	en	I commenti non possono contenere "%1"
+copied %1 to %2	filemanager	en	Copiato %1 in %2
+copy to	filemanager	en	Copia in
+copy to:	filemanager	en	Copia in:
+could not copy %1 to %2	filemanager	en	Non posso copiare %1 in %2
+Could not copy %1 to %2 Quota exceeded	filemanager	en	Non posso copiare %1 in %2 Quota superata
+could not create %1	filemanager	en	Non posso creare %1
+could not create directory %1	filemanager	en	Non posso creare la cartella %1
+could not delete %1	filemanager	en	Non posso cancellare %1
+could not move %1 to %2	filemanager	en	Non posso spostare %1 in %2
+Could not move %1 to %2 Quota exceeded	filemanager	en	Non posso spostare %1 in %2 Quota superata
+could not rename %1 to %2	filemanager	en	Non posso rinominare %1 in %2
+could not save %1	filemanager	en	Non posso salvare %1
+could not upload %1 Quota exceeded	filemanager	en	Non posso trasferire %1 Quota superata
+create file	filemanager	en	Crea File
+create folder	filemanager	en	Crea cartella
+created	filemanager	en	Creato
+created %1	filemanager	en	%1 creato
+created by	filemanager	en	Creato da
+created directory %1	filemanager	en	Cartella %1 creata
+date	filemanager	en	Data
+default number of upload fields to show	filemanager	en	Numero predefinito di campi di trasferimento da mostrare
+delete	filemanager	en	Cancella
+deleted %1	filemanager	en	%1 cancellato
+directory	filemanager	en	Cartella
+directory %1 already exists	filemanager	en	La cartella %1 esiste gia'
+directory %1 does not exist	filemanager	en	La cartella %1 non esiste
+directory names cannot contain "%1"	filemanager	en	Il nome della cartella non puo' contenre "%1"
+display attributes	filemanager	en	Mostra attributi
+download	filemanager	en	Scarica
+edit	filemanager	en	Modifica
+edit comments	filemanager	en	Modifica commenti
+edit quota	filemanager	en	Modifica quota
+Enter comma separated Quota value in MB	filemanager	en	Inserisci valore della quota in MB sperato da virgole
+erroneous input! check quota value!	filemanager	en	Input errato! Controlla il valore della quota!
+error running command	filemanager	en	Errore durante l'esecuzione del comando
+execute	filemanager	en	Esegui
+failed to create directory	filemanager	en	Creazione della cartella fallita
+file	filemanager	en	File
+file %1 already exists. please edit it or delete it first.	filemanager	en	Il file %1 esiste gia'. E' pregato di modificarlo o cancellarlo prima.
+file %1 could not be created.	filemanager	en	Il file %1 non puo' essere creato.
+file name	filemanager	en	Nome del File
+file names cannot contain "%1"	filemanager	en	I nomi di file non possono contenere "%1"
+file names cannot contain \ or /	filemanager	en	I nomi di file non possono contenere \ o /
+filemanager	common	en	Filemanager
+filemanager preferences	filemanager	en	Preferenze del fileManager
+files	filemanager	en	File
+folder	filemanager	en	Cartelle
+go to	filemanager	en	Vai a
+go to %1	filemanager	en	Vai a %1
+go to your home directory	filemanager	en	Vai alla cartella personale
+go to:	filemanager	en	Vai a:
+home	filemanager	en	Casa
+locked	filemanager	en	Bloccato
+mime type	filemanager	en	Tipo MIME
+modified	filemanager	en	Modificato
+modified by	filemanager	en	Modificato da
+move to	filemanager	en	Sposta in
+move to:	filemanager	en	Sposta in:
+moved %1 to %2	filemanager	en	Sposta %1 in %2
+no version history for this file/directory	filemanager	en	Nessuno storico di versione per questo file/cartella
+operation	filemanager	en	Operazione
+owner	filemanager	en	Proprietario
+preview %1	filemanager	en	Anteprima %1
+preview of %1	filemanager	en	Anteprima di %1
+refresh	filemanager	en	Aggiorna
+rename	filemanager	en	Rinomina
+renamed %1 to %2	filemanager	en	Rinominato %1 in %2
+replaced %1	filemanager	en	Rimpiazzato %1
+save %1	filemanager	en	Salva %1
+save all	filemanager	en	Salva tutto
+saved %1	filemanager	en	%1 salvato
+show	filemanager	en	Mostra
+show ..	filemanager	en	Mostra ..
+show .files	filemanager	en	Mostra .file
+show command line (experimental. dangerous.)	filemanager	en	Mostra linea di comando (SPERIMENTALE. PERICOLOSO.)
+show help	filemanager	en	Mostra aiuto
+size	filemanager	en	Dimensione
+sort by:	filemanager	en	Ordina per:
+total files	filemanager	en	File totali
+unknown mime-type defaults to text/plain when viewing	filemanager	en	Tipo-MIME sconosciuto impostato a text/plain durante la visualizzazione
+unused space	filemanager	en	Spazio inutilizzato
+up	filemanager	en	Su
+update	filemanager	en	Aggiorna
+updated comment for %1	filemanager	en	Commenti aggiornati for %1
+upload fields	filemanager	en	Trasferisci campi
+upload files	filemanager	en	Trasferisci campi
+used space	filemanager	en	Spazio inutilizzato
+users	filemanager	en	Utenti
+version	filemanager	en	Versione
+view documents in new window	filemanager	en	Mostra documenti in una nuova finestra
+view documents on server (if available)	filemanager	en	Mostra documenti nel server (se disponibile)
+who	filemanager	en	Chi
+you do not have access to %1	filemanager	en	Non hai accesso a %1

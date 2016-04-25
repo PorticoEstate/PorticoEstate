@@ -1,0 +1,40 @@
+add a note	notes	fr	Ajouter une note
+apply	notes	fr	Appliquer
+apply the values	notes	fr	Appliquer les valeurs
+arial	notes	fr	Arial
+choose a font	notes	fr	Choisissez une fonte
+choose the font size	notes	fr	Choisissez la taille de la fonte
+content	notes	fr	Contenu
+courier new	notes	fr	Courier New
+Delete a single entry by passing the id.	notes	fr	Effacer une unique entrée en faisant passer l'ID.
+delete note	common	fr	Effacer la note
+display note	notes	fr	Afficher la note
+do you really want to delete this note ?	notes	fr	Etes-vous sûr de vouloir effacer cette note ?
+edit note	notes	fr	Modifier la note
+edit the note	notes	fr	Modifier la note
+enter the content of the note	notes	fr	Entrer dans le contenu de la note
+enter the search string. to show all entries, empty this field and press the submit button again	notes	fr	Entrez la chaîne de caractères à rechercher. Pour montrer toutes les entrées, videz ce champ et pressez le bouton SOUMETTRE à nouveau
+georgia	notes	fr	Géorgie
+helvetica	notes	fr	Helvetica
+large	notes	fr	Large
+leave the note untouched and return back to the list	notes	fr	Laisser la note non modifiée et retourner à la liste
+list notes	notes	fr	Lister les notes
+note id	notes	fr	ID de note
+notes preferences	notes	fr	Préférences de notes
+Read a list of entries.	notes	fr	Lire une liste d'entrées.
+Read a single entry by passing the id and fieldlist.	notes	fr	Lire une unique entrée en faisant passer l'ID et la liste de champs.
+save the note and return back to the list	notes	fr	Enregistrer la note et retourner à la liste
+select the category the notes belongs to. to do not use a category select no category	notes	fr	Choisir la catégorie à laquelle la note appartient. Pour ne pas utiliser de catégorie, choisissez PAS DE CATEGORIE
+select the filter. to show all entries select show all	notes	fr	Choisissez le filtre. Pour montrer toutes les entrées choisissez montrer tout
+small	notes	fr	Petit
+submit the search string	notes	fr	Soumettre la chaîne de recherches
+tahoma	notes	fr	Tahoma
+the note is private. if the note should be public, uncheck this box	notes	fr	Cette note est privée. Si la note doit être publique, décochez cette case
+the note is public. if the note should be private, check this box	notes	fr	Cette note est publiquer. Si la note doit être privée, cochez cette case
+time created	notes	fr	Heure créé
+times new roman	notes	fr	Times New Roman
+Update a single entry by passing the fields.	notes	fr	Mettre à jour une unique entrée en faisant passer les champs.
+verdana	notes	fr	Verdana
+very large	notes	fr	Très grand
+very small	notes	fr	Très petit
+view the note	notes	fr	Voir la note

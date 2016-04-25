@@ -1,0 +1,176 @@
+/**
+* phpGroupWare desktop template
+* @copyright Copyright (C) 2004 Free Software Foundation http://www.fsf.org/
+* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+* @version $Id: verdilak.css 16728 2006-05-15 10:29:22Z sigurdne $
+*/
+
+a { text-decoration:none; color: blue; }
+a:active{ text-decoration:none; color: red; }
+a:hover{ text-decoration:underline; color: red; }
+a:visted{ text-decoration:none; color: blue; }
+body { margin-top: 0px; margin-right: 0px; margin-left: 0px; font-family: Arial, Helvetica, san-serif; }
+.row_on { color: #000000; background-color: #DDDDDD; }
+.row_off { color: #000000; background-color: #EEEEEE; }
+.th { color: #000000; background-color: #D3DCE3; }
+.tablink { color: #000000; }
+
+
+body,p,td,th,table,input,form,option
+{
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+	line-height: normal;
+	text-decoration: none;
+	letter-spacing: 0em;
+	word-spacing: 0em;
+}
+
+body
+{
+	margin-right: 0em;
+	margin-left: 0em;
+	margin-top: 0em;
+	margin-bottom: 0em;
+}
+
+table
+{
+	border-width: 0;
+}
+
+td.alarm
+{
+	color: #FF0000;
+}
+
+a:link,a:visited,a:active,a:hover
+{
+	text-decoration: none;
+}
+
+a.th,a.th_text
+{
+	font-weight: bold;
+}
+
+table.portal
+{
+	width: 100%;
+}
+
+table.about
+{
+	width: 70%;
+}
+
+table.login
+{
+	margin-top: 130px;
+	width: 40%;
+	text-align: center;
+}
+
+.login,.portal,.about,.msgbox
+{
+	border-width: 1px;
+	border-style: ridge;
+}
+
+.small_text
+{
+	font-size: 80%;
+}
+
+.header_text
+{
+	font-size: 110%;
+	font-weight: bold;
+}
+
+.th_text,.app_header,.th
+{
+	font-weight: bold;
+}
+
+
+.app_header
+{
+	text-align: center;
+	padding: 2px;
+	padding-top: 5px;
+}
+
+body,p,td,th,table,input,form,option
+{
+	color: #000000;
+}
+
+body
+{
+	background-color: #FFFFFF;
+}
+
+a:link,a:visited,a:active
+{
+	color: mediumblue;
+}
+
+a:hover
+{
+	color: #cc0000;
+}
+
+.navbar,.th,.app_header
+{
+	background-color: #80BBFF;
+}
+
+.login,.portal,.about
+{
+	background-color: #80BBFF;
+	border-color: #000000;
+}
+
+.portal_text,.info
+{
+	color: #FFFFFF;
+}
+
+.row_on,.th_bright
+{
+	background-color: #CCEEFF;
+}
+
+.msgbox
+{
+	background-color: #FFFFFF;
+}
+
+.row_off
+{
+	background-color: #DDF0FF;
+}
+
+.cal_today
+{
+	background-color: #FFFFCC;
+}
+
+.cal_dayview
+{
+	background-color: #C0C0C0;
+}
+
+.email_folder
+{
+	background-color: #7090FF;
+	color: #FFFFFF;
+}
+
+a.info,.info
+{
+	font-weight: bold;
+}

@@ -1,0 +1,135 @@
+CHANGELOG
+
+=== 20090209 ===
+New file : php5/mssg.php5 : class message to displaying in lib odt2xhtml
+
+Modify odt2xhtml.php5 script :
+- Add method to copy icon in directory html/img
+- modify method _unzip_odf to function with ZIP support native on PHP 5
+	(usage PCLZIP can disparate!)
+
+PCLZIP is archived!
+
+=== 20090202 ===
+Add a capacity to use the library in PHP CLI. See test_cli.php5 script.
+
+Correct file odt2xhtml.xsl.
+
+=== 20090130 ===
+Add a possibility to obtain css in file .css separate.
+
+=== 20090119 ===
+Modify odt2xhtml.php5 script :
+- Add management of abbreviations (OOo specification text:reference-mark)
+- modify display differents messages : method _message($value,$index,$var='')
+
+Modify odt2xhtml.xsl :
+- Add management element html abbr by using text:reference-mark : good ?
+
+New version : odt2xhtml.odt
+
+=== 20090118 ===
+Add file .htaccess_for_php5.
+Add file config.php5 :
+
+Correct index.php5 script :
+- modify absolute directory for files included
+
+Correct odt2xhtml.php5 script :
+- modify method _mk_all_dir() if making directories necessaries not run
+- modify debuging messages.
+- modify management of file and extension
+
+Correct odt2xhtml.xsl : (support to office version 1.2)
+- add element link to display icon
+- add support to automatic styles in document style
+- modify longdesc support in element img
+
+Thanks to Damien Accorsi <damien AT accorsi POINT info>
+
+=== 20080121 ===
+Correct odt2xhtml.php5 script :
+- error in method get_elements_html() : bad directory to read file html.
+
+Thanks to Eric Bellot <contact AT eric-bellot POINT fr>
+
+=== 20071122 ===
+Modify XSL File :
+- Resolve the bug in XSL that declarate 2 xmlns in element html.
+
+Correct odt2xhtml.php5 script.
+
+=== 20071121 ===
+Remove script in PHP4 - official support stop 20071231 -
+Modify script odt2xhtml.php5 : 
+- reorganize it !
+- new method to make all directories necessary : _mk_all_dir()
+
+=== 20070731 ===
+Modify script odt2xhtml.php(5) : 
+- to manage text position indice or exposant
+- to manage header and footer page
+- to manage too files .sxw and .stw (StarOffice & OOo 1.0)
+- new method get_elements_html() and display_elements_html() to include elements
+   html converted by this script, in your file html.
+   
+Create new file XSLT sxw2xhtml.xsl to manage file .sxw and .stw.
+Modify odt2xhtml.xsl to :
+- correct the output html, the meta tags, output img segun is in h or p elements,
+- implement div header, div footer, element sup and sub, blockquote citations,
+
+=== 20070307 ===
+Use another template xsl : odt2xhtml.xsl - (project ODFTools : http://opendocumentfellowship.org/projects/odftools)
+Better styles supports by this file xsl.
+I've modified and corrected the 'odt2xhtml.xsl' for build an ouput file html, W3C compliant, XHTML 1.0.
+
+Modify script odt2xhtml.php(5) : 
+- reorganization
+- rename method private __exists_odt in _make_new_xml_with_odf_files
+- modify method private __make_new_xml_with_odf_files to manage meta.xml, content.xml, styles.xml
+
+=== 20070626 ===
+Modify script odt2xhtml.php(5) : (necessary to run correctly with odt2xhtml_portable)
+ - modify constructor to link correctly img ...
+ - modify private method __delete_tmp() to public method delete_tmp ... 
+
+Modify script test.php(5).
+
+Correct script index.php(5) to run correctly on WINNT.
+
+=== 20070625 ===
+Modify the script index.php(5) to run on WINNT.
+
+=== 20070621 ===
+Implement versions PHP 4 and 5, separatly and correctly.
+add file odt2xhtml.odt, to test the script.
+writing script test.php(5?) 
+
+=== 20061029 ===
+- odt2xhtml.php
+modify the script to run with php5.
+
+*** 20060925 ***
+delete script config.php
+
+- odt2xhtml.php :
+modify constructor to permit that script run with different paths
+
+*** 20060915 ***
+add script config.php !
+
+- template.xsl : 
+modify out element paragraph
+modify out element anchor empty
+
+- odt2xhtml.php : 
+modify private method __exists_odt();
+modify private method __move_img();
+
+*** 20060902 ***
+add define image directory
+add public method delete_dir();
+modify private method __move_img();
+
+*** 20060825 ***
+* First version

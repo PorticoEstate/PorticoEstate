@@ -1,0 +1,9 @@
+<xsl:template match="activity" xmlns:php="http://php.net/xsl">
+	tester
+</xsl:template>
+
+<xsl:template match="contract">
+	<xsl:copy-of select="."/>
+	
+</xsl:template>
+

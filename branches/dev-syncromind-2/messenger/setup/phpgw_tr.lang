@@ -1,0 +1,35 @@
+compose	messenger	tr	Mesaj Gönder
+compose global message	admin	tr	Ayrıntılı mesaj gönder
+compose message	messenger	tr	Mesajı gönder
+delete a message.	messenger	tr	Mesaj sil.
+delete selected	messenger	tr	Seçileni sil
+forward	messenger	tr	İlet
+forward a message	messenger	tr	Mesaj ilet
+forward a message to another user.	messenger	tr	Bir mesajı diğer bir kullanıcıya ilet.
+forwarded	messenger	tr	İletildi
+from	messenger	tr	Kimden
+global message	messenger	tr	Ayrıntılı Mesaj
+i can't find the username %1 on the system	messenger	tr	Sistemde %1 adında kullancı adı bulamadım
+inbox	messenger	tr	Gelen Kutusu
+message from	messenger	tr	Mesajı Gönderen
+messenger	common	tr	Messenger
+new	messenger	tr	Yeni
+read a list of messages.	messenger	tr	Mesaj listesi oku.
+read a single message.	messenger	tr	Tek mesaj oku.
+read message	messenger	tr	Mesaj oku
+replied	messenger	tr	Cevap verildi
+reply	messenger	tr	Cevap ver
+reply to a message	messenger	tr	Bir mesajı birine cevap olarak gönder
+reply to a received message.	messenger	tr	Alınan mesajı cevap olarak gönder.
+send	messenger	tr	Gönder
+send a global message.	messenger	tr	Ayrıntılı mesaj gönder.
+send a message to a single recipient.	messenger	tr	Bir alıcıya mesaj gönder.
+send message to	messenger	tr	Mesajı gönder
+sorry, %1's account is not currently active	messenger	tr	Üzgünüm, %1 kullanıcısının hesabı şu an için aktif değil
+update a message status	messenger	tr	Update a message status
+you didn't	trter anything for the message	messenger	tr	Mesaj için hiç birşey girmedin
+you have %1 new message	messenger	tr	%1 yeni bir mesajın var
+you have %1 new messages	messenger	tr	%1 yeni mesajların var
+you have no messages	messenger	tr	Hiç mesajın yok
+you must	trter a subject	messenger	tr	Bir başlık girmelisin
+you must	trter the username this message is for	messenger	tr	Bu mesaj için kullanıcı adını girmelisin

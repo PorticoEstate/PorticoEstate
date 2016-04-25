@@ -1,0 +1,6 @@
+Options None
+#AllowOverride None
+DirectoryIndex index.html
+RemoveHandler cgi-script .cgi .pl
+RemoveType application/x-httpd-php .php .php3
+RemoveType application/x-httpd-php-source .phps

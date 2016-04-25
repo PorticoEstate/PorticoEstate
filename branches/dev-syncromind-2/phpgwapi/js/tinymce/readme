@@ -1,0 +1,15 @@
+This is the development version of tinymce to make it easier for us to build on tinymce.
+All modifications to the code must be made in the classes and must be noted so they 
+don't get lost during upgrades.
+
+we have moved somethings around so it works properly with phpgw, sorry - skwashd
+
+Here is where everything now lives compared to upstream:
+
+/tinymce/ - moved to tinymce/other/ (confused?)
+/tinymce/docs/ - moved to tinymce/other/docs/
+/tinymce/examples/ - moved to tinymce/other/examples
+/tinymce/jscripts/ - dropped
+/tinymce/jscripts/tiny_mce/ - moved to here
+
+Hope this makes it easier for experienced tinymce users to adapt

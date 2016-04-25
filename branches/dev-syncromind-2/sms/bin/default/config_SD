@@ -1,0 +1,31 @@
+<?php
+	/**
+	 * phpGroupWare - sms: A SMS Gateway
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package sms
+	 * @subpackage sms
+	 * @version $Id: config_SD 18284 2007-09-25 08:17:17Z sigurdne $
+	 */
+	/**
+	 * Description
+	 * @package sms
+	 * Config values for SMS-command "SD" - short for "noxious animal in Norwegian" - as example - as it is configured at BBB 
+	 */
+	$agreement_id = 31793;
+	$id_field = 'location_code';
+	$target_field = 'kvittering';
+	$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
+
+	if ($agreement_id && isset($param[0]) && $param[0])
+	{
+		$filter = "WHERE agreement_id = $agreement_id AND location_code ilike '" . $param[0] . "%'";
+	}
+
+	$this->db->query("SELECT id FROM phpgw_cust_attribute WHERE column_name = '$target_field' AND location_id = $location_id", __LINE__, __FILE__);
+	$this->db->next_record();
+	$attrib_id = $this->db->f('id');
+

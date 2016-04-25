@@ -1,0 +1,19 @@
+compose	messenger	pl	Utwórz
+compose global message	admin	pl	
+compose message	messenger	pl	Tworzenie wiadomości
+delete selected	messenger	pl	Usuń zaznaczone
+forward	messenger	pl	Przekaż
+forward a message	messenger	pl	Przekaż wiadomość
+forwarded	messenger	pl	Przekazany
+from	messenger	pl	Od
+global message	messenger	pl	
+inbox	messenger	pl	Skrzynka odbiorcza
+message from	messenger	pl	Wiadomość od
+messenger	common	pl	Komunikator
+new	messenger	pl	Nowa
+read message	messenger	pl	Czytaj wiadomość
+reply	messenger	pl	Odpowiedz
+reply to a message	messenger	pl	Odpowiedz na tę wiadomość
+send	messenger	pl	Wyślij
+send message to	messenger	pl	Wyślij wiadomość do
+you have %1 new messages	messenger	pl	Masz %1 nowych wiadomości

@@ -1,0 +1,7 @@
+Sigurd sept 2009:
+
+Converted to use native support for soap.
+
+Have a look on soap/test_client.php and phpgwapi/inc/class.soap_client.php to see how it works.
+
+The serverpart is found in soap.php (at the root)

@@ -1,0 +1,50 @@
+/* Used by tabs */
+th.activetab
+{
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	background-color: #FFFFFF;
+	border-color: #808080;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	border-style: solid;
+	border-width: 1px 1px 0px 1px;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap; 
+}
+
+th.inactivetab
+{
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	background-color:#CCCCCC;
+	border: 1px solid #808080;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	color:#006699;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap;
+}
+
+th.tablast
+{
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-color: #000000;
+	width: 100%;
+}
+
+div.activetab
+ {
+  color:#000000;
+  display:inline;
+ }
+
+div.inactivetab
+ {
+  color:#000063;
+  display:none;
+ }
+  

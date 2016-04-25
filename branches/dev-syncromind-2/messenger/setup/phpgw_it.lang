@@ -1,0 +1,18 @@
+compose	messenger	it	Componi
+compose global message	admin	it	Componi messaggio globale
+compose global message	messenger	it	Componi messaggio globale
+compose message	messenger	it	Componi messaggio
+forward	messenger	it	Inoltra
+forward a message	messenger	it	Inoltra un messaggio
+forwarded	messenger	it	Inoltrato
+global message	messenger	it	Messaggio Globale
+inbox	messenger	it	Inbox
+message from	messenger	it	Messaggio da
+messenger	common	it	Messenger
+read message	messenger	it	Leggi messaggio
+reply	messenger	it	Rispondi
+reply to a message	messenger	it	Rispondi a un messaggio
+send	messenger	it	Invia
+send message to	messenger	it	Invia un messaggio a
+you have %1 new messages	messenger	it	Tu hai %1 nuovi messaggi
+you have no messages	messenger	it	Non ci sono messaggi

@@ -1,0 +1,122 @@
+<?php
+	/**
+	 * <<APP>> - Menus
+	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
+	 * @copyright Copyright (C) 2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package <<APP>> 
+	 * @version $Id$
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 3 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+/*
+//////////////////////////////////////////////////////////////////////////////////
+
+	This is an example stub menu class, you will need to read it in order
+	to understand how to use the new menu API.
+
+	Here is a quick start guide
+		* <module> is the name of your phpGW module
+		* copy this file to <module>/inc/class.menu.inc.php
+		* run find and replace :%s/<<APP>>/<module>/g
+		* edit <module>/setup/setup.inc.php and make sure it has a hook entry 
+			for the menu, something like this should do it for you
+			$setup_info['<module>']['hooks']['menu'] = '<module>.menu.get_menu';
+		* edit the class to suit your requirements
+		* Remove this comment block
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/
+
+
+	/**
+	 * Menus
+	 *
+	 * @package <<APP>>
+	 */	
+	class <<APP>>_menu
+	{
+		/**
+		 * Get the menus for the <<APP>>
+		 *
+		 * @return array available menus for the current user
+		 */
+		function get_menu()
+		{
+			/* The base array which holds all the menus */
+			$menus = array();
+
+			/*
+				This gives you entries on the navigation bar, you can use multiple entries
+				order values less than 20 are reserved for the API and core modules
+			*/
+			$menus['navbar'] = array
+			(
+				'<<APP>>' => array
+				(
+					'text'	=> lang('<<APP>>'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> '<<APP>>.ui<<APP>>.index') ),
+					'image'	=> array('<<APP>>', 'navbar'),
+					'order'	=> 25, // must be greater than 19
+					'group'	=> 'office' // which collection of apps does it belong in, if in doubt ask on the dev list
+				)
+			);
+
+			/*
+				This should be rendered as a toolbar when your module is being used by a user
+			*/
+			$menus['toolbar'] = array();
+
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				/*
+					These items are available to users with access to the admin module
+						- they are grouped by module
+				*/
+				$menus['admin'] = array();
+			}
+
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				/*
+					These items are available to users with access to the preferences module 
+						- they are grouped by module
+				*/
+				$menus['preferences'] = array();
+
+				$menus['toolbar'][] = array
+				(
+					'text'	=> lang('Preferences'),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> '<<APP>>')),
+					'image'	=> array('<<APP>>', 'preferences')
+				);
+			}
+
+			/*
+				These items are used by the navigation menu, this is rendered differently by different template sets
+			*/
+			$menus['navigation'] = array();
+
+			/*
+				OPTIONAL This is used by the folders view - not implemented in all template sets 
+			*/
+			$menus['folders'] = phpgwapi_menu::get_categories('<<APP>>');
+
+			return $menus;
+		}
+	}

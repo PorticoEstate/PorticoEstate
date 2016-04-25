@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-10-24T18:50:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BKParticipants" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" isFloatColumnFooter="true" uuid="1873d2c1-c32a-44a8-872b-cceed58b6b0f">
+	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tag.language" value="EN-US"/>
+	<style name="Sans_Normal" isDefault="true" fontName="Serif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" fontName="Serif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<subDataset name="ByBuilding_preview" uuid="c4e37eff-60df-478a-8cd1-abea5e1bd145">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev_syncromind_ebe"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="DATE_FROM" class="java.lang.String"/>
+		<parameter name="DATE_TO" class="java.lang.String"/>
+		<parameter name="BUILDING_ID" class="java.lang.Integer"/>
+		<parameter name="RESOURCES" class="java.lang.String"/>
+		<parameter name="WEEKDAYS" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT ag.name AS aname, ba.male, ba.female, bu.id, bu.name, ag.sort as agegroup_sort, re.name AS resource_name
+				FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu, bb_booking_resource br, bb_resource re
+				WHERE ba.agegroup_id = ag.id 
+				AND ba.booking_id = bo.id
+				AND br.booking_id = bo.id
+				AND br.resource_id = re.id
+				AND bo.allocation_id = al.id
+				AND al.season_id = se.id 
+				AND se.building_id = bu.id 
+				AND ag.active = 1
+				AND date_trunc('day' ,bo.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
+				AND date_trunc('day' ,bo.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND re.id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
+				AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
+				UNION
+				SELECT ag.name AS aname, ea.male, ea.female, bu.id, bu.name, ag.sort AS agegroup_sort, re.name AS resource_name
+				FROM bb_event ev
+				INNER JOIN bb_event_agegroup ea ON ea.event_id = ev.id
+				INNER JOIN bb_agegroup ag ON ag.id = ea.agegroup_id and ag.active = 1
+				INNER JOIN bb_event_resource er ON er.event_id = ev.id
+				INNER JOIN bb_resource re ON re.id = er.resource_id
+				INNER JOIN bb_building bu ON bu.id = re.building_id
+				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
+				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
+				AND er.resource_id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
+				ORDER BY resource_name ASC, agegroup_sort]]>
+		</queryString>
+		<field name="resource_name" class="java.lang.String"/>
+		<field name="aname" class="java.lang.String"/>
+		<field name="male" class="java.lang.Integer"/>
+		<field name="female" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="BK_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2013-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BK_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2014-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BK_RESOURCES" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1,2,3,4,5,6,7,8,9,10,20,31,36,38,39,44,48,50,51,65,66,82,83,84,85,91,96,108,109,110,111,112,113,114,127,261,294,370,411,417,418,419,420,421,422"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BK_WEEKDAYS" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1,2,3,4,5,6,7"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			FROM bb_booking bo
+			INNER JOIN bb_allocation al ON al.id = bo.allocation_id
+			INNER JOIN bb_allocation_resource ar ON ar.allocation_id = al.id
+			INNER JOIN bb_resource re on re.id = ar.resource_id
+			INNER JOIN bb_season se ON se.id = al.season_id
+			INNER JOIN bb_building bu ON bu.id = se.building_id
+			WHERE date_trunc('day', bo.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', bo.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND ar.resource_id = ANY (string_to_array($P{BK_RESOURCES}, ',')::int4[])
+			AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{BK_WEEKDAYS}, ',')::int4[])
+			UNION
+			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			from bb_event ev
+			inner join bb_event_resource er on er.event_id = ev.id
+			inner join bb_resource re on re.id = er.resource_id
+			inner join bb_building bu on bu.id = re.building_id
+			WHERE date_trunc('day', ev.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', ev.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND re.id = ANY (string_to_array($P{BK_RESOURCES}, ',')::int4[])
+			AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{BK_WEEKDAYS}, ',')::int4[])
+			order by building_name]]>
+	</queryString>
+	<field name="building_id" class="java.lang.Integer"/>
+	<field name="building_name" class="java.lang.String"/>
+	<title>
+		<band height="80" splitType="Prevent">
+			<staticText>
+				<reportElement x="20" y="5" width="750" height="30" uuid="e7407441-b3ae-40cf-bc16-79560cc4a81e">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Deltagere per aldersgruppe pr ressurs]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="20" y="35" width="750" height="40" uuid="bdf9207a-d0f4-4be6-9013-baad45d25237">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(" + $P{BK_DATE_FROM} + " - " + $P{BK_DATE_TO} + ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="130" splitType="Prevent">
+			<textField>
+				<reportElement style="Sans_Bold" x="0" y="20" width="500" height="35" uuid="0676bc2b-3729-44c9-8d1a-a7e348784682"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bygg/Anlegg: " + $F{building_name}]]></textFieldExpression>
+			</textField>
+			<crosstab isRepeatColumnHeaders="false">
+				<reportElement x="0" y="60" width="782" height="70" uuid="bb140d14-10c9-4af5-9d0b-cdaa10397db7">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<crosstabParameter name="BUILDING_ID" class="java.lang.Integer">
+					<parameterValueExpression><![CDATA[$F{building_id}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="ByBuilding_preview" uuid="8fbab4ad-bd52-4666-9170-64abfaa403c7">
+							<datasetParameter name="BUILDING_ID">
+								<datasetParameterExpression><![CDATA[$F{building_id}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DATE_FROM">
+								<datasetParameterExpression><![CDATA[$P{BK_DATE_FROM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DATE_TO">
+								<datasetParameterExpression><![CDATA[$P{BK_DATE_TO}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="RESOURCES">
+								<datasetParameterExpression><![CDATA[$P{BK_RESOURCES}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="WEEKDAYS">
+								<datasetParameterExpression><![CDATA[$P{BK_WEEKDAYS}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<rowGroup name="ResourceGroup" width="75" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{resource_name}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Sans_Bold" x="5" y="0" width="70" height="10" uuid="8c9718ee-483a-4929-a100-244a24e4ffbe"/>
+								<textFieldExpression><![CDATA[$V{ResourceGroup}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#E0FFFF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement style="Sans_Bold" x="5" y="0" width="70" height="10" uuid="c01ea586-6f5b-4516-b2dd-6aa27b2cc56c"/>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="AgeGroup" height="80" totalPosition="End" headerPosition="Stretch">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{aname}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Sans_Bold" x="0" y="0" width="80" height="70" uuid="184c30a1-fa45-4ee3-8be6-8a90ebe1ef0d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+								<textFieldExpression><![CDATA[$V{AgeGroup}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement style="Sans_Bold" x="0" y="70" width="40" height="10" uuid="06209a7c-1c5e-4e95-9ecd-ad7f33059f32"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[M]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Sans_Bold" x="40" y="70" width="40" height="10" uuid="9969bbca-5f4c-4cea-bd51-3889a8baf399"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[K]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#FFFF60" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement style="Sans_Bold" x="0" y="0" width="80" height="70" uuid="a63a51d1-aa6f-4cae-ba66-a8d5b7cfa2f8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Sans_Bold" x="0" y="70" width="40" height="10" uuid="11b3cb34-8980-40dc-87d5-662e4d79ec75"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[M]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Sans_Bold" x="40" y="70" width="40" height="10" uuid="97644c1d-5c61-4a01-be1b-c98ae8497f56"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[K]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="MaleMesure" class="java.lang.Integer" calculation="Sum">
+					<measureExpression><![CDATA[$F{male}]]></measureExpression>
+				</measure>
+				<measure name="FemaleMesure" class="java.lang.Integer" calculation="Sum">
+					<measureExpression><![CDATA[$F{female}]]></measureExpression>
+				</measure>
+				<crosstabCell width="80" height="10">
+					<cellContents backcolor="#FFFFFF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10" uuid="22264a3a-7193-4892-bf29-b75899cc2b80"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{MaleMesure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10" uuid="93429dda-20a2-411b-8c7c-48de11729143"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{FemaleMesure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="80" height="10" columnTotalGroup="AgeGroup">
+					<cellContents backcolor="#FFFF60" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10" uuid="4956a86e-de4d-4ae4-aab7-ebc757987f4e"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{MaleMesure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10" uuid="7c281a12-3cd0-422f-9689-fb480b311127"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{FemaleMesure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="80" height="10" rowTotalGroup="ResourceGroup">
+					<cellContents backcolor="#E0FFFF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="40" height="10" uuid="90c25670-614f-48d4-8da2-d77b3ea3cd6e"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{MaleMesure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="40" y="0" width="40" height="10" uuid="8852a81d-3234-4216-b364-3f61abd35f5c"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{FemaleMesure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="80" height="10" rowTotalGroup="ResourceGroup" columnTotalGroup="AgeGroup">
+					<cellContents backcolor="#C0C0C0" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement style="Sans_Bold" x="0" y="0" width="40" height="10" uuid="ad6c304a-8e57-48e4-b7fb-3870a1f35401"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{MaleMesure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Sans_Bold" x="40" y="0" width="40" height="10" uuid="b24d7c43-17b9-4c89-9f2b-f0e3bfa5e1bb"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{FemaleMesure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<whenNoDataCell>
+					<cellContents>
+						<staticText>
+							<reportElement x="0" y="0" width="250" height="25" uuid="59b20104-6c6f-4eb1-b324-25b2b746f423"/>
+							<text><![CDATA[No data]]></text>
+						</staticText>
+					</cellContents>
+				</whenNoDataCell>
+			</crosstab>
+		</band>
+	</detail>
+</jasperReport>

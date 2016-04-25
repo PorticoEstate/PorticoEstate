@@ -1,0 +1,352 @@
+<?php
+
+	class import_conversion
+	{
+
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		public $debug = true;
+		protected $is_eav;
+		protected $location_id;
+		protected $bim_type_id;
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = $this->db->join;
+			$admin_entity = CreateObject('property.soadmin_entity');
+			$admin_entity->type = 'entity';
+			$category = $admin_entity->read_single_category(4, 1);
+			$this->is_eav = !!$category['is_eav'];
+			$this->location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.4.1");
+
+			$sql = "SELECT fm_bim_type.id FROM fm_bim_type WHERE location_id = {$this->location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$this->bim_type_id = $this->db->f('id');
+		}
+
+		public function add( $data )
+		{
+			/*
+			  [0] => Identifikasjonsnr
+			  [1] => Betegnelse
+			  [2] => Objekt-id
+			  [3] => Fast plassering
+			  [4] => Juridisk person
+			  [5] => Datering
+			  [6] => Tittel
+			  [7] => Avbildet person
+			  [8] => Avbildet sted
+			  [9] => Teknikk
+			  [10] => Mål
+			  [11] => Historikk
+			  [12] => Tilstand
+			 */
+			$error = false;
+
+			$plassering = explode('.', $data[3]);
+			$byggid = $plassering[1];
+			if (!$byggid)
+			{
+				$this->errors[] = "Mangler objekt, hopper over: {$data[3]}";
+				return true;
+			}
+
+			$plassering_descr_arr = array();
+			$count_plassering = count($plassering);
+			for ($i = 3; $i < $count_plassering; $i++)
+			{
+				if ($plassering[$i])
+				{
+					$plassering_descr_arr[] = $plassering[$i];
+				}
+			}
+
+			$plassering_descr = implode('.', $plassering_descr_arr);
+//_debug_array($plassering_descr);
+			/*
+			  if(substr($plassering[0],0,1) == 'B')
+			  {
+			  $this->warnings[] = "BBB-objekt, hopper over: {$data[3]}";
+			  return true;
+			  }
+			 */
+
+			$location_code = substr($byggid, 0, 4) . '-0' . substr($byggid, -1);
+//_debug_array($location_code);
+
+			$location_data = execMethod('property.solocation.read_single', $location_code);
+			if (!$location_data['loc1'])
+			{
+				$this->errors[] = "Error importing location: {$location_code}";
+				$error = true;
+				return true;
+			}
+
+
+			if ($location_data['street_name'])
+			{
+				$address[] = $location_data['street_name'];
+				$address[] = $location_data['street_number'];
+				$address = $this->db->db_addslashes(implode(" ", $address));
+			}
+
+			$loc3_data = explode('.', $data[3]);
+			$loc3_data2 = explode('.........', $data[3]);
+			$loc3_data3 = explode('.', $loc3_data2[1]);
+
+			if (ctype_digit(rtrim($loc3_data[2], '00')))
+			{
+				$location_code .= '-' . sprintf("%02s", rtrim($loc3_data[2], '00'));
+			}
+			else if (ctype_digit($loc3_data3[0]))
+			{
+				$location_code .= '-' . sprintf("%02s", $loc3_data3[0]);
+			}
+
+			$_location_data = execMethod('property.solocation.read_single', $location_code);
+
+			if (!$_location_data['loc1'])
+			{
+				$location_code = substr($byggid, 0, 4) . '-0' . substr($byggid, -1);
+			}
+
+			if (!$address)
+			{
+				$address = $this->db->db_addslashes($location_data['loc1_name']);
+			}
+
+			$address .= $plassering_descr ? ", $plassering_descr" : '';
+
+			$id = (int)$data[2];
+
+
+			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
+			$entry_date = time();
+
+//_debug_array($entry_date_info);
+//_debug_array($entry_date);
+			$value_set = array();
+
+			$value_set['num'] = sprintf('%04s', $id);
+			$value_set['loc1'] = $location_data['loc1'];
+			$value_set['loc2'] = $location_data['loc2'];
+			$value_set['user_id'] = $this->account;
+			$value_set['location_code'] = $location_code;
+			$value_set['address'] = $address;
+			$value_set['entry_date'] = $entry_date;
+			$value_set['museumsnr'] = $this->db->db_addslashes($data[0]);
+			$value_set['betegnelse'] = $this->db->db_addslashes($data[1]);
+			$value_set['beskrivelse'] = $this->db->db_addslashes(str_replace('"', '', $data[6])); // tittel
+			$value_set['juridisk_person'] = $this->db->db_addslashes($data[4]);
+			$value_set['datering'] = $this->db->db_addslashes($data[5]);
+			$value_set['avbildet_person'] = $this->db->db_addslashes($data[7]);
+			$value_set['avbildet_sted'] = $this->db->db_addslashes($data[8]);
+			$value_set['teknikk'] = $this->db->db_addslashes($data[9]);
+			$value_set['maal'] = $this->db->db_addslashes($data[10]);
+			$value_set['historikk'] = $this->db->db_addslashes($data[11]);
+			$value_set['tilstand'] = $this->db->db_addslashes($data[12]);
+			$value_set['tilstandsgrad'] = (int)substr($data[12], 0, 1) + 1;
+			$value_set['paafort_text'] = $this->db->db_addslashes($data[13]);
+
+			/*
+			 *    [0] => Identifikasjonsnr
+			 *    [1] => Betegnelse
+			 *    [2] => Objekt-id
+			 *    [3] => Fast plassering
+			 *    [4] => Juridisk person
+			 *    [5] => Datering
+			 *    [6] => Tittel
+			 *    [7] => Avbildet person
+			 *    [8] => Avbildet sted
+			 *    [9] => Teknikk
+			 *    [10] => Mål
+			 *    [11] => Historikk
+			 *    [12] => Tilstand
+			 */
+			if ($this->is_eav)
+			{
+				$ok = $this->_add_eav($id, $value_set);
+			}
+			else
+			{
+				$ok = $this->_add_sql($id, $value_set);
+			}
+
+			return true;
+		}
+
+		private function _add_eav( $id, $data )
+		{
+			$location_id = (int)$this->location_id;
+			$sql = "SELECT fm_bim_item.id FROM fm_bim_item WHERE fm_bim_item.type = {$this->bim_type_id} AND fm_bim_item.id = {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+//			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+//			$this->db->next_record();
+			$type = (int)$this->bim_type_id;
+
+
+			$location_name = '_entity_4_1';
+
+			if ($this->db->next_record())
+			{
+				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
+
+
+				phpgw::import_class('phpgwapi.xmlhelper');
+
+				$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
+				$doc = new DOMDocument;
+				$doc->preserveWhiteSpace = true;
+				$doc->loadXML($xmldata);
+				$domElement = $doc->getElementsByTagName($location_name)->item(0);
+				$domAttribute = $doc->createAttribute('appname');
+				$domAttribute->value = 'property';
+
+				// Don't forget to append it to the element
+				$domElement->appendChild($domAttribute);
+
+				// Append it to the document itself
+				$doc->appendChild($domElement);
+
+				$doc->formatOutput = true;
+				$xml = $doc->saveXML();
+
+				$value_set = array
+					(
+					'xml_representation' => $this->db->db_addslashes($xml),
+					'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+					'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+					'location_code' => $data['location_code'],
+					'loc1' => $data['loc1'],
+					'address' => $data['address'],
+				);
+
+				$value_set = $this->db->validate_update($value_set);
+
+				$sql = "UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}";
+			}
+			else
+			{
+				$data['id'] = $id;
+				$this->warnings[] = "Denne er ny: {$id}, legger til";
+
+				phpgw::import_class('phpgwapi.xmlhelper');
+				$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
+				$doc = new DOMDocument;
+				$doc->preserveWhiteSpace = true;
+				$doc->loadXML($xmldata);
+				$domElement = $doc->getElementsByTagName($location_name)->item(0);
+				$domAttribute = $doc->createAttribute('appname');
+				$domAttribute->value = 'property';
+
+				// Don't forget to append it to the element
+				$domElement->appendChild($domAttribute);
+
+				// Append it to the document itself
+				$doc->appendChild($domElement);
+				$doc->formatOutput = true;
+
+				$xml = $doc->saveXML();
+
+				if (function_exists('com_create_guid') === true)
+				{
+					$guid = trim(com_create_guid(), '{}');
+				}
+				else
+				{
+					$guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+				}
+
+				$values_insert = array
+					(
+					'id' => $id,
+					'type' => $type,
+					'guid' => $guid,
+					'xml_representation' => $this->db->db_addslashes($xml),
+					'model' => 0,
+					'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+					'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+					'location_code' => $data['location_code'],
+					'loc1' => $data['loc1'],
+					'address' => $data['address'],
+					'entry_date' => time(),
+					'user_id' => $this->account
+				);
+
+				$sql = "INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($values_insert)) . ')';
+			}
+
+			if ($this->debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			if (!$request_ok)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
+				$ok = false;
+			}
+			return $ok;
+		}
+
+		private function _add_sql( $id, $value_set )
+		{
+			$request_ok = false;
+			$table = 'fm_entity_4_1';
+
+			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}", __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
+				$value_set = $this->db->validate_update($value_set);
+				$sql = "UPDATE {$table} SET {$value_set} WHERE id = {$id}";
+			}
+			else
+			{
+				$value_set['id'] = $id;
+				$this->warnings[] = "Denne er ny: {$id}, legger til";
+				$cols = implode(',', array_keys($value_set));
+				$values = $this->db->validate_insert(array_values($value_set));
+
+				$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+			}
+
+			if ($this->debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			if (!$request_ok)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
+				$ok = false;
+			}
+			return $ok;
+		}
+	}

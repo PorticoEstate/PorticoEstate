@@ -1,0 +1,37 @@
+add sub	todo	zh	新增子分类
+addsub	todo	zh	新增子分类
+are you sure you want to delete this entry	todo	zh	您确定要移除这笔资料吗？
+back to projectlist	todo	zh	回到专案列表
+clear form	todo	zh	清除表格
+completed	todo	zh	已完成
+date due	todo	zh	截止日期
+days datedue	todo	zh	离截止日期天数
+displaying subprojects of following project	todo	zh	显示下列专案的子专案
+grant todo access	common	zh	代办事项权限控管
+last updated	todo	zh	最後更新日期
+month	todo	zh	月
+or: days from startdate:	todo	zh	或：从开始日起算天数
+or: select for today:	todo	zh	或：由今天开始
+parent project	todo	zh	上一层目录
+parent project:	todo	zh	上一层目录：
+project description	todo	zh	专案说明
+project name	todo	zh	专案名称
+projectname	todo	zh	专案名称
+status	todo	zh	状态
+sub	todo	zh	子项目
+subproject description	todo	zh	子专案说明
+todo	common	zh	代办事项
+todo list	common	zh	代办事项
+to do list	common	zh	代办事项
+todo list - add	todo	zh	代办事项  - 新增
+todo list - add sub-project	todo	zh	代办事项  - 新增子专案
+todo list - edit	todo	zh	代办事项  - 编辑
+todo preferences	common	zh	代办事项喜好设定
+urgency	todo	zh	优先权
+view matrix of actual month	todo	zh	检视当月总览
+viewsub	todo	zh	检视子项目
+which groups	todo	zh	哪一群组
+year	todo	zh	年
+you have entered an invailed date	todo	zh	您输入了不合法的日期
+you must enter a description	todo	zh	您必须输入说明
+

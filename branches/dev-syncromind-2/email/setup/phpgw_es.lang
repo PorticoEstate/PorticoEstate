@@ -1,0 +1,187 @@
+1 message has been deleted	email	es	1 mensaje fue borrado
+1 message has been moved to	email	es	1 mensaje fue movido a
+account	email	es	Cuenta
+and	email	es	y
+add to addressbook	email	es	Agregar a la libreta de direcciones
+all messages	email	es	Todos los mensajes
+arrival date	email	es	Fecha de Llegada
+as	email	es	como
+attach file	email	es	Adjuntar Archivo
+attachment	email	es	Archivo Adjunto
+attachments	email	es	Archivos Adjuntos
+attach signature	email	es	Adjuntar firma
+bcc	email	es	CCO
+bcc address	email	es	Direccion CCO
+body	email	es	Cuerpo
+cache server data whenever possible	email	es	Almacenar datos del servidor en memoria cuando sea posible
+cc	email	es	CC
+cc address	email	es	Direccion CC
+choose for rename	email	es	Seleccione para renombrar
+compose	email	es	Componer
+compose new	common	es	Componer
+contains	email	es	Contiene
+could not open this mailbox	email	es	No se pudo abrir esta casilla
+create a folder	email	es	Crear Carpeta
+create (expert)	email	es	Crear (experto)
+current attachments	email	es	Archivos Adjuntos Actuales
+custom	email	es	Personal -
+custom email settings	email	es	Seteos personalizados del Email
+date	email	es	Fecha
+default:	common	es	por defecto:
+default sorting order	email	es	Modo de orden por defecto
+delete account	common	es	Eliminar cuenta
+delete a folder	email	es	Borrar Carpeta
+deleted messages go to trash	email	es	Mensajes borrados van a la Papelera
+deleted messages (trash) folder	email	es	Carpeta de Mensajes borrados (Papelera - Trash)
+delete	email	es	Borrar
+delete (expert)	email	es	Borrar (experto)
+discard	email	es	Descartar
+does not contain	email	es	No Contiene
+email account name	email	es	Nombre de cuenta de Email
+email address	email	es	Dirección de Email
+email date	email	es	Fecha del Mensaje
+email	email	es	E-mail
+email - file attachment	email	es	Email - Adjuntar Archivo
+email filters	email	es	Filtros de Correo
+e-mail folders	common	es	Carpetas
+email password	email	es	Contraseña de Email
+e-mail preferences	common	es	Preferencias - E-Mail
+email preferences	email	es	Preferencias - E-Mail
+email signature	email	es	Firma del E-mail
+email type	common	es	Tipo del E-mail
+enable this email account	common	es	Habilitar esta cuenta de correo
+enable utf-7 encoded folder names	email	es	Habilitar codificacion UTF-7 para carpetas
+enter your default mail domain ( From: user@domain )	admin	es	Ingrese su dominio de email predeterminado ( De: usuario@dominio )
+enter your pop	admin	es	Ingrese su Servidor POP
+enter your smtp server hostname or ip address	admin	es	Ingrese su Servidor SMTP (nombre o IP)
+enter your smtp server port	admin	es	Ingrese el puerto del Servidor SMTP
+error moving messages to	email	es	Error moviendo mensajes a
+error: unknown message data	email	es	Error: Datos del mensaje desconocidos
+extended sieve	email	es	Filtrado Extendido
+extra e-mail account	common	es	Cuenta de Correo adicional
+extra e-mail accounts	common	es	Cuentas de Correo adicionales
+fewer actions	email	es	Menos Acciones
+fewer choices	email	es	Menos Opciones
+file attachment	email	es	Adjuntar Archivo
+file	email	es	Archivo
+file into	email	es	Guardar en
+files	email	es	Archivos
+folder	email	es	Carpeta
+folder maintenance	email	es	Mantenimiento de Carpetas
+folder name	email	es	Nombre de la Carpeta
+folders	email	es	Carpetas
+folder size	email	es	Tama&ntilde;o de la Carpeta
+for these items, fill only what is different from you default e-mail preferences	common	es	Para estos items, complete solo los campos que difieran de su configuracion por defecto
+forward	email	es	Reenviar
+from	email	es	De
+from address	email	es	Direccion del Remitente
+get size	email	es	Obtener tama&ntilde;o
+header field	email	es	Encabezados
+hidden	email	es	oculta
+if applicable	email	es	Si es aplicable
+if fileto then select destination folder	email	es	si archiva, seleccione a que carpeta
+if messages match	email	es	Si los mensajes coinciden con
+image	email	es	Imagen
+imap server type	email	es	Tipo de servidor IMAP
+keep	email	es	Mantener
+keywords	email	es	Palabras Clave
+layout 1	email	es	Modo 1
+layout 2	email	es	Modo 2
+layout	email	es	Modo
+lines	email	es	Lineas
+long names	email	es	nombres largos
+mail folder(uw-maildir)	email	es	Carpeta del Correo
+mail server	email	es	Servidor de Mail
+mail server login type	admin	es	Tipo de login
+mail server type	email	es	Tipo de servidor de Mail
+mail settings	admin	es	Seteos del E-mail
+manage accounts	email	es	Administrar cuentas
+manage folders	email	es	Administrar carpetas
+message	email	es	Mensaje
+message list layout	email	es	Modo de listado de mensajes
+messages	email	es	Mensajes
+messages have been moved to	email	es	mensajes fueron movidos a
+monitor	email	es	Monitor
+more actions	email	es	Mas Acciones
+more choices	email	es	Mas Opciones
+move selected messages into	email	es	Mover los mensajes seleccionados a
+move this message into	email	es	Mover este mensaje a
+na	email	es	NA
+newest	email	es	Mas Nuevo
+new	email	es	Nuevo
+new message	email	es	Nuevo mensaje
+new messages	email	es	Mensajes Nuevos
+next	email	es	Proximo
+no error returned from server	email	es	El servidor no devolvio errores
+no next message	email	es	No hay mas mensajes
+non-standard	email	es	No-Estandar
+no previous message	email	es	No hay mensaje anterior
+no subject	email	es	Sin Asunto
+number	email	es	N&uacute;mero
+oldest	email	es	Mas Antiguo
+or	common	es	o
+or enter text	email	es	o ingrese texto
+please fill in everything you need	email	es	Por favor complete los campos necesarios
+please select a folder to rename	email	es	Por favor seleccione una carpeta a renombrar
+please select a message first	email	es	Por favor seleccione un mensaje primero
+please type a folder name in the text box	email	es	Por favor ingrese el nombre de una carpeta en el campo de texto
+previous	email	es	Previo
+redirect	email	es	Redirigir
+reject	email	es	Rechazar
+raw message	email	es	texto plano
+rename a folder	email	es	Renombrar carpeta
+rename (expert)	email	es	Renombrar (experto)
+recipient	email	es	Receptor
+reply all	email	es	Responder a Todos
+reply	email	es	Responder
+replyto	email	es	ResponderA
+reset	email	es	Reiniciar
+result	email	es	resultado
+search this folder	email	es	Buscar en esta carpeta
+section	email	es	Seccion
+select home email address	email	es	Seleccione el Email Personal
+select work email address	email	es	Seleccione el Email Laboral
+select your mail server type	admin	es	Seleccione el tipo de servidor de correo
+send deleted messages to the trash	email	es	Enviar mensaje borrados a el Trash
+send	email	es	Enviar
+sender	email	es	Remitente
+sent messages folder	email	es	Carpeta de Mensajes Enviados
+sent messages saved in &quot;sent&quot; folder	email	es	Mensajes grabados en carpeta &quot;Enviados&quot;
+short names	email	es	Nombres cortos
+show new messages on main screen	email	es	Mostrar mensajes nuevos en pantalla principal
+show sender's email address with name	email	es	Mostrar direccion y nombre del remitente
+size	email	es	Tamaño
+size larger than	email	es	Tamaño mayor a
+size smaller than	email	es	Tamaño menor a
+somebody	email	es	alguien
+sort by	email	es	Ordenar segun
+standard	email	es	Normal -
+stop if matched	email	es	Parar si Coincidio
+subject	email	es	Asunto
+switch accounts	email	es	Cambiar de cuenta
+switch current folder to	common	es	Cambiar la presente carpeta a
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	es	Hubo un error en la conexion a su servidor.<br />Revise el usuario y clave, o contacte al soporte tecnico.
+then take this actions	email	es	Entonces realice las siguientes acciones
+this data not supplied.	email	es	Esta informacion no fue suministrada
+this folder is empty	email	es	Esta carpeta esta vacia
+to	email	es	Para
+to address	email	es	Direccion del Destinatario
+total messages	email	es	Total de Mensajes
+undisclosed recipients	email	es	Destinatarios Ocultos
+undisclosed sender	email	es	Remitente Oculto
+unknown action	email	es	Accion Desconocida
+unknown error	email	es	Error desconocido
+use custom settings	email	es	Usar seteos personalizados
+u-wash mail folder 	email	es	Carpeta IMAP U-Wash
+view as html	email	es	Ver como HTML
+view formatted	email	es	Ver con formato
+view headers	email	es	Ver Encabezados
+view unformatted	email	es	Ver sin formato
+wrote	email	es	escribio
+%1 messages have been deleted	email	es	%1 mensajes han sido borrados
+you have 1 new message!	common	es	Usted tiene 1 nuevo mensaje!
+you have messages!	common	es	Usted tiene mensajes!
+you have no new messages	common	es	Usted no tiene nuevos mensajes
+you have %1 new messages!	common	es	Usted tiene %1 mensajes nuevos!
+your full name	common	es	Su nombre completo
+your message has been sent	common	es	Su mensaje ha sido enviado!

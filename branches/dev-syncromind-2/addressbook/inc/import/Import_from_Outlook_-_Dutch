@@ -1,0 +1,175 @@
+<?php
+// Dit bestand definieert enkele functies en een associatieve array.
+// De sleutels van de array komen overeen met een hoofding in het te
+// importeren bestand en de waarden van de array zullen gebruikt worden
+// bij het aanmaken van het uitvoerbestand.
+//
+// Een uit Outlook geëxporteerd bestand ziet er uit als volgt:
+//
+// Titel<tab>Voornaam<tab>Middelste naam<tab>Achternaam<tab>...
+// <tab>Jan<tab><tab>Janssens<tab>...
+//
+// Hierin duidt de eerste lijn de betekenis aan van elk (optioneel) veld.
+// Dit is wat opgezocht zal worden voor de sleutel.
+//
+// De array hoeft in geen specifieke volgorde te staan en alle velden die
+// niet gedefiniëerd zijn, zullen ook niet worden omgezet.
+// Als de waarde gelijk is aan '+', zal ze worden toegevoegd aan het vorige
+// veld en alle tekst na de '+' zal worden toegevoegd vóór de waarde.
+// Zo zal bijvoorbeeld het volgende een komma en een spatie toevoegen tussen
+// Achternaam en Voornaam en het resultaat bewaren in Volledige naam:
+//
+//	array('Achternaam' => 'Volledige naam','Voornaam' => '+, ');
+//
+// Begin met een '#' symbool om een komma-gescheiden lijst om te zetten naar
+// een reeks gelijke velden.
+
+	class import_conv
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id;
+		var $type = 'csv';
+
+		var $import = array(
+			'Titel' => 'title', 
+			'Voornaam' => 'n_given',
+			'Middelste naam' => 'n_middle',
+			'Achternaam' => 'n_family',
+			'Achtervoegsel' => 'n_suffix',
+			'Bedrijf' => 'org_name',  //objectclass: organization
+			'Afdeling' => 'org_unit', //objectclass: organizationalPerson
+			'Functie' => 'title', //objectclass: organizationalPerson
+			'Werkadres, straat' => 'adr_one_street',
+			'Werkadres 2, straat' => 'address2',
+			'Werkadres 3, straat' => 'address3',
+			'Werkadres, plaats' => 'adr_one_locality',
+			'Werkadres, provincie' => 'adr_one_region',
+			'Werkadres, postcode' => 'adr_one_postalcode',
+			'Werkadres, land' => 'adr_one_countryname',
+			'Huisadres, straat' => 'adr_two_street',
+			'Huisadres, plaats' => 'adr_two_locality',
+			'Huisadres, provincie' => 'adr_two_region',
+			'Huisadres, postcode' => 'adr_two_postalcode',
+			'Huisadres, land' => 'adr_two_countryname',
+			'Huisadres, straat 2' => '',
+			'Huisadres, straat 3' => '',
+			'Ander adres, straat' => '',
+			'Ander adres, plaats' => '',
+			'Ander adres, provincie' => '',
+			'Ander adres, postcode' => '',
+			'Ander adres, land' => '',
+			'Telefoon assistent' => 'tel_msg',
+			'Fax op werk' => 'tel_fax',
+			'Telefoon op werk' => 'tel_work',
+			'Telefoon op werk 2' => 'ophone',
+			'Terugbellen' => '',
+			'Autotelefoon' => 'tel_car',
+			'Hoofdtelefoon bedrijf' => '',
+			'Fax thuis' => '',
+			'Telefoon thuis' => 'tel_home',
+			'Telefoon thuis 2' => '', //This will make another homePhone entry
+			'ISDN' => 'tel_isdn',
+			'Mobiele telefoon' => 'tel_cell', //newPilotPerson
+			'Andere fax' => '',
+			'Andere telefoon' => '',
+			'Pager' => 'tel_pager',
+			'Hoofdtelefoon' => '',
+			'Radiotelefoon' => '',
+			'Teksttelefoon' => '',
+			'Telex' => '', //organization
+			'Account' => '',
+			'Speciale datum' => '',
+			'Naam assistent' => '', //newPilotPerson
+			'Factuurinformatie' => '',
+			'Verjaardag' => 'bday',
+			'Categorieën' => '', 
+			'Kinderen' => '',
+			'Directory-server' => '',
+			'E-mailadres' => 'email',
+			'E-mail, weergegeven naam' => '',
+			'E-mailadres 2' => 'email_home',
+			'E-mail, weergegeven naam 2' => '',
+			'E-mailadres 3' => '', //add another...
+			'E-mail, weergegeven naam 3' => '',
+			'Geslacht' => '',
+			'Sofi-nummer' => '',
+			"Hobby's" => '',
+			'Initialen' => '',
+			'Vrije/bezette tijden voor Internet-gebruik' => '',
+			'Trefwoorden' => '',
+			'Taal' => '',
+			'Locatie' => '',
+			'Naam manager' => '',
+			'Reisafstand' => '',
+			'Notities' => 'note',
+			'Kantoorlocatie' => '',
+			'Organisatie-id' => '',
+			'Postbus' => '',
+			'Prioriteit' => '',
+			'Privé' => '',
+			'Referentie van' => '',
+			'Gevoeligheid' => '',
+			'Partner' => '',
+			'Gebruiker 1' => '',
+			'Gebruiker 2' => '',
+			'Gebruiker 3' => '',
+			'Gebruiker 4' => '',
+			'Webpagina' => 'url'
+		);
+
+		function import_start_file($buffer)
+		{
+			return $buffer;
+		}
+
+		function import_start_record($buffer)
+		{
+			$top=array();
+			++$this->id;
+			$this->currentrecord = $top;
+			return $buffer;
+		}
+
+		function import_new_attrib($buffer,$name,$value)
+		{
+			$value = trim($value);
+			$value = str_replace('\n','<BR>',$value);
+			$value = str_replace('\r','',$value);
+			$this->currentrecord += array($name => $value);
+
+			return $buffer;
+		}
+
+		function import_end_record($buffer)
+		{
+			$buffer[$this->id]='';
+			while ( list($name, $value) = each($this->currentrecord))
+			{
+				$buffer[$this->id][$name] = $value;
+				//echo '<br>'.$name.' => '.$value;
+			}
+			return $buffer;
+		}
+
+		function import_end_file($buffer,$access='private',$cat_id=0)
+		{
+			$contacts = CreateObject('phpgwapi.contacts');
+			//echo '<br>'; 
+			for ($i=1;$i<=count($buffer);$i++)
+			{
+				while ( list($name,$value) = @each($buffer[$i]) )
+				{
+					//echo '<br>'.$i.': '.$name.' => '.$value;
+					$entry[$i][$name] = $value;
+				}
+				$entry[$i]['email_type']      = 'INTERNET';
+				$entry[$i]['email_home_type'] = 'INTERNET';
+				$entry[$i]['adr_one_type']    = 'intl';
+				$entry[$i]['adr_two_type']    = 'intl';
+				//echo '<br>';
+				$contacts->add($GLOBALS['phpgw_info']['user']['account_id'],$entry[$i],$access,$cat_id);
+			}
+			$num = $i - 1;
+			return lang('Successfully imported x records into your addressbook.',$num);
+		}
+	}

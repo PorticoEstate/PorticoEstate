@@ -1,0 +1,33 @@
+are you sure you want to delete %1 ?	ftp	pl	Na pewno chcesz usunąć %1 ?
+attempt to create a directory with empty name	ftp	pl	Próba utworzenia katalogu bez nazwy
+cancel	ftp	pl	Anuluj
+cd	ftp	pl	cd
+connect	ftp	pl	Połącz
+create new directory	ftp	pl	Utwórz nowy katalog
+delete	ftp	pl	usuń %1
+failed to connect to %1 with user %2 and password %3	ftp	pl	Nieudane połączenie do %1 z nazwą użytkownika %2 i hasłem %3
+failed to create directory %1	ftp	pl	Nie udało się utworzyć katalogu %1
+failed to delete %1	ftp	pl	Nie udało się usunąć %1
+failed to rename %1 to %2	ftp	pl	Nie udało się zmienić nazwy %1 na %2
+failed to upload %1	ftp	pl	Nie udało się wczytać %1
+ftp client	ftp	pl	Klient FTP
+ftp hostname	ftp	pl	Nazwa serwera FTP
+ftp server	ftp	pl	Serwer FTP
+home	ftp	pl	Home
+log into ftp server	ftp	pl	Logowanie do serwera FTP
+logout/relogin	ftp	pl	Wyloguj/Zaloguj
+password	ftp	pl	Hasło
+permissions	ftp	pl	Prawa
+rename	ftp	pl	zmień nazwę %1
+rename from	ftp	pl	Zmień nazwę z
+rename to	ftp	pl	na
+renamed %1 to %2	ftp	pl	Zmieniono nazwę %1 na %2
+save	ftp	pl	zapisz
+save to filemanager	ftp	pl	zapisz do managera plików
+size	ftp	pl	Wielkość
+successfully created directory %1	ftp	pl	Pomyślnie utworzono %1
+successfully deleted %1	ftp	pl	Pomyślnie usunięto %1
+successfully uploaded %1	ftp	pl	Pomyślnie wczytano %1
+upload	ftp	pl	Wczytaj
+username	ftp	pl	Nazwa użytkownika
+view	ftp	pl	Widok

@@ -1,0 +1,37 @@
+add sub	todo	zt	新增子分類
+addsub	todo	zt	新增子分類
+are you sure you want to delete this entry	todo	zt	您確定要移除這筆資料嗎？
+back to projectlist	todo	zt	回到專案列表
+clear form	todo	zt	清除表格
+completed	todo	zt	已完成
+date due	todo	zt	截止日期
+days datedue	todo	zt	離截止日期天數
+displaying subprojects of following project	todo	zt	顯示下列專案的子專案
+grant todo access	common	zt	代辦事項權限控管
+last updated	todo	zt	最後更新日期
+month	todo	zt	月
+or: days from startdate:	todo	zt	或：從開始日起算天數
+or: select for today:	todo	zt	或：由今天開始
+parent project	todo	zt	上一層目錄
+parent project:	todo	zt	上一層目錄：
+project description	todo	zt	專案說明
+project name	todo	zt	專案名稱
+projectname	todo	zt	專案名稱
+status	todo	zt	狀態
+sub	todo	zt	子項目
+subproject description	todo	zt	子專案說明
+todo	common	zt	代辦事項
+todo list	common	zt	代辦事項
+to do list	common	zt	代辦事項
+todo list - add	todo	zt	代辦事項  - 新增
+todo list - add sub-project	todo	zt	代辦事項  - 新增子專案
+todo list - edit	todo	zt	代辦事項  - 編輯
+todo preferences	common	zt	代辦事項喜好設定
+urgency	todo	zt	優先權
+view matrix of actual month	todo	zt	檢視當月總覽
+viewsub	todo	zt	檢視子項目
+which groups	todo	zt	哪一群組
+year	todo	zt	年
+you have entered an invailed date	todo	zt	您輸入了不合法的日期
+you must enter a description	todo	zt	您必須輸入說明
+

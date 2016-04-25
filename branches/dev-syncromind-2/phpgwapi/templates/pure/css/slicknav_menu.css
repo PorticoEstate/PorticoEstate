@@ -1,0 +1,20 @@
+
+.slicknav_menu {
+	display:block;
+	float:left;
+    position: fixed;
+    top: 40px;
+	z-index: 100;
+	text-align:left;
+}
+#menutree {
+	display:none;
+}
+
+.slicknav_btn {
+	float:left;
+}
+
+.pure-menu-fixed {
+	white-space: nowrap;
+}

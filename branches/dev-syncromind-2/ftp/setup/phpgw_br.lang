@@ -1,0 +1,28 @@
+are you sure you want to delete %1 ?	ftp	br	Are you sure you want to delete %1 ?
+attempt to create a directory with empty name	ftp	br	Attempt to create a directory with empty name
+cancel	ftp	br	cancel
+cd	ftp	br	cd
+connect	ftp	br	Connect
+create new directory	ftp	br	Create new dir
+delete	ftp	br	delete
+failed to connect to %1 with user %1 and password %3	ftp	br	Failed to connect to %1 with user %2 and password %3
+failed to create directory %1	ftp	br	Failed to create directory %1
+failed to delete %1	ftp	br	Failed to delete %1
+failed to rename %1 to %2	ftp	br	Failed to rename %1 to %2
+failed to upload %1	ftp	br	Failed to upload %1
+ftp client	ftp	br	Ftp Client
+ftp server	ftp	br	Ftp Server
+home	ftp	br	Home
+password	ftp	br	Password
+rename	ftp	br	rename
+rename from	ftp	br	Rename from
+rename to	ftp	br	to
+renamed	%1 to %2	ftp	br	Renamed %1 to %2
+successfully created directory %1	ftp	br	Successfully created directory %1
+successfully deleted %1	ftp	br	Successfully deleted %1
+save	ftp	br	save
+save to filemanager	ftp	br	save to filemanager
+successfully uploaded %1	ftp	br	Successfully uploaded %1
+upload	ftp	br	upload
+username	ftp	br	Username
+view	ftp	br	view
