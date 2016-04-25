@@ -8935,7 +8935,6 @@
 			)
 		);
 
-
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'unspsc_code', array(
 			'type' => 'varchar',
 			'precision' => 15,
@@ -8954,9 +8953,38 @@
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET external_project_id = project_group WHERE project_group IS NOT NULL");
 
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project', array(), 'project_group');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM  fm_project_group");
+
+		$external_projects = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$external_projects[] = array
+			(
+				'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'name'		=> $GLOBALS['phpgw_setup']->oProc->f('descr'),
+				'budget'	=> $GLOBALS['phpgw_setup']->oProc->f('budget')
+			);
+		}
+
+		foreach($external_projects as $external_project)
+		{
+			$cols = implode(',', array_keys($external_project));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($external_project));
+			$sql = "INSERT INTO fm_external_project ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_project_group');
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'contract_id', array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_agreement", 'contract_id', array(
 			'type' => 'varchar',
 			'precision' => 30,
 			'nullable' => True
