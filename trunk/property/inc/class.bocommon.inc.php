@@ -2398,4 +2398,141 @@
 			}
 			return $content_email;
 		}
+
+
+		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
+			if($selected)
+			{
+				foreach ($contract_list as &$contract)
+				{
+					$contract['selected'] = $selected == $contract['id'] ? 1 : 0;
+				}
+			}
+
+			return $contract_list;
+		}
+
+		/**
+		 * Gets vendor canidated to be used as vendor - called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
+		 * @return array
+		 */
+		public function get_eco_service()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+			$values = $sogeneric->read(array('query' => $query));
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_eco_service_name( $id )
+		{
+			$ret = '';
+			if($id = (int)$id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				$ret =  $sogeneric_data['name'];
+			}
+			return $ret;
+		}
+
+		public function get_unspsc_code()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+			$values = $sogeneric->read(array('query' => $query, 'allrows' => true));
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+		public function get_unspsc_code_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
+		}
+
+		public function get_b_account()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_external_project()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'external_project');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_external_project_name( $id )
+		{
+			$ret = '';
+			if($id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'external_project');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				if($sogeneric_data)
+				{
+					$ret =  $sogeneric_data['name'];
+				}
+			}
+			return $ret;
+		}
+
+		public function get_ecodimb()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'dimb');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
 	}

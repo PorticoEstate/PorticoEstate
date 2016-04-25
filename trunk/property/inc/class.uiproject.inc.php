@@ -2611,18 +2611,7 @@ JS;
 			{
 				return;
 			}
-
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'external_project');
-			$values = $sogeneric->read(array('query' => $query));
-
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['name']}";
-			}
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_external_project();
 		}
 
 		public function get_ecodimb()
@@ -2631,33 +2620,12 @@ JS;
 			{
 				return;
 			}
-
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'dimb');
-			$values = $sogeneric->read(array('query' => $query));
-
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['descr']}";
-			}
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_ecodimb();
 		}
 
 		private function _get_external_project_name( $id )
 		{
-			$ret = '';
-			if($id)
-			{
-				$sogeneric = CreateObject('property.sogeneric', 'external_project');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				if($sogeneric_data)
-				{
-					$ret =  $sogeneric_data['name'];
-				}
-			}
-			return $ret;
+			return $this->bocommon->get_external_project_name($id);
 		}
 
 		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )

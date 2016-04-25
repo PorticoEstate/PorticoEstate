@@ -1699,7 +1699,7 @@ HTML;
 				'table_send' => $table_send,
 				'table_done' => $table_done,
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
-				'files' => isset($workorder['files']) ? $workorder['files'] : '',
+				'files' => $content_files,
 				'lang_files' => lang('files'),
 				'lang_filename' => lang('Filename'),
 				'lang_file_action' => lang('attach file'),
