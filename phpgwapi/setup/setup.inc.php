@@ -12,7 +12,7 @@
 	// Basic information about this app
 	$setup_info['phpgwapi']['name']      = 'phpgwapi';
 	$setup_info['phpgwapi']['title']     = 'phpgwapi';
-	$setup_info['phpgwapi']['version']   = '0.9.17.549';
+	$setup_info['phpgwapi']['version']   = '0.9.17.550';
 	$setup_info['phpgwapi']['versions']['current_header'] = '1.31';
 	$setup_info['phpgwapi']['versions']['system'] = '2.0';
 	$setup_info['phpgwapi']['enable']    = 3;
@@ -64,6 +64,7 @@
 		'phpgw_sessions',
 		'phpgw_vfs',
 		'phpgw_vfs_filedata',
+		'phpgw_vfs_file_relation',
 		'phpgw_config2_section',
 		'phpgw_config2_attrib',
 		'phpgw_config2_choice',
