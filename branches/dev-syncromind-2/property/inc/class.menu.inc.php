@@ -1225,6 +1225,10 @@
 					'image' => array('property', 'documentation'),
 					'children' => array
 						(
+						'generic' => array(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric_document.index')),
+							'text' => lang('generic document')
+						),
 						'legislation' => array
 							(
 							'text' => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
