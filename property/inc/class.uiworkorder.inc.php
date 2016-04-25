@@ -2247,6 +2247,7 @@
 				'value_sum_estimated_cost' => $sum_estimated_cost,
 				'value_contract_sum' => isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['contract_sum'] : '',
 				'ecodimb_data' => $ecodimb_data,
+				'project_ecodimb' => $project['ecodimb'],
 				'vendor_data' => $vendor_data,
 				'location_data' => $location_data,
 				'location_template_type' => $location_template_type,

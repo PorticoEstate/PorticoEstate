@@ -278,6 +278,10 @@
 						$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
 						$where = 'OR';
 				}
+				else
+				{
+					$querymethod .= " OR CAST ({$table}.{$this->location_info['id']['name']} AS TEXT) $this->_like '%$query%'";
+				}
 
 				foreach ($this->location_info['fields'] as $field)
 				{

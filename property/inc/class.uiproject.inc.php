@@ -73,6 +73,7 @@
 			'get_vouchers' => true,
 			'check_missing_project_budget' => true,
 			'get_external_project'=> true,
+			'get_ecodimb'	=> true
 		);
 
 		function __construct()
@@ -2619,6 +2620,26 @@ JS;
 			foreach ($values as &$value)
 			{
 				$value['name'] = "{$value['id']} {$value['name']}";
+			}
+
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		public function get_ecodimb()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'dimb');
+			$values = $sogeneric->read(array('query' => $query));
+
+			foreach ($values as &$value)
+			{
+				$value['name'] = "{$value['id']} {$value['descr']}";
 			}
 
 			return array('ResultSet' => array('Result' => $values));
