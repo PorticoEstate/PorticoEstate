@@ -598,22 +598,30 @@
 						<label>
 							<xsl:value-of select="$lang_dimb"/>
 						</label>
-						<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
+						<xsl:if test="mode='edit' and project_ecodimb =''">
+							<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
+						</xsl:if>
 						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="project_ecodimb !=''">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+									</xsl:choose>
 								</xsl:when>
-								<xsl:otherwise test="mode='edit'">
+								<xsl:otherwise>
 									<xsl:attribute name="disabled">
 										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="$lang_dimb"/>
 									</xsl:attribute>
-
 								</xsl:otherwise>
 							</xsl:choose>
 						</input>
