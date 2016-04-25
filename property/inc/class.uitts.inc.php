@@ -2717,21 +2717,7 @@
 
 		public function get_vendor_contract($vendor_id = 0, $selected = '')
 		{
-			if(!$vendor_id)
-			{
-				$vendor_id = phpgw::get_var('vendor_id', 'int');
-			}
-
-			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
-			if($selected)
-			{
-				foreach ($contract_list as &$contract)
-				{
-					$contract['selected'] = $selected == $contract['id'] ? 1 : 0;
-				}
-			}
-
-			return $contract_list;
+			return $this->bocommon->get_vendor_contract($vendor_id, $selected);
 		}
 
 		/**
@@ -2748,13 +2734,9 @@
 				return;
 			}
 
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
-			$values = $sogeneric->read(array('query' => $query));
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_eco_service();
 		}
+
 		public function get_external_project()
 		{
 			if (!$this->acl_read)
@@ -2762,12 +2744,7 @@
 				return;
 			}
 
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'external_project');
-			$values = $sogeneric->read(array('query' => $query));
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_external_project();
 		}
 
 		public function get_unspsc_code()
@@ -2776,17 +2753,7 @@
 			{
 				return;
 			}
-
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
-			$values = $sogeneric->read(array('query' => $query, 'allrows' => true));
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['name']}";
-			}
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_unspsc_code();
 		}
 
 		public function get_ecodimb()
@@ -2796,17 +2763,7 @@
 				return;
 			}
 
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'dimb');
-			$values = $sogeneric->read(array('query' => $query));
-
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['descr']}";
-			}
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_ecodimb();
 		}
 
 		public function get_b_account()
@@ -2816,59 +2773,23 @@
 				return;
 			}
 
-			$query = phpgw::get_var('query');
-
-			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
-			$values = $sogeneric->read(array('query' => $query));
-
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['descr']}";
-			}
-
-			return array('ResultSet' => array('Result' => $values));
+			return $this->bocommon->get_b_account();
 		}
 
 
 		private function _get_eco_service_name( $id )
 		{
-			$ret = '';
-			if($id = (int)$id)
-			{
-				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				$ret =  $sogeneric_data['name'];
-			}
-			return $ret;
+			return $this->bocommon->get_eco_service_name($id);
 		}
 
 		private function _get_unspsc_code_name( $id )
 		{
-			$ret = '';
-			if($id)
-			{
-				$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				if($sogeneric_data)
-				{
-					$ret =  $sogeneric_data['name'];
-				}
-			}
-			return $ret;
+			return $this->bocommon->get_unspsc_code_name($id);
 		}
+
 		private function _get_external_project_name( $id )
 		{
-			$ret = '';
-			if($id)
-			{
-				$sogeneric = CreateObject('property.sogeneric', 'external_project');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				if($sogeneric_data)
-				{
-					$ret =  $sogeneric_data['name'];
-				}
-			}
-			return $ret;
+			return $this->bocommon->get_external_project_name($id);
 		}
 
 		protected function _generate_tabs( $history = '' )
