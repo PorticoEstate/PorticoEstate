@@ -515,19 +515,20 @@
 			$uicols['name'][] = 'subject';
 			$uicols['descr'][] = lang('subject');
 
-			$location_types = execMethod('property.soadmin_location.select_location_type');
-			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
+//			$location_types = execMethod('property.soadmin_location.select_location_type');
+//			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
 
-			static $location_cache = array();
+//			foreach ($location_types as $dummy => $level)
+//			{
+//				if (in_array($level['id'], $level_assigned))
+//				{
+//					$uicols['name'][] = "loc{$level['id']}_name";
+//					$uicols['descr'][] = $level['name'];
+//				}
+//			}
 
-			foreach ($location_types as $dummy => $level)
-			{
-				if (in_array($level['id'], $level_assigned))
-				{
-					$uicols['name'][] = "loc{$level['id']}_name";
-					$uicols['descr'][] = $level['name'];
-				}
-			}
+			$uicols['name'][] = "loc1_name";
+			$uicols['descr'][] = 'Eiendom';
 
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][] = lang('entry date');
