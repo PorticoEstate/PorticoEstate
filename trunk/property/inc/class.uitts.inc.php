@@ -199,28 +199,6 @@
 			return $this->jquery_results($result_data);
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'status_id' => $this->status_id,
-				'user_id' => $this->user_id,
-				'reported_by' => $this->reported_by,
-				'cat_id' => $this->cat_id,
-				'vendor_id' => $this->vendor_id,
-				'district_id' => $this->district_id,
-				'part_of_town_id' => $this->part_of_town_id,
-				'allrows' => $this->allrows,
-				'start_date' => $this->start_date,
-				'end_date' => $this->end_date
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function _print()
 		{
 			if (!$this->acl_read)
@@ -525,7 +503,6 @@
 
 		private function _get_fields()
 		{
-			$this->bo->read(array('dry_run' => true));
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
 
@@ -910,8 +887,8 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uitts.index',
-						'start_date' => $start_date,
-						'end_date' => $end_date,
+					//	'start_date' => $start_date,
+					//	'end_date' => $end_date,
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
