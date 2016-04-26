@@ -575,16 +575,16 @@
 						<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
-									<xsl:attribute name="data-validation">
+									<!--xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise test="mode='edit'">
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="$lang_service"/>
+									</xsl:attribute-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -607,6 +607,9 @@
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_dimb"/>
+									</xsl:attribute>
 									<xsl:choose>
 										<xsl:when test="project_ecodimb !=''">
 											<xsl:attribute name="disabled">
@@ -618,9 +621,6 @@
 								<xsl:otherwise>
 									<xsl:attribute name="disabled">
 										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="$lang_dimb"/>
 									</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -641,13 +641,13 @@
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise test="mode='edit'">
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="$lang_budget_account"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -666,18 +666,17 @@
 						<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
-									<xsl:attribute name="data-validation">
+									<!--xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise test="mode='edit'">
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="$lang_unspsc_code"/>
+									</xsl:attribute-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
 									</xsl:attribute>
-
 								</xsl:otherwise>
 							</xsl:choose>
 						</input>
