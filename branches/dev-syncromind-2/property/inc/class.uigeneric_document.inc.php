@@ -54,7 +54,7 @@
 		{
 			parent::__construct();
 
-//			$this->bo = CreateObject('property.bogeneric_document');∕∕create me...
+			$this->bo = CreateObject('property.bogeneric_document');
 			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.document';//$this->bo->acl_location;
@@ -114,7 +114,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
-
+			
 			$data = array(
 				'datatable_name' => lang('generic document'),
 				'form' => array(
@@ -144,8 +144,8 @@
 							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'title',
-							'label' => lang('title'),
+							'key' => 'name',
+							'label' => lang('Name'),
 							'sortable' => true,
 							'editor' => true
 						),
@@ -155,38 +155,20 @@
 						  'sortable' => false,
 						  ), */
 						array(
-							'key' => 'address',
-							'label' => lang('buildingname'),
+							'key' => 'app',
+							'label' => lang('app'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'vendor',
-							'label' => lang('vendor'),
+							'key' => 'version',
+							'label' => lang('version'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'year',
-							'label' => lang('year'),
+							'key' => 'created',
+							'label' => lang('created'),
 							'sortable' => true,
 							'className' => 'center'
-						),
-						array(
-							'key' => 'multiplier',
-							'label' => lang('multiplier'),
-							'sortable' => false,
-							'className' => 'right'
-						),
-						array(
-							'key' => 'cnt',
-							'label' => lang('count'),
-							'sortable' => false,
-							'className' => 'center'
-						),
-						array(
-							'key' => 'link',
-							'label' => 'dummy',
-							'sortable' => false,
-							'hidden' => true,
 						)
 					)
 				),
@@ -263,13 +245,14 @@
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'location' => 'generic_document',
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$result_objects = array();
 			$result_count = 0;
 
-			$values = array(); //$this->bo->read($params);
+			$values = $this->bo->read($params);
 			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
@@ -583,8 +566,9 @@
 					phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
 					return;
 				}
-
-				$to_file = $bofiles->fakebase . '/generic_document/' . $id . '/' . $file_name;
+				
+				// cambiar $id  por $file_id
+				$to_file = $bofiles->fakebase . '/generic_document/' .$id. $file_name;
 				if ($bofiles->vfs->file_exists(array(
 						'string' => $to_file,
 						'relatives' => Array(RELATIVE_NONE)
