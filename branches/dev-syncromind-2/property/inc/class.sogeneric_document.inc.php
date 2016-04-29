@@ -139,4 +139,25 @@
 
 			return $values;
 		}
+		
+		public function get_file_relations($location_id, $file_id) 
+		{
+			$filtermethod = "WHERE location_id = {$location_id} AND file_id = {$file_id}";
+			
+			$sql = "SELECT * FROM phpgw_vfs_file_relation " ." {$filtermethod} ";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+					(
+					'id' => $this->db->f('relation_id'),
+					'location_item_id' => $this->db->f('location_item_id')
+				);
+			}
+			
+			return $values;
+		}
 	}
