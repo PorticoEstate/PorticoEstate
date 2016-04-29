@@ -236,14 +236,14 @@
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
-
+			$columns = phpgw::get_var('columns');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'location' => 'generic_document',
 				'allrows' => phpgw::get_var('length', 'int') == -1
@@ -382,12 +382,11 @@
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
-				self::add_javascript('property', 'portico', 'generic_document_edit.js');
 				phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'generic_document.js');
+			self::add_javascript('property', 'portico', 'generic_document.edit.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
@@ -500,24 +499,49 @@
 			{
 				return;
 			}
-
-
+			
+			$file_id = phpgw::get_var('file_id', 'int');
+			$location_id = phpgw::get_var('location_id', 'int');
+			$search = phpgw::get_var('search');
+			$draw = phpgw::get_var('draw', 'int');
+			
+			$_components = execMethod('property.soentity.read', array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'filter_entity_group' => 0,
+				'location_id' => $location_id,
+				'filter_item' => array()
+				));
+			
+			//$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+			$values_location_item_id = array();
+			if (count($relation_values))
+			{
+				foreach($relation_values as $item)
+				{
+					$values_location_item_id[] = $item['location_item_id'];
+				}
+			}
+			
 			$values = array();
-			$values[] = array(
-				'name' => 'Item 1',
-				'relate' => '<input type="checkbox" checked="checked">',
-			);
-			$values[] = array(
-				'name' => 'Item 2',
-				'relate' => '<input type="checkbox">',
-			);
+			foreach($_components as $item)
+			{
+				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				
+				$values[] = array(
+					'name' => $item['benevnelse'],
+					'relate' => '<input type="checkbox" '.$checked.'>',
+				);				
+			}
+			
+			$result_data = array('results' => $values);
 
-			return array(
-				'recordsTotal' => count($values),
-				'recordsFiltered' => count($values),
-				'draw' => phpgw::get_var('draw', 'int'),
-				'data' => $values,
-			);
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 
