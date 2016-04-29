@@ -51,4 +51,10 @@
 			return $values;
 		}
 
+		function get_file_relations( $location_id, $file_id )
+		{
+			$values = $this->so->get_file_relations($location_id, $file_id);
+
+			return $values;
+		}
 	}
