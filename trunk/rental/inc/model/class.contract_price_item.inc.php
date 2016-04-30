@@ -123,7 +123,7 @@
 		 * Returns true if the price item is active at the given date, false otherwise
 		 * 
 		 * @param $date the date to check
-		 * @return boolean
+		 * @return bool
 		 */
 		public function is_active_at( $date )
 		{
@@ -212,7 +212,7 @@
 
 		public function set_is_billed( $is_billed )
 		{
-			$this->is_billed = (boolean)$is_billed;
+			$this->is_billed = (bool)$is_billed;
 		}
 
 		public function is_billed()
@@ -222,7 +222,7 @@
 
 		public function set_is_one_time( $is_one_time )
 		{
-			$this->is_one_time = (boolean)$is_one_time;
+			$this->is_one_time = (bool)$is_one_time;
 		}
 
 		public function is_one_time()
