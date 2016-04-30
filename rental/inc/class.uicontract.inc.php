@@ -2495,7 +2495,7 @@ JS;
 		 * Public function. Add a composite to a contract.
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::composite_id	the composite id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function add_composite()
 		{
@@ -2527,7 +2527,7 @@ JS;
 		 * Public function. Remove a composite from a contract.
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::composite_id	the composite id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function remove_composite()
 		{
@@ -2559,7 +2559,7 @@ JS;
 		 * Public function. Add a price item to a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function add_price_item()
 		{
@@ -2593,7 +2593,7 @@ JS;
 		 * Public function. Remove a price item from a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function remove_price_item()
 		{
@@ -2625,7 +2625,7 @@ JS;
 		 * Public function. Reset a price item on a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function reset_price_item()
 		{

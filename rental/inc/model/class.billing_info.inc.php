@@ -84,9 +84,9 @@
 			$this->month = $month;
 		}
 
-		public function set_deleted( boolean $deleted )
+		public function set_deleted( bool $deleted )
 		{
-			$this->deleted = (boolean)$deleted;
+			$this->deleted = (bool)$deleted;
 		}
 
 		public function is_deleted()

@@ -31,7 +31,7 @@
 			return self::$so;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 			if ($sort_field == 'description')
@@ -330,7 +330,7 @@
 		 * @param $billing_term
 		 * @param $year
 		 * @param $month
-		 * @return boolean true if the period has been billed before, false if not.
+		 * @return bool true if the period has been billed before, false if not.
 		 */
 		public function has_been_billed( $contract_type, $billing_term, $year, $month )
 		{

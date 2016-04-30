@@ -21,14 +21,14 @@
 		protected $timestamp_end; // End date for the given invoice
 		public static $so;
 
-		public function __construct( int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end )
+		public function __construct( int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, bool $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end )
 		{
 			$this->decimals = (int)$decimals;
 			$this->id = (int)$id;
 			$this->invoice_id = (int)$invoice_id;
 			$this->title = $title;
 			$this->agresso_id = $agresso_id;
-			$this->is_area = (boolean)$is_area;
+			$this->is_area = (bool)$is_area;
 			$this->price_per_year = (float)$price_per_year;
 			$this->area = (float)$area;
 			$this->count = (int)$count;
@@ -47,9 +47,9 @@
 			return $this->invoice_id;
 		}
 
-		public function set_is_area( boolean $is_area )
+		public function set_is_area( bool $is_area )
 		{
-			$this->is_area = (boolean)$is_area;
+			$this->is_area = (bool)$is_area;
 			$this->total_price = null; // Needs to be re-calculated
 		}
 
