@@ -90,20 +90,20 @@
 						phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_contract'));
 					}
 
-					$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+					$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
 						'contract_id' => $contract->get_id()));
 					$party = reset($parties); //
 
 					$contract_dates = $contract->get_contract_date();
 
-					$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+					$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 						'contract_id' => $contract->get_id()));
 					$composite = reset($composites);
 
 					$units = $composite->get_units();
 
 
-					$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+					$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 						'contract_id' => $contract->get_id()));
 					$months = rental_socontract::get_instance()->get_months_in_term($contract->get_term_id());
 
