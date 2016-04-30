@@ -92,7 +92,7 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<dt>E-post.:</dt>
 	<dd>
 		<?php
-			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+			$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array('contract_id' => $contract->get_id()));
 			$party_email = array();
 			foreach($parties as $party)
 			{
