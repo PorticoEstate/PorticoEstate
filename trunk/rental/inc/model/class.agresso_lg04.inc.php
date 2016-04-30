@@ -88,7 +88,7 @@
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
-			$invoices = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
+			$invoices = rental_soinvoice::get_instance()->get(0, 0, 'id', true, '', '', array(
 				'billing_id' => $this->billing_job->get_id()));
 
 
@@ -129,11 +129,11 @@
 			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
-				$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
+				$price_items = rental_soinvoice_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 					'invoice_id' => $invoice->get_id()));
 				$composite_name = '';
 				// We need to get the composites to get a composite name for the Agresso export
-				$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+				$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $invoice->get_contract_id()));
 				if ($composites != null && count($composites) > 0)
 				{
@@ -194,18 +194,18 @@
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
-			$invoices = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
+			$invoices = rental_soinvoice::get_instance()->get(0, 0, 'id', true, '', '', array(
 				'billing_id' => $this->billing_job->get_id()));
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
-				$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
+				$price_items = rental_soinvoice_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 					'invoice_id' => $invoice->get_id()));
 				$composite_name = '';
 				// We need to get the composites to get a composite name for the Agresso export
-				$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+				$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $invoice->get_contract_id()));
 				if ($composites != null && count($composites) > 0)
 				{
