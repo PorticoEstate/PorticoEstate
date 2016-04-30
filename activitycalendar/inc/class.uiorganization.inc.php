@@ -352,7 +352,7 @@
 
 		public function index_json()
 		{
-			$organizations = activitycalendar_soorganization::get_instance()->get(); //get organizations
+			$organizations = activitycalendar_soorganization::get_instance()->get(0, 0, '', false, '', '',array()); //get organizations
 			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
 
 			foreach ($organizations["results"] as &$organization)
@@ -381,7 +381,7 @@
 			$so_org = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
 			$so_contact = activitycalendar_socontactperson::get_instance();
-			$org_array = $so_org->get(null, null, null, null, null, null, array('id' => $id,
+			$org_array = $so_org->get(0, 0, '', false, '', '', array('id' => $id,
 				'changed_orgs' => 'true'));
 			if (count($org_array) > 0)
 			{
@@ -456,7 +456,7 @@
 
 			$so_org = activitycalendar_soorganization::get_instance();
 			$so_contact = activitycalendar_socontactperson::get_instance();
-			$org_array = $so_org->get(null, null, null, null, null, null, array('id' => $id,
+			$org_array = $so_org->get(0, 0, '', false, '', '', array('id' => $id,
 				'changed_orgs' => 'true'));
 			if (count($org_array) > 0)
 			{
@@ -543,7 +543,7 @@
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
 			$search_for = $search['value'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -580,6 +580,7 @@
 					break;
 				default: // ... get all parties of a given type
 					//$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
+					$filters = array();
 					break;
 			}
 			if ($changed_group)
@@ -607,7 +608,7 @@
 					if (!$changed_group && !$changed_org)
 					{
 						$filter_group = array('org_id' => $org_id);
-						$result_groups = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
+						$result_groups = activitycalendar_sogroup::get_instance()->get(0, 0, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
 						foreach ($result_groups as $result_group)
 						{
 							if (isset($result_group))
@@ -651,7 +652,7 @@
 			$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
 			if ($org_id)
 			{
-				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
+				$groups = activitycalendar_sogroup::get_instance()->get(0, 0, '', false, '', '', array(
 					'org_id' => $org_id));
 				foreach ($groups as $group)
 				{

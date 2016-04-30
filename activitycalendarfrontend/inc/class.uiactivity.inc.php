@@ -1193,7 +1193,7 @@
 			if ($org_id)
 			{
 				$group_html[] = "<option value='new_group'>Ny gruppe</option>";
-				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
+				$groups = activitycalendar_sogroup::get_instance()->get(0, 0, '', false, '', '', array(
 					'org_id' => $org_id));
 				foreach ($groups as $group)
 				{

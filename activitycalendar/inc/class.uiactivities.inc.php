@@ -473,19 +473,19 @@
 			{
 				$desc = substr($desc, 0, 254);
 			}
-			$arenas = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+			$arenas = $this->so_arena->get(0, 0, 'arena.arena_name', true, '', '', array());
 			if ($activity->get_new_org())
 			{
 				$org_name = $this->so_org->get_organization_name_local($activity->get_organization_id());
 			}
 			else
 			{
-				$organizations = $this->so_org->get(null, null, 'org.name', true, null, null, null);
+				$organizations = $this->so_org->get(0, 0, 'org.name', true, '', '', array());
 			}
 
 			if ($new_group)
 			{
-				$group_array = $this->so_group->get(null, null, null, null, null, null, array(
+				$group_array = $this->so_group->get(0, 0, '', false, '', '', array(
 					'group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
 				//var_dump($group_array);
 				if (count($group_array) > 0)
@@ -498,7 +498,7 @@
 			}
 			else
 			{
-				$groups = $this->so_group->get(null, null, null, null, null, null, null);
+				$groups = $this->so_group->get();
 			}
 
 			if ($activity->get_new_org())
@@ -710,7 +710,7 @@ JS;
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
 			$search_for = $search['value'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -1355,7 +1355,7 @@ JS;
 			$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
 			if ($org_id)
 			{
-				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
+				$groups = activitycalendar_sogroup::get_instance()->get(0, 0, '', false, '', '', array(
 					'org_id' => $org_id));
 				foreach ($groups as $group)
 				{
