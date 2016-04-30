@@ -348,19 +348,20 @@
 					'resizeable' => true),
 			);
 
-
+			$values_location = $this->get_location_filter();
+			
 			$datatable_def = array();
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_relations',
-						'id' => $id, 'phpgw_return_as' => 'json'))),
+						'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def,
 				'config' => array(
 					array('disableFilter' => true)
 				)
 			);
-
+			
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -370,7 +371,7 @@
 				'status_list' => array('options' => array('id' => 1, 'name' => 'status_1')),
 				'editable' => $mode == 'edit',
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'location_filter' => array('options' => $this->get_location_filter()),
+				'location_filter' => array('options' => $values_location),
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
 
@@ -500,7 +501,7 @@
 				return;
 			}
 			
-			$file_id = phpgw::get_var('file_id', 'int');
+			$file_id = phpgw::get_var('id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$search = phpgw::get_var('search');
 			$draw = phpgw::get_var('draw', 'int');
@@ -515,7 +516,10 @@
 				'filter_item' => array()
 				));
 			
-			//$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+			if ($file_id)
+			{
+				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+			}
 			$values_location_item_id = array();
 			if (count($relation_values))
 			{
@@ -570,7 +574,8 @@
 		 */
 		private function _handle_files( $id )
 		{
-			$id = (int)$id;
+			//$id = (int)$id;
+			$id = 78048;
 			if (!$id)
 			{
 				throw new Exception('uigeneric_document::_handle_files() - missing id');
