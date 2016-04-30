@@ -36,7 +36,7 @@
 										<xsl:value-of select="php:function('lang', 'id')" />
 									</label>
 									<xsl:value-of select="document/id"/>
-									<input type="hidden" name="id" value="{document/id}"/>
+									<input type="hidden" name="id" id="id" value="{document/id}"/>
 
 								</div>
 							</xsl:when>
