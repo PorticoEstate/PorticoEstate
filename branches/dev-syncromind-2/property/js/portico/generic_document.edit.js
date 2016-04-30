@@ -3,14 +3,9 @@ $(document).ready(function ()
 {
 	$('#location_id').change(function ()
 	{
-		filterRelations('location_id', $(this).val());
+		var oArgs1 = {menuaction: 'property.uigeneric_document.get_relations', location_id: $('#location_id').val(), id: $('#id').val()};
+		var requestUrl = phpGWLink('index.php', oArgs1, true);
+		JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 	});
-	
-	filterRelations('location_id', $('#location_id').val());
-});
 
-function filterRelations(param, value)
-{
-	oTable0.dataTableSettings[0]['ajax']['data'][param] = value;
-	oTable0.fnDraw();
-}
+});
