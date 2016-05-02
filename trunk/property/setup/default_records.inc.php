@@ -36,6 +36,7 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.custom', 'custom queries')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.project', 'Demand -> Workorder', 1, 1, 1, 'fm_project')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.project.workorder', 'Workorder', 1, 1 ,1, 'fm_workorder')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_function) VALUES ({$app_id}, '.project.workorder.transfer', 'Transfer Workorder', 1)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.project.request', 'Request', 1, 1 ,1, 'fm_request')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.ticket', 'Helpdesk', 1, 1, 1, 'fm_tts_tickets')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.ticket.order', 'Helpdesk ad hock order', 1, 'fm_tts_tickets')");
