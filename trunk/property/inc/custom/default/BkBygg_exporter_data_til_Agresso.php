@@ -237,7 +237,8 @@
 			}
 
 			$transfer_ok = false;
-			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
+//			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
+			if (false)//Not yet...
 			{
 				if (!$connection = $this->connection)
 				{

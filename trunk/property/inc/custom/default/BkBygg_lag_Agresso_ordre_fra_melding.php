@@ -48,6 +48,11 @@
 		public function transfer( $id )
 		{
 			$_ticket = ExecMethod('property.sotts.read_single', $id);
+			if ($_ticket['order_sent'])
+			{
+				return 2;
+			}
+
 //		_debug_array($_ticket);die();
 
 			$contacts = CreateObject('property.sogeneric');
@@ -146,7 +151,7 @@
 				)
 			);
 
-			$exporter_ordre = new BkBygg_exporter_data_til_Agresso();
+			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array('order_id' => $_ticket['order_id']));
 			$exporter_ordre->create_transfer_xml($param);
 			$exporter_ordre->output();
 			die();

@@ -35,10 +35,10 @@
 	 *
 	 * @author Sigurd Nes
 	 */
-	if (isset($data['order_id']) && $data['order_id'] && isset($data['varemottak']) && $data['varemottak'])
+	if (isset($id) && $id && isset($acl_location) && $acl_location && isset($receive_order) && $receive_order)
 	{
-		$exporter_varemottak = new lag_agresso_varemottak($this->acl_location, $id);
-		$exporter_varemottak->transfer($id);
+		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
+		$result = $exporter_varemottak->transfer($id);
 	}
 
 	class lag_agresso_varemottak
@@ -58,6 +58,7 @@
 				default:
 					$this->acl_location = '.project.workorder';
 					$this->values = ExecMethod('property.soworkorder.read_single', $id);
+					$this->values['order_id'] = $id;
 					break;
 			}
 		}
@@ -77,15 +78,17 @@
 				)
 			);
 
-			$exporter_varemotta = new BkBygg_exporter_varemottak_til_Agresso();
-			$exporter_varemotta->create_transfer_xml();
-			$exporter_varemotta->output();
-			die();
-			$export_ok = $exporter_ordre->transfer();
+			$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array('order_id' => $values['order_id']));
+			$exporter_varemottak->create_transfer_xml($param);
+			$exporter_varemottak->output();
+			$export_ok = true;
+	//		die();
+	//		$export_ok = $exporter_varemottak->transfer();
 			if ($export_ok)
 			{
 				$this->log_transfer( $id );
 			}
+			return $export_ok;
 		}
 
 		private function log_transfer( $id )
@@ -155,8 +158,6 @@
 			$xml_creator->fromArray($Orders);
 			$this->transfer_xml = $xml_creator->getDocument();
 			return $this->transfer_xml;
-			//		$xml_creator->output();
-			//		die();
 		}
 
 		protected function create_file_name( $ref = '' )

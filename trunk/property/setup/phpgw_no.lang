@@ -2058,3 +2058,5 @@ hjemmel	common	no	Hjemmel
 record has been edited	common	no	data er editert
 external project	property	no	Eksternt prosjekt
 unspsc code	common	no	UNSPSC-kode
+order received	property	no	Varemottak
+receive order	property	no	Motta vare

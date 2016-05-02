@@ -36,9 +36,35 @@ $(document).ready(function ()
 
 function receive_order(workorder_id)
 {
-	var oArgs = {menuaction: 'property.uiworkorder.receive_order', order_id: workorder_id};
-	var sUrl = phpGWLink('index.php', oArgs);
-	alert(sUrl);
+	var oArgs = {menuaction: 'property.uiworkorder.receive_order', id: workorder_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: strURL,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				var msg;
+				if (data['result'] == true)
+				{
+					msg = 'OK';
+				}
+				else
+				{
+					msg = 'Error';
+
+				}
+				window.alert(msg);
+			}
+		},
+		failure: function (o)
+		{
+			window.alert('failure - try again - once');
+		},
+		timeout: 5000
+	});
 }
 
 function check_and_submit_valid_session()

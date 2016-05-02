@@ -283,3 +283,36 @@ var oArgs = {menuaction: 'property.uitts.get_unspsc_code'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'unspsc_code_container');
 
+function receive_order(order_id)
+{
+	var oArgs = {menuaction: 'property.uitts.receive_order', id: order_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: strURL,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				var msg;
+				if (data['result'] == true)
+				{
+					msg = 'OK';
+					$("#order_received_time").html(data['time']);
+				}
+				else
+				{
+					msg = 'Error';
+
+				}
+				window.alert(msg);
+			}
+		},
+		failure: function (o)
+		{
+			window.alert('failure - try again - once');
+		},
+		timeout: 5000
+	});
+}

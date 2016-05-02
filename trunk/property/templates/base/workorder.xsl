@@ -985,7 +985,9 @@
 										<xsl:value-of select="$lang_receive_order"/>
 									</xsl:attribute>
 								</input>
-								<xsl:value-of select="value_order_received"/>
+								<div id="order_received_time" class="pure-custom">
+									<xsl:value-of select="value_order_received"/>
+								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>

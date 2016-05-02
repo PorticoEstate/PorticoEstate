@@ -54,7 +54,8 @@
 			'get_ecodimb'	=> true,
 			'get_b_account'	=> true,
 			'get_external_project'=> true,
-			'get_unspsc_code'=> true
+			'get_unspsc_code'=> true,
+			'receive_order'	=> true
 		);
 
 		/**
@@ -2664,7 +2665,8 @@
 					'options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) : '',
 				'preview_html' => "javascript:preview_html($id)",
 				'preview_pdf' => "javascript:preview_pdf($id)",
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($ticket['order_received'])
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -2753,6 +2755,17 @@
 			return $this->bocommon->get_b_account();
 		}
 
+		public function receive_order( )
+		{
+			if (!$GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'property'))
+			{
+				return;
+			}
+
+			$id = phpgw::get_var('id', 'int');
+
+			return $this->bo->receive_order($id);
+		}
 
 		private function _get_eco_service_name( $id )
 		{
