@@ -24,99 +24,143 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package property
 	 * @subpackage helpdesk
-	 * @version $Id: class.uitts.inc.php 14940 2016-04-26 11:02:40Z sigurdne $
+	 * @version $Id$
 	 */
 	/**
 	 * Description
 	 * @package property
 	 */
-
-
 	//if (false)
-	if(isset($data['order_id']) && $data['order_id'] && isset($data['save']) && $data['save'] && isset($data['vendor_email'][0]) && $data['vendor_email'][0])
+	if (isset($data['order_id']) && $data['order_id'] && isset($data['save']) && $data['save'] && isset($data['vendor_email'][0]) && $data['vendor_email'][0])
 	{
-		$_ticket = $this->read_single($id);
+		$exporter_ordre = new lag_agresso_ordre_fra_melding();
+		$exporter_ordre->transfer($id);
+	}
+
+	class lag_agresso_ordre_fra_melding
+	{
+
+		function __construct()
+		{
+			
+		}
+
+		public function transfer( $id )
+		{
+			$_ticket = ExecMethod('property.sotts.read_single', $id);
 //		_debug_array($_ticket);die();
 
-		$contacts = CreateObject('property.sogeneric');
-		$contacts->get_location_info('vendor', false);
+			$contacts = CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor', false);
 
-		$custom = createObject('property.custom_fields');
-		$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom = createObject('property.custom_fields');
+			$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-		$vendor_data = $contacts->read_single(array('id' => $_ticket['vendor_id']), $vendor_data);
-		if (is_array($vendor_data))
-		{
-			foreach ($vendor_data['attributes'] as $attribute)
+			$vendor_data = $contacts->read_single(array('id' => $_ticket['vendor_id']), $vendor_data);
+			if (is_array($vendor_data))
 			{
-				if ($attribute['name'] == 'adresse')
+				foreach ($vendor_data['attributes'] as $attribute)
 				{
-					$vendor['address'] = $attribute['value'];
-				}
-				if ($attribute['name'] == 'org_name')
-				{
-					$vendor['name'] = $attribute['value'];
+					if ($attribute['name'] == 'adresse')
+					{
+						$vendor['address'] = $attribute['value'];
+					}
+					if ($attribute['name'] == 'org_name')
+					{
+						$vendor['name'] = $attribute['value'];
+					}
 				}
 			}
+			unset($contacts);
+
+
+			if (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name']))
+			{
+				$user_name = $_ticket['assignedto_name'];
+				$GLOBALS['phpgw']->preferences->set_account_id($_ticket['assignedto'], true);
+				$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
+				$account_lid = $GLOBALS['phpgw']->accounts->id2lid($_ticket['assignedto']);
+			}
+			else
+			{
+				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				$account_lid = $GLOBALS['phpgw_info']['user']['account_lid'];
+			}
+			//	$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+
+			$buyer = array(
+				'Name' => $user_name,
+				'AddressInfo' => array(
+					array(
+						'Address' => $_ticket['address']
+					)
+				),
+				'BuyerReferences' => array(
+					array(
+						'Responsible' => $account_lid,
+						'RequestedBy' => $account_lid,
+						'Accountable' => $account_lid,
+					)
+				)
+			);
+			if ($_ticket['location_data'])
+			{
+				$dim3 = isset($_ticket['location_data']['loc2']) && $_ticket['location_data']['loc2'] ? "{$_ticket['location_data']['loc1']}{$_ticket['location_data']['loc2']}" : "{$_ticket['location_data']['loc1']}01";
+			}
+			else
+			{
+				$dim3 = 9;
+			}
+
+			$dim6 = 9;
+
+			if ($_ticket['order_dim1'])
+			{
+				$sogeneric = CreateObject('property.sogeneric', 'order_dim1');
+				$sogeneric_data = $sogeneric->read_single(array('id' => $_ticket['order_dim1']));
+				if ($sogeneric_data)
+				{
+					$dim6 = "{$_ticket['building_part']}{$sogeneric_data['num']}";
+				}
+			}
+
+			$param = array(
+				'dim0' => $_ticket['b_account_id'],			// Art
+				'dim1' => $_ticket['ecodimb'],				// Ansvar
+				'dim2' => $_ticket['service_id'] ? $_ticket['service_id'] : 9, // Tjeneste liste 30 stk, default 9
+				'dim3' => $dim3,							// Objekt: eiendom + bygg: 6 siffer
+				'dim4' => $_ticket['contract_id'],			// Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
+				'dim5' => $_ticket['external_project_id'],	// Prosjekt
+				'dim6' => $dim6,							// Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
+				'vendor_id' => $_ticket['vendor_id'],
+				'vendor_name' => $vendor['name'],
+				'vendor_address' => $vendor['address'],
+				'order_id' => $_ticket['order_id'],
+				'tax_code' => $_ticket['tax_code'],
+				'buyer' => $buyer,
+				'lines' => array(
+					array(
+						'unspsc_code' => $_ticket['unspsc_code'],
+						'descr' => strip_tags($_ticket['order_descr'])
+					)
+				)
+			);
+
+			$exporter_ordre = new BkBygg_exporter_data_til_Agresso();
+			$exporter_ordre->create_transfer_xml($param);
+			$exporter_ordre->output();
+			die();
+			$export_ok = $exporter_ordre->transfer();
+			if ($export_ok)
+			{
+				$this->log_transfer( $id );
+			}
 		}
-		unset($contacts);
 
-
-		if (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name']))
+		private function log_transfer( $id )
 		{
-			$user_name = $_ticket['assignedto_name'];
-			$GLOBALS['phpgw']->preferences->set_account_id($_ticket['assignedto'], true);
-			$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-			$account_lid = $GLOBALS['phpgw']->accounts->id2lid($_ticket['assignedto']);
+			$historylog = CreateObject('property.historylog', 'tts');
+			$historylog->add('RM', $id, "Ordre overført til agresso");
+			$GLOBALS['phpgw']->db->query("UPDATE fm_tts_tickets SET order_sent = 1 WHERE id = {$id}");
 		}
-		else
-		{
-			$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
-			$account_lid = $GLOBALS['phpgw_info']['user']['account_lid'];
-		}
-		//	$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-
-		$buyer = array(
-			'Name' => $user_name,
-			'AddressInfo' => array(
-				array(
-					'Address' => $_ticket['address']
-				)
-			),
-			'BuyerReferences' => array(
-				array(
-					'Responsible' => $account_lid,
-					'RequestedBy' => $account_lid,
-					'Accountable' => $account_lid,
-				)
-			)
-		);
-
-		$param = array(
-			'dim0' => $_ticket['b_account_id'],								// Art
-			'dim1' => $_ticket['ecodimb'],									// Ansvar
-			'dim2' => $_ticket['service_id'] ? $_ticket['service_id'] : 9,	// Tjeneste liste 30 stk, default 9
-			'dim3' => $_ticket['location_data']['loc1'] . ($_ticket['location_data']['loc2'] ? $_ticket['location_data']['loc2'] : '01') , // Objekt: eiendom + bygg: 6 siffer
-			'dim4' => $_ticket['contract_id'],								// Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
-			'dim5' => $_ticket['external_project_id'],						// Prosjekt
-			'dim6' => $_ticket['order_dim1'],								// Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
-			'vendor_id' => $_ticket['vendor_id'],
-			'vendor_name' => $vendor['name'],
-			'vendor_address' => $vendor['address'],
-			'order_id' => $_ticket['order_id'],
-			'tax_code'	=> $_ticket['tax_code'],
-			'buyer' => $buyer,
-			'lines' => array(
-				array(
-					'unspsc_code' => $_ticket['unspsc_code'],
-					'descr' => strip_tags($_ticket['order_descr'])
-				)
-			)
-		);
-
-		$exporter_ordre = new BkBygg_exporter_ordre_til_Agresso();
-		$exporter_ordre->create_transfer_xml($param);
-		$exporter_ordre->output();
-		die();
-	//	$exporter_ordre->transfer();
 	}

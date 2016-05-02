@@ -24,7 +24,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package property
 	 * @subpackage helpdesk
-	 * @version $Id: class.uitts.inc.php 14940 2016-04-26 11:02:40Z sigurdne $
+	 * @version $Id$
 	 */
 	/**
 	 * Description
@@ -33,11 +33,11 @@
 
 
 	/**
-	 * Description of BkBygg_exporter_ordre_til_Agresso
+	 * Description of BkBygg_exporter_data_til_Agresso
 	 *
 	 * @author Sigurd Nes
 	 */
-	class BkBygg_exporter_ordre_til_Agresso
+	class BkBygg_exporter_data_til_Agresso
 	{
 
 		var $dim0; // Art
@@ -201,11 +201,11 @@
 		{
 			if (!$ref)
 			{
-				throw new Exception('BkBygg_exporter_ordre_til_Agresso::create_file_name() Mangler referanse');
+				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$filename = "{$fil_katalog}/FDV_{$ref}.xml";
+			$filename = "{$fil_katalog}/FDV_ordre_{$ref}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($filename))

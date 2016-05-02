@@ -346,7 +346,7 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_descr_statustext"/>
 							</xsl:attribute>
-							<xsl:value-of select="value_descr"/>
+							<xsl:value-of disable-output-escaping="yes" select="value_descr"/>
 						</textarea>
 					</div>
 					<div class="pure-control-group">
@@ -682,6 +682,77 @@
 						</input>
 						<div id="unspsc_code_container"/>
 					</div>
+					<xsl:choose>
+						<xsl:when test="collect_building_part=1">
+							<div class="pure-control-group">
+								<xsl:variable name="lang_building_part">
+									<xsl:value-of select="php:function('lang', 'building part')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_building_part"/>
+								</label>
+								<select name="values[building_part]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_building_part"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_building_part"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="$lang_building_part"/>
+									</option>
+									<xsl:apply-templates select="building_part_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_order_dim1">
+									<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_order_dim1"/>
+								</label>
+								<select name="values[order_dim1]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_order_dim1"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+									</option>
+									<xsl:apply-templates select="order_dim1_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_tax_code">
+									<xsl:value-of select="php:function('lang', 'tax code')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_tax_code"/>
+								</label>
+								<select name="values[tax_code]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_tax_code"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_tax_code"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="tax_code_list/options"/>
+								</select>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_cat_sub"/>
@@ -907,7 +978,7 @@
 									<xsl:variable name="lang_add_invoice_statustext">
 										<xsl:value-of select="php:function('lang', 'add invoice')"/>
 									</xsl:variable>
-									<a href="javascript:showlightbox_manual_invoide({value_workorder_id})" title="{$lang_add_invoice_statustext}">
+									<a href="javascript:showlightbox_manual_invoice({value_workorder_id})" title="{$lang_add_invoice_statustext}">
 										<xsl:value-of select="php:function('lang', 'add invoice')"/>
 									</a>
 								</xsl:when>

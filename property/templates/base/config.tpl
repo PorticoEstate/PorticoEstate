@@ -61,41 +61,41 @@
 				<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 			</td>
 		</tr>
-	</tr>
+		</tr>
 		<tr>
-		<td>{lang_dimb_responsible_1}:</td>
-		<td>
-			<select name="newsettings[dimb_responsible_1]">
-				{hook_dimb_cat_1}
-			</select>
-		</td>
-	</tr>
+			<td>{lang_dimb_responsible_1}:</td>
+			<td>
+				<select name="newsettings[dimb_responsible_1]">
+					{hook_dimb_cat_1}
+				</select>
+			</td>
+		</tr>
 		<tr class="pure-table-odd">
-		<td>{lang_dimb_responsible_2}:</td>
-		<td>
-			<select name="newsettings[dimb_responsible_2]">
-				{hook_dimb_cat_2}
-			</select>
-		</td>
-	</tr>
+			<td>{lang_dimb_responsible_2}:</td>
+			<td>
+				<select name="newsettings[dimb_responsible_2]">
+					{hook_dimb_cat_2}
+				</select>
+			</td>
+		</tr>
 		<tr>
-		<td>{lang_invoicehandler}:</td>
-		<td>
-			<select name="newsettings[invoicehandler]">
-				<option value="1" {selected_invoicehandler_1}>Default</option>
-				<option value="2" {selected_invoicehandler_2}>Alternative</option>
-			</select>
-		</td>
-	</tr>
+			<td>{lang_invoicehandler}:</td>
+			<td>
+				<select name="newsettings[invoicehandler]">
+					<option value="1" {selected_invoicehandler_1}>Default</option>
+					<option value="2" {selected_invoicehandler_2}>Alternative</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="pure-table-odd">
-		<td>{lang_invoice_acl}:</td>
-		<td>
-			<select name="newsettings[invoice_acl]">
-				<option value="default" {selected_invoice_acl_default}>ACL</option>
-				<option value="dimb" {selected_invoice_acl_dimb}>DimB</option>
-			</select>
-		</td>
-	</tr>
+			<td>{lang_invoice_acl}:</td>
+			<td>
+				<select name="newsettings[invoice_acl]">
+					<option value="default" {selected_invoice_acl_default}>ACL</option>
+					<option value="dimb" {selected_invoice_acl_dimb}>DimB</option>
+				</select>
+			</td>
+		</tr>
 		<tr>
 			<td>{lang_project_status_on_approval}:</td>
 			<td>
@@ -149,17 +149,25 @@
 		</tr>
 
 		<tr class="pure-table-odd">
-		<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
-		<td>
-			<select name="newsettings[workorder_closed_status]">
-				{hook_workorder_closed_status}
-			</select>
-		</td>
+			<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
+			<td>
+				<select name="newsettings[workorder_closed_status]">
+					{hook_workorder_closed_status}
+				</select>
+			</td>
 		<tr>
 			<td>{lang_workorder_reopen_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 			<td>
 				<select name="newsettings[workorder_reopen_status]">
 					{hook_workorder_reopen_status}
+				</select>
+			</td>
+		<tr>
+			<td>{lang_require_building_part_at_workorder}:</td>
+			<td>
+				<select name="newsettings[workorder_require_building_part]">
+					<option value="" {selected_workorder_require_building_part_}>NO</option>
+					<option value="1" {selected_workorder_require_building_part_1}>YES</option>
 				</select>
 			</td>
 		</tr>
@@ -584,49 +592,49 @@
 		</tr>
 
 		<tr>
-		<td>{lang_filter_buildingpart}:</td>
-		<td>
-			<table>
-				{hook_filter_buildingpart}
-			</table>
-		</td>
-	</tr>
+			<td>{lang_filter_buildingpart}:</td>
+			<td>
+				<table>
+					{hook_filter_buildingpart}
+				</table>
+			</td>
+		</tr>
 
 		<tr class="pure-table-odd">
-		<td>{lang_condition_survey_import_category}:</td>
-		<td>
-			<table>
-				{hook_condition_survey_import_cat}
-			</table>
-		</td>
-	</tr>
+			<td>{lang_condition_survey_import_category}:</td>
+			<td>
+				<table>
+					{hook_condition_survey_import_cat}
+				</table>
+			</td>
+		</tr>
 
 		<tr>
-		<td>{lang_initial_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
-		<td>
-			<select name="newsettings[condition_survey_initial_status]">
-				{hook_condition_survey_initial_status}
-			</select>
-		</td>
-	</tr>
+			<td>{lang_initial_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+			<td>
+				<select name="newsettings[condition_survey_initial_status]">
+					{hook_condition_survey_initial_status}
+				</select>
+			</td>
+		</tr>
 
 		<tr>
-		<td>{lang_hidden_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
-		<td>
-			<select name="newsettings[condition_survey_hidden_status]">
-				{hook_condition_survey_hidden_status}
-			</select>
-		</td>
-	</tr>
+			<td>{lang_hidden_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+			<td>
+				<select name="newsettings[condition_survey_hidden_status]">
+					{hook_condition_survey_hidden_status}
+				</select>
+			</td>
+		</tr>
 
 		<tr class="pure-table-odd">
-		<td>{lang_obsolete_status_that_are_to_be_set_for_old_records_when_condition_survey_are_imported}:</td>
-		<td>
-			<select name="newsettings[condition_survey_obsolete_status]">
-				{hook_condition_survey_obsolete_status}
-			</select>
-		</td>
-	</tr>
+			<td>{lang_obsolete_status_that_are_to_be_set_for_old_records_when_condition_survey_are_imported}:</td>
+			<td>
+				<select name="newsettings[condition_survey_obsolete_status]">
+					{hook_condition_survey_obsolete_status}
+				</select>
+			</td>
+		</tr>
 
 		<!--
 		groupnotification

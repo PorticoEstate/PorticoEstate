@@ -2185,6 +2185,30 @@
 
 			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
+			$collect_building_part = false;
+			$building_part_list = array();
+			$order_dim1_list = array();
+			if(isset($config->config_data['workorder_require_building_part']))
+			{
+				if($config->config_data['workorder_require_building_part'] == 1)
+				{
+				$collect_building_part = true;
+				$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
+
+				$_filter_buildingpart = array();
+				if ($filter_key = array_search('.b_account', $filter_buildingpart))
+				{
+					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+				}
+				$building_part_list = array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'building_part', 'selected' => $values['building_part'], 'order' => 'id',
+						'id_in_name' => 'num', 'filter' => $_filter_buildingpart)));
+				$order_dim1_list = array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'order_dim1', 'selected' => $values['order_dim1'], 'order' => 'id',
+						'id_in_name' => 'num')));
+				}
+			}
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2346,6 +2370,9 @@
 				'contract_list' => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id']) ),
 				'value_unspsc_code' => $values['unspsc_code'],
 				'value_unspsc_code_name' => $this->_get_unspsc_code_name($values['unspsc_code']),
+				'collect_building_part'	=> $collect_building_part,
+				'building_part_list' => $building_part_list,
+				'order_dim1_list' => $order_dim1_list,
 			);
 
 			$appname = lang('Workorder');

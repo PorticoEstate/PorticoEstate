@@ -9018,3 +9018,79 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Add parametres for integration with e-commerse platforms
+	*/
+	$test[] = '0.9.17.697';
+
+	function property_upgrade0_9_17_697()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.project.workorder.transfer', 'Transfer Workorder', 'property', $allow_grant = null, $custom_tbl = null, $c_function = true);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.698';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Add parametres for integration with e-commerse platforms
+	*/
+	$test[] = '0.9.17.698';
+
+	function property_upgrade0_9_17_698()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'building_part', array(
+			'type' => 'varchar',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_dim1', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_sent', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_received', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_sent', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_received', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.699';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

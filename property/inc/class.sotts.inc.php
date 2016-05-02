@@ -820,6 +820,8 @@
 				$ticket['branch_id'] = $this->db->f('branch_id');
 				$ticket['entry_date'] = $this->db->f('entry_date');
 				$ticket['modified_date'] = $this->db->f('modified_date');
+				$ticket['order_sent'] = $this->db->f('order_sent');
+				$ticket['order_received'] = $this->db->f('order_received');
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1083,7 +1085,7 @@
 			 * * T - Category change
 			 * * S - Subject change
 			 * * B - Budget
-			 * *	AC - actual cost changed
+			 * * AC - actual cost changed
 			 * * H - Billing hours
 			 * * F - finnish date
 			 * * C% - Status changed

@@ -874,6 +874,8 @@
 					case 'MS':
 						$type = lang('Sent by sms');
 						break;
+					case 'RM': $type = lang('remark');
+						break;
 					default:
 					// nothing
 				}
