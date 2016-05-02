@@ -30,8 +30,8 @@
 	 * Description
 	 * @package property
 	 */
-	//if (false)
-	if (true)
+	
+	if (!$workorder['order_sent'])
 	{
 		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
 		$exporter_ordre->transfer($project, $workorder);

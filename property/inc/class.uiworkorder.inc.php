@@ -69,7 +69,8 @@
 			'get_eco_service'=> true,
 			'get_ecodimb'	=> true,
 			'get_b_account'	=> true,
-			'get_unspsc_code'=> true
+			'get_unspsc_code'=> true,
+			'receive_order'	=> true
 		);
 
 		function __construct()
@@ -2890,6 +2891,17 @@
 			return $this->bocommon->get_b_account();
 		}
 
+		public function receive_order( )
+		{
+			if (!$this->acl_edit)
+			{
+				return;
+			}
+
+			$id = phpgw::get_var('id', 'int');
+
+			return $this->bo->receive_order($id);
+		}
 
 		private function _get_eco_service_name( $id )
 		{

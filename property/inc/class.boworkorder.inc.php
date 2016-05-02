@@ -1098,4 +1098,38 @@ HTML;
 				}
 			}
 		}
+
+		public function receive_order( $id )
+		{
+			$receive_order = true; // used as trigger within the custom function
+			$acl_location = '.project.workorder';
+
+			$criteria = array(
+				'appname' => 'property',
+				'location' => $acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+			// $result from the custom function
+			return array(
+				'result' => $result,
+				'time'	=> $GLOBALS['phpgw']->common->show_date(time())
+				);
+		}
 	}
