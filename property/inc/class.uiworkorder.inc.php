@@ -2373,6 +2373,7 @@
 				'collect_building_part'	=> $collect_building_part,
 				'building_part_list' => $building_part_list,
 				'order_dim1_list' => $order_dim1_list,
+				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($values['order_received'])
 			);
 
 			$appname = lang('Workorder');

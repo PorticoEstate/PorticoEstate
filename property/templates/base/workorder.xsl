@@ -971,6 +971,24 @@
 							</xsl:attribute>
 						</input>
 					</div>
+					<xsl:choose>
+						<xsl:when test="value_workorder_id!='' and mode='edit'">
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'order received')"/>
+								</label>
+								<xsl:variable name="lang_receive_order">
+									<xsl:value-of select="php:function('lang', 'receive order')"/>
+								</xsl:variable>
+								<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_receive_order}" onClick="receive_order({value_workorder_id});">
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_receive_order"/>
+									</xsl:attribute>
+								</input>
+								<xsl:value-of select="value_order_received"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:choose>

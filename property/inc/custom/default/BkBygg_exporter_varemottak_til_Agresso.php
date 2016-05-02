@@ -103,7 +103,8 @@
 					break;
 			}
 			$historylog->add('RM', $id, "Varemottak overført til agresso");
-			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = 1 WHERE id = {$id}");
+			$now = time();
+			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now} WHERE id = {$id}");
 		}
 	}
 

@@ -34,6 +34,13 @@ $(document).ready(function ()
 
 });
 
+function receive_order(workorder_id)
+{
+	var oArgs = {menuaction: 'property.uiworkorder.receive_order', order_id: workorder_id};
+	var sUrl = phpGWLink('index.php', oArgs);
+	alert(sUrl);
+}
+
 function check_and_submit_valid_session()
 {
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
