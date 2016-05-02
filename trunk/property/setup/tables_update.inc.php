@@ -9064,25 +9064,25 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_sent', array(
 			'type' => 'int',
-			'precision' => 2,
+			'precision' => 8,
 			'nullable' => True
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_received', array(
 			'type' => 'int',
-			'precision' => 2,
+			'precision' => 8,
 			'nullable' => True
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_sent', array(
 			'type' => 'int',
-			'precision' => 2,
+			'precision' => 8,
 			'nullable' => True
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_received', array(
 			'type' => 'int',
-			'precision' => 2,
+			'precision' => 8,
 			'nullable' => True
 			)
 		);

@@ -161,6 +161,7 @@
 		{
 			$historylog = CreateObject('property.historylog', 'tts');
 			$historylog->add('RM', $id, "Ordre overført til agresso");
-			$GLOBALS['phpgw']->db->query("UPDATE fm_tts_tickets SET order_sent = 1 WHERE id = {$id}");
+			$now = time();
+			$GLOBALS['phpgw']->db->query("UPDATE fm_tts_tickets SET order_sent = {$now} WHERE id = {$id}");
 		}
 	}
