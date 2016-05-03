@@ -50,6 +50,7 @@ function receive_order(workorder_id)
 				if (data['result'] == true)
 				{
 					msg = 'OK';
+					$("#order_received_time").html(data['time']);
 				}
 				else
 				{
