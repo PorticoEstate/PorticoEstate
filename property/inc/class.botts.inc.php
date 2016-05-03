@@ -1726,7 +1726,7 @@
 			return $values;
 		}
 
-		public function receive_order( $id )
+		public function receive_order( $id, $received_percent )
 		{
 			$receive_order = true; // used as trigger within the custom function
 			$acl_location = $this->acl_location;

@@ -36,7 +36,11 @@ $(document).ready(function ()
 
 function receive_order(workorder_id)
 {
-	var oArgs = {menuaction: 'property.uiworkorder.receive_order', id: workorder_id};
+	var oArgs = {
+		menuaction: 'property.uiworkorder.receive_order',
+		id: workorder_id,
+		received_percent: $("#slider-range-min").slider("value")
+	};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	$.ajax({
 		type: 'POST',
@@ -180,7 +184,7 @@ this.fetch_vendor_contract = function ()
 
 	if ($("#vendor_id").val() != vendor_id)
 	{
-		var oArgs = {menuaction: 'property.uiworkorder.get_vendor_contract',vendor_id:$("#vendor_id").val()};
+		var oArgs = {menuaction: 'property.uiworkorder.get_vendor_contract', vendor_id: $("#vendor_id").val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var htmlString = "";
 
@@ -387,5 +391,17 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
-});
+	$("#slider-range-min").slider({
+		range: "min",
+		value: $("#value_order_received_percent").val() || 0,
+		min: 0,
+		max: 100,
+		step: 10,
+		slide: function (event, ui)
+		{
+			$("#order_received_percent").val(ui.value + " %");
+		}
+	});
+	$("#order_received_percent").val($("#slider-range-min").slider("value") + " %");
 
+});

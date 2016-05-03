@@ -971,8 +971,9 @@
 					'building_part' => $this->db->f('building_part'),
 					'order_dim1' => $this->db->f('order_dim1'),
 					'order_sent' => $this->db->f('order_sent'),
-					'order_received' => $this->db->f('order_received')
-				);
+					'order_received' => $this->db->f('order_received'),
+					'order_received_percent' => $this->db->f('order_received_percent')
+					);
 
 				$sql = "SELECT periodization_id,"
 					. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"

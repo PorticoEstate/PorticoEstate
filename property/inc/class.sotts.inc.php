@@ -822,6 +822,7 @@
 				$ticket['modified_date'] = $this->db->f('modified_date');
 				$ticket['order_sent'] = $this->db->f('order_sent');
 				$ticket['order_received'] = $this->db->f('order_received');
+				$ticket['order_received_percent'] = $this->db->f('order_received_percent');
 
 				$user_id = (int)$this->db->f('user_id');
 
