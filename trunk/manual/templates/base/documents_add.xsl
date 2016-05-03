@@ -9,18 +9,7 @@
 		</xsl:variable>
 
 		<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
-
 			<div id="tab-content">
-
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
 				<div id="documents">
