@@ -38,7 +38,7 @@
 	if (isset($id) && $id && isset($acl_location) && $acl_location && isset($receive_order) && $receive_order)
 	{
 		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
-		$result = $exporter_varemottak->transfer($id);
+		$result = $exporter_varemottak->transfer($id, $received_percent);
 	}
 
 	class lag_agresso_varemottak
@@ -63,7 +63,7 @@
 			}
 		}
 
-		public function transfer( $id )
+		public function transfer( $id, $received_percent )
 		{
 			$values = $this->values;
 //		_debug_array($values);die();
@@ -73,7 +73,7 @@
 				'lines' => array(
 					array(
 						'UnitCode' => 'STK',
-						'Quantity' => 1,
+						'Quantity' => ($received_percent / 100),
 					)
 				)
 			);
@@ -86,14 +86,15 @@
 	//		$export_ok = $exporter_varemottak->transfer();
 			if ($export_ok)
 			{
-				$this->log_transfer( $id );
+				$this->log_transfer( $id, $received_percent );
 			}
 			return $export_ok;
 		}
 
-		private function log_transfer( $id )
+		private function log_transfer( $id, $received_percent )
 		{
 			$id = (int)$id;
+			$received_percent = (int)$received_percent;
 			switch ($this->acl_location)
 			{
 				case '.ticket':
@@ -105,9 +106,9 @@
 					$table = 'fm_workorder';
 					break;
 			}
-			$historylog->add('RM', $id, "Varemottak overført til agresso");
+			$historylog->add('RM', $id, "Varemottak ({$received_percent} %) overført til agresso");
 			$now = time();
-			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now} WHERE id = {$id}");
+			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now}, order_received_percent = {$received_percent} WHERE id = {$id}");
 		}
 	}
 

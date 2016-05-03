@@ -2374,7 +2374,8 @@
 				'collect_building_part'	=> $collect_building_part,
 				'building_part_list' => $building_part_list,
 				'order_dim1_list' => $order_dim1_list,
-				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($values['order_received'])
+				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($values['order_received']),
+				'value_order_received_percent' => (int) $values['order_received_percent']
 			);
 
 			$appname = lang('Workorder');
@@ -2899,8 +2900,8 @@
 			}
 
 			$id = phpgw::get_var('id', 'int');
-
-			return $this->bo->receive_order($id);
+			$received_percent = phpgw::get_var('received_percent', 'int');
+			return $this->bo->receive_order($id, $received_percent);
 		}
 
 		private function _get_eco_service_name( $id )
