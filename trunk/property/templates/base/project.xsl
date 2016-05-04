@@ -336,7 +336,7 @@
 						<xsl:value-of select="php:function('lang', 'external project')"/>
 					</label>
 					<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
-					<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_id} {value_external_project_name}"/>
+					<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
 					<div id="external_project_container"/>
 				</div>
 
