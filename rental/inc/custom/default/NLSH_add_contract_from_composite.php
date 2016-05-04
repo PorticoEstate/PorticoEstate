@@ -31,6 +31,10 @@
 			{
 				$responsibility_id = 8018;
 			}
+			else if($loc1 == 8534)
+			{
+				$responsibility_id = 4036;
+			}
 			else if ($loc1 > 8499 && $loc1 < 8600)
 			{
 				if ($loc2 == 18)
