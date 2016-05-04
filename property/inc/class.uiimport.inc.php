@@ -50,6 +50,7 @@
 
 			$this->valid_tables = array
 				(
+				'fm_streetaddress' => array('name' => 'fm_streetaddress (' . lang('street name') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_unspsc_code' => array('name' => 'fm_unspsc_code (' . lang('unspsc code') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_external_project' => array('name' => 'fm_external_project (' . lang('external project') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_eco_service' => array('name' => 'fm_eco_service (' . lang('service') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),

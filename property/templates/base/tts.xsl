@@ -1054,6 +1054,11 @@
 											<xsl:attribute name="title">
 												<xsl:value-of select="$lang_receive_order"/>
 											</xsl:attribute>
+											<xsl:if test="value_order_sent != 1">
+												<xsl:attribute name="disabled">
+													<xsl:text>disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
 										</input>
 										<div id="order_received_time" class="pure-custom">
 											<xsl:value-of select="value_order_received"/>
