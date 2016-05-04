@@ -2210,6 +2210,8 @@
 				}
 			}
 
+			$unspsc_code = $values['unspsc_code'] ? $values['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2369,12 +2371,13 @@
 						'type' => 'tax', 'selected' => $values['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list' => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id']) ),
-				'value_unspsc_code' => $values['unspsc_code'],
-				'value_unspsc_code_name' => $this->_get_unspsc_code_name($values['unspsc_code']),
+				'value_unspsc_code' => $unspsc_code,
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($unspsc_code),
 				'collect_building_part'	=> $collect_building_part,
 				'building_part_list' => $building_part_list,
 				'order_dim1_list' => $order_dim1_list,
-				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($values['order_received']),
+				'value_order_sent'	=> $values['order_sent'],
+				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_percent' => (int) $values['order_received_percent']
 			);
 

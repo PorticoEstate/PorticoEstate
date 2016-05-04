@@ -2734,6 +2734,7 @@
 			$tabs['history'] = array('label' => lang('History'), 'link' => '#history');
 			$active_tab = 'general';
 
+			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2753,8 +2754,8 @@
 				'value_service_name' => $this->_get_eco_service_name($ticket['service_id']),
 				'value_external_project_id' => $ticket['external_project_id'],
 				'value_external_project_name' => $this->_get_external_project_name($ticket['external_project_id']),
-				'value_unspsc_code' => $ticket['unspsc_code'],
-				'value_unspsc_code_name' => $this->_get_unspsc_code_name($ticket['unspsc_code']),
+				'value_unspsc_code' => $unspsc_code,
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($unspsc_code),
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
@@ -2845,7 +2846,8 @@
 				'preview_html' => "javascript:preview_html($id)",
 				'preview_pdf' => "javascript:preview_pdf($id)",
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_order_received'	=> $GLOBALS['phpgw']->common->show_date($ticket['order_received']),
+				'value_order_sent'	=> $ticket['order_sent'],
+				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_percent' => (int) $ticket['order_received_percent']
 			);
 
