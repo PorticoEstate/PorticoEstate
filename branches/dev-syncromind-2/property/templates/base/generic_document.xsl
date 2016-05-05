@@ -321,7 +321,7 @@
 
 <xsl:template match="options">
 	<option value="{id}">
-		<xsl:if test="selected = 1">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:attribute name="title" value="description" />
