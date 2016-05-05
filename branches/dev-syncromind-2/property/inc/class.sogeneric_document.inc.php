@@ -160,4 +160,48 @@
 			
 			return $values;
 		}
+		
+		public function add( $data = array(), $file_id )
+		{
+			$values_insert = array
+				(
+				'file_id' => $file_id,
+				'metadata' => json_encode($data)
+			);
+
+			$resutl = $this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+
+			return $resutl;
+		}
+		
+		public function update( $data = array(), $file_id)
+		{
+			$value_set = array
+			(
+				'metadata' => json_encode($data)
+			);
+
+			$value_set = $this->db->validate_update($value_set);
+			
+			return $this->db->query("UPDATE phpgw_vfs_filedata SET $value_set WHERE file_id = {$file_id}", __LINE__, __FILE__);
+		}
+		
+		public function read_single( $id )
+		{
+			$id = (int)$id;
+
+			$this->db->query("SELECT * FROM phpgw_vfs_filedata WHERE file_id = {$id}");
+
+			$values = array();
+			if ($this->db->next_record())
+			{
+				$values['id'] = $id;
+				$values['metadata'] = $this->db->f('metadata');
+			}
+
+			return $values['metadata'];
+			
+		}
+		
 	}
