@@ -1115,6 +1115,94 @@
 			}
 		}
 
+		function touch2($data,$p = array())
+		{
+			if(!is_array($data))
+			{
+				$data = array();
+			}
+
+			$default_values = array
+			(
+				'relatives'	=> array(RELATIVE_CURRENT)
+			);
+
+			$data = array_merge($this->default_values($data, $default_values), $data);
+
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			if(!$p)
+			{
+				$p = $this->path_parts(array(
+						'string'	=> $data['string'],
+						'relatives'	=> array($data['relatives'][0])
+					)
+				);
+			}
+
+			umask(000);
+
+			if(!$this->acl_check(array(
+					'string'	=> $p->fake_full_path,
+					'relatives'	=> array($p->mask),
+					'operation'	=> PHPGW_ACL_ADD
+				))
+			)
+			{
+				return false;
+			}
+
+			$value_set = array
+			(
+				'owner_id'	=> $this->working_id,
+				'directory'	=> $p->fake_leading_dirs_clean,
+				'name'		=> $p->fake_name_clean
+			);
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO phpgw_vfs ({$cols}) VALUES ({$values})";
+
+			$query = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			
+			$last_insert_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_vfs', 'file_id');
+			
+			$this->set_attributes(array(
+				'string'		=> $p->fake_full_path,
+				'relatives'		=> array($p->mask),
+				'attributes'	=> array(
+							'createdby_id'	=> $account_id,
+							'created'		=> $this->now,
+							'size'			=> 0,
+							'deleteable'	=> 'Y',
+							'app'			=> $currentapp
+						)
+				)
+			);
+			$this->correct_attributes(array(
+					'string'	=> $p->fake_full_path,
+					'relatives'	=> array($p->mask)
+				)
+			);
+			
+			$this->add_journal(array(
+					'string'	=> $p->fake_full_path,
+					'relatives'	=> array($p->mask),
+					'operation'	=> VFS_OPERATION_CREATED
+				)
+			);
+
+			if($query)
+			{
+				return $last_insert_id;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		/*
 		 * See vfs_shared
 		 */
@@ -1302,7 +1390,7 @@
 							'relatives'	=> array($t->mask)
 						)
 					);
-
+					
 					$set_attributes_array = array
 					(
 						'createdby_id'	=> $account_id,
@@ -1684,6 +1772,331 @@
 
 			return true;
 		}
+		
+
+		function cp3($data)
+		{
+			if(!$data['from'])
+			{
+				throw new Exception('nothing to copy from');
+			}
+
+			if(!is_array($data))
+			{
+				$data = array();
+			}
+
+			$default_values = array
+			(
+				'relatives'	=> array(RELATIVE_CURRENT, RELATIVE_CURRENT)
+			);
+
+			$data = array_merge($this->default_values($data, $default_values), $data);
+
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$f = $this->path_parts(array(
+					'string'	=> $data['from'],
+					'relatives'	=> array($data['relatives'][0])
+				)
+			);
+
+			$t = $this->path_parts(array(
+					'string'	=> $data['to'],
+					'relatives'	=> array($data['relatives'][1])
+				)
+			);
+
+			if(!$this->fileoperation->check_target_directory($t))
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text' => 'vfs::cp() : missing target directory %1',
+					'p1'   => $t->real_leading_dirs,
+					'p2'	 => '',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+
+				return false;
+			}
+
+			if(!$this->acl_check(array(
+					'string'	=> $f->fake_full_path,
+					'relatives'	=> array($f->mask),
+					'operation'	=> PHPGW_ACL_READ
+				))
+			)
+			{
+				return false;
+			}
+
+			if($this->file_exists(array(
+					'string'	=> $t->fake_full_path,
+					'relatives'	=> array($t->mask)
+				))
+			)
+			{
+				if(!$this->acl_check(array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array($t->mask),
+						'operation'	=> PHPGW_ACL_EDIT
+					))
+				)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if(!$this->acl_check(array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array($t->mask),
+						'operation'	=> PHPGW_ACL_ADD
+					))
+				)
+				{
+					return false;
+				}
+
+			}
+
+			umask(000);
+
+			if($this->file_type(array(
+					'string'	=> $f->fake_full_path,
+					'relatives'	=> array($f->mask)
+				)) != 'Directory'
+			)
+			{
+				if($this->file_actions)
+				{
+//					if(!$this->fileoperation->touch($data, $t) && !$this->fileoperation->copy($f, $t))
+					if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+					{
+						$_document_id = $this->fileoperation->touch($data, $t);
+					}
+
+					if(!$this->fileoperation->copy($f, $t, $_document_id))
+					{
+						return false;
+					}
+
+					$size = $this->fileoperation->filesize($f);
+				}
+				else
+				{
+					$content = $this->read(array(
+							'string'	=> $f->fake_full_path,
+							'relatives'	=> array($f->mask)
+						)
+					);
+
+					$size = strlen($content);
+				}
+
+				if($t->outside)
+				{
+					return true;
+				}
+
+				$ls_array = $this->ls(array(
+						'string'	=> $f->real_full_path, // Sigurd: seems to work better with real - old: 'string'	=> $f->fake_full_path,
+						'relatives'	=> array($f->mask),
+						'checksubdirs'	=> false,
+						'mime_type'	=> false,
+						'nofiles'	=> true
+					)
+				);
+				$record = $ls_array[0];
+
+				if($this->file_exists(array(
+						'string'	=> $data['to'],
+						'relatives'	=> array($data['relatives'][1])
+					))
+				)
+				{
+					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
+					. " directory='{$t->fake_leading_dirs_clean}',"
+					. " name='{$t->fake_name_clean}'"
+					. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
+					. " AND name='{$t->fake_name_clean}'" . $this->extra_sql(VFS_SQL_UPDATE), __LINE__, __FILE__);
+
+					$set_attributes_array = array
+					(
+						'createdby_id'	=> $account_id,
+						'created'		=> $this->now,
+						'size'			=> $size,
+						'mime_type'		=> $record['mime_type'],
+						'deleteable'	=> $record['deleteable'],
+						'comment'		=> $record['comment'],
+						'app'			=> $record['app']
+					);
+
+					if(!$this->file_actions)
+					{
+						$set_attributes_array['content'] = $content;
+					}
+
+					$this->set_attributes(array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array($t->mask),
+						'attributes'	=> $set_attributes_array
+						)
+					);
+
+					$this->add_journal(array(
+							'string'	=> $t->fake_full_path,
+							'relatives'	=> array($t->mask),
+							'operation'	=> VFS_OPERATION_EDITED
+						)
+					);
+				}
+				else
+				{
+					$file_id = $this->touch2(array(
+							'string'	=> $t->fake_full_path,
+							'relatives'	=> array($t->mask)
+						)
+					);
+					
+					if ($file_id)
+					{
+						if($this->file_actions)
+						{
+							$new_name = $t->fake_leading_dirs .'/'.$file_id.'_#' .$t->fake_name_clean;
+
+							$t2 = $this->path_parts(array(
+									'string'	=> $new_name,
+									'relatives'	=> array($data['relatives'][1])
+								)
+							);						
+
+							$rr = $this->fileoperation->rename($t, $t2);
+
+							if ($rr)
+							{
+								$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
+								. " directory='{$t2->fake_leading_dirs_clean}',"
+								. " name='{$t2->fake_name_clean}'"
+								. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
+								. " AND name='{$t->fake_name_clean}'", __LINE__, __FILE__);	
+
+								$t = $t2;
+							}
+						}
+
+						$set_attributes_array = array
+						(
+							'createdby_id'	=> $account_id,
+							'created'		=> $this->now,
+							'size'			=> $size,
+							'mime_type'		=> $record['mime_type'],
+							'deleteable'	=> $record['deleteable'],
+							'comment'		=> $record['comment'],
+							'app'			=> $record['app']
+						);
+
+						if(!$this->file_actions)
+						{
+							$set_attributes_array['content'] = $content;
+						}
+
+						$this->set_attributes(array(
+								'string'	=> $t->fake_full_path,
+								'relatives'	=> array($t->mask),
+								'attributes'	=> $set_attributes_array
+							)
+						);					
+					}
+				}
+				$this->correct_attributes(array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array($t->mask)
+					)
+				);
+				
+				if ($file_id)
+				{
+					return $file_id;
+				}
+				else {
+					return false;
+				}				
+			}
+			else	/* It's a directory */
+			{
+				/* First, make the initial directory */
+				if($this->mkdir(array(
+						'string'	=> $data['to'],
+						'relatives'	=> array($data['relatives'][1])
+					)) === false
+				)
+				{
+					return false;
+				}
+
+				/* Next, we create all the directories below the initial directory */
+				$ls = $this->ls(array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array($f->mask),
+						'checksubdirs'	=> true,
+						'mime_type'	=> 'Directory'
+					)
+				);
+
+				while(list($num, $entry) = each($ls))
+				{
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
+
+					if($this->mkdir(array(
+							'string'	=> "{$newdir}/{$entry['name']}",
+							'relatives'	=> array($t->mask)
+						)) === false
+					)
+					{
+						return false;
+					}
+				}
+
+				/* Lastly, we copy the files over */
+				$ls = $this->ls(array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array($f->mask)
+					)
+				);
+
+				while(list($num, $entry) = each($ls))
+				{
+					if($entry['mime_type'] == 'Directory')
+					{
+						continue;
+					}
+
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
+					$this->cp(array(
+							'from'	=> "{$entry[directory]}/{$entry[name]}",
+							'to'	=> "{$newdir}/{$entry[name]}",
+							'relatives'	=> array($f->mask, $t->mask)
+						)
+					);
+				}
+			}
+
+			if(!$f->outside)
+			{
+				$this->add_journal(array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array($f->mask),
+						'operation'	=> VFS_OPERATION_COPIED,
+						'state_one'	=> NULL,
+						'state_two'	=> $t->fake_full_path
+					)
+				);
+			}
+
+			return true;
+		}
+		
 		/*
 		 * See vfs_shared
 		 */
