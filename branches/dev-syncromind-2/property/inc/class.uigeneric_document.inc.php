@@ -436,16 +436,16 @@
 				return $this->edit();
 			}
 
-			$id = (int)phpgw::get_var('id');
+			/*$id = (int)phpgw::get_var('id');
 
 			if ($id)
 			{
-				$values = array();//$this->bo->read_single(array('id' => $id, 'view' => true));
+				$this->bo->read_single(array('id' => $id, 'view' => true));
 			}
 			else
 			{
 				$values = array();
-			}
+			}*/
 
 			/*
 			 * Overrides with incoming data from POST
@@ -461,7 +461,8 @@
 
 				try
 				{
-					$id = $this->bo->save($values);
+					$file_id = $this->_handle_files($id);
+					//$id = $this->bo->save($values);
 				}
 				catch (Exception $e)
 				{
@@ -473,17 +474,9 @@
 					}
 				}
 
-				$this->_handle_files($id);
-				if ($_FILES['import_file']['tmp_name'])
-				{
-					$this->_handle_import($id);
-				}
-				else
-				{
-					phpgwapi_cache::message_set('ok!', 'message');
-					self::redirect(array('menuaction' => 'property.uigeneric_document.edit',
-						'id' => $id));
-				}
+				phpgwapi_cache::message_set('ok!', 'message');
+				self::redirect(array('menuaction' => 'property.uigeneric_document.edit',
+					'id' => $file_id));
 			}
 		}
 
@@ -575,11 +568,11 @@
 		private function _handle_files( $id )
 		{
 			//$id = (int)$id;
-			$id = 78048;
+			/*$id = 78051;
 			if (!$id)
 			{
 				throw new Exception('uigeneric_document::_handle_files() - missing id');
-			}
+			}*/
 			$bofiles = CreateObject('property.bofiles');
 
 			if (isset($_POST['file_action']) && is_array($_POST['file_action']))
@@ -596,28 +589,32 @@
 					return;
 				}
 				
-				// cambiar $id  por $file_id
-				$to_file = $bofiles->fakebase . '/generic_document/' .$id. $file_name;
+				$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 				if ($bofiles->vfs->file_exists(array(
 						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
+						'relatives' => array(RELATIVE_NONE)
 					)))
 				{
 					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
 				}
 				else
 				{
-					$bofiles->create_document_dir("generic_document/{$id}");
+					$bofiles->create_document_dir("generic_document");
 					$bofiles->vfs->override_acl = 1;
-
-					if (!$bofiles->vfs->cp(array(
+					
+					$file_id = $bofiles->vfs->cp3(array(
 							'from' => $_FILES['file']['tmp_name'],
 							'to' => $to_file,
-							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
-					{
-						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
-					}
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 					$bofiles->vfs->override_acl = 0;
+					
+					if ($file_id)
+					{						
+						return $file_id;
+					} else {
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+						return false;
+					}
 				}
 			}
 		}
