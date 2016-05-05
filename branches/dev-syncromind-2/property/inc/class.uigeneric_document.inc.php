@@ -332,10 +332,12 @@
 
 				if (!$values)
 				{
-					$values = array();//$this->bo->read_single(array('id' => $id, 'view' => $mode == 'view'));
+					$values = (array) $this->bo->read_single($id);
 				}
 			}
 
+			$values['report_date'] = date($this->dateFormat, $values['report_date']);
+			
 			$categories = $this->_get_categories($values['cat_id']);
 
 			self::message_set($this->receipt);
@@ -462,7 +464,7 @@
 				try
 				{
 					$file_id = $this->_handle_files($id);
-					//$id = $this->bo->save($values);
+					$id = $this->bo->save($values, $file_id);
 				}
 				catch (Exception $e)
 				{
