@@ -29,7 +29,16 @@
 
 	class property_bogeneric_document
 	{
-
+		private $so;
+		var $public_functions = array
+			(
+			'read' => true,
+			'read_single' => true,
+			'save' => true,
+			'delete' => true,
+			'get_file_relations' => true
+		);
+		
 		public function __construct()
 		{
 			$this->so = CreateObject('property.sogeneric_document');
@@ -44,11 +53,11 @@
 			return $values;
 		}
 		
-		function read_single( $file_id )
+		public function read_single( $file_id )
 		{
 			$values = $this->so->read_single($file_id);
 
-			return $values;
+			return json_decode($values);
 		}
 
 		function get_file_relations( $location_id, $file_id )
@@ -57,4 +66,24 @@
 
 			return $values;
 		}
+		
+		function save( $values = array(), $file_id )
+		{
+			$report_date = phpgwapi_datetime::date_array($values['report_date']);
+			$values['report_date'] = mktime(2, 0, 0, $report_date['month'], $report_date['day'], $report_date['year']);
+			
+			$result = $this->so->read_single( $file_id );
+
+			if (count($result))
+			{
+				$receipt = $this->so->edit($values, $file_id);
+			}
+			else
+			{
+				$receipt = $this->so->add($values, $file_id);
+			}
+			
+			return $receipt;
+		}
+		
 	}
