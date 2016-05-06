@@ -330,12 +330,53 @@
 						</xsl:attribute>
 					</input>
 				</div>
-				<xsl:call-template name="project_group_form"/>
-				<xsl:choose>
+				<!--xsl:call-template name="external_project_form"/-->
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'external project')"/>
+					</label>
+					<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
+					<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
+					<div id="external_project_container"/>
+				</div>
+
+				<!--xsl:choose>
 					<xsl:when test="ecodimb_data!=''">
 						<xsl:call-template name="ecodimb_form"/>
 					</xsl:when>
-				</xsl:choose>
+				</xsl:choose-->
+
+
+				<div class="pure-control-group">
+					<xsl:variable name="lang_dimb">
+						<xsl:value-of select="php:function('lang', 'dimb')"/>
+					</xsl:variable>
+					<label>
+						<xsl:value-of select="$lang_dimb"/>
+					</label>
+					<xsl:if test="mode='edit'">
+						<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
+					</xsl:if>
+					<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
+						<xsl:choose>
+							<xsl:when test="mode='edit'">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_dimb"/>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</input>
+					<div id="ecodimb_container"/>
+				</div>
+
 				<xsl:choose>
 					<xsl:when test="b_account_data!=''">
 						<xsl:choose>

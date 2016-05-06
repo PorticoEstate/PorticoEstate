@@ -59,7 +59,7 @@
 			'street' => true,
 			'tenant' => true,
 			'phpgw_user' => true,
-			'project_group' => true,
+			'external_project' => true,
 			'ecodimb' => true,
 			'order_template' => true,
 			'response_template' => true,
@@ -1311,7 +1311,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		function project_group()
+		function external_project()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -1333,7 +1333,7 @@
 
 				$values = array();
 				$bo = CreateObject('property.bogeneric');
-				$bo->get_location_info('project_group');
+				$bo->get_location_info('external_project');
 				$values = $bo->read($params);
 
 				$result_data = array
@@ -1345,10 +1345,10 @@
 				return $this->jquery_results($result_data);
 			}
 
-			$action = 'parent.document.getElementsByName("project_group")[0].value = "";' . "\r\n";
-			$action .= 'parent.document.getElementsByName("project_group_descr")[0].value = "";' . "\r\n";
-			$action .= 'parent.document.getElementsByName("project_group")[0].value = aData["id"];' . "\r\n";
-			$action .= 'parent.document.getElementsByName("project_group_descr")[0].value = aData["descr"];' . "\r\n";
+			$action = 'parent.document.getElementsByName("external_project_id")[0].value = "";' . "\r\n";
+			$action .= 'parent.document.getElementsByName("external_project_name")[0].value = "";' . "\r\n";
+			$action .= 'parent.document.getElementsByName("external_project_id")[0].value = aData["id"];' . "\r\n";
+			$action .= 'parent.document.getElementsByName("external_project_name")[0].value = aData["name"];' . "\r\n";
 			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
 
 			$data = array(
@@ -1361,9 +1361,9 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'property.uilookup.project_group',
+						'menuaction' => 'property.uilookup.external_project',
 						'query' => $this->query,
-						'type' => 'project_group',
+						'type' => 'external_project',
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
@@ -1373,7 +1373,7 @@
 			);
 
 			$uicols = array(
-				'name' => array('id', 'descr', 'budget'),
+				'name' => array('id', 'name', 'budget'),
 				'sortable' => array(true, false, true),
 				'formatter' => array('', '', 'JqueryPortico.FormatterRight'),
 				'descr' => array(lang('ID'), lang('Name'), lang('budget'))
@@ -1393,8 +1393,8 @@
 				array_push($data['datatable']['field'], $params);
 			}
 
-			$appname = lang('project group');
-			$function_msg = lang('list project group');
+			$appname = lang('external project');
+			$function_msg = lang('list external project');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 

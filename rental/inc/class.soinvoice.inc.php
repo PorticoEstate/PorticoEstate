@@ -25,7 +25,7 @@
 			return 'id';
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 			if (isset($filters[$this->get_id_field_name()]))

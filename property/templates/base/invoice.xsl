@@ -1462,7 +1462,7 @@
 								<xsl:apply-templates select="process_code_list"/>
 							</select>
 						</div>
-					<xsl:call-template name="project_group_form"/>
+					<xsl:call-template name="external_project_form"/>
 						<div class="pure-control-group">
 							<label>
 							<xsl:value-of select="php:function('lang', 'voucher process log')"/>

@@ -921,7 +921,7 @@
 					if (isset($price_items_only))
 					{
 						//export contract price items
-						$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+						$result_objects_pi = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 							'contract_id' => $result->get_id(), 'export' => 'true', 'include_billed' => 'true'));
 						foreach ($result_objects_pi as $result_pi)
 						{
@@ -1383,7 +1383,7 @@ JS;
 			if (isset($contract))
 			{
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
-				$contract->set_security_type(phpgw::get_var('security_type'));
+				$contract->set_security_type(phpgw::get_var('security_type', 'int'));
 				$contract->set_security_amount(phpgw::get_var('security_amount'));
 				$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
 				$contract->set_comment(phpgw::get_var('comment'));
@@ -1648,7 +1648,7 @@ JS;
 			$datatable_def = array_merge($datatable_def, $tableDef_composite, $tableDef_party, $tableDef_price, $tableDef_invoice, $tableDef_document, $tableDef_notification);
 
 			/*			 * ***************************** invoice filters */
-			$invoices = rental_soinvoice::get_instance()->get(null, null, null, false, null, null, array(
+			$invoices = rental_soinvoice::get_instance()->get(0, 0, '', false, '', '', array(
 				'contract_id' => $contract->get_id()));
 			if ($invoices != null && count($invoices) > 0)
 			{
@@ -2129,7 +2129,7 @@ JS;
 				/*				 * ******************************************************************************** */
 
 				/*				 * ***************************** invoice filters */
-				$invoices = rental_soinvoice::get_instance()->get(null, null, null, false, null, null, array(
+				$invoices = rental_soinvoice::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $contract->get_id()));
 				if ($invoices != null && count($invoices) > 0)
 				{
@@ -2495,7 +2495,7 @@ JS;
 		 * Public function. Add a composite to a contract.
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::composite_id	the composite id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function add_composite()
 		{
@@ -2527,7 +2527,7 @@ JS;
 		 * Public function. Remove a composite from a contract.
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::composite_id	the composite id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function remove_composite()
 		{
@@ -2559,7 +2559,7 @@ JS;
 		 * Public function. Add a price item to a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function add_price_item()
 		{
@@ -2593,7 +2593,7 @@ JS;
 		 * Public function. Remove a price item from a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function remove_price_item()
 		{
@@ -2625,7 +2625,7 @@ JS;
 		 * Public function. Reset a price item on a contract
 		 * @param	HTTP::contract_id	the contract id
 		 * @param	HTTP::price_item_id	the price item id
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		public function reset_price_item()
 		{

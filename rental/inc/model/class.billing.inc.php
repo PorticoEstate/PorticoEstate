@@ -123,7 +123,7 @@
 
 		public function set_success( $success )
 		{
-			$this->success = (boolean)$success;
+			$this->success = (bool)$success;
 		}
 
 		public function set_timestamp_commit( $timestamp_commit )
@@ -140,7 +140,7 @@
 		 * Convenience method for checking if a billing job has been commited or
 		 * not. Checks if the timestamp for commit has been set.
 		 *
-		 * @return boolean true if job has been commited, false if not.
+		 * @return bool true if job has been commited, false if not.
 		 */
 		public function is_commited()
 		{
@@ -157,9 +157,9 @@
 			$this->created_by = (int)$created_by;
 		}
 
-		public function set_deleted( boolean $deleted )
+		public function set_deleted( bool $deleted )
 		{
-			$this->deleted = (boolean)$deleted;
+			$this->deleted = (bool)$deleted;
 		}
 
 		public function is_deleted()
@@ -177,9 +177,9 @@
 			return $this->has_generated_export;
 		}
 
-		public function set_generated_export( boolean $has_generated_export )
+		public function set_generated_export( bool $has_generated_export )
 		{
-			$this->has_generated_export = (boolean)$has_generated_export;
+			$this->has_generated_export = (bool)$has_generated_export;
 		}
 
 		public function set_export_format( $export_format )

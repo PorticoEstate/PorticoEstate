@@ -239,7 +239,7 @@ JS;
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
 			$search_for = $search['value'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Create an empty result set
 			$result_objects = array();

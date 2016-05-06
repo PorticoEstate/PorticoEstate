@@ -185,3 +185,4 @@ Eiendom - preferences	preferences	no	Eiendom - innstillinger
 as in "." or ","	preferences	no	Velg "." eller ","
 number of planned controls on home page	preferences	no	Antall planlagte kontroller på hjemmeskjerm
 number of assigned controls on home page	preferences	no	Antall tildelte kontroller på hjemmeskjerm
+filter tickets on assigned to me	preferences	no	Filtrer meldinger på tildelt til meg.

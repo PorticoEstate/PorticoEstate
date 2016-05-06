@@ -48,7 +48,14 @@
 			'edit_priority' => true,
 			'update_data' => true,
 			'_print' => true,
-			'columns' => true
+			'columns' => true,
+			'get_vendor_contract'=> true,
+			'get_eco_service'=> true,
+			'get_ecodimb'	=> true,
+			'get_b_account'	=> true,
+			'get_external_project'=> true,
+			'get_unspsc_code'=> true,
+			'receive_order'	=> true
 		);
 
 		/**
@@ -193,28 +200,6 @@
 			return $this->jquery_results($result_data);
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'status_id' => $this->status_id,
-				'user_id' => $this->user_id,
-				'reported_by' => $this->reported_by,
-				'cat_id' => $this->cat_id,
-				'vendor_id' => $this->vendor_id,
-				'district_id' => $this->district_id,
-				'part_of_town_id' => $this->part_of_town_id,
-				'allrows' => $this->allrows,
-				'start_date' => $this->start_date,
-				'end_date' => $this->end_date
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function _print()
 		{
 			if (!$this->acl_read)
@@ -255,8 +240,42 @@
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
 
-			$this->bo->allrows = true;
-			$list = $this->bo->read($start_date, $end_date, $external, '', $download = true);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => 0,
+				'results' => -1,
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1 ? true : false,
+				'status_id' => $this->bo->status_id,
+				'user_id' => $this->bo->user_id,
+				'reported_by' => $this->bo->reported_by,
+				'cat_id' => $this->bo->cat_id,
+				'vendor_id' => $this->bo->vendor_id,
+				'district_id' => $this->bo->district_id,
+				'part_of_town_id' => $this->bo->part_of_town_id,
+				'allrows' => true,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'location_code' => $this->bo->location_code,
+				'p_num' => $this->bo->p_num,
+				'building_part' => $this->bo->building_part,
+				'b_account' => $this->bo->b_account,
+				'ecodimb' => $this->bo->ecodimb,
+				'branch_id' => phpgw::get_var('branch_id'),
+				'order_dim1' => phpgw::get_var('order_dim1'),
+				'external' => $external,
+				'download' => true
+			);
+//			_debug_array($params); die();
+			$list = $this->bo->read($params);
 
 			$custom_status = $this->bo->get_custom_status();
 
@@ -485,7 +504,6 @@
 
 		private function _get_fields()
 		{
-			$this->bo->read(array('dry_run' => true));
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
 
@@ -499,18 +517,18 @@
 			$uicols['descr'][] = lang('subject');
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
-			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
-
-			static $location_cache = array();
+//			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
 
 			foreach ($location_types as $dummy => $level)
 			{
-				if (in_array($level['id'], $level_assigned))
+		//		if (in_array($level['id'], $level_assigned))
 				{
 					$uicols['name'][] = "loc{$level['id']}_name";
 					$uicols['descr'][] = $level['name'];
 				}
+				break;//first one only...
 			}
+
 
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][] = lang('entry date');
@@ -680,17 +698,19 @@
 					'list' => $values_combo_box[2]
 				);
 
+				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
+
 				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
-					'selected'	=> (int)$this->user_id <= 0 ? 1 : 0));
+					'selected'	=> ((int)$this->user_id < 0  || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
 				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
 				$combos[] = array('type' => 'filter',
 					'name' => 'user_id',
 					'extra' => '',
-					'text' => lang('user'),
+					'text' => lang('assigned to'),
 					'list' => $values_combo_box[4]
 				);
 
@@ -868,8 +888,8 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uitts.index',
-						'start_date' => $start_date,
-						'end_date' => $end_date,
+					//	'start_date' => $start_date,
+					//	'end_date' => $end_date,
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
@@ -1431,8 +1451,7 @@
 			$function_msg = lang('add ticket');
 
 			self::add_javascript('property', 'portico', 'tts.add.js');
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
-				'file'));
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
@@ -1521,11 +1540,11 @@
 
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
-			$values['ecodimb'] = phpgw::get_var('ecodimb');
+//			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
-			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
+//			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
+//			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
 
 			$values_attribute = phpgw::get_var('values_attribute');
 
@@ -2458,6 +2477,186 @@
 				)
 			);
 
+
+			// start invoice
+			$invoices = array();
+			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+				'order_id' => $id));
+			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+				'order_id' => $id,
+				'paid' => true));
+			$invoices = array_merge($active_invoices, $historical_invoices);
+
+
+			$link_data_invoice1 = array
+				(
+				'menuaction' => 'property.uiinvoice.index',
+				'user_lid' => 'all'
+			);
+			$link_data_invoice2 = array
+				(
+				'menuaction' => 'property.uiinvoice2.index'
+			);
+
+			$content_invoice = array();
+			$amount = 0;
+			$approved_amount = 0;
+			foreach ($invoices as $entry)
+			{
+				$entry['voucher_id'] = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
+				if ($entry['voucher_out_id'])
+				{
+					$voucher_out_id = $entry['voucher_out_id'];
+				}
+				else
+				{
+					$voucher_out_id = abs($entry['voucher_id']);
+				}
+
+				if ($this->bo->config->config_data['invoicehandler'] == 2)
+				{
+					if ($entry['voucher_id'] > 0)
+					{
+						$link_data_invoice2['voucher_id'] = $entry['voucher_id'];
+						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice2);
+					}
+					else
+					{
+						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+						$link_data_invoice1['paid'] = 'true';
+						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+					}
+				}
+				else
+				{
+					if ($entry['voucher_id'] > 0)
+					{
+						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
+						$link_data_invoice1['query'] = $entry['voucher_id'];
+						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+					}
+					else
+					{
+						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+						$link_data_invoice1['paid'] = 'true';
+						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+					}
+				}
+				$link_voucher_id = "<a href='" . $url . "'>" . $voucher_out_id . "</a>";
+
+				$content_invoice[] = array
+					(
+					'voucher_id' => ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
+					'voucher_out_id' => $entry['voucher_out_id'],
+					'status' => $entry['status'],
+					'period' => $entry['period'],
+					'periodization' => $entry['periodization'],
+					'periodization_start' => $entry['periodization_start'],
+					'invoice_id' => $entry['invoice_id'],
+					'budget_account' => $entry['budget_account'],
+					'dima' => $entry['dima'],
+					'dimb' => $entry['dimb'],
+					'dimd' => $entry['dimd'],
+					'type' => $entry['type'],
+					'amount' => $entry['amount'],
+					'approved_amount' => $entry['approved_amount'],
+					'vendor' => $entry['vendor'],
+					'external_project_id' => $entry['project_id'],
+					'currency' => $entry['currency'],
+					'budget_responsible' => $entry['budget_responsible'],
+					'budsjettsigndato' => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time' => $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+				);
+
+				$amount += $entry['amount'];
+				$approved_amount += $entry['approved_amount'];
+			}
+
+			$invoice_def = array
+				(
+				array(
+					'key' => 'voucher_id',
+					'label' => lang('bilagsnr'),
+					'sortable' => false,
+					'value_footer' => lang('Sum')),
+				array(
+					'key' => 'voucher_out_id',
+					'hidden' => true),
+				array(
+					'key' => 'invoice_id',
+					'label' => lang('invoice number'),
+					'sortable' => false),
+				array(
+					'key' => 'vendor',
+					'label' => lang('vendor'),
+					'sortable' => false),
+				array(
+					'key' => 'amount',
+					'label' => lang('amount'),
+					'sortable' => false,
+					'className' => 'right',
+					'value_footer' => number_format($amount, 2, $this->decimal_separator, '.')),
+				array(
+					'key' => 'approved_amount',
+					'label' => lang('approved amount'),
+					'sortable' => false,
+					'className' => 'right',
+					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+				array(
+					'key' => 'period',
+					'label' => lang('period'),
+					'sortable' => false),
+				array(
+					'key' => 'periodization',
+					'label' => lang('periodization'),
+					'sortable' => false),
+				array(
+					'key' => 'periodization_start',
+					'label' => lang('periodization start'),
+					'sortable' => false),
+				array(
+					'key' => 'currency',
+					'label' => lang('currency'),
+					'sortable' => false),
+				array(
+					'key' => 'type',
+					'label' => lang('type'),
+					'sortable' => false),
+				array(
+					'key' => 'budget_responsible',
+					'label' => lang('budget responsible'),
+					'sortable' => false),
+				array(
+					'key' => 'budsjettsigndato',
+					'label' => lang('budsjettsigndato'),
+					'sortable' => false),
+				array(
+					'key' => 'transfer_time',
+					'label' => lang('transfer time'),
+					'sortable' => false)
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_7',
+				'requestUrl' => "''",
+				'data' => json_encode($content_invoice),
+				'ColumnDefs' => $invoice_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
+				)
+			);
+
+
+
+			// end invoice table
+
+			//----------------------------------------------datatable settings--------
+
+
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 
@@ -2466,7 +2665,6 @@
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
-			//----------------------------------------------datatable settings--------
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
@@ -2527,7 +2725,7 @@
 				$my_groups[$group_id] = $group->firstname;
 			}
 
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security',
 				'file'));
 
 			$tabs = array();
@@ -2536,6 +2734,7 @@
 			$tabs['history'] = array('label' => lang('History'), 'link' => '#history');
 			$active_tab = 'general';
 
+			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2551,6 +2750,12 @@
 				'vendor_data' => $vendor_data,
 				'b_account_data' => $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
+				'value_service_id' => $ticket['service_id'],
+				'value_service_name' => $this->_get_eco_service_name($ticket['service_id']),
+				'value_external_project_id' => $ticket['external_project_id'],
+				'value_external_project_name' => $this->_get_external_project_name($ticket['external_project_id']),
+				'value_unspsc_code' => $unspsc_code,
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($unspsc_code),
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
@@ -2587,6 +2792,7 @@
 				'lang_priority_statustext' => lang('Select the priority the selection belongs to.'),
 				'select_priority_name' => 'values[priority]',
 				'priority_list' => array('options' => $this->bo->get_priority_list($ticket['priority'])),
+				'contract_list' => array('options' => $this->get_vendor_contract($ticket['vendor_id'], $ticket['contract_id']) ),
 				'lang_no_cat' => lang('no category'),
 				'value_cat_id' => $this->cat_id,
 				'cat_select' => $cat_select,
@@ -2632,14 +2838,21 @@
 				'order_dim1_list' => array('options' => $this->bocommon->select_category_list(array(
 						'type' => 'order_dim1', 'selected' => $ticket['order_dim1'], 'order' => 'id',
 						'id_in_name' => 'num'))),
+				'tax_code_list' => array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
+						'id_in_name' => 'num'))),
 				'branch_list' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list'] == 1 ? array(
 					'options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) : '',
 				'preview_html' => "javascript:preview_html($id)",
 				'preview_pdf' => "javascript:preview_pdf($id)",
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'value_order_sent'	=> $ticket['order_sent'],
+				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
+				'value_order_received_percent' => (int) $ticket['order_received_percent']
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
@@ -2661,6 +2874,94 @@
 			}
 
 			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+		}
+
+		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		{
+			return $this->bocommon->get_vendor_contract($vendor_id, $selected);
+		}
+
+		/**
+		 * Gets vendor canidated to be used as vendor - called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
+		 * @return array
+		 */
+		public function get_eco_service()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			return $this->bocommon->get_eco_service();
+		}
+
+		public function get_external_project()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			return $this->bocommon->get_external_project();
+		}
+
+		public function get_unspsc_code()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+			return $this->bocommon->get_unspsc_code();
+		}
+
+		public function get_ecodimb()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			return $this->bocommon->get_ecodimb();
+		}
+
+		public function get_b_account()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			return $this->bocommon->get_b_account();
+		}
+
+		public function receive_order( )
+		{
+			if (!$GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'property'))
+			{
+				return;
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			$received_percent = phpgw::get_var('received_percent', 'int');
+			return $this->bo->receive_order($id, $received_percent);
+		}
+
+		private function _get_eco_service_name( $id )
+		{
+			return $this->bocommon->get_eco_service_name($id);
+		}
+
+		private function _get_unspsc_code_name( $id )
+		{
+			return $this->bocommon->get_unspsc_code_name($id);
+		}
+
+		private function _get_external_project_name( $id )
+		{
+			return $this->bocommon->get_external_project_name($id);
 		}
 
 		protected function _generate_tabs( $history = '' )

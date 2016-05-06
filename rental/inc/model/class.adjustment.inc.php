@@ -104,7 +104,7 @@
 
 		public function set_is_manual( $is_manual )
 		{
-			$this->is_manual = (boolean)$is_manual;
+			$this->is_manual = (bool)$is_manual;
 		}
 
 		public function get_is_executed()
@@ -119,7 +119,7 @@
 
 		public function set_is_executed( $is_executed )
 		{
-			$this->is_executed = (boolean)$is_executed;
+			$this->is_executed = (bool)$is_executed;
 		}
 
 		public function get_extra_adjustment()
@@ -134,7 +134,7 @@
 
 		public function set_extra_adjustment( $extra_adjustment )
 		{
-			$this->extra_adjustment = (boolean)$extra_adjustment;
+			$this->extra_adjustment = (bool)$extra_adjustment;
 		}
 
 		public function get_interval()

@@ -1338,6 +1338,30 @@
 					unset($_ok);
 				}
 
+				$criteria = array
+					(
+					'appname' => 'property',
+					'location' => '.project.workorder.transfer',
+					'allrows' => true
+				);
+
+				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+				foreach ($custom_functions as $entry)
+				{
+					// prevent path traversal
+					if (preg_match('/\.\./', $entry['file_name']))
+					{
+						continue;
+					}
+
+					$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+					if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+					{
+						require $file;
+					}
+				}
+
 				$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : $to_email;
 				$email_data['use_yui_table'] = false;
 
@@ -1699,7 +1723,7 @@ HTML;
 				'table_send' => $table_send,
 				'table_done' => $table_done,
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
-				'files' => isset($workorder['files']) ? $workorder['files'] : '',
+				'files' => $content_files,
 				'lang_files' => lang('files'),
 				'lang_filename' => lang('Filename'),
 				'lang_file_action' => lang('attach file'),

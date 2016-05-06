@@ -676,7 +676,7 @@
 								<table border="1" width="100%" bordercolor="#000000" cellspacing="0" cellpadding="0">
 									<tr>
 										<td width="100%">
-											<xsl:value-of select="descr"/>
+											<xsl:value-of disable-output-escaping="yes" select="descr"/>
 										</td>
 									</tr>
 								</table>

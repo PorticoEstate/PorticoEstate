@@ -482,6 +482,7 @@ JS;
 					break;
 				default:
 					//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
+					$filters = array();
 					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 					break;

@@ -385,7 +385,7 @@
 			$criteria = array();
 			$criteria[1] = array
 				(
-				'field' => 'project_group',
+				'field' => 'external_project_id',
 				'type' => 'int',
 				'matchtype' => 'exact',
 				'front' => '',

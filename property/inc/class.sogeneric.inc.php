@@ -273,6 +273,16 @@
 				//_debug_array($filtermethod);
 				//_debug_array($where);die();
 
+				if ($this->location_info['id']['type'] == 'varchar')
+				{
+						$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
+						$where = 'OR';
+				}
+				else
+				{
+					$querymethod .= " OR CAST ({$table}.{$this->location_info['id']['name']} AS TEXT) $this->_like '%$query%'";
+				}
+
 				foreach ($this->location_info['fields'] as $field)
 				{
 					if ($field['type'] == 'varchar')
@@ -447,34 +457,6 @@
 
 					break;
 
-				case 'project_group':
-					$info = array
-						(
-						'table' => 'fm_project_group',
-						'id' => array('name' => 'id', 'type' => 'int'),
-						'fields' => array
-							(
-							array
-								(
-								'name' => 'descr',
-								'descr' => lang('descr'),
-								'type' => 'varchar'
-							),
-							array
-								(
-								'name' => 'budget',
-								'descr' => lang('budget'),
-								'type' => 'int'
-							)
-						),
-						'edit_msg' => lang('edit'),
-						'add_msg' => lang('add'),
-						'name' => '',
-						'acl_app' => 'property',
-						'acl_location' => '.admin',
-						'menu_selection' => 'admin::property::project_group'
-					);
-					break;
 				case 'dimb':
 					$info = array
 						(
@@ -593,7 +575,7 @@
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),
-						'name' => '',
+						'name' => lang('tax code'),
 						'acl_app' => 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_tax'
@@ -1092,8 +1074,7 @@
 								'descr' => lang('descr'),
 								'type' => 'varchar'
 							),
-							array
-								(
+							array(
 								'name' => 'active',
 								'descr' => lang('active'),
 								'type' => 'checkbox',
@@ -1107,7 +1088,7 @@
 							),
 							array
 								(
-								'name' => 'project_group',
+								'name' => 'external_project',
 								'descr' => lang('mandatory project group'),
 								'type' => 'checkbox'
 							)
@@ -1246,6 +1227,64 @@
 					break;
 
 				//-------- ID type varchar
+				case 'external_project':
+					$info = array
+						(
+						'table' => 'fm_external_project',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array(
+							array(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array(
+								'name' => 'budget',
+								'descr' => lang('budget'),
+								'type' => 'int'
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array
+									(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('external project'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::external_project'
+					);
+					break;
+				case 'unspsc_code':
+					$info = array
+						(
+						'table' => 'fm_unspsc_code',
+						'id' => array('name' => 'id', 'type' => 'varchar'),
+						'fields' => array(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('unspsc code'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::unspsc_code'
+					);
+					break;
 				case 'project_status':
 					$info = array
 						(
@@ -1759,6 +1798,35 @@
 					);
 					break;
 
+				case 'eco_service':
+					$info = array(
+						'table' => 'fm_eco_service',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array(
+							array(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false,
+								'size' => 50,
+								'sortable' => true
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							),
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('service'),
+						'acl_app' => 'property',
+						'acl_location' => '.b_account',
+						'menu_selection' => 'property::economy::eco_service',
+						'check_grant' => false
+					);
+					break;
 				//-------- ID type auto
 
 				case 'dimb_role_user':

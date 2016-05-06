@@ -142,8 +142,7 @@
 
 			$categories = $this->_get_categories($cat_id);
 
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			self::message_set($this->receipt);
 
 			$file_def = array
 				(
@@ -175,7 +174,6 @@
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'categories' => array('options' => $categories),
 				'editable' => $mode == 'edit',
 				'multiple_uploader' => $mode == 'edit' ? true : '',
@@ -284,11 +282,6 @@
 					'string' => "/manual/{$_cat_id}",
 					'relatives' => array(RELATIVE_NONE)));
 
-				foreach ($_files as &$_file)
-				{
-					$_file['path'] = "{$_cat_id}/{$_file['name']}";
-				}
-
 				$files = array_merge($files, $_files);
 			}
 
@@ -323,10 +316,9 @@
 			$values = array();
 			foreach ($out as $_entry)
 			{
-				$values[] = array
-					(
-					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['path']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
+				$values[] = array(
+					'file_name' => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['file_id']}' title='$lang_delete'>",
 				);
 			}
 
@@ -351,12 +343,7 @@
 			{
 				return lang('no access');
 			}
-
-			$bofiles = CreateObject('property.bofiles', '/manual');
-
-			$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
-			$file = "{$bofiles->fakebase}/{$file_name}";
-			$bofiles->view_file('', $file);
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		/**

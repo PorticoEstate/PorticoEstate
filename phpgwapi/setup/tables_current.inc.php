@@ -54,7 +54,7 @@
 			'fd' => array(
 				'account_id' => array('type' => 'auto','nullable' => False),
 				'account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False),
-				'account_pwd' => array('type' => 'varchar','precision' => '40','nullable' => False),
+				'account_pwd' => array('type' => 'varchar','precision' => 115,'nullable' => False),
 				'account_firstname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'account_lastname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'account_permissions' => array('type' => 'text','nullable' => True),
@@ -309,7 +309,23 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
+		'phpgw_vfs_file_relation' => array(
+			'fd' => array(
+				'relation_id'		=> array('type' => 'int','precision' => '4','nullable' => False),
+				'file_id'			=> array('type' => 'int','precision' => '4','nullable' => False),
+				'location_id'		=> array('type' => 'int','precision' => '4','nullable' => False),
+				'location_item_id'	=> array('type' => 'int','precision' => '4','nullable' => False),
+				'is_private'		=> array('type' => 'int','precision' => '2','nullable' => False),
+				'account_id'		=> array('type' => 'int','precision' => '4','nullable' => False),
+				'entry_date'		=> array('type' => 'int','precision' => '8','nullable' => False),
+				'start_date'		=> array('type' => 'int','precision' => '8','nullable' => False),
+				'end_date'			=> array('type' => 'int','precision' => '8 ','nullable' => False),
+			),
+			'pk' => array('relation_id'),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'phpgw_history_log' => array(
 			'fd' => array(
 				'history_id' => array('type' => 'auto','precision' => 4,'nullable' => False),

@@ -272,7 +272,7 @@
 					{
 						if (!array_key_exists($contract_price_item->get_contract_id(), $contracts))
 						{
-							$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array(
+							$aditional_contracts = rental_socontract::get_instance()->get(0, 0, '', false, '', '', array(
 								'contract_id' => $contract_price_item->get_contract_id(), 'contract_type' => $contract_type));
 							if (count($aditional_contracts) == 1)
 							{
@@ -562,7 +562,7 @@
 				}
 
 				$existing_billing_options[] = array('id' => 'new_billing', 'name' => lang('new_billing'));
-				$result_objects = rental_sobilling::get_instance()->get(null, null, null, null, null, null, array(
+				$result_objects = rental_sobilling::get_instance()->get(0, 0, '', false, '', '', array(
 					'location_id' => $contract_type));
 				foreach ($result_objects as $billing)
 				{
@@ -824,7 +824,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('invoice_run');
 
 			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-			$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
+			$billing_info_array = rental_sobilling_info::get_instance()->get(0, 0, '', false, '', '', array(
 				'billing_id' => phpgw::get_var('id')));
 
 			if ($billing_job == null) // Not found
@@ -1061,7 +1061,7 @@ JS;
 			$result = rental_sobilling::get_instance()->store($billing_job);
 
 			//set deleted=true on billing_info
-			$billing_infos = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
+			$billing_infos = rental_sobilling_info::get_instance()->get(0, 0, '', false, '', '', array(
 				'billing_id' => phpgw::get_var('id')));
 			foreach ($billing_infos as $billing_info)
 			{
@@ -1070,11 +1070,11 @@ JS;
 			}
 
 			//set is_billed on invoice price items to false
-			$billing_job_invoices = rental_soinvoice::get_instance()->get(null, null, null, null, null, null, array(
+			$billing_job_invoices = rental_soinvoice::get_instance()->get(0, 0, '', false, '', '', array(
 				'billing_id' => phpgw::get_var('id')));
 			foreach ($billing_job_invoices as $invoice)
 			{
-				$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+				$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $invoice->get_contract_id(), 'one_time' => true, 'include_billed' => true));
 				foreach ($price_items as $price_item)
 				{
@@ -1308,7 +1308,7 @@ JS;
 				else
 				{
 					$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-					$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array(
+					$billing_info_array = rental_sobilling_info::get_instance()->get(0, 0, '', false, '', '', array(
 						'billing_id' => phpgw::get_var('id')));
 					$type = phpgw::get_var('type', 'string', 'GET', 'bk');
 					if ($billing_job == null) // Not found
