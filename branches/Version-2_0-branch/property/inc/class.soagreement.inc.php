@@ -110,6 +110,13 @@
 			$uicols['statustext'][] = lang('name');
 			$uicols['datatype'][] = 'V';
 
+			$cols_return[] = 'contract_id';
+			$uicols['input_type'][] = 'text';
+			$uicols['name'][] = 'contract_id';
+			$uicols['descr'][] = lang('contract');
+			$uicols['statustext'][] = lang('contract');
+			$uicols['datatype'][] = 'V';
+
 			$cols_return[] = 'org_name';
 			$uicols['input_type'][] = 'text';
 			$uicols['name'][] = 'org_name';
@@ -667,8 +674,9 @@
 				$values['termination_date'] = $this->db->f('termination_date');
 				$values['vendor_id'] = $this->db->f('vendor_id');
 				$values['b_account_id'] = $this->db->f('account_id');
-				$values['name'] = stripslashes($this->db->f('name'));
-				$values['descr'] = stripslashes($this->db->f('descr'));
+				$values['name'] = $this->db->f('name',true);
+				$values['contract_id'] = $this->db->f('contract_id',true);
+				$values['descr'] = $this->db->f('descr',true);
 				$values['user_id'] = $this->db->f('user_id');
 				$values['group_id'] = $this->db->f('group_id');
 				$values['status'] = $this->db->f('status');
@@ -732,6 +740,7 @@
 			$vals = array();
 			$vals[] = $id;
 			$vals[] = $agreement['name'];
+			$vals[] = $agreement['contract_id'];
 			$vals[] = $agreement['descr'];
 			$vals[] = time();
 			$vals[] = $agreement['cat_id'];
@@ -776,7 +785,7 @@
 				$vals = $this->db->validate_insert($vals);
 			}
 
-			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,start_date,end_date,termination_date,vendor_id,user_id $cols) "
+			$this->db->query("INSERT INTO $table (id,name,contract_id,descr,entry_date,category,start_date,end_date,termination_date,vendor_id,user_id $cols) "
 				. "VALUES ($vals)", __LINE__, __FILE__);
 
 			$receipt['agreement_id'] = $id;//$this->db->get_last_insert_id($table,'id');
@@ -861,6 +870,7 @@
 			}
 
 			$value_set['name'] = $values['name'];
+			$value_set['contract_id'] = $values['contract_id'];
 			$value_set['descr'] = $values['descr'];
 			$value_set['group_id'] = $values['group_id'];
 			$value_set['status'] = $values['status'];
@@ -1249,5 +1259,23 @@
 			$this->db->query("SELECT descr FROM fm_activities WHERE id = $id", __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('descr', true);
+		}
+
+		function get_vendor_contract ( $vendor_id )
+		{
+			$vendor_id = (int)$vendor_id;
+			$this->db->query("SELECT contract_id, name FROM fm_agreement WHERE status = 'active' AND contract_id IS NOT NULL AND vendor_id = {$vendor_id}", __LINE__, __FILE__);
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$contract_id = $this->db->f('contract_id',true);
+				$name = $this->db->f('name',true);
+				$values[] = array(
+					'id' => $contract_id,
+					'name' => "{$contract_id}::{$name}"
+				);
+			}
+			return $values;
+
 		}
 	}

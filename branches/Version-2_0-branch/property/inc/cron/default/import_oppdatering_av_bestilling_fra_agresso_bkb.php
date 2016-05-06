@@ -257,7 +257,7 @@
 			}
 
 			//prosjektnummer;prosjektstatus;bestillingsnummer;beløp
-			$agresso_prosjekt = trim($data[0]);
+			$external_project = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
 			$order_id = trim($data[2]);
 			$diff_actual_cost = (float)trim($data[3]);
@@ -268,7 +268,7 @@
 
 			if (!$id)
 			{
-				$this->receipt['error'][] = array('msg' => "Oppdatere beløp for agresso prosjekt {$agresso_prosjekt}: fant ikke bestillingen, hopper over: {$order_id}");
+				$this->receipt['error'][] = array('msg' => "Oppdatere beløp for agresso prosjekt {$external_project}: fant ikke bestillingen, hopper over: {$order_id}");
 				return false;
 			}
 
@@ -291,12 +291,12 @@
 			$values_cost = $this->db->validate_insert(array_values($value_set_cost));
 			$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
 
-			$this->receipt['message'][] = array('msg' => "Oppdaterer melding #{$id} for agresso prosjekt {$agresso_prosjekt}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
+			$this->receipt['message'][] = array('msg' => "Oppdaterer melding #{$id} for agresso prosjekt {$external_project}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 			$this->historylog->add('AC', $id, $new_actual_cost, $old_actual_cost);
 
 			$value_set = array
 				(
-				'agresso_prosjekt' => $agresso_prosjekt,
+				'external_project' => $external_project,
 				'actual_cost' => $new_actual_cost,
 				'actual_cost_year' => date('Y'),
 				'modified_date' => time()
@@ -316,7 +316,7 @@
 
 		private function update_status( $data )
 		{
-			$agresso_prosjekt = trim($data[0]);
+			$external_project = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
 			$order_id = trim($data[2]);
 
@@ -331,11 +331,11 @@
 
 			if (!$id)
 			{
-				$this->receipt['error'][] = array('msg' => "Oppdatere status: fant ikke bestillingen for agresso prosjekt {$agresso_prosjekt}");
+				$this->receipt['error'][] = array('msg' => "Oppdatere status: fant ikke bestillingen for agresso prosjekt {$external_project}");
 				return false;
 			}
 
-			$this->db->query("UPDATE fm_tts_tickets SET agresso_prosjekt = '{$agresso_prosjekt}' WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_tts_tickets SET external_project = '{$external_project}' WHERE id={$id}", __LINE__, __FILE__);
 
 			$ok = true;
 			if (preg_match('/(^C|^P)/i', $prosjektstatus))

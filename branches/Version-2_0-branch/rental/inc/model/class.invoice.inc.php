@@ -392,12 +392,12 @@
 					'month' => date('m', $timestamp_invoice_start));
 				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, $filters2);
-				//$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id(), 'one_time' => true));
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', $filters2);
+				//$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array('contract_id' => $contract->get_id(), 'one_time' => true));
 			}
 			else
 			{
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $contract->get_id()));
 			}
 

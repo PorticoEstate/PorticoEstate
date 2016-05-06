@@ -139,7 +139,7 @@
 			{
 				$missing_billing_info[] = 'Project id can not be more than 6 characters.';
 			}
-			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+			$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 				'contract_id' => $contract->get_id()));
 			foreach ($price_items as $price_item) // Runs through all items
 			{
@@ -168,12 +168,12 @@
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
-			$invoices = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array(
+			$invoices = rental_soinvoice::get_instance()->get(0, 0, 'id', true, '', '', array(
 				'billing_id' => $this->billing_job->get_id()));
 			foreach ($invoices as $invoice) // Runs through all invoices
 			{
 				// We need all price items in the invoice
-				$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array(
+				$price_items = rental_soinvoice_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 					'invoice_id' => $invoice->get_id()));
 				// HACK to get the needed location code for the building
 				$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());

@@ -428,7 +428,7 @@
 			$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases, cl.serie_id ";
 			$sql .= "FROM controller_control c ";
 			$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-			$sql .= "WHERE cl.location_code = '{$location_code}' ";
+			$sql .= "WHERE cl.location_code LIKE '{$location_code}%' ";
 
 			if ($repeat_type != null)
 			{

@@ -4,7 +4,8 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Philipp Kamps <pkamps@probusiness.de>
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2000-2016 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
@@ -83,7 +84,7 @@
 			}
 
 			$salt = substr(md5(uniqid(rand(), true)), 0, $chars);
-			return $salt;
+			return $salt;	
 		}
 
 		/**
@@ -94,11 +95,34 @@
 		*/
 		public function create_hash($passwd)
 		{
+			static $retry = 0;
 			switch ($GLOBALS['phpgw_info']['server']['encryption_type'])
 			{
 				case 'CRYPT':
-					return '{CRYPT}' . crypt($passwd, $this->_shake_salt(CRYPT_SALT_LENGTH));
+					$size =  mcrypt_get_iv_size(MCRYPT_CAST_256, MCRYPT_MODE_CFB);
+					$salt = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
+					$hash = crypt($passwd, '$5$' . $salt);//CRYPT_SHA256
+					$ret =  '{CRYPT}' . base64_encode($hash . $salt);
+					$lenght_hash = strlen($hash);
 
+					/*
+					 * It happens (about one out of 15 - 20 times) that the lenght is not as expexted
+					 */
+
+					if($lenght_hash != 63 && $retry < 3)
+					{
+						if($retry < 3)
+						{
+							$retry++;
+							$ret = self::create_hash($passwd);
+						}
+						else
+						{
+							throw new Exception('Invalid lenght of password hash: ' . $lenght_hash);
+
+						}
+					}
+					return $ret;
 				case 'MD5':
 					return "{MD5}" . base64_encode(phpgwapi_common::hex2bin(md5($passwd)));
 
@@ -137,8 +161,10 @@
 			switch ( strtoupper($algo) )
 			{
 				case 'CRYPT':
-					//TODO implement this
-					return false;
+					$hash = base64_decode($hash);
+					$salt = substr($hash, 63);
+					$hash = substr($hash, 0, 63);
+					return $hash === crypt($passwd, '$5$' . $salt);
 				case 'MD5':
 					$hash = bin2hex(base64_decode($hash));
 					return $hash === md5($passwd);

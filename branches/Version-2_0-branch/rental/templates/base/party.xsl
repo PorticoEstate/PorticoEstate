@@ -350,6 +350,9 @@
 <!-- view  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
 	<xsl:call-template name="top-toolbar" />
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+	</script>
 	<div>
 		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">

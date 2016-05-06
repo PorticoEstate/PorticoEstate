@@ -65,7 +65,7 @@
 			'addfiles' => true,
 		);
 
-		function __construct( $session = false )
+		function __construct( )
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'property')
 			{
@@ -108,84 +108,27 @@
 				}
 			}
 
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
-
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$status_id = phpgw::get_var('status_id', 'string');
-			$user_id = phpgw::get_var('user_id', 'int');
-			$reported_by = phpgw::get_var('reported_by', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
-			$district_id = phpgw::get_var('district_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$start_date = phpgw::get_var('start_date', 'string');
-			$end_date = phpgw::get_var('end_date', 'string');
-			$location_code = phpgw::get_var('location_code');
-			$vendor_id = phpgw::get_var('vendor_id', 'int');
-			$ecodimb = phpgw::get_var('ecodimb', 'int');
-			$b_account = phpgw::get_var('b_account', 'string');
-			$building_part = phpgw::get_var('building_part', 'string');
-			$branch_id = phpgw::get_var('branch_id', 'int');
-			$order_dim1 = phpgw::get_var('order_dim1', 'int');
-
-			$this->start = $start ? $start : 0;
-
-			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
-			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order = isset($_REQUEST['order']) ? $order : $this->order;
-			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
-			$this->status_id = isset($_REQUEST['status_id']) ? $status_id : $this->status_id;
-			$this->user_id = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
-			$this->reported_by = isset($_REQUEST['user_id']) ? $reported_by : $this->reported_by;
-
-			$this->part_of_town_id = isset($_REQUEST['part_of_town_id']) ? $part_of_town_id : $this->part_of_town_id;
-			$this->district_id = isset($_REQUEST['district_id']) ? $district_id : $this->district_id;
-			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
-			$this->start_date = isset($_REQUEST['start_date']) ? $start_date : $this->start_date;
-			$this->end_date = isset($_REQUEST['end_date']) ? $end_date : $this->end_date;
-			$this->location_code = isset($location_code) && $location_code ? $location_code : '';
-			$this->vendor_id = isset($_REQUEST['vendor_id']) ? $vendor_id : $this->vendor_id;
+			$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$this->query = phpgw::get_var('query');
+			$this->sort = phpgw::get_var('sort');
+			$this->order = phpgw::get_var('order');
+			$this->status_id = phpgw::get_var('status_id', 'string');
+			$this->user_id = phpgw::get_var('user_id', 'int');
+			$this->reported_by = phpgw::get_var('reported_by', 'int');
+			$this->cat_id = phpgw::get_var('cat_id', 'int');
+			$this->part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+			$this->district_id = phpgw::get_var('district_id', 'int');
+			$this->allrows = phpgw::get_var('allrows', 'bool');
+			$this->start_date = phpgw::get_var('filter_start_date', 'string');
+			$this->end_date = phpgw::get_var('filter_end_date', 'string');
+			$this->location_code = phpgw::get_var('location_code');
+			$this->vendor_id = phpgw::get_var('vendor_id', 'int');
+			$this->ecodimb = phpgw::get_var('ecodimb', 'int');
+			$this->b_account = phpgw::get_var('b_account', 'string');
+			$this->building_part = phpgw::get_var('building_part', 'string');
+			$this->branch_id = phpgw::get_var('branch_id', 'int');
+			$this->order_dim1 = phpgw::get_var('order_dim1', 'int');
 			$this->p_num = phpgw::get_var('p_num');
-			$this->ecodimb = isset($_REQUEST['ecodimb']) ? $ecodimb : $this->ecodimb;
-			$this->b_account = isset($_REQUEST['b_account']) ? $b_account : $this->b_account;
-			$this->building_part = isset($_REQUEST['building_part']) ? $building_part : $this->building_part;
-			$this->branch_id = isset($_REQUEST['branch_id']) ? $branch_id : $this->branch_id;
-			$this->order_dim1 = isset($_REQUEST['order_dim1']) ? $order_dim1 : $this->order_dim1;
-		}
-
-		function save_sessiondata( $data )
-		{
-			if ($this->use_session)
-			{
-				$GLOBALS['phpgw']->session->appsession('session_data', 'fm_tts', $data);
-			}
-		}
-
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'fm_tts');
-
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->user_id = isset($data['user_id']) ? $data['user_id'] : '';
-			$this->reported_by = isset($data['reported_by']) ? $data['reported_by'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->status_id = isset($data['status_id']) ? $data['status_id'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
-			$this->part_of_town_id = isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
-			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$this->start_date = isset($data['start_date']) ? $data['start_date'] : '';
-			$this->end_date = isset($data['end_date']) ? $data['end_date'] : '';
-			$this->vendor_id = isset($data['vendor_id']) ? $data['vendor_id'] : '';
 		}
 
 		function column_list( $selected = array() )
@@ -273,6 +216,31 @@
 					(
 					'id' => 'order_dim1',
 					'name' => lang('order_dim1')
+				);
+				$columns['external_project_id'] = array
+					(
+					'id' => 'external_project_id',
+					'name' => lang('external project')
+				);
+				$columns['contract_id'] = array
+					(
+					'id' => 'contract_id',
+					'name' => lang('contract')
+				);
+				$columns['service_id'] = array
+					(
+					'id' => 'service_id',
+					'name' => lang('service')
+				);
+				$columns['tax_code'] = array
+					(
+					'id' => 'tax_code',
+					'name' => lang('tax code')
+				);
+				$columns['unspsc_code'] = array
+					(
+					'id' => 'unspsc_code',
+					'name' => lang('unspsc code')
 				);
 			}
 
@@ -905,6 +873,8 @@
 						break;
 					case 'MS':
 						$type = lang('Sent by sms');
+						break;
+					case 'RM': $type = lang('remark');
 						break;
 					default:
 					// nothing
@@ -1755,4 +1725,39 @@
 			}
 			return $values;
 		}
+
+		public function receive_order( $id, $received_percent )
+		{
+			$receive_order = true; // used as trigger within the custom function
+			$acl_location = $this->acl_location;
+
+			$criteria = array(
+				'appname' => 'property',
+				'location' => $acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+			// $result from the custom function
+			return array(
+				'result' => $result,
+				'time'	=> $GLOBALS['phpgw']->common->show_date(time())
+				);
+		}
+
 	}

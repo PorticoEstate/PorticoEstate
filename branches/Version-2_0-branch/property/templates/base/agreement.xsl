@@ -166,6 +166,16 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'contract')"/>
+								</label>
+								<input type="text" name="values[contract_id]" value="{value_contract_id}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'contract')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="lang_status"/>
 								</label>
 								<xsl:call-template name="status_select"/>
@@ -747,6 +757,12 @@
 									<xsl:value-of select="lang_name"/>
 								</label>
 								<xsl:value-of select="value_name"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'contract')"/>
+								</label>
+								<xsl:value-of select="value_contract_id"/>
 							</div>
 							<div class="pure-control-group">
 								<label>

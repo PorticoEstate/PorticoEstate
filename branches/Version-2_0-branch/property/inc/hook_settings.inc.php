@@ -182,7 +182,9 @@
 
 
 
+	create_select_box('Filter tickets on assigned to me', 'tts_assigned_to_me', $yes_and_no, '');
 	create_select_box('Notify me by mail when ticket is assigned or altered', 'tts_notify_me', $yes_and_no, '');
+
 	create_select_box('Send e-mail from TTS', 'tts_user_mailnotification', $yes_and_no, 'Send e-mail from TTS as default');
 	create_input_box('Refresh TTS every (seconds)', 'refreshinterval', 'The intervall for Helpdesk refresh - cheking for new tickets');
 
@@ -267,6 +269,7 @@
 	$ecodimb->get_location_info('dimb', false);
 	$values_dimb = $ecodimb->read(array('sort' => 'ASC', 'order' => 'id', 'allrows' => true));
 
+	$_dimb = array();
 	foreach ($values_dimb as $entry)
 	{
 		$_dimb[$entry['id']] = "{$entry['id']} - {$entry['descr']}";
@@ -277,6 +280,21 @@
 	unset($_dimb);
 	unset($ecodimb);
 	unset($values_dimb);
+	unset($entry);
+
+	$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
+	$_values_unspsc_code = $sogeneric->read(array('allrows' => true));
+	$_unspsc_code = array();
+	foreach ($_values_unspsc_code as &$entry)
+	{
+		$_unspsc_code[$entry['id']] = "{$entry['id']} {$entry['name']}";
+	}
+
+	create_select_box('unspsc code', 'unspsc_code', $_unspsc_code, 'default unspsc code');
+	unset($sogeneric);
+	unset($_unspsc_code);
+	unset($entry);
+	unset($_values_unspsc_code);
 
 	create_select_box('Workorder Approval From', 'approval_from', $_accounts, 'If you need approval from your supervisor for projects/workorders');
 

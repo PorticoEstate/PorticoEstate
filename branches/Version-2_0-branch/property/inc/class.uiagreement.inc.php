@@ -839,7 +839,7 @@
 		{
 
 			$agreement_id = phpgw::get_var('agreement_id', 'int');
-			if (empty($agreement_id))
+			if (!$agreement_id)
 			{
 				$result_data = array('results' => array());
 				$result_data['total_records'] = 0;
@@ -879,7 +879,7 @@
 			$data = phpgw::get_var('data');
 			$account_id = phpgw::get_var('account_id');
 
-			if (empty(id))
+			if (!$id)
 			{
 				$result_data = array('results' => array());
 				$result_data['total_records'] = 0;
@@ -1521,6 +1521,7 @@
 				'lang_name' => lang('name'),
 				'lang_name_statustext' => lang('name'),
 				'value_name' => $agreement['name'],
+				'value_contract_id' => $agreement['contract_id'],
 				'lang_descr' => lang('descr'),
 				'lang_descr_statustext' => lang('descr'),
 				'value_descr' => $agreement['descr'],
