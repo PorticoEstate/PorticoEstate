@@ -76,12 +76,20 @@
 
 			if (count($result))
 			{
-				$receipt = $this->so->edit($values, $file_id);
+				$receipt = $this->so->update($values, $file_id);
 			}
 			else
 			{
 				$receipt = $this->so->add($values, $file_id);
 			}
+			
+			return $receipt;
+		}
+		
+		function set_file_relation( $items = array(), $location_id, $file_id  )
+		{
+			
+			$result = $this->so->set_file_relation( $items, $location_id, $file_id );
 			
 			return $receipt;
 		}
