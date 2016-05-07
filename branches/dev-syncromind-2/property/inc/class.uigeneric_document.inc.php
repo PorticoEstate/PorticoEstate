@@ -46,6 +46,7 @@
 			'get_users' => true,
 			'edit_title' => true,
 			'get_relations' => true,
+			'set_relations' => true,
 			'view_file' => true,
 			'download' => true,
 		);
@@ -333,10 +334,14 @@
 				if (!$values)
 				{
 					$values = (array) $this->bo->read_single($id);
+					$values['id'] = $id;
 				}
 			}
 
-			$values['report_date'] = date($this->dateFormat, $values['report_date']);
+			if ($values['report_date'])
+			{
+				$values['report_date'] = date($this->dateFormat, $values['report_date']);
+			}
 			
 			$categories = $this->_get_categories($values['cat_id']);
 
@@ -344,28 +349,41 @@
 
 			$related_def = array
 				(
-				array('key' => 'name', 'label' => lang('name'), 'sortable' => false,
-					'resizeable' => true),
-				array('key' => 'relate', 'label' => lang('related'), 'sortable' => false,
-					'resizeable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 			);
 
 			$values_location = $this->get_location_filter();
 			
+			$tabletools[] = array
+				(
+				'my_name' => 'relate',
+				'text' => lang('Relate'),
+				'type' => 'custom',
+				'custom_code' => "
+					var oArgs = " . json_encode(array(
+					'menuaction' => 'property.uigeneric_document.set_relations',
+					'phpgw_return_as' => 'json'
+				)) . ";
+					var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
+							'source' => 'id')))) . ";
+					setRelations(oArgs, parameters);
+				"
+			);
+					
 			$datatable_def = array();
 			$datatable_def[] = array
-				(
+			(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_relations',
 						'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def,
-				'config' => array(
-					array('disableFilter' => true)
-				)
+				'tabletools' => $tabletools,
+				'config' => array(array('disableFilter' => true))
 			);
 			
 			$data = array
-				(
+			(
 				'datatable_def' => $datatable_def,
 				'document' => $values,
 				'lang_coordinator' =>  lang('coordinator'),
@@ -376,8 +394,6 @@
 				'location_filter' => array('options' => $values_location),
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
-
-			//print_r($data['tabs']); die;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('generic document');
 
@@ -438,16 +454,17 @@
 				return $this->edit();
 			}
 
-			/*$id = (int)phpgw::get_var('id');
+			$id = (int)phpgw::get_var('id');
 
 			if ($id)
 			{
-				$this->bo->read_single(array('id' => $id, 'view' => true));
+				//$values = (array)$this->bo->read_single(array('id' => $id, 'view' => true));
+				$values = (array)$this->bo->read_single($id);
 			}
 			else
 			{
 				$values = array();
-			}*/
+			}
 
 			/*
 			 * Overrides with incoming data from POST
@@ -460,11 +477,10 @@
 			}
 			else
 			{
-
 				try
 				{
-					$file_id = $this->_handle_files($id);
-					$id = $this->bo->save($values, $file_id);
+					$id = $this->_handle_files($id);
+					$this->bo->save($values, $id);
 				}
 				catch (Exception $e)
 				{
@@ -477,8 +493,7 @@
 				}
 
 				phpgwapi_cache::message_set('ok!', 'message');
-				self::redirect(array('menuaction' => 'property.uigeneric_document.edit',
-					'id' => $file_id));
+				self::redirect(array('menuaction' => 'property.uigeneric_document.edit', 'id' => $id));
 			}
 		}
 
@@ -523,7 +538,7 @@
 					$values_location_item_id[] = $item['location_item_id'];
 				}
 			}
-			
+
 			$values = array();
 			foreach($_components as $item)
 			{
@@ -531,7 +546,7 @@
 				
 				$values[] = array(
 					'name' => $item['benevnelse'],
-					'relate' => '<input type="checkbox" '.$checked.'>',
+					'relate' => '<input value="'.$item['id'].'" class="select_check" type="checkbox" '.$checked.'>',
 				);				
 			}
 			
@@ -543,6 +558,18 @@
 			return $this->jquery_results($result_data);
 		}
 
+		 
+		public function set_relations()
+		{
+			$location_id = phpgw::get_var('location_id', 'int');
+			$file_id = phpgw::get_var('file_id', 'int');
+			$items = phpgw::get_var('items');
+			
+			$result = $this->bo->set_file_relation( $items, $location_id, $file_id );
+			
+			return $result;
+		}
+		
 
 		/**
 		 * Dowloads a single file to the browser
@@ -569,39 +596,39 @@
 		 */
 		private function _handle_files( $id )
 		{
-			//$id = (int)$id;
-			/*$id = 78051;
-			if (!$id)
+			$id = (int)$id;
+
+			if (empty($id))
 			{
-				throw new Exception('uigeneric_document::_handle_files() - missing id');
-			}*/
+				if (!is_file($_FILES['file']['tmp_name']))
+				{
+					//phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					throw new Exception('Failed to upload file !');
+				}
+			}
+				
 			$bofiles = CreateObject('property.bofiles');
 
-			if (isset($_POST['file_action']) && is_array($_POST['file_action']))
-			{
-				$bofiles->delete_file("/generic_document/{$id}/",array('file_action' => $_POST['file_action']));
-			}
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
 			if ($file_name)
 			{
-				if (!is_file($_FILES['file']['tmp_name']))
-				{
-					phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
-					return;
-				}
-				
 				$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 				if ($bofiles->vfs->file_exists(array(
 						'string' => $to_file,
 						'relatives' => array(RELATIVE_NONE)
 					)))
 				{
-					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+					//phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+					throw new Exception('This file already exists !');
 				}
 				else
 				{
-					$bofiles->create_document_dir("generic_document");
+					$receipt = $bofiles->create_document_dir("generic_document");
+					if (count($receipt['error']))
+					{
+						throw new Exception('failed to create directory');
+					}
 					$bofiles->vfs->override_acl = 1;
 					
 					$file_id = $bofiles->vfs->cp3(array(
@@ -610,14 +637,15 @@
 							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 					$bofiles->vfs->override_acl = 0;
 					
-					if ($file_id)
+					if (empty($file_id))
 					{						
-						return $file_id;
-					} else {
-						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
-						return false;
-					}
+						throw new Exception('Failed to upload file !');
+					} 
+					
+					return $file_id;
 				}
+			} else {
+				return $id;
 			}
 		}
 
