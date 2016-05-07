@@ -161,6 +161,39 @@
 			return $values;
 		}
 		
+		function set_file_relation( $items = array(), $location_id, $file_id )
+		{
+			$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id} AND location_id = {$location_id}", __LINE__, __FILE__);
+			
+			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
+			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
+				
+			if (count($items))
+			{
+				foreach($items as $item)
+				{
+					$values_insert = array
+					(
+						'relation_id' => $item,
+						'file_id' => (int)$file_id,
+						'location_id' => (int)$location_id,
+						'location_item_id' => $item,
+						'is_private' => 0,
+						'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+						'entry_date' => $date,
+						'start_date' => $date,
+						'end_date' => $date
+					);				
+
+					$this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+						. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);				
+				}
+			}
+			
+			return true;
+		}
+		
+		
 		public function add( $data = array(), $file_id )
 		{
 			$values_insert = array
