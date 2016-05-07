@@ -235,19 +235,6 @@
 						</select>
 					</div>
 
-					<h3> Should be able to get items from the following (have a look at <a href="{link_controller_example}">controller</a>) for how it is used</h3>
-
-					<xsl:text>
-						$_components = execMethod('property.soentity.read', array(
-						'filter_entity_group' => $entity_group_id,
-						'location_id' => $_location_id,
-						'district_id' => $district_id,
-						'allrows' => true,
-						'filter_item' => $component_list
-						)
-					);
-					</xsl:text>
-
 					<div class="pure-control-group">
 
 						<xsl:for-each select="datatable_def">
