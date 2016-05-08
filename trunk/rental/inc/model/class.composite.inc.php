@@ -35,7 +35,7 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct( int $id = null )
+		public function __construct( int $id = 0 )
 		{
 			parent::__construct($id);
 			$this->units = array();
