@@ -325,7 +325,6 @@
 				case 'list_attribute':
 					$values = $this->bo->read_attrib($params);
 					break;
-				default:
 				case 'list_attribute_group':
 					$values = $this->bo->read_attrib_group($params);
 					break;
@@ -1223,94 +1222,113 @@
 
 		function config()
 		{
-			if (!$this->acl_manage)
+			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 16, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::config';
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-				'admin_location',
-				'nextmatchs',
-				'search_field'));
-
-			$standard_list = $this->bo->read_config();
-
-			while (is_array($standard_list) && list(, $standard) = each($standard_list))
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$content[] = array
-					(
-					'column_name' => $standard['column_name'],
-					'name' => $standard['location_name'],
-					'link_edit' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.edit_config',
-						'column_name' => $standard['column_name'])),
-					'lang_edit_standardtext' => lang('edit the column relation'),
-					'text_edit' => lang('edit')
+				$search = phpgw::get_var('search');
+				$order = phpgw::get_var('order');
+				$draw = phpgw::get_var('draw', 'int');
+				$columns = phpgw::get_var('columns');
+
+				$params = array(
+					'start' => $this->start,
+					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query' => $search['value'],
+					'sort' => $order[0]['dir'],
+					'order' => $columns[$order[0]['column']]['data'],
+					'allrows' => phpgw::get_var('length', 'int') == -1,
 				);
+
+				$standard_list = $this->bo->read_config($params);
+				$text_edit = lang('edit');
+				$lang_edit_standardtext = lang('edit the column relation');
+
+				$content = array();
+				foreach ($standard_list as $standard)
+				{
+					$content[] = array(
+						'column_name' => $standard['column_name'],
+						'name' => $standard['location_name'],
+						'link_edit' => "<a title =\"{$lang_edit_standardtext}\" href=\"" .$GLOBALS['phpgw']->link('/index.php',
+							array('menuaction' => 'property.uiadmin_location.edit_config',
+								'column_name' => $standard['column_name']
+							)) . "\">{$text_edit}</a>",
+					);
+				}
+				$result_data = array('results' => $content);
+				$result_data['total_records'] = $this->bo->total_records;
+				$result_data['draw'] = $draw;
+				return $this->jquery_results($result_data);
 			}
-
-			//_debug_array($content);
-
-			$table_header[] = array
-				(
-				'lang_attribute' => lang('Attributes'),
-				'lang_edit' => lang('edit'),
-				'lang_delete' => lang('delete'),
-				'sort_column_name' => $this->nextmatchs->show_sort_order(array
-					(
-					'sort' => $this->sort,
-					'var' => 'column_name',
-					'order' => $this->order,
-					'extra' => array('menuaction' => 'property.uiadmin_location.config')
-				)),
-				'lang_column_name' => lang('column name'),
-				'sort_name' => $this->nextmatchs->show_sort_order(array
-					(
-					'sort' => $this->sort,
-					'var' => 'name',
-					'order' => $this->order,
-					'extra' => array('menuaction' => 'property.uiadmin_location.config')
-				)),
-				'lang_name' => lang('Table Name'),
-			);
-
-			$table_add[] = array
-				(
-				'lang_add' => lang('add'),
-				'lang_add_standardtext' => lang('add a standard'),
-				'add_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.edit')),
-				'lang_done' => lang('done'),
-				'lang_done_standardtext' => lang('back to admin'),
-				'done_action' => $GLOBALS['phpgw']->link('/admin/index.php')
-			);
-
-
-			$data = array
-				(
-				'allow_allrows' => false,
-				'start_record' => $this->start,
-				'record_limit' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records' => count($standard_list),
-				'all_records' => $this->bo->total_records,
-				'link_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
-				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
-				'lang_searchfield_standardtext' => lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_standardtext' => lang('Submit the search string'),
-				'query' => $this->query,
-				'lang_search' => lang('search'),
-				'table_header_list_config' => $table_header,
-				'values_list_config' => $content,
-				'table_add' => $table_add
-			);
 
 			$appname = lang('location');
 			$function_msg = lang('list config');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list_config' => $data));
-			$this->save_sessiondata();
+
+			$data = array(
+				'datatable_name' => $appname. ': ' . $function_msg,
+				'form' => array(
+					'toolbar' => array(
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uiadmin_location.config',
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array(
+						array(
+							'key' => 'column_name',
+							'label' => lang('Name'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'name',
+							'label' => lang('table name'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'link_edit',
+							'label' => lang('edit'),
+							'sortable' => false
+						),
+					)
+				)
+			);
+
+			$parameters = array
+				(
+				'parameter' => array(
+					array(
+						'name' => 'column_name',
+						'source' => 'column_name'
+					),
+				)
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name' => 'edit',
+				'statustext' => lang('Edit'),
+				'text' => lang('Edit'),
+				'action' => $GLOBALS['phpgw']->link(
+					'/index.php', array(
+						'menuaction' => 'property.uiadmin_location.edit_config',
+					)
+				),
+				'parameters' => json_encode($parameters)
+			);
+	
+			unset($parameters);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		function edit_config()
