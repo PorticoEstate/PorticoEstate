@@ -143,17 +143,18 @@
 				$querymethod = " where name $this->like '%$query%' or column_name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT fm_location_config.* ,fm_location_type.name as name FROM fm_location_config  $this->join fm_location_type on fm_location_config.location_type=fm_location_type.id $querymethod";
+			$sql = "SELECT fm_location_config.* ,fm_location_type.name as name FROM fm_location_config"
+				. "  $this->join fm_location_type on fm_location_config.location_type=fm_location_type.id $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
 
+			$config = array();
 			while ($this->db->next_record())
 			{
-				$config[] = array
-					(
+				$config[] = array(
 					'column_name' => $this->db->f('column_name'),
 					'input_text' => $this->db->f('input_text'),
 					'f_key' => $this->db->f('f_key'),
@@ -625,9 +626,9 @@
 					if ($column_name == 'street_id')
 					{
 						$this->oProc->AddColumn('fm_location' . $values[$column_name], 'street_number', array(
-							'type' => 'varchar', 'precision' => 10));
+							'type' => 'varchar', 'precision' => 10, 'nullable' => true));
 						$this->oProc->AddColumn('fm_location' . $values[$column_name] . '_history', 'street_number', array(
-							'type' => 'varchar', 'precision' => 10));
+							'type' => 'varchar', 'precision' => 10, 'nullable' => true));
 						$this->oProc->DropColumn('fm_location' . $location_type, $table_def['fm_location' . $location_type], 'street_number');
 						$this->oProc->DropColumn('fm_location' . $location_type . '_history', $history_table_def['fm_location' . $location_type] . '_history', 'street_number');
 					}
