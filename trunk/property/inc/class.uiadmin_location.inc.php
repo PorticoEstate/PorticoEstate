@@ -307,13 +307,14 @@
 					break;
 			}
 
+			$export = phpgw::get_var('export', 'bool');
 			$params = array(
 				'start' => $this->start,
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'sort' => $order[0]['dir'],
 				'order' => $columns[$order[0]['column']]['data'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'type_id' => $id_type
 			);
 
@@ -342,7 +343,7 @@
 				$new_values[] = $value;
 			}
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $new_values;
 			}

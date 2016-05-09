@@ -114,34 +114,11 @@
 			$this->decimal_separator = ',';
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'status_id' => $this->status_id,
-				'wo_hour_cat_id' => $this->wo_hour_cat_id,
-				'start_date' => $this->start_date,
-				'end_date' => $this->end_date,
-				'b_group' => $this->b_group,
-				'paid' => $this->paid,
-				'b_account' => $this->b_account,
-				'district_id' => $this->district_id,
-				'criteria_id' => $this->criteria_id
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function download()
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
+				phpgw::no_access();
 				return;
 			}
 
@@ -348,6 +325,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -356,13 +334,13 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date
 			);
 
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -396,8 +374,6 @@
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
-
-			$this->save_sessiondata();
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{

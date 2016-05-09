@@ -147,6 +147,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 			$order[0]['column'] = 2;
 			$order[0]['dir'] = "desc";
 
@@ -160,7 +161,7 @@
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
 				'part_of_town_id' => $this->part_of_town_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
 			$investment_list = $this->bo->read($params);
@@ -216,7 +217,7 @@
 				$counter++;
 			}
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $content;
 			}

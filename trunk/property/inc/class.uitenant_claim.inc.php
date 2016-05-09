@@ -382,6 +382,7 @@
 			$district_id = phpgw::get_var('district_id', 'int');
 			$columns = phpgw::get_var('columns');
 			$project_id = isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => $this->start,
@@ -392,7 +393,7 @@
 				'user_id' => $this->user_id,
 				'status' => $this->status,
 				'cat_id' => $this->cat_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'project_id' => $project_id,
 				'district_id' => $district_id
 			);
@@ -401,7 +402,7 @@
 			$result_count = 0;
 			//
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
