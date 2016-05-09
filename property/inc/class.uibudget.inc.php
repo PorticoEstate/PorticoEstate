@@ -601,6 +601,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 			$order_field = '';
 
 			switch ($columns[$order[0]['column']]['data'])
@@ -621,12 +622,12 @@
 				'query' => $search['value'],
 				'order' => $order_field,
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
 			$values = $this->bo->read($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -765,6 +766,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 			$order_field = '';
 
 			switch ($columns[$order[0]['column']]['data'])
@@ -785,12 +787,12 @@
 				'query' => $search['value'],
 				'order' => $order_field,
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
 			$values = $this->bo->read_basis($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -909,6 +911,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -916,12 +919,12 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
 			$location_list = $this->bo->read_obligations($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $location_list;
 			}

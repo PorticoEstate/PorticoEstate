@@ -400,6 +400,7 @@ JS;
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -407,7 +408,7 @@ JS;
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'location_code' => $location_code ? $location_code : $search['value'],
 				'gaards_nr' => $gaards_nr,
 				'bruksnr' => $bruksnr,
@@ -529,7 +530,7 @@ JS;
 			}
 
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}

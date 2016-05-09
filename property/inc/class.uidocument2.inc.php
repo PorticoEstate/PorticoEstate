@@ -283,6 +283,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 
 			$columns = $this->_get_columns();
+			$export = phpgw::get_var('export', 'bool');
 
 
 			$params = array
@@ -292,12 +293,12 @@
 				'query' => $search['value'],
 				'order' => $order,
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
 			$values = $this->bo->read2(array('columns' => $columns, 'params' => $params));
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
