@@ -1909,17 +1909,45 @@
 				);
 				$record = $ls_array[0];
 
-				if($this->file_exists(array(
-						'string'	=> $data['to'],
-						'relatives'	=> array($data['relatives'][1])
-					))
-				)
+				if($data['id'])
 				{
+					$file_info = $this->get_info($data['id']);
+					$old_file = "{$file_info['directory']}/{$file_info['name']}";
+				
+					$p = $this->path_parts(array(
+							'string'	=> $old_file,
+							'relatives'	=> array($data['relatives'][0])
+						)
+					);
+
+					if(!$this->acl_check(array(
+							'string'	=> $p->fake_full_path,
+							'relatives'	=> array($p->mask),
+							'operation'	=> PHPGW_ACL_DELETE
+						))
+					)
+					{
+						return false;
+					}
+			
+					if(!$this->file_exists(array(
+							'string'	=> $old_file,
+							'relatives'	=> array($data['relatives'][0])
+						))
+					)
+					{
+						if($this->file_actions)
+						{
+							$this->fileoperation->unlink($p);
+						}
+					}
+					
+					$file_name = $data['id'].'_#' .$t->fake_name_clean;
+					
 					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
 					. " directory='{$t->fake_leading_dirs_clean}',"
-					. " name='{$t->fake_name_clean}'"
-					. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
-					. " AND name='{$t->fake_name_clean}'" . $this->extra_sql(VFS_SQL_UPDATE), __LINE__, __FILE__);
+					. " name='{$file_name}'"
+					. " WHERE owner_id='{$this->working_id}' AND file_id='{$data['id']}'" . $this->extra_sql(VFS_SQL_UPDATE), __LINE__, __FILE__);
 
 					$set_attributes_array = array
 					(
@@ -1950,6 +1978,7 @@
 							'operation'	=> VFS_OPERATION_EDITED
 						)
 					);
+					$file_id = $data['id'];
 				}
 				else
 				{
