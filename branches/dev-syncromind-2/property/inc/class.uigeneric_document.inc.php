@@ -333,9 +333,9 @@
 
 				if (!$values)
 				{
-					$values = (array) $this->bo->read_single($id);
-					$values['id'] = $id;
+					$values = (array) $this->bo->read_single($id);				
 				}
+				$values['id'] = $id;
 			}
 
 			if ($values['report_date'])
@@ -608,7 +608,7 @@
 			}
 				
 			$bofiles = CreateObject('property.bofiles');
-
+			
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
 			if ($file_name)
@@ -634,6 +634,7 @@
 					$file_id = $bofiles->vfs->cp3(array(
 							'from' => $_FILES['file']['tmp_name'],
 							'to' => $to_file,
+							'id' => $id,
 							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 					$bofiles->vfs->override_acl = 0;
 					
