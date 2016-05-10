@@ -66,8 +66,9 @@
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 1,'listbox', 'gateway_module_get', 'Active gateway module GET')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 2,'listbox', 'gateway_module_send', 'Active gateway module SEND')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 3, 'text', 'gateway_number', 'Gateway number')");
-	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 4, 'text', 'anonymous_user', 'anonymous user for delivering data via wev-service')");
-	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 5, 'password', 'anonymous_pass', 'Password for anonymous user for delivering data via wev-service')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 4, 'text', 'gateway_codeword', 'Gateway codeword')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 5, 'text', 'anonymous_user', 'anonymous user for delivering data via web-service')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 6, 'password', 'anonymous_pass', 'Password for anonymous user for delivering data via web-service')");
 
 
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (2 + $num_sections) . ", 1, 'text', 'gnokii_cfg', 'Gnokii Installation Path')");
