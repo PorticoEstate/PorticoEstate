@@ -174,7 +174,6 @@
 				{
 					$values_insert = array
 					(
-						'relation_id' => $item,
 						'file_id' => (int)$file_id,
 						'location_id' => (int)$location_id,
 						'location_item_id' => $item,
