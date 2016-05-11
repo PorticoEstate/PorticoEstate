@@ -32,3 +32,12 @@ function setRelations(oArgs)
 	{
 	}, data, "POST", "JSON");
 }
+
+//	call to AutoCompleteHelper JQUERY
+var oArgs = {menuaction: 'property.uigeneric_document.get_users'};
+var strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'coordinator_name', 'coordinator_id', 'coordinator_container');
+
+var oArgs = {menuaction: 'property.uigeneric_document.get_vendors'};
+var strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container');
