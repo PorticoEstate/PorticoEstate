@@ -1942,13 +1942,20 @@
 						}
 					}
 					
-					$file_name = $data['id'].'_#' .$t->fake_name_clean;
-					
+					$file_name = $t->fake_leading_dirs .'/'.$data['id'].'_#' .$t->fake_name_clean;
+					$t2 = $this->path_parts(array(
+							'string'	=> $file_name,
+							'relatives'	=> array($data['relatives'][1])
+						)
+					);	
+							
 					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
-					. " directory='{$t->fake_leading_dirs_clean}',"
-					. " name='{$file_name}'"
+					. " directory='{$t2->fake_leading_dirs_clean}',"
+					. " name='{$t2->fake_name_clean}'"
 					. " WHERE owner_id='{$this->working_id}' AND file_id='{$data['id']}'" . $this->extra_sql(VFS_SQL_UPDATE), __LINE__, __FILE__);
-
+					
+					$t = $t2;
+					
 					$set_attributes_array = array
 					(
 						'createdby_id'	=> $account_id,
