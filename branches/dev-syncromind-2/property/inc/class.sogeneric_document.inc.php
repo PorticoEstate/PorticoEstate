@@ -32,6 +32,9 @@
 
 		function __construct()
 		{
+			$this->vfs = CreateObject('phpgwapi.vfs');
+			$this->vfs->fakebase = '/property';
+			
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
@@ -234,6 +237,57 @@
 
 			return $values['metadata'];
 			
+		}
+		
+		public function delete( $file_id )
+		{
+			$file_info = $this->vfs->get_info($file_id);
+			$file = "{$file_info['directory']}/{$file_info['name']}";
+
+			if ($file)
+			{
+				$this->db->transaction_begin();
+				
+				$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id}", __LINE__, __FILE__);
+				$this->db->query("DELETE FROM phpgw_vfs_filedata WHERE file_id = {$file_id}", __LINE__, __FILE__);
+								
+				$receipt = $this->delete_file($file);
+				
+				if (!isset($receipt['error']))
+				{
+					$this->db->transaction_commit();
+				}
+			}
+			
+			return $receipt;
+		}
+		
+		function delete_file( $file )
+		{
+			$receipt = array();
+			if ($this->vfs->file_exists(array(
+					'string' => $file,
+					'relatives' => array(RELATIVE_NONE)
+				)))
+			{
+				$this->vfs->override_acl = 1;
+
+				if (!$this->vfs->rm(array(
+						'string' => $file,
+						'relatives' => array(
+							RELATIVE_NONE
+						)
+					)))
+				{
+					$receipt['error'][] = array('msg' => lang('failed to delete file') . ' :' . $file);
+				}
+				else
+				{
+					$receipt['message'][] = array('msg' => lang('file deleted') . ' :' . $file);
+				}
+				$this->vfs->override_acl = 0;
+			}
+			return $receipt;
 		}
 		
 	}
