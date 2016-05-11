@@ -94,4 +94,11 @@
 			return $receipt;
 		}
 		
+		function delete( $file_id  )
+		{		
+			$result = $this->so->delete( $file_id );
+			
+			return $result;
+		}
+		
 	}
