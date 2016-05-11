@@ -224,7 +224,7 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
-
+			
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -333,14 +333,10 @@
 
 				if (!$values)
 				{
-					$values = (array) $this->bo->read_single($id);				
+					$values = (array) $this->bo->read_single($id);		
+					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';			
 				}
 				$values['id'] = $id;
-			}
-
-			if ($values['report_date'])
-			{
-				$values['report_date'] = date($this->dateFormat, $values['report_date']);
 			}
 			
 			$categories = $this->_get_categories($values['cat_id']);
@@ -614,7 +610,7 @@
 			if ($file_name)
 			{
 				$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
-				if ($bofiles->vfs->file_exists(array(
+				/*if ($bofiles->vfs->file_exists(array(
 						'string' => $to_file,
 						'relatives' => array(RELATIVE_NONE)
 					)))
@@ -623,7 +619,7 @@
 					throw new Exception('This file already exists !');
 				}
 				else
-				{
+				{*/
 					$receipt = $bofiles->create_document_dir("generic_document");
 					if (count($receipt['error']))
 					{
@@ -644,7 +640,7 @@
 					} 
 					
 					return $file_id;
-				}
+				//}
 			} else {
 				return $id;
 			}
@@ -763,11 +759,12 @@
 			{
 				return 'No access';
 			}
+
 			$id = phpgw::get_var('id', 'int', 'GET');
 
 			try
 			{
-				$this->bo->delete($id);
+				$result = $this->bo->delete($id);
 			}
 			catch (Exception $e)
 			{
@@ -776,7 +773,7 @@
 					return $e->getMessage();
 				}
 			}
-			return 'Deleted';
+			return $result;
 		}
 
 			/*
