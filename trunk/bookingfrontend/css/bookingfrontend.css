@@ -34,6 +34,7 @@ ul.pathway li:first-child {background: rgba(0, 0, 0, 0) none repeat scroll 0 0;p
 #schedule_container .pure-table thead th {line-height: 1.4;}
 #schedule_container p.conflicts {margin: 0;color: #000;}
 #schedule_container .cellInfo:hover {background-image: url("../../phpgwapi/templates/pure/images/info.png");background-position: 100% 0;background-repeat: no-repeat;cursor: pointer;}
+#schedule_container .free:hover {cursor: pointer;}
 #schedule_overlay {background-color: #fff;border: 1px solid #000;height: auto;left: 0;margin: auto;padding: 20px;position: absolute;right: 0;width: 400px;z-index: 9;}
 #schedule_overlay img {bottom: 0;display: block;left: 0;margin: auto;position: absolute;right: 0;top: 0;}
 #week-selector {list-style: outside none none;margin-top: 10px;cursor: pointer;}
@@ -601,13 +602,14 @@ dl.proplist dd.address, dl.proplist-col dd.address {
 }
 .date-container .close-btn {
     border: medium none;
-    color: white;
+    color: black;
     cursor: pointer;
     display: block;
     float: right;
-    height: 15px;
+    height: 25px;
     text-decoration: none;
     width: 25px;
+	font-size: 100%;
 }
 #agegroup {
     background: #eee none repeat scroll 0 0;
