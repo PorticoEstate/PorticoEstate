@@ -14,7 +14,7 @@ function setRelations(oArgs)
 {
 	var values = {};
 	
-	var select_check = $('.select_check');
+	var select_check = $('.mychecks');
 	select_check.each(function (i, obj)
 	{
 		if (obj.checked)
