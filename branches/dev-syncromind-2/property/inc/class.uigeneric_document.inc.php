@@ -323,14 +323,9 @@
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
-			$tabs['relations'] = array('label' => lang('relations'), 'link' => "#relations",
-				'disable' => 0);
 
 			if ($id)
 			{
-				$tabs['relations']['link'] = '#relations';
-				$tabs['relations']['disable'] = 0;
-
 				if (!$values)
 				{
 					$values = (array) $this->bo->read_single($id);		
@@ -342,41 +337,48 @@
 			$categories = $this->_get_categories($values['cat_id']);
 
 			self::message_set($this->receipt);
-
-			$related_def = array
-				(
-				array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
-			);
-
-			$values_location = $this->get_location_filter();
 			
-			$tabletools[] = array
-				(
-				'my_name' => 'relate',
-				'text' => lang('Relate'),
-				'type' => 'custom',
-				'custom_code' => "
-					var oArgs = " . json_encode(array(
-					'menuaction' => 'property.uigeneric_document.set_relations',
-					'phpgw_return_as' => 'json'
-				)) . ";
-					var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
-							'source' => 'id')))) . ";
-					setRelations(oArgs, parameters);
-				"
-			);
-					
 			$datatable_def = array();
-			$datatable_def[] = array
-			(
-				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_relations',
-						'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $related_def,
-				'tabletools' => $tabletools,
-				'config' => array(array('disableFilter' => true))
-			);
+			
+			if ($id)
+			{
+				$tabs['relations'] = array('label' => lang('relations'), 'link' => '#relations');
+				
+				$related_def = array
+					(
+					array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
+				);
+
+				$values_location = $this->get_location_filter();
+
+				$tabletools[] = array
+					(
+					'my_name' => 'relate',
+					'text' => lang('Relate'),
+					'className' => 'relate',
+					'type' => 'custom',
+					'custom_code' => "
+						var oArgs = " . json_encode(array(
+						'menuaction' => 'property.uigeneric_document.set_relations',
+						'phpgw_return_as' => 'json'
+					)) . ";
+						var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
+								'source' => 'id')))) . ";
+						setRelations(oArgs, parameters);
+					"
+				);
+
+				$datatable_def[] = array
+				(
+					'container' => 'datatable-container_0',
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_relations',
+							'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
+					'ColumnDefs' => $related_def,
+					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
+					'config' => array(array('disableFilter' => true))
+				);
+			}
 			
 			$data = array
 			(
@@ -512,15 +514,16 @@
 			$search = phpgw::get_var('search');
 			$draw = phpgw::get_var('draw', 'int');
 			
-			$_components = execMethod('property.soentity.read', array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
-				'filter_entity_group' => 0,
-				'location_id' => $location_id,
-				'filter_item' => array()
-				));
+            $soentity = CreateObject('property.soentity');
+            $_components = $soentity->read( array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+                'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                'query' => $search['value'],
+                'allrows' => phpgw::get_var('length', 'int') == -1,
+                'filter_entity_group' => 0,
+                'location_id' => $location_id,
+                'filter_item' => array()
+                ));
 			
 			if ($file_id)
 			{
@@ -534,21 +537,21 @@
 					$values_location_item_id[] = $item['location_item_id'];
 				}
 			}
-
+			
 			$values = array();
 			foreach($_components as $item)
 			{
 				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
-				
+
 				$values[] = array(
 					'name' => $item['benevnelse'],
-					'relate' => '<input value="'.$item['id'].'" class="select_check" type="checkbox" '.$checked.'>',
+					'relate' => '<input value="'.$item['id'].'" class="mychecks" type="checkbox" '.$checked.'>',
 				);				
 			}
 			
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = count($values);
+			$result_data['total_records'] = $soentity->total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
