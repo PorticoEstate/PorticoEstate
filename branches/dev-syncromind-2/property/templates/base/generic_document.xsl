@@ -222,34 +222,36 @@
 					</fieldset>
 				</div>
 
-				<div id="relations">
+				<xsl:choose>
+					<xsl:when test="document/id!=''">
+						<div id="relations">
+							<h3>Implement how to find and link documents to items - using &quot;location_id&quot;, &quot;item_id&quot; and the &quot;phpgw_vfs_file_relation&quot;</h3>
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'item types')" />
+								</label>
+								<select id="location_id" name="location_id">
+									<xsl:apply-templates select="location_filter/options"/>
+								</select>
+							</div>
 
-					<h3>Implement how to find and link documents to items - using &quot;location_id&quot;, &quot;item_id&quot; and the &quot;phpgw_vfs_file_relation&quot;</h3>
+							<div class="pure-control-group">
 
-					<div class="pure-control-group">
-						<label for="vendor">
-							<xsl:value-of select="php:function('lang', 'item types')" />
-						</label>
-						<select id="location_id" name="location_id">
-							<xsl:apply-templates select="location_filter/options"/>
-						</select>
-					</div>
-
-					<div class="pure-control-group">
-
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_0'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl' />
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-									<xsl:with-param name="tabletools" select ='tabletools' />
-									<xsl:with-param name="config" select ='config' />
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
-					</div>
-				</div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+					</xsl:when>
+				</xsl:choose>
 			</div>
 			<div class="proplist-col">
 				<xsl:variable name="lang_cancel">
