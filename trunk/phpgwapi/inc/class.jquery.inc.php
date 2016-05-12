@@ -219,10 +219,12 @@
 			if ($errorMessagePosition_id)
 			{
 				$errorMessagePosition = "$('#{$errorMessagePosition_id}')";
+				$scrollToTopOnError = 'false';
 			}
 			else
 			{
 				$errorMessagePosition = "'top'";
+				$scrollToTopOnError = 'true';
 			}
 
 			$translation = '';
@@ -332,7 +334,9 @@ JS;
 					form: '#{$form_id}',
 					validateOnBlur : false,
 					scrollToTopOnError : false,
-					errorMessagePosition : {$errorMessagePosition}
+					validateHiddenInputs: true,
+					errorMessagePosition : {$errorMessagePosition},
+					scrollToTopOnError: {$scrollToTopOnError}
 				});
 			});
 JS;
