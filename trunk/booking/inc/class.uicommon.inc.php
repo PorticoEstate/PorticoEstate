@@ -742,11 +742,12 @@
 			$lang_select_date = lang('select date');
 			$lang_from = lang('from');
 			$lang_to = lang('to');
+			$lang_remove = lang('remove date');
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$html = 'var html = "<div class=\'date-container\'>"+
-                            "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
+                            "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
                             "<dt><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label></dt>"+
                             "<dd><input class=\'new_datepicker time\' readonly=\'readonly\' name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
                             "</input></dd>"+
