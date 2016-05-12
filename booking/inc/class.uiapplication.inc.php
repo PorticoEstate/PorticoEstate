@@ -311,7 +311,7 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index',
 						'phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 4, 'dir' => 'asc'),//created
+					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -805,6 +805,9 @@
 
 		public function edit()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+			$application_text = $config->config_data;
 			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);
@@ -898,9 +901,10 @@
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
-
+			//_debug_array($application_text);die();
 			self::render_template_xsl('application_edit', array('application' => $application,
-				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
+				'config' => $application_text));
 		}
 
 		private function check_date_availability( &$allocation )
