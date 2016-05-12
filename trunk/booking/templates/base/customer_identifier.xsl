@@ -3,10 +3,10 @@
 	<xsl:param name="label" select="string('Invoice information')"/>
 
 	<func:result>
-		<xsl:if test="not(normalize-space($label))">
-			<xsl:attribute name="style">display:none</xsl:attribute>
-		</xsl:if>
 		<label>
+			<xsl:if test="not(normalize-space($label))">
+				<xsl:attribute name="style">display:none</xsl:attribute>
+			</xsl:if>
 			<h4>
 				<xsl:value-of select="php:function('lang', $label)" />
 			</h4>
