@@ -1360,6 +1360,8 @@ function createTableSchedule(d, u, c, r, cl, dt)
 							else
 							{
 								tableBodyTrTdText = "free";
+								classes += " free";
+								tableBodyTrTd.setAttribute('class', classes);
 								if (vc['formatter'] == "frontendScheduleDateColumn")
 								{
 									tableBodyTrTd.addEventListener('click', function ()
