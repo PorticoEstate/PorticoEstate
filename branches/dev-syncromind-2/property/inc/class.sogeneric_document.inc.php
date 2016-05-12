@@ -50,6 +50,7 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 			$mime_type = isset($data['mime_type']) ? $data['mime_type'] : '';
 			$start_date = isset($data['start_date']) ? $data['start_date'] : 0;
 			$end_date = isset($data['end_date']) ? $data['end_date'] : 0;
@@ -70,23 +71,29 @@
 						$_order = $order;
 				}
 
-				$ordermethod = " ORDER BY $_order $sort";
+				$ordermethod = " ORDER BY a.{$_order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY file_id ASC';
+				$ordermethod = ' ORDER BY a.file_id ASC';
 			}
+			
+			$filtermethod = "WHERE a.mime_type != 'Directory' AND a.mime_type != 'journal' AND a.mime_type != 'journal-deleted'";
 
-			$filtermethod = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+			if ($cat_id)
+			{
+				$joinmethod = "{$this->join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
+				$filtermethod .= " AND b.metadata @> '{\"cat_id\":\"{$cat_id}\"}'";
+			} 
 
 			if ($user_id)
 			{
-				$filtermethod .= " AND createdby_id = {$user_id}";
+				$filtermethod .= " AND a.createdby_id = {$user_id}";
 			}
 
 			if ($mime_type)
 			{
-				$filtermethod .= " AND mime_type = '{$mime_type}'";
+				$filtermethod .= " AND a.mime_type = '{$mime_type}'";
 			}
 
 			if ($start_date)
@@ -94,15 +101,15 @@
 				$date_format = $this->db->date_format();
 				$start_date = date($date_format, $start_date);
 				$end_date = date($date_format, $end_date);
-				$filtermethod .= " AND phpgw_vfs.created >= '$start_date' AND phpgw_vfs.created <= '$end_date'";
+				$filtermethod .= " AND a.created >= '$start_date' AND a.created <= '$end_date'";
 			}
 
 			if ($location)
 			{
-				$filtermethod .= " AND phpgw_vfs.directory {$this->like} '%{$location}%'";
+				$filtermethod .= " AND a.directory {$this->like} '%{$location}%'";
 			}
 
-			$sql = "SELECT * FROM  phpgw_vfs" ." {$filtermethod} ";
+			$sql = "SELECT a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} ";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
