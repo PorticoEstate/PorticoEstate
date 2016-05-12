@@ -46,6 +46,11 @@
 								<label for="field_activity">
 									<xsl:value-of select="php:function('lang', 'Activity')" />
 								</label>
+								<xsl:if test="config/application_activities">
+									<p>
+										<xsl:value-of select="config/application_activities"/>
+									</p>
+								</xsl:if>
 								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -73,6 +78,11 @@
 								<label for="field_description">
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
+								<xsl:if test="config/application_description">
+									<p>
+										<xsl:value-of select="config/application_description"/>
+									</p>
+								</xsl:if>
 								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -100,6 +110,11 @@
 									<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
 								</legend>
 							</div>
+							<xsl:if test="config/application_where">
+								<p>
+									<xsl:value-of select="config/application_where"/>
+								</p>
+							</xsl:if>
 							<div class="pure-control-group">
 								<label for="field_building_name">
 									<xsl:value-of select="php:function('lang', 'Building')" />
@@ -144,6 +159,11 @@
 									<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
 								</legend>
 							</div>
+							<xsl:if test="config/application_when">
+								<p>
+									<xsl:value-of select="config/application_when"/>
+								</p>
+							</xsl:if>
 							<div id="dates-container">
 								<input type="hidden" data-validation="application_dates">
 									<xsl:attribute name="data-validation-error-msg">
@@ -236,6 +256,11 @@
 									<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
 								</legend>
 							</div>
+							<xsl:if test="config/application_who">
+								<p>
+									<xsl:value-of select="config/application_who"/>
+								</p>
+							</xsl:if>
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<label for="field_from">
@@ -268,6 +293,11 @@
 									<label for="field_from">
 										<xsl:value-of select="php:function('lang', 'Number of participants')" />
 									</label>
+									<xsl:if test="config/application_howmany">
+										<p>
+											<xsl:value-of select="config/application_howmany"/>
+										</p>
+									</xsl:if>
 									<input type="hidden" data-validation="number_participants">
 										<xsl:attribute name="data-validation-error-msg">
 											<xsl:value-of select="php:function('lang', 'Number of participants is required')" />
@@ -327,6 +357,11 @@
 									</h3>
 								</legend>
 							</div>
+							<xsl:if test="config/application_contact_information">
+								<p>
+									<xsl:value-of select="config/application_contact_information"/>
+								</p>
+							</xsl:if>
 							<div class="pure-control-group">
 								<label for="field_contact_name">
 									<xsl:value-of select="php:function('lang', 'Name')" />
@@ -392,12 +427,24 @@
 											</h3>
 										</legend>
 									</div>
+									<xsl:if test="config/application_terms">
+										<p>
+											<xsl:value-of select="config/application_terms"/>
+										</p>
+									</xsl:if>
+
 									<input type="hidden" data-validation="regulations_documents">
 										<xsl:attribute name="data-validation-error-msg">
 											<xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" />
 										</xsl:attribute>
 									</input>
 									<div id='regulation_documents'></div>
+									<xsl:if test="config/application_terms2">
+										<p>
+											<xsl:value-of select="config/application_terms2"/>
+										</p>
+									</xsl:if>
+
 								</div>
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1"></div>
 							</div>
