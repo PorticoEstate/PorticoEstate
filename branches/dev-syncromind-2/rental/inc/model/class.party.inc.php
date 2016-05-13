@@ -438,7 +438,7 @@
 			}
 
 			$location_name = $GLOBALS['phpgw']->locations->get_name($this->location_id);
-			$result_unit_number = result_unit::get_identifier_from_name($location_name['location']);
+			$result_unit_number = result_unit::get_identifier_from_name((string)$location_name['location']);
 
 			return array(
 				'id' => $this->id,
