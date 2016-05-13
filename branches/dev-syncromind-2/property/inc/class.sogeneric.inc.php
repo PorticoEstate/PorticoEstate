@@ -1074,8 +1074,7 @@
 								'descr' => lang('descr'),
 								'type' => 'varchar'
 							),
-							array
-								(
+							array(
 								'name' => 'active',
 								'descr' => lang('active'),
 								'type' => 'checkbox',
@@ -1234,8 +1233,7 @@
 						'table' => 'fm_external_project',
 						'id' => array('name' => 'id', 'type' => 'varchar'),
 						'fields' => array(
-							array
-								(
+							array(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar'
@@ -1244,6 +1242,18 @@
 								'name' => 'budget',
 								'descr' => lang('budget'),
 								'type' => 'int'
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array
+									(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
 							)
 						),
 						'edit_msg' => lang('edit'),
