@@ -647,6 +647,7 @@ JS;
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date = urldecode(phpgw::get_var('end_date'));
 			$skip_origin = phpgw::get_var('skip_origin', 'bool');
+			$export = phpgw::get_var('export', 'bool');
 
 			if ($start_date && empty($end_date))
 			{
@@ -660,7 +661,7 @@ JS;
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date,
 				'skip_origin' => $skip_origin
@@ -668,7 +669,7 @@ JS;
 
 			$values = $this->bo->read($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
