@@ -72,7 +72,7 @@ this.confirm_session = function (action)
 	if (action == 'save' || action == 'apply')
 	{
 		conf = {
-			modules: 'location, date, security, file',
+			modules: 'date, security, file',
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',
@@ -283,3 +283,54 @@ var oArgs = {menuaction: 'property.uitts.get_unspsc_code'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'unspsc_code_container');
 
+function receive_order(order_id)
+{
+	var oArgs = {
+		menuaction: 'property.uitts.receive_order',
+		id: order_id,
+		received_percent:$( "#slider-range-min" ).slider( "value" )
+	};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: strURL,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				var msg;
+				if (data['result'] == true)
+				{
+					msg = 'OK';
+					$("#order_received_time").html(data['time']);
+				}
+				else
+				{
+					msg = 'Error';
+
+				}
+				window.alert(msg);
+			}
+		},
+		failure: function (o)
+		{
+			window.alert('failure - try again - once');
+		},
+		timeout: 5000
+	});
+}
+
+  $(function() {
+    $( "#slider-range-min" ).slider({
+      range: "min",
+      value: $( "#value_order_received_percent" ).val() || 0,
+      min: 0,
+      max: 100,
+      step: 10,
+      slide: function( event, ui ) {
+        $( "#order_received_percent" ).val( ui.value + " %");
+      }
+    });
+    $( "#order_received_percent" ).val( $( "#slider-range-min" ).slider( "value" )  + " %");
+  });
