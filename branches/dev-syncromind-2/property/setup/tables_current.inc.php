@@ -176,6 +176,7 @@
 		),
 		'fm_location1' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
@@ -207,6 +208,7 @@
 		),
 		'fm_location1_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
@@ -249,6 +251,7 @@
 		),
 		'fm_location2' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -280,6 +283,7 @@
 		),
 		'fm_location2_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -319,6 +323,7 @@
 		),
 		'fm_location3' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -351,6 +356,7 @@
 		),
 		'fm_location3_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -391,6 +397,7 @@
 		),
 		'fm_location4' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -427,6 +434,7 @@
 		),
 		'fm_location4_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -593,7 +601,12 @@
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
 				'service_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
- 			),
+				'building_part' => array('type' => 'varchar', 'precision' => 4, 'nullable' => True),
+				'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+ 				'order_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'order_received_percent' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+			),
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
@@ -1152,6 +1165,9 @@
 				'publish_note' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'branch_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'order_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'order_received_percent' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1220,7 +1236,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
-				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),
+				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => 1),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1787,6 +1803,7 @@
 				'id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => 1),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
