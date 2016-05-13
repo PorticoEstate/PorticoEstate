@@ -52,7 +52,7 @@
 		 *
 		 * @param string Url of the page
 		 * @param string Path of the future image
-		 * @return boolean True if success
+		 * @return bool True if success
 		 */
 		public function save( $url, $path )
 		{
