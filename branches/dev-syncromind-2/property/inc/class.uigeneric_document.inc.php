@@ -47,6 +47,7 @@
 			'edit_title' => true,
 			'get_relations' => true,
 			'set_relations' => true,
+			'get_location_filter' => true,
 			'view_file' => true,
 			'download' => true,
 		);
@@ -351,6 +352,7 @@
 				);
 
 				$values_location = $this->get_location_filter();
+				$entity_group = execMethod('property.bogeneric.get_list', array('type' => 'entity_group', 'add_empty' => true));
 
 				$tabletools[] = array
 					(
@@ -390,6 +392,7 @@
 				'editable' => $mode == 'edit',
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'location_filter' => array('options' => $values_location),
+				'entity_group_filter' => array('options' => $entity_group),
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
 
@@ -412,22 +415,35 @@
 		}
 
 
-		private function get_location_filter()
+		public function get_location_filter()
 		{
-			$this->soadmin_entity = CreateObject('property.soadmin_entity');
-			$entity_list = $this->soadmin_entity->read(array('allrows' => true));
-			$location_filter = array();
-			foreach ($entity_list as $entry)
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+			
+			$location_filter = phpgwapi_cache::session_get('property', "location_filter_{$entity_group_id}");
+
+			if (!$location_filter)
 			{
-				$categories = $this->soadmin_entity->read_category(array('entity_id' => $entry['id'],
-					'order' => 'name', 'sort' => 'asc', 'enable_controller' => true, 'allrows' => true));
-				foreach ($categories as $category)
+				$this->soadmin_entity = CreateObject('property.soadmin_entity');
+				$entity_list = $this->soadmin_entity->read(array('allrows' => true));
+
+				$location_filter = array();
+				foreach ($entity_list as $entry)
 				{
-					$location_filter[] = array(
-						'id' => $category['location_id'],
-						'name' => "{$entry['name']}::{$category['name']}",
-					);
+					$categories = $this->soadmin_entity->read_category(array('entity_id' => $entry['id'],
+						'order' => 'name', 'sort' => 'asc', 'enable_controller' => true, 'allrows' => true));
+					foreach ($categories as $category)
+					{
+						if ($entity_group_id && $category['entity_group_id'] != $entity_group_id)
+						{
+							continue;
+						}
+						$location_filter[] = array(
+							'id' => $category['location_id'],
+							'name' => "{$entry['name']}::{$category['name']}",
+						);
+					}
 				}
+				phpgwapi_cache::session_set('property', "location_filter_{$entity_group_id}", $location_filter);
 			}
 
 			foreach ($location_filter as &$location)
