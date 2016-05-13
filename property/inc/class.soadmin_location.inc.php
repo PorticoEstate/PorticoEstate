@@ -214,8 +214,20 @@
 			$receipt['id'] = $standard['id'];
 
 			$this->init_process();
+			$default_attrib = array();
 
 			$j = 1;
+			$default_attrib['id'][] = $j;
+			$default_attrib['column_name'][] = 'id';
+			$default_attrib['type'][] = 'I';
+			$default_attrib['precision'][] = 4;
+			$default_attrib['nullable'][] = 'false';
+			$default_attrib['input_text'][] = 'id';
+			$default_attrib['statustext'][] = 'id';
+			$default_attrib['attrib_sort'][] = '';
+			$default_attrib['custom'][] = '';
+
+			$j++;
 			$default_attrib['id'][] = $j;
 			$default_attrib['column_name'][] = 'location_code';
 			$default_attrib['type'][] = 'V';
@@ -339,6 +351,7 @@
 
 
 			$fd = array();
+			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => false);
 
 			for ($i = 1; $i < $standard['id'] + 1; $i++)
