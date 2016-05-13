@@ -424,6 +424,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -431,7 +432,7 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
 				'member_id' => $this->member_id,
@@ -446,7 +447,7 @@
 
 			$values = $this->bo->read($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
