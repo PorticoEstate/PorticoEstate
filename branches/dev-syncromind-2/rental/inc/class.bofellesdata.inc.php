@@ -172,7 +172,7 @@
 					return;
 				}
 
-				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
+				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = '$result_unit'";
 				if ($level)
 				{
 					$sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
