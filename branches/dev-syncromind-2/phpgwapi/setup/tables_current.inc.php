@@ -301,8 +301,7 @@
 		'phpgw_vfs_filedata' => array(
 			'fd' => array(
 				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'metadata' => array('type' => 'xml','nullable' => False),
+				'metadata' => array('type' => 'jsonb','nullable' => False),
 			),
 			'pk' => array('file_id'),
 			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
@@ -311,7 +310,7 @@
 		),
 		'phpgw_vfs_file_relation' => array(
 			'fd' => array(
-				'relation_id'		=> array('type' => 'int','precision' => '4','nullable' => False),
+				'relation_id'		=> array('type' => 'auto','nullable' => False),
 				'file_id'			=> array('type' => 'int','precision' => '4','nullable' => False),
 				'location_id'		=> array('type' => 'int','precision' => '4','nullable' => False),
 				'location_item_id'	=> array('type' => 'int','precision' => '4','nullable' => False),
