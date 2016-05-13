@@ -784,7 +784,7 @@
 			// The contract is active only parts of the current year, we must calculate the total sum using the billing logic
 
 			$total_sum = 0; // Holding the total price of the contract current year
-			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+			$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 				'contract_id' => $this->get_id()));
 
 
@@ -1031,7 +1031,7 @@
 
 		public function set_adjustable( $adjustable )
 		{
-			$this->adjustable = (boolean)$adjustable;
+			$this->adjustable = (bool)$adjustable;
 		}
 
 		public function is_adjustable()
@@ -1200,7 +1200,7 @@
 
 		public function set_publish_comment( $publish_comment )
 		{
-			$this->publish_comment = (boolean)$publish_comment;
+			$this->publish_comment = (bool)$publish_comment;
 		}
 
 		/**
