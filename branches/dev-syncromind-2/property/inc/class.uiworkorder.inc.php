@@ -69,7 +69,8 @@
 			'get_eco_service'=> true,
 			'get_ecodimb'	=> true,
 			'get_b_account'	=> true,
-			'get_unspsc_code'=> true
+			'get_unspsc_code'=> true,
+			'receive_order'	=> true
 		);
 
 		function __construct()
@@ -113,34 +114,11 @@
 			$this->decimal_separator = ',';
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'status_id' => $this->status_id,
-				'wo_hour_cat_id' => $this->wo_hour_cat_id,
-				'start_date' => $this->start_date,
-				'end_date' => $this->end_date,
-				'b_group' => $this->b_group,
-				'paid' => $this->paid,
-				'b_account' => $this->b_account,
-				'district_id' => $this->district_id,
-				'criteria_id' => $this->criteria_id
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function download()
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
+				phpgw::no_access();
 				return;
 			}
 
@@ -347,6 +325,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -355,13 +334,13 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date
 			);
 
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -395,8 +374,6 @@
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
-
-			$this->save_sessiondata();
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -2185,6 +2162,32 @@
 
 			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
+			$collect_building_part = false;
+			$building_part_list = array();
+			$order_dim1_list = array();
+			if(isset($config->config_data['workorder_require_building_part']))
+			{
+				if($config->config_data['workorder_require_building_part'] == 1)
+				{
+				$collect_building_part = true;
+				$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
+
+				$_filter_buildingpart = array();
+				if ($filter_key = array_search('.b_account', $filter_buildingpart))
+				{
+					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+				}
+				$building_part_list = array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'building_part', 'selected' => $values['building_part'], 'order' => 'id',
+						'id_in_name' => 'num', 'filter' => $_filter_buildingpart)));
+				$order_dim1_list = array('options' => $this->bocommon->select_category_list(array(
+						'type' => 'order_dim1', 'selected' => $values['order_dim1'], 'order' => 'id',
+						'id_in_name' => 'num')));
+				}
+			}
+
+			$unspsc_code = $values['unspsc_code'] ? $values['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2344,8 +2347,14 @@
 						'type' => 'tax', 'selected' => $values['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list' => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id']) ),
-				'value_unspsc_code' => $values['unspsc_code'],
-				'value_unspsc_code_name' => $this->_get_unspsc_code_name($values['unspsc_code']),
+				'value_unspsc_code' => $unspsc_code,
+				'value_unspsc_code_name' => $this->_get_unspsc_code_name($unspsc_code),
+				'collect_building_part'	=> $collect_building_part,
+				'building_part_list' => $building_part_list,
+				'order_dim1_list' => $order_dim1_list,
+				'value_order_sent'	=> $values['order_sent'],
+				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
+				'value_order_received_percent' => (int) $values['order_received_percent']
 			);
 
 			$appname = lang('Workorder');
@@ -2862,6 +2871,17 @@
 			return $this->bocommon->get_b_account();
 		}
 
+		public function receive_order( )
+		{
+			if (!$this->acl_edit)
+			{
+				return;
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			$received_percent = phpgw::get_var('received_percent', 'int');
+			return $this->bo->receive_order($id, $received_percent);
+		}
 
 		private function _get_eco_service_name( $id )
 		{
