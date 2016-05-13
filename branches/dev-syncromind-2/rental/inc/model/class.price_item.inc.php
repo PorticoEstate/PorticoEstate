@@ -91,7 +91,7 @@
 
 		public function set_is_area( $is_area )
 		{
-			$this->is_area = (boolean)$is_area;
+			$this->is_area = (bool)$is_area;
 		}
 
 		public function is_inactive()
@@ -113,7 +113,7 @@
 
 		public function set_is_inactive( $is_inactive )
 		{
-			$this->is_inactive = (boolean)$is_inactive;
+			$this->is_inactive = (bool)$is_inactive;
 		}
 
 		public function get_price()
@@ -279,7 +279,7 @@
 
 		public function set_is_adjustable( $is_adjustable )
 		{
-			$this->is_adjustable = (boolean)$is_adjustable;
+			$this->is_adjustable = (bool)$is_adjustable;
 		}
 
 		public function is_standard()
@@ -301,14 +301,14 @@
 
 		public function set_standard( $standard )
 		{
-			$this->standard = (boolean)$standard;
+			$this->standard = (bool)$standard;
 		}
 		/* 		public function is_one_time(){
 		  return $this->is_one_time;
 		  }
 
 		  public function set_is_one_time($is_one_time){
-		  $this->is_one_time = (boolean)$is_one_time;
+		  $this->is_one_time = (bool)$is_one_time;
 		  }
 		 */
 	}
