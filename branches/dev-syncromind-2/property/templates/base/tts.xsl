@@ -653,7 +653,7 @@
 											<xsl:value-of select="php:function('lang', 'external project')"/>
 										</label>
 										<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
-										<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_id} {value_external_project_name}"/>
+										<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
 										<div id="external_project_container"/>
 									</div>
 
@@ -1043,6 +1043,49 @@
 											<xsl:apply-templates select="status_list/options"/>
 										</select>
 									</div>
+									<div class="pure-control-group">
+										<label for="name">
+											<xsl:value-of select="php:function('lang', 'order received')"/>
+										</label>
+										<xsl:variable name="lang_receive_order">
+											<xsl:value-of select="php:function('lang', 'receive order')"/>
+										</xsl:variable>
+										<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_receive_order}" onClick="receive_order({location_item_id});">
+											<xsl:attribute name="title">
+												<xsl:value-of select="$lang_receive_order"/>
+											</xsl:attribute>
+											<xsl:if test="value_order_sent != 1">
+												<xsl:attribute name="disabled">
+													<xsl:text>disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+										</input>
+										<div id="order_received_time" class="pure-custom">
+											<xsl:value-of select="value_order_received"/>
+											<div id="slider-range-min"></div>
+										</div>
+										<input  class="pure-custom" type="text" id="order_received_percent" readonly="readonly" size="6"/>
+										<input type="hidden" id="value_order_received_percent" value="{value_order_received_percent}"/>
+									</div>
+
+									<div class="pure-control-group">
+										<div class="pure-custom">
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_7'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+									</div>
+
+
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>
