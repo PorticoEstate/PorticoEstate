@@ -61,14 +61,14 @@
 		 * the party is involved in.
 		 *
 		 * @param string $sort_field
-		 * @param boolean $ascending
+		 * @param bool $ascending
 		 * @param string $search_for
 		 * @param string $search_type
 		 * @param array $filters
-		 * @param boolean $return_count
+		 * @param bool $return_count
 		 * @return string SQL
 		 */
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -336,7 +336,7 @@
 		 * Update the database values for an existing party object.
 		 *
 		 * @param $party the party to be updated
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		function update( $party )
 		{
