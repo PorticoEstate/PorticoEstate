@@ -2431,14 +2431,16 @@
 			$query = phpgw::get_var('query');
 
 			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
-			$values = $sogeneric->read(array('query' => $query));
+
+			$filter = array('active' => 1);
+			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
 
 			return array('ResultSet' => array('Result' => $values));
 		}
 
 		public function get_eco_service_name( $id )
 		{
-			$ret = '';
+			$ret = $id;
 			if($id = (int)$id)
 			{
 				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
@@ -2496,7 +2498,8 @@
 			$query = phpgw::get_var('query');
 
 			$sogeneric = CreateObject('property.sogeneric', 'external_project');
-			$values = $sogeneric->read(array('query' => $query));
+			$filter = array('active' => 1);
+			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
 
 			foreach ($values as &$value)
 			{
@@ -2508,7 +2511,7 @@
 
 		public function get_external_project_name( $id )
 		{
-			$ret = '';
+			$ret = $id;
 			if($id)
 			{
 				$sogeneric = CreateObject('property.sogeneric', 'external_project');
