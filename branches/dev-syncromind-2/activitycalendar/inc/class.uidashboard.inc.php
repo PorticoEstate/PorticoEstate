@@ -254,7 +254,7 @@
 					if (!$changed_group && !$changed_org)
 					{
 						$filter_group = array('org_id' => $org_id);
-						$result_groups = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
+						$result_groups = activitycalendar_sogroup::get_instance()->get(0, 0, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
 						foreach ($result_groups as $result_group)
 						{
 							if (isset($result_group))
@@ -295,7 +295,7 @@
 			$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
 			if ($org_id)
 			{
-				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
+				$groups = activitycalendar_sogroup::get_instance()->get(0, 0, '', false, '', '', array(
 					'org_id' => $org_id));
 				foreach ($groups as $group)
 				{
