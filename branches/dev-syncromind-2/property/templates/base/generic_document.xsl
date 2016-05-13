@@ -227,6 +227,14 @@
 						<div id="relations">
 							<h3>Implement how to find and link documents to items - using &quot;location_id&quot;, &quot;item_id&quot; and the &quot;phpgw_vfs_file_relation&quot;</h3>
 							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'entity group')" />
+								</label>
+								<select id="entity_group_id" name="entity_group_id">
+									<xsl:apply-templates select="entity_group_filter/options"/>
+								</select>
+							</div>							
+							<div class="pure-control-group">
 								<label for="vendor">
 									<xsl:value-of select="php:function('lang', 'item types')" />
 								</label>
