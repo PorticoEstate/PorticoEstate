@@ -100,7 +100,7 @@
 		 * in order to validate against the standard database rules.  The subclasses can in addition
 		 * add their own specific validation logic.
 		 *
-		 * @return boolean true if the object is valid, false otherwise
+		 * @return bool true if the object is valid, false otherwise
 		 */
 		public function validates()
 		{
