@@ -105,11 +105,9 @@
 			return $standard;
 		}
 
-		function read_config()
+		function read_config($data = array())
 		{
-			$standard = $this->so->read_config(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order));
-
+			$standard = $this->so->read_config($data);
 			$this->total_records = $this->so->total_records;
 
 			return $standard;
