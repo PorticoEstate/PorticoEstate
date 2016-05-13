@@ -1,6 +1,23 @@
 
 $(document).ready(function ()
 {
+	$('#entity_group_id').change(function ()
+	{
+		var oArgs1 = {menuaction: 'property.uigeneric_document.get_location_filter'};
+		var requestUrl = phpGWLink('index.php', oArgs1, true);
+		var data = {"entity_group_id": $(this).val()};
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+				var $el = $("#location_id");
+				$el.empty();
+				$.each(result, function(key, value) {
+				  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+				});
+				$( "#location_id" ).change();
+			}, data, "GET", "json"
+		);	
+	});
+	
 	$('#location_id').change(function ()
 	{
 		var oArgs1 = {menuaction: 'property.uigeneric_document.get_relations', location_id: $('#location_id').val(), id: $('#id').val()};
