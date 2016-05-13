@@ -35,7 +35,7 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct( int $id = null )
+		public function __construct( int $id = 0 )
 		{
 			parent::__construct($id);
 			$this->units = array();
@@ -106,7 +106,7 @@
 		 * Checks if a unit is already added to the composite.
 		 * 
 		 * @param $location_code string with location code.
-		 * @return boolean true if unit is added, false if not.
+		 * @return bool true if unit is added, false if not.
 		 */
 		public function contains_unit( $location_code )
 		{
@@ -124,7 +124,7 @@
 		 * Checks if a contract is already added to the composite.
 		 * 
 		 * @param $contract_id int with contract id.
-		 * @return boolean true if contract is added, false if not.
+		 * @return bool true if contract is added, false if not.
 		 */
 		public function contains_contract( $contract_id )
 		{
@@ -183,7 +183,7 @@
 
 		public function set_is_active( $is_active )
 		{
-			$this->is_active = (boolean)$is_active;
+			$this->is_active = (bool)$is_active;
 		}
 
 		public function is_active()
