@@ -76,8 +76,8 @@
 			$offices = $this->so_activity->select_district_list();
 			$districts = $this->so_activity->get_districts();
 			$buildings = $this->so_arena->get_buildings();
-			$arenas = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
-			$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, null);
+			$arenas = $this->so_arena->get(0, 0, 'arena.arena_name', true, '', '', array());
+			$organizations = $this->so_organization->get(0, 0, 'org.name', true, '', '', array());
 
 			$activity = new activitycalendar_activity();
 
@@ -187,7 +187,7 @@
 				{
 					$new_org = false;
 					$organization = $this->so_organization->get_single($o_id);
-					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array(
+					$person_arr = $this->so_contact->get(0, 0, '', false, '', '', array(
 						'organization_id' => $o_id));
 					foreach ($person_arr as $p)
 					{
@@ -1193,7 +1193,7 @@
 			if ($org_id)
 			{
 				$group_html[] = "<option value='new_group'>Ny gruppe</option>";
-				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array(
+				$groups = activitycalendar_sogroup::get_instance()->get(0, 0, '', false, '', '', array(
 					'org_id' => $org_id));
 				foreach ($groups as $group)
 				{
