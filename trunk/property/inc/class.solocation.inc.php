@@ -345,6 +345,16 @@
 				$location_types = $this->soadmin_location->select_location_type();
 
 				$cols = "fm_location{$type_id}.*";
+				$cols_return[] = 'id';
+				$uicols['input_type'][] = 'hidden';
+				$uicols['name'][] = 'id';
+				$uicols['descr'][] = 'dummy';
+				$uicols['statustext'][] = 'dummy';
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+
 				$cols_return[] = 'location_code';
 				$uicols['input_type'][] = 'hidden';
 				$uicols['name'][] = 'location_code';
@@ -1543,7 +1553,7 @@
 			$levels = $this->db->f('levels');
 
 			//perform an update on all location_codes on all levels to make sure they are consistent and unique
-			$locations = array();
+/*			$locations = array();
 			for ($level = 1; $level < ($levels + 1); $level++)
 			{
 				$sql = "SELECT * from fm_location{$level}";
@@ -1574,7 +1584,7 @@
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
-
+*/
 			$locations = array();
 			for ($i = 1; $i < ($levels + 1); $i++)
 			{
