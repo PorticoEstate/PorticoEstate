@@ -510,7 +510,7 @@
 			}
 
 			$sql = "SELECT fm_ecobilag.* ,fm_part_of_town.district_id"
-				. " FROM (fm_location1 {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)"
+				. " FROM (fm_location1 {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id)"
 				. " {$this->join} fm_ecobilag ON fm_location1.loc1 = fm_ecobilag.loc1"
 				. " WHERE bilagsnr='$bilagsnr' AND fakturanr = '{$fakturanr}'";
 
