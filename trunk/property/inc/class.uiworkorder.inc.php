@@ -1992,7 +1992,7 @@
 				array(
 					'key' => 'year',
 					'label' => lang('year'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'center',
 					'value_footer' => lang('Sum')),
 				array(

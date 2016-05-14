@@ -337,10 +337,10 @@
 			$criteria[1] = array
 				(
 				'field' => 'external_project_id',
-				'type' => 'int',
+				'type' => 'varchar',
 				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[2] = array
 				(
