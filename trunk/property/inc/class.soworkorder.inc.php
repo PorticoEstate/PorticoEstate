@@ -2426,19 +2426,23 @@
 				}
 
 				$entry['deviation_period'] = $deviation;
-				$budget_acc +=$entry['budget'];
+				
+				$entry['active'] = isset($active_period[$entry['period']]) && $active_period[$entry['period']] ? $active_period[$entry['period']] : 0;
+				if ($entry['active'] != 2)
+				{
+					$budget_acc +=$entry['budget'];
+				}
 
+				$entry['budget_acc'] = $budget_acc;
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
-
 
 				$entry['deviation_percent_period'] = $deviation / $entry['budget'] * 100;
 				$entry['deviation_percent_acc'] = $entry['deviation_acc'] / $budget_acc * 100;
 
 				$entry['closed'] = isset($closed_period[$entry['period']]) && $closed_period[$entry['period']];
-				$entry['active'] = isset($active_period[$entry['period']]) && $active_period[$entry['period']] ? $active_period[$entry['period']] : 0;
 				$entry['fictive'] = isset($fictive_period[$entry['period']]) && $fictive_period[$entry['period']];
 			}
-
+//			_debug_array($values);die();
 			phpgwapi_cache::system_set('property', "budget_order_{$order_id}", $values);
 
 			return $values;
