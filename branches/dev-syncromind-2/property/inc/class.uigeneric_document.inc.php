@@ -48,6 +48,8 @@
 			'get_relations' => true,
 			'set_relations' => true,
 			'get_location_filter' => true,
+			'get_part_of_town' => true,
+			'get_locations_for_type' => true,
 			'view_file' => true,
 			'download' => true,
 		);
@@ -270,6 +272,42 @@
 			return $this->jquery_results($result_data);
 		}
 
+		public function get_locations_for_type()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'type_id' => phpgw::get_var('type_id', 'int', 'REQUEST', 0),
+				'district_id' => phpgw::get_var('district_id', 'int', 'REQUEST', 0),
+				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
+			
+            $solocation = CreateObject('property.solocation');
+            $values = $solocation->read($params);
+
+			if (phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $solocation->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+		
 		public function view()
 		{
 			if (!$this->acl_read)
@@ -297,7 +335,13 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
+			$type_id = phpgw::get_var('type_id', 'int');
 
+			if (!$type_id)
+			{
+				$type_id = 1;
+			}
+			
 			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric_document.view',
@@ -343,7 +387,8 @@
 			
 			if ($id)
 			{
-				$tabs['relations'] = array('label' => lang('relations'), 'link' => '#relations');
+				$tabs['relations'] = array('label' => lang('Components'), 'link' => '#relations');
+				$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
 				
 				$related_def = array
 					(
@@ -353,7 +398,22 @@
 
 				$values_location = $this->get_location_filter();
 				$entity_group = execMethod('property.bogeneric.get_list', array('type' => 'entity_group', 'add_empty' => true));
-
+				$type_filter = 	execMethod('property.soadmin_location.read', array());			
+				$category_filter = $this->bocommon->select_category_list(array
+					('format' => 'filter',
+					'selected' => '',
+					'type' => 'location',
+					'type_id' => $type_id,
+					'order' => 'descr')
+				);
+				array_unshift($category_filter, array('id' => '', 'name' => lang('no category')));
+				
+				$district_filter = $this->bocommon->select_district_list('filter', '');
+				array_unshift($district_filter, array('id' => '', 'name' => lang('no district')));
+				
+				$part_of_town_filter = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
+				array_unshift($part_of_town_filter, array('id' => '', 'name' => lang('no part of town')));
+			
 				$tabletools[] = array
 					(
 					'my_name' => 'relate',
@@ -380,6 +440,23 @@
 					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
 					'config' => array(array('disableFilter' => true))
 				);
+				
+				$related_def2 = array
+					(
+					array('key' => 'location_code', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'loc1_name', 'label' => lang('eiendom name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
+				);
+				
+				$datatable_def[] = array
+				(
+					'container' => 'datatable-container_1',
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type',
+							'type_id' => 1, 'phpgw_return_as' => 'json'))),
+					'ColumnDefs' => $related_def2,
+					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
+					'config' => array(array('disableFilter' => true))
+				);				
 			}
 			
 			$data = array
@@ -393,6 +470,12 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'location_filter' => array('options' => $values_location),
 				'entity_group_filter' => array('options' => $entity_group),
+				
+				'type_filter' => array('options' => $type_filter),
+				'category_filter' => array('options' => $category_filter),
+				'district_filter' => array('options' => $district_filter),
+				'part_of_town_filter' => array('options' => $part_of_town_filter),
+				
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
 
