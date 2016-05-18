@@ -42,6 +42,7 @@
 		public function __construct()
 		{
 			$this->so = CreateObject('property.sogeneric_document');
+			$this->bocommon = CreateObject('property.bocommon');
 		}
 
 		public function read($data = array())
