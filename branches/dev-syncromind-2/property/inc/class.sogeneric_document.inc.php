@@ -124,6 +124,7 @@
 				{
 					$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 				}
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 				while ($this->db->next_record())
 				{
@@ -133,8 +134,8 @@
 						'owner_id' => $this->db->f('owner_id'),
 						'createdby_id' => $this->db->f('createdby_id'),
 						'modifiedby_id' => $this->db->f('modifiedby_id'),
-						'created' => $this->db->f('created'),
-						'modified' => $this->db->f('modified'),
+						'created' => $GLOBALS['phpgw']->common->show_date(strtotime($this->db->f('created')), $dateformat),
+						'modified' => $GLOBALS['phpgw']->common->show_date(strtotime($this->db->f('modified')), $dateformat),
 						'size' => $this->db->f('size'),
 						'mime_type' => $this->db->f('mime_type', true),
 						'app' => $this->db->f('app'),
