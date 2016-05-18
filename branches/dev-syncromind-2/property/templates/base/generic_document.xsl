@@ -258,6 +258,131 @@
 								</xsl:for-each>
 							</div>
 						</div>
+						
+						<div id="locations">							
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'type')" />
+								</label>
+								<select id="type_id" name="type_id">
+									<xsl:apply-templates select="type_filter/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'category')" />
+								</label>
+								<select id="cat_id" name="cat_id">
+									<xsl:apply-templates select="category_filter/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'district')" />
+								</label>
+								<select id="district_id" name="district_id">
+									<xsl:apply-templates select="district_filter/options"/>
+								</select>
+							</div>				
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'part of town')" />
+								</label>
+								<select id="part_of_town_id" name="part_of_town_id">
+									<xsl:apply-templates select="part_of_town_filter/options"/>
+								</select>
+							</div>								
+									
+							<div class="pure-control-group">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						<script>
+							
+<![CDATA[							
+						
+		function filterByCategory()
+		{
+			var data = {"head": 1};						
+			data['type_id'] = $('#type_id').val();
+			data['cat_id'] = $('#cat_id').val();
+			data['district_id'] = $('#district_id').val();
+			data['part_of_town_id'] = $('#part_of_town_id').val();				
+			
+			JqueryPortico.execute_ajax(ajax_url,
+				function(result)
+				{
+
+					var buttons_def_temp = JqueryPortico.buttons;
+					var buttons_def = [];
+					for (var i=0;i<buttons_def_temp.length; i++)
+					{
+						buttons_def.push(buttons_def_temp[i]);
+					}
+
+					var api = oTable.api();
+					api.destroy();
+
+					//Reset the destroyed values.
+					JqueryPortico.buttons = buttons_def;
+					$('#' + result.datatable_def.container).empty();
+					$('#' + result.datatable_def.container).append(result.datatable_head);
+
+					var download = result.datatable_def.download || false;
+					if(download)
+					{
+						for (i=0;i<buttons_def.length;i++)
+						{
+							if(typeof(buttons_def[i].className) != 'undefined' && buttons_def[i].className == "download")
+							{
+								buttons_def[i].sUrl = phpGWLink('index.php',download);
+							}
+						}
+					}
+
+					options ={};
+					options.TableTools = buttons_def;
+					options.initial_search = initial_search;
+
+					var render;
+					var columns = [];
+					var PreColumns = result.datatable_def.ColumnDefs;
+					for (i=0;i<PreColumns.length;i++)
+					{
+						if(typeof(PreColumns[i].formatter) != 'undefined' && PreColumns[i].formatter)
+						{
+							render = eval(PreColumns[i].formatter);
+						}
+						else
+						{
+							render = false;
+						}
+
+						if (PreColumns[i].hidden == false)
+						{
+							columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className, "orderable":PreColumns[i].sortable, "render":render} );
+						}
+					}
+					var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
+					oTable = JqueryPortico.inlineTableHelper(result.datatable_def.container, requestUrl, columns , options);
+				}, data, "GET", "json"
+			);
+		}
+		
+]]>					
+</script>							
+						</div>
+						
+
 					</xsl:when>
 				</xsl:choose>
 			</div>
