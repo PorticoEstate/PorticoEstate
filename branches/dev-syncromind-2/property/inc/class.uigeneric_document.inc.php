@@ -50,6 +50,7 @@
 			'get_location_filter' => true,
 			'get_part_of_town' => true,
 			'get_locations_for_type' => true,
+			'get_categories_for_type' => true,
 			'view_file' => true,
 			'download' => true,
 		);
@@ -274,6 +275,14 @@
 
 		public function get_locations_for_type()
 		{
+			$type_id = phpgw::get_var('type_id', 'int');
+			$file_id = phpgw::get_var('id', 'int');
+
+			if (!$type_id)
+			{
+				$type_id = 1;
+			}
+			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
@@ -286,18 +295,40 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'type_id' => phpgw::get_var('type_id', 'int', 'REQUEST', 0),
+				'type_id' => $type_id,
 				'district_id' => phpgw::get_var('district_id', 'int', 'REQUEST', 0),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 			
             $solocation = CreateObject('property.solocation');
-            $values = $solocation->read($params);
+            $locations = $solocation->read($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+			if ($file_id)
 			{
-				return $values;
+				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+			}
+			$values_location_item_id = array();
+			if (count($relation_values))
+			{
+				foreach($relation_values as $item)
+				{
+					$values_location_item_id[] = $item['location_item_id'];
+				}
+			}
+			
+			$values = array();
+			foreach($locations as $item)
+			{
+				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+
+				$values[] = array(
+					'location_code' => $item['location_code'],
+					'loc1_name' => $item['loc1_name'],
+					//'location_id' => $location_id,
+					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'
+				);				
 			}
 
 			$result_data = array('results' => $values);
@@ -335,12 +366,6 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
-			$type_id = phpgw::get_var('type_id', 'int');
-
-			if (!$type_id)
-			{
-				$type_id = 1;
-			}
 			
 			if (!$this->acl_add && !$this->acl_edit)
 			{
@@ -399,20 +424,13 @@
 				$values_location = $this->get_location_filter();
 				$entity_group = execMethod('property.bogeneric.get_list', array('type' => 'entity_group', 'add_empty' => true));
 				$type_filter = 	execMethod('property.soadmin_location.read', array());			
-				$category_filter = $this->bocommon->select_category_list(array
-					('format' => 'filter',
-					'selected' => '',
-					'type' => 'location',
-					'type_id' => $type_id,
-					'order' => 'descr')
-				);
-				array_unshift($category_filter, array('id' => '', 'name' => lang('no category')));
-				
-				$district_filter = $this->bocommon->select_district_list('filter', '');
+				$category_filter = $this->get_categories_for_type();
+							
+				$district_filter = $this->bocommon->select_district_list('filter');
 				array_unshift($district_filter, array('id' => '', 'name' => lang('no district')));
 				
-				$part_of_town_filter = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
-				array_unshift($part_of_town_filter, array('id' => '', 'name' => lang('no part of town')));
+				$part_of_town_filter = $this->bocommon->select_part_of_town('filter');
+				array_unshift($part_of_town_filter, array('id' => '', 'name' => lang('no part of town'), 'selected' => 'selected'));
 			
 				$tabletools[] = array
 					(
@@ -427,7 +445,7 @@
 					)) . ";
 						var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
 								'source' => 'id')))) . ";
-						setRelations(oArgs, parameters);
+						setRelationsComponents(oArgs, parameters);
 					"
 				);
 
@@ -445,16 +463,31 @@
 					(
 					array('key' => 'location_code', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'loc1_name', 'label' => lang('eiendom name'), 'sortable' => false, 'resizeable' => true),
+					//array('key' => 'location_id', 'label' => lang('location id'), 'sortable' => false, 'resizeable' => true, 'hidden' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
+				);
+				
+				$tabletools2[] = array
+					(
+					'my_name' => 'relate_locations',
+					'text' => lang('Relate'),
+					'className' => 'relate',
+					'type' => 'custom',
+					'custom_code' => "
+						var oArgs = " . json_encode(array(
+						'menuaction' => 'property.uigeneric_document.set_relations',
+						'phpgw_return_as' => 'json'
+					)) . ";
+						setRelationsLocations(oArgs);
+					"
 				);
 				
 				$datatable_def[] = array
 				(
 					'container' => 'datatable-container_1',
-					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type',
-							'type_id' => 1, 'phpgw_return_as' => 'json'))),
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def2,
-					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
+					'tabletools' => ($mode == 'edit') ? $tabletools2 : array(),
 					'config' => array(array('disableFilter' => true))
 				);				
 			}
@@ -497,7 +530,36 @@
 			self::render_template_xsl(array('generic_document', 'datatable_inline'), $data);
 		}
 
+		public function get_categories_for_type()
+		{
+			$type_id = phpgw::get_var('type_id', 'int');
 
+			if (!$type_id)
+			{
+				$type_id = 1;
+			}
+			
+			$categories = $this->bocommon->select_category_list(array
+				('format' => 'filter',
+				'selected' => '',
+				'type' => 'location',
+				'type_id' => $type_id,
+				'order' => 'descr')
+			);
+			array_unshift($categories, array('id' => '', 'name' => lang('no category')));
+
+			return $categories;
+		}
+		
+		public function get_part_of_town()
+		{
+			$district_id = phpgw::get_var('district_id', 'int');
+			$values = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $district_id);
+			array_unshift($values, array('id' => '', 'name' => lang('no part of town')));
+
+			return $values;
+		}
+		
 		public function get_location_filter()
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
@@ -644,7 +706,7 @@
 
 				$values[] = array(
 					'name' => $item['benevnelse'],
-					'relate' => '<input value="'.$item['id'].'" class="mychecks" type="checkbox" '.$checked.'>',
+					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>',
 				);				
 			}
 			
@@ -659,9 +721,15 @@
 		 
 		public function set_relations()
 		{
+			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
 			$items = phpgw::get_var('items');
+			
+			if (empty($location_id))
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+			}
 			
 			$result = $this->bo->set_file_relation( $items, $location_id, $file_id );
 			
