@@ -49,7 +49,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true,
 			'get_category' => true
 		);
 

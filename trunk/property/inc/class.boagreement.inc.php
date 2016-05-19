@@ -53,7 +53,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -128,10 +127,6 @@
 			$this->status_id = $data['status_id'];
 		}
 
-		function check_perms( $has, $needed )
-		{
-			return (!!($has & $needed) == true);
-		}
 
 		function select_vendor_list( $format = '', $selected = '' )
 		{

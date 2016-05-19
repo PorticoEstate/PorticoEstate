@@ -54,7 +54,7 @@
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl->set_account_id($this->account);
-			$this->grants = $this->acl->get_grants('property', '.project');
+			$this->grants = $this->acl->get_grants2('property', '.project');
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 		}
@@ -308,6 +308,8 @@
 
 				$joinmethod = " {$this->join} phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis = '(';
+				$joinmethod .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id))";
+				$paranthesis .='(';
 
 				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
@@ -526,23 +528,35 @@
 				$where = 'AND';
 			}
 
-			/*
-			  $group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.entry_date,fm_project.start_date,fm_project.end_date,'
-			  . 'fm_project.name,fm_project.ecodimb,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
-			  . 'fm_project.budget,fm_project.reserve,planned_cost,external_project_id';
-			 */
-
-			if (is_array($this->grants))
+			$public_user_list = array();
+			if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 			{
-				$grants = $this->grants;
-				while (list($user) = each($grants))
+				foreach($this->grants['accounts'] as $user => $_right)
 				{
 					$public_user_list[] = $user;
 				}
+				unset($user);
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.user_id IN(" . implode(',', $public_user_list) . ")";
-
+				$filtermethod .= " $where (( fm_project.coordinator IN(" . implode(',', $public_user_list) . ")";
 				$where = 'AND';
+			}
+
+			$public_group_list = array();
+			if (is_array($this->grants['groups']) && $this->grants['groups'])
+			{
+				foreach($this->grants['groups'] as $user => $_right)
+				{
+					$public_group_list[] = $user;
+				}
+				unset($user);
+				reset($public_group_list);
+				$where = $public_user_list ? 'OR' : $where;
+				$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				$where = 'AND';
+			}
+			if($public_user_list && !$public_group_list)
+			{
+				$filtermethod .=')';
 			}
 
 			if ($filter)
@@ -715,7 +729,6 @@
 					{
 						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 					}
-					$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
 
 					$location_code = $this->db->f('location_code');
 					$location = explode('-', $location_code);
@@ -888,7 +901,6 @@
 					'start_date' => $this->db->f('start_date'),
 					'end_date' => $this->db->f('end_date'),
 					'cat_id' => $this->db->f('category'),
-					'grants' => (int)$this->grants[$this->db->f('user_id')],
 					'p_num' => $this->db->f('p_num'),
 					'p_entity_id' => $this->db->f('p_entity_id'),
 					'p_cat_id' => $this->db->f('p_cat_id'),

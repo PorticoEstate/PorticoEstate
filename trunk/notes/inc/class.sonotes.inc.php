@@ -41,7 +41,7 @@
 			$this->db		= &$GLOBALS['phpgw']->db;
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants	= $GLOBALS['phpgw']->acl->get_grants('notes');
+			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('notes');
 		}
 
 		function read($data)
@@ -72,19 +72,32 @@
 			if ($filter == 'none')
 			{
 				$filtermethod = ' ( note_owner = ' . $this->account;
-				if (is_array($this->grants))
+				$public_user_list = array();
+				$grants = & $this->grants;
+				if (is_array($grants['accounts']) && $grants['accounts'])
 				{
-					$grants = $this->grants;
-					while (list($user) = each($grants))
+					foreach($grants['accounts'] as $user => $_right)
 					{
 						$public_user_list[] = $user;
 					}
 					reset($public_user_list);
-					$filtermethod .= " OR (note_access='public' AND note_owner IN(" . implode(',',$public_user_list) . ")))";
+					$filtermethod .= " OR (note_access='public' AND {$table}.note_owner IN(" . implode(',', $public_user_list) . "))";
 				}
-				else
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
 				{
-					$filtermethod .= ' )';
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$filtermethod .= " OR note_access='public' AND phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			elseif ($filter == 'yours')
@@ -117,10 +130,19 @@
 				$filtermethod .= " AND note_lastmod > $lastmod ";
 			}
 
-			$sql = "SELECT * FROM phpgw_notes WHERE $filtermethod $querymethod";
+				$this->db->query("SELECT count(*) as cnt FROM phpgw_notes"
+				. " {$this->join} phpgw_accounts ON ( {$table}.note_owner = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " {$app_filter} {$filtermethod} {$querymethod}", __LINE__, __FILE__);
 
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+				$this->db->next_record();
+				$this->total_records = $this->db->f('cnt');
+
+
+			$sql = "SELECT DISTINCT phpgw_notes.* FROM phpgw_notes"
+				. " {$this->join} phpgw_accounts ON ( {$table}.note_owner = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " WHERE $filtermethod $querymethod";
 
 			if($start)
 			{
@@ -130,7 +152,6 @@
 			$notes = array();
 			while ($this->db->next_record())
 			{
-				$ngrants = $this->grants[$this->db->f('note_owner')];
 				$id = $this->db->f('note_id');
 				$notes[$id] = array
 				(
@@ -141,7 +162,6 @@
 					'date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('note_date')),
 					'cat_id'	=> $this->db->f('note_category'),
 					'content'	=> $this->db->f('note_content', true),
-					'grants'	=> $ngrants
 				);
 			}
 			return $notes;

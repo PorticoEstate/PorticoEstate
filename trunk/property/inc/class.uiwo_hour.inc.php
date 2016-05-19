@@ -381,13 +381,6 @@
 		{
 
 			$workorder = $this->boworkorder->read_single($workorder_id);
-			/* 			if (!$this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
-			  {
-			  $receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
-			  $GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-			  $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view','id'=> $workorder_id));
-			  }
-			 */
 			$hour_list = $this->bo->read($workorder_id);
 			//_debug_array($hour_list);
 			$grouping_descr_old = '';

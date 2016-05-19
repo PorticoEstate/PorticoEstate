@@ -141,23 +141,20 @@
 
 
 			$result_order_field = array();
+			$order_join = "{$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
+
 			if ($order)
 			{
 				if ($order == 'assignedto')
 				{
-					$result_order_field = array('account_lastname' => 'account_lastname');
-					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
-					$order = 'account_lastname';
+			//		$result_order_field = array('account_lastname' => 'account_lastname');
+			//		$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
+			//		$order = 'account_lastname';
 				}
 				else if ($order == 'user')
 				{
 					$result_order_field = array('account_lastname' => 'account_lastname');
-					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
 					$order = 'account_lastname';
-				}
-				else
-				{
-					$order_join = '';
 				}
 
 				$ordermethod = " ORDER BY $order $sort";
@@ -166,43 +163,44 @@
 			{
 				$ordermethod = ' ORDER BY id DESC';
 			}
-
+			$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 			$union_select = false;
 			$filtermethod = '';
 
 			$where = 'WHERE';
 
-			$GLOBALS['phpgw']->config->read();
+			$config = $GLOBALS['phpgw']->config->read();
 
-			if (!isset($GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets']) || !$GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets'])
+			if (!isset($config['bypass_acl_at_tickets']) || !$config['bypass_acl_at_tickets'])
 			{
-				$this->grants = $GLOBALS['phpgw']->session->appsession('grants_ticket', 'property');
-
-				if (!$this->grants)
-				{
-					$GLOBALS['phpgw']->acl->set_account_id($this->account);
-					$this->grants = $GLOBALS['phpgw']->acl->get_grants('property', '.ticket');
-					$GLOBALS['phpgw']->session->appsession('grants_ticket', 'property', $this->grants);
-				}
+				$GLOBALS['phpgw']->acl->set_account_id($this->account);
+				$grants = $GLOBALS['phpgw']->acl->get_grants2('property', '.ticket');
 
 				$public_user_list = array();
-				if (isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+				if (isset($config['acl_at_tts_category']) && $config['acl_at_tts_category'])
 				{
 					$categories = $GLOBALS['phpgw']->locations->get_subs('property', '.ticket.category');
 
 					$category_grants = array();
 					foreach ($categories as $location)
 					{
-						$category_grants = array_merge($category_grants, $GLOBALS['phpgw']->acl->get_grants('property', $location));
-					}
-
-					foreach ($category_grants as $user => $right)
-					{
-						$public_user_list[] = $user;
+						$category_grants = $GLOBALS['phpgw']->acl->get_grants2('property', $location);
+						foreach ($category_grants['accounts'] as $user => $right)
+						{
+							$grants['accounts'][$user] = $right;
+						}
+						unset($user);
+						unset($right);
+						foreach ($category_grants['groups'] as $user => $right)
+						{
+							$grants['groups'][$user] = $right;
+						}
+						unset($user);
+						unset($right);
 					}
 				}
 
-				if (isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+				if (isset($config['acl_at_location']) && $config['acl_at_location'])
 				{
 					$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
 					if ($access_location)
@@ -212,21 +210,37 @@
 					}
 				}
 
-				if (is_array($this->grants))
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
 				{
-					$grants = & $this->grants;
-					foreach ($grants as $user => $right)
+					foreach ($grants['accounts'] as $user => $right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
+
+					reset($public_user_list);
+					$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+
+					$where = 'AND';
 				}
 
-				if ($public_user_list)
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
 				{
-					$public_user_list = array_unique($public_user_list);
-					reset($public_user_list);
-					$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',', $public_user_list) . "))";
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
 					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 
@@ -358,7 +372,7 @@
 				{
 					$membership = array(-1 => 0);
 				}
-				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',', array_keys($membership)) . ')))';
+				$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',', array_keys($membership)) . ')))';
 			}
 
 			if ($user_id < 0)

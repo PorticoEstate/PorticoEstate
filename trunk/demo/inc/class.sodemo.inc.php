@@ -60,7 +60,7 @@
 			$this->custom = createObject('property.custom_fields');
 
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants = $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
+			$this->grants = $GLOBALS['phpgw']->acl->get_grants2('demo', $this->acl_location);
 		}
 
 		function read( $data )
@@ -83,14 +83,35 @@
 
 			if (!$filter)
 			{
-				if (is_array($this->grants))
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 				{
-					while (list($user) = each($this->grants))
+					foreach($this->grants['accounts'] as $user => $_right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
 					reset($public_user_list);
-					$filtermethod .= " $where ( $table.user_id IN(" . implode(',', $public_user_list) . "))";
+					$filtermethod .= " $where (({$table}.user_id IN(" . implode(',', $public_user_list) . ")";
+					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			else if ($filter == 'yours')
@@ -126,13 +147,19 @@
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM $table $filtermethod $querymethod";
+			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM $table"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table}"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " $filtermethod $querymethod $ordermethod";
 
 			if ($allrows)
 			{
@@ -151,7 +178,6 @@
 					'id' => $this->db->f('id'),
 					'name' => $this->db->f('name', true),
 					'entry_date' => $this->db->f('entry_date'),
-					'grants' => (int)$this->grants[$this->db->f('user_id')]
 				);
 			}
 
@@ -184,14 +210,35 @@
 
 			if (!$filter)
 			{
-				if (is_array($this->grants))
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 				{
-					while (list($user) = each($this->grants))
+					foreach($this->grants['accounts'] as $user => $_right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
 					reset($public_user_list);
-					$filtermethod .= " $where ( $table.user_id IN(" . implode(',', $public_user_list) . "))";
+					$filtermethod .= " $where (({$table}.user_id IN(" . implode(',', $public_user_list) . ")";
+					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			else if ($filter == 'yours')
@@ -317,7 +364,10 @@
 
 			$this->uicols = $uicols;
 
-			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM $table $filtermethod $querymethod";
+			$sql = "SELECT COUNT(phpgw_demo_table.id) as cnt FROM"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " $table $filtermethod $querymethod";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
@@ -327,7 +377,10 @@
 				return array();
 			}
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table}"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " $filtermethod $querymethod $ordermethod";
 			if ($allrows)
 			{
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -382,7 +435,6 @@
 				$values['user_id'] = $this->db->f('user_id');
 				$values['cat_id'] = $this->db->f('category');
 				$values['access'] = $this->db->f('access');
-				$values['grants'] = (int)$this->grants[$this->db->f('user_id')];
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{

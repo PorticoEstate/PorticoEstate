@@ -30,7 +30,7 @@
 			$this->join 		= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('hrm','.user');
+			$this->grants		= $GLOBALS['phpgw']->acl->get_grants2('hrm','.user');
 		}
 
 		function read($data)
@@ -54,7 +54,6 @@
 			{
 				$account_info[] = array
 				(
-					'grants'			=> isset($this->grants[$entry->id]) ? $this->grants[$entry->id] : 0,
 					'account_firstname'	=> $entry->firstname,
 					'account_lastname'	=> $entry->lastname,
 					'account_id'		=> $entry->id

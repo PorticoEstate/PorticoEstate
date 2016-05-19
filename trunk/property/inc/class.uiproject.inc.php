@@ -1300,12 +1300,20 @@ JS;
 						'project_id' => $id));
 				}
 
-				if (!$this->bocommon->check_perms($values['grants'], PHPGW_ACL_EDIT))
+				if (!$this->bocommon->check_perms2($values['coordinator'], $this->bo->so->grants, PHPGW_ACL_EDIT))
 				{
 					$this->receipt['error'][] = array('msg' => lang('You have no edit right for this project'));
-					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $this->receipt['error']);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiproject.view',
-						'id' => $id));
+					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $this->receipt);
+
+					switch ($mode)
+					{
+						case 'edit':
+							self::redirect(array('menuaction' => 'property.uiproject.view','id' => $id));
+							break;
+						default:
+							self::redirect(array('menuaction' => 'property.uiproject.index'));
+							break;
+					}
 				}
 				else
 				{
@@ -2279,13 +2287,15 @@ JS;
 
 		function delete()
 		{
-			if (!$this->acl_delete)
+			$project_id = phpgw::get_var('project_id', 'int');
+
+//			$project = $this->bo->read_single($project_id);
+
+			if (!$this->acl_delete)// || !$this->bocommon->check_perms2($project['coordinator'], $this->bo->so->grants, PHPGW_ACL_DELETE))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 8, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
-			$project_id = phpgw::get_var('project_id', 'int');
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->delete($project_id);

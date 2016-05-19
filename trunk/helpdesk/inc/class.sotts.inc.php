@@ -121,28 +121,23 @@
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 
-			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','helpdesk');
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
+			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
 
-			if(!$this->grants)
-			{
-				$GLOBALS['phpgw']->acl->set_account_id($this->account);
-				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('helpdesk','.ticket');
-				$GLOBALS['phpgw']->session->appsession('grants_ticket','helpdesk',$this->grants);
-			}
+			$order_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
 
 			$result_order_field = '';
 			if ($order)
 			{
 				if( $order == 'assignedto' )
 				{
-					$result_order_field = ',account_lastname';
-					$order_join = "LEFT OUTER JOIN phpgw_accounts ON phpgw_helpdesk_tickets.assignedto=phpgw_accounts.account_id";
-					$order = 'account_lastname';
+//					$result_order_field = ',account_lastname';
+//					$order_join = "LEFT OUTER JOIN phpgw_accounts ON phpgw_helpdesk_tickets.assignedto=phpgw_accounts.account_id";
+//					$order = 'account_lastname';
 				}
 				else if( $order == 'user' )
 				{
 					$result_order_field = ',account_lastname';
-					$order_join = "LEFT OUTER JOIN phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
 					$order = 'account_lastname';
 				}
 				else
@@ -156,6 +151,8 @@
 			{
 				$ordermethod = ' ORDER BY phpgw_helpdesk_tickets.id DESC';
 			}
+
+			$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 
 			$filtermethod = '';
 
@@ -195,14 +192,36 @@
 
 			if (is_array($this->grants))
 			{
-				$grants = & $this->grants;
-				foreach($grants as $user => $right)
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 				{
-					$public_user_list[] = $user;
+					foreach($this->grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$filtermethod .= " $where ((phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+					$where = 'AND';
 				}
-				reset($public_user_list);
-				$filtermethod .= " $where ( phpgw_helpdesk_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
-				$where= 'AND';
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
+				}
 			}
 
 			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','helpdesk'))
