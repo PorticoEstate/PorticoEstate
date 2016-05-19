@@ -2088,11 +2088,7 @@
 				$table_header = $list['table_header'];
 			}
 
-			$link_data = array
-				(
-				'menuaction' => 'property.uiagreement.save',
-				'id' => $agreement_id,
-			);
+			$link_data = array('menuaction' => 'property.uiagreement.index');
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id' => $agreement['vendor_id'],
@@ -2148,12 +2144,6 @@
 			{
 				$record_limit = $this->bo->total_records;
 			}
-
-			$link_data2 = array
-				(
-				'menuaction' => 'property.uiagreement.view',
-				'id' => $agreement_id,
-			);
 
 			//---datatable0 settings---------------------------------------------------
 
@@ -2271,7 +2261,6 @@
 				'num_records' => count($content),
 				'lang_total_records' => lang('Total'),
 				'all_records' => $this->bo->total_records,
-				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data2),
 				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
 				'alarm_data' => $alarm_data,
 				'lang_alarm' => lang('Alarm'),
@@ -2280,7 +2269,7 @@
 				'lang_files' => lang('files'),
 				'lang_filename' => lang('Filename'),
 				'lang_view_file_statustext' => lang('click to view file'),
-				'edit_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'lang_id' => lang('ID'),
 				'value_agreement_id' => $agreement_id,
 				'lang_category' => lang('category'),
