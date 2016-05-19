@@ -384,7 +384,7 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		public function get_id_field_name( $extended_info = false )
+		protected function get_id_field_name( $extended_info = false )
 		{
 			if (!$extended_info)
 			{
@@ -402,7 +402,7 @@
 			return $ret;
 		}
 
-		function populate( int $contract_id, &$contract )
+		protected function populate( int $contract_id, &$contract )
 		{
 
 			if ($contract == null) // new contract
@@ -592,7 +592,7 @@
 		 * @param $contract the contract to be updated
 		 * @return result receipt from the db operation
 		 */
-		function update( $contract )
+		protected function update( $contract )
 		{
 			$id = intval($contract->get_id());
 
@@ -730,7 +730,7 @@
 		 * @param $contract the contract to be added
 		 * @return array result receipt from the db operation
 		 */
-		function add( &$contract )
+		protected function add( &$contract )
 		{
 
 			$contract->set_id(self::get_new_id($contract->get_old_contract_id()));
