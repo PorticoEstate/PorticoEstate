@@ -45,8 +45,8 @@
 			'get_vendors' => true,
 			'get_users' => true,
 			'edit_title' => true,
-			'get_relations' => true,
-			'set_relations' => true,
+			'get_componentes' => true,
+			'save_file_relations' => true,
 			'get_location_filter' => true,
 			'get_part_of_town' => true,
 			'get_locations_for_type' => true,
@@ -254,9 +254,6 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
-			$result_objects = array();
-			$result_count = 0;
-
 			$values = $this->bo->read($params);
 			if (phpgw::get_var('export', 'bool'))
 			{
@@ -326,7 +323,6 @@
 				$values[] = array(
 					'location_code' => $item['location_code'],
 					'loc1_name' => $item['loc1_name'],
-					//'location_id' => $location_id,
 					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'
 				);				
 			}
@@ -429,8 +425,7 @@
 				$district_filter = $this->bocommon->select_district_list('filter');
 				array_unshift($district_filter, array('id' => '', 'name' => lang('no district')));
 				
-				$part_of_town_filter = $this->bocommon->select_part_of_town('filter');
-				array_unshift($part_of_town_filter, array('id' => '', 'name' => lang('no part of town'), 'selected' => 'selected'));
+				$part_of_town_filter = $this->get_part_of_town();
 			
 				$tabletools[] = array
 					(
@@ -440,7 +435,7 @@
 					'type' => 'custom',
 					'custom_code' => "
 						var oArgs = " . json_encode(array(
-						'menuaction' => 'property.uigeneric_document.set_relations',
+						'menuaction' => 'property.uigeneric_document.save_file_relations',
 						'phpgw_return_as' => 'json'
 					)) . ";
 						var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
@@ -452,7 +447,7 @@
 				$datatable_def[] = array
 				(
 					'container' => 'datatable-container_0',
-					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_relations',
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_componentes',
 							'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def,
 					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
@@ -475,7 +470,7 @@
 					'type' => 'custom',
 					'custom_code' => "
 						var oArgs = " . json_encode(array(
-						'menuaction' => 'property.uigeneric_document.set_relations',
+						'menuaction' => 'property.uigeneric_document.save_file_relations',
 						'phpgw_return_as' => 'json'
 					)) . ";
 						setRelationsLocations(oArgs);
@@ -487,8 +482,7 @@
 					'container' => 'datatable-container_1',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def2,
-					'tabletools' => ($mode == 'edit') ? $tabletools2 : array(),
-					'config' => array(array('disableFilter' => true))
+					'tabletools' => ($mode == 'edit') ? $tabletools2 : array()
 				);				
 			}
 			
@@ -554,7 +548,7 @@
 		public function get_part_of_town()
 		{
 			$district_id = phpgw::get_var('district_id', 'int');
-			$values = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $district_id);
+			$values = $this->bocommon->select_part_of_town('filter', '', $district_id);
 			array_unshift($values, array('id' => '', 'name' => lang('no part of town')));
 
 			return $values;
@@ -617,7 +611,6 @@
 
 			if ($id)
 			{
-				//$values = (array)$this->bo->read_single(array('id' => $id, 'view' => true));
 				$values = (array)$this->bo->read_single($id);
 			}
 			else
@@ -639,7 +632,7 @@
 				try
 				{
 					$id = $this->_handle_files($id);
-					$this->bo->save($values, $id);
+					$receipt = $this->bo->save($values, $id);
 				}
 				catch (Exception $e)
 				{
@@ -650,8 +643,14 @@
 						return;
 					}
 				}
+				
+				if ($receipt['message']) 
+				{
+					phpgwapi_cache::message_set($receipt['message'], 'message');
+				} else {
+					phpgwapi_cache::message_set($receipt['message'], 'error');
+				}
 
-				phpgwapi_cache::message_set('ok!', 'message');
 				self::redirect(array('menuaction' => 'property.uigeneric_document.edit', 'id' => $id));
 			}
 		}
@@ -663,7 +662,7 @@
 		 *
 		 * @return array $ResultSet json resultset
 		 */
-		public function get_relations()
+		public function get_componentes()
 		{
 			if (!$this->acl_read)
 			{
@@ -719,8 +718,10 @@
 		}
 
 		 
-		public function set_relations()
+		public function save_file_relations()
 		{
+			$receipt = array();
+			
 			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
@@ -731,9 +732,18 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			}
 			
-			$result = $this->bo->set_file_relation( $items, $location_id, $file_id );
+			$result = $this->bo->save_file_relations( $items, $location_id, $file_id );
 			
-			return $result;
+			if ($result)
+			{
+				$receipt['message'][] = array('msg' => lang('Records has been added'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('Nothing changed'));
+			}
+			
+			return $receipt;
 		}
 		
 
@@ -946,10 +956,9 @@
 			return $result;
 		}
 
-			/*
+		/*
 		 * Overrides with incoming data from POST
 		 */
-
 		private function _populate( $data = array() )
 		{
 
