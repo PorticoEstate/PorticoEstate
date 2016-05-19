@@ -537,7 +537,7 @@
 				}
 				unset($user);
 				reset($public_user_list);
-				$filtermethod .= " $where (( fm_project.coordinator IN(" . implode(',', $public_user_list) . ")";
+				$filtermethod .= " $where ( fm_project.coordinator IN(" . implode(',', $public_user_list) . ")";
 				$where = 'AND';
 			}
 
@@ -659,7 +659,7 @@
 				}
 			}
 
-			$querymethod .= ')';
+//			$querymethod .= ')';
 
 			$sql = str_replace('FROM', "{$_custom_cols} FROM", $sql);
 

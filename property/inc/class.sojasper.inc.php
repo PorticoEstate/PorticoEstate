@@ -75,7 +75,7 @@
 			}
 
 
-			$filtermethod = "WHERE ( {$table}.user_id = {$this->account}";
+			$filtermethod = "WHERE {$table}.user_id = {$this->account}";
 			$public_user_list = array();
 			if (is_array($grants['accounts']) && $grants['accounts'])
 			{
@@ -84,7 +84,7 @@
 					$public_user_list[] = $user;
 				}
 				reset($public_user_list);
-				$filtermethod .= " OR (access='public' AND {$table}.user_id IN(" . implode(',', $public_user_list) . "))";
+				$filtermethod .= " OR (access='public' AND {$table}.user_id IN(" . implode(',', $public_user_list) . ")";
 			}
 
 			$public_group_list = array();

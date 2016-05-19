@@ -183,7 +183,7 @@
 					unset($user);
 
 					reset($public_user_list);
-					$filtermethod .= " $where (( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
 				}
@@ -551,7 +551,7 @@
 					unset($user);
 
 					reset($public_user_list);
-					$filtermethod .= " $where (( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
 				}
@@ -1541,7 +1541,7 @@
 					unset($user);
 
 					reset($public_user_list);
-					$filtermethod .= " $where (( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
 				}
