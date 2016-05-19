@@ -272,7 +272,7 @@
 								<label for="vendor">
 									<xsl:value-of select="php:function('lang', 'category')" />
 								</label>
-								<select id="cat_id" name="cat_id">
+								<select id="cat_location_id" name="cat_location_id">
 									<xsl:apply-templates select="category_filter/options"/>
 								</select>
 							</div>
@@ -305,84 +305,8 @@
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>
-							</div>
-						<script>
-							
-<![CDATA[							
-						
-		function filterByCategory()
-		{
-			var data = {"head": 1};						
-			data['type_id'] = $('#type_id').val();
-			data['cat_id'] = $('#cat_id').val();
-			data['district_id'] = $('#district_id').val();
-			data['part_of_town_id'] = $('#part_of_town_id').val();				
-			
-			JqueryPortico.execute_ajax(ajax_url,
-				function(result)
-				{
-
-					var buttons_def_temp = JqueryPortico.buttons;
-					var buttons_def = [];
-					for (var i=0;i<buttons_def_temp.length; i++)
-					{
-						buttons_def.push(buttons_def_temp[i]);
-					}
-
-					var api = oTable.api();
-					api.destroy();
-
-					//Reset the destroyed values.
-					JqueryPortico.buttons = buttons_def;
-					$('#' + result.datatable_def.container).empty();
-					$('#' + result.datatable_def.container).append(result.datatable_head);
-
-					var download = result.datatable_def.download || false;
-					if(download)
-					{
-						for (i=0;i<buttons_def.length;i++)
-						{
-							if(typeof(buttons_def[i].className) != 'undefined' && buttons_def[i].className == "download")
-							{
-								buttons_def[i].sUrl = phpGWLink('index.php',download);
-							}
-						}
-					}
-
-					options ={};
-					options.TableTools = buttons_def;
-					options.initial_search = initial_search;
-
-					var render;
-					var columns = [];
-					var PreColumns = result.datatable_def.ColumnDefs;
-					for (i=0;i<PreColumns.length;i++)
-					{
-						if(typeof(PreColumns[i].formatter) != 'undefined' && PreColumns[i].formatter)
-						{
-							render = eval(PreColumns[i].formatter);
-						}
-						else
-						{
-							render = false;
-						}
-
-						if (PreColumns[i].hidden == false)
-						{
-							columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className, "orderable":PreColumns[i].sortable, "render":render} );
-						}
-					}
-					var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
-					oTable = JqueryPortico.inlineTableHelper(result.datatable_def.container, requestUrl, columns , options);
-				}, data, "GET", "json"
-			);
-		}
-		
-]]>					
-</script>							
+							</div>					
 						</div>
-						
-
 					</xsl:when>
 				</xsl:choose>
 			</div>
