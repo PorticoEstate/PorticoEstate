@@ -347,9 +347,9 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 
 	if (buttons_def)
 	{
-		var sDom_def = 'B<"clear">lfrtip';
-//		var sDom_def = 'Bfrtlip';
-		var sDom_def = '<lfB<t>ip>'
+//		var sDom_def = 'B<"clear">lfrtip';
+		var sDom_def = 'Bfrtlip';
+//		var sDom_def = '<lfB<t>ip>'
 		if (singleSelect == true)
 		{
 			select = true;
@@ -370,7 +370,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var oTable = $("#" + container).dataTable({
 		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
-		info: disableFilter ? false : true,
+		info: disablePagination ? false : true,
 		order: order,
 		processing: true,
 		serverSide: serverSide_def,
