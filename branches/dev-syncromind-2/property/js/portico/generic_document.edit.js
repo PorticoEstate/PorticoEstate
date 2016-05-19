@@ -20,7 +20,7 @@ $(document).ready(function ()
 	
 	$('#location_id').change(function ()
 	{
-		var oArgs1 = {menuaction: 'property.uigeneric_document.get_relations', location_id: $('#location_id').val(), id: $('#id').val()};
+		var oArgs1 = {menuaction: 'property.uigeneric_document.get_componentes', location_id: $('#location_id').val(), id: $('#id').val()};
 		var requestUrl = phpGWLink('index.php', oArgs1, true);
 		JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 	});
@@ -50,7 +50,7 @@ $(document).ready(function ()
 
 	$('select#district_id').change( function()
 	{
-		filterData({'district_id': $(this).val()});
+		filterData({'district_id': $(this).val(), 'part_of_town_id': ''});
 		
 		var oArgs1 = {menuaction: 'property.uigeneric_document.get_part_of_town'};
 		var requestUrl = phpGWLink('index.php', oArgs1, true);		
@@ -70,6 +70,8 @@ $(document).ready(function ()
 	{
 		filterData({'part_of_town_id': $(this).val()});				
 	});
+	
+	$('select#part_of_town_id').prop('selectedIndex', 0);
 });
 
 function filterData(objParams)
@@ -101,6 +103,9 @@ function setRelationsComponents(oArgs)
 	var data = {"items": values};
 	JqueryPortico.execute_ajax(requestUrl, function (result)
 	{
+		JqueryPortico.show_message(0, result);
+		oTable0.fnDraw();
+		
 	}, data, "POST", "JSON");
 }
 
@@ -124,6 +129,9 @@ function setRelationsLocations(oArgs)
 	var data = {"items": values};
 	JqueryPortico.execute_ajax(requestUrl, function (result)
 	{
+		JqueryPortico.show_message(1, result);
+		oTable1.fnDraw();
+		
 	}, data, "POST", "JSON");
 }
 
