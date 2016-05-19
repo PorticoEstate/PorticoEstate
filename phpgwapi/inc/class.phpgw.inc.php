@@ -604,12 +604,19 @@
 			 */
 			public static function no_access($appname = '', $message = '')
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 				$message = $message ? $message : lang('no access');
-				$appname = $appname ? $appname : $GLOBALS['phpgw_info']['flags']['currentapp'];
-				phpgwapi_cache::message_set($message, 'error');
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . '::' . lang('No access');
-				$GLOBALS['phpgw']->common->phpgw_header(true);
+				if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					echo $message;
+				}
+				else
+				{
+					phpgwapi_cache::message_set($message, 'error');
+					$appname = $appname ? $appname : $GLOBALS['phpgw_info']['flags']['currentapp'];
+					$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . '::' . lang('No access');
+					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+					$GLOBALS['phpgw']->common->phpgw_header(true);
+				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 		}

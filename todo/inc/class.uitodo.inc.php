@@ -262,7 +262,7 @@
 				$this->t->set_var('view','<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.view', 'todo_id' => $todo_list[$i]['id']) )
 					. '">' . lang('View') . '</a>');
 
-				if ($this->botodo->check_perms($this->grants[$todo_list[$i]['owner_id']],PHPGW_ACL_EDIT))
+				if ($this->botodo->check_perms($todo_list[$i]['owner_id'], $this->grants, PHPGW_ACL_EDIT))
 				{
 					$this->t->set_var('edit','<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.edit', 'todo_id' => $todo_list[$i]['id']) )
 											. '">' . lang('Edit') . '</a>');
@@ -272,7 +272,7 @@
 					$this->t->set_var('edit','&nbsp;');
 				}
 
-				if ($this->botodo->check_perms($this->grants[$todo_list[$i]['owner_id']],PHPGW_ACL_DELETE))
+				if ($this->botodo->check_perms($todo_list[$i]['owner_id'],$this->grants, PHPGW_ACL_DELETE))
 				{
 					$this->t->set_var('delete','<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.delete', 'todo_id' => $todo_list[$i]['id']) )
 												. '">' . lang('Delete') . '</a>');
@@ -282,7 +282,7 @@
 					$this->t->set_var('delete','&nbsp;');
 				}
 
-				if ($this->botodo->check_perms($this->grants[$todo_list[$i]['owner_id']],PHPGW_ACL_ADD))
+				if ($this->botodo->check_perms($todo_list[$i]['owner_id'],$this->grants,PHPGW_ACL_ADD))
 				{
 					$this->t->set_var('subadd', '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.add', 'parent' => $todo_list[$i]['id'], 'cat_id' => $this->cat_id) )
 												. '">' . lang('Add Sub') . '</a>');
@@ -316,7 +316,7 @@
 				}
 				else
 				{
-					if ($this->botodo->check_perms($this->grants[$cat[0]['owner']],PHPGW_ACL_ADD) || $cat[0]['owner'] == $GLOBALS['phpgw_info']['user']['account_id'])
+					if ($this->botodo->check_perms($cat[0]['owner'], $this->grants,PHPGW_ACL_ADD) || $cat[0]['owner'] == $GLOBALS['phpgw_info']['user']['account_id'])
 					{
 						$this->t->set_var('add','<form method="POST" action="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.add', 'cat_id' => $this->cat_id) )
 							. '"><input type="submit" name="Add" value="' . lang('Add') .'"></form>');
@@ -753,7 +753,7 @@
 
 			$this->t->set_var('access_list', '<input type="checkbox" name="values[access]" value="True"' . ($values['access'] == 'private'?' checked':'') . '>');
 
-			if ($this->botodo->check_perms($this->grants[$values['owner']],PHPGW_ACL_DELETE) || $values['owner'] == $GLOBALS['phpgw_info']['user']['account_id'])
+			if ($this->botodo->check_perms($values['owner'], $this->grants,PHPGW_ACL_DELETE) || $values['owner'] == $GLOBALS['phpgw_info']['user']['account_id'])
 			{
 				$this->t->set_var('delete','<form method="POST" action="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.delete', 'todo_id' => $values['id']) )
                                     . '"><input type="submit" value="' . lang('Delete') .'"></form>');

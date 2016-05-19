@@ -1248,14 +1248,21 @@
 				}
 
 				$acl_required = $mode == 'edit' ? PHPGW_ACL_EDIT : PHPGW_ACL_READ;
-				if (!$this->bocommon->check_perms($project['grants'], $acl_required))
+				if (!$this->bocommon->check_perms2($project['coordinator'], $this->bo->so->grants, PHPGW_ACL_EDIT))
 				{
 					$this->receipt['error'][] = array(
 						'msg' => lang('You have no edit right for this project'));
 					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $this->receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array(
-						'menuaction' => 'property.uiworkorder.view',
-						'id' => $id));
+
+					switch ($mode)
+					{
+						case 'edit':
+							self::redirect(array('menuaction' => 'property.uiworkorder.view','id' => $id));
+							break;
+						default:
+							self::redirect(array('menuaction' => 'property.uiworkorder.index'));
+							break;
+					}
 				}
 
 				if ($project['key_fetch'] && !$values['key_fetch'])

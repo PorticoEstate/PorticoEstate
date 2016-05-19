@@ -185,9 +185,30 @@
 			$this->cat_id	= $data['cat_id'];
 		}
 
-		function check_perms($has, $needed)
+		/**
+		 *
+		 * @param integer $owner_id
+		 * @param array $grants
+		 * @param integer $required
+		 * @return bool
+		 */
+		function check_perms( $owner_id, $grants,  $required )
 		{
-			return (!!($has & $needed) == True);
+			if(isset($grants['accounts'][$owner_id]) && ($grants['accounts'][$owner_id] & $required))
+			{
+				return true;
+			}
+
+			$equalto = $GLOBALS['phpgw']->accounts->membership($owner_id);
+			foreach($grants['groups'] as $group => $_right)
+			{
+				if(isset($equalto[$group]) && ($_right & $required))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		function cached_accounts($account_id)

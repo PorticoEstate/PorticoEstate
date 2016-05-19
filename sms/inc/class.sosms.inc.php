@@ -18,7 +18,6 @@
 	class sms_sosms
 	{
 
-		var $grants;
 		var $db;
 		var $account;
 
@@ -41,11 +40,11 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$acl_location = isset($data['acl_location']) ? $data['acl_location'] : '';
 
-			if ($acl_location)
-			{
-				$GLOBALS['phpgw']->acl->set_account_id($this->account);
-				$grants = $GLOBALS['phpgw']->acl->get_grants('sms', $acl_location);
-			}
+//			if ($acl_location)
+//			{
+//				$GLOBALS['phpgw']->acl->set_account_id($this->account);
+//				$grants = $GLOBALS['phpgw']->acl->get_grants2('sms', $acl_location);
+//			}
 
 //_debug_array($grants);
 			if ($order)
@@ -61,18 +60,6 @@
 
 			$where = 'WHERE';
 
-			/* 			if (is_array($grants))
-			  {
-			  while (list($user) = each($grants))
-			  {
-			  $public_user_list[] = $user;
-			  }
-			  reset($public_user_list);
-			  $filtermethod .= " $where ( $table.in_uid IN(" . implode(',',$public_user_list) . "))";
-
-			  $where= 'AND';
-			  }
-			 */
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -106,7 +93,6 @@
 					'entry_time' => $this->db->f('in_datetime'),
 					'message' => $this->db->f('in_msg', true),
 					'user' => $GLOBALS['phpgw']->accounts->id2name($this->db->f('in_uid')),
-					'grants' => (int)isset($grants[$this->db->f('in_uid')]) ? $grants[$this->db->f('in_uid')] : 0
 				);
 			}
 
@@ -122,11 +108,11 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$acl_location = isset($data['acl_location']) ? $data['acl_location'] : '';
 
-			if ($acl_location)
-			{
-				$GLOBALS['phpgw']->acl->set_account_id($this->account);
-				$grants = $GLOBALS['phpgw']->acl->get_grants('sms', $acl_location);
-			}
+//			if ($acl_location)
+//			{
+//				$GLOBALS['phpgw']->acl->set_account_id($this->account);
+//				$grants = $GLOBALS['phpgw']->acl->get_grants2('sms', $acl_location);
+//			}
 
 			if ($order)
 			{
@@ -142,17 +128,17 @@
 
 			$where = 'WHERE';
 
-			if (is_array($grants))
-			{
-				while (list($user) = each($grants))
-				{
-					$public_user_list[] = $user;
-				}
-				reset($public_user_list);
-				$filtermethod = " $where ( $table.uid IN(" . implode(',', $public_user_list) . "))";
-
-				$where = 'AND';
-			}
+//			if (is_array($grants))
+//			{
+//				while (list($user) = each($grants))
+//				{
+//					$public_user_list[] = $user;
+//				}
+//				reset($public_user_list);
+//				$filtermethod = " $where ( $table.uid IN(" . implode(',', $public_user_list) . "))";
+//
+//				$where = 'AND';
+//			}
 
 			$querymethod = '';
 			if ($query)
@@ -197,7 +183,6 @@
 					'entry_time' => $this->db->f('p_datetime'),
 					'message' => $this->db->f('p_msg', true),
 					'status' => $status_array[$this->db->f('p_status')],
-					'grants' => (int)$grants[$this->db->f('uid')]
 				);
 			}
 			return $outbox;

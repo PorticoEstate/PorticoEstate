@@ -26,7 +26,7 @@
 		function __construct()
 		{
 			$this->db          =& $GLOBALS['phpgw']->db;
-			$this->grants      = $GLOBALS['phpgw']->acl->get_grants('todo');
+			$this->grants      = $GLOBALS['phpgw']->acl->get_grants2('todo');
 			$this->account     = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->user_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$this->historylog  = CreateObject('phpgwapi.historylog','todo', '.');
@@ -99,15 +99,33 @@
 
 			if($filter == 'none')
 			{
-				if(is_array($this->grants))
+
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
 				{
-					$grants = $this->grants;
-					while(list($user) = each($grants))
+					foreach($grants['accounts'] as $user => $_right)
 					{
 						$public_user_list[] = $user;
 					}
 					reset($public_user_list);
-					$filtermethod .= " OR (todo_access='public' AND todo_owner IN(" . implode(',', $public_user_list) . '))';
+					$filtermethod .= " OR (todo_access='public' AND todo_owner IN(" . implode(',', $public_user_list) . "))";
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$filtermethod .= " OR todo_access='public' AND phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 
@@ -138,7 +156,17 @@
 				$parentmethod = ' AND todo_id_parent=' . (int) $parent;
 			}
 
-			$sql = "SELECT * FROM phpgw_todo WHERE $filtermethod $querymethod $type $parentmethod ";
+			$this->db->query("SELECT count(*) as cnt FROM phpgw_todo"
+				. " {$this->join} phpgw_accounts ON ( phpgw_todo.todo_owner = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " WHERE $filtermethod $querymethod $type $parentmethod", __LINE__, __FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
+
+			$sql = "SELECT DISTINCT phpgw_todo.* FROM phpgw_todo"
+				. " {$this->join} phpgw_accounts ON ( phpgw_todo.todo_owner = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " WHERE $filtermethod $querymethod $type $parentmethod ";
 
 			if($limit)
 			{
@@ -148,8 +176,6 @@
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
-
-			$this->total_records = $this->db->num_rows();
 
 			$todos = array();
 			while($this->db->next_record())
@@ -170,7 +196,6 @@
 					'status'			=> (int)$this->db->f('todo_status'),
 					'sdate'				=> $this->db->f('todo_startdate'),
 					'edate'				=> $this->db->f('todo_enddate'),
-					'grants'			=> (int)$this->grants[$this->db->f('todo_owner')],
 					'sdate_epoch'		=> (int)$this->db->f('todo_startdate'),
 					'edate_epoch'		=> (int)$this->db->f('todo_enddate'),
 					'assigned'			=> $this->db->f('todo_assigned'),

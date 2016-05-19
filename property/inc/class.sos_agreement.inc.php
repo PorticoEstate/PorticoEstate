@@ -532,7 +532,6 @@
 				for ($i = 0; $i < $n; $i++)
 				{
 					$s_agreement_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
-					//	$s_agreement_list[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
 				}
 
 				if (isset($cols_return_extra) && is_array($cols_return_extra))

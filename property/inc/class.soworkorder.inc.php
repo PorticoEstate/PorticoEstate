@@ -48,14 +48,9 @@
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
 			$this->interlink = CreateObject('property.interlink');
-			//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project','property');
-			//	if(!$this->grants)
-			{
-				$this->acl = & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$this->grants = $this->acl->get_grants('property', '.project');
-				//		$GLOBALS['phpgw']->session->appsession('grants_project','property',$this->grants);
-			}
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl->set_account_id($this->account);
+			$this->grants = $this->acl->get_grants2('property', '.project');
 		}
 
 		function next_id()
@@ -373,6 +368,8 @@
 				$uicols['classname'][] = 'rightClasss';
 				$uicols['sortable'][] = '';
 
+				$joinmethod .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id))";
+				$paranthesis .='(';
 				$joinmethod .= " {$this->left_join} fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
 				$joinmethod .= " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id))";
@@ -632,16 +629,35 @@
 				$where = 'AND';
 			}
 
-			if (is_array($this->grants))
+			$public_user_list = array();
+			if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 			{
-				$grants = $this->grants;
-				while (list($user) = each($grants))
+				foreach($this->grants['accounts'] as $user => $_right)
 				{
 					$public_user_list[] = $user;
 				}
+				unset($user);
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',', $public_user_list) . ")";
+				$filtermethod .= " $where ((fm_project.user_id IN(" . implode(',', $public_user_list) . ")";
 				$where = 'AND';
+			}
+
+			$public_group_list = array();
+			if (is_array($this->grants['groups']) && $this->grants['groups'])
+			{
+				foreach($this->grants['groups'] as $user => $_right)
+				{
+					$public_group_list[] = $user;
+				}
+				unset($user);
+				reset($public_group_list);
+				$where = $public_user_list ? 'OR' : $where;
+				$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				$where = 'AND';
+			}
+			if($public_user_list && !$public_group_list)
+			{
+				$filtermethod .=')';
 			}
 
 			if ($filter)
@@ -689,7 +705,7 @@
 			if ($filter_year && $filter_year != 'all')
 			{
 				$filter_year = (int)$filter_year;
-				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year} OR fm_workorder_status.closed IS NULL)";
+				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year})";// OR fm_workorder_status.closed IS NULL)";
 				$where = 'AND';
 			}
 
@@ -765,7 +781,7 @@
 			{
 				$sql_minimized = "SELECT DISTINCT fm_workorder.id {$sql_base}";
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
-
+//				_debug_array($sql_count);
 				$this->db->query($sql_count, __LINE__, __FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
@@ -844,7 +860,6 @@
 				$workorder['combined_cost'] = 0;
 				$workorder['budget'] = 0;
 //---------
-				$workorder['grants'] = (int)$this->grants[$this->db->f('project_owner')];
 
 				$location_code = $this->db->f('location_code');
 				$location = explode('-', $location_code);
@@ -957,7 +972,6 @@
 					'contact_phone' => $this->db->f('contact_phone'),
 					'tenant_id' => $this->db->f('tenant_id'),
 					'cat_id' => $this->db->f('category'),
-					'grants' => (int)$this->grants[$this->db->f('user_id')],
 					'billable_hours' => $this->db->f('billable_hours'),
 					'approved' => $this->db->f('approved'),
 					'mail_recipients' => explode(',', trim($this->db->f('mail_recipients'), ',')),

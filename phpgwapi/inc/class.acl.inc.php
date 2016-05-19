@@ -1347,6 +1347,193 @@
 			return $grant_rights;
 		}
 		/**
+		* Get a list of users that have grants rights to their records at a location within an app
+		*
+		* @param string $app      Application name
+		*				if emptry string, value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		* @param string $location location within application
+		*
+		* @return array Array with account ids and corresponding rights
+		*/
+		public function get_grants2($app = '', $location = '')
+		{
+			$grant_rights = phpgwapi_cache::session_get('phpgwapi', "get_grants2_{$app}_{$location}");
+			if ( !is_null($grant_rights) )
+			{
+				return $grant_rights; // nothing more to do
+			}
+
+			$grant_rights	= $this->get_grants_type2($app, $location, 0);
+			$grant_mask		= $this->get_grants_type2($app, $location, 1);
+			if ( is_array($grant_mask['accounts']) )
+			{
+				foreach ( $grant_mask['accounts'] as $user_id => $mask )
+				{
+					if ( $grant_rights['accounts'][$user_id] )
+					{
+						$grant_rights['accounts'][$user_id] &= (~ $mask);
+						if ( $grant_rights['accounts'][$user_id] <= 0 )
+						{
+							unset($grant_rights['accounts'][$user_id]);
+						}
+					}
+				}
+			}
+			if ( is_array($grant_mask['groups']) )
+			{
+				foreach ( $grant_mask['groups'] as $user_id => $mask )
+				{
+					if ( $grant_rights['groups'][$user_id] )
+					{
+						$grant_rights['groups'][$user_id] &= (~ $mask);
+						if ( $grant_rights['groups'][$user_id] <= 0 )
+						{
+							unset($grant_rights['groups'][$user_id]);
+						}
+					}
+				}
+			}
+			phpgwapi_cache::session_set('phpgwapi', "get_grants2_{$app}_{$location}", $grant_rights);
+			return $grant_rights;
+		}
+		/**
+		* Get application specific account based granted rights list
+		*
+		* @param string  $app      Application name
+		*				if emptry string, value of $GLOBALS['phpgw_info']['flags']['currentapp'] is used
+		* @param string  $location location within application
+		* @param integer $mask     mask or right (1 means mask , 0 means right) to check against
+		*
+		* @return array Associative array with granted access rights for accounts
+		*
+		* @internal FIXME this should be simplified - if it is actually used
+		*/
+		public function get_grants_type2($app = '', $location = '', $mask = 0)
+		{
+			$accounts = array();
+			$groups = array();
+			$grants =array(
+				'accounts' => $accounts,
+				'groups' => $groups
+			);
+			if(!$this->_account_id)
+			{
+				return array(
+						'accounts' => $accounts,
+						'groups' => $groups
+					);
+			}
+
+			if ( !$app )
+			{
+				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
+			$at_location = '';
+			if ( $location )
+			{
+				$location = $this->_db->db_addslashes($location);
+				$at_location = " AND phpgw_locations.name = '$location'";
+			}
+
+			$accts =& $GLOBALS['phpgw']->accounts;
+			$acct_ids = array_keys($accts->membership($this->_account_id));
+			$acct_ids[] = $this->_account_id;
+
+			$rights = 0;
+
+			$ids = implode(',', $acct_ids);
+			$sql = 'SELECT acl_account, acl_grantor, acl_rights'
+				. ' FROM phpgw_acl'
+				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
+				. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+				. " WHERE phpgw_applications.app_name = '$app' $at_location"
+					. " AND acl_grantor > 0 AND acl_type = $mask"
+					. " AND acl_account IN ($ids)";
+
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->num_rows() == 0 && $mask == 0  && isset($GLOBALS['phpgw_info']['user']['account_id']))
+			{
+				//return array($GLOBALS['phpgw_info']['user']['account_id'] => 31);
+				return array(
+					'accounts' => array($GLOBALS['phpgw_info']['user']['account_id'] => 31),
+					'groups' => $groups
+				);
+			}
+
+			$records = array();
+			while ($this->_db->next_record())
+			{
+				$records[] = array
+				(
+					'account'	=> $this->_db->f('acl_account'),
+					'grantor'	=> $this->_db->f('acl_grantor'),
+					'rights'	=> $this->_db->f('acl_rights')
+				);
+			}
+
+			foreach ($records as $record )
+			{
+				$grantor = $record['grantor'];
+				$rights = $record['rights'];
+
+				if( $grantor > 0 )
+				{
+					if (!isset($accounts[$grantor]))
+					{
+						$is_group[$grantor] = $accts->get_type($grantor) == phpgwapi_account::TYPE_GROUP;
+						if ( !$is_group[$grantor] )
+						{
+							$accounts[$grantor] = array($grantor);
+						}
+						else
+						{
+							$groups[$grantor] = array($grantor);//$GLOBALS['phpgw']->accounts->get_members($grantor);
+						}
+					}
+
+					if ( $is_group[$grantor] )
+					{
+						// Don't allow to override private!
+						$rights &= (~ PHPGW_ACL_PRIVATE);
+						if ( !isset($grants['groups'][$grantor]) )
+						{
+							$grants['groups'][$grantor] = 0;
+						}
+
+						$grants['groups'][$grantor] |= $rights;
+						if ( !!($rights & self::READ) )
+						{
+							$grants['groups'][$grantor] |= self::READ;
+						}
+					}
+
+					foreach ( $accounts[$grantor] as $grantors )
+					{
+						if ( !isset($grants['accounts'][$grantors]) )
+						{
+							$grants['accounts'][$grantors] = 0;
+						}
+						$grants['accounts'][$grantors] |= $rights;
+					}
+				}
+			}
+
+			if ( $mask == 0 && isset($GLOBALS['phpgw_info']['user']['account_id']))
+			{
+				$grants['accounts'][$GLOBALS['phpgw_info']['user']['account_id']] = 31;
+			}
+			else
+			{
+				if ( isset($GLOBALS['phpgw_info']['user']['account_id']) && isset($grants['accounts'][$GLOBALS['phpgw_info']['user']['account_id']]) )
+				{
+					unset ($grants['accounts'][$GLOBALS['phpgw_info']['user']['account_id']]);
+				}
+			}
+
+			return $grants;
+		}
+		/**
 		* Get application specific account based granted rights list
 		*
 		* @param string  $app      Application name
