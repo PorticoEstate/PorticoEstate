@@ -87,19 +87,19 @@
 			return $receipt;
 		}
 		
-		function set_file_relation( $items = array(), $location_id, $file_id  )
+		function save_file_relations( $items = array(), $location_id, $file_id  )
 		{
 			
-			$result = $this->so->set_file_relation( $items, $location_id, $file_id );
+			$receipt = $this->so->save_file_relations( $items, $location_id, $file_id );
 			
 			return $receipt;
 		}
 		
-		function delete( $file_id  )
+		function delete( $file_id )
 		{		
-			$result = $this->so->delete( $file_id );
+			$receipt = $this->so->delete( $file_id );
 			
-			return $result;
+			return $receipt;
 		}
 		
 	}
