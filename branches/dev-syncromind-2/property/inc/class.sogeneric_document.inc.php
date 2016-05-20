@@ -172,8 +172,10 @@
 			return $values;
 		}
 		
-		function set_file_relation( $items = array(), $location_id, $file_id )
+		function save_file_relations( $items = array(), $location_id, $file_id )
 		{
+			$this->db->transaction_begin();
+			
 			$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id} AND location_id = {$location_id}", __LINE__, __FILE__);
 			
 			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
@@ -187,7 +189,7 @@
 					(
 						'file_id' => (int)$file_id,
 						'location_id' => (int)$location_id,
-						'location_item_id' => $item,
+						'location_item_id' => (int)$item,
 						'is_private' => 0,
 						'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 						'entry_date' => $date,
@@ -200,26 +202,42 @@
 				}
 			}
 			
-			return true;
+			if ($this->db->transaction_commit())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		
 		public function add( $data = array(), $file_id )
 		{
+			$receipt = array();
 			$values_insert = array
 				(
 				'file_id' => $file_id,
 				'metadata' => json_encode($data)
 			);
 
-			$resutl = $this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+			$result = $this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 
-			return $resutl;
+			if ($result)
+			{
+				$receipt['message'] = lang('filedata has been saved');
+			} 
+			else {
+				$receipt['error'] = lang('filedata has not been saved');
+			}
+			return $receipt;
 		}
 		
 		public function update( $data = array(), $file_id)
 		{
+			$receipt = array();
 			$value_set = array
 			(
 				'metadata' => json_encode($data)
@@ -227,7 +245,16 @@
 
 			$value_set = $this->db->validate_update($value_set);
 			
-			return $this->db->query("UPDATE phpgw_vfs_filedata SET $value_set WHERE file_id = {$file_id}", __LINE__, __FILE__);
+			$result = $this->db->query("UPDATE phpgw_vfs_filedata SET $value_set WHERE file_id = {$file_id}", __LINE__, __FILE__);
+			
+			if ($result)
+			{
+				$receipt['message'] = lang('filedata has been edited');
+			} 
+			else {
+				$receipt['error'] = lang('filedata has not been edited');
+			}
+			return $receipt;
 		}
 		
 		public function read_single( $id )
@@ -243,8 +270,7 @@
 				$values['metadata'] = $this->db->f('metadata');
 			}
 
-			return $values['metadata'];
-			
+			return $values['metadata'];			
 		}
 		
 		public function delete( $file_id )
@@ -259,11 +285,14 @@
 				$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id}", __LINE__, __FILE__);
 				$this->db->query("DELETE FROM phpgw_vfs_filedata WHERE file_id = {$file_id}", __LINE__, __FILE__);
 								
-				$receipt = $this->delete_file($file);
+				$result = $this->delete_file($file);
 				
-				if (!isset($receipt['error']))
+				if ($result)
 				{
 					$this->db->transaction_commit();
+					$receipt = lang('file deleted') . ' : ' . $file_info['name'];
+				} else {					
+					$receipt = lang('failed to delete file') . ' : ' . $file_info['name'];
 				}
 			}
 			
@@ -272,7 +301,7 @@
 		
 		function delete_file( $file )
 		{
-			$receipt = array();
+			$result = false;
 			if ($this->vfs->file_exists(array(
 					'string' => $file,
 					'relatives' => array(RELATIVE_NONE)
@@ -280,22 +309,20 @@
 			{
 				$this->vfs->override_acl = 1;
 
-				if (!$this->vfs->rm(array(
+				if ($this->vfs->rm(array(
 						'string' => $file,
 						'relatives' => array(
 							RELATIVE_NONE
 						)
 					)))
 				{
-					$receipt['error'][] = array('msg' => lang('failed to delete file') . ' :' . $file);
+					$result = true;
 				}
-				else
-				{
-					$receipt['message'][] = array('msg' => lang('file deleted') . ' :' . $file);
-				}
+
 				$this->vfs->override_acl = 0;
 			}
-			return $receipt;
+			
+			return $result;
 		}
 		
 	}
