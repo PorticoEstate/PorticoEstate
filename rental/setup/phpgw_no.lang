@@ -617,3 +617,4 @@ new	rental	no	Ny
 download excel export bk	rental	no	Last ned Excel-eksport BK
 serial_number	rental	no	Serienummer
 Name or company is required	rental	no	Navn på person ELLER navn på foretak er obligatorisk
+simulation	rental	no	Simulering
