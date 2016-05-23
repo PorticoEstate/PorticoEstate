@@ -49,35 +49,43 @@
 			}
 			if (isset($filters['contract_ids_one_time']))
 			{
-				$billing_term_id = (int)$filters['billing_term_id'];
-				$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
-				$result = $this->db->query($sql);
-				if (!$result)
+				if($filters['credits'])
 				{
-					return;
-				}
-				if (!$this->db->next_record())
-				{
-					return;
-				}
-				$month = (int)$filters['month'];
-				$year = (int)$filters['year'];
-				$months = $this->unmarshal($this->db->f('months', true), 'int');
-				$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-				if ($months == 1)
-				{
-					$timestamp_start = $timestamp_end; // The first day of the period to bill for
+					$filter_clauses[] = "is_one_time";
+					$filter_clauses[] = "rental_contract_price_item.total_price < 0.00";	
 				}
 				else
 				{
-					$months = $months - 1;
-					$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
-				}
-				$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+					$billing_term_id = (int)$filters['billing_term_id'];
+					$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+					$result = $this->db->query($sql);
+					if (!$result)
+					{
+						return;
+					}
+					if (!$this->db->next_record())
+					{
+						return;
+					}
+					$month = (int)$filters['month'];
+					$year = (int)$filters['year'];
+					$months = $this->unmarshal($this->db->f('months', true), 'int');
+					$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+					if ($months == 1)
+					{
+						$timestamp_start = $timestamp_end; // The first day of the period to bill for
+					}
+					else
+					{
+						$months = $months - 1;
+						$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+					}
+					$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
 
-				$filter_clauses[] = "is_one_time";
-				$filter_clauses[] = "date_start < {$timestamp_end}";
-				$filter_clauses[] = "date_start >= {$timestamp_start}";
+					$filter_clauses[] = "is_one_time";
+					$filter_clauses[] = "date_start < {$timestamp_end}";
+					$filter_clauses[] = "date_start >= {$timestamp_start}";
+				}
 			}
 			if (isset($filters['one_time']) && $filters['include_billed'])
 			{
@@ -342,6 +350,10 @@
 		public function get_total_price_invoice( $contract_id, $billing_term, $month, $year )
 		{
 			$billing_term_id = (int)$billing_term;
+			if($billing_term == 5 )
+			{
+				return $this->get_total_price_invoice_credit($contract_id);
+			}
 			$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
 			$result = $this->db->query($sql);
 			if (!$result)
@@ -371,6 +383,20 @@
 			$q_total_price .= "AND NOT is_billed ";
 			$q_total_price .= "AND ((NOT date_start IS NULL AND date_start < {$timestamp_end}) OR date_start IS NULL) ";
 			$q_total_price .= "AND ((NOT date_end IS NULL AND date_end >= {$timestamp_start}) OR date_end IS NULL)";
+			$this->db->query($q_total_price);
+			if ($this->db->next_record())
+			{
+				$total_price = $this->db->f('sum_total');
+				return $total_price;
+			}
+		}
+		public function get_total_price_invoice_credit( int $contract_id )
+		{
+			$q_total_price = "SELECT sum(total_price::numeric) AS sum_total ";
+			$q_total_price .= "FROM rental_contract_price_item ";
+			$q_total_price .= "WHERE contract_id={$contract_id} ";
+			$q_total_price .= "AND NOT is_billed ";
+			$q_total_price .= "AND total_price < 0.00 ";
 			$this->db->query($q_total_price);
 			if ($this->db->next_record())
 			{

@@ -217,6 +217,19 @@
 								$billing_term_label = lang('second_half');
 							}
 						}
+						else if ($billing_term == '5')
+						{ // half year
+							if ($billing_month == '1')
+							{
+								$month = 1;
+								$billing_term_label = lang('free_of_charge');
+							}
+							else
+							{
+								$month = 2;
+								$billing_term_label = lang('credits');
+							}
+						}
 						else // yearly
 						{
 							$month = 12;
@@ -473,6 +486,19 @@ JS;
 						$billing_term_label = lang('second_half');
 					}
 				}
+				else if ($billing_term == '5')
+				{ // half year
+					if ($billing_month == '1')
+					{
+						$month = 1;
+						$billing_term_label = lang('free_of_charge');
+					}
+					else
+					{
+						$month = 2;
+						$billing_term_label = lang('credits');
+					}
+				}
 				else // yearly
 				{
 					$month = 12;
@@ -524,14 +550,22 @@ JS;
 
 					$socontract_price_item = rental_socontract_price_item::get_instance();
 
-					//... 1. Contracts following regular billing cycle
-					$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type,
-						'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
-					$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 
 					//... 2. Contracts with one-time price items
-					$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term,
-						'year' => $year, 'month' => $month);
+					if($billing_term == 5)
+					{
+						$filters2 = array('contract_ids_one_time' => true, 'credits' => true);
+						$contracts = array();
+					}
+					else
+					{
+						//... 1. Contracts following regular billing cycle
+						$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type,
+							'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+						$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+						$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term,
+							'year' => $year, 'month' => $month);
+					}
 					$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 
 					foreach ($contract_price_items as $contract_price_item)
@@ -547,6 +581,10 @@ JS;
 								$c->set_bill_only_one_time();
 								//$contracts[$contract_price_item->get_contract_id()] = $c;
 								//$contracts_with_one_time[$contract_price_item->get_contract_id()] = $c; // used for information purposes
+							}
+							else
+							{
+								continue;
 							}
 						}
 						else
@@ -886,6 +924,7 @@ JS;
 					else
 					{
 						$options[] = array('id' => $term_id . '-1', 'name' => lang($term_title), 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
+						$options[] = array('id' => $term_id . '-2', 'name' => 'Kreditering', 'selected' => (($term_id . '-2' == $billing_term_selection) ? 1 : 0));
 					}
 					$current++;
 					$billing_term_group_options[] = array('label' => lang($term_title), 'options' => $options);
