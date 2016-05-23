@@ -1362,6 +1362,7 @@ JS;
 			{
 				phpgw::no_access();
 			}
+			rental_sobilling::get_instance()->transaction_begin();
 			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 			$billing_job->set_deleted(true);
 			$result = rental_sobilling::get_instance()->store($billing_job);
@@ -1384,7 +1385,8 @@ JS;
 					'contract_id' => $invoice->get_contract_id(), 'one_time' => true, 'include_billed' => true));
 				foreach ($price_items as $price_item)
 				{
-					if ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end())
+					//Check for credit or valid date
+					if (($price_item->get_is_one_time() && $price_item->get_total_price() < 0) || ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()))
 					{
 						$price_item->set_is_billed(false);
 						rental_socontract_price_item::get_instance()->store($price_item);
@@ -1393,6 +1395,7 @@ JS;
 				$invoice->set_serial_number(null);
 				rental_soinvoice::get_instance()->store($invoice);
 			}
+			rental_sobilling::get_instance()->transaction_commit();
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
