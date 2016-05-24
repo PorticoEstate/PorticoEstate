@@ -1987,11 +1987,42 @@ JS;
 					$documents = $objDocument->get_files_at_location(array('location_code' => $location_code));
 				}
 
-				if (count($documents))
+				$cats = CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+				$cats->supress_info = true;
+				$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => 0,
+					'globals' => true, 'use_acl' => true));
+				$default_value = array('cat_id' => '', 'name' => lang('no category'));
+				array_unshift($categories['cat_list'], $default_value);
+
+				foreach ($categories['cat_list'] as & $_category)
 				{
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
-					$documents = json_encode($documents);
+					$_category['id'] = $_category['cat_id'];
 				}
+
+				$cat_filter = $categories['cat_list'];
+		
+				//if (count($documents))
+				//{
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
+					//$documents = json_encode($documents);
+					
+					$documents_def = array
+						(
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_0',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uilocation.get_files_at_location', 'location_code' => $location_code, 'phpgw_return_as' => 'json'))),
+						'data' => "",
+						'ColumnDefs' => $documents_def,
+						'config' => array(
+							array('disableFilter' => true)
+						)
+					);				
+				//}
 
 				$_dirname = '';
 
@@ -2066,7 +2097,7 @@ JS;
 
 				$datatable_def[] = array
 					(
-					'container' => 'datatable-container_0',
+					'container' => 'datatable-container_1',
 					'requestUrl' => "''",
 					'data' => json_encode($_related),
 					'ColumnDefs' => $related_def,
@@ -2096,7 +2127,7 @@ JS;
 
 					$datatable_def[] = array
 						(
-						'container' => 'datatable-container_1',
+						'container' => 'datatable-container_2',
 						'requestUrl' => "''",
 						'data' => json_encode(array()),
 						'ColumnDefs' => $history_def,
@@ -2344,6 +2375,7 @@ JS;
 				'cat_list' => $this->bocommon->select_category_list(array('format' => 'select',
 					'selected' => $values['cat_id'], 'type' => 'location', 'type_id' => $type_id,
 					'order' => 'descr')),
+				'cat_filter' => array('options' => $cat_filter),
 				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'general'),
