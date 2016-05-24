@@ -356,7 +356,7 @@
 			{
 				// columns to retrieve
 				$columns[] = 'contract.id AS contract_id';
-				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,contract.publish_comment';
+				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,override_adjustment_start,contract.publish_comment';
 				$columns[] = 'party.id AS party_id';
 				$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
 				$columns[] = 'c_t.is_payer';
@@ -441,6 +441,7 @@
 				$contract->set_adjustment_interval($this->unmarshal($this->db->f('adjustment_interval'), 'int'));
 				$contract->set_adjustment_share($this->unmarshal($this->db->f('adjustment_share'), 'int'));
 				$contract->set_adjustment_year($this->unmarshal($this->db->f('adjustment_year'), 'int'));
+				$contract->set_override_adjustment_start($this->unmarshal($this->db->f('override_adjustment_start'), 'int'));
 				$contract->set_publish_comment($this->unmarshal($this->db->f('publish_comment'), 'bool'));
 				$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'), 'int'));
 				$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'), 'int'));
@@ -629,6 +630,7 @@
 			$values[] = "adjustment_interval = " . $this->marshal($contract->get_adjustment_interval(), 'int');
 			$values[] = "adjustment_share = " . $this->marshal($contract->get_adjustment_share(), 'int');
 			$values[] = "publish_comment = " . ($contract->get_publish_comment() ? "true" : "false");
+			$values[] = "override_adjustment_start = " . $this->marshal($contract->get_override_adjustment_start(), 'int');
 
 			// FORM COLUMN 3
 			$values[] = "comment = " . $this->marshal($contract->get_comment(), 'string');
@@ -827,6 +829,9 @@
 
 			$cols[] = 'adjustment_year';
 			$values[] = $this->marshal($contract->get_adjustment_year(), 'int');
+
+			$cols[] = 'override_adjustment_start';
+			$values[] = $this->marshal($contract->get_override_adjustment_start(), 'int');
 
 			$cols[] = 'publish_comment';
 			$values[] = ($contract->get_publish_comment() ? "true" : "false");

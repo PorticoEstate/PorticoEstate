@@ -54,7 +54,7 @@
 			}
 			else
 			{
-				$cols = 'rental_invoice_price_item.id, invoice_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end';
+				$cols = 'rental_invoice_price_item.id, invoice_id, title, area, count, agresso_id, is_area, is_one_time, price, total_price, date_start, date_end';
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ($return_count ? '' : 'ORDER BY rental_invoice_price_item.id ASC');
@@ -65,8 +65,22 @@
 		{
 			if ($price_item == null)
 			{
-				$price_item = new rental_invoice_price_item(0, $this->db->f('id', true), $this->db->f('invoice_id', true), $this->db->f('title', true), $this->db->f('agresso_id', true), $this->db->f('is_area', true), $this->db->f('price', true), $this->db->f('area', true), $this->db->f('count', true), strtotime($this->db->f('date_start', true)), strtotime($this->db->f('date_end', true)));
+				$price_item = new rental_invoice_price_item(
+					0,
+					$this->db->f('id', true),
+					$this->db->f('invoice_id', true),
+					$this->db->f('title', true),
+					$this->db->f('agresso_id', true),
+					$this->db->f('is_area', true),
+					$this->db->f('price', true),
+					$this->db->f('area', true),
+					$this->db->f('count', true),
+					strtotime($this->db->f('date_start', true)),
+					strtotime($this->db->f('date_end', true))
+				);
+	
 				$price_item->set_total_price($this->db->f('total_price', true));
+				$price_item->set_is_one_time((bool)$this->db->f('is_one_time'));
 			}
 			return $price_item;
 		}
@@ -84,9 +98,10 @@
 				$this->marshal($invoice_price_item->get_count(), 'int'),
 				$this->marshal($invoice_price_item->get_total_price(), 'float'),
 				$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_start()), 'date'),
-				$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_end()), 'date')
+				$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_end()), 'date'),
+				$invoice_price_item->is_one_time() ? 'true' : 'false',
 			);
-			$query = "INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (" . join(',', $values) . ")";
+			$query = "INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end,is_one_time) VALUES (" . join(',', $values) . ")";
 			$receipt = null;
 			if ($this->db->query($query))
 			{

@@ -537,8 +537,8 @@ JS;
 				}
 
 				$contracts_with_one_time = array();
-				//Check to see if the period har been billed before
-				if (rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
+				//Check to see if the period har been billed before, not including credits
+				if ($billing_term != 5 && rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
 				{
 					// We only give a warning and let the user go to step 2
 					$warningMsgs[] = lang('the period has been billed before.');

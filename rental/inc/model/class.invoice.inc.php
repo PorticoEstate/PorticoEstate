@@ -521,6 +521,7 @@
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...
 				if ($contract_price_item->is_one_time())
 				{
+					$invoice_price_item->set_is_one_time(true);
 					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
 					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
