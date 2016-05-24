@@ -114,7 +114,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td valign="top">
+									<td valign="top" height="30">
 										<div id = 'split_text'>
 										</div>
 									</td>
@@ -501,15 +501,15 @@
 		<tr class ='row_off'>
 			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
 			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
-			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+			<td class="th_text" align="left" valign="top" style="white-space: nowrap;" height="40">
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
-			<td class="th_text" valign="top" align="left">
+			<td class="th_text" valign="top" align="left" height="40">
 				<div id = "approve_as2"> </div>
 			</td>
 		</tr>
 		<tr class ='row_off'>
-			<td>
+			<td height="50">
 			</td>
 			<td>
 				<div id = 'email_link'></div>
