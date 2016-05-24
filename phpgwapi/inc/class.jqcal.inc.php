@@ -80,6 +80,10 @@
 					buttonImage: "{$this->img_cal}",
 					buttonText: "{$this->lang_select_date}",
 					buttonImageOnly: true
+				}).keyup(function(e) {
+					if(e.keyCode == 8 || e.keyCode == 46) {
+						$.datepicker._clearDate(this);
+					}
 				});
 			    $('#ui-datepicker-div').draggable();
 			});
