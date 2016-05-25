@@ -20,8 +20,8 @@
 	 */
 	include('../header.inc.php');
 
-	$n_passwd   = isset($_POST['n_passwd']) && $_POST['n_passwd'] ? $_POST['n_passwd'] : '';
-	$n_passwd_2 = isset($_POST['n_passwd_2']) && $_POST['n_passwd_2'] ? $_POST['n_passwd_2'] : '';
+	$n_passwd   = isset($_POST['n_passwd']) && $_POST['n_passwd'] ? html_entity_decode(phpgw::get_var('n_passwd', 'string', 'POST')) : '';
+	$n_passwd_2 = isset($_POST['n_passwd_2']) && $_POST['n_passwd_2'] ? html_entity_decode(phpgw::get_var('n_passwd_2', 'string', 'POST')) : '';
 
 	if (! $GLOBALS['phpgw']->acl->check('changepassword', 1, 'preferences') || (isset($_POST['cancel']) && $_POST['cancel']))
 	{
