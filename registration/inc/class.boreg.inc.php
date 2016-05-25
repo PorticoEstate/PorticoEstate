@@ -132,7 +132,8 @@
 
 			if ($this->config['password_is'] == 'http')
 			{
-				$r_reg['passwd'] = $r_reg['passwd_confirm'] = $_SERVER['PHP_AUTH_PW'];
+				// remove entities to stop mangling
+				$r_reg['passwd'] = $r_reg['passwd_confirm'] = html_entity_decode(phpgw::clean_value($_SERVER['PHP_AUTH_PW']));
 			}
 
 			if (($this->config['display_tos']) && !$r_reg['tos_agree'])
