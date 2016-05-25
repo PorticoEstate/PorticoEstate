@@ -51,6 +51,7 @@
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
+			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$mime_type = isset($data['mime_type']) ? $data['mime_type'] : '';
 			$start_date = isset($data['start_date']) ? $data['start_date'] : 0;
 			$end_date = isset($data['end_date']) ? $data['end_date'] : 0;
@@ -82,15 +83,21 @@
 
 			if ($cat_id)
 			{
-				$joinmethod = "{$this->join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
+				$joinmethod .= " {$this->join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
 				$filtermethod .= " AND b.metadata @> '{\"cat_id\":\"{$cat_id}\"}'";
 			} 
 
+			if ($location_id)
+			{
+				$joinmethod .= " {$this->join} phpgw_vfs_file_relation c ON ( a.file_id = c.file_id )";
+				$filtermethod .= " AND c.location_id = {$location_id}";
+			} 
+			
 			if ($user_id)
 			{
 				$filtermethod .= " AND a.createdby_id = {$user_id}";
 			}
-
+			
 			if ($mime_type)
 			{
 				$filtermethod .= " AND a.mime_type = '{$mime_type}'";
@@ -109,7 +116,8 @@
 				$filtermethod .= " AND a.directory {$this->like} '%{$location}%'";
 			}
 
-			$sql = "SELECT a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} ";
+			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} ";
+		
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
