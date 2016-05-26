@@ -1611,7 +1611,7 @@ JS;
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$doc_type = phpgw::get_var('doc_type', 'int');
 			$location_code = phpgw::get_var('location_code');
 			$export = phpgw::get_var('export', 'bool');
 			$values = array();
@@ -1624,16 +1624,16 @@ JS;
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
-				'doc_type' => $cat_id,
+				'doc_type' => $doc_type,
 				'location_code' => $location_code
 			);
 			
 			$document = CreateObject('property.sodocument');
 			$documents = $document->read_at_location($params);
-			
+		
 			foreach ($documents as $item) 
 			{
-				$document_name = '<a href="'.self::link(array('menuaction' => 'property.uidocument.list_doc')).'">'.$item['document_name'].'</a>';
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.edit', 'document_id'=>$item['document_id'])).'">'.$item['document_name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
 
@@ -1641,7 +1641,7 @@ JS;
 			$generic_document = CreateObject('property.sogeneric_document');
 			$params['location_id'] = $location_id;
 			$params['order'] = 'name';
-			$params['cat_id'] = $cat_id;
+			$params['cat_id'] = $doc_type;
 			$documents2 = $generic_document->read($params);
 			foreach ($documents2 as $item) 
 			{
@@ -1975,8 +1975,8 @@ JS;
 				unset($attributes_groups);
 			}
 
-			$documents = array();
-			$file_tree = array();
+			/*$documents = array();
+			$file_tree = array();*/
 			$integration = array();
 			if ($location_code)
 			{
@@ -2031,7 +2031,7 @@ JS;
 				$cats->supress_info = true;
 				$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => 0,
 					'globals' => true, 'use_acl' => true));
-				$default_value = array('cat_id' => '', 'name' => lang('no category'));
+				$default_value = array('cat_id' => '', 'name' => lang('no document type'));
 				array_unshift($categories['cat_list'], $default_value);
 
 				foreach ($categories['cat_list'] as & $_category)
@@ -2039,7 +2039,7 @@ JS;
 					$_category['id'] = $_category['cat_id'];
 				}
 
-				$cat_filter = $categories['cat_list'];
+				$doc_type_filter = $categories['cat_list'];
 		
 				//if (count($documents))
 				//{
@@ -2064,7 +2064,7 @@ JS;
 					);				
 				//}
 
-				$_dirname = '';
+				/*$_dirname = '';
 
 				$_files_maxlevel = 0;
 				if (isset($_config->config_data['external_files_maxlevel']) && $_config->config_data['external_files_maxlevel'])
@@ -2089,7 +2089,7 @@ JS;
 				{
 					$tabs['file_tree'] = array('label' => lang('Files'), 'link' => '#file_tree');
 					$file_tree = json_encode($file_tree);
-				}
+				}*/
 
 				$_related = array();
 				foreach ($related as $_location_level => $related_info)
@@ -2415,7 +2415,7 @@ JS;
 				'cat_list' => $this->bocommon->select_category_list(array('format' => 'select',
 					'selected' => $values['cat_id'], 'type' => 'location', 'type_id' => $type_id,
 					'order' => 'descr')),
-				'cat_filter' => array('options' => $cat_filter),
+				'doc_type_filter' => array('options' => $doc_type_filter),
 				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'general'),
