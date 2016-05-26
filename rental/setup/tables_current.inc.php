@@ -399,7 +399,8 @@
 				'total_price' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => true),
 				'date_start' => array('type' => 'date'),
-				'date_end' => array('type' => 'date')
+				'date_end' => array('type' => 'date'),
+                                'is_one_time' => array('type' => 'bool', 'nullable' => false, 'default' => 'true')
 			),
 			'pk' => array('id'),
 			'fk' => array(
