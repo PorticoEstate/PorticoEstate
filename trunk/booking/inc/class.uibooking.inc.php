@@ -120,6 +120,11 @@
 							'label' => lang('Cost')
 						),
 						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -199,6 +204,7 @@
 				$booking['building_name'] = $building['name'];
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
+				$booking['cost_history'] = count($this->bo->so->get_ordered_costs($booking['id']));
 			}
 
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");

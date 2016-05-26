@@ -682,3 +682,4 @@ Subject caseofficer	booking	no	Emne Saksbehandler
 Mail text for comment added	booking	no	Ekstra epost tekst for kommentar
 organzations_ids_description	booking	no	Her kan du legge inn en komma separert liste med organisasjons IDer som vil få epost viss noen avbestiller denne ressursen.
 organzations_ids	booking	no	Organisasjons IDer
+cost history	booking	no	Prishistorikk

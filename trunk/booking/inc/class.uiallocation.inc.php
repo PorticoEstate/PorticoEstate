@@ -109,6 +109,15 @@
 							'label' => lang('To')
 						),
 						array(
+							'key' => 'cost',
+							'label' => lang('cost')
+						),
+						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -188,6 +197,7 @@
 			{
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
+				$allocation['cost_history'] = count($this->bo->so->get_ordered_costs($allocation['id']));
 			}
 
 			return $this->jquery_results($allocations);
