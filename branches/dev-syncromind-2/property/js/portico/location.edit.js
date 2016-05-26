@@ -4,9 +4,9 @@ var set_history_data = 0;
 
 $(document).ready(function ()
 {
-	$('#category_id').change( function()
+	$('#doc_type').change( function()
 	{
-		oTable0.dataTableSettings[0]['ajax']['data']['cat_id'] = $(this).val();
+		oTable0.dataTableSettings[0]['ajax']['data']['doc_type'] = $(this).val();
 		oTable0.fnDraw();				
 	});
 
