@@ -511,10 +511,10 @@ onMouseOut="nd()">
 								
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'categories')" />
+									<xsl:value-of select="php:function('lang', 'Doc type')" />
 								</label>
-								<select id="category_id" name="category_id">
-									<xsl:apply-templates select="cat_filter/options"/>
+								<select id="doc_type" name="doc_type">
+									<xsl:apply-templates select="doc_type_filter/options"/>
 								</select>
 							</div>
 									
@@ -531,34 +531,6 @@ onMouseOut="nd()">
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-
-					<xsl:choose>
-						<xsl:when test="file_tree != ''">
-							<div id="file_tree">
-							<fieldset>
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									documents2 = <xsl:value-of select="file_tree"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="treecontrol">
-									<a id="collapse2" title="Collapse the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
-									<xsl:text> | </xsl:text>
-									<a id="expand2" title="Expand the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-								</div>
-								<div id="treeDiv2"></div>
-							</fieldset>
-							</div>
-						</xsl:when>
-					</xsl:choose>
 						<div id="related">
 					<xsl:for-each select="datatable_def">
 						<xsl:if test="container = 'datatable-container_1'">
