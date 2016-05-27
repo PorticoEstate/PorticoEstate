@@ -930,36 +930,62 @@
 //			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace ( ',' , '|' , $config->config_data['document_valid_types'] ) : '.pdf';
 
 			$values = array();
-//			if($valid_types)
-			{
-				$lang_view = lang('click to view file');
-				foreach ($document_list as $entry)
-				{
-//					if ( !preg_match("/({$valid_types})$/i", $entry['document_name']) )
-//					{
-//						continue;
-//					}
-					$link_file_data = array
-						(
-						'menuaction' => 'property.uidocument.view_file',
-						'id' => $entry['document_id'],
-						'p_num' => $data['id'],
-						'cat_id' => $cat_id,
-						'entity_id' => $entity_id,
-					);
 
-					$values[] = array
-						(
-						'document_id' => $entry['document_id'],
-						'file_name' => $entry['document_name'],
-						'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . "\" target='_blank' title='{$lang_view}'>{$entry['document_name']}</a>",
-						'link' => $entry['link'],
-						'title' => $entry['title'],
-						'doc_type' => $entry['doc_type'],
-						'document_date' => $GLOBALS['phpgw']->common->show_date($entry['document_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-					);
+			$lang_view = lang('click to view file');
+			foreach ($document_list as $entry)
+			{
+				$link_file_data = array
+					(
+					'menuaction' => 'property.uidocument.view_file',
+					'id' => $entry['document_id'],
+					'p_num' => $data['id'],
+					'cat_id' => $cat_id,
+					'entity_id' => $entity_id,
+				);
+
+				$values[] = array
+					(
+					'document_id' => $entry['document_id'],
+					'file_name' => $entry['document_name'],
+					'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . "\" target='_blank' title='{$lang_view}'>{$entry['document_name']}</a>",
+					'link' => $entry['link'],
+					'title' => $entry['title'],
+					'doc_type' => $entry['doc_type'],
+					'document_date' => $GLOBALS['phpgw']->common->show_date($entry['document_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+				);
+			}
+		
+			$generic_document = CreateObject('property.sogeneric_document');
+			$params['location_id'] = $location_id;
+			$params['order'] = 'name';		
+			$params['allrows'] = true;
+			$generic_document_list = array();
+			foreach ($doc_types as $doc_type)
+			{
+				if ($doc_type)
+				{
+					$params['cat_id'] = $doc_type;
+					$generic_document_list = array_merge($generic_document_list, $generic_document->read($params));
 				}
 			}
+			
+			foreach ($generic_document_list as $entry)
+			{
+				$link_file_data = array
+					(
+					'menuaction' => 'property.uigeneric_document.view_file',
+					'file_id' => $entry['id']
+				);
+
+				$values[] = array
+					(
+					'document_id' => $entry['id'],
+					'file_name' => $entry['name'],
+					'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . "\" target='_blank' title='{$lang_view}'>{$entry['name']}</a>"
+				);
+			}
+				
+			
 			return $values;
 		}
 
