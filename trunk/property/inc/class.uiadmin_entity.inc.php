@@ -987,6 +987,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 					'entity_id' => $entity_id, 'type' => $this->type)),
+				'base_java_url' => json_encode(array('menuaction' => "property.uiadmin_entity.edit_category")),
 				'lang_save' => lang('save'),
 				'lang_done' => lang('done'),
 				'value_id' => $id,
