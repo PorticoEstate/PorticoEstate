@@ -620,3 +620,5 @@ Name or company is required	rental	no	Navn på person ELLER navn på foretak er 
 simulation	rental	no	Simulering
 credits	rental	no	Kreditering
 override adjustment start	rental	no	Overstyr sist regulert
+application	rental	no	søknad
+dimb	rental	no	Ansvarssted
