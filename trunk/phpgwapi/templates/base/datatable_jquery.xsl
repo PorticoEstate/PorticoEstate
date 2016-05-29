@@ -154,8 +154,20 @@
 										<script type="text/javascript">
 											$(document).ready(function() {
 											var app = "<xsl:value-of select="app"/>";
+											app = app || 'booking';
+											var label_attr = "<xsl:value-of select="label_attr"/>";
+											label_attr = label_attr || 'name';
+											var show_id =  false;
+											<xsl:if test="show_id = 1">
+												show_id = true;
+											</xsl:if>
+
 											var name = "<xsl:value-of select="name"/>";
 											var ui = "<xsl:value-of select="ui"/>";
+											var requestGenerator = false;
+											<xsl:if test="requestGenerator">
+												requestGenerator = '<xsl:value-of select="requestGenerator"/>';
+											</xsl:if>
 											var depends = false;
 											var filter_depends = "";
 											var filter_selected = "";
@@ -168,8 +180,8 @@
 												if (filter_select != filter_selected){
 												if (filter_depends) {
 													<![CDATA[
-															JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&filter_'+depends+'_id='+filter_depends+'&',
-																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+															JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&filter_'+depends+'_id='+filter_depends+'&',
+																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 												}
 												oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
@@ -183,8 +195,8 @@
 												filter_depends = false;
 												if (!filter_depends) {
 															<![CDATA[
-																JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&',
-																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+																JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&',
+																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 															]]>
 												}
 												filter_selected = "";
@@ -196,13 +208,13 @@
 											</xsl:if>
 											if (filter_depends) {
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&filter_'+depends+'_id='+filter_depends+'&',
-																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&filter_'+depends+'_id='+filter_depends+'&',
+																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}else{
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&',
-																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&',
+																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}
 											});
