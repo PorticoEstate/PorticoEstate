@@ -255,7 +255,7 @@
 			);
 
 			$values = $this->bo->read($params);
-			if ($export)
+			if (phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
