@@ -2195,8 +2195,9 @@
 
 			$unspsc_code = $values['unspsc_code'] ? $values['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
 
-			$data = array
-				(
+			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
+			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
+			$data = array(
 				'datatable_def' => $datatable_def,
 				'periodization_data' => $periodization_data,
 				'year_list' => array(
@@ -2208,6 +2209,8 @@
 				'lang_claim' => lang('claim'),
 				'suppressmeter' => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination' => $suppresscoordination,
+				'enable_unspsc' => $enable_unspsc,
+				'enable_order_service_id' => $enable_order_service_id,
 				'tabs' => self::_generate_tabs(array(), $active_tab, array(
 					'documents' => $id ? false : true,
 					'history' => $id ? false : true)),
