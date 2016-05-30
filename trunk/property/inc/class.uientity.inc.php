@@ -558,7 +558,7 @@
 				return $values;
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
 			$custom_config = CreateObject('admin.soconfig', $location_id);
 			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
@@ -863,7 +863,7 @@
 		 */
 		function get_target()
 		{
-			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'int');
 			$draw = phpgw::get_var('draw', 'int');
 			$allrows = phpgw::get_var('length', 'int') == -1;
 
@@ -976,6 +976,7 @@
 			$allrows = phpgw::get_var('length', 'int') == -1;
 
 			$values = $this->bo->read_single(array('entity_id' => $this->entity_id, 'cat_id' => $this->cat_id,
+				'type' => $this->type,
 				'id' => $id));
 
 			$link_file_data = array
@@ -2008,7 +2009,7 @@
 				(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_files',
-						'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'phpgw_return_as' => 'json'))),
+						'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'type' => $this->type, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $file_def,
 				'config' => array(
 					array('disableFilter' => true),
@@ -2040,7 +2041,13 @@
 					(
 					'container' => 'datatable-container_1',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_target',
-							'id' => $id, 'phpgw_return_as' => 'json'))),
+						'entity_id' => $this->entity_id,
+						'cat_id' => $this->cat_id,
+						'id' => $id,
+						'type' => $this->type,
+						'phpgw_return_as' => 'json')
+						)
+					),
 					'ColumnDefs' => $target_def,
 					'config' => array(
 						array('disableFilter' => true),
@@ -2104,9 +2111,9 @@
 						)
 					);
 				//}
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
 				if ($_enable_controller)
 				{
-					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 					$_controls = $this->get_controls_at_component($location_id, $id);
 
 					$controls_def = array
