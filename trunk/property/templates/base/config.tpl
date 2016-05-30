@@ -189,8 +189,24 @@
 				</select>
 			</td>
 		</tr>
-
-
+		<tr class="pure-table-odd">
+			<td>{lang_enable_UNSPSC_kode}:</td>
+			<td>
+				<select name="newsettings[enable_unspsc]">
+					<option value="" {selected_enable_unspsc_}>NO</option>
+					<option value="1" {selected_enable_unspsc_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>{lang_enable_order_service_id}:</td>
+			<td>
+				<select name="newsettings[enable_order_service_id]">
+					<option value="" {selected_enable_order_service_id_}>NO</option>
+					<option value="1" {selected_enable_order_service_id_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="pure-table-odd">
 			<td>{lang_Default_municipal_number}:</td>
 			<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
