@@ -506,63 +506,34 @@ onMouseOut="nd()">
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="documents != ''">
+
 							<div id="document">
-							<fieldset>
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									documents = <xsl:value-of select="documents"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="treecontrol">
-									<a id="collapse1" title="Collapse the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
-									<xsl:text> | </xsl:text>
-									<a id="expand1" title="Expand the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-								</div>
-								<div id="treeDiv1"></div>
-							</fieldset>
+								
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Doc type')" />
+								</label>
+								<select id="doc_type" name="doc_type">
+									<xsl:apply-templates select="doc_type_filter/options"/>
+								</select>
 							</div>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="file_tree != ''">
-							<div id="file_tree">
-							<fieldset>
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									documents2 = <xsl:value-of select="file_tree"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="treecontrol">
-									<a id="collapse2" title="Collapse the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
-									<xsl:text> | </xsl:text>
-									<a id="expand2" title="Expand the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-								</div>
-								<div id="treeDiv2"></div>
-							</fieldset>
+									
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
 							</div>
-						</xsl:when>
-					</xsl:choose>
 						<div id="related">
 					<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_0'">
+						<xsl:if test="container = 'datatable-container_1'">
 							<xsl:call-template name="table_setup">
 								<xsl:with-param name="container" select ='container'/>
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -581,7 +552,7 @@ onMouseOut="nd()">
 						</script>
 						<div id="history">
 							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_1'">
+								<xsl:if test="container = 'datatable-container_2'">
 									<xsl:call-template name="table_setup">
 										<xsl:with-param name="container" select ='container'/>
 										<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -833,4 +804,14 @@ onMouseOut="nd()">
 			</xsl:for-each>
 			];
 		</script>
+</xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected = 'selected' or selected = 1">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:attribute name="title" value="description" />
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

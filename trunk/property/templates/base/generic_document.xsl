@@ -23,12 +23,6 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
 				<div id="generic">
-
-					<h3>Generic document information::metadata <br/>
-						the metadata might be stored as XML (or JSONB) in "phpgw_vfs_filedata"
-
-					</h3>
-					<fieldset>
 						<xsl:choose>
 							<xsl:when test="document/id!=''">
 								<div class="pure-control-group">
@@ -36,7 +30,7 @@
 										<xsl:value-of select="php:function('lang', 'id')" />
 									</label>
 									<xsl:value-of select="document/id"/>
-									<input type="hidden" name="id" value="{document/id}"/>
+									<input type="hidden" name="id" id="id" value="{document/id}"/>
 
 								</div>
 							</xsl:when>
@@ -218,51 +212,89 @@
 								</div>
 							</xsl:when>
 						</xsl:choose>
-
-					</fieldset>
 				</div>
 
-				<div id="relations">
+				<xsl:choose>
+					<xsl:when test="document/id!=''">
+						<div id="relations">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'entity group')" />
+								</label>
+								<select id="entity_group_id" name="entity_group_id">
+									<xsl:apply-templates select="entity_group_filter/options"/>
+								</select>
+							</div>							
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'item types')" />
+								</label>
+								<select id="location_id" name="location_id">
+									<xsl:apply-templates select="location_filter/options"/>
+								</select>
+							</div>
 
-					<h3>Implement how to find and link documents to items - using &quot;location_id&quot;, &quot;item_id&quot; and the &quot;phpgw_vfs_file_relation&quot;</h3>
-
-					<div class="pure-control-group">
-						<label for="vendor">
-							<xsl:value-of select="php:function('lang', 'item types')" />
-						</label>
-						<select id="location_id" name="location_id">
-							<xsl:apply-templates select="location_filter/options"/>
-						</select>
-					</div>
-
-					<h3> Should be able to get items from the following (have a look at <a href="{link_controller_example}">controller</a>) for how it is used</h3>
-
-					<xsl:text>
-						$_components = execMethod('property.soentity.read', array(
-						'filter_entity_group' => $entity_group_id,
-						'location_id' => $_location_id,
-						'district_id' => $district_id,
-						'allrows' => true,
-						'filter_item' => $component_list
-						)
-					);
-					</xsl:text>
-
-					<div class="pure-control-group">
-
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_0'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl' />
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-									<xsl:with-param name="tabletools" select ='tabletools' />
-									<xsl:with-param name="config" select ='config' />
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
-					</div>
-				</div>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+						
+						<div id="locations">							
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'type')" />
+								</label>
+								<select id="type_id" name="type_id">
+									<xsl:apply-templates select="type_filter/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'category')" />
+								</label>
+								<select id="cat_location_id" name="cat_location_id">
+									<xsl:apply-templates select="category_filter/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'district')" />
+								</label>
+								<select id="district_id" name="district_id">
+									<xsl:apply-templates select="district_filter/options"/>
+								</select>
+							</div>				
+							<div class="pure-control-group">
+								<label for="vendor">
+									<xsl:value-of select="php:function('lang', 'part of town')" />
+								</label>
+								<select id="part_of_town_id" name="part_of_town_id">
+									<xsl:apply-templates select="part_of_town_filter/options"/>
+								</select>
+							</div>								
+									
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_1'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>				
+						</div>
+					</xsl:when>
+				</xsl:choose>
 			</div>
 			<div class="proplist-col">
 				<xsl:variable name="lang_cancel">
@@ -321,7 +353,7 @@
 
 <xsl:template match="options">
 	<option value="{id}">
-		<xsl:if test="selected = 1">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:attribute name="title" value="description" />
