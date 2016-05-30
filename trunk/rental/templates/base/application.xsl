@@ -29,6 +29,26 @@
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="showing">
+					<fieldset>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_dimb">
+							<xsl:value-of select="php:function('lang', 'dimb')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_dimb"/>
+						</label>
+						<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{value_ecodimb}"/>
+						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{value_ecodimb_descr}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="$lang_dimb"/>
+							</xsl:attribute>
+						</input>
+						<div id="ecodimb_container"/>
+					</div>
+					</fieldset>
 					<!--fieldset>
 						<input type="hidden" name="id" value="{price_item_id}"/>
 						<div class="pure-control-group">

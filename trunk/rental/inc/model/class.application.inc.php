@@ -31,6 +31,7 @@
 	class rental_application extends rental_model
 	{
 
+		protected $ecodimb;
 		protected $title;
 		protected $description;
 		protected $name;
@@ -42,6 +43,15 @@
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);
+		}
+		public function set_ecodimb( $ecodimb )
+		{
+			$this->ecodimb = $ecodimb;
+		}
+
+		public function get_ecodimb()
+		{
+			return $this->ecodimb;
 		}
 
 		public function set_title( $title )
