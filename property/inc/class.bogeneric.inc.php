@@ -351,4 +351,20 @@
 		{
 			return $this->so->edit_field($data);
 		}
+
+		public function get_single_attrib_value( array $data )
+		{
+			$ret = $id = $data['id'];
+			$type = $data['type'];
+			$attrib_name = $data['attrib_name'];
+			$ret = $id;
+			if($id = (int)$id)
+			{
+				$sogeneric = CreateObject('property.sogeneric', $type);
+				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
+				$ret =  $sogeneric_data[$attrib_name];
+			}
+			return $ret;
+		}
+
 	}

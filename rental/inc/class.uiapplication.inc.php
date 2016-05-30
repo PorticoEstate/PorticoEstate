@@ -280,6 +280,8 @@ JS;
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
 				'lang_save' => lang('save'),
 				'lang_cancel' => lang('cancel'),
+				'value_ecodimb'	=> $application->get_ecodimb(),
+				'value_ecodimb_descr'	=> ExecMethod('property.bogeneric.get_single_attrib_value', array('type' => 'dimb', 'id' => $application->get_ecodimb(), 'attrib_name' => 'descr' )),
 //				'lang_current_price_type' => lang($application->get_price_type_title()),
 //				'lang_adjustable_text' => $application->get_adjustable_text(),
 //				'lang_standard_text' => $application->get_standard_text(),
@@ -298,10 +300,10 @@ JS;
 //				'responsibility_id' => $responsibility_id,
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date',
-					'security', 'file'))
 			);
+			phpgwapi_jquery::formvalidator_generate(array('date','security', 'file'));
+			phpgwapi_jquery::load_widget('autocomplete');
+			self::add_javascript('rental', 'rental', 'application.edit.js');
 
 			self::render_template_xsl(array('application'), array($mode => $data));
 		}
