@@ -54,6 +54,7 @@
 			'responsiblility_role_save' => true,
 			'get_part_of_town' => true,
 			'get_history_data' => true,
+			'get_documents' => true,
 			'download' => true,
 			'index' => true,
 			'view' => true,
@@ -1606,15 +1607,54 @@ JS;
 
 		public function get_documents()
 		{
-			$entity_id = phpgw::get_var('entity_id', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$num = phpgw::get_var('num');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$doc_type = phpgw::get_var('doc_type', 'int');
+			$location_code = phpgw::get_var('location_code');
+			$export = phpgw::get_var('export', 'bool');
+			$values = array();
 
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+				'doc_type' => $doc_type,
+				'location_code' => $location_code
+			);
+			
 			$document = CreateObject('property.sodocument');
-			$documents = $document->get_files_at_location(array('entity_id' => $entity_id,
-				'cat_id' => $cat_id, 'num' => $num));
+			$documents = $document->read_at_location($params);
+		
+			foreach ($documents as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.edit', 'document_id'=>$item['document_id'])).'">'.$item['document_name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
 
-			return $documents;
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $location_code)));
+			$generic_document = CreateObject('property.sogeneric_document');
+			$params['location_id'] = $location_id;
+			$params['order'] = 'name';
+			$params['cat_id'] = $doc_type;
+			$documents2 = $generic_document->read($params);
+			foreach ($documents2 as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.edit', 'id'=>$item['id'])).'">'.$item['name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
+			
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		public function add()
@@ -1935,8 +1975,8 @@ JS;
 				unset($attributes_groups);
 			}
 
-			$documents = array();
-			$file_tree = array();
+			/*$documents = array();
+			$file_tree = array();*/
 			$integration = array();
 			if ($location_code)
 			{
@@ -1981,19 +2021,50 @@ JS;
 				$location_type_info = $this->soadmin_location->read_single($type_id);
 				$documents = array();
 
-				if ($location_type_info['list_documents'])
+				/*if ($location_type_info['list_documents'])
 				{
 					$objDocument = CreateObject('property.sodocument');
 					$documents = $objDocument->get_files_at_location(array('location_code' => $location_code));
-				}
+				}*/
 
-				if (count($documents))
+				$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
+				$cats->supress_info = true;
+				$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => 0,
+					'globals' => true, 'use_acl' => true));
+				$default_value = array('cat_id' => '', 'name' => lang('no document type'));
+				array_unshift($categories['cat_list'], $default_value);
+
+				foreach ($categories['cat_list'] as & $_category)
 				{
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
-					$documents = json_encode($documents);
+					$_category['id'] = $_category['cat_id'];
 				}
 
-				$_dirname = '';
+				$doc_type_filter = $categories['cat_list'];
+		
+				//if (count($documents))
+				//{
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
+					//$documents = json_encode($documents);
+					
+					$documents_def = array
+						(
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_0',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uilocation.get_documents', 'location_code' => $location_code, 'phpgw_return_as' => 'json'))),
+						'data' => "",
+						'ColumnDefs' => $documents_def,
+						'config' => array(
+							array('disableFilter' => true)
+						)
+					);				
+				//}
+
+				/*$_dirname = '';
 
 				$_files_maxlevel = 0;
 				if (isset($_config->config_data['external_files_maxlevel']) && $_config->config_data['external_files_maxlevel'])
@@ -2018,7 +2089,7 @@ JS;
 				{
 					$tabs['file_tree'] = array('label' => lang('Files'), 'link' => '#file_tree');
 					$file_tree = json_encode($file_tree);
-				}
+				}*/
 
 				$_related = array();
 				foreach ($related as $_location_level => $related_info)
@@ -2066,7 +2137,7 @@ JS;
 
 				$datatable_def[] = array
 					(
-					'container' => 'datatable-container_0',
+					'container' => 'datatable-container_1',
 					'requestUrl' => "''",
 					'data' => json_encode($_related),
 					'ColumnDefs' => $related_def,
@@ -2096,7 +2167,7 @@ JS;
 
 					$datatable_def[] = array
 						(
-						'container' => 'datatable-container_1',
+						'container' => 'datatable-container_2',
 						'requestUrl' => "''",
 						'data' => json_encode(array()),
 						'ColumnDefs' => $history_def,
@@ -2344,18 +2415,19 @@ JS;
 				'cat_list' => $this->bocommon->select_category_list(array('format' => 'select',
 					'selected' => $values['cat_id'], 'type' => 'location', 'type_id' => $type_id,
 					'order' => 'descr')),
+				'doc_type_filter' => array('options' => $doc_type_filter),
 				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'general'),
-				'documents' => $documents,
-				'file_tree' => $file_tree,
+				//'documents' => $documents,
+				//'file_tree' => $file_tree,
 				'lang_expand_all' => lang('expand all'),
 				'lang_collapse_all' => lang('collapse all'),
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
 
-			phpgwapi_jquery::load_widget('treeview');
+			//phpgwapi_jquery::load_widget('treeview');
 
 			$appname = lang('location');
 

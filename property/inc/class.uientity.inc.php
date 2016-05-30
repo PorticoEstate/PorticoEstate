@@ -465,15 +465,63 @@
 
 		public function get_documents()
 		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$doc_type = phpgw::get_var('doc_type', 'int');
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$cat_id = phpgw::get_var('cat_id', 'int');
 			$num = phpgw::get_var('num');
+			$location_id = phpgw::get_var('location_id', 'int');
+			$export = phpgw::get_var('export', 'bool');
+			$values = array();
 
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+				'doc_type' => $doc_type,
+				'entity_id' => $entity_id,
+				'cat_id' => $cat_id,
+				'num' => $num
+			);
+			
 			$document = CreateObject('property.sodocument');
-			$documents = $document->get_files_at_location(array('entity_id' => $entity_id,
-				'cat_id' => $cat_id, 'num' => $num));
+			$documents = $document->read_at_location($params);
+		
+			foreach ($documents as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.edit', 'document_id'=>$item['document_id'])).'">'.$item['document_name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
 
-			return $documents;
+			//$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $location_code)));
+			$generic_document = CreateObject('property.sogeneric_document');
+			if (empty($location_id))
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+			$params['location_id'] = $location_id;
+			$params['order'] = 'name';
+			$params['cat_id'] = $doc_type;
+			$documents2 = $generic_document->read($params);
+			foreach ($documents2 as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.edit', 'id'=>$item['id'])).'">'.$item['name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
+			
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		public function query()
@@ -1972,27 +2020,6 @@
 
 			if ($id)
 			{
-				$get_docs = false;
-				$check_doc = $this->bocommon->get_lookup_entity('document');
-				foreach ($check_doc as $_check)
-				{
-					if ($_check['id'] == $this->entity_id)
-					{
-						$get_docs = true;
-						break;
-					}
-				}
-
-				if ($get_docs)
-				{
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document',
-						'disable' => 0);
-					$requestUrlDoc = json_encode(self::link(array('menuaction' => 'property.uientity.get_documents',
-							'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'],
-							'phpgw_return_as' => 'json')));
-					$documents = 1;
-				}
-
 				if (!$category['enable_bulk'])
 				{
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
@@ -2038,8 +2065,8 @@
 					)
 				);
 
-				if ($category['enable_bulk'])
-				{
+				//if ($category['enable_bulk'])
+				//{
 					$tabs['inventory'] = array('label' => lang('inventory'), 'link' => '#inventory',
 						'disable' => 0);
 
@@ -2076,7 +2103,7 @@
 							array('disablePagination' => true)
 						)
 					);
-				}
+				//}
 				if ($_enable_controller)
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
@@ -2210,6 +2237,54 @@
 						)
 					);
 				}
+				
+				$get_docs = false;
+				$check_doc = $this->bocommon->get_lookup_entity('document');
+				foreach ($check_doc as $_check)
+				{
+					if ($_check['id'] == $this->entity_id)
+					{
+						$get_docs = true;
+						break;
+					}
+				}
+
+				//if ($get_docs)
+				//{					
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
+					
+					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
+					$cats->supress_info = true;
+					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
+						'globals' => true, 'use_acl' => true));
+					$default_value = array('cat_id' => '', 'name' => lang('no document type'), 'selected' => 'selected');
+					array_unshift($categories['cat_list'], $default_value);
+
+					foreach ($categories['cat_list'] as & $_category)
+					{
+						$_category['id'] = $_category['cat_id'];
+					}
+					$doc_type_filter = $categories['cat_list'];
+				
+					$documents_def = array
+						(
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_7',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
+							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
+						'data' => "",
+						'ColumnDefs' => $documents_def,
+						'config' => array(
+							array('disableFilter' => true)
+						)
+					);
+				//}
+				
 			}
 
 			//$category['org_unit'] =1;
@@ -2319,8 +2394,9 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'active_tab' => $active_tab,
 				'integration' => $integration,
-				'documents' => $documents,
-				'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',
+				'doc_type_filter' => array('options' => $doc_type_filter),
+				/*'documents' => $documents,
+				'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',*/
 				'lean' => $_lean ? 1 : 0,
 				'entity_group_list' => array('options' => $entity_group_list),
 				'entity_group_name' => $entity_group_name,
@@ -2339,7 +2415,7 @@ JS;
 			self::render_template_xsl(array('entity', 'datatable_inline', 'attributes_form',
 				'files'), array('edit' => $data));
 
-			phpgwapi_jquery::load_widget('treeview');
+			//phpgwapi_jquery::load_widget('treeview');
 
 			$criteria = array
 				(
