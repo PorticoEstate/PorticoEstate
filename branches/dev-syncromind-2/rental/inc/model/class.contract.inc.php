@@ -74,6 +74,7 @@
 		protected $adjustment_interval;
 		protected $adjustment_share;
 		protected $adjustment_year;
+		protected $override_adjustment_start;
 		protected $adjustable;
 		protected $bill_only_one_time;
 		protected $publish_comment;
@@ -952,6 +953,7 @@
 				'adjustment_interval' => $this->get_adjustment_interval(),
 				'adjustment_share' => $this->get_adjustment_share(),
 				'adjustment_year' => $this->get_adjustment_year(),
+				'override_adjustment_start' => $this->get_override_adjustment_start(),
 				'comment' => $this->get_comment(),
 				'publish_comment' => $this->get_publish_comment(),
 				'term_label' => $this->get_term_id_title(),
@@ -1027,6 +1029,15 @@
 		public function get_adjustment_year()
 		{
 			return $this->adjustment_year;
+		}
+		public function set_override_adjustment_start( $override_adjustment_start )
+		{
+			$this->override_adjustment_start = $override_adjustment_start;
+		}
+
+		public function get_override_adjustment_start()
+		{
+			return $this->override_adjustment_start;
 		}
 
 		public function set_adjustable( $adjustable )

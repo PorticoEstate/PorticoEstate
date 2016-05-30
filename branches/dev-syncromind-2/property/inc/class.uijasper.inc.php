@@ -250,100 +250,7 @@
 					)
 				)
 			);
-			//$this->save_sessiondata();
-			//$datatable = array();
 
-			/* if( phpgw::get_var('phpgw_return_as') != 'json' )
-			  {
-			  $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-			  (
-			  'menuaction'	=> 'property.uijasper.index',
-			  'app'			=> $this->app
-			  ));
-
-			  $datatable['config']['base_java_url'] = "menuaction:'property.uijasper.index',"
-			  ."app: '{$this->app}',"
-			  ."allrows:'{$this->allrows}'";
-
-
-			  $link_data = array
-			  (
-			  'menuaction'	=> 'property.uijasper.index',
-			  'app'			=> $this->app
-			  );
-
-			  $values_combo_box[0]  = $this->bo->get_apps();
-
-			  $datatable['config']['allow_allrows'] = true;
-
-			  $datatable['actions']['form'] = array
-			  (
-			  array
-			  (
-			  'action'	=> $GLOBALS['phpgw']->link('/index.php',
-			  array
-			  (
-			  'menuaction'	=> 'property.uijasper.index'//,
-			  )
-			  ),
-			  'fields'	=> array
-			  (
-			  'field' => array
-			  (
-			  array //boton 	CATEGORY
-			  (
-			  'id' => 'btn_app_id',
-			  'name' => 'app',
-			  'value'	=> lang('application'),
-			  'type' => 'button',
-			  'style' => 'filter',
-			  'tab_index' => 1
-			  ),
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_export',
-			  'value'	=> lang('download'),
-			  'tab_index' => 9
-			  ),
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_new',
-			  'value'	=> lang('add'),
-			  'tab_index' => 8
-			  ),
-			  array //boton  SEARCH
-			  (
-			  'id' => 'btn_search',
-			  'name' => 'search',
-			  'value'	=> lang('search'),
-			  'type' => 'button',
-			  'tab_index' => 7
-			  ),
-			  array // TEXT INPUT
-			  (
-			  'name'	 => 'query',
-			  'id'	 => 'txt_query',
-			  'value'	=> '',//$query,
-			  'type' => 'text',
-			  'onkeypress' => 'return pulsar(event)',
-			  'size'	=> 28,
-			  'tab_index' => 6
-			  )
-			  ),
-			  'hidden_value' => array
-			  (
-			  array //div values  combo_box_0
-			  (
-			  'id' => 'values_combo_box_0',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[0])
-			  )
-			  )
-			  )
-			  )
-			  );
-			  } */
 			$filters = $this->_get_Filters();
 			foreach ($filters as $filter)
 			{
@@ -637,12 +544,9 @@
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit report');
-				$this->acl->set_account_id($this->account);
-				$grants = $this->acl->get_grants('property', '.jasper');
-				if (!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
+				if (!$this->bocommon->check_perms2($values['user_id'], $this->grants, PHPGW_ACL_READ))
 				{
-					$values = array();
-					$receipt['error'][] = array('msg' => lang('You are not granted sufficient rights for this entry'));
+					phpgw::no_access();
 				}
 			}
 			else
@@ -780,7 +684,7 @@
 				$values['input'] = $values_attribute;
 				$first_run = false;
 			}
-			if (!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_READ))
+			if (!$this->bocommon->check_perms2($values['user_id'], $this->grants, PHPGW_ACL_READ))
 			{
 				echo lang('not allowed');
 				$GLOBALS['phpgw']->common->phpgw_exit();
@@ -946,7 +850,7 @@
 
 			$id = phpgw::get_var('id'); // string
 			$values = $this->bo->read_single($id);
-			if (!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
+			if (!$this->bocommon->check_perms2($values['user_id'], $this->grants, PHPGW_ACL_DELETE))
 			{
 				return lang('not allowed');
 			}

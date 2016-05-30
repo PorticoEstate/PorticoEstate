@@ -64,7 +64,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true,
 			'add_control' => true,
 			'update_control_serie' => true
 		);

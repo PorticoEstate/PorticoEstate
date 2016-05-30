@@ -4,8 +4,15 @@ var values_tophp = [];
 
 $(document).ready(function ()
 {
-	var api = oTable0.api();
-	api.on('draw', add_checkall);
+	try
+	{
+		var api = oTable0.api();
+		api.on('draw', add_checkall);
+	}
+	catch(err)
+	{
+
+	}
 });
 
 function add_checkall()

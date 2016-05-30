@@ -347,9 +347,9 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 
 	if (buttons_def)
 	{
-		var sDom_def = 'B<"clear">lfrtip';
-//		var sDom_def = 'Bfrtlip';
-		var sDom_def = '<lfB<t>ip>'
+//		var sDom_def = 'B<"clear">lfrtip';
+		var sDom_def = 'Bfrtlip';
+//		var sDom_def = '<lfB<t>ip>'
 		if (singleSelect == true)
 		{
 			select = true;
@@ -370,7 +370,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var oTable = $("#" + container).dataTable({
 		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
-		info: disableFilter ? false : true,
+		info: disablePagination ? false : true,
 		order: order,
 		processing: true,
 		serverSide: serverSide_def,
@@ -599,11 +599,25 @@ JqueryPortico.substr_count = function (haystack, needle, offset, length)
 };
 
 
-JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, label_attr)
+JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, label_attr, show_id, requestGenerator)
 {
+	show_id = show_id ? true : false;
+	requestGenerator = requestGenerator || false;
 	label_attr = (label_attr) ? label_attr : 'name';
 	$(document).ready(function ()
 	{
+		if(requestGenerator)
+		{
+			try
+			{
+				baseUrl = window[requestGenerator](baseUrl);
+			}
+			catch(err)
+			{
+
+			}
+		}
+
 		$("#" + field).autocomplete({
 			source: function (request, response)
 			{
@@ -629,8 +643,17 @@ JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, 
 						}
 						response($.map(data_t, function (item)
 						{
+							if(show_id)
+							{
+								label = item.id + ' ' + item[label_attr];					
+							}
+							else
+							{
+								label = item[label_attr];
+							}
+
 							return {
-								label: item[label_attr],
+								label: label,
 								value: item.id
 							};
 						}));

@@ -111,6 +111,15 @@
 							'label' => lang('Active')
 						),
 						array(
+							'key' => 'cost',
+							'label' => lang('Cost')
+						),
+						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -172,6 +181,7 @@
 			{
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
+				$event['cost_history'] = count($this->bo->so->get_ordered_costs($event['id']));
 			}
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");

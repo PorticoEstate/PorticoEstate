@@ -46,7 +46,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -124,11 +123,6 @@
 			$this->sort = $data['sort'];
 			$this->order = $data['order'];
 			$this->cat_id = $data['cat_id'];
-		}
-
-		function check_perms( $has, $needed )
-		{
-			return (!!($has & $needed) == true);
 		}
 
 		function read( $data = array() )

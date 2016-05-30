@@ -132,11 +132,6 @@
 			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
 		}
 
-		function check_perms( $has, $needed )
-		{
-			return (!!($has & $needed) == true);
-		}
-
 		function get_status_list( $data = 0 )
 		{
 			if (is_array($data))

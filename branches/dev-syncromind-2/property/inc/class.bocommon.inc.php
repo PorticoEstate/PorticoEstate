@@ -76,6 +76,32 @@
 			return ($rights & $required);
 		}
 
+		/**
+		 *
+		 * @param integer $owner_id
+		 * @param array $grants
+		 * @param integer $required
+		 * @return bool
+		 */
+		function check_perms2( $owner_id, $grants,  $required )
+		{
+			if(isset($grants['accounts'][$owner_id]) && ($grants['accounts'][$owner_id] & $required))
+			{
+				return true;
+			}
+
+			$equalto = $GLOBALS['phpgw']->accounts->membership($owner_id);
+			foreach($grants['groups'] as $group => $_right)
+			{
+				if(isset($equalto[$group]) && ($_right & $required))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		function create_preferences( $app = '', $user_id = '' )
 		{
 			return $this->socommon->create_preferences($app, $user_id);

@@ -859,6 +859,12 @@
 		public function _user_save()
 		{
 			$values									= phpgw::get_var('values', 'string', 'POST');
+			if(isset($values['passwd']))
+			{
+				// remove entities to stop mangling
+				$values['passwd'] = html_entity_decode($values['passwd']);
+				$values['passwd_2'] = html_entity_decode($values['passwd_2']);
+			}
 			$values['account_groups']				= (array) phpgw::get_var('account_groups', 'int', 'POST');
 			$account_permissions					= phpgw::get_var('account_permissions', 'int', 'POST');
 			$account_permissions_admin				= phpgw::get_var('account_permissions_admin', 'int', 'POST');

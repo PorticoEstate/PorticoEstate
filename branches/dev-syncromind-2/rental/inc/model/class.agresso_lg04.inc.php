@@ -151,7 +151,7 @@
 					$description = $price_item->get_title();
 					$start = $price_item->get_timestamp_start();
 					$stop = $price_item->get_timestamp_end();
-					if (isset($start) && isset($stop))
+					if (!$price_item->get_is_one_time() && isset($start) && isset($stop))
 					{
 						$description .= ' ' . date('j/n', $start) . '-' . date('j/n', $stop);
 					}

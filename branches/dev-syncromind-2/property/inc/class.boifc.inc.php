@@ -53,7 +53,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -150,11 +149,6 @@
 			$this->sort = (isset($data['sort']) ? $data['sort'] : '');
 			$this->order = (isset($data['order']) ? $data['order'] : '');
 			$this->cat_id = (isset($data['cat_id']) ? $data['cat_id'] : '');
-		}
-
-		function check_perms( $rights, $required )
-		{
-			return ($rights & $required);
 		}
 
 		function import( $values = '', $ifcfile = '' )

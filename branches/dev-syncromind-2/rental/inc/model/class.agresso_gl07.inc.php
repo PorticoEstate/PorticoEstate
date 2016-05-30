@@ -43,6 +43,15 @@
 			return $contents;
 		}
 
+		public function get_contents_excel( $excel_export_type )
+		{
+			if ($this->orders == null) // Data hasn't been created yet
+			{
+				$this->run_excel_export($excel_export_type);
+			}
+			return $this->orders;
+		}
+
 		public function get_missing_billing_info( $contract )
 		{
 
@@ -191,6 +200,49 @@
 				$this->lines[] = $this->get_line($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
 			}
 		}
+		protected function run_excel_export( $excel_export_type )
+		{
+			switch ($excel_export_type)
+			{
+				case 'bk':
+					$get_order_excel = 'get_order_excel_bk';
+					break;
+				case 'nlsh':
+					$get_order_excel = 'get_order_excel_bk';//'get_order_excel_nlsh';
+					break;
+
+				default:
+					$get_order_excel = 'get_order_excel_bk';
+					break;
+			}
+			$this->lines = array();
+			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
+			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
+			// We need all invoices for this billing
+			$invoices = rental_soinvoice::get_instance()->get(0, 0, 'id', true, '', '', array(
+				'billing_id' => $this->billing_job->get_id()));
+			foreach ($invoices as $invoice) // Runs through all invoices
+			{
+				// We need all price items in the invoice
+				$price_items = rental_soinvoice_price_item::get_instance()->get(0, 0, '', false, '', '', array(
+					'invoice_id' => $invoice->get_id()));
+				// HACK to get the needed location code for the building
+				$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
+				$description = "{$invoice->get_old_contract_id()}, " . number_format($invoice->get_total_area(), 1, $decimal_separator, $thousands_separator) . " m2 - {$invoice->get_header()}";
+
+				$responsibility_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'] : '028120';
+				$project_id_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'] : '9';
+
+				// The income side
+				foreach ($price_items as $price_item) // Runs through all items
+				{
+					$this->lines[] = $this->$get_order_excel($invoice->get_account_in(), $responsibility_in, $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+				}
+				// The receiver's outlay side
+			//	$this->lines[] = $this->$get_order_excel($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+			}
+			$this->orders = $this->lines;
+		}
 
 		/**
 		 * Builds one single line of the Agresso file.
@@ -280,6 +332,45 @@
 			;
 			return str_replace(array("\n", "\r"), '', $line);
 		}
+		/**
+		 * Builds one single order of the excel file.
+		 *
+		 */
+		protected function get_order_excel_bk( $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month )
+		{
+
+			//$order_id = $order_id + 39500000;
+			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
+			//$order = array();
+
+			$item_counter = $counter;
+			$order = array(
+				'contract_id' => $contract_id,
+				'account' => $account,
+				'client_ref' => $client_ref,
+				'header' => utf8_decode($header),
+				'bill_year' => $bill_year,
+				'bill_month' => $bill_month,
+				'building' => $building,
+				'name' => $party_name,
+				'amount' => $this->get_formatted_amount_excel($amount),
+				'article description' => utf8_decode($product_item['article_description']),
+				'article_code' => $product_item['article_code'],
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'responsibility' => $responsibility,
+				'service' => $service,
+				'project' => $project,
+				'part_no' => $part_no,
+				'counter' => ++$item_counter,
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'item_counter' => $item_counter,
+				'text' => utf8_decode($description)
+			);
+
+			return str_replace(array("\n", "\r"), '', $order);
+		}
 
 		protected function get_formatted_amount( $amount )
 		{
@@ -290,4 +381,17 @@
 			}
 			return sprintf("%020.20s", $amount);
 		}
+		protected function get_formatted_amount_excel( $amount )
+		{
+//            var_dump($amount);
+//            var_dump($belop);
+			$amount = round($amount, 2) * 100;
+			$belop = substr($amount, 0, strlen($amount) - 2) . '.' . substr($amount, -2);
+			if ($amount < 0) // Negative number
+			{
+				return '-' . sprintf("%016.16s", abs($belop)); // We have to have the sign at the start of the string
+			}
+			return sprintf("%017.17s", $belop);
+		}
+
 	}

@@ -1405,6 +1405,7 @@ JS;
 
 				$contract->set_project_id(phpgw::get_var('project_id'));
 				$contract->set_due_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('due_date')));
+				$contract->set_override_adjustment_start(phpgw::get_var('override_adjustment_start', 'int'));
 				$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 				$old_rented_area = $contract->get_rented_area();
 				$new_rented_area = phpgw::get_var('rented_area');
@@ -1716,6 +1717,7 @@ JS;
 				'rented_area_simbol' => $this->area_suffix,
 				'is_adjustable' => $contract->is_adjustable(),
 				'value_adjustment_year' => $contract->get_adjustment_year(),
+				'value_override_adjustment_start' => $contract->get_override_adjustment_start(),
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
 				'location_id' => $contract->get_location_id(),
@@ -2168,6 +2170,7 @@ JS;
 				var area_suffix = '$this->area_suffix';
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
+			$override_adjustment_start = $contract->get_override_adjustment_start();
 
 			$data = array
 				(
@@ -2207,6 +2210,7 @@ JS;
 				'list_adjustment_interval' => array('options' => $adjustment_interval_options),
 				'list_adjustment_share' => array('options' => $adjustment_share_options),
 				'value_adjustment_year' => $contract->get_adjustment_year(),
+				'value_override_adjustment_start' => $override_adjustment_start ? $override_adjustment_start : '',
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
 				'location_id' => $contract->get_location_id(),
@@ -2240,6 +2244,7 @@ JS;
 
 			//$appname	=  $this->location_info['name'];
 			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			phpgwapi_jquery::formvalidator_generate(array('date'));
 			self::add_javascript('rental', 'rental', 'contract.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('contract', 'datatable_inline'), array('edit' => $data));
