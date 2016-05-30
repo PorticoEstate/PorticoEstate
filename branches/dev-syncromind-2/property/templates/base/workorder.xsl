@@ -564,33 +564,35 @@
 							</xsl:if>
 						</input>
 					</div>
-					<div class="pure-control-group">
-						<xsl:variable name="lang_service">
-							<xsl:value-of select="php:function('lang', 'service')"/>
-						</xsl:variable>
-						<label>
-							<xsl:value-of select="$lang_service"/>
-						</label>
-						<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
-						<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<!--xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="$lang_service"/>
-									</xsl:attribute-->
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
-						</input>
-						<div id="service_container"/>
-					</div>
+					<xsl:if test="enable_order_service_id = 1">
+						<div class="pure-control-group">
+							<xsl:variable name="lang_service">
+								<xsl:value-of select="php:function('lang', 'service')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_service"/>
+							</label>
+							<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
+							<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
+								<xsl:choose>
+									<xsl:when test="mode='edit'">
+										<!--xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_service"/>
+										</xsl:attribute-->
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="disabled">
+											<xsl:text>disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
+							</input>
+							<div id="service_container"/>
+						</div>
+					</xsl:if>
 					<div class="pure-control-group">
 						<xsl:variable name="lang_dimb">
 							<xsl:value-of select="php:function('lang', 'dimb')"/>
@@ -654,34 +656,35 @@
 						</input>
 						<div id="b_account_container"/>
 					</div>
-					<!--xsl:call-template name="b_account_form"/-->
-					<div class="pure-control-group">
-						<xsl:variable name="lang_unspsc_code">
-							<xsl:value-of select="php:function('lang', 'unspsc code')"/>
-						</xsl:variable>
-						<label>
-							<xsl:value-of select="$lang_unspsc_code"/>
-						</label>
-						<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
-						<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<!--xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="$lang_unspsc_code"/>
-									</xsl:attribute-->
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
-						</input>
-						<div id="unspsc_code_container"/>
-					</div>
+					<xsl:if test="enable_unspsc = 1">
+						<div class="pure-control-group">
+							<xsl:variable name="lang_unspsc_code">
+								<xsl:value-of select="php:function('lang', 'unspsc code')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_unspsc_code"/>
+							</label>
+							<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
+							<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
+								<xsl:choose>
+									<xsl:when test="mode='edit'">
+										<!--xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_unspsc_code"/>
+										</xsl:attribute-->
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="disabled">
+											<xsl:text>disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
+							</input>
+							<div id="unspsc_code_container"/>
+						</div>
+					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="collect_building_part=1">
 							<div class="pure-control-group">
