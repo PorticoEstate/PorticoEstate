@@ -385,7 +385,7 @@
 			</xsl:choose>
 		</xsl:variable>
 //		$(document).ready(function() {
-		var paramsTable<xsl:number value="$num"/> = [];
+		var paramsTable<xsl:number value="$num"/> = {};
 		oTable<xsl:number value="$num"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="$num"/>, options<xsl:number value="$num"/> , <xsl:value-of select="$dataset"/>);
 //	});
 	</script>
