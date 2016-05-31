@@ -802,7 +802,8 @@
 					</xsl:when>
 				</xsl:choose>
 
-
+				<xsl:choose>
+					<xsl:when test="enable_bulk = 1">
 						<div id="inventory">
 							<fieldset>
 								<div class="pure-control-group">
@@ -831,8 +832,8 @@
 								</xsl:choose>
 							</fieldset>
 						</div>
-		
-
+					</xsl:when>
+				</xsl:choose>
 			</div>
 			<xsl:choose>
 				<xsl:when test="mode = 'edit'">

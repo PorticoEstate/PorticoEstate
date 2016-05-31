@@ -380,7 +380,15 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		data: data,
 		ajax: ajax_def,
 		fnServerParams: function (aoData)
-		{
+		{			
+			if (eval('paramsTable' + container.substr(container.length -1, 1)).length)
+			{	
+				$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+				{
+					aoData[v.name] = v.value;
+				});
+			}
+
 			if (typeof (aoData.order) != 'undefined')
 			{
 				var column = aoData.order[0].column;

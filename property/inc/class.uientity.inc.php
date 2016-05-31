@@ -2021,6 +2021,55 @@
 
 			if ($id)
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+				
+				$get_docs = false;
+				$check_doc = $this->bocommon->get_lookup_entity('document');
+				foreach ($check_doc as $_check)
+				{
+					if ($_check['id'] == $this->entity_id)
+					{
+						$get_docs = true;
+						break;
+					}
+				}
+
+				if ($get_docs)
+				{					
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
+					
+					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
+					$cats->supress_info = true;
+					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
+						'globals' => true, 'use_acl' => true));
+					$default_value = array('cat_id' => '', 'name' => lang('no document type'), 'selected' => 'selected');
+					array_unshift($categories['cat_list'], $default_value);
+
+					foreach ($categories['cat_list'] as & $_category)
+					{
+						$_category['id'] = $_category['cat_id'];
+					}
+					$doc_type_filter = $categories['cat_list'];
+				
+					$documents_def = array
+						(
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_7',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
+							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
+						'data' => "",
+						'ColumnDefs' => $documents_def,
+						'config' => array(
+							array('disableFilter' => true)
+						)
+					);
+				}
+				
 				if (!$category['enable_bulk'])
 				{
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
@@ -2072,8 +2121,8 @@
 					)
 				);
 
-				//if ($category['enable_bulk'])
-				//{
+				if ($category['enable_bulk'])
+				{
 					$tabs['inventory'] = array('label' => lang('inventory'), 'link' => '#inventory',
 						'disable' => 0);
 
@@ -2110,8 +2159,8 @@
 							array('disablePagination' => true)
 						)
 					);
-				//}
-				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+				}
+				
 				if ($_enable_controller)
 				{
 					$_controls = $this->get_controls_at_component($location_id, $id);
@@ -2244,53 +2293,6 @@
 						)
 					);
 				}
-				
-				$get_docs = false;
-				$check_doc = $this->bocommon->get_lookup_entity('document');
-				foreach ($check_doc as $_check)
-				{
-					if ($_check['id'] == $this->entity_id)
-					{
-						$get_docs = true;
-						break;
-					}
-				}
-
-				//if ($get_docs)
-				//{					
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
-					
-					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
-					$cats->supress_info = true;
-					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
-						'globals' => true, 'use_acl' => true));
-					$default_value = array('cat_id' => '', 'name' => lang('no document type'), 'selected' => 'selected');
-					array_unshift($categories['cat_list'], $default_value);
-
-					foreach ($categories['cat_list'] as & $_category)
-					{
-						$_category['id'] = $_category['cat_id'];
-					}
-					$doc_type_filter = $categories['cat_list'];
-				
-					$documents_def = array
-						(
-						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
-					);
-
-					$datatable_def[] = array
-						(
-						'container' => 'datatable-container_7',
-						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
-							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
-						'data' => "",
-						'ColumnDefs' => $documents_def,
-						'config' => array(
-							array('disableFilter' => true)
-						)
-					);
-				//}
 				
 			}
 
