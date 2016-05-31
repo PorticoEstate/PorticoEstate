@@ -220,19 +220,23 @@ add_control = function ()
 
 var documents = null;
 var requestUrlDoc = null;
-
+	
 $(document).ready(function ()
 {
 	$('#doc_type').change( function()
 	{
-		var oTable = $("#datatable-container_7").dataTable();
+		//oTable7.dataTableSettings[6]['ajax']['data']['doc_type'] = $(this).val();
+		paramsTable7.push( { "name": 'doc_type', "value": $(this).val() } );
+		oTable7.fnDraw();				
+
+		/*var oTable = $("#datatable-container_7").dataTable();
 		var api = oTable.api();
 		var requestUrl = api.ajax.url();
 		Url = JqueryPortico.parseURL(requestUrl);
 		oArgs = Url.searchObject;
 		oArgs.doc_type = $(this).val();
 		requestUrl = phpGWLink('index.php', oArgs, true);
-		api.ajax.url(requestUrl).load();
+		api.ajax.url(requestUrl).load();*/
 	});
 
 	$("#workorder_cancel").on("submit", function (e)
