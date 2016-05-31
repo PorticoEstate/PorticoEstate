@@ -263,7 +263,10 @@ JS;
 			);
 
 			$tabs = array();
-			$tabs['showing'] = array('label' => lang('application'), 'link' => '#showing');
+			$tabs['application'] = array('label' => lang('application'), 'link' => '#application');
+			$tabs['party'] = array('label' => lang('party'), 'link' => '#party');
+			$tabs['assignment'] = array('label' => lang('assignment'), 'link' => '#assignment');
+
 			$active_tab = 'showing';
 
 //			$current_price_type_id = $application->get_price_type_id();
@@ -275,6 +278,21 @@ JS;
 //					'selected' => $selected);
 //			}
 
+
+			$composite_type = array();
+			$composite_type[] = array('id' => 1, 'name' => 'Hybel');
+			$composite_type[] = array('id' => 2, 'name' => 'Leilighet');
+
+			$payment_method = array();
+			$payment_method[] = array('id' => 1, 'name' => 'Faktura');
+			$payment_method[] = array('id' => 2, 'name' => 'Trekk i lønn');
+
+
+			$bocommon = CreateObject('property.bocommon');
+
+			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+
 			$data = array(
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_save),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
@@ -282,6 +300,13 @@ JS;
 				'lang_cancel' => lang('cancel'),
 				'value_ecodimb'	=> $application->get_ecodimb(),
 				'value_ecodimb_descr'	=> ExecMethod('property.bogeneric.get_single_attrib_value', array('type' => 'dimb', 'id' => $application->get_ecodimb(), 'attrib_name' => 'descr' )),
+				'district_list'			=> array('options' => $bocommon->select_district_list('', $application->get_district_id())),
+				'composite_type_list'		=> array('options' => $bocommon->select_list( $application->get_composite_type(), $composite_type)),
+				'value_date_start'	=> $GLOBALS['phpgw']->common->show_date($application->get_start_date(),$this->dateFormat),
+				'value_date_end'	=> $GLOBALS['phpgw']->common->show_date($application->get_end_date(),$this->dateFormat),
+				'value_cleaning'	=> $application->get_cleaning(),
+				'payment_method_list'		=> array('options' => $bocommon->select_list( $application->get_payment_method(), $payment_method)),
+
 //				'lang_current_price_type' => lang($application->get_price_type_title()),
 //				'lang_adjustable_text' => $application->get_adjustable_text(),
 //				'lang_standard_text' => $application->get_standard_text(),

@@ -622,3 +622,7 @@ credits	rental	no	Kreditering
 override adjustment start	rental	no	Overstyr sist regulert
 application	rental	no	søknad
 dimb	rental	no	Ansvarssted
+payment method	rental	no	Betalingsmetode
+what	rental	no	Hva
+cleaning	rental	no	Rengjøring
+assignment	rental	no	Tildeling
