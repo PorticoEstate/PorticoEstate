@@ -22,12 +22,13 @@
 	<xsl:param name="tabletools" />
 	<xsl:param name="config" />
 	<xsl:param name="data" />
+	<xsl:param name="separator" select="'_'" />
 	
 	<xsl:variable name="num">
-		<xsl:number count="*"/>
+		<xsl:number value="substring-after($container, $separator)"/>
 	</xsl:variable>
 	
-	<div id='message{($num - 1)}' class='message'/>
+	<div id='message{$num}' class='message'/>
 	
 	<table id="{$container}" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
@@ -73,11 +74,11 @@
 	
 	<script>
 		
-	var oTable<xsl:number value="($num - 1)"/> = null;
+	var oTable<xsl:number value="$num"/> = null;
 		
 	<xsl:choose>
 			<xsl:when test="$tabletools">
-					JqueryPortico.buttons<xsl:number value="($num - 1)"/> = 	{
+					JqueryPortico.buttons<xsl:number value="$num"/> = 	{
 							buttons: 
 								[
 									<xsl:for-each select="$tabletools">
@@ -86,7 +87,7 @@
 												{
 													text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 													action: function () {
-														var api = oTable<xsl:number value="($num - 1)"/>.api();
+														var api = oTable<xsl:number value="$num"/>.api();
 														api.rows().select();
 														$(".mychecks").each(function()
 														{
@@ -105,7 +106,7 @@
 												{
 													text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
 													action: function () {
-														var api = oTable<xsl:number value="($num - 1)"/>.api();
+														var api = oTable<xsl:number value="$num"/>.api();
 														api.rows().deselect();
 														$(".mychecks").each(function()
 														{
@@ -122,7 +123,7 @@
 													sUrl: '<xsl:value-of select="download"/>',
 													action: function (e, dt, node, config) {
 													  var sUrl = config.sUrl;
-													  var addtional_filterdata = oTable<xsl:number value="($num - 1)"/>.dataTableSettings[0]['ajax']['data'];
+													  var addtional_filterdata = oTable<xsl:number value="$num"/>.dataTableSettings[0]['ajax']['data'];
 													<![CDATA[
 														var oParams = {};
 														oParams.length = -1;
@@ -184,7 +185,7 @@
 													</xsl:choose>
 													action: function (e, dt, node, config) {
 																	var receiptmsg = [];
-																	var selected = JqueryPortico.fnGetSelected(oTable<xsl:number value="($num - 1)"/>);
+																	var selected = JqueryPortico.fnGetSelected(oTable<xsl:number value="$num"/>);
 																	var numSelected = 	selected.length;
 
 																	if (numSelected ==0){
@@ -214,7 +215,7 @@
 																	for (; n &lt; numSelected; ) {
 
 														//				console.log(selected[n]);
-																		var aData = oTable<xsl:number value="($num - 1)"/>.fnGetData( selected[n] ); //complete dataset from json returned from server
+																		var aData = oTable<xsl:number value="$num"/>.fnGetData( selected[n] ); //complete dataset from json returned from server
 														//				console.log(aData);
 
 																		//delete stuff comes here
@@ -236,16 +237,16 @@
 																		{               
 																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
-																					document.getElementById("message<xsl:number value="($num - 1)"/>").innerHTML += '<br/>' + result;
-																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																					document.getElementById("message<xsl:number value="$num"/>").innerHTML += '<br/>' + result;
+																					oTable<xsl:number value="$num"/>.fnDraw();
 																				});																			
 																		}
 																		else if (target == 'ajax')
 																		{
 																				action += "&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
-																					document.getElementById("message<xsl:number value="($num - 1)"/>").innerHTML += '<br/>' + result;
-																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																					document.getElementById("message<xsl:number value="$num"/>").innerHTML += '<br/>' + result;
+																					oTable<xsl:number value="$num"/>.fnDraw();
 																				});																				
 																		}
 																		else
@@ -331,46 +332,46 @@
 			</xsl:for-each>
 		];
 
-		var columns<xsl:number value="($num - 1)"/> = [];
+		var columns<xsl:number value="$num"/> = [];
 <![CDATA[
 		for(i=0;i < PreColumns.length;i++)
 		{
 			if ( PreColumns[i]['visible'] == true )
 			{
 ]]>
-				columns<xsl:number value="($num - 1)"/>.push(PreColumns[i]);
+				columns<xsl:number value="$num"/>.push(PreColumns[i]);
 <![CDATA[
 			}
 		}
 ]]>
 
-		var options<xsl:number value="($num - 1)"/> = {};
+		var options<xsl:number value="$num"/> = {};
 		<xsl:for-each select="$config">
 			<xsl:if test="allrows">
-				options<xsl:number value="($num - 1)"/>.allrows = true;
+				options<xsl:number value="$num"/>.allrows = true;
 			</xsl:if>
 			<xsl:if test="singleSelect">
-				options<xsl:number value="($num - 1)"/>.singleSelect = true;
+				options<xsl:number value="$num"/>.singleSelect = true;
 			</xsl:if>
 			<xsl:if test="disableFilter">
-				options<xsl:number value="($num - 1)"/>.disableFilter = true;
+				options<xsl:number value="$num"/>.disableFilter = true;
 			</xsl:if>
 			<xsl:if test="disablePagination">
-				options<xsl:number value="($num - 1)"/>.disablePagination = true;
+				options<xsl:number value="$num"/>.disablePagination = true;
 			</xsl:if>
 			<xsl:if test="order">
-				options<xsl:number value="($num - 1)"/>.order = <xsl:value-of select="order" />;
+				options<xsl:number value="$num"/>.order = <xsl:value-of select="order" />;
 			</xsl:if>
 			<xsl:if test="responsive">
-				options<xsl:number value="($num - 1)"/>.responsive = true;
+				options<xsl:number value="$num"/>.responsive = true;
 			</xsl:if>
 			<xsl:if test="editor_action">
-				options<xsl:number value="($num - 1)"/>.editor_action = "<xsl:value-of select="editor_action" />";
+				options<xsl:number value="$num"/>.editor_action = "<xsl:value-of select="editor_action" />";
 			</xsl:if>
 		</xsl:for-each>
-		if (JqueryPortico.buttons<xsl:number value="($num - 1)"/>)
+		if (JqueryPortico.buttons<xsl:number value="$num"/>)
 		{
-			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.buttons<xsl:number value="($num - 1)"/>;
+			options<xsl:number value="$num"/>.TableTools = JqueryPortico.buttons<xsl:number value="$num"/>;
 		}
 
 		<xsl:variable name="dataset">
@@ -384,7 +385,8 @@
 			</xsl:choose>
 		</xsl:variable>
 //		$(document).ready(function() {
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
+		var paramsTable<xsl:number value="$num"/> = [];
+		oTable<xsl:number value="$num"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="$num"/>, options<xsl:number value="$num"/> , <xsl:value-of select="$dataset"/>);
 //	});
 	</script>
 </xsl:template>
