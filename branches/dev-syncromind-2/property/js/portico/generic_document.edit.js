@@ -77,7 +77,8 @@ $(document).ready(function ()
 function filterData(objParams)
 {
 	$.each(objParams, function(key, value) {
-		oTable1.dataTableSettings[1]['ajax']['data'][key] = value;
+		//oTable1.dataTableSettings[1]['ajax']['data'][key] = value;
+		paramsTable1.push( { "name": key, "value": value } );
 	});
 	
 	oTable1.fnDraw();
