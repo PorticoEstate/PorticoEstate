@@ -6,7 +6,7 @@ $(document).ready(function ()
 {
 	$('#doc_type').change( function()
 	{
-		oTable0.dataTableSettings[0]['ajax']['data']['doc_type'] = $(this).val();
+		paramsTable0['doc_type'] = $(this).val();
 		oTable0.fnDraw();				
 	});
 
@@ -19,3 +19,12 @@ $(document).ready(function ()
 		}
 	};
 });
+
+function newDocument(oArgs)
+{
+	oArgs['doc_type'] = $('#doc_type').val();
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	window.open(requestUrl, '_self');
+};

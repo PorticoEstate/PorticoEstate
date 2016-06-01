@@ -224,6 +224,10 @@
 								<select id="entity_group_id" name="entity_group_id">
 									<xsl:apply-templates select="entity_group_filter/options"/>
 								</select>
+								<label>
+									<xsl:value-of select="php:function('lang', 'Only Related')" />
+								</label>
+								<input type="checkbox" id="check_components_related" name="check_components_related" value="1" onchange="showRelatedComponentes()"></input>
 							</div>							
 							<div class="pure-control-group">
 								<label for="vendor">
@@ -279,6 +283,10 @@
 								<select id="part_of_town_id" name="part_of_town_id">
 									<xsl:apply-templates select="part_of_town_filter/options"/>
 								</select>
+								<label>
+									<xsl:value-of select="php:function('lang', 'Only Related')" />
+								</label>
+								<input type="checkbox" id="check_locations_related" name="check_locations_related" value="1" onchange="showRelatedLocations()"></input>
 							</div>								
 									
 							<xsl:for-each select="datatable_def">
