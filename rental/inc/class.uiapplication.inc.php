@@ -286,7 +286,7 @@ JS;
 			$payment_method = array();
 			$payment_method[] = array('id' => 1, 'name' => 'Faktura');
 			$payment_method[] = array('id' => 2, 'name' => 'Trekk i lønn');
-
+			$payment_method[] = array('id' => 3, 'name' => 'intern faktura');
 
 			$bocommon = CreateObject('property.bocommon');
 
