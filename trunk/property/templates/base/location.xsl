@@ -506,18 +506,17 @@ onMouseOut="nd()">
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
-							<div id="document">
-								
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Doc type')" />
-								</label>
-								<select id="doc_type" name="doc_type">
-									<xsl:apply-templates select="doc_type_filter/options"/>
-								</select>
-							</div>
-									
+					<xsl:choose>
+						<xsl:when test="documents != ''">
+							<div id="document">								
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Doc type')" />
+									</label>
+									<select id="doc_type" name="doc_type">
+										<xsl:apply-templates select="doc_type_filter/options"/>
+									</select>
+								</div>									
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
 										<xsl:call-template name="table_setup">
@@ -531,20 +530,22 @@ onMouseOut="nd()">
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-						<div id="related">
-					<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_1'">
-							<xsl:call-template name="table_setup">
-								<xsl:with-param name="container" select ='container'/>
-								<xsl:with-param name="requestUrl" select ='requestUrl' />
-								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-								<xsl:with-param name="tabletools" select ='tabletools' />
-								<xsl:with-param name="data" select ='data' />
-								<xsl:with-param name="config" select ='config' />
-							</xsl:call-template>
-						</xsl:if>
-					</xsl:for-each>
-						</div>
+						</xsl:when>
+					</xsl:choose>
+					<div id="related">
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_1'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
 				<xsl:choose>
 					<xsl:when test="check_history != ''">
 						<script type="text/javascript">

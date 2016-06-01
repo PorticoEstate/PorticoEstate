@@ -13,22 +13,18 @@ $(document).ready(function ()
 				$.each(result, function(key, value) {
 				  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 				});
-				$( "#location_id" ).change();
+				getComponents();
 			}, data, "GET", "json"
 		);	
 	});
 	
 	$('#location_id').change(function ()
 	{
-		var oArgs1 = {menuaction: 'property.uigeneric_document.get_componentes', location_id: $('#location_id').val(), id: $('#id').val()};
-		var requestUrl = phpGWLink('index.php', oArgs1, true);
-		JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+		getComponents();
 	});
 	
 	$('select#type_id').change( function()
 	{
-		filterData({'type_id': $(this).val(), 'cat_id': ''});
-		
 		var oArgs1 = {menuaction: 'property.uigeneric_document.get_categories_for_type'};
 		var requestUrl = phpGWLink('index.php', oArgs1, true);		
 		var data = {"type_id": $(this).val()};
@@ -39,19 +35,18 @@ $(document).ready(function ()
 				$.each(result, function(key, value) {
 					$el.append($("<option></option>").attr("value", value.id).text(value.name));
 				});
+				getLocations();
 			}, data, "GET", "json"
 		);			
 	});
 	
 	$('select#cat_location_id').change( function()
-	{
-		filterData({'cat_id': $(this).val()});				
+	{	
+		getLocations();
 	});
 
 	$('select#district_id').change( function()
 	{
-		filterData({'district_id': $(this).val(), 'part_of_town_id': ''});
-		
 		var oArgs1 = {menuaction: 'property.uigeneric_document.get_part_of_town'};
 		var requestUrl = phpGWLink('index.php', oArgs1, true);		
 		var data = {"district_id": $(this).val()};
@@ -62,28 +57,50 @@ $(document).ready(function ()
 				$.each(result, function(key, value) {
 					$el.append($("<option></option>").attr("value", value.id).text(value.name));
 				});
+				getLocations();
 			}, data, "GET", "json"
 		);				
 	});
 
 	$('select#part_of_town_id').change( function()
 	{
-		filterData({'part_of_town_id': $(this).val()});				
+		getLocations();
 	});
 	
 	$('select#part_of_town_id').prop('selectedIndex', 0);
 });
 
-function filterData(objParams)
+function getLocations()
 {
-	$.each(objParams, function(key, value) {
-		//oTable1.dataTableSettings[1]['ajax']['data'][key] = value;
-		paramsTable1.push( { "name": key, "value": value } );
-	});
+	paramsTable1['type_id'] = $('#type_id').val();
+	paramsTable1['cat_id'] = $('#cat_location_id').val();
+	paramsTable1['district_id'] = $('#district_id').val();
+	paramsTable1['part_of_town_id'] = $('#part_of_town_id').val();
+	
+	if ($('#check_locations_related').is(':checked')) {
+		paramsTable1['only_related'] = 1;
+	} else {
+		paramsTable1['only_related'] = 0;
+	}
+	console.log(paramsTable1);
 	
 	oTable1.fnDraw();
 }
-			
+		
+function getComponents()
+{
+	paramsTable0['location_id'] = $('#location_id').val();
+	paramsTable0['id'] = $('#id').val();
+	
+	if ($('#check_components_related').is(':checked')) {
+		paramsTable0['only_related'] = 1;
+	} else {
+		paramsTable0['only_related'] = 0;
+	}
+	console.log(paramsTable0);
+	oTable0.fnDraw();
+}
+
 function setRelationsComponents(oArgs)
 {
 	var values = {};
@@ -134,6 +151,14 @@ function setRelationsLocations(oArgs)
 		oTable1.fnDraw();
 		
 	}, data, "POST", "JSON");
+}
+
+function showRelatedComponentes() {
+	getComponents();
+}
+
+function showRelatedLocations() {
+	getLocations();
 }
 
 //	call to AutoCompleteHelper JQUERY
