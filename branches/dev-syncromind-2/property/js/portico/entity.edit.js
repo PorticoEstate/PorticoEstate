@@ -240,11 +240,6 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
-});
-
-
-$(document).ready(function ()
-{
 	var click_action_on_table = false;
 	$("#check_lst_time_span").change(function ()
 	{
@@ -293,3 +288,12 @@ function updateCaseTable(check_list_id)
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
 }
+
+function newDocument(oArgs)
+{
+	oArgs['doc_type'] = $('#doc_type').val();
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	window.open(requestUrl, '_self');
+};
