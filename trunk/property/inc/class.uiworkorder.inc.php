@@ -1772,7 +1772,7 @@
 				array(
 					'key' => 'voucher_id',
 					'label' => lang('bilagsnr'),
-					'sortable' => false,
+					'sortable' => true,
 					'value_footer' => lang('Sum')),
 				array(
 					'key' => 'voucher_out_id',
@@ -1788,19 +1788,19 @@
 				array(
 					'key' => 'amount',
 					'label' => lang('amount'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'approved_amount',
 					'label' => lang('approved amount'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'period',
 					'label' => lang('period'),
-					'sortable' => false),
+					'sortable' => true),
 				array(
 					'key' => 'periodization',
 					'label' => lang('periodization'),
@@ -1838,10 +1838,8 @@
 				'data' => json_encode($content_invoice),
 				'ColumnDefs' => $invoice_def,
 				'config' => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+//					array('disablePagination' => true)
 				)
 			);
 

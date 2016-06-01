@@ -991,8 +991,34 @@
 
 		function project_workorder_data( $data = array() )
 		{
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$project_id = (int)$data['project_id'];
 			$year = (int)$data['year'];
+			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : 'fm_workorder';
+			$results = (isset($data['results']) ? $data['results'] : 0);
+
+			$ordermethod = 'ORDER BY fm_workorder.id DESC';
+
+			if ($order)
+			{
+				switch ($order)
+				{
+					case 'workorder_id':
+						$ordermethod = "ORDER BY fm_workorder.id {$sort}";
+						break;
+					case 'title':
+						$ordermethod = "ORDER BY fm_workorder.title {$sort}";
+						break;
+					case 'b_account_id':
+						$ordermethod = "ORDER BY fm_workorder.account_id {$sort}";
+						break;
+					case 'status':
+						$ordermethod = "ORDER BY fm_workorder_status.descr {$sort}";
+						break;
+				}
+			}
+
 			$values = array();
 
 			$filter_year = '';
@@ -1001,20 +1027,29 @@
 				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
 			}
 
-			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
+			$sql =  "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
 				. " fm_workorder.mail_recipients"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " WHERE project_id={$project_id} {$filter_year} {$ordermethod}";
+
+			$this->db->query("SELECT count(fm_workorder.id) AS cnt FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " WHERE project_id={$project_id} {$filter_year}", __LINE__, __FILE__);
+				
+			$this->db->next_record();
+			$this->total_records = (int)$this->db->f('cnt');
+
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 			$_orders = array();
 
 			while ($this->db->next_record())
 			{
-				$values[] = array
-					(
+				$values[] = array(
 					'workorder_id' => $this->db->f('workorder_id'),
 					'title' => $this->db->f('title', true),
 					'vendor_id' => $this->db->f('vendor_id'),
