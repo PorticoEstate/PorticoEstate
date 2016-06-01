@@ -274,6 +274,7 @@
 		{
 			$type_id = phpgw::get_var('type_id', 'int');
 			$file_id = phpgw::get_var('id', 'int');
+			$only_related = phpgw::get_var('only_related', 'boolean');
 
 			if (!$type_id)
 			{
@@ -319,7 +320,12 @@
 			foreach($locations as $item)
 			{
 				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
-
+				
+				if ($only_related && empty($checked))
+				{
+					continue;
+				}
+				
 				$values[] = array(
 					'location_code' => $item['location_code'],
 					'loc1_name' => $item['loc1_name'],
@@ -329,7 +335,7 @@
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $solocation->total_records;
+			$result_data['total_records'] = ($only_related) ? count($values_location_item_id) : $solocation->total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
@@ -450,8 +456,7 @@
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_componentes',
 							'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def,
-					'tabletools' => ($mode == 'edit') ? $tabletools : array(),
-					'config' => array(array('disableFilter' => true))
+					'tabletools' => ($mode == 'edit') ? $tabletools : array()
 				);
 				
 				$related_def2 = array
@@ -673,6 +678,7 @@
 			$location_id = phpgw::get_var('location_id', 'int');
 			$search = phpgw::get_var('search');
 			$draw = phpgw::get_var('draw', 'int');
+			$only_related = phpgw::get_var('only_related', 'boolean');
 			
             $soentity = CreateObject('property.soentity');
             $_components = $soentity->read( array(
@@ -703,15 +709,20 @@
 			{
 				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
 
+				if ($only_related && empty($checked))
+				{
+					continue;
+				}
+				
 				$values[] = array(
 					'name' => $item['benevnelse'],
 					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>',
-				);				
+				);
 			}
 			
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $soentity->total_records;
+			$result_data['total_records'] = ($only_related) ? count($values_location_item_id) : $soentity->total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
