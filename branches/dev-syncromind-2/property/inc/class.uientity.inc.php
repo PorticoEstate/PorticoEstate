@@ -2051,6 +2051,23 @@
 					}
 					$doc_type_filter = $categories['cat_list'];
 				
+					$documents_tabletools = array
+						(
+						'my_name' => 'add',
+						'text' => lang('add new document'),
+						'type' => 'custom',
+						'className' => 'add',
+						'custom_code' => "
+								var oArgs = " . json_encode(array(
+									'menuaction' => 'property.uidocument.edit',							
+									'p_entity_id' => $this->entity_id,
+									'p_cat_id' => $this->cat_id,
+									'p_num' => $values['num']
+						)) . ";
+								newDocument(oArgs);
+							"
+					);
+					
 					$documents_def = array
 						(
 						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
@@ -2063,6 +2080,7 @@
 						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
 							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
 						'data' => "",
+						'tabletools' => $documents_tabletools,
 						'ColumnDefs' => $documents_def,
 						'config' => array(
 							array('disableFilter' => true)
