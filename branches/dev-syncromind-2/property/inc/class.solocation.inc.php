@@ -373,13 +373,11 @@
 					$uicols['statustext'][] = $location_types[$i]['descr'];
 					$uicols['exchange'][] = true;
 					$uicols['align'][] = 'center';
-					$uicols['datatype'][] = 'link';
+					$uicols['datatype'][] = $i==($type_id -1 ) ? 'I' : 'link'; // correct the last one
 					$uicols['formatter'][] = '';
 					$cols .= ",fm_location{$type_id}.loc{$location_types[$i]['id']}";
 					$cols_return[] = "loc{$location_types[$i]['id']}";
 				}
-
-				$uicols['datatype'][$type_id] = 'I'; // correct the last one
 
 				$list_info = $location_types[($type_id - 1)]['list_info'];
 

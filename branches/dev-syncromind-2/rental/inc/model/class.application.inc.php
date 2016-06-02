@@ -31,6 +31,13 @@
 	class rental_application extends rental_model
 	{
 
+		protected $ecodimb;
+		protected $district_id;
+		protected $composite_type;
+		protected $start_date;
+		protected $end_date;
+		protected $cleaning;
+		protected $payment_method;
 		protected $title;
 		protected $description;
 		protected $name;
@@ -42,6 +49,71 @@
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);
+		}
+		public function set_ecodimb( $ecodimb )
+		{
+			$this->ecodimb = $ecodimb;
+		}
+
+		public function get_ecodimb()
+		{
+			return $this->ecodimb;
+		}
+
+		public function set_district_id( $district_id )
+		{
+			$this->district_id = $district_id;
+		}
+
+		public function get_district_id()
+		{
+			return $this->district_id;
+		}
+		public function set_composite_type( $composite_type )
+		{
+			$this->composite_type = $composite_type;
+		}
+
+		public function get_composite_type()
+		{
+			return $this->composite_type;
+		}
+		public function set_start_date( $start_date )
+		{
+			$this->start_date = $start_date;
+		}
+
+		public function get_start_date()
+		{
+			return $this->start_date;
+		}
+		public function set_end_date( $end_date )
+		{
+			$this->end_date = $end_date;
+		}
+		public function get_end_date()
+		{
+			return $this->end_date;
+		}
+
+		public function set_cleaning( $cleaning )
+		{
+			$this->cleaning = $cleaning;
+		}
+
+		public function get_cleaning()
+		{
+			return (bool)$this->cleaning;
+		}
+
+		public function set_payment_method( $payment_method )
+		{
+			$this->payment_method = $payment_method;
+		}
+
+		public function get_payment_method()
+		{
+			return $this->payment_method;
 		}
 
 		public function set_title( $title )
