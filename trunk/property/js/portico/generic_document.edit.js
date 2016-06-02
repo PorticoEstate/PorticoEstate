@@ -82,7 +82,6 @@ function getLocations()
 	} else {
 		paramsTable1['only_related'] = 0;
 	}
-	console.log(paramsTable1);
 	
 	oTable1.fnDraw();
 }
@@ -97,7 +96,7 @@ function getComponents()
 	} else {
 		paramsTable0['only_related'] = 0;
 	}
-	console.log(paramsTable0);
+
 	oTable0.fnDraw();
 }
 

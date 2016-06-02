@@ -496,7 +496,7 @@
 		
 			foreach ($documents as $item) 
 			{
-				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.edit', 'document_id'=>$item['document_id'])).'">'.$item['document_name'].'</a>';
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
 
@@ -512,7 +512,7 @@
 			$documents2 = $generic_document->read($params);
 			foreach ($documents2 as $item) 
 			{
-				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.edit', 'id'=>$item['id'])).'">'.$item['name'].'</a>';
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
 			
@@ -1853,13 +1853,7 @@
 						$attributes_general = array_merge($attributes_general, $group['attributes']);
 					}
 				}
-
 				unset($attributes_groups);
-
-				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
-				{
-					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
-				}
 				/*
 				  if($category['jasperupload'])
 				  {
@@ -1867,6 +1861,7 @@
 				  }
 				 */
 			}
+				
 // ---- START INTEGRATION -------------------------
 
 			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
@@ -1985,39 +1980,7 @@
 // ---- END INTEGRATION -------------------------
 
 			unset($values['attributes']);
-
-			$link_file_data = array
-				(
-				'menuaction' => 'property.uientity.view_file',
-				'loc1' => $values['location_data']['loc1'],
-				'id' => $id,
-				'cat_id' => $this->cat_id,
-				'entity_id' => $this->entity_id,
-				'type' => $this->type
-			);
-
-			$file_def = array
-				(
-				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
-					'resizeable' => true),
-				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
-					'resizeable' => true)
-			);
-
 			$datatable_def = array();
-			$datatable_def[] = array
-				(
-				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_files',
-						'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'type' => $this->type, 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $file_def,
-				'config' => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			//$category['enable_bulk'] = 1;
 
 			if ($id)
 			{
@@ -2035,7 +1998,7 @@
 				}
 
 				if ($get_docs)
-				{					
+				{
 					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
 					
 					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
@@ -2080,10 +2043,46 @@
 						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
 							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
 						'data' => "",
-						'tabletools' => $documents_tabletools,
+						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
 						'ColumnDefs' => $documents_def,
 						'config' => array(
 							array('disableFilter' => true)
+						)
+					);
+				}
+
+				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
+				{
+					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
+					
+					$link_file_data = array
+						(
+						'menuaction' => 'property.uientity.view_file',
+						'loc1' => $values['location_data']['loc1'],
+						'id' => $id,
+						'cat_id' => $this->cat_id,
+						'entity_id' => $this->entity_id,
+						'type' => $this->type
+					);
+
+					$file_def = array
+						(
+						array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+							'resizeable' => true)
+					);
+
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_0',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_files',
+								'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'type' => $this->type, 'phpgw_return_as' => 'json'))),
+						'ColumnDefs' => $file_def,
+						'config' => array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
 						)
 					);
 				}
@@ -2422,8 +2421,9 @@ JS;
 				'active_tab' => $active_tab,
 				'integration' => $integration,
 				'doc_type_filter' => array('options' => $doc_type_filter),
-				/*'documents' => $documents,
-				'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',*/
+				'documents' => $get_docs ? 1 : 0,
+				/*'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',*/
+						
 				'lean' => $_lean ? 1 : 0,
 				'entity_group_list' => array('options' => $entity_group_list),
 				'entity_group_name' => $entity_group_name,

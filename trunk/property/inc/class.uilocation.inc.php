@@ -1633,7 +1633,7 @@ JS;
 		
 			foreach ($documents as $item) 
 			{
-				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.edit', 'document_id'=>$item['document_id'])).'">'.$item['document_name'].'</a>';
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
 
@@ -1645,7 +1645,7 @@ JS;
 			$documents2 = $generic_document->read($params);
 			foreach ($documents2 as $item) 
 			{
-				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.edit', 'id'=>$item['id'])).'">'.$item['name'].'</a>';
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
 			
@@ -2067,7 +2067,7 @@ JS;
 						'container' => 'datatable-container_0',
 						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uilocation.get_documents', 'location_code' => $location_code, 'phpgw_return_as' => 'json'))),
 						'data' => "",
-						'tabletools' => $documents_tabletools,
+						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
 						'ColumnDefs' => $documents_def,
 						'config' => array(
 							array('disableFilter' => true)

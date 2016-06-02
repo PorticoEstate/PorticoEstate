@@ -327,7 +327,7 @@
 				}
 				
 				$values[] = array(
-					'location_code' => $item['location_code'],
+					'location_code' => '<a href="'.self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $item['location_code'])).'">'.$item['location_code'].'</a>',
 					'loc1_name' => $item['loc1_name'],
 					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'
 				);				
@@ -419,7 +419,8 @@
 				
 				$related_def = array
 					(
-					array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'name', 'label' => lang('Benevnelse'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);
 
@@ -461,8 +462,8 @@
 				
 				$related_def2 = array
 					(
-					array('key' => 'location_code', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'loc1_name', 'label' => lang('eiendom name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'location_code', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
 					//array('key' => 'location_id', 'label' => lang('location id'), 'sortable' => false, 'resizeable' => true, 'hidden' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);
@@ -690,7 +691,7 @@
                 'location_id' => $location_id,
                 'filter_item' => array()
                 ));
-			
+
 			if ($file_id)
 			{
 				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
@@ -715,6 +716,7 @@
 				}
 				
 				$values[] = array(
+					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
 					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>',
 				);
