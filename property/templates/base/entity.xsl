@@ -703,7 +703,7 @@
 				</xsl:choose>
 					
 				<xsl:choose>
-					<xsl:when test="files!='' or fileupload = 1">
+					<xsl:when test="files!='' or  fileupload = 1 and value_id!=''">
 						<div id="files">
 							<script type="text/javascript">
 								var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
@@ -741,7 +741,8 @@
 					</div>
 				</xsl:for-each>
 
-		
+			<xsl:choose>
+				<xsl:when test="value_id!='' and documents =1">		
 						<div id="document">
 							<div class="pure-control-group">
 								<label>
@@ -765,7 +766,8 @@
 									</xsl:if>
 								</xsl:for-each>
 						</div>
-	
+				</xsl:when>
+			</xsl:choose>	
 
 				<xsl:choose>
 					<xsl:when test="value_id !='' and enable_bulk = 0">
