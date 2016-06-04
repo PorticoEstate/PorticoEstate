@@ -198,6 +198,12 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'file')"/>
+							</label>
+							<a href="{link_file}" target="_blank"><xsl:value-of select="file_name" /></a>
+						</div>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 								<div class="pure-control-group">
