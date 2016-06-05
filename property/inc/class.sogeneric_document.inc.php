@@ -47,6 +47,7 @@
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 			$order = isset($data['order']) ? $data['order'] : '';
+			$query = isset($data['query']) ? $data['query'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
@@ -116,8 +117,15 @@
 				$filtermethod .= " AND a.directory {$this->like} '%{$location}%'";
 			}
 
-			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} ";
-		
+			$querymethod = '';
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+				$querymethod = " AND a.name $this->like '%$query%'";
+			}
+			
+			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
+	
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 

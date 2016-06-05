@@ -259,13 +259,17 @@
 			{
 				return $values;
 			}
-
+			
+			foreach($values as &$item)
+			{	
+				$item['name'] = '<a href="'.self::link(array('menuaction' => 'property.uigeneric_document.view_file', 'file_id' => $item['id'])).'">'.$item['name'].'</a>';
+				$item['link'] = self::link(array('menuaction' => 'property.uigeneric_document.view', 'id' => $item['id']));
+			}
+			
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
-
-			array_walk($result_data['results'], array($this, '_add_links'), array('menuaction' => 'property.uigeneric_document.view'));
 
 			return $this->jquery_results($result_data);
 		}
@@ -492,11 +496,16 @@
 				);				
 			}
 			
+			$vfs = CreateObject('phpgwapi.vfs');
+			$file_info = $vfs->get_info($id);
+	
 			$data = array
 			(
 				'datatable_def' => $datatable_def,
 				'document' => $values,
 				'lang_coordinator' =>  lang('coordinator'),
+				'link_file' =>  self::link(array('menuaction' => 'property.uigeneric_document.view_file', 'file_id' => $file_info['file_id'])),
+				'file_name' =>  $file_info['name'],
 				'categories' => array('options' => $categories),
 				'status_list' => array('options' => array('id' => 1, 'name' => 'status_1')),
 				'editable' => $mode == 'edit',
