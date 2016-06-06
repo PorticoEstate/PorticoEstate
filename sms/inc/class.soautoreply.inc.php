@@ -17,8 +17,6 @@
 	 */
 	class sms_soautoreply
 	{
-
-		var $grants;
 		var $db;
 		var $account;
 		var $autoreply_data;
@@ -29,7 +27,6 @@
 			$this->db = clone($GLOBALS['phpgw']->db);
 
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants = $GLOBALS['phpgw']->acl->get_grants('sms', '.config');
 			$this->join = $this->db->join;
 			$this->like = $this->db->like;
 		}
@@ -54,20 +51,6 @@
 			$table = 'phpgw_sms_featautoreply';
 
 			$where = 'WHERE';
-			$grants = $this->grants;
-
-			/* 			if (is_array($grants))
-			  {
-			  while (list($user) = each($grants))
-			  {
-			  $public_user_list[] = $user;
-			  }
-			  reset($public_user_list);
-			  $filtermethod .= " $where ( $table.uid IN(" . implode(',',$public_user_list) . "))";
-
-			  $where= 'AND';
-			  }
-			 */
 
 			$querymethod = '';
 			if ($query)
@@ -98,7 +81,6 @@
 					'id' => $this->db->f('autoreply_id'),
 					'uid' => $this->db->f('uid'),
 					'code' => stripslashes($this->db->f('autoreply_code')),
-					'grants' => (int)$grants[$this->db->f('uid')]
 				);
 			}
 

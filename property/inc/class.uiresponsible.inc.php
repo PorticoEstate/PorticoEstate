@@ -448,6 +448,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -455,7 +456,7 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'appname' => $this->appname,
 				'location' => $this->location
 			);
@@ -465,7 +466,7 @@
 
 			$values = $this->bo->read_type($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -581,16 +582,13 @@
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit responsible');
-				/*
-				  $this->acl->set_account_id($this->account);
-				  $grants	= $this->acl->get_grants('property','.responsible');
-				  if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
-				  {
-				  $values = array();
-				  $receipt['error'][]=array('msg'=>lang('You are not granted sufficient rights for this entry'));
-				  }
-
-				 */
+				
+//				  $this->acl->set_account_id($this->account);
+//				  $grants	= $this->acl->get_grants('property','.responsible');
+//				  if(!$this->bocommon->check_perms2($values['created_by'], $grants, PHPGW_ACL_READ))
+//				  {
+//					  phpgw::no_access();
+//				  }
 			}
 			else
 			{
@@ -705,8 +703,7 @@
 		{
 			if (!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$id = phpgw::get_var('id', 'int');
@@ -763,16 +760,6 @@
 			{
 				$values = $this->bo->read_single_role($id);
 				$function_msg = lang('edit role');
-				/*
-				  $this->acl->set_account_id($this->account);
-				  $grants	= $this->acl->get_grants('property','.responsible');
-				  if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
-				  {
-				  $values = array();
-				  $receipt['error'][]=array('msg'=>lang('You are not granted sufficient rights for this entry'));
-				  }
-
-				 */
 			}
 			else
 			{

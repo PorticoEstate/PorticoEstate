@@ -137,6 +137,7 @@
 					'default' => 100), //Reguleringsandel
 				'adjustment_year' => array('type' => 'int', 'precision' => '4', 'nullable' => true), //Sist regulert
 				'adjustable' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'), //Regulerbar
+				'override_adjustment_start' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'publish_comment' => array('type' => 'bool', 'nullable' => true, 'default' => 'false') //skal kommentar vises i frontend
 			),
 			'pk' => array('id'),
@@ -393,11 +394,13 @@
 				'count' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'agresso_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'is_area' => array('type' => 'bool', 'nullable' => false, 'default' => 'true'),
+				'is_one_time' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'),
 				'price' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => true),
 				'total_price' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => true),
 				'date_start' => array('type' => 'date'),
-				'date_end' => array('type' => 'date')
+				'date_end' => array('type' => 'date'),
+                                'is_one_time' => array('type' => 'bool', 'nullable' => false, 'default' => 'true')
 			),
 			'pk' => array('id'),
 			'fk' => array(

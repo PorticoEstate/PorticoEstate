@@ -632,7 +632,7 @@
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 
-		for($i = 0; $i < count($default_attrib['id']); $i++)
+	for($i = 0; $i < count($default_attrib['id']); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
 			. " VALUES ("

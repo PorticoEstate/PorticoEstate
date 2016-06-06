@@ -21,6 +21,12 @@
 					<xsl:value-of select="php:function('pretty_timestamp', allocation/to_)"/>
 				</div>
 				<div class="pure-control-group">
+					<label for="field_cost">
+						<xsl:value-of select="php:function('lang', 'Cost')" />
+					</label>
+					<xsl:value-of select="allocation/cost"/>
+				</div>
+				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Season')" />
 					</label>

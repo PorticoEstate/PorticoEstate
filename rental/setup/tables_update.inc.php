@@ -389,3 +389,24 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.22';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
+
+	$test[] = '0.1.0.22';
+	function rental_upgrade0_1_0_22()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'override_adjustment_start', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_invoice_price_item', 'is_one_time', array(
+			'type' => 'bool',
+			'nullable' => true,
+			'default' => 'false'
+		));
+
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.23';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+
+

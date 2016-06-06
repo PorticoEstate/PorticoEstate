@@ -126,15 +126,9 @@
 			{
 				return;
 			}
-
-			$grants = $GLOBALS['phpgw']->session->appsession('grants_entity_' . $entity_id . '_' . $cat_id, $this->type_app[$this->type]);
-
-			if (!$grants)
-			{
-				$this->acl = & $GLOBALS['phpgw']->acl;
-				$grants = $this->acl->get_grants($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession('grants_entity_' . $entity_id . '_' . $cat_id, $this->type_app[$this->type], $grants);
-			}
+		
+			$acl = & $GLOBALS['phpgw']->acl;
+			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$admin_entity = CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
@@ -179,16 +173,37 @@
 
 			if ($filter == 'all')
 			{
-				if (is_array($grants))
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
 				{
-					foreach ($grants as $user => $right)
+					foreach ($grants['accounts'] as $user => $right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
+
 					reset($public_user_list);
-					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . "))";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			else
@@ -198,7 +213,10 @@
 			}
 			$values = array();
 			$name = 'title';
-			$sql = "SELECT id, {$name} as name FROM {$entity_table} {$filtermethod}";
+			$sql = "SELECT id, {$name} as name FROM {$entity_table}"
+				. " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
+				. " {$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id"
+				. " {$filtermethod}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -465,16 +483,10 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
-
-			$grants = $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type]);
-
-			if (!$grants)
-			{
-				$this->acl = & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$grants = $this->acl->get_grants($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
-			}
+		
+			$acl = & $GLOBALS['phpgw']->acl;
+			$acl->set_account_id($this->account);
+			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$admin_entity = CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
@@ -529,16 +541,37 @@
 
 			if ($filter == 'all')
 			{
-				if (is_array($grants) && !$bypass_acl_at_entity)
+				$public_user_list = array();
+				if (!$bypass_acl_at_entity && is_array($grants['accounts']) && $grants['accounts'])
 				{
-					foreach ($grants as $user => $right)
+					foreach ($grants['accounts'] as $user => $right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
+
 					reset($public_user_list);
-					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . "))";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (!$bypass_acl_at_entity && is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			else
@@ -743,7 +776,9 @@
 				}
 			}
 
-			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)"
+				. " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
+				. " {$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
 			$join_control = "controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
 
 			if ($control_registered)
@@ -1436,16 +1471,10 @@
 			{
 				return;
 			}
-
-			$grants = $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type]);
-
-			if (!$grants)
-			{
-				$this->acl = & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$grants = $this->acl->get_grants($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
-			}
+		
+			$acl = & $GLOBALS['phpgw']->acl;
+			$acl->set_account_id($this->account);
+			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			//_debug_array($cols_return_extra);
 
@@ -1502,16 +1531,37 @@
 
 			if ($filter == 'all')
 			{
-				if (is_array($grants) && !$bypass_acl_at_entity)
+				$public_user_list = array();
+				if (!$bypass_acl_at_entity && is_array($grants['accounts']) && $grants['accounts'])
 				{
-					foreach ($grants as $user => $right)
+					foreach ($grants['accounts'] as $user => $right)
 					{
 						$public_user_list[] = $user;
 					}
+					unset($user);
+
 					reset($public_user_list);
-					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . "))";
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',', $public_user_list) . ")";
 
 					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (!$bypass_acl_at_entity && is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
 				}
 			}
 			else
@@ -1707,9 +1757,11 @@
 			}
 
 			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
+			$_joinmethod_datatype[] = " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
+				. " {$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
 			foreach ($_joinmethod_datatype as $_joinmethod)
 			{
-				$sql .= $_joinmethod;
+				$sql .= " {$_joinmethod}";
 			}
 
 			$querymethod = '';

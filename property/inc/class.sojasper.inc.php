@@ -41,7 +41,7 @@
 			$this->join = & $this->db->join;
 			$this->like = & $this->db->like;
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants = $GLOBALS['phpgw']->acl->get_grants('property', '.jasper');
+			$this->grants = $GLOBALS['phpgw']->acl->get_grants2('property', '.jasper');
 		}
 
 		public function read( $data )
@@ -75,19 +75,33 @@
 			}
 
 
-			$filtermethod = "WHERE ( {$table}.user_id = {$this->account}";
-			if (is_array($grants))
+			$filtermethod = "WHERE {$table}.user_id = {$this->account}";
+			$public_user_list = array();
+			if (is_array($grants['accounts']) && $grants['accounts'])
 			{
-				foreach ($grants as $user => $right)
+				foreach($grants['accounts'] as $user => $_right)
 				{
 					$public_user_list[] = $user;
 				}
 				reset($public_user_list);
-				$filtermethod .= " OR (access='public' AND {$table}.user_id IN(" . implode(',', $public_user_list) . ")))";
+				$filtermethod .= " OR (access='public' AND {$table}.user_id IN(" . implode(',', $public_user_list) . ")";
 			}
-			else
+
+			$public_group_list = array();
+			if (is_array($grants['groups']) && $grants['groups'])
 			{
-				$filtermethod .= ' )';
+				foreach($grants['groups'] as $user => $_right)
+				{
+					$public_group_list[] = $user;
+				}
+				unset($user);
+				reset($public_group_list);
+				$filtermethod .= " OR access='public' AND phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				$where = 'AND';
+			}
+			if($public_user_list && !$public_group_list)
+			{
+				$filtermethod .=')';
 			}
 
 			if ($location_id)
@@ -101,11 +115,17 @@
 				$querymethod = "AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 
-			$sql = "SELECT * FROM {$table} {$app_filter} {$filtermethod} {$querymethod}";
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table}"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " {$app_filter} {$filtermethod} {$querymethod}";
 
 			if (!$allrows)
 			{
-				$this->db->query("SELECT count(*) as cnt FROM {$table} {$app_filter} {$filtermethod} {$querymethod}", __LINE__, __FILE__);
+				$this->db->query("SELECT count(*) as cnt FROM {$table}"
+				. " {$this->join} phpgw_accounts ON ( {$table}.user_id = phpgw_accounts.account_id)"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " {$app_filter} {$filtermethod} {$querymethod}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
@@ -243,12 +263,6 @@
 			$this->db->query("SELECT user_id FROM {$table} WHERE id = {$jasper['id']}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$user_id = $this->db->f('user_id');
-
-			if (!($this->grants[$user_id] & PHPGW_ACL_EDIT))
-			{
-				$receipt['error'][] = array('msg' => lang('JasperReport %1 has not been edited', $jasper['id']));
-				return $receipt;
-			}
 
 			$value_set = array
 				(

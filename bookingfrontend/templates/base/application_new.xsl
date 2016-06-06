@@ -21,11 +21,11 @@
 							<label for="field_activity">
 								<xsl:value-of select="php:function('lang', 'Activity')" />
 							</label>
-							<!--xsl:if test="config/application_activities">
+							<xsl:if test="config/application_activities">
 							<p>
 								<xsl:value-of select="config/application_activities"/>
 							</p>
-							</xsl:if-->
+							</xsl:if>
 						</dt>
 						<dd>
 							<select name="activity_id" id="field_activity">
@@ -55,11 +55,11 @@
 							<label for="field_description">
 								<xsl:value-of select="php:function('lang', 'Information about the event')" />
 							</label>
-							<!--xsl:if test="config/application_description">
+							<xsl:if test="config/application_description">
 							<p>
 								<xsl:value-of select="config/application_description"/>
 							</p>
-							</xsl:if-->
+							</xsl:if>
 						</dt>
 						<dd>
 							<textarea id="field_description" class="full-width" name="description">
@@ -72,7 +72,7 @@
 								<xsl:value-of select="application/description"/>
 							</textarea>
 						</dd>
-						<!--dt>
+						<dt>
 							<xsl:if test="config/application_equipment">
 								<p>
 									<xsl:value-of select="config/application_equipment"/>
@@ -81,17 +81,17 @@
 						</dt>
 						<dd>
 							<textarea id="field_equipment" class="full-width" name="equipment"><xsl:value-of select="application/equipment"/></textarea>
-						</dd-->
+						</dd>
 					</dl>
 				</div>
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
 					<dl class="form-col">
 						<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
-						<!--xsl:if test="config/application_howmany">
+						<xsl:if test="config/application_howmany">
 						<p>
 							<xsl:value-of select="config/application_howmany"/>
 						</p>
-						</xsl:if-->
+						</xsl:if>
 						<dt>
 							<label for="field_agegroups">
 								<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
@@ -153,11 +153,11 @@
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
-						<!--xsl:if test="config/application_where">
+						<xsl:if test="config/application_where">
 							<p>
 								<xsl:value-of select="config/application_where"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 						<dt>
 							<label for="field_building">
 								<xsl:value-of select="php:function('lang', 'Building')" />
@@ -212,11 +212,11 @@
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-						<!--xsl:if test="config/application_when">
+						<xsl:if test="config/application_when">
 							<p>
 								<xsl:value-of select="config/application_when"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 						<div id="dates-container">
 							<input type="hidden" data-validation="application_dates">
 								<xsl:attribute name="data-validation-error-msg">
@@ -228,7 +228,9 @@
 								<xsl:choose>
 									<xsl:when test="position() > 1">
 										<div class="date-container">
-											<a href="javascript:void(0);" class="close-btn btnclose">-</a>
+											<a href="javascript:void(0);" class="close-btn btnclose">
+												<xsl:value-of select="php:function('lang', 'remove date')" />
+											</a>
 											<dt>
 												<label for="start_date_{$index}">
 													<xsl:value-of select="php:function('lang', 'From')" />
@@ -263,7 +265,9 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<div class="date-container">
-											<a href="javascript:void(0);" class="close-btn btnclose">-</a>
+											<a href="javascript:void(0);" class="close-btn btnclose">
+												<xsl:value-of select="php:function('lang', 'remove date')" />
+											</a>
 											<dt>
 												<label for="start_date">
 													<xsl:value-of select="php:function('lang', 'From')" />
@@ -311,11 +315,11 @@
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
-						<!--xsl:if test="config/application_who">
+						<xsl:if test="config/application_who">
 							<p>
 								<xsl:value-of select="config/application_who"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 						<dt>
 							<label for="field_from">
 								<xsl:value-of select="php:function('lang', 'Target audience')" />
@@ -354,11 +358,11 @@
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
-						<!--xsl:if test="config/application_contact_information">
+						<xsl:if test="config/application_contact_information">
 							<p>
 								<xsl:value-of select="config/application_contact_information"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 						<dt>
 							<label for="field_contact_name">
 								<xsl:value-of select="php:function('lang', 'Name')" />
@@ -433,18 +437,18 @@
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
-						<!--xsl:if test="config/application_responsible_applicant">
+						<xsl:if test="config/application_responsible_applicant">
 							<p>
 								<xsl:value-of select="config/application_responsible_applicant"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 						<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 						<br />
-						<!--xsl:if test="config/application_invoice_information">
+						<xsl:if test="config/application_invoice_information">
 							<p>
 								<xsl:value-of select="config/application_invoice_information"/>
 							</p>
-						</xsl:if-->
+						</xsl:if>
 					</dl>
 				</div>
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">

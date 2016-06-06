@@ -260,6 +260,16 @@
 							</label>
 							<xsl:value-of select="value_adjustment_year"/>
 						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
+							</label>
+							<input type="text" id="override_adjustment_start" name="override_adjustment_start" size="10" value="{value_override_adjustment_start}" data-validation-optional="true" data-validation="date" data-validation-format="yyyy">
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'year')"/>
+								</xsl:attribute>
+							</input>
+						</div>
 					</div>
 					<div class="pure-u-1 pure-u-lg-1-2">
 						<div class="pure-control-group">
@@ -819,6 +829,12 @@
 										<xsl:value-of select="php:function('lang', 'adjustment_year')"/>
 									</label>
 									<xsl:value-of select="value_adjustment_year"/>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
+									</label>
+									<xsl:value-of select="value_override_adjustment_start"/>
 								</div>
 							</xsl:when>
 							<xsl:otherwise>

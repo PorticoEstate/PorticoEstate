@@ -120,6 +120,11 @@
 							'label' => lang('Cost')
 						),
 						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -199,6 +204,7 @@
 				$booking['building_name'] = $building['name'];
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
+				$booking['cost_history'] = count($this->bo->so->get_ordered_costs($booking['id']));
 			}
 
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
@@ -366,7 +372,9 @@
 			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
 
 			if (!isset($allocation_id))
+			{
 				$noallocation = 1;
+			}
 			$invalid_dates = array();
 			$valid_dates = array();
 			if (isset($allocation_id))
@@ -384,16 +392,19 @@
 			}
 			else
 			{
-				$season = $this->season_bo->read_single($_POST['season_id']);
-				$booking['organization_id'] = $_POST['organization_id'];
-				$booking['organization_name'] = $_POST['organization_name'];
+				$season = $this->season_bo->read_single(phpgw::get_var('season_id','int', 'POST'));
+				$booking['organization_id'] = phpgw::get_var('organization_id','int', 'POST');
+				$booking['organization_name'] = phpgw::get_var('organization_name','string', 'POST');
 				$noallocation = True;
 			}
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
-				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+//				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+//				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+//				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+//				$_POST['from_'] = phpgw::get_var('from_','string', 'POST');
+//				$_POST['to_'] = phpgw::get_var('to_','string', 'POST');
+//				$_POST['repeat_until'] = phpgw::get_var('repeat_until','string', 'POST');
 
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);

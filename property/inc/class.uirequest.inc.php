@@ -128,6 +128,7 @@
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date = urldecode(phpgw::get_var('end_date'));
 			$list_descr = phpgw::get_var('list_descr', 'bool');
+			$export = phpgw::get_var('export', 'bool');
 
 			$query = phpgw::get_var('query');
 			if (!empty($query))
@@ -148,7 +149,7 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'project_id' => $project_id,
 				'start_date' => $start_date,
 				'end_date' => $end_date,
@@ -156,7 +157,7 @@
 			);
 
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}

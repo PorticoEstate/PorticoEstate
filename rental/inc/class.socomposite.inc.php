@@ -209,6 +209,15 @@
 			THEN 'Ikke ledig' ELSE 'Ledig' END as status";
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
+			if ($sort_field == 'name')
+			{
+				$sort_field = 'rental_composite.name';
+			}
+			else if ($sort_field == 'location_code')
+			{
+				$sort_field = 'rental_unit.location_code';
+			}
+
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 			$this->sort_field = $sort_field;
 

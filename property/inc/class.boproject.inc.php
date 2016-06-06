@@ -51,7 +51,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -386,10 +385,10 @@
 			$criteria[1] = array
 				(
 				'field' => 'external_project_id',
-				'type' => 'int',
+				'type' => 'varchar',
 				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[2] = array
 				(

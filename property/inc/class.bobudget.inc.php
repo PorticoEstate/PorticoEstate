@@ -58,7 +58,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -143,11 +142,6 @@
 			$this->dimb_id = isset($data['dimb_id']) ? $data['dimb_id'] : '';
 			$this->details = isset($data['details']) ? $data['details'] : '';
 			$this->direction = isset($data['direction']) ? $data['direction'] : '';
-		}
-
-		function check_perms( $has, $needed )
-		{
-			return (!!($has & $needed) == true);
 		}
 
 		function read( $data = array() )

@@ -9020,7 +9020,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Update property version from 0.9.17.697 to 0.9.17.698
 	* Add parametres for integration with e-commerse platforms
 	*/
 	$test[] = '0.9.17.697';
@@ -9038,7 +9038,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Update property version from 0.9.17.698 to 0.9.17.699
 	* Add parametres for integration with e-commerse platforms
 	*/
 	$test[] = '0.9.17.698';
@@ -9096,7 +9096,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Update property version from 0.9.17.699 to 0.9.17.700
 	* Add parametres for integration with e-commerse platforms
 	*/
 	$test[] = '0.9.17.699';
@@ -9127,7 +9127,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.696 to 0.9.17.697
+	* Update property version from 0.9.17.700 to 0.9.17.701
 	*
 	*/
 	$test[] = '0.9.17.700';
@@ -9147,6 +9147,59 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.701';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.701 to 0.9.17.702
+	*
+	*/
+	$test[] = '0.9.17.701';
+
+	function property_upgrade0_9_17_701()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for($location_type = 1; $location_type < ($locations + 1); $location_type++)
+		{
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}", 'id', array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => true,
+				)
+			);
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}_history", 'id', array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => true,
+				)
+			);
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
+
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT max(id) as id FROM phpgw_cust_attribute WHERE location_id = {$location_id}");
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			$attrib_id = $GLOBALS['phpgw_setup']->oProc->f('id') +1;
+
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
+			. " VALUES ( {$location_id}, {$attrib_id}, 'id', 'I', 4, 'id', 'id', 'true', NULL)");
+
+		}
+
+		execMethod('property.solocation.update_location');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.702';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

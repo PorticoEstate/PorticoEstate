@@ -72,7 +72,7 @@ this.confirm_session = function (action)
 	if (action == 'save' || action == 'apply')
 	{
 		conf = {
-			modules: 'location, date, security, file',
+			modules: 'date, security, file',
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',

@@ -76,7 +76,7 @@
 			$content = array();
 			foreach ( $account_info as $entry )
 			{
-				if($entry['grants'])
+				if($this->bocommon->check_perms2($entry['account_id'], $this->grants, PHPGW_ACL_READ))
 				{
 					$link_training				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.training', 'user_id'=> $entry['account_id']));
 					$text_training				= lang('training');
@@ -182,9 +182,9 @@
 		{
 			$user_id	= phpgw::get_var('user_id', 'int');
 
-			if (!$this->grants[$user_id])
+			if (!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				phpgw::no_access();
 				return;
 			}
 
@@ -216,13 +216,13 @@
 					$entry['end_date']	= $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
 				}
 
-				if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_EDIT))
+				if($this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_EDIT))
 				{
 					$link_edit	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.edit', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
 					$text_edit	= lang('edit');
 					$lang_edit_text	= lang('edit training item');
 				}
-				if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_DELETE))
+				if($this->bocommon->check_perms2($user_id,$this->grants, PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.delete', 'user_id'=> $user_id, 'training_id'=> $entry['training_id']));
 					$text_delete		= lang('delete');
@@ -320,7 +320,7 @@
 				'user_id'	=> $user_id
 			);
 
-			if($this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_ADD))
+			if($this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_ADD))
 			{
 				$add_action	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiuser.edit', 'user_id'=> $user_id));
 				$lang_add	= lang('add');
@@ -388,17 +388,17 @@
 
 			if(!$training_id)
 			{
-				if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_ADD))
+				if(!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_ADD))
 				{
-					$this->bocommon->no_access($links);
+					phpgw::no_access();
 					return;
 				}
 			}
 			else
 			{
-				if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_EDIT))
+				if(!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_EDIT))
 				{
-					$this->bocommon->no_access($links);
+					phpgw::no_access();
 					return;
 				}
 			}
@@ -605,9 +605,9 @@
 			$training_id		= phpgw::get_var('training_id', 'int');
 			$user_id	= phpgw::get_var('user_id', 'int');
 
-			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_READ))
+			if(!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				phpgw::no_access();
 				return;
 			}
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user'));
@@ -691,9 +691,9 @@
 			$training_id		= phpgw::get_var('training_id', 'int');
 			$user_id	= phpgw::get_var('user_id', 'int');
 
-			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_DELETE))
+			if(!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_DELETE))
 			{
-				$this->bocommon->no_access($links);
+				phpgw::no_access();
 				return;
 			}
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
@@ -734,9 +734,9 @@
 		{
 			$user_id	= phpgw::get_var('user_id', 'int');
 
-			if(!$this->bocommon->check_perms($this->grants[$user_id], PHPGW_ACL_READ))
+			if(!$this->bocommon->check_perms2($user_id, $this->grants, PHPGW_ACL_READ))
 			{
-				$this->bocommon->no_access($links);
+				phpgw::no_access();
 				return;
 			}
 

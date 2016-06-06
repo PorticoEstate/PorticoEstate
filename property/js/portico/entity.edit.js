@@ -220,45 +220,14 @@ add_control = function ()
 
 var documents = null;
 var requestUrlDoc = null;
-
+	
 $(document).ready(function ()
 {
-	if (requestUrlDoc)
+	$('#doc_type').change( function()
 	{
-		$("#treeDiv1").jstree({
-			"core": {
-				"multiple": false,
-				"themes": {"stripes": true},
-				"data": {
-					"url": requestUrlDoc
-				}
-			},
-			"plugins": ["themes", "html_data", "ui", "state"]
-		});
-
-		var count = 0;
-		$("#treeDiv1").bind("select_node.jstree", function (event, data)
-		{
-			count += 1;
-			var divd = data.instance.get_node(data.selected[0]).original['link'];
-			if (count > 1)
-			{
-				window.location.href = divd;
-			}
-		});
-
-		$('#collapse').on('click', function ()
-		{
-			$(this).attr('href', 'javascript:;');
-			$('#treeDiv1').jstree('close_all');
-		})
-
-		$('#expand').on('click', function ()
-		{
-			$(this).attr('href', 'javascript:;');
-			$('#treeDiv1').jstree('open_all');
-		});
-	}
+		paramsTable7['doc_type'] = $(this).val();
+		oTable7.fnDraw();				
+	});
 
 	$("#workorder_cancel").on("submit", function (e)
 	{
@@ -271,11 +240,6 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
-});
-
-
-$(document).ready(function ()
-{
 	var click_action_on_table = false;
 	$("#check_lst_time_span").change(function ()
 	{
@@ -324,3 +288,12 @@ function updateCaseTable(check_list_id)
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
 }
+
+function newDocument(oArgs)
+{
+	oArgs['doc_type'] = $('#doc_type').val();
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	window.open(requestUrl, '_self');
+};

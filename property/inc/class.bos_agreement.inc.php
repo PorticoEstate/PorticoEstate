@@ -55,7 +55,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true
 		);
 
 		function __construct( $session = false )
@@ -126,11 +125,6 @@
 			$this->vendor_id = isset($data['vendor_id']) ? $data['vendor_id'] : '';
 			$this->member_id = isset($data['member_id']) ? $data['member_id'] : '';
 			$this->status_id = $data['status_id'];
-		}
-
-		function check_perms( $has, $needed )
-		{
-			return (!!($has & $needed) == true);
 		}
 
 		function select_vendor_list( $format = '', $selected = '' )

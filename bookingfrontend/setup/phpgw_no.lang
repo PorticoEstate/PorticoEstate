@@ -1,5 +1,9 @@
 attachment	bookingfrontend	no	Vedlegg
+remove date	bookingfrontend	no	Fjern dato
 please enter a descripction	bookingfrontend	no	Vennligst angi en beskrivelse
+please choose at least 1 resource	common	no	Vennligst velg minst en ressurs
+you must accept to follow all terms and conditions of lease first	common	no	Du må bekrefte at du har lest juridiske betingelser
+invalid date	common	no	Ugyldig dato
 please enter a contact name	bookingfrontend	no	Vennligst angi kontaktnavn
 please enter a contact email	bookingfrontend	no	Vennligst angi epost
 customer identifier type is required	bookingfrontend	no	Vennligst angi identifikasjon
