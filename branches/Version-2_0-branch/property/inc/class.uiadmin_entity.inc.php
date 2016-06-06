@@ -265,13 +265,15 @@
 					break;
 			}
 
+			$export = phpgw::get_var('export', 'bool');
+
 			$params = array(
 				'start' => $this->start,
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'sort' => $order[0]['dir'],
 				'order' => $columns[$order[0]['column']]['data'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'entity_id' => $entity_id,
 				'cat_id' => $cat_id
 			);
@@ -304,7 +306,7 @@
 				$new_values[] = $value;
 			}
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $new_values;
 			}
@@ -985,6 +987,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 					'entity_id' => $entity_id, 'type' => $this->type)),
+				'base_java_url' => json_encode(array('menuaction' => "property.uiadmin_entity.get_template_attributes")),
 				'lang_save' => lang('save'),
 				'lang_done' => lang('done'),
 				'value_id' => $id,

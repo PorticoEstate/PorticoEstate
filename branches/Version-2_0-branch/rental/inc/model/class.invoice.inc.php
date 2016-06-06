@@ -358,18 +358,18 @@
 			// Create invoice ...
 			$invoice = new rental_invoice(
 				-1, // no identifier
-	$billing_id, // the billing identifier
-	$contract_id, // the contract identifier
-	time(), // the creation time
-	$timestamp_invoice_start, // the invoice start date
-	$timestamp_invoice_end, // the invoice end date
-	0, // the total sum of invoice (not calculated yet)
-	$contract->get_rented_area(), // the area rented on the contract
-	$contract->get_invoice_header(), // the invoice header
-	$contract->get_account_in(), // the ingoing account number
-	$account_out, // the outgoing account number
-	$contract->get_service_id(), // the service identifier (internal)
-	$contract->get_responsibility_id() // the responsibility identifier (internal)
+				$billing_id, // the billing identifier
+				$contract_id, // the contract identifier
+				time(), // the creation time
+				$timestamp_invoice_start, // the invoice start date
+				$timestamp_invoice_end, // the invoice end date
+				0, // the total sum of invoice (not calculated yet)
+				$contract->get_rented_area(), // the area rented on the contract
+				$contract->get_invoice_header(), // the invoice header
+				$contract->get_account_in(), // the ingoing account number
+				$account_out, // the outgoing account number
+				$contract->get_service_id(), // the service identifier (internal)
+				$contract->get_responsibility_id() // the responsibility identifier (internal)
 			);
 
 			// ... and add party identifier, project number and the old contract identifier
@@ -385,11 +385,22 @@
 			// Retrieve the contract price items: only one-time or all
 			if ($bill_only_one_time)
 			{
-				$filters2 = array('contract_id' => $contract->get_id(),
-					'contract_ids_one_time' => true,
-					'billing_term_id' => $billing_term,
-					'year' => date('Y', $timestamp_invoice_start),
-					'month' => date('m', $timestamp_invoice_start));
+				if($billing_term == 5)//credits
+				{
+					$filters2 = array(
+						'contract_id' => $contract->get_id(),
+						'contract_ids_one_time' => true, 'credits' => true
+					);
+				}
+				else
+				{
+					$filters2 = array('contract_id' => $contract->get_id(),
+						'contract_ids_one_time' => true,
+						'billing_term_id' => $billing_term,
+						'year' => date('Y', $timestamp_invoice_start),
+						'month' => date('m', $timestamp_invoice_start)
+					);
+					}
 				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 
 				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', $filters2);
@@ -441,7 +452,7 @@
 				{
 					$invoice_price_item_start = $timestamp_invoice_start; // We use the invoice start
 				}
-				else if ($contract_price_item_start > $timestamp_invoice_end) // Start of price item after this invoice ends
+				else if ($contract_price_item_start > $timestamp_invoice_end && $billing_term != 5) // Start of price item after this invoice ends
 				{
 					continue; // We don't add this price item - continue to next
 				}
@@ -451,7 +462,7 @@
 				}
 
 				// Checking the end date against invoice dates
-				if ($contract_price_item_end < $timestamp_invoice_start) // End of price item before this invoice starts
+				if ($contract_price_item_end < $timestamp_invoice_start && $billing_term != 5) // End of price item before this invoice starts
 				{
 					continue; // We don't add this price item - continue to next
 				}
@@ -495,22 +506,23 @@
 				// Create a new invoice price item
 				$invoice_price_item = new rental_invoice_price_item(
 					$decimals, // the number of decimals to use for the total price of the price item
-	 -1, // no price item identifier
-	 $invoice->get_id(), // the invoice identifier
-	 $contract_price_item->get_title(), // the contract price item title
-	 $contract_price_item->get_agresso_id(), // the contract price item agresso identifier
-	 $contract_price_item->is_area(), // flag for specifying if the contract is of area/piece
-	 $contract_price_item->get_price(), // the price of the contract price item
-	 $contract_price_item->get_area(), // the rented area on this contract (derived from contract)
-	 $contract_price_item->get_count(), // the number of items on this price item
-	 $invoice_price_item_start, // the start date from which this price item should be calculated
-	 $invoice_price_item_end   // the end date to which this price item should be calculated
+					 -1, // no price item identifier
+					 $invoice->get_id(), // the invoice identifier
+					 $contract_price_item->get_title(), // the contract price item title
+					 $contract_price_item->get_agresso_id(), // the contract price item agresso identifier
+					 $contract_price_item->is_area(), // flag for specifying if the contract is of area/piece
+					 $contract_price_item->get_price(), // the price of the contract price item
+					 $contract_price_item->get_area(), // the rented area on this contract (derived from contract)
+					 $contract_price_item->get_count(), // the number of items on this price item
+					 $invoice_price_item_start, // the start date from which this price item should be calculated
+					 $invoice_price_item_end   // the end date to which this price item should be calculated
 				);
 
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...
 				if ($contract_price_item->is_one_time())
 				{
-					if ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end)
+					$invoice_price_item->set_is_one_time(true);
+					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
 					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
@@ -531,6 +543,12 @@
 
 				// Add the price item to the invoice
 				$invoice->add_invoice_price_item($invoice_price_item);
+
+				//FIXME
+				if($billing_term == 5)
+				{
+					$invoice->set_header($contract_price_item->get_title());
+				}
 
 				// Add this price item's total sum to the tota sum of the invoice
 				$total_sum += $invoice_price_item->get_total_price();

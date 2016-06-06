@@ -261,7 +261,7 @@
 			return $missing_billing_info;
 		}
 
-		public function create_billing( int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing, array $contracts_bill_only_one_time )
+		public function create_billing( int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing, array $contracts_bill_only_one_time, bool $dry_run )
 		{
 			if ($contracts_overriding_billing_start == null)
 			{
@@ -281,7 +281,10 @@
 				$billing->set_timestamp_start(time()); // Start of run
 				$billing->set_export_format($export_format);
 				$billing->set_title($title);
-				$this->store($billing); // Store job as it is
+				if(!$dry_run)
+				{
+					$this->store($billing); // Store job as it is
+				}
 				$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
 				$counter = 0;
 				$total_sum = 0;
@@ -294,7 +297,10 @@
 			}
 
 			$billing_info = new rental_billing_info(null, $billing->get_id(), $contract_type, $billing_term, $year, $month);
-			$res = rental_sobilling_info::get_instance()->store($billing_info);
+			if(!$dry_run)
+			{
+				$res = rental_sobilling_info::get_instance()->store($billing_info);
+			}
 
 			// Get the number of months in selected term for contract
 			$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
@@ -303,21 +309,30 @@
 			$first_day_of_selected_month = strtotime($year . '-' . $month . '-01');
 			$bill_from_timestamp = strtotime('-' . ($months - 1) . ' month', $first_day_of_selected_month);
 
+			$invoices = array();
 			foreach ($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 			{
-				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id, $contracts_overriding_billing_start) ? true : false, $bill_from_timestamp, $billing_end_timestamp, in_array($contract_id, $contracts_bill_only_one_time) ? true : false, false, $billing_term); // Creates an invoice of the contract
+				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id, $contracts_overriding_billing_start) ? true : false, $bill_from_timestamp, $billing_end_timestamp, in_array($contract_id, $contracts_bill_only_one_time) ? true : false, $dry_run, $billing_term); // Creates an invoice of the contract
 				if ($invoice != null)
 				{
 					$total_sum += $invoice->get_total_sum();
+					$invoices[] = $invoice;
 				}
 			}
 			$billing->set_total_sum(round($total_sum, $decimals));
 			$billing->set_timestamp_stop(time()); //  End of run
 			$billing->set_success(true); // Billing job is a success
-			$this->store($billing); // Store job now that we're done
+			if(!$dry_run)
+			{
+				$this->store($billing); // Store job now that we're done
+			}
 			// End of transaction!
 			if ($this->db->transaction_commit())
 			{
+				if($dry_run)
+				{
+					return $invoices;
+				}
 				return $billing;
 			}
 			throw new UnexpectedValueException('Transaction failed.');

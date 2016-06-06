@@ -553,6 +553,18 @@
 				case 'pmwrkord_code':
 					$ordermethod = " ORDER BY $order $sort";
 					break;
+				case 'workorder_id':
+					$ordermethod = " ORDER BY pmwrkord_code $sort";
+					break;
+				case 'voucher_id':
+					$ordermethod = " ORDER BY bilagsnr_ut $sort, bilagsnr $sort";
+					break;
+				case 'amount':
+					$ordermethod = " ORDER BY belop $sort";
+					break;
+				case 'period':
+					$ordermethod = " ORDER BY periode $sort";
+					break;
 				default:
 					$ordermethod = " ORDER BY pmwrkord_code DESC";
 			}

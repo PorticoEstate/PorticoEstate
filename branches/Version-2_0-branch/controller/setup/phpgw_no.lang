@@ -391,3 +391,4 @@ summary	common	no	Sammendrag
 components	controller	no	Komponenter
 report type	controller	no	RapportType
 lang_control_mandatory_location	controller	no	Påkrevd lokasjonsvalg
+Control types	controller	no	Kontrolltyper

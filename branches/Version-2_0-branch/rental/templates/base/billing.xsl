@@ -8,6 +8,9 @@
 		<xsl:when test="step2">
 			<xsl:apply-templates select="step2"/>
 		</xsl:when>
+		<xsl:when test="simulation">
+			<xsl:apply-templates select="simulation"/>
+		</xsl:when>
 		<xsl:when test="view">
 			<xsl:apply-templates select="view"/>
 		</xsl:when>
@@ -87,12 +90,12 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		
+
 		<h3>
 			<xsl:value-of select="php:function('lang', 'invoice_run')"/>:<xsl:text> </xsl:text>
 			<xsl:value-of select="title"/>
 		</h3>
-		
+
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -155,7 +158,7 @@
 									<xsl:value-of select="php:function('lang', 'previous')"/>
 								</xsl:variable>
 								<xsl:variable name="next">
-									<xsl:value-of select="php:function('lang', 'bill2')"/>
+									<xsl:value-of select="php:function('lang', 'simulation')"/>
 								</xsl:variable>
 								<div class="proplist-col">
 									<input type="submit" class="pure-button pure-button-primary" name="previous" value="{$previous}"/>
@@ -301,7 +304,139 @@
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>
-					</div>						
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" match="simulation">
+	<div>
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+
+		<h3>
+			<xsl:value-of select="php:function('lang', 'invoice_run')"/>:<xsl:text> </xsl:text>
+			<xsl:value-of select="title"/>
+		</h3>
+
+		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="details">
+					<input type="hidden" name="step" value="simulation"/>
+					<input type="hidden" name="contract_type" value="{contract_type}"/>
+					<input type="hidden" name="year" value="{year}"/>
+					<input type="hidden" name="month" value="{month}"/>
+					<input type="hidden" name="title" value="{title}"/>
+					<input type="hidden" name="use_existing" value="{use_existing}"/>
+					<input type="hidden" name="existing_billing" value="{existing_billing}"/>
+					<input type="hidden" name="billing_term" value="{billing_term}"/>
+					<input type="hidden" name="billing_term_selection" value="{billing_term_selection}"/>
+					<input type="hidden" name="export_format" value="{export_format}"/>
+					<xsl:for-each select="contract_ids">
+						<input type="hidden" name="contract[]">
+							<xsl:attribute name="value">
+								<xsl:value-of select="current()"/>
+							</xsl:attribute>
+						</input>
+					</xsl:for-each>
+					<xsl:for-each select="contract_ids_override">
+						<input type="hidden" name="override_start_date[]">
+							<xsl:attribute name="value">
+								<xsl:value-of select="current()"/>
+							</xsl:attribute>
+						</input>
+					</xsl:for-each>
+					<xsl:for-each select="contract_bill_only_one_time">
+						<input type="hidden" name="bill_only_one_time[]">
+							<xsl:attribute name="value">
+								<xsl:value-of select="current()"/>
+							</xsl:attribute>
+						</input>
+					</xsl:for-each>
+
+					<div class="pure-g">
+						<div class="pure-u-1-3">
+							<h3>Fakturakjøringsdetaljer</h3>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'contract_type')"/>
+								</label>
+								<xsl:value-of select="fields_of_responsibility_label"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_start')"/>
+								</label>
+								<xsl:value-of select="billing_start"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'year')"/>
+								</label>
+								<xsl:value-of select="year"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Export format')"/>
+								</label>
+								<xsl:value-of select="export_format"/>
+							</div>
+							<xsl:if test="billing_term = 1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'month')"/>
+									</label>
+									<xsl:value-of select="month_label"/>
+								</div>
+							</xsl:if>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_term')"/>
+								</label>
+								<xsl:value-of select="billing_term_label"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'sum')"/>
+								</label>
+								<xsl:value-of select="sum"/>
+							</div>
+							<h3>Fakturakjøringsvalg</h3>
+							<div class="pure-control-group">
+								<xsl:variable name="previous">
+									<xsl:value-of select="php:function('lang', 'previous')"/>
+								</xsl:variable>
+								<xsl:variable name="next">
+									<xsl:value-of select="php:function('lang', 'bill2')"/>
+								</xsl:variable>
+								<div class="proplist-col">
+									<input type="submit" class="pure-button pure-button-primary" name="previous" value="{$previous}"/>
+									<input type="submit" class="pure-button pure-button-primary" name="next" value="{$next}"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h2>
+							<xsl:value-of select="php:function('lang', 'simulation')"/>
+						</h2>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_0'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
 				</div>
 			</div>
 		</form>

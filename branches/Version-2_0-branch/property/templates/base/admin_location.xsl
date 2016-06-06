@@ -11,9 +11,6 @@
 			<xsl:when test="edit_attrib">
 				<xsl:apply-templates select="edit_attrib"/>
 			</xsl:when>
-			<xsl:when test="list_config">
-				<xsl:apply-templates select="list_config"/>
-			</xsl:when>
 			<xsl:when test="edit_config">
 				<xsl:apply-templates select="edit_config"/>
 			</xsl:when>
@@ -168,88 +165,6 @@
 				</xsl:variable>
 				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_standardtext}';return true;" onMouseout="window.status='';return true;">
 					<xsl:value-of select="text_delete"/>
-				</a>
-			</td>
-		</tr>
-</xsl:template>
-
-<!-- New template-->
-<xsl:template match="list_config">
-		<xsl:apply-templates select="menu"/>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<tr>
-				<td align="right">
-					<xsl:call-template name="search_field"/>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" width="100%">
-					<xsl:call-template name="nextmatchs"/>
-				</td>
-			</tr>
-		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:apply-templates select="table_header_list_config"/>
-			<xsl:apply-templates select="values_list_config"/>
-		</table>
-</xsl:template>
-
-<!-- New template-->
-<xsl:template match="table_header_list_config">
-		<xsl:variable name="sort_column_name">
-			<xsl:value-of select="sort_column_name"/>
-		</xsl:variable>
-		<xsl:variable name="sort_name">
-			<xsl:value-of select="sort_name"/>
-		</xsl:variable>
-		<tr class="th">
-			<td class="th_text" width="10%" align="center">
-				<a href="{$sort_column_name}">
-					<xsl:value-of select="lang_column_name"/>
-				</a>
-			</td>
-			<td class="th_text" width="10%" align="center">
-				<a href="{$sort_name}">
-					<xsl:value-of select="lang_name"/>
-				</a>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_edit"/>
-			</td>
-		</tr>
-</xsl:template>
-
-<!-- New template-->
-<xsl:template match="values_list_config">
-		<xsl:variable name="lang_edit_standardtext">
-			<xsl:value-of select="lang_edit_standardtext"/>
-		</xsl:variable>
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td align="left">
-				<xsl:value-of select="column_name"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="name"/>
-			</td>
-			<td align="center">
-				<xsl:variable name="link_edit">
-					<xsl:value-of select="link_edit"/>
-				</xsl:variable>
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;">
-					<xsl:value-of select="text_edit"/>
 				</a>
 			</td>
 		</tr>

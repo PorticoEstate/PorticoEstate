@@ -558,3 +558,48 @@
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
+	/**
+	 * Update sms version from 0.9.17.512 to 0.9.17.513
+	 *
+	 */
+	$test[] = '0.9.17.512';
+
+	function sms_upgrade0_9_17_512()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_received_data', 'external_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('sms', 'run'));
+
+		$sections = $custom_config->read_section(array('allrows'=> true));
+		foreach ($sections as $section)
+		{
+			if($section['name'] == 'common')
+			{
+				$section_id = $section['id'];
+				break;
+			}
+		}
+	
+		$receipt = $custom_config->add_attrib(array(
+			'section_id' => $section_id,
+			'input_type' => 'text',
+			'name' => 'gateway_codeword',
+			'descr' => 'Gateway codeword'
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.513';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+

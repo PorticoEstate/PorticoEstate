@@ -118,6 +118,11 @@
 
 			$menus['navigation'] = array
 				(
+				'application' => array(
+					'text' => lang('application'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
+					'image' => array('rental', 'text-x-generic'),
+				),
 				'contracts' => array
 					(
 					'text' => lang('contracts'),

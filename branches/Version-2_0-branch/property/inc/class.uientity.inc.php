@@ -465,15 +465,63 @@
 
 		public function get_documents()
 		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$doc_type = phpgw::get_var('doc_type', 'int');
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$cat_id = phpgw::get_var('cat_id', 'int');
 			$num = phpgw::get_var('num');
+			$location_id = phpgw::get_var('location_id', 'int');
+			$export = phpgw::get_var('export', 'bool');
+			$values = array();
 
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+				'doc_type' => $doc_type,
+				'entity_id' => $entity_id,
+				'cat_id' => $cat_id,
+				'num' => $num
+			);
+			
 			$document = CreateObject('property.sodocument');
-			$documents = $document->get_files_at_location(array('entity_id' => $entity_id,
-				'cat_id' => $cat_id, 'num' => $num));
+			$documents = $document->read_at_location($params);
+		
+			foreach ($documents as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
 
-			return $documents;
+			//$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $location_code)));
+			$generic_document = CreateObject('property.sogeneric_document');
+			if (empty($location_id))
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+			$params['location_id'] = $location_id;
+			$params['order'] = 'name';
+			$params['cat_id'] = $doc_type;
+			$documents2 = $generic_document->read($params);
+			foreach ($documents2 as $item) 
+			{
+				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
+				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+			}
+			
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		public function query()
@@ -491,6 +539,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -498,18 +547,18 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date
 			);
 
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
 			$custom_config = CreateObject('admin.soconfig', $location_id);
 			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
@@ -814,7 +863,7 @@
 		 */
 		function get_target()
 		{
-			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'int');
 			$draw = phpgw::get_var('draw', 'int');
 			$allrows = phpgw::get_var('length', 'int') == -1;
 
@@ -927,6 +976,7 @@
 			$allrows = phpgw::get_var('length', 'int') == -1;
 
 			$values = $this->bo->read_single(array('entity_id' => $this->entity_id, 'cat_id' => $this->cat_id,
+				'type' => $this->type,
 				'id' => $id));
 
 			$link_file_data = array
@@ -1803,13 +1853,7 @@
 						$attributes_general = array_merge($attributes_general, $group['attributes']);
 					}
 				}
-
 				unset($attributes_groups);
-
-				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
-				{
-					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
-				}
 				/*
 				  if($category['jasperupload'])
 				  {
@@ -1817,6 +1861,7 @@
 				  }
 				 */
 			}
+				
 // ---- START INTEGRATION -------------------------
 
 			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
@@ -1935,42 +1980,12 @@
 // ---- END INTEGRATION -------------------------
 
 			unset($values['attributes']);
-
-			$link_file_data = array
-				(
-				'menuaction' => 'property.uientity.view_file',
-				'loc1' => $values['location_data']['loc1'],
-				'id' => $id,
-				'cat_id' => $this->cat_id,
-				'entity_id' => $this->entity_id,
-				'type' => $this->type
-			);
-
-			$file_def = array
-				(
-				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
-					'resizeable' => true),
-				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
-					'resizeable' => true)
-			);
-
 			$datatable_def = array();
-			$datatable_def[] = array
-				(
-				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_files',
-						'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $file_def,
-				'config' => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			//$category['enable_bulk'] = 1;
 
 			if ($id)
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+				
 				$get_docs = false;
 				$check_doc = $this->bocommon->get_lookup_entity('document');
 				foreach ($check_doc as $_check)
@@ -1984,14 +1999,94 @@
 
 				if ($get_docs)
 				{
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document',
-						'disable' => 0);
-					$requestUrlDoc = json_encode(self::link(array('menuaction' => 'property.uientity.get_documents',
-							'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'],
-							'phpgw_return_as' => 'json')));
-					$documents = 1;
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
+					
+					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
+					$cats->supress_info = true;
+					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
+						'globals' => true, 'use_acl' => true));
+					$default_value = array('cat_id' => '', 'name' => lang('no document type'), 'selected' => 'selected');
+					array_unshift($categories['cat_list'], $default_value);
+
+					foreach ($categories['cat_list'] as & $_category)
+					{
+						$_category['id'] = $_category['cat_id'];
+					}
+					$doc_type_filter = $categories['cat_list'];
+				
+					$documents_tabletools = array
+						(
+						'my_name' => 'add',
+						'text' => lang('add new document'),
+						'type' => 'custom',
+						'className' => 'add',
+						'custom_code' => "
+								var oArgs = " . json_encode(array(
+									'menuaction' => 'property.uidocument.edit',							
+									'p_entity_id' => $this->entity_id,
+									'p_cat_id' => $this->cat_id,
+									'p_num' => $values['num']
+						)) . ";
+								newDocument(oArgs);
+							"
+					);
+					
+					$documents_def = array
+						(
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_7',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
+							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
+						'data' => "",
+						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
+						'ColumnDefs' => $documents_def,
+						'config' => array(
+							array('disableFilter' => true)
+						)
+					);
 				}
 
+				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
+				{
+					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
+					
+					$link_file_data = array
+						(
+						'menuaction' => 'property.uientity.view_file',
+						'loc1' => $values['location_data']['loc1'],
+						'id' => $id,
+						'cat_id' => $this->cat_id,
+						'entity_id' => $this->entity_id,
+						'type' => $this->type
+					);
+
+					$file_def = array
+						(
+						array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+							'resizeable' => true)
+					);
+
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_0',
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_files',
+								'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'id' => $id, 'type' => $this->type, 'phpgw_return_as' => 'json'))),
+						'ColumnDefs' => $file_def,
+						'config' => array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
+						)
+					);
+				}
+				
 				if (!$category['enable_bulk'])
 				{
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
@@ -2012,7 +2107,13 @@
 					(
 					'container' => 'datatable-container_1',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_target',
-							'id' => $id, 'phpgw_return_as' => 'json'))),
+						'entity_id' => $this->entity_id,
+						'cat_id' => $this->cat_id,
+						'id' => $id,
+						'type' => $this->type,
+						'phpgw_return_as' => 'json')
+						)
+					),
 					'ColumnDefs' => $target_def,
 					'config' => array(
 						array('disableFilter' => true),
@@ -2076,9 +2177,9 @@
 						)
 					);
 				}
+				
 				if ($_enable_controller)
 				{
-					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 					$_controls = $this->get_controls_at_component($location_id, $id);
 
 					$controls_def = array
@@ -2209,6 +2310,7 @@
 						)
 					);
 				}
+				
 			}
 
 			//$category['org_unit'] =1;
@@ -2318,8 +2420,10 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'active_tab' => $active_tab,
 				'integration' => $integration,
-				'documents' => $documents,
-				'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',
+				'doc_type_filter' => array('options' => $doc_type_filter),
+				'documents' => $get_docs ? 1 : 0,
+				/*'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',*/
+						
 				'lean' => $_lean ? 1 : 0,
 				'entity_group_list' => array('options' => $entity_group_list),
 				'entity_group_name' => $entity_group_name,
@@ -2338,7 +2442,7 @@ JS;
 			self::render_template_xsl(array('entity', 'datatable_inline', 'attributes_form',
 				'files'), array('edit' => $data));
 
-			phpgwapi_jquery::load_widget('treeview');
+			//phpgwapi_jquery::load_widget('treeview');
 
 			$criteria = array
 				(

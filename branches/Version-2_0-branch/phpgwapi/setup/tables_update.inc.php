@@ -3359,3 +3359,42 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.550';
+	/**
+	* Add table for file relation to multiple items
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_550()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('phpgw_vfs_filedata');
+		if(isset($metadata['location_id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_vfs_filedata',null,'location_id');
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_vfs_filedata',null,'metadata');
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_vfs_filedata', 'metadata', array(
+				'type' => 'jsonb',
+				'nullable' => true
+				)
+			);
+
+			$GLOBALS['phpgw_setup']->oProc->query("CREATE SEQUENCE public.seq_phpgw_vfs_file_relation"
+				. " INCREMENT 1"
+				. " MINVALUE 1"
+				. " MAXVALUE 9223372036854775807"
+				. " START 1"
+				. " CACHE 1",__LINE__,__FILE__);
+
+			$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE public.phpgw_vfs_file_relation"
+				. " ALTER COLUMN relation_id SET DEFAULT nextval('seq_phpgw_vfs_file_relation'::regclass)",__LINE__,__FILE__);
+
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.551';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

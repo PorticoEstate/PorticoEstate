@@ -111,6 +111,15 @@
 							'label' => lang('Active')
 						),
 						array(
+							'key' => 'cost',
+							'label' => lang('Cost')
+						),
+						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -172,6 +181,7 @@
 			{
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
+				$event['cost_history'] = count($this->bo->so->get_ordered_costs($event['id']));
 			}
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
@@ -359,11 +369,11 @@
 
 				foreach ($_POST['from_'] as &$from)
 				{
-					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
+//					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
 				foreach ($_POST['to_'] as &$to)
 				{
-					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+//					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
 				$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);

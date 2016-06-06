@@ -328,6 +328,7 @@
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'filter' => $this->filter,
@@ -342,7 +343,7 @@
 				//'dir' => phpgw::get_var('dir'),
 				'chapter_id' => $this->chapter_id,
 				//'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
 			$result_objects = array();
@@ -350,7 +351,7 @@
 
 			$values = $this->bo->read($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -368,6 +369,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => $this->start,
@@ -375,7 +377,7 @@
 				'query' => $search['value'],
 				'sort' => $order[0]['dir'],
 				'order' => $columns[$order[0]['column']]['data'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'chapter_id' => $this->chapter_id,
 				'template_id' => $template_id
 			);
@@ -429,7 +431,7 @@
 			}
 //            
 //            echo '<pre>'; print_r($content); echo '</pre>';exit('hour');
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $content;
 			}

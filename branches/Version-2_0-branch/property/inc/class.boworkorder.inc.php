@@ -49,25 +49,16 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true,
 			'get_category' => true
 		);
 
-		function __construct( $session = false )
+		function __construct( )
 		{
 			$this->so = CreateObject('property.soworkorder');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$this->cats->supress_info = true;
 			$this->interlink = & $this->so->interlink;
-
-			$obligation = phpgw::get_var('obligation', 'bool');
-
-			if ($session && !$obligation)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
 
 			$default_filter_year = 'all';
 
@@ -88,110 +79,28 @@
 				}
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$filter_year = phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$status_id = phpgw::get_var('status_id');
-			$wo_hour_cat_id = phpgw::get_var('wo_hour_cat_id', 'int');
-			$start_date = phpgw::get_var('start_date');
-			$end_date = phpgw::get_var('end_date');
-			$b_group = phpgw::get_var('b_group');
-			$ecodimb = phpgw::get_var('ecodimb');
-			$paid = phpgw::get_var('paid', 'bool');
-			$b_account = phpgw::get_var('b_account');
-			$district_id = phpgw::get_var('district_id', 'int');
-			$criteria_id = phpgw::get_var('criteria_id', 'int');
-			$this->allrows = phpgw::get_var('allrows', 'bool');
-			$this->obligation = $obligation;
+			$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$this->query = phpgw::get_var('query');
+			$this->sort = phpgw::get_var('sort');
+			$this->order = phpgw::get_var('order');
+			$this->filter = phpgw::get_var('filter', 'int');
+			$this->filter_year = phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
+			$this->cat_id = phpgw::get_var('cat_id', 'int');
+			$this->status_id = phpgw::get_var('status_id');
+			$this->wo_hour_cat_id = phpgw::get_var('wo_hour_cat_id', 'int');
+			$this->start_date = phpgw::get_var('filter_start_date');
+			$this->end_date = phpgw::get_var('filter_end_date');
+			$this->b_group = phpgw::get_var('b_group');
+			$this->ecodimb = phpgw::get_var('ecodimb');
+			$this->paid = phpgw::get_var('paid', 'bool');
+			$this->b_account = phpgw::get_var('b_account');
+			$this->district_id = phpgw::get_var('district_id', 'int');
+			$this->criteria_id = phpgw::get_var('criteria_id', 'int');
+			$this->this->allrows = phpgw::get_var('allrows', 'bool');
+			$this->obligation = phpgw::get_var('obligation', 'bool');
 
-			$this->start = $start ? $start : 0;
-			$this->filter_year = $filter_year;
-
-			if (array_key_exists('district_id', $_POST) || array_key_exists('district_id', $_GET))
-			{
-				$this->district_id = $district_id;
-			}
-
-			$this->paid = $paid;
-
-			$this->b_group = $b_group;
-			$this->ecodimb = $ecodimb;
-			$this->b_account = $b_account;
-
-			if (array_key_exists('query', $_POST) || array_key_exists('query', $_GET))
-			{
-				$this->query = $query;
-			}
-			if (array_key_exists('filter', $_POST) || array_key_exists('filter', $_GET))
-			{
-				$this->filter = $filter;
-			}
-			if (isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if (isset($order))
-			{
-				$this->order = $order;
-			}
-			if (array_key_exists('cat_id', $_POST) || array_key_exists('cat_id', $_GET))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if (array_key_exists('criteria_id', $_POST) || array_key_exists('criteria_id', $_GET))
-			{
-				$this->criteria_id = $criteria_id;
-			}
-			if (array_key_exists('status_id', $_POST) || array_key_exists('status_id', $_GET))
-			{
-				$this->status_id = $status_id;
-			}
-			if (array_key_exists('wo_hour_cat_id', $_POST) || array_key_exists('wo_hour_cat_id', $_GET))
-			{
-				$this->wo_hour_cat_id = $wo_hour_cat_id;
-			}
-			if (array_key_exists('start_date', $_POST) || array_key_exists('start_date', $_GET))
-			{
-				$this->start_date = $start_date;
-			}
-			if (array_key_exists('end_date', $_POST) || array_key_exists('end_date', $_GET))
-			{
-				$this->end_date = $end_date;
-			}
 		}
 
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'workorder');
-
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->filter = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->status_id = isset($data['status_id']) ? $data['status_id'] : '';
-			$this->wo_hour_cat_id = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
-			//		$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
-			//		$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
-			//		$this->b_group			= isset($data['b_group']) ? $data['b_group']: '';
-			//		$this->paid				= isset($data['paid']) ? $data['paid']: '';
-			//		$this->b_account		= isset($data['b_account']) ? $data['b_account']: '';
-			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
-			$this->criteria_id = isset($data['criteria_id']) ? $data['criteria_id'] : '';
-		}
-
-		function save_sessiondata( $data )
-		{
-			if ($this->use_session)
-			{
-				$GLOBALS['phpgw']->session->appsession('session_data', 'workorder', $data);
-			}
-		}
 
 		public function get_category()
 		{
@@ -427,10 +336,10 @@
 			$criteria[1] = array
 				(
 				'field' => 'external_project_id',
-				'type' => 'int',
+				'type' => 'varchar',
 				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[2] = array
 				(

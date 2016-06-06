@@ -300,8 +300,8 @@
 
 <xsl:template match="options">
 	<option value="{id}">
-		<xsl:if test="selected != 0">
-			<xsl:attribute name="selected" value="selected"/>
+		<xsl:if test="selected = 'selected' or selected = 1">
+			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
@@ -703,7 +703,7 @@
 				</xsl:choose>
 					
 				<xsl:choose>
-					<xsl:when test="files!='' or fileupload = 1">
+					<xsl:when test="files!='' or  fileupload = 1 and value_id!=''">
 						<div id="files">
 							<script type="text/javascript">
 								var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
@@ -741,34 +741,33 @@
 					</div>
 				</xsl:for-each>
 
-				<xsl:choose>
-					<xsl:when test="documents != ''">
+			<xsl:choose>
+				<xsl:when test="value_id!='' and documents =1">		
 						<div id="document">
-							<!-- Some style for the expand/contract section-->
-							<style>
-								#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-								#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-							</style>
-							<script type="text/javascript">
-								documents = <xsl:value-of select="documents"/>;
-								requestUrlDoc = <xsl:value-of select="requestUrlDoc"/>;
-							</script>
-							<fieldset>
-								<!-- markup for expand/contract links -->
-								<div id="treecontrol">
-									<a id="collapse" title="Collapse the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
-									<xsl:text> | </xsl:text>
-									<a id="expand" title="Expand the entire tree below" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-								</div>
-								<div id="treeDiv1"></div>
-							</fieldset>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Doc type')" />
+								</label>
+								<select id="doc_type" name="doc_type">
+									<xsl:apply-templates select="doc_type_filter/options"/>
+								</select>
+							</div>
+									
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_7'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
 						</div>
-					</xsl:when>
-				</xsl:choose>
+				</xsl:when>
+			</xsl:choose>	
 
 				<xsl:choose>
 					<xsl:when test="value_id !='' and enable_bulk = 0">
@@ -837,7 +836,6 @@
 						</div>
 					</xsl:when>
 				</xsl:choose>
-
 			</div>
 			<xsl:choose>
 				<xsl:when test="mode = 'edit'">

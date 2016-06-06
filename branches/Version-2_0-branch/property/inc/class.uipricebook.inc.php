@@ -157,6 +157,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -167,7 +168,7 @@
 				'sort' => $order[0]['dir'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
 			$pricebook_list = $this->bo->read($params);
@@ -206,7 +207,7 @@
 				}
 			}
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $content;
 			}
@@ -462,6 +463,7 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			$cat_id = phpgw::get_var('cat_id');
+			$export = phpgw::get_var('export', 'bool');
 
 			switch ($columns[$order[0]['column']]['data'])
 			{
@@ -481,12 +483,12 @@
 				'sort' => $order[0]['dir'],
 				'filter' => $this->filter,
 				'cat_id' => $cat_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
 			$values = $this->bo->read_agreement_group($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -1159,6 +1161,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -1169,12 +1172,12 @@
 				'sort' => $order[0]['dir'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
 			$values = $this->bo->read_activities_pr_agreement_group($params);
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -1356,6 +1359,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -1366,7 +1370,7 @@
 				'sort' => $order[0]['dir'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'activity_id' => $activity_id
 			);
 
@@ -1384,7 +1388,7 @@
 				);
 			}
 
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $content;
 			}

@@ -42,79 +42,67 @@
 				'controller' => array
 					(
 					'text' => lang('Controller'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list')),
+			//		'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list')),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index')),
 					'image' => array('property', 'location'),
 					'order' => 10,
 					'group' => 'office'
 				)
 			);
 
+			$menus['navigation'] = array();
 			if ($GLOBALS['phpgw']->acl->check('.usertype.superuser', PHPGW_ACL_ADD, 'controller'))
 			{
-				$menus['navigation'] = array
-					(
-					'control' => array
-						(
-						'text' => lang('Control'),
+				$menus['navigation']['control'] =  array(
+						'text' => lang('Control types'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list')),
-						'image' => array('property', 'location_1'),
-						'children' => array(
+						'image' => array('property', 'location_1'));
+
+				
+				$config = CreateObject('phpgwapi.config', 'controller');
+				$config->read();
+
+
+				if (!isset($config->config_data['home_alternative']) || !$config->config_data['home_alternative'])
+				{
+								
+					$menus['navigation']['control']['children'] = array(
 							'location_for_check_list' => array
 								(
 								'text' => lang('location_connections'),
 								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_register_to_location.index')),
 								'image' => array('property', 'location_1')
-							),
-							'component_for_check_list' => array
-								(
-								'text' => lang('component'),
-								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_register_to_component.index')),
-								'image' => array('property', 'entity_1')
 							)
-						)
-					),
-					'control_item' => array
-						(
-						'text' => lang('Control_item'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.index')),
-						'image' => array('property', 'location_1')
-					),
-					'control_group' => array
-						(
-						'text' => lang('Control_group'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_group.index')),
-						'image' => array('property', 'location_1'),
-					/*
-					  'children' => array(
-					  'component_for_control_group' => array
-					  (
-					  'text'	=> lang('component'),
-					  'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group_component.index') ),
-					  'image'	=> array('property', 'entity_1')
-					  )
-					  )
-					 */
-					),
-					'procedure' => array
-						(
-						'text' => lang('Procedure'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.index')),
-						'image' => array('property', 'location_1'),
-					),
-					'calendar_overview' => array
-						(
-						'text' => lang('Calendar_overview'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
-						'image' => array('property', 'location_1'),
-					),
-					'status_components' => array
-						(
-						'text' => lang('status components'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index')),
-						'image' => array('property', 'location_1'),
-					),
+						);
+				}
+
+				$menus['navigation']['control_item'] = array(
+					'text' => lang('Control_item'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.index')),
+					'image' => array('property', 'location_1')
+				);
+				$menus['navigation']['control_group'] = array(
+					'text' => lang('Control_group'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_group.index')),
+					'image' => array('property', 'location_1')
+					);
+
+				$menus['navigation']['procedure'] = array(
+					'text' => lang('Procedure'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.index')),
+					'image' => array('property', 'location_1'),
 				);
 			}
+			$menus['navigation']['calendar_overview'] = array(
+				'text' => lang('Calendar_overview'),
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
+				'image' => array('property', 'location_1'),
+			);
+			$menus['navigation']['status_components'] = array(
+				'text' => lang('status components'),
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index')),
+				'image' => array('property', 'location_1'),
+			);
 
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{

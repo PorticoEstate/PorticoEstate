@@ -17,8 +17,6 @@
 	 */
 	class sms_sopoll
 	{
-
-		var $grants;
 		var $db;
 		var $account;
 		var $poll_data;
@@ -29,7 +27,6 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
-			$this->grants = $GLOBALS['phpgw']->acl->get_grants('sms', '.config');
 			$this->join = $this->db->join;
 			$this->like = $this->db->like;
 		}
@@ -54,20 +51,6 @@
 			$table = 'phpgw_sms_featpoll';
 
 			$where = 'WHERE';
-			$grants = $this->grants;
-
-			/* 			if (is_array($grants))
-			  {
-			  while (list($user) = each($grants))
-			  {
-			  $public_user_list[] = $user;
-			  }
-			  reset($public_user_list);
-			  $filtermethod .= " $where ( $table.uid IN(" . implode(',',$public_user_list) . "))";
-
-			  $where= 'AND';
-			  }
-			 */
 
 			$querymethod = '';
 			if ($query)
@@ -100,7 +83,6 @@
 					'code' => $this->db->f('poll_code', true),
 					'title' => $this->db->f('poll_title', true),
 					'enable' => $this->db->f('poll_enable'),
-					'grants' => (int)$grants[$this->db->f('uid')]
 				);
 			}
 

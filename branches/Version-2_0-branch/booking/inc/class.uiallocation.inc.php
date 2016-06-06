@@ -109,6 +109,15 @@
 							'label' => lang('To')
 						),
 						array(
+							'key' => 'cost',
+							'label' => lang('cost')
+						),
+						array(
+							'key' => 'cost_history',
+							'label' => lang('cost history'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -188,6 +197,7 @@
 			{
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
+				$allocation['cost_history'] = count($this->bo->so->get_ordered_costs($allocation['id']));
 			}
 
 			return $this->jquery_results($allocations);
@@ -287,41 +297,12 @@
 				$allocation['active'] = '1';
 				$allocation['completed'] = '0';
 
-				if (phpgw::get_var('weekday', 'string') != '')
-				{
-					$from_date = phpgw::get_var('from_', 'string');
-					$to_date = phpgw::get_var('to_', 'string');
-					$weekday = phpgw::get_var('weekday', 'string');
-					$datef = explode(' ', $from_date[0]);
-					$timef = $_POST['from_'];
-					$datet = explode(' ', $to_date[0]);
-					$timet = $_POST['to_'];
+				$from_date = $_POST['from_'];
+				$to_date = $_POST['to_'];
+				$weekday = $_POST['weekday'];
 
-					if (strlen($_POST['from_']) < 14)
-					{
-						$allocation['from_'] = $datef[0] . " " . $timef;
-						$allocation['to_'] = $datet[0] . " " . $timet;
-						$from_date = $allocation['from_'];
-						$to_date = $allocation['to_'];
-					}
-					else
-					{
-						$allocation['from_'] = $_POST['from_'];
-						$allocation['to_'] = $_POST['to_'];
-						$from_date = $allocation['from_'];
-						$to_date = $allocation['to_'];
-					}
-				}
-				else
-				{
-					$from_date = $_POST['from_'];
-					$to_date = $_POST['to_'];
-					$weekday = $_POST['weekday'];
-
-					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
-					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
-				}
-
+				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
+				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
 
 				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == 'sunday' && date('w') < date('w', strtotime($_POST['weekday']))))
 				{

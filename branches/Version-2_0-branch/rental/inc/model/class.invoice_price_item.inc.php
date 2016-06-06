@@ -13,6 +13,7 @@
 		protected $decimals;
 		protected $invoice_id;
 		protected $is_area;
+		protected $is_one_time;
 		protected $price_per_year;
 		protected $area;
 		protected $count;
@@ -224,6 +225,21 @@
 			return $this->timestamp_end;
 		}
 
+		public function set_is_one_time( $is_one_time )
+		{
+			$this->is_one_time = (bool)$is_one_time;
+		}
+
+		public function is_one_time()
+		{
+			return $this->is_one_time;
+		}
+
+		public function get_is_one_time()
+		{
+			return $this->is_one_time;
+		}
+
 		public function serialize()
 		{
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -232,6 +248,7 @@
 				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
+				'is_one_time' => $this->get_is_one_time(),
 				'price' => $this->get_price(),
 				'area' => $this->get_area(),
 				'count' => $this->get_count(),

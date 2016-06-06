@@ -212,28 +212,6 @@
 
 			$where = 'WHERE';
 
-			/* 			if ($filter=='all')
-			  {
-			  if (is_array($grants))
-			  {
-			  while (list($user) = each($grants))
-			  {
-			  $public_user_list[] = $user;
-			  }
-			  reset($public_user_list);
-			  $filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',',$public_user_list) . "))";
-
-			  $where= 'AND';
-			  }
-
-			  }
-			  else
-			  {
-			  $filtermethod = " $where $entity_table.user_id=$filter ";
-			  $where= 'AND';
-			  }
-			 */
-
 			if ($agreement_id)
 			{
 				$filtermethod .= " $where $entity_table.agreement_id=$agreement_id";
@@ -319,7 +297,6 @@
 				for ($i = 0; $i < $n; $i++)
 				{
 					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$agreement_list[$j]['grants'] = (int)isset($grants[$this->db->f('user_id')]) ? $grants[$this->db->f('user_id')] : '';
 				}
 
 				if (isset($cols_return_extra) && is_array($cols_return_extra))

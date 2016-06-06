@@ -114,34 +114,11 @@
 			$this->decimal_separator = ',';
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'status_id' => $this->status_id,
-				'wo_hour_cat_id' => $this->wo_hour_cat_id,
-				'start_date' => $this->start_date,
-				'end_date' => $this->end_date,
-				'b_group' => $this->b_group,
-				'paid' => $this->paid,
-				'b_account' => $this->b_account,
-				'district_id' => $this->district_id,
-				'criteria_id' => $this->criteria_id
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function download()
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
+				phpgw::no_access();
 				return;
 			}
 
@@ -348,6 +325,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
 			$params = array
 				(
@@ -356,13 +334,13 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date
 			);
 
 			$values = $this->bo->read($params);
-			if (phpgw::get_var('export', 'bool'))
+			if ($export)
 			{
 				return $values;
 			}
@@ -396,8 +374,6 @@
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
-
-			$this->save_sessiondata();
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -1272,14 +1248,21 @@
 				}
 
 				$acl_required = $mode == 'edit' ? PHPGW_ACL_EDIT : PHPGW_ACL_READ;
-				if (!$this->bocommon->check_perms($project['grants'], $acl_required))
+				if (!$this->bocommon->check_perms2($project['coordinator'], $this->bo->so->grants, PHPGW_ACL_EDIT))
 				{
 					$this->receipt['error'][] = array(
 						'msg' => lang('You have no edit right for this project'));
 					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $this->receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array(
-						'menuaction' => 'property.uiworkorder.view',
-						'id' => $id));
+
+					switch ($mode)
+					{
+						case 'edit':
+							self::redirect(array('menuaction' => 'property.uiworkorder.view','id' => $id));
+							break;
+						default:
+							self::redirect(array('menuaction' => 'property.uiworkorder.index'));
+							break;
+					}
 				}
 
 				if ($project['key_fetch'] && !$values['key_fetch'])
@@ -1789,7 +1772,7 @@
 				array(
 					'key' => 'voucher_id',
 					'label' => lang('bilagsnr'),
-					'sortable' => false,
+					'sortable' => true,
 					'value_footer' => lang('Sum')),
 				array(
 					'key' => 'voucher_out_id',
@@ -1805,19 +1788,19 @@
 				array(
 					'key' => 'amount',
 					'label' => lang('amount'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'approved_amount',
 					'label' => lang('approved amount'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'period',
 					'label' => lang('period'),
-					'sortable' => false),
+					'sortable' => true),
 				array(
 					'key' => 'periodization',
 					'label' => lang('periodization'),
@@ -1855,10 +1838,8 @@
 				'data' => json_encode($content_invoice),
 				'ColumnDefs' => $invoice_def,
 				'config' => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+//					array('disablePagination' => true)
 				)
 			);
 
@@ -2016,7 +1997,7 @@
 				array(
 					'key' => 'year',
 					'label' => lang('year'),
-					'sortable' => false,
+					'sortable' => true,
 					'className' => 'center',
 					'value_footer' => lang('Sum')),
 				array(
@@ -2212,8 +2193,9 @@
 
 			$unspsc_code = $values['unspsc_code'] ? $values['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
 
-			$data = array
-				(
+			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
+			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
+			$data = array(
 				'datatable_def' => $datatable_def,
 				'periodization_data' => $periodization_data,
 				'year_list' => array(
@@ -2225,6 +2207,8 @@
 				'lang_claim' => lang('claim'),
 				'suppressmeter' => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination' => $suppresscoordination,
+				'enable_unspsc' => $enable_unspsc,
+				'enable_order_service_id' => $enable_order_service_id,
 				'tabs' => self::_generate_tabs(array(), $active_tab, array(
 					'documents' => $id ? false : true,
 					'history' => $id ? false : true)),

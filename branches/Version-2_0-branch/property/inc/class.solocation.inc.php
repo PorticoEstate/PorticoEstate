@@ -345,6 +345,16 @@
 				$location_types = $this->soadmin_location->select_location_type();
 
 				$cols = "fm_location{$type_id}.*";
+				$cols_return[] = 'id';
+				$uicols['input_type'][] = 'hidden';
+				$uicols['name'][] = 'id';
+				$uicols['descr'][] = 'dummy';
+				$uicols['statustext'][] = 'dummy';
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+
 				$cols_return[] = 'location_code';
 				$uicols['input_type'][] = 'hidden';
 				$uicols['name'][] = 'location_code';
@@ -363,13 +373,11 @@
 					$uicols['statustext'][] = $location_types[$i]['descr'];
 					$uicols['exchange'][] = true;
 					$uicols['align'][] = 'center';
-					$uicols['datatype'][] = 'link';
+					$uicols['datatype'][] = $i==($type_id -1 ) ? 'I' : 'link'; // correct the last one
 					$uicols['formatter'][] = '';
 					$cols .= ",fm_location{$type_id}.loc{$location_types[$i]['id']}";
 					$cols_return[] = "loc{$location_types[$i]['id']}";
 				}
-
-				$uicols['datatype'][$type_id] = 'I'; // correct the last one
 
 				$list_info = $location_types[($type_id - 1)]['list_info'];
 
@@ -1335,6 +1343,9 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->update_location_name($location['location_code']);
 
+			$id = $this->get_item_id( $location['location_code'] );
+			$this->db->query("UPDATE fm_location{$type_id} SET id = {$id} WHERE location_code = '{$location['location_code']}'", __LINE__, __FILE__);
+
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg' => lang('Location %1 has been saved', $location['location_code']));
 
@@ -1540,7 +1551,7 @@
 			$levels = $this->db->f('levels');
 
 			//perform an update on all location_codes on all levels to make sure they are consistent and unique
-			$locations = array();
+/*			$locations = array();
 			for ($level = 1; $level < ($levels + 1); $level++)
 			{
 				$sql = "SELECT * from fm_location{$level}";
@@ -1563,15 +1574,15 @@
 				}
 			}
 
-			foreach ($locations as $level => $location_at_leve)
+			foreach ($locations as $level => $location_at_level)
 			{
-				foreach ($location_at_leve as $location)
+				foreach ($location_at_level as $location)
 				{
 					$sql = "UPDATE fm_location{$level} SET location_code = '{$location['new_values']['location_code']}' {$location['condition']}";
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
-
+*/
 			$locations = array();
 			for ($i = 1; $i < ($levels + 1); $i++)
 			{
@@ -1594,6 +1605,7 @@
 
 				$receipt['message'][] = array('msg' => lang('location %1 added at level %2', $location['location_code'], $location['level']));
 			}
+			unset($location);
 
 			// Check ACL-location - currently only level 1
 			$GLOBALS['phpgw']->config->read();
@@ -1633,6 +1645,26 @@
 			foreach ($locations as $location_code)
 			{
 				$this->update_location_name($location_code);
+			}
+
+
+			$locations = array();
+			for ($i = 1; $i < ($levels + 1); $i++)
+			{
+				$this->db->query("SELECT fm_location{$i}.location_code, fm_locations.id FROM fm_location{$i} {$this->join} fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_location{$i}.id IS NULL");
+				while ($this->db->next_record())
+				{
+					$locations[] = array(
+						'level' => $i,
+						'location_code' => $this->db->f('location_code'),
+						'id' => (int)$this->db->f('id')
+					);
+				}
+			}
+
+			foreach ($locations as $location)
+			{
+				$this->db->query("UPDATE fm_location{$location['level']} SET id = {$location['id']} WHERE location_code = '{$location['location_code']}'");
 			}
 
 			if (!$this->global_lock)
@@ -1919,7 +1951,7 @@
 		{
 			$this->db->query("SELECT id FROM fm_locations WHERE location_code='{$location_code}'", __LINE__, __FILE__);
 			$this->db->next_record();
-			return $this->db->f('id');
+			return (int)$this->db->f('id');
 		}
 
 		public function get_location_code( $id )

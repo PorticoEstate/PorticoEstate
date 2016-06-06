@@ -955,10 +955,10 @@
 		</div>
 		<div class="proplist-col">
 			<table cellpadding="2" cellspacing="2" align="left">
-				<xsl:variable name="edit_url">
-					<xsl:value-of select="edit_url"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
 				</xsl:variable>
-				<form name="form" method="post" action="{$edit_url}">
+				<form name="form" method="post" action="{$cancel_url}">
 					<tr>
 						<td align="left" valign="bottom">
 							<xsl:variable name="lang_cancel">

@@ -176,6 +176,7 @@
 		),
 		'fm_location1' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
@@ -207,6 +208,7 @@
 		),
 		'fm_location1_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
@@ -249,6 +251,7 @@
 		),
 		'fm_location2' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -280,6 +283,7 @@
 		),
 		'fm_location2_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -319,6 +323,7 @@
 		),
 		'fm_location3' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -351,6 +356,7 @@
 		),
 		'fm_location3_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -391,6 +397,7 @@
 		),
 		'fm_location4' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
@@ -427,6 +434,7 @@
 		),
 		'fm_location4_history' => array(
 			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc2' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),

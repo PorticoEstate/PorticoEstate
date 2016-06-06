@@ -54,7 +54,7 @@
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl->set_account_id($this->account);
-			$this->grants = $this->acl->get_grants('property', '.project');
+			$this->grants = $this->acl->get_grants2('property', '.project');
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
 		}
@@ -308,6 +308,8 @@
 
 				$joinmethod = " {$this->join} phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis = '(';
+				$joinmethod .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id))";
+				$paranthesis .='(';
 
 				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
@@ -526,23 +528,35 @@
 				$where = 'AND';
 			}
 
-			/*
-			  $group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.entry_date,fm_project.start_date,fm_project.end_date,'
-			  . 'fm_project.name,fm_project.ecodimb,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
-			  . 'fm_project.budget,fm_project.reserve,planned_cost,external_project_id';
-			 */
-
-			if (is_array($this->grants))
+			$public_user_list = array();
+			if (is_array($this->grants['accounts']) && $this->grants['accounts'])
 			{
-				$grants = $this->grants;
-				while (list($user) = each($grants))
+				foreach($this->grants['accounts'] as $user => $_right)
 				{
 					$public_user_list[] = $user;
 				}
+				unset($user);
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.user_id IN(" . implode(',', $public_user_list) . ")";
-
+				$filtermethod .= " $where ( fm_project.coordinator IN(" . implode(',', $public_user_list) . ")";
 				$where = 'AND';
+			}
+
+			$public_group_list = array();
+			if (is_array($this->grants['groups']) && $this->grants['groups'])
+			{
+				foreach($this->grants['groups'] as $user => $_right)
+				{
+					$public_group_list[] = $user;
+				}
+				unset($user);
+				reset($public_group_list);
+				$where = $public_user_list ? 'OR' : $where;
+				$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				$where = 'AND';
+			}
+			if($public_user_list && !$public_group_list)
+			{
+				$filtermethod .=')';
 			}
 
 			if ($filter)
@@ -645,7 +659,7 @@
 				}
 			}
 
-			$querymethod .= ')';
+//			$querymethod .= ')';
 
 			$sql = str_replace('FROM', "{$_custom_cols} FROM", $sql);
 
@@ -715,7 +729,6 @@
 					{
 						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 					}
-					$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
 
 					$location_code = $this->db->f('location_code');
 					$location = explode('-', $location_code);
@@ -888,7 +901,6 @@
 					'start_date' => $this->db->f('start_date'),
 					'end_date' => $this->db->f('end_date'),
 					'cat_id' => $this->db->f('category'),
-					'grants' => (int)$this->grants[$this->db->f('user_id')],
 					'p_num' => $this->db->f('p_num'),
 					'p_entity_id' => $this->db->f('p_entity_id'),
 					'p_cat_id' => $this->db->f('p_cat_id'),
@@ -979,8 +991,34 @@
 
 		function project_workorder_data( $data = array() )
 		{
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$project_id = (int)$data['project_id'];
 			$year = (int)$data['year'];
+			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : 'fm_workorder';
+			$results = (isset($data['results']) ? $data['results'] : 0);
+
+			$ordermethod = 'ORDER BY fm_workorder.id DESC';
+
+			if ($order)
+			{
+				switch ($order)
+				{
+					case 'workorder_id':
+						$ordermethod = "ORDER BY fm_workorder.id {$sort}";
+						break;
+					case 'title':
+						$ordermethod = "ORDER BY fm_workorder.title {$sort}";
+						break;
+					case 'b_account_id':
+						$ordermethod = "ORDER BY fm_workorder.account_id {$sort}";
+						break;
+					case 'status':
+						$ordermethod = "ORDER BY fm_workorder_status.descr {$sort}";
+						break;
+				}
+			}
+
 			$values = array();
 
 			$filter_year = '';
@@ -989,20 +1027,29 @@
 				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
 			}
 
-			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
+			$sql =  "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
 				. " fm_workorder.mail_recipients"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " WHERE project_id={$project_id} {$filter_year} {$ordermethod}";
+
+			$this->db->query("SELECT count(fm_workorder.id) AS cnt FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " WHERE project_id={$project_id} {$filter_year}", __LINE__, __FILE__);
+				
+			$this->db->next_record();
+			$this->total_records = (int)$this->db->f('cnt');
+
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 			$_orders = array();
 
 			while ($this->db->next_record())
 			{
-				$values[] = array
-					(
+				$values[] = array(
 					'workorder_id' => $this->db->f('workorder_id'),
 					'title' => $this->db->f('title', true),
 					'vendor_id' => $this->db->f('vendor_id'),

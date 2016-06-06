@@ -56,7 +56,6 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'check_perms' => true,
 			'get_locations_by_name' => true
 		);
 
