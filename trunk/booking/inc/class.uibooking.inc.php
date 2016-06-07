@@ -819,14 +819,14 @@
 			{
 				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
 
 				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
-					if ($_POST['allocation_delete'] != 'on')
+					if ($_POST['delete_allocation'] != 'on')
 					{
 						$this->bo->so->delete_booking($id);
 						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
