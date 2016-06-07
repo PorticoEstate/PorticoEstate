@@ -2736,8 +2736,9 @@
 			$active_tab = 'general';
 
 			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
-			$data = array
-				(
+			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
+			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
+			$data = array(
 				'datatable_def' => $datatable_def,
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $ticket['attributes']),
@@ -2746,6 +2747,8 @@
 				'value_sms_phone' => $ticket['contact_phone'],
 				'access_order' => $access_order,
 				'currency' => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'enable_unspsc' => $enable_unspsc,
+				'enable_order_service_id' => $enable_order_service_id,
 				'value_order_id' => $ticket['order_id'],
 				'value_order_descr' => $ticket['order_descr'],
 				'vendor_data' => $vendor_data,
