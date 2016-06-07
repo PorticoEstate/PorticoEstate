@@ -27,7 +27,7 @@
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;">
 				<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'requirement-container'">
+						<xsl:if test="container = 'requirement-container_0'">
 							<xsl:call-template name="table_setup">
 								<xsl:with-param name="container" select ='container'/>
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -46,7 +46,7 @@
 				<!-- // Needed for case of only one checkbox in datatable-->
 				<input type='hidden' name='assign_requirement' value = '0'/>
 				<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'allocation-container'">
+						<xsl:if test="container = 'allocation-container_0'">
 							<xsl:call-template name="table_setup">
 								<xsl:with-param name="container" select ='container'/>
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
