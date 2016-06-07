@@ -1,15 +1,15 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage setup
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage setup
 	 * @version $Id$
-	*/
+	 */
 	/**
 	 * Description
 	 * @package property
@@ -73,19 +73,18 @@
 	$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
 	$GLOBALS['phpgw']->locations->add('.project.condition_survey', 'Condition Survey', 'property', true, 'fm_condition_survey', true);
 
-	$locations = array
-		(
-	'property.ticket'	=> '.ticket',
-	'property.project'	=> '.project',
-	'property.document' => '.document',
-	'fm_vendor'			=> '.vendor',
-	'fm_tenant'			=> '.tenant',
-	'fm_owner'			=> '.owner'
+	$locations = array(
+		'property.ticket' => '.ticket',
+		'property.project' => '.project',
+		'property.document' => '.document',
+		'fm_vendor' => '.vendor',
+		'fm_tenant' => '.tenant',
+		'fm_owner' => '.owner'
 	);
 
-	foreach($locations as $dummy => $location)
+	foreach ($locations as $dummy => $location)
 	{
-	$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
+		$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
 	}
 
 
@@ -233,34 +232,31 @@
 	$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
 	$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
 
-	$cats->add(array
-	(
-		'name'	=> 'Picture',
-		'descr'	=> 'Picture',
+	$cats->add(array(
+		'name' => 'Picture',
+		'descr' => 'Picture',
 		'parent' => 'none',
 		'old_parent' => 0,
 		'access' => 'public'
-	)
+		)
 	);
 
-	$cats->add(array
-	(
-		'name'	=> 'Report',
-		'descr'	=> 'Report',
+	$cats->add(array(
+		'name' => 'Report',
+		'descr' => 'Report',
 		'parent' => 'none',
 		'old_parent' => 0,
 		'access' => 'public'
-	)
+		)
 	);
 
-	$cats->add(array
-	(
-		'name'	=> 'Instruction',
-		'descr'	=> 'Instruction',
+	$cats->add(array(
+		'name' => 'Instruction',
+		'descr' => 'Instruction',
 		'parent' => 'none',
 		'old_parent' => 0,
 		'access' => 'public'
-	)
+		)
 	);
 
 
@@ -534,7 +530,7 @@
 	$location_naming[4]['name'] = 'Apartment';
 	$location_naming[4]['descr'] = 'Apartment';
 
-	for($location_type = 1; $location_type < 5; $location_type++)
+	for ($location_type = 1; $location_type < 5; $location_type++)
 	{
 		$default_attrib['id'][] = 1;
 		$default_attrib['column_name'][] = 'location_code';
@@ -592,7 +588,7 @@
 		$default_attrib['input_text'][] = 'modified_on';
 		$default_attrib['statustext'][] = 'modified_on';
 
-		for($i = 1; $i < $location_type + 1; $i++)
+		for ($i = 1; $i < $location_type + 1; $i++)
 		{
 			$pk[$i - 1] = 'loc' . $i;
 
@@ -603,52 +599,52 @@
 			$default_attrib['nullable'][] = 'False';
 			$default_attrib['input_text'][] = 'loc' . $i;
 			$default_attrib['statustext'][] = 'loc' . $i;
-	}
+		}
 
 		/*
-	if($location_type>1)
-	{
-		$fk_table='fm_location'. ($location_type-1);
+		  if($location_type>1)
+		  {
+		  $fk_table='fm_location'. ($location_type-1);
 
-		for ($i=1; $i<$standard['id']; $i++)
-		{
-			$fk['loc' . $i]	= $fk_table . '.loc' . $i;
-		}
-	}
+		  for ($i=1; $i<$standard['id']; $i++)
+		  {
+		  $fk['loc' . $i]	= $fk_table . '.loc' . $i;
+		  }
+		  }
 		 */
-	$ix = array('location_code');
+		$ix = array('location_code');
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_type (id,name,descr,pk,ix) "
-		. "VALUES ($location_type,'"
-		.  $location_naming[$location_type]['name'] . "','"
-		. $location_naming[$location_type]['descr'] . "','"
-		. implode(',', $pk) . "','"
-		. implode(',', $ix) . "')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_type (id,name,descr,pk,ix) "
+			. "VALUES ($location_type,'"
+			. $location_naming[$location_type]['name'] . "','"
+			. $location_naming[$location_type]['descr'] . "','"
+			. implode(',', $pk) . "','"
+			. implode(',', $ix) . "')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' . "' WHERE id = '1'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:2:{i:1;s:1:"1";i:2;s:1:"2";}' . "' WHERE id = '2'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}' . "' WHERE id = '3'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' . "' WHERE id = '4'");
 
-	$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
+		$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 
-	for($i = 0; $i < count($default_attrib['id']); $i++)
-	{
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
-			. " VALUES ("
-			. $location_id . ','
-			. $default_attrib['id'][$i] . ",'"
-			. $default_attrib['column_name'][$i] . "','"
-			. $default_attrib['type'][$i] . "',"
-			. $default_attrib['precision'][$i] . ",'"
-			. $default_attrib['input_text'][$i] . "','"
-			. $default_attrib['statustext'][$i] . "','"
-			. $default_attrib['nullable'][$i] . "',NULL)");
-	}
+		for ($i = 0; $i < count($default_attrib['id']); $i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
+				. " VALUES ("
+				. $location_id . ','
+				. $default_attrib['id'][$i] . ",'"
+				. $default_attrib['column_name'][$i] . "','"
+				. $default_attrib['type'][$i] . "',"
+				. $default_attrib['precision'][$i] . ",'"
+				. $default_attrib['input_text'][$i] . "','"
+				. $default_attrib['statustext'][$i] . "','"
+				. $default_attrib['nullable'][$i] . "',NULL)");
+		}
 
-	unset($pk);
-	unset($ix);
-	unset($default_attrib);
+		unset($pk);
+		unset($ix);
+		unset($default_attrib);
 	}
 
 #
@@ -717,12 +713,12 @@
 	$GLOBALS['phpgw']->acl->enable_inheritance = true;
 	$aclobj = & $GLOBALS['phpgw']->acl;
 	$admin_group = $GLOBALS['phpgw']->accounts->name2id('admin');
-	if($admin_group) // check if admin has been defined yet
+	if ($admin_group) // check if admin has been defined yet
 	{
-	$aclobj->set_account_id($admin_group, true);
-	$aclobj->add('property', '.', 31);
-	$aclobj->add('property', 'run', 1);
-	$aclobj->save_repository();
+		$aclobj->set_account_id($admin_group, true);
+		$aclobj->add('property', '.', 31);
+		$aclobj->add('property', 'run', 1);
+		$aclobj->save_repository();
 	}
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('integer', 'Integer')");
@@ -745,178 +741,162 @@
 
 	$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
-		// common
-		$receipt_section_common = $custom_config->add_section(array
-			(
-				'name' => 'common',
-				'descr' => 'common invoice config'
-			)
-		);
+	// common
+	$receipt_section_common = $custom_config->add_section(array
+		(
+		'name' => 'common',
+		'descr' => 'common invoice config'
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'host',
-				'descr'			=> 'Host',
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'user',
-				'descr'			=> 'User',
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'password',
-				'name'			=> 'password',
-				'descr'			=> 'Password',
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'listbox',
-				'name'			=> 'method',
-				'descr'			=> 'Export / import method',
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'input_type' => 'text',
+		'name' => 'host',
+		'descr' => 'Host',
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'input_type' => 'text',
+		'name' => 'user',
+		'descr' => 'User',
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'input_type' => 'password',
+		'name' => 'password',
+		'descr' => 'Password',
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'input_type' => 'listbox',
+		'name' => 'method',
+		'descr' => 'Export / import method',
 		'choice' => array('local', 'ftp', 'ssh'),
-			)
-		);
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'attrib_id'		=> $receipt['attrib_id'],
-				'input_type'	=> 'listbox',
-				'name'			=> 'invoice_approval',
-				'descr'			=> 'Number of persons required to approve for payment',
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'attrib_id' => $receipt['attrib_id'],
+		'input_type' => 'listbox',
+		'name' => 'invoice_approval',
+		'descr' => 'Number of persons required to approve for payment',
 		'choice' => array(1, 2),
-			)
-		);
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'baseurl_invoice',
-				'descr'			=> 'baseurl on remote server for image of invoice',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_common['section_id'],
+		'input_type' => 'text',
+		'name' => 'baseurl_invoice',
+		'descr' => 'baseurl on remote server for image of invoice',
+		)
+	);
 
-		// import:
-		$receipt_section_import = $custom_config->add_section(array
-			(
-				'name' => 'import',
-				'descr' => 'import invoice config'
-			)
-		);
+	// import:
+	$receipt_section_import = $custom_config->add_section(array(
+		'name' => 'import',
+		'descr' => 'import invoice config'
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_import['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'local_path',
-				'descr'			=> 'path on local sever to store imported files',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_import['section_id'],
+		'input_type' => 'text',
+		'name' => 'local_path',
+		'descr' => 'path on local sever to store imported files',
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_import['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'budget_responsible',
-				'descr'			=> 'default initials if responsible can not be found',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_import['section_id'],
+		'input_type' => 'text',
+		'name' => 'budget_responsible',
+		'descr' => 'default initials if responsible can not be found',
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_import['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'remote_basedir',
-				'descr'			=> 'basedir on remote server',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_import['section_id'],
+		'input_type' => 'text',
+		'name' => 'remote_basedir',
+		'descr' => 'basedir on remote server',
+		)
+	);
 
-		//export
-		$receipt_section_export = $custom_config->add_section(array
-			(
-				'name' => 'export',
-				'descr' => 'Invoice export'
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_export['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'cleanup_old',
-				'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_export['section_id'],
-				'input_type'	=> 'date',
-				'name'			=> 'dato_aarsavslutning',
-				'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
-			)
-		);
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_export['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'path',
-				'descr'			=> 'path on local sever to store exported files',
-			)
-		);
+	//export
+	$receipt_section_export = $custom_config->add_section(array(
+		'name' => 'export',
+		'descr' => 'Invoice export'
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_export['section_id'],
+		'input_type' => 'text',
+		'name' => 'cleanup_old',
+		'descr' => 'Overføre manuelt registrerte fakturaer rett til historikk'
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_export['section_id'],
+		'input_type' => 'date',
+		'name' => 'dato_aarsavslutning',
+		'descr' => "Dato for årsavslutning: overført pr. desember foregående år"
+		)
+	);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_export['section_id'],
+		'input_type' => 'text',
+		'name' => 'path',
+		'descr' => 'path on local sever to store exported files',
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_export['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'pre_path',
-				'descr'			=> 'path on local sever to store exported files for pre approved vouchers',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_export['section_id'],
+		'input_type' => 'text',
+		'name' => 'pre_path',
+		'descr' => 'path on local sever to store exported files for pre approved vouchers',
+		)
+	);
 
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_export['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'remote_basedir',
-				'descr'			=> 'basedir on remote server to receive files',
-			)
-		);
+	$receipt = $custom_config->add_attrib(array(
+		'section_id' => $receipt_section_export['section_id'],
+		'input_type' => 'text',
+		'name' => 'remote_basedir',
+		'descr' => 'basedir on remote server to receive files',
+		)
+	);
 
-		$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS' 
-			. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
-			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
+	$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS'
+		. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
+		. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-		$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
-			. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
+	$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
+		. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
-			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+	$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+		. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
-		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
- 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+	$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+		. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
-	switch($GLOBALS['phpgw_info']['server']['db_type'])
-		{
-			case 'postgres':
-				$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS 
+	switch ($GLOBALS['phpgw_info']['server']['db_type'])
+	{
+		case 'postgres':
+			$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
 				 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode,orders_paid_or_pending.amount,orders_paid_or_pending.periodization, orders_paid_or_pending.periodization_start
 				   FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start
 						   FROM fm_ecobilagoverf
@@ -927,24 +907,24 @@
 						   GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start) orders_paid_or_pending ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id';
 
 			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
-				break;
-			default:
-				//do nothing for now
-		}
+			break;
+		default:
+		//do nothing for now
+	}
 
-		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
- 			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
- 			. ' FROM fm_workorder_budget'
- 			. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
- 			. ' ORDER BY fm_workorder.project_id';
+	$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+		. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
+		. ' FROM fm_workorder_budget'
+		. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
+		. ' ORDER BY fm_workorder.project_id';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
- 			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
- 			. ' FROM fm_project_budget'
- 			. ' ORDER BY fm_project_budget.project_id';
+	$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS'
+		. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
+		. ' FROM fm_project_budget'
+		. ' ORDER BY fm_project_budget.project_id';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
@@ -953,7 +933,6 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')", __LINE__, __FILE__);
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')", __LINE__, __FILE__);
 
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (1, '1 - Highest')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (2, '2')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (3, '3 - Lowest')");
-
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (1, '1 - Highest')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (2, '2')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (3, '3 - Lowest')");
