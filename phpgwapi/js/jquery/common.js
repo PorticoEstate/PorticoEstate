@@ -381,12 +381,19 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		ajax: ajax_def,
 		fnServerParams: function (aoData)
 		{			
-			if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length -1, 1))))
-			{	
-				$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+			try
+			{
+				if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length -1, 1))))
 				{
-					aoData[k] = v;
-				});
+					$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+					{
+						aoData[k] = v;
+					});
+				}
+			}
+			catch (err)
+			{
+
 			}
 
 			if (typeof (aoData.order) != 'undefined')
