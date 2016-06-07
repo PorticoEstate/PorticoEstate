@@ -30,7 +30,7 @@ function load_requirement_delete_id(id)
 
 		var callback = function (result)
 		{
-			JqueryPortico.updateinlineTableHelper('requirement-container');
+			JqueryPortico.updateinlineTableHelper('requirement-container_0');
 		};
 		JqueryPortico.execute_ajax(requestUrl, callback, {}, 'POST', 'json');
 	}
@@ -61,8 +61,8 @@ function load_delete_allocation(requirement_id, id)
 
 					var requestUrl2 = phpGWLink('index.php', oArgs2, true);
 
-					JqueryPortico.updateinlineTableHelper('allocation-container', requestUrl2);
-					JqueryPortico.updateinlineTableHelper('requirement-container');
+					JqueryPortico.updateinlineTableHelper('allocation-container_0', requestUrl2);
+					JqueryPortico.updateinlineTableHelper('requirement-container_0');
 				}
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown)
@@ -120,7 +120,7 @@ function closeJS_local(activity_id)
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	JqueryPortico.updateinlineTableHelper('requirement-container', requestUrl);
+	JqueryPortico.updateinlineTableHelper('requirement-container_0', requestUrl);
 }
 
 
@@ -134,6 +134,6 @@ function closeJS_local_allocation(requirement_id)
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	JqueryPortico.updateinlineTableHelper(oTable1, requestUrl);
+	JqueryPortico.updateinlineTableHelper('requirement-container_0', requestUrl);
 
 }

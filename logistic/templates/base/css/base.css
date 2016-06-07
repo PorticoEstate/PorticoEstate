@@ -763,7 +763,7 @@ dl.proplist, dl.proplist-col {
   padding: 20px;
 }
 
-#datatable-container {
+#datatable-container_0 {
   margin: 20px;
 }
 
@@ -1971,7 +1971,7 @@ div.controller_checklist {
   float: left;
 }
 
-#choose-location #datatable-container{
+#choose-location #datatable-container_0{
   margin: 20px 0;
 }
 
@@ -2369,7 +2369,7 @@ p.no_items_msg {
 	margin-top: 0;	
 }
 
-#requirement-container .btn-sm {
+#requirement-container_0 .btn-sm {
     border-color: #4378B1 #2663A3 #366CA4;
     font-size: 12px;
     padding: 1px 8px;
@@ -2380,7 +2380,7 @@ p.no_items_msg {
     padding: 0;
 }
 
-#requirement-container table td{
+#requirement-container_0 table td{
 	padding: 5px 0;	
 }
 
@@ -2398,7 +2398,7 @@ p.no_items_msg {
 }
 
 
-#allocation-container .yui-dt-col-delete_link .yui-dt-liner {
+#allocation-container_0 .yui-dt-col-delete_link .yui-dt-liner {
 	text-align: center;
 }
 	
@@ -2417,11 +2417,11 @@ p.no_items_msg {
     width: 136px;
 }
 
-#sub-activities-container th div, #requirement-container th div {
+#sub-activities-container th div, #requirement-container_0 th div {
     /*background: #6292C5;*/
 }
 
-#sub-activities-container .yui-dt table, #requirement-container .yui-dt table {
+#sub-activities-container .yui-dt table, #requirement-container_0 .yui-dt table {
     /*border: 1px solid #98BFE8;*/
 }
 
@@ -2429,14 +2429,14 @@ p.no_items_msg {
     width: 800px;
 }
 
-#requirement-container .yui-dt table, #allocation-container .yui-dt table {
+#requirement-container_0 .yui-dt table, #allocation-container_0 .yui-dt table {
     width: 1000px;
 }
 	
 #sub-activities-container th a, #sub-activities-container th span, 
-#requirement-container th a, #requirement-container th span,
-#allocation-container th a, #allocation-container th span,
-#datatable-container th a, #datatable-container th span
+#requirement-container_0 th a, #requirement-container_0 th span,
+#allocation-container_0 th a, #allocation-container_0 th span,
+#datatable-container_0 th a, #datatable-container_0 th span
 {
     /*color: #F9FCFE;*/
     font-weight: bold;
@@ -2465,6 +2465,6 @@ p.no_items_msg {
 	text-decoration: underline;
 }
 
-#requirement-container .btn-sm.cancel {
+#requirement-container_0 .btn-sm.cancel {
   border: 1px solid #CCCCCC;
 }

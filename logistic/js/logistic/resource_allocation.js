@@ -1,7 +1,7 @@
 $(document).ready(function ()
 {
 
-	$("#requirement-container tr").on("click", function (e)
+	$("#requirement-container_0 tr").on("click", function (e)
 	{
 		var requirement_id = $('td', this).eq(0).text();
 		updateAllocationTable(requirement_id);
@@ -23,5 +23,5 @@ function updateAllocationTable(requirement_id)
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	JqueryPortico.updateinlineTableHelper('allocation-container', requestUrl);
+	JqueryPortico.updateinlineTableHelper('allocation-container_0', requestUrl);
 }
