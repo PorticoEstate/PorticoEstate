@@ -906,7 +906,7 @@
 							{
 								$allocation_delete[$i]['from_'] = $fromdate;
 								$allocation_delete[$i]['to_'] = $todate;
-								if ($step == 3)
+								if ($step == 3 && $aid)
 								{
 									$stat = $this->bo->so->delete_allocation($aid);
 								}
