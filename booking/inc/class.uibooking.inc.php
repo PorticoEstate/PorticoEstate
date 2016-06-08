@@ -89,6 +89,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uibooking.index', 'phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 4, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
 							'key' => 'activity_name',
@@ -896,12 +897,12 @@
 						}
 						if ($_POST['delete_allocation'] == 'on')
 						{
-							if (!$aid)
-							{
-								$allocation_keep[$i]['from_'] = $fromdate;
-								$allocation_keep[$i]['to_'] = $todate;
-							}
-							else
+//							if (!$aid)
+//							{
+//								$allocation_keep[$i]['from_'] = $fromdate;
+//								$allocation_keep[$i]['to_'] = $todate;
+//							}
+//							else
 							{
 								$allocation_delete[$i]['from_'] = $fromdate;
 								$allocation_delete[$i]['to_'] = $todate;
