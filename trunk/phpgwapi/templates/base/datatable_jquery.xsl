@@ -88,15 +88,12 @@
 		}
 	</style>
 	<div id="active_filters"></div>
-
-	<input class="toggle-box" id="header1" type="checkbox" />
-	<label for="header1">
-		<xsl:value-of select="php:function('lang', 'filter')"/>
-	</label>
-
-	<div id="toolbar" class='dtable_custom_controls'>
-		<!--xsl:if test="item/text and normalize-space(item/text)"-->
-		<xsl:if test="item">
+	<xsl:if test="item">
+		<input class="toggle-box" id="header1" type="checkbox" />
+		<label for="header1">
+			<xsl:value-of select="php:function('lang', 'filter')"/>
+		</label>
+		<div id="toolbar" class='dtable_custom_controls'>
 			<table id="toolbar_table" class="pure-table pure-table-horizontal">
 				<thead>
 					<tr>
@@ -339,8 +336,9 @@
 					</xsl:for-each>
 				</tbody>
 			</table>
-		</xsl:if>
-	</div>
+		</div>
+	</xsl:if>
+
 </xsl:template>
 
 <xsl:template match="form/list_actions">
