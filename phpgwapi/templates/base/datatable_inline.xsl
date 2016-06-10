@@ -368,6 +368,9 @@
 			<xsl:if test="editor_action">
 				options<xsl:number value="$num"/>.editor_action = "<xsl:value-of select="editor_action" />";
 			</xsl:if>
+			<xsl:if test="rows_per_page">
+				options<xsl:number value="$num"/>.rows_per_page = "<xsl:value-of select="rows_per_page" />";
+			</xsl:if>
 		</xsl:for-each>
 		if (JqueryPortico.buttons<xsl:number value="$num"/>)
 		{
