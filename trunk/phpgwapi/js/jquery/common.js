@@ -274,6 +274,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var editor_cols = [];
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
+	data = data || {};
 
 	for (i = 0; i < columns.length; i++)
 	{
@@ -337,8 +338,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		lengthMenu[1].push(data.length);
 	}
 
-
-
 	var language = null;
 	try
 	{
@@ -347,8 +346,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	catch (err)
 	{
 	}
-
-	data = data || {};
 
 	if (ajax_url)
 	{
