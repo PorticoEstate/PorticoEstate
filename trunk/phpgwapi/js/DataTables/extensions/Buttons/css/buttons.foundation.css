@@ -115,3 +115,15 @@ div.dt-button-background {
     float: none;
   }
 }
+div.button-group.stacked.dropdown-pane {
+  margin-top: 2px;
+  padding: 1px;
+  z-index: 89;
+}
+div.button-group.stacked.dropdown-pane a.button {
+  margin-bottom: 1px;
+  border-right: none;
+}
+div.button-group.stacked.dropdown-pane a.button:last-child {
+  margin-bottom: 0;
+}
