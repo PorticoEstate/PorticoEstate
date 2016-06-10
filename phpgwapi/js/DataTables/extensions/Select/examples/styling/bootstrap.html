@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0">
-	<title>Select example - Bootstrap styling</title>
-	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<title>Select example - Bootstrap</title>
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../../../../media/css/dataTables.bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../../css/select.bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../../../../examples/resources/syntax/shCore.css">
@@ -13,7 +13,7 @@
 	<style type="text/css" class="init">
 	
 	</style>
-	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.11.3.min.js">
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="../../../../media/js/jquery.dataTables.js">
 	</script>
@@ -31,9 +31,7 @@
 
 $(document).ready(function() {
 	$('#example').DataTable( {
-		select: {
-			style: 'os'
-		}
+		select: true
 	} );
 } );
 
@@ -44,7 +42,7 @@ $(document).ready(function() {
 <body class="dt-example dt-example-bootstrap">
 	<div class="container">
 		<section>
-			<h1>Select example <span>Bootstrap styling</span></h1>
+			<h1>Select example <span>Bootstrap</span></h1>
 			<div class="info">
 				<p>This example shows DataTables and the Select extension being used with the <a href="http://getbootstrap.com">Bootstrap</a> framework providing the styling. The
 				<a href="//datatables.net/manual/styling/bootstrap">DataTables / Bootstrap integration</a> provides seamless integration for DataTables to be used in a Bootstrap
@@ -541,15 +539,13 @@ $(document).ready(function() {
 				<div class="js">
 					<p>The Javascript shown below is used to initialise the table shown in this example:</p><code class="multiline language-js">$(document).ready(function() {
 	$('#example').DataTable( {
-		select: {
-			style: 'os'
-		}
+		select: true
 	} );
 } );</code>
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this example:</p>
 					<ul>
 						<li>
-							<a href="//code.jquery.com/jquery-1.11.3.min.js">//code.jquery.com/jquery-1.11.3.min.js</a>
+							<a href="//code.jquery.com/jquery-1.12.3.min.js">//code.jquery.com/jquery-1.12.3.min.js</a>
 						</li>
 						<li>
 							<a href="../../../../media/js/jquery.dataTables.js">../../../../media/js/jquery.dataTables.js</a>
@@ -573,7 +569,7 @@ $(document).ready(function() {
 					<p>The following CSS library files are loaded for use in this example to provide the styling of the table:</p>
 					<ul>
 						<li>
-							<a href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css</a>
+							<a href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css</a>
 						</li>
 						<li>
 							<a href="../../../../media/css/dataTables.bootstrap.css">../../../../media/css/dataTables.bootstrap.css</a>
@@ -639,14 +635,20 @@ $(document).ready(function() {
 					<div class="toc-group">
 						<h3><a href="./index.html">Styling</a></h3>
 						<ul class="toc active">
-							<li>
-								<a href="./jqueryui.html">jQuery UI styling</a>
-							</li>
 							<li class="active">
-								<a href="./bootstrap.html">Bootstrap styling</a>
+								<a href="./bootstrap.html">Bootstrap</a>
 							</li>
 							<li>
-								<a href="./foundation.html">Foundation styling</a>
+								<a href="./bootstrap4.html">Bootstrap 4</a>
+							</li>
+							<li>
+								<a href="./foundation.html">Foundation</a>
+							</li>
+							<li>
+								<a href="./semanticui.html">Semantic UI</a>
+							</li>
+							<li>
+								<a href="./jqueryui.html">jQuery UI</a>
 							</li>
 						</ul>
 					</div>
@@ -654,13 +656,16 @@ $(document).ready(function() {
 						<h3><a href="../api/index.html">API</a></h3>
 						<ul class="toc">
 							<li>
+								<a href="../api/get.html">Get selected items</a>
+							</li>
+							<li>
 								<a href="../api/select.html">Select items</a>
 							</li>
 							<li>
 								<a href="../api/events.html">Events</a>
 							</li>
 							<li>
-								<a href="../api/get.html">Get selected items</a>
+								<a href="../api/cancellableEvents.html">Events (cancellable)</a>
 							</li>
 						</ul>
 					</div>
@@ -669,7 +674,7 @@ $(document).ready(function() {
 					<p>Please refer to the <a href="http://www.datatables.net">DataTables documentation</a> for full information about its API properties and methods.<br>
 					Additionally, there are a wide range of <a href="http://www.datatables.net/extensions">extensions</a> and <a href=
 					"http://www.datatables.net/plug-ins">plug-ins</a> which extend the capabilities of DataTables.</p>
-					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2015<br>
+					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2016<br>
 					DataTables is licensed under the <a href="http://www.datatables.net/mit">MIT license</a>.</p>
 				</div>
 			</div>

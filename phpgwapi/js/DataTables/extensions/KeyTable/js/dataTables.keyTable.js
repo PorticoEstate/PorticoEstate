@@ -1,15 +1,15 @@
-/*! KeyTable 2.1.0
- * ©2009-2015 SpryMedia Ltd - datatables.net/license
+/*! KeyTable 2.1.2
+ * ©2009-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     KeyTable
  * @description Spreadsheet like keyboard navigation for DataTables
- * @version     2.1.0
+ * @version     2.1.2
  * @file        dataTables.keyTable.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2009-2015 SpryMedia Ltd.
+ * @copyright   Copyright 2009-2016 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -69,7 +69,10 @@ var KeyTable = function ( dt, opts ) {
 		/** @type {DataTable.Api} DataTables' API instance */
 		dt: new DataTable.Api( dt ),
 
-		enable: true
+		enable: true,
+
+		/** @type {bool} Flag for if a draw is triggered by focus */
+		focusDraw: false
 	};
 
 	// DOM items
@@ -174,17 +177,17 @@ $.extend( KeyTable.prototype, {
 				return;
 	}
 
-			that._focus( cell );
+			that._focus( cell, null, false );
 		} );
 
 		// Key events
-		$( document.body ).on( 'keydown.keyTable', function (e) {
+		$( document ).on( 'keydown.keyTable', function (e) {
 			that._key( e );
 		} );
 
 		// Click blur
 		if ( this.c.blurable ) {
-			$( document.body ).on( 'click.keyTable', function ( e ) {
+			$( document ).on( 'click.keyTable', function ( e ) {
 				// Click on the search input will blur focus
 				if ( $(e.target).parents( '.dataTables_filter' ).length ) {
 					that._blur();
@@ -205,7 +208,7 @@ $.extend( KeyTable.prototype, {
 			}
 
 		if ( this.c.editor ) {
-			dt.on( 'key.kt', function ( e, dt, key, cell, orig ) {
+			dt.on( 'key.keyTable', function ( e, dt, key, cell, orig ) {
 				that._editor( key, orig );
 			} );
 		}
@@ -219,6 +222,27 @@ $.extend( KeyTable.prototype, {
 			} );
 	}
 
+		// Reload - re-focus on the currently selected item. In SSP mode this
+		// has the effect of keeping the focus in position when changing page as
+		// well (which is different from how client-side processing works).
+		dt.on( 'xhr.keyTable', function ( e ) {
+			if ( that.s.focusDraw ) {
+				// Triggered by server-side processing, and thus `_focus` will
+				// do the refocus on the next draw event
+				return;
+			}
+
+			var lastFocus = that.s.lastFocus;
+
+			if ( lastFocus ) {
+				that.s.lastFocus = null;
+
+				dt.one( 'draw', function () {
+					that._focus( lastFocus );
+				} );
+			}
+		} );
+
 		dt.on( 'destroy.keyTable', function () {
 			dt.off( '.keyTable' );
 			$( dt.table().body() ).off( 'click.keyTable', 'th, td' );
@@ -231,7 +255,15 @@ $.extend( KeyTable.prototype, {
 		var state = dt.state.loaded();
 
 		if ( state && state.keyTable ) {
-			dt.cell( state.keyTable ).focus();
+			// Wait until init is done
+			dt.one( 'init', function () {
+				var cell = dt.cell( state.keyTable );
+
+				// Ensure that the saved cell still exists
+				if ( cell.any() ) {
+					cell.focus();
+				}
+			} );
 			}
 		else if ( this.c.focus ) {
 			dt.cell( this.c.focus ).focus();
@@ -302,10 +334,16 @@ $.extend( KeyTable.prototype, {
 
 		orig.stopPropagation();
 
+		// Return key should do nothing - for textareas's it would empty the
+		// contents
+		if ( key === 13 ) {
+			orig.preventDefault();
+		}
+
 		editor.inline( this.s.lastFocus.index() );
 
 		// Excel style - select all text
-		var input = $('div.DTE input');
+		var input = $('div.DTE input, div.DTE textarea');
 		if ( input.length ) {
 			input[0].select();
 			}
@@ -352,9 +390,10 @@ $.extend( KeyTable.prototype, {
 	 * @param  {integer} [column] Not required if a cell is given as the first
 	 *   parameter. Otherwise this is the column data index for the cell to
 	 *   focus on
+	 * @param {boolean} [shift=true] Should the viewport be moved to show cell
 	 * @private
 	 */
-	_focus: function ( row, column )
+	_focus: function ( row, column, shift )
 	{
 		var that = this;
 		var dt = this.s.dt;
@@ -385,8 +424,11 @@ $.extend( KeyTable.prototype, {
 		// Is the row on the current page? If not, we need to redraw to show the
 		// page
 		if ( pageInfo.length !== -1 && (row < pageInfo.start || row >= pageInfo.start+pageInfo.length) ) {
+			this.s.focusDraw = true;
+
 			dt
 				.one( 'draw', function () {
+					that.s.focusDraw = false;
 					that._focus( row, column );
 				} )
 				.page( Math.floor( row / pageInfo.length ) )
@@ -422,6 +464,7 @@ $.extend( KeyTable.prototype, {
 		node.addClass( this.c.className );
 
 		// Shift viewpoint and page to make cell visible
+		if ( shift === undefined || shift === true ) {
 		this._scroll( $(window), $(document.body), node, 'offset' );
 
 		var bodyParent = dt.table().body().parentNode;
@@ -430,6 +473,7 @@ $.extend( KeyTable.prototype, {
 
 			this._scroll( parent, parent, node, 'position' );
 	}
+		}
 
 		// Event and finish
 		this.s.lastFocus = cell;
@@ -567,12 +611,12 @@ $.extend( KeyTable.prototype, {
 	}
 
 		// Bottom correction
-		if ( offset.top + height > scrollTop + containerHeight ) {
+		if ( offset.top + height > scrollTop + containerHeight && height < containerHeight ) {
 			scroller.scrollTop( offset.top + height - containerHeight );
 		}
 
 		// Right correction
-		if ( offset.left + width > scrollLeft + containerWidth ) {
+		if ( offset.left + width > scrollLeft + containerWidth && width < containerWidth ) {
 			scroller.scrollLeft( offset.left + width - containerWidth );
 	}
 	},
@@ -693,7 +737,7 @@ $.extend( KeyTable.prototype, {
 			.insertBefore( dt.table().node() );
 
 		div.children().on( 'focus', function () {
-			that._focus( dt.cell(':eq(0)', {page: 'current'}) );
+			that._focus( dt.cell(':eq(0)', '0:visible', {page: 'current'}) );
 		} );
 	}
 } );
@@ -754,7 +798,7 @@ KeyTable.defaults = {
 
 
 
-KeyTable.version = "2.1.0";
+KeyTable.version = "2.1.2";
 
 
 $.fn.dataTable.KeyTable = KeyTable;
