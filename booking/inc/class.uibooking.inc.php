@@ -378,7 +378,7 @@
 			}
 			$invalid_dates = array();
 			$valid_dates = array();
-			if (isset($allocation_id))
+			if ($allocation_id)
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
 				$season = $this->season_bo->read_single($allocation['season_id']);
