@@ -414,9 +414,11 @@
 					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 
-				$timestamp = strtotime($booking['from_']);
+//				$timestamp = strtotime($booking['from_']);
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['from_']);
 				$booking['from_'] = date("Y-m-d H:i:s", $timestamp);
-				$timestamp = strtotime($booking['to_']);
+//				$timestamp = strtotime($booking['to_']);
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['to_']);
 				$booking['to_'] = date("Y-m-d H:i:s", $timestamp);
 
 				if (strlen($_POST['from_']) < 6)
@@ -496,15 +498,15 @@
 				{
 					if ($_POST['recurring'] == 'on')
 					{
-						$repeat_until = strtotime($_POST['repeat_until']) + 60 * 60 * 24;
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
 					}
 					else
 					{
-						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($season['to_']) + 60 * 60 * 24;
 						$_POST['repeat_until'] = $season['to_'];
 					}
 
-					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
@@ -512,8 +514,8 @@
 
 					while (($max_dato + ($interval * $i)) <= $repeat_until)
 					{
-						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval * $i));
-						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
+						$fromdate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['from_']) + ($interval * $i));
+						$todate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['to_']) + ($interval * $i));
 						$booking['from_'] = $fromdate;
 						$booking['to_'] = $todate;
 						$fromdate = pretty_timestamp($fromdate);
