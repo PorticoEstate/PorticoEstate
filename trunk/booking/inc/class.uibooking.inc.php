@@ -502,8 +502,8 @@
 					}
 					else
 					{
-						$repeat_until = phpgwapi_datetime::date_to_timestamp($season['to_']) + 60 * 60 * 24;
-						$_POST['repeat_until'] = $season['to_'];
+						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
+						$_POST['repeat_until'] = pretty_timestamp($season['to_']);
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
@@ -679,9 +679,12 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
-					'from_date' => pretty_timestamp($_POST['from_']),
-					'to_date' => pretty_timestamp($_POST['to_']),
+//					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+//					'from_date' => pretty_timestamp($_POST['from_']),
+//					'to_date' => pretty_timestamp($_POST['to_']),
+					'repeat_until' => $_POST['repeat_until'],
+					'from_date' => $_POST['from_'],
+					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups,
