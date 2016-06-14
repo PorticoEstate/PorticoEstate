@@ -2870,7 +2870,7 @@
 				$username	= $config->config_data['external_register']['username'];
 				$password	= $config->config_data['external_register']['password'];
 				$sub_check = 'objekt';
-				return $this->check_external_register(array(
+				$fullmakt = $this->check_external_register(array(
 					'url'		=> $url,
 					'username'	=> $username,
 					'password'	=> $password,
@@ -2878,12 +2878,20 @@
 					'id'		=> $id
 					)
 				);
+
+				/**
+				 * some magic...to decide $supervisor_lid
+				 */
+
+				$supervisor_lid = 'hc483';
+				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
 			}
 			else
 			{
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-				return $this->get_supervisor_email($supervisor_id);
 			}
+
+			return $this->get_supervisor_email($supervisor_id);
 		}
 
 		public function check_external_register($param)
