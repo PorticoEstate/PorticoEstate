@@ -12,7 +12,7 @@
 	<style type="text/css" class="init">
 	
 	</style>
-	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.11.3.min.js">
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="../../../../media/js/jquery.dataTables.js">
 	</script>
@@ -70,9 +70,9 @@ $(document).ready(function() {
 				show Scroller's ability to show large data sets. It does not have a real database behind it! You would normally not use <a href=
 				"//datatables.net/reference/option/ajax"><code class="option" title="DataTables initialisation option">ajax</code></a> as a function to generate data, but rather
 				as a url for where to fetch the real data!</p>
-				<p>In this example we also enable the <a href="//datatables.net/reference/option/loadingIndicator"><code class="option" title=
-				"Scroller initialisation option">loadingIndicator</code></a> option of Scroller to show the end user what is happening when they scroll passed the currently loaded
-				data.</p>
+				<p>In this example we also enable the <a href="//datatables.net/reference/option/scroller.loadingIndicator"><code class="option" title=
+				"Scroller initialisation option">scroller.loadingIndicator</code></a> option of Scroller to show the end user what is happening when they scroll passed the
+				currently loaded data.</p>
 			</div>
 			<table id="example" class="display nowrap" cellspacing="0" width="100%">
 				<thead>
@@ -124,7 +124,7 @@ $(document).ready(function() {
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this example:</p>
 					<ul>
 						<li>
-							<a href="//code.jquery.com/jquery-1.11.3.min.js">//code.jquery.com/jquery-1.11.3.min.js</a>
+							<a href="//code.jquery.com/jquery-1.12.3.min.js">//code.jquery.com/jquery-1.12.3.min.js</a>
 						</li>
 						<li>
 							<a href="../../../../media/js/jquery.dataTables.js">../../../../media/js/jquery.dataTables.js</a>
@@ -191,19 +191,28 @@ $(document).ready(function() {
 							<li>
 								<a href="./fixedColumns.html">FixedColumns integration</a>
 							</li>
+							<li>
+								<a href="./select.html">Select integration</a>
+							</li>
 						</ul>
 					</div>
 					<div class="toc-group">
 						<h3><a href="../styling/index.html">Styling</a></h3>
 						<ul class="toc">
 							<li>
-								<a href="../styling/jqueryui.html">jQuery UI</a>
+								<a href="../styling/bootstrap.html">Bootstrap</a>
+							</li>
+							<li>
+								<a href="../styling/bootstrap4.html">Bootstrap 4</a>
 							</li>
 							<li>
 								<a href="../styling/foundation.html">Foundation</a>
 							</li>
 							<li>
-								<a href="../styling/bootstrap.html">Bootstrap</a>
+								<a href="../styling/semanticui.html">Semantic UI</a>
+							</li>
+							<li>
+								<a href="../styling/jqueryui.html">jQuery UI</a>
 							</li>
 						</ul>
 					</div>
@@ -212,7 +221,7 @@ $(document).ready(function() {
 					<p>Please refer to the <a href="http://www.datatables.net">DataTables documentation</a> for full information about its API properties and methods.<br>
 					Additionally, there are a wide range of <a href="http://www.datatables.net/extensions">extensions</a> and <a href=
 					"http://www.datatables.net/plug-ins">plug-ins</a> which extend the capabilities of DataTables.</p>
-					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2015<br>
+					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2016<br>
 					DataTables is licensed under the <a href="http://www.datatables.net/mit">MIT license</a>.</p>
 				</div>
 			</div>

@@ -985,6 +985,7 @@
 			else
 			{
 				$receipt = $this->so->add($project, $values_attribute);
+				$project['id'] = $receipt['id'];
 			}
 
 			foreach ($custom_functions as $entry)

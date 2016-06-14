@@ -261,7 +261,6 @@ JqueryPortico.FormatterCenter = function (key, oData)
 
 JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, options, data)
 {
-
 	options = options || {};
 	var disablePagination = options['disablePagination'] || false;
 	var disableFilter = options['disableFilter'] || false;
@@ -274,6 +273,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var editor_action = options['editor_action'] || false;
 	var editor_cols = [];
 	var allrows = options['allrows'] || false;
+	var pageLength = options['rows_per_page'] || 10;
+	data = data || {};
 
 	for (i = 0; i < columns.length; i++)
 	{
@@ -288,16 +289,29 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	}
 
 	var lengthMenu = null;
-	try
+
+	if(pageLength != 10)
 	{
-		lengthMenu = JqueryPortico.i18n.lengthmenu();
+		lengthMenu = [[],[]];
+		for (var i = 1; i < 5; i++)
+		{
+			lengthMenu[0].push( pageLength*i );
+			lengthMenu[1].push( pageLength*i );
+		}
 	}
-	catch (err)
+	else
 	{
-		lengthMenu = [[10, 25, 50, 100],[10, 25, 50, 100]];
+		try
+		{
+			lengthMenu = JqueryPortico.i18n.lengthmenu();
+		}
+		catch (err)
+		{
+			lengthMenu = [[10, 25, 50, 100],[10, 25, 50, 100]];
+		}
 	}
 
-	if (allrows == true)
+	if (allrows == true && data.length == 0)
 	{
 		lengthmenu_allrows = [];
 
@@ -318,6 +332,12 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		}
 	}
 
+	if (data.length > 5)
+	{
+		lengthMenu[0].push(data.length);
+		lengthMenu[1].push(data.length);
+	}
+
 	var language = null;
 	try
 	{
@@ -326,8 +346,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	catch (err)
 	{
 	}
-
-	data = data || {};
 
 	if (ajax_url)
 	{
@@ -423,6 +441,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			 }*/
 		},
 		lengthMenu: lengthMenu,
+		pageLength: pageLength,
 		language: language,
 		columns: columns,
 		//	stateSave:		true,

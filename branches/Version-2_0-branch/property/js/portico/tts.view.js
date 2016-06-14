@@ -186,7 +186,7 @@ this.fetch_vendor_contract = function ()
 
 	if ($("#vendor_id").val() != vendor_id)
 	{
-		var oArgs = {menuaction: 'property.uitts.get_vendor_contract',vendor_id:$("#vendor_id").val()};
+		var oArgs = {menuaction: 'property.uitts.get_vendor_contract', vendor_id: $("#vendor_id").val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var htmlString = "";
 
@@ -204,7 +204,7 @@ this.fetch_vendor_contract = function ()
 						return;
 					}
 
-					htmlString = "<option>" + data.length + " kontrakter funnet</option>"
+					htmlString = "<option>" + data.length + " kontrakter funnet</option>";
 					var obj = data;
 
 					$.each(obj, function (i)
@@ -288,7 +288,7 @@ function receive_order(order_id)
 	var oArgs = {
 		menuaction: 'property.uitts.receive_order',
 		id: order_id,
-		received_percent:$( "#slider-range-min" ).slider( "value" )
+		received_percent: $("#slider-range-min").slider("value")
 	};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	$.ajax({
@@ -321,16 +321,88 @@ function receive_order(order_id)
 	});
 }
 
-  $(function() {
-    $( "#slider-range-min" ).slider({
-      range: "min",
-      value: $( "#value_order_received_percent" ).val() || 0,
-      min: 0,
-      max: 100,
-      step: 10,
-      slide: function( event, ui ) {
-        $( "#order_received_percent" ).val( ui.value + " %");
-      }
-    });
-    $( "#order_received_percent" ).val( $( "#slider-range-min" ).slider( "value" )  + " %");
-  });
+$(function ()
+{
+	$("#slider-range-min").slider({
+		range: "min",
+		value: $("#value_order_received_percent").val() || 0,
+		min: 0,
+		max: 100,
+		step: 10,
+		slide: function (event, ui)
+		{
+			$("#order_received_percent").val(ui.value + " %");
+		}
+	});
+	$("#order_received_percent").val($("#slider-range-min").slider("value") + " %");
+});
+
+var ecodimb_selection = "";
+
+$(window).load(function ()
+{
+	ecodimb = $('#ecodimb').val();
+	var selection = [];
+	if (ecodimb)
+	{
+		populateTableChkApproval(ecodimb, selection);
+//		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
+		ecodimb_selection = ecodimb;
+	}
+	$("#ecodimb_name").on("autocompleteselect", function (event, ui)
+	{
+		var ecodimb = ui.item.value;
+		if (ecodimb != ecodimb_selection)
+		{
+			populateTableChkApproval(ecodimb, selection);
+		}
+	});
+});
+
+function populateTableChkApproval(ecodimb, selection)
+{
+//	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: 1, sub_activity_id: $("#field_activity").val()};
+//	var url = phpGWLink('bookingfrontend/', oArgs, true);
+//	var container = 'approval_container';
+//	var colDefs = [
+//		{label: '', object: [{type: 'input', attrs: [
+//						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'values[approval][]'}, {name: 'class', value: 'chkRegulations'}
+//					]}
+//			], value: 'id', checked: selection},
+//		{key: 'name', label: lang['Name']},
+//		{key: 'type', label: lang['Address']}
+//	];
+//	createTable(container, url, colDefs, 'results');
+
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var htmlString = "";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				htmlString = "<table>";
+				var obj = data;
+
+				$.each(obj, function (i)
+				{
+					htmlString += "<tr><td>"
+					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"></input>";
+					htmlString += "</td><td valign=\"top\">";
+					htmlString += obj[i].address;
+					htmlString += "</td></tr>";
+				});
+				htmlString += "</table>";
+
+				$("#approval_container").html(htmlString);
+			}
+		}
+	});
+
+}
+;

@@ -67,6 +67,7 @@
 							</li>
 						</xsl:for-each>
 					</div>
+		<!--
 					<h4>
 						<xsl:value-of select="php:function('lang', 'Allocations with still existing bookings (%1)', count(allocation_keep[from_]))" />
 					</h4>
@@ -77,6 +78,7 @@
 							</li>
 						</xsl:for-each>
 					</div>
+		-->
 				</xsl:if>
 				<div class="form-buttons">
 					<input type="submit" name="delete" class="pure-button pure-button-primary">

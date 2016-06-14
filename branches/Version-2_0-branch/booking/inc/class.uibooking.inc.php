@@ -89,6 +89,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uibooking.index', 'phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 4, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
 							'key' => 'activity_name',
@@ -371,13 +372,9 @@
 
 			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
 
-			if (!isset($allocation_id))
-			{
-				$noallocation = 1;
-			}
 			$invalid_dates = array();
 			$valid_dates = array();
-			if (isset($allocation_id))
+			if ($allocation_id)
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
 				$season = $this->season_bo->read_single($allocation['season_id']);
@@ -392,6 +389,7 @@
 			}
 			else
 			{
+				$allocation = array();
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id','int', 'POST'));
 				$booking['organization_id'] = phpgw::get_var('organization_id','int', 'POST');
 				$booking['organization_name'] = phpgw::get_var('organization_name','string', 'POST');
@@ -413,9 +411,11 @@
 					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 
-				$timestamp = strtotime($booking['from_']);
+//				$timestamp = strtotime($booking['from_']);
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['from_']);
 				$booking['from_'] = date("Y-m-d H:i:s", $timestamp);
-				$timestamp = strtotime($booking['to_']);
+//				$timestamp = strtotime($booking['to_']);
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['to_']);
 				$booking['to_'] = date("Y-m-d H:i:s", $timestamp);
 
 				if (strlen($_POST['from_']) < 6)
@@ -471,7 +471,7 @@
 						$allocation['season_id'] = $booking['season_id'];
 						$allocation['organization_id'] = $booking['organization_id'];
 						$allocation['organization_name'] = $booking['organization_name'];
-						if ($application_id != '0')
+						if ($application_id)
 						{
 							$allocation['application_id'] = $application_id;
 						}
@@ -495,15 +495,15 @@
 				{
 					if ($_POST['recurring'] == 'on')
 					{
-						$repeat_until = strtotime($_POST['repeat_until']) + 60 * 60 * 24;
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
 					}
 					else
 					{
 						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-						$_POST['repeat_until'] = $season['to_'];
+						$_POST['repeat_until'] = pretty_timestamp($season['to_']);
 					}
 
-					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
@@ -511,8 +511,8 @@
 
 					while (($max_dato + ($interval * $i)) <= $repeat_until)
 					{
-						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval * $i));
-						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
+						$fromdate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['from_']) + ($interval * $i));
+						$todate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['to_']) + ($interval * $i));
 						$booking['from_'] = $fromdate;
 						$booking['to_'] = $todate;
 						$fromdate = pretty_timestamp($fromdate);
@@ -676,9 +676,12 @@
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
-					'from_date' => pretty_timestamp($_POST['from_']),
-					'to_date' => pretty_timestamp($_POST['to_']),
+//					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
+//					'from_date' => pretty_timestamp($_POST['from_']),
+//					'to_date' => pretty_timestamp($_POST['to_']),
+					'repeat_until' => $_POST['repeat_until'],
+					'from_date' => $_POST['from_'],
+					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups,
@@ -819,14 +822,14 @@
 			{
 				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
 
 				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
-					if ($_POST['allocation_delete'] != 'on')
+					if ($_POST['delete_allocation'] != 'on')
 					{
 						$this->bo->so->delete_booking($id);
 						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
@@ -896,16 +899,16 @@
 						}
 						if ($_POST['delete_allocation'] == 'on')
 						{
-							if (!$aid)
-							{
-								$allocation_keep[$i]['from_'] = $fromdate;
-								$allocation_keep[$i]['to_'] = $todate;
-							}
-							else
+//							if (!$aid)
+//							{
+//								$allocation_keep[$i]['from_'] = $fromdate;
+//								$allocation_keep[$i]['to_'] = $todate;
+//							}
+//							else
 							{
 								$allocation_delete[$i]['from_'] = $fromdate;
 								$allocation_delete[$i]['to_'] = $todate;
-								if ($step == 3)
+								if ($step == 3 && $aid)
 								{
 									$stat = $this->bo->so->delete_allocation($aid);
 								}
