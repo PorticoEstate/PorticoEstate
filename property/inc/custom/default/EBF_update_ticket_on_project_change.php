@@ -27,9 +27,9 @@
 			{
 				$origin = $this->interlink->get_relation('property', '.project', $project['id'], 'origin');
 			}
-			else if (isset($project['origin']) && is_array($project['origin']))
+			else if (isset($project['origin_data']) && is_array($project['origin_data']))
 			{
-				$origin = $project['origin'];
+				$origin = $project['origin_data'];
 			}
 			else
 			{
