@@ -2888,7 +2888,7 @@
 
 		public function check_external_register($param)
 		{
-			$id = 1101;//$param['id'];
+			$id = 5501;//$param['id'];
 	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
 			$url = "{$param['url']}/{$param['sub_check']}";
 			$extravars = array
