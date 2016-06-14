@@ -282,6 +282,10 @@
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
+	//	var initialSelection = <xsl:value-of select="resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
+
+
 	</script>
 	<dl>
 		<xsl:choose>
@@ -954,34 +958,8 @@
 												<label>
 													<xsl:value-of select="php:function('lang', 'ask for approval')"/>
 												</label>
-
-												<xsl:choose>
-													<xsl:when test="value_approval_mail_address!=''">
-														<div class="pure-table pure-u-md-1-2">
-															<table>
-																<xsl:for-each select="value_approval_mail_address">
-																	<tr>
-																		<td>
-																			<input type="checkbox" name="values[approval][{id}]" value="{address}">
-																				<xsl:attribute name="title">
-																					<xsl:value-of select="php:function('lang', 'ask for approval')"/>
-																				</xsl:attribute>
-																			</input>
-																		</td>
-																		<td valign="top">
-																			<xsl:value-of select="address"/>
-																		</td>
-																	</tr>
-																</xsl:for-each>
-															</table>
-														</div>
-													</xsl:when>
-													<xsl:otherwise>
-														<b>
-															<xsl:value-of select="php:function('lang', 'address not defined')"/>
-														</b>
-													</xsl:otherwise>
-												</xsl:choose>
+												<div id="approval_container" class="pure-table pure-u-md-1-2">
+												</div>
 											</div>
 										</xsl:when>
 									</xsl:choose>
