@@ -1702,7 +1702,8 @@ JS;
 				'ColumnDefs' => $budget_def,
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true),
+					array('rows_per_page' => $rows_per_page),
+//					array('disablePagination' => true),
 					array('initial_page' => $initial_page)
 				)
 			);

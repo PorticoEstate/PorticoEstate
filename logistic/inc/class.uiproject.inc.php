@@ -142,6 +142,8 @@
 					$project = $result->serialize();
 					$href = self::link(array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project['id']));
 					$project['add_activity_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Legg til aktivitet</a>";
+					$href_view = self::link(array('menuaction' => 'logistic.uiactivity.index', 'project_id' => $project['id']));
+					$project['view_activity_link'] = "<a class=\"btn-sm delete\" href=\"{$href_view}\">Vis aktiviteter</a>";
 					$rows[] = $project;
 				}
 			}
@@ -192,20 +194,15 @@
 								'name' => 'project_type',
 								'text' => lang('Project_type') . ':',
 								'list' => $project_type_array,
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('t_new_project'),
-								'href' => self::link(array('menuaction' => 'logistic.uiproject.add')),
-								'class' => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
 					'allrows' => true,
 					'editor_action' => self::link(array('menuaction' => 'logistic.uiproject.edit_project_name')),
+					'new_item' => self::link(array('menuaction' => 'logistic.uiproject.add')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -242,6 +239,11 @@
 						array(
 							'key' => 'add_activity_link',
 							'label' => lang('Add activity'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'view_activity_link',
+							'label' => lang('view activities'),
 							'sortable' => false
 						),
 						array(
@@ -302,29 +304,15 @@
 					'form' => array(
 						'toolbar' => array(
 							'item' => array(
-								array('type' => 'text',
-									'text' => lang('search'),
-									'name' => 'query'
-								),
-								array(
-									'type' => 'submit',
-									'name' => 'search',
-									'value' => lang('Search')
-								),
-								array(
-									'type' => 'link',
-									'value' => lang('t_new_project_type'),
-									'href' => self::link(array('menuaction' => 'logistic.uiproject.project_types',
-										'new_type' => 'yes')),
-									'class' => 'new_item'
-								),
-							),
-						),
+							)
+						)
 					),
 					'datatable' => array(
 						'source' => self::link(array('menuaction' => 'logistic.uiproject.project_types',
 							'phpgw_return_as' => 'json', 'type' => 'project_type')),
 						'editor_action' => self::link(array('menuaction' => 'logistic.uiproject.edit_project_type_name')),
+						'new_item' => self::link(array('menuaction' => 'logistic.uiproject.project_types',
+										'new_type' => 'yes')),
 						'field' => array(
 							array(
 								'key' => 'id',
@@ -345,6 +333,29 @@
 						)
 					),
 				);
+
+				$parameters = array(
+					'parameter' => array(
+						array(
+							'name' => 'id',
+							'source' => 'id'
+						)
+					)
+				);
+
+				if ($this->acl_read)
+				{
+					$data['datatable']['actions'][] = array
+						(
+						'my_name' => 'view',
+						'statustext' => lang('view'),
+						'text' => lang('view'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array(
+							'menuaction' => 'logistic.uiproject.edit_project_type'
+						)),
+						'parameters' => json_encode($parameters)
+					);
+				}
 
 				self::render_template_xsl(array('datatable_jquery'), $data);
 			}
@@ -390,6 +401,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.edit_project_type',
 					'id' => $project_type_id));
 			}
+			else if (isset($_POST['cancel_project_type']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.project_types'));
+			}
 			else
 			{
 				if ($project_type_id && is_numeric($project_type_id))
@@ -402,8 +417,7 @@
 						$project = $objects[$keys[0]];
 					}
 				}
-				$data = array
-					(
+				$data = array(
 					'project' => $project
 				);
 
@@ -446,13 +460,11 @@
 			}
 			else if (isset($_POST['cancel_project_type']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view_project_type',
-					'id' => $project_type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.project_types'));
 			}
 			else
 			{
-				$data = array
-					(
+				$data = array(
 					'project' => $project,
 					'editable' => true
 				);

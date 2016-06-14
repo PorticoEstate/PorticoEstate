@@ -103,20 +103,15 @@
 								'name' => 'user',
 								'text' => lang('Responsible user') . ':',
 								'list' => $user_array,
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('Add activity'),
-								'href' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
-								'class' => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json',
 						'filter' => phpgw::get_var('filter', 'int'))),
 					'allrows' => true,
+					'new_item' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
 					'field' => array(
 						array(
 							'key' => 'id',
