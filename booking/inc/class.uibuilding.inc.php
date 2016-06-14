@@ -307,6 +307,9 @@
 		public function schedule()
 		{
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'int'), "booking.uibuilding");
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$building['name']}";
+
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $building['id']));
 			$building['datasource_url'] = self::link(array(
