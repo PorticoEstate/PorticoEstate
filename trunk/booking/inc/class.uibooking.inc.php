@@ -372,10 +372,6 @@
 
 			$step = phpgw::get_var('step', 'int', 'REQUEST', 1);
 
-			if (!isset($allocation_id))
-			{
-				$noallocation = 1;
-			}
 			$invalid_dates = array();
 			$valid_dates = array();
 			if ($allocation_id)
@@ -393,6 +389,7 @@
 			}
 			else
 			{
+				$allocation = array();
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id','int', 'POST'));
 				$booking['organization_id'] = phpgw::get_var('organization_id','int', 'POST');
 				$booking['organization_name'] = phpgw::get_var('organization_name','string', 'POST');
@@ -474,7 +471,7 @@
 						$allocation['season_id'] = $booking['season_id'];
 						$allocation['organization_id'] = $booking['organization_id'];
 						$allocation['organization_name'] = $booking['organization_name'];
-						if ($application_id != '0')
+						if ($application_id)
 						{
 							$allocation['application_id'] = $application_id;
 						}
