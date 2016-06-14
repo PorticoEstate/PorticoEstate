@@ -55,7 +55,8 @@
 			'get_b_account'	=> true,
 			'get_external_project'=> true,
 			'get_unspsc_code'=> true,
-			'receive_order'	=> true
+			'receive_order'	=> true,
+			'check_purchase_right'=> true
 		);
 
 		/**
@@ -1937,36 +1938,7 @@
 
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
-				$supervisor_email = array();
-				if ($supervisor_id && $need_approval)
-				{
-					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-					if (isset($prefs['email']) && $prefs['email'])
-					{
-						$supervisor_email[] = array
-							(
-							'id' => $supervisor_id,
-							'address' => $prefs['email'],
-						);
-					}
-
-					if (isset($prefs['approval_from']) && $prefs['approval_from'])
-					{
-						$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
-
-						if (isset($prefs2['email']) && $prefs2['email'])
-						{
-							$supervisor_email[] = array
-								(
-								'id' => $prefs['approval_from'],
-								'address' => $prefs2['email'],
-							);
-							$supervisor_email = array_reverse($supervisor_email);
-						}
-						unset($prefs2);
-					}
-					unset($prefs);
-				}
+				$supervisor_email = $this->get_supervisor_email($supervisor_id,  $need_approval);
 				// approval					
 			}
 
@@ -2883,6 +2855,111 @@
 		public function get_vendor_contract($vendor_id = 0, $selected = '')
 		{
 			return $this->bocommon->get_vendor_contract($vendor_id, $selected);
+		}
+
+
+		public function check_purchase_right()
+		{
+			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
+			$id =  phpgw::get_var('ecodimb');
+
+			if($check_external_register && $id)
+			{
+				$url		= $config->config_data['external_register']['url'];
+				$username	= $config->config_data['external_register']['username'];
+				$password	= $config->config_data['external_register']['password'];
+				$sub_check = 'objekt';
+				return $this->check_external_register(array(
+					'url'		=> $url,
+					'username'	=> $username,
+					'password'	=> $password,
+					'sub_check'	=> $sub_check,
+					'id'		=> $id
+					)
+				);
+			}
+			else
+			{
+				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				return $this->get_supervisor_email($supervisor_id);
+			}
+		}
+
+		public function check_external_register($param)
+		{
+			$id = 1101;//$param['id'];
+	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
+			$url = "{$param['url']}/{$param['sub_check']}";
+			$extravars = array
+			(
+				'id'		=> $id,
+			);
+
+			$url .= '?' . http_build_query($extravars, null, '&');
+
+			$post_data = array();
+
+			$ch = curl_init();
+	//		curl_setopt($ch, CURLOPT_PROXY, $proxy);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$param['username']}:{$param['password']}");
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			// Set The Response Format to Json
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			//set data to be posted
+			if($post_data)
+			{
+				$post_items = array();
+				foreach ( $post_data as $key => $value)
+				{
+					$post_items[] = "{$key}={$value}";
+				}
+				curl_setopt($ch, CURLOPT_POSTFIELDS, implode ('&', $post_items));
+			}
+
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return $result;
+		}
+
+		protected function get_supervisor_email($supervisor_id)
+		{
+			$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
+			$supervisor_email = array();
+			if ($supervisor_id && $need_approval)
+			{
+				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+				if (isset($prefs['email']) && $prefs['email'])
+				{
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $prefs['email'],
+					);
+				}
+
+				if (isset($prefs['approval_from']) && $prefs['approval_from'])
+				{
+					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+					if (isset($prefs2['email']) && $prefs2['email'])
+					{
+						$supervisor_email[] = array(
+							'id' => $prefs['approval_from'],
+							'address' => $prefs2['email'],
+						);
+						$supervisor_email = array_reverse($supervisor_email);
+					}
+					unset($prefs2);
+				}
+				unset($prefs);
+			}
+			return $supervisor_email;
 		}
 
 		/**
