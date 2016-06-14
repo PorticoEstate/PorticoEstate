@@ -5,7 +5,8 @@
 
 		var $public_functions = array
 			(
-			'index' => true
+			'index' => true,
+			'components' => true
 		);
 
 		const DELIMITER = ";";
@@ -684,6 +685,15 @@ HTML;
 			}
 		}
 
+		protected function getxmldata( $path, $get_identificator = true )
+		{
+			phpgw::import_class('phpgwapi.xmlhelper');
+
+			$result = phpgwapi_xmlhelper::xml2assoc($path);
+
+			return $result;
+		}
+		
 		protected function getcsvdata( $path, $get_identificator = true )
 		{
 			// Open the csv file
@@ -860,4 +870,218 @@ HTML;
 
 			return $file_list;
 		}
+		
+		/**
+		 * Public method. 
+		 * 
+		 * @return unknown_type
+		 */
+		public function components()
+		{
+			// Set the submit button label to its initial state
+			$this->import_button_label = "Start import";
+
+			$check_method = 0;
+			$get_identificator = false;
+			/*if ($this->conv_type = phpgw::get_var('conv_type'))
+			{
+				$check_method ++;
+				$get_identificator = true;
+			}
+			
+			if ($this->location_id = phpgw::get_var('location_id', 'int'))
+			{
+				$check_method ++;
+				$get_identificator = true;
+			}
+
+			if ($table = phpgw::get_var('table'))
+			{
+				$check_method ++;
+				$get_identificator = true;
+			}*/
+
+			if ($check_method > 1)
+			{
+				phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
+			}
+
+
+			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
+
+			/*$download_template = phpgw::get_var('download_template');
+
+			if ($download_template)
+			{
+				$this->get_template($this->location_id);
+			}*/
+
+			// If the parameter 'importsubmit' exist (submit button in import form), set path
+			if (phpgw::get_var("importsubmit"))
+			{
+				if ($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
+				{
+					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
+				}
+
+
+				$start_time = time(); // Start time of import
+				$start = date("G:i:s", $start_time);
+				echo "<h3>Import started at: {$start}</h3>";
+				echo "<ul>";
+
+				/*if ($this->conv_type)
+				{
+					if (preg_match('/\.\./', $this->conv_type))
+					{
+						throw new Exception("Not a valid file: {$this->conv_type}");
+					}
+
+					$file = PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$this->conv_type}";
+
+					if (is_file($file))
+					{
+						require_once $file;
+					}
+				}
+				else
+				{
+					require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_generic.php";
+				}*/
+
+
+				$this->debug = phpgw::get_var('debug', 'bool');
+				//$this->import_conversion = new import_conversion($this->location_id, $this->debug);
+
+				// Get the path for user input or use a default path
+
+				$files = array();
+				if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+				{
+					$files[] = array
+						(
+						'name' => $_FILES['file']['tmp_name'],
+						'type' => $_FILES['file']['type']
+					);
+				}
+				else
+				{
+					$path = phpgw::get_var('path', 'string');
+					$files = $this->get_files($path);
+				}
+
+				if (!$files)
+				{
+					phpgwapi_cache::session_set('property', 'import_message', 'Ingen filer er valgt');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
+				}
+
+				foreach ($files as $file)
+				{
+					$valid_type = true;
+					/*switch ($file['type'])
+					{
+						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+						case 'application/vnd.oasis.opendocument.spreadsheet':
+						case 'application/vnd.ms-excel':
+							$this->csvdata = $this->getexceldata($file['name'], $get_identificator);
+							$valid_type = true;
+							break;
+						case 'text/csv':
+						case 'text/comma-separated-values':
+							$this->csvdata = $this->getcsvdata($file['name'], $get_identificator);
+							$valid_type = true;
+							break;
+						default:
+							throw new Exception("Not a valid filetype: {$file['type']}");
+					}*/
+
+					$result = $this->getxmldata($file['name'], $get_identificator);
+		
+					echo '<li class="info">Import: finished step ' . print_r($result) . '</li>';
+				}
+
+
+				echo "</ul>";
+				$end_time = time();
+				$difference = ($end_time - $start_time) / 60;
+				$end = date("G:i:s", $end_time);
+				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
+
+				if ($this->errors)
+				{
+					echo "<ul>";
+					foreach ($this->errors as $error)
+					{
+						echo '<li class="error">Error: ' . $error . '</li>';
+					}
+
+					echo "</ul>";
+				}
+
+				if ($this->warnings)
+				{
+					echo "<ul>";
+					foreach ($this->warnings as $warning)
+					{
+						echo '<li class="warning">Warning: ' . $warning . '</li>';
+					}
+					echo "</ul>";
+				}
+
+				if ($this->messages)
+				{
+					echo "<ul>";
+
+					foreach ($this->messages as $message)
+					{
+						echo '<li class="info">Message: ' . $message . '</li>';
+					}
+					echo "</ul>";
+				}
+				echo '<a href="' . $GLOBALS['phpgw']->link('/home.php') . '">Home</a>';
+				echo '</br><a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.components')) . '">Import</a>';
+			}
+			else
+			{
+				$import_settings = phpgwapi_cache::session_get('property', 'import_settings');
+				$import_message = phpgwapi_cache::session_get('property', 'import_message');
+
+				phpgwapi_cache::session_clear('property', 'import_message');
+
+
+				$home = $GLOBALS['phpgw']->link('/home.php');
+				$action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.components'));
+
+				//$debug_checked = isset($import_settings['debug']) && $import_settings['debug'] ? 'checked =  "checked"' : '';
+				$html = <<<HTML
+				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
+				<div id="messageHolder">{$import_message}</div>
+				<form action="{$action}" method="post" enctype="multipart/form-data">
+					<fieldset>
+						<p>
+							<label for="file">Choose file:</label>
+							<input type="file" name="file" id="file" title = 'Single file'/>
+						</p>
+						<p>
+							<label for="path">Local path:</label>
+							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
+						</p>
+						<p>
+							<label for="debug">Debug:</label>
+							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
+						</p>
+						<p>
+							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
+						</p>
+		 			</fieldset>
+				</form>
+				<br><a href='$home'>Home</a>
+HTML;
+				echo $html;
+			}
+		}
+		
 	}
