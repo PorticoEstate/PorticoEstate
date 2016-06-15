@@ -684,14 +684,23 @@ HTML;
 				return false;
 			}
 		}
+		
+		private function _xml2array ( $xmlObject, $out = array () )
+		{
+			foreach ( (array) $xmlObject as $index => $node )
+			{
+				$out[$index] = ( is_object($node) || is_array($node) ) ? $this->_xml2array ( $node ) : $node;
+			}
+			
+			return $out;
+		}
 
 		protected function getxmldata( $path, $get_identificator = true )
 		{
-			phpgw::import_class('phpgwapi.xmlhelper');
+			$xml = simplexml_load_file($path);
+			$out = $this->_xml2array($xml);
 
-			$result = phpgwapi_xmlhelper::xml2assoc($path);
-
-			return $result;
+			return $out;
 		}
 		
 		protected function getcsvdata( $path, $get_identificator = true )
