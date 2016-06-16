@@ -393,9 +393,11 @@
 					<div class="heading">
 						<br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" />
 					</div>
-					<p>
-						<xsl:value-of select="php:function('lang', 'All that borrow premises from Bergen Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" />
-					</p>
+						<xsl:if test="config/application_terms">
+							<p>
+								<xsl:value-of select="config/application_terms"/>
+							</p>
+						</xsl:if>
 					<br />
 					<div id='regulation_documents'>&nbsp;</div>
 					<br />

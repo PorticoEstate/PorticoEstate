@@ -129,7 +129,17 @@
 
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
-			self::render_template_xsl('application', array('application' => $application,
-				'audience' => $audience, 'agegroups' => $agegroups, 'frontend' => 'true'));
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+			$application_text = $config->config_data;
+
+			self::render_template_xsl('application', array(
+				'application' => $application,
+				'audience' => $audience,
+				'agegroups' => $agegroups,
+				'frontend' => 'true',
+				'config' => $application_text
+				)
+			);
 		}
 	}
