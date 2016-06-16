@@ -118,11 +118,6 @@
 
 			$menus['navigation'] = array
 				(
-				'application' => array(
-					'text' => lang('application'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
-					'image' => array('rental', 'text-x-generic'),
-				),
 				'contracts' => array
 					(
 					'text' => lang('contracts'),
@@ -143,6 +138,18 @@
 					'image' => array('rental', 'x-office-address-book')
 				)
 			);
+
+			//temporary check
+			if(!$use_fellesdata)
+			{
+				$menus['navigation'] = array_reverse($menus['navigation'], true);
+				$menus['navigation']['application'] = array(
+					'text' => lang('application'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
+					'image' => array('rental', 'text-x-generic'),
+				);
+				$menus['navigation'] = array_reverse($menus['navigation'], true);
+			}
 
 			if ($use_fellesdata)
 			{
