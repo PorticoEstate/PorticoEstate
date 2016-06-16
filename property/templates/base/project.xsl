@@ -363,13 +363,13 @@
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_dimb"/>
+								</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:attribute name="disabled">
 									<xsl:text>disabled</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_dimb"/>
 								</xsl:attribute>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -405,8 +405,11 @@
 					</div>
 				</xsl:if>
 				<div class="pure-control-group">
-					<label for="name">
+					<xsl:variable name="lang_budget">
 						<xsl:value-of select="php:function('lang', 'budget')"/>
+					</xsl:variable>
+					<label for="name">
+						<xsl:value-of select="$lang_budget"/>
 					</label>
 					<div class="pure-custom">
 						<div>
@@ -419,10 +422,16 @@
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_budget"/>
+										</xsl:attribute>
 									</xsl:when>
 									<xsl:when  test="value_project_id &gt; 0 and not(check_for_budget &gt; 0) and mode='edit'">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_budget"/>
 										</xsl:attribute>
 									</xsl:when>
 									<xsl:otherwise>
