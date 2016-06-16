@@ -36,14 +36,24 @@
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'controller';
 			$menus = array();
+			$config = CreateObject('phpgwapi.config', 'controller');
+			$config->read();
+			if (isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'])
+			{
+				$main = 'controller.uicomponent.index';
+			}
+			else
+			{
+				$main = 'controller.uicontrol.control_list';
+
+			}
 
 			$menus['navbar'] = array
 				(
 				'controller' => array
 					(
 					'text' => lang('Controller'),
-			//		'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list')),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index')),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $main)),
 					'image' => array('property', 'location'),
 					'order' => 10,
 					'group' => 'office'
@@ -56,11 +66,8 @@
 				$menus['navigation']['control'] =  array(
 						'text' => lang('Control types'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list')),
-						'image' => array('property', 'location_1'));
-
-				
-				$config = CreateObject('phpgwapi.config', 'controller');
-				$config->read();
+						'image' => array('property', 'location_1')
+					);
 
 
 				if (!isset($config->config_data['home_alternative']) || !$config->config_data['home_alternative'])
