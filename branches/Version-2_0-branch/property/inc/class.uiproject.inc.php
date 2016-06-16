@@ -733,7 +733,7 @@ JS;
 			$values = phpgw::get_var('values');
 			$values_attribute = phpgw::get_var('values_attribute');
 //			$values['external_project_id'] = phpgw::get_var('external_project_id');
-			$values['ecodimb'] = phpgw::get_var('ecodimb');
+//			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
