@@ -43,7 +43,9 @@
 			$this->resource_bo = CreateObject('booking.boresource');
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->organization_bo = CreateObject('booking.boorganization');
-			$this->document_bo = CreateObject('booking.bodocument_building');
+			$this->document_building = CreateObject('booking.bodocument_building');
+			$this->document_resource = CreateObject('booking.bodocument_resource');
+
 			self::set_active_menu('booking::applications');
 			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
 				'building_id', 'building_name', 'contact_name',
@@ -550,8 +552,19 @@
 			$comment_text = lang('The user has accepted the following documents') . ': ';
 			foreach ($application['accepted_documents'] as $doc)
 			{
-				$doc_id = substr($doc, strrpos($doc, ':') + 1); // finding the document_building.id
-				$document = $this->document_bo->read_single($doc_id);
+				$doc_info = explode('::', $doc);
+				$doc_type = $doc_info[0];
+				$doc_id = $doc_info[1];
+				switch ($doc_type)
+				{
+					default:
+					case 'building':
+						$document = $this->document_building->read_single($doc_id);
+						break;
+					case 'resource':
+						$document = $this->document_resource->read_single($doc_id);
+						break;
+				}
 				$comment_text .= $document['description'] . ' (' . $document['name'] . '), ';
 			}
 			$comment_text = substr($comment_text, 0, -2);

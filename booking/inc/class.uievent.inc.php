@@ -369,11 +369,11 @@
 
 				foreach ($_POST['from_'] as &$from)
 				{
-//					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
+					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
 				}
 				foreach ($_POST['to_'] as &$to)
 				{
-//					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
 				$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
