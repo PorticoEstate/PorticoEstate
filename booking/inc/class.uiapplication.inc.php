@@ -943,8 +943,8 @@
 				}
 			}
 			$event = array();
-			$event[] = array('from_', $date['from_']);
-			$event[] = array('to_', $date['to_']);
+			$event[] = array('from_', pretty_timestamp($date['from_']));
+			$event[] = array('to_', pretty_timestamp($date['to_']));
 			$event[] = array('cost', '0');
 			$event[] = array('application_id', $application['id']);
 			$event[] = array('reminder', '0');
