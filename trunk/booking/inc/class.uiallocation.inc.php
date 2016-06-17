@@ -299,17 +299,26 @@
 
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
+				$from_date_arr = explode(' ', $_POST['from_']);
+				$to_date_arr = explode(' ', $_POST['to_']);
+				if(!isset($_POST['weekday']))
+				{
+					$_POST['weekday'] = strtolower (date('l', phpgwapi_datetime::date_to_timestamp($_POST['from_'])));
+				}
+
 				$weekday = $_POST['weekday'];
 
-				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
-				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
+//				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
+//				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
+				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_date_arr[1]));
+				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_date_arr[1]));
 
-				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == 'sunday' && date('w') < date('w', strtotime($_POST['weekday']))))
+				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == '0' && date('w') < date('w', strtotime($_POST['weekday']))))
 				{
-					if (phpgw::get_var('weekday', 'string') == '')
+					if (!phpgw::get_var('weekday', 'string', 'POST'))
 					{
-						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']) - 60 * 60 * 24 * 7);
-						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']) - 60 * 60 * 24 * 7);
+						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
+						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
 					}
 				}
 				$_POST['from_'] = $allocation['from_'];
@@ -409,7 +418,7 @@
 				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'string'));
 				array_set_default($allocation, 'from_', $timeFrom);
 				array_set_default($allocation, 'to_', $timeTo);
-				$weekday = phpgw::get_var('weekday', 'string');
+				$weekday = phpgw::get_var('weekday', 'string', 'POST');
 			}
 
 			$this->flash_form_errors($errors);

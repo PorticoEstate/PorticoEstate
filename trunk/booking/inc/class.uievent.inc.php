@@ -363,17 +363,27 @@
 			$event = array('customer_internal' => 0);
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
-				foreach ($_POST['from_'] as &$from)
+				if(isset($_POST['from_']))
 				{
-					$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
-				}
-				foreach ($_POST['to_'] as &$to)
-				{
-					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+					if(is_array($_POST['from_']))
+					{
+						foreach ($_POST['from_'] as &$from)
+						{
+							$from = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($from));
+						}
+						foreach ($_POST['to_'] as &$to)
+						{
+							$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
+						}
+					}
+					else
+					{
+						$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+						$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+					}
 				}
 
 				$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
@@ -1019,6 +1029,10 @@
 			if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
 			{
 				$this->bo->so->delete_event($event_id);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('Mangler rettighet for å slette', 'error');
 			}
 			if (isset($application_id))
 			{
