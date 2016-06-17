@@ -1008,11 +1008,42 @@ HTML;
 					}*/
 
 					$result = $this->getxmldata($file['name'], $get_identificator);
+					
+					$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
+					
+					foreach ($posts as $post) 
+					{
+						$entity_categories_in_xml[] = array(
+							'buildingpart' => $post['Postnrdeler']['Postnrdel'][1]['Kode'],
+							'benevnelse' => trim($post['Egenskaper']['Egenskap']['Verdi']),
+							'beskrivelse' => trim($post['Tekst']['Uformatert'])
+						);
+						
+						$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
+					}
 		
-					echo '<li class="info">Import: finished step ' . print_r($result) . '</li>';
+					//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
 				}
+				
+				require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
 
+				$import_components = new import_components();
+				$entity_categories  = $import_components->get_entity_categories();
 
+				$buildingpart_out_table = array();
+				foreach ($buildingpart_in_xml as $item) 
+				{
+					if (!array_key_exists((string)$item, $entity_categories))
+					{
+						$parent = substr($item, 0, strlen($item) -1);
+						$buildingpart_out_table[$item] = array('parent' => $entity_categories[$parent]);
+					}
+				}
+				
+				//$childs = $import_components->add_entity_categories($buildingpart_out_table);
+				
+				print_r($buildingpart_out_table);
+				
 				echo "</ul>";
 				$end_time = time();
 				$difference = ($end_time - $start_time) / 60;
