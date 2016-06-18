@@ -1035,14 +1035,17 @@ HTML;
 				{
 					if (!array_key_exists((string)$item, $entity_categories))
 					{
-						$parent = substr($item, 0, strlen($item) -1);
-						$buildingpart_out_table[$item] = array('parent' => $entity_categories[$parent]);
+						$buildingpart_parent = substr($item, 0, strlen($item) -1);
+						$buildingpart_out_table[$item] = array('parent' => $entity_categories[$buildingpart_parent]);
 					}
 				}
 				
-				//$childs = $import_components->add_entity_categories($buildingpart_out_table);
+				if (count($buildingpart_out_table))
+				{
+					//$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+				}
 				
-				print_r($buildingpart_out_table);
+				print_r($buildingpart_in_xml);
 				
 				echo "</ul>";
 				$end_time = time();
