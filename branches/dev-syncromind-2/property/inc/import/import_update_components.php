@@ -11,6 +11,7 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
+			$this->bo_entity = CreateObject('property.boentity', true);
 		}
 
 		public function get_entity_categories ($data = array())
@@ -44,20 +45,51 @@
 		
 		public function add_entity_categories ($buildingpart_out_table)
 		{
+			$buildingparts = array();
+			
 			foreach ($buildingpart_out_table as $k => $v)
-			{
+			{	
 				if ($v['parent'])
 				{
+					$values = array();
 					$childs = $this->get_entity_categories(array('parent_id' => $v['parent']['id']));
 					if (count($childs))
 					{
-						$category = array_values($childs)[0];
-						$attrib_list = $this->bo->read_attrib(array('entity_id' => $category['entity_id'], 'cat_id' => $category['id'], 'allrows' => true));
+						$child = array_values($childs)[0];
+						$attrib_list = $this->bo->read_attrib(array('entity_id' => $child['entity_id'], 'cat_id' => $child['id'], 'allrows' => true));
+						
+						foreach ($attrib_list as $attrib) 
+						{
+							$values['template_attrib'][] = $attrib['id'];
+						}
+						$values['category_template'] = $child['entity_id'].'_'.$child['id'];
+					}
+					$values['parent_id'] = $v['parent']['id'];
+					$values['name'] = $k;
+					$values['descr'] = $k;
+					$values['entity_id'] = 3;
+					$values['fileupload'] = 1;
+					$values['loc_link'] = 1;
+					$values['is_eav'] = 1;
+					
+					$receipt = $this->bo->save_category($values);
+					
+					if ($receipt['id'])
+					{
+						$buildingparts['added'][$k] = $k;
+					}
+					else {
+						$buildingparts['not_added'][$k] = $k;
 					}
 				}
 			}
 			
-			return $attrib_list;
+			return $buildingparts;
+		}
+		
+		public function add_bim_item($data)
+		{
+			return;
 		}
 		
 	}
