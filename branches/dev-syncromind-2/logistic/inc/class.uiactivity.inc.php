@@ -103,20 +103,15 @@
 								'name' => 'user',
 								'text' => lang('Responsible user') . ':',
 								'list' => $user_array,
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('Add activity'),
-								'href' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
-								'class' => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json',
 						'filter' => phpgw::get_var('filter', 'int'))),
 					'allrows' => true,
+					'new_item' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -670,7 +665,7 @@
 
 			$datatable_def[] = array
 				(
-				'container' => 'requirement-container',
+				'container' => 'requirement-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'logistic.uirequirement.index',
 						'activity_id' => $activity_id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $ColumnDefs0,
@@ -698,7 +693,7 @@
 
 			$datatable_def[] = array
 				(
-				'container' => 'allocation-container',
+				'container' => 'allocation-container_0',
 				'requestUrl' => "''", //json_encode(self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'requirement_id' => $requirement_id, 'type' => "requirement_id", 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $ColumnDefs1,
 				'data' => json_encode(array()),

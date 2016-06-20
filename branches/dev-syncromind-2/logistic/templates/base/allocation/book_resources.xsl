@@ -158,5 +158,4 @@
 			</form>
 	</div>
 </div>
-<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>

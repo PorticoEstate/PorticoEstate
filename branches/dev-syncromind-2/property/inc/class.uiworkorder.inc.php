@@ -2090,10 +2090,9 @@
 				'data' => json_encode($content_budget),
 				'ColumnDefs' => $budget_def,
 				'config' => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+//					array('disablePagination' => true),
+					array('rows_per_page' => $rows_per_page),
 				)
 			);
 

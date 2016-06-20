@@ -282,6 +282,10 @@
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
+	//	var initialSelection = <xsl:value-of select="resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
+
+
 	</script>
 	<dl>
 		<xsl:choose>
@@ -669,25 +673,27 @@
 											<xsl:apply-templates select="contract_list/options"/>
 										</select>
 									</div>
-									<div class="pure-control-group">
-										<xsl:variable name="lang_service">
-											<xsl:value-of select="php:function('lang', 'service')"/>
-										</xsl:variable>
-										<label>
-											<xsl:value-of select="$lang_service"/>
-										</label>
-										<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
-										<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
-											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-error-msg">
+									<xsl:if test="enable_order_service_id = 1">
+										<div class="pure-control-group">
+											<xsl:variable name="lang_service">
+												<xsl:value-of select="php:function('lang', 'service')"/>
+											</xsl:variable>
+											<label>
 												<xsl:value-of select="$lang_service"/>
-											</xsl:attribute>
-										</input>
+											</label>
+											<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
+											<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="$lang_service"/>
+												</xsl:attribute>
+											</input>
 
-										<div id="service_container"/>
-									</div>
+											<div id="service_container"/>
+										</div>
+									</xsl:if>
 									<div class="pure-control-group">
 										<xsl:variable name="lang_dimb">
 											<xsl:value-of select="php:function('lang', 'dimb')"/>
@@ -724,24 +730,26 @@
 										</input>
 										<div id="b_account_container"/>
 									</div>
-									<div class="pure-control-group">
-										<xsl:variable name="lang_unspsc_code">
-											<xsl:value-of select="php:function('lang', 'unspsc code')"/>
-										</xsl:variable>
-										<label>
-											<xsl:value-of select="$lang_unspsc_code"/>
-										</label>
-										<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
-										<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
-											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-error-msg">
+									<xsl:if test="enable_unspsc = 1">
+										<div class="pure-control-group">
+											<xsl:variable name="lang_unspsc_code">
+												<xsl:value-of select="php:function('lang', 'unspsc code')"/>
+											</xsl:variable>
+											<label>
 												<xsl:value-of select="$lang_unspsc_code"/>
-											</xsl:attribute>
-										</input>
-										<div id="unspsc_code_container"/>
-									</div>
+											</label>
+											<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
+											<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="$lang_unspsc_code"/>
+												</xsl:attribute>
+											</input>
+											<div id="unspsc_code_container"/>
+										</div>
+									</xsl:if>
 
 									<div class="pure-control-group">
 										<xsl:variable name="lang_building_part">
@@ -808,26 +816,28 @@
 											<xsl:apply-templates select="order_dim1_list/options"/>
 										</select>
 									</div>
-									<div class="pure-control-group">
-										<xsl:variable name="lang_tax_code">
-											<xsl:value-of select="php:function('lang', 'tax code')"/>
-										</xsl:variable>
-										<label>
-											<xsl:value-of select="$lang_tax_code"/>
-										</label>
-										<select name="values[tax_code]">
-											<xsl:attribute name="title">
+									<xsl:if test="enable_unspsc = 1">
+										<div class="pure-control-group">
+											<xsl:variable name="lang_tax_code">
+												<xsl:value-of select="php:function('lang', 'tax code')"/>
+											</xsl:variable>
+											<label>
 												<xsl:value-of select="$lang_tax_code"/>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-error-msg">
-												<xsl:value-of select="$lang_tax_code"/>
-											</xsl:attribute>
-											<xsl:apply-templates select="tax_code_list/options"/>
-										</select>
-									</div>
+											</label>
+											<select name="values[tax_code]">
+												<xsl:attribute name="title">
+													<xsl:value-of select="$lang_tax_code"/>
+												</xsl:attribute>
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="$lang_tax_code"/>
+												</xsl:attribute>
+												<xsl:apply-templates select="tax_code_list/options"/>
+											</select>
+										</div>
+									</xsl:if>
 									<div class="pure-control-group">
 										<label>
 											<a href="javascript:template_lookup()">
@@ -948,34 +958,8 @@
 												<label>
 													<xsl:value-of select="php:function('lang', 'ask for approval')"/>
 												</label>
-
-												<xsl:choose>
-													<xsl:when test="value_approval_mail_address!=''">
-														<div class="pure-table pure-u-md-1-2">
-															<table>
-																<xsl:for-each select="value_approval_mail_address">
-																	<tr>
-																		<td>
-																			<input type="checkbox" name="values[approval][{id}]" value="{address}">
-																				<xsl:attribute name="title">
-																					<xsl:value-of select="php:function('lang', 'ask for approval')"/>
-																				</xsl:attribute>
-																			</input>
-																		</td>
-																		<td valign="top">
-																			<xsl:value-of select="address"/>
-																		</td>
-																	</tr>
-																</xsl:for-each>
-															</table>
-														</div>
-													</xsl:when>
-													<xsl:otherwise>
-														<b>
-															<xsl:value-of select="php:function('lang', 'address not defined')"/>
-														</b>
-													</xsl:otherwise>
-												</xsl:choose>
+												<div id="approval_container" class="pure-table pure-u-md-1-2">
+												</div>
 											</div>
 										</xsl:when>
 									</xsl:choose>

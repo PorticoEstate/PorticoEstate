@@ -94,6 +94,9 @@
 
 			$DetailInfo = array();
 			$DetailInfo[] = array(
+				'TaxCode' => $param['tax_code'] // Moms kode
+			);
+			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'A0',
 					'Value' => $param['dim0'] // Art
@@ -135,13 +138,14 @@
 					'Value' => $param['dim6'] // Aktivitet
 				)
 			);
+/*
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'A1',
 					'Value' => $param['tax_code'] // Moms kode
 				)
 			);
-
+*/
 			$Detail = array();
 			$i = 1;
 			foreach ($param['lines'] as $line)
@@ -154,6 +158,8 @@
 					'BuyerProductDescr' => $line['descr'], //'Kopipapir',
 					'UnitCode' => 'STK',
 					'Quantity' => 100,
+					'Price' =>'',
+					'Linetotal'=> '',
 					'DetailInfo' => $DetailInfo
 				);
 
@@ -163,7 +169,7 @@
 
 			$Orders['Order'][] = array(
 				'OrderNo' => $param['order_id'],
-				'VoucherType' => 'IV',
+				'VoucherType' => 'P3',
 				'TransType' => 41,
 				'Header' => array($Header),
 				'Details' => array('Detail' => $Detail)

@@ -1,5 +1,5 @@
 /*! Bootstrap integration for DataTables' Responsive
- * ©2015 SpryMedia Ltd - datatables.net/license
+ * ©2015-2016 SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -38,16 +38,8 @@ var DataTable = $.fn.dataTable;
 
 var _display = DataTable.Responsive.display;
 var _original = _display.modal;
-
-_display.modal = function ( options ) {
-	return function ( row, update, render ) {
-		if ( ! $.fn.modal ) {
-			_original( row, update, render );
-		}
-		else {
-			if ( ! update ) {
-				var modal = $(
-					'<div class="modal fade" role="dialog">'+
+var _modal = $(
+	'<div class="modal fade dtr-bs-modal" role="dialog">'+
 						'<div class="modal-dialog" role="document">'+
 							'<div class="modal-content">'+
 								'<div class="modal-header">'+
@@ -57,15 +49,26 @@ _display.modal = function ( options ) {
 							'</div>'+
 						'</div>'+
 					'</div>'
-				);
+);
 
+_display.modal = function ( options ) {
+	return function ( row, update, render ) {
+		if ( ! $.fn.modal ) {
+			_original( row, update, render );
+		}
+		else {
+			if ( ! update ) {
 				if ( options && options.header ) {
-					modal.find('div.modal-header')
+					_modal.find('div.modal-header')
+						.empty()
 						.append( '<h4 class="modal-title">'+options.header( row )+'</h4>' );
 				}
 
-				modal.find( 'div.modal-body' ).append( render() );
-				modal
+				_modal.find( 'div.modal-body' )
+					.empty()
+					.append( render() );
+
+				_modal
 					.appendTo( 'body' )
 					.modal();
 			}

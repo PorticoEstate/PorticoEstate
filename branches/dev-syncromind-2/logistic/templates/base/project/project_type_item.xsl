@@ -7,7 +7,7 @@
 	<h1>Prosjekttype</h1>
 		<div style="padding:20px;" class="content-wrp">
 			<form action="#" method="post">
-				<input type="hidden" name="id" value = "{value_id}">
+				<input type="hidden" name="id" value = "{project/id}">
 				</input>
 				<dl class="proplist-col">
 					<dt>
@@ -26,16 +26,17 @@
 				</dl>
 				
 				<div class="form-buttons">
+					<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 					<xsl:choose>
 						<xsl:when test="editable">
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_project_type" value="{$lang_save}" title = "{$lang_save}" />
 							<input type="submit" name="cancel_project_type" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
 							<input type="submit" name="edit_project_type" value="{$lang_edit}" title = "{$lang_edit}" />
+							<input type="submit" name="cancel_project_type" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

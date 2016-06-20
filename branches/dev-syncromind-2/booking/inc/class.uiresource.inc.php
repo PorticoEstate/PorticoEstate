@@ -440,6 +440,19 @@
 		public function schedule()
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'int'), 'booking.uibuilding', 'booking.uiresource');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$resource['name']}";
+			$building_names = array();
+			if(is_array($resource['buildings']))
+			{
+				foreach ($resource['buildings'] as $building_id)
+				{
+					$building = $this->bo->read_single($building_id);
+					$building_names[] = $building['name'];
+				}
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= ' (' . implode('',$building_names) . ')';
+			}
+
 			$resource['application_link'] = self::link(array(
 					'menuaction' => 'booking.uiapplication.add',
 					'building_id' => $resource['building_id'],

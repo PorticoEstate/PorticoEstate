@@ -350,7 +350,7 @@
 	<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 	</form>
 
-	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<!--xsl:call-template name="jquery_phpgw_i18n"/-->
 
 </xsl:template>
 

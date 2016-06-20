@@ -60,11 +60,11 @@
 			$this->so = CreateObject('logistic.soresource_type_requirement');
 			$this->so_project = CreateObject('logistic.soproject');
 
-			$this->read = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
-			$this->add = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'logistic');//2
-			$this->edit = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_EDIT, 'logistic');//4
-			$this->delete = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_DELETE, 'logistic');//8
-			$this->manage = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
+			$this->acl_read = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
+			$this->acl_add = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'logistic');//2
+			$this->acl_edit = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_EDIT, 'logistic');//4
+			$this->acl_delete = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_DELETE, 'logistic');//8
+			$this->acl_manage = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::resource_type_requirement";
 			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
@@ -126,6 +126,8 @@
 			switch ($query_type)
 			{
 				case 'resource_type_requirement_list':
+					$filters = array();//FIXME
+
 					$search_type = 'resource_type_requirement_list';
 					$sort_field = 'type_requirement.location_id';
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
@@ -184,19 +186,14 @@
 								'name' => 'entity_type',
 								'text' => lang('Entity types') . ':',
 								'list' => $entity_list,
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('t_new_type_requirement'),
-								'href' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.add')),
-								'class' => 'new_item'
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index',
 						'phpgw_return_as' => 'json', 'type' => 'resource_type_requirement_list')),
+					'new_item' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.add')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -233,6 +230,29 @@
 					)
 				),
 			);
+
+			$parameters = array(
+					'parameter' => array(
+						array(
+							'name' => 'id',
+							'source' => 'id'
+						)
+					)
+				);
+
+				if ($this->acl_read)
+				{
+					$data['datatable']['actions'][] = array
+						(
+						'my_name' => 'view',
+						'statustext' => lang('view'),
+						'text' => lang('view'),
+						'action' => $GLOBALS['phpgw']->link('/index.php', array(
+							'menuaction' => 'logistic.uiresource_type_requirement.view'
+						)),
+						'parameters' => json_encode($parameters)
+					);
+				}
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}

@@ -294,9 +294,8 @@
 			$this->receipt['message'][] = array('msg' => "Oppdaterer melding #{$id} for agresso prosjekt {$external_project}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 			$this->historylog->add('AC', $id, $new_actual_cost, $old_actual_cost);
 
-			$value_set = array
-				(
-				'external_project' => $external_project,
+			$value_set = array(
+				'external_project_id' => $external_project,
 				'actual_cost' => $new_actual_cost,
 				'actual_cost_year' => date('Y'),
 				'modified_date' => time()
@@ -335,7 +334,7 @@
 				return false;
 			}
 
-			$this->db->query("UPDATE fm_tts_tickets SET external_project = '{$external_project}' WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_tts_tickets SET external_project_id = '{$external_project}' WHERE id={$id}", __LINE__, __FILE__);
 
 			$ok = true;
 			if (preg_match('/(^C|^P)/i', $prosjektstatus))
