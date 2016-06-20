@@ -401,12 +401,15 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		{			
 			try
 			{
-				if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length -1, 1))))
+				if ($.isNumeric(container.substr(container.length -1, 1)))
 				{
-					$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+					if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length -1, 1))))
 					{
-						aoData[k] = v;
-					});
+						$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+						{
+							aoData[k] = v;
+						});
+					}
 				}
 			}
 			catch (err)
