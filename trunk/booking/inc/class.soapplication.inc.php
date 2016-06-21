@@ -304,7 +304,7 @@
                       WHERE ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
                       AND ((ba.from_ < '$from_' AND ba.to_ > '$from_')
-                      OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
+                      OR (ba.from_ > '$from_' AND ba.to_ < '$to_')
                       OR (ba.from_ < '$to_' AND ba.to_ > '$to_'))
                       UNION
                       SELECT be.id
@@ -313,7 +313,7 @@
                       AND be.id = bed.event_id
                       AND ber.resource_id in ($rids)
                       AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
-                      OR (bed.from_ >= '$from_' AND bed.to_ <= '$to_')
+                      OR (bed.from_ > '$from_' AND bed.to_ < '$to_')
                       OR (bed.from_ < '$to_' AND bed.to_ > '$to_'))";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
