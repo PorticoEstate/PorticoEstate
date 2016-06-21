@@ -481,7 +481,7 @@
 				$association['link'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.edit',
 						'id' => $association['id']));
 				$association['dellink'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.delete',
-						'event_id' => $association['id'], 'application_id' => $association['application_id']));
+						'id' => $association['id'], 'application_id' => $association['application_id']));
 				$association['type'] = lang($association['type']);
 			}
 			return $associations;
