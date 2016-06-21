@@ -289,6 +289,10 @@
 
 		function read_single( $id )
 		{
+			if (!$id)
+			{
+				return null;
+			}
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
 			$cols_joins = $this->_get_cols_and_joins();
