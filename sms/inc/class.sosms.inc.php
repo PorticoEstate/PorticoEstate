@@ -40,6 +40,8 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$acl_location = isset($data['acl_location']) ? $data['acl_location'] : '';
 
+			$filtermethod = '';
+
 //			if ($acl_location)
 //			{
 //				$GLOBALS['phpgw']->acl->set_account_id($this->account);
@@ -108,11 +110,48 @@
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$acl_location = isset($data['acl_location']) ? $data['acl_location'] : '';
 
-//			if ($acl_location)
-//			{
-//				$GLOBALS['phpgw']->acl->set_account_id($this->account);
-//				$grants = $GLOBALS['phpgw']->acl->get_grants2('sms', $acl_location);
-//			}
+			$table = 'phpgw_sms_tblsmsoutgoing';
+			$where = 'WHERE';
+			$filtermethod = '';
+			if ($acl_location)
+			{
+				$GLOBALS['phpgw']->acl->set_account_id($this->account);
+				$grants = $GLOBALS['phpgw']->acl->get_grants2('sms', $acl_location);
+
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach ($grants['accounts'] as $user => $right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+
+					reset($public_user_list);
+					$filtermethod .= " $where ( $table.uid IN(" . implode(',', $public_user_list) . ")";
+
+					$where = 'AND';
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : $where;
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+					$where = 'AND';
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
+				}
+
+			}
 
 			if ($order)
 			{
@@ -123,23 +162,6 @@
 				$ordermethod = ' ORDER BY smslog_id DESC';
 			}
 
-			$table = 'phpgw_sms_tblsmsoutgoing';
-
-
-			$where = 'WHERE';
-
-//			if (is_array($grants))
-//			{
-//				while (list($user) = each($grants))
-//				{
-//					$public_user_list[] = $user;
-//				}
-//				reset($public_user_list);
-//				$filtermethod = " $where ( $table.uid IN(" . implode(',', $public_user_list) . "))";
-//
-//				$where = 'AND';
-//			}
-
 			$querymethod = '';
 			if ($query)
 			{
@@ -148,10 +170,16 @@
 				$querymethod = " AND p_dst $this->like '%$query%' OR p_msg $this->like '%$query%'";
 			}
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod AND flag_deleted='0'";
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table}"
+				. " {$this->join} phpgw_accounts ON {$table}.uid=phpgw_accounts.account_id"
+				. " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)"
+				. " {$filtermethod} {$querymethod} {$where} flag_deleted='0'";
 
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->db->num_rows();
+			$sql_cnt = "SELECT COUNT(*) as cnt FROM ({$sql}) as t";
+
+			$this->db->query($sql_cnt, __LINE__, __FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
 
 			if (!$allrows)
 			{
