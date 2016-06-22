@@ -205,12 +205,14 @@
 									<xsl:value-of select="application/description"/>
 								</span>
 							</div>
-							<!--<div class="pure-control-group">
+							<div class="pure-control-group">
 								<label>
-									<h4><xsl:value-of select="config/application_equipment"/></h4>
+									<h4>
+										<xsl:value-of select="php:function('lang', 'Extra info')" />
+									</h4>
 								</label>
 								<xsl:value-of select="application/equipment"/>
-							</div>-->
+							</div>
 						</div>
 
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
