@@ -987,6 +987,7 @@ HTML;
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
 				}
 
+				$entity_categories_in_xml = array();
 				foreach ($files as $file)
 				{
 					$valid_type = true;
@@ -1009,17 +1010,35 @@ HTML;
 
 					$result = $this->getxmldata($file['name'], $get_identificator);
 					
-					$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
+					$postnrdelkode = $result['Prosjekter']['ProsjektNS']['Postnrplan']['PostnrdelKoder']['PostnrdelKode'];
+					$entities_name = array();
+					foreach ($postnrdelkode as $items) 
+					{
+						if ($items['PostnrdelKoder']['PostnrdelKode']['Kode'])
+						{
+								$entities_name[$items['PostnrdelKoder']['PostnrdelKode']['Kode']] = array(
+									'name' => $items['PostnrdelKoder']['PostnrdelKode']['Kode'].' - '.$items['PostnrdelKoder']['PostnrdelKode']['Navn']
+								);							
+						}
+						else {
+							foreach ($items['PostnrdelKoder']['PostnrdelKode'] as $item) 
+							{
+								$entities_name[$item['Kode']] = array('name' => $item['Kode'].' - '.$item['Navn']);
+							}
+						}
+					}
 					
+					$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
 					foreach ($posts as $post) 
 					{
-						$entity_categories_in_xml[] = array(
-							'buildingpart' => $post['Postnrdeler']['Postnrdel'][1]['Kode'],
+						$buildingpart = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
+						$entity_categories_in_xml[$buildingpart]['name'] = $entities_name[$buildingpart]['name'];
+						$entity_categories_in_xml[$buildingpart]['components'][] = array(
 							'benevnelse' => trim($post['Egenskaper']['Egenskap']['Verdi']),
 							'beskrivelse' => trim($post['Tekst']['Uformatert'])
 						);
 						
-						$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
+						//$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
 					}
 		
 					//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
@@ -1031,21 +1050,43 @@ HTML;
 				$entity_categories  = $import_components->get_entity_categories();
 
 				$buildingpart_out_table = array();
-				foreach ($buildingpart_in_xml as $item) 
+				foreach ($entity_categories_in_xml as $k => $v) 
 				{
-					if (!array_key_exists((string)$item, $entity_categories))
+					if (!array_key_exists((string)$k, $entity_categories))
 					{
-						$buildingpart_parent = substr($item, 0, strlen($item) -1);
-						$buildingpart_out_table[$item] = array('parent' => $entity_categories[$buildingpart_parent]);
+						$buildingpart_parent = substr($k, 0, strlen($k) -1);
+						$buildingpart_out_table[$k] = array('parent' => $entity_categories[$buildingpart_parent], 'name' => $v['name']);
+					} else {
+						$entity_categories_in_xml[$k]['cat_id'] = $entity_categories[$k]['id'];
+						$entity_categories_in_xml[$k]['entity_id'] = $entity_categories[$k]['entity_id'];
 					}
 				}
 				
-				if (count($buildingpart_out_table))
+				/*if (count($buildingpart_out_table))
 				{
-					//$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
-				}
+					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+					
+					if (count($buildingpart_processed['added']))
+					{
+						foreach($buildingpart_processed['added'] as $k => $v)
+						{
+							$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
+							$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];							
+						}
+					} 
+					
+					if (count($buildingpart_processed['not_added']))
+					{
+						foreach($buildingpart_processed['not_added'] as $k => $v)
+						{
+							unset($entity_categories_in_xml[$k]);					
+						}						
+					}
+				}*/
 				
-				print_r($buildingpart_in_xml);
+				//$processed = $import_components->add_bim_item($entity_categories_in_xml);
+				
+				print_r($entity_categories_in_xml);
 				
 				echo "</ul>";
 				$end_time = time();
