@@ -12,6 +12,7 @@
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->bo_entity = CreateObject('property.boentity', true);
+			$this->custom = createObject('property.custom_fields');
 		}
 
 		public function get_entity_categories ($data = array())
@@ -65,8 +66,8 @@
 						$values['category_template'] = $child['entity_id'].'_'.$child['id'];
 					}
 					$values['parent_id'] = $v['parent']['id'];
-					$values['name'] = $k;
-					$values['descr'] = $k;
+					$values['name'] = $v['name'];
+					$values['descr'] = $v['name'];
 					$values['entity_id'] = 3;
 					$values['fileupload'] = 1;
 					$values['loc_link'] = 1;
@@ -76,7 +77,7 @@
 					
 					if ($receipt['id'])
 					{
-						$buildingparts['added'][$k] = $k;
+						$buildingparts['added'][$k] = array('id'=> $receipt['id'], 'entity_id' => 3);
 					}
 					else {
 						$buildingparts['not_added'][$k] = $k;
@@ -87,8 +88,16 @@
 			return $buildingparts;
 		}
 		
-		public function add_bim_item($data)
+		public function add_bim_item($entity_categories)
 		{
+			foreach ($entity_categories as $entity) 
+			{
+				foreach ($entity['components'] as $component)
+				{
+					$receipt = $this->bo_entity->save(array(), $component, 'add', $entity['entity_id'], $entity['cat_id']);
+				}
+			}
+			
 			return;
 		}
 		
