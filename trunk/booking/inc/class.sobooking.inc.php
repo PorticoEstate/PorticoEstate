@@ -434,6 +434,7 @@
 		public function delete_booking( $id )
 		{
 			$db = $this->db;
+			$db->transaction_begin();
 			$table_name = $this->table_name . '_resource';
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
@@ -446,15 +447,18 @@
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+			return	$db->transaction_commit();
 		}
 
 		public function delete_allocation( $id )
 		{
 			$db = $this->db;
+			$db->transaction_begin();
 			$sql = "DELETE FROM bb_allocation_resource WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 			$sql = "DELETE FROM bb_allocation WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+			return	$db->transaction_commit();
 		}
 
 		public function got_no_allocation( $booking )
