@@ -12,7 +12,9 @@
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->bo_entity = CreateObject('property.boentity', true);
-			$this->custom = createObject('property.custom_fields');
+			$this->type = $this->bo_entity->type;
+			$this->type_app = $this->bo_entity->type_app;
+			$this->custom = CreateObject('property.custom_fields');
 		}
 
 		public function get_entity_categories ($data = array())
@@ -42,6 +44,45 @@
 			}
 			
 			return $values;
+		}
+		
+		public function get_attributes($entity_id, $cat_id)
+		{
+			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+
+			$values = array();
+			foreach($attributes as $attribute)
+			{
+				$values[] = array(
+								'name' => $attribute['name'],
+								'datatype' => $attribute['datatype'],
+								'precision' => $attribute['precision'],
+								'history' => $attribute['history'],
+								'attrib_id' => $attribute['attrib_id'],
+								'nullable' => $attribute['nullable'],
+								'input_text' => $attribute['input_text'],
+								'disabled' => $attribute['disabled'],
+								'value' => $attribute['value']
+							);
+			}
+			
+			return $values;
+		}
+		
+		public function set_attributes_values($values, $attributes)
+		{
+			foreach($attributes as &$attribute)
+			{
+				foreach ($values as $value)
+				{
+					if ($attribute['name'] ==  $value['name'])
+					{
+						$attribute['value'] = $value['value'];
+					}
+				}
+			}
+			
+			return $attributes;
 		}
 		
 		public function add_entity_categories ($buildingpart_out_table)
@@ -77,11 +118,13 @@
 					
 					if ($receipt['id'])
 					{
-						$buildingparts['added'][$k] = array('id'=> $receipt['id'], 'entity_id' => 3);
+						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => 3, 'name' => $v['name']);
 					}
 					else {
-						$buildingparts['not_added'][$k] = $k;
+						$buildingparts['not_added'][$k] = array('name' => $v['name']);
 					}
+				} else {
+					$buildingparts['not_added'][$k] = array('name' => $v['name']);
 				}
 			}
 			
@@ -90,15 +133,31 @@
 		
 		public function add_bim_item($entity_categories)
 		{
+			$components_not_added = array();
 			foreach ($entity_categories as $entity) 
 			{
-				foreach ($entity['components'] as $component)
+				if ($entity['cat_id'])
 				{
-					$receipt = $this->bo_entity->save(array(), $component, 'add', $entity['entity_id'], $entity['cat_id']);
+					$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
+
+					$not_added = array();
+					foreach ($entity['components'] as $values)
+					{
+						$attributes_values = $this->set_attributes_values($values, $attributes);
+						$receipt = $this->bo_entity->save(array('cat_id' => $entity['cat_id']), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
+						if (!$receipt['id'])
+						{
+							$not_added[] = 1;
+						}
+					}
+					if (count($not_added))
+					{
+						$components_not_added[$entity['name']] = count($not_added);
+					}
 				}
 			}
 			
-			return;
+			return $components_not_added;
 		}
 		
 	}
