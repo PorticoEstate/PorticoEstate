@@ -676,6 +676,10 @@
 
 			list($event, $errors) = $this->extract_and_validate($event);
 
+			if ($event['description'])
+			{
+				$event['description'] =  html_entity_decode($event['description']);
+			}
 			if ($event['customer_organization_number'])
 			{
 				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
