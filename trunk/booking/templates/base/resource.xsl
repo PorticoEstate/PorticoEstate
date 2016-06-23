@@ -123,12 +123,12 @@
 		var colDefsDocuments = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},
 		{key: 'category', label: lang['Category']},
-		{key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
 		var colDefsPermissions = [
 		{key: 'subject_name', label: lang['Account']},
 		{key: 'role', label: lang['Role']},
-		{key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
 
 		createTable('documents_container',documentsURL,colDefsDocuments);
