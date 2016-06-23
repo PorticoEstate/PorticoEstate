@@ -157,13 +157,13 @@
 							'label' => lang('Role'),
 						),
 						array(
-							'key' => 'opcion_edit',
+							'key' => 'option_edit',
 							'label' => lang('Edit'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
 						),
 						array(
-							'key' => 'opcion_delete',
+							'key' => 'option_delete',
 							'label' => lang('Delete'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
@@ -203,10 +203,14 @@
 
 				$permission_actions = array();
 				if ($this->bo->allow_write($permission))
-					$permission['opcion_edit'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+				{
+					$permission['option_edit'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+				}
 				if ($this->bo->allow_delete($permission))
-					$permission['opcion_delete'] = $this->get_object_typed_link('delete', array(
+				{
+					$permission['option_delete'] = $this->get_object_typed_link('delete', array(
 						'id' => $permission['id']));
+				}
 
 				$account_id = $GLOBALS['phpgw']->accounts->name2id($permission['subject_name']);
 				if($account_id)

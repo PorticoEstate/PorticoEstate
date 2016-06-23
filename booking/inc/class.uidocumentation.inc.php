@@ -62,13 +62,13 @@
 							'label' => lang('Category'),
 						),
 						array(
-							'key' => 'opcion_edit',
+							'key' => 'option_edit',
 							'label' => lang('Edit'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
 						),
 						array(
-							'key' => 'opcion_delete',
+							'key' => 'option_delete',
 							'label' => lang('Delete'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
@@ -101,9 +101,9 @@
 //				$document_actions[] = 
 //				$document_actions[] = 
 
-				$document['opcion_edit'] = self::link(array('menuaction' => $this->module . '.uidocumentation.edit',
+				$document['option_edit'] = self::link(array('menuaction' => $this->module . '.uidocumentation.edit',
 						'id' => $document['id']));
-				$document['opcion_delete'] = self::link(array('menuaction' => $this->module . '.uidocumentation.delete',
+				$document['option_delete'] = self::link(array('menuaction' => $this->module . '.uidocumentation.delete',
 						'id' => $document['id']));
 			}
 			return $this->jquery_results($documents);
