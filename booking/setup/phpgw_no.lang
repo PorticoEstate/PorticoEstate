@@ -588,7 +588,6 @@ Cancelation of bookings and allocations from	booking	no	Avbestilling av bookinge
 Cancelation of bookings from	booking	no	Avbestilling av bookinger fra
 Booking system settings	booking	no	Bookingmodul systeminnstillinger
 Frontend users can delete bookings and allocations	booking	no	Brukere av frontend kan slette bookinger og tildelinger direkte
-All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
 Delete Information	booking	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
 Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Delete information	booking	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst.

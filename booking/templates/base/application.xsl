@@ -452,9 +452,11 @@
 								</legend>
 							</div>
 							<div class="pure-control-group">
-								<p>
-									<xsl:value-of select="php:function('lang', 'All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" />
-								</p>
+								<xsl:if test="config/application_terms">
+									<p>
+										<xsl:value-of select="config/application_terms"/>
+									</p>
+								</xsl:if>
 								<br />
 								<div id='regulation_documents'>&nbsp;</div>
 								<br />
