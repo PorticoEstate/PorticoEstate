@@ -93,7 +93,7 @@
 		var colDefsPermissions = [
 		{key: 'subject_name', label: lang['Account']},
 		{key: 'role', label: lang['Role']},
-		{key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
 		createTable('resources_container', resourcesURL, colDefsRespurces);
 		createTable('permissions_container', permissionsURL, colDefsPermissions);
