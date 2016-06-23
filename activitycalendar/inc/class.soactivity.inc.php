@@ -107,6 +107,9 @@
 				//$order = "ORDER BY id $dir";
 				$order = "ORDER BY $sort_field $dir";
 			}
+
+			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
+
 			/* else
 			  {
 			  $dir = $ascending ? 'ASC' : 'DESC';

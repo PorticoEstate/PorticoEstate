@@ -234,7 +234,6 @@ JS;
 			$columns = phpgw::get_var('columns');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $this->user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
@@ -246,6 +245,10 @@ JS;
 			$result_count = 0;
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
+
+			$length = phpgw::get_var('length', 'int');
+			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$num_of_objects = $length == -1 ? null : $user_rows_per_page;
 
 			$export = phpgw::get_var('export', 'bool');
 			if ($export)
