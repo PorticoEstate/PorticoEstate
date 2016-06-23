@@ -1034,8 +1034,8 @@ HTML;
 						$buildingpart = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
 						$entity_categories_in_xml[$buildingpart]['name'] = $entities_name[$buildingpart]['name'];
 						$entity_categories_in_xml[$buildingpart]['components'][] = array(
-							'benevnelse' => trim($post['Egenskaper']['Egenskap']['Verdi']),
-							'beskrivelse' => trim($post['Tekst']['Uformatert'])
+							array('name' => 'benevnelse', 'value' => trim($post['Egenskaper']['Egenskap']['Verdi'])),
+							array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
 						);
 						
 						//$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
@@ -1062,31 +1062,43 @@ HTML;
 					}
 				}
 				
-				/*if (count($buildingpart_out_table))
+				if (count($buildingpart_out_table))
 				{
 					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
 					
 					if (count($buildingpart_processed['added']))
 					{
+						echo 'Entities added: <br>';
 						foreach($buildingpart_processed['added'] as $k => $v)
 						{
 							$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
-							$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];							
+							$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
+							echo $v['name'].'<br>';
 						}
 					} 
 					
 					if (count($buildingpart_processed['not_added']))
 					{
+						echo '<br>Entities not added: <br>';
 						foreach($buildingpart_processed['not_added'] as $k => $v)
 						{
-							unset($entity_categories_in_xml[$k]);					
+							unset($entity_categories_in_xml[$k]);	
+							echo $v['name'].'<br>';
 						}						
 					}
-				}*/
+				}
 				
-				//$processed = $import_components->add_bim_item($entity_categories_in_xml);
+				$components_not_added = $import_components->add_bim_item($entity_categories_in_xml);
+				if (count($components_not_added))
+				{
+					echo '<br>Components not added: <br>';
+					foreach ($components_not_added as $k => $v)
+					{
+						echo $k.' => not added: '.$v.'<br>';
+					}
+				}
 				
-				print_r($entity_categories_in_xml);
+				//print_r($entity_categories_in_xml);
 				
 				echo "</ul>";
 				$end_time = time();
