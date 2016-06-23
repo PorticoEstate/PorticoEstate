@@ -1023,7 +1023,7 @@
 
 		public function delete()
 		{
-			$event_id = phpgw::get_var('event_id', 'int');
+			$event_id = phpgw::get_var('id', 'int');
 			$application_id = phpgw::get_var('application_id', 'int');
 
 			if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))

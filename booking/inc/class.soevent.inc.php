@@ -312,6 +312,10 @@
 		public function delete_event( $id )
 		{
 			$db = $this->db;
+			$db->transaction_begin();
+			$table_name = $this->table_name . '_cost';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
 			$table_name = $this->table_name . '_comment';
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
@@ -330,7 +334,7 @@
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			return True;
+			return	$db->transaction_commit();
 		}
 
 		public function update_id_string()

@@ -389,7 +389,9 @@ EOT;
 
 		function delete( $id )
 		{
+			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM bb_wtemplate_alloc_resource WHERE allocation_id=" . intval($id), __LINE__, __FILE__);
 			$this->db->query("DELETE FROM bb_wtemplate_alloc WHERE id=" . intval($id), __LINE__, __FILE__);
+			return	$this->db->transaction_commit();
 		}
 	}
