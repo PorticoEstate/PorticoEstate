@@ -1046,7 +1046,7 @@
 
 		function get_targetgroups()
 		{
-			$sql = "SELECT * FROM bb_agegroup where active=1 AND NOT name like 'Tilskuer%' ORDER BY sort";
+			$sql = "SELECT * FROM bb_agegroup where active=1 AND activity_id = 1 AND NOT name like 'Tilskuer%' ORDER BY sort";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
