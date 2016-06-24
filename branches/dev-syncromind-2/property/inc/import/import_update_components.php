@@ -93,23 +93,20 @@
 			{	
 				if ($v['parent'])
 				{
+					$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
+					$entity_id = '3';
 					$values = array();
-					$childs = $this->get_entity_categories(array('parent_id' => $v['parent']['id']));
-					if (count($childs))
+
+					$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+					foreach ($attrib_list as $attrib) 
 					{
-						$child = array_values($childs)[0];
-						$attrib_list = $this->bo->read_attrib(array('entity_id' => $child['entity_id'], 'cat_id' => $child['id'], 'allrows' => true));
-						
-						foreach ($attrib_list as $attrib) 
-						{
-							$values['template_attrib'][] = $attrib['id'];
-						}
-						$values['category_template'] = $child['entity_id'].'_'.$child['id'];
+						$values['template_attrib'][] = $attrib['id'];
 					}
+					$values['category_template'] = $entity_id.'_'.$cat_id;
 					$values['parent_id'] = $v['parent']['id'];
 					$values['name'] = $v['name'];
 					$values['descr'] = $v['name'];
-					$values['entity_id'] = 3;
+					$values['entity_id'] = $entity_id;
 					$values['fileupload'] = 1;
 					$values['loc_link'] = 1;
 					$values['is_eav'] = 1;
@@ -118,7 +115,7 @@
 					
 					if ($receipt['id'])
 					{
-						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => 3, 'name' => $v['name']);
+						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
 					}
 					else {
 						$buildingparts['not_added'][$k] = array('name' => $v['name']);
