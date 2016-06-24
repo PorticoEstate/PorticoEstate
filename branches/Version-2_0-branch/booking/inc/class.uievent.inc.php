@@ -676,6 +676,10 @@
 
 			list($event, $errors) = $this->extract_and_validate($event);
 
+			if ($event['description'])
+			{
+				$event['description'] =  html_entity_decode($event['description']);
+			}
 			if ($event['customer_organization_number'])
 			{
 				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
@@ -1023,7 +1027,7 @@
 
 		public function delete()
 		{
-			$event_id = phpgw::get_var('event_id', 'int');
+			$event_id = phpgw::get_var('id', 'int');
 			$application_id = phpgw::get_var('application_id', 'int');
 
 			if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))

@@ -205,12 +205,14 @@
 									<xsl:value-of select="application/description"/>
 								</span>
 							</div>
-							<!--<div class="pure-control-group">
+							<div class="pure-control-group">
 								<label>
-									<h4><xsl:value-of select="config/application_equipment"/></h4>
+									<h4>
+										<xsl:value-of select="php:function('lang', 'Extra info')" />
+									</h4>
 								</label>
 								<xsl:value-of select="application/equipment"/>
-							</div>-->
+							</div>
 						</div>
 
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -450,9 +452,11 @@
 								</legend>
 							</div>
 							<div class="pure-control-group">
-								<p>
-									<xsl:value-of select="php:function('lang', 'All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" />
-								</p>
+								<xsl:if test="config/application_terms">
+									<p>
+										<xsl:value-of select="config/application_terms"/>
+									</p>
+								</xsl:if>
 								<br />
 								<div id='regulation_documents'>&nbsp;</div>
 								<br />

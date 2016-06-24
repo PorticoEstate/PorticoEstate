@@ -657,7 +657,7 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-				'excelHtml5',
+				'csvHtml5',
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
@@ -682,8 +682,26 @@
 								var iframe = document.createElement('iframe');
 								iframe.style.height = "0px";
 								iframe.style.width = "0px";
-								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1" + "&query=" + $('div.dataTables_filter input').val();
+								console.log(oParams);
 
+								if(typeof(oParams.order[0]) != 'undefined')
+								{
+									var column = oParams.order[0].column;
+									var dir = oParams.order[0].dir;
+									var column_to_keep = oParams.columns[column];
+									delete oParams.columns;
+									oParams.columns = {};
+									if(JqueryPortico.columns[column]['orderable'] == true)
+									{
+										oParams.columns[column] = column_to_keep;
+									}
+								}
+								else
+								{
+										delete oParams.columns;
+								}
+
+								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1" + "&query=" + $('div.dataTables_filter input').val();
 								if(confirm("This will take some time..."))
 								{
 									document.body.appendChild( iframe );

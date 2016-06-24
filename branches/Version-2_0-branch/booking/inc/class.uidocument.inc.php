@@ -171,13 +171,13 @@
 							'label' => lang('Category'),
 						),
 						array(
-							'key' => 'opcion_edit',
+							'key' => 'option_edit',
 							'label' => lang('Edit'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
 						),
 						array(
-							'key' => 'opcion_delete',
+							'key' => 'option_delete',
 							'label' => lang('Delete'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false
@@ -214,9 +214,13 @@
 //				$document['actions'] = $document_actions;
 
 				if ($this->bo->allow_write($document))
-					$document['opcion_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+				{
+					$document['option_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+				}
 				if ($this->bo->allow_delete($document))
-					$document['opcion_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+				{
+					$document['option_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+				}
 			}
 			if (phpgw::get_var('no_images'))
 			{

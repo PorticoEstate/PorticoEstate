@@ -32,6 +32,16 @@ $(document).ready(function ()
 	{
 		update_search(selected_criteria, true);
 	});
+
+	$('#field_searchterm').keydown(function (event)
+	{
+		var keypressed = event.keyCode || event.which;
+		if (keypressed == 13)
+		{
+			update_search(selected_criteria, true);
+		}
+	});
+
 	$("#search_type :checkbox").on('click', function ()
 	{
 		update_search(selected_criteria, true);
