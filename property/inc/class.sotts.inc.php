@@ -170,7 +170,7 @@
 
 			$config = $GLOBALS['phpgw']->config->read();
 
-			if (!isset($config['bypass_acl_at_tickets']) || !$config['bypass_acl_at_tickets'])
+			if (!$start_date && (!isset($config['bypass_acl_at_tickets']) || !$config['bypass_acl_at_tickets']))
 			{
 				$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 				$GLOBALS['phpgw']->acl->set_account_id($this->account);
