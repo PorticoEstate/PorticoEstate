@@ -141,14 +141,14 @@
 
 
 			$result_order_field = array();
-			$order_join = "{$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
+			$order_join = " {$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
 
 			if ($order)
 			{
 				if ($order == 'assignedto')
 				{
 			//		$result_order_field = array('account_lastname' => 'account_lastname');
-			//		$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
+			//		$order_join = " LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
 			//		$order = 'account_lastname';
 				}
 				else if ($order == 'user')
@@ -163,7 +163,6 @@
 			{
 				$ordermethod = ' ORDER BY id DESC';
 			}
-			$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 			$union_select = false;
 			$filtermethod = '';
 
@@ -173,6 +172,7 @@
 
 			if (!isset($config['bypass_acl_at_tickets']) || !$config['bypass_acl_at_tickets'])
 			{
+				$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 				$GLOBALS['phpgw']->acl->set_account_id($this->account);
 				$grants = $GLOBALS['phpgw']->acl->get_grants2('property', '.ticket');
 
@@ -421,7 +421,7 @@
 					$start_period = date('Ym', $start_date);
 					$end_period = date('Ym', $end_date);
 //					$filtermethod .= " OR (fm_tts_payments.period >= {$start_period} AND fm_tts_payments.period <= {$end_period})";
-					$date_cost_join = "LEFT OUTER JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
+					$date_cost_join = " LEFT OUTER JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
 //					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
 					$actual_cost_field = array('SUM(actual_cost) AS actual_cost' => 'fm_tts_payments.amount as actual_cost');
 
@@ -430,7 +430,7 @@
 					$start_budget_period = date('Y', $start_date) . '00';
 					$end_budget_period = date('Y', $end_date) . '13';
 //					$filtermethod .= " OR (fm_tts_budget.period >= {$start_budget_period} AND fm_tts_budget.period <= {$end_budget_period}))";
-					$date_budget_join = "LEFT OUTER JOIN fm_tts_budget ON ( fm_tts_tickets.id=fm_tts_budget.ticket_id AND fm_tts_budget.period >= $start_budget_period AND fm_tts_budget.period <= $end_budget_period )";
+					$date_budget_join = " LEFT OUTER JOIN fm_tts_budget ON ( fm_tts_tickets.id=fm_tts_budget.ticket_id AND fm_tts_budget.period >= $start_budget_period AND fm_tts_budget.period <= $end_budget_period )";
 //					$budget_field = 'SUM(fm_tts_budget.amount) AS budget';
 					$budget_field = array('SUM(budget) AS budget' => 'fm_tts_budget.amount as budget');
 					$budget_group_field = '';
