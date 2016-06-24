@@ -47,14 +47,19 @@
 
 			//Add columns to this array to include them in the query
 			$columns = array();
+			$dir = $ascending ? 'ASC' : 'DESC';
 
 			if ($sort_field != null && !$return_count)
 			{
-				if ($sort_field == 'identifier')
+				if ($sort_field == 'identifier' )
 				{
 					$sort_field = 'org.id';
 				}
-				$dir = $ascending ? 'ASC' : 'DESC';
+				else if ( $sort_field == 'organization_number')
+				{
+					$sort_field = 'org.orgno';
+				}
+
 				$order = "ORDER BY $sort_field $dir";
 			}
 			else if (!$return_count)
@@ -62,6 +67,9 @@
 				$dir = $ascending ? 'ASC' : 'DESC';
 				$order = "ORDER BY org.name $dir";
 			}
+
+			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
+
 			if ($search_for)
 			{
 				$query = $this->marshal($search_for, 'string');

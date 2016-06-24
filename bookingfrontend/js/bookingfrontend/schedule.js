@@ -10,17 +10,37 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	url += '&date=' + datestr;
 
-	var lang = {
-		WEEKDAYS_FULL: [
-			'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-		],
-		MONTHS_LONG: [
-			'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-		],
-		LBL_TIME: 'Time',
-		LBL_RESOURCE: 'Resource',
-		LBL_WEEK: 'Week'
-	};
+	var detected_lang = navigator.language || navigator.userLanguage;
+	var lang = {};
+
+	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb')
+	{
+		lang = {
+			WEEKDAYS_FULL: [
+				'Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'
+			],
+			MONTHS_LONG: [
+				'Januar', 'Februar', 'Mars', 'April', 'May', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'
+			],
+			LBL_TIME: 'Tidsrom',
+			LBL_RESOURCE: 'Ressurs',
+			LBL_WEEK: 'Uke'
+		};
+	}
+	else
+	{
+		lang = {
+			WEEKDAYS_FULL: [
+				'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+			],
+			MONTHS_LONG: [
+				'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+			],
+			LBL_TIME: 'Time',
+			LBL_RESOURCE: 'Resource',
+			LBL_WEEK: 'Week'
+		};
+	}
 
 	var colDefs = [
 		{key: 'time', label: date.getFullYear() + '<br/>' + lang['LBL_TIME']}];

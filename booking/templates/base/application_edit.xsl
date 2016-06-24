@@ -95,8 +95,13 @@
 							</div>
 							<div class="pure-control-group">
 								<label for="field_equipment">
-									<xsl:value-of select="php:function('lang', 'Equipment')" />
+									<xsl:value-of select="php:function('lang', 'Extra info')" />
 								</label>
+								<xsl:if test="config/application_equipment">
+									<p>
+										<xsl:value-of select="config/application_equipment"/>
+									</p>
+								</xsl:if>
 								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="equipment">
 									<xsl:value-of select="application/equipment"/>
 								</textarea>

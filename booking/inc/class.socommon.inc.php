@@ -641,6 +641,7 @@
 		{
 			$values = $this->marshal_field_values($this->get_table_values($entry, __FUNCTION__));
 
+			$this->db->transaction_begin();
 			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			foreach ($this->fields as $field => $params)
@@ -699,6 +700,9 @@
 					}
 				}
 			}
+
+			$this->db->transaction_commit();
+
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg' => lang('Entity %1 has been saved', $receipt['id']));
 			return $receipt;

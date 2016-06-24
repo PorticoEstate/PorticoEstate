@@ -41,10 +41,10 @@
 
 			//Add columns to this array to include them in the query
 			$columns = array();
+			$dir = $ascending ? 'ASC' : 'DESC';
 
 			if ($sort_field != null)
 			{
-				$dir = $ascending ? 'ASC' : 'DESC';
 				if ($sort_field == 'arena_id')
 				{
 					$sort_field = 'id';
@@ -53,9 +53,10 @@
 			}
 			else if (!$return_count)
 			{
-				$dir = $ascending ? 'ASC' : 'DESC';
-				$order = "ORDER BY arena.arena_name $dir";
+				$sort_field = 'arena.arena_name';
+				$order = "ORDER BY $sort_field $dir";
 			}
+			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
 
 			if ($search_for)
 			{
