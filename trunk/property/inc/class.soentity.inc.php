@@ -126,7 +126,7 @@
 			{
 				return;
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
@@ -483,7 +483,7 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$acl->set_account_id($this->account);
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
@@ -532,9 +532,11 @@
 			}
 
 			$bypass_acl_at_entity = false;
+			$acl_group_join	= "{$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
 			if (isset($_config->config_data['bypass_acl_at_entity']) && is_array($_config->config_data['bypass_acl_at_entity']) && in_array($entity_id, $_config->config_data['bypass_acl_at_entity']))
 			{
 				$bypass_acl_at_entity = true;
+				$acl_group_join = '';
 			}
 
 			unset($_config);
@@ -778,7 +780,7 @@
 
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)"
 				. " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
-				. " {$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
+				. " {$acl_group_join}";
 			$join_control = "controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
 
 			if ($control_registered)
@@ -926,6 +928,20 @@
 				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
 				$sql .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
 			}
+
+			if(!$bypass_acl_at_entity)
+			{
+				$sql = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.location_id,"
+					. "fm_bim_item.id,fm_bim_item.type,fm_bim_item.guid,"
+					. "fm_bim_item.model,fm_bim_item.p_location_id,"
+					. "fm_bim_item.p_id,fm_bim_item.location_code,"
+					. "fm_bim_item.loc1,fm_bim_item.address,"
+					. "fm_bim_item.entry_date,fm_bim_item.user_id,"
+					. "fm_bim_item.org_unit_id,fm_bim_item.entity_group_id,"
+					. "fm_bim_item.modified_by,fm_bim_item.modified_on", $sql);
+			}
+
+
 //_debug_array($sql);
 			static $cache_attributes = array();
 
@@ -953,7 +969,18 @@
 //_debug_array($uicols);
 			while ($this->db->next_record())
 			{
-				$xmldata = $this->db->f('xml_representation');
+				if($bypass_acl_at_entity)
+				{
+					$xmldata = $this->db->f('xml_representation');
+				}
+				else
+				{
+					$id = (int)$this->db->f('id');
+					$type = (int)$this->db->f('type');
+					$this->db2->query("SELECT xml_representation FROM fm_bim_item WHERE type = {$type} AND id = {$id}", __LINE__, __FILE__);
+					$this->db2->next_record();
+					$xmldata = $this->db2->f('xml_representation');
+				}
 				$xml = new DOMDocument('1.0', 'utf-8');
 				$xml->loadXML($xmldata);
 
@@ -963,8 +990,7 @@
 					{
 						$value = $this->db->f($field, true);
 					}
-					$dataset[$j][$field] = array
-						(
+					$dataset[$j][$field] = array(
 						'value' => $value,
 						'datatype' => $uicols['datatype'][$key],
 						'attrib_id' => $uicols['cols_return_extra'][$key]['attrib_id'],
@@ -1471,7 +1497,7 @@
 			{
 				return;
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$acl->set_account_id($this->account);
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
