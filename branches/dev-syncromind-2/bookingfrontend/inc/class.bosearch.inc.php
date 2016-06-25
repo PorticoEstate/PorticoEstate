@@ -184,7 +184,7 @@
 					$res_result['total_records'] ++;
 					$res_result['results'][] = $res;
 				}
-
+/*
 				if (isset($bui_result['total_records']) && $bui_result['total_records'] > 0)
 				{
 					$_bui_result = array(
@@ -203,7 +203,10 @@
 					}
 					$bui_result = $_bui_result;
 				}
+ */
 			}
+
+
 			if (!in_array('building', $types))
 			{
 				$bui_result = array();

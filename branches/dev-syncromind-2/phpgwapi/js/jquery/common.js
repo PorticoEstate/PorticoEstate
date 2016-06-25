@@ -86,12 +86,12 @@ JqueryPortico.formatLinkGeneric = function (key, oData)
 	}
 
 	var data = oData[key];
-	if (key == 'opcion_edit')
+	if (key == 'option_edit')
 	{
 		var link = data;
 		var name = 'Edit';
 	}
-	else if (key == 'opcion_delete')
+	else if (key == 'option_delete')
 	{
 		var link = data;
 		var name = 'Delete';
@@ -1124,11 +1124,11 @@ function createTable(d, u, c, r, cl, l)
 								}
 								if (label_name == 'Edit' || label_name == 'edit')
 								{
-									vcfLink = 'opcion_edit';
+									vcfLink = 'option_edit';
 								}
 								else if (label_name == 'Delete' || label_name == 'delete')
 								{
-									vcfLink = 'opcion_delete';
+									vcfLink = 'option_delete';
 								}
 								else if (label_name == 'dellink')
 								{

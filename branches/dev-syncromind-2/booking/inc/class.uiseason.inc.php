@@ -340,6 +340,17 @@
 			$active_tab = 'generic';
 
 			$season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			//exclude the seconds
+			if(isset($boundary['from_']))
+			{
+				$from_arr = explode(':',$boundary['from_']);
+				$to_arr = explode(':',$boundary['to_']);
+				$boundary['from_'] = "{$from_arr[0]}:{$from_arr[1]}";
+				$boundary['to_'] = "{$to_arr[0]}:{$to_arr[1]}";
+			}
+
+			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
 
 			self::render_template('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries,
 				'season' => $season));

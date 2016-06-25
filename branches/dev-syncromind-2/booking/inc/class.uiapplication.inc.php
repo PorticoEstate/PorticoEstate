@@ -481,7 +481,7 @@
 				$association['link'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.edit',
 						'id' => $association['id']));
 				$association['dellink'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.delete',
-						'event_id' => $association['id'], 'application_id' => $association['application_id']));
+						'id' => $association['id'], 'application_id' => $association['application_id']));
 				$association['type'] = lang($association['type']);
 			}
 			return $associations;
@@ -955,7 +955,7 @@
 			);
 			foreach ($copy as $f)
 			{
-				$event[] = array($f, htmlentities($application[$f]));
+				$event[] = array($f, htmlentities(html_entity_decode($application[$f])), ENT_QUOTES | ENT_SUBSTITUTE);
 			}
 			foreach ($application['agegroups'] as $ag)
 			{

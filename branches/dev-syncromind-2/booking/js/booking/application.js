@@ -3,6 +3,12 @@ var regulations_select_all = "";
 
 $(document).ready(function ()
 {
+	$("#start_date").change(function ()
+	{
+		$("#end_date").val($("#start_date").val());
+	});
+
+
 	JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
 		'field_building_name', 'field_building_id', 'building_container');
 

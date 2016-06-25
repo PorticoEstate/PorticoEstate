@@ -780,28 +780,28 @@
 			$js = <<<JS
 
 			$(function() {
-                                
-                                $.each($('.newaddedpicker'), function(i, v){
-                                var id = v.id;
-                                v.classList.remove('newaddedpicker');
-                                $( "#"+id ).{$type}picker({
-                                    dateFormat: '{$dateformat}',
-                                    showWeek: true,
-                                    changeMonth: true,
-                                    changeYear: true,
-                                    showOn: "button",
-                                    showButtonPanel:true,
-                                    buttonImage: "{$img_cal}",
-                                    buttonText: "{$lang_select_date}",
-                                    buttonImageOnly: true
-                                });
-                            });
+
+					$.each($('.newaddedpicker'), function(i, v){
+					var id = v.id;
+					v.classList.remove('newaddedpicker');
+					$( "#"+id ).{$type}picker({
+						dateFormat: '{$dateformat}',
+						showWeek: true,
+						changeMonth: true,
+						changeYear: true,
+						showOn: "button",
+						showButtonPanel:true,
+						buttonImage: "{$img_cal}",
+						buttonText: "{$lang_select_date}",
+						buttonImageOnly: true
+					});
+				});
 
 				$('#add-date-link').click(function(){
 					var add = $(this);
 					var html = '';
                                     
-                                        this.counter = $('.date-container').length - 1;
+					this.counter = $('.date-container').length - 1;
 
 					if (!this.counter) { this.counter = 0; }
                                     

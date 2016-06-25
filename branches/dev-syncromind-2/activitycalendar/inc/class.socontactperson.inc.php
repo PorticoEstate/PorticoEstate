@@ -49,6 +49,8 @@
 			  $order = "ORDER BY id $dir";
 			  }
 			 */
+//			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
+
 			if ($search_for)
 			{
 				$query = $this->marshal($search_for, 'string');

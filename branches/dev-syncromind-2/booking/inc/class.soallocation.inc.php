@@ -270,6 +270,7 @@
 
 		function check_for_booking( $id )
 		{
+			$id = (int) $id;
 			$sql = "SELECT id FROM bb_booking  WHERE allocation_id = ($id)";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
@@ -282,14 +283,16 @@
 
 		public function delete_allocation( $id )
 		{
+			$id = (int) $id;
 			$db = $this->db;
+			$db->transaction_begin();
 			$table_name = $this->table_name . '_resource';
 			$sql = "DELETE FROM $table_name WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
-			return True;
+			return	$db->transaction_commit();
 		}
 
 		public function update_id_string()

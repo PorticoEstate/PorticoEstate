@@ -46,8 +46,11 @@
 			if ($sort_field != null)
 			{
 				$dir = $ascending ? 'ASC' : 'DESC';
-				$order = "ORDER BY bb_group.id $dir";
+				$sort_field = 'bb_group.id';
+				$order = "ORDER BY $sort_field $dir";
 			}
+
+			$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
 			if ($search_for)
 			{
 				$query = $this->marshal($search_for, 'string');
