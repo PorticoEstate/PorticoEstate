@@ -19,6 +19,7 @@ $(function () {
 				 console.log(data.changed.selected); // newly selected
 				 console.log(data.changed.deselected); // newly deselected
 */
+				$('#navbar').jstree(true).select_node(original_selected_node);
 				setTimeout(function () {
 					window.location.href = data.node.original.url;
 				}, 200);

@@ -878,8 +878,7 @@
 				unset($sql2);
 				unset($sql_cnt);
 
-				$cache_info = array
-					(
+				$cache_info = array(
 					'total_records' => $this->db->f('cnt'),
 					'sql_hash' => md5($_sql)
 				);
@@ -910,6 +909,9 @@
 					case 'id':
 						$ordermethod = " ORDER BY {$entity_table}.id {$sort}";
 						break;
+					case 'loc1':
+						$ordermethod = " ORDER BY {$entity_table}.loc1 {$sort}";
+						break;
 					default:
 						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
 						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
@@ -923,26 +925,36 @@
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
 
+			$sql_pre_run = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.id,fm_bim_item.type {$sql_custom_field}", $sql);
+//			_debug_array($sql_pre_run);
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql_pre_run, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql_pre_run, __LINE__, __FILE__);
+			}
+
+			$ids = array();
+			$types = array();
+			while ($this->db->next_record())
+			{
+				$ids[] = (int)$this->db->f('id');
+				$types[] = (int)$this->db->f('type');
+			}
+
+			if(!$ids)
+			{
+				return array();
+			}
+
 			if ($sql_custom_field)
 			{
 				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
 				$sql .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
 			}
 
-			if(!$bypass_acl_at_entity)
-			{
-				$sql = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.location_id,"
-					. "fm_bim_item.id,fm_bim_item.type,fm_bim_item.guid,"
-					. "fm_bim_item.model,fm_bim_item.p_location_id,"
-					. "fm_bim_item.p_id,fm_bim_item.location_code,"
-					. "fm_bim_item.loc1,fm_bim_item.address,"
-					. "fm_bim_item.entry_date,fm_bim_item.user_id,"
-					. "fm_bim_item.org_unit_id,fm_bim_item.entity_group_id,"
-					. "fm_bim_item.modified_by,fm_bim_item.modified_on", $sql);
-			}
-
-
-//_debug_array($sql);
 			static $cache_attributes = array();
 
 			if (!isset($cache_attributes[$location_id]))
@@ -950,15 +962,9 @@
 				$filters = array("short_description" => "IS NOT NULL");
 				$cache_attributes[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true, $filters);
 			}
-
-			if (!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
-			}
+			$sql = str_replace($acl_group_join,'', $sql);
+			$sql_arr = explode('WHERE', $sql);
+			$this->db->query("{$sql_arr[0]} WHERE fm_bim_item.id IN (" . implode(', ',$ids) . ") AND fm_bim_item.type IN ({$types[0]})" . $ordermethod, __LINE__, __FILE__);
 
 			$j = 0;
 
@@ -969,18 +975,7 @@
 //_debug_array($uicols);
 			while ($this->db->next_record())
 			{
-				if($bypass_acl_at_entity)
-				{
-					$xmldata = $this->db->f('xml_representation');
-				}
-				else
-				{
-					$id = (int)$this->db->f('id');
-					$type = (int)$this->db->f('type');
-					$this->db2->query("SELECT xml_representation FROM fm_bim_item WHERE type = {$type} AND id = {$id}", __LINE__, __FILE__);
-					$this->db2->next_record();
-					$xmldata = $this->db2->f('xml_representation');
-				}
+				$xmldata = $this->db->f('xml_representation');
 				$xml = new DOMDocument('1.0', 'utf-8');
 				$xml->loadXML($xmldata);
 
