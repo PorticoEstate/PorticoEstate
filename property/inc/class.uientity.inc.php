@@ -699,10 +699,11 @@
 				//phpgwapi_cache::message_set($receipt, 'message');
 				if ($values['apply'])
 				{
-					if ($id)
+					if ($id || (isset($receipt['id']) && $receipt['id']))
 					{
+						$_id = isset($receipt['id']) && $receipt['id'] ? $receipt['id'] : $id;
 						self::message_set($this->receipt);
-						self::redirect(array('menuaction' => 'property.uientity.edit', 'id' => $id,
+						self::redirect(array('menuaction' => 'property.uientity.edit', 'id' => $_id,
 							'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'type' => $this->type));
 					}
 
