@@ -67,6 +67,7 @@
 			$this->join 		= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->custom		= createObject('property.custom_fields');
 		}
 
 
@@ -112,7 +113,6 @@
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
@@ -201,7 +201,7 @@
 					}
 					unset($user);
 					reset($public_user_list);
-					$filtermethod .= " $where ((phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+					$filtermethod .= " $where (phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
 					$where = 'AND';
 				}
 
@@ -329,12 +329,6 @@
 				$where = 'AND';
 			}
 
-			if ($district_id > 0)
-			{
-				$filtermethod .= " $where  district_id=" .(int)$district_id;
-				$where = 'AND';
-			}
-
 			if ($start_date)
 			{
 				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
@@ -343,35 +337,13 @@
 				$where= 'AND';
 			}
 
-			if ($location_code)
-			{
-				$filtermethod .= " $where phpgw_helpdesk_tickets.location_code {$this->like} '{$location_code}%'";
-				$where= 'AND';
-			}
 
 			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.') && !$p_num)
-				{
-					$query=explode(".",$query);
-					$querymethod = " $where (phpgw_helpdesk_tickets.loc1='" . $query[0] . "' AND phpgw_helpdesk_tickets.loc4='" . $query[1] . "')";
-				}
-				else if(stristr($query, '.') && $p_num)
-				{
-					$query=explode(".",$query);
-					$querymethod = " $where (phpgw_helpdesk_tickets.p_entity_id='" . (int)$query[1] . "' AND phpgw_helpdesk_tickets.p_cat_id='" . (int)$query[2] . "' AND phpgw_helpdesk_tickets.p_num='" . (int)$query[3] . "')";
-				}
-				else
-				{
-					$querymethod = " $where (subject $this->like '%$query%'"
-						. " OR address $this->like '%$query%' "
-						. " OR fm_location1.loc1_name $this->like '%$query%'"
-						. " OR phpgw_helpdesk_tickets.location_code $this->like '%$query%'"
-						. " OR phpgw_helpdesk_tickets.order_id =" . (int)$query . ')';
-				}
+				$querymethod = " $where subject $this->like '%$query%'";
+
 			}
 
 			$sql = "SELECT DISTINCT phpgw_helpdesk_tickets.* , phpgw_helpdesk_views.id as view {$result_order_field} FROM phpgw_helpdesk_tickets"
@@ -380,6 +352,7 @@
 				. " $filtermethod $querymethod";
 
 			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
+			_debug_array($sql2);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
@@ -412,11 +385,7 @@
 						(
 							'id'				=> (int) $this->db->f('id'),
 							'subject'			=> $this->db->f('subject',true),
-							'loc1_name'			=> $this->db->f('loc1_name',true),
-							'location_code'		=> $this->db->f('location_code'),
-							'district'			=> $this->db->f('district',true),
 							'user_id'			=> $this->db->f('user_id'),
-							'address'			=> $this->db->f('address',true),
 							'assignedto'		=> $this->db->f('assignedto'),
 							'status'			=> $this->db->f('status'),
 							'priority'			=> $this->db->f('priority'),
@@ -985,8 +954,8 @@
 			{
 				$this->fields_updated = true;
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
-				$_history_id = $this->db->get_last_insert_id('phpgw_helpdesk_history','history_id');
-				$this->db->query("UPDATE phpgw_helpdesk_history SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);
+				$_history_id = $this->db->get_last_insert_id('phpgw_history_log','history_id');
+				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);
 				unset($_history_id);
 			}
 
@@ -1195,5 +1164,25 @@
 			{
 				return false;
 			}
+		}
+
+		public function get_reported_by()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT user_id as id , account_lastname, account_firstname FROM phpgw_helpdesk_tickets"
+				. " {$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id = phpgw_accounts.account_id"
+				. " ORDER BY account_lastname ASC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true)
+				);
+			}
+
+			return $values;
 		}
 	}

@@ -58,9 +58,10 @@
 				'save'			=> true,
 			);
 
-		function __construct($session=false)
+		function __construct()
 		{
 			$this->so 					= CreateObject('helpdesk.sotts');
+			$this->custom				= & $this->so->custom;
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config','helpdesk');
@@ -71,90 +72,115 @@
 
 			$this->config->read();
 
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
-
-			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query					= phpgw::get_var('query');
-			$sort					= phpgw::get_var('sort');
-			$order					= phpgw::get_var('order');
-			$status_id				= phpgw::get_var('status_id', 'string');
-			$user_id				= phpgw::get_var('user_id', 'int');
-			$cat_id					= phpgw::get_var('cat_id', 'int');
-			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
-			$district_id			= phpgw::get_var('district_id', 'int');
-			$allrows				= phpgw::get_var('allrows', 'bool');
-			$start_date				= phpgw::get_var('start_date', 'string');
-			$end_date				= phpgw::get_var('end_date', 'string');
-			$location_code			= phpgw::get_var('location_code');
-
-
-			$this->start			= $start 							? $start 			: 0;
-			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
-			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
-			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
-			$this->cat_id			= isset($_REQUEST['cat_id']) 		? $cat_id			:  $this->cat_id;
-			$this->status_id		= isset($_REQUEST['status_id'])		? $status_id		: $this->status_id;
-			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
-			$this->part_of_town_id	= isset($_REQUEST['part_of_town_id'])? $part_of_town_id : $this->part_of_town_id;
-			$this->district_id		= isset($_REQUEST['district_id']) 	? $district_id		: $this->district_id;
-			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
-			$this->start_date		= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
-			$this->end_date			= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
-			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
-
-			$this->p_num			= phpgw::get_var('p_num');
+			$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$this->query = phpgw::get_var('query');
+			$this->sort = phpgw::get_var('sort');
+			$this->order = phpgw::get_var('order');
+			$this->status_id = phpgw::get_var('status_id', 'string');
+			$this->user_id = phpgw::get_var('user_id', 'int');
+			$this->reported_by = phpgw::get_var('reported_by', 'int');
+			$this->cat_id = phpgw::get_var('cat_id', 'int');
+			$this->allrows = phpgw::get_var('allrows', 'bool');
+			$this->start_date = phpgw::get_var('filter_start_date', 'string');
+			$this->end_date = phpgw::get_var('filter_end_date', 'string');
 		}
 
 
-		function save_sessiondata($data)
+		function column_list( $selected = array() )
 		{
-			if ($this->use_session)
-			{
-				$GLOBALS['phpgw']->session->appsession('session_data','fm_tts',$data);
-			}
-		}
-
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','fm_tts');
-
-			$this->start		= isset($data['start'])?$data['start']:'';
-			$this->query		= isset($data['query'])?$data['query']:'';
-			$this->user_id		= isset($data['user_id'])?$data['user_id']:'';
-			$this->sort			= isset($data['sort'])?$data['sort']:'';
-			$this->order		= isset($data['order'])?$data['order']:'';
-			$this->status_id	= isset($data['status_id'])?$data['status_id']:'';
-			$this->cat_id		= isset($data['cat_id'])?$data['cat_id']:'';
-			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
-			$this->allrows		= isset($data['allrows'])?$data['allrows']:'';
-			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
-			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
-		}
-
-		function column_list($selected = array(),$type_id='',$allrows='')
-		{
-			if(!$selected)
+			if (!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : '';
 			}
-			$filter = array('list' => ''); // translates to "list IS NULL"
+			$_columns = $this->get_columns();
+
 			$columns = array();
-			$columns[] = array
-				(
-					'id' => 'billable_hours',
-					'name'=> lang('billable hours')
-				);
-			$columns[] = array
-				(
-					'id' => 'district',
-					'name'=> lang('district')
-				);
-			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			foreach ($_columns as $id => $column_info)
+			{
+				$columns[] = $column_info;
+			}
+
+			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 			return $column_list;
+		}
+
+		public function get_columns()
+		{
+			$columns = array();
+
+			$columns['modified_date'] = array(
+				'id' => 'modified_date',
+				'name' => lang('modified date'),
+//					'sortable'	=> true
+			);
+
+			$columns['status'] = array(
+				'id' => 'status',
+				'name' => lang('status')
+			);
+			$columns['user'] = array(
+				'id' => 'user',
+				'name' => lang('user')
+			);
+			$columns['assignedto'] = array
+				(
+				'id' => 'assignedto',
+				'name' => lang('assignedto')
+			);
+
+			$columns['billable_hours'] = array(
+				'id' => 'billable_hours',
+				'name' => lang('billable hours')
+			);
+
+			foreach ($this->uicols_related as $related)
+			{
+				$columns[$related] = array
+					(
+					'id' => $related,
+					'name' => ltrim(lang(str_replace('_', ' ', $related)), '!')
+				);
+			}
+
+			if ($this->show_finnish_date)
+			{
+				$columns['finnish_date'] = array(
+					'id' => 'finnish_date',
+					'name' => lang('finnish_date')
+				);
+				$columns['delay'] = array(
+					'id' => 'delay',
+					'name' => lang('delay')
+				);
+			}
+
+			$custom_cols = $this->get_custom_cols();
+
+			foreach ($custom_cols as $custom_col)
+			{
+				$columns[$custom_col['column_name']] = array(
+					'id' => $custom_col['column_name'],
+					'name' => $custom_col['input_text'],
+					'datatype' => $custom_col['datatype'],
+				);
+				if (($custom_col['datatype'] == 'LB' || $custom_col['datatype'] == 'CH' || $custom_col['datatype'] == 'R') && $custom_col['choice'])
+				{
+					$this->custom_filters[] = $custom_col['column_name'];
+				}
+			}
+			return $columns;
+		}
+
+		function get_custom_cols()
+		{
+			static $custom_cols = array();
+
+			if ($custom_cols)
+			{
+				return $custom_cols;
+			}
+			$custom_cols = $this->custom->find('helpdesk', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			return $custom_cols;
 		}
 
 		function filter($data=0)
@@ -286,45 +312,80 @@
 			return $related;
 		}
 
-		function read($start_date='', $end_date='', $dry_run = '', $download = '')
+		function get_custom_filters()
+		{
+			static $custom_filters = array();
+
+			if ($custom_filters)
+			{
+				return $custom_filters;
+			}
+
+			$custom_cols = $this->get_custom_cols();
+			foreach ($custom_cols as $custom_col)
+			{
+				if (($custom_col['datatype'] == 'LB' || $custom_col['datatype'] == 'CH' || $custom_col['datatype'] == 'R') && $custom_col['choice'])
+				{
+					$custom_filters[] = $custom_col['column_name'];
+				}
+			}
+			return $custom_filters;
+		}
+
+		function read( $data = array() )
 		{
 			static $category_name = array();
 			static $account = array();
 			static $vendor_cache = array();
 
-			$interlink 	= CreateObject('property.interlink');
-			$start_date	= $this->bocommon->date_to_timestamp($start_date);
-			$end_date	= $this->bocommon->date_to_timestamp($end_date);
+			$interlink = CreateObject('property.interlink');
+			$data['start_date'] = $this->bocommon->date_to_timestamp($data['start_date']);
+			$data['end_date'] = $this->bocommon->date_to_timestamp($data['end_date']);
 
-			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-				'start_date'=>$start_date,'end_date'=>$end_date,
-				'allrows'=>$this->allrows,'user_id' => $this->user_id, 'dry_run' => $dry_run,
-				'location_code' => $this->location_code, 'p_num' => $this->p_num));
+			$custom_filtermethod = array();
+			foreach ($this->get_custom_filters() as $custom_filter)
+			{
+				if ($_REQUEST[$custom_filter]) //just testing..
+				{
+					$custom_filtermethod[$custom_filter] = phpgw::get_var($custom_filter, 'int');
+				}
+			}
+
+			$data['custom_filtermethod'] = $custom_filtermethod;
+
+			$tickets = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;
-			$entity	= $this->get_origin_entity_type();
-			$contacts	= CreateObject('property.sogeneric');
-			$contacts->get_location_info('vendor',false);
+			$this->sum_budget = $this->so->sum_budget;
+			$this->sum_actual_cost = $this->so->sum_actual_cost;
+			$this->sum_difference = $this->so->sum_difference;
 
-			$custom 		= createObject('property.custom_fields');
-			$vendor_data['attributes'] = $custom->find('helpdesk','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom_status = $this->so->get_custom_status();
+			$closed_status = array('X');
+			foreach ($custom_status as $custom)
+			{
+				if ($custom['closed'])
+				{
+					$closed_status[] = "C{$custom['id']}";
+				}
+			}
 
 			foreach ($tickets as & $ticket)
 			{
-				if(!isset($category_name[$ticket['cat_id']]))
+				if (!isset($category_name[$ticket['cat_id']]))
 				{
 					$category_name[$ticket['cat_id']] = $this->get_category_name($ticket['cat_id']);
 				}
 
-				$ticket['category']	= $category_name[$ticket['cat_id']];
+				$ticket['category'] = $category_name[$ticket['cat_id']];
 
-				if(!$ticket['subject'])
+				if (!$ticket['subject'])
 				{
 					$ticket['subject'] = $category_name[$ticket['cat_id']];
 				}
 
-				if(!isset($account[$ticket['user_id']]))
+
+				if (!isset($account[$ticket['user_id']]))
 				{
 					$ticket['user'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 					$account[$ticket['user_id']] = $ticket['user'];
@@ -334,9 +395,9 @@
 					$ticket['user'] = $account[$ticket['user_id']];
 				}
 
-				if($ticket['assignedto'])
+				if ($ticket['assignedto'])
 				{
-					if(!isset($account[$ticket['assignedto']]))
+					if (!isset($account[$ticket['assignedto']]))
 					{
 						$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
 						$account[$ticket['assignedto']] = $ticket['assignedto'];
@@ -348,7 +409,7 @@
 				}
 				else
 				{
-					if(!isset($account[$ticket['group_id']]))
+					if (!isset($account[$ticket['group_id']]))
 					{
 						$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 						$account[$ticket['group_id']] = $ticket['assignedto'];
@@ -359,61 +420,20 @@
 					}
 				}
 
-				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
-
-				if($ticket['finnish_date2'])
+				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], $this->dateformat);
+				$ticket['modified_date'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'], $this->dateformat);
+				if ($ticket['finnish_date2'])
 				{
-					$ticket['delay'] = round(($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600));
-					$ticket['finnish_date']=$ticket['finnish_date2'];
+					$ticket['delay'] = round(($ticket['finnish_date2'] - $ticket['finnish_date']) / (24 * 3600));
+					$ticket['finnish_date'] = $ticket['finnish_date2'];
 				}
-				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'],$this->dateformat):'');
+				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'], $this->dateformat) : '');
 
-				if ($ticket['status'] == 'X')
-				{
-					$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$ticket['id']);
-					$ticket['timestampclosed'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
-				}
 				if ($ticket['new_ticket'])
 				{
 					$ticket['new_ticket'] = '*';
 				}
-
-				if(isset($entity) && is_array($entity))
-				{
-					for ($j=0;$j<count($entity);$j++)
-					{
-						$ticket['child_date'][$j] = $interlink->get_child_date('helpdesk', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
-						if($ticket['child_date'][$j]['date_info'] && !$download)
-						{
-							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
-						}
-					}
-				}
-				if( $ticket['vendor_id'])
-				{
-					if(isset($vendor_cache[$ticket['vendor_id']]))
-					{
-						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
-					}
-					else
-					{
-						$vendor_data	= $contacts->read_single(array('id' => $ticket['vendor_id']),$vendor_data);
-						if($vendor_data)
-						{
-							foreach($vendor_data['attributes'] as $attribute)
-							{
-								if($attribute['name']=='org_name')
-								{
-									$vendor_cache[$ticket['vendor_id']]=$attribute['value'];
-									$ticket['vendor'] = $attribute['value'];
-									break;
-								}
-							}
-						}
-					}
-				}
 			}
-
 			return $tickets;
 		}
 
@@ -976,4 +996,64 @@
 			$this->fields_updated = $this->so->fields_updated;		
 			return $receipt;
 		}
+
+		public function get_reported_by( $selected = 0 )
+		{
+			$values = $this->so->get_reported_by();
+
+			foreach ($values as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+			return $values;
+		}
+		public function get_attributes( $values )
+		{
+			$values['attributes'] = $this->get_custom_cols();
+			$values = $this->custom->prepare($values, 'helpdesk', '.ticket', false);
+			return $values;
+		}
+		function get_group_list( $selected = 0 )
+		{
+			$query = '';
+			$group_list = $this->bocommon->get_group_list('select', $selected, $start = -1, $sort = 'ASC', $order = 'account_firstname', $query, $offset = -1);
+			$_candidates = array();
+			if (isset($this->config->config_data['fmtts_assign_group_candidates']) && is_array($this->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
+
+			if ($_candidates)
+			{
+				if ($selected)
+				{
+					if (!in_array($selected, $_candidates))
+					{
+						$_candidates[] = $selected;
+					}
+				}
+
+				$values = array();
+				foreach ($group_list as $group)
+				{
+					if (in_array($group['id'], $_candidates))
+					{
+						$values[] = $group;
+					}
+				}
+
+				return $values;
+			}
+			else
+			{
+				return $group_list;
+			}
+		}
+
 	}
