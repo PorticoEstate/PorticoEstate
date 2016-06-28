@@ -1,5 +1,6 @@
 var d;
 var vendor_id = 0;
+var amount = 0;
 
 this.local_DrawCallback4 = function ()
 {
@@ -26,6 +27,7 @@ this.local_DrawCallback4 = function ()
 			}) : 0;
 
 		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
+		amount = pageTotal;
 	});
 
 };
@@ -342,10 +344,9 @@ var ecodimb_selection = "";
 $(window).load(function ()
 {
 	ecodimb = $('#ecodimb').val();
-	var selection = [];
 	if (ecodimb)
 	{
-		populateTableChkApproval(ecodimb, selection);
+		populateTableChkApproval();
 //		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
 		ecodimb_selection = ecodimb;
 	}
@@ -354,27 +355,28 @@ $(window).load(function ()
 		var ecodimb = ui.item.value;
 		if (ecodimb != ecodimb_selection)
 		{
-			populateTableChkApproval(ecodimb, selection);
+			populateTableChkApproval(ecodimb);
 		}
 	});
+
+	$("#budget").change(function ()
+	{
+		populateTableChkApproval();
+	});
+
 });
 
-function populateTableChkApproval(ecodimb, selection)
+function populateTableChkApproval(ecodimb)
 {
-//	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: 1, sub_activity_id: $("#field_activity").val()};
-//	var url = phpGWLink('bookingfrontend/', oArgs, true);
-//	var container = 'approval_container';
-//	var colDefs = [
-//		{label: '', object: [{type: 'input', attrs: [
-//						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'values[approval][]'}, {name: 'class', value: 'chkRegulations'}
-//					]}
-//			], value: 'id', checked: selection},
-//		{key: 'name', label: lang['Name']},
-//		{key: 'type', label: lang['Address']}
-//	];
-//	createTable(container, url, colDefs, 'results');
+	ecodimb = ecodimb || $('#ecodimb').val();
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb};
+	if(!ecodimb)
+	{
+		return;
+	}
+	
+	var total_amount = Number(amount) + Number($('#budget').val());
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -388,11 +390,20 @@ function populateTableChkApproval(ecodimb, selection)
 			{
 				htmlString = "<table>";
 				var obj = data;
+				var required = '';
 
 				$.each(obj, function (i)
 				{
+					required = '';
+
 					htmlString += "<tr><td>"
-					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"></input>";
+
+					if (obj[i].required == true)
+					{
+						htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"></input>";
+						required = 'checked="checked" disabled="disabled"';
+					}
+					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"" + required +"></input>";
 					htmlString += "</td><td valign=\"top\">";
 					htmlString += obj[i].address;
 					htmlString += "</td></tr>";
