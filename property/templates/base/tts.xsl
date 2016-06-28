@@ -860,7 +860,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
 										</label>
-										<input type="text" name="values[budget]">
+										<input id="budget" type="text" name="values[budget]">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 											</xsl:attribute>
