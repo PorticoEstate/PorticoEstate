@@ -65,6 +65,13 @@
 				<div id="upload">
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'location')"/>
+						</label>
+						<div id="location_name" class='pure-custom'></div>
+						<input type="hidden" id="location_code" name="location_code" value=""></input>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'upload file')"/>
 						</label>
 						<input type="file" name="file" size="40">
@@ -72,12 +79,15 @@
 								<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
 							</xsl:attribute>
 						</input>
+					</div>	
+					<div class="pure-control-group">
+						<label></label>
 						<input type="submit" name="importsubmit" size="40">
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('lang', 'Start import')"/>
 							</xsl:attribute>
 						</input>
-					</div>						
+					</div>					
 				</div>
 				
 			</div>
