@@ -34,7 +34,8 @@
 	{
 		public $public_functions = array(
 			'query' => true,
-			'index' => true
+			'index' => true,
+			'get_locations_for_type' => true
 		);
 
 		public function __construct()
@@ -260,7 +261,7 @@
 			
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['upload'] = array('label' => lang('Upload'), 'link' => '#upload');
+			$tabs['upload'] = array('label' => lang('Upload'), 'link' => '#upload', 'disable' => 1);
 			
 			$active_tab = 'locations';
 
@@ -278,12 +279,16 @@
 				array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true)
 			);
 
+
 			$datatable_def[] = array
 			(
 				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'phpgw_return_as' => 'json'))),
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiimport_components.get_locations_for_type', 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def,
-				'tabletools' => array()
+				'tabletools' => array(),
+				'config' => array(
+					array('singleSelect' => true)
+				)				
 			);	
 				
 			$data = array
@@ -299,11 +304,59 @@
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
 			
+			self::add_javascript('property', 'portico', 'import_components.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Importer ');
 
 			self::render_template_xsl(array('import_components', 'datatable_inline'), $data);
 		}
 
+		public function get_locations_for_type()
+		{
+			$type_id = phpgw::get_var('type_id', 'int');
+
+			if (!$type_id)
+			{
+				$type_id = 1;
+			}
+			
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'type_id' => $type_id,
+				'district_id' => phpgw::get_var('district_id', 'int', 'REQUEST', 0),
+				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
+			
+            $solocation = CreateObject('property.solocation');
+            $locations = $solocation->read($params);
+			
+			$values = array();
+			foreach($locations as $item)
+			{
+				$values[] = array(
+					'location_code' => $item['location_code'],
+					'loc1_name' => $item['loc1_name']
+				);				
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $solocation->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+		
 		/**
 		 * Fetch data from $this->bo based on parametres
 		 * @return array
