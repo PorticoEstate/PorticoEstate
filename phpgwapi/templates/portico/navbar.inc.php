@@ -26,7 +26,8 @@
 			'about_text'	=> lang('about'),
 			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
 			'logout_text'	=> lang('logout'),
-			'user_fullname' => $user->__toString()
+			'user_fullname' => $user->__toString(),
+			'top_level_menu_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'phpgwapi.menu.get_local_menu_ajax', 'node'=> 'top_level', 'phpgw_return_as'=>'json') ),
 		);
 
 		if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
@@ -117,26 +118,23 @@
 			}
 		}
 
-		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu'
-			&& !phpgwapi_cache::session_get('navbar', 'compiled') == true
-		)
+//		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu'
+//			&& !phpgwapi_cache::session_get('navbar', 'compiled') == true
+//		)
 		{
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-			$treemenu = '';
+			$treemenu = array();
 			foreach($navbar as $app => $app_data)
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
 					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
+					$treemenu[] = render_item($app_data, "navbar::{$app}", $submenu);
 				}
 			}
-			$var['treemenu'] = <<<HTML
-			<ul>
-{$treemenu}
-			</ul>
-
-HTML;
+//			_debug_array(json_encode($treemenu, JSON_PRETTY_PRINT)); die();
+			$var['treemenu_data'] = json_encode($treemenu);
+			$var['current_node_id'] = 14;
 			
 			/**
 			 * Check for HTML5
@@ -146,77 +144,6 @@ HTML;
 				phpgwapi_cache::session_set('navbar', 'compiled', true);
 			}
 		}
-
-		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
-		{
-			$var['tree_script'] = <<<JS
-				<script type="text/javascript">
-
-				$(function() {
-
-				if(typeof(Storage)!=="undefined")
-				{
-					var cached_menu_tree_data = $("#navbar").html();
-					if(cached_menu_tree_data)
-					{
-						sessionStorage.cached_menu_tree_data = cached_menu_tree_data;
-					}
-					else
-					{
-						cached_menu_tree_data = sessionStorage.cached_menu_tree_data;
-					}
-
-					if(typeof(cached_menu_tree_data) !='undefined' && cached_menu_tree_data)
-					{
-						$('#navbar').html(cached_menu_tree_data);
-					}
-				}
-
-				 $('#navbar').jstree({
-						core:{
-								multiple: false
-							 },
-						plugins: ["state", "search"]
-					});
-
-					$('#collapseNavbar').on('click', function () {
-							$(this).attr('href', 'javascript:;');
-							$('#navbar').jstree('close_all');
-							$('#navbar_search').hide();
-						})
-
-					$('#expandNavbar').on('click', function () {
-						$(this).attr('href', 'javascript:;');
-						$('#navbar').jstree('open_all');
-						$('#navbar_search').show();
-					});
-
-
-				    var to = false;
-					$('#navbar_search').keyup(function () {
-						if(to) { clearTimeout(to); }
-						to = setTimeout(function () {
-							var v = $('#navbar_search').val();
-							$('#navbar').jstree(true).search(v);
-						}, 250);
-					});
-					$('#navbar').bind('select_node.jstree', function(e,data) {
-						if (typeof (data.event) == 'undefined')
-						{
-							return false;
-						}
-						setTimeout(function() {
-							update_content(data.node.a_attr.href);
-							//window.location.href = data.node.a_attr.href;
-						}, 100);
-
-					});
-			});
-			</script>
-JS;
-
-		}
-
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
@@ -266,8 +193,11 @@ JS;
 		return isset( $navbar_state[ $id ]);
 	}
 
-	function render_item($item, $id='', $children='')
+	function render_item($item, $id='', $children=array())
 	{
+		static $node_id = 0;
+		$node_id ++;
+
 		$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
 		static $blank_image;
 		static $images = array(); // cache
@@ -307,6 +237,7 @@ JS;
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
 			$current_class = 'current';
+			$current_node_id = $node_id;
 		}
 
 		$link_class = " class=\"{$current_class}{$parent_class}\"";
@@ -319,10 +250,6 @@ JS;
 		$icon_style = '';
 		$id			= '';
 
-		$out = <<<HTML
-				<li{$expand_class}>
-
-HTML;
 /*
  *		Sigurd: img treeview
  * 		if( $expand_class )
@@ -343,31 +270,28 @@ HTML;
 			$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
 		}
 
-		return <<<HTML
-$out
-					<a href="{$item['url']}"{$link_class}{$icon_style}{$id}{$target}>{$item['text']}</a>
-{$children}
-				</li>
+		$ret = array(
+			'name'	=> "<a href=\"{$item['url']}\" style=\"white-space: nowrap;\">{$item['text']}</a>",
+			'id'	=> $node_id
+//			'name'	=> "<a href=\"{$item['url']}\"{$link_class}{$icon_style}{$id}{$target}>{$item['text']}</a>"
+		);
+		if($children)
+		{
+			$ret['children'] = $children;
+		}
 
-HTML;
+		return $ret;
 	}
 
 	function render_submenu($parent, $menu)
 	{
-		$out = '';
+		$out = array();
 		foreach ( $menu as $key => $item )
 		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : '';
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : array();
+			$out[]= render_item($item, "navbar::{$parent}::{$key}", $children);
 			//$debug .= "{$parent}::{$key}<br>";
 		}
-
-		$out = <<<HTML
-			<ul>
-{$out}
-			</ul>
-
-HTML;
 		return $out;
 	}
 
