@@ -126,7 +126,7 @@
 			{
 				return;
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
@@ -483,7 +483,7 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$acl->set_account_id($this->account);
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
@@ -532,9 +532,11 @@
 			}
 
 			$bypass_acl_at_entity = false;
+			$acl_group_join	= "{$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
 			if (isset($_config->config_data['bypass_acl_at_entity']) && is_array($_config->config_data['bypass_acl_at_entity']) && in_array($entity_id, $_config->config_data['bypass_acl_at_entity']))
 			{
 				$bypass_acl_at_entity = true;
+				$acl_group_join = '';
 			}
 
 			unset($_config);
@@ -778,7 +780,7 @@
 
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)"
 				. " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
-				. " {$this->join} phpgw_group_map ON phpgw_accounts.account_id = phpgw_group_map.account_id ";
+				. " {$acl_group_join}";
 			$join_control = "controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
 
 			if ($control_registered)
@@ -876,8 +878,7 @@
 				unset($sql2);
 				unset($sql_cnt);
 
-				$cache_info = array
-					(
+				$cache_info = array(
 					'total_records' => $this->db->f('cnt'),
 					'sql_hash' => md5($_sql)
 				);
@@ -908,6 +909,9 @@
 					case 'id':
 						$ordermethod = " ORDER BY {$entity_table}.id {$sort}";
 						break;
+					case 'loc1':
+						$ordermethod = " ORDER BY {$entity_table}.loc1 {$sort}";
+						break;
 					default:
 						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
 						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
@@ -921,12 +925,36 @@
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
 
+			$sql_pre_run = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.id,fm_bim_item.type {$sql_custom_field}", $sql);
+//			_debug_array($sql_pre_run);
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql_pre_run, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql_pre_run, __LINE__, __FILE__);
+			}
+
+			$ids = array();
+			$types = array();
+			while ($this->db->next_record())
+			{
+				$ids[] = (int)$this->db->f('id');
+				$types[] = (int)$this->db->f('type');
+			}
+
+			if(!$ids)
+			{
+				return array();
+			}
+
 			if ($sql_custom_field)
 			{
 				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
 				$sql .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
 			}
-//_debug_array($sql);
+
 			static $cache_attributes = array();
 
 			if (!isset($cache_attributes[$location_id]))
@@ -934,15 +962,9 @@
 				$filters = array("short_description" => "IS NOT NULL");
 				$cache_attributes[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true, $filters);
 			}
-
-			if (!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
-			}
+			$sql = str_replace($acl_group_join,'', $sql);
+			$sql_arr = explode('WHERE', $sql);
+			$this->db->query("{$sql_arr[0]} WHERE fm_bim_item.id IN (" . implode(', ',$ids) . ") AND fm_bim_item.type IN ({$types[0]})" . $ordermethod, __LINE__, __FILE__);
 
 			$j = 0;
 
@@ -963,8 +985,7 @@
 					{
 						$value = $this->db->f($field, true);
 					}
-					$dataset[$j][$field] = array
-						(
+					$dataset[$j][$field] = array(
 						'value' => $value,
 						'datatype' => $uicols['datatype'][$key],
 						'attrib_id' => $uicols['cols_return_extra'][$key]['attrib_id'],
@@ -1471,7 +1492,7 @@
 			{
 				return;
 			}
-		
+
 			$acl = & $GLOBALS['phpgw']->acl;
 			$acl->set_account_id($this->account);
 			$grants = $acl->get_grants2($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
