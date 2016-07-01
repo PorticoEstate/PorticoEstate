@@ -13,7 +13,7 @@ $(document).ready(function ()
 			onCreateLi: function (node, $li)
 			{
 				// Add 'icon' span before title
-				$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
+		//		$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
 				tree.tree('removeFromSelection', node);
 				if (typeof (current_node_id) != 'undefined' && current_node_id > 0 && node.id == current_node_id)
 				{
