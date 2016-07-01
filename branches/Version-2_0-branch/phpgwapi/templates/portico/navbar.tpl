@@ -9,10 +9,20 @@
 			{
 				sessionStorage.cached_menu_tree_data = '';
 		 	}
-					$('#navbar').jstree('close_all');
+			var $tree = $('#navbar');
+			var tree = $tree.tree('getTree');
+
+			tree.iterate(
+				function(node) {
+					$tree.tree('closeNode', node, true);
+				 }
+			);
 			var sUrl = phpGWLink('logout.php');
 			window.open(sUrl,'_self');
 		}
+
+		var treemenu_data = {treemenu_data};
+		var current_node_id = {current_node_id};
 	</script>
 			<div class="ui-layout-north">
 				<div id="logo">{site_title}</div>
@@ -53,15 +63,11 @@
 					<a id="collapseNavbar" title="Collapse the entire tree below" href="#">
 						{lang_collapse_all}
 					</a>
-					|
-					<a id="expandNavbar" title="Expand the entire tree below" href="#">
-						{lang_expand_all}
-					</a>
-					</div>
-
-				<div id="navbar" class="ui-layout-content" style="overflow: auto;">{treemenu}</div>
-				{tree_script}
 				</div>
+
+
+				<div id="navbar" class="ui-layout-content" style="overflow: auto;"></div>
+			</div>
 
 			<div class="ui-layout-east">
 				<div id = "layouheader_east" class="layouheader"></div>
