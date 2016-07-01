@@ -122,19 +122,11 @@
 //			&& !phpgwapi_cache::session_get('navbar', 'compiled') == true
 //		)
 		{
-			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-			$treemenu = array();
-			foreach($navbar as $app => $app_data)
-			{
-				if(!in_array($app, array('logout', 'about', 'preferences')))
-				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
-					$treemenu[] = render_item($app_data, "navbar::{$app}", $submenu);
-				}
-			}
-//			_debug_array(json_encode($treemenu, JSON_PRETTY_PRINT)); die();
+			$menu_organizer = new menu_organizer($navbar);
+			$treemenu = $menu_organizer->get_menu();
+
 			$var['treemenu_data'] = json_encode($treemenu);
-			$var['current_node_id'] = 14;
+			$var['current_node_id'] =  $menu_organizer->get_current_node_id();
 			
 			/**
 			 * Check for HTML5
@@ -191,108 +183,6 @@
 			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
 		}
 		return isset( $navbar_state[ $id ]);
-	}
-
-	function render_item($item, $id='', $children=array())
-	{
-		static $node_id = 0;
-		$node_id ++;
-
-		$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
-		static $blank_image;
-		static $images = array(); // cache
-
-		if ( !isset($blank_image) )
-		{
-			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
-		}
-		if ( isset($item['image']) )
-		{
-			if(!isset($images[$item['image'][0]][$item['image'][1]]))
-			{
-				$icon = $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]);
-				if(!$icon)
-				{
-					$icon = $GLOBALS['phpgw']->common->image('phpgwapi', 'folder');
-				}
-				$icon_style = ' style="background-image: url(' . $icon . ')"';
-				$images[$item['image'][0]][$item['image'][1]] = $icon_style;
-			}
-			else
-			{
-				$icon_style = $images[$item['image'][0]][$item['image'][1]];
-			}
-		}
-		else
-		{
-			$icon = $GLOBALS['phpgw']->common->image('phpgwapi', 'folder');
-			$icon_style = ' style="background-image: url(' . $icon . ')"';
-		//	$images[$item['image'][0]][$item['image'][1]] = $icon_style;
-		}
-		if ( $children )
-		{
-			$expand_class = item_expanded($id) ? ' class="expanded"' : ' class="collapsed"';
-			$parent_class = ' parent';
-		}
-		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
-		{
-			$current_class = 'current';
-			$current_node_id = $node_id;
-		}
-
-		$link_class = " class=\"{$current_class}{$parent_class}\"";
-		$id=" id=\"{$id}\"";
-		/**
-		 * Sigurd: Block class for treeview
-		 */
-		$link_class = '';//" class=\"{$current_class}{$parent_class}\"";
-		$expand_class = '';
-		$icon_style = '';
-		$id			= '';
-
-/*
- *		Sigurd: img treeview
- * 		if( $expand_class )
-		{
-		$out .= <<<HTML
-							<img src="{$blank_image}"{$expand_class}width="16" height="16" alt="+/-" />
-
-HTML;
-		}
- */
-		$target = '';
-		if(isset($item['target']))
-		{
-			$target = "target = '{$item['target']}'";
-		}
-		if(isset($item['local_files']) && $item['local_files'])
-		{
-			$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
-		}
-
-		$ret = array(
-			'name'	=> "<a href=\"{$item['url']}\" style=\"white-space: nowrap;\">{$item['text']}</a>",
-			'id'	=> $node_id
-//			'name'	=> "<a href=\"{$item['url']}\"{$link_class}{$icon_style}{$id}{$target}>{$item['text']}</a>"
-		);
-		if($children)
-		{
-			$ret['children'] = $children;
-		}
-
-		return $ret;
-	}
-
-	function render_submenu($parent, $menu)
-	{
-		$out = array();
-		foreach ( $menu as $key => $item )
-		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : array();
-			$out[]= render_item($item, "navbar::{$parent}::{$key}", $children);
-			//$debug .= "{$parent}::{$key}<br>";
-		}
-		return $out;
 	}
 
 	function parse_footer_end()
@@ -364,4 +254,103 @@ HTML;
 			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
 		}
 		uasort($navbar, 'sort_navbar');
+	}
+
+	class menu_organizer
+	{
+		private $current_node_id;
+		private $navbar;
+
+		function __construct($navbar = array())
+		{
+			$this->set_navbar($navbar);
+			$this->set_current_node_id(0);
+		}
+
+		private function set_navbar($navbar)
+		{
+			$this->navbar = $navbar;
+		}
+		private function set_current_node_id($current_node_id)
+		{
+			$this->current_node_id = $current_node_id;
+		}
+		public function get_current_node_id()
+		{
+			return $this->current_node_id;
+		}
+
+		public function get_menu( )
+		{
+			$treemenu = array();
+			$navbar = $this->navbar;
+			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+
+			foreach($navbar as $app => $app_data)
+			{
+				if(!in_array($app, array('logout', 'about', 'preferences')))
+				{
+					$submenu = isset($navigation[$app]) ? $this->render_submenu($app, $navigation[$app]) : '';
+					$treemenu[] = $this->render_item($app_data, "navbar::{$app}", $submenu);
+				}
+			}
+			return $treemenu;
+		}
+
+		private function render_item($item, $id='', $children=array())
+		{
+			static $node_id = 0;
+			$node_id ++;
+
+			$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
+			static $blank_image;
+			static $images = array(); // cache
+
+			if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
+			{
+				$current_class = 'current';
+				$this->set_current_node_id($node_id);
+			}
+
+			$link_class = " class=\"{$current_class}{$parent_class}\"";
+			$id=" id=\"{$id}\"";
+
+			$link_class = '';//" class=\"{$current_class}{$parent_class}\"";
+			$expand_class = '';
+			$icon_style = '';
+			$id			= '';
+
+			$target = '';
+			if(isset($item['target']))
+			{
+				$target = "target = '{$item['target']}'";
+			}
+			if(isset($item['local_files']) && $item['local_files'])
+			{
+				$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+			}
+
+			$ret = array(
+				'name'	=> "<a href=\"{$item['url']}\" style=\"white-space: nowrap;\"{$target}>{$item['text']}</a>",
+				'id'	=> $node_id
+			);
+
+			if($children)
+			{
+				$ret['children'] = $children;
+			}
+
+			return $ret;
+		}
+
+		private function render_submenu($parent, $menu)
+		{
+			$out = array();
+			foreach ( $menu as $key => $item )
+			{
+				$children = isset($item['children']) ? $this->render_submenu(	"{$parent}::{$key}", $item['children']) : array();
+				$out[]= $this->render_item($item, "navbar::{$parent}::{$key}", $children);
+			}
+			return $out;
+		}
 	}
