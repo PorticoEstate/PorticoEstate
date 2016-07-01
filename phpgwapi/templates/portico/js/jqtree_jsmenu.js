@@ -1,3 +1,37 @@
+$(document).ready(function ()
+{
+	var tree = $('#navbar');
+	setTimeout(function ()
+	{
+		tree.tree({
+			data: treemenu_data,
+			autoEscape: false,
+			dragAndDrop: true,
+			autoOpen: false,
+			saveState: true,
+			useContextMenu: false,
+			onCreateLi: function (node, $li)
+			{
+				// Add 'icon' span before title
+				$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
+				tree.tree('removeFromSelection', node);
+				if (typeof (current_node_id) != 'undefined' && current_node_id > 0 && node.id == current_node_id)
+				{
+		//			console.log(current_node_id);
+					tree.tree('addToSelection', node);
+					var parent = node.parent;
+					while (typeof (parent.element) !== 'undefined')
+					{
+						tree.tree('openNode', parent, false);
+						//		tree.tree('addToSelection', parent);
+						parent = parent.parent;
+					}
+				}
+			}
+		});
+	}, 50);
+
+});
 //$(document).ready(function () {
 //    var tree = $('#navbar'),
 //        filter = $('#navbar_search'),
@@ -74,13 +108,13 @@
 $(function ()
 {
 
-	$('#navbar').tree({
-		data: treemenu_data,
-		autoEscape: false,
-		autoOpen: 0,
-		saveState: true,
-		dragAndDrop: true
-	});
+//	$('#navbar').tree({
+//		data: treemenu_data,
+//		autoEscape: false,
+//		autoOpen: 0,
+//		saveState: true,
+//		dragAndDrop: true
+//	});
 
 
 	$('#navbar_search').hide();
@@ -88,15 +122,16 @@ $(function ()
 	$('#collapseNavbar').on('click', function ()
 	{
 		$(this).attr('href', 'javascript:;');
-  
+
 		var $tree = $('#navbar');
 		var tree = $tree.tree('getTree');
 
-        tree.iterate(
-            function(node) {
+		tree.iterate(
+			function (node)
+			{
 				$tree.tree('closeNode', node, true);
-             }
-        );
+			}
+		);
 
 		$('#navbar_search').hide();
 	})
@@ -108,11 +143,12 @@ $(function ()
 		var $tree = $('#navbar');
 		var tree = $tree.tree('getTree');
 
-        tree.iterate(
-            function(node) {
+		tree.iterate(
+			function (node)
+			{
 				$tree.tree('openNode', node, false);
-             }
-        );
+			}
+		);
 		$('#navbar_search').show();
 	});
 
