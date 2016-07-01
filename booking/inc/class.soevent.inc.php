@@ -116,6 +116,7 @@
 
 		function get_ordered_comments( $id )
 		{
+			$id = (int) $id;
 			$results = array();
 			$this->db->query("select time,author,comment,type from bb_event_comment where event_id=($id) order by time desc", __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -130,6 +131,7 @@
 
 		function get_ordered_costs( $id )
 		{
+			$id = (int) $id;
 			$results = array();
 			$this->db->query("SELECT * FROM bb_event_cost WHERE event_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -177,6 +179,7 @@
 
 		function get_contact_mail( $id, $type )
 		{
+			$id = (int) $id;
 			$mail = array();
 			if ($type == 'allocation')
 			{
