@@ -918,7 +918,8 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
+						$building_id = $booking['building_id'] ? $booking['building_id'] : $allocation['building_id'];
+						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
 					}
 				}
 			}
