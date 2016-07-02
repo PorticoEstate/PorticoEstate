@@ -173,7 +173,23 @@
 					);
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
 					break;
-
+				
+				case 'file-upload':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+						"js/{$_jquery_ui}{$_type}",
+						"file-upload/js/tmpl{$_type}",
+						"file-upload/js/jquery.fileupload",
+						"file-upload/js/jquery.fileupload-process",
+						"file-upload/js/jquery.fileupload-validate",
+						"file-upload/js/jquery.fileupload-ui",
+						"file-upload/js/jquery.fileupload-jquery-ui"
+					);
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
+					break;
+				
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);
@@ -458,4 +474,140 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
 		}
+		
+		public static function form_file_upload_generate( $action )
+		{
+			self::load_widget('file-upload');
+			$output = <<<HTML
+			<form id="fileupload" action="{$action}" method="POST" enctype="multipart/form-data">
+				<!-- Redirect browsers with JavaScript disabled to the origin page -->
+				<noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+				<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+				<div class="fileupload-buttonbar">
+					<div class="fileupload-buttons">
+						<!-- The fileinput-button span is used to style the file input field as button -->
+						<span class="fileinput-button">
+							<span>Add files...</span>
+							<input type="file" name="files[]" multiple>
+						</span>
+						<button type="submit" class="start">Start upload</button>
+						<button type="reset" class="cancel">Cancel upload</button>
+						<button type="button" class="delete">Delete</button>
+						<input type="checkbox" class="toggle">
+						<!-- The global file processing state -->
+						<span class="fileupload-process"></span>
+					</div>
+					<!-- The global progress state -->
+					<div class="fileupload-progress fade" style="display:none">
+						<!-- The global progress bar -->
+						<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+						<!-- The extended global progress state -->
+						<div class="progress-extended">&nbsp;</div>
+					</div>
+				</div>
+				<!-- The table listing the files available for upload/download -->
+				<table role="presentation"><tbody class="files"></tbody></table>
+			</form>
+
+			<!-- The template to display files available for upload -->
+			<script id="template-upload" type="text/x-tmpl">
+			{% for (var i=0, file; file=o.files[i]; i++) { %}
+				<tr class="template-upload fade">
+					<td>
+						<span class="preview"></span>
+					</td>
+					<td>
+						<p class="name">{%=file.name%}</p>
+						<strong class="error"></strong>
+					</td>
+					<td>
+						<p class="size">Processing...</p>
+						<div class="progress"></div>
+					</td>
+					<td>
+						{% if (!i && !o.options.autoUpload) { %}
+							<button class="start" disabled>Start</button>
+						{% } %}
+						{% if (!i) { %}
+							<button class="cancel">Cancel</button>
+						{% } %}
+					</td>
+				</tr>
+			{% } %}
+			</script>
+			<!-- The template to display files available for download -->
+			<script id="template-download" type="text/x-tmpl">
+			{% for (var i=0, file; file=o.files[i]; i++) { %}
+				<tr class="template-download fade">
+					<td>
+						<span class="preview">
+							{% if (file.thumbnailUrl) { %}
+								<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+							{% } %}
+						</span>
+					</td>
+					<td>
+						<p class="name">
+							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+						</p>
+						{% if (file.error) { %}
+							<div><span class="error">Error</span> {%=file.error%}</div>
+						{% } %}
+					</td>
+					<td>
+						<span class="size">{%=o.formatFileSize(file.size)%}</span>
+					</td>
+					<td>
+						<button class="delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+						<input type="checkbox" name="delete" value="1" class="toggle">
+					</td>
+				</tr>
+			{% } %}
+			</script>
+HTML;
+			
+			$js = <<<JS
+					
+		$(function () {
+			'use strict';
+
+			// Initialize the jQuery File Upload widget:
+			$('#fileupload').fileupload({
+				// Uncomment the following to send cross-domain cookies:
+				//xhrFields: {withCredentials: true},
+				url: '{$action}'
+			});
+
+			// Enable iframe cross-domain access via redirect option:
+			$('#fileupload').fileupload(
+				'option',
+				'redirect',
+				window.location.href.replace(
+					/\/[^\/]*$/,
+					'/cors/result.html?%s'
+				)
+			);
+
+			// Load existing files:
+			$('#fileupload').addClass('fileupload-processing');
+			$.ajax({
+				// Uncomment the following to send cross-domain cookies:
+				//xhrFields: {withCredentials: true},
+				url: $('#fileupload').fileupload('option', 'url'),
+				dataType: 'json',
+				context: $('#fileupload')[0]
+			}).always(function () {
+				$(this).removeClass('fileupload-processing');
+			}).done(function (result) {
+				$(this).fileupload('option', 'done')
+					.call(this, $.Event('done'), {result: result});
+			});
+
+		});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+			
+			return $output;
+		}
+		
 	}
