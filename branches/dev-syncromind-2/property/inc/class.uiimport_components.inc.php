@@ -35,7 +35,8 @@
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
-			'get_locations_for_type' => true
+			'get_locations_for_type' => true,
+			'file_upload_handler' => true
 		);
 
 		public function __construct()
@@ -54,6 +55,13 @@
 			return;
 		}
 
+		public function file_upload_handler()
+		{
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			
+			$upload_handler = new UploadHandler();
+		}
+		
 		/**
 		 * Prepare UI
 		 * @return void
@@ -72,7 +80,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
 			}
 
-
 			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
 
@@ -82,9 +89,9 @@
 				if ($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
 				{
 					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport_components.index'));
 				}
-
+				
 
 				$start_time = time(); // Start time of import
 				$start = date("G:i:s", $start_time);
@@ -169,10 +176,6 @@
 					if (!array_key_exists((string)$k, $entity_categories))
 					{
 						$buildingpart_parent = substr($k, 0, strlen($k) -1);
-						if (empty($entity_categories[$buildingpart_parent]))
-						{
-							
-						}
 						$buildingpart_out_table[$k] = array('parent' => $entity_categories[$buildingpart_parent], 'name' => $v['name']);
 					} else {
 						$entity_categories_in_xml[$k]['cat_id'] = $entity_categories[$k]['id'];
@@ -180,7 +183,7 @@
 					}
 				}
 				
-				if (count($buildingpart_out_table))
+				/*if (count($buildingpart_out_table))
 				{
 					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
 					
@@ -214,9 +217,9 @@
 					{
 						echo $k.' => not added: '.$v.'<br>';
 					}
-				}
+				}*/
 				
-				//print_r($entity_categories_in_xml);
+				print_r($entity_categories_in_xml);
 				
 				echo "</ul>";
 				$end_time = time();
@@ -291,6 +294,8 @@
 				)				
 			);	
 				
+			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.file_upload_handler'));
+			
 			$data = array
 			(
 				'datatable_def' => $datatable_def,
@@ -300,10 +305,9 @@
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
-				
-				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
+				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
 			);
-			
+
 			self::add_javascript('property', 'portico', 'import_components.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Importer ');
 
@@ -395,4 +399,23 @@
 
 			return $values;
 		}
+		
+		private function _xml2array ( $xmlObject, $out = array () )
+		{
+			foreach ( (array) $xmlObject as $index => $node )
+			{
+				$out[$index] = ( is_object($node) || is_array($node) ) ? $this->_xml2array ( $node ) : $node;
+			}
+			
+			return $out;
+		}
+
+		protected function getxmldata( $path, $get_identificator = true )
+		{
+			$xml = simplexml_load_file($path);
+			$out = $this->_xml2array($xml);
+
+			return $out;
+		}
+		
 	}
