@@ -47,7 +47,9 @@
 				'edit_status'		=> true,
 				'get_vendor_email'	=> true,
 				'_print'			=> true,
-				'columns'			=> true
+				'columns'			=> true,
+				'update_data'		=> true,
+				'upload_clip'		=> true
 			);
 
 		/**
@@ -861,6 +863,50 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		function upload_clip()
+		{
+			$id = phpgw::get_var('id', 'POST', 'int');
+			$ret = array(
+				'status' => 'error',
+				'message'=> lang('No data')
+			);
+
+			if($_POST['pasted_image'])
+			{
+				$_ticket = $this->bo->read_single($id);
+				$bofiles = CreateObject('property.bofiles','/helpdesk');
+				$img = $_POST['pasted_image'];
+				$img = str_replace('data:image/png;base64,', '', $img);
+				$img = str_replace(' ', '+', $img);
+				$data = base64_decode($img);
+				$file = '/tmp/' . uniqid() . '.png';
+				if (file_put_contents($file, $data))
+				{
+					$to_file = "{$bofiles->fakebase}/{$id}/" .  str_replace(' ', '_', $_ticket['subject']) . '_' . ( (int)count($_ticket['files']) +1 ) . '.png';
+					$bofiles->create_document_dir("{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					$ret = array(
+						'status' => 'ok',
+						'message'=> 'Ok'
+					);
+					if (!$bofiles->vfs->cp(array(
+							'from' => $file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$ret = array(
+							'status' => 'error',
+							'message'=> lang('Failed to upload file !')
+						);
+
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+			return $ret;
+		}
+
 		function add()
 		{
 			if (!$this->acl_add)
@@ -996,10 +1042,10 @@
 					//------------ files
 					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
 
+					$bofiles = CreateObject('property.bofiles','/helpdesk');
 					if ($values['file_name'] && $receipt['id'])
 					{
-						$bofiles = CreateObject('property.bofiles');
-						$to_file = $bofiles->fakebase . '/helpdesk/' . $receipt['id'] . '/' . $values['file_name'];
+						$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$values['file_name']}";
 
 						if ($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
@@ -1010,7 +1056,7 @@
 						}
 						else
 						{
-							$bofiles->create_document_dir("helpdesk/{$receipt['id']}");
+							$bofiles->create_document_dir("{$receipt['id']}");
 							$bofiles->vfs->override_acl = 1;
 
 							if (!$bofiles->vfs->cp(array(
@@ -1023,6 +1069,31 @@
 							$bofiles->vfs->override_acl = 0;
 						}
 					}
+
+					if($_POST['pasted_image'])
+					{
+						$img = $_POST['pasted_image'];
+						$img = str_replace('data:image/png;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+						$file = '/tmp/' . uniqid() . '.png';
+						if (file_put_contents($file, $data))
+						{
+							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(' ', '_', $values['subject']) . '.png';
+							$bofiles->create_document_dir("{$receipt['id']}");
+							$bofiles->vfs->override_acl = 1;
+
+							if (!$bofiles->vfs->cp(array(
+									'from' => $file,
+									'to' => $to_file,
+									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
@@ -1160,7 +1231,7 @@
 				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
-				'fileupload' => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
+				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
@@ -1174,6 +1245,67 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
+		}
+
+		function update_data()
+		{
+			$action = phpgw::get_var('action', 'string', 'GET');
+			switch ($action)
+			{
+				case 'get_vendor':
+					return $this->bocommon->get_vendor_email();
+					break;
+				case 'get_files':
+					return $this->get_files();
+					break;
+				default:
+			}
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'property.uitts.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$values = $this->bo->read_single($id);
+
+			$content_files = array();
+
+			foreach ($values['files'] as $_entry)
+			{
+				$content_files[] = array
+					(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
 		}
 
 		function view()
@@ -1310,17 +1442,17 @@
 				}
 
 				//--------- files
-				$bofiles = CreateObject('property.bofiles');
+				$bofiles = CreateObject('property.bofiles','/helpdesk');
 				if (isset($values['file_action']) && is_array($values['file_action']))
 				{
-					$bofiles->delete_file("/helpdesk/{$id}/", $values);
+					$bofiles->delete_file("/{$id}", $values);
 				}
 
 				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
 
 				if ($values['file_name'])
 				{
-					$to_file = $bofiles->fakebase . '/helpdesk/' . $id . '/' . $values['file_name'];
+					$to_file = "{$bofiles->fakebase}/{$id}/{$values['file_name']}";
 
 					if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
@@ -1331,7 +1463,7 @@
 					}
 					else
 					{
-						$bofiles->create_document_dir("helpdesk/{$id}");
+						$bofiles->create_document_dir("{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if (!$bofiles->vfs->cp(array(
@@ -1401,10 +1533,6 @@
 				$this->cat_id = $ticket['cat_id'];
 			}
 
-			$link_file_data = array(
-				'menuaction' => 'helpdesk.uitts.view_file',
-				'id' => $id
-			);
 
 			if ($this->show_finnish_date)
 			{
@@ -1483,8 +1611,9 @@
 				)
 			);
 
+			$link_file_data = array('menuaction' => 'helpdesk.uitts.view_file');
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view_file'));
 
 			for ($z = 0; $z < count($ticket['files']); $z++)
 			{
@@ -1564,8 +1693,7 @@
 				$category = $this->cats->return_single($ticket['cat_id']);
 //_debug_array($category);
 
-				array_unshift($cat_select['cat_list'], array
-					(
+				array_unshift($cat_select['cat_list'], array(
 					'cat_id' => $category[0]['id'],
 					'name' => $category[0]['name'],
 					'description' => $category[0]['description'],
@@ -1603,6 +1731,7 @@
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $ticket['attributes']),
 				'lookup_functions' => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',
+				'simple' => $this->simple,
 				'send_response' => isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
 				'value_sms_phone' => $ticket['contact_phone'],
 				'value_budget' => $ticket['budget'],
@@ -1640,6 +1769,7 @@
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index')),
 				'value_subject' => $ticket['subject'],
 				'value_id' => '[ #' . $id . ' ] - ',
+				'id'		=> $id,
 				'value_details' => $ticket['details'],
 				'value_opendate' => $ticket['entry_date'],
 				'value_assignedfrom' => $ticket['user_name'],
@@ -1650,10 +1780,9 @@
 				'record_history' => $record_history,
 				'contact_phone' => $ticket['contact_phone'],
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : '',
-				'fileupload' => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
+				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
 				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
-				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
 				'lang_filename' => lang('Filename'),
@@ -1698,7 +1827,7 @@
 				phpgw::no_access();
 			}
 
-			ExecMethod('helpdesk.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		protected function _generate_tabs( $history = '' )

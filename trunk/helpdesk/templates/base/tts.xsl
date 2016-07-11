@@ -200,6 +200,16 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+						</label>
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						</canvas>
+						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+					</div>
+
 				</fieldset>
 			</div>
 		</div>
@@ -281,7 +291,7 @@
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
-	//	var initialSelection = <xsl:value-of select="resources_json"/>;
+		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 
 
@@ -314,6 +324,9 @@
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
 						</input>
+						<input type="text" id="id" name="id" value="{id}">
+						</input>
+
 					</div>
 					<xsl:for-each select="value_origin">
 						<div class="pure-control-group">
@@ -546,6 +559,17 @@
 							<xsl:call-template name="file_upload"/>
 						</xsl:when>
 					</xsl:choose>
+
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+						</label>
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						</canvas>
+						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+					</div>
+
 					<xsl:choose>
 						<xsl:when test="send_response = 1">
 							<div class="pure-control-group">
