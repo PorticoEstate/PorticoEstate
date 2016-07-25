@@ -280,13 +280,16 @@
 					else
 					{
 						// Handle failure on storing document
-						$this->redirect($document, $document_propeties, '', '');
+						$this->redirect($document, $document_properties, '', '');
 					}
 				}
 				else
 				{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show',
+							'procedure_id' => $procedure->get_id(),
+							'tab' => 'documents'));
 					//Handle vfs failure to store document
-					$this->redirect($document, $document_propeties, '', '');
+//					$this->redirect($document, $document_properties, '', '');
 				}
 			}
 		}

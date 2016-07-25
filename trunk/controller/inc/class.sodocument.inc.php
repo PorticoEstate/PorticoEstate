@@ -313,6 +313,12 @@
 			$path .= "/{$name}";
 			$file = array('string' => $path, RELATIVE_NONE);
 
+			return $vfs->cp(array(
+							'from' => $temporary_name,
+							'to' => $path,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))
+				);
+/*
 			return $vfs->write
 					(
 					array
@@ -322,6 +328,7 @@
 						'content' => file_get_contents($temporary_name)
 					)
 			);
+ */
 		}
 
 		public function read_document_from_vfs( string $document_type, $id, $name )
@@ -352,10 +359,8 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			return $vfs->rm
-					(
-					array
-						(
+			return $vfs->rm(
+					array(
 						'string' => $path,
 						RELATIVE_NONE
 					)
@@ -364,6 +369,7 @@
 
 		public function delete_document( $id )
 		{
+			$id = (int)$id;
 			$sql = "DELETE FROM controller_document WHERE id = {$id}";
 
 			$result = $this->db->query($sql, __LINE__, __FILE__);
