@@ -150,7 +150,7 @@
 		 */
 		public function get_single( int $id )
 		{
-			$objects = $this->get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
+			$objects = $this->get(0, 0, '', false, '', '', array($this->get_id_field_name() => $id));
 			if (count($objects) > 0)
 			{
 				$keys = array_keys($objects);
