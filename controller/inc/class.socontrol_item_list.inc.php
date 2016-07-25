@@ -178,7 +178,7 @@
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -213,7 +213,7 @@
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -261,7 +261,7 @@
 			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -329,7 +329,7 @@
 
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-					$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
+					$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -433,7 +433,7 @@
 
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 
 		}

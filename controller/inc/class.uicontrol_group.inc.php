@@ -760,7 +760,9 @@
 			// YUI variables for paging and sorting
 			$start_index = $params['start'];
 			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
-			$sort_field = $params['order'];
+			$sort_field = ($params['order']) ? $params['order'] : '';
+			$filters = array();
+			$search_type = '';
 
 			$ctrl_area = phpgw::get_var('control_areas');
 			if (isset($ctrl_area) && $ctrl_area > 0)

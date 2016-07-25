@@ -84,7 +84,7 @@
 		 * Update the database values for an existing control object.
 		 *
 		 * @param $control the control to be updated
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		function update( $control )
 		{
@@ -1220,7 +1220,7 @@
 			return $ret;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 
