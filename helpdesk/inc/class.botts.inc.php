@@ -125,7 +125,7 @@
 			$columns['assignedto'] = array
 				(
 				'id' => 'assignedto',
-				'name' => lang('assignedto')
+				'name' => lang('assigned to')
 			);
 
 			$columns['billable_hours'] = array(
@@ -990,10 +990,65 @@
 			return $receipt;
 		}
 
-		public function update_ticket($data, $id)
+		public function update_priority( $data, $id = 0 )
 		{
-			$receipt 	= $this->so->update_ticket($data, $id);
-			$this->fields_updated = $this->so->fields_updated;		
+			$receipt = $this->so->update_priority($data, $id);
+			$this->fields_updated = $this->so->fields_updated;
+			return $receipt;
+		}
+
+		public function update_ticket( &$data, $id, $receipt = array(), $values_attribute = array() )
+		{
+			if ($values_attribute && is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
+
+			$criteria = array
+				(
+				'appname' => 'helpdesk',
+				'location' => $this->acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $this->simple);
+			$this->fields_updated = $this->so->fields_updated;
+
+
+			reset($custom_functions);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
 			return $receipt;
 		}
 

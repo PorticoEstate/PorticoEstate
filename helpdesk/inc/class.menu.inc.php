@@ -116,7 +116,7 @@
 
 			$menus['navigation'] = array();
 
-
+/*
 			if ( $acl->check('.ticket',PHPGW_ACL_READ, 'helpdesk') )
 			{
 				$menus['navigation']['helpdesk'] = array
@@ -126,21 +126,7 @@
 						'image'		=> array('helpdesk', 'helpdesk')
 					);
 			}
-
-			if ( $acl->check('.ticket.order',PHPGW_ACL_ADD, 'helpdesk') )
-			{
-				$menus['navigation']['helpdesk']['children'] = array
-					(
-						'order_template' => array
-						(	
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'order_template') ),
-							'text'	=> lang('order template'),
-							'image'		=> array('helpdesk', 'helpdesk')
-						)
-					);
-			}
-
-
+*/
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

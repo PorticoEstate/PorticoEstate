@@ -45,6 +45,7 @@
 				'download'			=> true,
 				'view_file'			=> true,
 				'edit_status'		=> true,
+				'edit_priority' => true,
 				'get_vendor_email'	=> true,
 				'_print'			=> true,
 				'columns'			=> true,
@@ -357,6 +358,28 @@
 			return "id ".$id." ".lang('Status has been changed');
 		}
 
+		function edit_priority()
+		{
+			if (!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$new_priority = phpgw::get_var('new_priority', 'int');
+			$id = phpgw::get_var('id', 'int');
+
+//			$ticket = $this->bo->read_single($id);
+
+			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
+				)
+			)
+			{
+				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+			}
+			return "id {$id} " . lang('priority has been changed');
+		}
+
 		function delete()
 		{
 			if(!$this->acl_delete)
@@ -448,7 +471,7 @@
 			$uicols['name'][] = 'link_view';
 			$uicols['descr'][] = lang('link view');
 			$uicols['name'][] = 'lang_view_statustext';
-			$uicols['descr'][] = lang('lang view statustext');
+			$uicols['descr'][] = lang('view statustext');
 			$uicols['name'][] = 'text_view';
 			$uicols['descr'][] = lang('text view');
 
