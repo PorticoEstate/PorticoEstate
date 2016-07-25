@@ -464,7 +464,7 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
-				$documents = $this->so->get(null, null, null, null, null, null, array(
+				$documents = $this->so->get(0, 0, '', false, '', '', array(
 					'procedure_id' => $procedure_id,
 					'type' => $document_type));
 
