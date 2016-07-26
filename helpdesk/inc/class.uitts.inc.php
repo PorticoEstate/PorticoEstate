@@ -881,7 +881,7 @@
 				$data['datatable']['group_buttons'] = false;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1259,13 +1259,12 @@
 			);
 
 			//_debug_array($data);
-			$appname = lang('helpdesk');
 			$function_msg = lang('add ticket');
 
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			$this->_insert_custom_js();
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
 		}
@@ -1837,9 +1836,8 @@
 			//-----------------------datatable settings---
 			//_debug_array($data);die();
 
-			$appname = lang('helpdesk');
 			$function_msg = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 
