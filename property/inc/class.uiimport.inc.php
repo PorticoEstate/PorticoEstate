@@ -72,9 +72,12 @@
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 
+			$lang_category = lang('category');
 			foreach ($location_types as $location_type)
 			{
 				$this->valid_tables["fm_location{$location_type['id']}"] = array('name' => "fm_location{$location_type['id']} ({$location_type['name']})",
+					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
+				$this->valid_tables["fm_location{$location_type['id']}_category"] = array('name' => "fm_location{$location_type['id']}_category ({$location_type['name']} {$lang_category})",
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
 			}
 
