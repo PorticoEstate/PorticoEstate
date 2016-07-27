@@ -89,10 +89,10 @@
 				case 'all_composites': // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
 					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
-					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
+					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active','string', 'REQUEST', 'active'));
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
 					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
-					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 
+					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),'is_active' => phpgw::get_var('is_active','string', 'REQUEST', 'active'), 'is_vacant' => phpgw::get_var('occupancy'),
 									 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 
 									 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'), 'district_id' => $district_id);
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
