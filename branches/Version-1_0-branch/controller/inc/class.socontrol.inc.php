@@ -1160,7 +1160,8 @@
 			. " FROM controller_control_component_list"
 			. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id"
 			. " {$this->db->left_join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id AND controller_control_serie.control_relation_type = 'component')"
-			. " WHERE location_id = {$location_id} AND component_id = {$component_id}";
+			. " WHERE location_id = {$location_id} AND component_id = {$component_id}"
+			. " ORDER BY repeat_type, repeat_interval";
 //			_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
