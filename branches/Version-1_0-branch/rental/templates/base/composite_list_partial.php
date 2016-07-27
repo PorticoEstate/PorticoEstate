@@ -160,7 +160,7 @@ function checkAvailabitily()
 	//Avoid Notices
 	$q = false;
 	$s_type = false;
-	$status = false;
+	$status = 'active';
 	$status_contract = false;
 	if(isset($populate))
 	{
