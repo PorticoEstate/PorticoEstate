@@ -56,37 +56,56 @@
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>		
+					</form>
+				</div>
+				
+				<div id="upload_components">
+					<form id="form_components" name="form_components" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'location')"/>
+							</label>
+							<div id="location_name" class='pure-custom'></div>
+							<input type="hidden" id="location_code" name="location_code" value=""></input>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'upload file')"/>
+							</label>
+							<input type="file" id="file_xml" name="file_xml" size="40">
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label></label>
+							<input type="button" id="import_components" name="import_components" size="40">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'Start import')"/>
+								</xsl:attribute>
+							</input>
+						</div>
 					</form>		
 				</div>
 				
-				<div id="upload">
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'location')"/>
-						</label>
-						<div id="location_name" class='pure-custom'></div>
-						<input type="hidden" id="location_code" name="location_code" value=""></input>
-					</div>
-					<!--
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'upload file')"/>
-						</label>
-						<input type="file" name="file" size="40">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-							</xsl:attribute>
-						</input>
-					</div>	-->
-					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
-					<div class="pure-control-group">
-						<label></label>
-						<input type="submit" name="importsubmit" size="40">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'Start import')"/>
-							</xsl:attribute>
-						</input>
-					</div>					
+				<div id="upload_files">
+					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
+						<!-- <xsl:value-of disable-output-escaping="yes" select="form_file_upload"/> -->	
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'upload file')"/>
+							</label>
+							<input type="file" id="file_excel" name="file_excel" size="40">
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label></label>
+							<input type="button" id="import_files" name="import_files" size="40">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'Start import')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+					</form>
 				</div>
 				
 			</div>
