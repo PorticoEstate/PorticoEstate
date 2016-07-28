@@ -128,7 +128,7 @@
 			return $buildingparts;
 		}
 		
-		public function add_bim_item($entity_categories)
+		public function add_bim_item($entity_categories, $location)
 		{
 			$components_not_added = array();
 			foreach ($entity_categories as $entity) 
@@ -141,7 +141,7 @@
 					foreach ($entity['components'] as $values)
 					{
 						$attributes_values = $this->set_attributes_values($values, $attributes);
-						$receipt = $this->bo_entity->save(array('cat_id' => $entity['cat_id']), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
+						$receipt = $this->bo_entity->save(array('location' => $location), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
 						if (!$receipt['id'])
 						{
 							$not_added[] = 1;
